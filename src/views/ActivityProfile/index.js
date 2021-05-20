@@ -1,7 +1,6 @@
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
-import { withRouter } from 'react-router-dom';
 import activityService from 'services/activity';
 import './activity-profile.css';
 import Cropper from 'react-cropper';
@@ -240,99 +239,104 @@ const ActivityProfile = (props) => {
 
   let content;
 
-  // Creates the content of an activity's profile depending on the status of the network found in local storage
   if (isOnline) {
-    if (props.authentication) {
-      if (loading) {
-        content = <GordonLoader />;
-      } else {
-        let editActivity;
-        const redButton = {
-          background: gordonColors.secondary.red,
-          color: 'white',
-        };
+    if (loading) {
+      content = <GordonLoader />;
+    } else {
+      const { SessionDescription, SessionCode } = sessionInfo;
+      const {
+        ActivityBlurb,
+        ActivityDescription,
+        ActivityURL,
+        ActivityImagePath,
+        ActivityJoinInfo,
+        ActivityCode,
+      } = activityInfo;
 
-        if (isAdmin) {
-          editActivity = (
-            <section align="center" padding={6}>
+      const redButton = {
+        background: gordonColors.secondary.red,
+        color: 'white',
+      };
+
+      const editActivity = isAdmin ? (
+        <Grid item>
+          <Grid container spacing={2} justify="center">
+            <Grid item>
+              <Button variant="contained" color="primary" onClick={openEditActivityDialog}>
+                Edit Involvement
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" color="primary" onClick={sendEmail}>
+                Email Members/Subscribers
+              </Button>
+            </Grid>
+          </Grid>
+
+          <Dialog open={openEditActivity} fullWidth aria-labelledby="edit-activity-dialog-title">
+            <DialogTitle id="edit-activity-dialog-title"> Edit {ActivityDescription}</DialogTitle>
+            <DialogContent>
+              <Grid align="center" className="activity-image" item>
+                <img
+                  alt={activityService.activityDescription}
+                  src={image || ActivityImagePath}
+                  className="rounded-corners"
+                />
+              </Grid>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button variant="contained" color="primary" onClick={openEditActivityDialog}>
-                    Edit Involvement
+                  <Button variant="contained" onClick={alertRemoveImage} style={redButton}>
+                    Remove image
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="contained" color="primary" onClick={sendEmail}>
-                    Email Members/Subscribers
+                  <Button variant="contained" onClick={handlePhotoOpen} color="primary">
+                    Change Image
                   </Button>
                 </Grid>
               </Grid>
-
-              <Dialog open={openEditActivity} fullWidth>
-                <DialogTitle> Edit {activityInfo?.ActivityDescription}</DialogTitle>
+              <Dialog
+                open={photoOpen}
+                keepMounted
+                onClose={() => setPhotoOpen(false)}
+                aria-labelledby="edit-activity-image-dialog-title"
+                aria-describedby="edit-activity-image-dialog-description"
+                fullWidth
+              >
+                <DialogTitle id="edit-activity-image-dialog-title">
+                  Update Involvement Picture
+                </DialogTitle>
                 <DialogContent>
-                  <Grid align="center" className="activity-image" item>
-                    <img
-                      alt={activityService.activityDescription}
-                      src={image || activityInfo?.ActivityImagePath}
-                      className="rounded-corners"
-                    />
-                  </Grid>
-                  <Grid container spacing={2} justify="center">
-                    <Grid item>
-                      <Button variant="contained" onClick={alertRemoveImage} style={redButton}>
-                        Remove image
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button variant="contained" onClick={handlePhotoOpen} color="primary">
-                        Change Image
-                      </Button>
-                    </Grid>
-                  </Grid>
-                  <Dialog
-                    open={photoOpen}
-                    keepMounted
-                    onClose={() => setPhotoOpen(false)}
-                    aria-labelledby="alert-dialog-slide-title"
-                    aria-describedby="alert-dialog-slide-description"
-                    maxWidth="false"
-                  >
-                    <DialogTitle id="simple-dialog-title">Update Involvement Picture</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText>
-                        {window.innerWidth < 600
-                          ? 'Tap Image to Browse Files'
-                          : 'Drag & Drop Picture, or Click to Browse Files'}
-                      </DialogContentText>
-                      <DialogContentText>
-                        <br />
-                      </DialogContentText>
-                      {!preview && (
-                        <Grid container justify="center" spacing={6}>
-                          <Dropzone
-                            onDropAccepted={onDropAccepted.bind(this)}
-                            onDropRejected={onDropRejected.bind(this)}
-                            accept="image/jpeg, image/jpg, image/png"
-                          >
-                            {({ getRootProps, getInputProps }) => (
-                              <section>
-                                <div className="photoUploader" {...getRootProps()}>
-                                  <input {...getInputProps()} />
-                                  <img
-                                    className="rounded-corners"
-                                    src={activityInfo?.ActivityImagePath}
-                                    alt=""
-                                    style={{ 'max-width': '320px', 'max-height': '320px' }}
-                                  />
-                                </div>
-                              </section>
-                            )}
-                          </Dropzone>
-                        </Grid>
-                      )}
-                      {preview && (
-                        <Grid container justify="center" spacing={6}>
+                  <DialogContentText id="edit-activity-image-dialog-description">
+                    {window.innerWidth < 600
+                      ? 'Tap Image to Browse Files'
+                      : 'Drag & Drop Picture, or Click to Browse Files'}
+                  </DialogContentText>
+                  <Grid container justify="center" spacing={2}>
+                    {!preview && (
+                      <Dropzone
+                        onDropAccepted={onDropAccepted.bind(this)}
+                        onDropRejected={onDropRejected.bind(this)}
+                        accept="image/jpeg, image/jpg, image/png"
+                      >
+                        {({ getRootProps, getInputProps }) => (
+                          <section>
+                            <div className="photoUploader" {...getRootProps()}>
+                              <input {...getInputProps()} />
+                              <img
+                                className="rounded-corners"
+                                src={ActivityImagePath}
+                                alt=""
+                                style={{ 'max-width': '320px', 'max-height': '320px' }}
+                              />
+                            </div>
+                          </section>
+                        )}
+                      </Dropzone>
+                    )}
+                    {preview && (
+                      <>
+                        <Grid item>
                           <Cropper
                             ref={cropperRef}
                             src={preview}
@@ -352,256 +356,158 @@ const ActivityProfile = (props) => {
                             minCropBoxHeight={cropperData.cropBoxDim}
                           />
                         </Grid>
-                      )}
-                      {preview && <br />}
-                      {preview && (
-                        <Grid container justify="center" spacing={6}>
-                          <Grid item>
-                            <Button variant="contained" onClick={() => setPreview(null)}>
-                              Choose Another Image
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      )}
-                    </DialogContent>
-                    <DialogActions>
-                      <Grid container spacing={8} justify="flex-end">
+
                         <Grid item>
-                          <Button variant="contained" color="primary" onClick={handleCloseCancel}>
-                            Cancel
+                          <Button variant="contained" onClick={() => setPreview(null)}>
+                            Choose Another Image
                           </Button>
                         </Grid>
-                        <Grid item>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleCloseSelect}
-                            disabled={!preview}
-                          >
-                            Select
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </DialogActions>
-                  </Dialog>
-
-                  <Dialog open={openRemoveImage} keepMounted align="center">
-                    <DialogTitle>Are you sure you want to remove image?</DialogTitle>
-                    <DialogContent>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6} sm={6} md={6} lg={6}>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={onRemoveImage}
-                            raised
-                          >
-                            OK
-                          </Button>
-                        </Grid>
-                        <Grid item xs={6} sm={6} md={6} lg={6}>
-                          <Button
-                            variant="contained"
-                            onClick={() => setOpenRemoveImage(false)}
-                            raised
-                          >
-                            CANCEL
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </DialogContent>
-                  </Dialog>
-                  <form>
-                    <Grid container>
-                      <Grid item xs={12}>
-                        <TextField
-                          label="Description"
-                          margin="dense"
-                          multiline
-                          fullWidth
-                          defaultValue={activityInfo?.ActivityBlurb}
-                          onChange={(event) => setTempActivityBlurb(event.target.value)}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <TextField
-                          label="Special Information for Joining"
-                          margin="dense"
-                          multiline
-                          fullWidth
-                          defaultValue={activityInfo?.ActivityJoinInfo}
-                          onChange={(event) => setTempActivityJoinInfo(event.target.value)}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
-                        <TextField
-                          label="Website"
-                          margin="dense"
-                          multiline
-                          fullWidth
-                          defaultValue={activityInfo?.ActivityURL}
-                          onChange={(event) => setTempActivityURL(event.target.value)}
-                        />
-                      </Grid>
-                    </Grid>
-                  </form>
+                      </>
+                    )}
+                  </Grid>
                 </DialogContent>
-
                 <DialogActions>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => setOpenEditActivity(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button variant="contained" color="primary" onClick={onEditActivity}>
-                    Submit
-                  </Button>
+                  <Grid container spacing={8} justify="flex-end">
+                    <Grid item>
+                      <Button variant="contained" color="primary" onClick={handleCloseCancel}>
+                        Cancel
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleCloseSelect}
+                        disabled={!preview}
+                      >
+                        Select
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </DialogActions>
               </Dialog>
-            </section>
-          );
-        }
-        const { SessionDescription: sessionDescription } = sessionInfo;
-        const { ActivityBlurb: activityBlurb } = activityInfo;
-        let website;
-        if (activityInfo?.ActivityURL?.length !== 0) {
-          website = (
-            <Typography variant="body2">
-              <a
-                href={activityInfo?.ActivityURL}
-                className="gc360-text-link"
-                style={{ fontWeight: 'bold' }}
+
+              <Dialog open={openRemoveImage} keepMounted align="center">
+                <DialogTitle>Are you sure you want to remove image?</DialogTitle>
+                <DialogContent>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6} sm={6} md={6} lg={6}>
+                      <Button variant="contained" color="primary" onClick={onRemoveImage} raised>
+                        OK
+                      </Button>
+                    </Grid>
+                    <Grid item xs={6} sm={6} md={6} lg={6}>
+                      <Button variant="contained" onClick={() => setOpenRemoveImage(false)} raised>
+                        CANCEL
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </DialogContent>
+              </Dialog>
+              <form>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Description"
+                      margin="dense"
+                      multiline
+                      fullWidth
+                      defaultValue={ActivityBlurb}
+                      onChange={(event) => setTempActivityBlurb(event.target.value)}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Special Information for Joining"
+                      margin="dense"
+                      multiline
+                      fullWidth
+                      defaultValue={ActivityJoinInfo}
+                      onChange={(event) => setTempActivityJoinInfo(event.target.value)}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Website"
+                      margin="dense"
+                      multiline
+                      fullWidth
+                      defaultValue={ActivityURL}
+                      onChange={(event) => setTempActivityURL(event.target.value)}
+                    />
+                  </Grid>
+                </Grid>
+              </form>
+            </DialogContent>
+
+            <DialogActions>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setOpenEditActivity(false)}
               >
-                {activityInfo?.ActivityURL}
-              </a>
-            </Typography>
-          );
-        }
-        let subscribersWord, membersWord;
-        let groupContacts = <GroupContacts groupAdmin={activityGroupAdmins} />;
-        let advisors = <Advisors advisors={activityAdvisors} />;
-        const subscribersNum = activityFollowers;
-        if (subscribersNum === 1) {
-          subscribersWord = 'Subscriber';
-        } else {
-          subscribersWord = 'Subscribers';
-        }
-        const membersNum = activityMembersNum;
-        if (membersNum === 1) {
-          membersWord = 'Member';
-        } else {
-          membersWord = 'Members';
-        }
-        let membership = (
-          <Membership
-            sessionCode={sessionInfo.SessionCode}
-            activityCode={activityInfo.ActivityCode}
-            activityDescription={activityInfo.ActivityDescription}
-            id={id}
-            isAdmin={isAdmin}
-          />
-        );
-        content = (
-          <section className="gordon-activity-profile">
-            <Card>
-              <CardHeader
-                title={activityInfo?.ActivityDescription}
-                subheader={sessionDescription}
+                Cancel
+              </Button>
+              <Button variant="contained" color="primary" onClick={onEditActivity}>
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Grid>
+      ) : null;
+
+      content = (
+        <Card className="gordon-activity-profile">
+          <CardHeader align="center" title={ActivityDescription} subheader={SessionDescription} />
+          <CardContent>
+            <Grid align="center" item>
+              <img
+                alt={activityService.activityDescription}
+                src={ActivityImagePath}
+                className="rounded-corners"
               />
-              <CardContent>
-                <Grid align="center" className="activity-image" item>
-                  <img
-                    alt={activityService.activityDescription}
-                    src={activityInfo?.ActivityImagePath}
-                    className="rounded-corners"
-                  />
-                </Grid>
-                <Grid item>{editActivity}</Grid>
-                <Grid item style={{ padding: '16px' }}>
-                  {activityBlurb && <Typography variant="body2">{activityBlurb}</Typography>}
-                  <Typography variant="subtitle1">{website}</Typography>
-                </Grid>
+            </Grid>
+            {editActivity}
+            <Grid item>
+              {ActivityBlurb && <Typography variant="body2">{ActivityBlurb}</Typography>}
+              {ActivityURL?.length !== 0 && (
+                <Typography variant="body2">
+                  <a href={ActivityURL} className="gc360-text-link" style={{ fontWeight: 'bold' }}>
+                    {ActivityURL}
+                  </a>
+                </Typography>
+              )}
+            </Grid>
 
+            {props.authentication && (
+              <>
                 <hr width="70%"></hr>
-                <br></br>
 
-                {/* Activity Description */}
-                <Grid container direction="column" align="left">
-                  {groupContacts}
-                  {advisors}
-                  <Typography variant="body2">
-                    <strong>Special Information for Joining: </strong>
-                    {activityInfo.ActivityJoinInfo}
-                  </Typography>
-                  <Typography variant="body2">
-                    <strong>Current Involvement Roster: </strong>
-                    {membersNum} {membersWord} and {subscribersNum} {subscribersWord}
-                  </Typography>
-                  {/* negative margin necessary because of default padding on Membership */}
-                  {/* perhaps defaults can be changed eventually if all use cases checked */}
-                  {membership}
-                </Grid>
-              </CardContent>
-            </Card>
-          </section>
-        );
-      }
-    } else {
-      if (loading === true) {
-        content = <GordonLoader />;
-      } else {
-        let editActivity;
-
-        const { SessionDescription: sessionDescription } = sessionInfo;
-        const { ActivityDescription: activityDescription } = activityInfo;
-        let description;
-        if (activityInfo?.ActivityBlurb?.length !== 0) {
-          description = (
-            <Typography variant="body1">
-              <strong>Description: </strong>
-              {activityInfo?.ActivityBlurb}
-            </Typography>
-          );
-        }
-        let website;
-        if (activityInfo?.ActivityURL?.length !== 0) {
-          website = (
-            <Typography variant="body2">
-              <strong>Website: </strong>
-              <a href={activityInfo?.ActivityURL}> {activityInfo?.ActivityURL}</a>
-            </Typography>
-          );
-        }
-        content = (
-          <section className="gordon-activity-profile">
-            <Card>
-              <CardContent>
-                <Typography align="center" variant="h4">
-                  {activityDescription}
+                <GroupContacts groupAdmin={activityGroupAdmins} />
+                <Advisors advisors={activityAdvisors} />
+                <Typography>
+                  <strong>Special Information for Joining: </strong>
+                  {ActivityJoinInfo}
                 </Typography>
-                <Grid align="center" className="activity-image" item>
-                  <img
-                    alt={activityService.activityDescription}
-                    src={activityInfo?.ActivityImagePath}
-                    className="rounded-corners"
-                  />
-                </Grid>
-                <Grid item>{editActivity}</Grid>
-                <Typography variant="body1">
-                  <strong>Session: </strong>
-                  {sessionDescription}
+                <Typography>
+                  <strong>Current Involvement Roster: </strong>
+                  {activityMembersNum} Member{activityMembersNum === 1 ? '' : 's'} and{' '}
+                  {activityFollowers} Subcriber{activityFollowers === 1 ? '' : 's'}
                 </Typography>
-                {description}
-                {website}
-              </CardContent>
-            </Card>
-          </section>
-        );
-      }
+                <Membership
+                  sessionCode={SessionCode}
+                  activityCode={ActivityCode}
+                  activityDescription={ActivityDescription}
+                  id={id}
+                  isAdmin={isAdmin}
+                />
+              </>
+            )}
+          </CardContent>
+        </Card>
+      );
     }
   } else {
     content = (
@@ -649,8 +555,8 @@ const ActivityProfile = (props) => {
   }
 
   return (
-    <Grid container justify="center" spacing={6}>
-      <Grid item xs={12} md={12} lg={8}>
+    <Grid container justify="center">
+      <Grid item xs={12} lg={8}>
         {content}
       </Grid>
     </Grid>
@@ -663,4 +569,4 @@ ActivityProfile.propTypes = {
   }).isRequired,
 };
 
-export default withRouter(ActivityProfile);
+export default ActivityProfile;
