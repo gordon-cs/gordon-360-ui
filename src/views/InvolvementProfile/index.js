@@ -456,34 +456,50 @@ const InvolvementProfile = ({ authentication }) => {
         <Card>
           <CardHeader align="center" title={ActivityDescription} subheader={SessionDescription} />
           <CardContent>
-            <Grid align="center" item>
-              <img alt={ActivityDescription} src={ActivityImagePath} className="rounded-corners" />
-            </Grid>
-            {editInvolvement}
-            <Grid item align="center">
-              {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
-              {ActivityURL?.length !== 0 && (
-                <Typography>
-                  <a href={ActivityURL} className="gc360-text-link" style={{ fontWeight: 'bold' }}>
-                    {ActivityURL}
-                  </a>
-                </Typography>
+            <Grid container direction="column" spacing={2}>
+              <Grid align="center" item>
+                <img
+                  alt={ActivityDescription}
+                  src={ActivityImagePath}
+                  className="rounded-corners"
+                />
+              </Grid>
+              {editInvolvement}
+              <Grid item align="center">
+                {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
+                {ActivityURL?.length !== 0 && (
+                  <Typography>
+                    <a
+                      href={ActivityURL}
+                      className="gc360-text-link"
+                      style={{ fontWeight: 'bold' }}
+                    >
+                      {ActivityURL}
+                    </a>
+                  </Typography>
+                )}
+              </Grid>
+
+              {authentication && (
+                <>
+                  <hr width="70%"></hr>
+
+                  <Grid item>
+                    <GroupContacts groupAdmins={groupAdmins} />
+                  </Grid>
+                  <Grid item>
+                    <Advisors advisors={advisors} />
+                  </Grid>
+                  <Grid item>
+                    <Typography>
+                      <strong>Special Information for Joining: </strong>
+                      {ActivityJoinInfo}
+                    </Typography>
+                  </Grid>
+                  <Membership involvementDescription={ActivityDescription} isAdmin={isAdmin} />
+                </>
               )}
             </Grid>
-
-            {authentication && (
-              <>
-                <hr width="70%"></hr>
-
-                <GroupContacts groupAdmins={groupAdmins} />
-                <Advisors advisors={advisors} />
-                <Typography>
-                  <strong>Special Information for Joining: </strong>
-                  {ActivityJoinInfo}
-                </Typography>
-                <Membership involvementDescription={ActivityDescription} isAdmin={isAdmin} />
-              </>
-            )}
           </CardContent>
         </Card>
       );

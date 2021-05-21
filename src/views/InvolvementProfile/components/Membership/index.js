@@ -166,47 +166,55 @@ const Membership = ({ isAdmin, involvementDescription }) => {
       content = (
         <>
           {(isAdmin || isSuperAdmin) && (
-            <AdminCard
-              createSnackbar={createSnackbar}
-              sessionCode={sessionCode}
-              participationLevel={participationDetail[1]}
-              isSuperAdmin={isSuperAdmin}
-            />
+            <Grid item>
+              <AdminCard
+                createSnackbar={createSnackbar}
+                sessionCode={sessionCode}
+                participationLevel={participationDetail[1]}
+                isSuperAdmin={isSuperAdmin}
+              />
+            </Grid>
           )}
-          <Card>
-            {header}
-            <CardContent>
-              {members.sort(compareByLastThenFirst).map((groupMember) => (
-                <MemberList
-                  member={groupMember}
-                  admin={isAdmin}
-                  key={groupMember.MembershipID}
-                  createSnackbar={createSnackbar}
-                />
-              ))}
-            </CardContent>
-          </Card>
+          <Grid item>
+            <Card>
+              {header}
+              <CardContent>
+                {members.sort(compareByLastThenFirst).map((groupMember) => (
+                  <MemberList
+                    member={groupMember}
+                    admin={isAdmin}
+                    key={groupMember.MembershipID}
+                    createSnackbar={createSnackbar}
+                  />
+                ))}
+              </CardContent>
+            </Card>
+          </Grid>
         </>
       );
     } else {
       content = (
-        <NonMemberButtons
-          participationDetail={participationDetail}
-          onSubscribe={onSubscribe}
-          onUnsubscribe={onUnsubscribe}
-          involvementDescription={involvementDescription}
-          createSnackbar={createSnackbar}
-        />
+        <Grid item>
+          <NonMemberButtons
+            isGuest={participationDetail[1] === 'Guest'}
+            onSubscribe={onSubscribe}
+            onUnsubscribe={onUnsubscribe}
+            involvementDescription={involvementDescription}
+            createSnackbar={createSnackbar}
+          />
+        </Grid>
       );
     }
   }
   return (
     <>
-      <Typography>
-        <strong>Current Roster: </strong>
-        {membersNum} Member{membersNum === 1 ? '' : 's'} and {followersNum} Subcriber
-        {followersNum === 1 ? '' : 's'}
-      </Typography>
+      <Grid item>
+        <Typography>
+          <strong>Current Roster: </strong>
+          {membersNum} Member{membersNum === 1 ? '' : 's'} and {followersNum} Subcriber
+          {followersNum === 1 ? '' : 's'}
+        </Typography>
+      </Grid>
       {content}
       <GordonSnackbar
         {...snackbar}
