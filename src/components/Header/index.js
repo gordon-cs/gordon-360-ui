@@ -122,7 +122,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     }
   };
 
-  const disablableTab = (name, icon) => {
+  const requiresAuthTab = (name, icon) => {
     if (!isOnline) {
       return (
         <Tab
@@ -218,9 +218,9 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
                 component={ForwardNavLink}
                 to="/events"
               />
-              {disablableTab('People', <PeopleIcon />)}
-              {/* {disablableTab('Timesheets', WorkIcon)} */}
-              {disablableTab('Wellness', <WellnessIcon />)}
+              {requiresAuthTab('People', <PeopleIcon />)}
+              {/* {requiresAuthTab('Timesheets', WorkIcon)} */}
+              {requiresAuthTab('Wellness', <WellnessIcon />)}
             </Tabs>
           </div>
 
