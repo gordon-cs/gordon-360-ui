@@ -30,7 +30,7 @@ const Events = (props) => {
 
   useEffect(() => {
     const loadEvents = async () => {
-      setLoading(true);
+      // setLoading(true);
       let allEvents;
       if (props.authentication) {
         allEvents = await gordonEvent.getAllEvents();

@@ -58,13 +58,11 @@ export default class EventList extends Component {
       padding: '10px',
     };
 
-    /****** HEADER ******/
-    // Show single "events" column on narrow viewports
-    if (window.innerWidth < this.breakpointWidth) {
-      content = events.map((currEvent) => (
-        <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
-      ));
-
+    if (events.length === 0) {
+      content = <Typography variant="h5">No Events To Show</Typography>;
+    }
+    // MOBILE - Single Column Layout
+    else if (window.innerWidth < this.breakpointWidth) {
       header = (
         <div style={headerStyle}>
           <Grid container direction="row">
@@ -76,38 +74,40 @@ export default class EventList extends Component {
           </Grid>
         </div>
       );
-    } else if (events.length > 0) {
-      content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
-    } else if (events.length === 0) {
-      content = <Typography variant="h5">No Events To Show</Typography>;
+      content = events.map((currEvent) => (
+        <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
+      ));
     }
-
-    header = (
-      <div style={headerStyle}>
-        <Grid container direction="row">
-          <Grid item xs={4}>
-            <Typography variant="body2" style={headerStyle}>
-              EVENT
-            </Typography>
+    // DESKTOP - Multi-Column Layout
+    else {
+      header = (
+        <div style={headerStyle}>
+          <Grid container direction="row">
+            <Grid item xs={4}>
+              <Typography variant="body2" style={headerStyle}>
+                EVENT
+              </Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="body2" style={headerStyle}>
+                LOCATION
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography variant="body2" style={headerStyle}>
+                DATE
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography variant="body2" style={headerStyle}>
+                TIME
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <Typography variant="body2" style={headerStyle}>
-              LOCATION
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography variant="body2" style={headerStyle}>
-              DATE
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography variant="body2" style={headerStyle}>
-              TIME
-            </Typography>
-          </Grid>
-        </Grid>
-      </div>
-    );
+        </div>
+      );
+      content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
+    }
 
     return (
       <section>
