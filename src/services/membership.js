@@ -272,9 +272,7 @@ const remove = (membershipID) => {
  * @return {Promise<Object>} Response body
  */
 function requestMembership(data) {
-  return http.post(`requests`, data).catch((reason) => {
-    console.log(reason);
-  });
+  return http.post(`requests`, data);
 }
 
 /**

@@ -20,26 +20,28 @@ import userService from 'services/user';
 import involvementService from 'services/activity';
 
 const NonMemberButtons = ({
-  participationDetail,
+  isGuest,
   onUnsubscribe,
   onSubscribe,
   involvementDescription,
   createSnackbar,
 }) => {
   const [isRosterClosed, setIsRosterClosed] = useState(false);
-  const [openJoin, setOpenJoin] = useState(false);
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
   const { involvementCode, sessionCode } = useParams();
 
   useEffect(() => {
-    involvementService
-      .getStatus(involvementCode, sessionCode)
-      .then((s) => setIsRosterClosed(s === 'CLOSED'));
+    const load = async () => {
+      const rosterStatus = await involvementService.getStatus(involvementCode, sessionCode);
+      setIsRosterClosed(rosterStatus === 'CLOSED');
+    };
+    load();
   }, [involvementCode, sessionCode]);
 
   const onClose = () => {
-    setOpenJoin(false);
+    setIsJoinDialogOpen(false);
     setParticipationCode('');
     setTitleComment('');
   };
@@ -54,15 +56,30 @@ const NonMemberButtons = ({
       COMMENT_TXT: titleComment,
       APPROVED: 'Pending',
     };
-    await membershipService.requestMembership(data);
-    onClose();
-    createSnackbar('Request sent, awaiting approval from a group leader', 'success');
+
+    try {
+      await membershipService.requestMembership(data);
+      onClose();
+      createSnackbar('Request sent, awaiting approval from a group leader', 'success');
+    } catch (err) {
+      if (
+        err ===
+        'A request for this activity has already been made for you and is awaiting group leader approval.'
+      ) {
+        createSnackbar('You already have a pending request to join this involvement.');
+      } else {
+        createSnackbar(
+          'There was a problem sending your request to join. Please try again or contact CTS',
+          'error',
+        );
+      }
+    }
   };
 
   return (
     <>
       <CardActions>
-        {participationDetail[1] === 'Guest' ? (
+        {isGuest ? (
           <Button variant="contained" color="primary" onClick={onUnsubscribe}>
             Unsubscribe
           </Button>
@@ -80,13 +97,13 @@ const NonMemberButtons = ({
           variant="contained"
           color="primary"
           disabled={isRosterClosed}
-          onClick={() => setOpenJoin(true)}
+          onClick={() => setIsJoinDialogOpen(true)}
         >
           Join
         </Button>
       </CardActions>
 
-      <Dialog open={openJoin} keepMounted>
+      <Dialog open={isJoinDialogOpen} keepMounted>
         <DialogTitle>Join {involvementDescription}</DialogTitle>
         <DialogContent>
           <Grid container direction="column" spacing={2}>
