@@ -20,6 +20,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
   InputLabel,
   CardHeader,
   CardContent,
@@ -29,6 +30,8 @@ import userService from 'services/user';
 
 const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescription }) => {
   const [members, setMembers] = useState([]);
+  const [activityFollowersNum, setActivityFollowersNum] = useState(0);
+  const [activityMembersNum, setActivityMembersNum] = useState(0);
   const [status, setStatus] = useState('');
   const [openJoin, setOpenJoin] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
@@ -44,12 +47,21 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
       setLoading(true);
 
       try {
-        const [participationDetail, status] = await Promise.all([
+        const [
+          participationDetail,
+          status,
+          activityFollowersNum,
+          activityMembersNum,
+        ] = await Promise.all([
           membershipService.search(id, sessionCode, activityCode),
           involvementService.getStatus(activityCode, sessionCode),
+          membershipService.getFollowersNum(activityCode, sessionCode),
+          membershipService.getMembersNum(activityCode, sessionCode),
         ]);
         setParticipationDetail(participationDetail);
         setStatus(status);
+        setActivityFollowersNum(activityFollowersNum);
+        setActivityMembersNum(activityMembersNum);
 
         const isSuperAdmin = (await userService.getLocalInfo()).college_role === 'god';
         setIsSuperAdmin(isSuperAdmin);
@@ -88,20 +100,18 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
   };
 
   const onRequest = async () => {
-    let date = new Date();
     let data = {
       ACT_CDE: activityCode,
       SESS_CDE: sessionCode,
       ID_NUM: id,
       PART_CDE: participationCode,
-      DATE_SENT: date.toLocaleString(),
+      DATE_SENT: new Date().toLocaleString(),
       COMMENT_TXT: titleComment,
       APPROVED: 'Pending',
     };
     await membershipService.requestMembership(data);
     onClose();
     createSnackbar('Request sent, awaiting approval from a group leader', 'success');
-    //Used to call refresh() here, but it caused requests not to go through
   };
 
   const onSubscribe = async () => {
@@ -114,22 +124,17 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
       GRP_ADMIN: false,
     };
     await membershipService.addMembership(data);
-    refresh();
+    setParticipationDetail(await membershipService.search(id, sessionCode, activityCode));
+    setActivityFollowersNum(await membershipService.getFollowersNum(activityCode, sessionCode));
   };
 
-  // Called when Unsubscribe button clicked
   const onUnsubscribe = async () => {
-    let participationDescription = participationDetail[2];
-    await membershipService.remove(participationDescription);
-    setParticipationDetail([false, false, null]);
+    await membershipService.remove(participationDetail[2]);
+    setParticipationDetail(await membershipService.search(id, sessionCode, activityCode));
+    setActivityFollowersNum(await membershipService.getFollowersNum(activityCode, sessionCode));
   };
 
-  const refresh = () => {
-    window.location.reload();
-  };
-
-  // Compare members initially by last name, then by first name, A-Z
-  const compareFunction = (a, b) => {
+  const compareByLastThenFirst = (a, b) => {
     if (a.LastName.toUpperCase() < b.LastName.toUpperCase()) {
       return -1;
     }
@@ -220,16 +225,14 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
           <Card>
             {header}
             <CardContent>
-              {members
-                .sort((a, b) => compareFunction(a, b))
-                .map((groupMember) => (
-                  <MemberList
-                    member={groupMember}
-                    admin={isAdmin}
-                    key={groupMember.MembershipID}
-                    createSnackbar={createSnackbar}
-                  />
-                ))}
+              {members.sort(compareByLastThenFirst).map((groupMember) => (
+                <MemberList
+                  member={groupMember}
+                  admin={isAdmin}
+                  key={groupMember.MembershipID}
+                  createSnackbar={createSnackbar}
+                />
+              ))}
             </CardContent>
           </Card>
         </>
@@ -317,8 +320,13 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
   }
   return (
     <>
+      {' '}
+      <Typography>
+        <strong>Current Involvement Roster: </strong>
+        {activityMembersNum} Member{activityMembersNum === 1 ? '' : 's'} and {activityFollowersNum}{' '}
+        Subcriber{activityFollowersNum === 1 ? '' : 's'}
+      </Typography>
       {content}
-
       <GordonSnackbar
         {...snackbar}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}

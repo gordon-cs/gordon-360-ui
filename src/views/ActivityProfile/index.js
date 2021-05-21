@@ -35,9 +35,7 @@ const CROP_DIM = 320; // pixels
 const ActivityProfile = (props) => {
   const [activityInfo, setActivityInfo] = useState(null);
   const [activityAdvisors, setActivityAdvisors] = useState([]);
-  const [activityFollowers, setActivityFollowers] = useState(0);
   const [activityGroupAdmins, setActivityGroupAdmins] = useState([]);
-  const [activityMembersNum, setActivityMembersNum] = useState(0);
   const [photoOpen, setPhotoOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -64,9 +62,7 @@ const ActivityProfile = (props) => {
         const [
           activityInfo,
           activityAdvisors,
-          activityFollowers,
           activityGroupAdmins,
-          activityMembersNum,
           sessionInfo,
           id,
           college_role, // for testing purposes only, remove before push
@@ -74,29 +70,30 @@ const ActivityProfile = (props) => {
         ] = await Promise.all([
           activityService.get(activityCode),
           activityService.getAdvisors(activityCode, sessionCode),
-          membershipService.getFollowersNum(activityCode, sessionCode),
           activityService.getGroupAdmins(activityCode, sessionCode),
-          membershipService.getMembersNum(activityCode, sessionCode),
           sessionService.get(sessionCode),
           userService.getLocalInfo().id,
           userService.getLocalInfo().college_role,
           membershipService.checkAdmin(userService.getLocalInfo().id, sessionCode, activityCode),
         ]);
-        const emailList = isAdmin ? await emailsService.get(activityCode) : null;
 
         setActivityInfo(activityInfo);
         setActivityAdvisors(activityAdvisors);
-        setActivityFollowers(activityFollowers);
         setActivityGroupAdmins(activityGroupAdmins);
-        setActivityMembersNum(activityMembersNum);
         setSessionInfo(sessionInfo);
         setId(id);
         setIsAdmin(isAdmin || college_role === 'god');
         setTempActivityBlurb(activityInfo.ActivityBlurb);
         setTempActivityJoinInfo(activityInfo.ActivityJoinInfo);
         setTempActivityURL(activityInfo.ActivityURL);
-        setEmailList(emailList);
+
+        if (isAdmin) {
+          setEmailList(await emailsService.get(activityCode));
+        }
+
         setLoading(false);
+
+        console.log(activityGroupAdmins, activityAdvisors);
       } else {
         const [activityInfo, sessionInfo] = await Promise.all([
           activityService.get(activityCode),
@@ -470,10 +467,10 @@ const ActivityProfile = (props) => {
               />
             </Grid>
             {editActivity}
-            <Grid item>
-              {ActivityBlurb && <Typography variant="body2">{ActivityBlurb}</Typography>}
+            <Grid item align="center">
+              {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
               {ActivityURL?.length !== 0 && (
-                <Typography variant="body2">
+                <Typography>
                   <a href={ActivityURL} className="gc360-text-link" style={{ fontWeight: 'bold' }}>
                     {ActivityURL}
                   </a>
@@ -490,11 +487,6 @@ const ActivityProfile = (props) => {
                 <Typography>
                   <strong>Special Information for Joining: </strong>
                   {ActivityJoinInfo}
-                </Typography>
-                <Typography>
-                  <strong>Current Involvement Roster: </strong>
-                  {activityMembersNum} Member{activityMembersNum === 1 ? '' : 's'} and{' '}
-                  {activityFollowers} Subcriber{activityFollowers === 1 ? '' : 's'}
                 </Typography>
                 <Membership
                   sessionCode={SessionCode}
