@@ -4,9 +4,8 @@ import membershipService from 'services/membership';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import MemberList from './components/MemberList';
-import { gordonColors } from 'theme';
 
-import { Card, Grid, Typography, CardHeader, CardContent } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import AdminCard from './components/AdminCard';
 import userService from 'services/user';
 import NonMemberButtons from './components/NonMemberButtons';
@@ -20,7 +19,6 @@ const Membership = ({ isAdmin, involvementDescription }) => {
   const [participationDetail, setParticipationDetail] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [loading, setLoading] = useState(true);
-  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 810);
   const { involvementCode, sessionCode } = useParams();
 
   useEffect(() => {
@@ -52,16 +50,6 @@ const Membership = ({ isAdmin, involvementDescription }) => {
 
     loadMembers();
   }, [involvementCode, isAdmin, sessionCode]);
-
-  useEffect(() => {
-    const resize = () => {
-      setIsMobileView(window.innerWidth < 810);
-    };
-
-    window.addEventListener('resize', resize);
-
-    return () => window.removeEventListener('resize', resize);
-  });
 
   const createSnackbar = (text, severity) => {
     setSnackbar({ open: true, text, severity });
@@ -95,78 +83,12 @@ const Membership = ({ isAdmin, involvementDescription }) => {
     setMembers(await membershipService.get(involvementCode, sessionCode));
   };
 
-  const compareByLastThenFirst = (a, b) => {
-    if (a.LastName.toUpperCase() < b.LastName.toUpperCase()) {
-      return -1;
-    }
-    if (a.LastName.toUpperCase() > b.LastName.toUpperCase()) {
-      return 1;
-    }
-    if (a.FirstName.toUpperCase() < b.FirstName.toUpperCase()) {
-      return -1;
-    }
-    if (a.FirstName.toUpperCase() > b.FirstName.toUpperCase()) {
-      return 1;
-    }
-    return 0;
-  };
-
   let content;
-  const headerStyle = {
-    backgroundColor: gordonColors.primary.blue,
-    color: '#FFF',
-    padding: '10px',
-  };
 
   if (loading === true) {
     return <GordonLoader />;
   } else {
     if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSuperAdmin) {
-      const header = isMobileView ? (
-        <CardHeader title="Members" style={headerStyle} />
-      ) : isAdmin || isSuperAdmin ? (
-        <CardHeader
-          title={
-            <Grid container direction="row">
-              <Grid item xs={2}>
-                Name
-              </Grid>
-              <Grid item xs={2}>
-                Participation
-              </Grid>
-              <Grid item xs={3}>
-                Title/Comment
-              </Grid>
-              <Grid item xs={2}>
-                Mail #
-              </Grid>
-              <Grid item xs={3}>
-                Admin
-              </Grid>
-            </Grid>
-          }
-          titleTypographyProps={{ variant: 'h6' }}
-          style={headerStyle}
-        />
-      ) : (
-        <CardHeader
-          title={
-            <Grid container direction="row">
-              <Grid item xs={4}>
-                Name
-              </Grid>
-              <Grid item xs={4}>
-                Participation
-              </Grid>
-              <Grid item xs={4}>
-                Mail #
-              </Grid>
-            </Grid>
-          }
-          style={headerStyle}
-        />
-      );
-
       content = (
         <>
           {(isAdmin || isSuperAdmin) && (
@@ -181,19 +103,11 @@ const Membership = ({ isAdmin, involvementDescription }) => {
             </Grid>
           )}
           <Grid item>
-            <Card>
-              {header}
-              <CardContent>
-                {members.sort(compareByLastThenFirst).map((groupMember) => (
-                  <MemberList
-                    member={groupMember}
-                    admin={isAdmin}
-                    key={groupMember.MembershipID}
-                    createSnackbar={createSnackbar}
-                  />
-                ))}
-              </CardContent>
-            </Card>
+            <MemberList
+              members={members}
+              admin={isAdmin || isSuperAdmin}
+              createSnackbar={createSnackbar}
+            />
           </Grid>
         </>
       );
