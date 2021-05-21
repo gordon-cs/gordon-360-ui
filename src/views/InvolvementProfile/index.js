@@ -42,7 +42,6 @@ const InvolvementProfile = ({ authentication }) => {
   const [preview, setPreview] = useState(null);
   const [photoUpdated, setPhotoUpdated] = useState(false);
   const [sessionInfo, setSessionInfo] = useState(null);
-  const [id, setId] = useState(''); // User's id
   const [loading, setLoading] = useState(true);
   const [tempBlurb, setTempBlurb] = useState('');
   const [tempJoinInfo, setTempJoinInfo] = useState('');
@@ -65,7 +64,6 @@ const InvolvementProfile = ({ authentication }) => {
           advisors,
           groupAdmins,
           sessionInfo,
-          id,
           college_role, // for testing purposes only, remove before push
           isAdmin,
         ] = await Promise.all([
@@ -73,7 +71,6 @@ const InvolvementProfile = ({ authentication }) => {
           involvementService.getAdvisors(involvementCode, sessionCode),
           involvementService.getGroupAdmins(involvementCode, sessionCode),
           sessionService.get(sessionCode),
-          userService.getLocalInfo().id,
           userService.getLocalInfo().college_role,
           membershipService.checkAdmin(userService.getLocalInfo().id, sessionCode, involvementCode),
         ]);
@@ -82,7 +79,6 @@ const InvolvementProfile = ({ authentication }) => {
         setAdvisors(advisors);
         setGroupAdmins(groupAdmins);
         setSessionInfo(sessionInfo);
-        setId(id);
         setIsAdmin(isAdmin || college_role === 'god');
         setTempBlurb(involvementInfo.ActivityBlurb);
         setTempJoinInfo(involvementInfo.ActivityJoinInfo);
@@ -231,14 +227,13 @@ const InvolvementProfile = ({ authentication }) => {
     if (loading) {
       content = <GordonLoader />;
     } else {
-      const { SessionDescription, SessionCode } = sessionInfo;
+      const { SessionDescription } = sessionInfo;
       const {
         ActivityBlurb,
         ActivityDescription,
         ActivityURL,
         ActivityImagePath,
         ActivityJoinInfo,
-        ActivityCode,
       } = involvementInfo;
 
       const redButton = {
@@ -486,13 +481,7 @@ const InvolvementProfile = ({ authentication }) => {
                   <strong>Special Information for Joining: </strong>
                   {ActivityJoinInfo}
                 </Typography>
-                <Membership
-                  sessionCode={SessionCode}
-                  involvementCode={ActivityCode}
-                  involvementDescription={ActivityDescription}
-                  id={id}
-                  isAdmin={isAdmin}
-                />
+                <Membership involvementDescription={ActivityDescription} isAdmin={isAdmin} />
               </>
             )}
           </CardContent>

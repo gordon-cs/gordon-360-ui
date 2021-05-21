@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   Button,
@@ -23,6 +23,7 @@ import involvementService from 'services/activity';
 import membershipService from 'services/membership';
 import RequestsReceived from './components/RequestsReceived';
 import { gordonColors } from 'theme';
+import { useParams } from 'react-router';
 
 const headerStyle = {
   backgroundColor: gordonColors.primary.blue,
@@ -31,29 +32,32 @@ const headerStyle = {
 };
 
 const AdminCard = ({
-  involvementCode,
-  sessionCode,
   createSnackbar,
-  isRosterClosed,
   participationLevel,
   isSuperAdmin,
   involvementDescription,
 }) => {
+  const [isRosterClosed, setIsRosterClosed] = useState(false);
   const [openAddMember, setOpenAddMember] = useState(false);
   const [addEmail, setAddEmail] = useState('');
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
+  const { involvementCode, sessionCode } = useParams();
+
+  useEffect(() => {
+    involvementService
+      .getStatus(involvementCode, sessionCode)
+      .then((s) => setIsRosterClosed(s === 'CLOSED'));
+  }, [involvementCode, sessionCode]);
 
   const onConfirmRoster = async () => {
     await involvementService.closeActivity(involvementCode, sessionCode);
-    // TODO: update 'status' when closing activity
-    // refresh();
+    setIsRosterClosed(true);
   };
 
   const onReopenRoster = async () => {
     await involvementService.reopenActivity(involvementCode, sessionCode);
-    // TODO: update 'status' when closing activity
-    // refresh();
+    setIsRosterClosed(false);
   };
 
   const onAddMember = async () => {

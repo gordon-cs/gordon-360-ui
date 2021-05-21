@@ -1,60 +1,39 @@
 import React, { useState, useEffect } from 'react';
 
 import membershipService from 'services/membership';
-import involvementService from 'services/activity';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import MemberList from './components/MemberList';
 import { gordonColors } from 'theme';
 
-import {
-  Button,
-  Card,
-  CardActions,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  DialogTitle,
-  Grid,
-  FormControl,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-  InputLabel,
-  CardHeader,
-  CardContent,
-} from '@material-ui/core';
+import { Card, Grid, Typography, CardHeader, CardContent } from '@material-ui/core';
 import AdminCard from './components/AdminCard';
 import userService from 'services/user';
+import NonMemberButtons from './components/NonMemberButtons';
+import { useParams } from 'react-router';
 
-const Membership = ({ isAdmin, involvementCode, id, sessionCode, involvementDescription }) => {
+const Membership = ({ isAdmin, involvementDescription }) => {
   const [members, setMembers] = useState([]);
   const [followersNum, setFollowersNum] = useState(0);
   const [membersNum, setMembersNum] = useState(0);
-  const [status, setStatus] = useState('');
-  const [openJoin, setOpenJoin] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
-  const [participationCode, setParticipationCode] = useState('');
-  const [titleComment, setTitleComment] = useState('');
   const [participationDetail, setParticipationDetail] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [loading, setLoading] = useState(true);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 810);
+  const { involvementCode, sessionCode } = useParams();
 
   useEffect(() => {
     const loadMembers = async () => {
       setLoading(true);
 
       try {
-        const [participationDetail, status, followersNum, membersNum] = await Promise.all([
-          membershipService.search(id, sessionCode, involvementCode),
-          involvementService.getStatus(involvementCode, sessionCode),
+        const [participationDetail, followersNum, membersNum] = await Promise.all([
+          membershipService.search(userService.getLocalInfo().id, sessionCode, involvementCode),
           membershipService.getFollowersNum(involvementCode, sessionCode),
           membershipService.getMembersNum(involvementCode, sessionCode),
         ]);
         setParticipationDetail(participationDetail);
-        setStatus(status);
         setFollowersNum(followersNum);
         setMembersNum(membersNum);
 
@@ -72,7 +51,7 @@ const Membership = ({ isAdmin, involvementCode, id, sessionCode, involvementDesc
     };
 
     loadMembers();
-  }, [involvementCode, id, isAdmin, sessionCode]);
+  }, [involvementCode, isAdmin, sessionCode]);
 
   useEffect(() => {
     const resize = () => {
@@ -88,44 +67,27 @@ const Membership = ({ isAdmin, involvementCode, id, sessionCode, involvementDesc
     setSnackbar({ open: true, text, severity });
   };
 
-  const onClose = () => {
-    setOpenJoin(false);
-    setParticipationCode('');
-    setTitleComment('');
-  };
-
-  const onRequest = async () => {
-    let data = {
-      ACT_CDE: involvementCode,
-      SESS_CDE: sessionCode,
-      ID_NUM: id,
-      PART_CDE: participationCode,
-      DATE_SENT: new Date().toLocaleString(),
-      COMMENT_TXT: titleComment,
-      APPROVED: 'Pending',
-    };
-    await membershipService.requestMembership(data);
-    onClose();
-    createSnackbar('Request sent, awaiting approval from a group leader', 'success');
-  };
-
   const onSubscribe = async () => {
     let data = {
       ACT_CDE: involvementCode,
       SESS_CDE: sessionCode,
-      ID_NUM: id,
+      ID_NUM: userService.getLocalInfo().id,
       PART_CDE: 'GUEST',
       COMMENT_TXT: 'Subscriber',
       GRP_ADMIN: false,
     };
     await membershipService.addMembership(data);
-    setParticipationDetail(await membershipService.search(id, sessionCode, involvementCode));
+    setParticipationDetail(
+      await membershipService.search(userService.getLocalInfo().id, sessionCode, involvementCode),
+    );
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
 
   const onUnsubscribe = async () => {
     await membershipService.remove(participationDetail[2]);
-    setParticipationDetail(await membershipService.search(id, sessionCode, involvementCode));
+    setParticipationDetail(
+      await membershipService.search(userService.getLocalInfo().id, sessionCode, involvementCode),
+    );
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
 
@@ -146,7 +108,6 @@ const Membership = ({ isAdmin, involvementCode, id, sessionCode, involvementDesc
   };
 
   let content;
-  const isRosterClosed = status === 'CLOSED';
   const headerStyle = {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
@@ -206,10 +167,7 @@ const Membership = ({ isAdmin, involvementCode, id, sessionCode, involvementDesc
         <>
           {(isAdmin || isSuperAdmin) && (
             <AdminCard
-              involvementCode={involvementCode}
-              involvementDescription={involvementDescription}
               createSnackbar={createSnackbar}
-              isRosterClosed={isRosterClosed}
               sessionCode={sessionCode}
               participationLevel={participationDetail[1]}
               isSuperAdmin={isSuperAdmin}
@@ -232,90 +190,20 @@ const Membership = ({ isAdmin, involvementCode, id, sessionCode, involvementDesc
       );
     } else {
       content = (
-        <>
-          <CardActions>
-            {participationDetail[1] === 'Guest' ? (
-              <Button variant="contained" color="primary" onClick={onUnsubscribe}>
-                Unsubscribe
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={isRosterClosed}
-                onClick={onSubscribe}
-              >
-                Subscribe
-              </Button>
-            )}
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={isRosterClosed}
-              onClick={() => setOpenJoin(true)}
-            >
-              Join
-            </Button>
-          </CardActions>
-
-          <Dialog open={openJoin} keepMounted>
-            <DialogTitle>Join {involvementDescription}</DialogTitle>
-            <DialogContent>
-              <Grid container direction="column" spacing={2}>
-                <Grid item>
-                  <FormControl variant="filled" fullWidth>
-                    <InputLabel id={`involvement-profile-join-${involvementDescription}`}>
-                      Participation
-                    </InputLabel>
-                    <Select
-                      required
-                      value={participationCode}
-                      onChange={(event) => setParticipationCode(event.target.value)}
-                      labelId={`involvement-profile-join-${involvementDescription}`}
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value="ADV">Advisor</MenuItem>
-                      <MenuItem value="LEAD">Leader</MenuItem>
-                      <MenuItem value="MEMBR">Member</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item>
-                  <TextField
-                    variant="filled"
-                    label="Title/Comment"
-                    fullWidth
-                    onChange={(event) => setTitleComment(event.target.value)}
-                  />
-                </Grid>
-              </Grid>
-
-              <DialogActions>
-                <Button onClick={onClose} variant="contained" color="primary">
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  disabled={!participationCode}
-                  onClick={onRequest}
-                >
-                  Submit
-                </Button>
-              </DialogActions>
-            </DialogContent>
-          </Dialog>
-        </>
+        <NonMemberButtons
+          participationDetail={participationDetail}
+          onSubscribe={onSubscribe}
+          onUnsubscribe={onUnsubscribe}
+          involvementDescription={involvementDescription}
+          createSnackbar={createSnackbar}
+        />
       );
     }
   }
   return (
     <>
-      {' '}
       <Typography>
-        <strong>Current Involvement Roster: </strong>
+        <strong>Current Roster: </strong>
         {membersNum} Member{membersNum === 1 ? '' : 's'} and {followersNum} Subcriber
         {followersNum === 1 ? '' : 's'}
       </Typography>
