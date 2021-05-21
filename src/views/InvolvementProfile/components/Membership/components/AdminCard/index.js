@@ -68,38 +68,34 @@ const AdminCard = ({
     }
 
     try {
-      // TODO: Fix API to accept username instead of ID and then remove Group Admin privilege to access ID.
-      let addID = await membershipService.getEmailAccount(memberEmail).then(function (result) {
-        return result.GordonID;
-      });
       let data = {
         ACT_CDE: involvementCode,
         SESS_CDE: sessionCode,
-        ID_NUM: addID,
+        // TODO: Fix API to accept username instead of ID and then remove Group Admin privilege to access ID.
+        ID_NUM: (await membershipService.getEmailAccount(memberEmail)).GordonID,
         PART_CDE: participationCode,
         COMMENT_TXT: titleComment,
         GRP_ADMIN: false,
       };
-      // if a user is already a member of an involvement, attempting addMembership(data)
-      //  will return 'undefined'. So, if this happens, alert the user
-      let alreadyIn = await membershipService.addMembership(data);
-      if (typeof alreadyIn === 'undefined') {
-        // User is already a member of this involvement
+
+      await membershipService.addMembership(data);
+      createSnackbar(`Successfully added ${username}`, 'success');
+      onAddMember();
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.log(error);
+      if (error.Message === 'The Person is already part of the activity.') {
         createSnackbar(`${username} is already a member`, 'info');
       } else {
-        createSnackbar(`Successfully added ${username}`, 'success');
-        onAddMember();
-        setIsDialogOpen(false);
-      }
-    } catch (error) {
-      switch (error.name) {
-        case 'NotFoundError':
-          createSnackbar('Nobody with that username was found', 'error');
-          break;
+        switch (error.name) {
+          case 'NotFoundError':
+            createSnackbar('Nobody with that username was found', 'error');
+            break;
 
-        default:
-          console.log('Something went wrong');
-          break;
+          default:
+            console.log(error);
+            break;
+        }
       }
     }
   };
@@ -122,7 +118,7 @@ const AdminCard = ({
         <CardContent>
           <Grid container spacing={2} direction="column">
             <Grid item>
-              <RequestsReceived involvementCode={involvementCode} sessionCode={sessionCode} />
+              <RequestsReceived onAddMember={onAddMember} />
             </Grid>
 
             <Grid item>

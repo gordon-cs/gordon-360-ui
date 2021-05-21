@@ -13,6 +13,7 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { useParams } from 'react-router';
 
 const redButton = {
   color: gordonColors.secondary.red,
@@ -27,9 +28,10 @@ const useStyles = makeStyles(
   { name: 'MuiListItem' },
 );
 
-const RequestsReceived = ({ involvementCode, sessionCode }) => {
+const RequestsReceived = ({ onAddMember }) => {
   const classes = useStyles();
   const [requests, setRequests] = useState([]);
+  const { involvementCode, sessionCode } = useParams();
 
   useEffect(() => {
     const loadRequests = async () => {
@@ -44,6 +46,7 @@ const RequestsReceived = ({ involvementCode, sessionCode }) => {
   const onApprove = async (id) => {
     await membershipService.approveRequest(id);
     setRequests((prevRequests) => prevRequests.filter((r) => r.RequestID !== id));
+    onAddMember();
   };
 
   const onDeny = async (id) => {
