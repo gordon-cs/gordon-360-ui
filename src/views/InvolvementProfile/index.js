@@ -29,10 +29,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useParams } from 'react-router';
 
 const CROP_DIM = 320; // pixels
 
-const InvolvementProfile = (props) => {
+const InvolvementProfile = ({ authentication }) => {
   const [involvementInfo, setInvolvementInfo] = useState(null);
   const [advisors, setAdvisors] = useState([]);
   const [groupAdmins, setGroupAdmins] = useState([]);
@@ -53,12 +54,12 @@ const InvolvementProfile = (props) => {
   const [cropperData, setCropperData] = useState({});
   const isOnline = useNetworkStatus();
   const cropperRef = useRef();
+  const { sessionCode, involvementCode } = useParams();
 
   useEffect(() => {
     const loadPage = async () => {
       setLoading(true);
-      const { sessionCode, activityCode: involvementCode } = props.match.params;
-      if (props.authentication) {
+      if (authentication) {
         const [
           involvementInfo,
           advisors,
@@ -103,7 +104,7 @@ const InvolvementProfile = (props) => {
       }
     };
     loadPage();
-  }, [props.authentication, props.match.params]);
+  }, [involvementCode, authentication, sessionCode]);
 
   const onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];
@@ -475,7 +476,7 @@ const InvolvementProfile = (props) => {
               )}
             </Grid>
 
-            {props.authentication && (
+            {authentication && (
               <>
                 <hr width="70%"></hr>
 

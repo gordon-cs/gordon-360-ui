@@ -45,7 +45,7 @@ export default [
   },
   {
     name: 'Involvement Profile',
-    path: '/activity/:sessionCode/:activityCode',
+    path: '/activity/:sessionCode/:involvementCode',
     component: InvolvementProfile,
   },
   {
