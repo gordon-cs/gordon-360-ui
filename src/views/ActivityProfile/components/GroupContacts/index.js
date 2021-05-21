@@ -3,7 +3,7 @@ import Email from '@material-ui/icons/Email';
 
 import { IconButton, List, ListItem, Typography } from '@material-ui/core';
 
-const GroupContacts = ({ groupAdmin: groupAdmins }) => {
+const GroupContacts = ({ groupAdmins }) => {
   if (groupAdmins.length > 0) {
     return (
       <>
@@ -11,13 +11,13 @@ const GroupContacts = ({ groupAdmin: groupAdmins }) => {
           <strong>Group Contacts:</strong>
         </Typography>
         <List dense disablePadding>
-          {groupAdmins.map((activityGroupAdmin) => (
-            <ListItem key={activityGroupAdmin.Email}>
-              <IconButton size="small" color="primary" href={`mailto:${activityGroupAdmin.Email}`}>
+          {groupAdmins.map((groupAdmin) => (
+            <ListItem key={groupAdmin.Email}>
+              <IconButton size="small" color="primary" href={`mailto:${groupAdmin.Email}`}>
                 <Email color="primary" style={{ width: 16, height: 16 }} />
               </IconButton>
               <Typography>
-                &emsp;{activityGroupAdmin.FirstName} {activityGroupAdmin.LastName}
+                &emsp;{groupAdmin.FirstName} {groupAdmin.LastName}
               </Typography>
             </ListItem>
           ))}

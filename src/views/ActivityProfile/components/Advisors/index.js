@@ -11,13 +11,13 @@ const Advisors = ({ advisors }) => {
           <strong>Advisors:</strong>
         </Typography>
         <List dense disablePadding>
-          {advisors.map((activityAdvisor) => (
-            <ListItem key={activityAdvisor.Email}>
-              <IconButton size="small" color="primary" href={`mailto:${activityAdvisor.Email}`}>
+          {advisors.map((advisor) => (
+            <ListItem key={advisor.Email}>
+              <IconButton size="small" color="primary" href={`mailto:${advisor.Email}`}>
                 <Email color="primary" style={{ width: 16, height: 16 }} />
               </IconButton>
               <Typography>
-                &emsp;{activityAdvisor.FirstName} {activityAdvisor.LastName}
+                &emsp;{advisor.FirstName} {advisor.LastName}
               </Typography>
             </ListItem>
           ))}

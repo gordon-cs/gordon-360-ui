@@ -28,10 +28,10 @@ import {
 import AdminCard from './components/AdminCard';
 import userService from 'services/user';
 
-const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescription }) => {
+const Membership = ({ isAdmin, involvementCode, id, sessionCode, involvementDescription }) => {
   const [members, setMembers] = useState([]);
-  const [activityFollowersNum, setActivityFollowersNum] = useState(0);
-  const [activityMembersNum, setActivityMembersNum] = useState(0);
+  const [followersNum, setFollowersNum] = useState(0);
+  const [membersNum, setMembersNum] = useState(0);
   const [status, setStatus] = useState('');
   const [openJoin, setOpenJoin] = useState(false);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
@@ -47,27 +47,22 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
       setLoading(true);
 
       try {
-        const [
-          participationDetail,
-          status,
-          activityFollowersNum,
-          activityMembersNum,
-        ] = await Promise.all([
-          membershipService.search(id, sessionCode, activityCode),
-          involvementService.getStatus(activityCode, sessionCode),
-          membershipService.getFollowersNum(activityCode, sessionCode),
-          membershipService.getMembersNum(activityCode, sessionCode),
+        const [participationDetail, status, followersNum, membersNum] = await Promise.all([
+          membershipService.search(id, sessionCode, involvementCode),
+          involvementService.getStatus(involvementCode, sessionCode),
+          membershipService.getFollowersNum(involvementCode, sessionCode),
+          membershipService.getMembersNum(involvementCode, sessionCode),
         ]);
         setParticipationDetail(participationDetail);
         setStatus(status);
-        setActivityFollowersNum(activityFollowersNum);
-        setActivityMembersNum(activityMembersNum);
+        setFollowersNum(followersNum);
+        setMembersNum(membersNum);
 
         const isSuperAdmin = (await userService.getLocalInfo()).college_role === 'god';
         setIsSuperAdmin(isSuperAdmin);
 
         if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSuperAdmin) {
-          setMembers(await membershipService.get(activityCode, sessionCode));
+          setMembers(await membershipService.get(involvementCode, sessionCode));
         }
 
         setLoading(false);
@@ -77,7 +72,7 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
     };
 
     loadMembers();
-  }, [activityCode, id, isAdmin, sessionCode]);
+  }, [involvementCode, id, isAdmin, sessionCode]);
 
   useEffect(() => {
     const resize = () => {
@@ -101,7 +96,7 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
 
   const onRequest = async () => {
     let data = {
-      ACT_CDE: activityCode,
+      ACT_CDE: involvementCode,
       SESS_CDE: sessionCode,
       ID_NUM: id,
       PART_CDE: participationCode,
@@ -116,7 +111,7 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
 
   const onSubscribe = async () => {
     let data = {
-      ACT_CDE: activityCode,
+      ACT_CDE: involvementCode,
       SESS_CDE: sessionCode,
       ID_NUM: id,
       PART_CDE: 'GUEST',
@@ -124,14 +119,14 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
       GRP_ADMIN: false,
     };
     await membershipService.addMembership(data);
-    setParticipationDetail(await membershipService.search(id, sessionCode, activityCode));
-    setActivityFollowersNum(await membershipService.getFollowersNum(activityCode, sessionCode));
+    setParticipationDetail(await membershipService.search(id, sessionCode, involvementCode));
+    setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
 
   const onUnsubscribe = async () => {
     await membershipService.remove(participationDetail[2]);
-    setParticipationDetail(await membershipService.search(id, sessionCode, activityCode));
-    setActivityFollowersNum(await membershipService.getFollowersNum(activityCode, sessionCode));
+    setParticipationDetail(await membershipService.search(id, sessionCode, involvementCode));
+    setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
 
   const compareByLastThenFirst = (a, b) => {
@@ -151,7 +146,7 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
   };
 
   let content;
-  const isActivityClosed = status === 'CLOSED';
+  const isRosterClosed = status === 'CLOSED';
   const headerStyle = {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
@@ -162,8 +157,6 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
     return <GordonLoader />;
   } else {
     if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSuperAdmin) {
-      // User is in activity and not a guest (unless user is superadmin [god mode])
-
       const header = isMobileView ? (
         <CardHeader title="Members" style={headerStyle} />
       ) : isAdmin || isSuperAdmin ? (
@@ -213,10 +206,10 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
         <>
           {(isAdmin || isSuperAdmin) && (
             <AdminCard
-              activityCode={activityCode}
-              activityDescription={activityDescription}
+              involvementCode={involvementCode}
+              involvementDescription={involvementDescription}
               createSnackbar={createSnackbar}
-              isActivityClosed={isActivityClosed}
+              isRosterClosed={isRosterClosed}
               sessionCode={sessionCode}
               participationLevel={participationDetail[1]}
               isSuperAdmin={isSuperAdmin}
@@ -249,7 +242,7 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
               <Button
                 variant="contained"
                 color="primary"
-                disabled={isActivityClosed}
+                disabled={isRosterClosed}
                 onClick={onSubscribe}
               >
                 Subscribe
@@ -258,7 +251,7 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
             <Button
               variant="contained"
               color="primary"
-              disabled={isActivityClosed}
+              disabled={isRosterClosed}
               onClick={() => setOpenJoin(true)}
             >
               Join
@@ -266,19 +259,19 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
           </CardActions>
 
           <Dialog open={openJoin} keepMounted>
-            <DialogTitle>Join {activityDescription}</DialogTitle>
+            <DialogTitle>Join {involvementDescription}</DialogTitle>
             <DialogContent>
               <Grid container direction="column" spacing={2}>
                 <Grid item>
                   <FormControl variant="filled" fullWidth>
-                    <InputLabel id={`involvement-profile-join-${activityDescription}`}>
+                    <InputLabel id={`involvement-profile-join-${involvementDescription}`}>
                       Participation
                     </InputLabel>
                     <Select
                       required
                       value={participationCode}
                       onChange={(event) => setParticipationCode(event.target.value)}
-                      labelId={`involvement-profile-join-${activityDescription}`}
+                      labelId={`involvement-profile-join-${involvementDescription}`}
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -323,8 +316,8 @@ const Membership = ({ isAdmin, activityCode, id, sessionCode, activityDescriptio
       {' '}
       <Typography>
         <strong>Current Involvement Roster: </strong>
-        {activityMembersNum} Member{activityMembersNum === 1 ? '' : 's'} and {activityFollowersNum}{' '}
-        Subcriber{activityFollowersNum === 1 ? '' : 's'}
+        {membersNum} Member{membersNum === 1 ? '' : 's'} and {followersNum} Subcriber
+        {followersNum === 1 ? '' : 's'}
       </Typography>
       {content}
       <GordonSnackbar

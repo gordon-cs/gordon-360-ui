@@ -205,7 +205,7 @@ const MemberList = ({ member, admin, createSnackbar }) => {
         <Dialog open={alertRemove} keepMounted align="center">
           <DialogTitle>
             Are you sure you want to remove {member.FirstName} {member.LastName} (
-            {member.ParticipationDescription}) from this activity?
+            {member.ParticipationDescription}) from this involvement?
           </DialogTitle>
           <DialogActions>
             <Button variant="contained" onClick={onClose}>
@@ -318,7 +318,7 @@ const MemberList = ({ member, admin, createSnackbar }) => {
             </Button>
 
             <Dialog open={alertLeave} keepMounted align="center" onBackdropClick={onClose}>
-              <DialogTitle>Are you sure you want to leave the activity?</DialogTitle>
+              <DialogTitle>Are you sure you want to leave this involvement?</DialogTitle>
               <DialogActions>
                 <Button variant="contained" color="primary" onClick={onClose}>
                   No, stay

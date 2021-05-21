@@ -27,19 +27,19 @@ const useStyles = makeStyles(
   { name: 'MuiListItem' },
 );
 
-const RequestsReceived = ({ activityCode, sessionCode }) => {
+const RequestsReceived = ({ involvementCode, sessionCode }) => {
   const classes = useStyles();
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
     const loadRequests = async () => {
-      const requests = await membershipService.getRequests(activityCode, sessionCode);
+      const requests = await membershipService.getRequests(involvementCode, sessionCode);
 
       setRequests(requests);
     };
 
     loadRequests();
-  }, [activityCode, sessionCode]);
+  }, [involvementCode, sessionCode]);
 
   const onApprove = async (id) => {
     await membershipService.approveRequest(id);

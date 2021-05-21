@@ -31,13 +31,13 @@ const headerStyle = {
 };
 
 const AdminCard = ({
-  activityCode,
+  involvementCode,
   sessionCode,
   createSnackbar,
-  isActivityClosed,
+  isRosterClosed,
   participationLevel,
   isSuperAdmin,
-  activityDescription,
+  involvementDescription,
 }) => {
   const [openAddMember, setOpenAddMember] = useState(false);
   const [addEmail, setAddEmail] = useState('');
@@ -45,13 +45,13 @@ const AdminCard = ({
   const [titleComment, setTitleComment] = useState('');
 
   const onConfirmRoster = async () => {
-    await involvementService.closeActivity(activityCode, sessionCode);
+    await involvementService.closeActivity(involvementCode, sessionCode);
     // TODO: update 'status' when closing activity
     // refresh();
   };
 
-  const onReopenActivity = async () => {
-    await involvementService.reopenActivity(activityCode, sessionCode);
+  const onReopenRoster = async () => {
+    await involvementService.reopenActivity(involvementCode, sessionCode);
     // TODO: update 'status' when closing activity
     // refresh();
   };
@@ -67,7 +67,7 @@ const AdminCard = ({
         return result.GordonID;
       });
       let data = {
-        ACT_CDE: activityCode,
+        ACT_CDE: involvementCode,
         SESS_CDE: sessionCode,
         ID_NUM: addID,
         PART_CDE: participationCode,
@@ -100,12 +100,12 @@ const AdminCard = ({
   };
 
   // Only advisors and superadmins can re-open the roster
-  const confirmRoster = !isActivityClosed ? (
+  const confirmRoster = !isRosterClosed ? (
     <Button variant="contained" color="primary" onClick={onConfirmRoster}>
       Confirm final roster
     </Button>
   ) : participationLevel === 'Advisor' || isSuperAdmin ? (
-    <Button variant="contained" color="primary" onClick={onReopenActivity}>
+    <Button variant="contained" color="primary" onClick={onReopenRoster}>
       Reopen roster
     </Button>
   ) : null;
@@ -117,14 +117,14 @@ const AdminCard = ({
         <CardContent>
           <Grid container spacing={2} direction="column">
             <Grid item>
-              <RequestsReceived activityCode={activityCode} sessionCode={sessionCode} />
+              <RequestsReceived involvementCode={involvementCode} sessionCode={sessionCode} />
             </Grid>
 
             <Grid item>
               <Button
                 variant="contained"
                 color="primary"
-                disabled={isActivityClosed}
+                disabled={isRosterClosed}
                 onClick={() => setOpenAddMember(true)}
                 startIcon={<AddPersonIcon />}
               >
@@ -142,7 +142,7 @@ const AdminCard = ({
       </Card>
 
       <Dialog open={openAddMember} keepMounted align="center">
-        <DialogTitle>Add a member to {activityDescription}</DialogTitle>
+        <DialogTitle>Add a member to {involvementDescription}</DialogTitle>
         <DialogContent>
           <Grid container direction="column" spacing={2}>
             <Grid item>

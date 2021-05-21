@@ -1,8 +1,7 @@
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 import React, { useEffect, useRef, useState } from 'react';
-import activityService from 'services/activity';
-import './activity-profile.css';
+import './involvement-profile.css';
 import Cropper from 'react-cropper';
 import Advisors from './components/Advisors';
 import GroupContacts from './components/GroupContacts';
@@ -11,6 +10,7 @@ import Membership from './components/Membership';
 import membershipService from 'services/membership';
 import emailsService from 'services/emails';
 import sessionService from 'services/session';
+import involvementService from 'services/activity';
 import { gordonColors } from 'theme';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import userService from 'services/user';
@@ -32,10 +32,10 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 
 const CROP_DIM = 320; // pixels
 
-const ActivityProfile = (props) => {
-  const [activityInfo, setActivityInfo] = useState(null);
-  const [activityAdvisors, setActivityAdvisors] = useState([]);
-  const [activityGroupAdmins, setActivityGroupAdmins] = useState([]);
+const InvolvementProfile = (props) => {
+  const [involvementInfo, setInvolvementInfo] = useState(null);
+  const [advisors, setAdvisors] = useState([]);
+  const [groupAdmins, setGroupAdmins] = useState([]);
   const [photoOpen, setPhotoOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -43,12 +43,12 @@ const ActivityProfile = (props) => {
   const [sessionInfo, setSessionInfo] = useState(null);
   const [id, setId] = useState(''); // User's id
   const [loading, setLoading] = useState(true);
-  const [tempActivityBlurb, setTempActivityBlurb] = useState(''); // For editing activity
-  const [tempActivityJoinInfo, setTempActivityJoinInfo] = useState(''); // For editing activity
-  const [tempActivityURL, setTempActivityURL] = useState(''); // For editing activity
+  const [tempBlurb, setTempBlurb] = useState('');
+  const [tempJoinInfo, setTempJoinInfo] = useState('');
+  const [tempURL, setTempURL] = useState('');
   const [isAdmin, setIsAdmin] = useState(false); // Boolean for current user
-  const [openEditActivity, setOpenEditActivity] = useState(false);
-  const [openRemoveImage, setOpenRemoveImage] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isRemoveImageDialogOpen, setIsRemoveImageDialogOpen] = useState(false);
   const [emailList, setEmailList] = useState([]);
   const [cropperData, setCropperData] = useState({});
   const isOnline = useNetworkStatus();
@@ -57,49 +57,47 @@ const ActivityProfile = (props) => {
   useEffect(() => {
     const loadPage = async () => {
       setLoading(true);
-      const { sessionCode, activityCode } = props.match.params;
+      const { sessionCode, activityCode: involvementCode } = props.match.params;
       if (props.authentication) {
         const [
-          activityInfo,
-          activityAdvisors,
-          activityGroupAdmins,
+          involvementInfo,
+          advisors,
+          groupAdmins,
           sessionInfo,
           id,
           college_role, // for testing purposes only, remove before push
           isAdmin,
         ] = await Promise.all([
-          activityService.get(activityCode),
-          activityService.getAdvisors(activityCode, sessionCode),
-          activityService.getGroupAdmins(activityCode, sessionCode),
+          involvementService.get(involvementCode),
+          involvementService.getAdvisors(involvementCode, sessionCode),
+          involvementService.getGroupAdmins(involvementCode, sessionCode),
           sessionService.get(sessionCode),
           userService.getLocalInfo().id,
           userService.getLocalInfo().college_role,
-          membershipService.checkAdmin(userService.getLocalInfo().id, sessionCode, activityCode),
+          membershipService.checkAdmin(userService.getLocalInfo().id, sessionCode, involvementCode),
         ]);
 
-        setActivityInfo(activityInfo);
-        setActivityAdvisors(activityAdvisors);
-        setActivityGroupAdmins(activityGroupAdmins);
+        setInvolvementInfo(involvementInfo);
+        setAdvisors(advisors);
+        setGroupAdmins(groupAdmins);
         setSessionInfo(sessionInfo);
         setId(id);
         setIsAdmin(isAdmin || college_role === 'god');
-        setTempActivityBlurb(activityInfo.ActivityBlurb);
-        setTempActivityJoinInfo(activityInfo.ActivityJoinInfo);
-        setTempActivityURL(activityInfo.ActivityURL);
+        setTempBlurb(involvementInfo.ActivityBlurb);
+        setTempJoinInfo(involvementInfo.ActivityJoinInfo);
+        setTempURL(involvementInfo.ActivityURL);
 
         if (isAdmin) {
-          setEmailList(await emailsService.get(activityCode));
+          setEmailList(await emailsService.get(involvementCode));
         }
 
         setLoading(false);
-
-        console.log(activityGroupAdmins, activityAdvisors);
       } else {
-        const [activityInfo, sessionInfo] = await Promise.all([
-          activityService.get(activityCode),
+        const [involvementInfo, sessionInfo] = await Promise.all([
+          involvementService.get(involvementCode),
           sessionService.get(sessionCode),
         ]);
-        setActivityInfo(activityInfo);
+        setInvolvementInfo(involvementInfo);
         setSessionInfo(sessionInfo);
         setLoading(false);
       }
@@ -169,31 +167,26 @@ const ActivityProfile = (props) => {
     alert('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
   };
 
-  const openEditActivityDialog = () => setOpenEditActivity(true);
-
-  const alertRemoveImage = () => setOpenRemoveImage(true);
-
-  // Called when user submits changes to activity from edit activity dialog box
-  const onEditActivity = async () => {
+  const onEditInvolvement = async () => {
     let data = {
-      ACT_CDE: activityInfo.ActivityCode,
-      ACT_URL: tempActivityURL,
-      ACT_BLURB: tempActivityBlurb,
-      ACT_JOIN_INFO: tempActivityJoinInfo,
+      ACT_CDE: involvementInfo.ActivityCode,
+      ACT_URL: tempURL,
+      ACT_BLURB: tempBlurb,
+      ACT_JOIN_INFO: tempJoinInfo,
     };
-    await activityService.editActivity(activityInfo.ActivityCode, data);
+    await involvementService.editActivity(involvementInfo.ActivityCode, data);
 
     if (photoUpdated === true) {
-      await activityService.setActivityImage(activityInfo.ActivityCode, image);
+      await involvementService.setActivityImage(involvementInfo.ActivityCode, image);
     }
-    setOpenEditActivity(false);
+    setIsEditDialogOpen(false);
     refresh();
   };
 
   // Called when confirm remove image from the alert remove image dialog box
   const onRemoveImage = async () => {
-    await activityService.resetImage(activityInfo.ActivityCode);
-    setOpenRemoveImage(false);
+    await involvementService.resetImage(involvementInfo.ActivityCode);
+    setIsRemoveImageDialogOpen(false);
     refresh();
   };
 
@@ -228,10 +221,7 @@ const ActivityProfile = (props) => {
 
   const sendEmail = () => {
     window.location =
-      'mailto:' +
-      parseEmailsFromList(activityGroupAdmins) +
-      '?bcc=' +
-      parseEmailsFromList(emailList);
+      'mailto:' + parseEmailsFromList(groupAdmins) + '?bcc=' + parseEmailsFromList(emailList);
   };
 
   let content;
@@ -248,18 +238,18 @@ const ActivityProfile = (props) => {
         ActivityImagePath,
         ActivityJoinInfo,
         ActivityCode,
-      } = activityInfo;
+      } = involvementInfo;
 
       const redButton = {
         background: gordonColors.secondary.red,
         color: 'white',
       };
 
-      const editActivity = isAdmin ? (
+      const editInvolvement = isAdmin ? (
         <Grid item>
           <Grid container spacing={2} justify="center">
             <Grid item>
-              <Button variant="contained" color="primary" onClick={openEditActivityDialog}>
+              <Button variant="contained" color="primary" onClick={() => setIsEditDialogOpen(true)}>
                 Edit Involvement
               </Button>
             </Grid>
@@ -270,19 +260,26 @@ const ActivityProfile = (props) => {
             </Grid>
           </Grid>
 
-          <Dialog open={openEditActivity} fullWidth aria-labelledby="edit-activity-dialog-title">
-            <DialogTitle id="edit-activity-dialog-title"> Edit {ActivityDescription}</DialogTitle>
+          <Dialog open={isEditDialogOpen} fullWidth aria-labelledby="edit-involvement-dialog-title">
+            <DialogTitle id="edit-involvement-dialog-title">
+              {' '}
+              Edit {ActivityDescription}
+            </DialogTitle>
             <DialogContent>
-              <Grid align="center" className="activity-image" item>
+              <Grid align="center" className="involvement-image" item>
                 <img
-                  alt={activityService.activityDescription}
+                  alt={ActivityDescription}
                   src={image || ActivityImagePath}
                   className="rounded-corners"
                 />
               </Grid>
               <Grid container spacing={2} justify="center">
                 <Grid item>
-                  <Button variant="contained" onClick={alertRemoveImage} style={redButton}>
+                  <Button
+                    variant="contained"
+                    onClick={() => setIsRemoveImageDialogOpen(true)}
+                    style={redButton}
+                  >
                     Remove image
                   </Button>
                 </Grid>
@@ -296,15 +293,15 @@ const ActivityProfile = (props) => {
                 open={photoOpen}
                 keepMounted
                 onClose={() => setPhotoOpen(false)}
-                aria-labelledby="edit-activity-image-dialog-title"
-                aria-describedby="edit-activity-image-dialog-description"
+                aria-labelledby="edit-involvement-image-dialog-title"
+                aria-describedby="edit-involvement-image-dialog-description"
                 fullWidth
               >
-                <DialogTitle id="edit-activity-image-dialog-title">
+                <DialogTitle id="edit-involvement-image-dialog-title">
                   Update Involvement Picture
                 </DialogTitle>
                 <DialogContent>
-                  <DialogContentText id="edit-activity-image-dialog-description">
+                  <DialogContentText id="edit-involvement-image-dialog-description">
                     {window.innerWidth < 600
                       ? 'Tap Image to Browse Files'
                       : 'Drag & Drop Picture, or Click to Browse Files'}
@@ -384,7 +381,7 @@ const ActivityProfile = (props) => {
                 </DialogActions>
               </Dialog>
 
-              <Dialog open={openRemoveImage} keepMounted align="center">
+              <Dialog open={isRemoveImageDialogOpen} keepMounted align="center">
                 <DialogTitle>Are you sure you want to remove image?</DialogTitle>
                 <DialogContent>
                   <Grid container spacing={2}>
@@ -394,7 +391,11 @@ const ActivityProfile = (props) => {
                       </Button>
                     </Grid>
                     <Grid item xs={6} sm={6} md={6} lg={6}>
-                      <Button variant="contained" onClick={() => setOpenRemoveImage(false)} raised>
+                      <Button
+                        variant="contained"
+                        onClick={() => setIsRemoveImageDialogOpen(false)}
+                        raised
+                      >
                         CANCEL
                       </Button>
                     </Grid>
@@ -410,7 +411,7 @@ const ActivityProfile = (props) => {
                       multiline
                       fullWidth
                       defaultValue={ActivityBlurb}
-                      onChange={(event) => setTempActivityBlurb(event.target.value)}
+                      onChange={(event) => setTempBlurb(event.target.value)}
                     />
                   </Grid>
 
@@ -421,7 +422,7 @@ const ActivityProfile = (props) => {
                       multiline
                       fullWidth
                       defaultValue={ActivityJoinInfo}
-                      onChange={(event) => setTempActivityJoinInfo(event.target.value)}
+                      onChange={(event) => setTempJoinInfo(event.target.value)}
                     />
                   </Grid>
 
@@ -432,7 +433,7 @@ const ActivityProfile = (props) => {
                       multiline
                       fullWidth
                       defaultValue={ActivityURL}
-                      onChange={(event) => setTempActivityURL(event.target.value)}
+                      onChange={(event) => setTempURL(event.target.value)}
                     />
                   </Grid>
                 </Grid>
@@ -443,11 +444,11 @@ const ActivityProfile = (props) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => setOpenEditActivity(false)}
+                onClick={() => setIsEditDialogOpen(false)}
               >
                 Cancel
               </Button>
-              <Button variant="contained" color="primary" onClick={onEditActivity}>
+              <Button variant="contained" color="primary" onClick={onEditInvolvement}>
                 Submit
               </Button>
             </DialogActions>
@@ -456,17 +457,13 @@ const ActivityProfile = (props) => {
       ) : null;
 
       content = (
-        <Card className="gordon-activity-profile">
+        <Card>
           <CardHeader align="center" title={ActivityDescription} subheader={SessionDescription} />
           <CardContent>
             <Grid align="center" item>
-              <img
-                alt={activityService.activityDescription}
-                src={ActivityImagePath}
-                className="rounded-corners"
-              />
+              <img alt={ActivityDescription} src={ActivityImagePath} className="rounded-corners" />
             </Grid>
-            {editActivity}
+            {editInvolvement}
             <Grid item align="center">
               {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
               {ActivityURL?.length !== 0 && (
@@ -482,16 +479,16 @@ const ActivityProfile = (props) => {
               <>
                 <hr width="70%"></hr>
 
-                <GroupContacts groupAdmin={activityGroupAdmins} />
-                <Advisors advisors={activityAdvisors} />
+                <GroupContacts groupAdmins={groupAdmins} />
+                <Advisors advisors={advisors} />
                 <Typography>
                   <strong>Special Information for Joining: </strong>
                   {ActivityJoinInfo}
                 </Typography>
                 <Membership
                   sessionCode={SessionCode}
-                  activityCode={ActivityCode}
-                  activityDescription={ActivityDescription}
+                  involvementCode={ActivityCode}
+                  involvementDescription={ActivityDescription}
                   id={id}
                   isAdmin={isAdmin}
                 />
@@ -555,10 +552,10 @@ const ActivityProfile = (props) => {
   );
 };
 
-ActivityProfile.propTypes = {
+InvolvementProfile.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.object.isRequired,
   }).isRequired,
 };
 
-export default ActivityProfile;
+export default InvolvementProfile;
