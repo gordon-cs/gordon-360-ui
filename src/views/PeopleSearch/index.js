@@ -183,6 +183,7 @@ class PeopleSearch extends Component {
   }
 
   componentDidUpdate() {
+    // Browser 'back' arrow
     window.onpopstate = () => {
       if (!window.location.href.includes('?')) {
         this.setState({ header: '', peopleSearchResults: null });
