@@ -67,7 +67,7 @@ const Membership = ({ isAdmin, involvementDescription }) => {
     setSnackbar({ open: true, text, severity });
   };
 
-  const onSubscribe = async () => {
+  const handleSubscribe = async () => {
     let data = {
       ACT_CDE: involvementCode,
       SESS_CDE: sessionCode,
@@ -83,12 +83,16 @@ const Membership = ({ isAdmin, involvementDescription }) => {
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
 
-  const onUnsubscribe = async () => {
+  const handleUnsubscribe = async () => {
     await membershipService.remove(participationDetail[2]);
     setParticipationDetail(
       await membershipService.search(userService.getLocalInfo().id, sessionCode, involvementCode),
     );
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
+  };
+
+  const handleAddMember = async () => {
+    setMembers(await membershipService.get(involvementCode, sessionCode));
   };
 
   const compareByLastThenFirst = (a, b) => {
@@ -172,6 +176,7 @@ const Membership = ({ isAdmin, involvementDescription }) => {
                 sessionCode={sessionCode}
                 participationLevel={participationDetail[1]}
                 isSuperAdmin={isSuperAdmin}
+                onAddMember={handleAddMember}
               />
             </Grid>
           )}
@@ -197,8 +202,8 @@ const Membership = ({ isAdmin, involvementDescription }) => {
         <Grid item>
           <NonMemberButtons
             isGuest={participationDetail[1] === 'Guest'}
-            onSubscribe={onSubscribe}
-            onUnsubscribe={onUnsubscribe}
+            onSubscribe={handleSubscribe}
+            onUnsubscribe={handleUnsubscribe}
             involvementDescription={involvementDescription}
             createSnackbar={createSnackbar}
           />

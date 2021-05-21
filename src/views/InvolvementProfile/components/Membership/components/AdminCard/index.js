@@ -36,10 +36,11 @@ const AdminCard = ({
   participationLevel,
   isSuperAdmin,
   involvementDescription,
+  onAddMember,
 }) => {
   const [isRosterClosed, setIsRosterClosed] = useState(false);
-  const [openAddMember, setOpenAddMember] = useState(false);
-  const [addEmail, setAddEmail] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [username, setUsername] = useState('');
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
   const { involvementCode, sessionCode } = useParams();
@@ -60,13 +61,14 @@ const AdminCard = ({
     setIsRosterClosed(false);
   };
 
-  const onAddMember = async () => {
-    let memberEmail = addEmail;
+  const handleAddMember = async () => {
+    let memberEmail = username;
     if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
       memberEmail = memberEmail + '@gordon.edu';
     }
 
     try {
+      // TODO: Fix API to accept username instead of ID and then remove Group Admin privilege to access ID.
       let addID = await membershipService.getEmailAccount(memberEmail).then(function (result) {
         return result.GordonID;
       });
@@ -83,12 +85,11 @@ const AdminCard = ({
       let alreadyIn = await membershipService.addMembership(data);
       if (typeof alreadyIn === 'undefined') {
         // User is already a member of this involvement
-        createSnackbar(`${addEmail} is already a member`, 'info');
+        createSnackbar(`${username} is already a member`, 'info');
       } else {
-        createSnackbar(`Successfully added ${addEmail}`, 'success');
-
-        // TODO: update members when closing activity
-        // refresh();
+        createSnackbar(`Successfully added ${username}`, 'success');
+        onAddMember();
+        setIsDialogOpen(false);
       }
     } catch (error) {
       switch (error.name) {
@@ -129,7 +130,7 @@ const AdminCard = ({
                 variant="contained"
                 color="primary"
                 disabled={isRosterClosed}
-                onClick={() => setOpenAddMember(true)}
+                onClick={() => setIsDialogOpen(true)}
                 startIcon={<AddPersonIcon />}
               >
                 Add member
@@ -145,7 +146,7 @@ const AdminCard = ({
         </CardContent>
       </Card>
 
-      <Dialog open={openAddMember} keepMounted align="center">
+      <Dialog open={isDialogOpen} keepMounted align="center">
         <DialogTitle>Add a member to {involvementDescription}</DialogTitle>
         <DialogContent>
           <Grid container direction="column" spacing={2}>
@@ -153,7 +154,7 @@ const AdminCard = ({
               <TextField
                 required
                 fullWidth
-                onChange={(e) => setAddEmail(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
                 label="Username"
                 variant="filled"
               />
@@ -187,14 +188,14 @@ const AdminCard = ({
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button variant="outlined" onClick={() => setOpenAddMember(false)}>
+          <Button variant="outlined" onClick={() => setIsDialogOpen(false)}>
             CANCEL
           </Button>
           <Button
             variant="contained"
             color="primary"
-            disabled={!addEmail || !participationCode}
-            onClick={onAddMember}
+            disabled={!username || !participationCode}
+            onClick={handleAddMember}
           >
             Add member
           </Button>
