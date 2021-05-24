@@ -13,7 +13,14 @@ const headerStyle = {
   padding: '10px',
 };
 
-const MemberList = ({ members, admin, createSnackbar }) => {
+const MemberList = ({
+  members,
+  isAdmin,
+  isSuperAdmin,
+  createSnackbar,
+  onLeave,
+  onToggleIsAdmin,
+}) => {
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < breakpointWidth);
 
   useEffect(() => {
@@ -44,7 +51,7 @@ const MemberList = ({ members, admin, createSnackbar }) => {
 
   const header = isMobileView ? (
     <CardHeader title="Members" style={headerStyle} />
-  ) : admin ? (
+  ) : isAdmin || isSuperAdmin ? (
     <CardHeader
       title={
         <Grid container direction="row">
@@ -95,9 +102,12 @@ const MemberList = ({ members, admin, createSnackbar }) => {
           <MemberListItem
             member={member}
             key={member.MembershipID}
-            admin={admin}
+            isAdmin={isAdmin}
+            isSuperAdmin={isSuperAdmin}
             createSnackbar={createSnackbar}
             isMobileView={isMobileView}
+            onLeave={onLeave}
+            onToggleIsAdmin={onToggleIsAdmin}
           />
         ))}
       </CardContent>

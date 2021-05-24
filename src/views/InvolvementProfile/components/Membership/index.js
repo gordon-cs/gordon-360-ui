@@ -11,11 +11,10 @@ import userService from 'services/user';
 import NonMemberButtons from './components/NonMemberButtons';
 import { useParams } from 'react-router';
 
-const Membership = ({ isAdmin, involvementDescription }) => {
+const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdmin }) => {
   const [members, setMembers] = useState([]);
   const [followersNum, setFollowersNum] = useState(0);
   const [membersNum, setMembersNum] = useState(0);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [participationDetail, setParticipationDetail] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [loading, setLoading] = useState(true);
@@ -35,9 +34,6 @@ const Membership = ({ isAdmin, involvementDescription }) => {
         setFollowersNum(followersNum);
         setMembersNum(membersNum);
 
-        const isSuperAdmin = (await userService.getLocalInfo()).college_role === 'god';
-        setIsSuperAdmin(isSuperAdmin);
-
         if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSuperAdmin) {
           setMembers(await membershipService.get(involvementCode, sessionCode));
         }
@@ -49,7 +45,7 @@ const Membership = ({ isAdmin, involvementDescription }) => {
     };
 
     loadMembers();
-  }, [involvementCode, isAdmin, sessionCode]);
+  }, [involvementCode, isAdmin, isSuperAdmin, sessionCode]);
 
   const createSnackbar = (text, severity) => {
     setSnackbar({ open: true, text, severity });
@@ -83,6 +79,19 @@ const Membership = ({ isAdmin, involvementDescription }) => {
     setMembers(await membershipService.get(involvementCode, sessionCode));
   };
 
+  const handleLeave = async () => {
+    const newParticipationDetail = await membershipService.search(
+      userService.getLocalInfo().id,
+      sessionCode,
+      involvementCode,
+    );
+    setParticipationDetail(newParticipationDetail);
+    if (isSuperAdmin) {
+      setMembers(await membershipService.get(involvementCode, sessionCode));
+    }
+    setMembersNum(await membershipService.getMembersNum(involvementCode, sessionCode));
+  };
+
   let content;
 
   if (loading === true) {
@@ -105,8 +114,11 @@ const Membership = ({ isAdmin, involvementDescription }) => {
           <Grid item>
             <MemberList
               members={members}
-              admin={isAdmin || isSuperAdmin}
+              isAdmin={isAdmin}
+              isSuperAdmin={isSuperAdmin}
               createSnackbar={createSnackbar}
+              onLeave={handleLeave}
+              onToggleIsAdmin={toggleIsAdmin}
             />
           </Grid>
         </>

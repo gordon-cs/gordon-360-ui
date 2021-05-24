@@ -42,30 +42,41 @@ const PARTICIPATION_LEVELS = {
   Guest: 'GUEST',
 };
 
-const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
-  const [openEdit, setOpenEdit] = useState(false);
-  const [alertLeave, setAlertLeave] = useState(false);
-  const [alertRemove, setAlertRemove] = useState(false);
+const MemberListItem = ({
+  member,
+  isAdmin,
+  isSuperAdmin,
+  createSnackbar,
+  isMobileView,
+  onLeave,
+  onToggleIsAdmin,
+}) => {
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isLeaveAlertOpen, setIsLeaveAlertOpen] = useState(false);
+  const [isRemoveAlertOpen, setIsRemoveAlertOpen] = useState(false);
+  const [isUnadminSelfDialogOpen, setIsUnadminSelfDialogOpen] = useState(false);
 
   const [groupAdmin, setGroupAdmin] = useState(member.GroupAdmin);
   const [participationDescription, setParticipationDescription] = useState(
     member.ParticipationDescription,
   );
-
   const [participation, setParticipation] = useState(member.Participation);
   const [titleComment, setTitleComment] = useState(member.Description);
 
-  const handleToggleGroupAdmin = async (event) => {
-    setGroupAdmin(event.target.checked);
-    let data = {
-      MEMBERSHIP_ID: member.MembershipID,
-      ACT_CDE: member.ActivityCode,
-      SESS_CDE: member.SessionCode,
-      ID_NUM: member.IDNumber,
-      PART_CDE: member.Participation,
-    };
-    await membership.toggleGroupAdmin(member.MembershipID, data);
-    // refresh();
+  const handleToggleGroupAdmin = async () => {
+    if (isAdmin && !isSuperAdmin && member.IDNumber === Number(user.getLocalInfo().id)) {
+      setIsUnadminSelfDialogOpen(true);
+    } else {
+      let data = {
+        MEMBERSHIP_ID: member.MembershipID,
+        ACT_CDE: member.ActivityCode,
+        SESS_CDE: member.SessionCode,
+        ID_NUM: member.IDNumber,
+        PART_CDE: member.Participation,
+      };
+      await membership.toggleGroupAdmin(member.MembershipID, data);
+      setGroupAdmin((c) => !c);
+    }
   };
 
   const handleSelect = (event) => {
@@ -73,12 +84,10 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
     setParticipation(PARTICIPATION_LEVELS[event.target.value]);
   };
 
-  const onClose = () => {
-    setAlertLeave(false);
-    setAlertRemove(false);
-    setOpenEdit(false);
-    // setParticipationDescription(member.ParticipationDescription);
-    // setTitleComment(member.Description);
+  const handleCloseEditDialog = () => {
+    setIsEditDialogOpen(false);
+    setParticipationDescription(member.ParticipationDescription);
+    setTitleComment(member.Description);
   };
 
   const onEditMember = async () => {
@@ -91,8 +100,7 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
       COMMENT_TXT: titleComment,
     };
     await membership.editMembership(member.MembershipID, data);
-    onClose();
-    // refresh();
+    setIsEditDialogOpen(false);
   };
 
   const confirmLeave = async () => {
@@ -107,8 +115,16 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
     } else {
       createSnackbar('Leaving involvement succeeded', 'success');
     }
-    onClose();
-    // refresh();
+    onLeave();
+    setIsLeaveAlertOpen(false);
+  };
+
+  const handleRemove = () => {
+    if (member.IDNumber === Number(user.getLocalInfo().id)) {
+      setIsLeaveAlertOpen(true);
+    } else {
+      setIsRemoveAlertOpen(true);
+    }
   };
 
   let content;
@@ -118,7 +134,7 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
     ? `Box #${member.Mail_Location}`
     : member.Mail_Location || null;
 
-  if (admin) {
+  if (isAdmin || isSuperAdmin) {
     const disabled = participationDescription === 'Guest' || participationDescription === 'Member';
     // Can't make guests or members a group admin
     const buttons = (
@@ -128,7 +144,7 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
             <Grid item>
               <Button
                 color="primary"
-                onClick={() => setOpenEdit(true)}
+                onClick={() => setIsEditDialogOpen(true)}
                 variant="outlined"
                 size="small"
               >
@@ -139,7 +155,7 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
             <Grid item>
               <Button
                 style={outlinedRedButton}
-                onClick={() => setAlertRemove(true)}
+                onClick={handleRemove}
                 variant="outlined"
                 size="small"
               >
@@ -148,7 +164,7 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Dialog open={openEdit} keepMounted align="center">
+        <Dialog open={isEditDialogOpen} keepMounted align="center">
           <DialogTitle>
             Edit {member.FirstName} {member.LastName} ({member.ParticipationDescription})
           </DialogTitle>
@@ -182,7 +198,7 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button variant="contained" onClick={onClose}>
+            <Button variant="contained" onClick={handleCloseEditDialog}>
               CANCEL
             </Button>
             <Button variant="contained" color="primary" onClick={onEditMember}>
@@ -191,13 +207,13 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
           </DialogActions>
         </Dialog>
 
-        <Dialog open={alertRemove} keepMounted align="center">
+        <Dialog open={isRemoveAlertOpen} keepMounted align="center">
           <DialogTitle>
             Are you sure you want to remove {member.FirstName} {member.LastName} (
             {member.ParticipationDescription}) from this involvement?
           </DialogTitle>
           <DialogActions>
-            <Button variant="contained" onClick={onClose}>
+            <Button variant="contained" onClick={() => setIsRemoveAlertOpen(false)}>
               CANCEL
             </Button>
             <Button variant="contained" color="primary" onClick={confirmLeave}>
@@ -222,6 +238,7 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
             }
           />
         </Grid>
+
         {buttons}
       </Grid>
     );
@@ -272,7 +289,7 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
       );
 
       content = (
-        <Accordion defaultExpanded={admin && !isMobileView}>
+        <Accordion defaultExpanded={(isAdmin || isSuperAdmin) && !isMobileView}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Grid container>
               <Grid item xs={6} sm={7} md={8}>
@@ -300,23 +317,9 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
   } else {
     if (member.IDNumber.toString() === user.getLocalInfo().id) {
       options = (
-        <>
-          <Button variant="contained" style={redButton} onClick={() => setAlertLeave(true)}>
-            LEAVE
-          </Button>
-
-          <Dialog open={alertLeave} keepMounted align="center" onBackdropClick={onClose}>
-            <DialogTitle>Are you sure you want to leave this involvement?</DialogTitle>
-            <DialogActions>
-              <Button variant="contained" color="primary" onClick={onClose}>
-                No, stay
-              </Button>
-              <Button variant="contained" onClick={confirmLeave} style={redButton}>
-                Yes, leave
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </>
+        <Button variant="contained" style={redButton} onClick={() => setIsLeaveAlertOpen(true)}>
+          LEAVE
+        </Button>
       );
     }
 
@@ -334,7 +337,7 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
           <Grid item xs={2} style={rowStyle}>
             <Typography>{mailLoc}</Typography>
           </Grid>
-          <Grid item xs={2} style={rowStyle}>
+          <Grid item style={rowStyle} align="flex-end">
             {options}
           </Grid>
         </Grid>
@@ -343,7 +346,41 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
     );
   }
 
-  return content;
+  return (
+    <>
+      {content}
+      <Dialog
+        open={isLeaveAlertOpen}
+        keepMounted
+        align="center"
+        onBackdropClick={() => setIsLeaveAlertOpen(false)}
+      >
+        <DialogTitle>Are you sure you want to leave this involvement?</DialogTitle>
+        <DialogActions>
+          <Button variant="contained" color="primary" onClick={() => setIsLeaveAlertOpen(false)}>
+            No, stay
+          </Button>
+          <Button variant="contained" onClick={confirmLeave} style={redButton}>
+            Yes, leave
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={isUnadminSelfDialogOpen}>
+        <DialogTitle>
+          Are you sure you want to remove yourself from the list of group admins? You won't be able
+          to undo this action.
+        </DialogTitle>
+        <DialogActions>
+          <Button variant="outlined" onClick={() => setIsUnadminSelfDialogOpen(false)}>
+            Cancel
+          </Button>
+          <Button variant="outlined" style={redButton} onClick={onToggleIsAdmin}>
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 };
 
 export default MemberListItem;
