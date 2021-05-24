@@ -124,22 +124,30 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
     const buttons = (
       <>
         <Grid item>
-          <Button color="primary" onClick={() => setOpenEdit(true)} variant="outlined" size="small">
-            Edit
-          </Button>
-        </Grid>
+          <Grid container direction="column" align="center" spacing={2}>
+            <Grid item>
+              <Button
+                color="primary"
+                onClick={() => setOpenEdit(true)}
+                variant="outlined"
+                size="small"
+              >
+                Edit
+              </Button>
+            </Grid>
 
-        <Grid item>
-          <Button
-            style={outlinedRedButton}
-            onClick={() => setAlertRemove(true)}
-            variant="outlined"
-            size="small"
-          >
-            Remove
-          </Button>
+            <Grid item>
+              <Button
+                style={outlinedRedButton}
+                onClick={() => setAlertRemove(true)}
+                variant="outlined"
+                size="small"
+              >
+                Remove
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
-
         <Dialog open={openEdit} keepMounted align="center">
           <DialogTitle>
             Edit {member.FirstName} {member.LastName} ({member.ParticipationDescription})
@@ -201,8 +209,8 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
     );
 
     options = (
-      <Grid container alignItems="center" justify="space-between">
-        <Grid item sm={3} align="center">
+      <Grid container alignItems="center" justify="space-evenly">
+        <Grid item>
           <FormControlLabel
             control={
               <Checkbox
@@ -292,25 +300,23 @@ const MemberListItem = ({ member, admin, createSnackbar, isMobileView }) => {
   } else {
     if (member.IDNumber.toString() === user.getLocalInfo().id) {
       options = (
-        <Grid container>
-          <Grid item>
-            <Button variant="contained" style={redButton} onClick={() => setAlertLeave(true)}>
-              LEAVE
-            </Button>
+        <>
+          <Button variant="contained" style={redButton} onClick={() => setAlertLeave(true)}>
+            LEAVE
+          </Button>
 
-            <Dialog open={alertLeave} keepMounted align="center" onBackdropClick={onClose}>
-              <DialogTitle>Are you sure you want to leave this involvement?</DialogTitle>
-              <DialogActions>
-                <Button variant="contained" color="primary" onClick={onClose}>
-                  No, stay
-                </Button>
-                <Button variant="contained" onClick={confirmLeave} style={redButton}>
-                  Yes, leave
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </Grid>
-        </Grid>
+          <Dialog open={alertLeave} keepMounted align="center" onBackdropClick={onClose}>
+            <DialogTitle>Are you sure you want to leave this involvement?</DialogTitle>
+            <DialogActions>
+              <Button variant="contained" color="primary" onClick={onClose}>
+                No, stay
+              </Button>
+              <Button variant="contained" onClick={confirmLeave} style={redButton}>
+                Yes, leave
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
       );
     }
 

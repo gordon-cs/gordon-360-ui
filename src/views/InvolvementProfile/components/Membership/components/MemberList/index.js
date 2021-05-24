@@ -91,10 +91,10 @@ const MemberList = ({ members, admin, createSnackbar }) => {
     <Card>
       {header}
       <CardContent>
-        {members.sort(compareByLastThenFirst).map((groupMember) => (
+        {members.sort(compareByLastThenFirst).map((member) => (
           <MemberListItem
-            member={groupMember}
-            key={groupMember.MembershipID}
+            member={member}
+            key={member.MembershipID}
             admin={admin}
             createSnackbar={createSnackbar}
             isMobileView={isMobileView}
