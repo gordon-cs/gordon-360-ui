@@ -2,8 +2,6 @@ import Dropzone from 'react-dropzone';
 import React, { useEffect, useRef, useState } from 'react';
 import './involvement-profile.css';
 import Cropper from 'react-cropper';
-import Advisors from './components/Advisors';
-import GroupContacts from './components/GroupContacts';
 import GordonLoader from 'components/Loader';
 import Membership from './components/Membership';
 import membershipService from 'services/membership';
@@ -29,6 +27,7 @@ import {
 } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useParams } from 'react-router';
+import ContactList from './components/ContactList/Index';
 
 const CROP_DIM = 320; // pixels
 
@@ -497,14 +496,14 @@ const InvolvementProfile = ({ authentication }) => {
                   <hr width="70%"></hr>
 
                   <Grid item>
-                    <GroupContacts groupAdmins={groupAdmins} />
+                    <ContactList contacts={groupAdmins} listTitle="Group Contacts" />
                   </Grid>
                   <Grid item>
-                    <Advisors advisors={advisors} />
+                    <ContactList contacts={advisors} listTitle="Group Advisors" />
                   </Grid>
                   <Grid item>
                     <Typography>
-                      <strong>Special Information for Joining: </strong>
+                      <strong>To join: </strong>
                       {ActivityJoinInfo}
                     </Typography>
                   </Grid>

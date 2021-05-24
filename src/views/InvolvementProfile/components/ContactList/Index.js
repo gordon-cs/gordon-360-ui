@@ -3,21 +3,21 @@ import Email from '@material-ui/icons/Email';
 
 import { IconButton, List, ListItem, Typography } from '@material-ui/core';
 
-const Advisors = ({ advisors }) => {
-  if (advisors.length > 0) {
+const ContactList = ({ contacts, listTitle }) => {
+  if (contacts.length > 0) {
     return (
       <>
         <Typography variant="body2">
-          <strong>Advisors:</strong>
+          <strong>{listTitle}:</strong>
         </Typography>
         <List dense disablePadding>
-          {advisors.map((advisor) => (
-            <ListItem key={advisor.Email}>
-              <IconButton size="small" color="primary" href={`mailto:${advisor.Email}`}>
+          {contacts.map((contact) => (
+            <ListItem key={contact.Email}>
+              <IconButton size="small" color="primary" href={`mailto:${contact.Email}`}>
                 <Email color="primary" style={{ width: 16, height: 16 }} />
               </IconButton>
               <Typography>
-                &emsp;{advisor.FirstName} {advisor.LastName}
+                &emsp;{contact.FirstName} {contact.LastName}
               </Typography>
             </ListItem>
           ))}
@@ -28,4 +28,4 @@ const Advisors = ({ advisors }) => {
   return null;
 };
 
-export default Advisors;
+export default ContactList;
