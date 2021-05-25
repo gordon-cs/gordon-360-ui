@@ -178,7 +178,7 @@ export const EVENT_FILTERS = Object.freeze([
  * @param {Event[]} events the events to filter
  * @param {string[]} filters the list of filters to use
  * @param {string} search the string to search against
- * @returns {Event[]} The filtered list of events
+ * @returns {Promise<Event[]>} The filtered list of events
  */
 const getFilteredEvents = (events, filters, search) => {
   const matchesSearch = makeMatchesSearch(search);
