@@ -31,8 +31,6 @@ const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
         <GordonDialogBox
           open={dialog}
           onClose={() => setDialog(null)}
-          labelledby={'offline-dialog'}
-          describedby={'feature-deactivated'}
           title={'Offline Mode'}
           text={
             'This feature is unavailable offline. Please reconnect to internet to access this feature.'
@@ -46,8 +44,6 @@ const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
         <GordonDialogBox
           open={dialog}
           onClose={() => setDialog(null)}
-          labelledby={'unauthorized-dialog'}
-          describedby={'feature-unavailable'}
           title={'Credentials Needed'}
           text={`This feature is unavailable while not logged in. Please log in to access it.`}
           buttonClicked={() => setDialog(null)}

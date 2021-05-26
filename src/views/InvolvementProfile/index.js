@@ -28,6 +28,7 @@ import {
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useParams } from 'react-router';
 import ContactList from './components/ContactList/Index';
+import GordonDialogBox from 'components/GordonDialogBox';
 
 const CROP_DIM = 320; // pixels
 
@@ -267,7 +268,6 @@ const InvolvementProfile = ({ authentication }) => {
               aria-labelledby="edit-involvement-dialog-title"
             >
               <DialogTitle id="edit-involvement-dialog-title">
-                {' '}
                 Edit {ActivityDescription}
               </DialogTitle>
               <DialogContent>
@@ -386,26 +386,13 @@ const InvolvementProfile = ({ authentication }) => {
                   </DialogActions>
                 </Dialog>
 
-                <Dialog open={isRemoveImageDialogOpen} keepMounted align="center">
-                  <DialogTitle>Are you sure you want to remove image?</DialogTitle>
-                  <DialogContent>
-                    <Grid container spacing={2}>
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
-                        <Button variant="contained" color="primary" onClick={onRemoveImage}>
-                          OK
-                        </Button>
-                      </Grid>
-                      <Grid item xs={6} sm={6} md={6} lg={6}>
-                        <Button
-                          variant="contained"
-                          onClick={() => setIsRemoveImageDialogOpen(false)}
-                        >
-                          CANCEL
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </DialogContent>
-                </Dialog>
+                <GordonDialogBox
+                  open={isRemoveImageDialogOpen}
+                  title="Confirm Removing Image"
+                  text="Are you sure you want to remove the involvement image?"
+                  buttonClicked={onRemoveImage}
+                  cancelButtonClicked={() => setIsRemoveImageDialogOpen(false)}
+                />
                 <form>
                   <Grid container>
                     <Grid item xs={12}>

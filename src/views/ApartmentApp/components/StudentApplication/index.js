@@ -29,15 +29,11 @@ const BLANK_APPLICATION_DETAILS = {
 const DIALOG_PROPS = {
   default: {
     action: 'default',
-    labelledby: 'default-dialog',
-    describedby: 'dialog-undefined',
     title: 'How did you get here?',
     text: 'This text should not be displayed.',
   },
   changeEditor: {
     action: 'changeEditor',
-    labelledby: 'applicant-warning-dialog',
-    describedby: 'changing-application-editor',
     title: 'Change application editor?',
     text: (
       <span>
@@ -52,8 +48,6 @@ const DIALOG_PROPS = {
   },
   delete: {
     action: 'delete',
-    labelledby: 'delete-application-dialog',
-    describedby: 'delete-application',
     title: 'Delete apartment application?',
     text: (
       <span>
@@ -65,8 +59,6 @@ const DIALOG_PROPS = {
   },
   submit: {
     action: 'submit',
-    labelledby: 'submit-application-dialog',
-    describedby: 'submit-application',
     title: 'Submit apartment application?',
     text: (
       <span>
@@ -859,7 +851,7 @@ const StudentApplication = ({ userProfile }) => {
           }
         />
         <GordonDialogBox
-          open={dialogProps.open ?? false}
+          open={dialogProps.open}
           onClose={(_event, reason) =>
             reason !== 'clickaway' && setDialogProps((s) => ({ ...s, open: false }))
           }
