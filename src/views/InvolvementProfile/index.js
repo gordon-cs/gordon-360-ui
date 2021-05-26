@@ -174,27 +174,25 @@ const InvolvementProfile = ({ authentication }) => {
       ACT_JOIN_INFO: tempJoinInfo,
     };
     await involvementService.editActivity(involvementInfo.ActivityCode, data);
+    console.log(involvementInfo);
+    setInvolvementInfo((i) => ({
+      ...i,
+      ActivityBlurb: tempBlurb,
+      ActivityURL: tempURL,
+      ActivityJoinInfo: tempJoinInfo,
+    }));
 
     if (photoUpdated === true) {
       await involvementService.setActivityImage(involvementInfo.ActivityCode, image);
+      setInvolvementInfo((i) => ({ ...i, ActivityImagePath: image }));
     }
     setIsEditDialogOpen(false);
-    refresh();
   };
 
-  // Called when confirm remove image from the alert remove image dialog box
   const onRemoveImage = async () => {
     await involvementService.resetImage(involvementInfo.ActivityCode);
+    setInvolvementInfo(await involvementService.get(involvementCode));
     setIsRemoveImageDialogOpen(false);
-    refresh();
-  };
-
-  const refresh = () => {
-    window.location.reload();
-  };
-
-  const handlePhotoOpen = () => {
-    setPhotoOpen(true);
   };
 
   const handleCloseCancel = () => {
@@ -291,7 +289,7 @@ const InvolvementProfile = ({ authentication }) => {
                     </Button>
                   </Grid>
                   <Grid item>
-                    <Button variant="contained" onClick={handlePhotoOpen} color="primary">
+                    <Button variant="contained" onClick={() => setPhotoOpen(true)} color="primary">
                       Change Image
                     </Button>
                   </Grid>
@@ -393,7 +391,7 @@ const InvolvementProfile = ({ authentication }) => {
                   <DialogContent>
                     <Grid container spacing={2}>
                       <Grid item xs={6} sm={6} md={6} lg={6}>
-                        <Button variant="contained" color="primary" onClick={onRemoveImage} raised>
+                        <Button variant="contained" color="primary" onClick={onRemoveImage}>
                           OK
                         </Button>
                       </Grid>
@@ -401,7 +399,6 @@ const InvolvementProfile = ({ authentication }) => {
                         <Button
                           variant="contained"
                           onClick={() => setIsRemoveImageDialogOpen(false)}
-                          raised
                         >
                           CANCEL
                         </Button>
