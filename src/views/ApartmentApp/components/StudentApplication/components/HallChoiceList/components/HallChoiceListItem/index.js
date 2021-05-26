@@ -62,7 +62,7 @@ const HallChoiceListItem = ({
   ));
 
   return (
-    <React.Fragment>
+    <>
       <ListItem key={index} className="list-item">
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={4} sm={2}>
@@ -71,10 +71,7 @@ const HallChoiceListItem = ({
               <Select
                 disabled={disabled}
                 value={hallRank}
-                onChange={(event) =>
-                  event.target.value !== null &&
-                  onHallInputChange?.(String(event.target.value), hallName, index)
-                }
+                onChange={(event) => onHallInputChange(String(event.target.value), hallName, index)}
                 input={<Input id={'rank' + index} />}
               >
                 {rankOptions}
@@ -87,10 +84,7 @@ const HallChoiceListItem = ({
               <Select
                 disabled={disabled}
                 value={isHallNameValid ? hallName : ''}
-                onChange={(event) =>
-                  event.target.value !== null &&
-                  onHallInputChange?.(hallRank, String(event.target.value), index)
-                }
+                onChange={(event) => onHallInputChange(hallRank, String(event.target.value), index)}
                 input={<Input id={'hall' + index} />}
               >
                 {hallOptions}
@@ -108,14 +102,14 @@ const HallChoiceListItem = ({
             edge="end"
             aria-label="delete"
             disabled={disabled}
-            onClick={() => (index ?? -1) > -1 && onHallRemove?.(index)}
+            onClick={() => onHallRemove(index)}
           >
             <ClearIcon />
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
       <Divider />
-    </React.Fragment>
+    </>
   );
 };
 

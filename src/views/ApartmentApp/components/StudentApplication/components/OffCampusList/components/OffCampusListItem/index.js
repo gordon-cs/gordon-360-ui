@@ -75,11 +75,7 @@ const OffCampusListItem = ({
               <Select
                 disabled={disabled}
                 value={isSelectionValid ? offCampusProgram : ''}
-                onChange={(event) =>
-                  event.target.value !== null &&
-                  (index ?? -1) > -1 &&
-                  onOffCampusInputChange?.(String(event.target.value), index)
-                }
+                onChange={(event) => onOffCampusInputChange(String(event.target.value), index)}
                 input={<Input id={'department' + index} />}
                 displayEmpty
               >

@@ -487,7 +487,7 @@ const StudentApplication = ({ userProfile }) => {
    * @param {Number} index The index of the hall in the list
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
-    if ((index ?? -1) > -1) {
+    if (index >= 0) {
       // Error checking on the hallNameValue before modifying the newHallInfo object
       if (
         hallNameValue !== applicationDetails.ApartmentChoices[index].HallName &&
@@ -535,7 +535,8 @@ const StudentApplication = ({ userProfile }) => {
    * @param {Number} indexToRemove The index of the hall to be removed from the list of preferred halls
    */
   const handleHallRemove = (indexToRemove) => {
-    if ((indexToRemove ?? -1) > -1) {
+    console.log('removing hall with index:', indexToRemove);
+    if (indexToRemove >= 0) {
       setApplicationDetails((prevApplicationDetails) => ({
         ...prevApplicationDetails,
         ApartmentChoices: prevApplicationDetails.ApartmentChoices.filter(
@@ -557,7 +558,7 @@ const StudentApplication = ({ userProfile }) => {
    * @param {Number} index The index of the applicant in the list
    */
   const handleOffCampusInputChange = (offCampusProgramValue, index) => {
-    if ((index ?? -1) > -1) {
+    if (index >= 0) {
       let newApplicant = {
         ...applicationDetails.Applicants[index],
         OffCampusProgram: offCampusProgramValue,
