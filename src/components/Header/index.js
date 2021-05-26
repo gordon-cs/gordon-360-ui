@@ -95,12 +95,11 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
           open={dialog}
           onClose={() => setDialog(null)}
           title={'Offline Mode'}
-          text={
-            'This feature is unavailable offline. Please reconnect to internet to access this feature.'
-          }
           buttonClicked={() => setDialog(null)}
           buttonName={'Okay'}
-        />
+        >
+          This feature is unavailable offline. Please reconnect to internet to access this feature.
+        </GordonDialogBox>
       );
     } else if (dialog === 'unauthorized') {
       return (
@@ -108,10 +107,11 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
           open={dialog}
           onClose={() => setDialog(null)}
           title={'Credentials Needed'}
-          text={`This feature is unavailable while not logged in. Please log in to access it.`}
           buttonClicked={() => setDialog(null)}
           buttonName={'Okay'}
-        />
+        >
+          This feature is unavailable while not logged in. Please log in to access it.
+        </GordonDialogBox>
       );
     } else {
       return null;

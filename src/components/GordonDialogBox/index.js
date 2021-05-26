@@ -29,7 +29,6 @@ import { Alert, AlertTitle } from '@material-ui/lab';
  * @param  {Boolean} props.open Boolean that determines if the dialog should be visible or not
  * @param {onCloseCallback} props.onClose A callback function fired after the component requests to be closed
  * @param {String} props.title The title of the dialog box
- * @param {String} props.text The content of the dialog box
  * @param {onClickCallback} props.buttonClicked A function called when the confirming button is clicked
  * @param {String} [props.buttonName] The text of the button confirming the dialog is read/accepted
  * @param {onClickCallback} [props.cancelButtonClicked] A function called when the canceling button is clicked
@@ -42,12 +41,12 @@ const GordonDialogBox = ({
   open,
   onClose,
   title,
-  text,
   buttonClicked,
   buttonName,
   cancelButtonClicked,
   cancelButtonName,
   severity,
+  children,
 }) => {
   return (
     <Dialog
@@ -68,7 +67,7 @@ const GordonDialogBox = ({
         )}
       </DialogTitle>
       <DialogContent id="alert-dialog-description">
-        <DialogContentText>{text}</DialogContentText>
+        {typeof children === String ? <DialogContentText>{children}</DialogContentText> : children}
       </DialogContent>
       <DialogActions>
         {cancelButtonClicked && (

@@ -326,7 +326,7 @@ const InvolvementProfile = ({ authentication }) => {
                                   className="rounded-corners"
                                   src={ActivityImagePath}
                                   alt=""
-                                  style={{ 'max-width': '320px', 'max-height': '320px' }}
+                                  style={{ maxWidth: '320px', maxHeight: '320px' }}
                                 />
                               </div>
                             </section>
@@ -340,8 +340,8 @@ const InvolvementProfile = ({ authentication }) => {
                               ref={cropperRef}
                               src={preview}
                               style={{
-                                'max-width': maxCropPreviewWidth(),
-                                'max-height': maxCropPreviewWidth() / cropperData.aspectRatio,
+                                maxWidth: maxCropPreviewWidth(),
+                                maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
                               }}
                               autoCropArea={1}
                               viewMode={3}
@@ -389,10 +389,11 @@ const InvolvementProfile = ({ authentication }) => {
                 <GordonDialogBox
                   open={isRemoveImageDialogOpen}
                   title="Confirm Removing Image"
-                  text="Are you sure you want to remove the involvement image?"
                   buttonClicked={onRemoveImage}
                   cancelButtonClicked={() => setIsRemoveImageDialogOpen(false)}
-                />
+                >
+                  Are you sure you want to remove the involvement image?
+                </GordonDialogBox>
                 <form>
                   <Grid container>
                     <Grid item xs={12}>

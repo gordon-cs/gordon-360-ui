@@ -26,6 +26,7 @@ const BLANK_APPLICATION_DETAILS = {
   Applicants: [],
   ApartmentChoices: [],
 };
+
 const DIALOG_PROPS = {
   default: {
     action: 'default',
@@ -877,7 +878,9 @@ const StudentApplication = ({ userProfile }) => {
           cancelButtonClicked={() => setDialogProps((s) => ({ ...s, open: false }))}
           severity={'warning'}
           {...dialogProps}
-        />
+        >
+          {dialogProps.text}
+        </GordonDialogBox>
       </div>
     );
   }
