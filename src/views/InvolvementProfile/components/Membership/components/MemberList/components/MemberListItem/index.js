@@ -5,10 +5,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Divider,
   Grid,
   FormControl,
@@ -24,6 +20,7 @@ import {
 import { gordonColors } from 'theme';
 import user from 'services/user';
 import membership from 'services/membership';
+import GordonDialogBox from 'components/GordonDialogBox';
 const rowStyle = {
   padding: '10px',
 };
@@ -164,63 +161,52 @@ const MemberListItem = ({
             </Grid>
           </Grid>
         </Grid>
-        <Dialog open={isEditDialogOpen} keepMounted align="center">
-          <DialogTitle>
-            Edit {member.FirstName} {member.LastName} ({member.ParticipationDescription})
-          </DialogTitle>
-          <DialogContent>
-            <Grid container direction="column" spacing={2}>
-              <Grid item>
-                <FormControl variant="filled" fullWidth>
-                  <InputLabel id="member-edit-select-participation">Participation</InputLabel>
-                  <Select
-                    required
-                    value={participationDescription}
-                    onChange={handleSelect}
-                    labelId="member-edit-select-participation"
-                  >
-                    <MenuItem value="Advisor">Advisor</MenuItem>
-                    <MenuItem value="Leader">Leader</MenuItem>
-                    <MenuItem value="Member">Member</MenuItem>
-                    <MenuItem value="Guest">Guest</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item>
-                <TextField
-                  variant="filled"
-                  fullWidth
-                  onChange={(e) => setTitleComment(e.target.value)}
-                  defaultValue={member.Description}
-                  label="Title/Comment"
-                />
-              </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button variant="contained" onClick={handleCloseEditDialog}>
-              CANCEL
-            </Button>
-            <Button variant="contained" color="primary" onClick={onEditMember}>
-              SUBMIT CHANGES
-            </Button>
-          </DialogActions>
-        </Dialog>
 
-        <Dialog open={isRemoveAlertOpen} keepMounted align="center">
-          <DialogTitle>
-            Are you sure you want to remove {member.FirstName} {member.LastName} (
-            {member.ParticipationDescription}) from this involvement?
-          </DialogTitle>
-          <DialogActions>
-            <Button variant="contained" onClick={() => setIsRemoveAlertOpen(false)}>
-              CANCEL
-            </Button>
-            <Button variant="contained" color="primary" onClick={confirmLeave}>
-              OK
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <GordonDialogBox
+          open={isEditDialogOpen}
+          title={`Edit ${member.FirstName} ${member.LastName} (${member.ParticipationDescription})`}
+          buttonClicked={onEditMember}
+          buttonName="Submit Changes"
+          cancelButtonClicked={handleCloseEditDialog}
+        >
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <FormControl variant="filled" fullWidth>
+                <InputLabel id="member-edit-select-participation">Participation</InputLabel>
+                <Select
+                  required
+                  value={participationDescription}
+                  onChange={handleSelect}
+                  labelId="member-edit-select-participation"
+                >
+                  <MenuItem value="Advisor">Advisor</MenuItem>
+                  <MenuItem value="Leader">Leader</MenuItem>
+                  <MenuItem value="Member">Member</MenuItem>
+                  <MenuItem value="Guest">Guest</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <TextField
+                variant="filled"
+                fullWidth
+                onChange={(e) => setTitleComment(e.target.value)}
+                defaultValue={member.Description}
+                label="Title/Comment"
+              />
+            </Grid>
+          </Grid>
+        </GordonDialogBox>
+
+        <GordonDialogBox
+          open={isRemoveAlertOpen}
+          title="Confirm Removing Member"
+          buttonClicked={confirmLeave}
+          cancelButtonClicked={() => setIsRemoveAlertOpen(false)}
+        >
+          Are you sure you want to remove {member.FirstName} {member.LastName} (
+          {member.ParticipationDescription}) from this involvement?
+        </GordonDialogBox>
       </>
     );
 
@@ -349,36 +335,23 @@ const MemberListItem = ({
   return (
     <>
       {content}
-      <Dialog
+      <GordonDialogBox
         open={isLeaveAlertOpen}
-        keepMounted
-        align="center"
-        onBackdropClick={() => setIsLeaveAlertOpen(false)}
+        buttonName="Yes, Leave"
+        buttonClicked={confirmLeave}
+        cancelButtonName="No, Stay"
+        cancelButtonClicked={() => setIsLeaveAlertOpen(false)}
       >
-        <DialogTitle>Are you sure you want to leave this involvement?</DialogTitle>
-        <DialogActions>
-          <Button variant="contained" color="primary" onClick={() => setIsLeaveAlertOpen(false)}>
-            No, stay
-          </Button>
-          <Button variant="contained" onClick={confirmLeave} style={redButton}>
-            Yes, leave
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog open={isUnadminSelfDialogOpen}>
-        <DialogTitle>
-          Are you sure you want to remove yourself from the list of group admins? You won't be able
-          to undo this action.
-        </DialogTitle>
-        <DialogActions>
-          <Button variant="outlined" onClick={() => setIsUnadminSelfDialogOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="outlined" style={redButton} onClick={onToggleIsAdmin}>
-            Okay
-          </Button>
-        </DialogActions>
-      </Dialog>
+        Are you sure you want to leave this involvement?
+      </GordonDialogBox>
+      <GordonDialogBox
+        open={isUnadminSelfDialogOpen}
+        buttonClicked={onToggleIsAdmin}
+        cancelButtonClicked={() => setIsUnadminSelfDialogOpen(false)}
+      >
+        Are you sure you want to remove yourself from the list of group admins? You won't be able to
+        undo this action.
+      </GordonDialogBox>
     </>
   );
 };

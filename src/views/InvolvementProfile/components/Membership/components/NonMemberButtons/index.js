@@ -3,10 +3,6 @@ import React, { useEffect, useState } from 'react';
 import {
   CardActions,
   Button,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  DialogContent,
   Grid,
   FormControl,
   InputLabel,
@@ -18,6 +14,7 @@ import membershipService from 'services/membership';
 import { useParams } from 'react-router';
 import userService from 'services/user';
 import involvementService from 'services/activity';
+import GordonDialogBox from 'components/GordonDialogBox';
 
 const NonMemberButtons = ({
   isGuest,
@@ -103,55 +100,43 @@ const NonMemberButtons = ({
         </Button>
       </CardActions>
 
-      <Dialog open={isJoinDialogOpen} keepMounted>
-        <DialogTitle>Join {involvementDescription}</DialogTitle>
-        <DialogContent>
-          <Grid container direction="column" spacing={2}>
-            <Grid item>
-              <FormControl variant="filled" fullWidth>
-                <InputLabel id={`involvement-profile-join-${involvementDescription}`}>
-                  Participation
-                </InputLabel>
-                <Select
-                  required
-                  value={participationCode}
-                  onChange={(event) => setParticipationCode(event.target.value)}
-                  labelId={`involvement-profile-join-${involvementDescription}`}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value="ADV">Advisor</MenuItem>
-                  <MenuItem value="LEAD">Leader</MenuItem>
-                  <MenuItem value="MEMBR">Member</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item>
-              <TextField
-                variant="filled"
-                label="Title/Comment"
-                fullWidth
-                onChange={(event) => setTitleComment(event.target.value)}
-              />
-            </Grid>
+      <GordonDialogBox
+        open={isJoinDialogOpen}
+        title={`Join ${involvementDescription}`}
+        buttonClicked={onRequest}
+        cancelButtonClicked={onClose}
+      >
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <FormControl variant="filled" fullWidth>
+              <InputLabel id={`involvement-profile-join-${involvementDescription}`}>
+                Participation
+              </InputLabel>
+              <Select
+                required
+                value={participationCode}
+                onChange={(event) => setParticipationCode(event.target.value)}
+                labelId={`involvement-profile-join-${involvementDescription}`}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value="ADV">Advisor</MenuItem>
+                <MenuItem value="LEAD">Leader</MenuItem>
+                <MenuItem value="MEMBR">Member</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
-
-          <DialogActions>
-            <Button onClick={onClose} variant="contained" color="primary">
-              Cancel
-            </Button>
-            <Button
-              color="primary"
-              variant="contained"
-              disabled={!participationCode}
-              onClick={onRequest}
-            >
-              Submit
-            </Button>
-          </DialogActions>
-        </DialogContent>
-      </Dialog>
+          <Grid item>
+            <TextField
+              variant="filled"
+              label="Title/Comment"
+              fullWidth
+              onChange={(event) => setTitleComment(event.target.value)}
+            />
+          </Grid>
+        </Grid>
+      </GordonDialogBox>
     </>
   );
 };

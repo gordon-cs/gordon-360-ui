@@ -105,7 +105,6 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
               <AdminCard
                 createSnackbar={createSnackbar}
                 sessionCode={sessionCode}
-                participationLevel={participationDetail[1]}
                 isSuperAdmin={isSuperAdmin}
                 onAddMember={handleAddMember}
               />

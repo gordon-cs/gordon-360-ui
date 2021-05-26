@@ -31,6 +31,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
  * @param {String} props.title The title of the dialog box
  * @param {onClickCallback} props.buttonClicked A function called when the confirming button is clicked
  * @param {String} [props.buttonName] The text of the button confirming the dialog is read/accepted
+ * @param {Boolean} [props.isButtonDisabled] Whether the primary button is disabled
  * @param {onClickCallback} [props.cancelButtonClicked] A function called when the canceling button is clicked
  * @param {String} [props.cancelButtonName] The text of the button canceling the dialog is read/accepted
  * @param {String} [props.severity] The severity of the alert (Examples: "error", "warning", "info", etc.)
@@ -43,6 +44,7 @@ const GordonDialogBox = ({
   title,
   buttonClicked,
   buttonName,
+  isButtonDisabled = false,
   cancelButtonClicked,
   cancelButtonName,
   severity,
@@ -76,7 +78,12 @@ const GordonDialogBox = ({
           </Button>
         )}
         {buttonClicked && (
-          <Button variant="contained" onClick={buttonClicked} color="primary">
+          <Button
+            variant="contained"
+            onClick={buttonClicked}
+            color="primary"
+            disabled={isButtonDisabled}
+          >
             {buttonName ?? 'Okay'}
           </Button>
         )}

@@ -16,11 +16,7 @@ import {
   Button,
   Card,
   CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
   DialogContentText,
-  DialogTitle,
   Grid,
   TextField,
   Typography,
@@ -175,7 +171,6 @@ const InvolvementProfile = ({ authentication }) => {
       ACT_JOIN_INFO: tempJoinInfo,
     };
     await involvementService.editActivity(involvementInfo.ActivityCode, data);
-    console.log(involvementInfo);
     setInvolvementInfo((i) => ({
       ...i,
       ActivityBlurb: tempBlurb,
@@ -199,6 +194,7 @@ const InvolvementProfile = ({ authentication }) => {
   const handleCloseCancel = () => {
     setPhotoOpen(false);
     setPreview(null);
+    setPhotoUpdated(false);
   };
 
   const handleCloseSelect = () => {
@@ -262,189 +258,150 @@ const InvolvementProfile = ({ authentication }) => {
               </Grid>
             </Grid>
 
-            <Dialog
+            <GordonDialogBox
               open={isEditDialogOpen}
-              fullWidth
-              aria-labelledby="edit-involvement-dialog-title"
+              title={`Edit ${ActivityDescription}`}
+              buttonName="Submit"
+              buttonClicked={onEditInvolvement}
+              cancelButtonClicked={() => setIsEditDialogOpen(false)}
             >
-              <DialogTitle id="edit-involvement-dialog-title">
-                Edit {ActivityDescription}
-              </DialogTitle>
-              <DialogContent>
-                <Grid align="center" className="involvement-image" item>
-                  <img
-                    alt={ActivityDescription}
-                    src={image || ActivityImagePath}
-                    className="rounded-corners"
-                  />
+              <Grid align="center" className="involvement-image" item>
+                <img
+                  alt={ActivityDescription}
+                  src={image || ActivityImagePath}
+                  className="rounded-corners"
+                />
+              </Grid>
+              <Grid container spacing={2} justify="center">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={() => setIsRemoveImageDialogOpen(true)}
+                    style={redButton}
+                  >
+                    Remove image
+                  </Button>
                 </Grid>
-                <Grid container spacing={2} justify="center">
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      onClick={() => setIsRemoveImageDialogOpen(true)}
-                      style={redButton}
+                <Grid item>
+                  <Button variant="contained" onClick={() => setPhotoOpen(true)} color="primary">
+                    Change Image
+                  </Button>
+                </Grid>
+              </Grid>
+
+              <GordonDialogBox
+                open={photoOpen}
+                title="Update Involvement Picture"
+                buttonName="Select"
+                buttonClicked={handleCloseSelect}
+                isButtonDisabled={!preview}
+                cancelButtonClicked={handleCloseCancel}
+              >
+                <DialogContentText id="edit-involvement-image-dialog-description">
+                  {window.innerWidth < 600
+                    ? 'Tap Image to Browse Files'
+                    : 'Drag & Drop Picture, or Click to Browse Files'}
+                </DialogContentText>
+                <Grid container justify="center" spacing={2}>
+                  {!preview && (
+                    <Dropzone
+                      onDropAccepted={onDropAccepted.bind(this)}
+                      onDropRejected={onDropRejected.bind(this)}
+                      accept="image/jpeg, image/jpg, image/png"
                     >
-                      Remove image
-                    </Button>
+                      {({ getRootProps, getInputProps }) => (
+                        <section>
+                          <div className="photoUploader" {...getRootProps()}>
+                            <input {...getInputProps()} />
+                            <img
+                              className="rounded-corners"
+                              src={ActivityImagePath}
+                              alt=""
+                              style={{ maxWidth: '320px', maxHeight: '320px' }}
+                            />
+                          </div>
+                        </section>
+                      )}
+                    </Dropzone>
+                  )}
+                  {preview && (
+                    <>
+                      <Grid item>
+                        <Cropper
+                          ref={cropperRef}
+                          src={preview}
+                          style={{
+                            maxWidth: maxCropPreviewWidth(),
+                            maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
+                          }}
+                          autoCropArea={1}
+                          viewMode={3}
+                          aspectRatio={1}
+                          highlight={false}
+                          background={false}
+                          zoom={onCropperZoom.bind(this)}
+                          zoomable={false}
+                          dragMode={'none'}
+                          minCropBoxWidth={cropperData.cropBoxDim}
+                          minCropBoxHeight={cropperData.cropBoxDim}
+                        />
+                      </Grid>
+
+                      <Grid item>
+                        <Button variant="contained" onClick={() => setPreview(null)}>
+                          Choose Another Image
+                        </Button>
+                      </Grid>
+                    </>
+                  )}
+                </Grid>
+              </GordonDialogBox>
+
+              <GordonDialogBox
+                open={isRemoveImageDialogOpen}
+                title="Confirm Removing Image"
+                buttonClicked={onRemoveImage}
+                cancelButtonClicked={() => setIsRemoveImageDialogOpen(false)}
+              >
+                Are you sure you want to remove the involvement image?
+              </GordonDialogBox>
+              <form>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Description"
+                      margin="dense"
+                      multiline
+                      fullWidth
+                      defaultValue={ActivityBlurb}
+                      onChange={(event) => setTempBlurb(event.target.value)}
+                    />
                   </Grid>
-                  <Grid item>
-                    <Button variant="contained" onClick={() => setPhotoOpen(true)} color="primary">
-                      Change Image
-                    </Button>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Special Information for Joining"
+                      margin="dense"
+                      multiline
+                      fullWidth
+                      defaultValue={ActivityJoinInfo}
+                      onChange={(event) => setTempJoinInfo(event.target.value)}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Website"
+                      margin="dense"
+                      multiline
+                      fullWidth
+                      defaultValue={ActivityURL}
+                      onChange={(event) => setTempURL(event.target.value)}
+                    />
                   </Grid>
                 </Grid>
-                <Dialog
-                  open={photoOpen}
-                  keepMounted
-                  onClose={() => setPhotoOpen(false)}
-                  aria-labelledby="edit-involvement-image-dialog-title"
-                  aria-describedby="edit-involvement-image-dialog-description"
-                  fullWidth
-                >
-                  <DialogTitle id="edit-involvement-image-dialog-title">
-                    Update Involvement Picture
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="edit-involvement-image-dialog-description">
-                      {window.innerWidth < 600
-                        ? 'Tap Image to Browse Files'
-                        : 'Drag & Drop Picture, or Click to Browse Files'}
-                    </DialogContentText>
-                    <Grid container justify="center" spacing={2}>
-                      {!preview && (
-                        <Dropzone
-                          onDropAccepted={onDropAccepted.bind(this)}
-                          onDropRejected={onDropRejected.bind(this)}
-                          accept="image/jpeg, image/jpg, image/png"
-                        >
-                          {({ getRootProps, getInputProps }) => (
-                            <section>
-                              <div className="photoUploader" {...getRootProps()}>
-                                <input {...getInputProps()} />
-                                <img
-                                  className="rounded-corners"
-                                  src={ActivityImagePath}
-                                  alt=""
-                                  style={{ maxWidth: '320px', maxHeight: '320px' }}
-                                />
-                              </div>
-                            </section>
-                          )}
-                        </Dropzone>
-                      )}
-                      {preview && (
-                        <>
-                          <Grid item>
-                            <Cropper
-                              ref={cropperRef}
-                              src={preview}
-                              style={{
-                                maxWidth: maxCropPreviewWidth(),
-                                maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
-                              }}
-                              autoCropArea={1}
-                              viewMode={3}
-                              aspectRatio={1}
-                              highlight={false}
-                              background={false}
-                              zoom={onCropperZoom.bind(this)}
-                              zoomable={false}
-                              dragMode={'none'}
-                              minCropBoxWidth={cropperData.cropBoxDim}
-                              minCropBoxHeight={cropperData.cropBoxDim}
-                            />
-                          </Grid>
-
-                          <Grid item>
-                            <Button variant="contained" onClick={() => setPreview(null)}>
-                              Choose Another Image
-                            </Button>
-                          </Grid>
-                        </>
-                      )}
-                    </Grid>
-                  </DialogContent>
-                  <DialogActions>
-                    <Grid container spacing={8} justify="flex-end">
-                      <Grid item>
-                        <Button variant="contained" color="primary" onClick={handleCloseCancel}>
-                          Cancel
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={handleCloseSelect}
-                          disabled={!preview}
-                        >
-                          Select
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </DialogActions>
-                </Dialog>
-
-                <GordonDialogBox
-                  open={isRemoveImageDialogOpen}
-                  title="Confirm Removing Image"
-                  buttonClicked={onRemoveImage}
-                  cancelButtonClicked={() => setIsRemoveImageDialogOpen(false)}
-                >
-                  Are you sure you want to remove the involvement image?
-                </GordonDialogBox>
-                <form>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Description"
-                        margin="dense"
-                        multiline
-                        fullWidth
-                        defaultValue={ActivityBlurb}
-                        onChange={(event) => setTempBlurb(event.target.value)}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Special Information for Joining"
-                        margin="dense"
-                        multiline
-                        fullWidth
-                        defaultValue={ActivityJoinInfo}
-                        onChange={(event) => setTempJoinInfo(event.target.value)}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Website"
-                        margin="dense"
-                        multiline
-                        fullWidth
-                        defaultValue={ActivityURL}
-                        onChange={(event) => setTempURL(event.target.value)}
-                      />
-                    </Grid>
-                  </Grid>
-                </form>
-              </DialogContent>
-
-              <DialogActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setIsEditDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button variant="contained" color="primary" onClick={onEditInvolvement}>
-                  Submit
-                </Button>
-              </DialogActions>
-            </Dialog>
+              </form>
+            </GordonDialogBox>
           </Grid>
         ) : null;
 
