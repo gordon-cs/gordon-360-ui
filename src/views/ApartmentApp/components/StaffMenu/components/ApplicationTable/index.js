@@ -35,7 +35,7 @@ const ApplicationsTable = ({ applications }) => {
                 iteratee={iteratee}
                 onRequestSort={handleRequestSort}
               />
-              <TableBody className={'double-striped-table'}>
+              <TableBody className="double-striped-table">
                 {orderBy(applications, [iteratee], [order]).map((applicationDetails, index) => (
                   <ApplicationRow
                     key={applicationDetails.ApplicationID}

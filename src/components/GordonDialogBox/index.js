@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
-
 // Learn more about Dialog's API at https://material-ui.com/api/dialog/
 // Learn more about Alert's API at https://material-ui.com/api/alert/
 
@@ -65,14 +64,14 @@ export default class GordonDialogBox extends Component {
           <DialogContentText>{this.props.text}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          {this.props.cancelButtonName && (
+          {this.props.cancelButtonClicked !== undefined && (
             <Button variant="contained" onClick={this.props.cancelButtonClicked} color="primary">
-              {this.props.cancelButtonName}
+              {this.props.cancelButtonName ?? 'Cancel'}
             </Button>
           )}
-          {this.props.buttonName && (
+          {this.props.buttonClicked !== undefined && (
             <Button variant="contained" onClick={this.props.buttonClicked} color="primary">
-              {this.props.buttonName}
+              {this.props.buttonName ?? 'Okay'}
             </Button>
           )}
         </DialogActions>
