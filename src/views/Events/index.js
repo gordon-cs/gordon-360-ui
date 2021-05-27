@@ -16,6 +16,7 @@ import {
   Switch,
   TextField,
 } from '@material-ui/core';
+import useQueryState from 'hooks/useQueryState';
 
 const Events = (props) => {
   const [open, setOpen] = useState(false);
@@ -23,10 +24,12 @@ const Events = (props) => {
   const [allEvents, setAllEvents] = useState([]);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [includePast, setIncludePast] = useState(false);
+  const [includePast, setIncludePast] = useQueryState('past', false);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState([]);
+  const [filters, setFilters] = useQueryState('filters', []);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
+
+  const [searchTest, setSearchTest] = useQueryState('search', '');
 
   useEffect(() => {
     // Single use - Loads events data on page load / authentication
@@ -44,62 +47,8 @@ const Events = (props) => {
     loadEventsPage();
   }, [props.authentication]);
 
-  // Pull data from the URL anytime it loads/changes
-  useEffect(() => {
-    const loadURLParams = async () => {
-      // Load filters from UrlParams if they exist
-      const urlParams = new URLSearchParams(props.location.search);
-      let willIncludePast = false;
-      const filtersFromURL = [];
-      for (const key of urlParams.keys()) {
-        if (key === 'Past') {
-          willIncludePast = true;
-        } else {
-          filtersFromURL.push(key);
-        }
-      }
-      // this check prevents 'filters' dependants from being run unnecessarily
-      // (array changes [] -> [] are different memory objects)
-      // note: this requires filter arrays to be in same order, which they are
-      if(JSON.stringify(filters) !== JSON.stringify(filtersFromURL)) {
-        setFilters(filtersFromURL);
-      }
-      setIncludePast(willIncludePast);
-      setOpen(willIncludePast || filtersFromURL.length > 0);
-    }
-    console.log("Pulling data from URL (location.search change)", props.location.search);
-    loadURLParams();
-  // ESLint Disable Justification:
-  // Adding filters as a dependency would cause the URL params to take presendence over real filters
-  // Ex. filters and filtersFromURL currently in sync -> filter added -> now out of sync
-  // so then we setFilters(filtersFromURL); however, URL is secondary
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.location.search]);
-
-  // Browser 'back' arrow
-  // window.onpopstate = () => {
-  //   if (!window.location.href.includes('?')) {
-      
-  //   }
-  //   loadFiltersFromURL();
-  //   console.log("pop");
-  // };
-
-  // Combined - no good because of toggle
-  // useEffect(() => {
-  //   const loadEventsTest = async () => {
-  //     console.log("start");
-  //     setFilteredEvents(await gordonEvent.getFilteredEvents(includePast ? allEvents : futureEvents, filters, search));
-  //     setLoading(false);
-  //     console.log("end");
-  //   }
-  //   loadEventsTest();
-  // }, [includePast, allEvents, futureEvents, filters, search]);
-
   // When the actual events data changes update the events
   useEffect(() => {
-    console.log("set all events", includePast);
-    // setLoading(true);
     setEvents(includePast ? allEvents : futureEvents);
   }, [includePast, allEvents, futureEvents]);
 
@@ -108,32 +57,12 @@ const Events = (props) => {
     const loadFilteredEvents = async() => {
       setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
     }
-    console.log("loadFilteredEvents", events.length, filters, search);
     loadFilteredEvents();
   }, [events, filters, search]);
 
-  // Update the URL when filters change
   useEffect(() => {
-    const setURLParams = (includePast, filters) => {
-      // if there are filters set, push them to url; otherwise, push empty params
-      if (includePast || filters.length > 0) {
-        let url = '?';
-        if (includePast) url += '&Past';
-        url = filters.reduce((url, filter) => (url += `&${encodeURIComponent(filter)}`), url);
-        props.history.push(url);
-        // console.log("pushing", url);
-      } else {
-        props.history.push();
-        // console.log("pushing ()");
-      }
-    };
-    console.log("setURLParams", filters, includePast, props.history, props.history.location);
-    setURLParams(includePast, filters);
-  // ESLint Disable Justification:
-  // Setting url pushes to history, which we do not want to then set the url again
-  // so we have removed props.history from dependency list
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, includePast]);
+    setOpen(filters.length > 0 || includePast);
+  }, [filters.length, includePast]);
 
   const handleExpandClick = () => {
     clearFilters();
@@ -142,11 +71,7 @@ const Events = (props) => {
 
   const clearFilters = () => {
     setIncludePast(false);
-    // this check prevents 'filters' dependants from being run unnecessarily
-    // (array changes [] -> [] are different memory objects)
-    if(filters.length) {
-      setFilters([]);
-    }
+    setFilters([]);
   };
 
   let content;
@@ -200,8 +125,8 @@ const Events = (props) => {
           <TextField
             id="search"
             label="Search"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            value={searchTest}
+            onChange={(event) => setSearchTest(event.target.value)}
             fullWidth
           />
         </Grid>
