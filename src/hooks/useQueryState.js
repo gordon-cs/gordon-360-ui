@@ -20,84 +20,106 @@ import { useHistory } from 'react-router-dom';
  * arrow, preventing you from going forward (and other similar browsing history issues).
  *
  * @param {String} keyParam - key of the QueryState variable
- * @param {String} initial - initial value of the QueryState variable TODO
- * @returns {boolean} true if connected to the network, false otherwise. TODO
+ * @param {String} typeString - the type of variable (must correspond with a types enum value)
+ * @param {String} initial - initial value of the QueryState variable (optional)
+ * @returns {[var, Callback]} - the state variable, the setQueryState callback function
  */
-function useQueryState(keyParam, initial) {
-  const [state, setState] = useState(initial);
+function useQueryState(keyParam, typeString, initial) {
   const key = keyParam; // we should never change the particular key once we start using it
-  const defaultVal = initial; // so we can go back to it
-  // ^^^ NOTE: issue this probably has to be reset on url load
-  let history = useHistory();
+  const types = {
+    SingleValue: 'SingleValue',
+    Array: 'Array',
+    Boolean: 'Boolean',
+  };
+  const defaultValues = {
+    SingleValue: '',
+    Array: [],
+    Boolean: false,
+  };
+  const type = types[typeString];
+  if (type === undefined)
+    throw new Error(`type must be one of the given types: ${Object.values(types)}`);
+  const defaultVal = defaultValues[type];
+  const [state, setState] = useState(initial ?? defaultVal);
+  const history = useHistory();
 
   /**
-   * TODO
+   * Anytime the state changes, setURLParam is invoked
+   * This function updates the URL with the state (if changed)
    */
   useEffect(() => {
     const setURLParam = async () => {
-      console.log('setURLParam', key, state);
       let urlParams = new URLSearchParams(history.location.search);
-      console.log("urlParams", urlParams.toString(),
-       "url param", urlParams.get(key),
-       "defaultVal", defaultVal,
-       "state", state.toString(), 
-       "action", (urlParams.get(key) ?? defaultVal) === state.toString());
 
       // if the url value is already the same as the state value -> don't set the url again
       // note: must include toString in defaultVal.toString() in order to check empty arrays
-      // TODO: check defaultVal usage, might just change this to ''
-      if ((urlParams.get(key) ?? defaultVal.toString()) === state.toString()) return;
+      if (
+        (urlParams.get(key) ?? defaultVal.toString()) === state.toString() ||
+        (state === true && urlParams.get(key) === '')
+      )
+        return;
 
       // key with no value OR boolean key set to false -> absent from url, push empty
       if (!state || state === '' || state.length === 0 || state === false) urlParams.delete(key);
-      // boolean key set to true -> present in url, doesn't need '=value'
-      else if (state === true) {
-          console.log("boolean");
-          urlParams.delete(key);
-          urlParams += `&${encodeURIComponent(key)}`;
-      } else {
-        // value key is present in url with its current value
-        urlParams.set(key, state.toString());
-      }
+      // boolean or value key is present in url with its current value
+      else urlParams.set(key, state.toString());
+
+      // boolean keys set to true don't need '=value'
+      urlParams = (urlParams.toString()).replace(/=true|=$/g, '').replace(/=&/,'&');
 
       history.push('?' + urlParams);
     };
-    console.log("state changed -> comparing with this url", history.location.search);
     setURLParam();
+    /*********************** ESLint Disable Justification: *******************************/
+    // ESLint wants to include `defaultVal, key, history` as dependencies but to prevent
+    // extra loops of ~ url setting state setting the url ~ we do not include.
+    // The only time we want to set the URL manually is when the state changes
+    /*************************************************************************************/
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   /**
    * Anytime the url is changed, loadURLParams is invoked
    * This function pulls the value of the key from the url
    *   and updates the state with it (if changed)
+   *
+   * This is a useLayoutEffect rather than useEffect in order to prioritize loadURLParams;
+   *   this is necessary for preventing the race condition where (for ex.) the user clicks 'back'
+   *   twice quickly and the first 'back' sets the URL params before the second 'back' can
+   *   load the accurate new URL param. This is still not totally perfect but only breaks when
+   *   a user really messes with the navigation significantly and quickly.
+   * Comparison of the two effects: https://kentcdodds.com/blog/useeffect-vs-uselayouteffect
    */
   useLayoutEffect(() => {
     const loadURLParams = async () => {
       const urlParams = new URLSearchParams(history.location.search);
-      /*** Boolean Key Logic ***/
-      // using boolean key -> load true if present, false if absent from url
-      if(defaultVal === true || defaultVal === false) {
-          setState(urlParams.has(key));
-          return;
-      }
       let urlValue = urlParams.get(key);
 
-      /*** Array Key Logic ***/
-      // different logic if we are working with an array than with single value
-      // because setState will not do deep array comparison
-      if (Array.isArray(defaultVal)) {
-        // if the same value (or unset and state array is empty) -> do nothing
-        // this check is necessary because [] -> [] are different memory objects
-        if (urlValue === state.toString() || (!urlValue && state.length === 0)) return;
-        else if (!urlValue) setState(defaultVal);
-        else setState(urlValue.split(','));
-      }
-      /*** Single Value Key Logic ***/
-      else {
-        setState(urlValue ?? defaultVal);
+      switch (type) {
+        // using boolean key -> load true if present, false if absent from url
+        case types.Boolean:
+          setState(urlParams.has(key));
+          return;
+
+        // different logic if we are working with an array than with single value
+        // because setState will not do deep array comparison
+        case types.Array:
+          // if the same value (or unset and state array is empty) -> do nothing
+          // this check is necessary because [] -> [] are different memory objects
+          if (urlValue === state.toString() || (!urlValue && state.length === 0)) return;
+          else if (!urlValue) setState(defaultVal);
+          else setState(urlValue.split(','));
+          break;
+
+        case types.SingleValue:
+          setState(urlValue ?? defaultVal);
+          break;
+
+        default:
+          // should never be reached, type must always be one of the preceeding
+          throw new Error(`missing case for type ${type}`);
       }
     };
-    console.log('loadURLParams', key, history.location.search);
     loadURLParams();
     /*********************** ESLint Disable Justification: *******************************/
     // ESLint wants to include `defaultVal, key, state` as dependencies but to prevent

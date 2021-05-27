@@ -24,12 +24,12 @@ const Events = (props) => {
   const [allEvents, setAllEvents] = useState([]);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [includePast, setIncludePast] = useQueryState('past', false);
+  const [includePast, setIncludePast] = useQueryState('past', 'Boolean');
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useQueryState('filters', []);
+  const [filters, setFilters] = useQueryState('filters', 'Array');
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
 
-  const [searchTest, setSearchTest] = useQueryState('search', '');
+  const [searchTest, setSearchTest] = useQueryState('search', 'SingleValue');
 
   useEffect(() => {
     // Single use - Loads events data on page load / authentication
