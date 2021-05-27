@@ -60,10 +60,10 @@ const NonMemberButtons = ({
       createSnackbar('Request sent, awaiting approval from a group leader', 'success');
     } catch (err) {
       if (
-        err ===
+        err.Message ===
         'A request for this activity has already been made for you and is awaiting group leader approval.'
       ) {
-        createSnackbar('You already have a pending request to join this involvement.');
+        createSnackbar('You already have a pending request to join this involvement.', 'info');
       } else {
         createSnackbar(
           'There was a problem sending your request to join. Please try again or contact CTS',
