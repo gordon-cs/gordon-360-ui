@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useLayoutEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 /**
@@ -38,12 +38,14 @@ function useQueryState(keyParam, initial) {
       console.log('setURLParam', key, state);
       let urlParams = new URLSearchParams(history.location.search);
       console.log("urlParams", urlParams.toString(),
-       "key", urlParams.get(key),
+       "url param", urlParams.get(key),
        "defaultVal", defaultVal,
        "state", state.toString(), 
        "action", (urlParams.get(key) ?? defaultVal) === state.toString());
 
       // if the url value is already the same as the state value -> don't set the url again
+      // note: must include toString in defaultVal.toString() in order to check empty arrays
+      // TODO: check defaultVal usage, might just change this to ''
       if ((urlParams.get(key) ?? defaultVal.toString()) === state.toString()) return;
 
       // key with no value OR boolean key set to false -> absent from url, push empty
@@ -60,6 +62,7 @@ function useQueryState(keyParam, initial) {
 
       history.push('?' + urlParams);
     };
+    console.log("state changed -> comparing with this url", history.location.search);
     setURLParam();
   }, [state]);
 
@@ -68,7 +71,7 @@ function useQueryState(keyParam, initial) {
    * This function pulls the value of the key from the url
    *   and updates the state with it (if changed)
    */
-  useEffect(() => {
+  useLayoutEffect(() => {
     const loadURLParams = async () => {
       const urlParams = new URLSearchParams(history.location.search);
       /*** Boolean Key Logic ***/
