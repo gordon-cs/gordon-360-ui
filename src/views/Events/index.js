@@ -52,10 +52,7 @@ const Events = (props) => {
 
   // Apply filters to the events data
   useEffect(() => {
-    const loadFilteredEvents = async() => {
-      setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
-    }
-    loadFilteredEvents();
+    setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
   }, [events, filters, search]);
 
   useEffect(() => {
