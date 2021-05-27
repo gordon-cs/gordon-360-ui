@@ -73,7 +73,7 @@ const Events = (props) => {
 
   if (loading === true) {
     content = <GordonLoader />;
-  } else if (filteredEvents.length > 0) {
+  } else if (events.length > 0) {
     content = <EventList events={filteredEvents} />;
   }
 
@@ -87,7 +87,7 @@ const Events = (props) => {
             id="event-checkboxes"
             multiple
             value={filters}
-            onChange={(event) => {setFilters(event.target.value)}}
+            onChange={(event) => setFilters(event.target.value)}
             renderValue={(selected) => (
               <div className="filter-chips">
                 {selected.map((value) => (
@@ -111,7 +111,7 @@ const Events = (props) => {
       </div>
     </Collapse>
   );
-  
+
   return (
     <Grid container justify="center" alignContent="flex-start">
       {/* Search Bar and Filters */}
