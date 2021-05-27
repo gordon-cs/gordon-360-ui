@@ -19,9 +19,17 @@ import { useHistory } from 'react-router-dom';
  * that prevents issues like setting the state unnecessarily after clicking the browser back
  * arrow, preventing you from going forward (and other similar browsing history issues).
  *
+ * Current Implementation Issues:
+ * - UseLayoutEffect is not a perfect solution to the race condition issue. Symptoms of this
+ * possibly poor design are evident when the browser 'back'/'forward' arrows are tested heavily
+ * which can skip queryStates (likely not a practical use case), as well as the fact that
+ * we cannot set to an initial value or else we might load (and overwrite the state) from the url
+ * before we can set the url
+ *
  * @param {String} keyParam - key of the QueryState variable
  * @param {String} typeString - the type of variable (must correspond with a types enum value)
  * @param {String} initial - initial value of the QueryState variable (optional)
+ *          *** DOES NOT currently work because of loading from URL before URL gets set
  * @returns {[var, Callback]} - the state variable, the setQueryState callback function
  */
 function useQueryState(keyParam, typeString, initial) {
@@ -65,7 +73,10 @@ function useQueryState(keyParam, typeString, initial) {
       else urlParams.set(key, state.toString());
 
       // boolean keys set to true don't need '=value'
-      urlParams = (urlParams.toString()).replace(/=true|=$/g, '').replace(/=&/,'&');
+      urlParams = urlParams
+        .toString()
+        .replace(/=true|=$/g, '')
+        .replace(/=&/, '&');
 
       history.push('?' + urlParams);
     };

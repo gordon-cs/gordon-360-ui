@@ -29,8 +29,6 @@ const Events = (props) => {
   const [filters, setFilters] = useQueryState('filters', 'Array');
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
 
-  const [searchTest, setSearchTest] = useQueryState('search', 'SingleValue');
-
   useEffect(() => {
     // Single use - Loads events data on page load / authentication
     const loadEventsPage = async () => {
@@ -125,8 +123,8 @@ const Events = (props) => {
           <TextField
             id="search"
             label="Search"
-            value={searchTest}
-            onChange={(event) => setSearchTest(event.target.value)}
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
             fullWidth
           />
         </Grid>
