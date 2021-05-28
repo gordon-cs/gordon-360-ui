@@ -343,7 +343,7 @@ class PeopleSearch extends Component {
   };
 
   async search() {
-    if (!Object.values(this.state.searchValues).some((x) => x !== '' && x !== false)) {
+    if (!Object.values(this.state.searchValues).some((x) => x)) {
       // do not search, only search if there are some non-blank non-false values
     } else {
       this.setState({
@@ -383,9 +383,9 @@ class PeopleSearch extends Component {
 
   async updateURL() {
     const searchParameters = Object.entries(this.state.searchValues)
-      .map(([key, value]) => (value ? `${key}=${value}` : '')) // [ 'firstName=value', 'state=texas']
       .filter((n) => n) // removes empty strings
-      .join('&'); // 'firstName=value&state=texas' - note the lack of trailing &
+      .map(([key, value]) => (value ? `${key}=${value}` : '')) // [ 'firstName=value', 'state=texas']
+      .join('&'); // 'firstName=value&state=texas'
 
     if (this.props.history.location.search !== searchParameters) {
       this.props.history.push(`?${searchParameters}`);
