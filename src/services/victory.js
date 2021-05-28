@@ -23,6 +23,8 @@ const getVPScore = async () => {
   return await http.get(`vpscore`);
 };
 
-export default {
+const victoryPromiseService = {
   getVPScore,
 };
+
+export default victoryPromiseService;

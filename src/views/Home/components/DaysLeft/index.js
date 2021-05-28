@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Doughnut, defaults } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 
-import { gordonColors } from '../../../../theme';
-import session from '../../../../services/session';
-import GordonLoader from '../../../../components/Loader';
+import { gordonColors } from 'theme';
+import session from 'services/session';
+import GordonLoader from 'components/Loader';
 
 import { Card, CardHeader, CardContent, Typography, Grid } from '@material-ui/core';
 
@@ -20,7 +20,7 @@ export default class DaysLeft extends Component {
       loading: true,
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadDaysLeft();
   }
   async loadDaysLeft() {
@@ -45,7 +45,6 @@ export default class DaysLeft extends Component {
       throw this.state.error;
     }
 
-    defaults.global.legend.display = false;
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
@@ -55,13 +54,6 @@ export default class DaysLeft extends Component {
       const data = {
         datasets: [{ data: [pastDays, daysleft], backgroundColor: [gordonColors.primary.blue] }],
         labels: ['Days Finished', 'Days Remaining'],
-      };
-      const options = {
-        options: {
-          legend: {
-            display: false,
-          },
-        },
       };
       content = (
         <div>
@@ -77,7 +69,7 @@ export default class DaysLeft extends Component {
               </Typography>
             </Grid>
           </Grid>
-          <Doughnut data={data} height={175} options={options} />
+          <Doughnut data={data} height={175} />
           <div
             style={{
               marginTop: '1rem',
@@ -97,7 +89,7 @@ export default class DaysLeft extends Component {
               <div className="label-text" style={{ color: gordonColors.primary.blue }}>
                 {pastDays}
               </div>
-              <div class="entry-text">Days Finished</div>
+              <div className="entry-text">Days Finished</div>
             </div>
           </div>
         </div>

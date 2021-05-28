@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Doughnut, defaults } from 'react-chartjs-2';
+import { Link } from 'react-router-dom';
 
-import { gordonColors } from '../../../../theme';
-import user from '../../../../services/user';
-import session from '../../../../services/session';
-import GordonLoader from '../../../../components/Loader';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import session from 'services/session';
+import GordonLoader from 'components/Loader';
 
 import './CLWChart.css';
 
@@ -25,7 +26,7 @@ export default class CLWCreditsDaysLeft extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadData();
   }
 
@@ -129,20 +130,7 @@ export default class CLWCreditsDaysLeft extends Component {
               </Typography>
             </Grid>
           </Grid>
-          {/* <Grid container justify="center">
-            <Grid item>
-              <div class="legend">
-                <div class="entry">
-                  <span class="entry-label" style={{ background: daysColor }} />
-                  <span class="entry-text">Days Finished</span>
-                </div>
-                <div class="entry">
-                  <span class="entry-label" style={{ background: chapelColor }} />
-                  <span class="entry-text">CL&amp;W Credits</span>
-                </div>
-              </div>
-            </Grid>
-          </Grid> */}
+
           <Doughnut data={data} height={175} options={options} />
           <div
             style={{
@@ -163,7 +151,9 @@ export default class CLWCreditsDaysLeft extends Component {
               <div className="label-text" style={{ color: daysColor }}>
                 {daysFinished}
               </div>
-              <div class="entry-text">{'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}</div>
+              <div className="entry-text">
+                {'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}
+              </div>
             </div>
             <div
               style={{
@@ -176,7 +166,7 @@ export default class CLWCreditsDaysLeft extends Component {
               <div className="label-text" style={{ color: chapelColor }}>
                 {current}
               </div>
-              <div class="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
+              <div className="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
             </div>
           </div>
         </div>
@@ -184,17 +174,23 @@ export default class CLWCreditsDaysLeft extends Component {
     }
 
     return (
-      <Card>
+      <Card className="clw-credits-days-left">
         <CardContent>
           <Grid container direction="row" alignItems="center">
-            <Grid item xs={7} align="left">
+            <Grid item xs={4} align="left">
+              <Button variant="contained" style={style.button} component={Link} to="/attended">
+                ATTENDED EVENTS
+              </Button>
+            </Grid>
+            <Grid item xs={4} align="center">
               <CardHeader title={this.state.currSessionDescription} />
             </Grid>
-            <Grid item xs={5} align="right">
+            <Grid item xs={4} align="right">
               <Button
                 variant="contained"
                 style={style.button}
-                onClick={(event) => (window.location.href = '/events?CLW')}
+                component={Link}
+                to="/events?CLW%20Credits"
               >
                 MORE CREDITS
               </Button>

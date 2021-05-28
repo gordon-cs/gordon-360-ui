@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
-import user from './../../services/user';
-import GordonLoader from './../../components/Loader';
+import user from 'services/user';
+import GordonLoader from 'components/Loader';
 import './coCurricularTranscript.css';
 
 import { Grid, Button, Card, CardContent, Typography } from '@material-ui/core';
@@ -29,7 +29,7 @@ export default class Transcript extends Component {
     window.print();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.authentication) {
       this.loadTranscript();
     }

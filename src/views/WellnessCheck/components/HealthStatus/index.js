@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 import { Check, Remove, Clear } from '@material-ui/icons';
-import { StatusColors } from '../../../../services/wellness';
-import SymptomsDialog from '../../../../components/SymptomsDialog';
+import { StatusColors } from 'services/wellness';
+import SymptomsDialog from 'components/SymptomsDialog';
 import './index.css';
 
 const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
@@ -61,15 +61,13 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
     <Grid container justify="center" spacing={2}>
       <Grid item xs={12} md={8}>
         <Card className="wellness-check">
+          <CardHeader title={username} />
           <CardContent>
-            <CardHeader title={username} />
-            <Card>
-              <img
-                className="rounded-corners user-image"
-                src={`data:image/jpg;base64,${image}`}
-                alt={username}
-              />
-            </Card>
+            <img
+              className="rounded-corners user-image"
+              src={`data:image/jpg;base64,${image}`}
+              alt={username}
+            />
             {/* TODO: Remove following code block after Spring 2021 move in is complete */}
             {/* START */}
             {currentStatus === StatusColors.RED && (
@@ -87,7 +85,7 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
               </Typography>
             )}
             {/* END */}
-            <Grid spacing={2} className="wellness-status">
+            <Grid className="wellness-status">
               <Card className={currentStatus}>
                 <CardContent className="status-box">
                   <div className="status-time">{time}</div>

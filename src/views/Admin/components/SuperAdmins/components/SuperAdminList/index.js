@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { gordonColors } from '../../../../../../theme';
-import admin from '../../../../../../services/admin';
+import { gordonColors } from 'theme';
+import admin from 'services/admin';
 
 import {
   Typography,
@@ -24,7 +24,7 @@ export default class SuperAdminList extends Component {
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     this.setState({});
   }
 

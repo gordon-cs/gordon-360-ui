@@ -5,7 +5,7 @@
  */
 
 /**
- * Authentication Error
+ * authentication Error
  * @global
  * @class
  * @param {String} message Error message

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 import React from 'react';
-import Login from '../../../Login';
+import Login from 'views/Login';
 import './guest-welcome.css';
 
 const GuestWelcome = ({ onLogIn }) => {

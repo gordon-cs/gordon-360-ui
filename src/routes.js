@@ -1,14 +1,14 @@
 import About from './views/About';
-import ActivitiesAll from './views/ActivitiesAll';
-//import ActivityEdit from './views/ActivityEdit';
-import ActivityProfile from './views/ActivityProfile';
+import InvolvementsAll from './views/InvolvementsAll';
+import InvolvementProfile from './views/InvolvementProfile';
 import Home from './views/Home';
 import WellnessCheck from './views/WellnessCheck';
+import ApartmentApp from './views/ApartmentApp';
 import Help from './views/Help';
 import CoCurricularTranscript from './views/CoCurricularTranscript';
 import Events from './views/Events';
 import EventsAttended from './views/EventsAttended';
-import Profile from './views/Profile';
+import PublicProfile from './views/PublicProfile';
 import MyProfile from './views/MyProfile';
 import Feedback from './views/Feedback';
 import PeopleSearch from './views/PeopleSearch';
@@ -21,7 +21,7 @@ import News from './views/News';
 import Page404 from './views/Page404';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
-export default [
+const routes = [
   {
     name: 'Home',
     path: '/',
@@ -39,14 +39,19 @@ export default [
     component: WellnessCheck,
   },
   {
+    name: 'Apartment Application',
+    path: '/ApartApp',
+    component: ApartmentApp,
+  },
+  {
     name: 'Involvement Profile',
-    path: '/activity/:sessionCode/:activityCode',
-    component: ActivityProfile,
+    path: '/activity/:sessionCode/:involvementCode',
+    component: InvolvementProfile,
   },
   {
     name: 'Involvements',
     path: '/involvements',
-    component: ActivitiesAll,
+    component: InvolvementsAll,
   },
   {
     name: 'Help',
@@ -81,7 +86,7 @@ export default [
   {
     name: 'Profile',
     path: '/profile/:username',
-    component: Profile,
+    component: PublicProfile,
   },
   {
     name: 'My Profile',
@@ -124,3 +129,5 @@ export default [
     component: Page404,
   },
 ];
+
+export default routes;

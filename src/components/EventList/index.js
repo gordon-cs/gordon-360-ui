@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CollapsableEventItem from './components/CollapsableEventItem';
 import EventItem from './components/EventItem';
-import { gordonColors } from '../../theme';
+import { gordonColors } from 'theme';
 
 import './event-list.css';
 

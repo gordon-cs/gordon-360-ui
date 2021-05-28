@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PostAddIcon from '@material-ui/icons/PostAdd';
-import newsService from './../../services/news';
-import userService from './../../services/user';
-import NewsList from '../News/components/NewsList';
-import GordonLoader from '../../components/Loader';
+import newsService from 'services/news';
+import userService from 'services/user';
+import NewsList from './components/NewsList';
+import GordonLoader from 'components/Loader';
 import {
   Snackbar,
   IconButton,
@@ -21,7 +21,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { ReactComponent as NoConnectionImage } from '../../NoConnection.svg';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
 // import Dropzone from 'react-dropzone';
@@ -73,10 +73,11 @@ export default class StudentNews extends Component {
     this.callFunction = this.callFunction.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({ loading: false });
     this.loadNews();
     this.loadUsername();
+    window.addEventListener('resize', this.resize);
   }
 
   async loadUsername() {
@@ -257,10 +258,6 @@ export default class StudentNews extends Component {
     else return false;
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
-  }
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
   }
@@ -314,9 +311,9 @@ export default class StudentNews extends Component {
         );
       } else {
         content = (
-          <Grid item>
-            <Typography variant="h4">No News To Show</Typography>
-          </Grid>
+          <Typography variant="h4" align="center">
+            No News To Show
+          </Typography>
         );
       }
 
@@ -348,7 +345,7 @@ export default class StudentNews extends Component {
         (networkStatus === 'offline' && this.props.authentication)
       ) {
         news = (
-          <section>
+          <>
             {/* Button to Create Posting */}
             <Fab
               variant="extended"
@@ -472,7 +469,7 @@ export default class StudentNews extends Component {
                 open={this.state.snackbarOpen}
                 message={this.state.snackbarMessage}
                 onClose={this.handleSnackbarClose}
-                autoHideDuration="5000"
+                autoHideDuration={5000}
                 anchorOrigin={{
                   vertical: 'bottom',
                   horizontal: 'left',
@@ -489,12 +486,12 @@ export default class StudentNews extends Component {
                 ]}
               ></Snackbar>
 
-              <Grid item xs={12} md={12} lg={8} style={{ marginBottom: '7rem' }}>
+              <Grid item xs={12} lg={8} style={{ marginBottom: '7rem' }}>
                 {/* list of news */}
                 {content}
               </Grid>
             </Grid>
-          </section>
+          </>
         );
       }
       // If the user is offline

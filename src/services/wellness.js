@@ -121,8 +121,10 @@ const formatQuestion = async (question) => {
   return question;
 };
 
-export default {
+const wellnessService = {
   getStatus,
   getQuestion,
   postAnswer,
 };
+
+export default wellnessService;

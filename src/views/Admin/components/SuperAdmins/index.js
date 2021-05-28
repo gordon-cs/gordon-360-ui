@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import SuperAdminList from './components/SuperAdminList';
-import GordonLoader from '../../../../components/Loader';
-import admin from '../../../../services/admin';
-import { gordonColors } from '../../../../theme';
-import membership from '../../../../services/membership';
+import GordonLoader from 'components/Loader';
+import admin from 'services/admin';
+import { gordonColors } from 'theme';
+import membership from 'services/membership';
 
 import {
   Typography,
@@ -30,7 +30,7 @@ export default class SuperAdmin extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadAdmins();
   }
 
@@ -89,30 +89,27 @@ export default class SuperAdmin extends Component {
       content = <GordonLoader />;
     } else {
       content = this.state.admins.map((superadmin) => (
-        <div>
-          <SuperAdminList Admin={superadmin} />
-        </div>
+        <SuperAdminList key={superadmin.ADMIN_ID} Admin={superadmin} />
       ));
     }
 
     return (
       <Card>
-        <div>
-          <div style={headerStyle}>
-            <Typography variant="body2" align="center" style={headerStyle}>
-              Super Admins
-            </Typography>
-          </div>
-          {content}
+        <div style={headerStyle}>
+          <Typography variant="body2" align="center" style={headerStyle}>
+            Super Admins
+          </Typography>
         </div>
+        {content}
         <Button style={buttonStyle} onClick={this.handleAdd}>
           Add Super Admin
         </Button>
+
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
-          fullWidth="true"
+          fullWidth
         >
           <DialogTitle id="form-dialog-title">Add Super Admin</DialogTitle>
           <DialogContent>

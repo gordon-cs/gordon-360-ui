@@ -5,8 +5,8 @@
 
 import React, { Component } from 'react';
 import { Button, Grid, Typography, Collapse } from '@material-ui/core';
-import { gordonColors } from '../../../../../../theme';
-import NewsService from '../../../../../../services/news';
+import { gordonColors } from 'theme';
+import NewsService from 'services/news';
 import NewsItem from '../NewsItem';
 
 //Written by Jessica Guan
@@ -24,7 +24,7 @@ export default class CategorizedNews extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadNews();
   }
 

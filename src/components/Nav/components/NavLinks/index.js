@@ -1,297 +1,217 @@
-import GordonDialogBox from '../../../GordonDialogBox/index';
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { signOut } from '../../../../services/auth';
-import storage from '../../../../services/storage';
-import QuickLinksDialog from '../../../QuickLinksDialog';
-import {
-  createLinksButton,
-  createFeedbackButton,
-  createAdminButton,
-  createPeopleButton,
-  createInvolvementsButton,
-  createEventsButton,
-  createHomeButton,
-  createSignInOutButton,
-  createHelpButton,
-  createAboutButton,
-  createTimesheetsButton,
-  createWellnessButton,
-} from './navButtons.js';
+import React, { useState } from 'react';
+import { Divider, List } from '@material-ui/core';
+import HomeIcon from '@material-ui/icons/Home';
+import LocalActivityIcon from '@material-ui/icons/LocalActivity';
+import EventIcon from '@material-ui/icons/Event';
+import PeopleIcon from '@material-ui/icons/People';
+import WorkIcon from '@material-ui/icons/Work';
+import WellnessIcon from '@material-ui/icons/LocalHospital';
+import { signOut } from 'services/auth';
+import user from 'services/user';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import GordonQuickLinksDialog from 'components/QuickLinksDialog';
+import GordonDialogBox from 'components/GordonDialogBox/index';
+import GordonNavButton from 'components/NavButton';
 import './nav-links.css';
 
-import { List, Divider } from '@material-ui/core';
+const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
+  const [areLinksOpen, setAreLinksOpen] = useState(false);
+  const [dialog, setDialog] = useState(null);
+  const isOnline = useNetworkStatus();
 
-export default class GordonNavLinks extends Component {
-  constructor(props) {
-    super(props);
-    this.onSignOut = this.onSignOut.bind(this);
-    this.onSignIn = this.onSignIn.bind(this);
-    this.handleLinkClickOpen = this.handleLinkClickOpen.bind(this);
-    this.handleLinkClose = this.handleLinkClose.bind(this);
-    this.openDialogBox = this.openDialogBox.bind(this);
-    this.closeDialogBox = this.closeDialogBox.bind(this);
-
-    this.state = {
-      linkopen: false,
-      dialogBoxOpened: false,
-      dialogType: '',
-      dialogReason: '',
-      network: 'online',
-    };
-  }
-
-  componentDidMount() {
-    /* Used to re-render the page when the network connection changes.
-     *  this.state.network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline', linkopen: false });
-      }
-    });
-
-    let network;
-    /* Attempts to get the network status from local storage.
-     * If not found, the default value is online
-     */
-    try {
-      network = storage.get('network-status');
-    } catch (error) {
-      // Defaults the network to online if not found in local storage
-      network = 'online';
-    }
-
-    // Saves the network's status to this component's state
-    this.setState({ network });
-  }
-
-  componentWillUnmount() {
-    // Removes the window's event listener before unmounting the component
-    window.removeEventListener('message', () => {});
-  }
-
-  /**
-   * Signs user out
-   */
-  onSignOut() {
+  const handleSignOut = () => {
     signOut();
-    this.props.onLinkClick();
-    this.props.onSignOut();
-  }
+    onLinkClick();
+    onSignOut();
+  };
 
-  /**
-   * Brings user to login page
-   */
-  onSignIn() {
-    this.props.onLinkClick();
-  }
-
-  /**
-   * Opens the dialog box containing external links
-   */
-  handleLinkClickOpen() {
-    this.setState({
-      linkopen: true,
-    });
-  }
-
-  /**
-   * Closes the dialog box containing external links
-   */
-  handleLinkClose() {
-    this.setState({ linkopen: false });
-  }
-
-  /**
-   * Creates a dialog box.
-   *
-   * Depending on the dialog box's type saved in the state, the dialog box and it's content is created.
-   *
-   * @returns {JSX} The JSX of the dialog box
-   */
-  createDialogBox() {
-    // Type - Offline
-    if (this.state.dialogType === 'offline') {
+  const dialogBox = () => {
+    if (dialog === 'offline') {
       return (
         <GordonDialogBox
-          open={this.state.dialogBoxOpened}
-          onClose={this.closeDialogBox}
-          labelledby={'offline-dialog'}
-          describedby={'feature-deactivated'}
+          open={dialog}
+          onClose={() => setDialog(null)}
           title={'Offline Mode'}
-          text={
-            'This feature is unavailable offline. Please reconnect to internet to access this feature.'
-          }
-          buttonClicked={this.closeDialogBox}
+          buttonClicked={() => setDialog(null)}
           buttonName={'Okay'}
-        />
+        >
+          This feature is unavailable offline. Please reconnect to internet to access this feature.
+        </GordonDialogBox>
       );
-    }
-    // Type - Unauthorized
-    else if (this.state.dialogType === 'unauthorized') {
+    } else if (dialog === 'unauthorized') {
       return (
         <GordonDialogBox
-          open={this.state.dialogBoxOpened}
-          onClose={this.closeDialogBox}
-          labelledby={'unauthorized-dialog'}
-          describedby={'feature-unavailable'}
+          open={dialog}
+          onClose={() => setDialog(null)}
           title={'Credentials Needed'}
-          text={`This feature is unavailable while not logged in. Please log in to ${this.state.dialogReason}.`}
-          buttonClicked={this.closeDialogBox}
+          buttonClicked={() => setDialog(null)}
           buttonName={'Okay'}
-        />
+        >
+          This feature is unavailable while not logged in. Please log in to access it.
+        </GordonDialogBox>
       );
     }
-  }
+  };
 
-  /**
-   * Opens the dialog box.
-   *
-   * Depending on the type and reason for opening the dialog box, the dialog box's content is made.
-   *
-   * @param {String} type The type of dialog box requested
-   * @param {String} feature The feature the user attempted to access
-   */
-  openDialogBox(type, feature) {
-    let reason = '';
-    if (feature === 'people search') {
-      reason = 'use People Search';
-    } else if (feature === 'timesheets view') {
-      reason = 'view Timesheets';
-    } else if (feature === 'wellness check') {
-      reason = 'check Wellness';
-    } else {
-      reason = '';
-    }
+  const homeButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName={'Home'}
+      linkPath={'/'}
+      LinkIcon={HomeIcon}
+      divider={false}
+    />
+  );
 
-    this.setState({ dialogBoxOpened: true, dialogType: type, dialogReason: reason });
-  }
+  const involvementsButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName={'Involvements'}
+      linkPath={'/involvements'}
+      LinkIcon={LocalActivityIcon}
+      divider={false}
+    />
+  );
 
-  /**
-   * Closes the dialog box.
-   *
-   * While closing the dialog box, all of its text content is erased.
-   */
-  closeDialogBox() {
-    this.setState({ dialogBoxOpened: false, dialogType: '', dialogReason: '' });
-  }
+  const eventsButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName={'Events'}
+      linkPath={'/events'}
+      LinkIcon={EventIcon}
+      divider={false}
+    />
+  );
 
-  render() {
-    // Home Button
-    let homeButton = createHomeButton(this.props.onLinkClick);
+  const peopleButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !authentication ? 'unauthorized' : null}
+      onLinkClick={onLinkClick}
+      openUnavailableDialog={setDialog}
+      divider={false}
+      linkName={'People'}
+      linkPath="/people"
+      LinkIcon={PeopleIcon}
+    />
+  );
 
-    // Involvements Button
-    let involvementsButton = createInvolvementsButton(this.props.onLinkClick);
+  const timesheetsButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !authentication ? 'unauthorized' : null}
+      openUnavailableDialog={setDialog}
+      onLinkClick={onLinkClick}
+      linkName={'Timesheets'}
+      linkPath={'/timesheets'}
+      LinkIcon={WorkIcon}
+      divider={false}
+    />
+  );
 
-    // Events Button
-    let eventsButton = createEventsButton(this.props.onLinkClick);
+  const wellnessButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !authentication ? 'unauthorized' : null}
+      openUnavailableDialog={setDialog}
+      onLinkClick={onLinkClick}
+      linkName={'Wellness'}
+      linkPath={'/wellness'}
+      LinkIcon={WellnessIcon}
+      divider={false}
+    />
+  );
 
-    // People Button
-    let peopleButton = createPeopleButton(
-      this.state.network,
-      this.props.authentication,
-      this.props.onLinkClick,
-      this.openDialogBox,
-    );
+  const linksButton = (
+    <GordonNavButton
+      unavailable={isOnline ? null : 'offline'}
+      openUnavailableDialog={setDialog}
+      divider={false}
+      onLinkClick={() => {
+        onLinkClick();
+        setAreLinksOpen(true);
+      }}
+      linkName={'Links'}
+    />
+  );
 
-    // Timesheets Button
-    let timesheetsButton = createTimesheetsButton(
-      this.state.network,
-      this.props.authentication,
-      this.props.onLinkClick,
-      this.openDialogBox,
-    );
+  const helpButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName={'Help'}
+      linkPath={'/help'}
+      divider={false}
+    />
+  );
 
-    // Wellness Button
-    let wellnessButton = createWellnessButton(
-      this.state.network,
-      this.props.authentication,
-      this.props.onLinkClick,
-      this.openDialogBox,
-    );
+  const aboutButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName={'About'}
+      linkPath={'/about'}
+      divider={false}
+    />
+  );
 
-    // Links Button
-    let linksButton = createLinksButton(
-      this.state.network,
-      this.handleLinkClickOpen,
-      this.openDialogBox,
-    );
+  const feedbackButton = (
+    <GordonNavButton
+      unavailable={isOnline ? null : 'offline'}
+      onLinkClick={onLinkClick}
+      openUnavailableDialog={setDialog}
+      divider={false}
+      linkName={'Feedback'}
+      linkPath={'/feedback'}
+    />
+  );
 
-    // Help Button
-    let helpButton = createHelpButton(this.props.onLinkClick);
+  const adminButton =
+    authentication && user.getLocalInfo().college_role === 'god' ? (
+      <GordonNavButton
+        unavailable={!isOnline ? 'offline' : null}
+        onLinkClick={onLinkClick}
+        openUnavailableDialog={setDialog}
+        linkName={'Admin'}
+        linkPath={'/admin'}
+        divider={false}
+      />
+    ) : null;
 
-    // About Button
-    let aboutButton = createAboutButton(this.props.onLinkClick);
+  const signInOutButton = (
+    <GordonNavButton
+      onLinkClick={authentication ? handleSignOut : onLinkClick}
+      linkName={authentication ? 'Sign Out' : 'Sign In'}
+      linkPath={'/'}
+    />
+  );
 
-    // Feedback Button
-    let feedbackButton = createFeedbackButton(
-      this.state.network,
-      this.props.onLinkClick,
-      this.openDialogBox,
-    );
+  return (
+    <>
+      <List className="gordon-nav-links">
+        {homeButton}
+        {involvementsButton}
+        {eventsButton}
+        {peopleButton}
+        {timesheetsButton}
+        {wellnessButton}
+      </List>
 
-    // Admin Button
-    let adminButton = createAdminButton(
-      this.state.network,
-      this.props.authentication,
-      this.props.onLinkClick,
-      this.openDialogBox,
-    );
+      <Divider />
 
-    // Sign In & Out Button
-    let signInOutButton = createSignInOutButton(
-      this.props.authentication,
-      this.onSignOut,
-      this.onSignIn,
-    );
+      <List className="gordon-nav-links-bottom">
+        {linksButton}
+        {helpButton}
+        {aboutButton}
+        {feedbackButton}
+        {adminButton}
+        {signInOutButton}
+      </List>
 
-    return (
-      <div>
-        <List className="gordon-nav-links">
-          {homeButton}
-          {involvementsButton}
-          {eventsButton}
-          {peopleButton}
-          {timesheetsButton}
-          {wellnessButton}
-        </List>
+      <GordonQuickLinksDialog
+        handleLinkClickOpen={() => setAreLinksOpen(true)}
+        handleLinkClose={() => setAreLinksOpen(false)}
+        linkopen={areLinksOpen}
+      />
 
-        <Divider />
-
-        <List className="gordon-nav-links-bottom">
-          {linksButton}
-          {helpButton}
-          {aboutButton}
-          {feedbackButton}
-          {adminButton}
-          {signInOutButton}
-        </List>
-
-        <QuickLinksDialog
-          handleLinkClickOpen={this.handleLinkClickOpen}
-          handleLinkClose={this.handleLinkClose}
-          linkopen={this.state.linkopen}
-        />
-
-        {this.createDialogBox()}
-      </div>
-    );
-  }
-}
-
-GordonNavLinks.propTypes = {
-  onLinkClick: PropTypes.func.isRequired,
+      {dialogBox()}
+    </>
+  );
 };
+
+export default GordonNavLinks;

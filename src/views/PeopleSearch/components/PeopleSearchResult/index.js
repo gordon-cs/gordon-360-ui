@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import IMG from 'react-graceful-image';
 import { Typography, Grid, Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import user from '../../../../services/user';
+import user from 'services/user';
 import { Link } from 'react-router-dom';
 
 import './peopleSearchResult.css';
-import '../../../../app.css';
 
 export default class PeopleSearchResult extends Component {
   constructor(props) {
@@ -25,7 +24,7 @@ export default class PeopleSearchResult extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadAvatar();
   }
 
@@ -102,7 +101,7 @@ export default class PeopleSearchResult extends Component {
     }
 
     return (
-      <section>
+      <>
         <Divider />
         <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
           <Grid
@@ -116,25 +115,25 @@ export default class PeopleSearchResult extends Component {
           >
             <Grid item xs={1}>
               <IMG
-                className="avatar"
+                className="people-search-avatar"
                 src={`data:image/jpg;base64,${this.state.avatar}`}
                 alt=""
                 noLazyLoad="true"
-                placeholderColor="#FFF"
+                placeholderColor="#eeeeee"
               />
             </Grid>
             <Grid item xs={2}>
               <Typography>
-                {Person.FirstName} {nickname}{' '}
+                {Person.FirstName} {nickname}
               </Typography>
             </Grid>
             <Grid item xs={2}>
               <Typography>{Person.LastName}</Typography>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <Typography>{Person.Type}</Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography>{personClassJobTitle}</Typography>
             </Grid>
             <Grid item xs={2}>
@@ -144,15 +143,15 @@ export default class PeopleSearchResult extends Component {
           </Grid>
         </Link>
         <Divider />
-      </section>
+      </>
     );
   }
 }
 
 PeopleSearchResult.propTypes = {
-  person: PropTypes.shape({
-    First_Name: PropTypes.string.isRequired,
-    Last_Name: PropTypes.string.isRequired,
+  Person: PropTypes.shape({
+    FirstName: PropTypes.string.isRequired,
+    LastName: PropTypes.string.isRequired,
     Email: PropTypes.string.isRequired,
   }).isRequired,
 };

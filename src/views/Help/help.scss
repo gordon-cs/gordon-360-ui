@@ -1,7 +1,27 @@
 @import '../../vars';
 
-strong {
-  font-size: 15px;
-  font-weight: bold;
-  margin-top: 20px;
+.help {
+  margin: 1rem;
+
+  li {
+    list-style-type: '⮞ ';
+  }
+
+  li li {
+    list-style-type: '⮚ ';
+  }
+
+  &-title {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  &-header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+  }
+
+  &-section.MuiCard-root {
+    box-shadow: none;
+  }
 }

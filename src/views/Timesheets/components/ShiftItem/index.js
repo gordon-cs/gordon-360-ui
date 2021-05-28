@@ -14,7 +14,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
-import { gordonColors } from '../../../../theme';
+import { gordonColors } from 'theme';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import MessageOutlinedIcon from '@material-ui/icons/MessageOutlined';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
@@ -22,8 +22,8 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import './ShiftItem.css';
-import GordonLoader from '../../../../components/Loader';
-import SimpleSnackbar from '../../../../components/Snackbar';
+import GordonLoader from 'components/Loader';
+import SimpleSnackbar from 'components/Snackbar';
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
