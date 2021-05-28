@@ -73,7 +73,8 @@
     "lint": "npm run --silent lint-js && npm run --silent lint-scss",
     "lint-js": "eslint --ext .js src",
     "lint-scss": "stylelint 'src/**/*.scss'",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "lint-staged": {
     "{**/*.md,src/**/*.{js,scss}}": "prettier --write",
