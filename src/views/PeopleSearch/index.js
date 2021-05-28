@@ -89,13 +89,63 @@ const noResultsCard = (
   </Grid>
 );
 
+const peopleSearchHeader = (
+  <Media query="(min-width: 960px)">
+    {(matches) =>
+      matches ? (
+        <div style={styles.headerStyle}>
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={1} />
+            <Grid item xs={2}>
+              <Typography variant="body2" style={styles.headerStyle}>
+                FIRST NAME
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography variant="body2" style={styles.headerStyle}>
+                LAST NAME
+              </Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <Typography variant="body2" style={styles.headerStyle}>
+                TYPE
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography variant="body2" style={styles.headerStyle}>
+                CLASS/JOB TITLE
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography variant="body2" style={styles.headerStyle}>
+                @GORDON.EDU
+                <br />
+                MAIL LOCATION
+              </Typography>
+            </Grid>
+          </Grid>
+        </div>
+      ) : (
+        <div style={styles.headerStyle}>
+          <Grid container direction="row" justify="center">
+            <Grid item>
+              <Typography variant="body2" style={styles.headerStyle}>
+                RESULTS
+              </Typography>
+            </Grid>
+          </Grid>
+        </div>
+      )
+    }
+  </Media>
+);
+
 class PeopleSearch extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       personType: '',
-      nameExpanded: true,
       academicsExpanded: false,
       homeExpanded: false,
       offDepExpanded: false,
@@ -109,23 +159,25 @@ class PeopleSearch extends Component {
       buildings: [],
       halls: [],
 
-      // Keyboard string values
-      firstNameSearchValue: '',
-      lastNameSearchValue: '',
-      homeCitySearchValue: '',
-      // Drop-down menu values
-      majorSearchValue: '',
-      minorSearchValue: '',
-      hallSearchValue: '',
-      classTypeSearchValue: '',
-      stateSearchValue: '',
-      countrySearchValue: '',
-      departmentSearchValue: '',
-      buildingSearchValue: '',
+      // These values *must* be in the same order as services/goStalk.js search function
+      searchValues: {
+        includeAlumni: false,
+        firstName: '',
+        lastName: '',
+        major: '',
+        minor: '',
+        hall: '',
+        classType: '',
+        homeCity: '',
+        state: '',
+        country: '',
+        department: '',
+        building: '',
+      },
+
       // For April Fools:
       relationshipStatusValue: '',
 
-      includeAlumni: false,
       peopleSearchResults: null,
       header: '',
       searchButtons: '',
@@ -134,158 +186,14 @@ class PeopleSearch extends Component {
     };
   }
 
-  makeHeader() {
-    let content = (
-      <Media query="(min-width: 960px)">
-        {(matches) =>
-          matches ? (
-            <div style={styles.headerStyle}>
-              <Grid container direction="row" alignItems="center">
-                <Grid item xs={1} />
-                <Grid item xs={2}>
-                  <Typography variant="body2" style={styles.headerStyle}>
-                    FIRST NAME
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography variant="body2" style={styles.headerStyle}>
-                    LAST NAME
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography variant="body2" style={styles.headerStyle} noWrap>
-                    DESCRIPTION
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography variant="body2" style={styles.headerStyle}>
-                    CLASS/JOB TITLE
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography variant="body2" style={styles.headerStyle}>
-                    @GORDON.EDU
-                    <br />
-                    MAIL LOCATION
-                  </Typography>
-                </Grid>
-              </Grid>
-            </div>
-          ) : (
-            <div style={styles.headerStyle}>
-              <Grid container direction="row" justify="center">
-                <Grid item>
-                  <Typography variant="body2" style={styles.headerStyle}>
-                    RESULTS
-                  </Typography>
-                </Grid>
-              </Grid>
-            </div>
-          )
-        }
-      </Media>
-    );
-    return content;
-  }
-
   componentDidUpdate() {
+    // Browser 'back' arrow
     window.onpopstate = () => {
       if (!window.location.href.includes('?')) {
-        window.location.reload();
-      } else {
-        this.goBackPage();
+        this.setState({ header: '', peopleSearchResults: null });
       }
+      this.loadSearchParamsFromURL();
     };
-  }
-
-  async goBackPage() {
-    const urlParams = new URLSearchParams(window.location.search);
-    var includeAlumni = urlParams.get('includeAlumni') || false;
-    var firstName = urlParams.get('firstName').trim() || '';
-    var lastName = urlParams.get('lastName').trim() || '';
-    var major = urlParams.get('major').trim() || '';
-    var minor = urlParams.get('minor').trim() || '';
-    var hall = urlParams.get('hall').trim() || '';
-    var classType = urlParams.get('classType').trim() || '';
-    var homeCity = urlParams.get('homeCity').trim() || '';
-    var state = urlParams.get('state').trim() || '';
-    var country = urlParams.get('country').trim() || '';
-    var department = urlParams.get('department').trim() || '';
-    var building = urlParams.get('building').trim() || '';
-
-    this.setState({
-      firstNameSearchValue: firstName,
-      lastNameSearchValue: lastName,
-      homeCitySearchValue: homeCity,
-      majorSearchValue: major,
-      minorSearchValue: minor,
-      hallSearchValue: hall,
-      classTypeSearchValue: classType,
-      stateSearchValue: state,
-      countrySearchValue: country,
-      departmentSearchValue: department,
-      buildingSearchValue: building,
-    });
-
-    if (
-      includeAlumni === false &&
-      firstName === '' &&
-      lastName === '' &&
-      major === '' &&
-      minor === '' &&
-      hall === '' &&
-      classType === '' &&
-      homeCity === '' &&
-      state === '' &&
-      country === '' &&
-      department === '' &&
-      building === ''
-    ) {
-      // do not search
-    } else {
-      this.setState({
-        header: <GordonLoader />,
-        peopleSearchResults: null,
-      });
-      let peopleSearchResults = [];
-      peopleSearchResults = await goStalk.search(
-        includeAlumni,
-        firstName,
-        lastName,
-        major,
-        minor,
-        hall,
-        classType,
-        homeCity,
-        state,
-        country,
-        department,
-        building,
-      );
-      if (peopleSearchResults.length === 0) {
-        this.setState({
-          peopleSearchResults: noResultsCard,
-          header: '',
-        });
-      } else {
-        this.setState({
-          peopleSearchResults: (
-            <Media query="(min-width: 960px)">
-              {(matches) =>
-                matches
-                  ? peopleSearchResults.map((person) => (
-                      <PeopleSearchResult key={person.AD_Username} Person={person} />
-                    ))
-                  : peopleSearchResults.map((person) => (
-                      <MobilePeopleSearchResult key={person.AD_Username} Person={person} />
-                    ))
-              }
-            </Media>
-          ),
-          header: this.makeHeader(),
-        });
-      }
-    }
   }
 
   async componentDidMount() {
@@ -293,23 +201,16 @@ class PeopleSearch extends Component {
       try {
         const profile = await user.getProfileInfo();
         const personType = profile.PersonType;
-        const [
-          majors,
-          minors,
-          halls,
-          states,
-          countries,
-          departments,
-          buildings,
-        ] = await Promise.all([
-          goStalk.getMajors(),
-          goStalk.getMinors(),
-          goStalk.getHalls(),
-          goStalk.getStates(),
-          goStalk.getCountries(),
-          goStalk.getDepartments(),
-          goStalk.getBuildings(),
-        ]);
+        const [majors, minors, halls, states, countries, departments, buildings] =
+          await Promise.all([
+            goStalk.getMajors(),
+            goStalk.getMinors(),
+            goStalk.getHalls(),
+            goStalk.getStates(),
+            goStalk.getCountries(),
+            goStalk.getDepartments(),
+            goStalk.getBuildings(),
+          ]);
         this.setState({
           majors,
           minors,
@@ -325,102 +226,34 @@ class PeopleSearch extends Component {
       }
 
       if (window.location.href.includes('?')) {
-        const urlParams = new URLSearchParams(window.location.search);
-        var includeAlumni = urlParams.get('includeAlumni') || false;
-        let firstName = urlParams.get('firstName').trim() || '';
-        let lastName = urlParams.get('lastName').trim() || '';
-        let major = urlParams.get('major').trim() || '';
-        let minor = urlParams.get('minor').trim() || '';
-        let hall = urlParams.get('hall').trim() || '';
-        let classType = urlParams.get('classType').trim() || '';
-        let homeCity = urlParams.get('homeCity').trim() || '';
-        let state = urlParams.get('state').trim() || '';
-        let country = urlParams.get('country').trim() || '';
-        let department = urlParams.get('department').trim() || '';
-        let building = urlParams.get('building').trim() || '';
-
-        this.setState({
-          firstNameSearchValue: firstName,
-          lastNameSearchValue: lastName,
-          homeCitySearchValue: homeCity,
-          majorSearchValue: major,
-          minorSearchValue: minor,
-          hallSearchValue: hall,
-          classTypeSearchValue: classType,
-          stateSearchValue: state,
-          countrySearchValue: country,
-          departmentSearchValue: department,
-          buildingSearchValue: building,
-        });
-
-        if (
-          includeAlumni === false &&
-          firstName === '' &&
-          lastName === '' &&
-          major === '' &&
-          minor === '' &&
-          hall === '' &&
-          classType === '' &&
-          homeCity === '' &&
-          state === '' &&
-          country === '' &&
-          department === '' &&
-          building === ''
-        ) {
-          // do not search
-        } else {
-          this.setState({
-            header: <GordonLoader />,
-            peopleSearchResults: null,
-          });
-          let peopleSearchResults = [];
-
-          peopleSearchResults = await goStalk.search(
-            includeAlumni,
-            firstName,
-            lastName,
-            major,
-            minor,
-            hall,
-            classType,
-            homeCity,
-            state,
-            country,
-            department,
-            building,
-          );
-
-          if (peopleSearchResults.length === 0) {
-            this.setState({
-              peopleSearchResults: noResultsCard,
-              header: '',
-            });
-          } else {
-            this.setState({
-              peopleSearchResults: (
-                <Media query="(min-width: 960px)">
-                  {(matches) =>
-                    matches
-                      ? peopleSearchResults.map((person) => (
-                          <PeopleSearchResult key={person.AD_Username} Person={person} />
-                        ))
-                      : peopleSearchResults.map((person) => (
-                          <MobilePeopleSearchResult key={person.AD_Username} Person={person} />
-                        ))
-                  }
-                </Media>
-              ),
-              header: this.makeHeader(),
-            });
-          }
-        }
+        this.loadSearchParamsFromURL();
       }
     }
   }
 
-  handleNameExpandClick = () => {
-    this.setState((state) => ({ nameExpanded: !state.nameExpanded }));
-  };
+  async loadSearchParamsFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    this.setState({
+      searchValues: {
+        includeAlumni: urlParams.get('includeAlumni') || false,
+        firstName: urlParams.get('firstName')?.trim() || '',
+        lastName: urlParams.get('lastName')?.trim() || '',
+        major: urlParams.get('major')?.trim() || '',
+        minor: urlParams.get('minor')?.trim() || '',
+        hall: urlParams.get('hall')?.trim() || '',
+        classType: urlParams.get('classType')?.trim() || '',
+        homeCity: urlParams.get('homeCity')?.trim() || '',
+        state: urlParams.get('state')?.trim() || '',
+        country: urlParams.get('country')?.trim() || '',
+        department: urlParams.get('department')?.trim() || '',
+        building: urlParams.get('building')?.trim() || '',
+      },
+    });
+
+    this.search();
+  }
+
   handleAcademicsExpandClick = () => {
     this.setState((state) => ({
       academicsExpanded: !state.academicsExpanded,
@@ -448,96 +281,70 @@ class PeopleSearch extends Component {
       relationshipStatusValue: e.target.value,
     });
   };
+  handleChangeIncludeAlumni() {
+    this.setState({
+      searchValues: { ...this.state.searchValues, includeAlumni: !this.state.includeAlumni },
+    });
+  }
   handleFirstNameInputChange = (e) => {
     this.setState({
-      firstNameSearchValue: e.target.value,
+      searchValues: { ...this.state.searchValues, firstName: e.target.value },
     });
   };
   handleLastNameInputChange = (e) => {
     this.setState({
-      lastNameSearchValue: e.target.value,
+      searchValues: { ...this.state.searchValues, lastName: e.target.value },
     });
   };
   handleMajorInputChange = (e) => {
     this.setState({
-      majorSearchValue: e.target.value,
+      searchValues: { ...this.state.searchValues, major: e.target.value },
     });
   };
   handleMinorInputChange = (e) => {
     this.setState({
-      minorSearchValue: e.target.value,
+      searchValues: { ...this.state.searchValues, minor: e.target.value },
     });
   };
   handleHallInputChange = (e) => {
     this.setState({
-      hallSearchValue: e.target.value,
+      searchValues: { ...this.state.searchValues, hall: e.target.value },
     });
   };
   handleClassTypeInputChange = (event) => {
     this.setState({
-      classTypeSearchValue: event.target.value,
+      searchValues: { ...this.state.searchValues, classType: event.target.value },
     });
   };
   handleHomeCityInputChange = (e) => {
     this.setState({
-      homeCitySearchValue: e.target.value,
+      searchValues: { ...this.state.searchValues, homeCity: e.target.value },
     });
   };
   handleStateInputChange = (e) => {
     this.setState({
-      stateSearchValue: e.target.value,
+      searchValues: { ...this.state.searchValues, state: e.target.value },
     });
   };
   handleCountryInputChange = (e) => {
     this.setState({
-      countrySearchValue: e.target.value,
+      searchValues: { ...this.state.searchValues, country: e.target.value },
     });
   };
   handleDepartmentInputChange = (e) => {
     this.setState({
-      departmentSearchValue: e.target.value,
+      searchValues: { ...this.state.searchValues, department: e.target.value },
     });
   };
   handleBuildingInputChange = (e) => {
     this.setState({
-      buildingSearchValue: e.target.value,
+      searchValues: { ...this.state.searchValues, building: e.target.value },
     });
   };
 
-  handleChangeIncludeAlumni() {
-    this.setState({ includeAlumni: !this.state.includeAlumni });
-  }
-
-  async search(
-    includeAlumni,
-    firstName,
-    lastName,
-    major,
-    minor,
-    hall,
-    classType,
-    homeCity,
-    state,
-    country,
-    department,
-    building,
-  ) {
-    if (
-      this.state.includeAlumni === false &&
-      this.state.firstNameSearchValue === '' &&
-      this.state.lastNameSearchValue === '' &&
-      this.state.classTypeSearchValue === '' &&
-      this.state.majorSearchValue === '' &&
-      this.state.minorSearchValue === '' &&
-      this.state.hallSearchValue === '' &&
-      this.state.classTypeSearchValue === '' &&
-      this.state.homeCitySearchValue === '' &&
-      this.state.stateSearchValue === '' &&
-      this.state.countrySearchValue === '' &&
-      this.state.departmentSearchValue === '' &&
-      this.state.buildingSearchValue === ''
-    ) {
-      // do not search
+  async search() {
+    if (!Object.values(this.state.searchValues).some((x) => x)) {
+      // do not search, only search if there are some non-blank non-false values
     } else {
       this.setState({
         header: <GordonLoader />,
@@ -546,28 +353,7 @@ class PeopleSearch extends Component {
         homeExpanded: false,
         offDepExpanded: false,
       });
-      let peopleSearchResults = [];
-      peopleSearchResults = await goStalk.search(
-        includeAlumni,
-        firstName,
-        lastName,
-        major,
-        minor,
-        hall,
-        classType,
-        homeCity,
-        state,
-        country,
-        department,
-        building,
-      );
-
-      let searchParameters =
-        `?firstName=${firstName}&lastName=${lastName}` +
-        `&major=${major}&minor=${minor}&hall=${hall}&classType=${classType}` +
-        `&homeCity=${homeCity}&state=${state}&country=${country}` +
-        `&department=${department}&building=${building}&includeAlumni=${includeAlumni}`;
-      this.props.history.push(searchParameters);
+      let peopleSearchResults = await goStalk.search(...Object.values(this.state.searchValues));
 
       if (peopleSearchResults.length === 0) {
         this.setState({
@@ -577,7 +363,7 @@ class PeopleSearch extends Component {
       } else {
         this.setState({
           peopleSearchResults: (
-            <Media query="(min-width: 1025px)">
+            <Media query="(min-width: 960px)">
               {(matches) =>
                 matches
                   ? peopleSearchResults.map((person) => (
@@ -589,32 +375,27 @@ class PeopleSearch extends Component {
               }
             </Media>
           ),
-          header: this.makeHeader(),
+          header: peopleSearchHeader,
         });
       }
     }
   }
 
-  getDate = () => {
-    return new Date();
-  };
+  async updateURL() {
+    const searchParameters = Object.entries(this.state.searchValues)
+      .filter((n) => n) // removes empty strings
+      .map(([key, value]) => (value ? `${key}=${value}` : '')) // [ 'firstName=value', 'state=texas']
+      .join('&'); // 'firstName=value&state=texas'
+
+    if (this.props.history.location.search !== searchParameters) {
+      this.props.history.push(`?${searchParameters}`);
+    }
+  }
 
   handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
-      this.search(
-        this.state.includeAlumni,
-        this.state.firstNameSearchValue,
-        this.state.lastNameSearchValue,
-        this.state.majorSearchValue,
-        this.state.minorSearchValue,
-        this.state.hallSearchValue,
-        this.state.classTypeSearchValue,
-        this.state.homeCitySearchValue,
-        this.state.stateSearchValue,
-        this.state.countrySearchValue,
-        this.state.departmentSearchValue,
-        this.state.buildingSearchValue,
-      );
+      this.search();
+      this.updateURL();
     }
   };
 
@@ -697,7 +478,7 @@ class PeopleSearch extends Component {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={this.state.includeAlumni}
+                  checked={this.state.searchValues.includeAlumni}
                   onChange={() => {
                     this.handleChangeIncludeAlumni();
                   }}
@@ -711,7 +492,8 @@ class PeopleSearch extends Component {
 
       // April Fools
       let aprilFools = '';
-      if (this.getDate().getMonth() === 3 && this.getDate().getDate() === 1) {
+      const todaysDate = new Date();
+      if (todaysDate.getMonth() === 3 && todaysDate.getDate() === 1) {
         aprilFools = (
           <Grid container spacing={2} alignItems="flex-end">
             <Media
@@ -785,7 +567,7 @@ class PeopleSearch extends Component {
       // Creates the PeopleSearch page depending on the status of the network found in local storage
       let PeopleSearch;
       let searchPageTitle = (
-        <div align='center'>
+        <div align="center">
           Search the
           <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
           Community
@@ -818,7 +600,7 @@ class PeopleSearch extends Component {
                             id="first-name"
                             label="First Name"
                             fullWidth
-                            value={this.state.firstNameSearchValue}
+                            value={this.state.searchValues.firstName}
                             onChange={this.handleFirstNameInputChange}
                             onKeyDown={this.handleEnterKeyPress}
                           />
@@ -833,7 +615,7 @@ class PeopleSearch extends Component {
                             id="last-name"
                             label="Last Name"
                             fullWidth
-                            value={this.state.lastNameSearchValue}
+                            value={this.state.searchValues.lastName}
                             onChange={this.handleLastNameInputChange}
                             onKeyDown={this.handleEnterKeyPress}
                           />
@@ -855,7 +637,7 @@ class PeopleSearch extends Component {
                           <FormControl fullWidth>
                             <InputLabel>Hall</InputLabel>
                             <Select
-                              value={this.state.hallSearchValue}
+                              value={this.state.searchValues.hall}
                               onChange={this.handleHallInputChange}
                               input={<Input id="hall" />}
                             >
@@ -966,7 +748,7 @@ class PeopleSearch extends Component {
                         <FormControl fullWidth>
                           <InputLabel>Major</InputLabel>
                           <Select
-                            value={this.state.majorSearchValue}
+                            value={this.state.searchValues.major}
                             onChange={this.handleMajorInputChange}
                             input={<Input id="major" />}
                           >
@@ -991,7 +773,7 @@ class PeopleSearch extends Component {
                         <FormControl fullWidth>
                           <InputLabel>Minor</InputLabel>
                           <Select
-                            value={this.state.minorSearchValue}
+                            value={this.state.searchValues.minor}
                             onChange={this.handleMinorInputChange}
                             input={<Input id="minor" />}
                           >
@@ -1016,7 +798,7 @@ class PeopleSearch extends Component {
                         <FormControl fullWidth>
                           <InputLabel>Class</InputLabel>
                           <Select
-                            value={this.state.classTypeSearchValue}
+                            value={this.state.searchValues.classType}
                             onChange={this.handleClassTypeInputChange}
                             input={<Input id="class" />}
                           >
@@ -1056,7 +838,7 @@ class PeopleSearch extends Component {
                           id="hometown"
                           label="Hometown"
                           fullWidth
-                          value={this.state.homeCitySearchValue}
+                          value={this.state.searchValues.homeCity}
                           onChange={this.handleHomeCityInputChange}
                           onKeyDown={this.handleEnterKeyPress}
                         />
@@ -1075,7 +857,7 @@ class PeopleSearch extends Component {
                         <FormControl fullWidth>
                           <InputLabel>State</InputLabel>
                           <Select
-                            value={this.state.stateSearchValue}
+                            value={this.state.searchValues.state}
                             onChange={this.handleStateInputChange}
                             input={<Input id="state" />}
                           >
@@ -1100,7 +882,7 @@ class PeopleSearch extends Component {
                         <FormControl fullWidth>
                           <InputLabel>Country</InputLabel>
                           <Select
-                            value={this.state.countrySearchValue}
+                            value={this.state.searchValues.country}
                             onChange={this.handleCountryInputChange}
                             input={<Input id="country" />}
                           >
@@ -1132,7 +914,7 @@ class PeopleSearch extends Component {
                         <FormControl fullWidth>
                           <InputLabel>Department</InputLabel>
                           <Select
-                            value={this.state.departmentSearchValue}
+                            value={this.state.searchValues.department}
                             onChange={this.handleDepartmentInputChange}
                             input={<Input id="department-type" />}
                           >
@@ -1157,7 +939,7 @@ class PeopleSearch extends Component {
                         <FormControl fullWidth>
                           <InputLabel>Building</InputLabel>
                           <Select
-                            value={this.state.buildingSearchValue}
+                            value={this.state.searchValues.building}
                             onChange={this.handleBuildingInputChange}
                             input={<Input id="building-type" />}
                           >
@@ -1181,25 +963,30 @@ class PeopleSearch extends Component {
                         fullWidth
                         variant="contained"
                         onClick={() => {
-                          this.setState({
-                            includeAlumni: false,
-                            firstNameSearchValue: '',
-                            lastNameSearchValue: '',
-                            majorSearchValue: '',
-                            minorSearchValue: '',
-                            hallSearchValue: '',
-                            classTypeSearchValue: '',
-                            homeCitySearchValue: '',
-                            stateSearchValue: '',
-                            countrySearchValue: '',
-                            departmentSearchValue: '',
-                            buildingSearchValue: '',
-                            academicsExpanded: false,
-                            homeExpanded: false,
-                            offDepExpanded: false,
-                            header: '',
-                            peopleSearchResults: null,
-                          });
+                          this.setState(
+                            {
+                              searchValues: {
+                                includeAlumni: false,
+                                firstName: '',
+                                lastName: '',
+                                major: '',
+                                minor: '',
+                                hall: '',
+                                classType: '',
+                                homeCity: '',
+                                state: '',
+                                country: '',
+                                department: '',
+                                building: '',
+                              },
+                              academicsExpanded: false,
+                              homeExpanded: false,
+                              offDepExpanded: false,
+                              header: '',
+                              peopleSearchResults: null,
+                            },
+                            () => this.updateURL(),
+                          );
                         }}
                       >
                         Clear All
@@ -1210,20 +997,8 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         onClick={() => {
-                          this.search(
-                            this.state.includeAlumni,
-                            this.state.firstNameSearchValue,
-                            this.state.lastNameSearchValue,
-                            this.state.majorSearchValue,
-                            this.state.minorSearchValue,
-                            this.state.hallSearchValue,
-                            this.state.classTypeSearchValue,
-                            this.state.homeCitySearchValue,
-                            this.state.stateSearchValue,
-                            this.state.countrySearchValue,
-                            this.state.departmentSearchValue,
-                            this.state.buildingSearchValue,
-                          );
+                          this.search();
+                          this.updateURL();
                         }}
                         fullWidth
                         variant="contained"
