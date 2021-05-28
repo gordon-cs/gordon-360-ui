@@ -1,7 +1,6 @@
 import About from './views/About';
 import InvolvementsAll from './views/InvolvementsAll';
-//import ActivityEdit from './views/ActivityEdit';
-import ActivityProfile from './views/ActivityProfile';
+import InvolvementProfile from './views/InvolvementProfile';
 import Home from './views/Home';
 import WellnessCheck from './views/WellnessCheck';
 import ApartmentApp from './views/ApartmentApp';
@@ -46,8 +45,8 @@ export default [
   },
   {
     name: 'Involvement Profile',
-    path: '/activity/:sessionCode/:activityCode',
-    component: ActivityProfile,
+    path: '/activity/:sessionCode/:involvementCode',
+    component: InvolvementProfile,
   },
   {
     name: 'Involvements',
