@@ -45,8 +45,10 @@ const getScheduleControl = async (username) => {
   return schedule;
 };
 
-export default {
+const scheduleControlService = {
   setSchedulePrivacy,
   setScheduleDescription,
   getScheduleControl,
 };
+
+export default scheduleControlService;

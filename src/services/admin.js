@@ -26,8 +26,10 @@ const removeAdmin = (id) => http.del(`/admins/${id}`);
  */
 const addAdmin = (dataURI) => http.post(`/admins/`, dataURI);
 
-export default {
+const adminService = {
   getAdmins,
   removeAdmin,
   addAdmin,
 };
+
+export default adminService;

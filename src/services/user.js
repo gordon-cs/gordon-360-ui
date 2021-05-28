@@ -621,7 +621,7 @@ function updateSocialLink(platform, link) {
   return http.put('profiles/' + platform.toLowerCase(), body);
 }
 
-export default {
+const userService = {
   setFullname,
   setClass,
   setMobilePhonePrivacy,
@@ -647,3 +647,5 @@ export default {
   getEmploymentInfo,
   updateSocialLink,
 };
+
+export default userService;

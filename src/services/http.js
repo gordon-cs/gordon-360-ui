@@ -132,9 +132,11 @@ const post = (url, body, headerOptions) => {
  */
 const del = (url) => makeRequest(url, 'delete');
 
-export default {
+const httpUtils = {
   del,
   get,
   post,
   put,
 };
+
+export default httpUtils;

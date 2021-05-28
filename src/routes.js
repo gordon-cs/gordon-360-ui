@@ -21,7 +21,7 @@ import News from './views/News';
 import Page404 from './views/Page404';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
-export default [
+const routes = [
   {
     name: 'Home',
     path: '/',
@@ -129,3 +129,5 @@ export default [
     component: Page404,
   },
 ];
+
+export default routes;

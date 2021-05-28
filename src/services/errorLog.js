@@ -78,8 +78,10 @@ const parseNavigator = (navigator) => {
   return result;
 };
 
-export default {
+const errorLogService = {
   postErrorLog,
   postErrorMessage,
   parseNavigator,
 };
+
+export default errorLogService;

@@ -305,7 +305,7 @@ const toggleGroupAdmin = async (membershipID, data) => {
   return await http.put(`memberships/${membershipID}/group-admin`, data);
 };
 
-export default {
+const membershipService = {
   addMembership,
   approveRequest,
   checkAdmin,
@@ -328,3 +328,5 @@ export default {
   toggleGroupAdmin,
   toggleMembershipPrivacy,
 };
+
+export default membershipService;

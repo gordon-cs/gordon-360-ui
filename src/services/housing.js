@@ -283,7 +283,7 @@ const submitApplication = async (applicationID) => {
   return await http.put(`housing/apartment/applications/${applicationID}/submit`);
 };
 
-export default {
+const housingService = {
   checkHousingAdmin,
   addHousingAdmin,
   deleteHousingAdmin,
@@ -297,3 +297,5 @@ export default {
   getSubmittedApartmentApplications,
   submitApplication,
 };
+
+export default housingService;

@@ -6,7 +6,7 @@ import GordonLoader from 'components/Loader';
 import Membership from './components/Membership';
 import membershipService from 'services/membership';
 import emailsService from 'services/emails';
-import sessionService from 'services/session';
+import sessionUtils from 'services/session';
 import involvementService from 'services/activity';
 import { gordonColors } from 'theme';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
@@ -55,21 +55,19 @@ const InvolvementProfile = ({ authentication }) => {
     const loadPage = async () => {
       setLoading(true);
       if (authentication) {
-        const [
-          involvementInfo,
-          advisors,
-          groupAdmins,
-          sessionInfo,
-          college_role,
-          isAdmin,
-        ] = await Promise.all([
-          involvementService.get(involvementCode),
-          involvementService.getAdvisors(involvementCode, sessionCode),
-          involvementService.getGroupAdmins(involvementCode, sessionCode),
-          sessionService.get(sessionCode),
-          userService.getLocalInfo().college_role,
-          membershipService.checkAdmin(userService.getLocalInfo().id, sessionCode, involvementCode),
-        ]);
+        const [involvementInfo, advisors, groupAdmins, sessionInfo, college_role, isAdmin] =
+          await Promise.all([
+            involvementService.get(involvementCode),
+            involvementService.getAdvisors(involvementCode, sessionCode),
+            involvementService.getGroupAdmins(involvementCode, sessionCode),
+            sessionUtils.get(sessionCode),
+            userService.getLocalInfo().college_role,
+            membershipService.checkAdmin(
+              userService.getLocalInfo().id,
+              sessionCode,
+              involvementCode,
+            ),
+          ]);
 
         const isSuperAdmin = college_role === 'god';
 
@@ -91,7 +89,7 @@ const InvolvementProfile = ({ authentication }) => {
       } else {
         const [involvementInfo, sessionInfo] = await Promise.all([
           involvementService.get(involvementCode),
-          sessionService.get(sessionCode),
+          sessionUtils.get(sessionCode),
         ]);
         setInvolvementInfo(involvementInfo);
         setSessionInfo(sessionInfo);
