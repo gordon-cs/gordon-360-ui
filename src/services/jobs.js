@@ -150,7 +150,7 @@ const getHourTypes = () => {
   return http.get(`jobs/hourTypes`);
 };
 
-export default {
+const jobsService = {
   getStaffPageForUser,
   getJobs,
   getSavedShiftsForUser,
@@ -164,3 +164,5 @@ export default {
   deleteClockIn,
   getHourTypes,
 };
+
+export default jobsService;

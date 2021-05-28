@@ -189,7 +189,7 @@ const resetImage = async (activityCode) => {
   return await http.post(`activities/${activityCode}/image/reset`, null);
 };
 
-export default {
+const involvementService = {
   closeActivity,
   editActivity,
   setActivityImage,
@@ -205,3 +205,5 @@ export default {
   reopenActivity,
   resetImage,
 };
+
+export default involvementService;

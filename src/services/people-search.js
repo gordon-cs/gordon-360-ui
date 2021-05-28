@@ -31,6 +31,8 @@ const search = (query) => {
   return http.get(`accounts/search/${searchQuery}`);
 };
 
-export default {
+const peopleSearchService = {
   search,
 };
+
+export default peopleSearchService;

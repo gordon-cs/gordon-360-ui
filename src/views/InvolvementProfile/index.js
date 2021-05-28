@@ -55,21 +55,19 @@ const InvolvementProfile = ({ authentication }) => {
     const loadPage = async () => {
       setLoading(true);
       if (authentication) {
-        const [
-          involvementInfo,
-          advisors,
-          groupAdmins,
-          sessionInfo,
-          college_role,
-          isAdmin,
-        ] = await Promise.all([
-          involvementService.get(involvementCode),
-          involvementService.getAdvisors(involvementCode, sessionCode),
-          involvementService.getGroupAdmins(involvementCode, sessionCode),
-          sessionService.get(sessionCode),
-          userService.getLocalInfo().college_role,
-          membershipService.checkAdmin(userService.getLocalInfo().id, sessionCode, involvementCode),
-        ]);
+        const [involvementInfo, advisors, groupAdmins, sessionInfo, college_role, isAdmin] =
+          await Promise.all([
+            involvementService.get(involvementCode),
+            involvementService.getAdvisors(involvementCode, sessionCode),
+            involvementService.getGroupAdmins(involvementCode, sessionCode),
+            sessionService.get(sessionCode),
+            userService.getLocalInfo().college_role,
+            membershipService.checkAdmin(
+              userService.getLocalInfo().id,
+              sessionCode,
+              involvementCode,
+            ),
+          ]);
 
         const isSuperAdmin = college_role === 'god';
 

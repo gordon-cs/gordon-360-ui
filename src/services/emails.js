@@ -53,7 +53,7 @@ const getAdvisors = (id) => http.get(`emails/activity/${id}/advisors`);
 const getAdvisorsForSession = (id, SessionId) =>
   http.get(`emails/activity/${id}/advisors/session/${SessionId}`);
 
-export default {
+const emailsService = {
   get,
   getForSession,
   getLeaders,
@@ -61,3 +61,5 @@ export default {
   getAdvisors,
   getAdvisorsForSession,
 };
+
+export default emailsService;

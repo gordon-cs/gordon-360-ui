@@ -27,6 +27,8 @@ import http from './http';
  */
 const getSlides = () => http.get('cms/slider');
 
-export default {
+const cmsService = {
   getSlides,
 };
+
+export default cmsService;

@@ -245,7 +245,7 @@ async function editStudentNews(newsID, newData) {
   }
 }
 
-export default {
+const newsService = {
   getNewsByCategory,
   getCategories,
   getTodaysNews,
@@ -258,3 +258,5 @@ export default {
   editStudentNews,
   getPostingByID,
 };
+
+export default newsService;

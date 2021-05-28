@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Doughnut, defaults } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import { Button, Grid, Typography, Card, CardContent, CardHeader } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
 import { gordonColors } from 'theme';
@@ -51,7 +51,6 @@ export default class DiningBalance extends Component {
       },
     };
 
-    defaults.global.legend.display = false;
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;

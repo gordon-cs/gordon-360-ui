@@ -182,7 +182,7 @@ const getBuildings = () => {
   return http.get(`advanced-search/buildings`);
 };
 
-export default {
+const advancedSearchService = {
   search,
   getMajors,
   getMinors,
@@ -192,3 +192,5 @@ export default {
   getDepartments,
   getBuildings,
 };
+
+export default advancedSearchService;
