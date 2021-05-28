@@ -130,10 +130,10 @@ export default class PeopleSearchResult extends Component {
             <Grid item xs={2}>
               <Typography>{Person.LastName}</Typography>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <Typography>{Person.Type}</Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography>{personClassJobTitle}</Typography>
             </Grid>
             <Grid item xs={2}>
