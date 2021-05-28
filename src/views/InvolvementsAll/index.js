@@ -16,7 +16,7 @@ import GordonLoader from 'components/Loader';
 import Requests from './components/Requests';
 import userService from 'services/user';
 import involvementService from 'services/activity';
-import sessionUtils from 'services/session';
+import sessionService from 'services/session';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import './involvements-all.css';
 
@@ -37,17 +37,17 @@ const InvolvementsAll = ({ location, authentication, history }) => {
 
   useEffect(() => {
     const loadPage = async () => {
-      setSessions(await sessionUtils.getAll());
+      setSessions(await sessionService.getAll());
 
       if (sessionFromURL) {
         setSelectedSession(sessionFromURL);
       } else {
-        const { SessionCode: currentSessionCode } = await sessionUtils.getCurrent();
+        const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
         setCurrentAcademicSession(currentSessionCode);
 
         const [involvements, sessions] = await Promise.all([
           involvementService.getAll(currentSessionCode),
-          sessionUtils.getAll(),
+          sessionService.getAll(),
         ]);
 
         if (involvements.length === 0) {

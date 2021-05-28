@@ -6,7 +6,7 @@ import GordonLoader from 'components/Loader';
 import Membership from './components/Membership';
 import membershipService from 'services/membership';
 import emailsService from 'services/emails';
-import sessionUtils from 'services/session';
+import sessionService from 'services/session';
 import involvementService from 'services/activity';
 import { gordonColors } from 'theme';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
@@ -60,7 +60,7 @@ const InvolvementProfile = ({ authentication }) => {
             involvementService.get(involvementCode),
             involvementService.getAdvisors(involvementCode, sessionCode),
             involvementService.getGroupAdmins(involvementCode, sessionCode),
-            sessionUtils.get(sessionCode),
+            sessionService.get(sessionCode),
             userService.getLocalInfo().college_role,
             membershipService.checkAdmin(
               userService.getLocalInfo().id,
@@ -89,7 +89,7 @@ const InvolvementProfile = ({ authentication }) => {
       } else {
         const [involvementInfo, sessionInfo] = await Promise.all([
           involvementService.get(involvementCode),
-          sessionUtils.get(sessionCode),
+          sessionService.get(sessionCode),
         ]);
         setInvolvementInfo(involvementInfo);
         setSessionInfo(sessionInfo);

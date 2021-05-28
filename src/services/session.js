@@ -73,7 +73,7 @@ const getTermCode = () => {
   return `${year.toString().substr(-2)}${term}`;
 };
 
-const sessionUtils = {
+const sessionService = {
   get,
   getAll,
   getCurrent,
@@ -81,4 +81,4 @@ const sessionUtils = {
   getTermCode,
 };
 
-export default sessionUtils;
+export default sessionService;
