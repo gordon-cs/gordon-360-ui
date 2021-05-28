@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import HallListItem from './components/HallListItem';
+import HallChoiceListItem from './components/HallChoiceListItem';
 import housing from 'services/housing';
 
 /**
@@ -10,10 +9,18 @@ import housing from 'services/housing';
  * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
  */
 
-// Create a list of selection boxes to choosing preferred halls
-const HallSelection = ({
+/**
+ * Renders a list of selection boxes to choosing preferred halls
+ * @param {Object} props The React component props
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {ApartmentChoice[]} props.apartmentChoices Array of apartment choices
+ * @param {CallbackFcn} props.onHallAdd Callback for "Add Hall" button
+ * @param {CallbackFcn} props.onHallInputChange Callback for dropdown menu change
+ * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
+ * @returns {JSX.Element} JSX Element for the hall list
+ */
+const HallChoiceList = ({
   disabled,
-  authentication,
   apartmentChoices,
   onHallAdd,
   onHallInputChange,
@@ -34,32 +41,8 @@ const HallSelection = ({
       setHalls(await housing.getApartmentHalls());
     };
 
-    if (authentication) {
-      loadApartmentHalls();
-    }
-  }, [authentication]);
-
-  /**
-   * Callback for changes to hall list item name and/or rank
-   * @param {Number} hallRankValue The rank value that the user assigned to this hall
-   * @param {String} hallNameValue The name of the hall that was selected
-   * @param {Number} index The index of the hall in the list
-   */
-  const handleInputChange = (hallRankValue, hallNameValue, index) => {
-    onHallInputChange(hallRankValue, hallNameValue, index);
-  };
-
-  /**
-   * Callback for hall list remove button
-   * @param {Number} index The index of the hall to be removed from the list of perferred halls
-   */
-  const handleRemove = (index) => {
-    // Make sure the chosen index was not null
-    if (index !== null) {
-      // Send the selected index to the parent component
-      onHallRemove(index);
-    }
-  };
+    loadApartmentHalls();
+  }, []);
 
   return (
     <Card>
@@ -70,7 +53,7 @@ const HallSelection = ({
             <List className="hall-list" aria-label="apartment preferred halls" disablePadding>
               {apartmentChoices?.length > 0 &&
                 apartmentChoices.map((hallInfo, index) => (
-                  <HallListItem
+                  <HallChoiceListItem
                     key={index + hallInfo.HallRank + hallInfo.HallName}
                     disabled={disabled}
                     index={index}
@@ -78,8 +61,8 @@ const HallSelection = ({
                     hallName={hallInfo.HallName}
                     apartmentChoices={apartmentChoices}
                     halls={halls}
-                    onHallInputChange={handleInputChange}
-                    onHallRemove={handleRemove}
+                    onHallInputChange={onHallInputChange}
+                    onHallRemove={onHallRemove}
                   />
                 ))}
             </List>
@@ -101,13 +84,4 @@ const HallSelection = ({
   );
 };
 
-HallSelection.propTypes = {
-  disabled: PropTypes.bool,
-  authentication: PropTypes.any,
-  apartmentChoices: PropTypes.array.isRequired,
-  onHallAdd: PropTypes.func,
-  onHallInputChange: PropTypes.func,
-  onHallRemove: PropTypes.func,
-};
-
-export default HallSelection;
+export default HallChoiceList;
