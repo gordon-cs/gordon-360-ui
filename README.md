@@ -35,7 +35,7 @@ Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtua
 - Download the latest release of nvm from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
   - Extract the file and run it.
   - The installer will ask you where to install nvm. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
-  - After this, go to https://nodejs.org/en/ and look for the version labeled "lts" (which indicates the latest stable version).
+  - After this, go to https://nodejs.org/en/ and look for the version labeled "LTS" (which indicates the latest stable version).
   - Finally, run `nvm install <version>` where <version> is the version you found.
 
 #### Linux:
