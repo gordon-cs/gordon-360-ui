@@ -38,13 +38,13 @@ Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtua
   - After this, go to https://nodejs.org/en/ and look for the version labeled "LTS" (which indicates the latest stable version).
   - Finally, run `nvm install <version>` where <version> is the version you found.
 
-#### Linux:
+#### Linux and Mac:
 
-- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm.
-- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`.
-- Then, tell nvm that you want to use that verion: `nvm use node`.
-  To use a specific Node version - usually the latest Long Term Support (LTS) version - replace `node` in the above commands with the desired version or alias, e.g. `nvm install 14.15.4` for version 14.15.4 or `nvm install --lts` for the latest LTS.
-
+- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm.  It may take a few minutes to run, and appear for a while to be hung. (After it finishes, you might need to close your terminal window and open another before nvm will work.)
+- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`.  Or, better yet, `nvm install --lts`, to use the current "long term support" version which is generally the most stable.
+- Then, tell nvm that you want to use that verion: `nvm use node`, or better yet, `nvm use --lts`.
+  (More generally, "node" and "--lts" in the above commands can be replaced by any specific version.)
+  
 #### Troubleshooting NVM
 
 - If a developer accidentally follows the above Windows instructions on CS-RDSH-02, the environment variable for NVM will be set by their installation to a path within their user directory. Thus, many if not all other users on the machine will lose access to NVM. To fix this, any user can open Powershell as administrator and run `choco install -y nvm`. (The `-y` option answers `yes` to any prompts that occur during the installation.) Then, in a Powershell terminal not running as admin, run `nvm install --lts`. Users should log out and back in to see the fix take effect. As usual, you can check if this worked by opening a terminal and running the command `nvm`. If the output says `Running version...`, then it is all set.
