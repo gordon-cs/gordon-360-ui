@@ -49,8 +49,8 @@ Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtua
 
 - Follow the linux installations. 
 - After installing nvm make sure you do quit terminal and then open it back. 
-- To check if the nvm is install in your macOS type this command nvm -v.
-- Next you can install the latest version of the nvm you can do it ny typing this command nvm install --lts for the latest version of it.
+- To check if the `nvm` is install in your macOS type this command `nvm -v`.
+- Next you can install the latest version of the nvm you can do it by typing this command nvm `nvm install --lts` for the most recent stable version which means you will not worry to update it for a while.
 
 
 #### Troubleshooting NVM
