@@ -45,6 +45,14 @@ Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtua
 - Then, tell nvm that you want to use that verion: `nvm use node`.
   To use a specific Node version - usually the latest Long Term Support (LTS) version - replace `node` in the above commands with the desired version or alias, e.g. `nvm install 14.15.4` for version 14.15.4 or `nvm install --lts` for the latest LTS.
 
+#### MacOS:
+
+- Follow the linux installations. 
+- After installing nvm make sure you do quit terminal and then open it back. 
+- To check if the nvm is install in your macOS type this command nvm -v.
+- Next you can install the latest version of the nvm you can do it ny typing this command nvm install --lts for the latest version. 
+
+
 #### Troubleshooting NVM
 
 - If a developer accidentally follows the above Windows instructions on CS-RDSH-02, the environment variable for NVM will be set by their installation to a path within their user directory. Thus, many if not all other users on the machine will lose access to NVM. To fix this, any user can open Powershell as administrator and run `choco install -y nvm`. (The `-y` option answers `yes` to any prompts that occur during the installation.) Then, in a Powershell terminal not running as admin, run `nvm install --lts`. Users should log out and back in to see the fix take effect. As usual, you can check if this worked by opening a terminal and running the command `nvm`. If the output says `Running version...`, then it is all set.
