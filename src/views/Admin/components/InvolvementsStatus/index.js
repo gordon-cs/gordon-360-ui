@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';
 import GordonLoader from 'components/Loader';
 import activity from 'services/activity';
+import session from 'services/session';
 import InvolvementStatusList from './components/InvolvementStatusList/index';
 import { Typography, Divider, Card, CardHeader } from '@material-ui/core';
 import { NotFoundError } from 'services/error';
@@ -9,6 +10,15 @@ import { NotFoundError } from 'services/error';
 const InvolvementsStatus = ({ status }) => {
   const [loading, setLoading] = useState(true);
   const [involvements, setInvolvements] = useState([]);
+  const [currentSession, setCurrentSession] = useState('');
+
+  useEffect(() => {
+    const loadSession = async () => {
+      const { SessionCode } = await session.getCurrent();
+      setCurrentSession(SessionCode);
+    };
+    loadSession();
+  }, []);
 
   useEffect(() => {
     const loadInvolvements = async () => {
@@ -43,7 +53,7 @@ const InvolvementsStatus = ({ status }) => {
   } else if (involvements.length > 0) {
     content = involvements.map((activity) => (
       <React.Fragment key={activity.ActivityCode}>
-        <InvolvementStatusList Activity={activity} />
+        <InvolvementStatusList Activity={activity} session={currentSession} />
         <Divider />
       </React.Fragment>
     ));
