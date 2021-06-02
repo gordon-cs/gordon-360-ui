@@ -32,6 +32,7 @@ const DIALOG_PROPS = {
     action: 'default',
     title: 'How did you get here?',
     text: 'This text should not be displayed.',
+    open: false,
   },
   changeEditor: {
     action: 'changeEditor',

@@ -44,14 +44,14 @@ const HallChoiceListItem = ({
 }) => {
   const [isHallNameValid, setIsHallNameValid] = useState(false);
 
-  useEffect(
-    () => setIsHallNameValid(hallName === '' || halls.some((hall) => hall.Name === hallName)),
-    [hallName, halls],
-  );
+  useEffect(() => setIsHallNameValid(hallName === '' || halls.some((hall) => hall === hallName)), [
+    hallName,
+    halls,
+  ]);
 
   const hallOptions = halls.map((hall) => (
-    <MenuItem value={hall.Name} key={hall.Name}>
-      {hall.Name}
+    <MenuItem value={hall} key={hall}>
+      {hall}
     </MenuItem>
   ));
 
