@@ -6,15 +6,15 @@ import { Button, Grid, Card, CardContent } from '@material-ui/core';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 
-const Admin = (props) => {
+const Admin = ({ authentication }) => {
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const isOnline = useNetworkStatus();
 
   useEffect(() => {
     setIsSuperAdmin(user.getLocalInfo().college_role === 'god');
-  }, [props.authentication]);
+  }, [authentication]);
 
-  if (props.authentication) {
+  if (authentication) {
     if (isOnline) {
       if (isSuperAdmin) {
         return (

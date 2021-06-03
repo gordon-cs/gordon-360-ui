@@ -37,6 +37,7 @@ const SuperAdmin = () => {
       SUPER_ADMIN: true, //Used to be distinction between superadmin (godmode), admin, and groupadmin
       //now just superadmin and groupadmin
     };
+    // TODO: Add snackbar feedback, especially for errors like 404
     await admin.addAdmin(data);
     setIsDialogOpen(false);
     setAdmins(await admin.getAdmins());
@@ -52,12 +53,11 @@ const SuperAdmin = () => {
   const headerStyle = {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
-    textAlign: 'center',
   };
 
   return (
     <Card>
-      <CardHeader title="Site Admins" style={headerStyle} />
+      <CardHeader title="Site Admins" style={headerStyle} align="center" />
       {loading ? (
         <GordonLoader />
       ) : (

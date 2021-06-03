@@ -6,9 +6,10 @@ import { Button, ListItem, ListItemText, ListItemSecondaryAction } from '@materi
 import GordonDialogBox from 'components/GordonDialogBox';
 
 const SuperAdminList = ({ Admin, onRemove }) => {
-  const [open, setOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleConfirmedRemove = () => {
+    // TODO: Detect removing self and display confirmation dialog
     admin.removeAdmin(Admin.ADMIN_ID);
     onRemove(Admin.ADMIN_ID);
   };
@@ -22,19 +23,19 @@ const SuperAdminList = ({ Admin, onRemove }) => {
     <>
       <ListItem divider>
         <ListItemText primary={Admin.USER_NAME} />
-
         <ListItemSecondaryAction>
-          <Button variant="contained" style={buttonStyle} onClick={() => setOpen(true)}>
+          <Button variant="contained" style={buttonStyle} onClick={() => setIsDialogOpen(true)}>
             Remove
           </Button>
         </ListItemSecondaryAction>
       </ListItem>
+
       <GordonDialogBox
-        open={open}
+        open={isDialogOpen}
         title="Remove Site Admin"
         buttonName="Remove"
         buttonClicked={handleConfirmedRemove}
-        cancelButtonClicked={() => setOpen(false)}
+        cancelButtonClicked={() => setIsDialogOpen(false)}
       >
         Are you sure you want to remove {Admin.USER_NAME} from being a site admin?
       </GordonDialogBox>

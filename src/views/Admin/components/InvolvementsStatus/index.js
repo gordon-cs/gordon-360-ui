@@ -46,30 +46,24 @@ const InvolvementsStatus = ({ status }) => {
     color: '#FFF',
   };
 
-  let content;
-
-  if (loading === true) {
-    content = <GordonLoader />;
-  } else if (involvements.length > 0) {
-    content = involvements.map((activity) => (
-      <InvolvementStatusList
-        key={activity.ActivityCode}
-        Activity={activity}
-        session={currentSession}
-      />
-    ));
-  } else {
-    content = (
-      <Typography align="center" variant="h5">
-        No {status} Involvements To Show
-      </Typography>
-    );
-  }
-
   return (
     <Card>
       <CardHeader style={headerStyle} align="center" title={`${status} Involvements`} />
-      {content}
+      {loading ? (
+        <GordonLoader />
+      ) : involvements.length > 0 ? (
+        involvements.map((activity) => (
+          <InvolvementStatusList
+            key={activity.ActivityCode}
+            Activity={activity}
+            session={currentSession}
+          />
+        ))
+      ) : (
+        <Typography align="center" variant="h5">
+          No {status} Involvements To Show
+        </Typography>
+      )}
     </Card>
   );
 };
