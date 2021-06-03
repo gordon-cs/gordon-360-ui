@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import InvolvementStatusList from './components/InvolvementsStatus';
-import AdminList from './components/SuperAdmins';
+import AdminList from './components/AdminList';
 import user from 'services/user';
 import { Button, Grid, Card, CardContent } from '@material-ui/core';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import AdminListItem from './components/SuperAdminList';
+import AdminListItem from './components/AdminListItem';
 import GordonLoader from 'components/Loader';
 import admin from 'services/admin';
 import { gordonColors } from 'theme';
