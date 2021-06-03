@@ -283,7 +283,10 @@ class PeopleSearch extends Component {
   };
   handleChangeIncludeAlumni() {
     this.setState({
-      searchValues: { ...this.state.searchValues, includeAlumni: !this.state.includeAlumni },
+      searchValues: {
+        ...this.state.searchValues,
+        includeAlumni: !this.state.searchValues.includeAlumni,
+      },
     });
   }
   handleFirstNameInputChange = (e) => {
@@ -474,7 +477,7 @@ class PeopleSearch extends Component {
     if (this.props.authentication) {
       if (this.state.personType && !this.state.personType.includes('stu')) {
         includeAlumniCheckbox = (
-          <Grid item xs={12} align='center'>
+          <Grid item xs={12} align="center">
             <FormControlLabel
               control={
                 <Checkbox
