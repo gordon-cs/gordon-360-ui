@@ -474,7 +474,7 @@ class PeopleSearch extends Component {
     if (this.props.authentication) {
       if (this.state.personType && !this.state.personType.includes('stu')) {
         includeAlumniCheckbox = (
-          <Grid item xs={12}>
+          <Grid item xs={12} align='center'>
             <FormControlLabel
               control={
                 <Checkbox
