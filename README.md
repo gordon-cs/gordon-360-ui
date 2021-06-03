@@ -53,6 +53,7 @@ Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtua
 - Next you can install the latest version of the nvm you can do it by typing this command nvm `nvm install --lts` for the most recent stable version which means you will not worry to update it for a while.
 
 
+
 #### Troubleshooting NVM
 
 - If a developer accidentally follows the above Windows instructions on CS-RDSH-02, the environment variable for NVM will be set by their installation to a path within their user directory. Thus, many if not all other users on the machine will lose access to NVM. To fix this, any user can open Powershell as administrator and run `choco install -y nvm`. (The `-y` option answers `yes` to any prompts that occur during the installation.) Then, in a Powershell terminal not running as admin, run `nvm install --lts`. Users should log out and back in to see the fix take effect. As usual, you can check if this worked by opening a terminal and running the command `nvm`. If the output says `Running version...`, then it is all set.
