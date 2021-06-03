@@ -1,89 +1,51 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { gordonColors } from 'theme';
 import admin from 'services/admin';
 
-import {
-  Typography,
-  Divider,
-  Grid,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@material-ui/core';
+import { Typography, Divider, Grid, Button } from '@material-ui/core';
+import GordonDialogBox from 'components/GordonDialogBox';
 
-export default class SuperAdminList extends Component {
-  constructor(props) {
-    super(props);
-    this.handleRemove = this.handleRemove.bind(this);
-    this.handleConfirmedRemove = this.handleConfirmedRemove.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.state = {
-      open: false, //remove admin confirmation box
-    };
-  }
+const SuperAdminList = ({ Admin }) => {
+  const [open, setOpen] = useState(false);
 
-  async componentDidMount() {
-    this.setState({});
-  }
-
-  handleRemove() {
-    this.setState({ open: true });
-  }
-
-  //close remove admin confirmation
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  handleConfirmedRemove() {
-    const adminID = this.props.Admin.ADMIN_ID;
+  const handleConfirmedRemove = () => {
+    const adminID = Admin.ADMIN_ID;
     admin.removeAdmin(adminID);
     window.location.reload();
-  }
+  };
 
-  render() {
-    const itemStyle = {
-      padding: '10px',
-    };
-    const buttonStyle = {
-      background: gordonColors.secondary.red,
-      color: 'white',
-    };
+  const itemStyle = {
+    padding: '10px',
+  };
+  const buttonStyle = {
+    background: gordonColors.secondary.red,
+    color: 'white',
+  };
 
-    return (
-      <div>
-        <Grid container style={itemStyle} justify="center">
-          <Grid item xs={8}>
-            <Typography>{this.props.Admin.USER_NAME}</Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <Button variant="contained" style={buttonStyle} onClick={this.handleRemove}>
-              Remove
-            </Button>
-            <Dialog
-              open={this.state.open}
-              onClose={this.handleClose}
-              aria-labelledby="form-dialog-title"
-            >
-              <DialogTitle id="form-dialog-title">
-                Are you sure you want to remove this super admin?
-              </DialogTitle>
-              <DialogContent />
-              <DialogActions>
-                <Button onClick={this.handleClose} color="primary">
-                  Cancel
-                </Button>
-                <Button onClick={this.handleConfirmedRemove} color="primary">
-                  Remove
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </Grid>
+  return (
+    <>
+      <Grid container style={itemStyle} justify="center" alignItems="center">
+        <Grid item xs={8}>
+          <Typography>{Admin.USER_NAME}</Typography>
         </Grid>
-        <Divider />
-      </div>
-    );
-  }
-}
+        <Grid item xs={4}>
+          <Button variant="contained" style={buttonStyle} onClick={() => setOpen(true)}>
+            Remove
+          </Button>
+        </Grid>
+      </Grid>
+      <Divider />
+      <GordonDialogBox
+        open={open}
+        title="Remove Site Admin"
+        buttonName="Remove"
+        buttonClicked={handleConfirmedRemove}
+        cancelButtonClicked={() => setOpen(false)}
+      >
+        Are you sure you want to remove {Admin.USER_NAME} from being a site admin?
+      </GordonDialogBox>
+    </>
+  );
+};
+
+export default SuperAdminList;
