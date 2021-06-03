@@ -1,137 +1,121 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import SuperAdminList from './components/SuperAdminList';
 import GordonLoader from 'components/Loader';
 import admin from 'services/admin';
 import { gordonColors } from 'theme';
 import membership from 'services/membership';
 
-import {
-  Typography,
-  Card,
-  Button,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from '@material-ui/core';
+import { Card, Button, TextField, CardHeader } from '@material-ui/core';
+import GordonDialogBox from 'components/GordonDialogBox';
 
-export default class SuperAdmin extends Component {
-  constructor(props) {
-    super(props);
-    this.handleAdd = this.handleAdd.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {
-      loading: true,
-      admins: [],
-      open: false, //add admin dialogue box
-      newAdminEmail: '',
+const SuperAdmin = () => {
+  const [loading, setLoading] = useState(true);
+  const [admins, setAdmins] = useState([]);
+  const [open, setOpen] = useState(false); //add admin dialogue box
+  const [newAdminEmail, setNewAdminEmail] = useState('');
+
+  useEffect(() => {
+    const loadAdmins = async () => {
+      setAdmins(await admin.getAdmins());
+      setLoading(false);
     };
-  }
 
-  componentDidMount() {
-    this.loadAdmins();
-  }
+    loadAdmins();
+  }, []);
 
-  async loadAdmins() {
-    const adminList = await admin.getAdmins();
-    this.setState({ loading: false, admins: adminList });
-  }
-
-  handleAdd() {
-    this.setState({ open: true });
-  }
-
-  handleText = (event) => {
-    this.setState({ newAdminEmail: event.target.value });
-  };
-
-  async handleSubmit() {
-    let adminEmail = this.state.newAdminEmail;
-    if (!adminEmail.toLowerCase().includes('@gordon.edu')) {
-      adminEmail = adminEmail + '@gordon.edu';
+  const handleSubmit = async () => {
+    let email = newAdminEmail;
+    if (!newAdminEmail.toLowerCase().includes('@gordon.edu')) {
+      email = newAdminEmail + '@gordon.edu';
     }
-    let addID = await membership.getEmailAccount(adminEmail).then(function (result) {
-      return result.GordonID;
-    });
+    // TODO: Refactor API to not require ID?
+    const { GordonID: addID } = await membership.getEmailAccount(email);
     let data = {
       ID_NUM: addID,
-      EMAIL: adminEmail,
-      USER_NAME: adminEmail.split('@')[0],
+      EMAIL: newAdminEmail,
+      USER_NAME: newAdminEmail.split('@')[0],
       SUPER_ADMIN: true, //Used to be distinction between superadmin (godmode), admin, and groupadmin
       //now just superadmin and groupadmin
     };
     await admin.addAdmin(data);
-    this.handleClose();
+    setOpen(false);
     window.location.reload(); //refresh
-  }
-
-  //close add admin dialogue
-  handleClose = () => {
-    this.setState({ open: false });
   };
 
-  render() {
-    const buttonStyle = {
-      margin: '20px',
-      background: gordonColors.primary.blue,
-      color: 'white',
-    };
-    const headerStyle = {
-      backgroundColor: gordonColors.primary.blue,
-      color: '#FFF',
-      padding: '10px',
-    };
+  const buttonStyle = {
+    margin: '20px',
+    background: gordonColors.primary.blue,
+    color: 'white',
+  };
+  const headerStyle = {
+    backgroundColor: gordonColors.primary.blue,
+    color: '#FFF',
+    textAlign: 'center',
+  };
 
-    let content;
-    if (this.state.loading === true) {
-      content = <GordonLoader />;
-    } else {
-      content = this.state.admins.map((superadmin) => (
-        <SuperAdminList key={superadmin.ADMIN_ID} Admin={superadmin} />
-      ));
-    }
-
-    return (
-      <Card>
-        <div style={headerStyle}>
-          <Typography variant="body2" align="center" style={headerStyle}>
-            Super Admins
-          </Typography>
-        </div>
-        {content}
-        <Button style={buttonStyle} onClick={this.handleAdd}>
-          Add Super Admin
-        </Button>
-
-        <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
-          aria-labelledby="form-dialog-title"
-          fullWidth
-        >
-          <DialogTitle id="form-dialog-title">Add Super Admin</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Super Admin Email (or username)"
-              type="email"
-              onChange={this.handleText}
-              fullWidth
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={this.handleSubmit} color="primary">
-              Add Super Admin
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Card>
-    );
+  let content;
+  if (loading === true) {
+    content = <GordonLoader />;
+  } else {
+    content = admins.map((superadmin) => (
+      <SuperAdminList key={superadmin.ADMIN_ID} Admin={superadmin} />
+    ));
   }
-}
+
+  return (
+    <Card>
+      <CardHeader title="Site Admins" style={headerStyle} />
+      {content}
+      <Button style={buttonStyle} onClick={() => setOpen(true)}>
+        Add Super Admin
+      </Button>
+      {/*
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="form-dialog-title"
+        fullWidth
+      >
+        <DialogTitle id="form-dialog-title">Add Super Admin</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Super Admin Email (or username)"
+            type="email"
+            onChange={(e) => setNewAdminEmail(e.target.value)}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} color="primary">
+            Add Super Admin
+          </Button>
+        </DialogActions>
+      </Dialog> */}
+
+      <GordonDialogBox
+        open={open}
+        title="Add Site Admin"
+        buttonName="Add"
+        buttonClicked={handleSubmit}
+        cancelButtonClicked={() => setOpen(false)}
+      >
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Email"
+          type="email"
+          variant="filled"
+          onChange={(e) => setNewAdminEmail(e.target.value)}
+          fullWidth
+        />
+      </GordonDialogBox>
+    </Card>
+  );
+};
+
+export default SuperAdmin;
