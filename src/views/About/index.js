@@ -7,7 +7,6 @@ import origins from './origins.json';
 import './about.css';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@material-ui/core';
-import { getOverlappingDaysInIntervals } from 'date-fns/fp';
 
 const About = () => {
   const [version, setVersion] = useState(null);
