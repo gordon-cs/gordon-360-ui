@@ -5,13 +5,13 @@ import admin from 'services/admin';
 import { gordonColors } from 'theme';
 import membership from 'services/membership';
 
-import { Card, Button, TextField, CardHeader } from '@material-ui/core';
+import { Card, Button, TextField, CardHeader, List } from '@material-ui/core';
 import GordonDialogBox from 'components/GordonDialogBox';
 
 const SuperAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [admins, setAdmins] = useState([]);
-  const [open, setOpen] = useState(false); //add admin dialogue box
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newAdminEmail, setNewAdminEmail] = useState('');
 
   useEffect(() => {
@@ -32,20 +32,22 @@ const SuperAdmin = () => {
     const { GordonID: addID } = await membership.getEmailAccount(email);
     let data = {
       ID_NUM: addID,
-      EMAIL: newAdminEmail,
-      USER_NAME: newAdminEmail.split('@')[0],
+      EMAIL: email,
+      USER_NAME: email.split('@')[0],
       SUPER_ADMIN: true, //Used to be distinction between superadmin (godmode), admin, and groupadmin
       //now just superadmin and groupadmin
     };
     await admin.addAdmin(data);
-    setOpen(false);
-    window.location.reload(); //refresh
+    setIsDialogOpen(false);
+    setAdmins(await admin.getAdmins());
+  };
+
+  const handleRemove = async (adminID) => {
+    setAdmins((prevAdmins) => prevAdmins.filter((a) => a.ADMIN_ID !== adminID));
   };
 
   const buttonStyle = {
-    margin: '20px',
-    background: gordonColors.primary.blue,
-    color: 'white',
+    margin: '0.5rem',
   };
   const headerStyle = {
     backgroundColor: gordonColors.primary.blue,
@@ -53,56 +55,33 @@ const SuperAdmin = () => {
     textAlign: 'center',
   };
 
-  let content;
-  if (loading === true) {
-    content = <GordonLoader />;
-  } else {
-    content = admins.map((superadmin) => (
-      <SuperAdminList key={superadmin.ADMIN_ID} Admin={superadmin} />
-    ));
-  }
-
   return (
     <Card>
       <CardHeader title="Site Admins" style={headerStyle} />
-      {content}
-      <Button style={buttonStyle} onClick={() => setOpen(true)}>
-        Add Super Admin
-      </Button>
-      {/*
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="form-dialog-title"
-        fullWidth
+      {loading ? (
+        <GordonLoader />
+      ) : (
+        <List>
+          {admins.map((superadmin) => (
+            <SuperAdminList key={superadmin.ADMIN_ID} Admin={superadmin} onRemove={handleRemove} />
+          ))}
+        </List>
+      )}
+      <Button
+        variant="contained"
+        color="primary"
+        style={buttonStyle}
+        onClick={() => setIsDialogOpen(true)}
       >
-        <DialogTitle id="form-dialog-title">Add Super Admin</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Super Admin Email (or username)"
-            type="email"
-            onChange={(e) => setNewAdminEmail(e.target.value)}
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} color="primary">
-            Add Super Admin
-          </Button>
-        </DialogActions>
-      </Dialog> */}
+        Add Site Admin
+      </Button>
 
       <GordonDialogBox
-        open={open}
+        open={isDialogOpen}
         title="Add Site Admin"
         buttonName="Add"
         buttonClicked={handleSubmit}
-        cancelButtonClicked={() => setOpen(false)}
+        cancelButtonClicked={() => setIsDialogOpen(false)}
       >
         <TextField
           autoFocus
