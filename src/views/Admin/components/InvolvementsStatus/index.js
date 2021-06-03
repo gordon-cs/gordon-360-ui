@@ -4,7 +4,7 @@ import GordonLoader from 'components/Loader';
 import activity from 'services/activity';
 import session from 'services/session';
 import InvolvementStatusList from './components/InvolvementStatusList/index';
-import { Typography, Divider, Card, CardHeader } from '@material-ui/core';
+import { Typography, Card, CardHeader } from '@material-ui/core';
 import { NotFoundError } from 'services/error';
 
 const InvolvementsStatus = ({ status }) => {
@@ -52,13 +52,18 @@ const InvolvementsStatus = ({ status }) => {
     content = <GordonLoader />;
   } else if (involvements.length > 0) {
     content = involvements.map((activity) => (
-      <React.Fragment key={activity.ActivityCode}>
-        <InvolvementStatusList Activity={activity} session={currentSession} />
-        <Divider />
-      </React.Fragment>
+      <InvolvementStatusList
+        key={activity.ActivityCode}
+        Activity={activity}
+        session={currentSession}
+      />
     ));
   } else {
-    content = <Typography variant="h5">No {status} Involvements To Show</Typography>;
+    content = (
+      <Typography align="center" variant="h5">
+        No {status} Involvements To Show
+      </Typography>
+    );
   }
 
   return (
