@@ -39,7 +39,7 @@ const defaultValues = {
  *
  * @param {String} key - key of the QueryState variable
  * @param {String} typeString - the type of variable (must correspond with a types enum value)
- * @param {String} initial - initial value of the QueryState variable (optional)
+ * @param {String} [initial] - initial value of the QueryState variable
  *          *** DOES NOT currently work because of loading from URL before URL gets set
  * @returns {[var, Callback]} - the state variable, the setQueryState callback function
  */
@@ -52,11 +52,11 @@ function useQueryState(key, typeString, initial) {
   const history = useHistory();
 
   /**
-   * Anytime the state changes, setURLParam is invoked
+   * Anytime the state changes, setURLFromState is invoked
    * This function updates the URL with the state (if changed)
    */
   useEffect(() => {
-    const setURLParam = async () => {
+    const setURLFromState = async () => {
       let urlParams = new URLSearchParams(history.location.search);
 
       // if the url value is already the same as the state value -> don't set the url again
@@ -80,21 +80,22 @@ function useQueryState(key, typeString, initial) {
 
       history.push('?' + urlParams);
     };
-    setURLParam();
+    setURLFromState();
     /*********************** ESLint Disable Justification: *******************************/
-    // ESLint wants to include `defaultVal, key, history` as dependencies but to prevent
+    // ESLint wants to include `history` as dependencies but to prevent
     // extra loops of ~ url setting state setting the url ~ we do not include.
     // The only time we want to set the URL manually is when the state changes
+    // (key and defaultVal are constant)
     /*************************************************************************************/
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, [state, key, defaultVal]);
 
   /**
-   * Anytime the url is changed, loadURLParams is invoked
+   * Anytime the url is changed, loadStateFromURL is invoked
    * This function pulls the value of the key from the url
    *   and updates the state with it (if changed)
    *
-   * This is a useLayoutEffect rather than useEffect in order to prioritize loadURLParams;
+   * This is a useLayoutEffect rather than useEffect in order to prioritize loadStateFromURL;
    *   this is necessary for preventing the race condition where (for ex.) the user clicks 'back'
    *   twice quickly and the first 'back' sets the URL params before the second 'back' can
    *   load the accurate new URL param. This is still not totally perfect but only breaks when
@@ -102,7 +103,7 @@ function useQueryState(key, typeString, initial) {
    * Comparison of the two effects: https://kentcdodds.com/blog/useeffect-vs-uselayouteffect
    */
   useLayoutEffect(() => {
-    const loadURLParams = async () => {
+    const loadStateFromURL = async () => {
       const urlParams = new URLSearchParams(history.location.search);
       let urlValue = urlParams.get(key);
 
@@ -118,8 +119,7 @@ function useQueryState(key, typeString, initial) {
           // if the same value (or unset and state array is empty) -> do nothing
           // this check is necessary because [] -> [] are different memory objects
           if (urlValue === state.toString() || (!urlValue && state.length === 0)) return;
-          else if (!urlValue) setState(defaultVal);
-          else setState(urlValue.split(','));
+          else setState(urlValue?.split(',') ?? defaultVal);
           break;
 
         case types.SingleValue:
@@ -131,32 +131,35 @@ function useQueryState(key, typeString, initial) {
           throw new Error(`missing case for type ${type}`);
       }
     };
-    loadURLParams();
+    loadStateFromURL();
     /*********************** ESLint Disable Justification: *******************************/
-    // ESLint wants to include `defaultVal, key, state` as dependencies but to prevent
+    // ESLint wants to include `state` as dependencies but to prevent
     // extra loops of ~ url setting state setting the url ~ we do not include.
     // It makes good sense that the only time we should pull the URL is the URL changes
+    // (key and defaultVal are constant)
     /*************************************************************************************/
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history.location.search]);
+  }, [history.location.search, key, defaultVal]);
 
   /**
    * Callback function to allow user component to setQueryState just like one would use setState
    */
-  const setQueryState = useCallback((val) => {
-    // this check prevents unnecessary array setting
-    // ([] -> [] are technically different memory objects)
-    // this is safe to deep compare because the array value should not have very many values
-    // (ex. 'filters' array has a few different possible filter values)
-    if (Array.isArray(defaultVal) && !JSON.stringify(state) === JSON.stringify(val)) return;
-    setState(val);
-    /*********************** ESLint Disable Justification: *******************************/
-    // We do not want the defaultVal or state dependencies here because they were simply added to
-    // prevent unecessarily setting the value array. We do not want any dependencies that might
-    // change the state after the initial setQueryState is called from the user function.
-    /*************************************************************************************/
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const setQueryState = useCallback(
+    (nextState) => {
+      // this check prevents unnecessary array setting
+      // ([] -> [] are technically different memory objects)
+      // this is safe to deep compare because the array value should not have very many values
+      // (ex. 'filters' array has a few different possible filter values)
+      if (
+        type === types.Array &&
+        state.every((elem, index) => elem === nextState[index]) &&
+        nextState.every((elem, index) => elem === state[index])
+      )
+        return;
+      setState(nextState);
+    },
+    [state, type],
+  );
 
   return [state, setQueryState];
 }

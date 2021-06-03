@@ -23,7 +23,7 @@ const Events = (props) => {
   const [allEvents, setAllEvents] = useState([]);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
-  //TODO: useQueryState('search', types.SingleValue);- needs debouncing
+  //TODO: useQueryState('search', types.SingleValue); - needs debouncing
   const [search, setSearch] = useState('');
   const [includePast, setIncludePast] = useQueryState('past', types.Boolean);
   const [filters, setFilters] = useQueryState('filters', types.Array);
@@ -31,8 +31,7 @@ const Events = (props) => {
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
 
   useEffect(() => {
-    // Single use - Loads events data on page load / authentication
-    const loadEventsPage = async () => {
+    const loadAllEventsData = async () => {
       setLoading(true);
       let allEvents;
       if (props.authentication) {
@@ -43,15 +42,13 @@ const Events = (props) => {
       setAllEvents(allEvents);
       setLoading(false);
     };
-    loadEventsPage();
+    loadAllEventsData();
   }, [props.authentication]);
 
-  // When the actual events data changes update the events
   useEffect(() => {
     setEvents(includePast ? allEvents : futureEvents);
   }, [includePast, allEvents, futureEvents]);
 
-  // Apply filters to the events data
   useEffect(() => {
     setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
   }, [events, filters, search]);
