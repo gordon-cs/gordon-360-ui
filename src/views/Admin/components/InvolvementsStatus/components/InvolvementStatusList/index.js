@@ -5,23 +5,23 @@ import { ListItem, ListItemAvatar, Avatar, ListItemText } from '@material-ui/cor
 
 const ListItemLink = (props) => <ListItem button component={Link} {...props} />;
 
-const InvolvementStatusList = ({ Activity, session }) => {
+const InvolvementStatusListItem = ({ involvement, session }) => {
   return (
     <ListItemLink
       className="gc360-link"
-      to={`/activity/${session}/${Activity.ActivityCode}`}
+      to={`/activity/${session}/${involvement.ActivityCode}`}
       divider
     >
       <ListItemAvatar>
         <Avatar
           variant="rounded"
-          src={Activity.ActivityImagePath}
-          alt={Activity.ActivityDescription}
+          src={involvement.ActivityImagePath}
+          alt={involvement.ActivityDescription}
         />
       </ListItemAvatar>
-      <ListItemText primary={Activity.ActivityDescription} />
+      <ListItemText primary={involvement.ActivityDescription} />
     </ListItemLink>
   );
 };
 
-export default InvolvementStatusList;
+export default InvolvementStatusListItem;

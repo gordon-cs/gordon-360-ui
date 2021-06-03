@@ -3,11 +3,11 @@ import { gordonColors } from 'theme';
 import GordonLoader from 'components/Loader';
 import activity from 'services/activity';
 import session from 'services/session';
-import InvolvementStatusList from './components/InvolvementStatusList/index';
+import InvolvementStatusListItem from './components/InvolvementStatusList/index';
 import { Typography, Card, CardHeader } from '@material-ui/core';
 import { NotFoundError } from 'services/error';
 
-const InvolvementsStatus = ({ status }) => {
+const InvolvementStatusList = ({ status }) => {
   const [loading, setLoading] = useState(true);
   const [involvements, setInvolvements] = useState([]);
   const [currentSession, setCurrentSession] = useState('');
@@ -52,10 +52,10 @@ const InvolvementsStatus = ({ status }) => {
       {loading ? (
         <GordonLoader />
       ) : involvements.length > 0 ? (
-        involvements.map((activity) => (
-          <InvolvementStatusList
-            key={activity.ActivityCode}
-            Activity={activity}
+        involvements.map((involvement) => (
+          <InvolvementStatusListItem
+            key={involvement.ActivityCode}
+            involvement={involvement}
             session={currentSession}
           />
         ))
@@ -68,4 +68,4 @@ const InvolvementsStatus = ({ status }) => {
   );
 };
 
-export default InvolvementsStatus;
+export default InvolvementStatusList;

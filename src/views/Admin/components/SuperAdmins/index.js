@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SuperAdminList from './components/SuperAdminList';
+import AdminListItem from './components/SuperAdminList';
 import GordonLoader from 'components/Loader';
 import admin from 'services/admin';
 import { gordonColors } from 'theme';
@@ -8,7 +8,7 @@ import membership from 'services/membership';
 import { Card, Button, TextField, CardHeader, List } from '@material-ui/core';
 import GordonDialogBox from 'components/GordonDialogBox';
 
-const SuperAdmin = () => {
+const AdminList = () => {
   const [loading, setLoading] = useState(true);
   const [admins, setAdmins] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -63,7 +63,7 @@ const SuperAdmin = () => {
       ) : (
         <List>
           {admins.map((superadmin) => (
-            <SuperAdminList key={superadmin.ADMIN_ID} Admin={superadmin} onRemove={handleRemove} />
+            <AdminListItem key={superadmin.ADMIN_ID} Admin={superadmin} onRemove={handleRemove} />
           ))}
         </List>
       )}
@@ -97,4 +97,4 @@ const SuperAdmin = () => {
   );
 };
 
-export default SuperAdmin;
+export default AdminList;

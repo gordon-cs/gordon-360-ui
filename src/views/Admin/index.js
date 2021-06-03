@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import InvolvementsStatus from './components/InvolvementsStatus';
-import SuperAdmin from './components/SuperAdmins';
+import InvolvementStatusList from './components/InvolvementsStatus';
+import AdminList from './components/SuperAdmins';
 import user from 'services/user';
 import { Button, Grid, Card, CardContent } from '@material-ui/core';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 
 const Admin = ({ authentication }) => {
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const isOnline = useNetworkStatus();
 
   useEffect(() => {
-    setIsSuperAdmin(user.getLocalInfo().college_role === 'god');
+    setIsAdmin(user.getLocalInfo().college_role === 'god');
   }, [authentication]);
 
   if (authentication) {
     if (isOnline) {
-      if (isSuperAdmin) {
+      if (isAdmin) {
         return (
           <Grid container justify="center" spacing={2}>
             <Grid item xs={12} lg={8}>
-              <InvolvementsStatus status={'Open'} />
+              <InvolvementStatusList status={'Open'} />
             </Grid>
 
             <Grid item xs={12} lg={8}>
-              <InvolvementsStatus status={'Closed'} />
+              <InvolvementStatusList status={'Closed'} />
             </Grid>
 
             <Grid item xs={12} lg={8}>
-              <SuperAdmin />
+              <AdminList />
             </Grid>
           </Grid>
         );

@@ -5,7 +5,7 @@ import admin from 'services/admin';
 import { Button, ListItem, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
 import GordonDialogBox from 'components/GordonDialogBox';
 
-const SuperAdminList = ({ Admin, onRemove }) => {
+const AdminListItem = ({ Admin, onRemove }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleConfirmedRemove = () => {
@@ -43,4 +43,4 @@ const SuperAdminList = ({ Admin, onRemove }) => {
   );
 };
 
-export default SuperAdminList;
+export default AdminListItem;
