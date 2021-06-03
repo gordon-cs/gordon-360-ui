@@ -16,17 +16,18 @@ import {
   Switch,
   TextField,
 } from '@material-ui/core';
-import useQueryState from 'hooks/useQueryState';
+import useQueryState, { types } from 'hooks/useQueryState';
 
 const Events = (props) => {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
   const [allEvents, setAllEvents] = useState([]);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [includePast, setIncludePast] = useQueryState('past', 'Boolean');
+  //TODO: useQueryState('search', types.SingleValue);- needs debouncing
+  const [search, setSearch] = useState('');
+  const [includePast, setIncludePast] = useQueryState('past', types.Boolean);
+  const [filters, setFilters] = useQueryState('filters', types.Array);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useQueryState('filters', 'Array');
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
 
   useEffect(() => {

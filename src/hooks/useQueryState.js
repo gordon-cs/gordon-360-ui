@@ -1,6 +1,17 @@
 import { useState, useCallback, useEffect, useLayoutEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
+export const types = {
+  SingleValue: 'SingleValue',
+  Array: 'Array',
+  Boolean: 'Boolean',
+};
+const defaultValues = {
+  SingleValue: '',
+  Array: [],
+  Boolean: false,
+};
+
 /**
  * Custom hook to useState synced with URL query parameters.
  * Inspiration from François Best https://github.com/47ng/next-usequerystate/tree/next/src
@@ -26,24 +37,13 @@ import { useHistory } from 'react-router-dom';
  * we cannot set to an initial value or else we might load (and overwrite the state) from the url
  * before we can set the url
  *
- * @param {String} keyParam - key of the QueryState variable
+ * @param {String} key - key of the QueryState variable
  * @param {String} typeString - the type of variable (must correspond with a types enum value)
  * @param {String} initial - initial value of the QueryState variable (optional)
  *          *** DOES NOT currently work because of loading from URL before URL gets set
  * @returns {[var, Callback]} - the state variable, the setQueryState callback function
  */
-function useQueryState(keyParam, typeString, initial) {
-  const key = keyParam; // we should never change the particular key once we start using it
-  const types = {
-    SingleValue: 'SingleValue',
-    Array: 'Array',
-    Boolean: 'Boolean',
-  };
-  const defaultValues = {
-    SingleValue: '',
-    Array: [],
-    Boolean: false,
-  };
+function useQueryState(key, typeString, initial) {
   const type = types[typeString];
   if (type === undefined)
     throw new Error(`type must be one of the given types: ${Object.values(types)}`);
