@@ -55,6 +55,9 @@ export default class DaysLeft extends Component {
         datasets: [{ data: [pastDays, daysleft], backgroundColor: [gordonColors.primary.blue] }],
         labels: ['Days Finished', 'Days Remaining'],
       };
+      const options = {
+        legend: false,
+      };
       content = (
         <div>
           <Grid
@@ -69,7 +72,7 @@ export default class DaysLeft extends Component {
               </Typography>
             </Grid>
           </Grid>
-          <Doughnut data={data} height={175} />
+          <Doughnut data={data} height={175} options={options}/>
           <div
             style={{
               marginTop: '1rem',
