@@ -671,20 +671,16 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.searchValues.major === '' &&
-                          this.state.searchValues.minor === '' &&
-                          this.state.searchValues.classType === ''
-                            ? {
-                                backgroundColor: gordonColors.primary.contrastDefaultColor,
-                              }
-                            : this.state.searchValues.major !== '' ||
-                              this.state.searchValues.minor !== '' ||
-                              this.state.searchValues.classType !== ''
+                          this.state.searchValues.major !== '' ||
+                          this.state.searchValues.minor !== '' ||
+                          this.state.searchValues.classType !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
                               }
-                            : {}
+                            : {
+                                backgroundColor: gordonColors.primary.contrastDefaultColor,
+                              }
                         }
                         variant={this.state.academicsExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleAcademicsExpandClick}
@@ -697,20 +693,16 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.searchValues.homeCity === '' &&
-                          this.state.searchValues.state === '' &&
-                          this.state.searchValues.country === ''
-                            ? {
-                                backgroundColor: gordonColors.primary.contrastDefaultColor,
-                              }
-                            : this.state.searchValues.homeCity !== '' ||
-                              this.state.searchValues.state !== '' ||
-                              this.state.searchValues.country !== ''
+                          this.state.searchValues.homeCity !== '' ||
+                          this.state.searchValues.state !== '' ||
+                          this.state.searchValues.country !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
                               }
-                            : {}
+                            : {
+                                backgroundColor: gordonColors.primary.contrastDefaultColor,
+                              }
                         }
                         variant={this.state.homeExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleHomeExpandClick}
@@ -725,18 +717,15 @@ class PeopleSearch extends Component {
                         variant={this.state.offDepExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleOffDepExpandClick}
                         style={
-                          this.state.searchValues.department === '' &&
-                          this.state.searchValues.building === ''
-                            ? {
-                                backgroundColor: gordonColors.primary.contrastDefaultColor,
-                              }
-                            : this.state.searchValues.department !== '' ||
-                              this.state.searchValues.building !== ''
+                          this.state.searchValues.department !== '' ||
+                          this.state.searchValues.building !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
                               }
-                            : {}
+                            : {
+                                backgroundColor: gordonColors.primary.contrastDefaultColor,
+                              }
                         }
                       >
                         <AddIcon fontSize="inherit" />
