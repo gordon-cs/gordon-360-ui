@@ -671,9 +671,15 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.majorSearchValue !== '' ||
-                          this.state.minorSearchValue !== '' ||
-                          this.state.classTypeSearchValue !== ''
+                          this.state.searchValues.major === '' &&
+                          this.state.searchValues.minor === '' &&
+                          this.state.searchValues.classType === ''
+                            ? {
+                                backgroundColor: gordonColors.primary.contrastDefaultColor,
+                              }
+                            : this.state.searchValues.major !== '' ||
+                              this.state.searchValues.minor !== '' ||
+                              this.state.searchValues.classType !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
@@ -691,9 +697,15 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.homeCitySearchValue !== '' ||
-                          this.state.stateSearchValue !== '' ||
-                          this.state.countrySearchValue !== ''
+                          this.state.searchValues.homeCity === '' &&
+                          this.state.searchValues.state === '' &&
+                          this.state.searchValues.country === ''
+                            ? {
+                                backgroundColor: gordonColors.primary.contrastDefaultColor,
+                              }
+                            : this.state.searchValues.homeCity !== '' ||
+                              this.state.searchValues.state !== '' ||
+                              this.state.searchValues.country !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
@@ -713,8 +725,13 @@ class PeopleSearch extends Component {
                         variant={this.state.offDepExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleOffDepExpandClick}
                         style={
-                          this.state.departmentSearchValue !== '' ||
-                          this.state.buildingSearchValue !== ''
+                          this.state.searchValues.department === '' &&
+                          this.state.searchValues.building === ''
+                            ? {
+                                backgroundColor: gordonColors.primary.contrastDefaultColor,
+                              }
+                            : this.state.searchValues.department !== '' ||
+                              this.state.searchValues.building !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
