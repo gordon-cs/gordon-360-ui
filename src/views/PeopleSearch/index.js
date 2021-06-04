@@ -678,9 +678,7 @@ class PeopleSearch extends Component {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
                               }
-                            : {
-                                backgroundColor: gordonColors.primary.contrastDefaultColor,
-                              }
+                            : {}
                         }
                         variant={this.state.academicsExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleAcademicsExpandClick}
@@ -700,9 +698,7 @@ class PeopleSearch extends Component {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
                               }
-                            : {
-                                backgroundColor: gordonColors.primary.contrastDefaultColor,
-                              }
+                            : {}
                         }
                         variant={this.state.homeExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleHomeExpandClick}
@@ -723,9 +719,7 @@ class PeopleSearch extends Component {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
                               }
-                            : {
-                                backgroundColor: gordonColors.primary.contrastDefaultColor,
-                              }
+                            : {}
                         }
                       >
                         <AddIcon fontSize="inherit" />
