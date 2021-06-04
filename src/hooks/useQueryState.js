@@ -29,6 +29,14 @@ const defaultValues = {
  * *and is out of sync with the state* do we update the state. This is a critical design choice
  * that prevents issues like setting the state unnecessarily after clicking the browser back
  * arrow, preventing you from going forward (and other similar browsing history issues).
+ * 
+ * Alternative approaches to try, should implementation change or issues arise:
+ * - Remove the loadStateFromURL from UseEffect and instead only set the state with the URL value
+ * when the page is first loaded (useEffect with []) or when the browser navigation is used
+ * (usePopState to detect browser back/forward arrows); this way the problem of oversetting is
+ * avoided without the use of checks that this approach uses
+ * - URL First Approach: Rather than being state-first and updating the URL as needed,
+ * this approach would be to use the URL as the ~ source of truth ~ so to speak
  *
  * Current Implementation Issues:
  * - UseLayoutEffect is not a perfect solution to the race condition issue. Symptoms of this
