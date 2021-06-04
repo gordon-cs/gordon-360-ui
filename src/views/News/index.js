@@ -2,13 +2,20 @@ import React, { Component } from 'react';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import newsService from 'services/news';
 import userService from 'services/user';
+import createPhotoDialogBoxMessage from 'services/user';
 import NewsList from './components/NewsList';
 import GordonLoader from 'components/Loader';
+import Dropzone from 'react-dropzone';
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
+import { gordonColors } from 'theme';
+//import { maxCropPreviewWidth } from 'components/Profile/components/Identification';
 import {
   Snackbar,
   IconButton,
   Grid,
   TextField,
+  Tooltip,
   Button,
   Fab,
   Typography,
@@ -18,6 +25,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  DialogContentText,
   MenuItem,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -27,6 +35,29 @@ import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 // import Dropzone from 'react-dropzone';
 
 const styles = {
+  button: {
+    background: gordonColors.primary.blue,
+    color: 'white',
+
+    changeImageButton: {
+      background: gordonColors.primary.blue,
+      color: 'white',
+    },
+
+    resetButton: {
+      backgroundColor: '#f44336',
+      color: 'white',
+    },
+    cancelButton: {
+      backgroundColor: 'white',
+      color: gordonColors.primary.blue,
+      border: `1px solid ${gordonColors.primary.blue}`,
+      width: this.showCropper ? '38%' : '86%',
+    },
+    hidden: {
+      display: 'none',
+    },
+  },
   searchBar: {
     margin: '0 auto',
   },
@@ -60,17 +91,70 @@ export default class StudentNews extends Component {
       newPostCategory: '',
       newPostSubject: '',
       newPostBody: '',
+      newPostImage: '',
+      showCropper: null,
+      openPhotoDialog: false,
+      photoDialogErrorTimeout: null,
+      photoDialogError: null,
+      cropBoxDim: null,
+      aspectRatio: null,
       snackbarOpen: false,
       snackbarMessage: 'Something went wrong',
       currentUsername: '',
       // false if not editing, newsID if editing
       currentlyEditing: false,
     };
+    this.cropperRef = React.createRef();
     this.isMobileView = false;
     this.breakpointWidth = 540;
     this.updateSnackbar = this.updateSnackbar.bind(this);
     this.handleNewsItemEdit = this.handleNewsItemEdit.bind(this);
     this.callFunction = this.callFunction.bind(this);
+    this.CROP_DIM = 200; // pixels
+  }
+
+  setShowCropper(dataURL) {
+    this.setState({ showCropper: dataURL });
+  }
+
+  setPhotoDialogError(value) {
+    this.setState({ photoDialogError: value });
+  }
+
+  setOpenPhotoDialog(bool) {
+    this.setState({ openPhotoDialog: bool });
+  }
+
+  setCropperData(dimensions, ratio) {
+    this.setState({ cropBoxDim: dimensions, aspectRatio: ratio });
+  }
+
+  //copied from Identification
+  maxCropPreviewWidth() {
+    // see IDUploader/index.js > maxCropPreviewWidth for commented out code
+    // that seemed to have finer tuned logic
+    const smallScreenRatio = 0.5;
+    const largeScreenRatio = 0.25;
+    const w = this.breakpointWidth; //const w = currentWidth;
+    switch (w) {
+      default:
+        return 960 * largeScreenRatio;
+      case 'xs':
+        return 360 * smallScreenRatio;
+      case 'sm':
+        return 600 * smallScreenRatio;
+      case 'md':
+        return 960 * largeScreenRatio;
+      case 'lg':
+        return 1280 * largeScreenRatio;
+      case 'xl':
+        return 1920 * largeScreenRatio;
+    }
+  }
+
+  //Copied from Identification
+  minCropBoxDim(imgWidth, dispWidth) {
+    return (this.CROP_DIM * dispWidth) / imgWidth;
   }
 
   componentDidMount() {
@@ -99,6 +183,7 @@ export default class StudentNews extends Component {
       newPostCategory: '',
       newPostSubject: '',
       newPostBody: '',
+      newPostImage: '',
       currentlyEditing: false,
     });
   }
@@ -146,6 +231,246 @@ export default class StudentNews extends Component {
     }
   }
 
+  /**
+   * Clears the timeout of the Photo Dialog error message.
+   *
+   * If an error occured while the Photo Dialog was open, then a timeout for displaying the error
+   * message was created. That timeout is cleared and the error message is deleted. This can be used
+   * to stop or remove the timeout to allow another one to be made (prevents memory leaks of
+   * unreferenced timeouts)
+   */
+  async clearPhotoDialogErrorTimeout() {
+    //Should this be Async??? no idea
+    return new Promise((resolve, reject) => {
+      clearTimeout(this.photoDialogErrorTimeout);
+      this.photoDialogErrorTimeout = null;
+      this.photoDialogError = null;
+      resolve(true);
+    });
+  }
+
+  onCropperZoom(event) {
+    if (event.detail.ratio > 1) {
+      event.preventDefault();
+      React.cropperRef.current.cropper.zoomTo(1);
+    }
+  }
+
+  /**
+   * Handles the acceptance of the user dropping an image in the Photo Uploader in News submission
+   *
+   * @param {*} fileList The image dropped in the Dropzone of the Photo Uploader
+   */
+  onDropAccepted(fileList) {
+    var previewImageFile = fileList[0];
+    var reader = new FileReader();
+    reader.onload = function () {
+      var dataURL = reader.result.toString();
+      var i = new Image();
+      i.onload = async () => {
+        if (i.width < this.CROP_DIM || i.height < this.CROP_DIM) {
+          await this.clearPhotoDialogErrorTimeout();
+          this.setPhotoDialogError(
+            'Sorry, your image is too small! Image dimensions must be at least 200 x 200 pixels.',
+          );
+        } else {
+          var aRatio = i.width / i.height;
+          this.setCropperData({ aspectRatio: aRatio });
+          var maxWidth = this.maxCropPreviewWidth();
+          var displayWidth = maxWidth > i.width ? i.width : maxWidth;
+          var cropDim = this.minCropBoxDim(i.width, displayWidth);
+          this.setPhotoDialogError(null);
+          this.setCropperData({ aspectRatio: aRatio, cropBoxDim: cropDim });
+          this.setShowCropper(dataURL);
+        }
+      };
+      i.src = dataURL;
+    };
+    reader.readAsDataURL(previewImageFile);
+  }
+
+  /**
+   * Handles the rejection of the user dropping an invalid file in the Photo Updater Dialog Box
+   * Copied from Identification
+   */
+  async onDropRejected() {
+    await this.clearPhotoDialogErrorTimeout();
+    this.setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
+  }
+
+  /**
+   * Handles closing the Photo Updater Dialog Box
+   * Copied from Identification
+   */
+  async handleCloseCancel() {
+    this.setOpenPhotoDialog(false);
+    this.setShowCropper(null);
+    await this.clearPhotoDialogErrorTimeout();
+  }
+
+  /**
+   * Handles submission of a new photo in the Photo Updater Dialog Box
+   *
+   * Copied from Identification
+   */
+  handleCloseSubmit() {
+    if (this.showCropper != null) {
+      let croppedImage = this.cropperRef.current.cropper
+        .getCroppedCanvas({ width: this.CROP_DIM })
+        .toDataURL();
+      let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+      this.setState({ newPostImage: newImage });
+      //let response = user.postImage(croppedImage);
+      /*
+      response
+        .then(async () => {
+          // Sets the user's preferred image
+          setPreferredUserImage(newImage);
+          setHasPreferredImage(true);
+          // Reset default image so we display only preferred on MyProfile
+          setDefaultUserImage(null);
+          // Displays to the user that their photo has been submitted
+          createSnackbar('Photo Submitted', 'success');
+          // Closes out the Photo Updater
+          setOpenPhotoDialog(false);
+          setShowCropper(null);
+          window.postMessage('update-profile-picture', window.location.origin);
+        })
+        .catch(() => {
+          // Displays to the user that their photo failed to submit
+          createSnackbar('Photo Submission Failed', 'error');
+        });
+        */
+    }
+  }
+
+  /**
+   * Creates the Photo Uploader Box for a News posting
+   *
+   * @return {JSX} The JSX of the Photo Updater
+   */
+  createNewsImageUploader() {
+    return (
+      <div className="gc360-photo-dialog-box">
+        <DialogTitle className="gc360-photo-dialog-box_title">Update Photo</DialogTitle>
+        <DialogContent className="gc360-photo-dialog-box_content">
+          <DialogContentText className="gc360-photo-dialog-box_content_text">
+            {createPhotoDialogBoxMessage()}
+          </DialogContentText>
+          {!this.showCropper && (
+            <Dropzone
+              onDropAccepted={this.onDropAccepted}
+              onDropRejected={this.onDropRejected}
+              accept="image/jpeg, image/jpg, image/png"
+            >
+              {({ getRootProps, getInputProps }) => (
+                <section>
+                  <div className="gc360-photo-dialog-box_content_dropzone" {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <img
+                      className="gc360-photo-dialog-box_content_dropzone_img"
+                      src={`data:image/jpg;base64,${null}`} //this feels wrong
+                      alt="Profile"
+                    />
+                  </div>
+                </section>
+              )}
+            </Dropzone>
+          )}
+          {this.showCropper && (
+            <div className="gc360-photo-dialog-box_content_cropper">
+              <Cropper
+                ref={this.cropperRef}
+                src={this.showCropper}
+                style={{
+                  maxWidth: this.maxCropPreviewWidth(),
+                  maxHeight: this.maxCropPreviewWidth() / this.ratio,
+                }}
+                autoCropArea={1}
+                viewMode={3}
+                aspectRatio={1}
+                highlight={false}
+                background={false}
+                zoom={this.onCropperZoom}
+                zoomable={false}
+                dragMode={'none'}
+                minCropBoxWidth={this.cropBoxDim}
+                minCropBoxHeight={this.cropBoxDim}
+              />
+            </div>
+          )}
+        </DialogContent>
+        <DialogActions className="gc360-photo-dialog-box_actions-top">
+          {this.showCropper && (
+            <Button
+              variant="contained"
+              onClick={() => this.setShowCropper(null)} //setShowCropper(null)}
+              style={styles.button.changeImageButton}
+              className="gc360-photo-dialog-box_content_button"
+            >
+              Go Back
+            </Button>
+          )}
+        </DialogActions>
+        {/*!this.showCropper && (
+            <DialogActions className="gc360-photo-dialog-box_actions-middle">
+              <Tooltip
+                classes={{ tooltip: 'tooltip' }}
+                id="tooltip-hide"
+                title={
+                  isImagePublic
+                    ? 'Only faculty and police will see your photo'
+                    : 'Make photo visible to other students'
+                }
+              >
+                <Button variant="contained" onClick={toggleImagePrivacy} style={style.button}>
+                  {isImagePublic ? 'Hide' : 'Show'}
+                </Button>
+              </Tooltip>
+              <Tooltip
+                classes={{ tooltip: 'tooltip' }}
+                id="tooltip-reset"
+                title="Restore your original ID photo"
+              >
+                <Button
+                  variant="contained"
+                  onClick={handleResetImage}
+                  style={style.button.resetButton}
+                >
+                  Reset
+                </Button>
+              </Tooltip>
+            </DialogActions>
+              )*/}
+        <DialogActions className="gc360-photo-dialog-box_actions-bottom">
+          <Button
+            variant="contained"
+            onClick={this.handleCloseCancel}
+            style={styles.button.cancelButton}
+          >
+            Cancel
+          </Button>
+          {this.showCropper && (
+            <Tooltip
+              classes={{ tooltip: 'tooltip' }}
+              id="tooltip-submit"
+              title="Crop to current region and submit"
+            >
+              <Button
+                variant="contained"
+                onClick={this.handleCloseSubmit}
+                disabled={!this.showCropper}
+                style={this.showCropper ? styles.button : styles.button.hidden}
+              >
+                Submit
+              </Button>
+            </Tooltip>
+          )}
+        </DialogActions>
+      </div>
+    );
+  }
+
   // Function called when 'edit' clicked for a news item
   async handleNewsItemEdit(newsID) {
     let newsItem = await newsService.getPostingByID(newsID);
@@ -154,6 +479,7 @@ export default class StudentNews extends Component {
       newPostCategory: newsItem.categoryID,
       newPostSubject: newsItem.Subject,
       newPostBody: newsItem.Body,
+      newPostImage: newsItem.Image,
       currentlyEditing: newsID,
     });
   }
@@ -171,6 +497,7 @@ export default class StudentNews extends Component {
       categoryID: this.state.newPostCategory,
       Subject: this.state.newPostSubject,
       Body: this.state.newPostBody,
+      Image: this.state.newPostImage,
     };
 
     // update the news item and give feedback
@@ -193,6 +520,7 @@ export default class StudentNews extends Component {
       categoryID: this.state.newPostCategory,
       Subject: this.state.newPostSubject,
       Body: this.state.newPostBody,
+      Image: this.state.newPostImage,
     };
 
     // submit the news item and give feedback
@@ -267,7 +595,8 @@ export default class StudentNews extends Component {
     let submitButtonDisabled =
       this.state.newPostCategory === '' ||
       this.state.newPostSubject === '' ||
-      this.state.newPostBody === '';
+      this.state.newPostBody === '' ||
+      this.state.newPostImage === '';
     let content;
 
     /* Used to re-render the page when the network connection changes.
@@ -435,10 +764,9 @@ export default class StudentNews extends Component {
                       />
                     </Grid>
 
-                    {/* Image dropzone will be added here */}
-                    {/* <Grid item xs={12}>
-                          <Dropzone></Dropzone>
-                        </Grid> */}
+                    {/* IMAGE ENTRY */}
+                    <Grid item xs={12}></Grid>
+
                     <Grid item>
                       {/* SUBMISSION GUIDELINES */}
                       <Typography variant="caption" color="textSecondary" display="block">

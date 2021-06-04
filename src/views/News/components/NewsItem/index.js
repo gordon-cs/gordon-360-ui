@@ -108,6 +108,8 @@ export default class NewsItem extends Component {
     const posting = this.state.posting;
     const { size } = this.props;
     const postingDescription = posting.Body;
+    const postingImage = posting.Image;
+
     // Unapproved news should be distinct,
     // currently it is italicized and grayed out slightly
     const { unapproved } = this.props;
@@ -244,6 +246,11 @@ export default class NewsItem extends Component {
                   <Typography type="caption" className="descriptionText">
                     {postingDescription}
                   </Typography>
+                  {postingImage === '' ? (
+                    {}
+                  ) : (
+                    <img src={`data:image/jpg;base64,${postingImage}`} alt="News Item" />
+                  )}
                 </Grid>
                 {/* Possible action buttons */}
                 <Grid item xs={4}>
@@ -266,6 +273,7 @@ NewsItem.propTypes = {
   posting: PropTypes.shape({
     SNID: PropTypes.number.isRequired,
     Subject: PropTypes.string.isRequired,
+    //Image: PropTypes.string.isRequired ?
     ADUN: PropTypes.string.isRequired,
     Entered: PropTypes.string.isRequired,
     categoryName: PropTypes.string.isRequired,
