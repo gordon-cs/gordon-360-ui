@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import newsService from 'services/news';
 import userService from 'services/user';
-import createPhotoDialogBoxMessage from 'services/user';
+//import createPhotoDialogBoxMessage from 'services/user';
 import NewsList from './components/NewsList';
 import GordonLoader from 'components/Loader';
 import Dropzone from 'react-dropzone';
@@ -33,7 +33,7 @@ import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
 // import Dropzone from 'react-dropzone';
-
+/*
 const styles = {
   button: {
     background: gordonColors.primary.blue,
@@ -74,6 +74,7 @@ const styles = {
     zIndex: 1,
   },
 };
+*/
 
 export default class StudentNews extends Component {
   constructor(props) {
@@ -111,6 +112,53 @@ export default class StudentNews extends Component {
     this.handleNewsItemEdit = this.handleNewsItemEdit.bind(this);
     this.callFunction = this.callFunction.bind(this);
     this.CROP_DIM = 200; // pixels
+
+    this.maxCropPreviewWidth = this.maxCropPreviewWidth.bind(this);
+    this.onDropAccepted = this.onDropAccepted.bind(this);
+    //this.minCropBoxDim(imgWidth, dispWidth) = this.minCropBoxDim(imgWidth, dispWidth).bind(this);
+    this.minCropBoxDim = this.minCropBoxDim.bind(this);
+    this.setPhotoDialogError = this.setPhotoDialogError.bind(this);
+
+    this.styles = {
+      button: {
+        background: gordonColors.primary.blue,
+        color: 'white',
+
+        changeImageButton: {
+          background: gordonColors.primary.blue,
+          color: 'white',
+        },
+
+        resetButton: {
+          backgroundColor: '#f44336',
+          color: 'white',
+        },
+        cancelButton: {
+          backgroundColor: 'white',
+          color: gordonColors.primary.blue,
+          border: `1px solid ${gordonColors.primary.blue}`,
+          width: this.showCropper ? '38%' : '86%',
+        },
+        hidden: {
+          display: 'none',
+        },
+      },
+      searchBar: {
+        margin: '0 auto',
+      },
+      newNewsForm: {
+        backgroundColor: '#fff',
+      },
+      fab: {
+        margin: 0,
+        top: 'auto',
+        right: 40,
+        bottom: 40,
+        left: 'auto',
+        position: 'fixed',
+        zIndex: 1,
+      },
+    };
   }
 
   setShowCropper(dataURL) {
@@ -131,8 +179,6 @@ export default class StudentNews extends Component {
 
   //copied from Identification
   maxCropPreviewWidth() {
-    // see IDUploader/index.js > maxCropPreviewWidth for commented out code
-    // that seemed to have finer tuned logic
     const smallScreenRatio = 0.5;
     const largeScreenRatio = 0.25;
     const w = this.breakpointWidth; //const w = currentWidth;
@@ -153,9 +199,9 @@ export default class StudentNews extends Component {
   }
 
   //Copied from Identification
-  minCropBoxDim(imgWidth, dispWidth) {
+  minCropBoxDim = (imgWidth, dispWidth) => {
     return (this.CROP_DIM * dispWidth) / imgWidth;
-  }
+  };
 
   componentDidMount() {
     this.setState({ loading: false });
@@ -249,6 +295,44 @@ export default class StudentNews extends Component {
     });
   }
 
+  /**
+   * Creates the Photo Dialog message that will be displayed to the user
+   *
+   * @return {String} The message of the Photo Dialog
+   *
+   * Copied from Identification
+   */
+  createPhotoDialogBoxMessage() {
+    let message = '';
+    // If an error occured and there's no currently running timeout, the error is displayed
+    // and a timeout for that error message is created
+    if (this.photoDialogError !== null) {
+      message = <span style={{ color: '#B63228' }}>{this.photoDialogError}</span>;
+      if (this.photoDialogErrorTimeout === null) {
+        // Shows the error message for 6 seconds and then returns back to normal text
+        this.photoDialogErrorTimeout = setTimeout(() => {
+          this.setState({ photoDialogErrorTimeout: null }); //photoDialogErrorTimeout = null;
+          this.setPhotoDialogError(null);
+        }, 6000);
+      }
+    }
+    // If no error occured and the cropper is shown, the cropper text is displayed
+    else if (this.showCropper) {
+      message = 'Crop Photo to liking & Click Submit';
+    }
+    // If no error occured and the cropper is not shown, the pick a file text is displayed
+    else {
+      message =
+        this.breakpointWidth === 'md' ||
+        this.breakpointWidth === 'sm' ||
+        this.breakpointWidth === 'xs'
+          ? //currentWidth === 'md' || currentWidth === 'sm' || currentWidth === 'xs'
+            'Tap Image to Browse Files'
+          : 'Drag & Drop Picture, or Click to Browse Files';
+    }
+    return message;
+  }
+
   onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
@@ -261,7 +345,7 @@ export default class StudentNews extends Component {
    *
    * @param {*} fileList The image dropped in the Dropzone of the Photo Uploader
    */
-  onDropAccepted(fileList) {
+  onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
     reader.onload = function () {
@@ -269,25 +353,28 @@ export default class StudentNews extends Component {
       var i = new Image();
       i.onload = async () => {
         if (i.width < this.CROP_DIM || i.height < this.CROP_DIM) {
-          await this.clearPhotoDialogErrorTimeout();
+          await this.clearPhotoDialogErrorTimeout(); //Maybe bad??
           this.setPhotoDialogError(
             'Sorry, your image is too small! Image dimensions must be at least 200 x 200 pixels.',
           );
         } else {
           var aRatio = i.width / i.height;
-          this.setCropperData({ aspectRatio: aRatio });
-          var maxWidth = this.maxCropPreviewWidth();
+          //this.setCropperData({ aspectRatio: aRatio });
+          var maxWidth = this.maxCropPreviewWidth;
           var displayWidth = maxWidth > i.width ? i.width : maxWidth;
-          var cropDim = this.minCropBoxDim(i.width, displayWidth);
-          this.setPhotoDialogError(null);
-          this.setCropperData({ aspectRatio: aRatio, cropBoxDim: cropDim });
+          var cropDim = () => {
+            this.minCropBoxDim(i.width, displayWidth);
+          }; //This worked- continue with it
+          this.setPhotoDialogError(null); //????
+          //let blah = () => (this.setPhotoDialogError(null));
+          this.setCropperData({ aRatio, cropDim });
           this.setShowCropper(dataURL);
         }
       };
       i.src = dataURL;
     };
     reader.readAsDataURL(previewImageFile);
-  }
+  };
 
   /**
    * Handles the rejection of the user dropping an invalid file in the Photo Updater Dialog Box
@@ -351,123 +438,131 @@ export default class StudentNews extends Component {
    */
   createNewsImageUploader() {
     return (
-      <div className="gc360-photo-dialog-box">
-        <DialogTitle className="gc360-photo-dialog-box_title">Update Photo</DialogTitle>
-        <DialogContent className="gc360-photo-dialog-box_content">
-          <DialogContentText className="gc360-photo-dialog-box_content_text">
-            {createPhotoDialogBoxMessage()}
-          </DialogContentText>
-          {!this.showCropper && (
-            <Dropzone
-              onDropAccepted={this.onDropAccepted}
-              onDropRejected={this.onDropRejected}
-              accept="image/jpeg, image/jpg, image/png"
-            >
-              {({ getRootProps, getInputProps }) => (
-                <section>
-                  <div className="gc360-photo-dialog-box_content_dropzone" {...getRootProps()}>
-                    <input {...getInputProps()} />
-                    <img
-                      className="gc360-photo-dialog-box_content_dropzone_img"
-                      src={`data:image/jpg;base64,${null}`} //this feels wrong
-                      alt="Profile"
-                    />
-                  </div>
-                </section>
-              )}
-            </Dropzone>
-          )}
-          {this.showCropper && (
-            <div className="gc360-photo-dialog-box_content_cropper">
-              <Cropper
-                ref={this.cropperRef}
-                src={this.showCropper}
-                style={{
-                  maxWidth: this.maxCropPreviewWidth(),
-                  maxHeight: this.maxCropPreviewWidth() / this.ratio,
-                }}
-                autoCropArea={1}
-                viewMode={3}
-                aspectRatio={1}
-                highlight={false}
-                background={false}
-                zoom={this.onCropperZoom}
-                zoomable={false}
-                dragMode={'none'}
-                minCropBoxWidth={this.cropBoxDim}
-                minCropBoxHeight={this.cropBoxDim}
-              />
-            </div>
-          )}
-        </DialogContent>
-        <DialogActions className="gc360-photo-dialog-box_actions-top">
-          {this.showCropper && (
+      <Dialog
+        className="gc360-photo-dialog"
+        open={this.openPhotoDialog}
+        keepMounted
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <div className="gc360-photo-dialog-box">
+          <DialogTitle className="gc360-photo-dialog-box_title">Update Photo</DialogTitle>
+          <DialogContent className="gc360-photo-dialog-box_content">
+            <DialogContentText className="gc360-photo-dialog-box_content_text">
+              {this.createPhotoDialogBoxMessage}
+            </DialogContentText>
+            {!this.showCropper && (
+              <Dropzone
+                onDropAccepted={this.onDropAccepted}
+                onDropRejected={this.onDropRejected}
+                accept="image/jpeg, image/jpg, image/png"
+              >
+                {({ getRootProps, getInputProps }) => (
+                  <section>
+                    <div className="gc360-photo-dialog-box_content_dropzone" {...getRootProps()}>
+                      <input {...getInputProps()} />
+                      <img
+                        className="gc360-photo-dialog-box_content_dropzone_img"
+                        src={`data:image/jpg;base64,${null}`} //this feels wrong
+                        alt="Profile"
+                      />
+                    </div>
+                  </section>
+                )}
+              </Dropzone>
+            )}
+            {this.showCropper && (
+              <div className="gc360-photo-dialog-box_content_cropper">
+                <Cropper
+                  ref={this.cropperRef}
+                  src={this.showCropper}
+                  style={{
+                    maxWidth: this.maxCropPreviewWidth(),
+                    maxHeight: this.maxCropPreviewWidth() / this.ratio,
+                  }}
+                  autoCropArea={1}
+                  viewMode={3}
+                  aspectRatio={1}
+                  highlight={false}
+                  background={false}
+                  zoom={this.onCropperZoom}
+                  zoomable={false}
+                  dragMode={'none'}
+                  minCropBoxWidth={this.cropBoxDim}
+                  minCropBoxHeight={this.cropBoxDim}
+                />
+              </div>
+            )}
+          </DialogContent>
+          <DialogActions className="gc360-photo-dialog-box_actions-top">
+            {this.showCropper && (
+              <Button
+                variant="contained"
+                onClick={() => this.setShowCropper(null)} //setShowCropper(null)}
+                style={this.styles.button.changeImageButton}
+                className="gc360-photo-dialog-box_content_button"
+              >
+                Go Back
+              </Button>
+            )}
+          </DialogActions>
+          {/*!this.showCropper && (
+              <DialogActions className="gc360-photo-dialog-box_actions-middle">
+                <Tooltip
+                  classes={{ tooltip: 'tooltip' }}
+                  id="tooltip-hide"
+                  title={
+                    isImagePublic
+                      ? 'Only faculty and police will see your photo'
+                      : 'Make photo visible to other students'
+                  }
+                >
+                  <Button variant="contained" onClick={toggleImagePrivacy} style={style.button}>
+                    {isImagePublic ? 'Hide' : 'Show'}
+                  </Button>
+                </Tooltip>
+                <Tooltip
+                  classes={{ tooltip: 'tooltip' }}
+                  id="tooltip-reset"
+                  title="Restore your original ID photo"
+                >
+                  <Button
+                    variant="contained"
+                    onClick={handleResetImage}
+                    style={style.button.resetButton}
+                  >
+                    Reset
+                  </Button>
+                </Tooltip>
+              </DialogActions>
+                )*/}
+          <DialogActions className="gc360-photo-dialog-box_actions-bottom">
             <Button
               variant="contained"
-              onClick={() => this.setShowCropper(null)} //setShowCropper(null)}
-              style={styles.button.changeImageButton}
-              className="gc360-photo-dialog-box_content_button"
+              onClick={this.handleCloseCancel}
+              style={this.styles.button.cancelButton}
             >
-              Go Back
+              Cancel
             </Button>
-          )}
-        </DialogActions>
-        {/*!this.showCropper && (
-            <DialogActions className="gc360-photo-dialog-box_actions-middle">
+            {this.showCropper && (
               <Tooltip
                 classes={{ tooltip: 'tooltip' }}
-                id="tooltip-hide"
-                title={
-                  isImagePublic
-                    ? 'Only faculty and police will see your photo'
-                    : 'Make photo visible to other students'
-                }
-              >
-                <Button variant="contained" onClick={toggleImagePrivacy} style={style.button}>
-                  {isImagePublic ? 'Hide' : 'Show'}
-                </Button>
-              </Tooltip>
-              <Tooltip
-                classes={{ tooltip: 'tooltip' }}
-                id="tooltip-reset"
-                title="Restore your original ID photo"
+                id="tooltip-submit"
+                title="Crop to current region and submit"
               >
                 <Button
                   variant="contained"
-                  onClick={handleResetImage}
-                  style={style.button.resetButton}
+                  onClick={this.handleCloseSubmit}
+                  disabled={!this.showCropper}
+                  style={this.showCropper ? this.styles.button : this.styles.button.hidden}
                 >
-                  Reset
+                  Submit
                 </Button>
               </Tooltip>
-            </DialogActions>
-              )*/}
-        <DialogActions className="gc360-photo-dialog-box_actions-bottom">
-          <Button
-            variant="contained"
-            onClick={this.handleCloseCancel}
-            style={styles.button.cancelButton}
-          >
-            Cancel
-          </Button>
-          {this.showCropper && (
-            <Tooltip
-              classes={{ tooltip: 'tooltip' }}
-              id="tooltip-submit"
-              title="Crop to current region and submit"
-            >
-              <Button
-                variant="contained"
-                onClick={this.handleCloseSubmit}
-                disabled={!this.showCropper}
-                style={this.showCropper ? styles.button : styles.button.hidden}
-              >
-                Submit
-              </Button>
-            </Tooltip>
-          )}
-        </DialogActions>
-      </div>
+            )}
+          </DialogActions>
+        </div>
+      </Dialog>
     );
   }
 
@@ -680,7 +775,7 @@ export default class StudentNews extends Component {
               variant="extended"
               color="primary"
               onClick={this.handlePostClick.bind(this)}
-              style={styles.fab}
+              style={this.styles.fab}
             >
               <PostAddIcon />
               Post Listing
@@ -693,7 +788,7 @@ export default class StudentNews extends Component {
                   container
                   alignItems="baseline"
                   justify="center"
-                  style={styles.searchBar}
+                  style={this.styles.searchBar}
                   spacing={5}
                 >
                   <Grid item xs={10} sm={8} md={8} lg={6}>
@@ -765,7 +860,134 @@ export default class StudentNews extends Component {
                     </Grid>
 
                     {/* IMAGE ENTRY */}
-                    <Grid item xs={12}></Grid>
+                    {/*<Grid item xs={12}>
+                      {this.createPhotoDialogBox}
+                        </Grid>*/}
+
+                    <div className="gc360-photo-dialog-box">
+                      <DialogTitle className="gc360-photo-dialog-box_title">
+                        Update Photo
+                      </DialogTitle>
+                      <DialogContent className="gc360-photo-dialog-box_content">
+                        <DialogContentText className="gc360-photo-dialog-box_content_text">
+                          {this.createPhotoDialogBoxMessage}
+                        </DialogContentText>
+                        {!this.showCropper && (
+                          <Dropzone
+                            onDropAccepted={this.onDropAccepted}
+                            onDropRejected={this.onDropRejected}
+                            accept="image/jpeg, image/jpg, image/png"
+                          >
+                            {({ getRootProps, getInputProps }) => (
+                              <section>
+                                <div
+                                  className="gc360-photo-dialog-box_content_dropzone"
+                                  {...getRootProps()}
+                                >
+                                  <input {...getInputProps()} />
+                                  <img
+                                    className="gc360-photo-dialog-box_content_dropzone_img"
+                                    src={`data:image/jpg;base64,${null}`} //this feels wrong
+                                    alt="Profile"
+                                  />
+                                </div>
+                              </section>
+                            )}
+                          </Dropzone>
+                        )}
+                        {this.showCropper && (
+                          <div className="gc360-photo-dialog-box_content_cropper">
+                            <Cropper
+                              ref={this.cropperRef}
+                              src={this.showCropper}
+                              style={{
+                                maxWidth: this.maxCropPreviewWidth(),
+                                maxHeight: this.maxCropPreviewWidth() / this.ratio,
+                              }}
+                              autoCropArea={1}
+                              viewMode={3}
+                              aspectRatio={1}
+                              highlight={false}
+                              background={false}
+                              zoom={this.onCropperZoom}
+                              zoomable={false}
+                              dragMode={'none'}
+                              minCropBoxWidth={this.cropBoxDim}
+                              minCropBoxHeight={this.cropBoxDim}
+                            />
+                          </div>
+                        )}
+                      </DialogContent>
+                      <DialogActions className="gc360-photo-dialog-box_actions-top">
+                        {this.showCropper && (
+                          <Button
+                            variant="contained"
+                            onClick={() => this.setShowCropper(null)} //setShowCropper(null)}
+                            style={this.styles.button.changeImageButton}
+                            className="gc360-photo-dialog-box_content_button"
+                          >
+                            Go Back
+                          </Button>
+                        )}
+                      </DialogActions>
+                      {/*!this.showCropper && (
+                          <DialogActions className="gc360-photo-dialog-box_actions-middle">
+                            <Tooltip
+                              classes={{ tooltip: 'tooltip' }}
+                              id="tooltip-hide"
+                              title={
+                                isImagePublic
+                                  ? 'Only faculty and police will see your photo'
+                                  : 'Make photo visible to other students'
+                              }
+                            >
+                              <Button variant="contained" onClick={toggleImagePrivacy} style={style.button}>
+                                {isImagePublic ? 'Hide' : 'Show'}
+                              </Button>
+                            </Tooltip>
+                            <Tooltip
+                              classes={{ tooltip: 'tooltip' }}
+                              id="tooltip-reset"
+                              title="Restore your original ID photo"
+                            >
+                              <Button
+                                variant="contained"
+                                onClick={handleResetImage}
+                                style={style.button.resetButton}
+                              >
+                                Reset
+                              </Button>
+                            </Tooltip>
+                          </DialogActions>
+                            )*/}
+                      <DialogActions className="gc360-photo-dialog-box_actions-bottom">
+                        <Button
+                          variant="contained"
+                          onClick={this.handleCloseCancel}
+                          style={this.styles.button.cancelButton}
+                        >
+                          Cancel
+                        </Button>
+                        {this.showCropper && (
+                          <Tooltip
+                            classes={{ tooltip: 'tooltip' }}
+                            id="tooltip-submit"
+                            title="Crop to current region and submit"
+                          >
+                            <Button
+                              variant="contained"
+                              onClick={this.handleCloseSubmit}
+                              disabled={!this.showCropper}
+                              style={
+                                this.showCropper ? this.styles.button : this.styles.button.hidden
+                              }
+                            >
+                              Submit
+                            </Button>
+                          </Tooltip>
+                        )}
+                      </DialogActions>
+                    </div>
 
                     <Grid item>
                       {/* SUBMISSION GUIDELINES */}
