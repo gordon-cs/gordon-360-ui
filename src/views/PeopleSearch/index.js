@@ -367,13 +367,13 @@ class PeopleSearch extends Component {
           peopleSearchResults: (
             <Media query="(min-width: 960px)">
               {(matches) =>
-                matches
-                  ? peopleSearchResults.map((person) => (
-                      <PeopleSearchResult key={person.AD_Username} Person={person} size="full" />
-                    ))
-                  : peopleSearchResults.map((person) => (
-                      <PeopleSearchResult key={person.AD_Username} Person={person} size="single" />
-                    ))
+                peopleSearchResults.map((person) => (
+                  <PeopleSearchResult
+                    key={person.AD_Username}
+                    Person={person}
+                    size={matches ? 'full' : 'single'}
+                  />
+                ))
               }
             </Media>
           ),
