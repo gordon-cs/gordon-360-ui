@@ -178,7 +178,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             <MenuIcon className="menu-button-icon" />
           </IconButton>
 
-          <Typography className="header disable-select" variant="h6" color="inherit">
+          <Typography className="title disable-select" variant="h6" color="inherit">
             <Switch>
               {routes.map((route) => (
                 <Route
