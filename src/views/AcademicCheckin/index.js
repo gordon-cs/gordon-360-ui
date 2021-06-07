@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 
 import GordonLoader from 'components/Loader';
 import Login from 'views/Login';
+import CheckInQuestion from 'components/checkInQuestion';
 import user from 'services/user';
 import checkIn from 'services/checkIn';
 import './index.css';
+import CheckInStatus from './components/checkInStatus';
 
 const AcademicCheckIn = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
 
   // we can keep this cause all this is is just a way of saving information
-  const [checkInStatus, setCheckInStatus] = useState(null);
+  const [currentStatus, setCurrentStatus] = useState(null);
   const [username, setUsername] = useState(null);
 
   // do we need image? would it be nice touch
@@ -24,7 +26,7 @@ const AcademicCheckIn = ({ authentication, onLogIn }) => {
     } else {
       setIsAuthenticated(false);
     }
-  }, [authentication, checkInStatus]);
+  }, [authentication, currentStatus]);
 
   const loadPage = async () => {
     setLoading(true);
@@ -32,7 +34,7 @@ const AcademicCheckIn = ({ authentication, onLogIn }) => {
     const status = await checkIn.getStatus();
 
     if (status && status.IsValid) {
-        setCheckInStatus(status.Status);
+        setCurrentStatus(status.Status);
         const [
           { FirstName, LastName },
         ] = await Promise.all(user.getProfileInfo());
@@ -51,5 +53,17 @@ const AcademicCheckIn = ({ authentication, onLogIn }) => {
         <Login onLogIn={onLogIn} />
       </div>
     );
+  } else if (currentStatus === null) {
+    return <CheckInQuestion setStatus={setCurrentStatus} />;
+  } else {
+    return (
+      <CheckInStatus
+        currentStatus={currentStatus}
+        setCurrentStatus={setCurrentStatus}
+        username={username}
+      />
+    )
   }
 }
+
+export default AcademicCheckIn;
