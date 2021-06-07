@@ -95,7 +95,7 @@ const PersonalInfoList = ({
       setIsMobilePhonePrivate(!isMobilePhonePrivate);
 
       createSnackbar(
-        isMobilePhonePrivate ? 'Mobile Phone Hidden' : 'Mobile Phone Visible',
+        isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
         'success',
       );
     } catch {
