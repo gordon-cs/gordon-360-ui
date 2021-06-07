@@ -386,8 +386,8 @@ class PeopleSearch extends Component {
 
   async updateURL() {
     const searchParameters = Object.entries(this.state.searchValues)
-      .filter((n) => n) // removes empty strings
       .map(([key, value]) => (value ? `${key}=${value}` : '')) // [ 'firstName=value', 'state=texas']
+      .filter((n) => n) // removes empty strings
       .join('&'); // 'firstName=value&state=texas'
 
     if (this.props.history.location.search !== searchParameters) {
