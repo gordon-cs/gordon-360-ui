@@ -52,11 +52,7 @@ export default class PeopleSearchResult extends Component {
     fullName = Person.FirstName + ' ' + Person.LastName;
 
     // set nicknames up
-    if (
-      Person.NickName !== null &&
-      Person.NickName !== '' &&
-      Person.FirstName !== Person.NickName
-    ) {
+    if (Person.NickName && Person.FirstName !== Person.NickName) {
       nickname = '(' + Person.NickName + ')';
     }
     // set classes up
@@ -88,11 +84,11 @@ export default class PeopleSearchResult extends Component {
           break;
       }
       // set job titles up
-    } else if (Person.Type !== 'Student' && Person.JobTitle !== undefined) {
+    } else if (Person.JobTitle && Person.Type !== 'Student') {
       personClassJobTitle = Person.JobTitle;
     }
     // set mailbox up
-    if (Person.Mail_Location && Person.Mail_Location !== '') {
+    if (Person.Mail_Location) {
       if (size === 'single') {
         personMailLocation =
           Person.Type === 'Student'
@@ -148,7 +144,7 @@ export default class PeopleSearchResult extends Component {
         </>
       );
     } else {
-    /*** Full Size - Multiple Columns (Desktop View) ***/
+      /*** Full Size - Multiple Columns (Desktop View) ***/
       return (
         <>
           <Divider />
