@@ -106,12 +106,12 @@ const peopleSearchHeader = (
                 LAST NAME
               </Typography>
             </Grid>
-            <Grid item xs={1}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                TYPE
+            <Grid item xs={2}>
+              <Typography variant="body2" style={styles.headerStyle} noWrap>
+                DESCRIPTION
               </Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerStyle}>
                 CLASS/JOB TITLE
               </Typography>
