@@ -29,7 +29,7 @@ const defaultValues = {
  * *and is out of sync with the state* do we update the state. This is a critical design choice
  * that prevents issues like setting the state unnecessarily after clicking the browser back
  * arrow, preventing you from going forward (and other similar browsing history issues).
- * 
+ *
  * Alternative approaches to try, should implementation change or issues arise:
  * - Remove the loadStateFromURL from UseEffect and instead only set the state with the URL value
  * when the page is first loaded (useEffect with []) or when the browser navigation is used
@@ -54,10 +54,38 @@ const defaultValues = {
 function useQueryState(key, typeString, initial) {
   const type = types[typeString];
   if (type === undefined)
-    throw new Error(`type must be one of the given types: ${Object.values(types)}`);
+    throw new Error(`Type must be one of the given types: ${Object.values(types)}`);
   const defaultVal = defaultValues[type];
   const [state, setState] = useState(initial ?? defaultVal);
   const history = useHistory();
+  const [isInitializing, setInitializing] = useState(true);
+
+  /**
+   * Initialize state
+   */
+  useEffect(() => {
+    const initialize = async () => {
+      let urlParams = new URLSearchParams(history.location.search);
+      if (urlParams.toString()) {
+        // set to key value, otherwise boolean value, otherwise default
+        setState(urlParams.get(key) || urlParams.has(key) || defaultVal);
+      } else {
+        // update the url with initial value
+        urlParams.set(key, state.toString());
+        // boolean keys set to true don't need '=value'
+        urlParams = urlParams
+          .toString()
+          .replace(/=true|=$/g, '')
+          .replace(/=&/, '&');
+        history.push('?' + urlParams);
+      }
+      // Uncommenting the next line should theoretically make this work.
+      // Uncommenting that line and removing the else logic above does currently work.
+      // setInitializing(false);
+      console.log('done initializing', key, state);
+    };
+    initialize();
+  }, []);
 
   /**
    * Anytime the state changes, setURLFromState is invoked
@@ -65,6 +93,7 @@ function useQueryState(key, typeString, initial) {
    */
   useEffect(() => {
     const setURLFromState = async () => {
+      console.log('setURLFromState', key);
       let urlParams = new URLSearchParams(history.location.search);
 
       // if the url value is already the same as the state value -> don't set the url again
@@ -88,7 +117,7 @@ function useQueryState(key, typeString, initial) {
 
       history.push('?' + urlParams);
     };
-    setURLFromState();
+    if (!isInitializing) setURLFromState();
     /*********************** ESLint Disable Justification: *******************************/
     // ESLint wants to include `history` as dependencies but to prevent
     // extra loops of ~ url setting state setting the url ~ we do not include.
@@ -112,6 +141,7 @@ function useQueryState(key, typeString, initial) {
    */
   useLayoutEffect(() => {
     const loadStateFromURL = async () => {
+      console.log('loadStateFromURL', key);
       const urlParams = new URLSearchParams(history.location.search);
       let urlValue = urlParams.get(key);
 
@@ -139,7 +169,7 @@ function useQueryState(key, typeString, initial) {
           throw new Error(`missing case for type ${type}`);
       }
     };
-    loadStateFromURL();
+    if (!isInitializing) loadStateFromURL();
     /*********************** ESLint Disable Justification: *******************************/
     // ESLint wants to include `state` as dependencies but to prevent
     // extra loops of ~ url setting state setting the url ~ we do not include.

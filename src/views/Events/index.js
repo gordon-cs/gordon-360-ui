@@ -25,7 +25,7 @@ const Events = (props) => {
   const [filteredEvents, setFilteredEvents] = useState([]);
   //TODO: useQueryState('search', types.SingleValue); - needs debouncing
   const [search, setSearch] = useState('');
-  const [includePast, setIncludePast] = useQueryState('past', types.Boolean);
+  const [includePast, setIncludePast] = useQueryState('past', types.Boolean, true);
   const [filters, setFilters] = useQueryState('filters', types.Array);
   const [loading, setLoading] = useState(true);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
