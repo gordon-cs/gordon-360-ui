@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import './mobilePeopleSearchResult.css';
 
-export default class PeopleSearchResult extends Component {
+export default class MobilePeopleSearchResult extends Component {
   constructor(props) {
     super(props);
 
@@ -146,10 +146,10 @@ export default class PeopleSearchResult extends Component {
   }
 }
 
-PeopleSearchResult.propTypes = {
-  person: PropTypes.shape({
-    First_Name: PropTypes.string.isRequired,
-    Last_Name: PropTypes.string.isRequired,
+MobilePeopleSearchResult.propTypes = {
+  Person: PropTypes.shape({
+    FirstName: PropTypes.string.isRequired,
+    LastName: PropTypes.string.isRequired,
     Email: PropTypes.string.isRequired,
   }).isRequired,
 };
