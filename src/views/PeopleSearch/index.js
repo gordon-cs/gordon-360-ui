@@ -36,7 +36,6 @@ import user from 'services/user';
 import { gordonColors } from 'theme';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import PeopleSearchResult from './components/PeopleSearchResult';
-import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
 import GordonLoader from 'components/Loader';
 
 const styles = {
@@ -370,10 +369,10 @@ class PeopleSearch extends Component {
               {(matches) =>
                 matches
                   ? peopleSearchResults.map((person) => (
-                      <PeopleSearchResult key={person.AD_Username} Person={person} />
+                      <PeopleSearchResult key={person.AD_Username} Person={person} size="full" />
                     ))
                   : peopleSearchResults.map((person) => (
-                      <MobilePeopleSearchResult key={person.AD_Username} Person={person} />
+                      <PeopleSearchResult key={person.AD_Username} Person={person} size="single" />
                     ))
               }
             </Media>
@@ -387,7 +386,7 @@ class PeopleSearch extends Component {
   async updateURL() {
     const searchParameters = Object.entries(this.state.searchValues)
       .filter(([, value]) => value) // removes empty values
-      .map(([key, value]) => (`${key}=${value}`)) // [ 'firstName=value', 'state=texas']
+      .map(([key, value]) => `${key}=${value}`) // [ 'firstName=value', 'state=texas']
       .join('&'); // 'firstName=value&state=texas'
 
     if (this.props.history.location.search !== searchParameters) {
