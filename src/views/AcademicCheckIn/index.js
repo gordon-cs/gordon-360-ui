@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 import GordonLoader from 'components/Loader';
 import Login from 'views/Login';
-import CheckInQuestion from 'components/checkInQuestion';
+import CheckInQuestion from 'views/AcademicCheckIn/components/question';
 import user from 'services/user';
 import checkIn from 'services/checkIn';
 import './index.css';
-import CheckInStatus from './components/checkInStatus';
+import CheckInStatus from 'views/AcademicCheckIn/components/status';
 
 const AcademicCheckIn = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);

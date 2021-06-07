@@ -5,7 +5,7 @@ import { StatusColors } from 'services/wellness';
 import SymptomsDialog from 'components/SymptomsDialog';
 import './index.css';
 
-const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
+const CheckInStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [time, setTime] = useState(null);
   const [iconSize, setIconSize] = useState(0);
@@ -96,4 +96,4 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
   );
 };
 
-export default HealthStatus;
+export default CheckInStatus;
