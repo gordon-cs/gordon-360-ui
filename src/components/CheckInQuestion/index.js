@@ -52,17 +52,64 @@ const CheckInQuestion = ({ setStatus }) => {
     <Grid container justify="center" spacing={2}>
       <Grid item xs={10} md={4}>
         <Card className="checkIn-question">
+        <CardContent>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+                <FormControl>
+                  <FormLabel>Are you here?</FormLabel>
+                  <div style={{ height: '10px' }}></div>
+                  <br />
+                  <RadioGroup>
+                    <FormControlLabel
+                      value="Yes"
+                      control={<Radio />}
+                      label={`Yes`}
+                      onChange={() => {
+                        setAnswer(Status.ONCAMPUS);
+                      }}
+                    />
+                    <br></br>
+                    <FormControlLabel
+                      value="No"
+                      control={<Radio />}
+                      label={'No'}
+                      onChange={() => {
+                        setAnswer(Status.NOTONCAMPUS);
+                      }}
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </CardContent>
           <Grid item>
-            <p align='center'>
-              check in question
-            </p>
-            <Button
-              variant='contained' align='center'
-              onClick={() => {
-              }}
-            >
-              Submit
-            </Button>
+            <Collapse in={answer}>
+              <Grid container direction="column" align="center" className={answer} spacing={1}>
+                <Grid item>
+                  <Typography color="textPrimary" className="left">
+                    {answer === Status.ONCAMPUS
+                    /*
+                      ? CheckInQuestion.yesPrompt
+                    : CheckInQuestion.noPrompt*/}
+                    {answer === Status.ONCAMPUS ? (
+                      <a href={'https://www.google.com'} target="_blank" rel="noopener noreferrer">
+                        this link
+                      </a>
+                    ) : null}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      answer === Status.ONCAMPUS ? setIsDialogOpen(true) : submitAnswer();
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+            </Collapse>
           </Grid>
         </Card>
       </Grid>
