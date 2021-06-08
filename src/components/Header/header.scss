@@ -70,7 +70,7 @@ $drawer-width: 240px;
     }
 
     .center-container {
-      flex: 5;
+      flex: 8;
       justify-content: center;
       // float: none;
       display: flex;
@@ -94,7 +94,7 @@ $drawer-width: 240px;
   }
 
   .title {
-    flex: -1;
+    flex: 1;
     margin-right: 10px;
     font-weight: bold;
   }
