@@ -269,18 +269,20 @@ export default class StudentNews extends Component {
     let message = '';
     // If an error occured and there's no currently running timeout, the error is displayed
     // and a timeout for that error message is created
-    if (this.photoDialogError !== null) {
-      message = <span style={{ color: '#B63228' }}>{this.photoDialogError}</span>;
-      if (this.photoDialogErrorTimeout === null) {
+    if (this.state.photoDialogError !== null) {
+      message = <span style={{ color: '#B63228' }}>{this.state.photoDialogError}</span>;
+      if (this.state.photoDialogErrorTimeout === null) {
         // Shows the error message for 6 seconds and then returns back to normal text
-        this.photoDialogErrorTimeout = setTimeout(() => {
-          this.setState({ photoDialogErrorTimeout: null }); //photoDialogErrorTimeout = null;
-          this.setPhotoDialogError(null);
-        }, 6000);
+        this.setState({
+          photoDialogErrorTimeout: setTimeout(() => {
+            this.setState({ photoDialogErrorTimeout: null }); //photoDialogErrorTimeout = null;
+            this.setPhotoDialogError(null);
+          }, 6000),
+        });
       }
     }
     // If no error occured and the cropper is shown, the cropper text is displayed
-    else if (this.showCropper) {
+    else if (this.state.showCropper) {
       message = 'Crop Photo to liking & Click Submit';
     }
     // If no error occured and the cropper is not shown, the pick a file text is displayed
@@ -372,33 +374,13 @@ export default class StudentNews extends Component {
    * Copied from Identification
    */
   handleCloseSubmit() {
-    if (this.showCropper != null) {
+    if (this.state.showCropper != null) {
       let croppedImage = this.cropperRef.current.cropper
         .getCroppedCanvas({ width: this.CROP_DIM })
         .toDataURL();
       let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({ newPostImage: newImage });
-      //let response = user.postImage(croppedImage);
-      /*
-      response
-        .then(async () => {
-          // Sets the user's preferred image
-          setPreferredUserImage(newImage);
-          setHasPreferredImage(true);
-          // Reset default image so we display only preferred on MyProfile
-          setDefaultUserImage(null);
-          // Displays to the user that their photo has been submitted
-          createSnackbar('Photo Submitted', 'success');
-          // Closes out the Photo Updater
-          setOpenPhotoDialog(false);
-          setShowCropper(null);
-          window.postMessage('update-profile-picture', window.location.origin);
-        })
-        .catch(() => {
-          // Displays to the user that their photo failed to submit
-          createSnackbar('Photo Submission Failed', 'error');
-        });
-        */
+      console.log('got to submit');
     }
   }
 
@@ -457,6 +439,7 @@ export default class StudentNews extends Component {
   }
 
   async handleSubmit() {
+    this.handleCloseSubmit();
     // create the JSON newsItem object to post
     let newsItem = {
       categoryID: this.state.newPostCategory,
@@ -708,11 +691,11 @@ export default class StudentNews extends Component {
                     {/* IMAGE ENTRY */}
                     <Grid item xs={12}>
                       <div className="gc360-photo-dialog-box">
-                        {
+                        {/*
                           <DialogTitle className="gc360-photo-dialog-box_title">
                             Update Photo
                           </DialogTitle>
-                        }
+                        */}
                         <DialogContent className="gc360-photo-dialog-box_content">
                           <DialogContentText className="gc360-photo-dialog-box_content_text">
                             {this.createPhotoDialogBoxMessage()}
@@ -764,15 +747,14 @@ export default class StudentNews extends Component {
                           )}
                         </DialogContent>
                         <DialogActions className="gc360-photo-dialog-box_actions-top">
-                          {this.showCropper && (
+                          {this.state.showCropper && (
                             <Button
                               variant="contained"
-                              onClick={() => this.setShowCropper(null)} //() => this.setShowCropper(null)}
-                              //Not sure which is right
+                              onClick={() => this.setShowCropper(null)}
                               style={this.styles.button.changeImageButton}
                               className="gc360-photo-dialog-box_content_button"
                             >
-                              Go Back
+                              Choose a different picture
                             </Button>
                           )}
                         </DialogActions>
@@ -807,14 +789,14 @@ export default class StudentNews extends Component {
                             </DialogActions>
                               )*/}
                         <DialogActions className="gc360-photo-dialog-box_actions-bottom">
-                          <Button
+                          {/*<Button
                             variant="contained"
                             onClick={this.handleCloseCancel}
                             style={this.styles.button.cancelButton}
                           >
                             Cancel
-                          </Button>
-                          {this.state.showCropper && (
+                          </Button>*/}
+                          {/*this.state.showCropper && (
                             <Tooltip
                               classes={{ tooltip: 'tooltip' }}
                               id="tooltip-submit"
@@ -833,7 +815,7 @@ export default class StudentNews extends Component {
                                 Submit
                               </Button>
                             </Tooltip>
-                          )}
+                              )*/}
                         </DialogActions>
                       </div>
                     </Grid>
