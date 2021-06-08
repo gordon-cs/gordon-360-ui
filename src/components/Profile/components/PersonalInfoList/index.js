@@ -274,7 +274,7 @@ const PersonalInfoList = ({
           <a href="https://360.gordon.edu/myprofile">here</a>.
         </li>
         <li>
-          To update your On Campus Address, contact <a href="mailto: housing@gordon.edu">housing</a>
+          To update your On Campus Address, contact <a href="mailto: housing@gordon.edu">Housing</a>
           (x4263).
         </li>
         <li>
