@@ -3,7 +3,8 @@ import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@materi
 import { Check, Remove, Clear } from '@material-ui/icons';
 import { StatusColors } from 'services/wellness';
 import SymptomsDialog from 'components/SymptomsDialog';
-import './index.css';
+
+import styles from './health-status.module.css';
 
 const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -60,11 +61,11 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
   return (
     <Grid container justify="center" spacing={2}>
       <Grid item xs={12} md={8}>
-        <Card className="wellness-check">
+        <Card className={styles['wellness-check']}>
           <CardHeader title={username} />
           <CardContent>
             <img
-              className="rounded-corners user-image"
+              className={styles['rounded-corners user-image']}
               src={`data:image/jpg;base64,${image}`}
               alt={username}
             />
@@ -77,7 +78,7 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   href="https://forms.office.com/r/BFdQwaTBR1"
-                  className="rtc-link"
+                  className={styles['rtc-link']}
                 >
                   the Post-Easter Break Return to Campus form
                 </a>{' '}
@@ -85,12 +86,12 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
               </Typography>
             )}
             {/* END */}
-            <Grid className="wellness-status">
-              <Card className={currentStatus}>
-                <CardContent className="status-box">
-                  <div className="status-time">{time}</div>
+            <Grid className={styles['wellness-status']}>
+              <Card className={styles[currentStatus]}>
+                <CardContent className={styles['status-box']}>
+                  <div className={styles['status-time']}>{time}</div>
 
-                  <div className="status-animation">{animatedIcon}</div>
+                  <div className={styles['status-animation']}>{animatedIcon}</div>
                 </CardContent>
               </Card>
               <br />
@@ -106,7 +107,7 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
               />
             </Grid>
           </CardContent>
-          <div className="wellness-header">Questions? Health Center: (978) 867-4300 </div>
+          <div className={styles['wellness-header']}>Questions? Health Center: (978) 867-4300 </div>
         </Card>
       </Grid>
     </Grid>

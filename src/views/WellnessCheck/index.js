@@ -7,8 +7,6 @@ import Login from 'views/Login';
 import wellness from 'services/wellness';
 import user from 'services/user';
 
-import './index.css';
-
 const WellnessCheck = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
@@ -48,9 +46,7 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
     return (
-      <div className="gordon-login">
-        <Login onLogIn={onLogIn} />
-      </div>
+      <Login onLogIn={onLogIn} />
     );
   } else if (currentStatus === null) {
     return <WellnessQuestion setStatus={setCurrentStatus} />;
