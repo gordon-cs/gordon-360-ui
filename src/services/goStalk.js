@@ -62,15 +62,16 @@ const search = (
     // eslint-disable-next-line
     major = 'C' + '\u266F';
   } else if (
-    major.includes('&') || 
-    major.includes('-') || 
-    major.includes(':') || 
-    major.includes('/')) {
-      // workaround to avoid breaking the backend
-      major = major.replace('&', '_');
-      major = major.replace('-', 'dash');
-      major = major.replace(':', 'colon');
-      major = major.replace('/', 'slash');
+    major.includes('&') ||
+    major.includes('-') ||
+    major.includes(':') ||
+    major.includes('/')
+  ) {
+    // workaround to avoid breaking the backend
+    major = major.replace('&', '_');
+    major = major.replace('-', 'dash');
+    major = major.replace(':', 'colon');
+    major = major.replace('/', 'slash');
   }
   if (minor === '' || minor === null) {
     // eslint-disable-next-line
@@ -181,7 +182,7 @@ const getBuildings = () => {
   return http.get(`advanced-search/buildings`);
 };
 
-export default {
+const advancedSearchService = {
   search,
   getMajors,
   getMinors,
@@ -191,3 +192,5 @@ export default {
   getDepartments,
   getBuildings,
 };
+
+export default advancedSearchService;

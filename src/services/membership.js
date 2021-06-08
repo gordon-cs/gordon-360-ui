@@ -53,9 +53,7 @@ import http from './http';
  * @return {Promise<any>} Response
  */
 function addMembership(data) {
-  return http.post('memberships', data).catch((reason) => {
-    console.log(reason);
-  });
+  return http.post('memberships', data);
 }
 
 /**
@@ -75,7 +73,7 @@ const approveRequest = (requestID) => {
  * @return {boolean} True if given id is a group admin, else false
  */
 const checkAdmin = (id, sessionCode, activityCode) => {
-  let isGroupAdmin = getAllGroupAdmins(activityCode).then(function(result) {
+  let isGroupAdmin = getAllGroupAdmins(activityCode).then(function (result) {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
         if (result[i].SessionCode === sessionCode) {
@@ -141,7 +139,7 @@ const filterCurrent = (memberArray, sessionCode) => {
  * @return {Member[]} List of members in given session
  */
 const get = (activityCode, sessionCode) => {
-  let allMembership = getAll(activityCode).then(function(result) {
+  let allMembership = getAll(activityCode).then(function (result) {
     return filterCurrent(result, sessionCode);
   });
   return allMembership;
@@ -149,20 +147,10 @@ const get = (activityCode, sessionCode) => {
 
 //Change the privacy value for a club membership
 const toggleMembershipPrivacy = async (userMembership) => {
-  let currentMembershipPrivacy = userMembership.Privacy;
-  let newMembershipPrivacy = !currentMembershipPrivacy;
-  let setMembershipPrivacy = async function(value) {
-    return await http
-      .put('memberships/' + userMembership.MembershipID + '/privacy/' + value, value)
-      .then(() => {
-        // Changes the membership's privacy to the new privacy
-        userMembership.Privacy = newMembershipPrivacy;
-        return true;
-      })
-      .catch(false);
-  };
-
-  return setMembershipPrivacy(newMembershipPrivacy);
+  return await http.put(
+    `memberships/${userMembership.MembershipID}/privacy/${!userMembership.Privacy}`,
+    !userMembership.Privacy,
+  );
 };
 
 /**
@@ -213,7 +201,7 @@ const getMembersNum = (activityCode, sessionCode) =>
  * @return {Member[]} Array of the given student's memberships
  */
 const getIndividualMembership = (userID) =>
-  http.get(`memberships/student/${userID}`).then(function(result) {
+  http.get(`memberships/student/${userID}`).then(function (result) {
     return result;
   });
 
@@ -224,7 +212,7 @@ const getIndividualMembership = (userID) =>
  * @return {Request[]} List of requests for activity and session
  */
 const getRequests = (activityCode, sessionCode) => {
-  let allRequests = http.get(`requests/activity/${activityCode}`).then(function(result) {
+  let allRequests = http.get(`requests/activity/${activityCode}`).then(function (result) {
     return filterCurrentRequests(result, sessionCode);
   });
   return allRequests;
@@ -251,7 +239,7 @@ const filterCurrentRequests = (requestsArray, sessionCode) => {
 
 // Get the difference in days bewteen today and specified date
 // Returns integer and printable string
-const getDiffDays = function(date) {
+const getDiffDays = function (date) {
   let currentDate = new Date();
   let requestDate = new Date(date);
   let timeDiff = Math.abs(currentDate.getTime() - requestDate.getTime());
@@ -282,9 +270,7 @@ const remove = (membershipID) => {
  * @return {Promise<Object>} Response body
  */
 function requestMembership(data) {
-  return http.post(`requests`, data).catch((reason) => {
-    console.log(reason);
-  });
+  return http.post(`requests`, data);
 }
 
 /**
@@ -296,7 +282,7 @@ function requestMembership(data) {
  *                  and membershipID if in specific activity and session
  */
 const search = (id, sessionCode, activityCode) => {
-  let found = http.get(`memberships/student/${id}`).then(function(result) {
+  let found = http.get(`memberships/student/${id}`).then(function (result) {
     for (var i = 0; i < result.length; i++) {
       if (result[i].ActivityCode === activityCode) {
         if (result[i].SessionCode === sessionCode) {
@@ -319,7 +305,7 @@ const toggleGroupAdmin = async (membershipID, data) => {
   return await http.put(`memberships/${membershipID}/group-admin`, data);
 };
 
-export default {
+const membershipService = {
   addMembership,
   approveRequest,
   checkAdmin,
@@ -342,3 +328,5 @@ export default {
   toggleGroupAdmin,
   toggleMembershipPrivacy,
 };
+
+export default membershipService;

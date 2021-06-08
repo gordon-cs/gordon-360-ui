@@ -46,8 +46,10 @@ const remove = (key) => {
   localStorage.removeItem(key);
 };
 
-export default {
+const storageUtils = {
   get,
   remove,
   store,
 };
+
+export default storageUtils;

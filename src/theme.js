@@ -43,7 +43,13 @@ export const gordonColors = {
   },
   secondary: {
     green: '#B2BB1C',
+    greenShades: {
+      main: '#B2BB1C',
+    },
     yellow: '#FDB913',
+    yellowShades: {
+      main: '#FDB913',
+    },
     orange: '#DE571F',
     red: '#B53228',
     redShades: {
@@ -103,10 +109,20 @@ const theme = createMuiTheme({
     primary: gordonColors.primary.blueShades,
     secondary: gordonColors.primary.cyanShades,
     error: gordonColors.secondary.redShades,
+    success: gordonColors.secondary.greenShades,
+    warning: gordonColors.secondary.yellowShades,
+    info: gordonColors.primary.cyanShades,
     grey: gordonColors.neutral.grayShades,
   },
   typography: {
     fontFamily: ['Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', 'sans-serif'].join(','),
+  },
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        backgroundColor: gordonColors.neutral.darkGray,
+      },
+    },
   },
 });
 

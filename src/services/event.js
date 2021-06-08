@@ -43,7 +43,7 @@ import session from './session';
 
 /**
  * Gets all events from the backend, and then formats and sorts them
- * @returns {Event[]} All events
+ * @returns {Promise<Event[]>} All events
  */
 const getAllEvents = async () => {
   const allEvents = await http.get('events/25Live/All');
@@ -53,7 +53,7 @@ const getAllEvents = async () => {
 /**
  * Gets upcoming CL&W events and formats them for display
  * TODO: Unused. Consider removing
- * @returns {Event[]} upcoming CL&W events
+ * @returns {Promise<Event[]>} upcoming CL&W events
  */
 const getCLWEvents = async () => {
   const allEvents = await http.get('events/25Live/CLAW');
@@ -66,7 +66,7 @@ const getCLWEvents = async () => {
 
 /**
  * Gets all public events from the backend, and then formats and sorts them
- * @returns {Event[]} All events
+ * @returns {Promise<Event[]>} All events
  */
 const getAllGuestEvents = async () => {
   const allGuest = await http.get('events/25Live/Public');
@@ -75,7 +75,7 @@ const getAllGuestEvents = async () => {
 
 /**
  * Get chapel events attended by the user during the current term
- * @return {AttendedEvent[]} all CL&W events attended by the user, formatted and sorted
+ * @return {Promise<AttendedEvent[]>} all CL&W events attended by the user, formatted and sorted
  */
 const getAttendedChapelEvents = async () => {
   const termCode = session.getTermCode();
@@ -112,45 +112,6 @@ function formatevent(event) {
   }
 
   return formattedEvent;
-}
-
-function filterbyCategory(filters, allEvents) {
-  let filteredEvents = [];
-  if (
-    filters.chapelOffice ||
-    filters.art ||
-    filters.cec ||
-    filters.admissions ||
-    filters.sports ||
-    filters.studentLife ||
-    filters.chapelCredits
-  ) {
-    for (let i = 0; i < allEvents.length; i++) {
-      if (filters.chapelOffice && allEvents[i].Organization === 'Chapel Office') {
-        filteredEvents.push(allEvents[i]);
-      } else if (
-        filters.art &&
-        (allEvents[i].Organization === 'Music Department' ||
-          allEvents[i].Organization === 'Theatre' ||
-          allEvents[i].Organization === 'Art Department')
-      ) {
-        filteredEvents.push(allEvents[i]);
-      } else if (filters.cec && allEvents[i].Organization === 'Campus Events Council (CEC)') {
-        filteredEvents.push(allEvents[i]);
-      } else if (filters.admissions && allEvents[i].Organization === 'Admissions') {
-        filteredEvents.push(allEvents[i]);
-      } else if (filters.sports && allEvents[i].Organization === 'Athletics') {
-        filteredEvents.push(allEvents[i]);
-      } else if (filters.studentLife && allEvents[i].Organization === 'Office of Student Life') {
-        filteredEvents.push(allEvents[i]);
-      } else if (filters.chapelCredits && allEvents[i].HasCLAWCredit) {
-        filteredEvents.push(allEvents[i]);
-      }
-    }
-  } else {
-    filteredEvents = null;
-  }
-  return filteredEvents;
 }
 
 /**
@@ -199,45 +160,120 @@ const getFutureEvents = (allEvents) => {
 };
 
 /**
- * Filters events based on the active filters and search text
- * TODO: Refactor to take in an explicit events array, search text, and list of filters.
- *       Currently, the Events component is passing it's entire state, which is poor encapsulation
- *       and makes this method much less reusable.
- * @param {Object} filters the events and filters to use
- * @returns {Event[]} The filtered events
+ * The list of valid event filters
  */
-const getFilteredEvents = (filters) => {
-  const allEvents = filters.events;
-  let filteredEvents = [];
-  let shownEvents = [];
-  filteredEvents = filterbyCategory(filters, allEvents);
-  if (filteredEvents === null) {
-    filteredEvents = allEvents;
-  }
+export const EVENT_FILTERS = Object.freeze([
+  'CLW Credits',
+  'Admissions',
+  'Arts',
+  'Athletics',
+  'CEC',
+  'Chapel Office',
+  'Student Life',
+]);
 
-  if (filters.search !== '') {
-    shownEvents = [];
-    for (let i = 0; i < filteredEvents.length; i++) {
-      // search through the event title
-      if (filteredEvents[i].title.toLowerCase().includes(filters.search.toLowerCase())) {
-        shownEvents.push(filteredEvents[i]);
-        // search through the date
-      } else if (filteredEvents[i].timeRange.toLowerCase().includes(filters.search.toLowerCase())) {
-        shownEvents.push(filteredEvents[i]);
-        // search through the event times
-      } else if (filteredEvents[i].date.toLowerCase().includes(filters.search.toLowerCase())) {
-        shownEvents.push(filteredEvents[i]);
-        // search through the location
-      } else if (filteredEvents[i].location.toLowerCase().includes(filters.search.toLowerCase())) {
-        shownEvents.push(filteredEvents[i]);
-      }
-    }
-    filteredEvents = shownEvents;
+/**
+ * Filter a list of events for a given list of filters and a given search string
+ *
+ * @param {Event[]} events the events to filter
+ * @param {string[]} filters the list of filters to use
+ * @param {string} search the string to search against
+ * @returns {Event[]} The filtered list of events
+ */
+const getFilteredEvents = (events, filters, search) => {
+  const matchesSearch = makeMatchesSearch(search);
+  const matchesFilters = makeMatchesFilters(filters);
+  if (search && filters.length) {
+    return events.filter((event) => matchesSearch(event) && matchesFilters(event));
+  } else if (search) {
+    return events.filter(matchesSearch);
+  } else if (filters.length) {
+    return events.filter(matchesFilters);
+  } else {
+    return events;
   }
-  return filteredEvents;
 };
 
-export default {
+/**
+ * Make a closure over a search string.
+ *
+ * The returned closure determines whether a given `event` matches the`search` string
+ *
+ * @param {string} search The string to search for
+ * @returns {function(Event): boolean} A function that matches a given event against `search`
+ */
+const makeMatchesSearch = (search) => (event) => {
+  const matchableSearchString = search.toLowerCase();
+  return (
+    event.title.toLowerCase().includes(matchableSearchString) ||
+    event.timeRange.toLowerCase().includes(matchableSearchString) ||
+    event.date.toLowerCase().includes(matchableSearchString) ||
+    event.location.toLowerCase().includes(matchableSearchString)
+  );
+};
+
+/**
+ * Make a closure over a list of filters.
+ *
+ * The returned closure determines whether a given `event` matches any filter in `filters`
+ *
+ * @param {string[]} filters The list of filters to match an event against
+ * @returns {function(Event): boolean} A function that matches a given event against `filters`
+ */
+const makeMatchesFilters = (filters) => (event) => {
+  // Since we've closed over filters, we can match the event against only the enabled filters
+  // Because most cases involve only 1-2 concurrently active filters, this should improve filtering speed
+  for (const filter of filters) {
+    // For each of our enabled filters, stop matching and return true if the event matches
+    // This allows us to skip checking other filters once we've found a matching one
+    switch (filter) {
+      case 'Chapel Office':
+        if (event.organization === 'Chapel Office') {
+          return true;
+        }
+        break;
+      case 'Arts':
+        if (
+          event.Organization === 'Music Department' ||
+          event.Organization === 'Theatre' ||
+          event.Organization === 'Art Department'
+        ) {
+          return true;
+        }
+        break;
+      case 'CEC':
+        if (event.Organization === 'Campus Events Council (CEC)') {
+          return true;
+        }
+        break;
+      case 'Admissions':
+        if (event.Organization === 'Admissions') {
+          return true;
+        }
+        break;
+      case 'Athletics':
+        if (event.Organization === 'Athletics') {
+          return true;
+        }
+        break;
+      case 'Student Life':
+        if (event.Organization === 'Office of Student Life') {
+          return true;
+        }
+        break;
+      case 'CLW Credits':
+        if (event.HasCLAWCredit) {
+          return true;
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  return false;
+};
+
+const eventService = {
   getAllEvents,
   getFutureEvents,
   getCLWEvents,
@@ -245,3 +281,5 @@ export default {
   getAllGuestEvents,
   getAttendedChapelEvents,
 };
+
+export default eventService;

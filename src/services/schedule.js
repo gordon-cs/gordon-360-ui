@@ -117,8 +117,10 @@ async function makeScheduleCourses(schedule) {
   return eventArray;
 }
 
-export default {
+const scheduleService = {
   getSchedule,
   getScheduleMyProf,
   makeScheduleCourses,
 };
+
+export default scheduleService;

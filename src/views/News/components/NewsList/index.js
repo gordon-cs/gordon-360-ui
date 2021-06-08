@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import List from '@material-ui/core/List';
 
 import NewsItem from '../NewsItem';
-import { gordonColors } from '../../../../theme';
+import { gordonColors } from 'theme';
 import './newsList.scss';
+
+import { Grid, Typography, Card, List } from '@material-ui/core';
 
 export default class NewsList extends Component {
   constructor(props) {
@@ -126,45 +124,41 @@ export default class NewsList extends Component {
       ));
 
       header = (
-        <div style={headerStyle}>
-          <Grid container direction="row">
-            <Grid item xs={2}>
-              <Typography variant="body2" style={headerStyle}>
-                CATEGORY
-              </Typography>
-            </Grid>
-            <Grid item xs={5}>
-              <Typography variant="body2" style={headerStyle}>
-                SUBJECT
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography variant="body2" style={headerStyle}>
-                POSTED BY
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={headerStyle}>
-                POSTED
-              </Typography>
-            </Grid>
+        <Grid container direction="row" style={headerStyle}>
+          <Grid item xs={2}>
+            <Typography variant="body1" style={headerStyle}>
+              CATEGORY
+            </Typography>
           </Grid>
-        </div>
+          <Grid item xs={5}>
+            <Typography variant="body1" style={headerStyle}>
+              SUBJECT
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography variant="body1" style={headerStyle}>
+              POSTED BY
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" style={headerStyle}>
+              POSTED
+            </Typography>
+          </Grid>
+        </Grid>
       );
     }
 
     return (
-      <section>
-        <Card>
-          {header}
-          <Grid>
-            <List className="news-list" disablePadding>
-              {personalUnapprovedPostings}
-              {postings}
-            </List>
-          </Grid>
-        </Card>
-      </section>
+      <Card>
+        {header}
+        <Grid>
+          <List className="news-list" disablePadding>
+            {personalUnapprovedPostings}
+            {postings}
+          </List>
+        </Grid>
+      </Card>
     );
   }
 }

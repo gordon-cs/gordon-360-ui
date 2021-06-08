@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
 import PostAddIcon from '@material-ui/icons/PostAdd';
-import Typography from '@material-ui/core/Typography';
-import newsService from './../../services/news';
-import userService from './../../services/user';
-import NewsList from '../News/components/NewsList';
-import GordonLoader from '../../components/Loader';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import MenuItem from '@material-ui/core/MenuItem';
-import { Snackbar, IconButton } from '@material-ui/core';
+import newsService from 'services/news';
+import userService from 'services/user';
+import NewsList from './components/NewsList';
+import GordonLoader from 'components/Loader';
+import {
+  Snackbar,
+  IconButton,
+  Grid,
+  TextField,
+  Button,
+  Fab,
+  Typography,
+  Card,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
+} from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
 // import Dropzone from 'react-dropzone';
@@ -69,10 +73,11 @@ export default class StudentNews extends Component {
     this.callFunction = this.callFunction.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({ loading: false });
     this.loadNews();
     this.loadUsername();
+    window.addEventListener('resize', this.resize);
   }
 
   async loadUsername() {
@@ -253,10 +258,6 @@ export default class StudentNews extends Component {
     else return false;
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
-  }
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.resize);
   }
@@ -310,9 +311,9 @@ export default class StudentNews extends Component {
         );
       } else {
         content = (
-          <Grid item>
-            <Typography variant="h4">No News To Show</Typography>
-          </Grid>
+          <Typography variant="h4" align="center">
+            No News To Show
+          </Typography>
         );
       }
 
@@ -344,7 +345,7 @@ export default class StudentNews extends Component {
         (networkStatus === 'offline' && this.props.authentication)
       ) {
         news = (
-          <section>
+          <>
             {/* Button to Create Posting */}
             <Fab
               variant="extended"
@@ -379,7 +380,7 @@ export default class StudentNews extends Component {
                 </Grid>
               </Grid>
 
-              {/* NOTE: leaving helper text for now in case 
+              {/* NOTE: leaving helper text for now in case
               that is better than disabling submit button */}
               {/* Create Posting */}
               <Dialog open={this.state.openPostActivity} fullWidth>
@@ -468,7 +469,7 @@ export default class StudentNews extends Component {
                 open={this.state.snackbarOpen}
                 message={this.state.snackbarMessage}
                 onClose={this.handleSnackbarClose}
-                autoHideDuration="5000"
+                autoHideDuration={5000}
                 anchorOrigin={{
                   vertical: 'bottom',
                   horizontal: 'left',
@@ -485,12 +486,12 @@ export default class StudentNews extends Component {
                 ]}
               ></Snackbar>
 
-              <Grid item xs={12} md={12} lg={8} style={{ marginBottom: '7rem' }}>
+              <Grid item xs={12} lg={8} style={{ marginBottom: '7rem' }}>
                 {/* list of news */}
                 {content}
               </Grid>
             </Grid>
-          </section>
+          </>
         );
       }
       // If the user is offline
@@ -515,10 +516,7 @@ export default class StudentNews extends Component {
                       marginRight: 'auto',
                     }}
                   >
-                    <img
-                      src={require(`${'../../NoConnection.svg'}`)}
-                      alt="Internet Connection Lost"
-                    />
+                    <NoConnectionImage />
                   </Grid>
                   <br />
                   <h1>Please Re-establish Connection</h1>

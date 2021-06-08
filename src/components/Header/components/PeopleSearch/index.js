@@ -1,20 +1,24 @@
 import Downshift from 'downshift';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
-import Typography from '@material-ui/core/Typography';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
-import peopleSearch from '../../../../services/people-search';
+import peopleSearch from 'services/people-search';
+
+import {
+  TextField,
+  InputAdornment,
+  Paper,
+  MenuItem,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from '@material-ui/core';
+
 const MIN_QUERY_LENGTH = 2;
 
 //  TextBox Input Field
@@ -87,6 +91,13 @@ export default class GordonPeopleSearch extends Component {
     this.setState({ suggestions });
   }
 
+  handleClick = (theChosenOne) => {
+    if (theChosenOne && this.props.disableLink) {
+      this.props.onSearchSubmit(theChosenOne);
+    }
+    this.reset();
+  };
+
   handleKeys = (key) => {
     let suggestionIndex = this.state.suggestionIndex;
     let suggestionList = this.state.suggestions;
@@ -97,7 +108,11 @@ export default class GordonPeopleSearch extends Component {
         suggestionIndex === -1
           ? (theChosenOne = suggestionList[0].UserName)
           : (theChosenOne = suggestionList[suggestionIndex].UserName);
-        window.location.pathname = '/profile/' + theChosenOne;
+        // If prop set to disable link, then trigger the onSearchSubmit callback function
+        // Else, redirect the user to the selected profile page
+        this.props.disableLink
+          ? this.props.onSearchSubmit(theChosenOne)
+          : (window.location.pathname = '/profile/' + theChosenOne);
         this.reset();
       }
     }
@@ -173,12 +188,13 @@ export default class GordonPeopleSearch extends Component {
       return null;
     }
     return (
+      // The props for component={Link} and to={`/profile/${suggestion.UserName}`}
+      // have been moved to the declaration of itemProps in the render() method.
+      // This allows these link features to be omitted if this.props.disableLink is true
       <MenuItem
         {...itemProps}
         key={suggestion.UserName}
-        component={Link}
-        to={`/profile/${suggestion.UserName}`}
-        onClick={this.reset}
+        onClick={this.handleClick.bind(this, suggestion.UserName)}
         className={
           suggestionList && suggestionList[suggestionIndex] !== undefined
             ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
@@ -297,7 +313,9 @@ export default class GordonPeopleSearch extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     let holder = 'People Search';
-    if (window.innerWidth < this.breakpointWidth) {
+    if (this.props.customPlaceholderText) {
+      holder = this.props.customPlaceholderText;
+    } else if (window.innerWidth < this.breakpointWidth) {
       holder = 'People';
       if (networkStatus === 'offline') holder = 'Offline';
     } else if (networkStatus === 'offline') holder = 'Offline-Unavailable';
@@ -332,14 +350,29 @@ export default class GordonPeopleSearch extends Component {
               {isOpen &&
               this.state.suggestions.length > 0 &&
               this.state.query.length >= MIN_QUERY_LENGTH ? (
-                <Paper square className="people-search-dropdown">
-                  {this.state.suggestions.map((suggestion) =>
-                    this.renderSuggestion({
-                      suggestion,
-                      itemProps: getItemProps({ item: suggestion.UserName }),
-                    }),
-                  )}
-                </Paper>
+                this.props.disableLink ? (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map((suggestion) =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({ item: suggestion.UserName }),
+                      }),
+                    )}
+                  </Paper>
+                ) : (
+                  <Paper square className="people-search-dropdown">
+                    {this.state.suggestions.map((suggestion) =>
+                      this.renderSuggestion({
+                        suggestion,
+                        itemProps: getItemProps({
+                          item: suggestion.UserName,
+                          component: Link,
+                          to: `/profile/${suggestion.UserName}`,
+                        }),
+                      }),
+                    )}
+                  </Paper>
+                )
               ) : isOpen &&
                 this.state.suggestions.length === 0 &&
                 this.state.query.length >= MIN_QUERY_LENGTH ? (
@@ -359,7 +392,7 @@ export default class GordonPeopleSearch extends Component {
           <TextField
             placeholder="People Search"
             value={''}
-            onChange={(event) => this.unauthenticatedSearch()}
+            onChange={() => this.unauthenticatedSearch()}
             className={'text-field'}
             InputProps={{
               disableUnderline: true,
@@ -376,7 +409,7 @@ export default class GordonPeopleSearch extends Component {
           />
           <Dialog
             open={this.state.loginDialog}
-            onClose={(clicked) => this.handleClose()}
+            onClose={() => this.handleClose()}
             aria-labelledby="login-dialog-title"
             aria-describedby="login-dialog-description"
           >
@@ -387,7 +420,7 @@ export default class GordonPeopleSearch extends Component {
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" onClick={(clicked) => this.handleClose()} color="primary">
+              <Button variant="contained" onClick={() => this.handleClose()} color="primary">
                 Okay
               </Button>
             </DialogActions>

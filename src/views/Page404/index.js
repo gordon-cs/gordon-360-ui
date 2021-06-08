@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Typography } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
+import { Typography, Grid } from '@material-ui/core';
 import mascot from './mascot.svg';
 import ScottieDog from './components/ScottieDog';
 
@@ -45,7 +44,7 @@ export default class Page404 extends Component {
           </Typography>
         </Grid>
         {/* Gordon mascot image */}
-        <Grid item style={styles.image}>
+        <Grid item align="center" style={styles.image}>
           <img src={mascot} alt="Gordon Mascot" style={styles.mascot}></img>
         </Grid>
         {/* Scottie dog walking across bottom animation */}

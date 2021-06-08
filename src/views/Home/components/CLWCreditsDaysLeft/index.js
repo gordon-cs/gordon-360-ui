@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import { Doughnut, defaults } from 'react-chartjs-2';
-import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
 
-import { gordonColors } from '../../../../theme';
-import user from '../../../../services/user';
-import session from '../../../../services/session';
-import GordonLoader from '../../../../components/Loader';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import session from 'services/session';
+import GordonLoader from 'components/Loader';
 
 import './CLWChart.css';
+
+import { Card, CardHeader, CardContent, Typography, Grid, Button } from '@material-ui/core';
 
 export default class CLWCreditsDaysLeft extends Component {
   constructor(props) {
@@ -29,7 +26,7 @@ export default class CLWCreditsDaysLeft extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadData();
   }
 
@@ -82,7 +79,7 @@ export default class CLWCreditsDaysLeft extends Component {
           // Allow different tooltips for different datasets within the same pie;
           callbacks: {
             // Code taken from https://github.com/chartjs/Chart.js/issues/1417
-            label: function(item, data) {
+            label: function (item, data) {
               return (
                 data.datasets[item.datasetIndex].label[item.index] +
                 ': ' +
@@ -133,20 +130,7 @@ export default class CLWCreditsDaysLeft extends Component {
               </Typography>
             </Grid>
           </Grid>
-          {/* <Grid container justify="center">
-            <Grid item>
-              <div class="legend">
-                <div class="entry">
-                  <span class="entry-label" style={{ background: daysColor }} />
-                  <span class="entry-text">Days Finished</span>
-                </div>
-                <div class="entry">
-                  <span class="entry-label" style={{ background: chapelColor }} />
-                  <span class="entry-text">CL&amp;W Credits</span>
-                </div>
-              </div>
-            </Grid>
-          </Grid> */}
+
           <Doughnut data={data} height={175} options={options} />
           <div
             style={{
@@ -167,7 +151,9 @@ export default class CLWCreditsDaysLeft extends Component {
               <div className="label-text" style={{ color: daysColor }}>
                 {daysFinished}
               </div>
-              <div class="entry-text">{'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}</div>
+              <div className="entry-text">
+                {'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}
+              </div>
             </div>
             <div
               style={{
@@ -180,7 +166,7 @@ export default class CLWCreditsDaysLeft extends Component {
               <div className="label-text" style={{ color: chapelColor }}>
                 {current}
               </div>
-              <div class="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
+              <div className="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
             </div>
           </div>
         </div>
@@ -188,17 +174,23 @@ export default class CLWCreditsDaysLeft extends Component {
     }
 
     return (
-      <Card>
+      <Card className="clw-credits-days-left">
         <CardContent>
           <Grid container direction="row" alignItems="center">
-            <Grid item xs={7} align="left">
+            <Grid item xs={4} align="left">
+              <Button variant="contained" style={style.button} component={Link} to="/attended">
+                ATTENDED EVENTS
+              </Button>
+            </Grid>
+            <Grid item xs={4} align="center">
               <CardHeader title={this.state.currSessionDescription} />
             </Grid>
-            <Grid item xs={5} align="right">
+            <Grid item xs={4} align="right">
               <Button
                 variant="contained"
                 style={style.button}
-                onClick={(event) => (window.location.href = '/events?CLW')}
+                component={Link}
+                to="/events?CLW%20Credits"
               >
                 MORE CREDITS
               </Button>

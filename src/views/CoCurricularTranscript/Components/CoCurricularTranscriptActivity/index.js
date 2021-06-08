@@ -62,7 +62,7 @@ export default class Activity extends Component {
   // Returns: A string representing the duration of the user's membership based on the sessionsList
   formatDuration = (sessionsList) => {
     let duration = '';
-    sessionsList.sort(function(sessA, sessB) {
+    sessionsList.sort(function (sessA, sessB) {
       return sessA - sessB;
     });
 
@@ -126,7 +126,7 @@ export default class Activity extends Component {
     }
 
     return (
-      <div className="activities">
+      <div className="experience-transcript-activities">
         <div className="organization-role">{Activity.ActivityDescription}</div>
         <div className="date"> {duration} </div>
         {!(leaderDuration === undefined) && (

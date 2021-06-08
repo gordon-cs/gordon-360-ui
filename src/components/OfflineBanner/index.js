@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { gordonColors } from '../../theme';
-import storage from '../../services/storage';
+import { gordonColors } from 'theme';
+import storage from 'services/storage';
+
+import { Grid, Typography } from '@material-ui/core';
 
 export default class OfflineBanner extends Component {
   constructor() {

@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import { Doughnut, defaults } from 'react-chartjs-2';
-import { Button } from '@material-ui/core';
-import GordonLoader from '../../../../components/Loader';
-import { gordonColors } from '../../../../theme';
-import user from '../../../../services/user';
-import session from '../../../../services/session';
-import { CardContent } from '../../../../../node_modules/@material-ui/core';
+import { Doughnut } from 'react-chartjs-2';
+import { Button, Grid, Typography, Card, CardContent, CardHeader } from '@material-ui/core';
+import GordonLoader from 'components/Loader';
+import { gordonColors } from 'theme';
+import user from 'services/user';
+import session from 'services/session';
 
 import './DiningBalance.css';
 
@@ -27,15 +22,13 @@ export default class DiningBalance extends Component {
     this.balanceTypes = ['Dining Dollars', 'Swipes', 'Guest Swipes'];
     this.facStaffBalance = '';
   }
-  componentWillMount() {
+  componentDidMount() {
     this.loadData();
   }
 
   async loadData() {
-    const diningInfoPromise = user.getDiningInfo();
-    const daysLeftPromise = session.getDaysLeft();
-    const daysLeft = await daysLeftPromise;
-    const diningInfo = await diningInfoPromise;
+    const diningInfo = await user.getDiningInfo();
+    const daysLeft = await session.getDaysLeft();
     this.daysLeft = daysLeft;
     if (typeof diningInfo === 'object') {
       this.diningInfo = diningInfo;
@@ -58,7 +51,6 @@ export default class DiningBalance extends Component {
       },
     };
 
-    defaults.global.legend.display = false;
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
@@ -116,7 +108,7 @@ export default class DiningBalance extends Component {
             // Allow different tooltips for different datasets within the same pie;
             callbacks: {
               // Code taken from https://github.com/chartjs/Chart.js/issues/1417
-              label: function(item, data) {
+              label: function (item, data) {
                 return (
                   data.datasets[item.datasetIndex].label[item.index] +
                   ': ' +
@@ -172,28 +164,6 @@ export default class DiningBalance extends Component {
                 </Typography>
               </Grid>
             </Grid>
-            {/* <Grid container justify="center">
-              <Grid item>
-                <div class="legend">
-                  <div class="entry">
-                      <span class="entry-label" style={{ background: gordonColors.primary.blue }} />
-                      <span class="entry-text">Days Finished</span>
-                  </div>
-                  <div class="entry">
-                    <span class="entry-label" style={{ background: gordonColors.primary.cyan }} />
-                    <span class="entry-text">Swipes</span>
-                  </div>
-                  <div class="entry">
-                    <span class="entry-label" style={{ background: '#b2bb1c' }} />
-                    <span class="entry-text">Dining Dollars</span>
-                  </div>
-                  <div class="entry">
-                    <span class="entry-label" style={{ background: '#fdb913' }} />
-                    <span class="entry-text">Guest Swipes</span>
-                  </div>
-                </div>
-              </Grid>
-            </Grid> */}
             <Doughnut data={data} height={175} options={options} />
             <div
               style={{
@@ -248,7 +218,7 @@ export default class DiningBalance extends Component {
       }
     }
     return (
-      <Card>
+      <Card className="dining-balance">
         <CardContent>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={7} align="left">

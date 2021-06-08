@@ -4,12 +4,9 @@
 // This file is being preserved for now as the news features are still in development
 
 import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Collapse from '@material-ui/core/Collapse';
-import { Button } from '@material-ui/core';
-import { gordonColors } from '../../../../../../theme';
-import NewsService from '../../../../../../services/news';
+import { Button, Grid, Typography, Collapse } from '@material-ui/core';
+import { gordonColors } from 'theme';
+import NewsService from 'services/news';
 import NewsItem from '../NewsItem';
 
 //Written by Jessica Guan
@@ -27,7 +24,7 @@ export default class CategorizedNews extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadNews();
   }
 

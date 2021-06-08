@@ -1,30 +1,27 @@
-// TODO: When login page hang/refresh issue is solved, remove all code marked "Login Hang"
-
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import amber from '@material-ui/core/colors/amber'; // Login Hang
-import Fab from '@material-ui/core/Fab';
-import PWAInstructions from '../../components/PWAInstructions/index';
+import PWAInstructions from 'components/PWAInstructions/index';
 import './login.css';
-import { authenticate } from '../../services/auth';
-import storage from '../../services/storage';
-import session from '../../services/session';
+import { authenticate } from 'services/auth';
+import storage from 'services/storage';
+import session from 'services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
-import { gordonColors } from '../../theme';
-import { projectName } from '../../project-name';
+import { gordonColors } from 'theme';
+import { projectName } from 'project-name';
 
-// To temporarily disable the Login Hang message, set this boolean to false
-const LOGIN_BUG_MESSAGE = true; // Login Hang
+import {
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+  Grid,
+  Snackbar,
+  IconButton,
+  Fab,
+} from '@material-ui/core';
 
 export default class Login extends Component {
   constructor(props) {
@@ -38,7 +35,6 @@ export default class Login extends Component {
       loading: false,
       password: '',
       username: '',
-      showMessageSnackbar: false, // Login Hang
       openPWAInstructions: false,
       showPWALink: false,
       deferredPWAPrompt: null,
@@ -48,12 +44,9 @@ export default class Login extends Component {
 
   componentDidMount() {
     this.isIE = false;
-    this.isEdge = false;
     let ua = navigator.userAgent;
     if (ua.indexOf('MSIE ') > -1 || ua.indexOf('Trident') > -1) {
       this.isIE = true;
-    } else if (ua.indexOf('Edge') > -1) {
-      this.isEdge = true;
     }
 
     // A window event listener to see if the browser has the PWA quick installation prompt available
@@ -138,14 +131,6 @@ export default class Login extends Component {
     event.preventDefault();
     this.setState({ loading: true, error: null });
 
-    // Login Hang
-    var id;
-    if (LOGIN_BUG_MESSAGE)
-      id = setTimeout(() => {
-        this.setState({ showMessageSnackbar: true });
-      }, 6000);
-    // Login Hang
-
     try {
       await authenticate(this.state.username, this.state.password);
 
@@ -168,13 +153,11 @@ export default class Login extends Component {
       }
       this.props.onLogIn();
     } catch (err) {
-      clearTimeout(id); // Login Hang
       this.setState({ showMessageSnackbar: false });
       this.setState({ error: err.message, loading: false });
     }
   }
 
-  //Temp Login Hang Fix - remove when reason for error addressed
   handleCloseSnackbar(event, reason) {
     if (reason === 'clickaway') {
       return;
@@ -184,12 +167,11 @@ export default class Login extends Component {
 
   render() {
     return (
-      <Grid container alignItems="center" justify="center" spacing={0}>
+      <div className="login">
         <DocumentTitle title={`Login | ${projectName}`} />
-        <Grid className="container" item xs={12} sm={6} md={5} lg={4} xl={4}>
+        <Grid container direction="column" className="container">
           <img className="login-img" src={GordonLogoVerticalWhite} alt={`${projectName}`} />
           <form onSubmit={this.logIn}>
-            <Typography variant="subtitle1">Welcome to {projectName}!</Typography>
             <TextField
               id="username"
               label="Username"
@@ -200,11 +182,6 @@ export default class Login extends Component {
               margin="normal"
               fullWidth
               autoFocus
-              InputProps={{
-                classes: {
-                  input: 'input',
-                },
-              }}
             />
             <TextField
               id="password"
@@ -215,16 +192,11 @@ export default class Login extends Component {
               onChange={this.handleChange('password')}
               margin="normal"
               fullWidth
-              InputProps={{
-                classes: {
-                  input: 'input',
-                },
-              }}
             />
             <Typography className="error" variant="body2" color="error">
               {this.state.error}
             </Typography>
-            <section className="button-wrapper">
+            <Grid container justify="center">
               <Button
                 variant="contained"
                 className="submit-button"
@@ -235,27 +207,28 @@ export default class Login extends Component {
                 {!this.state.loading && 'Log in'}
                 {this.state.loading && <CircularProgress size={24} />}
               </Button>
-            </section>
+            </Grid>
           </form>
         </Grid>
+
         {this.state.network === 'online' && this.state.showPWALink && (
           <Grid
             container
-            xs={12}
             justify="center"
             style={{ margin: '0.5rem' }}
             onClick={() => {
               this.setState({ openPWAInstructions: true });
             }}
           >
-            <Grid xs={12} sm={6} md={5} lg={4} xl={4}>
+            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
               <Fab variant="extended" color="primary">
                 <GetAppIcon />
-                <Typography variant="subtitle1">&nbsp;Install Gordon 360</Typography>
+                <Typography variant="subtitle1">Install Gordon 360</Typography>
               </Fab>
             </Grid>
           </Grid>
         )}
+
         {this.state.network === 'online' &&
           this.state.showPWALink &&
           this.state.openPWAInstructions && (
@@ -268,44 +241,6 @@ export default class Login extends Component {
             />
           )}
 
-        {LOGIN_BUG_MESSAGE && (
-          <Snackbar /* Login Hang [START of section; remove everything from here to END] */
-            style={{ marginTop: '1rem' }}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'center',
-            }}
-            open={this.state.showMessageSnackbar}
-            onClose={this.handleCloseSnackbar.bind(this)}
-            ContentProps={{
-              'aria-describedby': 'message-id',
-              style: { backgroundColor: amber[700] },
-            }}
-            message={
-              <span id="message-id">
-                Whoops! It looks like our login page has frozen. This happens occasionally, and
-                we're working to fix it.
-                <b> Please refresh your browser page</b>. Sorry for the inconvenience, and thank you
-                for your patience!
-              </span>
-            }
-            action={[
-              <Button onClick={() => window.location.reload()} style={{ color: 'white' }}>
-                Refresh
-              </Button>,
-              <IconButton
-                key="close"
-                aria-label="Close"
-                color="inherit"
-                onClick={this.handleCloseSnackbar.bind(this)}
-              >
-                <CloseIcon />
-              </IconButton>,
-            ]}
-          />
-        )}
-
-        {/* Login Hang [END of section] */}
         <Snackbar /* Internet Explorer popup message */
           style={{ marginTop: '1rem' }}
           anchorOrigin={{
@@ -321,8 +256,7 @@ export default class Login extends Component {
           message={
             <span id="message-id">
               Whoops! It looks like you're using Internet Explorer. Unfortunately, Gordon 360
-              doesn't support IE. Please use a modern browser like Chrome or Firefox. (We don't
-              support Edge yet, but we hope to soon!)
+              doesn't support IE. Please use a modern browser like Chrome or Firefox.
             </span>
           }
           action={[
@@ -348,48 +282,7 @@ export default class Login extends Component {
             </IconButton>,
           ]}
         />
-        <Snackbar /* Edge browser popup message */
-          style={{ marginTop: '1rem' }}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-          open={this.isEdge}
-          onClose={this.handleCloseSnackbar.bind(this)}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-            style: { backgroundColor: gordonColors.primary.cyan },
-          }}
-          message={
-            <span id="message-id">
-              Whoops! It looks like you're using Edge. Unfortunately, Gordon 360 doesn't support
-              Edge yet, but we hope to soon! In the meantime, please try Chrome or Firefox.
-            </span>
-          }
-          action={[
-            <Button
-              onClick={() => (window.location.href = 'https://www.google.com/chrome/')}
-              style={{ color: 'white' }}
-            >
-              Get Chrome
-            </Button>,
-            <Button
-              onClick={() => (window.location.href = 'https://www.mozilla.org/en-US/firefox/new/')}
-              style={{ color: 'white' }}
-            >
-              Get Firefox
-            </Button>,
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={this.handleCloseSnackbar.bind(this)}
-            >
-              <CloseIcon />
-            </IconButton>,
-          ]}
-        />
-      </Grid>
+      </div>
     );
   }
 }

@@ -3,7 +3,7 @@
 .pwa-instructions {
   &-title {
     background-color: $primary-blue !important;
-    color: white;
+    color: $neutral-white;
     padding: 1rem;
   }
   &-content {
@@ -27,27 +27,27 @@
           margin-bottom: 1rem;
           &-toggles {
             .MuiToggleButtonGroup-grouped:not(:first-child) {
-              border-left: 1px solid #ffffff8f;
+              border-left: 1px solid $neutral-white-opacity50;
             }
           }
         }
         &-instructions {
           &-choice {
-            color: #ce392e;
+            color: $secondary-red;
             padding: 1rem 0rem;
           }
           &-text {
             padding-bottom: 0.5rem;
             &-step {
-              color: #014983;
+              color: $primary-blue;
             }
             &-instruction {
-              color: #31342b;
+              color: $neutral-dark-gray;
               a {
                 text-decoration: none;
                 color: $primary-blue;
                 &:hover {
-                  color: #0078da;
+                  color: $primary-cyan;
                 }
               }
             }

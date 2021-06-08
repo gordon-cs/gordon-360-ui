@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import List from '@material-ui/core/List';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import event from './../../services/event';
-import GordonLoader from '../../components/Loader';
-import EventList from './../../components/EventList';
-import { gordonColors } from '../../theme';
+import event from 'services/event';
+import GordonLoader from 'components/Loader';
+import EventList from 'components/EventList';
+import { Link } from 'react-router-dom';
+import { gordonColors } from 'theme';
+
+import { List, Grid, Card, CardContent, Button, Typography } from '@material-ui/core';
 
 export default class EventsAttended extends Component {
   constructor(props) {
@@ -18,7 +15,7 @@ export default class EventsAttended extends Component {
       loading: true,
     };
   }
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.authentication) {
       this.loadEvents();
     }
@@ -50,9 +47,8 @@ export default class EventsAttended extends Component {
               <Button
                 variant="contained"
                 style={style.button}
-                onClick={() => {
-                  this.props.history.push('/events?CLW');
-                }}
+                component={Link}
+                to="/events?CLW%20Credits"
               >
                 Need More Chapel Credits?
               </Button>
@@ -74,9 +70,8 @@ export default class EventsAttended extends Component {
             <Button
               variant="contained"
               style={style.button}
-              onClick={() => {
-                this.props.history.push('/events?CLW');
-              }}
+              component={Link}
+              to="/events?CLW%20Credits"
             >
               Need More Chapel Credits?
             </Button>

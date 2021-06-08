@@ -13,16 +13,16 @@ import {
 } from '@material-ui/core';
 import React, { Component, Fragment } from 'react';
 import Dropzone from 'react-dropzone';
-import { gordonColors } from '../../theme';
-import IdCardDefault from '../IDUploader/image-default.png';
-import IdCardGreen from '../IDUploader/image-green.png';
-import IdCardTop from '../IDUploader/image-top.png';
+import { gordonColors } from 'theme';
+import IdCardDefault from './image-default.png';
+import IdCardGreen from './image-green.png';
+import IdCardTop from './image-top.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
-import user from '../../services/user';
-import errorLog from '../../services/errorLog';
-import Login from '../Login';
+import user from 'services/user';
+import errorLog from 'services/errorLog';
+import Login from 'views/Login';
 
 const CROP_DIM = 1200; // pixels
 class IDUploader extends Component {
@@ -39,6 +39,7 @@ class IDUploader extends Component {
       files: [],
       IdCardPlaceholder: IdCardDefault,
     };
+    this.cropperRef = React.createRef();
   }
 
   handleUploadPhoto = () => {
@@ -47,7 +48,9 @@ class IDUploader extends Component {
 
   handleCloseSubmit = () => {
     if (this.state.preview != null) {
-      var croppedImage = this.refs.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+      var croppedImage = this.cropperRef.current.cropper
+        .getCroppedCanvas({ width: CROP_DIM })
+        .toDataURL();
       this.postCroppedImage(croppedImage, 0);
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({
@@ -74,7 +77,7 @@ class IDUploader extends Component {
       this.setState({ submitDialogOpen: true });
     } catch (error) {
       let errorMessage = ', but image failed to post with error: ' + error;
-      logMessage = errorMessage + logMessage;
+      logMessage += errorMessage;
       if (attemptNumber < 5) {
         this.postCroppedImage(croppedImage, attemptNumber + 1);
       } else {
@@ -143,10 +146,10 @@ class IDUploader extends Component {
   onDropAccepted(fileList) {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
-    reader.onload = function() {
+    reader.onload = function () {
       var dataURL = reader.result.toString();
       var i = new Image();
-      i.onload = function() {
+      i.onload = function () {
         if (i.width < CROP_DIM || i.height < CROP_DIM) {
           alert(
             'Sorry, your image is too small! Image dimensions must be at least 1200 x 1200 pixels.',
@@ -174,15 +177,15 @@ class IDUploader extends Component {
   onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      this.refs.cropper.zoomTo(1);
+      this.cropperRef.current.cropper.zoomTo(1);
     }
   }
 
   onCropperMove() {
     // Keyboard support for cropping
     document.addEventListener('keydown', (e) => {
-      if (this.refs.cropper != null) {
-        let data = this.refs.cropper.getCropBoxData();
+      if (this.cropperRef.current.cropper != null) {
+        let data = this.cropperRef.current.cropper.getCropBoxData();
         if (e.code === 'ArrowUp') {
           data.top -= 5;
         } else if (e.code === 'ArrowDown') {
@@ -198,7 +201,7 @@ class IDUploader extends Component {
           data.height -= 5;
           data.width -= 5;
         }
-        this.refs.cropper.setCropBoxData(data);
+        this.cropperRef.current.cropper.setCropBoxData(data);
       }
     });
   }
@@ -207,17 +210,6 @@ class IDUploader extends Component {
     const { preview } = this.state;
 
     const style = {
-      img: {
-        width: '200px',
-        height: '200px',
-      },
-
-      centerGridContainer: {
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-      },
-
       button: {
         background: gordonColors.primary.cyan,
         color: 'white',
@@ -231,11 +223,6 @@ class IDUploader extends Component {
 
       uncontainedButton: {
         color: gordonColors.primary.cyan,
-      },
-
-      media: {
-        // ⚠️ object-fit is not supported by IE 11.
-        objectFit: 'cover',
       },
 
       instructionsText: {
@@ -279,40 +266,34 @@ class IDUploader extends Component {
             </Card>
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4} justify="center">
+          <Grid item xs={12} md={6} lg={4}>
             <Grid container justify="center">
               <Card raised={true}>
                 <Grid item style={{ margin: '10px' }}>
-                  <div>
-                    <img
-                      src={IdCardTop}
-                      alt="ID card top with Gordon College logo."
-                      className="placeholder-id"
-                      style={{ maxWidth: '100%', maxHeight: '100%' }}
-                    />
-                  </div>
+                  <img
+                    src={IdCardTop}
+                    alt="ID card top with Gordon College logo."
+                    className="placeholder-id"
+                    style={{ maxWidth: '100%', maxHeight: '100%' }}
+                  />
                 </Grid>
                 <Grid item>
                   <Grid container style={{ width: '406px' }}>
                     <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
-                      <div>
-                        <img
-                          src={this.state.IdCardPlaceholder}
-                          alt="Placeholder ID."
-                          className="placeholder-id"
-                          style={{ maxWidth: '100%', maxHeight: '100%' }}
-                        />
-                      </div>
+                      <img
+                        src={this.state.IdCardPlaceholder}
+                        alt="Placeholder ID."
+                        className="placeholder-id"
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                      />
                     </Grid>
                     <Grid item style={{ marginLeft: '7px', width: '53px', marginBottom: '5px' }}>
-                      <div>
-                        <img
-                          src={IdCardGreen}
-                          alt="Colored bar with text 'student'."
-                          className="placeholder-id"
-                          style={{ maxWidth: '100%', maxHeight: '100%' }}
-                        />
-                      </div>
+                      <img
+                        src={IdCardGreen}
+                        alt="Colored bar with text 'student'."
+                        className="placeholder-id"
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
+                      />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -357,7 +338,7 @@ class IDUploader extends Component {
     }
 
     return (
-      <Grid container justify="center" spacing="2">
+      <Grid container justify="center" spacing={2}>
         {content}
 
         <Dialog
@@ -393,7 +374,7 @@ class IDUploader extends Component {
                           className="gc360-id-dialog_content_dropzone_img"
                           src={`data:image/jpg;base64,${this.state.image}`}
                           alt=""
-                          style={{ 'max-width': '140px', 'max-height': '140px' }}
+                          style={{ maxWidth: '140px', maxHeight: '140px' }}
                         />
                       </div>
                     </section>
@@ -403,11 +384,11 @@ class IDUploader extends Component {
               {preview && (
                 <div className="gc360-id-dialog_content_cropper">
                   <Cropper
-                    ref="cropper"
+                    ref={this.cropperRef}
                     src={preview}
                     style={{
-                      'max-width': this.maxCropPreviewWidth(),
-                      'max-height': this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
+                      maxWidth: this.maxCropPreviewWidth(),
+                      maxHeight: this.maxCropPreviewWidth() / this.state.cropperData.aspectRatio,
                     }}
                     autoCropArea={1}
                     viewMode={3}
@@ -457,13 +438,17 @@ class IDUploader extends Component {
           keepMounted
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
-          maxWidth="false"
         >
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>
             <DialogContentText className="submittedText">
-              Your ID photo has been sent successfully! <br /> CTS will contact you if your photo
-              does not meet the stated criteria.
+              We got your photo!
+              <br />
+              You should now see it on your MyProfile page, but it may
+              <br />
+              take a couple of days for it to be approved for public view.
+              <br />
+              CTS will contact you if there’s an issue.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -482,7 +467,6 @@ class IDUploader extends Component {
           keepMounted
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
-          maxWidth="false"
         >
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>

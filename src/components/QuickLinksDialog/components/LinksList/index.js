@@ -1,145 +1,119 @@
-import React, { Component } from 'react';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import React from 'react';
 import LinkIcon from '@material-ui/icons/InsertLink';
-import Typography from '@material-ui/core/Typography';
 
-import { ListItemIcon } from '@material-ui/core';
+import { ListItemIcon, ListItemText, ListSubheader, List, ListItem } from '@material-ui/core';
 
-import '../../../../app.css';
+import CanvasIcon from './images/Canvas.ico';
+import GordonIcon from './images/GordonFavicon.ico';
+import GOIcon from './images/GoGordonFavicon.ico';
+import MyGordonIcon from './images/MyGordonFavicon.ico';
 
 function ListItemLink(props) {
   return <ListItem component="a" {...props} />;
 }
 
-// Currently all the URLs in Links tab are hardcoded in this file
+const GordonLinksList = () => (
+  <>
+    <List
+      component="nav"
+      subheader={
+        <ListSubheader component="div" disableSticky>
+          Academics
+        </ListSubheader>
+      }
+    >
+      <ListItemLink
+        target="_blank"
+        rel="noopener"
+        href="https://www.gordon.edu"
+        className="gc360-text-link"
+      >
+        <ListItemIcon>
+          <img src={GordonIcon} alt="gordon" width="16" height="16" />
+        </ListItemIcon>
+        <ListItemText primary="Gordon College" />
+      </ListItemLink>
+      <ListItemLink
+        target="_blank"
+        rel="noopener"
+        href="https://my.gordon.edu"
+        className="gc360-text-link"
+      >
+        <ListItemIcon>
+          <img src={MyGordonIcon} alt="my gordon" width="16" height="16" />
+        </ListItemIcon>
+        <ListItemText primary="My Gordon" />
+      </ListItemLink>
+      <ListItemLink
+        target="_blank"
+        rel="noopener"
+        href="https://go.gordon.edu"
+        className="gc360-text-link"
+      >
+        <ListItemIcon>
+          <img src={GOIcon} alt="go gordon" width="16" height="16" />
+        </ListItemIcon>
+        <ListItemText primary="Go Gordon" />
+      </ListItemLink>
+      <ListItemLink
+        target="_blank"
+        rel="noopener"
+        href="https://canvas.gordon.edu"
+        className="gc360-text-link"
+      >
+        <ListItemIcon>
+          <img src={CanvasIcon} alt="canvas" width="16" height="16" />
+        </ListItemIcon>
+        <ListItemText primary="Canvas" />
+      </ListItemLink>
+    </List>
+    <List component="nav" subheader={<ListSubheader component="div">Information</ListSubheader>}>
+      <ListItemLink
+        target="_blank"
+        rel="noopener"
+        href="http://athletics.gordon.edu/"
+        className="gc360-text-link"
+      >
+        <ListItemIcon>
+          <LinkIcon style={{ fontSize: 16 }} />
+        </ListItemIcon>
+        <ListItemText primary="Fighting Scots" />
+      </ListItemLink>
+      <ListItemLink
+        target="_blank"
+        rel="noopener"
+        href="http://stories.gordon.edu/"
+        className="gc360-text-link"
+      >
+        <ListItemIcon>
+          <LinkIcon style={{ fontSize: 16 }} />
+        </ListItemIcon>
+        <ListItemText primary="The Bell" />
+      </ListItemLink>
+      <ListItemLink
+        target="_blank"
+        rel="noopener"
+        href="https://www.gordon.edu/titleix"
+        className="gc360-text-link"
+      >
+        <ListItemIcon>
+          <LinkIcon style={{ fontSize: 16 }} />
+        </ListItemIcon>
+        <ListItemText primary="Sexual Discrimination and Harassment" />
+      </ListItemLink>
+      <ListItemLink
+        target="_blank"
+        rel="noopener"
+        href="https://www.gordon.edu/map"
+        className="gc360-text-link"
+      >
+        <ListItemIcon>
+          <LinkIcon style={{ fontSize: 16 }} />
+        </ListItemIcon>
+        <ListItemText primary="Gordon College Maps" />
+      </ListItemLink>
+    </List>
+  </>
+);
 
-export default class GordonLinksList extends Component {
-  render() {
-    return (
-      <Typography>
-        <List component="nav" subheader={<ListSubheader component="div">Academics</ListSubheader>}>
-          <ListItemLink
-            target="_blank"
-            rel="noopener"
-            href="https://www.gordon.edu"
-            className="gc360-text-link"
-          >
-            <ListItemIcon>
-              <img
-                className="gordon"
-                src={require(`${'../Images/GordonFavicon.ico'}`)}
-                alt="gordon"
-                width="16"
-                height="16"
-              />
-            </ListItemIcon>
-            <ListItemText primary="Gordon College" />
-          </ListItemLink>
-          <ListItemLink
-            target="_blank"
-            rel="noopener"
-            href="https://my.gordon.edu"
-            className="gc360-text-link"
-          >
-            <ListItemIcon>
-              <img
-                className="mygordon"
-                src={require(`${'../Images/MyGordonFavicon.ico'}`)}
-                alt="my gordon"
-                width="16"
-                height="16"
-              />
-            </ListItemIcon>
-            <ListItemText primary="My Gordon" />
-          </ListItemLink>
-          <ListItemLink
-            target="_blank"
-            rel="noopener"
-            href="https://go.gordon.edu"
-            className="gc360-text-link"
-          >
-            <ListItemIcon>
-              <img
-                className="gogordon"
-                src={require(`${'../Images/GoGordonFavicon.ico'}`)}
-                alt="go gordon"
-                width="16"
-                height="16"
-              />
-            </ListItemIcon>
-            <ListItemText primary="Go Gordon" />
-          </ListItemLink>
-          <ListItemLink
-            target="_blank"
-            rel="noopener"
-            href="https://canvas.gordon.edu"
-            className="gc360-text-link"
-          >
-            <ListItemIcon>
-              <img
-                className="canvas"
-                src={require(`${'../Images/Canvas.ico'}`)}
-                alt="canvas"
-                width="16"
-                height="16"
-              />
-            </ListItemIcon>
-            <ListItemText primary="Canvas" />
-          </ListItemLink>
-        </List>
-        <List
-          component="nav"
-          subheader={<ListSubheader component="div">Information</ListSubheader>}
-        >
-          <ListItemLink
-            target="_blank"
-            rel="noopener"
-            href="http://athletics.gordon.edu/"
-            className="gc360-text-link"
-          >
-            <ListItemIcon>
-              <LinkIcon style={{ fontSize: 16 }} />
-            </ListItemIcon>
-            <ListItemText primary="Fighting Scots" />
-          </ListItemLink>
-          <ListItemLink
-            target="_blank"
-            rel="noopener"
-            href="http://stories.gordon.edu/"
-            className="gc360-text-link"
-          >
-            <ListItemIcon>
-              <LinkIcon style={{ fontSize: 16 }} />
-            </ListItemIcon>
-            <ListItemText primary="The Bell" />
-          </ListItemLink>
-          <ListItemLink
-            target="_blank"
-            rel="noopener"
-            href="https://www.gordon.edu/titleix"
-            className="gc360-text-link"
-          >
-            <ListItemIcon>
-              <LinkIcon style={{ fontSize: 16 }} />
-            </ListItemIcon>
-            <ListItemText primary="Sexual Discrimination and Harassment" />
-          </ListItemLink>
-          <ListItemLink
-            target="_blank"
-            rel="noopener"
-            href="https://www.gordon.edu/map"
-            className="gc360-text-link"
-          >
-            <ListItemIcon>
-              <LinkIcon style={{ fontSize: 16 }} />
-            </ListItemIcon>
-            <ListItemText primary="Gordon College Maps" />
-          </ListItemLink>
-        </List>
-      </Typography>
-    );
-  }
-}
+export default GordonLinksList;

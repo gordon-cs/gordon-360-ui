@@ -1,4 +1,4 @@
-# Gordon 360 User Interface 
+# Gordon 360 User Interface
 
 ![Lint and Build](https://github.com/gordon-cs/gordon-360-ui/workflows/Lint%20and%20Build/badge.svg)
 
@@ -8,8 +8,8 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 
 - [Getting Started](#getting-started)
 
-  - [Front End Development](#front-end)
-  - [Back End Development](#connect-local-backend-to-react)
+  - [Starting the Front End](#starting-the-front-end)
+  - [Connect to Local Backend](#connect-local-backend-to-react)
   - [Server Notes](#server-notes)
   - [Editor Recommendations](#editor-recommendations)
   - [Libraries](#libraries)
@@ -22,54 +22,60 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 - [Continuous Integration and Deployment](#continuous-integration-and-deployment)
 - [Contributing](#contributing)
 - [Known Issues](#known-issues)
+- [History](#history)
 
 ## Getting Started
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). Read the user guide [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Read the user guide [here](https://github.com/facebook/create-react-app/blob/master/packages/cra-template/template/README.md).
 
-Make sure Node.js is set up on your machine. The following procedures will install nvm, a node.js version manager onto your machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
+Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtual machine, it should be setup already. To check if it is on a machine, open a terminal and run the command `nvm`. If the output says `'nvm' is not recognized...`, then Node.js has not been setup. In that case, follow the below procedures to install nvm (Node Version Manager) onto the machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
 
 #### Windows:
 
-- Download the latest release of NVM (Node Version Manager) from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
+- Download the latest release of nvm from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
   - Extract the file and run it.
-  - The installer will ask you where to install NVM. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
-  - After the installation completes, open a terminal and run these commands in order:
-    - `nvm install 9.11.1`
-    - `nvm use 9.11.1`
+  - The installer will ask you where to install nvm. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
+  - After this, go to https://nodejs.org/en/ and look for the version labeled "LTS" (which indicates the latest stable version).
+  - Finally, run `nvm install <version>` where <version> is the version you found.
 
-#### Linux:
+#### Linux and Mac:
 
-Follow [these instructions](https://hackernoon.com/how-to-install-node-js-on-ubuntu-16-04-18-04-using-nvm-node-version-manager-668a7166b854) to install NVM. At the step where it asks you to run nvm install, run `nvm install 9.11.1` then run `nvm use 9.11.1`.
+- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm.  It may take a few minutes to run, and appear for a while to be hung. (After it finishes, you might need to close your terminal window and open another before nvm will work.)
+- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`.  Or, better yet, `nvm install --lts`, to use the current "long term support" version which is generally the most stable.
+- Then, tell nvm that you want to use that verion: `nvm use node`, or better yet, `nvm use --lts`.
+  (More generally, "node" and "--lts" in the above commands can be replaced by any specific version.)
+  
+#### Troubleshooting NVM
 
-<!-- ### Front End Development (Note) -->
-<h3 id="front-end">Front End Development (Note)</h3>
+- If a developer accidentally follows the above Windows instructions on CS-RDSH-02, the environment variable for NVM will be set by their installation to a path within their user directory. Thus, many if not all other users on the machine will lose access to NVM. To fix this, any user can open Powershell as administrator and run `choco install -y nvm`. (The `-y` option answers `yes` to any prompts that occur during the installation.) Then, in a Powershell terminal not running as admin, run `nvm install --lts`. Users should log out and back in to see the fix take effect. As usual, you can check if this worked by opening a terminal and running the command `nvm`. If the output says `Running version...`, then it is all set.
 
-When running the app, it will open in a browser at <http://localhost:3000>.
+- Sometimes, the .json package management files in develop are missing a dependency and `npm install` throws an error. The error says something like "This is most likely not a problem with npm itself...and is related to npm not being able to find a file". The best solution we have found is to delete the whole `node_modules` directory, delete the file `package-lock.json`, and then run `npm install`. Warning, the deletions can take several minutes because they are large files.
+
+### Starting the Front End
 
 After cloning this repo, and after any major changes to local code (like changing branches) run:
 
 - `npm install` (This gets the right packages installed in the directory)
 - `npm start` (This starts a local server, and prints the local URL)
+  
+When running the app, it will open in a browser at <http://localhost:3000>.
 
-<!--### Connect Local Backend To React-->
-<h3 id="connect-local-backend-to-react">Back End Development (Connect Local Backend To React)</h3>
+### Connect Local Backend To React
 
-By default, React will use the live server backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI repository, use the following steps:
+By default, React will use the live 360ApiTrain backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI, use the following steps:
 
-- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-server-locally),
+- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-api-locally),
 
   - Clone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
   - Open `setupProxy.js` in src:
 
-    - You will see two nearly identical function calls that start with `app.use(proxy...`. In both calls, change the string following the word `target` to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the string to say `'http://localhost:5555/'` in both.
+    - You will see three sets of two nearly identical `app.use(...)` function calls. Each set is marked with a comment explaining which environment they are for (`PROD` for `360Api`, `TRAIN` for `360ApiTrain`, and `LOCALHOST` for your local backend). Make sure that only the `LOCALHOST` lines are uncommented, and update the port number after `http:localhost:` to the port your local backend is listening on. For example, if your backend is listening on `localhost:9999`, then the `app.use` `target` should be `http://localhost:9999/`
 
-  - Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file.
-  - Do the same with `.env.development`.
+  - Open `.env.development` and set `REACT_APP_API_URL` equal to `http://localhost:9999/`, assuming `9999` is the port your backend is listening on.
+  - You do not need to change `.env.production`.
 
-- Now, you are ready to work on the frontend. Although, you may need to install npm, as shown [here](#getting-started).
-  Also, note that it is better to run npm start in a VS Code terminal. It then knows to warn you if someone is already using port 3000. Type `y` if it does say 'Something is already running on port 3000...'.
+- Now, you are ready to work on the frontend.
 
 - In some scenarios, (for example, when someone has made custom changes to the backend which you also want to use) it is preferable to skip setting up your own backend and connect to someone else's. To do this, make sure you are on the virtual machine. Then, just follow the above directions, replacing each instance of the port number you chose with the port number on which their backend is listening.
 
@@ -93,7 +99,7 @@ The following extensions are recommended for any code editor used to develop thi
 
 - [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) ensures that indentation style, line endings, and file endings are consistent across editors and operating systems
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) checks syntax correctness for JavaScript (`.js` files)
-- [Stylelint](https://marketplace.visualstudio.com/items?itemName=shinnn.stylelint) checks syntax correctness for Sass (`.scss` files)
+- [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) checks syntax correctness for Sass (`.scss` files)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) automatically formats JavaScript, Sass, JSON, and Markdown files on save
 
 If you are using VS Code, you can use the following keyboard shortcuts to run the app:
@@ -107,7 +113,7 @@ VS Code users will also see a ruler at the 100 character mark, helping the devel
 
 Links to the homepages of libraries used in this project, listed here for easy reference.
 
-- [Material-UI](https://material-ui-next.com)
+- [Material-UI](https://next.material-ui.com/)
 
   Material-UI is a widely-used React implementation of Google's Material Design. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
 
@@ -153,6 +159,10 @@ Links to the homepages of libraries used in this project, listed here for easy r
 - [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
 
   Provides easy routing, allowing transitions between views with back button support and URL management.
+
+- [react-csv](https://github.com/react-csv/react-csv)
+
+  Provides components that allow React to easily generate a CSV file from given data. This data can be an array of arrays, an array of literal objects, or strings.
 
 ## Code Style
 
@@ -315,7 +325,7 @@ Similar to component folders, a view folder can have its own `components` folder
 
 ## Environment Variables
 
-Environment-specific variables are located in the root directory of the project in the files `.env` and `.env.production`. `.env` contains variables for local development and testing. `.env.production` contains overrides of those variables specific to the production environments (360 and 360Train).
+Environment-specific variables are located in the root directory of the project in the files `.env`, `.env.development` and `.env.production`. `.env` contains variables generic environment variables that are the same in train and production. `.env.development` contains variables for local development and testing. `.env.production` contains overrides of those variables specific to the production environments (360 and 360Train).
 
 To declare variables that should not be checked in to version control, create a file in the root directory called `.env.local`. This file will be ignored by git.
 
@@ -327,18 +337,18 @@ Environment variables must be declared in all caps, must use snake case, and mus
 
 The first forays into testing were made when we were still using Travis CI as our CI/CD solution. The below advice is probably still useful but will need updating.
 
-The foundations for a testing suite made up of Jasmine, Karma, and Travis CI have been laid. For one, package.json has the following dependencies listed:
-
-- `"jasmine-core": ">=3.4.0"`
-- `"karma": ">=4.1.0",`
-- `"karma-chrome-launcher": ">=2.2.0"`
-- `"karma-firefox-launcher": ">=1.1.0"`
-- `"karma-jasmine": ">=2.0.1"`
-- `"karma-safari-launcher": ">=1.0.0"`
-
-Secondly, there is a github account, `gordon-360-ci`, made solely for Travis CI and continuous integration services like it. Specifically, it was from this account that Travis' environment variable `GITHUB_TOKEN` was generated. The login credentials for this account can be found in a file called `ci-credentials` on the CS-RDSH-02 virtual machine, specifically in `C:\Users\Public\Public Documents\` (or `/c/users/public/documents\` when in git-bash).
-
-The process for setting up this testing environment can be continued by following the directions [here](https://www.sitepoint.com/testing-javascript-jasmine-travis-karma/) and the advice [here](https://www.arroyolabs.com/2016/08/unit-testing-your-javascipt-with-jasmine-karmajs-travis-ci/) about using Chromium instead of Chrome. Note that some steps from the first link have been completed, from the step about running `karma init my.conf.js` to the beginning, exclusively. Also, there is already a `.travis.yml` file in the project folder, but it may need some lines of code that the .yml in the directions has.
+> The foundations for a testing suite made up of Jasmine, Karma, and Travis CI have been laid. For one, package.json has the following dependencies listed:
+>
+> - `"jasmine-core": ">=3.4.0"`
+> - `"karma": ">=4.1.0",`
+> - `"karma-chrome-launcher": ">=2.2.0"`
+> - `"karma-firefox-launcher": ">=1.1.0"`
+> - `"karma-jasmine": ">=2.0.1"`
+> - `"karma-safari-launcher": ">=1.0.0"`
+>
+> Secondly, there is a github account, `gordon-360-ci`, made solely for Travis CI and continuous integration services like it. Specifically, it was from this account that Travis' environment variable `GITHUB_TOKEN` was generated. The login credentials for this account can be found in a file called `ci-credentials` on the CS-RDSH-02 virtual machine, specifically in `C:\Users\Public\Public Documents\` (or `/c/users/public/documents\` when in git-bash).
+>
+> The process for setting up this testing environment can be continued by following the directions [here](https://www.sitepoint.com/testing-javascript-jasmine-travis-karma/) and the advice [here](https://www.arroyolabs.com/2016/08/unit-testing-your-javascipt-with-jasmine-karmajs-travis-ci/) about using Chromium instead of Chrome. Note that some steps from the first link have been completed, from the step about running `karma init my.conf.js` to the beginning, exclusively. Also, there is already a `.travis.yml` file in the project folder, but it may need some lines of code that the .yml in the directions has.
 
 Timesheets page testing [here](https://docs.google.com/document/d/1fi7_iwTQa7JFVRR3LtSDU3-MGpupOfbqhH-kEU5eMew/edit?usp=sharing)
 
@@ -363,16 +373,16 @@ to the 360 server. Instead, deployment uses a powershell script that is run via 
 
 ### Deploying Manually
 
-In the unusual case that Train or Production have not been automatically deployed (which should happen within five minutes of a finished Lint and Build action on the appropriate branch), it is possible to deploy manually. 
+In the unusual case that Train or Production have not been automatically deployed (which should happen within five minutes of a finished Lint and Build action on the appropriate branch), it is possible to deploy manually.
 
-1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s). 
+1. Clone/open the repo in VSCode, check out the branch you want to deploy, which should be `develop` for Train and `master` for Production, and fetch and pull the most uptodate commit(s).
 1. Build the project by running `npm run build` in VSCode on a clone of the project set to the branch you want to deploy. The output will be in `path/to/the/repo/gordon-360-ui/build`.
 1. Connect to the `360-Frontend.gordon.edu` server. See [RemoteDesktopToVM](https://github.com/gordon-cs/gordon-360-api/blob/develop/RemoteDesktopToVM.md) in the API repo for instructions on how to connect.
 1. Open File Explorer and navigate to `D:\wwwroot\`.
 1. Backup the existing deployment:
-    1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
-    1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
-1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above. 
+   1. Copy the appropriate folder (`360.gordon.edu` for Production, `360train.gordon.edu` for Train)
+   1. Paste it into the `wwwroot` and rename it as a backup with the date, in the format `360[train].gordon.edu-backup-yyyy-MM-ddTHH-mm-ss-fff`, e.g. `360train.gordon.edu-backup-1900-01-31T19:27:59:367`
+1. Replace the contents of the existing deployment folder (either `360.gordon.edu` or `360train.gordon.edu`) with the output of your build from step 2 above.
 1. Check the appropriate site, refreshing if necessary, to ensure it deployed successfully and is stable.
 1. If you need to restore to a backup, simply copy the contents of the desired backup folder and overwrite the appropriate site's folder.
 
@@ -386,13 +396,7 @@ In the unusual case that Train or Production have not been automatically deploye
 
 ## Known Issues
 
-- Cannot login to 360 from Edge due to an authentication error that is caused from http request failing to return a token to edge which causes "Invalid Argument" error to be displayed
-
 - Internet Explorer does not work with 360 and never will due to the fact that IE is too old to support features that 360 currently uses
-
-- There is a problem with the first login hanging after the backend starts up, this might be due to an authentication error but refreshing is currently the only fix
-
-- Edge Authentication - Fails at creation of request object in getAuth() in auth.js service. Incompatability with URLSearchParams was fixed with an update to Edge in April, but different problem with request object must exist still.
 
 - The 'edit involvement' and 'change image' dialog boxes, accessible through the admin view of an involvement profile, are messy. Refer to the CSS styling and replacement of Material UI Grid in views/IDUploader/IDUploader.scss and ''/index.js for a proven fix.
 
@@ -406,3 +410,5 @@ In the unusual case that Train or Production have not been automatically deploye
 
 - The student timesheets project was done as a senior project by a trio of seniors Nathanial Rudenberg, Adam Princiotta, and Jacob Bradley. The handoff documentation for this project was a revision and update to the existing documentation which is in the [Connect Local Backend to React](#connect-local-backend-to-react) section of the README. The design document can be found [here](https://docs.google.com/document/d/1CepyCiMzBXQVM--JwKKstniU_H1TodzxHLuCqcHxLjk/edit?usp=sharing)
 - [Student Timesheets Final Presentation](https://docs.google.com/presentation/d/162V-DLuaEUyHDS2Diu09k5f4Tpo2iuoMtIDUyowa7eQ/edit?usp=sharing)
+
+- The apartment applications project was done as a senior project by Josh Rogers, Christian Kunis, Gahngnin Kim, and Nick Noormand. The design document for the UI can be found [here](https://docs.google.com/document/d/16gvjNApyNMJbqjnwv2DSP0EvY4JJdjVZZAiST3MAZEo/edit?usp=sharing)
