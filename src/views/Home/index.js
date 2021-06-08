@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
+import CheckInQuestion from 'components/CheckInQuestion';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
@@ -8,6 +9,7 @@ import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
 import user from 'services/user';
 import wellness from 'services/wellness';
+import checkIn from 'services/checkIn';
 import storage from 'services/storage';
 import GuestWelcome from './components/GuestWelcome';
 import './home.css';
@@ -19,6 +21,7 @@ const Home = ({ authentication, onLogIn }) => {
   const [personType, setPersonType] = useState(null);
   const [networkStatus, setNetworkStatus] = useState('online');
   const [hasAnswered, setHasAnswered] = useState(null);
+  const [hasCheckedIn, setCheckedIn] = useState(null);
 
   useEffect(() => {
     // Retrieve network status from local storage or default to online
@@ -54,6 +57,7 @@ const Home = ({ authentication, onLogIn }) => {
       // Clear out component's person-specific state when authentication becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
       setHasAnswered(null);
+      setCheckedIn(null);
       setPersonType(null);
       setIsAuthenticated(false);
       setLoading(false);
@@ -65,9 +69,11 @@ const Home = ({ authentication, onLogIn }) => {
     const [{ PersonType }, { IsValid }] = await Promise.all([
       user.getProfileInfo(),
       wellness.getStatus(),
+      //checkIn.getStatus(),
     ]);
     setPersonType(PersonType);
     setHasAnswered(IsValid);
+    setCheckedIn(true)
     setLoading(false);
   };
 
@@ -77,6 +83,8 @@ const Home = ({ authentication, onLogIn }) => {
     return <GuestWelcome onLogIn={onLogIn} />;
   } else if (networkStatus === 'online' && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
+  } else if (networkStatus === 'online' && !hasCheckedIn) {
+    return <CheckInQuestion setStatus={() => setCheckedIn(true)} />;
   } else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 

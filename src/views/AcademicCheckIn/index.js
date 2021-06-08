@@ -2,22 +2,19 @@ import React, { useState, useEffect } from 'react';
 
 import GordonLoader from 'components/Loader';
 import Login from 'views/Login';
-import CheckInQuestion from 'views/AcademicCheckIn/components/question';
+import CheckInQuestion from 'components/CheckInQuestion';
 import user from 'services/user';
 import checkIn from 'services/checkIn';
-import './index.css';
-import CheckInStatus from 'views/AcademicCheckIn/components/status';
+//import './index.css';
+// import CheckInStatus from 'views/AcademicCheckIn/components/status';
 
 const AcademicCheckIn = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
 
-  // we can keep this cause all this is is just a way of saving information
   const [currentStatus, setCurrentStatus] = useState(null);
   const [username, setUsername] = useState(null);
 
-  // do we need image? would it be nice touch
-  // prob gordon logo or something
 
   useEffect(() => {
     if (authentication) {
@@ -31,7 +28,7 @@ const AcademicCheckIn = ({ authentication, onLogIn }) => {
   const loadPage = async () => {
     setLoading(true);
 
-    const status = await checkIn.getStatus();
+    /*const status = await checkIn.getStatus();
 
     if (status && status.IsValid) {
         setCurrentStatus(status.Status);
@@ -41,6 +38,7 @@ const AcademicCheckIn = ({ authentication, onLogIn }) => {
 
         setUsername(`${FirstName} ${LastName}`);
       }
+    */
 
     setLoading(false);
   }
@@ -57,11 +55,7 @@ const AcademicCheckIn = ({ authentication, onLogIn }) => {
     return <CheckInQuestion setStatus={setCurrentStatus} />;
   } else {
     return (
-      <CheckInStatus
-        currentStatus={currentStatus}
-        setCurrentStatus={setCurrentStatus}
-        username={username}
-      />
+      <p> not Hi</p>
     )
   }
 }
