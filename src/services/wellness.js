@@ -17,7 +17,7 @@ export const StatusColors = {
   GREEN: 'GREEN',
   /** Self-reported symptoms */
   YELLOW: 'YELLOW',
-  /** Confirmed symtpoms or exposure */
+  /** Confirmed symptoms or exposure */
   RED: 'RED',
 };
 
