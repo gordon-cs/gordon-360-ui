@@ -60,7 +60,7 @@ const postAnswer = (status) => {
   };
 
 /** Returns questions to be displayed in the UI
- *
+ * Note: This may not be neccessary for CheckIn, probably will remove
  * @returns {Promise<AcademicCheckInQuestion>} list of questions from backend
  */
  const getQuestion = async () => {
@@ -76,6 +76,7 @@ const postAnswer = (status) => {
  * @param {string} question.noPrompt The text disclaimer for a negative answer
  * @returns {Promise<AcademicCheckInQuestion>} The checkIn question parsed into an object for display
  *
+ *  Note: If above is removed, will remove this function as well
  */
 const formatQuestion = async (question) => {
     const { FirstName, LastName } = await user.getProfileInfo();

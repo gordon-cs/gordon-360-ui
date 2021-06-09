@@ -5,7 +5,7 @@ import Login from 'views/Login';
 import CheckInQuestion from 'components/CheckInQuestion';
 import user from 'services/user';
 import checkIn from 'services/checkIn';
-//import './index.css';
+import './index.css';
 // import CheckInStatus from 'views/AcademicCheckIn/components/status';
 
 const AcademicCheckIn = ({ authentication, onLogIn }) => {
@@ -15,7 +15,7 @@ const AcademicCheckIn = ({ authentication, onLogIn }) => {
   const [currentStatus, setCurrentStatus] = useState(null);
   const [username, setUsername] = useState(null);
 
-
+  // Every time the page is updated, verify the user is logged in, and update any necessary info
   useEffect(() => {
     if (authentication) {
       loadPage();
@@ -25,6 +25,7 @@ const AcademicCheckIn = ({ authentication, onLogIn }) => {
     }
   }, [authentication, currentStatus]);
 
+  // Load the user's checkIn status from the API and update accordingly
   const loadPage = async () => {
     setLoading(true);
 
@@ -43,17 +44,18 @@ const AcademicCheckIn = ({ authentication, onLogIn }) => {
     setLoading(false);
   }
 
+  // If loadPage has not finished, display loader
   if (loading) {
     return <GordonLoader />;
-  } else if (!isAuthenticated) {
+  } else if (!isAuthenticated) { // Else if the user is not logged in, display login page
     return (
       <div className="gordon-login">
         <Login onLogIn={onLogIn} />
       </div>
     );
-  } else if (currentStatus === null) {
+  } else if (currentStatus === null) { // Else if the user has not completed checkIn, prompt them
     return <CheckInQuestion setStatus={setCurrentStatus} />;
-  } else {
+  } else { // Otherwise display a default appearance
     return (
       <p> not Hi</p>
     )

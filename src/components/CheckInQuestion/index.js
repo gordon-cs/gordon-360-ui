@@ -19,17 +19,19 @@ import CheckIn, { Status } from 'services/checkIn.js';
 
 import './index.scss';
 
+// Declaring variables and hooks for CheckInQuestion
 const CheckInQuestion = ({ setStatus }) => {
   const [loading, setLoading] = useState(true);
   const [answer, setAnswer] = useState(null);
   const [CheckInQuestion, setCheckInQuestion] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-
+  // Anytime the question element on the page is updated, this useEffect is called
   useEffect(() => {
     loadQuestion();
   }, []);
 
+  // Shows loading circle while it waits for the question to display from the API
   const loadQuestion = async () => {
     setLoading(true);
     /*
@@ -39,11 +41,13 @@ const CheckInQuestion = ({ setStatus }) => {
     setLoading(false);
   };
 
-
+  // Once a user clicks the submit button with a selected answer, this sends the answer to the API
+  // for storage and updates the webpage
   const submitAnswer = () => {
     CheckIn.postAnswer(answer).then((status) => setStatus(status));
   };
 
+  // While loadQuestion is still waiting for a response from the API, show the loading circle.
   if (loading === true) {
     return <GordonLoader />;
   }
@@ -87,10 +91,16 @@ const CheckInQuestion = ({ setStatus }) => {
               <Grid container direction="column" align="center" className={answer} spacing={1}>
                 <Grid item>
                   <Typography color="textPrimary" className="left">
+                    {/* This piece shows a different prompt in a subbox depending on which answer 
+                    in the radio button is selected. We could use this to display a bit of info
+                    regarding what ONCAMPUS vs NOTONCAMPUS means */}
                     {answer === Status.ONCAMPUS
                     /*
                       ? CheckInQuestion.yesPrompt
                     : CheckInQuestion.noPrompt*/}
+
+                    {/* This piece below was used to link to an information page on what YELLOW
+                     status meant for wellness. I don't think we will need it for our purposes*/}
                     {answer === Status.ONCAMPUS ? (
                       <a href={'https://www.google.com'} target="_blank" rel="noopener noreferrer">
                         this link
@@ -102,6 +112,8 @@ const CheckInQuestion = ({ setStatus }) => {
                   <Button
                     variant="contained"
                     onClick={() => {
+                      {/* If the student answered Yes, display a warning prompt to confirm. We could
+                      maybe use this, but I'm not sure. */}
                       answer === Status.ONCAMPUS ? setIsDialogOpen(true) : submitAnswer();
                     }}
                   >
@@ -111,6 +123,8 @@ const CheckInQuestion = ({ setStatus }) => {
               </Grid>
             </Collapse>
           </Grid>
+          <div className="CheckIn-header">For questions, please contact the Registrar's Office 
+          (978) 867-4242</div>
         </Card>
       </Grid>
     </Grid>
