@@ -221,14 +221,12 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
           </div>
 
           {authentication ? <GordonPeopleSearch authentication={authentication} /> : loginButton}
-
           <GordonNavAvatarRightCorner
             onSignOut={onSignOut}
             authentication={authentication}
             onClick={handleOpenMenu}
             menuOpened={isMenuOpen}
           />
-
           <GordonNavButtonsRightCorner
             open={isMenuOpen}
             openDialogBox={setDialog}
@@ -237,7 +235,6 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             anchorEl={anchorElement}
             onClose={handleCloseMenu}
           />
-
           {createDialogBox()}
         </Toolbar>
       </AppBar>

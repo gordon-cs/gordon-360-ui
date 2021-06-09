@@ -43,17 +43,13 @@ $drawer-width: 240px;
     margin-left: 16px;
     padding: 0;
     align-items: center;
-    display: flex;
+    display: none;
   }
 
   @media (min-width: $break-sm) {
     .app-bar {
       background-image: url('./gc_seal_top_64.png');
       height: $header-height-sm;
-    }
-    .right-side-container {
-      width: auto;
-      margin-left: 24px;
     }
   }
 
@@ -67,7 +63,7 @@ $drawer-width: 240px;
     }
 
     .center-container {
-      flex: 4;
+      flex: 3;
       justify-content: center;
       display: flex;
       visibility: visible;
@@ -76,9 +72,16 @@ $drawer-width: 240px;
     .tab {
       min-width: 80px;
     }
+    .right-side-container {
+      display: flex;
+      margin-left: 24px;
+    }
   }
 
   @media (min-width: $break-lg) {
+    .center-container {
+      flex: 7;
+    }
     .tab {
       min-width: 160px;
     }
