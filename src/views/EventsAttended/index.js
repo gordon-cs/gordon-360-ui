@@ -9,7 +9,7 @@ import { List, Grid, Card, CardContent, Button, Typography } from '@material-ui/
 
 const EventsAttended = (props) => {
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadEvents = async () => {
