@@ -17,8 +17,9 @@ const EventsAttended = (props) => {
         setLoading(true);
         const attendedEvents = await event.getAttendedChapelEvents();
         setEvents(attendedEvents);
-        setLoading(false);
       }
+      
+      setLoading(false);
     };
     loadEvents();
   }, [props.authentication]);
