@@ -6,8 +6,7 @@ import './error.css';
 import { Grid, Typography } from '@material-ui/core';
 
 const GordonError = ({ error, errorInfo }) => {
-  const [subject, setSubject] = useState(null);
-  setSubject('Gordon 360 Error');
+  const [subject, setSubject] = useState('Gordon 360 Error');
   return (
     <Grid className="gordon-error" container justify="center" alignItems="center">
       <Grid item xs={11} md={7} lg={5}>
