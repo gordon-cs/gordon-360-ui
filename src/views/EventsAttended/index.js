@@ -18,7 +18,7 @@ const EventsAttended = (props) => {
         const attendedEvents = await event.getAttendedChapelEvents();
         setEvents(attendedEvents);
       }
-      
+
       setLoading(false);
     };
     loadEvents();
@@ -33,47 +33,9 @@ const EventsAttended = (props) => {
     },
   };
 
-    if (loading === true) {
-      content = <GordonLoader />;
-    } else if (props.authentication){
-    } else if (events.length > 0) {
-      content = (
-        <Grid container direction="row" justify="center" spacing="2">
-          <Grid item align="center">
-            <Button
-              variant="contained"
-              style={style.button}
-              component={Link}
-              to="/events?CLW%20Credits"
-            >
-              Need More Chapel Credits?
-            </Button>
-          </Grid>
-          <Grid item>
-            <EventList events={events} />
-          </Grid>
-        </Grid>
-      );
-    } else {
-      content = (
-        <Grid item align="center">
-          <br /> <br />
-          <Typography variant="h4" align="center">
-            No Events To Show
-          </Typography>
-          <br />
-          <Button
-            variant="contained"
-            style={style.button}
-            component={Link}
-            to="/events?CLW%20Credits"
-          >
-            Need More Chapel Credits?
-          </Button>
-        </Grid>
-      );
-    }
-  } else {
+  if (loading === true) {
+    content = <GordonLoader />;
+  } else if (!props.authentication) {
     content = (
       <Grid container justify="center" spacing="2">
         <Grid item xs={12} md={8}>
@@ -94,6 +56,42 @@ const EventsAttended = (props) => {
             </CardContent>
           </Card>
         </Grid>
+      </Grid>
+    );
+  } else if (events.length > 0) {
+    content = (
+      <Grid container direction="row" justify="center" spacing="2">
+        <Grid item align="center">
+          <Button
+            variant="contained"
+            style={style.button}
+            component={Link}
+            to="/events?CLW%20Credits"
+          >
+            Need More Chapel Credits?
+          </Button>
+        </Grid>
+        <Grid item>
+          <EventList events={events} />
+        </Grid>
+      </Grid>
+    );
+  } else {
+    content = (
+      <Grid item align="center">
+        <br /> <br />
+        <Typography variant="h4" align="center">
+          No Events To Show
+        </Typography>
+        <br />
+        <Button
+          variant="contained"
+          style={style.button}
+          component={Link}
+          to="/events?CLW%20Credits"
+        >
+          Need More Chapel Credits?
+        </Button>
       </Grid>
     );
   }
