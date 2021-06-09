@@ -33,9 +33,9 @@ const EventsAttended = (props) => {
     },
   };
 
-  if (props.authentication) {
     if (loading === true) {
       content = <GordonLoader />;
+    } else if (props.authentication){
     } else if (events.length > 0) {
       content = (
         <Grid container direction="row" justify="center" spacing="2">
