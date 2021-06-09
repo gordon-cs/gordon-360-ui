@@ -436,10 +436,11 @@ const PersonalInfoList = ({
       </Typography>
     ) : null;
 
-    const disclaimer2 =
+    const disclaimer2 = isPolice ? (
     <Typography align="left" className="disclaimer">
         Private: visible only to Gordon Police
       </Typography>
+    ) : null;
 
   return (
     <Grid item xs={12}>
