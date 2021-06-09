@@ -241,7 +241,6 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     </section>
   );
 };
-
 export default GordonHeader;
 
 GordonHeader.propTypes = {
