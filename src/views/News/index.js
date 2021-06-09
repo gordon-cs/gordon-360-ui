@@ -13,7 +13,7 @@ import {
   IconButton,
   Grid,
   TextField,
-  Tooltip,
+  //Tooltip,
   Button,
   Fab,
   Typography,
@@ -49,7 +49,7 @@ export default class StudentNews extends Component {
       newPostSubject: '',
       newPostBody: '',
       newPostImage: '',
-      showCropper: null,
+      showCropper: null, //null if no picture chosen, else contains picture
       openPhotoDialog: false,
       photoDialogErrorTimeout: null,
       photoDialogError: null,
@@ -83,7 +83,6 @@ export default class StudentNews extends Component {
     this.imageOnLoadHelper = this.imageOnLoadHelper.bind(this);
     this.onDropRejected = this.onDropRejected.bind(this);
     this.handleCloseCancel = this.handleCloseCancel.bind(this);
-    this.handleCloseSubmit = this.handleCloseSubmit.bind(this);
 
     this.styles = {
       button: {
@@ -129,8 +128,6 @@ export default class StudentNews extends Component {
 
   setShowCropper = (dataURL) => {
     this.setState({ showCropper: dataURL });
-    console.log('worked');
-    console.log(dataURL);
   };
 
   setPhotoDialogError = (value) => {
@@ -207,8 +204,6 @@ export default class StudentNews extends Component {
   }
 
   handleSnackbarClose = (reason) => {
-    // not sure what reason is
-    // console.log(reason);
     if (reason === 'clickaway') {
       return;
     }
@@ -250,7 +245,6 @@ export default class StudentNews extends Component {
   }
 
   async clearPhotoDialogErrorTimeout() {
-    console.log('got to clearPhoto');
     return new Promise((resolve, reject) => {
       clearTimeout(this.photoDialogErrorTimeout);
       this.setState({ photoDialogErrorTimeout: null, photoDialogError: null });
@@ -295,7 +289,6 @@ export default class StudentNews extends Component {
             'Tap Image to Browse Files'
           : 'Drag & Drop Picture, or Click to Browse Files';
     }
-    console.log('do we get to photodialogmessage');
     return message;
   }
 
@@ -314,18 +307,15 @@ export default class StudentNews extends Component {
   onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
-    console.log('got to onDropAccepted');
     reader.onload = () => {
       this.imageOnLoadHelper(reader);
     };
     reader.readAsDataURL(previewImageFile);
-    console.log('read the file');
   };
 
   imageOnLoadHelper(reader) {
     var dataURL = reader.result.toString();
     var i = new Image();
-    console.log('got into a file reader');
     i.onload = async () => {
       if (i.width < this.CROP_DIM || i.height < this.CROP_DIM) {
         await this.clearPhotoDialogErrorTimeout();
@@ -341,8 +331,7 @@ export default class StudentNews extends Component {
         var cropDim = this.minCropBoxDim(i.width, displayWidth);
         this.setPhotoDialogError(null);
         this.setCropperData({ cropDim, aRatio });
-        this.setShowCropper(dataURL); //does anything happen here.
-        console.log('did we make it');
+        this.setShowCropper(dataURL);
       }
     };
     i.src = dataURL;
@@ -353,7 +342,6 @@ export default class StudentNews extends Component {
    * Copied from Identification
    */
   async onDropRejected() {
-    console.log('onDrop');
     await this.clearPhotoDialogErrorTimeout();
     this.setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
   }
@@ -366,22 +354,6 @@ export default class StudentNews extends Component {
     this.setOpenPhotoDialog(false);
     this.setShowCropper(null);
     await this.clearPhotoDialogErrorTimeout;
-  }
-
-  /**
-   * Handles submission of a new photo in the Photo Updater Dialog Box
-   *
-   * Copied from Identification
-   */
-  handleCloseSubmit() {
-    if (this.state.showCropper != null) {
-      let croppedImage = this.cropperRef.current.cropper
-        .getCroppedCanvas({ width: this.CROP_DIM })
-        .toDataURL();
-      let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-      this.setState({ newPostImage: newImage });
-      console.log('got to submit');
-    }
   }
 
   /**
@@ -439,27 +411,33 @@ export default class StudentNews extends Component {
   }
 
   async handleSubmit() {
-    this.handleCloseSubmit();
-    // create the JSON newsItem object to post
-    let newsItem = {
-      categoryID: this.state.newPostCategory,
-      Subject: this.state.newPostSubject,
-      Body: this.state.newPostBody,
-      Image: this.state.newPostImage,
-    };
+    if (this.state.showCropper != null) {
+      let croppedImage = this.cropperRef.current.cropper
+        .getCroppedCanvas({ width: this.CROP_DIM })
+        .toDataURL();
+      let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+      this.setState({ newPostImage: newImage }, async function () {
+        let newsItem = {
+          categoryID: this.state.newPostCategory,
+          Subject: this.state.newPostSubject,
+          Body: this.state.newPostBody,
+          Image: this.state.newPostImage,
+        };
 
-    // submit the news item and give feedback
-    let result = await newsService.submitStudentNews(newsItem);
-    if (result === undefined) {
-      this.updateSnackbar('News Posting Failed to Submit');
-    } else {
-      this.updateSnackbar('News Posting Submitted Successfully');
+        // submit the news item and give feedback
+        let result = await newsService.submitStudentNews(newsItem);
+        if (result === undefined) {
+          this.updateSnackbar('News Posting Failed to Submit');
+        } else {
+          this.updateSnackbar('News Posting Submitted Successfully');
+        }
+
+        // close the window and reload to update data
+        // (necessary since data is currently not pulled from render method)
+        this.setState({ openPostActivity: false });
+        window.top.location.reload();
+      });
     }
-
-    // close the window and reload to update data
-    // (necessary since data is currently not pulled from render method)
-    this.setState({ openPostActivity: false });
-    window.top.location.reload();
   }
 
   // This should be the only time we pull from the database

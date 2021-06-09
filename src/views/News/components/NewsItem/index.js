@@ -204,6 +204,11 @@ export default class NewsItem extends Component {
             <CardContent>
               <Typography className="news-content">"{posting.categoryName}"</Typography>
               <Typography className="news-content ">{posting.Body}</Typography>
+              {postingImage === '' ? (
+                {}
+              ) : (
+                <img src={`data:image/jpg;base64,${postingImage}`} alt="News Item" />
+              )}
             </CardContent>
             <Grid container justify="space-evenly">
               {editButton}
