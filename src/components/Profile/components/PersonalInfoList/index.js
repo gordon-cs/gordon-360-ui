@@ -438,7 +438,7 @@ const PersonalInfoList = ({
 
     const disclaimer2 =
     <Typography align="left" className="disclaimer">
-        Private by default, visible only to gordon police
+        Private: visible only to Gordon Police
       </Typography>
 
   return (
