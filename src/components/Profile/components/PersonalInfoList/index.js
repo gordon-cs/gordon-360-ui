@@ -437,16 +437,9 @@ const PersonalInfoList = ({
     ) : null;
 
     const disclaimer2 =
-    !myProf &&
-    (isHomePhonePrivate ||
-      isAddressPrivate ||
-      isMobilePhonePrivate ||
-      isCampusLocationPrivate ||
-      isSpousePrivate) ? (
-      <Typography align="left" className="disclaimer">
+    <Typography align="left" className="disclaimer">
         Private by default, visible only to gordon police
       </Typography>
-    ) : null;
 
   return (
     <Grid item xs={12}>
