@@ -444,7 +444,7 @@ const PersonalInfoList = ({
       isCampusLocationPrivate ||
       isSpousePrivate) ? (
       <Typography align="left" className="disclaimer">
-        Private by request, visible only to gordon police
+        Private by default, visible only to gordon police
       </Typography>
     ) : null;
 
@@ -470,6 +470,7 @@ const PersonalInfoList = ({
             {home}
             {spouse}
             {disclaimer1}
+            {note}
             {emergencyContact1}
             {emergencyRelationship1}
             {emergencyHomePhone1}
@@ -481,7 +482,6 @@ const PersonalInfoList = ({
             {emergencyCellPhone2}
             {emergencyWorkPhone2}
             {disclaimer2}
-            {note}
           </List>
         </CardContent>
       </Card>
