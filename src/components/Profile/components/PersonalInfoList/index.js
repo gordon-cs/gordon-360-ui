@@ -34,6 +34,16 @@ const PersonalInfoList = ({
     Advisors,
     BuildingDescription,
     Country,
+    EmergencyContact1,
+    EmergencyRelationship1,
+    EmergencyHomePhone1,
+    EmergencyCellPhone1,
+    EmergencyWorkPhone1,
+    EmergencyContact2,
+    EmergencyRelationship2,
+    EmergencyHomePhone2,
+    EmergencyCellPhone2,
+    EmergencyWorkPhone2,
     Hall,
     HomeCity,
     HomePhone,
@@ -59,6 +69,7 @@ const PersonalInfoList = ({
   const isOnline = useNetworkStatus();
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
+  const isPolice = (user.getLocalInfo().college_role === 'gordon police') ? true : false;
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -285,7 +296,135 @@ const PersonalInfoList = ({
     </Typography>
   ) : null;
 
-  const disclaimer =
+  const emergencyContact1 = isPolice ? (
+    <ProfileInfoListItem
+      title="Emergency 1 Contact:"
+      contentText={EmergencyContact1}
+      ContentIcon={
+        <Grid container justify="center">
+          <Grid container direction="column" justify="center" alignItems="center">
+          </Grid>
+        </Grid>
+      }
+      contentClass={'private'}
+    />
+  ) : null;
+
+  const emergencyRelationship1 = isPolice ? (
+    <ProfileInfoListItem
+      title="Emergency 1 Relationship:"
+      contentText={EmergencyRelationship1}
+      ContentIcon={
+        <Grid container justify="center">
+          <Grid container direction="column" justify="center" alignItems="center">
+          </Grid>
+        </Grid>
+      }
+      contentClass={'private'}
+    />
+  ) : null;
+
+  const emergencyHomePhone1 = isPolice ? (
+    <ProfileInfoListItem
+      title="Emergency 1 Home Phone:"
+      contentText={
+        <a href={`tel:${EmergencyHomePhone1}`} className="gc360-text-link">
+        {formatPhone(EmergencyHomePhone1)}
+      </a>
+      }
+      contentClass={'private'}
+    />
+  ) : null;
+
+  const emergencyCellPhone1 = isPolice ? (
+    <ProfileInfoListItem
+      title="Emergency 1 Cell Phone:"
+      contentText={
+        <a href={`tel:${EmergencyCellPhone1}`} className="gc360-text-link">
+        {formatPhone(EmergencyCellPhone1)}
+      </a>
+      }
+      contentClass={'private'}
+    />
+  ) : null;
+
+  const emergencyWorkPhone1 = isPolice ? (
+    <ProfileInfoListItem
+      title="Emergency 1 Work Phone:"
+      contentText={
+        <a href={`tel:${EmergencyWorkPhone1}`} className="gc360-text-link">
+        {formatPhone(EmergencyWorkPhone1)}
+      </a>
+      }
+      contentClass={'private'}
+    />
+  ) : null;
+
+  const emergencyContact2 = isPolice ? (
+    <ProfileInfoListItem
+      title="Emergency 2 Contact:"
+      contentText={EmergencyContact2}
+      ContentIcon={
+        <Grid container justify="center">
+          <Grid container direction="column" justify="center" alignItems="center">
+          </Grid>
+        </Grid>
+      }
+      contentClass={'private'}
+    />
+  ) : null;
+
+  const emergencyRelationship2 = isPolice ? (
+    <ProfileInfoListItem
+      title="Emergency 2 Relationship:"
+      contentText={EmergencyRelationship2}
+      ContentIcon={
+        <Grid container justify="center">
+          <Grid container direction="column" justify="center" alignItems="center">
+          </Grid>
+        </Grid>
+      }
+      contentClass={'private'}
+    />
+  ) : null;
+
+  const emergencyHomePhone2 = isPolice ? (
+    <ProfileInfoListItem
+      title="Emergency 2 Home Phone:"
+      contentText={
+        <a href={`tel:${EmergencyHomePhone2}`} className="gc360-text-link">
+        {formatPhone(EmergencyHomePhone2)}
+      </a>
+      }
+      contentClass={'private'}
+    />
+  ) : null;
+
+  const emergencyCellPhone2 = isPolice ? (
+    <ProfileInfoListItem
+      title="Emergency 2 Cell Phone:"
+      contentText={
+        <a href={`tel:${EmergencyCellPhone2}`} className="gc360-text-link">
+        {formatPhone(EmergencyCellPhone2)}
+      </a>
+      }
+      contentClass={'private'}
+    />
+  ) : null;
+
+  const emergencyWorkPhone2 = isPolice ? (
+    <ProfileInfoListItem
+      title="Emergency 2 Work Phone:"
+      contentText={
+        <a href={`tel:${EmergencyWorkPhone2}`} className="gc360-text-link">
+        {formatPhone(EmergencyWorkPhone2)}
+      </a>
+      }
+      contentClass={'private'}
+    />
+  ) : null;
+
+  const disclaimer1 =
     !myProf &&
     (isHomePhonePrivate ||
       isAddressPrivate ||
@@ -294,6 +433,18 @@ const PersonalInfoList = ({
       isSpousePrivate) ? (
       <Typography align="left" className="disclaimer">
         Private by request, visible only to faculty and staff
+      </Typography>
+    ) : null;
+
+    const disclaimer2 =
+    !myProf &&
+    (isHomePhonePrivate ||
+      isAddressPrivate ||
+      isMobilePhonePrivate ||
+      isCampusLocationPrivate ||
+      isSpousePrivate) ? (
+      <Typography align="left" className="disclaimer">
+        Private by request, visible only to gordon police
       </Typography>
     ) : null;
 
@@ -318,8 +469,19 @@ const PersonalInfoList = ({
             {studentID}
             {home}
             {spouse}
+            {disclaimer1}
+            {emergencyContact1}
+            {emergencyRelationship1}
+            {emergencyHomePhone1}
+            {emergencyCellPhone1}
+            {emergencyWorkPhone1}
+            {emergencyContact2}
+            {emergencyRelationship2}
+            {emergencyHomePhone2}
+            {emergencyCellPhone2}
+            {emergencyWorkPhone2}
+            {disclaimer2}
             {note}
-            {disclaimer}
           </List>
         </CardContent>
       </Card>
