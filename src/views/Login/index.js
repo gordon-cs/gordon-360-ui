@@ -10,14 +10,7 @@ import session from 'services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { projectName } from 'project-name';
 
-import {
-  Button,
-  CircularProgress,
-  TextField,
-  Typography,
-  Grid,
-  Fab,
-} from '@material-ui/core';
+import { Button, CircularProgress, TextField, Typography, Grid, Fab } from '@material-ui/core';
 
 export default class Login extends Component {
   constructor(props) {
