@@ -217,11 +217,11 @@ export default class Help extends Component {
                   <CardContent>
                     <Typography variant="body1" component="ul">
                       <li>
-                        360 has been successfully tested on Windows (Edge, Firefox, Chrome), Mac (Safari,
+                        Gordon 360 has been successfully tested on Windows (Edge, Firefox, Chrome), Mac (Safari,
                         Firefox, Chrome), and on Android and iPhone default browsers.
                       </li>
                       <li>
-                        Currently, Gordon 360 is not supported on Internet Explorer.
+                        Gordon 360 is not supported on Internet Explorer.
                       </li>
                     </Typography>
                   </CardContent>

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import DocumentTitle from 'react-document-title';
-import CloseIcon from '@material-ui/icons/Close';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PWAInstructions from 'components/PWAInstructions/index';
 import './login.css';
@@ -9,7 +8,6 @@ import { authenticate } from 'services/auth';
 import storage from 'services/storage';
 import session from 'services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
-import { gordonColors } from 'theme';
 import { projectName } from 'project-name';
 
 import {
@@ -18,8 +16,6 @@ import {
   TextField,
   Typography,
   Grid,
-  Snackbar,
-  IconButton,
   Fab,
 } from '@material-ui/core';
 
@@ -240,55 +236,6 @@ export default class Login extends Component {
               deferredPWAPrompt={this.state.deferredPWAPrompt}
             />
           )}
-
-        <Snackbar /* Internet Explorer popup message */
-          style={{ marginTop: '1rem' }}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-          open={this.isIE}
-          onClose={this.handleCloseSnackbar.bind(this)}
-          ContentProps={{
-            'aria-describedby': 'message-id',
-            style: { backgroundColor: gordonColors.primary.cyan },
-          }}
-          message={
-            <span id="message-id">
-              Whoops! It looks like you're using Internet Explorer. Unfortunately, Gordon 360
-              doesn't support IE. Please use a modern browser like Chrome, Edge, or Firefox.
-            </span>
-          }
-          action={[
-            <Button
-              onClick={() => (window.location.href = 'https://www.google.com/chrome/')}
-              style={{ color: 'white' }}
-            >
-              Get Chrome
-            </Button>,
-            // NOTE: Please uncomment once someone can test that this functions properly
-            // <Button
-            //   onClick={() => (window.location.href = 'https://www.microsoft.com/en-us/edge')}
-            //   style={{ color: 'white' }}
-            // >
-            //   Get Edge
-            // </Button>,
-            <Button
-              onClick={() => (window.location.href = 'https://www.mozilla.org/en-US/firefox/new/')}
-              style={{ color: 'white' }}
-            >
-              Get Firefox
-            </Button>,
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              onClick={this.handleCloseSnackbar.bind(this)}
-            >
-              <CloseIcon />
-            </IconButton>,
-          ]}
-        />
       </div>
     );
   }
