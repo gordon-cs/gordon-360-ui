@@ -16,6 +16,8 @@ const getVersion = () => {
   return version;
 };
 
-export default {
+const versionService = {
   getVersion,
 };
+
+export default versionService;

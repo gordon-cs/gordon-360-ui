@@ -1,67 +1,71 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';
 import GordonLoader from 'components/Loader';
 import activity from 'services/activity';
-import InvolvementStatusList from './components/InvolvementStatusList/index';
-import { Typography, Divider, Card } from '@material-ui/core';
+import session from 'services/session';
+import InvolvementStatusListItem from './components/InvolvementStatusList/index';
+import { Typography, Card, CardHeader } from '@material-ui/core';
+import { NotFoundError } from 'services/error';
 
-export default class InvolvementsStatus extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      InvolvementStatusList: [],
+const InvolvementStatusList = ({ status }) => {
+  const [loading, setLoading] = useState(true);
+  const [involvements, setInvolvements] = useState([]);
+  const [currentSession, setCurrentSession] = useState('');
+
+  useEffect(() => {
+    const loadSession = async () => {
+      const { SessionCode } = await session.getCurrent();
+      setCurrentSession(SessionCode);
     };
-  }
+    loadSession();
+  }, []);
 
-  componentDidMount() {
-    this.loadInvolvementsOfThisStatus();
-  }
-
-  async loadInvolvementsOfThisStatus() {
-    if (this.props.status === 'Open') {
-      this.setState({ loading: true });
-      const InvolvementStatusList = await activity.getOpen(); //Retrieve all open involvements
-      this.setState({ InvolvementStatusList, loading: false });
-    } else if (this.props.status === 'Closed') {
-      this.setState({ loading: true });
-      const InvolvementStatusList = await activity.getClosed(); //Retrieve all closed involvements
-      this.setState({ InvolvementStatusList, loading: false });
-    }
-  }
-
-  render() {
-    const headerStyle = {
-      backgroundColor: gordonColors.primary.blue,
-      color: '#FFF',
-      padding: '10px',
+  useEffect(() => {
+    const loadInvolvements = async () => {
+      try {
+        setLoading(true);
+        if (status === 'Open') {
+          setInvolvements(await activity.getOpen());
+        } else {
+          setInvolvements(await activity.getClosed());
+        }
+      } catch (err) {
+        if (err instanceof NotFoundError) {
+          setInvolvements([]);
+        }
+      } finally {
+        setLoading(false);
+      }
     };
 
-    let content;
-    const { status } = this.props;
+    loadInvolvements();
+  }, [status]);
 
-    if (this.state.loading === true) {
-      content = <GordonLoader />;
-    } else if (this.state.InvolvementStatusList.length > 0) {
-      content = this.state.InvolvementStatusList.map((activity) => (
-        <React.Fragment key={activity.ActivityCode}>
-          <InvolvementStatusList Activity={activity} />
-          <Divider />
-        </React.Fragment>
-      ));
-    } else {
-      content = <Typography variant="h5">No {status} Involvements To Show</Typography>;
-    }
+  const headerStyle = {
+    backgroundColor: gordonColors.primary.blue,
+    color: '#FFF',
+  };
 
-    return (
-      <Card>
-        <div style={headerStyle}>
-          <Typography variant="body2" align="center" style={headerStyle}>
-            {status} Involvements
-          </Typography>
-        </div>
-        {content}
-      </Card>
-    );
-  }
-}
+  return (
+    <Card>
+      <CardHeader style={headerStyle} align="center" title={`${status} Involvements`} />
+      {loading ? (
+        <GordonLoader />
+      ) : involvements.length > 0 ? (
+        involvements.map((involvement) => (
+          <InvolvementStatusListItem
+            key={involvement.ActivityCode}
+            involvement={involvement}
+            session={currentSession}
+          />
+        ))
+      ) : (
+        <Typography align="center" variant="h5">
+          No {status} Involvements To Show
+        </Typography>
+      )}
+    </Card>
+  );
+};
+
+export default InvolvementStatusList;

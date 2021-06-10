@@ -48,9 +48,11 @@ const initialize = () => {
   onPageView();
 };
 
-export default {
+const analyticsService = {
   initialize,
   onError,
   onEvent,
   onPageView,
 };
+
+export default analyticsService;

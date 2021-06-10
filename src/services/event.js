@@ -273,7 +273,7 @@ const makeMatchesFilters = (filters) => (event) => {
   return false;
 };
 
-export default {
+const eventService = {
   getAllEvents,
   getFutureEvents,
   getCLWEvents,
@@ -281,3 +281,5 @@ export default {
   getAllGuestEvents,
   getAttendedChapelEvents,
 };
+
+export default eventService;

@@ -44,7 +44,7 @@ export default class Page404 extends Component {
           </Typography>
         </Grid>
         {/* Gordon mascot image */}
-        <Grid item style={styles.image}>
+        <Grid item align="center" style={styles.image}>
           <img src={mascot} alt="Gordon Mascot" style={styles.mascot}></img>
         </Grid>
         {/* Scottie dog walking across bottom animation */}

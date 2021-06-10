@@ -7,7 +7,7 @@ import membership from 'services/membership';
 
 const RequestSent = ({ member, onCancel }) => {
   const handleCancel = () => {
-    membership.cancelRequest(member.requestID);
+    membership.cancelRequest(member.RequestID);
     onCancel(member); // Updates state of parent component to cause rerender
   };
 

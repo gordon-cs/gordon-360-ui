@@ -277,13 +277,13 @@ const getSubmittedApartmentApplications = async () => {
  * @async
  * @function submitApplication
  * @param {Number} applicationID the application ID number for the desired application
- * @return {Promise.<Boolean>[]} Application details
+ * @return {Promise.<Boolean>} Status of whether the application was successfully marked as submitted
  */
 const submitApplication = async (applicationID) => {
   return await http.put(`housing/apartment/applications/${applicationID}/submit`);
 };
 
-export default {
+const housingService = {
   checkHousingAdmin,
   addHousingAdmin,
   deleteHousingAdmin,
@@ -297,3 +297,5 @@ export default {
   getSubmittedApartmentApplications,
   submitApplication,
 };
+
+export default housingService;

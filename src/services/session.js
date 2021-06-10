@@ -73,10 +73,12 @@ const getTermCode = () => {
   return `${year.toString().substr(-2)}${term}`;
 };
 
-export default {
+const sessionService = {
   get,
   getAll,
   getCurrent,
   getDaysLeft,
   getTermCode,
 };
+
+export default sessionService;

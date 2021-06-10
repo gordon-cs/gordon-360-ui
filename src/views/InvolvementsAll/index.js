@@ -11,7 +11,6 @@ import {
   Select,
   TextField,
 } from '@material-ui/core';
-import { useParams } from 'react-router';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import GordonLoader from 'components/Loader';
 import Requests from './components/Requests';
@@ -21,7 +20,7 @@ import sessionService from 'services/session';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import './involvements-all.css';
 
-const InvolvementsAll = ({ authentication, history }) => {
+const InvolvementsAll = ({ location, authentication, history }) => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [involvements, setInvolvements] = useState([]);
   const [allInvolvements, setAllInvolvements] = useState([]);
@@ -34,7 +33,7 @@ const InvolvementsAll = ({ authentication, history }) => {
   const [types, setTypes] = useState([]);
   const isOnline = useNetworkStatus();
 
-  const { session: sessionFromURL } = useParams();
+  const sessionFromURL = new URLSearchParams(location.search).get('session');
 
   useEffect(() => {
     const loadPage = async () => {
@@ -43,16 +42,17 @@ const InvolvementsAll = ({ authentication, history }) => {
       if (sessionFromURL) {
         setSelectedSession(sessionFromURL);
       } else {
-        const { SessionCode } = await sessionService.getCurrent();
-        setCurrentAcademicSession(currentAcademicSession || SessionCode);
+        const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
+        setCurrentAcademicSession(currentSessionCode);
+
         const [involvements, sessions] = await Promise.all([
-          involvementService.getAll(SessionCode),
+          involvementService.getAll(currentSessionCode),
           sessionService.getAll(),
         ]);
 
         if (involvements.length === 0) {
           let IndexOfCurrentSession = sessions.findIndex(
-            (session) => session.SessionCode === SessionCode,
+            (session) => session.SessionCode === currentSessionCode,
           );
 
           for (let k = IndexOfCurrentSession + 1; k < sessions.length; k++) {
@@ -64,26 +64,22 @@ const InvolvementsAll = ({ authentication, history }) => {
             }
           }
         } else {
-          setSelectedSession(SessionCode);
+          setSelectedSession(currentSessionCode);
         }
       }
-      setLoading(false);
     };
     loadPage();
-  }, [currentAcademicSession, authentication, sessionFromURL]);
+  }, [authentication, sessionFromURL]);
 
-  useEffect(() => {
-    if (selectedSession) {
-      history.push(`?session=${selectedSession}`);
-    }
-  }, [history, selectedSession]);
+  const handleSelectSession = async (value) => {
+    setSelectedSession(value);
+    history.push(`?session=${value}`);
+  };
 
   useEffect(() => {
     const updateInvolvements = async () => {
       setLoading(true);
-      const allInvolvements = await involvementService.getAll(selectedSession);
-      setInvolvements(involvementService.filter(allInvolvements, type, search));
-      setAllInvolvements(allInvolvements);
+      setAllInvolvements(await involvementService.getAll(selectedSession));
       setTypes(await involvementService.getTypes(selectedSession));
       if (authentication) {
         const { id } = await userService.getLocalInfo();
@@ -94,8 +90,10 @@ const InvolvementsAll = ({ authentication, history }) => {
       setLoading(false);
     };
 
-    updateInvolvements();
-  }, [selectedSession, authentication, type, search]);
+    if (selectedSession) {
+      updateInvolvements();
+    }
+  }, [selectedSession, authentication]);
 
   useEffect(() => {
     setInvolvements(involvementService.filter(allInvolvements, type, search));
@@ -103,15 +101,22 @@ const InvolvementsAll = ({ authentication, history }) => {
 
   let myInvolvementsHeadingText;
   let myInvolvementsNoneText;
-  if (selectedSession === currentAcademicSession) {
+  let involvementSessionText = selectedSession
+    ? sessions.find((s) => s.SessionCode === selectedSession)?.SessionDescription
+    : '';
+  if (involvementSessionText.includes('Academic Year')) {
+    involvementSessionText = involvementSessionText.substring(
+      0,
+      involvementSessionText.indexOf('Academic Year'),
+    );
+  }
+  if (selectedSession === currentAcademicSession && selectedSession !== '') {
     myInvolvementsHeadingText = 'Current';
     myInvolvementsNoneText =
-      "It looks like you're not currently a member of any Involvements. Get connected below!";
+      "It looks like you're not currently a member of any involvements. Get connected below!";
   } else {
-    let involvementDescription = sessions.find((s) => s.SessionCode === selectedSession)
-      ?.SessionDescription;
-    myInvolvementsHeadingText = involvementDescription;
-    myInvolvementsNoneText = 'No Involvements found for ' + involvementDescription;
+    myInvolvementsHeadingText = involvementSessionText;
+    myInvolvementsNoneText = 'No personal involvements found for this term';
   }
 
   return (
@@ -130,10 +135,10 @@ const InvolvementsAll = ({ authentication, history }) => {
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <FormControl fullWidth>
-              <InputLabel htmlFor="activity-session">Session</InputLabel>
+              <InputLabel htmlFor="activity-session">Term</InputLabel>
               <Select
                 value={selectedSession}
-                onChange={(e) => setSelectedSession(e.target.value)}
+                onChange={(e) => handleSelectSession(e.target.value)}
                 input={<Input id="activity-session" />}
               >
                 {(isOnline
@@ -149,7 +154,7 @@ const InvolvementsAll = ({ authentication, history }) => {
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <FormControl fullWidth>
-              <InputLabel htmlFor="activity-type">Type of Involvement</InputLabel>
+              <InputLabel htmlFor="activity-type">Type</InputLabel>
               <Select
                 value={type}
                 onChange={(event) => setType(event.target.value)}
@@ -169,39 +174,38 @@ const InvolvementsAll = ({ authentication, history }) => {
         </Grid>
       </Grid>
 
-      {isOnline && authentication && (
+      {isOnline && authentication && <Requests />}
+
+      {/* My Involvements (private) */}
+      {authentication && (
         <Grid item xs={12} lg={8}>
-          <Requests />
+          <Card>
+            <CardHeader
+              title={`My ${myInvolvementsHeadingText} Involvements`}
+              className="involvements-header"
+            />
+            <CardContent>
+              {loading ? (
+                <GordonLoader />
+              ) : (
+                <InvolvementsGrid
+                  involvements={myInvolvements}
+                  sessionCode={selectedSession}
+                  noInvolvementsText={myInvolvementsNoneText}
+                />
+              )}
+            </CardContent>
+          </Card>
         </Grid>
       )}
 
-      {authentication && (
-        <>
-          <Grid item xs={12} lg={8}>
-            <Card>
-              <CardHeader
-                title={`My ${myInvolvementsHeadingText} Involvements`}
-                className="involvements-header"
-              />
-              <CardContent>
-                {loading ? (
-                  <GordonLoader />
-                ) : (
-                  <InvolvementsGrid
-                    involvements={myInvolvements}
-                    sessionCode={selectedSession}
-                    noInvolvementsText={myInvolvementsNoneText}
-                  />
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
-        </>
-      )}
-
+      {/* All Involvements (public) */}
       <Grid item xs={12} lg={8}>
         <Card>
-          <CardHeader title="All Involvements" className="involvements-header" />
+          <CardHeader
+            title={`${involvementSessionText} Involvements`}
+            className="involvements-header"
+          />
           <CardContent>
             {loading ? (
               <GordonLoader />

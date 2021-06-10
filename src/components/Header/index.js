@@ -94,35 +94,31 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
         <GordonDialogBox
           open={dialog}
           onClose={() => setDialog(null)}
-          labelledby={'offline-dialog'}
-          describedby={'feature-deactivated'}
           title={'Offline Mode'}
-          text={
-            'This feature is unavailable offline. Please reconnect to internet to access this feature.'
-          }
           buttonClicked={() => setDialog(null)}
           buttonName={'Okay'}
-        />
+        >
+          This feature is unavailable offline. Please reconnect to internet to access this feature.
+        </GordonDialogBox>
       );
     } else if (dialog === 'unauthorized') {
       return (
         <GordonDialogBox
           open={dialog}
           onClose={() => setDialog(null)}
-          labelledby={'unauthorized-dialog'}
-          describedby={'feature-unavailable'}
           title={'Credentials Needed'}
-          text={`This feature is unavailable while not logged in. Please log in to access it.`}
           buttonClicked={() => setDialog(null)}
           buttonName={'Okay'}
-        />
+        >
+          This feature is unavailable while not logged in. Please log in to access it.
+        </GordonDialogBox>
       );
     } else {
       return null;
     }
   };
 
-  const disablableTab = (name, icon) => {
+  const requiresAuthTab = (name, icon) => {
     if (!isOnline) {
       return (
         <Tab
@@ -218,9 +214,9 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
                 component={ForwardNavLink}
                 to="/events"
               />
-              {disablableTab('People', <PeopleIcon />)}
-              {/* {disablableTab('Timesheets', WorkIcon)} */}
-              {disablableTab('Wellness', <WellnessIcon />)}
+              {requiresAuthTab('People', <PeopleIcon />)}
+              {/* {requiresAuthTab('Timesheets', WorkIcon)} */}
+              {requiresAuthTab('Wellness', <WellnessIcon />)}
             </Tabs>
           </div>
 
