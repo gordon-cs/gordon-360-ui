@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
-import CheckInQuestion from 'components/CheckInQuestion';
+//import CheckInQuestion from 'components/CheckInQuestion';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
@@ -66,14 +66,14 @@ const Home = ({ authentication, onLogIn }) => {
 
   const loadPage = async () => {
     setLoading(true);
-    const [{ PersonType }, { IsValid }] = await Promise.all([
+    const [{ PersonType }, { IsValid } /*{ IsCheckedIn }*/] = await Promise.all([
       user.getProfileInfo(),
       wellness.getStatus(),
       //checkIn.getStatus(),
     ]);
     setPersonType(PersonType);
     setHasAnswered(IsValid);
-    setCheckedIn(true)
+    setCheckedIn(true);
     setLoading(false);
   };
 
@@ -84,7 +84,7 @@ const Home = ({ authentication, onLogIn }) => {
   } else if (networkStatus === 'online' && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else if (networkStatus === 'online' && !hasCheckedIn) {
-    return <CheckInQuestion setStatus={() => setCheckedIn(true)} />;
+    return; //<CheckInQuestion setStatus={() => setCheckedIn(true)} />;
   } else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 

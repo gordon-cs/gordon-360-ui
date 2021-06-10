@@ -4,69 +4,76 @@
  * @module AcademicCheckIn
  */
 
- import http from './http';
- import user from './user';
+import http from './http';
+import user from './user';
 
- /**
-  * Enum of the AcademicCheckIn Status
-  * @readonly
-  * @enum {string}
-  */
- export const Status = {
-   /** On campus and confirmed checkIn */
-   ONCAMPUS: 'ONCAMPUS',
-   /** Not yet arrived on campus for semester */
-   NOTONCAMPUS: 'NOTONCAMPUS',
- };
+/**
+ * Enum of the AcademicCheckIn Status
+ * @readonly
+ * @enum {string}
+ */
+export const Status = {
+  /** On campus and confirmed check in */
+  CHECKEDIN: 'CHECKEDIN',
+  /** Not yet completed check in */
+  NOTCHECKEDIN: 'NOTCHECKEDIN',
+  /** User has started check in and is on the emergency contact step */
+  EMERGENCYCONTACT: 'EMERGENCYCONTACT',
+  /** User has started check in and is on the phone number step */
+  PHONENUM: 'PHONENUM',
+  /** User has started check in and is on the privacy agreement step */
+  PRIVACYINFO: 'PRIVACYINFO',
+  /** User has started check in and is on the race question step */
+  RACEQUESTION: 'RACEQUESTION',
+};
 
+/**
+ * @global
+ * @typedef academicCheckInStatus
+ * @property {Status} Status The user's status
+ * @property {Date} Created when the status was created
+ * @property {boolean} IsValid whether the status has expired
+ *
+ */
 
- /**
-  * @global
-  * @typedef academicCheckInStatus
-  * @property {Status} Status The user's status
-  * @property {Date} Created when the status was created
-  * @property {boolean} IsValid whether the status has expired
-  *
-  */
+/**
+ * @global
+ * @typedef academicCheckInQuestion
+ * @property {string} academicCheckInQuestion the text content of the question
+ * @property {string} yesPrompt the text disclaimer for a positive answer
+ * @property {string} noPrompt the text disclaimer for a negative answer
+ *
+ */
 
- /**
-  * @global
-  * @typedef academicCheckInQuestion
-  * @property {string} academicCheckInQuestion the text content of the question
-  * @property {string} yesPrompt the text disclaimer for a positive answer
-  * @property {string} noPrompt the text disclaimer for a negative answer
-  *
-  */
+/** Returns current status of student
+ *
+ * @returns {Promise<AcademicCheckInStatus>} Response
+ */
+const getStatus = () => {
+  return http.get('academicCheckIn');
+};
 
- /** Returns current status of student
-  *
-  * @returns {Promise<AcademicCheckInStatus>} Response
-  */
- const getStatus = () => {
-   return http.get('academicCheckIn');
- };
-
- /** Adds answer to the checkIn question to the back end
+/** Adds answer to the checkIn question to the back end
  *
  * @param {Status} status status to be recorded
  * @return {Promise<AcademicCheckInStatus>} The status that was posted, if successful
  */
 const postAnswer = (status) => {
-    try {
-      return http.post('academicCheckIn', status);
-    } catch (error) {
-      return console.log(error);
-    }
-  };
+  try {
+    return http.post('academicCheckIn', status);
+  } catch (error) {
+    return console.log(error);
+  }
+};
 
 /** Returns questions to be displayed in the UI
  * Note: This may not be neccessary for CheckIn, probably will remove
  * @returns {Promise<AcademicCheckInQuestion>} list of questions from backend
  */
- const getQuestion = async () => {
-    const question = await http.get('checkIn/question');
-    return formatQuestion(question);
-  };
+const getQuestion = async () => {
+  const question = await http.get('checkIn/question');
+  return formatQuestion(question);
+};
 
 /** Formats the checkIn question and answer prompts for display
  *
@@ -79,31 +86,31 @@ const postAnswer = (status) => {
  *  Note: If above is removed, will remove this function as well
  */
 const formatQuestion = async (question) => {
-    const { FirstName, LastName } = await user.getProfileInfo();
-    /* eslint-disable no-template-curly-in-string */
-    question.question = question.question
+  const { FirstName, LastName } = await user.getProfileInfo();
+  /* eslint-disable no-template-curly-in-string */
+  question.question = question.question
     .replace('${user.FirstName}', `${FirstName}`)
     .replace('${user.LastName}', `${LastName}`);
 
-    let [yesPrompt, link] = question.yesPrompt.split('https://');
+  let [yesPrompt, link] = question.yesPrompt.split('https://');
 
-    question.yesPrompt = yesPrompt
+  question.yesPrompt = yesPrompt
     .replace('${user.FirstName}', `${FirstName}`)
     .replace('${user.LastName}', `${LastName}`);
-    question.link = 'https://' + link;
+  question.link = 'https://' + link;
 
-    question.noPrompt = question.noPrompt
+  question.noPrompt = question.noPrompt
     .replace('${user.FirstName}', `${FirstName}`)
     .replace('${user.LastName}', `${LastName}`);
-    /* eslint-enable no-template-curly-in-string */
+  /* eslint-enable no-template-curly-in-string */
 
-    return question;
+  return question;
 };
 
 const checkInService = {
-    getStatus,
-    getQuestion,
-    postAnswer,
-  };
+  getStatus,
+  getQuestion,
+  postAnswer,
+};
 
-  export default checkInService;
+export default checkInService;
