@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Doughnut, defaults } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 
 import { gordonColors } from 'theme';
 import session from 'services/session';
@@ -45,7 +45,6 @@ export default class DaysLeft extends Component {
       throw this.state.error;
     }
 
-    defaults.global.legend.display = false;
     let content;
     if (this.state.loading === true) {
       content = <GordonLoader />;
@@ -57,11 +56,7 @@ export default class DaysLeft extends Component {
         labels: ['Days Finished', 'Days Remaining'],
       };
       const options = {
-        options: {
-          legend: {
-            display: false,
-          },
-        },
+        legend: false,
       };
       content = (
         <div>
@@ -77,7 +72,7 @@ export default class DaysLeft extends Component {
               </Typography>
             </Grid>
           </Grid>
-          <Doughnut data={data} height={175} options={options} />
+          <Doughnut data={data} height={175} options={options}/>
           <div
             style={{
               marginTop: '1rem',

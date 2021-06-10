@@ -3,7 +3,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import parseISO from 'date-fns/parseISO';
 import {
   Button,
-  Grid,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
   Typography,
   Divider,
   Accordion,
@@ -52,53 +55,41 @@ const RequestReceived = ({ involvement }) => {
       </AccordionSummary>
       <AccordionDetails className="requests-received-list">
         {requests?.length > 0 ? (
-          requests
-            .sort((a, b) => parseISO(b.DateSent) - parseISO(a.DateSent))
-            .map((request) => (
-              <Grid key={request.RequestID} container direction="row" spacing={2}>
-                <Grid item xs={4}>
-                  <Typography>
-                    {request.FirstName} {request.LastName}
-                  </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography>
-                    <span className="weak">{membershipService.getDiffDays(request.DateSent)}</span>
-                  </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography>{request.ParticipationDescription} </Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography>{request.CommentText}</Typography>
-                </Grid>
-                <Grid item xs={8} container spacing={1} justify="flex-end">
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      className="deny-request-button"
-                      onClick={() => onDeny(request.RequestID)}
-                      size="small"
-                    >
-                      Deny
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => onApprove(request.RequestID)}
-                      size="small"
-                    >
-                      Approve
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12}>
+          <List>
+            {requests
+              .sort((a, b) => parseISO(b.DateSent) - parseISO(a.DateSent))
+              .map((request) => (
+                <React.Fragment key={request.RequestID}>
+                  <ListItem key={request.RequestID}>
+                    <ListItemText
+                      primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
+                      secondary={`${membershipService.getDiffDays(request.DateSent)} - ${
+                        request.CommentText
+                      }`}
+                    />
+
+                    <ListItemSecondaryAction>
+                      <Button
+                        className="deny-request-button"
+                        onClick={() => onDeny(request.RequestID)}
+                        size="small"
+                      >
+                        Deny
+                      </Button>
+                      &emsp;
+                      <Button
+                        color="primary"
+                        onClick={() => onApprove(request.RequestID)}
+                        size="small"
+                      >
+                        Approve
+                      </Button>
+                    </ListItemSecondaryAction>
+                  </ListItem>
                   <Divider />
-                </Grid>
-              </Grid>
-            ))
+                </React.Fragment>
+              ))}
+          </List>
         ) : (
           <Typography variant="body2" className="message_text">
             No Requests to Show

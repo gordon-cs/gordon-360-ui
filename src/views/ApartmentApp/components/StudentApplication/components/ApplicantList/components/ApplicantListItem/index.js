@@ -20,9 +20,16 @@ import user from 'services/user';
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
 
-// Based off src/views/PeopleSearch/components/PeopleSearchResult
-// but using props.profile of type StudentProfileInfo
-// rather than using Person of type PeopleSearchResult
+/**
+ * Renders the list item for the apartment applicant list
+ * @param {Object} props The React component props
+ * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {StudentProfileInfo} props.profile The StudentProfileInfo of the applicant
+ * @param {Boolean} props.isApplicationEditor Boolean indicating whether this list item corresponds to the application editor
+ * @param {CallbackFcn} props.onChangeEditor Callback for change editor button
+ * @param {CallbackFcn} props.onApplicantRemove Callback for remove applicant button
+ * @returns {JSX.Element} JSX Element for the applicant list item
+ */
 const ApplicantListItem = ({
   disabled,
   profile,
@@ -32,17 +39,10 @@ const ApplicantListItem = ({
 }) => {
   const [avatar, setAvatar] = useState(null);
   const [hasNickName, setHasNickname] = useState(false);
-  const [personClass, setPersonClass] = useState(profile.Class);
 
   useEffect(() => {
     loadAvatar(profile);
     setHasNickname(profile.FirstName !== profile.NickName && profile.NickName !== '');
-    if (String(profile.PersonType).includes('stu') && profile.Class !== undefined) {
-      setPersonClass(profile.Class);
-    } else {
-      // Technically, this case should never happen because the list does not allow the user to add a non-student to the applicant list
-      setPersonClass('');
-    }
   }, [profile]);
 
   /**
@@ -65,29 +65,6 @@ const ApplicantListItem = ({
     }
   };
 
-  /**
-   * Callback for changing the application editor
-   * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
-   */
-  const handleChangeEditor = () => {
-    // Make sure the chosen profile was not null
-    if (profile) {
-      // Send the selected profile to the parent component
-      onChangeEditor(profile);
-    }
-  };
-
-  /**
-   * Callback for applicant list remove button
-   */
-  const handleRemove = () => {
-    // Make sure the chosen profile was not null
-    if (profile?.AD_Username) {
-      // Send the selected profile to the parent component
-      onApplicantRemove(profile.AD_Username);
-    }
-  };
-
   const displayName = hasNickName
     ? `${profile.FirstName} ${profile.LastName} (${profile.NickName})`
     : `${profile.FirstName} ${profile.LastName}`;
@@ -99,7 +76,7 @@ const ApplicantListItem = ({
         component={Link}
         target="_blank"
         to={`/profile/${profile.AD_Username}`}
-        className={'list-item'}
+        className="list-item"
       >
         <ListItemAvatar>
           {avatar ? (
@@ -112,7 +89,11 @@ const ApplicantListItem = ({
         </ListItemAvatar>
         <Grid container alignItems="center" spacing={1}>
           <Grid item xs={8} sm>
-            <ListItemText primary={displayName} secondary={personClass} className={'list-item'} />
+            <ListItemText
+              primary={displayName}
+              secondary={profile.Class ?? ''}
+              className="list-item"
+            />
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
@@ -121,7 +102,7 @@ const ApplicantListItem = ({
               <IconButton
                 aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
                 disabled={isApplicationEditor || disabled}
-                onClick={handleChangeEditor}
+                onClick={() => profile && onChangeEditor?.(profile)}
               >
                 {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
               </IconButton>
@@ -130,7 +111,7 @@ const ApplicantListItem = ({
               <IconButton
                 aria-label="remove-applicant"
                 disabled={isApplicationEditor || disabled}
-                onClick={handleRemove}
+                onClick={() => profile?.AD_Username && onApplicantRemove?.(profile.AD_Username)}
               >
                 <ClearIcon />
               </IconButton>

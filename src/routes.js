@@ -1,7 +1,6 @@
 import About from './views/About';
 import InvolvementsAll from './views/InvolvementsAll';
-//import ActivityEdit from './views/ActivityEdit';
-import ActivityProfile from './views/ActivityProfile';
+import InvolvementProfile from './views/InvolvementProfile';
 import Home from './views/Home';
 import WellnessCheck from './views/WellnessCheck';
 import ApartmentApp from './views/ApartmentApp';
@@ -22,7 +21,7 @@ import News from './views/News';
 import Page404 from './views/Page404';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
-export default [
+const routes = [
   {
     name: 'Home',
     path: '/',
@@ -46,8 +45,8 @@ export default [
   },
   {
     name: 'Involvement Profile',
-    path: '/activity/:sessionCode/:activityCode',
-    component: ActivityProfile,
+    path: '/activity/:sessionCode/:involvementCode',
+    component: InvolvementProfile,
   },
   {
     name: 'Involvements',
@@ -130,3 +129,5 @@ export default [
     component: Page404,
   },
 ];
+
+export default routes;

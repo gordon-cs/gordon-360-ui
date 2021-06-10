@@ -154,7 +154,7 @@ const deleteMySchedule = (eventID) => {
   return http.del(`myschedule/${eventID}`);
 };
 
-export default {
+const myScheduleService = {
   getMyScheduleEventId,
   getMySchedule,
   makeMySchedule,
@@ -162,3 +162,5 @@ export default {
   updateMySchedule,
   deleteMySchedule,
 };
+
+export default myScheduleService;

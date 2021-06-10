@@ -53,9 +53,7 @@ import http from './http';
  * @return {Promise<any>} Response
  */
 function addMembership(data) {
-  return http.post('memberships', data).catch((reason) => {
-    console.log(reason);
-  });
+  return http.post('memberships', data);
 }
 
 /**
@@ -272,9 +270,7 @@ const remove = (membershipID) => {
  * @return {Promise<Object>} Response body
  */
 function requestMembership(data) {
-  return http.post(`requests`, data).catch((reason) => {
-    console.log(reason);
-  });
+  return http.post(`requests`, data);
 }
 
 /**
@@ -309,7 +305,7 @@ const toggleGroupAdmin = async (membershipID, data) => {
   return await http.put(`memberships/${membershipID}/group-admin`, data);
 };
 
-export default {
+const membershipService = {
   addMembership,
   approveRequest,
   checkAdmin,
@@ -332,3 +328,5 @@ export default {
   toggleGroupAdmin,
   toggleMembershipPrivacy,
 };
+
+export default membershipService;
