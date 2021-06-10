@@ -32,12 +32,6 @@ export default class Login extends Component {
   }
 
   componentDidMount() {
-    this.isIE = false;
-    let ua = navigator.userAgent;
-    if (ua.indexOf('MSIE ') > -1 || ua.indexOf('Trident') > -1) {
-      this.isIE = true;
-    }
-
     // A window event listener to see if the browser has the PWA quick installation prompt available
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -142,16 +136,8 @@ export default class Login extends Component {
       }
       this.props.onLogIn();
     } catch (err) {
-      this.setState({ showMessageSnackbar: false });
       this.setState({ error: err.message, loading: false });
     }
-  }
-
-  handleCloseSnackbar(event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    this.setState({ showMessageSnackbar: false });
   }
 
   render() {
