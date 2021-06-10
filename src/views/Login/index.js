@@ -1,129 +1,78 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
+import PropTypes from 'prop-types';
+import { Button, CircularProgress, TextField, Typography, Grid, Fab } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PWAInstructions from 'components/PWAInstructions/index';
-import './login.css';
 import { authenticate } from 'services/auth';
 import storage from 'services/storage';
 import session from 'services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import { projectName } from 'project-name';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import './login.css';
+import { ga } from 'react-ga';
 
-import { Button, CircularProgress, TextField, Typography, Grid, Fab } from '@material-ui/core';
+const Login = ({ onLogIn }) => {
+  const isOnline = useNetworkStatus();
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [openPWAInstructions, setOpenPWAInstructions] = useState(false);
+  const [showPWALink, setShowPWALink] = useState(false);
+  const [deferredPWAPrompt, setDeferredPWAPrompt] = useState();
 
-export default class Login extends Component {
-  constructor(props) {
-    super(props);
-
-    this.handleChange = this.handleChange.bind(this);
-    this.logIn = this.logIn.bind(this);
-
-    this.state = {
-      error: null,
-      loading: false,
-      password: '',
-      username: '',
-      openPWAInstructions: false,
-      showPWALink: false,
-      deferredPWAPrompt: null,
-      network: 'online',
-    };
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     // A window event listener to see if the browser has the PWA quick installation prompt available
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
-      this.setState({ deferredPWAPrompt: e });
+      setDeferredPWAPrompt(e);
     });
 
     // A window event listener to see if the PWA was installed
-    window.addEventListener('appinstalled', (evt) => {
+    window.addEventListener('appinstalled', () => {
       // Exits out the PWA Installation dialog box if already opened
-      this.setState({ openPWAInstructions: false, showPWALink: false });
+      setOpenPWAInstructions(false);
+      setShowPWALink(false);
     });
 
-    // A window event listener that checks to see if the page was loaded as an installed PWA
-    // or through a regular browser. If it was loaded through Gordon 360's PWA, the install button
-    // for Gordon 360 will not appear. Otherwise, it will
-    window.addEventListener('DOMContentLoaded', () => {
-      let loadedThroughPWA = false;
-      if (navigator.standalone) {
-        loadedThroughPWA = true;
-      }
-      if (window.matchMedia('(display-mode: standalone)').matches) {
-        loadedThroughPWA = true;
-      }
-      if (loadedThroughPWA) {
-        this.setState({ showPWALink: false, openPWAInstructions: false });
-      } else {
-        this.setState({ showPWALink: true });
-      }
-    });
-
-    /* Used to re-render PWA installation button. The PWA installation button should only show
-     * when the user is online
-     */
-    window.addEventListener('message', (event) => {
-      if (
-        event.data === 'online' &&
-        this.state.network === 'offline' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'online' });
-      } else if (
-        event.data === 'offline' &&
-        this.state.network === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        this.setState({ network: 'offline' });
-      }
-    });
-
-    let network;
-    /* Attempts to get the network status from local storage.
-     * If not found, the default value is online
-     */
-    try {
-      network = storage.get('network-status');
-    } catch (error) {
-      // Defaults the network to online if not found in local storage
-      network = 'online';
+    let displayMode;
+    if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+      // if loaded through PWA
+      displayMode = 'standalone';
+      setShowPWALink(false);
+      setOpenPWAInstructions(false);
+    } else {
+      // otherwise show install button for PWA
+      displayMode = 'browser';
+      setShowPWALink(true);
     }
-    // Saves the network's status to this component's state
-    this.setState({ network });
-  }
+    // Google Analytics to track PWA usage
+    ga('set', 'dimension1', displayMode)
 
-  componentWillUnmount() {
     // Removes all events listerners that were invoked in this component
-    window.removeEventListener('beforeinstallprompt', () => {});
-    window.removeEventListener('appinstalled', () => {});
-    window.removeEventListener('DOMContentLoaded', () => {});
-    window.removeEventListener('DOMContentLoaded', () => {});
-  }
-
-  handleChange(prop) {
-    return (event) => {
-      this.setState({ [prop]: event.target.value });
+    return function cleanupListener() {
+      window.removeEventListener('beforeinstallprompt', () => {});
+      window.removeEventListener('appinstalled', () => {});
     };
-  }
+  }, []);
 
-  async logIn(event) {
+  const logIn = async (event) => {
     event.preventDefault();
-    this.setState({ loading: true, error: null });
+    setLoading(true);
+    setError(null);
 
     try {
-      await authenticate(this.state.username, this.state.password);
+      await authenticate(username, password);
 
       /* Checks to see if the Service Worker API is available before attempting to access it
        *  This is important because if the API is not available, the site will load
        *  but not allow you to login due to the error "undefined is not a function"
        */
       if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-        // Sends the token, current term code, and a message to the service worker to update
-        // the cache
+        // Sends the token, current term code, and a message to the service worker to update cache
         navigator.serviceWorker.controller.postMessage({
           message: 'update-cache-files',
           token: storage.get('token'),
@@ -134,92 +83,86 @@ export default class Login extends Component {
         // Saves the network state as online in local storage
         localStorage.setItem('network-status', JSON.stringify('online'));
       }
-      this.props.onLogIn();
+      onLogIn();
     } catch (err) {
-      this.setState({ error: err.message, loading: false });
+      setError(err.message);
+      setLoading(false);
     }
-  }
+  };
 
-  render() {
-    return (
-      <div className="login">
-        <DocumentTitle title={`Login | ${projectName}`} />
-        <Grid container direction="column" className="container">
-          <img className="login-img" src={GordonLogoVerticalWhite} alt={`${projectName}`} />
-          <form onSubmit={this.logIn}>
-            <TextField
-              id="username"
-              label="Username"
-              placeholder="firstname.lastname"
-              autoComplete="username"
-              value={this.state.username}
-              onChange={this.handleChange('username')}
-              margin="normal"
-              fullWidth
-              autoFocus
-            />
-            <TextField
-              id="password"
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-              value={this.state.password}
-              onChange={this.handleChange('password')}
-              margin="normal"
-              fullWidth
-            />
-            <Typography className="error" variant="body2" color="error">
-              {this.state.error}
-            </Typography>
-            <Grid container justify="center">
-              <Button
-                variant="contained"
-                className="submit-button"
-                type="submit"
-                color="primary"
-                disabled={!this.state.username || !this.state.password || this.state.loading}
-              >
-                {!this.state.loading && 'Log in'}
-                {this.state.loading && <CircularProgress size={24} />}
-              </Button>
-            </Grid>
-          </form>
-        </Grid>
-
-        {this.state.network === 'online' && this.state.showPWALink && (
-          <Grid
-            container
-            justify="center"
-            style={{ margin: '0.5rem' }}
-            onClick={() => {
-              this.setState({ openPWAInstructions: true });
-            }}
-          >
-            <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-              <Fab variant="extended" color="primary">
-                <GetAppIcon />
-                <Typography variant="subtitle1">Install Gordon 360</Typography>
-              </Fab>
-            </Grid>
+  return (
+    <div className="login">
+      <DocumentTitle title={`Login | ${projectName}`} />
+      <Grid container direction="column" className="container">
+        <img className="login-img" src={GordonLogoVerticalWhite} alt={`${projectName}`} />
+        <form onSubmit={(e) => logIn(e)}>
+          <TextField
+            id="username"
+            label="Username"
+            placeholder="firstname.lastname"
+            autoComplete="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            margin="normal"
+            fullWidth
+            autoFocus
+          />
+          <TextField
+            id="password"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            margin="normal"
+            fullWidth
+          />
+          <Typography className="error" variant="body2" color="error">
+            {error}
+          </Typography>
+          <Grid container justify="center">
+            <Button
+              variant="contained"
+              className="submit-button"
+              type="submit"
+              color="primary"
+              disabled={!username || !password || loading}
+            >
+              {loading ? <CircularProgress size={24} /> : 'Log in'}
+            </Button>
           </Grid>
-        )}
+        </form>
+      </Grid>
 
-        {this.state.network === 'online' &&
-          this.state.showPWALink &&
-          this.state.openPWAInstructions && (
-            <PWAInstructions
-              open={this.state.openPWAInstructions}
-              handleDisplay={() => {
-                this.setState({ openPWAInstructions: !this.state.openPWAInstructions });
-              }}
-              deferredPWAPrompt={this.state.deferredPWAPrompt}
-            />
-          )}
-      </div>
-    );
-  }
-}
+      {isOnline && showPWALink && (
+        <Grid
+          container
+          justify="center"
+          style={{ margin: '0.5rem' }}
+          onClick={() => setOpenPWAInstructions(true)}
+        >
+          <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
+            <Fab variant="extended" color="primary">
+              <GetAppIcon />
+              <Typography variant="subtitle1">Install Gordon 360</Typography>
+            </Fab>
+          </Grid>
+        </Grid>
+      )}
+
+      {isOnline && showPWALink && openPWAInstructions && (
+        <PWAInstructions
+          open={openPWAInstructions}
+          handleDisplay={() => setOpenPWAInstructions(!openPWAInstructions)}
+          deferredPWAPrompt={deferredPWAPrompt}
+        />
+      )}
+    </div>
+  );
+};
 
 Login.propTypes = {
   onLogIn: PropTypes.func.isRequired,
 };
+
+export default Login;
