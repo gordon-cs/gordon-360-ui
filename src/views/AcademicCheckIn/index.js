@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import AcademicCheckInWelcome from 'views/AcademicCheckIn/components/AcademicCheckInWelcome';
 import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyContactUpdate';
-import { Button } from '@material-ui/core';
-
+import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
+import { Button, Grid, Card, CardHeader } from '@material-ui/core';
+import { checkInStatus } from 'services/checkIn';
+import './index.css';
 const AcademicCheckIn = () => {
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
 
   const getSteps = () => {
     return [
@@ -43,35 +45,49 @@ const AcademicCheckIn = () => {
 
   const handleSubmit = () => {
     alert(
-      '🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️Skiddadle Skidoodle your dick is now a noodle🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️🧙‍♂️',
+      `🧙‍♂️ \n
+      FirstName: ${values.firstname1}`,
     );
   };
 
   return (
-    <div>
-      {activeStep === 0 && <AcademicCheckInWelcome handleChange={handleChange} />}
+    <Grid container justify="center" spacing={2}>
+      <Card minWidth={4000}>
+        <CardHeader title="Academic Check In" className="checkIn-header" />
+        <Grid item xs={12} md={8} direction="row" spacing={10}>
+          <Grid container justify="center" alignItems="center">
+            {activeStep === 0 && <AcademicCheckInWelcome handleChange={handleChange} />}
 
-      {activeStep === 1 && <EmergencyContactUpdate values={values} handleChange={handleChange} />}
-      <Button disabled={activeStep === 0} variant="contained" onClick={handlePrev}>
-        Back
-      </Button>
+            {activeStep === 1 && (
+              <EmergencyContactUpdate values={values} handleChange={handleChange} />
+            )}
 
-      <Button
-        variant="contained"
-        onClick={handleNext}
-        style={activeStep === steps.length ? { display: 'none' } : {}}
-      >
-        Next
-      </Button>
+            {activeStep === 2 && <UpdatePhone values={values} handleChange={handleChange} />}
+            <Grid spacing={4}>
+              <Button disabled={activeStep === 0} variant="contained" onClick={handlePrev}>
+                Back
+              </Button>
 
-      <Button
-        variant="contained"
-        onClick={handleSubmit}
-        style={activeStep === steps.length ? {} : { display: 'none' }}
-      >
-        Submit
-      </Button>
-    </div>
+              <Button
+                variant="contained"
+                onClick={handleNext}
+                style={activeStep === steps.length ? { display: 'none' } : {}}
+              >
+                Next
+              </Button>
+
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                style={activeStep === steps.length ? {} : { display: 'none' }}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Card>
+    </Grid>
   );
 };
 

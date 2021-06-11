@@ -1,11 +1,9 @@
 import React from 'react';
+import { Typography } from '@material-ui/core';
+import './index.css';
 
 const AcademicCheckInWelcome = () => {
-  return (
-    <div>
-      <h4>Academic Check In Welcome Page (do you have holds?????)</h4>
-    </div>
-  );
+  return <Typography className="checkIn">Do you have the gay ???????????</Typography>;
 };
 
 export default AcademicCheckInWelcome;

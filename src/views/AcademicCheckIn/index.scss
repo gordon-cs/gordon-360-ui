@@ -1,0 +1,25 @@
+@import '../../vars';
+
+.checkIn {
+  text-align: center;
+
+  .MuiPaper-elevation1 {
+    box-shadow: none;
+  }
+
+  .MuiButton-contained {
+    background-color: $primary-cyan;
+    color: $neutral-white;
+
+    &:hover {
+      background-color: $primary-cyan;
+    }
+  }
+
+  .checkIn-header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+    padding: 10px;
+    font-size: 20px;
+  }
+}

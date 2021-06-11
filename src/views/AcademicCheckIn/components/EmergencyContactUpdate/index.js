@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect } from 'react';
 import { FormControl, FormControlLabel, FormLabel, InputLabel, Input } from '@material-ui/core';
+import './index.css';
 
 const EmergencyContactUpdate = ({ values, handleChange }) => {
   return (
-    <div>
-      <FormControl>
-        <InputLabel htmlFor="component-simple"> Firstname </InputLabel>
-        <Input
-          id="component-simple"
-          value={values.firstname1}
-          onChange={handleChange('firstname1')}
-        />
-      </FormControl>
-    </div>
+    <FormControl className="checkIn">
+      <InputLabel htmlFor="component-simple"> Firstname </InputLabel>
+      <Input
+        id="component-simple"
+        value={values.firstname1}
+        onChange={handleChange('firstname1')}
+      />
+    </FormControl>
   );
 };
 
