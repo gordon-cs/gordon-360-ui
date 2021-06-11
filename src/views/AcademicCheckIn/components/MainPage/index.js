@@ -13,6 +13,11 @@ const MainPage = () => {
     //curStatus ;
     switch (curStatus) {
       case Status.CHECKEDIN:
+        content = (
+          <Button variant="contained" to="/home">
+            Click here to go home
+          </Button>
+        );
         break;
 
       case Status.NOTCHECKEDIN:
@@ -33,6 +38,7 @@ const MainPage = () => {
       <Grid item xs={12} md={8}>
         <Card className="academicCheckInHomepage">
           <CardHeader title="Enrollment Check In" />
+          <Grid justify="center">content</Grid>
         </Card>
       </Grid>
     </Grid>
