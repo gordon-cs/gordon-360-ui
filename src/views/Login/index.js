@@ -53,7 +53,7 @@ const Login = ({ onLogIn }) => {
     // Google Analytics to track PWA usage
     ga('set', 'dimension1', displayMode);
 
-    // Removes all events listerners that were invoked in this component
+    // Removes all events listeners that were invoked in this component
     return function cleanupListener() {
       window.removeEventListener('beforeinstallprompt', () => {});
       window.removeEventListener('appinstalled', () => {});
@@ -96,7 +96,7 @@ const Login = ({ onLogIn }) => {
       <DocumentTitle title={`Login | ${projectName}`} />
       <Grid container direction="column" className="container">
         <img className="login-img" src={GordonLogoVerticalWhite} alt={`${projectName}`} />
-        <form onSubmit={(e) => logIn(e)}>
+        <form onSubmit={logIn}>
           <TextField
             id="username"
             label="Username"
