@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
 import PropTypes from 'prop-types';
-import { Button, CircularProgress, TextField, Typography, Grid, Fab } from '@material-ui/core';
+import { Button, TextField, Typography, Grid, Fab } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PWAInstructions from 'components/PWAInstructions/index';
 import { authenticate } from 'services/auth';
 import storage from 'services/storage';
 import session from 'services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
+import GordonLoader from 'components/Loader';
 import { projectName } from 'project-name';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import './login.css';
@@ -24,14 +25,14 @@ const Login = ({ onLogIn }) => {
   const [deferredPWAPrompt, setDeferredPWAPrompt] = useState();
 
   useEffect(() => {
-    // A window event listener to see if the browser has the PWA quick installation prompt available
+    // Check if the browser has the PWA quick installation prompt available
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       setDeferredPWAPrompt(e);
     });
 
-    // A window event listener to see if the PWA was installed
+    // Check if the PWA was installed
     window.addEventListener('appinstalled', () => {
       // Exits out the PWA Installation dialog box if already opened
       setOpenPWAInstructions(false);
@@ -50,7 +51,7 @@ const Login = ({ onLogIn }) => {
       setShowPWALink(true);
     }
     // Google Analytics to track PWA usage
-    ga('set', 'dimension1', displayMode)
+    ga('set', 'dimension1', displayMode);
 
     // Removes all events listerners that were invoked in this component
     return function cleanupListener() {
@@ -128,7 +129,7 @@ const Login = ({ onLogIn }) => {
               color="primary"
               disabled={!username || !password || loading}
             >
-              {loading ? <CircularProgress size={24} /> : 'Log in'}
+              {loading ? <GordonLoader size={24} /> : 'Log in'}
             </Button>
           </Grid>
         </form>
