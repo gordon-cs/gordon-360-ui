@@ -93,12 +93,38 @@ const MemberList = ({
       style={headerStyle}
     />
   );
+  /// function that re-arrange names alpabetically and also by Advisor, Leader, members and Guest
+  // by Hierarchy.
+  function sortByParticipation(memberArr) {
+    let advisors = [];
+    let leaders = [];
+    let members = [];
+    let guests = [];
+    memberArr.map((member) => {
+      if (member.ParticipationDescription === 'Member') {
+        members.push(member);
+      } else if (member.ParticipationDescription === 'Leader') {
+        leaders.push(member);
+      } else if (member.ParticipationDescription === 'Advisor') {
+        advisors.push(member);
+      } else if (member.ParticipationDescription === 'Guest') {
+        guests.push(member);
+      }
+    });
+    memberArr = [];
+    advisors.map((advisor) => memberArr.push(advisor));
+    leaders.map((leader) => memberArr.push(leader));
+    members.map((member) => memberArr.push(member));
+    guests.map((guest) => memberArr.push(guest));
+
+    return memberArr;
+  }
 
   return (
     <Card>
       {header}
       <CardContent>
-        {members.sort(compareByLastThenFirst).map((member) => (
+        {sortByParticipation(members.sort(compareByLastThenFirst)).map((member) => (
           <MemberListItem
             member={member}
             key={member.MembershipID}
