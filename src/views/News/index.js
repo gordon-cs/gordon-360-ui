@@ -28,9 +28,6 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
-// testing for future feature to upload image
-// import IDUploader from '../IDUploader';
-// import Dropzone from 'react-dropzone';
 
 export default class StudentNews extends Component {
   constructor(props) {
@@ -123,27 +120,36 @@ export default class StudentNews extends Component {
         position: 'fixed',
         zIndex: 1,
       },
+
+      root: {
+        '& > *': {
+          //margin: theme.spacing(1),
+        },
+      },
+
+      input: {
+        display: 'none',
+      },
     };
   }
 
-  setShowCropper = (dataURL) => {
-    this.setState({ showCropper: dataURL });
-  };
-
-  setPhotoDialogError = (value) => {
-    this.setState({ photoDialogError: value });
-  };
-
-  setOpenPhotoDialog(bool) {
-    this.setState({ openPhotoDialog: bool });
+  //checks if the screen has been resized past the mobile breakpoint
+  //allows for forceUpdate to only be called when necessary, improving resizing performance
+  breakpointPassed() {
+    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
+    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
+    else return false;
   }
 
-  setCropperData = (dimensions, ratio) => {
-    this.setState({ cropBoxDim: dimensions, aspectRatio: ratio });
-  };
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
 
-  setCropperRatio(ratio) {
-    this.setState({ aspectRatio: ratio });
+  componentDidMount() {
+    this.setState({ loading: false });
+    this.loadNews();
+    this.loadUsername();
+    window.addEventListener('resize', this.resize);
   }
 
   //copied from Identification
@@ -171,13 +177,6 @@ export default class StudentNews extends Component {
   minCropBoxDim = (imgWidth, dispWidth) => {
     return (this.CROP_DIM * dispWidth) / imgWidth;
   };
-
-  componentDidMount() {
-    this.setState({ loading: false });
-    this.loadNews();
-    this.loadUsername();
-    window.addEventListener('resize', this.resize);
-  }
 
   async loadUsername() {
     const user = await userService.getProfileInfo();
@@ -244,6 +243,56 @@ export default class StudentNews extends Component {
     }
   }
 
+  // This should be the only time we pull from the database
+  async loadNews() {
+    this.setState({ loading: true });
+
+    if (this.props.authentication) {
+      const newsCategories = await newsService.getCategories();
+      const personalUnapprovedNews = await newsService.getPersonalUnapprovedFormatted();
+      const unexpiredNews = await newsService.getNotExpiredFormatted();
+      this.setState({
+        loading: false,
+        categories: newsCategories,
+        news: unexpiredNews,
+        personalUnapprovedNews: personalUnapprovedNews,
+        filteredNews: unexpiredNews,
+      });
+    } else {
+      // TODO: test authentication handling and neaten code (ex. below)
+      // alert("Please sign in to access student news");
+    }
+  }
+
+  //Has to rerender on screen resize in order for table to switch to the mobile view
+  resize = () => {
+    if (this.breakpointPassed()) {
+      this.isMobileView = !this.isMobileView;
+      this.forceUpdate();
+    }
+  };
+
+  // TODO: Currently disabled and unused
+  search() {
+    return async (event) => {
+      // await ensures state has been updated before continuing
+      await this.setState({
+        search: event.target.value,
+      });
+      const filteredNews = await newsService.getFilteredNews(this.state);
+      this.setState({ filteredNews: filteredNews, loading: false });
+    };
+  }
+
+  updateSnackbar(message) {
+    this.setState({ snackbarMessage: message });
+    this.setState({ snackbarOpen: true });
+  }
+
+  /**********************************************************
+  /*Following methods are solely related to photo submission*
+  /**********************************************************/
+
   async clearPhotoDialogErrorTimeout() {
     return new Promise((resolve, reject) => {
       clearTimeout(this.photoDialogErrorTimeout);
@@ -292,6 +341,50 @@ export default class StudentNews extends Component {
     return message;
   }
 
+  // Function called when 'edit' clicked for a news item
+  async handleNewsItemEdit(newsID) {
+    let newsItem = await newsService.getPostingByID(newsID);
+
+    this.setState({
+      openPostActivity: true,
+      newPostCategory: newsItem.categoryID,
+      newPostSubject: newsItem.Subject,
+      newPostBody: newsItem.Body,
+      currentlyEditing: newsID,
+    });
+
+    /*
+    Error checking. Theoretically, this code is designed so that
+    When the get method in the API service is called from the frontend,
+    it will return the image data, even though that's not the value
+    of the image column in news entries. But in the impossible event that
+    it somhow DID return the path of the image instead of the image data,
+    not only would that produce garbage and make the cropper have trouble,
+    but it also is a potential security concern; it sends data back to the
+    client that shouldn't be sent anywhere.
+    */
+    let base64Test = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
+
+    if (base64Test.test(newsItem.Image) && newsItem.Image !== null) {
+      let newImageData = 'data:image/jpg;base64,' + newsItem.Image;
+      this.setState({ showCropper: newImageData });
+    } else {
+      this.setState({ showCropper: null });
+    }
+
+    console.log(this.state.showCropper);
+  }
+
+  /**
+   * Handles closing the Photo Updater Dialog Box
+   * Copied from Identification
+   */
+  async handleCloseCancel() {
+    this.setOpenPhotoDialog(false);
+    this.setShowCropper(null);
+    await this.clearPhotoDialogErrorTimeout;
+  }
+
   onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
@@ -312,6 +405,75 @@ export default class StudentNews extends Component {
     };
     reader.readAsDataURL(previewImageFile);
   };
+
+  /**
+   * Handles the rejection of the user dropping an invalid file in the Photo Updater Dialog Box
+   * Copied from Identification
+   */
+  async onDropRejected() {
+    await this.clearPhotoDialogErrorTimeout();
+    this.setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
+  }
+
+  // Handles the actual 'edit' submission
+  async handleUpdate() {
+    let newsID = this.state.currentlyEditing;
+    // create the JSON newData object to update with
+    let newData = {
+      categoryID: this.state.newPostCategory,
+      Subject: this.state.newPostSubject,
+      Body: this.state.newPostBody,
+      Image: this.cropperRef.current.cropper
+        .getCroppedCanvas({ width: this.CROP_DIM })
+        .toDataURL()
+        .replace(/data:image\/[A-Za-z]{3,4};base64,/, ''),
+    };
+
+    // update the news item and give feedback
+    let result = await newsService.editStudentNews(newsID, newData);
+    if (result === undefined) {
+      this.updateSnackbar('News Posting Failed to Update');
+    } else {
+      this.updateSnackbar('News Posting Updated Successfully');
+    }
+
+    // close the window and reload to update data
+    // (necessary since data is currently not pulled from render method)
+    this.setState({ openPostActivity: false });
+    window.top.location.reload();
+  }
+
+  async handleSubmit() {
+    let newImage;
+    if (this.state.showCropper != null) {
+      let croppedImage = this.cropperRef.current.cropper
+        .getCroppedCanvas({ width: this.CROP_DIM })
+        .toDataURL();
+      newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+    }
+
+    this.setState({ newPostImage: newImage }, async function () {
+      let newsItem = {
+        categoryID: this.state.newPostCategory,
+        Subject: this.state.newPostSubject,
+        Body: this.state.newPostBody,
+        Image: this.state.newPostImage,
+      };
+
+      // submit the news item and give feedback
+      let result = await newsService.submitStudentNews(newsItem);
+      if (result === undefined) {
+        this.updateSnackbar('News Posting Failed to Submit');
+      } else {
+        this.updateSnackbar('News Posting Submitted Successfully');
+      }
+
+      // close the window and reload to update data
+      // (necessary since data is currently not pulled from render method)
+      this.setState({ openPostActivity: false });
+      window.top.location.reload();
+    });
+  }
 
   imageOnLoadHelper(reader) {
     var dataURL = reader.result.toString();
@@ -337,168 +499,32 @@ export default class StudentNews extends Component {
     i.src = dataURL;
   }
 
-  /**
-   * Handles the rejection of the user dropping an invalid file in the Photo Updater Dialog Box
-   * Copied from Identification
-   */
-  async onDropRejected() {
-    await this.clearPhotoDialogErrorTimeout();
-    this.setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
-  }
-
-  /**
-   * Handles closing the Photo Updater Dialog Box
-   * Copied from Identification
-   */
-  async handleCloseCancel() {
-    this.setOpenPhotoDialog(false);
-    this.setShowCropper(null);
-    await this.clearPhotoDialogErrorTimeout;
-  }
-
-  /**
-   * Creates the Photo Uploader Box for a News posting
-   *
-   * @return {JSX} The JSX of the Photo Updater
-   *
-   * NOT BEING USED ATM
-   */
-  createNewsImageUploader() {
-    return '';
-  }
-
-  // Function called when 'edit' clicked for a news item
-  async handleNewsItemEdit(newsID) {
-    let newsItem = await newsService.getPostingByID(newsID);
-    this.setState({
-      openPostActivity: true,
-      newPostCategory: newsItem.categoryID,
-      newPostSubject: newsItem.Subject,
-      newPostBody: newsItem.Body,
-      newPostImage: newsItem.Image,
-      currentlyEditing: newsID,
-    });
-  }
-
-  updateSnackbar(message) {
-    this.setState({ snackbarMessage: message });
-    this.setState({ snackbarOpen: true });
-  }
-
-  // Handles the actual 'edit' submission
-  async handleUpdate() {
-    let newsID = this.state.currentlyEditing;
-    // create the JSON newData object to update with
-    let newData = {
-      categoryID: this.state.newPostCategory,
-      Subject: this.state.newPostSubject,
-      Body: this.state.newPostBody,
-      Image: this.state.newPostImage,
-    };
-
-    // update the news item and give feedback
-    let result = await newsService.editStudentNews(newsID, newData);
-    if (result === undefined) {
-      this.updateSnackbar('News Posting Failed to Update');
-    } else {
-      this.updateSnackbar('News Posting Updated Successfully');
-    }
-
-    // close the window and reload to update data
-    // (necessary since data is currently not pulled from render method)
-    this.setState({ openPostActivity: false });
-    window.top.location.reload();
-  }
-
-  async handleSubmit() {
-    if (this.state.showCropper != null) {
-      let croppedImage = this.cropperRef.current.cropper
-        .getCroppedCanvas({ width: this.CROP_DIM })
-        .toDataURL();
-      let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-      this.setState({ newPostImage: newImage }, async function () {
-        let newsItem = {
-          categoryID: this.state.newPostCategory,
-          Subject: this.state.newPostSubject,
-          Body: this.state.newPostBody,
-          Image: this.state.newPostImage,
-        };
-
-        // submit the news item and give feedback
-        let result = await newsService.submitStudentNews(newsItem);
-        if (result === undefined) {
-          this.updateSnackbar('News Posting Failed to Submit');
-        } else {
-          this.updateSnackbar('News Posting Submitted Successfully');
-        }
-
-        // close the window and reload to update data
-        // (necessary since data is currently not pulled from render method)
-        this.setState({ openPostActivity: false });
-        window.top.location.reload();
-      });
-    }
-  }
-
-  // This should be the only time we pull from the database
-  async loadNews() {
-    this.setState({ loading: true });
-
-    if (this.props.authentication) {
-      const newsCategories = await newsService.getCategories();
-      const personalUnapprovedNews = await newsService.getPersonalUnapprovedFormatted();
-      const unexpiredNews = await newsService.getNotExpiredFormatted();
-      this.setState({
-        loading: false,
-        categories: newsCategories,
-        news: unexpiredNews,
-        personalUnapprovedNews: personalUnapprovedNews,
-        filteredNews: unexpiredNews,
-      });
-    } else {
-      // TODO: test authentication handling and neaten code (ex. below)
-      // alert("Please sign in to access student news");
-    }
-  }
-
-  // TODO: Currently disabled and unused
-  search() {
-    return async (event) => {
-      // await ensures state has been updated before continuing
-      await this.setState({
-        search: event.target.value,
-      });
-      const filteredNews = await newsService.getFilteredNews(this.state);
-      this.setState({ filteredNews: filteredNews, loading: false });
-    };
-  }
-
-  //Has to rerender on screen resize in order for table to switch to the mobile view
-  resize = () => {
-    if (this.breakpointPassed()) {
-      this.isMobileView = !this.isMobileView;
-      this.forceUpdate();
-    }
+  setCropperData = (dimensions, ratio) => {
+    this.setState({ cropBoxDim: dimensions, aspectRatio: ratio });
   };
 
-  //checks if the screen has been resized past the mobile breakpoint
-  //allows for forceUpdate to only be called when necessary, improving resizing performance
-  breakpointPassed() {
-    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
-    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
-    else return false;
+  setCropperRatio(ratio) {
+    this.setState({ aspectRatio: ratio });
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
+  setOpenPhotoDialog(bool) {
+    this.setState({ openPhotoDialog: bool });
   }
+
+  setPhotoDialogError = (value) => {
+    this.setState({ photoDialogError: value });
+  };
+
+  setShowCropper = (dataURL) => {
+    this.setState({ showCropper: dataURL });
+  };
 
   render() {
     // if all of the inputs are filled, enable 'submit' button
     let submitButtonDisabled =
       this.state.newPostCategory === '' ||
       this.state.newPostSubject === '' ||
-      this.state.newPostBody === ''; // || this.state.newPostImage === '';
+      this.state.newPostBody === '';
     let content;
 
     /* Used to re-render the page when the network connection changes.
@@ -669,11 +695,6 @@ export default class StudentNews extends Component {
                     {/* IMAGE ENTRY */}
                     <Grid item xs={12}>
                       <div className="gc360-photo-dialog-box">
-                        {/*
-                          <DialogTitle className="gc360-photo-dialog-box_title">
-                            Update Photo
-                          </DialogTitle>
-                        */}
                         <DialogContent className="gc360-photo-dialog-box_content">
                           <DialogContentText className="gc360-photo-dialog-box_content_text">
                             {this.createPhotoDialogBoxMessage()}
@@ -725,7 +746,7 @@ export default class StudentNews extends Component {
                           )}
                         </DialogContent>
                         <DialogActions className="gc360-photo-dialog-box_actions-top">
-                          {this.state.showCropper && (
+                          {/*this.state.showCropper && (
                             <Button
                               variant="contained"
                               onClick={() => this.setShowCropper(null)}
@@ -733,6 +754,33 @@ export default class StudentNews extends Component {
                               className="gc360-photo-dialog-box_content_button"
                             >
                               Choose a different picture
+                            </Button>
+                          )*/}
+                          {this.state.showCropper && (
+                            <div className={'gc360-photo-dialog-box_actions-top'}>
+                              <input
+                                accept="image/*"
+                                className={'gc360-photo-dialog-box_actions-top'}
+                                id="contained-button-file"
+                                multiple
+                                type="file"
+                              />
+                              <label htmlFor="contained-button-file">
+                                <Button variant="contained" color="primary" component="span">
+                                  Choose a different picture
+                                </Button>
+                              </label>
+                            </div>
+                          )}
+
+                          {this.state.showCropper && (
+                            <Button
+                              variant="contained"
+                              onClick={() => this.setShowCropper(null)}
+                              style={this.styles.button.cancelButton}
+                              className="gc360-photo-dialog-box_content_button"
+                            >
+                              Remove picture
                             </Button>
                           )}
                         </DialogActions>

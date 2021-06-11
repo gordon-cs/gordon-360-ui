@@ -204,10 +204,8 @@ export default class NewsItem extends Component {
             <CardContent>
               <Typography className="news-content">"{posting.categoryName}"</Typography>
               <Typography className="news-content ">{posting.Body}</Typography>
-              {postingImage === '' ? (
-                {}
-              ) : (
-                <img src={`data:image/jpg;base64,${postingImage}`} alt="News Item" />
+              {postingImage !== null && (
+                <img src={`data:image/jpg;base64,${postingImage}`} alt=" " />
               )}
             </CardContent>
             <Grid container justify="space-evenly">
@@ -251,10 +249,8 @@ export default class NewsItem extends Component {
                   <Typography type="caption" className="descriptionText">
                     {postingDescription}
                   </Typography>
-                  {postingImage === '' ? (
-                    {}
-                  ) : (
-                    <img src={`data:image/jpg;base64,${postingImage}`} alt="News Item" />
+                  {postingImage !== null && (
+                    <img src={`data:image/jpg;base64,${postingImage}`} alt=" " />
                   )}
                 </Grid>
                 {/* Possible action buttons */}
@@ -278,7 +274,6 @@ NewsItem.propTypes = {
   posting: PropTypes.shape({
     SNID: PropTypes.number.isRequired,
     Subject: PropTypes.string.isRequired,
-    //Image: PropTypes.string.isRequired ?
     ADUN: PropTypes.string.isRequired,
     Entered: PropTypes.string.isRequired,
     categoryName: PropTypes.string.isRequired,
