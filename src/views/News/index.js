@@ -25,7 +25,6 @@ import {
   DialogTitle,
   DialogContentText,
   MenuItem,
-  makeStyles,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
@@ -57,6 +56,22 @@ export default class StudentNews extends Component {
       snackbarMessage: 'Something went wrong',
       currentUsername: '',
       currentlyEditing: false, // false if not editing, newsID if editing
+      justShowPicture: false,
+      /*justShowPicture is a more complicated state property. If an image was submitted
+       *to a news post, then if the user clicks on the edit button for the post later,
+       *we want to at first just show them the image, not the cropper (particularly since
+       *the cropper would only be able to contain what the API stored, so they can only
+       *crop more). If they remove the picture, then we want to show the dropzone. If they
+       *add a new picture, we want to display the cropper with the new data. When edit is
+       *clicked for the first time and when a new picture has been added, showCropper will
+       *have data, so we can't use showCropper to determine whether or not to show an img
+       *tag or a cropper. A new property was necessary. justShowPicture begins false and is
+       *made true when the edit button is clicked. When either the remove picture or cancel
+       *button is clicked from the edit window, it is set back to false. In this way there is
+       *the ability to update the view to the user. As a side note, this also creates the
+       *ability to change the message above the image in a way that makes sense in either the
+       *just-opened-an-edit or the just-submitted-new-image context.
+       */
     };
     this.cropperRef = React.createRef();
     this.isMobileView = false;
@@ -66,20 +81,21 @@ export default class StudentNews extends Component {
     this.callFunction = this.callFunction.bind(this);
     this.CROP_DIM = 200; // pixels
 
-    this.setShowCropper = this.setShowCropper.bind(this);
-    this.setPhotoDialogError = this.setPhotoDialogError.bind(this);
-    this.setOpenPhotoDialog = this.setOpenPhotoDialog.bind(this);
-    this.setCropperData = this.setCropperData.bind(this);
-    this.setCropperRatio = this.setCropperRatio.bind(this);
-    this.maxCropPreviewWidth = this.maxCropPreviewWidth.bind(this);
-    this.minCropBoxDim = this.minCropBoxDim.bind(this);
     this.clearPhotoDialogErrorTimeout = this.clearPhotoDialogErrorTimeout.bind(this);
     this.createPhotoDialogBoxMessage = this.createPhotoDialogBoxMessage.bind(this);
+    this.handleCloseCancel = this.handleCloseCancel.bind(this);
+    this.imageOnLoadHelper = this.imageOnLoadHelper.bind(this);
+    this.maxCropPreviewWidth = this.maxCropPreviewWidth.bind(this);
+    this.minCropBoxDim = this.minCropBoxDim.bind(this);
     this.onCropperZoom = this.onCropperZoom.bind(this);
     this.onDropAccepted = this.onDropAccepted.bind(this);
-    this.imageOnLoadHelper = this.imageOnLoadHelper.bind(this);
     this.onDropRejected = this.onDropRejected.bind(this);
-    this.handleCloseCancel = this.handleCloseCancel.bind(this);
+    this.setCropperData = this.setCropperData.bind(this);
+    this.setCropperRatio = this.setCropperRatio.bind(this);
+    this.setJustShowPicture = this.setJustShowPicture.bind(this);
+    this.setOpenPhotoDialog = this.setOpenPhotoDialog.bind(this);
+    this.setPhotoDialogError = this.setPhotoDialogError.bind(this);
+    this.setShowCropper = this.setShowCropper.bind(this);
 
     this.styles = {
       button: {
@@ -121,18 +137,6 @@ export default class StudentNews extends Component {
         zIndex: 1,
       },
     };
-
-    this.style = makeStyles((theme) => ({
-      root: {
-        '& > *': {
-          //margin: theme.spacing(1),
-        },
-      },
-
-      input: {
-        display: 'none',
-      },
-    }));
   }
 
   //checks if the screen has been resized past the mobile breakpoint
@@ -155,6 +159,13 @@ export default class StudentNews extends Component {
   }
 
   maxCropPreviewWidth() {
+    /*
+    Known non-critical issue:
+    maxCropperWidth() never utilizes its other cases.
+    Previous use of this same method in other files has the same problem.
+
+    It always uses the default case below.
+    */
     const smallScreenRatio = 0.5;
     const largeScreenRatio = 0.25;
     const w = this.breakpointWidth;
@@ -174,7 +185,6 @@ export default class StudentNews extends Component {
     }
   }
 
-  //Copied from Identification
   minCropBoxDim = (imgWidth, dispWidth) => {
     return (this.CROP_DIM * dispWidth) / imgWidth;
   };
@@ -200,6 +210,8 @@ export default class StudentNews extends Component {
       newPostBody: '',
       newPostImage: '',
       currentlyEditing: false,
+      showCropper: null,
+      justShowPicture: false,
     });
   }
 
@@ -306,8 +318,6 @@ export default class StudentNews extends Component {
    * Creates the Photo Dialog message that will be displayed to the user
    *
    * @return {String} The message of the Photo Dialog
-   *
-   * Copied from Identification
    */
   createPhotoDialogBoxMessage() {
     let message = '';
@@ -325,10 +335,18 @@ export default class StudentNews extends Component {
         });
       }
     }
+
     // If no error occured and the cropper is shown, the cropper text is displayed
-    else if (this.state.showCropper) {
+    else if (this.state.showCropper && !this.state.justShowPicture) {
       message = 'Crop Photo to liking & Click Submit';
     }
+
+    // If no error occured and the edit window has just been opened,
+    // show previously submitted photo
+    else if (this.state.justShowPicture) {
+      message = 'Previously submitted photo';
+    }
+
     // If no error occured and the cropper is not shown, the pick a file text is displayed
     else {
       message =
@@ -342,7 +360,7 @@ export default class StudentNews extends Component {
     return message;
   }
 
-  // Function called when 'edit' clicked for a news item
+  // Method called when 'edit' clicked for a news item
   async handleNewsItemEdit(newsID) {
     let newsItem = await newsService.getPostingByID(newsID);
 
@@ -368,7 +386,7 @@ export default class StudentNews extends Component {
 
     if (base64Test.test(newsItem.Image) && newsItem.Image !== null) {
       let newImageData = 'data:image/jpg;base64,' + newsItem.Image;
-      this.setState({ showCropper: newImageData });
+      this.setState({ showCropper: newImageData, justShowPicture: true });
     } else {
       this.setState({ showCropper: null });
     }
@@ -376,7 +394,6 @@ export default class StudentNews extends Component {
 
   /**
    * Handles closing the Photo Updater Dialog Box
-   * Copied from Identification
    */
   async handleCloseCancel() {
     this.setOpenPhotoDialog(false);
@@ -412,23 +429,32 @@ export default class StudentNews extends Component {
   async onDropRejected() {
     await this.clearPhotoDialogErrorTimeout();
     this.setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
+    this.setState({ justShowPicture: false });
   }
 
   // Handles the actual 'edit' submission
   async handleUpdate() {
     let newsID = this.state.currentlyEditing;
+
+    let imageData;
+
+    if (this.cropperRef.current === null && this.state.showCropper === null) {
+      imageData = null;
+    } else if (this.cropperRef.current === null && this.state.showCropper !== null) {
+      imageData = this.state.showCropper.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+    } else if (this.cropperRef.current !== null) {
+      imageData = this.cropperRef.current.cropper
+        .getCroppedCanvas({ width: this.CROP_DIM })
+        .toDataURL()
+        .replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+    }
+
     // create the JSON newData object to update with
     let newData = {
       categoryID: this.state.newPostCategory,
       Subject: this.state.newPostSubject,
       Body: this.state.newPostBody,
-      Image:
-        this.cropperRef.current === null
-          ? null
-          : this.cropperRef.current.cropper
-              .getCroppedCanvas({ width: this.CROP_DIM })
-              .toDataURL()
-              .replace(/data:image\/[A-Za-z]{3,4};base64,/, ''),
+      Image: imageData,
     };
 
     // update the news item and give feedback
@@ -447,12 +473,17 @@ export default class StudentNews extends Component {
 
   async handleSubmit() {
     let newImage;
+
     if (this.state.showCropper != null) {
       let croppedImage = this.cropperRef.current.cropper
         .getCroppedCanvas({ width: this.CROP_DIM })
         .toDataURL();
       newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
     }
+
+    //There is no else here because if there is no image, the JSON object SHOULD
+    //contain null, since the API has been designed to look for a null case and handle
+    //it, treating it appropriately to mean there is no image for the post.
 
     this.setState({ newPostImage: newImage }, async function () {
       let newsItem = {
@@ -492,12 +523,12 @@ export default class StudentNews extends Component {
         );
       } else {
         var aRatio = i.width / i.height;
-        //this.setCropperData({ aspectRatio: aRatio });
         this.setCropperRatio(aRatio);
+
         var maxWidth = this.maxCropPreviewWidth();
-        console.log('max Width is' + maxWidth);
         var displayWidth = maxWidth > i.width ? i.width : maxWidth;
         var cropDim = this.minCropBoxDim(i.width, displayWidth);
+
         this.setPhotoDialogError(null);
         this.setCropperData({ cropDim, aRatio });
         this.setShowCropper(dataURL);
@@ -518,6 +549,10 @@ export default class StudentNews extends Component {
     this.setState({ openPhotoDialog: bool });
   }
 
+  setJustShowPicture(bool) {
+    this.setState({ justShowPicture: bool });
+  }
+
   setPhotoDialogError = (value) => {
     this.setState({ photoDialogError: value });
   };
@@ -536,6 +571,7 @@ export default class StudentNews extends Component {
       this.state.newPostCategory === '' ||
       this.state.newPostSubject === '' ||
       this.state.newPostBody === '';
+    //Image isn't here because an image is optional
     let content;
 
     /* Used to re-render the page when the network connection changes.
@@ -733,7 +769,7 @@ export default class StudentNews extends Component {
                               )}
                             </Dropzone>
                           )}
-                          {this.state.showCropper && !this.state.currentlyEditing && (
+                          {this.state.showCropper && !this.state.justShowPicture && (
                             <div className="gc360-photo-dialog-box_content_cropper">
                               <Cropper
                                 ref={this.cropperRef}
@@ -751,33 +787,13 @@ export default class StudentNews extends Component {
                               />
                             </div>
                           )}
-                          {this.state.showCropper && this.state.currentlyEditing && (
+                          {this.state.showCropper && this.state.justShowPicture && (
                             <Grid item xs={8} style={{ textAlign: 'left' }}>
                               <img src={this.state.showCropper} alt=" " />
                             </Grid>
                           )}
                         </DialogContent>
                         <DialogActions className="gc360-photo-dialog-box_actions-top">
-                          {/*this.state.showCropper && (
-                            <div className={this.style.root}>
-                              <input
-                                className={this.style.input}
-                                accept="image/*"
-                                id="contained-button-file"
-                                multiple
-                                type="hidden"
-                                //ref={(input) => {this.setState({showCropper: input})}}
-                              />
-                              <label htmlFor="contained-button-file">
-                                <Button variant="contained" color="primary" component="span"
-                                onClick={(input) => this.setState({showCropper: input})}
-                                >
-                                  Choose a different picture
-                                </Button>
-                              </label>
-                            </div>
-                          )*/}
-
                           {this.state.showCropper && (
                             <Tooltip
                               classes={{ tooltip: 'tooltip' }}
@@ -786,7 +802,10 @@ export default class StudentNews extends Component {
                             >
                               <Button
                                 variant="contained"
-                                onClick={() => this.setShowCropper(null)}
+                                onClick={() => {
+                                  this.setShowCropper(null);
+                                  this.setJustShowPicture(false);
+                                }}
                                 style={this.styles.button.cancelButton}
                                 className="gc360-photo-dialog-box_content_button"
                               >
