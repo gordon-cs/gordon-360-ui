@@ -26,7 +26,7 @@ import http from './http';
  * @property {Number} categoryID the id number of the category to which the item belongs
  * @property {String} Subject the subject of the news item
  * @property {String} Body the main body of the news item
- * @property {String} Image the image of the news item (if there is one)
+ * @property {String} [Image] the image of the news item
  * @property {boolean} Sent whether the item has been sent
  * @property {boolean} thisPastMailing whether it belongs to this past mailing
  * @property {Date} Entered the date the item was entered into the system
