@@ -24,12 +24,9 @@ const CLWCreditsDaysLeft = () => {
     const loadData = async () => {
       setState({ loading: true });
       try {
-        const daysLeftPromise = session.getDaysLeft();
-        const chapelCreditsPromise = user.getChapelCredits();
-        const currSessionPromise = session.getCurrent();
-        const daysLeft = await daysLeftPromise;
-        const chapelCredits = await chapelCreditsPromise;
-        const currSession = await currSessionPromise;
+const daysLeft = await session.getDaysLeft();
+const chapelCredits = await user.getChapelCredits();
+const currSession = await session.getCurrent();
         const currSessionDescription = currSession.SessionDescription.replace(
           /(Academic Year)|(Grad)/gm,
           '',
