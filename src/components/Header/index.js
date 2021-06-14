@@ -18,10 +18,11 @@ import { projectName } from 'project-name';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import { windowBreakWidths } from 'theme';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-
 import { AppBar, Toolbar, Typography, IconButton, Tabs, Tab, Button } from '@material-ui/core';
 
 const getRouteName = (route) => {
+  // TODO: replace this function with the following line of code once document title setting has been refactored
+  // return () => ( route.name ? <span>{route.name}</span> : <span>{projectName}</span>);
   if (route.name) {
     return () => (
       <span>

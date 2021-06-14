@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Grid, Fab } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import DocumentTitle from 'react-document-title';
 import { projectName } from 'project-name';
 import PropTypes from 'prop-types';
 import PWAInstructions from 'components/PWAInstructions/index';
@@ -18,6 +17,8 @@ const Login = ({ onLogIn }) => {
   const [deferredPWAPrompt, setDeferredPWAPrompt] = useState();
 
   useEffect(() => {
+    document.title = `Login | ${projectName}`
+
     // Check if the browser has the PWA quick installation prompt available
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -55,8 +56,6 @@ const Login = ({ onLogIn }) => {
 
   return (
     <div className="login-background">
-      <DocumentTitle title={`Login | ${projectName}`} />
-
       <Grid
         container
         direction="column"
