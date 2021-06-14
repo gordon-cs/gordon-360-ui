@@ -2,10 +2,9 @@ import React from 'react';
 import { Grid, Card, CardContent, Button } from '@material-ui/core/';
 
 /**
- * @param {Object} props the component props
- * @param  {Boolean} props.open Boolean that determines if the dialog should be visible or not
+ * @param {String} feature - Text representing the content the user tried to access
  *
- * @returns {JSX.Element} A dialog box with the passed in content
+ * @returns {JSX.Element} A card with a message that the user must log in to view content
  */
 const GordonUnauthorized = ({ feature }) => {
   return (
