@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
+import Login from 'views/Login';
 import WellnessQuestion from 'components/WellnessQuestion';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
@@ -9,7 +10,6 @@ import NewsCard from './components/NewsCard';
 import user from 'services/user';
 import wellness from 'services/wellness';
 import storage from 'services/storage';
-import GuestWelcome from './components/GuestWelcome';
 import './home.css';
 import { Grid } from '@material-ui/core';
 
@@ -74,7 +74,7 @@ const Home = ({ authentication, onLogIn }) => {
   if (loading) {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
-    return <GuestWelcome onLogIn={onLogIn} />;
+    return <Login onLogIn={onLogIn} />;
   } else if (networkStatus === 'online' && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else {
