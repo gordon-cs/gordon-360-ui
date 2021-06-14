@@ -469,7 +469,7 @@ export default class StudentNews extends Component {
   async handleSubmit() {
     let newImage;
 
-    if (this.state.showCropper != null) {
+    if (this.state.showCropper !== null) {
       let croppedImage = this.cropperRef.current.cropper
         .getCroppedCanvas({ width: this.CROP_DIM })
         .toDataURL();
