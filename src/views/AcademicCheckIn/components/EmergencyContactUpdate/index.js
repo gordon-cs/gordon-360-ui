@@ -4,15 +4,15 @@ import { gordonColors } from 'theme';
 import './index.css';
 
 const EmergencyContactUpdate = ({ values, handleChange }) => {
-  // let cyan = gordonColors.primary.cyan; lmao
+  let cyan = gordonColors.primary.cyan;
   return (
     <Grid container justify="center" alignItems="center" direction="column">
       <Grid item xs={8}>
-        <Typography variant="h6" gutterBottom color="textPrimary">
+        <Typography variant="h6" gutterBottom style={{ color: cyan }}>
           Step 1: Enter your Emergency Contact Information
         </Typography>
         <Typography variant="h6" gutterBottom>
-          Who are your emergency contacts?
+          <b> Who are your emergency contacts? </b>
         </Typography>
         <Typography variant="body2" gutterBottom>
           HIPAA regulations prohibit sharing of medical information regarding anyone age 18 or over
@@ -28,8 +28,10 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
       <br />
       <Grid item xs={5}>
         <Box m={2}>
-          <Typography variant="body1">Emergency Contact 1</Typography>
+          <Typography variant="body1"> Emergency Contact 1 </Typography>
         </Box>
+      </Grid>
+      <Grid item xs={4}>
         <FormControl className="checkIn">
           <InputLabel htmlFor="component-simple"> First Name </InputLabel>
           <Input
@@ -85,9 +87,11 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
         </FormControl>
       </Grid>
       <br />
-      <Box m={2}>
-        <Typography variant="body1">Emergency Contact 2</Typography>
-      </Box>
+      <Grid item>
+        <Box m={2}>
+          <Typography variant="body1"> Emergency Contact 2 </Typography>
+        </Box>
+      </Grid>
       <Grid item xs={5}>
         <FormControl className="checkIn">
           <InputLabel htmlFor="component-simple"> First Name </InputLabel>
@@ -144,9 +148,11 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
         </FormControl>
       </Grid>
       <br />
-      <Box m={2}>
-        <Typography variant="body1">Emergency Contact 3</Typography>
-      </Box>
+      <Grid item>
+        <Box m={2}>
+          <Typography variant="body1"> Emergency Contact 3 </Typography>
+        </Box>
+      </Grid>
       <Grid item xs={5}>
         <FormControl className="checkIn">
           <InputLabel htmlFor="component-simple"> First Name </InputLabel>
@@ -209,7 +215,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
           Student Life at 978.867.4263.
         </Typography>
         <Typography variant="body2" gutterBottom>
-          For international phone numbers, check the
+          For international phone numbers, check the "Non-US Number" checkbox to enter information.
         </Typography>
       </Grid>
     </Grid>

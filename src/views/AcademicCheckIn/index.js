@@ -4,9 +4,10 @@ import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyCo
 import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
 import { Button, Grid, Card, CardHeader, Box } from '@material-ui/core';
 import { checkInStatus } from 'services/checkIn';
+import { gordonColors } from 'theme';
 import './index.css';
 import PrivacyAgreement from './components/PrivacyAgreement';
-
+import RaceEthnicity from './components/RaceEthnicity';
 const AcademicCheckIn = () => {
   const [activeStep, setActiveStep] = useState(0);
 
@@ -62,12 +63,16 @@ const AcademicCheckIn = () => {
     );
   };
 
+  let blue = gordonColors.primary.blue;
+
   return (
     <Grid container justify="center" spacing={2}>
-      <Grid item xs={8}>
+      <Grid item xs={9}>
         <Card>
           <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
-            <CardHeader title="Academic Check In" className="checkIn-header" />
+            <Grid item xs={12}>
+              <CardHeader title="Academic Check In" className="checkIn-header" />
+            </Grid>
             <Box m={2}>
               <Grid item>
                 <Grid container justify="center" alignItems="center">
@@ -83,6 +88,8 @@ const AcademicCheckIn = () => {
                     )}
 
                     {activeStep === 3 && <PrivacyAgreement />}
+
+                    {activeStep === 4 && <RaceEthnicity />}
                   </Grid>
                 </Grid>
               </Grid>

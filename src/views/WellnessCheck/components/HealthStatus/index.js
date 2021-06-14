@@ -84,7 +84,7 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
                 before checking in.
               </Typography>
             )}
-            {/* 🧙‍♂️END */}
+            {/* END */}
             <Grid className="wellness-status">
               <Card className={currentStatus}>
                 <CardContent className="status-box">
