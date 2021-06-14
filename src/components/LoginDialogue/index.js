@@ -7,6 +7,7 @@ import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import GordonLoader from 'components/Loader';
 import './loginDialogue.css';
 
+// TODO: Eventually abstract this out to be a global login component to be called anywhere
 const LoginDialogue = ({ onLogIn }) => {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);

@@ -1,10 +1,16 @@
-@import '../../vars';
+@import '../../../../vars';
 
-.login-container {
+div.gw-card {
+  background-color: $primary-blue;
+  color: $neutral-white;
+  opacity: 0.92;
+}
+
+.gw-container {
   padding: 1em;
 }
 
-.login-background {
+.gw-background {
   background: url(./images/campusFull.jpg) no-repeat center center fixed;
   background-size: cover;
   margin: -1rem;

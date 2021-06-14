@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Grid, Fab } from '@material-ui/core';
+import { Typography, Grid, Fab, Card, CardHeader, CardContent } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { projectName } from 'project-name';
 import PropTypes from 'prop-types';
 import PWAInstructions from 'components/PWAInstructions/index';
-import LoginDialogue from './components/LoginDialogue';
-import GuestWelcome from './components/GuestWelcome';
+import LoginDialogue from '../../../../components/LoginDialogue';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ga } from 'react-ga';
-import './login.css';
+import './guestWelcome.css';
 
-const Login = ({ onLogIn }) => {
+const GuestWelcome = ({ onLogIn }) => {
   const isOnline = useNetworkStatus();
   const [openPWAInstructions, setOpenPWAInstructions] = useState(false);
   const [showPWALink, setShowPWALink] = useState(false);
   const [deferredPWAPrompt, setDeferredPWAPrompt] = useState();
 
   useEffect(() => {
-    document.title = `Login | ${projectName}`
+    document.title = `Login | ${projectName}`;
 
     // Check if the browser has the PWA quick installation prompt available
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -55,16 +54,25 @@ const Login = ({ onLogIn }) => {
   }, []);
 
   return (
-    <div className="login-background">
+    <div className="gw-background">
       <Grid
         container
         direction="column"
         alignItems="center"
-        className="login-container"
+        className="gw-container"
         spacing={3}
       >
         <Grid item>
-          <GuestWelcome />
+          <Grid container style={{ textAlign: 'center' }}>
+            <Card raised className="gw-card">
+              <CardHeader title="Welcome to Gordon360!" />
+              <CardContent>
+                <Typography>
+                  As a guest, you have access to a limited view of the site. Login for full access.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
 
         <Grid item>
@@ -95,8 +103,8 @@ const Login = ({ onLogIn }) => {
   );
 };
 
-Login.propTypes = {
+GuestWelcome.propTypes = {
   onLogIn: PropTypes.func.isRequired,
 };
 
-export default Login;
+export default GuestWelcome;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
-import Login from 'views/Login';
 import WellnessQuestion from 'components/WellnessQuestion';
+import GuestWelcome from './components/GuestWelcome';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
@@ -74,7 +74,7 @@ const Home = ({ authentication, onLogIn }) => {
   if (loading) {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
-    return <Login onLogIn={onLogIn} />;
+    return <GuestWelcome onLogIn={onLogIn} />;
   } else if (networkStatus === 'online' && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else {
