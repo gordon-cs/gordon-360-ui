@@ -45,8 +45,8 @@ const LoginDialogue = ({ onLogIn }) => {
   };
 
   return (
-    <Grid container direction="column" className="loginDialogue container" lg={4}>
-      <img className="login-img" src={GordonLogoVerticalWhite} alt="Gordon 360 Logo" />
+    <Grid container direction="column" className="loginDialogue">
+      <img className="login-img" src={GordonLogoVerticalWhite} alt="Gordon Logo" />
       <form onSubmit={logIn}>
         <TextField
           id="username"

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import DocumentTitle from 'react-document-title';
-import PropTypes from 'prop-types';
 import { Typography, Grid, Fab } from '@material-ui/core';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import PWAInstructions from 'components/PWAInstructions/index';
-import { projectName } from 'project-name';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { ga } from 'react-ga';
+import DocumentTitle from 'react-document-title';
+import { projectName } from 'project-name';
+import PropTypes from 'prop-types';
+import PWAInstructions from 'components/PWAInstructions/index';
 import LoginDialogue from './components/LoginDialogue';
 import GuestWelcome from './components/GuestWelcome';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { ga } from 'react-ga';
 import './login.css';
 
 const Login = ({ onLogIn }) => {
@@ -54,27 +54,33 @@ const Login = ({ onLogIn }) => {
   }, []);
 
   return (
-    <div>
+    <div className="login-background">
       <DocumentTitle title={`Login | ${projectName}`} />
 
       <Grid
         container
         direction="column"
         alignItems="center"
-        justifyContent="center"
-        className="guest-landing-page"
-        spacing={2}
+        className="login-container"
+        spacing={3}
       >
-        <GuestWelcome />
+        <Grid item>
+          <GuestWelcome />
+        </Grid>
 
-        <LoginDialogue onLogIn={onLogIn} />
+        <Grid item>
+          <LoginDialogue onLogIn={onLogIn} />
+        </Grid>
 
         {isOnline && showPWALink && (
-          <Grid style={{ margin: '0.5rem' }} onClick={() => setOpenPWAInstructions(true)} padded>
-            <Fab variant="extended" color="primary">
-              <GetAppIcon />
-              <Typography variant="subtitle1">Install Gordon 360</Typography>
-            </Fab>
+          <Grid item>
+            <Grid onClick={() => setOpenPWAInstructions(true)}>
+              <Fab variant="extended" color="primary">
+                <GetAppIcon />
+                &nbsp;&nbsp;
+                <Typography variant="subtitle1">Install Gordon 360</Typography>
+              </Fab>
+            </Grid>
           </Grid>
         )}
       </Grid>

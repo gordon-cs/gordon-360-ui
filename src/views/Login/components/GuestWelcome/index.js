@@ -1,9 +1,10 @@
 import { Grid, Typography, Card, CardContent, CardHeader } from '@material-ui/core';
 import React from 'react';
+import './guestWelcome.css';
 
 const GuestWelcome = () => {
   return (
-    <Grid item md={5}>
+    <Grid container style={{ textAlign: 'center' }}>
       <Card raised className="guest-welcome-card">
         <CardHeader title="Welcome to Gordon360!" />
         <CardContent>
