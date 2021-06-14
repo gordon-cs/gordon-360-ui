@@ -40,15 +40,6 @@ const GordonCarousel = () => {
   if (loading === true) {
     content = <GordonLoader />;
   } else {
-    const images = [];
-    carouselContent.map((slide) =>
-      images.push({
-        original: slide.ImagePath,
-        originalAlt: slide.AltTag,
-        originalTitle: slide.Title,
-      }),
-    );
-
     content = (
       <ImageGallery
         ref={(i) => { setImageGallery(i); }}
@@ -59,7 +50,14 @@ const GordonCarousel = () => {
         autoPlay={true}
         showNav={false}
         slideInterval={5000}
-        items={images}
+        items={carouselContent.map((slide) =>
+             ({
+                original: slide.ImagePath,
+                originalAlt: slide.AltTag,
+                originalTitle: slide.Title,
+              })
+          );
+        }
         onClick={handleClickSlide}
       />
     );
