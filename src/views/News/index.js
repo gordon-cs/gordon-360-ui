@@ -436,17 +436,15 @@ export default class StudentNews extends Component {
   async handleUpdate() {
     let newsID = this.state.currentlyEditing;
 
-    let imageData;
+    let imageData = null;
 
-    if (this.cropperRef.current === null && this.state.showCropper === null) {
-      imageData = null;
-    } else if (this.cropperRef.current === null && this.state.showCropper !== null) {
-      imageData = this.state.showCropper.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-    } else if (this.cropperRef.current !== null) {
-      imageData = this.cropperRef.current.cropper
+    if (this.cropperRef.current !== null) {
+       imageData = this.cropperRef.current.cropper
         .getCroppedCanvas({ width: this.CROP_DIM })
         .toDataURL()
         .replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+    } else if (this.state.showCropper !== null) {
+      imageData = this.state.showCropper.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
     }
 
     // create the JSON newData object to update with
