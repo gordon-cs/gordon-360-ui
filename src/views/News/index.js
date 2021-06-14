@@ -96,48 +96,48 @@ export default class StudentNews extends Component {
     this.setOpenPhotoDialog = this.setOpenPhotoDialog.bind(this);
     this.setPhotoDialogError = this.setPhotoDialogError.bind(this);
     this.setShowCropper = this.setShowCropper.bind(this);
+  }
 
-    this.styles = {
-      button: {
+  styles = {
+    button: {
+      background: gordonColors.primary.blue,
+      color: 'white',
+
+      changeImageButton: {
         background: gordonColors.primary.blue,
         color: 'white',
+      },
 
-        changeImageButton: {
-          background: gordonColors.primary.blue,
-          color: 'white',
-        },
-
-        resetButton: {
-          backgroundColor: '#f44336',
-          color: 'white',
-        },
-        cancelButton: {
-          backgroundColor: 'white',
-          color: gordonColors.primary.blue,
-          border: `1px solid ${gordonColors.primary.blue}`,
-          width: this.showCropper ? '38%' : '86%',
-        },
-        hidden: {
-          display: 'none',
-        },
+      resetButton: {
+        backgroundColor: '#f44336',
+        color: 'white',
       },
-      searchBar: {
-        margin: '0 auto',
+      cancelButton: {
+        backgroundColor: 'white',
+        color: gordonColors.primary.blue,
+        border: `1px solid ${gordonColors.primary.blue}`,
+        width: this.showCropper ? '38%' : '86%',
       },
-      newNewsForm: {
-        backgroundColor: '#fff',
+      hidden: {
+        display: 'none',
       },
-      fab: {
-        margin: 0,
-        top: 'auto',
-        right: 40,
-        bottom: 40,
-        left: 'auto',
-        position: 'fixed',
-        zIndex: 1,
-      },
-    };
-  }
+    },
+    searchBar: {
+      margin: '0 auto',
+    },
+    newNewsForm: {
+      backgroundColor: '#fff',
+    },
+    fab: {
+      margin: 0,
+      top: 'auto',
+      right: 40,
+      bottom: 40,
+      left: 'auto',
+      position: 'fixed',
+      zIndex: 1,
+    },
+  };
 
   //checks if the screen has been resized past the mobile breakpoint
   //allows for forceUpdate to only be called when necessary, improving resizing performance
@@ -307,11 +307,8 @@ export default class StudentNews extends Component {
   /**********************************************************/
 
   async clearPhotoDialogErrorTimeout() {
-    return new Promise((resolve, reject) => {
-      clearTimeout(this.photoDialogErrorTimeout);
-      this.setState({ photoDialogErrorTimeout: null, photoDialogError: null });
-      resolve(true);
-    });
+    clearTimeout(this.photoDialogErrorTimeout);
+    this.setState({ photoDialogErrorTimeout: null, photoDialogError: null });
   }
 
   /**
@@ -439,7 +436,7 @@ export default class StudentNews extends Component {
     let imageData = null;
 
     if (this.cropperRef.current !== null) {
-       imageData = this.cropperRef.current.cropper
+      imageData = this.cropperRef.current.cropper
         .getCroppedCanvas({ width: this.CROP_DIM })
         .toDataURL()
         .replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
