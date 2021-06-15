@@ -252,6 +252,39 @@ const PersonalInfoList = ({
       />
     ) : null;
 
+  const note = isFacStaff ? (
+    <Typography align="left" className="note">
+      NOTE:
+      <ul>
+        <li>
+          To prevent your picture from displaying click{' '}
+          <a href="https://360.gordon.edu/myprofile"> here</a>.
+        </li>
+        <li>
+          To update your data contact <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
+        </li>
+      </ul>
+    </Typography>
+  ) : isStudent ? (
+    <Typography align="left" className="note">
+      NOTE:
+      <ul>
+        <li>
+          To prevent your picture or your cell phone number from displaying, click{' '}
+          <a href="https://360.gordon.edu/myprofile">here</a>.
+        </li>
+        <li>
+          To update your On Campus Address, contact <a href="mailto: housing@gordon.edu">Housing</a>
+          (x4263).
+        </li>
+        <li>
+          For all other changes or to partially/fully prevent your data from displaying, contact the{' '}
+          <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+        </li>
+      </ul>
+    </Typography>
+  ) : null;
+
   const disclaimer =
     !myProf &&
     (isHomePhonePrivate ||
@@ -285,6 +318,7 @@ const PersonalInfoList = ({
             {studentID}
             {home}
             {spouse}
+            {note}
             {disclaimer}
           </List>
         </CardContent>
