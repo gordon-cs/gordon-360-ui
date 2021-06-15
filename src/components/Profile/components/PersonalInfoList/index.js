@@ -318,8 +318,8 @@ const PersonalInfoList = ({
             {studentID}
             {home}
             {spouse}
-            {disclaimer}
             {note}
+            {disclaimer}
           </List>
         </CardContent>
       </Card>
