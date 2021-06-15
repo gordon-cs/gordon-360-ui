@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { gordonColors } from 'theme';
 import {
   FormControl,
   FormControlLabel,
@@ -9,25 +10,30 @@ import {
 } from '@material-ui/core';
 
 const PrivacyAgreement = ({ values, handleCheck }) => {
+  const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
-      <Grid item xs={7}>
-        <Typography variant="h4" gutterbottom>
+      <Grid item>
+        <Typography variant="h5" gutterbottom style={{ color: cyan }}>
           Step 3: Review Privacy Policies
         </Typography>
       </Grid>
-      <Grid item xs={6}>
-        <Typography variant="body1" gutterbottom>
+      <Grid item>
+        <Typography variant="subtitle1" gutterbottom align="center">
           This page explains Gordon's policies regarding student privacy. Please click each checkbox
           before continuing with your check-in.
         </Typography>
-        <Typography variant="h6" gutterbottom>
+      </Grid>
+      <Grid item>
+        <Typography variant="h6" gutterbottom align="center">
           Notification of Rights Under FERPA
         </Typography>
+        <br />
         <Typography variant="body1" gutterbottom>
           The Family Educational Rights and Privacy Act (FERPA) affords students certain rights with
           respect to their education records. They are:
         </Typography>
+        <br />
         <Grid item>
           <Typography variant="body1" gutterbottom>
             1. The right to inspect and review the student's education records within 45 days of the
@@ -39,6 +45,7 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
             request was submitted, that official shall advise the student of the correct official to
             whom the request should be addressed.
           </Typography>
+          <br />
           <Typography variant="body1" gutterbottom>
             2. The right to request the amendment of the student's education records that the
             student believes are inaccurate or misleading. Students may ask the College to amend a
@@ -47,6 +54,7 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
             changed, and specify why it is inaccurate or misleading. Grades, or an evaluation in
             lieu of grades, cannot be appealed through FERPA.
           </Typography>
+          <br />
           <Typography variant="body1" gutterbottom>
             If the College decides not to amend the record as requested by the student, the College
             will notify the student of the decision and advise the student of his or her right to a
@@ -54,6 +62,7 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
             hearing procedures will be provided to the student when notified of the right to a
             hearing.
           </Typography>
+          <br />
           <Typography variant="body1" gutterbottom>
             3. The right to consent to disclosures of personally identifiable information contained
             in the student’s education records, except to the extent that FERPA authorized
@@ -69,15 +78,18 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
             tasks. A school official has a legitimate educational interest if the official needs to
             review an education record in order to fulfill her or her professional responsibility.
           </Typography>
+          <br />
           <Typography variant="body1" gutterbottom>
             4. The right to file a complain with the U.S. Department of Education conerncing alleged
             failures by Gordon College to comply with the requirments of FERPA. The name and address
             of the office that administers FERPA is:
           </Typography>
+          <br />
           <Typography variant="body2" gutterbottom>
             Family Policy Compliance Office U.S. Department of Education 400 Maryland Avenue, SW
             Washington, DC 20202-8520
           </Typography>
+          <br />
           <Typography variant="body1" gutterbottom>
             FERPA permits release of student "directory information" upon inquiry unless the student
             specifically requests, in writing and within the first two weeks of a semester, that the
@@ -87,36 +99,48 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
             employer calls to confirm enrollment or degree information, they will be informed that
             we have no record of that person at Gordon College.
           </Typography>
-          <Typography variant="body1" gutterbottom>
+          <Typography variant="subtitle1" gutterbottom>
             Director information is defined as a student's:
           </Typography>
           <Typography variant="body1" gutterbottom>
-            * name {'\n'}* month/day and place of birth {'\n'}* major field of study {'\n'}* full-
-            or part-time status {'\n'}* participation in officially recognized activities and sports{' '}
-            {'\n'}* dates of attendance {'\n'}* degrees, honors and awards received{'\n'} * most
-            recent previous education agency or institution attended{'\n'}* photograph{'\n'} *
-            weights and heights of members of athletic teams{'\n'}
+            <ul>
+              <li> name </li> <li>month/day and place of birth </li>
+              <li>major field of study</li>
+              <li>full- or part-time status </li>
+              <li>participation in officially recognized activities and sports </li>
+              <li>dates of attendance </li>
+              <li>degrees, honors and awards received</li>
+              <li>most recent previous education agency or institution attended</li>
+              <li>photograph</li>
+              <li>weights and heights of members of athletic teams</li>
+            </ul>
           </Typography>
           <Typography variant="body2" gutterbottom>
-            Students may request that their photograph not be made available on the 360.gordon.edu
-            site by accessing 'My Profile' and selecting 'Photo Options' under their picture. If you
-            would like all your information blocked by a FERPA Hold, please contact the registrar's
-            office at (978) 867-4243 or
-            {<a href="mailto:registrar@gordon.edu"> registrar@gordon.edu</a>}.
+            <b>
+              Students may request that their personal photograph not be made available on the
+              360.gordon.edu site by accessing 'My Profile' and selecting 'Photo Options' under
+              their picture. If you would like all your information blocked by a FERPA Hold, please
+              contact the registrar's office at (978) 867-4243 or
+              {<a href="mailto:registrar@gordon.edu"> registrar@gordon.edu</a>}.
+            </b>
           </Typography>
+          <br />
           <FormControl>
             <FormControlLabel
               control={<Checkbox checked={values.FERPA} name="FERPA" onChange={handleCheck} />}
               label="I have read and understand the On-Campus Data Usage paragraph above and I give 
-              Gordon College consent to store and process my personal information as outline in its
-              data privacy policy"
+              Gordon College consent to store and process my personal information as outlined in its
+              data privacy policy."
+              labelPlacement="start"
             />
           </FormControl>
-
-          <Typography variant="h6" gutterbottom>
+          <br />
+          <br />
+          <Typography variant="h6" gutterbottom align="center">
             On-Campus Data Usage and Data Privacy Policy
           </Typography>
-          <Typography variant="body2" gutterbottom>
+          <br />
+          <Typography variant="body1" gutterbottom>
             Gordon's privacy policy also allows access by on-campus members of the Gordon community
             to current and permanent addresses, telephone listings, email addresses, class schedule,
             listing on course rosters,and photograph. This information, however, should never be
@@ -125,6 +149,7 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
             or to the contractual agents of the College, such as an attorney, auditor, the National
             Student Loan Clearinghouse or a collection agent.
           </Typography>
+          <br />
           <FormControl>
             <FormControlLabel
               control={
@@ -133,32 +158,45 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
               label="I have read and understand the On-Campus Data Usage paragraph above and I give
             Gordon College consent to store and process my personal information as outline in its
             data privacy policy"
+              labelPlacement="start"
             />
           </FormControl>
-          <Typography variant="h6" gutterBottom>
+          <br />
+          <br />
+          <Typography variant="h6" gutterBottom align="center">
             Generic Campus Photographs
           </Typography>
-          <Typography variant="body1" gutterbottom>
+          <Typography variant="body1">
             Gordon College also arranges for photographs of classes, campus scenes, etc., to be
             taken for use in publications or the web site. The students in these photographs are not
             identified and the photos are simply to represent typical College scenes and events.
             Please check below to indicate that you consent to having your photograph uses in this
             way.
           </Typography>
+          <br />
           <Typography variant="body2" gutterBottom>
-            Students may request that their photograph or address information not be made available
-            on the go.gordon.edu website by using the site's EDIT - My Account feature. If you would
-            like all of your information blocked by a FERPA hold, please contact the registrar's
-            office at 978.867.4243 or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>
+            <b>
+              Students may request that their personal photograph not be made available on the
+              360.gordon.edu site by accessing 'My Profile' and selecting 'Photo Options' under
+              their picture. If you would like all of your information blocked by a FERPA hold,
+              please contact the registrar's office at 978.867.4243 or{' '}
+              <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>.
+            </b>
           </Typography>
+          <br />
           <FormControl>
             <FormControlLabel
               control={
-                <Checkbox checked={values.dataUsage} name="dataUsage" onChange={handleCheck} />
+                <Checkbox
+                  checked={values.photoConsent}
+                  name="photoConsent"
+                  onChange={handleCheck}
+                />
               }
               label="I have read and understand the On-Campus Data Usage paragraph above and I give
             Gordon College consent to store and process my personal information as outline in its
             data privacy policy"
+              labelPlacement="start"
             />
           </FormControl>
         </Grid>

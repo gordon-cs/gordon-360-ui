@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { gordonColors } from 'theme';
 import {
   FormControl,
   FormLabel,
@@ -12,19 +13,15 @@ import {
 } from '@material-ui/core';
 
 const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
-  const [radioChoice, setRadioChoice] = useState({
-    yes: '',
-    no: '',
-  });
-
+  const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
-      <Grid item xs={7}>
-        <Typography variant="h4" gutterbottom>
+      <Grid item style={{ color: cyan }}>
+        <Typography variant="h5" gutterbottom>
           Step 4: Provide Your Race and Ethnicity
         </Typography>
       </Grid>
-      <Grid item xs={5}>
+      <Grid item>
         <Typography variant="h6" gutterbottom>
           Federal Reporting Status
         </Typography>
@@ -35,9 +32,13 @@ const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
           definitions of anthropological origins. In order to transition to the new data standards,
           we need students to self-identify their ethnicity and race by responding to two questions.
         </Typography>
+        <br />
         <Typography variant="body1" gutterbottom>
-          The first question asks students to designate ethnicity as either: {'\n'}* Hispanic or
-          Latino OR {'\n'} * Not Hispanic or Latino
+          The first question asks students to designate ethnicity as either:{' '}
+          <ul>
+            <li>Hispanic or Latino OR</li>
+            <li>Not Hispanic or Latino</li>
+          </ul>
         </Typography>
         <Typography variant="body1" gutterbottom>
           Note: The federal government considers "Hispanic/Latino" to be an ethnicity, not a race.
@@ -46,17 +47,29 @@ const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
           question is asked separately and Hispanic/Latino is no longer listed as a race
           identification category.
         </Typography>
+        <br />
         <Typography variant="body1" gutterbottom>
           The second question asks individuals to indicate one or more races that apply from the
-          following (you can select multiple categories): * American Indian or Alaska Native (Having
-          origins in any of the original peoples of North and South America, including Central
-          America) {'\n'} * Asian {'\n'} * Black or African American {'\n'} * Native Hawaiian or
-          Other Pacific Islander {'\n'} * White (Having origins in any of the original peopels of
-          Europe, North Africa, or the Middle East)
+          following (you can select multiple categories):{' '}
+          <ul>
+            <li>
+              American Indian or Alaska Native (Having origins in any of the original peoples of
+              North and South America, including Central America)
+            </li>
+
+            <li> Asian</li>
+            <li>Black or African American</li>
+            <li> Native Hawaiian or Other Pacific Islander </li>
+            <li>
+              White (Having origins in any of the original peoples of Europe, North Africa, or the
+              Middle East)
+            </li>
+          </ul>
         </Typography>
-        <Typography variant="h6" gutterbottom>
+        <Typography variant="subtitle1" gutterbottom>
           Please provide/confirm the following information:
         </Typography>
+        <br />
         <FormControl>
           <FormLabel component="legend">Ethnicity:</FormLabel>
           <RadioGroup

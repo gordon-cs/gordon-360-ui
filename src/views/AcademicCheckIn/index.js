@@ -4,9 +4,12 @@ import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyCo
 import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
 import { Button, Grid, Card, CardHeader, Box } from '@material-ui/core';
 import { checkInStatus } from 'services/checkIn';
+import { gordonColors } from 'theme';
 import './index.css';
 import PrivacyAgreement from './components/PrivacyAgreement';
 import RaceEthnicity from './components/RaceEthnicity';
+import ConfirmCheckIn from './components/ConfirmCheckIn';
+
 const AcademicCheckIn = () => {
   const [activeStep, setActiveStep] = useState(0);
 
@@ -22,6 +25,8 @@ const AcademicCheckIn = () => {
   };
 
   const steps = getSteps();
+
+  const holdStatus = false; // checkIn.getHoldStatus();
 
   const [values, setValues] = useState({
     firstName1: '',
@@ -73,13 +78,15 @@ const AcademicCheckIn = () => {
   const handleSubmit = () => {
     alert(
       `🧙‍♂️ \n
-      FirstName: ${values.firstname1}`,
+      FirstName: ${values.firstName1}`,
     );
   };
 
+  let cyan = gordonColors.primary.cyan;
+
   return (
     <Grid container justify="center" spacing={2}>
-      <Grid item xs={5}>
+      <Grid item xs={12} md={9} lg={5}>
         <Card>
           <CardHeader title="Academic Check In" className="checkIn-header" padding={30} />
           <Grid item>
@@ -87,7 +94,7 @@ const AcademicCheckIn = () => {
               <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
                 <Grid item>
                   <Grid container justify="center" alignItems="center">
-                    <Grid item xs={11}>
+                    <Grid item>
                       {activeStep === 0 && <AcademicCheckInWelcome handleChange={handleChange} />}
 
                       {activeStep === 1 && (
@@ -113,6 +120,7 @@ const AcademicCheckIn = () => {
                           handleCheck={handleCheck}
                         />
                       )}
+                      {activeStep == 5 && <ConfirmCheckIn values={values} />}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -123,7 +131,7 @@ const AcademicCheckIn = () => {
                   <Grid container justify="center" spacing={2}>
                     <Grid item>
                       <Button
-                        style={activeStep === 0 ? { display: 'none' } : {}}
+                        style={activeStep === 0 ? { display: 'none' } : { backgroundColor: cyan }}
                         variant="contained"
                         onClick={handlePrev}
                       >
@@ -134,7 +142,24 @@ const AcademicCheckIn = () => {
                       <Button
                         variant="contained"
                         onClick={handleNext}
-                        style={activeStep === steps.length ? { display: 'none' } : {}}
+                        style={
+                          activeStep === steps.length - 1
+                            ? { display: 'none' }
+                            : { backgroundColor: cyan }
+                        }
+                        disabled={
+                          (activeStep === 0 && holdStatus === true) ||
+                          (activeStep === 1 &&
+                            (values.firstName1 === '' || values.firstName2 === '')) ||
+                          (activeStep === 2 &&
+                            values.personalPhone === '' &&
+                            values.noPhone === false) ||
+                          (activeStep === 3 &&
+                            (values.FERPA === false ||
+                              values.dataUsage === false ||
+                              values.photoConsent === false)) ||
+                          (activeStep === 4 && values.ethnicity === '')
+                        }
                       >
                         {activeStep === 0 ? 'Begin Check-In' : 'Next'}
                       </Button>
@@ -143,7 +168,11 @@ const AcademicCheckIn = () => {
                       <Button
                         variant="contained"
                         onClick={handleSubmit}
-                        style={activeStep === steps.length ? {} : { display: 'none' }}
+                        style={
+                          activeStep === steps.length - 1
+                            ? { backgroundColor: cyan }
+                            : { display: 'none' }
+                        }
                       >
                         Submit
                       </Button>

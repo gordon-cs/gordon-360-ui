@@ -10,21 +10,28 @@ import {
   TextField,
 } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
+import { gordonColors } from 'theme';
 
 const UpdatePhone = ({ values, handleChange, handleCheck }) => {
+  const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justify="center" alignItems="center" direction="column">
-      <Typography variant="h5" gutterbottom>
-        Step 2: Enter your Cell Phone Number
-      </Typography>
-      <Grid item xs={7}>
-        <Typography align="center" gutterBottom variant="body2">
+      <Grid item style={{ color: cyan }}>
+        <Typography variant="h5" gutterbottom>
+          Step 2: Enter your Cell Phone Number
+        </Typography>
+      </Grid>
+
+      <Grid item>
+        <br />
+        <Typography gutterBottom variant="body2">
           Note: This information will be used to contact you with information in the event of issues
           with registration etc, not for emergencies. Your number to contact you in emergencies is
           handled by our 3rd-party company, RAVE.
         </Typography>
       </Grid>
-      <Grid item xs={5}>
+      <Grid item>
+        <br />
         <FormControl>
           <InputLabel htmlFor="component-simple"> Phone Number </InputLabel>
           <Input

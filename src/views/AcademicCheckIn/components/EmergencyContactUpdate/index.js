@@ -7,30 +7,26 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
   let cyan = gordonColors.primary.cyan;
   return (
     <Grid container justify="center" alignItems="center" direction="column">
-        <Typography variant="h5" gutterBottom style={{ color: cyan }}>
-          Step 1: Enter your Emergency Contact Information
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          <b> Who are your emergency contacts? </b>
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          HIPAA regulations prohibit sharing of medical information regarding anyone age 18 or over
-          without consent.
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          By listing emergency contacts below, I authorize the Gordon College staff to share medical
-          information with my emergency contact(s) during my enrollment at Gordon College. I hereby
-          authorize Gordon College to contact the following person(s) listed below in the event of a
-          medical emergency.
-        </Typography>
+      <Typography variant="h5" gutterBottom style={{ color: cyan }}>
+        Step 1: Enter your Emergency Contact Information
+      </Typography>
+      <Typography variant="h6" gutterBottom>
+        <b> Who are your emergency contacts? </b>
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        HIPAA regulations prohibit sharing of medical information regarding anyone age 18 or over
+        without consent.
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        By listing emergency contacts below, I authorize the Gordon College staff to share medical
+        information with my emergency contact(s) during my enrollment at Gordon College. I hereby
+        authorize Gordon College to contact the following person(s) listed below in the event of a
+        medical emergency.
+      </Typography>
 
-      <Grid container justify="left" direction="column" spacing={1}>
-
-
+      <Grid container justify="left" direction="column" spacing={2}>
         <Grid item>
-            <Typography variant="body1"> Emergency Contact 1 </Typography>
-        </Grid>
-        <Grid item>
+          <Typography variant="body1"> Emergency Contact 1 </Typography>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> First Name </InputLabel>
             <Input
@@ -40,8 +36,6 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
               onChange={handleChange}
             />
           </FormControl>
-        </Grid>
-        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Last Name </InputLabel>
             <Input
@@ -51,8 +45,6 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
               onChange={handleChange}
             />
           </FormControl>
-        </Grid>
-        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Relationship </InputLabel>
             <Input
@@ -62,8 +54,6 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
               onChange={handleChange}
             />
           </FormControl>
-        </Grid>
-        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Home Phone </InputLabel>
             <Input
@@ -73,8 +63,6 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
               onChange={handleChange}
             />
           </FormControl>
-        </Grid>
-        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Mobile Phone </InputLabel>
             <Input
@@ -86,11 +74,14 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
           </FormControl>
         </Grid>
 
+        <Grid item>
+          <br />
+        </Grid>
 
         <Grid item>
-            <Typography variant="body1"> Emergency Contact 2 </Typography>
+          <Typography variant="body1"> Emergency Contact 2 </Typography>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> First Name </InputLabel>
             <Input
@@ -101,7 +92,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Last Name </InputLabel>
             <Input
@@ -112,7 +103,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Relationship </InputLabel>
             <Input
@@ -123,7 +114,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Home Phone </InputLabel>
             <Input
@@ -134,7 +125,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Mobile Phone </InputLabel>
             <Input
@@ -146,11 +137,14 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
           </FormControl>
         </Grid>
 
+        <Grid item>
+          <br />
+        </Grid>
 
         <Grid item>
-            <Typography variant="body1"> Emergency Contact 3 </Typography>
+          <Typography variant="body1"> Emergency Contact 3 </Typography>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> First Name </InputLabel>
             <Input
@@ -161,7 +155,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Last Name </InputLabel>
             <Input
@@ -172,7 +166,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Relationship </InputLabel>
             <Input
@@ -183,7 +177,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Home Phone </InputLabel>
             <Input
@@ -194,7 +188,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
             />
           </FormControl>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item>
           <FormControl className="checkIn">
             <InputLabel htmlFor="component-simple"> Mobile Phone </InputLabel>
             <Input
@@ -207,7 +201,11 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
         </Grid>
       </Grid>
 
-      <Grid item xs={5}>
+      <Grid item>
+        <br />
+      </Grid>
+
+      <Grid item>
         <Typography variant="body2" gutterBottom>
           If, during the semester your emergency contact information must be updated, please contact
           Student Life at 978.867.4263.
