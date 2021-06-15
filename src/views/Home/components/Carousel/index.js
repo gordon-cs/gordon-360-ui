@@ -24,11 +24,10 @@ const GordonCarousel = () => {
     }
   };
 
-  let content;
   if (loading === true) {
-    content = <GordonLoader />;
+    return <GordonLoader />;
   } else {
-    content = (
+    return (
       <ImageGallery
         ref={(i) => {
           setImageGallery(i);
@@ -49,7 +48,6 @@ const GordonCarousel = () => {
       />
     );
   }
-  return content;
 };
 
 export default GordonCarousel;
