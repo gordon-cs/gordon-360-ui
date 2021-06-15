@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import IMG from 'react-graceful-image';
+import PropTypes from 'prop-types';
 import {
   Accordion,
   AccordionDetails,
@@ -40,6 +42,7 @@ const PARTICIPATION_LEVELS = {
 };
 
 const MemberListItem = ({
+  props,
   member,
   isAdmin,
   isSuperAdmin,
@@ -59,6 +62,29 @@ const MemberListItem = ({
   );
   const [participation, setParticipation] = useState(member.Participation);
   const [titleComment, setTitleComment] = useState(member.Description);
+  const [avatar, setAvatar] = useState(null);
+
+  useEffect(() => {
+    const loadAvatar = async () => {
+      setAvatar(null);
+      const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
+        await user.getImage(member.AD_Username),
+      ]);
+      let tempAvatar;
+      console.log(member.AD_Username);
+      if (member.AD_Username) {
+        tempAvatar = preferredImage || defaultImage;
+      } else {
+        tempAvatar = (
+          <svg width="50" height="50" viewBox="0 0 50 50">
+            <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+          </svg>
+        );
+      }
+      setAvatar(tempAvatar);
+    };
+    loadAvatar();
+  }, []);
 
   const handleToggleGroupAdmin = async () => {
     if (isAdmin && !isSuperAdmin && member.IDNumber === Number(user.getLocalInfo().id)) {
@@ -236,6 +262,13 @@ const MemberListItem = ({
             <Typography>
               {member.FirstName} {member.LastName}
             </Typography>
+            <IMG
+              className="people-search-avatar-mobile"
+              src={`data:image/jpg;base64,${avatar}`}
+              alt=""
+              noLazyLoad="true"
+              placeholderColor="#eeeeee"
+            />
           </Grid>
           <Grid item xs={2} style={rowStyle}>
             <Typography>{participationDescription}</Typography>
@@ -354,6 +387,14 @@ const MemberListItem = ({
       </GordonDialogBox>
     </>
   );
+};
+
+MemberListItem.propTypes = {
+  Person: PropTypes.shape({
+    FirstName: PropTypes.string.isRequired,
+    LastName: PropTypes.string.isRequired,
+    Email: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default MemberListItem;

@@ -4,6 +4,7 @@ import { gordonColors } from 'theme';
 
 import { Card, CardHeader, CardContent, Grid } from '@material-ui/core';
 import MemberListItem from './components/MemberListItem';
+import IMG from 'react-graceful-image';
 
 const breakpointWidth = 810;
 
@@ -33,7 +34,21 @@ const MemberList = ({
     return () => window.removeEventListener('resize', resize);
   });
 
+  // re-arranging names alpabetically and also by Hierarchy "Advisor" > "Leader" >
+  //"member" > "Guest".
+
   const compareByLastThenFirst = (a, b) => {
+    if (a.ParticipationDescription !== b.ParticipationDescription) {
+      if (a.ParticipationDescription == 'Advisor') return -1;
+      if (b.ParticipationDescription == 'Advisor') return 1;
+      if (a.ParticipationDescription == 'Leader') return -1;
+      if (b.ParticipationDescription == 'Leader') return 1;
+      if (a.ParticipationDescription == 'Member') return -1;
+      if (b.ParticipationDescription == 'Member') return 1;
+      if (a.ParticipationDescription == 'Guest') return -1;
+      if (b.ParticipationDescription == 'Guest') return 1;
+    } else {
+    }
     if (a.LastName.toUpperCase() < b.LastName.toUpperCase()) {
       return -1;
     }
@@ -93,38 +108,11 @@ const MemberList = ({
       style={headerStyle}
     />
   );
-  /// function that re-arrange names alpabetically and also by Advisor, Leader, members and Guest
-  // by Hierarchy.
-  function sortByParticipation(memberArr) {
-    let advisors = [];
-    let leaders = [];
-    let members = [];
-    let guests = [];
-    memberArr.map((member) => {
-      if (member.ParticipationDescription === 'Member') {
-        members.push(member);
-      } else if (member.ParticipationDescription === 'Leader') {
-        leaders.push(member);
-      } else if (member.ParticipationDescription === 'Advisor') {
-        advisors.push(member);
-      } else if (member.ParticipationDescription === 'Guest') {
-        guests.push(member);
-      }
-    });
-    memberArr = [];
-    advisors.map((advisor) => memberArr.push(advisor));
-    leaders.map((leader) => memberArr.push(leader));
-    members.map((member) => memberArr.push(member));
-    guests.map((guest) => memberArr.push(guest));
-
-    return memberArr;
-  }
-
   return (
     <Card>
       {header}
       <CardContent>
-        {sortByParticipation(members.sort(compareByLastThenFirst)).map((member) => (
+        {members.sort(compareByLastThenFirst).map((member) => (
           <MemberListItem
             member={member}
             key={member.MembershipID}
