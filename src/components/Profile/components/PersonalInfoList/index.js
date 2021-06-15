@@ -32,6 +32,7 @@ const PersonalInfoList = ({
   myProf,
   profile: {
     Advisors,
+    CliftonStrengths,
     BuildingDescription,
     Country,
     Hall,
@@ -183,6 +184,13 @@ const PersonalInfoList = ({
     />
   ) : null;
 
+  const cliftonStrengths = (
+    <ProfileInfoListItem
+      title="Clifton Strengths:"
+      contentText={CliftonStrengths?.Strengths ? CliftonStrengths.Strengths.join(', ') : 'Unset'}
+    />
+  );
+
   const advisors =
     myProf && isStudent ? (
       <ProfileInfoListItem
@@ -309,6 +317,7 @@ const PersonalInfoList = ({
           <List>
             {majors}
             {minors}
+            {cliftonStrengths}
             {advisors}
             {onOffCampus}
             {dormInfo}
