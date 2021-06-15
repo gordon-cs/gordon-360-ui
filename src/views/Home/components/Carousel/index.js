@@ -24,15 +24,6 @@ const GordonCarousel = () => {
     }
   };
 
-  // const handleClickSlide = useCallback(
-  //   () => {
-  //     if (carouselContent[imageGallery.getCurrentIndex()].ActionLink !== '') {
-  //       window.location = carouselContent[imageGallery.getCurrentIndex()].ActionLink;
-  //     }
-  //   },
-  //   [carouselContent, imageGallery],
-  // );
-
   let content;
   if (loading === true) {
     content = <GordonLoader />;
