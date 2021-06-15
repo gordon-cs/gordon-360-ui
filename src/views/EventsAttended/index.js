@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import event from 'services/event';
 import GordonLoader from 'components/Loader';
 import EventList from 'components/EventList';
 import { Link } from 'react-router-dom';
 import { gordonColors } from 'theme';
 
-import { List, Grid, Card, CardContent, Button, Typography } from '@material-ui/core';
+import { List, Grid, Button, Typography } from '@material-ui/core';
 
 export default class EventsAttended extends Component {
   constructor(props) {
@@ -79,28 +80,7 @@ export default class EventsAttended extends Component {
         );
       }
     } else {
-      content = (
-        <Grid container justify="center" spacing="2">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent class="cardContent">
-                <h1>You are not logged in.</h1>
-                <br />
-                <h4>You must be logged in to view your attended events.</h4>
-                <br />
-                <Button
-                  style={style.button}
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Login
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
+      content = <GordonUnauthorized feature={'your attended events'} />;
     }
 
     return (
