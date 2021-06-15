@@ -79,7 +79,7 @@ const AcademicCheckIn = () => {
 
   return (
     <Grid container justify="center" spacing={2}>
-      <Grid item xs={6}>
+      <Grid item xs={5}>
         <Card>
           <CardHeader title="Academic Check In" className="checkIn-header" padding={30} />
           <Grid item>
@@ -87,7 +87,7 @@ const AcademicCheckIn = () => {
               <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
                 <Grid item>
                   <Grid container justify="center" alignItems="center">
-                    <Grid item xs={10}>
+                    <Grid item xs={11}>
                       {activeStep === 0 && <AcademicCheckInWelcome handleChange={handleChange} />}
 
                       {activeStep === 1 && (
