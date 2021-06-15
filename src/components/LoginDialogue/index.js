@@ -59,6 +59,7 @@ const LoginDialogue = ({ onLogIn }) => {
           margin="normal"
           fullWidth
           autoFocus
+          variant="filled"
         />
         <TextField
           id="password"
@@ -69,6 +70,7 @@ const LoginDialogue = ({ onLogIn }) => {
           onChange={(e) => setPassword(e.target.value)}
           margin="normal"
           fullWidth
+          variant="filled"
         />
         <Typography className="error" variant="body2" color="error">
           {error}

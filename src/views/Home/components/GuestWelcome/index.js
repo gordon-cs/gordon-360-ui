@@ -4,7 +4,7 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 import { projectName } from 'project-name';
 import PropTypes from 'prop-types';
 import PWAInstructions from 'components/PWAInstructions/index';
-import LoginDialogue from '../../../../components/LoginDialogue';
+import LoginDialogue from 'components/LoginDialogue';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ga } from 'react-ga';
 import './guestWelcome.css';
