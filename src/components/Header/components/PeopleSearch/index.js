@@ -181,8 +181,6 @@ export default class GordonPeopleSearch extends Component {
 
   renderSuggestion(params) {
     const { suggestion, itemProps } = params;
-    console.log("renderSuggestion", suggestion);
-    console.log("nickname", suggestion.Nickname);
     let suggestionIndex = this.state.suggestionIndex;
     let suggestionList = this.state.suggestions;
     // Bail if any required properties are missing
