@@ -87,7 +87,6 @@ export default class GordonPeopleSearch extends Component {
     query = query.toLowerCase();
 
     let suggestions = await peopleSearch.search(query);
-    console.log(suggestions);
     this.setState({ suggestions });
   }
 

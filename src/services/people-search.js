@@ -12,7 +12,7 @@ import http from './http';
  * @property {String} FirstName First name
  * @property {String} Nickname Nickname
  * @property {String} LastName Last name
- * @property {String} Username Firstname.Lastname format
+ * @property {String} UserName Firstname.Lastname format
  * @property {String} ConcatonatedInfo All names combined in a single string
  */
 
