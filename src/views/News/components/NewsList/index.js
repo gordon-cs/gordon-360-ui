@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import NewsItem from '../NewsItem';
 import { gordonColors } from 'theme';
@@ -6,86 +6,51 @@ import './newsList.scss';
 
 import { Grid, Typography, Card, List } from '@material-ui/core';
 
-export default class NewsList extends Component {
-  constructor(props) {
-    super(props);
+const BREAKPOINT_WIDTH = 540;
 
-    this.handleExpandClick = this.handleExpandClick.bind(this);
+const NewsList = (props) => {
+  const { news } = props;
+  const { personalUnapprovedNews } = props;
+  const [postings, setPostings] = useState();
+  const [personalUnapprovedPostings, setPersonalUnapprovedPostings] = useState();
+  const [header, setHeader] = useState();
 
-    this.state = {
-      open: false,
-    };
-    this.breakpointWidth = 540;
-  }
-
-  handleExpandClick() {
-    this.setState({ open: !this.state.open });
-  }
-
-  //Has to rerender on screen resize in order for table to switch to the mobile view
-  resize = () => {
-    if (this.breakpointPassed()) {
-      this.isMobileView = !this.isMobileView;
-      this.forceUpdate();
-    }
-  };
-
-  //checks if the screen has been resized past the mobile breakpoint
-  //allows for forceUpdate to only be called when necessary, improving resizing performance
-  breakpointPassed() {
-    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
-    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
-    else return false;
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
-  }
-
-  render() {
-    const { news } = this.props;
-    const { personalUnapprovedNews } = this.props;
-    let postings;
-    let personalUnapprovedPostings;
-    let header;
-
+  useEffect(() => {
     const headerStyle = {
       backgroundColor: gordonColors.primary.blue,
       color: '#FFF',
       padding: '10px',
     };
 
-    /********** HEADER ***********/
-    // Show single 'news' column for narrrow viewports
-    if (window.innerWidth < this.breakpointWidth) {
-      personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="single"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-          unapproved
-        />
-      ));
+    if (window.innerWidth < BREAKPOINT_WIDTH) {
+      setPersonalUnapprovedPostings(
+        personalUnapprovedNews.map((posting) => (
+          <NewsItem
+            posting={posting}
+            key={posting.SNID}
+            size="single"
+            updateSnackbar={props.updateSnackbar}
+            currentUsername={props.currentUsername}
+            callFunction={props.callFunction}
+            unapproved
+          />
+        )),
+      );
 
-      postings = news.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="single"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-        />
-      ));
+      setPostings(
+        news.map((posting) => (
+          <NewsItem
+            posting={posting}
+            key={posting.SNID}
+            size="single"
+            updateSnackbar={props.updateSnackbar}
+            currentUsername={props.currentUsername}
+            callFunction={props.callFunction}
+          />
+        )),
+      );
 
-      header = (
+      setHeader(
         <div style={headerStyle}>
           <Grid container direction="row">
             <Grid item xs={12}>
@@ -94,36 +59,37 @@ export default class NewsList extends Component {
               </Typography>
             </Grid>
           </Grid>
-        </div>
+        </div>,
       );
-    }
+    } else if (news) {
+      setPersonalUnapprovedPostings(
+        personalUnapprovedNews.map((posting) => (
+          <NewsItem
+            posting={posting}
+            key={posting.SNID}
+            size="full"
+            updateSnackbar={props.updateSnackbar}
+            currentUsername={props.currentUsername}
+            callFunction={props.callFunction}
+            unapproved
+          />
+        )),
+      );
 
-    // Show full news columns in header for larger viewports
-    else if (news) {
-      personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="full"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-          unapproved
-        />
-      ));
+      setPostings(
+        news.map((posting) => (
+          <NewsItem
+            posting={posting}
+            key={posting.SNID}
+            updateSnackbar={props.updateSnackbar}
+            currentUsername={props.currentUsername}
+            callFunction={props.callFunction}
+            size="full"
+          />
+        )),
+      );
 
-      postings = news.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-          size="full"
-        />
-      ));
-
-      header = (
+      setHeader(
         <Grid container direction="row" style={headerStyle}>
           <Grid item xs={2}>
             <Typography variant="body1" style={headerStyle}>
@@ -145,20 +111,30 @@ export default class NewsList extends Component {
               POSTED
             </Typography>
           </Grid>
-        </Grid>
+        </Grid>,
       );
     }
+  }, [
+    personalUnapprovedNews,
+    postings,
+    header,
+    news,
+    props.callFunction,
+    props.currentUsername,
+    props.updateSnackbar,
+  ]);
 
-    return (
-      <Card>
-        {header}
-        <Grid>
-          <List className="news-list" disablePadding>
-            {personalUnapprovedPostings}
-            {postings}
-          </List>
-        </Grid>
-      </Card>
-    );
-  }
-}
+  return (
+    <Card>
+      {header}
+      <Grid>
+        <List className="news-list" disablePadding>
+          {personalUnapprovedPostings}
+          {postings}
+        </List>
+      </Grid>
+    </Card>
+  );
+};
+
+export default NewsList;
