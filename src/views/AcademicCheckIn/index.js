@@ -4,7 +4,6 @@ import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyCo
 import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
 import { Button, Grid, Card, CardHeader, Box } from '@material-ui/core';
 import { checkInStatus } from 'services/checkIn';
-import { gordonColors } from 'theme';
 import './index.css';
 import PrivacyAgreement from './components/PrivacyAgreement';
 import RaceEthnicity from './components/RaceEthnicity';
@@ -41,6 +40,17 @@ const AcademicCheckIn = () => {
     homePhone3: '',
     mobilePhone3: '',
     personalPhone: '',
+    makePublic: false,
+    noPhone: false,
+    FERPA: false,
+    dataUsage: false,
+    photoConsent: false,
+    ethnicity: '',
+    nativeAmerican: false,
+    asian: false,
+    black: false,
+    hawaiian: false,
+    white: false,
   });
 
   const handleNext = () => {
@@ -56,6 +66,10 @@ const AcademicCheckIn = () => {
     console.log(values);
   }
 
+  const handleCheck = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.checked });
+  };
+
   const handleSubmit = () => {
     alert(
       `🧙‍♂️ \n
@@ -63,67 +77,77 @@ const AcademicCheckIn = () => {
     );
   };
 
-  let blue = gordonColors.primary.blue;
-
   return (
     <Grid container justify="center" spacing={2}>
       <Grid item xs={9}>
         <Card>
-          <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
-            <Grid item xs={12}>
-              <CardHeader title="Academic Check In" className="checkIn-header" />
-            </Grid>
+          <CardHeader title="Academic Check In" className="checkIn-header" padding={30} />
+          <Grid item>
             <Box m={2}>
-              <Grid item>
-                <Grid container justify="center" alignItems="center">
-                  <Grid item xs={12}>
-                    {activeStep === 0 && <AcademicCheckInWelcome handleChange={handleChange} />}
+              <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
+                <Grid item>
+                  <Grid container justify="center" alignItems="center">
+                    <Grid item xs={12}>
+                      {activeStep === 0 && <AcademicCheckInWelcome handleChange={handleChange} />}
 
-                    {activeStep === 1 && (
-                      <EmergencyContactUpdate values={values} handleChange={handleChange} />
-                    )}
+                      {activeStep === 1 && (
+                        <EmergencyContactUpdate values={values} handleChange={handleChange} />
+                      )}
 
-                    {activeStep === 2 && (
-                      <UpdatePhone values={values} handleChange={handleChange} />
-                    )}
+                      {activeStep === 2 && (
+                        <UpdatePhone
+                          values={values}
+                          handleChange={handleChange}
+                          handleCheck={handleCheck}
+                        />
+                      )}
 
-                    {activeStep === 3 && <PrivacyAgreement />}
+                      {activeStep === 3 && (
+                        <PrivacyAgreement values={values} handleCheck={handleCheck} />
+                      )}
 
-                    {activeStep === 4 && <RaceEthnicity />}
+                      {activeStep === 4 && (
+                        <RaceEthnicity
+                          values={values}
+                          handleChange={handleChange}
+                          handleCheck={handleCheck}
+                        />
+                      )}
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-              <Grid item>
-                <br />
-              </Grid>
-              <Grid item>
-                <Grid container justify="center" spacing={2}>
-                  <Grid item>
-                    <Button
-                      style={activeStep === 0 ? { display: 'none' } : {}}
-                      variant="contained"
-                      onClick={handlePrev}
-                    >
-                      Back
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      onClick={handleNext}
-                      style={activeStep === steps.length ? { display: 'none' } : {}}
-                    >
-                      {activeStep === 0 ? 'Begin Check-In' : 'Next'}
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      onClick={handleSubmit}
-                      style={activeStep === steps.length ? {} : { display: 'none' }}
-                    >
-                      Submit
-                    </Button>
+                <Grid item>
+                  <br />
+                </Grid>
+                <Grid item>
+                  <Grid container justify="center" spacing={2}>
+                    <Grid item>
+                      <Button
+                        style={activeStep === 0 ? { display: 'none' } : {}}
+                        variant="contained"
+                        onClick={handlePrev}
+                      >
+                        Back
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        onClick={handleNext}
+                        style={activeStep === steps.length ? { display: 'none' } : {}}
+                      >
+                        {activeStep === 0 ? 'Begin Check-In' : 'Next'}
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        onClick={handleSubmit}
+                        style={activeStep === steps.length ? {} : { display: 'none' }}
+                      >
+                        Submit
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>

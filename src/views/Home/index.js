@@ -9,7 +9,7 @@ import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
 import user from 'services/user';
 import wellness from 'services/wellness';
-import checkIn from 'services/checkIn';
+// import checkIn from 'services/checkIn';
 import storage from 'services/storage';
 import GuestWelcome from './components/GuestWelcome';
 import './home.css';

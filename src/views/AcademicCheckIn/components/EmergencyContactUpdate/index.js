@@ -26,7 +26,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
         </Typography>
       </Grid>
       <br />
-      <Grid item xs={5}>
+      <Grid item xs={8}>
         <Box m={2}>
           <Typography variant="body1"> Emergency Contact 1 </Typography>
         </Box>

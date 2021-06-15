@@ -8,17 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 
-const PrivacyAgreement = () => {
-  const [checked, setChecked] = useState({
-    FERPA: false,
-    dataUsage: false,
-    photoConsent: false,
-  });
-
-  const handleCheck = (e) => {
-    setChecked({ ...checked, [e.target.name]: e.target.checked });
-  };
-
+const PrivacyAgreement = ({ values, handleCheck }) => {
   return (
     <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
       <Grid item xs={7}>
@@ -116,7 +106,7 @@ const PrivacyAgreement = () => {
           </Typography>
           <FormControl>
             <FormControlLabel
-              control={<Checkbox checked={checked.FERPA} name="FERPA" onChange={handleCheck} />}
+              control={<Checkbox checked={values.FERPA} name="FERPA" onChange={handleCheck} />}
               label="I have read and understand the On-Campus Data Usage paragraph above and I give 
               Gordon College consent to store and process my personal information as outline in its
               data privacy policy"
@@ -138,7 +128,7 @@ const PrivacyAgreement = () => {
           <FormControl>
             <FormControlLabel
               control={
-                <Checkbox checked={checked.dataUsage} name="dataUsage" onChange={handleCheck} />
+                <Checkbox checked={values.dataUsage} name="dataUsage" onChange={handleCheck} />
               }
               label="I have read and understand the On-Campus Data Usage paragraph above and I give
             Gordon College consent to store and process my personal information as outline in its
@@ -164,7 +154,7 @@ const PrivacyAgreement = () => {
           <FormControl>
             <FormControlLabel
               control={
-                <Checkbox checked={checked.dataUsage} name="dataUsage" onChange={handleCheck} />
+                <Checkbox checked={values.dataUsage} name="dataUsage" onChange={handleCheck} />
               }
               label="I have read and understand the On-Campus Data Usage paragraph above and I give
             Gordon College consent to store and process my personal information as outline in its

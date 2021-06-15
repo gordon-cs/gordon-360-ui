@@ -11,16 +11,7 @@ import {
 } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 
-const UpdatePhone = ({ values, handleChange }) => {
-  const [checked, setChecked] = useState({
-    makePublic: false,
-    noPhone: false,
-  });
-
-  const handleCheck = (e) => {
-    setChecked({ ...checked, [e.target.name]: e.target.checked });
-  };
-
+const UpdatePhone = ({ values, handleChange, handleCheck }) => {
   return (
     <Grid container justify="center" alignItems="center" direction="column">
       <Typography variant="h5" gutterbottom>
@@ -44,12 +35,12 @@ const UpdatePhone = ({ values, handleChange }) => {
           />
           <FormControlLabel
             control={
-              <Checkbox checked={checked.makePublic} name="makePublic" onChange={handleCheck} />
+              <Checkbox checked={values.makePublic} name="makePublic" onChange={handleCheck} />
             }
             label="Make my number public on People Search"
           />
           <FormControlLabel
-            control={<Checkbox checked={checked.noPhone} name="noPhone" onChange={handleCheck} />}
+            control={<Checkbox checked={values.noPhone} name="noPhone" onChange={handleCheck} />}
             label="I don't have a cell-phone"
           />
         </FormControl>

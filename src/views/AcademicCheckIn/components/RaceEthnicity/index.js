@@ -11,22 +11,11 @@ import {
   Typography,
 } from '@material-ui/core';
 
-const RaceEthnicity = () => {
-  const [checked, setChecked] = useState({
-    nativeAmerican: false,
-    asian: false,
-    black: false,
-    hawaiian: false,
-    white: false,
-  });
+const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
   const [radioChoice, setRadioChoice] = useState({
     yes: '',
     no: '',
   });
-
-  const handleCheck = (e) => {
-    setChecked({ ...checked, [e.target.name]: e.target.checked });
-  };
 
   return (
     <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
@@ -70,9 +59,14 @@ const RaceEthnicity = () => {
         </Typography>
         <FormControl>
           <FormLabel component="legend">Ethnicity:</FormLabel>
-          <RadioGroup aria-label="ethnicity" name="ethnicity1">
-            <FormControlLabel value="notH-L" control={<Radio />} label="Not Hispanic/Latino" />
-            <FormControlLabel value="H-L" control={<Radio />} label="Hispanic/Latino" />
+          <RadioGroup
+            aria-label="ethnicity"
+            name="ethnicity"
+            value={values.ethnicity}
+            onChange={handleChange}
+          >
+            <FormControlLabel value="notH_L" control={<Radio />} label="Not Hispanic/Latino" />
+            <FormControlLabel value="H_L" control={<Radio />} label="Hispanic/Latino" />
           </RadioGroup>
         </FormControl>
         <FormControl>
@@ -80,7 +74,7 @@ const RaceEthnicity = () => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={checked.nativeAmerican}
+                checked={values.nativeAmerican}
                 name="nativeAmerican"
                 onChange={handleCheck}
               />
@@ -88,19 +82,19 @@ const RaceEthnicity = () => {
             label="American Indian or Alaska Native"
           />
           <FormControlLabel
-            control={<Checkbox checked={checked.asian} name="asian" onChange={handleCheck} />}
+            control={<Checkbox checked={values.asian} name="asian" onChange={handleCheck} />}
             label="Asian"
           />
           <FormControlLabel
-            control={<Checkbox checked={checked.black} name="black" onChange={handleCheck} />}
+            control={<Checkbox checked={values.black} name="black" onChange={handleCheck} />}
             label="Black or African American"
           />
           <FormControlLabel
-            control={<Checkbox checked={checked.hawaiian} name="hawaiian" onChange={handleCheck} />}
+            control={<Checkbox checked={values.hawaiian} name="hawaiian" onChange={handleCheck} />}
             label="Native Hawaiian or Other Pacific Islander"
           />
           <FormControlLabel
-            control={<Checkbox checked={checked.white} name="white" onChange={handleCheck} />}
+            control={<Checkbox checked={values.white} name="white" onChange={handleCheck} />}
             label="White"
           />
         </FormControl>
