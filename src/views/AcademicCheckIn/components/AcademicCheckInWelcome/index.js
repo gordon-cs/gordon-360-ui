@@ -1,11 +1,11 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
-import './index.css';
+// import './index.css';
 
 const AcademicCheckInWelcome = () => {
   return (
     <Typography justify="center" className="checkIn">
-      Do you have the gay ???????????
+      Academic Check In Welcome
     </Typography>
   );
 };
