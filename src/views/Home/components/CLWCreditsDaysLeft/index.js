@@ -12,41 +12,31 @@ import './CLWChart.css';
 import { Card, CardHeader, CardContent, Typography, Grid, Button } from '@material-ui/core';
 
 const CLWCreditsDaysLeft = () => {
-  const [state, setState] = useState({
-    daysLeft: [],
-    chapelCredits: {},
-    error: null,
-    loading: true,
-    currSessionDescription: '',
-  });
+  const [daysLeft, setDaysLeft] = useState([]);
+  const [chapelCredits, setChapelCredits] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [currSessionDescription, setCurrSessionDescription] = useState('');
+
 
   useEffect(() => {
     const loadData = async () => {
-      setState({ loading: true });
-      try {
-const daysLeft = await session.getDaysLeft();
-const chapelCredits = await user.getChapelCredits();
-const currSession = await session.getCurrent();
-        const currSessionDescription = currSession.SessionDescription.replace(
-          /(Academic Year)|(Grad)/gm,
-          '',
-        );
-        setState({
-          loading: false,
-          daysLeft: daysLeft,
-          chapelCredits: chapelCredits,
-          currSessionDescription: currSessionDescription,
-        });
-      } catch (error) {
-        setState({ error });
-      }
+      setLoading(true);
+      const daysLeft = await session.getDaysLeft();
+      const chapelCredits = await user.getChapelCredits();
+      const currSession = await session.getCurrent();
+      const currSessionDescription = currSession.SessionDescription.replace(
+        /(Academic Year)|(Grad)/gm,
+        '',
+      );
+
+      setLoading(false);
+      setDaysLeft(daysLeft);
+      setChapelCredits(chapelCredits);
+      setCurrSessionDescription(currSessionDescription);
     };
+
     loadData();
   }, []);
-
-  if (state.error) {
-    throw state.error;
-  }
 
   let daysColor = gordonColors.primary.blue;
   let chapelColor = gordonColors.primary.cyan;
@@ -60,12 +50,13 @@ const currSession = await session.getCurrent();
   };
 
   defaults.global.legend.display = false;
+
   let content;
-  if (state.loading === true) {
+  if (loading === true) {
     content = <GordonLoader />;
   } else {
-    const daysLeft = state.daysLeft[0] < 0 ? 0 : state.daysLeft[0];
-    const daysFinished = state.daysLeft[1] - daysLeft;
+    const daysRemaining = daysLeft[0] < 0 ? 0 : daysLeft[0];
+    const daysFinished = daysLeft[1] - daysRemaining;
 
     const options = {
       cutoutPercentage: 25,
@@ -85,7 +76,7 @@ const currSession = await session.getCurrent();
       legend: false,
     };
 
-    const { current, required } = state.chapelCredits;
+    const { current, required } = chapelCredits;
     const remaining = current > required ? 0 : required - current;
 
     const data = {
@@ -94,7 +85,7 @@ const currSession = await session.getCurrent();
       datasets: [
         {
           label: ['Days Finished', 'Days Remaining'],
-          data: [daysFinished, daysLeft],
+          data: [daysFinished, daysRemaining],
           backgroundColor: [daysColor, emptyColor],
         },
         {
@@ -115,7 +106,7 @@ const currSession = await session.getCurrent();
         >
           <Grid item>
             <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
-              {`${daysLeft} Days Left`}
+              {`${daysRemaining} Days Left`}
             </Typography>
           </Grid>
           <Grid item>
@@ -177,7 +168,7 @@ const currSession = await session.getCurrent();
             </Button>
           </Grid>
           <Grid item xs={4} align="center">
-            <CardHeader title={state.currSessionDescription} />
+            <CardHeader title={currSessionDescription} />
           </Grid>
           <Grid item xs={4} align="right">
             <Button
