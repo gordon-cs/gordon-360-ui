@@ -3,9 +3,6 @@
  *
  * @module studentNews
  */
-// Written by Jessica Guan
-// Modified by Cameron Abbot
-//Modified by Josh Peters (for CS Practicum 2021)
 
 import { DateTime } from 'luxon';
 import http from './http';
