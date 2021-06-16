@@ -441,7 +441,8 @@ async function setAdvisors(profile) {
 }
 
 async function setCliftonStrengths(profile) {
-  profile.CliftonStrengths = await getCliftonStrengths(profile.AD_Username);
+  const cliftonStrengths = await getCliftonStrengths(profile.AD_Username);
+  profile.CliftonStrengths = cliftonStrengths?.Strengths;
 }
 
 async function setMobilePhonePrivacy(makePrivate) {

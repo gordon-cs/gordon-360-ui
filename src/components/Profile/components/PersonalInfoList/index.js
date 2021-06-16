@@ -184,12 +184,12 @@ const PersonalInfoList = ({
     />
   ) : null;
 
-  const cliftonStrengths = CliftonStrengths?.Strengths ? (
+  const cliftonStrengths = CliftonStrengths ? (
     <ProfileInfoListItem
       title="Clifton Strengths:"
-      contentText={CliftonStrengths.Strengths.join(', ')}
+      contentText={CliftonStrengths.join(', ')}
     />
-  ) : '';
+  ) : null;
 
   const advisors =
     myProf && isStudent ? (
