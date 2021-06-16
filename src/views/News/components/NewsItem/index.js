@@ -14,14 +14,12 @@ const NewsItem = (props) => {
   const [open, setOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(useNetworkStatus());
 
-  const size = props;
+  const size = props.size;
   const postingDescription = props.posting.Body;
   const postingImage = props.posting.Image;
   const { unapproved } = props;
 
   let posting = props.posting;
-
-  console.log(props.currentUsername);
 
   useEffect(() => {
     /* Used to re-render the page when the network connection changes.
@@ -40,22 +38,7 @@ const NewsItem = (props) => {
         setIsOnline(false);
       }
     });
-
-    // let network;
-    // /* Attempts to get the network status from local storage.
-    //  * If not found, the default value is online
-    //  */
-    // try {
-    //   network = storage.get('network-status');
-    // } catch (error) {
-    //   // Defaults the network to online if not found in local storage
-    //   network = 'online';
-    // }
-    // // Saves the network's status to this component's state
-    // // setState({ network });
   });
-
-  setIsOnline(useNetworkStatus());
 
   useEffect(() => {
     window.removeEventListener('message', () => {});

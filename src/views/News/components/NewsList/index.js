@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from 'react';
-
+import React from 'react';
 import NewsItem from '../NewsItem';
 import { gordonColors } from 'theme';
 import './newsList.scss';
-
 import { Grid, Typography, Card, List } from '@material-ui/core';
 
 const BREAKPOINT_WIDTH = 540;
 
 const NewsList = (props) => {
   const { news } = props;
-  // const { personalUnapprovedNews } = props;
-  // const [postings, setPostings] = useState();
-  // const [personalUnapprovedPostings, setPersonalUnapprovedPostings] = useState();
-  // const [header, setHeader] = useState();
   let header;
   let personalUnapprovedPostings;
   let postings;
@@ -61,7 +55,6 @@ const NewsList = (props) => {
       </div>
     );
   } else if (news) {
-    console.log('2');
     personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
       <NewsItem
         posting={posting}

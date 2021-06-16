@@ -131,10 +131,16 @@ const StudentNews = (props) => {
       }
     };
     loadNews();
-    console.log('1');
   }, [props.authentication]);
 
-  useEffect(() => {});
+  useEffect(() => {
+    const loadUsername = async () => {
+      const user = await userService.getProfileInfo();
+      setCurrentUsername(user.AD_Username);
+    };
+
+    loadUsername();
+  });
 
   function maxCropPreviewWidth() {
     /*
@@ -461,13 +467,6 @@ const StudentNews = (props) => {
   /***************************************************
   /*End of methods solely related to photo submission*
   /***************************************************/
-
-  const loadUsername = async () => {
-    const user = await userService.getProfileInfo();
-    setCurrentUsername(user.AD_Username);
-  };
-
-  loadUsername(); //This can NOT be right, but useEffect certainly wasn't either.
 
   // if all of the inputs are filled, enable 'submit' button
   let submitButtonDisabled = newPostCategory === '' || newPostSubject === '' || newPostBody === '';
