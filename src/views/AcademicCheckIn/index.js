@@ -29,6 +29,14 @@ const AcademicCheckIn = () => {
   const holdStatus = false; // checkIn.getHoldStatus();
 
   const [values, setValues] = useState({
+    studentFirstName: 'Silas',
+    studentLastName: 'White',
+    registrationHold: false,
+    highSchoolTranscriptHold: false,
+    financialHold: false,
+    medicalHold: false,
+    laVidaHold: false,
+    declarationOfMajorHold: false,
     firstName1: '',
     lastName1: '',
     relationship1: '',
@@ -87,99 +95,93 @@ const AcademicCheckIn = () => {
   return (
     <Grid container justify="center" spacing={2}>
       <Grid item xs={12} md={9} lg={5}>
-        <Card>
+        <Card className="academicCheckIn">
           <CardHeader title="Academic Check In" className="checkIn-header" padding={30} />
-            <Box m={2}>
-              <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
-                <Grid item>
-                  <Grid container justify="center" alignItems="center">
-                    <Grid item>
-                      {activeStep === 0 && <AcademicCheckInWelcome handleChange={handleChange} />}
+          <Box m={2}>
+            <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
+              <Grid item>
+                <Grid container justify="center" alignItems="center">
+                  <Grid item>
+                    {activeStep === 0 && (
+                      <AcademicCheckInWelcome handleChange={(values, handleChange)} />
+                    )}
 
-                      {activeStep === 1 && (
-                        <EmergencyContactUpdate values={values} handleChange={handleChange} />
-                      )}
+                    {activeStep === 1 && (
+                      <EmergencyContactUpdate values={values} handleChange={handleChange} />
+                    )}
 
-                      {activeStep === 2 && (
-                        <UpdatePhone
-                          values={values}
-                          handleChange={handleChange}
-                          handleCheck={handleCheck}
-                        />
-                      )}
+                    {activeStep === 2 && (
+                      <UpdatePhone
+                        values={values}
+                        handleChange={handleChange}
+                        handleCheck={handleCheck}
+                      />
+                    )}
 
-                      {activeStep === 3 && (
-                        <PrivacyAgreement values={values} handleCheck={handleCheck} />
-                      )}
+                    {activeStep === 3 && (
+                      <PrivacyAgreement values={values} handleCheck={handleCheck} />
+                    )}
 
-                      {activeStep === 4 && (
-                        <RaceEthnicity
-                          values={values}
-                          handleChange={handleChange}
-                          handleCheck={handleCheck}
-                        />
-                      )}
-                      {activeStep === 5 && <ConfirmCheckIn values={values} />}
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item>
-                  <br />
-                </Grid>
-                <Grid item>
-                  <Grid container justify="center" spacing={2}>
-                    <Grid item>
-                      <Button
-                        style={activeStep === 0 ? { display: 'none' } : { backgroundColor: cyan }}
-                        variant="contained"
-                        onClick={handlePrev}
-                      >
-                        Back
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        onClick={handleNext}
-                        style={
-                          activeStep === steps.length - 1
-                            ? { display: 'none' }
-                            : { backgroundColor: cyan }
-                        }
-                        disabled={
-                          (activeStep === 0 && holdStatus === true) ||
-                          (activeStep === 1 &&
-                            (values.firstName1 === '' || values.firstName2 === '')) ||
-                          (activeStep === 2 &&
-                            values.personalPhone === '' &&
-                            values.noPhone === false) ||
-                          (activeStep === 3 &&
-                            (values.FERPA === false ||
-                              values.dataUsage === false ||
-                              values.photoConsent === false)) ||
-                          (activeStep === 4 && values.ethnicity === '')
-                        }
-                      >
-                        {activeStep === 0 ? 'Begin Check-In' : 'Next'}
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        onClick={handleSubmit}
-                        style={
-                          activeStep === steps.length - 1
-                            ? { backgroundColor: cyan }
-                            : { display: 'none' }
-                        }
-                      >
-                        Submit
-                      </Button>
-                    </Grid>
+                    {activeStep === 4 && (
+                      <RaceEthnicity
+                        values={values}
+                        handleChange={handleChange}
+                        handleCheck={handleCheck}
+                      />
+                    )}
+                    {activeStep === 5 && <ConfirmCheckIn values={values} />}
                   </Grid>
                 </Grid>
               </Grid>
-            </Box>
+              <Grid item>
+                <br />
+              </Grid>
+              <Grid item>
+                <Grid container justify="center" className="buttonContainer" spacing={2}>
+                  <Grid item>
+                    <Button
+                      style={activeStep === 0 ? { display: 'none' } : {}}
+                      variant="contained"
+                      onClick={handlePrev}
+                    >
+                      Back
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      onClick={handleNext}
+                      style={activeStep === steps.length - 1 ? { display: 'none' } : {}}
+                      disabled={
+                        (activeStep === 0 && holdStatus === true) ||
+                        (activeStep === 1 &&
+                          (values.firstName1 === '' || values.firstName2 === '')) ||
+                        (activeStep === 2 &&
+                          values.personalPhone === '' &&
+                          values.noPhone === false) ||
+                        (activeStep === 3 &&
+                          (values.FERPA === false ||
+                            values.dataUsage === false ||
+                            values.photoConsent === false)) ||
+                        (activeStep === 4 && values.ethnicity === '')
+                      }
+                    >
+                      {activeStep === 0 ? 'Begin Check-In' : 'Next'}
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      onClick={handleSubmit}
+                      style={activeStep === steps.length - 1 ? {} : { display: 'none' }}
+                    >
+                      Submit
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Box>
         </Card>
       </Grid>
     </Grid>

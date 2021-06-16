@@ -9,6 +9,7 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
+import info from './info.json';
 
 const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
   const cyan = gordonColors.primary.cyan;
@@ -20,15 +21,11 @@ const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
         </Typography>
       </Grid>
       <Grid item>
-        <Typography variant="h6" gutterbottom>
-          Federal Reporting Status
+        <Typography variant="h6" align="center" gutterbottom>
+          {info.header}
         </Typography>
         <Typography variant="body1" gutterbottom>
-          The federal government has created new aggregate categories for reporting race and
-          ethnicity. Reporting these has been mandatory for Gordon College since fall 2010. The
-          categories describe groups to which individuals belong or identify with, not scientific
-          definitions of anthropological origins. In order to transition to the new data standards,
-          we need students to self-identify their ethnicity and race by responding to two questions.
+          {info.para1}
         </Typography>
         <br />
         <Typography variant="body1" gutterbottom>
@@ -39,11 +36,7 @@ const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
           </ul>
         </Typography>
         <Typography variant="body1" gutterbottom>
-          Note: The federal government considers "Hispanic/Latino" to be an ethnicity, not a race.
-          It defines this ethnicity as: A person of Cuban, Mexican, Puerto Rican, South or Central
-          American, or other Spanish culture of origin, regardless of race. That is why this
-          question is asked separately and Hispanic/Latino is no longer listed as a race
-          identification category.
+          {info.para2}
         </Typography>
         <br />
         <Typography variant="body1" gutterbottom>
@@ -68,6 +61,8 @@ const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
           Please provide/confirm the following information:
         </Typography>
         <br />
+      </Grid>
+      <Grid container direction="row">
         <FormControl>
           <FormLabel component="legend">Ethnicity:</FormLabel>
           <RadioGroup

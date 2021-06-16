@@ -1,12 +1,14 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, Grid } from '@material-ui/core';
 // import './index.css';
 
-const AcademicCheckInWelcome = () => {
+const AcademicCheckInWelcome = (values, handleChange) => {
   return (
-    <Typography justify="center" className="checkIn">
-      Academic Check In Welcome
-    </Typography>
+    <Grid container justify="center" alignItems="center" direction="column">
+      <Typography justify="center" className="checkIn">
+        Academic Check In Welcome
+      </Typography>
+    </Grid>
   );
 };
 

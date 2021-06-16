@@ -1,11 +1,31 @@
 import React from 'react';
 import { Typography, Grid } from '@material-ui/core';
+import { gordonColors } from 'theme';
 
 const ConfirmCheckIn = ({ values }) => {
+  const cyan = gordonColors.primary.cyan;
+  const raceValues = [
+    values.nativeAmerican,
+    values.asian,
+    values.black,
+    values.hawaiian,
+    values.white,
+  ];
+  const raceNames = ['Native American', 'Asian', 'Black', 'Hawaiian', 'White'];
+
+  const displayRace = () => {
+    var i;
+    var names = '';
+    for (i = 0; i < raceValues.length; i++) {
+      raceValues[i] === true ? (names += raceNames[i] + ', ') : (names += '');
+    }
+    return names;
+  };
+
   return (
     <Grid container alignItems="center" justify="center" direction="column">
       <Grid item>
-        <Typography variant="h5" gutterbottom align="center">
+        <Typography variant="h5" gutterbottom align="center" style={{ color: cyan }}>
           Check-In Confirmation
         </Typography>
         <br />
@@ -67,8 +87,7 @@ const ConfirmCheckIn = ({ values }) => {
           <b>Ethnicity:</b> {values.ethnicity === 'H_L' ? 'Hispanic/Latino' : 'Not Hispanic/Latino'}
         </Typography>
         <Typography variant="body1" gutterbottom>
-          <b>Race:</b>
-          {}
+          <b>Race:</b> {displayRace()}
         </Typography>
       </Grid>
     </Grid>

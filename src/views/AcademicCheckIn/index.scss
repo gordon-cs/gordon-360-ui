@@ -1,8 +1,19 @@
 @import '../../vars';
+.academicCheckIn {
+  .checkIn-header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+    padding: 30px;
+    font-size: 40px;
+  }
 
-.checkIn-header {
-  background-color: $primary-blue;
-  color: $neutral-white;
-  padding: 30px;
-  font-size: 40px;
+  .buttonContainer {
+    Button:disabled {
+      background-color: $neutral-gray3;
+    }
+    .MuiButton-contained {
+      background: $primary-cyan;
+      color: $neutral-white;
+    }
+  }
 }

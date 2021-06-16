@@ -35,7 +35,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
 
   return (
     <Grid container justify="center" alignItems="center" direction="column">
-      <Typography variant="h5" gutterBottom style={{ color: cyan }}>
+      <Typography align="center" variant="h5" gutterBottom style={{ color: cyan }}>
         Step 1: Enter your Emergency Contact Information
       </Typography>
       <Typography variant="h6" gutterBottom>
