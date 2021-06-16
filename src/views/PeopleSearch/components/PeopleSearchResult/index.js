@@ -47,15 +47,12 @@ export default class PeopleSearchResult extends Component {
   }
 
   render() {
-    const { Person } = this.props;
-    let personClassJobTitle, nickname, personMailLocation;
+    const { Person, size } = this.props;
+    let personClassJobTitle, nickname, fullName, personMailLocation;
+    fullName = Person.FirstName + ' ' + Person.LastName;
 
     // set nicknames up
-    if (
-      Person.NickName !== null &&
-      Person.NickName !== '' &&
-      Person.FirstName !== Person.NickName
-    ) {
+    if (Person.NickName && Person.FirstName !== Person.NickName) {
       nickname = '(' + Person.NickName + ')';
     }
     // set classes up
@@ -87,64 +84,113 @@ export default class PeopleSearchResult extends Component {
           break;
       }
       // set job titles up
-    } else if (Person.Type !== 'Student' && Person.JobTitle !== undefined) {
+    } else if (Person.JobTitle && Person.Type !== 'Student') {
       personClassJobTitle = Person.JobTitle;
     }
     // set mailbox up
-    if (
-      Person.Mail_Location !== undefined &&
-      Person.Mail_Location !== null &&
-      Person.Mail_Location !== ''
-    ) {
-      personMailLocation =
-        Person.Type === 'Student' ? '#' + Person.Mail_Location : Person.Mail_Location;
+    if (Person.Mail_Location) {
+      if (size === 'single') {
+        personMailLocation =
+          Person.Type === 'Student'
+            ? 'Mailbox #' + Person.Mail_Location
+            : 'Mailstop ' + Person.Mail_Location;
+      } else {
+        personMailLocation =
+          Person.Type === 'Student' ? '#' + Person.Mail_Location : Person.Mail_Location;
+      }
     }
 
-    return (
-      <>
-        <Divider />
-        <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            spacing={2}
-            style={{
-              padding: '1rem',
-            }}
-          >
-            <Grid item xs={1}>
-              <IMG
-                className="people-search-avatar"
-                src={`data:image/jpg;base64,${this.state.avatar}`}
-                alt=""
-                noLazyLoad="true"
-                placeholderColor="#eeeeee"
-              />
+    /*** Single Size - One Column (Mobile View) ***/
+    if (size === 'single') {
+      return (
+        <>
+          <Divider />
+          <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
+            <Grid
+              container
+              alignItems="center"
+              justify="center"
+              spacing={2}
+              style={{
+                padding: '1rem',
+              }}
+            >
+              <Grid item>
+                <IMG
+                  className="people-search-avatar-mobile"
+                  src={`data:image/jpg;base64,${this.state.avatar}`}
+                  alt=""
+                  noLazyLoad="true"
+                  placeholderColor="#eeeeee"
+                />
+              </Grid>
+              <Grid
+                item
+                style={{
+                  // a set width is necessary to keep profile images in line
+                  // while maintaining center alignment
+                  width: '260px',
+                }}
+              >
+                <Typography variant="h5">{fullName}</Typography>
+                <Typography variant="body2">{nickname}</Typography>
+                <Typography variant="body2">{personClassJobTitle}</Typography>
+                <Typography variant="body2">{Person.Email}</Typography>
+                <Typography variant="body2">{personMailLocation}</Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={2}>
-              <Typography>
-                {Person.FirstName} {nickname}
-              </Typography>
+          </Link>
+          <Divider />
+        </>
+      );
+    } else {
+      /*** Full Size - Multiple Columns (Desktop View) ***/
+      return (
+        <>
+          <Divider />
+          <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              spacing={2}
+              style={{
+                padding: '1rem',
+              }}
+            >
+              <Grid item xs={1}>
+                <IMG
+                  className="people-search-avatar"
+                  src={`data:image/jpg;base64,${this.state.avatar}`}
+                  alt=""
+                  noLazyLoad="true"
+                  placeholderColor="#eeeeee"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>
+                  {Person.FirstName} {nickname}
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>{Person.LastName}</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>{Person.Type}</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>{personClassJobTitle}</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>{Person.AD_Username}</Typography>
+                <Typography>{personMailLocation}</Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={2}>
-              <Typography>{Person.LastName}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{Person.Type}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{personClassJobTitle}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{Person.AD_Username}</Typography>
-              <Typography>{personMailLocation}</Typography>
-            </Grid>
-          </Grid>
-        </Link>
-        <Divider />
-      </>
-    );
+          </Link>
+          <Divider />
+        </>
+      );
+    }
   }
 }
 

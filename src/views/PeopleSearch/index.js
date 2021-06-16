@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import {
   Button,
   Card,
@@ -36,7 +37,6 @@ import user from 'services/user';
 import { gordonColors } from 'theme';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import PeopleSearchResult from './components/PeopleSearchResult';
-import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
 import GordonLoader from 'components/Loader';
 
 const styles = {
@@ -106,12 +106,12 @@ const peopleSearchHeader = (
                 LAST NAME
               </Typography>
             </Grid>
-            <Grid item xs={1}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                TYPE
+            <Grid item xs={2}>
+              <Typography variant="body2" style={styles.headerStyle} noWrap>
+                DESCRIPTION
               </Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               <Typography variant="body2" style={styles.headerStyle}>
                 CLASS/JOB TITLE
               </Typography>
@@ -283,7 +283,10 @@ class PeopleSearch extends Component {
   };
   handleChangeIncludeAlumni() {
     this.setState({
-      searchValues: { ...this.state.searchValues, includeAlumni: !this.state.includeAlumni },
+      searchValues: {
+        ...this.state.searchValues,
+        includeAlumni: !this.state.searchValues.includeAlumni,
+      },
     });
   }
   handleFirstNameInputChange = (e) => {
@@ -365,13 +368,13 @@ class PeopleSearch extends Component {
           peopleSearchResults: (
             <Media query="(min-width: 960px)">
               {(matches) =>
-                matches
-                  ? peopleSearchResults.map((person) => (
-                      <PeopleSearchResult key={person.AD_Username} Person={person} />
-                    ))
-                  : peopleSearchResults.map((person) => (
-                      <MobilePeopleSearchResult key={person.AD_Username} Person={person} />
-                    ))
+                peopleSearchResults.map((person) => (
+                  <PeopleSearchResult
+                    key={person.AD_Username}
+                    Person={person}
+                    size={matches ? 'full' : 'single'}
+                  />
+                ))
               }
             </Media>
           ),
@@ -383,8 +386,8 @@ class PeopleSearch extends Component {
 
   async updateURL() {
     const searchParameters = Object.entries(this.state.searchValues)
-      .filter((n) => n) // removes empty strings
-      .map(([key, value]) => (value ? `${key}=${value}` : '')) // [ 'firstName=value', 'state=texas']
+      .filter(([, value]) => value) // removes empty values
+      .map(([key, value]) => `${key}=${value}`) // [ 'firstName=value', 'state=texas']
       .join('&'); // 'firstName=value&state=texas'
 
     if (this.props.history.location.search !== searchParameters) {
@@ -474,7 +477,7 @@ class PeopleSearch extends Component {
     if (this.props.authentication) {
       if (this.state.personType && !this.state.personType.includes('stu')) {
         includeAlumniCheckbox = (
-          <Grid item xs={12}>
+          <Grid item xs={12} align="center">
             <FormControlLabel
               control={
                 <Checkbox
@@ -671,9 +674,9 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.majorSearchValue !== '' ||
-                          this.state.minorSearchValue !== '' ||
-                          this.state.classTypeSearchValue !== ''
+                          this.state.searchValues.major !== '' ||
+                          this.state.searchValues.minor !== '' ||
+                          this.state.searchValues.classType !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
@@ -691,9 +694,9 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.homeCitySearchValue !== '' ||
-                          this.state.stateSearchValue !== '' ||
-                          this.state.countrySearchValue !== ''
+                          this.state.searchValues.homeCity !== '' ||
+                          this.state.searchValues.state !== '' ||
+                          this.state.searchValues.country !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
@@ -713,8 +716,8 @@ class PeopleSearch extends Component {
                         variant={this.state.offDepExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleOffDepExpandClick}
                         style={
-                          this.state.departmentSearchValue !== '' ||
-                          this.state.buildingSearchValue !== ''
+                          this.state.searchValues.department !== '' ||
+                          this.state.searchValues.building !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
@@ -1065,34 +1068,7 @@ class PeopleSearch extends Component {
 
       return PeopleSearch;
     } else {
-      return (
-        <Grid container justify="center">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <h1>You are not logged in.</h1>
-                <br />
-                <h4>You must be logged in to view use People Search.</h4>
-                <br />
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Login
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
+      return <GordonUnauthorized feature={'People Search'} />;
     }
   }
 }

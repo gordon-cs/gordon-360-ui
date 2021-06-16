@@ -10,6 +10,7 @@ import http from './http';
  * @global
  * @typedef SearchResult
  * @property {String} FirstName First name
+ * @property {String} Nickname Nickname
  * @property {String} LastName Last name
  * @property {String} UserName Firstname.Lastname format
  * @property {String} ConcatonatedInfo All names combined in a single string

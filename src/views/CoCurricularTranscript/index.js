@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
+import { Button, Card, CardContent, Typography } from '@material-ui/core';
 import { gordonColors } from 'theme';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
 import user from 'services/user';
 import GordonLoader from 'components/Loader';
 import './coCurricularTranscript.css';
-
-import { Grid, Button, Card, CardContent, Typography } from '@material-ui/core';
 
 //This component creates the overall interface for the CoCurricularTranscript (card, heading,
 //download button), and contains a InvolvementsList object for displaying the content
@@ -349,34 +349,7 @@ export default class Transcript extends Component {
         </div>
       );
     } else {
-      return (
-        <Grid container justify="center">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <h1>You are not logged in.</h1>
-                <br />
-                <h4>You must be logged in to view your experience transcript.</h4>
-                <br />
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Login
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
+      return <GordonUnauthorized feature={'your experience transcript'} />;
     }
   }
 }

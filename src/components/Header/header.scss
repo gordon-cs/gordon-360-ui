@@ -11,6 +11,8 @@ $drawer-width: 240px;
   .app-bar {
     position: absolute;
     background-repeat: no-repeat;
+    background-image: url('./gc_seal_top_56.png');
+    height: $header-height-xs;
   }
 
   .tab {
@@ -32,31 +34,22 @@ $drawer-width: 240px;
     margin-left: -12px;
   }
 
-  @media (min-width: 0px) {
-    .app-bar {
-      background-image: url('./gc_seal_top_56.png');
-      height: $header-height-xs;
-    }
+  .center-container {
+    visibility: hidden;
+    width: 0;
+  }
 
-    .center-container {
-      visibility: hidden;
-      width: 0;
-    }
-
-    .right-side-container {
-      margin-left: 16px;
-      padding: 0;
-    }
+  .right-side-container {
+    margin-left: 16px;
+    padding: 0;
+    align-items: center;
+    display: none;
   }
 
   @media (min-width: $break-sm) {
     .app-bar {
       background-image: url('./gc_seal_top_64.png');
       height: $header-height-sm;
-    }
-    .right-side-container {
-      width: auto;
-      margin-left: 24px;
     }
   }
 
@@ -70,9 +63,8 @@ $drawer-width: 240px;
     }
 
     .center-container {
-      flex: 8;
+      flex: 3;
       justify-content: center;
-      // float: none;
       display: flex;
       visibility: visible;
     }
@@ -80,9 +72,16 @@ $drawer-width: 240px;
     .tab {
       min-width: 80px;
     }
+    .right-side-container {
+      display: flex;
+      margin-left: 24px;
+    }
   }
 
   @media (min-width: $break-lg) {
+    .center-container {
+      flex: 7;
+    }
     .tab {
       min-width: 160px;
     }
@@ -97,11 +96,6 @@ $drawer-width: 240px;
     flex: 1;
     margin-right: 10px;
     font-weight: bold;
-  }
-
-  .right-side-container {
-    align-items: center;
-    display: flex;
   }
 
   .menu-button-icon {
