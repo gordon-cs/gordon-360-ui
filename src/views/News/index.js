@@ -517,21 +517,10 @@ const StudentNews = (props) => {
       <Button
         variant="contained"
         color="primary"
-        onClick={handleSubmit}
+        onClick={currentlyEditing ? handleUpdate : handleSubmit}
         disabled={submitButtonDisabled}
       >
-        Submit
-      </Button>
-    );
-
-    let editButton = (
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleUpdate}
-        disabled={submitButtonDisabled}
-      >
-        Update
+        {currentlyEditing ? 'Update' : 'Submit'}
       </Button>
     );
 
