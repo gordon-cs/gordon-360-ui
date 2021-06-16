@@ -131,15 +131,10 @@ const StudentNews = (props) => {
       }
     };
     loadNews();
+    console.log('1');
   }, [props.authentication]);
 
-  useEffect(() => {
-    const loadUsername = async () => {
-      const user = await userService.getProfileInfo();
-      setCurrentUsername(user.AD_Username);
-    };
-    loadUsername();
-  });
+  useEffect(() => {});
 
   function maxCropPreviewWidth() {
     /*
@@ -419,8 +414,6 @@ const StudentNews = (props) => {
       Image: newImage,
     };
 
-    //console.log(showCropper);
-
     // submit the news item and give feedback
     let result = await newsService.submitStudentNews(newsItem);
     if (result === undefined) {
@@ -468,6 +461,13 @@ const StudentNews = (props) => {
   /***************************************************
   /*End of methods solely related to photo submission*
   /***************************************************/
+
+  const loadUsername = async () => {
+    const user = await userService.getProfileInfo();
+    setCurrentUsername(user.AD_Username);
+  };
+
+  loadUsername(); //This can NOT be right, but useEffect certainly wasn't either.
 
   // if all of the inputs are filled, enable 'submit' button
   let submitButtonDisabled = newPostCategory === '' || newPostSubject === '' || newPostBody === '';

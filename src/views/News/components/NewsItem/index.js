@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 import newsService from 'services/news';
 import EditIcon from '@material-ui/icons/Edit';
-import storage from 'services/storage';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -13,56 +12,54 @@ import { Typography, CardContent, Collapse, Grid, Button } from '@material-ui/co
 
 const NewsItem = (props) => {
   const [open, setOpen] = useState(false);
-  const [posting, setPosting] = useState(props.posting);
-  // const [snackbarOpen, setSnackbarOpen] = useState(false);
-  // const [snackbarMessage, setSnackbarMessage] = useState('Something went wrong');
   const [isOnline, setIsOnline] = useState(useNetworkStatus());
 
-  // function componentDidMount() {
-  //   /* Used to re-render the page when the network connection changes.
-  //    *  network is compared to the message received to prevent
-  //    *  multiple re-renders that creates extreme performance lost.
-  //    *  The origin of the message is checked to prevent cross-site scripting attacks
-  //    */
-  //   window.addEventListener('message', (event) => {
-  //     if (
-  //       event.data === 'online' &&
-  //       network === 'offline' &&
-  //       event.origin === window.location.origin
-  //     ) {
-  //       setState({ network: 'online' });
-  //     } else if (
-  //       event.data === 'offline' &&
-  //       network === 'online' &&
-  //       event.origin === window.location.origin
-  //     ) {
-  //       setState({ network: 'offline' });
-  //     }
-  //   });
+  const size = props;
+  const postingDescription = props.posting.Body;
+  const postingImage = props.posting.Image;
+  const { unapproved } = props;
 
-  //   let network;
-  //   /* Attempts to get the network status from local storage.
-  //    * If not found, the default value is online
-  //    */
-  //   try {
-  //     network = storage.get('network-status');
-  //   } catch (error) {
-  //     // Defaults the network to online if not found in local storage
-  //     network = 'online';
-  //   }
-  //   // Saves the network's status to this component's state
-  //   setState({ network });
-  // }
-  /*
+  let posting = props.posting;
+
+  console.log(props.currentUsername);
+
   useEffect(() => {
-    if (isOnline != useNetworkStatus())
-      setIsOnline(useNetworkStatus());
-  });*/
+    /* Used to re-render the page when the network connection changes.
+     *  network is compared to the message received to prevent
+     *  multiple re-renders that creates extreme performance lost.
+     *  The origin of the message is checked to prevent cross-site scripting attacks
+     */
+    window.addEventListener('message', (event) => {
+      if (event.data === 'online' && !isOnline && event.origin === window.location.origin) {
+        setIsOnline(true);
+      } else if (
+        event.data === 'offline' &&
+        isOnline === 'online' &&
+        event.origin === window.location.origin
+      ) {
+        setIsOnline(false);
+      }
+    });
 
-  function componentWillUnmount() {
-    // Removes the window's event listeners before unmounting the component
+    // let network;
+    // /* Attempts to get the network status from local storage.
+    //  * If not found, the default value is online
+    //  */
+    // try {
+    //   network = storage.get('network-status');
+    // } catch (error) {
+    //   // Defaults the network to online if not found in local storage
+    //   network = 'online';
+    // }
+    // // Saves the network's status to this component's state
+    // // setState({ network });
+  });
+
+  setIsOnline(useNetworkStatus());
+
+  useEffect(() => {
     window.removeEventListener('message', () => {});
-  }
+  });
 
   /**
    * When the edit (like submit) button is clicked on update news posting form
@@ -96,13 +93,6 @@ const NewsItem = (props) => {
     props.callFunction(functionName, param);
   }
 
-  const { size } = props;
-  const postingDescription = posting.Body;
-  const postingImage = posting.Image;
-
-  // Unapproved news should be distinct,
-  // currently it is italicized and grayed out slightly
-  const { unapproved } = props;
   if (unapproved) {
     // Shows 'pending approval' instead of the date posted
     posting.dayPosted = <i style={{ textTransform: 'lowercase' }}>"pending approval..."</i>;
@@ -142,7 +132,7 @@ const NewsItem = (props) => {
         variant="outlined"
         color="primary"
         startIcon={<EditIcon />}
-        onClick={handleEdit()}
+        onClick={handleEdit}
         className="btn"
       >
         Edit
@@ -164,7 +154,7 @@ const NewsItem = (props) => {
         variant="outlined"
         color="primary"
         startIcon={<DeleteIcon />}
-        onClick={handleDelete()}
+        onClick={handleDelete}
         className="btn deleteButton"
       >
         Delete
@@ -261,16 +251,16 @@ const NewsItem = (props) => {
   }
 };
 
-// NewsItem.propTypes = {
-//   posting: PropTypes.shape({
-//     SNID: PropTypes.number.isRequired,
-//     Subject: PropTypes.string.isRequired,
-//     ADUN: PropTypes.string.isRequired,
-//     Entered: PropTypes.string.isRequired,
-//     categoryName: PropTypes.string.isRequired,
-//     Body: PropTypes.string.isRequired,
-//     // Expiration: PropTypes.string.isRequired,
-//   }).isRequired,
-// };
+NewsItem.propTypes = {
+  posting: PropTypes.shape({
+    SNID: PropTypes.number.isRequired,
+    Subject: PropTypes.string.isRequired,
+    ADUN: PropTypes.string.isRequired,
+    Entered: PropTypes.string.isRequired,
+    categoryName: PropTypes.string.isRequired,
+    Body: PropTypes.string.isRequired,
+    // Expiration: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default NewsItem;
