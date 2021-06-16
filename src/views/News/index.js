@@ -28,6 +28,7 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
+import useNetworkStatus from 'hooks/useNetworkStatus';
 
 const BREAKPOINT_WIDTH = 540;
 const CROP_DIM = 200; // pixels
@@ -40,7 +41,7 @@ const StudentNews = (props) => {
   const [news, setNews] = useState([]);
   const [personalUnapprovedNews, setPersonalUnapprovedNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
-  const [network, setNetwork] = useState('online');
+  const [isOnline, setIsOnline] = useState(useNetworkStatus());
   const [newPostCategory, setNewPostCategory] = useState('');
   const [newPostSubject, setNewPostSubject] = useState('');
   const [newPostBody, setNewPostBody] = useState('');
@@ -474,23 +475,15 @@ const StudentNews = (props) => {
   let content;
 
   /* Used to re-render the page when the network connection changes.
-   *  state.network is compared to the message received to prevent
+   *  network is compared to the message received to prevent
    *  multiple re-renders that creates extreme performance lost.
    *  The origin of the message is checked to prevent cross-site scripting attacks
    */
   window.addEventListener('message', (event) => {
-    if (
-      event.data === 'online' &&
-      network === 'offline' &&
-      event.origin === window.location.origin
-    ) {
-      setNetwork('online');
-    } else if (
-      event.data === 'offline' &&
-      network === 'online' &&
-      event.origin === window.location.origin
-    ) {
-      setNetwork('offline');
+    if (event.data === 'online' && !isOnline && event.origin === window.location.origin) {
+      setIsOnline(true);
+    } else if (event.data === 'offline' && isOnline && event.origin === window.location.origin) {
+      setIsOnline(false);
     }
   });
 
