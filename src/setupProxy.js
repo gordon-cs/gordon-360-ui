@@ -21,10 +21,7 @@ module.exports = (app) => {
     createProxyMiddleware({ target: 'https://360ApiTrain.gordon.edu/', changeOrigin: true }),
   );
 
-  //@LOCALHOST
-  // app.use('/api', createProxyMiddleware({ target: 'http://localhost:5555/', changeOrigin: true }));
-  // app.use(
-  //   '/token',
-  //   createProxyMiddleware({ target: 'http://localhost:5555/', changeOrigin: true }),
-  // );
+  // @LOCALHOST
+  // app.use('/api', createProxyMiddleware({ target: 'http://localhost:2477/', changeOrigin: true }));
+  // app.use('/token', createProxyMiddleware({ target: 'http://localhost:2477/', changeOrigin: true }));
 };
