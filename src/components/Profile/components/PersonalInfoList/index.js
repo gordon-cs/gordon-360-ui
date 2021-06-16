@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import EditPhoneDialog from './components/EditPhoneDialog/index.js';
 import user from 'services/user';
 import './index.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
@@ -12,6 +14,7 @@ import {
   CardContent,
   List,
   Switch,
+  Button,
   FormControlLabel,
 } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -135,14 +138,17 @@ const PersonalInfoList = ({
       }
       ContentIcon={
         myProf && (
-          <FormControlLabel
-            control={
-              <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
-            }
-            label={isMobilePhonePrivate ? 'Private' : 'Public'}
-            labelPlacement="bottom"
-            disabled={!isOnline}
-          />
+          <>
+            <EditPhoneDialog />
+            <FormControlLabel
+              control={
+                <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
+              }
+              label={isMobilePhonePrivate ? 'Private' : 'Public'}
+              labelPlacement="bottom"
+              disabled={!isOnline}
+            />
+          </>
         )
       }
       contentClass={isMobilePhonePrivate ? 'private' : null}
@@ -163,6 +169,13 @@ const PersonalInfoList = ({
               : Country}
           </span>
         </>
+      }
+      ContentIcon={
+        <Link className="gc360-link" to="/transcript">
+          <Button variant="contained" className="edit-info-button">
+            Edit
+          </Button>
+        </Link>
       }
       contentClass={isAddressPrivate ? 'private' : null}
     />
@@ -258,7 +271,7 @@ const PersonalInfoList = ({
       <ul>
         <li>
           To prevent your picture from displaying click{' '}
-          <a href="https://360.gordon.edu/myprofile"> here</a>.
+          <a href="https://360.gordon.edu/myprofile">here</a>.
         </li>
         <li>
           To update your data contact <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
@@ -274,7 +287,7 @@ const PersonalInfoList = ({
           <a href="https://360.gordon.edu/myprofile">here</a>.
         </li>
         <li>
-          To update your On Campus Address, contact <a href="mailto: housing@gordon.edu">Housing</a>
+          To update your On Campus Address, contact <a href="mailto: housing@gordon.edu">Housing</a>{' '}
           (x4263).
         </li>
         <li>

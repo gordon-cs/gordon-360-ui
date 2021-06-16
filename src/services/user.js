@@ -434,6 +434,11 @@ async function setAdvisors(profile) {
   }
 }
 
+async function setMobilePhoneNumber(value) {
+  console.log('setMobilePhoneNumber');
+  await http.put(`profiles/mobile_phone_number/${value}/`);
+}
+
 async function setMobilePhonePrivacy(makePrivate) {
   // 'Y' = private, 'N' = public
   await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
@@ -640,6 +645,7 @@ const userService = {
   getSentMembershipRequests,
   getProfileInfo,
   getAdvisors,
+  setMobilePhoneNumber,
   resetImage,
   postImage,
   postIDImage,
