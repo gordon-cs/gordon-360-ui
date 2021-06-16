@@ -45,8 +45,8 @@ const MemberList = ({
       if (b.ParticipationDescription == 'Leader') return 1;
       if (a.ParticipationDescription == 'Member') return -1;
       if (b.ParticipationDescription == 'Member') return 1;
-    } else {
     }
+
     if (a.LastName.toUpperCase() < b.LastName.toUpperCase()) {
       return -1;
     }
@@ -68,6 +68,7 @@ const MemberList = ({
     <CardHeader
       title={
         <Grid container direction="row">
+          <Grid item xs={1} />
           <Grid item xs={2}>
             Name
           </Grid>
@@ -80,7 +81,7 @@ const MemberList = ({
           <Grid item xs={2}>
             Mail #
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             Admin
           </Grid>
         </Grid>

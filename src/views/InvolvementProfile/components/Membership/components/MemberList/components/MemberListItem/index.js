@@ -24,7 +24,7 @@ import user from 'services/user';
 import membership from 'services/membership';
 import GordonDialogBox from 'components/GordonDialogBox';
 const rowStyle = {
-  padding: '10px',
+  padding: '10px 0',
 };
 const redButton = {
   background: gordonColors.secondary.red,
@@ -42,7 +42,6 @@ const PARTICIPATION_LEVELS = {
 };
 
 const MemberListItem = ({
-  props,
   member,
   isAdmin,
   isSuperAdmin,
@@ -257,11 +256,8 @@ const MemberListItem = ({
 
     content = (
       <>
-        <Grid container direction="row" alignItems="center">
-          <Grid item xs={2} style={rowStyle}>
-            <Typography>
-              {member.FirstName} {member.LastName}
-            </Typography>
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item xs={0.5} style={rowStyle}>
             <IMG
               className="people-search-avatar-mobile"
               src={`data:image/jpg;base64,${avatar}`}
@@ -270,16 +266,21 @@ const MemberListItem = ({
               placeholderColor="#eeeeee"
             />
           </Grid>
+          <Grid item xs={2}>
+            <Typography>
+              {member.FirstName} {member.LastName}
+            </Typography>
+          </Grid>
           <Grid item xs={2} style={rowStyle}>
             <Typography>{participationDescription}</Typography>
           </Grid>
-          <Grid item xs={3} style={rowStyle}>
+          <Grid item xs={2} style={rowStyle}>
             <Typography>{titleComment}</Typography>
           </Grid>
-          <Grid item xs={2} style={rowStyle}>
+          <Grid item xs={1} style={rowStyle}>
             <Typography>{member.Mail_Location}</Typography>
           </Grid>
-          <Grid item xs={3} style={rowStyle}>
+          <Grid item xs={2} style={rowStyle}>
             {options}
           </Grid>
         </Grid>
@@ -310,6 +311,13 @@ const MemberListItem = ({
       content = (
         <Accordion defaultExpanded={(isAdmin || isSuperAdmin) && !isMobileView}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <IMG
+              className="people-search-avatar-mobile"
+              src={`data:image/jpg;base64,${avatar}`}
+              alt=""
+              noLazyLoad="true"
+              placeholderColor="#eeeeee"
+            />
             <Grid container>
               <Grid item xs={6} sm={7} md={8}>
                 <Typography>
