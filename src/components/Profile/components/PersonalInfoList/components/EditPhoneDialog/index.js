@@ -31,13 +31,7 @@ const EditPhoneDialog = () => {
   };
 
   const handleSubmit = async () => {
-    let result = await userService.setMobilePhoneNumber(mobilePhoneNumber);
-    // if (result === undefined) {
-    //   // this.updateSnackbar('Mobile Phone Number Failed to Edit');
-    // } else {
-    //   // this.updateSnackbar('Mobile Phone Number Edited Successfully');
-    // }
-
+    await userService.setMobilePhoneNumber(mobilePhoneNumber);
     handleClose();
   };
 
@@ -49,9 +43,14 @@ const EditPhoneDialog = () => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle className="gc360-editphone-dialog_title">Edit Phone Number</DialogTitle>
         <DialogContent className="gc360-editphone-dialog_content">
+          {/* SUBMISSION GUIDELINES */}
+
           <DialogContentText className="gc360-editphone-dialog_content_text">
             Paste or Edit your phone number below. When done, click Edit.
           </DialogContentText>
+
+          {/* PHONE NUMBER ENTRY */}
+
           <TextField
             id="mobile-phone-number-input"
             label="Phone Number"
@@ -65,6 +64,9 @@ const EditPhoneDialog = () => {
             onChange={(event) => setMobilePhoneNumber(event.target.value)}
           />
         </DialogContent>
+
+        {/* CANCEL/EDIT */}
+
         <DialogActions className="gc360-editphone-dialog_actions">
           <Button onClick={handleClose} variant="outlined" color="primary">
             Cancel
