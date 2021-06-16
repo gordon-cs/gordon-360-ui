@@ -10,35 +10,16 @@ import './newsItem.scss';
 
 import { Typography, CardContent, Collapse, Grid, Button } from '@material-ui/core';
 
-const NewsItem = (props) => {
+const NewsItem = ({
+  posting,
+  unapproved,
+  size,
+  currentUsername,
+  updateSnackbar,
+  handleNewsItemEdit,
+}) => {
   const [open, setOpen] = useState(false);
-  const [isOnline, setIsOnline] = useState(useNetworkStatus());
-
-  const size = props.size;
-  const postingDescription = props.posting.Body;
-  const postingImage = props.posting.Image;
-  const { unapproved } = props;
-
-  let posting = props.posting;
-
-  useEffect(() => {
-    /* Used to re-render the page when the network connection changes.
-     *  network is compared to the message received to prevent
-     *  multiple re-renders that creates extreme performance lost.
-     *  The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      if (event.data === 'online' && !isOnline && event.origin === window.location.origin) {
-        setIsOnline(true);
-      } else if (
-        event.data === 'offline' &&
-        isOnline === 'online' &&
-        event.origin === window.location.origin
-      ) {
-        setIsOnline(false);
-      }
-    });
-  });
+  const isOnline = useNetworkStatus();
 
   useEffect(() => {
     window.removeEventListener('message', () => {});
@@ -50,7 +31,7 @@ const NewsItem = (props) => {
    */
   async function handleEdit() {
     const newsID = posting.SNID;
-    callFunction('handleNewsItemEdit', newsID);
+    handleNewsItemEdit(newsID);
   }
 
   /**
@@ -61,19 +42,12 @@ const NewsItem = (props) => {
     // delete the news item and give feedback
     let result = await newsService.deleteStudentNews(newsID);
     if (result === undefined) {
-      callFunction('updateSnackbar', 'News Posting Failed to Delete');
+      updateSnackbar('News Posting Failed to Delete');
     } else {
-      callFunction('updateSnackbar', 'News Posting Deleted Successfully');
+      updateSnackbar('News Posting Deleted Successfully');
     }
     // Should be changed in future to allow react to only reload the updated news list
     window.top.location.reload();
-  }
-
-  // Calls a parent function in News
-  // Must be passed down through props of each component
-  // News -> NewsList -> NewsItem (currently)
-  function callFunction(functionName, param) {
-    props.callFunction(functionName, param);
   }
 
   if (unapproved) {
@@ -106,8 +80,8 @@ const NewsItem = (props) => {
   // it is because the home card doesn't give these properties
   let editButton;
   if (
-    props.currentUsername != null &&
-    props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase() &&
+    currentUsername != null &&
+    currentUsername.toLowerCase() === posting.ADUN.toLowerCase() &&
     unapproved
   ) {
     editButton = (
@@ -128,10 +102,7 @@ const NewsItem = (props) => {
   // Only show the delete button if the current user is the author of the posting
   // null check temporarily fixes issue on home card when user has not yet been authenticated
   let deleteButton;
-  if (
-    props.currentUsername != null &&
-    props.currentUsername.toLowerCase() === posting.ADUN.toLowerCase()
-  ) {
+  if (currentUsername != null && currentUsername.toLowerCase() === posting.ADUN.toLowerCase()) {
     deleteButton = (
       <Button
         variant="outlined"
@@ -169,7 +140,9 @@ const NewsItem = (props) => {
           <CardContent>
             <Typography className="news-content">"{posting.categoryName}"</Typography>
             <Typography className="news-content ">{posting.Body}</Typography>
-            {postingImage !== null && <img src={`data:image/jpg;base64,${postingImage}`} alt=" " />}
+            {posting.Image !== null && (
+              <img src={`data:image/jpg;base64,${posting.Image}`} alt=" " />
+            )}
           </CardContent>
           <Grid container justify="space-evenly">
             {editButton}
@@ -212,10 +185,10 @@ const NewsItem = (props) => {
               <Grid item xs={8} style={{ textAlign: 'left' }}>
                 <Typography className="descriptionText">Description:</Typography>
                 <Typography type="caption" className="descriptionText">
-                  {postingDescription}
+                  {posting.Body}
                 </Typography>
-                {postingImage !== null && (
-                  <img src={`data:image/jpg;base64,${postingImage}`} alt=" " />
+                {posting.Image !== null && (
+                  <img src={`data:image/jpg;base64,${posting.Image}`} alt=" " />
                 )}
               </Grid>
               {/* Possible action buttons */}
@@ -244,6 +217,12 @@ NewsItem.propTypes = {
     Body: PropTypes.string.isRequired,
     // Expiration: PropTypes.string.isRequired,
   }).isRequired,
+
+  unapproved: PropTypes.any,
+  size: PropTypes.string.isRequired,
+  currentUsername: PropTypes.string.isRequired,
+  updateSnackbar: PropTypes.func.isRequired,
+  handleNewsItemEdit: PropTypes.func.isRequired,
 };
 
 export default NewsItem;

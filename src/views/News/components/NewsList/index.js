@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import NewsItem from '../NewsItem';
 import { gordonColors } from 'theme';
@@ -6,101 +7,115 @@ import { Grid, Typography, Card, List } from '@material-ui/core';
 
 const BREAKPOINT_WIDTH = 540;
 
-const NewsList = (props) => {
-  const { news } = props;
+const headerStyle = {
+  backgroundColor: gordonColors.primary.blue,
+  color: '#FFF',
+  padding: '10px',
+};
+
+const NewsList = ({
+  news,
+  personalUnapprovedNews,
+  currentUsername,
+  updateSnackbar,
+  handleNewsItemEdit,
+}) => {
   let header;
   let personalUnapprovedPostings;
   let postings;
-  const { personalUnapprovedNews } = props;
 
-  const headerStyle = {
-    backgroundColor: gordonColors.primary.blue,
-    color: '#FFF',
-    padding: '10px',
-  };
+  if (news.length > 0 || personalUnapprovedNews.length > 0) {
+    if (window.innerWidth < BREAKPOINT_WIDTH) {
+      personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
+        <NewsItem
+          posting={posting}
+          unapproved
+          size="single"
+          currentUsername={currentUsername}
+          updateSnackbar={updateSnackbar}
+          handleNewsItemEdit={handleNewsItemEdit}
+          key={posting.SNID}
+        />
+      ));
 
-  if (window.innerWidth < BREAKPOINT_WIDTH) {
-    personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
-      <NewsItem
-        posting={posting}
-        key={posting.SNID}
-        size="single"
-        updateSnackbar={props.updateSnackbar}
-        currentUsername={props.currentUsername}
-        callFunction={props.callFunction}
-        unapproved
-      />
-    ));
+      postings = news.map((posting) => (
+        <NewsItem
+          posting={posting}
+          //approved
+          size="single"
+          currentUsername={currentUsername}
+          updateSnackbar={updateSnackbar}
+          handleNewsItemEdit={handleNewsItemEdit}
+          key={posting.SNID}
+        />
+      ));
 
-    postings = news.map((posting) => (
-      <NewsItem
-        posting={posting}
-        key={posting.SNID}
-        size="single"
-        updateSnackbar={props.updateSnackbar}
-        currentUsername={props.currentUsername}
-        callFunction={props.callFunction}
-      />
-    ));
+      header = (
+        <div style={headerStyle}>
+          <Grid container direction="row">
+            <Grid item xs={12}>
+              <Typography variant="body2" style={headerStyle}>
+                NEWS
+              </Typography>
+            </Grid>
+          </Grid>
+        </div>
+      );
+    } else {
+      personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
+        <NewsItem
+          posting={posting}
+          unapproved
+          size="full"
+          currentUsername={currentUsername}
+          updateSnackbar={updateSnackbar}
+          handleNewsItemEdit={handleNewsItemEdit}
+          key={posting.SNID}
+        />
+      ));
 
-    header = (
-      <div style={headerStyle}>
-        <Grid container direction="row">
-          <Grid item xs={12}>
-            <Typography variant="body2" style={headerStyle}>
-              NEWS
+      postings = news.map((posting) => (
+        <NewsItem
+          posting={posting}
+          //approved
+          size="full"
+          currentUsername={currentUsername}
+          updateSnackbar={updateSnackbar}
+          handleNewsItemEdit={handleNewsItemEdit}
+          key={posting.SNID}
+        />
+      ));
+
+      header = (
+        <Grid container direction="row" style={headerStyle}>
+          <Grid item xs={2}>
+            <Typography variant="body1" style={headerStyle}>
+              CATEGORY
+            </Typography>
+          </Grid>
+          <Grid item xs={5}>
+            <Typography variant="body1" style={headerStyle}>
+              SUBJECT
+            </Typography>
+          </Grid>
+          <Grid item xs={3}>
+            <Typography variant="body1" style={headerStyle}>
+              POSTED BY
+            </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="body1" style={headerStyle}>
+              POSTED
             </Typography>
           </Grid>
         </Grid>
-      </div>
-    );
-  } else if (news) {
-    personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
-      <NewsItem
-        posting={posting}
-        key={posting.SNID}
-        size="full"
-        updateSnackbar={props.updateSnackbar}
-        currentUsername={props.currentUsername}
-        callFunction={props.callFunction}
-        unapproved
-      />
-    ));
-
-    postings = news.map((posting) => (
-      <NewsItem
-        posting={posting}
-        key={posting.SNID}
-        updateSnackbar={props.updateSnackbar}
-        currentUsername={props.currentUsername}
-        callFunction={props.callFunction}
-        size="full"
-      />
-    ));
-
-    header = (
-      <Grid container direction="row" style={headerStyle}>
-        <Grid item xs={2}>
-          <Typography variant="body1" style={headerStyle}>
-            CATEGORY
-          </Typography>
-        </Grid>
-        <Grid item xs={5}>
-          <Typography variant="body1" style={headerStyle}>
-            SUBJECT
-          </Typography>
-        </Grid>
-        <Grid item xs={3}>
-          <Typography variant="body1" style={headerStyle}>
-            POSTED BY
-          </Typography>
-        </Grid>
-        <Grid item xs={2}>
-          <Typography variant="body1" style={headerStyle}>
-            POSTED
-          </Typography>
-        </Grid>
-      </Grid>
+      );
+    }
+  } else {
+    return (
+      <Typography variant="h4" align="center">
+        No News To Show
+      </Typography>
     );
   }
 
@@ -115,6 +130,36 @@ const NewsList = (props) => {
       </Grid>
     </Card>
   );
+};
+
+NewsList.propTypes = {
+  news: PropTypes.arrayOf(
+    PropTypes.shape({
+      SNID: PropTypes.number.isRequired,
+      Subject: PropTypes.string.isRequired,
+      ADUN: PropTypes.string.isRequired,
+      Entered: PropTypes.string.isRequired,
+      categoryName: PropTypes.string.isRequired,
+      Body: PropTypes.string.isRequired,
+      // Expiration: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+
+  personalUnapprovedNews: PropTypes.arrayOf(
+    PropTypes.shape({
+      SNID: PropTypes.number.isRequired,
+      Subject: PropTypes.string.isRequired,
+      ADUN: PropTypes.string.isRequired,
+      Entered: PropTypes.string.isRequired,
+      categoryName: PropTypes.string.isRequired,
+      Body: PropTypes.string.isRequired,
+      // Expiration: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+
+  currentUsername: PropTypes.string.isRequired,
+  updateSnackbar: PropTypes.func.isRequired,
+  handleNewsItemEdit: PropTypes.func.isRequired,
 };
 
 export default NewsList;

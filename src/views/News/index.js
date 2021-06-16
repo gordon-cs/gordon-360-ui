@@ -40,8 +40,8 @@ const StudentNews = (props) => {
   const [categories, setCategories] = useState([]);
   const [news, setNews] = useState([]);
   const [personalUnapprovedNews, setPersonalUnapprovedNews] = useState([]);
-  const [filteredNews, setFilteredNews] = useState([]);
-  const [isOnline, setIsOnline] = useState(useNetworkStatus());
+  //const [filteredNews, setFilteredNews] = useState([]);
+  const isOnline = useNetworkStatus();
   const [newPostCategory, setNewPostCategory] = useState('');
   const [newPostSubject, setNewPostSubject] = useState('');
   const [newPostBody, setNewPostBody] = useState('');
@@ -125,7 +125,7 @@ const StudentNews = (props) => {
         setCategories(newsCategories);
         setNews(unexpiredNews);
         setPersonalUnapprovedNews(personalUnapprovedNews);
-        setFilteredNews(unexpiredNews);
+        //setFilteredNews(unexpiredNews);
       } else {
         // TODO: test authentication handling and neaten code (ex. below)
         // alert("Please sign in to access student news");
@@ -193,28 +193,6 @@ const StudentNews = (props) => {
       return;
     }
     setSnackbarOpen(false);
-  }
-
-  function callFunction(functionName, param) {
-    if (functionName == null) {
-      throw new Error('Function name not specified to callFunction (news)');
-    }
-    switch (functionName) {
-      case 'updateSnackbar':
-        if (param == null) {
-          throw new Error("callFunction 'Update Snackbar' requires a parameter (news)");
-        }
-        updateSnackbar(param);
-        break;
-      case 'handleNewsItemEdit':
-        if (param == null) {
-          throw new Error("callFunction 'handleNewsItemEdit' requires a parameter (news)");
-        }
-        handleNewsItemEdit(param);
-        break;
-      default:
-        console.log('callFunction function name not applicable, double check your parameter');
-    }
   }
 
   // TODO: Currently disabled and unused
@@ -474,42 +452,18 @@ const StudentNews = (props) => {
   //Image isn't here because an image is optional
   let content;
 
-  /* Used to re-render the page when the network connection changes.
-   *  network is compared to the message received to prevent
-   *  multiple re-renders that creates extreme performance lost.
-   *  The origin of the message is checked to prevent cross-site scripting attacks
-   */
-  window.addEventListener('message', (event) => {
-    if (event.data === 'online' && !isOnline && event.origin === window.location.origin) {
-      setIsOnline(true);
-    } else if (event.data === 'offline' && isOnline && event.origin === window.location.origin) {
-      setIsOnline(false);
-    }
-  });
-
-  /* Gets status of current network connection for online/offline rendering
-   *  Defaults to online in case of PWA not being possible
-   */
-  const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
-
   if (props.authentication) {
     if (loading === true) {
       content = <GordonLoader />;
-    } else if (news.length > 0 || personalUnapprovedNews.length > 0) {
-      content = (
-        <NewsList
-          news={filteredNews}
-          personalUnapprovedNews={personalUnapprovedNews}
-          updateSnackbar={updateSnackbar}
-          currentUsername={currentUsername}
-          callFunction={callFunction}
-        />
-      );
     } else {
       content = (
-        <Typography variant="h4" align="center">
-          No News To Show
-        </Typography>
+        <NewsList
+          news={news}
+          personalUnapprovedNews={personalUnapprovedNews}
+          currentUsername={currentUsername}
+          updateSnackbar={updateSnackbar}
+          handleNewsItemEdit={handleNewsItemEdit}
+        />
       );
     }
 
@@ -527,7 +481,7 @@ const StudentNews = (props) => {
     let newsJSX;
 
     // If the user is online
-    if (networkStatus === 'online' || (networkStatus === 'offline' && props.authentication)) {
+    if (isOnline || (!isOnline && props.authentication)) {
       newsJSX = (
         <>
           {/* Button to Create Posting */}
@@ -613,7 +567,6 @@ const StudentNews = (props) => {
                       multiline
                       fullWidth
                       rows={4}
-                      variant="outlined"
                       name="newPostBody"
                       value={newPostBody}
                       onChange={(event) => {
@@ -716,7 +669,7 @@ const StudentNews = (props) => {
                   <Button variant="contained" onClick={handleWindowClose}>
                     Cancel
                   </Button>
-                  {currentlyEditing === false ? submitButton : editButton}
+                  {submitButton}
                 </DialogActions>
               }
             </Dialog>
