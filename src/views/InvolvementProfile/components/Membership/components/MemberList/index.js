@@ -45,8 +45,6 @@ const MemberList = ({
       if (b.ParticipationDescription == 'Leader') return 1;
       if (a.ParticipationDescription == 'Member') return -1;
       if (b.ParticipationDescription == 'Member') return 1;
-      if (a.ParticipationDescription == 'Guest') return -1;
-      if (b.ParticipationDescription == 'Guest') return 1;
     } else {
     }
     if (a.LastName.toUpperCase() < b.LastName.toUpperCase()) {
