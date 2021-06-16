@@ -607,6 +607,7 @@ const StudentNews = (props) => {
                   {/* BODY ENTRY */}
                   <Grid item xs={12}>
                     <TextField
+                      variant="filled"
                       label="Body"
                       margin="normal"
                       multiline
