@@ -5,19 +5,16 @@ import {
   Grid,
   Input,
   InputLabel,
-  CardHeader,
   Typography,
-  TextField,
 } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
 import { gordonColors } from 'theme';
 
 const UpdatePhone = ({ values, handleChange, handleCheck }) => {
   const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justify="center" alignItems="center" direction="column">
-      <Grid item style={{ color: cyan }}>
-        <Typography variant="h5" gutterbottom>
+      <Grid item>
+        <Typography variant="h5" style={{ color: cyan }} gutterbottom>
           Step 2: Enter your Cell Phone Number
         </Typography>
       </Grid>

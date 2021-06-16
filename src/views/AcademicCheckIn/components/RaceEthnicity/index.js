@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import { gordonColors } from 'theme';
 import {
   FormControl,
@@ -8,7 +7,6 @@ import {
   Radio,
   RadioGroup,
   Grid,
-  Typograph,
   Typography,
 } from '@material-ui/core';
 

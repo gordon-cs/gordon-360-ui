@@ -5,13 +5,41 @@ import { gordonColors } from 'theme';
 
 const EmergencyContactUpdate = ({ values, handleChange }) => {
   let cyan = gordonColors.primary.cyan;
+
+  const emergencyContact1 = [
+    1,
+    values.firstName1,
+    values.lastName1,
+    values.relationship1,
+    values.homePhone1,
+    values.mobilePhone1,
+  ];
+
+  const emergencyContact2 = [
+    2,
+    values.firstName2,
+    values.lastName2,
+    values.relationship2,
+    values.homePhone2,
+    values.mobilePhone2,
+  ];
+
+  const emergencyContact3 = [
+    3,
+    values.firstName3,
+    values.lastName3,
+    values.relationship3,
+    values.homePhone3,
+    values.mobilePhone3,
+  ];
+
   return (
     <Grid container justify="center" alignItems="center" direction="column">
       <Typography variant="h5" gutterBottom style={{ color: cyan }}>
         Step 1: Enter your Emergency Contact Information
       </Typography>
       <Typography variant="h6" gutterBottom>
-        <b> Who are your emergency contacts? </b>
+        Who are your emergency contacts?
       </Typography>
       <Typography variant="body1" gutterBottom>
         HIPAA regulations prohibit sharing of medical information regarding anyone age 18 or over
@@ -23,199 +51,98 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
         authorize Gordon College to contact the following person(s) listed below in the event of a
         medical emergency.
       </Typography>
-
-      <Grid container justify="left" direction="column" spacing={2}>
-        <Grid item>
-          <Typography variant="body1"> Emergency Contact 1 </Typography>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> First Name </InputLabel>
-            <Input
-              id="component-simple"
-              name="firstName1"
-              value={values.firstName1}
-              onChange={handleChange}
-            />
-          </FormControl>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Last Name </InputLabel>
-            <Input
-              id="component-simple"
-              name="lastName1"
-              value={values.lastName1}
-              onChange={handleChange}
-            />
-          </FormControl>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Relationship </InputLabel>
-            <Input
-              id="component-simple"
-              name="relationship1"
-              value={values.relationship1}
-              onChange={handleChange}
-            />
-          </FormControl>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Home Phone </InputLabel>
-            <Input
-              id="component-simple"
-              name="homePhone1"
-              value={values.homePhone1}
-              onChange={handleChange}
-            />
-          </FormControl>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Mobile Phone </InputLabel>
-            <Input
-              id="component-simple"
-              name="mobilePhone1"
-              value={values.mobilePhone1}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-
-        <Grid item>
-          <br />
-        </Grid>
-
-        <Grid item>
-          <Typography variant="body1"> Emergency Contact 2 </Typography>
-        </Grid>
-        <Grid item>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> First Name </InputLabel>
-            <Input
-              id="component-simple"
-              name="firstName2"
-              value={values.firstName2}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Last Name </InputLabel>
-            <Input
-              id="component-simple"
-              name="lastName2"
-              value={values.lastName2}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Relationship </InputLabel>
-            <Input
-              id="component-simple"
-              name="relationship2"
-              value={values.relationship2}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Home Phone </InputLabel>
-            <Input
-              id="component-simple"
-              name="homePhone2"
-              value={values.homePhone2}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Mobile Phone </InputLabel>
-            <Input
-              id="component-simple"
-              name="mobilePhone2"
-              value={values.mobilePhone2}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-
-        <Grid item>
-          <br />
-        </Grid>
-
-        <Grid item>
-          <Typography variant="body1"> Emergency Contact 3 </Typography>
-        </Grid>
-        <Grid item>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> First Name </InputLabel>
-            <Input
-              id="component-simple"
-              name="firstName3"
-              value={values.firstName3}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Last Name </InputLabel>
-            <Input
-              id="component-simple"
-              name="lastName3"
-              value={values.lastName3}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Relationship </InputLabel>
-            <Input
-              id="component-simple"
-              name="relationship3"
-              value={values.relationship3}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Home Phone </InputLabel>
-            <Input
-              id="component-simple"
-              name="homePhone3"
-              value={values.homePhone3}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <FormControl className="checkIn">
-            <InputLabel htmlFor="component-simple"> Mobile Phone </InputLabel>
-            <Input
-              id="component-simple"
-              name="mobilePhone3"
-              value={values.mobilePhone3}
-              onChange={handleChange}
-            />
-          </FormControl>
-        </Grid>
-      </Grid>
-
+      {createEmergencyContactFields(emergencyContact1, handleChange)}
+      {createEmergencyContactFields(emergencyContact2, handleChange)}
+      {createEmergencyContactFields(emergencyContact3, handleChange)}
       <Grid item>
         <br />
       </Grid>
-
-      <Grid item>
-        <Typography variant="body2" gutterBottom>
-          If, during the semester your emergency contact information must be updated, please contact
-          Student Life at 978.867.4263.
-        </Typography>
-        <Typography variant="body2" gutterBottom>
-          For international phone numbers, check the "Non-US Number" checkbox to enter information.
-        </Typography>
-      </Grid>
+      <Typography variant="body2" gutterBottom>
+        If, during the semester your emergency contact information must be updated, please contact
+        Student Life at 978.867.4263.
+      </Typography>
+      <Typography variant="body2" gutterBottom>
+        For international phone numbers, check the "Non-US Number" checkbox to enter information.
+      </Typography>
     </Grid>
   );
 };
+
+/**
+ * Helper function to return the emergency contact fields.
+ *
+ *
+ * @param {List} valueList a list of the values to be updated by the emergency contact form. These
+ * values should be passed in the order [formnumber, firstname, lastname, relationship, homephone,
+ * mobilephone]
+ * @param {Function} handleChange a function to handle the updating of the fields
+ *
+ * @returns {JSX.Element} valid JSX for the emergency contact fields
+ */
+function createEmergencyContactFields(valueList, handleChange) {
+  const formNumber = valueList[0];
+  return (
+    <Box padding={2} align="center">
+      <Typography variant="body1"> Emergency Contact {formNumber} </Typography>
+      <Grid container spacing={2} justify="center">
+        <Grid item>
+          <FormControl className="emergencyContactForm">
+            <InputLabel htmlFor="component-simple"> First Name </InputLabel>
+            <Input
+              id="component-simple"
+              name={'firstName' + formNumber}
+              value={valueList[1]}
+              onChange={handleChange}
+            />
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <FormControl className="emergencyContactForm">
+            <InputLabel htmlFor="component-simple"> Last Name </InputLabel>
+            <Input
+              id="component-simple"
+              name={'lastName' + formNumber}
+              value={valueList[2]}
+              onChange={handleChange}
+            />
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <FormControl className="emergencyContactForm">
+            <InputLabel htmlFor="component-simple"> Relationship </InputLabel>
+            <Input
+              id="component-simple"
+              name={'relationship' + formNumber}
+              value={valueList[3]}
+              onChange={handleChange}
+            />
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <FormControl className="emergencyContactForm">
+            <InputLabel htmlFor="component-simple"> Home Phone </InputLabel>
+            <Input
+              id="component-simple"
+              name={'homePhone' + formNumber}
+              value={valueList[4]}
+              onChange={handleChange}
+            />
+          </FormControl>
+        </Grid>
+        <Grid>
+          <FormControl className="emergencyContactForm">
+            <InputLabel htmlFor="component-simple"> Mobile Phone </InputLabel>
+            <Input
+              id="component-simple"
+              name={'mobilePhone' + formNumber}
+              value={valueList[5]}
+              onChange={handleChange}
+            />
+          </FormControl>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+}
 
 export default EmergencyContactUpdate;

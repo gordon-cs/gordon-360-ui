@@ -3,7 +3,7 @@ import AcademicCheckInWelcome from 'views/AcademicCheckIn/components/AcademicChe
 import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyContactUpdate';
 import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
 import { Button, Grid, Card, CardHeader, Box } from '@material-ui/core';
-import { checkInStatus } from 'services/checkIn';
+// import { checkInStatus } from 'services/checkIn';
 import { gordonColors } from 'theme';
 import './index.css';
 import PrivacyAgreement from './components/PrivacyAgreement';
@@ -89,7 +89,6 @@ const AcademicCheckIn = () => {
       <Grid item xs={12} md={9} lg={5}>
         <Card>
           <CardHeader title="Academic Check In" className="checkIn-header" padding={30} />
-          <Grid item>
             <Box m={2}>
               <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
                 <Grid item>
@@ -120,7 +119,7 @@ const AcademicCheckIn = () => {
                           handleCheck={handleCheck}
                         />
                       )}
-                      {activeStep == 5 && <ConfirmCheckIn values={values} />}
+                      {activeStep === 5 && <ConfirmCheckIn values={values} />}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -181,7 +180,6 @@ const AcademicCheckIn = () => {
                 </Grid>
               </Grid>
             </Box>
-          </Grid>
         </Card>
       </Grid>
     </Grid>

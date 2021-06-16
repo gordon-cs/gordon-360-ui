@@ -1,13 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import { gordonColors } from 'theme';
-import {
-  FormControl,
-  FormControlLabel,
-  Checkbox,
-  Grid,
-  Typograph,
-  Typography,
-} from '@material-ui/core';
+import { FormControl, FormControlLabel, Checkbox, Grid, Typography } from '@material-ui/core';
 
 const PrivacyAgreement = ({ values, handleCheck }) => {
   const cyan = gordonColors.primary.cyan;
@@ -85,7 +77,7 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
             of the office that administers FERPA is:
           </Typography>
           <br />
-          <Typography variant="body2" gutterbottom>
+          <Typography variant="subtitle2" gutterbottom>
             Family Policy Compliance Office U.S. Department of Education 400 Maryland Avenue, SW
             Washington, DC 20202-8520
           </Typography>
@@ -99,6 +91,7 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
             employer calls to confirm enrollment or degree information, they will be informed that
             we have no record of that person at Gordon College.
           </Typography>
+          <br />
           <Typography variant="subtitle1" gutterbottom>
             Director information is defined as a student's:
           </Typography>
@@ -121,17 +114,15 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
               360.gordon.edu site by accessing 'My Profile' and selecting 'Photo Options' under
               their picture. If you would like all your information blocked by a FERPA Hold, please
               contact the registrar's office at (978) 867-4243 or
-              {<a href="mailto:registrar@gordon.edu"> registrar@gordon.edu</a>}.
+              <a href="mailto:registrar@gordon.edu"> registrar@gordon.edu</a>.
             </b>
           </Typography>
           <br />
           <FormControl>
             <FormControlLabel
               control={<Checkbox checked={values.FERPA} name="FERPA" onChange={handleCheck} />}
-              label="I have read and understand the On-Campus Data Usage paragraph above and I give 
-              Gordon College consent to store and process my personal information as outlined in its
-              data privacy policy."
-              labelPlacement="start"
+              label="I have read and understand the FERPA Statement above."
+              labelPlacement="end"
             />
           </FormControl>
           <br />
@@ -150,6 +141,16 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
             Student Loan Clearinghouse or a collection agent.
           </Typography>
           <br />
+          <Typography variant="body2" gutterBottom>
+            <b>
+              Students may request that their personal photograph not be made available on the
+              360.gordon.edu site by accessing 'My Profile' and selecting 'Photo Options' under
+              their picture. If you would like all of your information blocked by a FERPA hold,
+              please contact the registrar's office at 978.867.4243 or{' '}
+              <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>.
+            </b>
+          </Typography>
+          <br />
           <FormControl>
             <FormControlLabel
               control={
@@ -158,7 +159,7 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
               label="I have read and understand the On-Campus Data Usage paragraph above and I give
             Gordon College consent to store and process my personal information as outline in its
             data privacy policy"
-              labelPlacement="start"
+              labelPlacement="end"
             />
           </FormControl>
           <br />
@@ -196,7 +197,7 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
               label="I have read and understand the On-Campus Data Usage paragraph above and I give
             Gordon College consent to store and process my personal information as outline in its
             data privacy policy"
-              labelPlacement="start"
+              labelPlacement="end"
             />
           </FormControl>
         </Grid>
