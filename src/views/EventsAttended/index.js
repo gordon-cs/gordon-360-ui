@@ -6,7 +6,7 @@ import EventList from 'components/EventList';
 import { Link } from 'react-router-dom';
 import { gordonColors } from 'theme';
 
-import { List, Grid, Card, CardContent, Button, Typography } from '@material-ui/core';
+import { List, Grid, Button, Typography } from '@material-ui/core';
 
 const EventsAttended = (props) => {
   const [events, setEvents] = useState([]);
