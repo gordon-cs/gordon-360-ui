@@ -4,7 +4,6 @@ import { gordonColors } from 'theme';
 
 import { Card, CardHeader, CardContent, Grid } from '@material-ui/core';
 import MemberListItem from './components/MemberListItem';
-import IMG from 'react-graceful-image';
 
 const breakpointWidth = 810;
 
@@ -39,12 +38,12 @@ const MemberList = ({
 
   const compareByLastThenFirst = (a, b) => {
     if (a.ParticipationDescription !== b.ParticipationDescription) {
-      if (a.ParticipationDescription == 'Advisor') return -1;
-      if (b.ParticipationDescription == 'Advisor') return 1;
-      if (a.ParticipationDescription == 'Leader') return -1;
-      if (b.ParticipationDescription == 'Leader') return 1;
-      if (a.ParticipationDescription == 'Member') return -1;
-      if (b.ParticipationDescription == 'Member') return 1;
+      if (a.ParticipationDescription === 'Advisor') return -1;
+      if (b.ParticipationDescription === 'Advisor') return 1;
+      if (a.ParticipationDescription === 'Leader') return -1;
+      if (b.ParticipationDescription === 'Leader') return 1;
+      if (a.ParticipationDescription === 'Member') return -1;
+      if (b.ParticipationDescription === 'Member') return 1;
     }
 
     if (a.LastName.toUpperCase() < b.LastName.toUpperCase()) {
@@ -69,14 +68,11 @@ const MemberList = ({
       title={
         <Grid container direction="row">
           <Grid item xs={1} />
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             Name
           </Grid>
-          <Grid item xs={2}>
-            Participation
-          </Grid>
-          <Grid item xs={3}>
-            Title/Comment
+          <Grid item xs={4}>
+            Title/Participation
           </Grid>
           <Grid item xs={2}>
             Mail #

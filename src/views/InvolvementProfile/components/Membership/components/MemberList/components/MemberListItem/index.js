@@ -24,7 +24,8 @@ import user from 'services/user';
 import membership from 'services/membership';
 import GordonDialogBox from 'components/GordonDialogBox';
 const rowStyle = {
-  padding: '10px 0',
+  margin: '10px 0',
+  padding: '10px 0px',
 };
 const redButton = {
   background: gordonColors.secondary.red,
@@ -51,6 +52,7 @@ const MemberListItem = ({
   onToggleIsAdmin,
 }) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [titleDialog, setTitleDialog] = useState(member.Description);
   const [isLeaveAlertOpen, setIsLeaveAlertOpen] = useState(false);
   const [isRemoveAlertOpen, setIsRemoveAlertOpen] = useState(false);
   const [isUnadminSelfDialogOpen, setIsUnadminSelfDialogOpen] = useState(false);
@@ -60,17 +62,19 @@ const MemberListItem = ({
     member.ParticipationDescription,
   );
   const [participation, setParticipation] = useState(member.Participation);
-  const [titleComment, setTitleComment] = useState(member.Description);
+  const [title, setTitle] = useState(member.Description);
   const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
     const loadAvatar = async () => {
       setAvatar(null);
+
+      //console.log(member.AD_username);
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(member.AD_Username),
       ]);
       let tempAvatar;
-      console.log(member.AD_Username);
+      //console.log(member.AD_Username);
       if (member.AD_Username) {
         tempAvatar = preferredImage || defaultImage;
       } else {
@@ -83,7 +87,7 @@ const MemberListItem = ({
       setAvatar(tempAvatar);
     };
     loadAvatar();
-  }, []);
+  }, [member.AD_Username]);
 
   const handleToggleGroupAdmin = async () => {
     if (isAdmin && !isSuperAdmin && member.IDNumber === Number(user.getLocalInfo().id)) {
@@ -109,7 +113,7 @@ const MemberListItem = ({
   const handleCloseEditDialog = () => {
     setIsEditDialogOpen(false);
     setParticipationDescription(member.ParticipationDescription);
-    setTitleComment(member.Description);
+    setTitle(member.Description);
   };
 
   const onEditMember = async () => {
@@ -119,9 +123,10 @@ const MemberListItem = ({
       SESS_CDE: member.SessionCode,
       ID_NUM: member.IDNumber,
       PART_CDE: participation,
-      COMMENT_TXT: titleComment,
+      COMMENT_TXT: titleDialog,
     };
     await membership.editMembership(member.MembershipID, data);
+    setTitle(titleDialog);
     setIsEditDialogOpen(false);
   };
 
@@ -148,6 +153,8 @@ const MemberListItem = ({
       setIsRemoveAlertOpen(true);
     }
   };
+
+  console.log(member.AD_Username);
 
   let content;
   let options;
@@ -215,9 +222,9 @@ const MemberListItem = ({
               <TextField
                 variant="filled"
                 fullWidth
-                onChange={(e) => setTitleComment(e.target.value)}
-                defaultValue={member.Description}
-                label="Title/Comment"
+                onChange={(e) => setTitleDialog(e.target.value)}
+                defaultValue={title}
+                label="Title"
               />
             </Grid>
           </Grid>
@@ -257,7 +264,7 @@ const MemberListItem = ({
     content = (
       <>
         <Grid container alignItems="center" spacing={2}>
-          <Grid item xs={0.5} style={rowStyle}>
+          <Grid item xs={1} style={rowStyle}>
             <IMG
               className="people-search-avatar-mobile"
               src={`data:image/jpg;base64,${avatar}`}
@@ -266,18 +273,15 @@ const MemberListItem = ({
               placeholderColor="#eeeeee"
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={3}>
             <Typography>
               {member.FirstName} {member.LastName}
             </Typography>
           </Grid>
-          <Grid item xs={2} style={rowStyle}>
-            <Typography>{participationDescription}</Typography>
+          <Grid item xs={4} style={rowStyle}>
+            <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
           <Grid item xs={2} style={rowStyle}>
-            <Typography>{titleComment}</Typography>
-          </Grid>
-          <Grid item xs={1} style={rowStyle}>
             <Typography>{member.Mail_Location}</Typography>
           </Grid>
           <Grid item xs={2} style={rowStyle}>
@@ -290,8 +294,8 @@ const MemberListItem = ({
 
     if (isMobileView) {
       options = (
-        <Grid container alignItems="center" justify="flex-end" spacing={4}>
-          <Grid item sm={3} align="center">
+        <Grid container alignItems="center" justify="flex-end" spacing={3}>
+          <Grid item sm={2} align="center">
             <FormControlLabel
               control={
                 <Checkbox
@@ -311,31 +315,37 @@ const MemberListItem = ({
       content = (
         <Accordion defaultExpanded={(isAdmin || isSuperAdmin) && !isMobileView}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <IMG
-              className="people-search-avatar-mobile"
-              src={`data:image/jpg;base64,${avatar}`}
-              alt=""
-              noLazyLoad="true"
-              placeholderColor="#eeeeee"
-            />
-            <Grid container>
-              <Grid item xs={6} sm={7} md={8}>
-                <Typography>
-                  {member.FirstName} {member.LastName}
-                </Typography>
+            <Grid container alignItems="center" spacing={2}>
+              <Grid item xs={9} sm={10}>
+                <Grid container spacing={3} wrap="nowrap" alignItems="center">
+                  <Grid item>
+                    <IMG
+                      className="people-search-avatar-mobile"
+                      src={`data:image/jpg;base64,${avatar}`}
+                      alt=""
+                      noLazyLoad="true"
+                      placeholderColor="#eeeeee"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Typography>
+                      {member.FirstName} {member.LastName}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item xs={4} sm={3} md={2}>
+              <Grid item xs={3} sm={2}>
                 <Typography>{member.ParticipationDescription} </Typography>
-              </Grid>
-              <Grid item xs={2}>
                 <Typography>{mailLoc}</Typography>
               </Grid>
+              {/* <Grid item xs={2}>
+              </Grid> */}
             </Grid>
           </AccordionSummary>
           <AccordionDetails>
             <Grid container direction="column">
               <Grid item>{options}</Grid>
-              <Grid item>{titleComment}</Grid>
+              <Grid item>{title}</Grid>
             </Grid>
           </AccordionDetails>
         </Accordion>
@@ -398,11 +408,40 @@ const MemberListItem = ({
 };
 
 MemberListItem.propTypes = {
-  Person: PropTypes.shape({
+  member: PropTypes.shape({
+    MembershipID: PropTypes.number.isRequired,
+    ActivityCode: PropTypes.string.isRequired,
+    //ActivityImage: Not sure what the prop type should be, but it will be required.
+    SessionCode: PropTypes.string.isRequired,
+    IDNumber: PropTypes.number.isRequired,
+    AD_Username: PropTypes.string.isRequired,
     FirstName: PropTypes.string.isRequired,
     LastName: PropTypes.string.isRequired,
-    Email: PropTypes.string.isRequired,
+    Mail_Location: PropTypes.string.isRequired,
+    Participation: PropTypes.string.isRequired,
+    ParticipationDescription: PropTypes.string.isRequired,
+    GroupAdmin: PropTypes.bool.isRequired,
+    Description: PropTypes.string.isRequired,
+
+    //Following in object are never used in this file and never passed down to another component
+    //Could be removed and everything would be fine.
+    ActivityDescription: PropTypes.string,
+    ActivityImagePath: PropTypes.string,
+    SessionDescription: PropTypes.string,
+    StartDate: PropTypes.string,
+    EndDate: PropTypes.string,
+    ActivityType: PropTypes.string,
+    ActivityTypeDescription: PropTypes.string,
+    Privacy: PropTypes.string,
+    AccountPrivate: PropTypes.number,
   }).isRequired,
+
+  isAdmin: PropTypes.bool.isRequired,
+  isSuperAdmin: PropTypes.bool.isRequired,
+  createSnackbar: PropTypes.func.isRequired,
+  isMobileView: PropTypes.bool.isRequired,
+  onLeave: PropTypes.func.isRequired,
+  onToggleIsAdmin: PropTypes.func.isRequired,
 };
 
 export default MemberListItem;
