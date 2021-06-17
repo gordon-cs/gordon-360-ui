@@ -39,7 +39,7 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
         Step 1: Enter your Emergency Contact Information
       </Typography>
       <Typography variant="h6" gutterBottom>
-        Who are your emergency contacts?
+        <b>Who are your emergency contacts?</b>
       </Typography>
       <Typography variant="body1" gutterBottom>
         HIPAA regulations prohibit sharing of medical information regarding anyone age 18 or over
@@ -83,7 +83,10 @@ function createEmergencyContactFields(valueList, handleChange) {
   const formNumber = valueList[0];
   return (
     <Box padding={2} align="center">
-      <Typography variant="body1"> Emergency Contact {formNumber} </Typography>
+      <Typography variant="body1" gutterBottom>
+        {' '}
+        <strong>Emergency Contact {formNumber}</strong>{' '}
+      </Typography>
       <Grid container spacing={2} justify="center">
         <Grid item>
           <FormControl className="emergencyContactForm">
@@ -129,7 +132,7 @@ function createEmergencyContactFields(valueList, handleChange) {
             />
           </FormControl>
         </Grid>
-        <Grid>
+        <Grid item>
           <FormControl className="emergencyContactForm">
             <InputLabel htmlFor="component-simple"> Mobile Phone </InputLabel>
             <Input

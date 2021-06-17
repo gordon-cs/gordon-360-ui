@@ -73,6 +73,7 @@ const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
           >
             <FormControlLabel value="notH_L" control={<Radio />} label="Not Hispanic/Latino" />
             <FormControlLabel value="H_L" control={<Radio />} label="Hispanic/Latino" />
+            <FormControlLabel value="none" control={<Radio />} label="Prefer not to say" />
           </RadioGroup>
         </FormControl>
         <FormControl>
@@ -103,8 +104,18 @@ const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
             control={<Checkbox checked={values.white} name="white" onChange={handleCheck} />}
             label="White"
           />
+          <FormControlLabel
+            control={<Checkbox checked={values.none} name="none" onChange={handleCheck} />}
+            label="Prefer not to say"
+          />
         </FormControl>
       </Grid>
+      <Typography variant="subtitle1" gutterbottom>
+        <b>
+          {info.subtext}
+          <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>.
+        </b>
+      </Typography>
     </Grid>
   );
 };

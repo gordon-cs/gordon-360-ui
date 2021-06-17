@@ -64,6 +64,7 @@ const AcademicCheckIn = () => {
     black: false,
     hawaiian: false,
     white: false,
+    none: false,
   });
 
   const handleNext = () => {
@@ -94,7 +95,7 @@ const AcademicCheckIn = () => {
 
   return (
     <Grid container justify="center" spacing={2}>
-      <Grid item xs={12} md={9} lg={5}>
+      <Grid item xs={12} md={9} lg={6}>
         <Card className="academicCheckIn">
           <CardHeader title="Academic Check In" className="checkIn-header" padding={30} />
           <Box m={2}>
