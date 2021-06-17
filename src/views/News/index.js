@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import newsService from 'services/news';
 import userService from 'services/user';
@@ -541,34 +542,7 @@ export default class StudentNews extends Component {
       }
       return news;
     } else {
-      return (
-        <Grid container justify="center">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <h1>You are not logged in.</h1>
-                <br />
-                <h4>You must be logged in to view use Student News.</h4>
-                <br />
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Login
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
+      return <GordonUnauthorized feature={'student news'} />;
     }
   }
 }

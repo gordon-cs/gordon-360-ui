@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import event from 'services/event';
 import GordonLoader from 'components/Loader';
 import EventList from 'components/EventList';
@@ -34,28 +35,7 @@ const EventsAttended = (props) => {
   if (loading === true) {
     content = <GordonLoader />;
   } else if (!props.authentication) {
-    content = (
-      <Grid container justify="center" spacing="2">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent class="cardContent">
-              <h1>You are not logged in.</h1>
-              <br />
-              <h4>You must be logged in to view your attended events.</h4>
-              <br />
-              <Button
-                style={style.button}
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Login
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    content = <GordonUnauthorized feature={'your attended events'} />;
   } else if (events.length > 0) {
     content = (
       <Grid container direction="row" justify="center" spacing="2">

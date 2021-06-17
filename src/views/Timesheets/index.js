@@ -1,5 +1,6 @@
 //Main timesheets page
 import React, { useState, useRef, useEffect } from 'react';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import {
   Grid,
   Card,
@@ -651,35 +652,7 @@ const Timesheets = (props) => {
       }
     }
   } else {
-    // The user is not logged in
-    return (
-      <Grid container justify="center">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <h1>You are not logged in.</h1>
-              <br />
-              <h4>You must be logged in to use the Timesheets page.</h4>
-              <br />
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Login
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    return <GordonUnauthorized feature={'timesheets'} />;
   }
 };
 

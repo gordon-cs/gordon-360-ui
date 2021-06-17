@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import {
   Button,
   Card,
@@ -1067,34 +1068,7 @@ class PeopleSearch extends Component {
 
       return PeopleSearch;
     } else {
-      return (
-        <Grid container justify="center">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <h1>You are not logged in.</h1>
-                <br />
-                <h4>You must be logged in to view use People Search.</h4>
-                <br />
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Login
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
+      return <GordonUnauthorized feature={'People Search'} />;
     }
   }
 }
