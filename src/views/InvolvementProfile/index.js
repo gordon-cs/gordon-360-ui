@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useParams } from 'react-router';
-import ContactList from './components/ContactList/Index';
+import ContactList from './components/ContactList';
 import GordonDialogBox from 'components/GordonDialogBox';
 
 const CROP_DIM = 320; // pixels
