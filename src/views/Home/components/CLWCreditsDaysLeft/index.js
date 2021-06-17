@@ -20,7 +20,6 @@ const CLWCreditsDaysLeft = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      setLoading(true);
       const daysLeft = await session.getDaysLeft();
       const chapelCredits = await user.getChapelCredits();
       const currSession = await session.getCurrent();

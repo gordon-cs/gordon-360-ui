@@ -14,11 +14,9 @@ const EventsAttended = (props) => {
   useEffect(() => {
     const loadEvents = async () => {
       if (props.authentication) {
-        setLoading(true);
         const attendedEvents = await event.getAttendedChapelEvents();
         setEvents(attendedEvents);
       }
-
       setLoading(false);
     };
     loadEvents();
