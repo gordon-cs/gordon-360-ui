@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from 'react';
+import { Button, Grid, Card, CardContent } from '@material-ui/core';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import InvolvementStatusList from './components/InvolvementsStatus';
 import AdminList from './components/AdminList';
 import user from 'services/user';
-import { Button, Grid, Card, CardContent } from '@material-ui/core';
+import { AuthError } from 'services/error';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 
 const Admin = ({ authentication }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const isOnline = useNetworkStatus();
 
   useEffect(() => {
-    setIsAdmin(user.getLocalInfo().college_role === 'god');
+    try {
+      setIsAdmin(user.getLocalInfo().college_role === 'god');
+    } catch (error) {
+      if (error instanceof AuthError) {
+        // Unauthorized exception expected when user not authenticated
+      } else {
+        throw error;
+      }
+    }
   }, [authentication]);
 
   if (authentication) {
@@ -80,34 +90,7 @@ const Admin = ({ authentication }) => {
       );
     }
   } else {
-    return (
-      <Grid container justify="center">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <h1>You are not logged in.</h1>
-              <br />
-              <h4>You must be logged in to view this page.</h4>
-              <br />
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Login
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    return <GordonUnauthorized feature={'the admin page'} />;
   }
 };
 
