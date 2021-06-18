@@ -258,7 +258,8 @@ const PersonalInfoList = ({
     ) : null;
 
   const note =
-    myProf && isFacStaff ? (
+    myProf &&
+    (isFacStaff ? (
       <Typography align="left" className="note">
         NOTE:
         <ul>
@@ -268,7 +269,7 @@ const PersonalInfoList = ({
           </li>
         </ul>
       </Typography>
-    ) : myProf && isStudent ? (
+    ) : isStudent ? (
       <Typography align="left" className="note">
         NOTE:
         <ul>
@@ -282,7 +283,7 @@ const PersonalInfoList = ({
           </li>
         </ul>
       </Typography>
-    ) : null;
+    ) : null);
 
   const disclaimer =
     !myProf &&
