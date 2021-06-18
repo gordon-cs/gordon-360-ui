@@ -369,7 +369,7 @@ const MemberListItem = ({
             </Typography>
           </Grid>
           <Grid item xs={4} style={rowStyle}>
-            <Typography>{participationDescription}</Typography>
+            <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
           <Grid item xs={2} style={rowStyle}>
             <Typography>{mailLoc}</Typography>

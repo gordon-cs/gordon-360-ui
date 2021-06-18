@@ -93,7 +93,7 @@ const MemberList = ({
             Name
           </Grid>
           <Grid item xs={4}>
-            Participation
+            Title/Participation
           </Grid>
           <Grid item xs={4}>
             Mail #
