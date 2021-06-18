@@ -63,12 +63,10 @@ const MemberListItem = ({
   );
   const [participation, setParticipation] = useState(member.Participation);
   const [title, setTitle] = useState(member.Description);
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState();
 
   useEffect(() => {
     const loadAvatar = async () => {
-      setAvatar(null);
-
       //console.log(member.AD_username);
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(member.AD_Username),

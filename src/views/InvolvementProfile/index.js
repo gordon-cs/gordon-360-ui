@@ -430,6 +430,7 @@ const InvolvementProfile = ({ authentication }) => {
                   </Typography>
                 )}
               </Grid>
+
               {authentication && (
                 <>
                   <hr width="70%"></hr>
