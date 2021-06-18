@@ -6,15 +6,15 @@ import GordonLoader from 'components/Loader';
 
 const GordonCarousel = () => {
   const [loading, setLoading] = useState(true);
-  const [carouselContent, setCarouselContent] = useState({});
+  const [carouselContent, setCarouselContent] = useState(null);
   const [imageGallery, setImageGallery] = useState(null);
 
   useEffect(() => {
     const loadCarousel = async () => {
-      setLoading(true);
       setCarouselContent(await cms.getSlides());
       setLoading(false);
     };
+
     loadCarousel();
   }, []);
 

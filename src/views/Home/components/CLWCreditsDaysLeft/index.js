@@ -11,12 +11,18 @@ import './CLWChart.css';
 
 import { Card, CardHeader, CardContent, Typography, Grid, Button } from '@material-ui/core';
 
+const style = {
+  button: {
+    background: gordonColors.primary.cyan,
+    color: 'white',
+  },
+};
+
 const CLWCreditsDaysLeft = () => {
   const [daysLeft, setDaysLeft] = useState([]);
-  const [chapelCredits, setChapelCredits] = useState({});
+  const [chapelCredits, setChapelCredits] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currSessionDescription, setCurrSessionDescription] = useState('');
-
 
   useEffect(() => {
     const loadData = async () => {
@@ -28,10 +34,10 @@ const CLWCreditsDaysLeft = () => {
         '',
       );
 
-      setLoading(false);
       setDaysLeft(daysLeft);
       setChapelCredits(chapelCredits);
       setCurrSessionDescription(currSessionDescription);
+      setLoading(false);
     };
 
     loadData();
@@ -40,13 +46,6 @@ const CLWCreditsDaysLeft = () => {
   let daysColor = gordonColors.primary.blue;
   let chapelColor = gordonColors.primary.cyan;
   let emptyColor = gordonColors.neutral.lightGray;
-
-  const style = {
-    button: {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    },
-  };
 
   defaults.global.legend.display = false;
 
@@ -96,7 +95,7 @@ const CLWCreditsDaysLeft = () => {
     };
 
     content = (
-      <div>
+      <React.Fragment>
         <Grid
           container
           justify="space-around"
@@ -153,7 +152,7 @@ const CLWCreditsDaysLeft = () => {
             <div className="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 

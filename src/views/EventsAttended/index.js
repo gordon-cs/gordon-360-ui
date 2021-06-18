@@ -8,33 +8,33 @@ import { gordonColors } from 'theme';
 
 import { List, Grid, Button, Typography } from '@material-ui/core';
 
-const EventsAttended = (props) => {
+const style = {
+  button: {
+    background: gordonColors.primary.cyan,
+    color: 'white',
+  },
+};
+
+const EventsAttended = (authentication) => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadEvents = async () => {
-      if (props.authentication) {
+      if (authentication) {
         const attendedEvents = await event.getAttendedChapelEvents();
         setEvents(attendedEvents);
       }
       setLoading(false);
     };
     loadEvents();
-  }, [props.authentication]);
+  }, [authentication]);
 
   let content;
 
-  const style = {
-    button: {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    },
-  };
-
   if (loading === true) {
     content = <GordonLoader />;
-  } else if (!props.authentication) {
+  } else if (!authentication) {
     content = <GordonUnauthorized feature={'your attended events'} />;
   } else if (events.length > 0) {
     content = (
