@@ -808,7 +808,7 @@ class PeopleSearch extends Component {
                             <MenuItem label="All Classes" value="">
                               <em>All</em>
                             </MenuItem>
-                            <MenuItem value={1}>Freshman</MenuItem>
+                            <MenuItem value={1}>First Year</MenuItem>
                             <MenuItem value={2}>Sophomore</MenuItem>
                             <MenuItem value={3}>Junior</MenuItem>
                             <MenuItem value={4}>Senior</MenuItem>
