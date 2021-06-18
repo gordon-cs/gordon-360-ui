@@ -4,7 +4,7 @@ import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyCo
 import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
 import { Button, Grid, Card, CardHeader, Box } from '@material-ui/core';
 // import { checkInStatus } from 'services/checkIn';
-import { gordonColors } from 'theme';
+
 import './index.css';
 import PrivacyAgreement from './components/PrivacyAgreement';
 import RaceEthnicity from './components/RaceEthnicity';
@@ -37,6 +37,8 @@ const AcademicCheckIn = () => {
     medicalHold: false,
     laVidaHold: false,
     declarationOfMajorHold: false,
+    isRegistered: true,
+    isIncoming: false,
     firstName1: '',
     lastName1: '',
     relationship1: '',
@@ -91,8 +93,6 @@ const AcademicCheckIn = () => {
     );
   };
 
-  let cyan = gordonColors.primary.cyan;
-
   return (
     <Grid container justify="center" spacing={2}>
       <Grid item xs={12} md={9} lg={6}>
@@ -103,9 +103,7 @@ const AcademicCheckIn = () => {
               <Grid item>
                 <Grid container justify="center" alignItems="center">
                   <Grid item>
-                    {activeStep === 0 && (
-                      <AcademicCheckInWelcome handleChange={(values, handleChange)} />
-                    )}
+                    {activeStep === 0 && <AcademicCheckInWelcome values={values} />}
 
                     {activeStep === 1 && (
                       <EmergencyContactUpdate values={values} handleChange={handleChange} />

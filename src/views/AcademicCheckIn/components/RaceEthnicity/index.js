@@ -22,7 +22,7 @@ const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
       </Grid>
       <Grid item>
         <Typography variant="h6" align="center" gutterbottom>
-          {info.header}
+          <b>{info.header}</b>
         </Typography>
         <Typography variant="body1" gutterbottom>
           {info.para1}
