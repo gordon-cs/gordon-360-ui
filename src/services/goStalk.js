@@ -14,7 +14,7 @@ import http from './http';
  * @param {String} major Major (matches up against 3 majors listed for people)
  * @param {String} minor Minor (matches up against 3 minors listed for people)
  * @param {String} hall Dorm hall that a student lives in
- * @param {String} classType 0-7: Unassigned, Freshman, Sophomore, Junior, Senior, Graduate Student,
+ * @param {String} classType 0-7: Unassigned, First Year, Sophomore, Junior, Senior, Graduate Student,
  * Undegraduate Conferred, Graduate Conferred
  * @param {String} homeCity Hometown/Home city queried
  * @param {String} state A US state or a Canadian Province

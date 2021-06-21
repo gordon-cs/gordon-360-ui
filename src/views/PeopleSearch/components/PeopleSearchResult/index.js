@@ -59,7 +59,7 @@ export default class PeopleSearchResult extends Component {
     if (Person.Type === 'Student') {
       switch (Person.Class) {
         case '1':
-          personClassJobTitle = 'Freshman';
+          personClassJobTitle = 'First Year';
           break;
         case '2':
           personClassJobTitle = 'Sophomore';

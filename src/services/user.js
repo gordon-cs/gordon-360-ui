@@ -270,7 +270,7 @@ function setClass(profile) {
   if (String(profile.PersonType).includes('stu')) {
     switch (profile.Class) {
       case '1':
-        profile.Class = 'Freshman';
+        profile.Class = 'First Year';
         break;
       case '2':
         profile.Class = 'Sophomore';
@@ -431,7 +431,7 @@ const getCliftonStrengths = async (username) => {
     return await http.get(`profiles/clifton/${username}/`);
   } catch (error) {
     console.log('Clifton strengths error:', error);
-    // TODO: currently throws an error whenever clifton strengths are missing, 
+    // TODO: currently throws an error whenever clifton strengths are missing,
     // should just return null or empty
   }
 };
