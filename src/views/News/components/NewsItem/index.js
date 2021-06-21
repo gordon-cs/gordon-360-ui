@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
+import { React, useState } from 'react';
 import newsService from 'services/news';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -21,19 +21,6 @@ const NewsItem = ({
   const [open, setOpen] = useState(false);
   const isOnline = useNetworkStatus();
 
-  useEffect(() => {
-    window.removeEventListener('message', () => {});
-  });
-
-  /**
-   * When the edit (like submit) button is clicked on update news posting form
-   * (handled by News parent component)
-   */
-  async function handleEdit() {
-    const newsID = posting.SNID;
-    handleNewsItemEdit(newsID);
-  }
-
   /**
    * When the delete button is clicked for a posting
    */
@@ -52,7 +39,7 @@ const NewsItem = ({
 
   if (unapproved) {
     // Shows 'pending approval' instead of the date posted
-    posting.dayPosted = <i>pending approval...</i>;
+    posting.dayPosted = <i style={{ textTransform: 'lowercase' }}>"pending approval..."</i>;
   }
 
   let authorProfileLink;
@@ -89,7 +76,7 @@ const NewsItem = ({
         variant="outlined"
         color="primary"
         startIcon={<EditIcon />}
-        onClick={handleEdit}
+        onClick={() => handleNewsItemEdit(posting.SNID)}
         className="btn"
       >
         Edit

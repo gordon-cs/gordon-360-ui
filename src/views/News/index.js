@@ -29,9 +29,51 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 
 const BREAKPOINT_WIDTH = 540;
 const CROP_DIM = 200; // pixels
+
+const styles = {
+  button: {
+    background: gordonColors.primary.blue,
+    color: 'white',
+
+    changeImageButton: {
+      background: gordonColors.primary.blue,
+      color: 'white',
+    },
+
+    resetButton: {
+      backgroundColor: '#f44336',
+      color: 'white',
+    },
+    cancelButton: {
+      backgroundColor: 'white',
+      color: gordonColors.primary.blue,
+      border: `1px solid ${gordonColors.primary.blue}`,
+      width: '38%',
+    },
+    hidden: {
+      display: 'none',
+    },
+  },
+  searchBar: {
+    margin: '0 auto',
+  },
+  newNewsForm: {
+    backgroundColor: '#fff',
+  },
+  fab: {
+    margin: 0,
+    top: 'auto',
+    right: 40,
+    bottom: 40,
+    left: 'auto',
+    position: 'fixed',
+    zIndex: 1,
+  },
+};
 
 const StudentNews = (props) => {
   const [search, setSearch] = useState('');
@@ -70,48 +112,8 @@ const StudentNews = (props) => {
    *ability to change the message above the image in a way that makes sense in either the
    *just-opened-an-edit or the just-submitted-new-image context.
    */
+
   let cropperRef = React.createRef();
-
-  const styles = {
-    button: {
-      background: gordonColors.primary.blue,
-      color: 'white',
-
-      changeImageButton: {
-        background: gordonColors.primary.blue,
-        color: 'white',
-      },
-
-      resetButton: {
-        backgroundColor: '#f44336',
-        color: 'white',
-      },
-      cancelButton: {
-        backgroundColor: 'white',
-        color: gordonColors.primary.blue,
-        border: `1px solid ${gordonColors.primary.blue}`,
-        width: showCropper ? '38%' : '86%',
-      },
-      hidden: {
-        display: 'none',
-      },
-    },
-    searchBar: {
-      margin: '0 auto',
-    },
-    newNewsForm: {
-      backgroundColor: '#fff',
-    },
-    fab: {
-      margin: 0,
-      top: 'auto',
-      right: 40,
-      bottom: 40,
-      left: 'auto',
-      position: 'fixed',
-      zIndex: 1,
-    },
-  };
 
   useEffect(() => {
     const loadNews = async () => {
@@ -481,7 +483,7 @@ const StudentNews = (props) => {
     let newsJSX;
 
     // If the user is online
-    if (isOnline || (!isOnline && props.authentication)) {
+    if (isOnline) {
       newsJSX = (
         <>
           {/* Button to Create Posting */}
@@ -504,6 +506,7 @@ const StudentNews = (props) => {
                   <TextField
                     id="search"
                     label="Search news"
+                    variant="filled"
                     value={search}
                     onChange={(event) => {
                       setSearch(event.target.value);
@@ -528,6 +531,7 @@ const StudentNews = (props) => {
                       select
                       label="Category"
                       name="newPostCategory"
+                      variant="filled"
                       value={newPostCategory}
                       onChange={(event) => {
                         setNewPostCategory(event.target.value);
@@ -547,6 +551,7 @@ const StudentNews = (props) => {
                   <Grid item xs={12}>
                     <TextField
                       label="Subject"
+                      variant="filled"
                       margin="dense"
                       fullWidth
                       name="newPostSubject"
@@ -752,34 +757,7 @@ const StudentNews = (props) => {
 
     return newsJSX;
   } else {
-    return (
-      <Grid container justify="center">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <h1>You are not logged in.</h1>
-              <br />
-              <h4>You must be logged in to view use Student News.</h4>
-              <br />
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Login
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    return <GordonUnauthorized feature={'the student news page'} />;
   }
 };
 
