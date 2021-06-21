@@ -52,7 +52,7 @@ const NewsItem = ({
 
   if (unapproved) {
     // Shows 'pending approval' instead of the date posted
-    posting.dayPosted = <i style={{ textTransform: 'lowercase' }}>"pending approval..."</i>;
+    posting.dayPosted = <i>pending approval...</i>;
   }
 
   let authorProfileLink;
