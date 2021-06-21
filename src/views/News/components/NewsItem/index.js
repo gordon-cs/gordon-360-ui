@@ -118,8 +118,7 @@ const NewsItem = ({
       >
         <Grid item xs={12}>
           <Typography variant="h6" className="news-heading" style={{ fontWeight: 'bold' }}>
-            {' '}
-            {posting.Subject}{' '}
+            {posting.Subject}
           </Typography>
           {authorProfileLink}
         </Grid>
