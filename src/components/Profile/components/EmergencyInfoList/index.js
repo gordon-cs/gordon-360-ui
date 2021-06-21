@@ -6,12 +6,11 @@ import user from 'services/user';
 import { Typography, Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
 
 const formatPhone = (phone) => {
-  let tele = String(phone);
-  if (tele.length === 10) {
-    return '(' + tele.slice(0, 3) + ') ' + tele.slice(3, 6) + '-' + tele.slice(6);
-  } else if (tele !== 'undefined') {
-    return tele;
-  }
+  if (phone?.length === 10) {
+    return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
+  } else {
+    return phone
+  } 
 };
 
 const EmergencyInfoList = ({ username }) => {
