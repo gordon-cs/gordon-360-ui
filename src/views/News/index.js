@@ -4,13 +4,13 @@ import newsService from 'services/news';
 import userService from 'services/user';
 import NewsList from './components/NewsList';
 import GordonLoader from 'components/Loader';
+import GordonSnackbar from 'components/Snackbar';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import { gordonColors } from 'theme';
 import {
-  Snackbar,
-  IconButton,
   Grid,
   TextField,
   Tooltip,
@@ -26,10 +26,8 @@ import {
   DialogContentText,
   MenuItem,
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import GordonUnauthorized from 'components/GordonUnauthorized';
 
 const BREAKPOINT_WIDTH = 540;
 const CROP_DIM = 200; // pixels
@@ -92,8 +90,7 @@ const StudentNews = (props) => {
   const [photoDialogError, setPhotoDialogError] = useState(null);
   const [cropBoxDim, setCropBoxDim] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('Something went wrong');
+  const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [currentUsername, setCurrentUsername] = useState('');
   const [currentlyEditing, setCurrentlyEditing] = useState(false); // false if not editing, newsID if editing
   const [justShowPicture, setJustShowPicture] = useState(false);
@@ -190,13 +187,6 @@ const StudentNews = (props) => {
     setJustShowPicture(false);
   }
 
-  function handleSnackbarClose(reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpen(false);
-  }
-
   // TODO: Currently disabled and unused
   /*
   search = () => {
@@ -211,10 +201,9 @@ const StudentNews = (props) => {
   }
   */
 
-  function updateSnackbar(message) {
-    setSnackbarMessage(message);
-    setSnackbarOpen(true);
-  }
+  const createSnackbar = (text, severity) => {
+    setSnackbar({ open: true, text, severity });
+  };
 
   /**********************************************************
   /*Following functions are solely related to photo submission*
@@ -369,9 +358,9 @@ const StudentNews = (props) => {
     // update the news item and give feedback
     let result = await newsService.editStudentNews(newsID, newData);
     if (result === undefined) {
-      updateSnackbar('News Posting Failed to Update');
+      createSnackbar('News Posting Failed to Update', 'error');
     } else {
-      updateSnackbar('News Posting Updated Successfully');
+      createSnackbar('News Posting Updated Successfully', 'success');
     }
 
     // close the window and reload to update data
@@ -404,9 +393,9 @@ const StudentNews = (props) => {
     // submit the news item and give feedback
     let result = await newsService.submitStudentNews(newsItem);
     if (result === undefined) {
-      updateSnackbar('News Posting Failed to Submit');
+      createSnackbar('News Posting Failed to Submit', 'error');
     } else {
-      updateSnackbar('News Posting Submitted Successfully');
+      createSnackbar('News Posting Submitted Successfully', 'success');
     }
 
     // close the window and reload to update data
@@ -419,28 +408,17 @@ const StudentNews = (props) => {
     var dataURL = reader.result.toString();
     var i = new Image();
     i.onload = async () => {
-      if (i.width < CROP_DIM || i.height < CROP_DIM) {
-        await clearPhotoDialogErrorTimeout();
-        setPhotoDialogError(
-          'Sorry, your image is too small! Image dimensions must be at least ' +
-            CROP_DIM +
-            ' x ' +
-            CROP_DIM +
-            ' pixels.',
-        );
-      } else {
-        var aRatio = i.width / i.height;
-        setAspectRatio(aRatio);
+      var aRatio = i.width / i.height;
+      setAspectRatio(aRatio);
 
-        var maxWidth = maxCropPreviewWidth();
-        var displayWidth = maxWidth > i.width ? i.width : maxWidth;
-        var cropDim = minCropBoxDim(i.width, displayWidth);
+      var maxWidth = maxCropPreviewWidth();
+      var displayWidth = maxWidth > i.width ? i.width : maxWidth;
+      var cropDim = minCropBoxDim(i.width, displayWidth);
 
-        setPhotoDialogError(null);
-        setCropBoxDim(cropDim);
-        setAspectRatio(aRatio);
-        setShowCropper(dataURL);
-      }
+      setPhotoDialogError(null);
+      setCropBoxDim(cropDim);
+      setAspectRatio(aRatio);
+      setShowCropper(dataURL);
     };
     i.src = dataURL;
   }
@@ -463,7 +441,7 @@ const StudentNews = (props) => {
           news={news}
           personalUnapprovedNews={personalUnapprovedNews}
           currentUsername={currentUsername}
-          updateSnackbar={updateSnackbar}
+          createSnackbar={createSnackbar}
           handleNewsItemEdit={handleNewsItemEdit}
         />
       );
@@ -680,7 +658,7 @@ const StudentNews = (props) => {
             </Dialog>
 
             {/* USER FEEDBACK */}
-            <Snackbar
+            {/* <Snackbar
               open={snackbarOpen}
               message={snackbarMessage}
               onClose={handleSnackbarClose}
@@ -699,7 +677,12 @@ const StudentNews = (props) => {
                   <CloseIcon />
                 </IconButton>,
               ]}
-            ></Snackbar>
+            ></Snackbar> */}
+            <GordonSnackbar
+              {...snackbar}
+              onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+              anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+            />
 
             <Grid item xs={12} lg={8} style={{ marginBottom: '7rem' }}>
               {/* list of news */}

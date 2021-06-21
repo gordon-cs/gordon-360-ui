@@ -15,7 +15,7 @@ const NewsItem = ({
   unapproved,
   size,
   currentUsername,
-  updateSnackbar,
+  createSnackbar,
   handleNewsItemEdit,
 }) => {
   const [open, setOpen] = useState(false);
@@ -29,9 +29,9 @@ const NewsItem = ({
     // delete the news item and give feedback
     let result = await newsService.deleteStudentNews(newsID);
     if (result === undefined) {
-      updateSnackbar('News Posting Failed to Delete');
+      createSnackbar('News Posting Failed to Delete', 'error');
     } else {
-      updateSnackbar('News Posting Deleted Successfully');
+      createSnackbar('News Posting Deleted Successfully', 'success');
     }
     // Should be changed in future to allow react to only reload the updated news list
     window.top.location.reload();
@@ -207,7 +207,7 @@ NewsItem.propTypes = {
   unapproved: PropTypes.any,
   size: PropTypes.string.isRequired,
   currentUsername: PropTypes.string.isRequired,
-  updateSnackbar: PropTypes.func.isRequired,
+  createSnackbar: PropTypes.func.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
 };
 

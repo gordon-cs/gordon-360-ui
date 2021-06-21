@@ -17,7 +17,7 @@ const NewsList = ({
   news,
   personalUnapprovedNews,
   currentUsername,
-  updateSnackbar,
+  createSnackbar,
   handleNewsItemEdit,
 }) => {
   let header;
@@ -32,7 +32,7 @@ const NewsList = ({
           unapproved
           size="single"
           currentUsername={currentUsername}
-          updateSnackbar={updateSnackbar}
+          createSnackbar={createSnackbar}
           handleNewsItemEdit={handleNewsItemEdit}
           key={posting.SNID}
         />
@@ -44,7 +44,7 @@ const NewsList = ({
           //approved
           size="single"
           currentUsername={currentUsername}
-          updateSnackbar={updateSnackbar}
+          createSnackbar={createSnackbar}
           handleNewsItemEdit={handleNewsItemEdit}
           key={posting.SNID}
         />
@@ -68,7 +68,7 @@ const NewsList = ({
           unapproved
           size="full"
           currentUsername={currentUsername}
-          updateSnackbar={updateSnackbar}
+          createSnackbar={createSnackbar}
           handleNewsItemEdit={handleNewsItemEdit}
           key={posting.SNID}
         />
@@ -80,7 +80,7 @@ const NewsList = ({
           //approved
           size="full"
           currentUsername={currentUsername}
-          updateSnackbar={updateSnackbar}
+          createSnackbar={createSnackbar}
           handleNewsItemEdit={handleNewsItemEdit}
           key={posting.SNID}
         />
@@ -158,7 +158,7 @@ NewsList.propTypes = {
   ).isRequired,
 
   currentUsername: PropTypes.string.isRequired,
-  updateSnackbar: PropTypes.func.isRequired,
+  createSnackbar: PropTypes.func.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
 };
 
