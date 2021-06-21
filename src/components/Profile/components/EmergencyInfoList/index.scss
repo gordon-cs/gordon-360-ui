@@ -1,46 +1,59 @@
-.emrg-info-list-header {
-  background-color: #014983;
-  color: #ffffff;
-  padding-left: 1rem;
+@import '../../../../vars';
+
+.emrg-info-list {
+  &-header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+    padding-left: 1rem;
+  }
+
+  .note {
+    color: $neutral-black-opacity55;
+    background-color: $neutral-light-gray;
+    padding: 0.3rem 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+  }
+
+  .disclaimer {
+    color: $secondary-red;
+    background-color: $neutral-light-gray;
+    padding: 0.3rem 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+  }
 }
 
-.emrg-info-list .note {
-  color: #0000008c;
-  background-color: #ebeaea;
-  padding: 0.3rem 1rem;
-  margin-top: 1rem;
-  border-radius: 5px;
+.my-emrg-info {
+  & .private {
+    color: $neutral-black-opacity40;
+
+    & .not-private {
+      opacity: 1;
+      color: $dark-text-color;
+    }
+  }
 }
 
-.emrg-info-list .disclaimer {
-  color: #b53228;
-  background-color: #ebeaea;
-  padding: 0.3rem 1rem;
-  margin-top: 1rem;
-  border-radius: 5px;
+.public-emrg-info {
+  & .private {
+    color: $secondary-red;
+
+    & a.gc360-text-link {
+      color: inherit;
+    }
+
+    & .not-private {
+      color: $dark-text-color;
+    }
+  }
 }
 
-.my-emrg-info .private {
-  color: #00000066;
-}
-.my-emrg-info .private .not-private {
-  opacity: 1;
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.public-emrg-info .private {
-  color: #b53228;
-}
-.public-emrg-info .private a.gc360-text-link {
-  color: inherit;
-}
-.public-emrg-info .private .not-private {
-  color: rgba(0, 0, 0, 0.87);
-}
-
-@media (max-width: 600px) {
-  .emrg-info-list-header {
-    padding-left: 0rem;
-    justify-content: center;
+@media (max-width: $break-sm) {
+  .emrg-info-list {
+    &-header {
+      padding-left: 0rem;
+      justify-content: center;
+    }
   }
 }
