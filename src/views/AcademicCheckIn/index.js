@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState/*, useEffect*/ } from 'react';
 import AcademicCheckInWelcome from 'views/AcademicCheckIn/components/AcademicCheckInWelcome';
 import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyContactUpdate';
 import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
@@ -82,8 +82,8 @@ const AcademicCheckIn = () => {
     console.log(values);
   }
 
-  const handleCheck = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.checked });
+  const handleCheck = (evt) => {
+    setValues({ ...values, [evt.target.name]: evt.target.checked });
   };
 
   const handleSubmit = () => {
@@ -136,7 +136,7 @@ const AcademicCheckIn = () => {
                 <br />
               </Grid>
               <Grid item>
-                <Grid container justify="center" className="buttonContainer" spacing={2}>
+                <Grid container justify="center" className="button-container" spacing={2}>
                   <Grid item>
                     <Button
                       style={activeStep === 0 ? { display: 'none' } : {}}
