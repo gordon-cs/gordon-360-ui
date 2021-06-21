@@ -1,10 +1,10 @@
-.personal-info-list-header {
+.emrg-info-list-header {
   background-color: #014983;
   color: #ffffff;
   padding-left: 1rem;
 }
 
-.personal-info-list .note {
+.emrg-info-list .note {
   color: #0000008c;
   background-color: #ebeaea;
   padding: 0.3rem 1rem;
@@ -12,7 +12,7 @@
   border-radius: 5px;
 }
 
-.personal-info-list .disclaimer {
+.emrg-info-list .disclaimer {
   color: #b53228;
   background-color: #ebeaea;
   padding: 0.3rem 1rem;
@@ -20,26 +20,26 @@
   border-radius: 5px;
 }
 
-.my-personal-info .private {
+.my-emrg-info .private {
   color: #00000066;
 }
-.my-personal-info .private .not-private {
+.my-emrg-info .private .not-private {
   opacity: 1;
   color: rgba(0, 0, 0, 0.87);
 }
 
-.public-personal-info .private {
+.public-emrg-info .private {
   color: #b53228;
 }
-.public-personal-info .private a.gc360-text-link {
+.public-emrg-info .private a.gc360-text-link {
   color: inherit;
 }
-.public-personal-info .private .not-private {
+.public-emrg-info .private .not-private {
   color: rgba(0, 0, 0, 0.87);
 }
 
 @media (max-width: 600px) {
-  .personal-info-list-header {
+  .emrg-info-list-header {
     padding-left: 0rem;
     justify-content: center;
   }
