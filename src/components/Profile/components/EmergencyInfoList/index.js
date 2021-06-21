@@ -14,7 +14,7 @@ const formatPhone = (phone) => {
 };
 
 const EmergencyInfoList = ({ username }) => {
-  const [emrg, setEmrg] = useState([]);
+  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
     const loadEmrg = async () => {
