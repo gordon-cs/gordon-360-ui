@@ -618,6 +618,10 @@ const getProfileInfo = async (username) => {
   return profile;
 };
 
+const getEmergencyInfo = async (username) => {
+  return await http.get(`profiles/emergency-contact/${username}/`);
+};
+
 function updateSocialLink(platform, link) {
   let linkToSend;
   if (link.indexOf(socialMediaInfo[platform].prefix2) === 0) {
@@ -658,6 +662,7 @@ const userService = {
   postIDImage,
   getTranscriptMembershipsInfo,
   getEmploymentInfo,
+  getEmergencyInfo,
   updateSocialLink,
 };
 
