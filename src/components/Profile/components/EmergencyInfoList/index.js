@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './index.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import user from 'services/user';
 
 import { Typography, Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
-import { useEffect } from 'react';
 
 const formatPhone = (phone) => {
   let tele = String(phone);
