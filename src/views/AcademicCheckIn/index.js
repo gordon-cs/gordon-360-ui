@@ -162,7 +162,14 @@ const AcademicCheckIn = () => {
                           (values.FERPA === false ||
                             values.dataUsage === false ||
                             values.photoConsent === false)) ||
-                        (activeStep === 4 && values.ethnicity === '')
+                        ((activeStep === 4 && values.ethnicity === '') ||
+                        (activeStep === 4 && !(
+                          values.nativeAmerican ||
+                          values.asian ||
+                          values.blackhawaiian ||
+                          values.white ||
+                          values.none
+                        )))
                       }
                     >
                       {activeStep === 0 ? 'Begin Check-In' : 'Next'}
