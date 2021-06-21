@@ -19,11 +19,10 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 const PRIVATE_INFO = 'Private as requested.';
 
 const formatPhone = (phone) => {
-  let tele = String(phone);
-  if (tele.length === 10) {
-    return '(' + tele.slice(0, 3) + ') ' + tele.slice(3, 6) + '-' + tele.slice(6);
-  } else if (tele !== 'undefined') {
-    return tele;
+  if (phone?.length === 10) {
+    return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
+  } else {
+    return phone;
   }
 };
 
