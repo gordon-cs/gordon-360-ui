@@ -67,12 +67,10 @@ const MemberListItem = ({
 
   useEffect(() => {
     const loadAvatar = async () => {
-      //console.log(member.AD_username);
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(member.AD_Username),
       ]);
       let tempAvatar;
-      //console.log(member.AD_Username);
       if (member.AD_Username) {
         tempAvatar = preferredImage || defaultImage;
       } else {
