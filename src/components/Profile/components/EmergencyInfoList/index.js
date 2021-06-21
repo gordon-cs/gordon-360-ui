@@ -26,7 +26,7 @@ const EmergencyInfoList = ({ username }) => {
 
   return (
     <Grid item xs={12}>
-      <Card className={`emrg-info-list`}>
+      <Card className="emrg-info-list">
         <Grid container className="emrg-info-list-header">
           <CardHeader title="Emergency Contact Information" />
         </Grid>
