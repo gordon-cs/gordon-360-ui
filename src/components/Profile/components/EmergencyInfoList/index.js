@@ -14,11 +14,11 @@ const formatPhone = (phone) => {
 };
 
 const EmergencyInfoList = ({ username }) => {
-  const [emrg, setContacts] = useState([]);
+  const [emergencyContacts, setEmergencyContacts] = useState([]);
 
   useEffect(() => {
     const loadEmrg = async () => {
-      setContacts(await user.getEmergencyInfo(username));
+      setEmergencyContacts(await user.getEmergencyInfo(username));
     };
     loadEmrg();
   }, [username]);
@@ -31,7 +31,7 @@ const EmergencyInfoList = ({ username }) => {
         </Grid>
         <CardContent>
           <List>
-            {emrg.map((emrgContact) => (
+            {emergencyContacts.map((emrgContact) => (
               <>
                 <ProfileInfoListItem
                   title="Emergency Contact:"
