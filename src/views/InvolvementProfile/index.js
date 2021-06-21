@@ -20,10 +20,11 @@ import {
   Grid,
   TextField,
   Typography,
+  List,
 } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useParams } from 'react-router';
-import ContactList from './components/ContactList/Index';
+import ContactListItem from './components/ContactList/Index';
 import GordonDialogBox from 'components/GordonDialogBox';
 
 const CROP_DIM = 320; // pixels
@@ -436,10 +437,24 @@ const InvolvementProfile = ({ authentication }) => {
                   <hr width="70%"></hr>
 
                   <Grid item>
-                    <ContactList contacts={groupAdmins} listTitle="Group Contacts" />
+                    <Typography>
+                      <strong>Group Contacts</strong>
+                    </Typography>
+                    <List dense disablePadding>
+                      {groupAdmins.map((admin) => (
+                        <ContactListItem contact={admin} />
+                      ))}
+                    </List>
                   </Grid>
                   <Grid item>
-                    <ContactList contacts={advisors} listTitle="Group Advisors" />
+                    <Typography>
+                      <strong>Group Advisors</strong>
+                    </Typography>
+                    <List dense disablePadding>
+                      {advisors.map((advisor) => (
+                        <ContactListItem contact={advisor} />
+                      ))}
+                    </List>
                   </Grid>
                   <Grid item>
                     <Typography>
