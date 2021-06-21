@@ -22,8 +22,7 @@ const formatPhone = (phone) => {
   let tele = String(phone);
   if (tele.length === 10) {
     return '(' + tele.slice(0, 3) + ') ' + tele.slice(3, 6) + '-' + tele.slice(6);
-  }
-  if (tele !== 'undefined') {
+  } else if (tele !== 'undefined') {
     return tele;
   }
 };

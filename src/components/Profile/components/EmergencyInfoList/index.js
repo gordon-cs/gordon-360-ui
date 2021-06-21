@@ -10,8 +10,7 @@ const formatPhone = (phone) => {
   let tele = String(phone);
   if (tele.length === 10) {
     return '(' + tele.slice(0, 3) + ') ' + tele.slice(3, 6) + '-' + tele.slice(6);
-  }
-  if (tele !== 'undefined') {
+  } else if (tele !== 'undefined') {
     return tele;
   }
 };
@@ -25,12 +24,6 @@ const EmergencyInfoList = ({ username }) => {
     };
     loadEmrg();
   }, [username]);
-
-  const disclaimer = (
-    <Typography align="left" className="disclaimer">
-      Private: visible only to Gordon Police
-    </Typography>
-  );
 
   return (
     <Grid item xs={12}>
@@ -89,7 +82,9 @@ const EmergencyInfoList = ({ username }) => {
                 </ul>
               </>
             ))}
-            {disclaimer}
+            <Typography align="left" className="disclaimer">
+              Private: visible only to Gordon Police
+            </Typography>
           </List>
         </CardContent>
       </Card>
