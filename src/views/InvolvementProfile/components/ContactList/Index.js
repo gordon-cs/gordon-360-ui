@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Email from '@material-ui/icons/Email';
 
-import { IconButton, List, ListItem, Typography, Grid } from '@material-ui/core';
+import { IconButton, ListItem, Typography, Grid } from '@material-ui/core';
 import IMG from 'react-graceful-image';
 import user from 'services/user';
 const rowStyle = {
   margin: '10px 0',
   padding: '10px 0px',
 };
-
+//
 const ContactListItem = ({ contact }) => {
   const [avatar, setAvatar] = useState();
   const AD_Username = contact.Email.slice(0, contact.Email.search('@'));
@@ -31,7 +31,7 @@ const ContactListItem = ({ contact }) => {
       setAvatar(tempAvatar);
     };
     loadAvatar();
-  }, [AD_Username]);
+  }, [AD_Username, contact]);
 
   return (
     <>
