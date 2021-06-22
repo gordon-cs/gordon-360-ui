@@ -1,31 +1,31 @@
-import Dropzone from 'react-dropzone';
-import React, { useEffect, useRef, useState } from 'react';
-import './involvement-profile.css';
-import Cropper from 'react-cropper';
-import GordonLoader from 'components/Loader';
-import Membership from './components/Membership';
-import membershipService from 'services/membership';
-import emailsService from 'services/emails';
-import sessionService from 'services/session';
-import involvementService from 'services/activity';
-import { gordonColors } from 'theme';
-import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
-import userService from 'services/user';
 import {
-  CardHeader,
   Button,
   Card,
   CardContent,
+  CardHeader,
   DialogContentText,
   Grid,
+  List,
   TextField,
   Typography,
-  List,
 } from '@material-ui/core';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useParams } from 'react-router';
-import ContactListItem from './components/ContactListItem/Index';
 import GordonDialogBox from 'components/GordonDialogBox';
+import GordonLoader from 'components/Loader';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
+import React, { useEffect, useRef, useState } from 'react';
+import Cropper from 'react-cropper';
+import Dropzone from 'react-dropzone';
+import { useParams } from 'react-router';
+import involvementService from 'services/activity';
+import emailsService from 'services/emails';
+import membershipService from 'services/membership';
+import sessionService from 'services/session';
+import userService from 'services/user';
+import { gordonColors } from 'theme';
+import ContactListItem from './components/ContactListItem/Index';
+import Membership from './components/Membership';
+import './involvement-profile.css';
 
 const CROP_DIM = 320; // pixels
 
@@ -56,19 +56,21 @@ const InvolvementProfile = ({ authentication }) => {
     const loadPage = async () => {
       setLoading(true);
       if (authentication) {
-        const [involvementInfo, advisors, groupAdmins, sessionInfo, college_role, isAdmin] =
-          await Promise.all([
-            involvementService.get(involvementCode),
-            involvementService.getAdvisors(involvementCode, sessionCode),
-            involvementService.getGroupAdmins(involvementCode, sessionCode),
-            sessionService.get(sessionCode),
-            userService.getLocalInfo().college_role,
-            membershipService.checkAdmin(
-              userService.getLocalInfo().id,
-              sessionCode,
-              involvementCode,
-            ),
-          ]);
+        const [
+          involvementInfo,
+          advisors,
+          groupAdmins,
+          sessionInfo,
+          college_role,
+          isAdmin,
+        ] = await Promise.all([
+          involvementService.get(involvementCode),
+          involvementService.getAdvisors(involvementCode, sessionCode),
+          involvementService.getGroupAdmins(involvementCode, sessionCode),
+          sessionService.get(sessionCode),
+          userService.getLocalInfo().college_role,
+          membershipService.checkAdmin(userService.getLocalInfo().id, sessionCode, involvementCode),
+        ]);
 
         const isSuperAdmin = college_role === 'god';
 
@@ -440,7 +442,7 @@ const InvolvementProfile = ({ authentication }) => {
                     <Typography>
                       <strong>Group Contacts</strong>
                     </Typography>
-                    <List dense disablePadding>
+                    <List>
                       {groupAdmins.map((admin) => (
                         <ContactListItem contact={admin} />
                       ))}
@@ -450,7 +452,7 @@ const InvolvementProfile = ({ authentication }) => {
                     <Typography>
                       <strong>Group Advisors</strong>
                     </Typography>
-                    <List dense disablePadding>
+                    <List>
                       {advisors.map((advisor) => (
                         <ContactListItem contact={advisor} />
                       ))}

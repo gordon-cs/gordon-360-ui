@@ -1,62 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import {
+  Avatar,
+  IconButton,
+  ListItem,
+  ListItemAvatar,
+  ListItemSecondaryAction,
+  ListItemText,
+} from '@material-ui/core';
 import Email from '@material-ui/icons/Email';
-
-import { IconButton, ListItem, Typography, Grid } from '@material-ui/core';
-import IMG from 'react-graceful-image';
+import React, { useEffect, useState } from 'react';
 import user from 'services/user';
-const rowStyle = {
-  margin: '10px 0',
-  padding: '10px 0px',
-};
+
+const PlaceHolderAvatar = () => (
+  <svg width="50" height="50" viewBox="0 0 50 50">
+    <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+  </svg>
+);
 
 const ContactListItem = ({ contact }) => {
   const [avatar, setAvatar] = useState();
-  const AD_Username = contact.Email.slice(0, contact.Email.search('@'));
   useEffect(() => {
     const loadAvatar = async () => {
-      console.log(contact);
-      const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-        await user.getImage(AD_Username),
-      ]);
-      let contAvatar;
-      if (AD_Username) {
-        contAvatar = preferredImage || defaultImage;
-      } else {
-        contAvatar = (
-          <svg width="50" height="50" viewBox="0 0 50 50">
-            <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-          </svg>
-        );
+      if (contact.Email) {
+        const AD_Username = contact.Email.slice(0, contact.Email.search('@'));
+        const { def: defaultImage, pref: preferredImage } = await user.getImage(AD_Username);
+        setAvatar(preferredImage || defaultImage);
       }
-      setAvatar(contAvatar);
     };
     loadAvatar();
-  }, [AD_Username, contact]);
+  }, [contact]);
 
   return (
-    <>
-      <ListItem key={contact.Email}>
-        <Grid>
-          <IMG
-            className="contact-list-image"
-            src={`data:image/jpg;base64,${avatar}`}
-            alt=""
-            noLazyLoad="true"
-            placeholderColor="#eeeeee"
-          />
-        </Grid>
-        <Grid style={rowStyle}>
-          <IconButton size="small" color="primary" href={`mailto:${contact.Email}`}>
-            <Email color="primary" style={{ width: 20, height: 20 }} />
-          </IconButton>
-        </Grid>
-        <Grid item xs={8}>
-          <Typography>
-            &emsp;{contact.FirstName} {contact.LastName}
-          </Typography>
-        </Grid>
-      </ListItem>
-    </>
+    <ListItem key={contact.Email} divider>
+      <ListItemAvatar>
+        <Avatar
+          alt={`${contact.FirstName} ${contact.LastName}`}
+          src={`data:image/jpg;base64,${avatar}`}
+          variant="rounded"
+          style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+        >
+          {!avatar && <PlaceHolderAvatar />}
+        </Avatar>
+      </ListItemAvatar>
+      <div />
+      <ListItemText primary={`${contact.FirstName} ${contact.LastName}`} />
+      <ListItemSecondaryAction>
+        <IconButton color="primary" href={`mailto:${contact.Email}`}>
+          <Email color="primary" />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
   );
 };
 export default ContactListItem;
