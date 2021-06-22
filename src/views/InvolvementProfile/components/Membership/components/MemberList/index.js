@@ -33,8 +33,8 @@ const MemberList = ({
     return () => window.removeEventListener('resize', resize);
   });
 
-  // re-arranging names alpabetically and also by Hierarchy "Advisor" > "Leader" >
-  //"member" > "Guest".
+  // compare names by participation Hierarchy "Advisor" > "Leader" >
+  //"member" > "Guest" then alphabetically.
 
   const compareByLastThenFirst = (a, b) => {
     if (a.ParticipationDescription !== b.ParticipationDescription) {

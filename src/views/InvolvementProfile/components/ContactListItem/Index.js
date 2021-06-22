@@ -8,7 +8,7 @@ const rowStyle = {
   margin: '10px 0',
   padding: '10px 0px',
 };
-//
+
 const ContactListItem = ({ contact }) => {
   const [avatar, setAvatar] = useState();
   const AD_Username = contact.Email.slice(0, contact.Email.search('@'));
@@ -18,17 +18,17 @@ const ContactListItem = ({ contact }) => {
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(AD_Username),
       ]);
-      let tempAvatar;
+      let contAvatar;
       if (AD_Username) {
-        tempAvatar = preferredImage || defaultImage;
+        contAvatar = preferredImage || defaultImage;
       } else {
-        tempAvatar = (
+        contAvatar = (
           <svg width="50" height="50" viewBox="0 0 50 50">
             <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
           </svg>
         );
       }
-      setAvatar(tempAvatar);
+      setAvatar(contAvatar);
     };
     loadAvatar();
   }, [AD_Username, contact]);
@@ -38,7 +38,7 @@ const ContactListItem = ({ contact }) => {
       <ListItem key={contact.Email}>
         <Grid>
           <IMG
-            className="people-search-avatar-mobile"
+            className="contact-list-image"
             src={`data:image/jpg;base64,${avatar}`}
             alt=""
             noLazyLoad="true"

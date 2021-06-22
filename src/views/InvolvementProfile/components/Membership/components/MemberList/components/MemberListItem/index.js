@@ -70,17 +70,17 @@ const MemberListItem = ({
       const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
         await user.getImage(member.AD_Username),
       ]);
-      let tempAvatar;
+      let MemAvatar;
       if (member.AD_Username) {
-        tempAvatar = preferredImage || defaultImage;
+        MemAvatar = preferredImage || defaultImage;
       } else {
-        tempAvatar = (
+        MemAvatar = (
           <svg width="50" height="50" viewBox="0 0 50 50">
             <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
           </svg>
         );
       }
-      setAvatar(tempAvatar);
+      setAvatar(MemAvatar);
     };
     loadAvatar();
   }, [member.AD_Username]);
@@ -316,7 +316,7 @@ const MemberListItem = ({
                 <Grid container spacing={3} wrap="nowrap" alignItems="center">
                   <Grid item>
                     <IMG
-                      className="people-search-avatar-mobile"
+                      className="member-list-image"
                       src={`data:image/jpg;base64,${avatar}`}
                       alt=""
                       noLazyLoad="true"
