@@ -89,7 +89,8 @@ const MemberList = ({
     <CardHeader
       title={
         <Grid container direction="row">
-          <Grid item xs={4}>
+          <Grid item xs={1} />
+          <Grid item xs={3}>
             Name
           </Grid>
           <Grid item xs={4}>

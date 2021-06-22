@@ -24,7 +24,7 @@ import user from 'services/user';
 import membership from 'services/membership';
 import GordonDialogBox from 'components/GordonDialogBox';
 const rowStyle = {
-  margin: '10px 0',
+  margin: '10px 0px',
   padding: '10px 0px',
 };
 const redButton = {
@@ -316,14 +316,14 @@ const MemberListItem = ({
                 <Grid container spacing={3} wrap="nowrap" alignItems="center">
                   <Grid item>
                     <IMG
-                      className="member-list-image"
+                      className="people-search-avatar-mobile"
                       src={`data:image/jpg;base64,${avatar}`}
                       alt=""
                       noLazyLoad="true"
                       placeholderColor="#eeeeee"
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid>
                     <Typography>
                       {member.FirstName} {member.LastName}
                     </Typography>
@@ -358,8 +358,17 @@ const MemberListItem = ({
 
     content = (
       <>
-        <Grid container style={rowStyle} direction="row" alignItems="center">
-          <Grid item xs={4} style={rowStyle}>
+        <Grid container alignItems="center" spacing={2} wrap="nowrap">
+          <Grid item md={1} style={rowStyle}>
+            <IMG
+              className="member-list-image"
+              src={`data:image/jpg;base64,${avatar}`}
+              alt=""
+              noLazyLoad="true"
+              placeholderColor="#eeeeee"
+            />
+          </Grid>
+          <Grid item xs={3} style={rowStyle}>
             <Typography>
               {member.FirstName} {member.LastName}
             </Typography>
@@ -370,7 +379,7 @@ const MemberListItem = ({
           <Grid item xs={2} style={rowStyle}>
             <Typography>{mailLoc}</Typography>
           </Grid>
-          <Grid item style={rowStyle} align="flex-end">
+          <Grid item xs={2} style={rowStyle}>
             {options}
           </Grid>
         </Grid>
