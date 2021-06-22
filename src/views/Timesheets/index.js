@@ -31,7 +31,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from 'components/Snackbar';
 import user from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import GordonOffline from 'components/GordonOffline';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
