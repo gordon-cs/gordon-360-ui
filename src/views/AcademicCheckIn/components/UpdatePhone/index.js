@@ -7,9 +7,10 @@ import {
   InputLabel,
   Typography,
 } from '@material-ui/core';
+import MaskedInput from 'react-text-mask';
 import { gordonColors } from 'theme';
 
-const UpdatePhone = ({ values, handleChange, handleCheck }) => {
+const UpdatePhone = ({ values, handleCheck, handleChange }) => {
   const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
@@ -18,7 +19,6 @@ const UpdatePhone = ({ values, handleChange, handleCheck }) => {
           Step 2: Enter your Cell Phone Number
         </Typography>
       </Grid>
-
       <Grid item>
         <Typography gutterBottom variant="body2">
           Note: This information will be used to contact you with information in the event of issues
@@ -28,14 +28,15 @@ const UpdatePhone = ({ values, handleChange, handleCheck }) => {
       </Grid>
       <Grid item>
         <FormControl>
-          <InputLabel htmlFor="component-simple"> Phone Number </InputLabel>
+          <InputLabel htmlFor="formatted-text-mask-input"> Phone Number </InputLabel>
           <Input
-            id="component-simple"
+            id="formatted-text-mask-input"
             name="personalPhone"
-            placeholder="Phone Number"
             value={values.personalPhone}
             onChange={handleChange}
             disabled={values.noPhone}
+            inputComponent={phoneMaskUS}
+            autoFocus
           />
         </FormControl>
       </Grid>
@@ -56,5 +57,59 @@ const UpdatePhone = ({ values, handleChange, handleCheck }) => {
     </Grid>
   );
 };
+
+// From material ui website
+// https://material-ui.com/components/text-fields/#integration-with-3rd-party-input-libraries
+export function phoneMaskUS(props) {
+  const { inputRef, ...other } = props;
+
+  return (
+    <MaskedInput
+      {...other}
+      ref={(ref) => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={['(', /[0-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+      placeholderChar={'\u2000'}
+      showMask
+    />
+  );
+}
+
+export function phoneMaskINTL(props) {
+  const { inputRef, ...other } = props;
+
+  return (
+    <MaskedInput
+      {...other}
+      ref={(ref) => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={[
+        '+',
+        /[0-9]/,
+        /\d/,
+        /\d/,
+        ' ',
+        '(',
+        /\d/,
+        /\d/,
+        /\d/,
+        ')',
+        ' ',
+        /\d/,
+        /\d/,
+        /\d/,
+        '-',
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+      ]}
+      placeholderChar={'\u2000'}
+      showMask
+    />
+  );
+}
 
 export default UpdatePhone;

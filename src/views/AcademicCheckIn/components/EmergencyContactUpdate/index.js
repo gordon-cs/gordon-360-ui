@@ -1,9 +1,19 @@
 // import React, { useState, useEffect } from 'react';
-import { FormControl, InputLabel, Input, Grid, Typography, Box } from '@material-ui/core';
+import {
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  Checkbox,
+  Input,
+  Grid,
+  Typography,
+  Box,
+} from '@material-ui/core';
 import { gordonColors } from 'theme';
+import { phoneMaskUS, phoneMaskINTL } from 'views/AcademicCheckIn/components/UpdatePhone/';
 // import './index.css';
 
-const EmergencyContactUpdate = ({ values, handleChange }) => {
+const EmergencyContactUpdate = ({ values, handleChange, handleCheck }) => {
   let cyan = gordonColors.primary.cyan;
 
   const emergencyContact1 = [
@@ -12,7 +22,9 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
     values.lastName1,
     values.relationship1,
     values.homePhone1,
+    values.homePhone1IN,
     values.mobilePhone1,
+    values.mobilePhone1IN,
   ];
 
   const emergencyContact2 = [
@@ -21,7 +33,9 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
     values.lastName2,
     values.relationship2,
     values.homePhone2,
+    values.homePhone2IN,
     values.mobilePhone2,
+    values.mobilePhone2IN,
   ];
 
   const emergencyContact3 = [
@@ -30,7 +44,9 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
     values.lastName3,
     values.relationship3,
     values.homePhone3,
+    values.homePhone3IN,
     values.mobilePhone3,
+    values.mobilePhone3IN,
   ];
 
   return (
@@ -51,9 +67,9 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
         authorize Gordon College to contact the following person(s) listed below in the event of a
         medical emergency.
       </Typography>
-      {createEmergencyContactFields(emergencyContact1, handleChange)}
-      {createEmergencyContactFields(emergencyContact2, handleChange)}
-      {createEmergencyContactFields(emergencyContact3, handleChange)}
+      {createEmergencyContactFields(emergencyContact1, handleChange, handleCheck)}
+      {createEmergencyContactFields(emergencyContact2, handleChange, handleCheck)}
+      {createEmergencyContactFields(emergencyContact3, handleChange, handleCheck)}
       <Grid item>
         <br />
       </Grid>
@@ -77,9 +93,11 @@ const EmergencyContactUpdate = ({ values, handleChange }) => {
  * mobilephone]
  * @param {Function} handleChange a function to handle the updating of the fields
  *
+ * @param {Function} handleCheck a function to handle the updating of the checkbox fields
+ *
  * @returns {JSX.Element} valid JSX for the emergency contact fields
  */
-function createEmergencyContactFields(valueList, handleChange) {
+function createEmergencyContactFields(valueList, handleChange, handleCheck) {
   const formNumber = valueList[0];
   return (
     <Box padding={2} align="center">
@@ -123,23 +141,46 @@ function createEmergencyContactFields(valueList, handleChange) {
         </Grid>
         <Grid item>
           <FormControl className="emergencyContactForm">
-            <InputLabel htmlFor="component-simple"> Home Phone </InputLabel>
+            <InputLabel htmlFor="formatted-text-mask-input">Home Phone</InputLabel>
             <Input
-              id="component-simple"
+              id="formatted-text-mask-input"
               name={'homePhone' + formNumber}
               value={valueList[4]}
               onChange={handleChange}
+              inputComponent={valueList[5] ? phoneMaskINTL : phoneMaskUS}
+            />
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={valueList[5]}
+                  name={'homePhone' + formNumber + 'IN'}
+                  onChange={handleCheck}
+                />
+              }
+              label="International #"
             />
           </FormControl>
         </Grid>
         <Grid item>
           <FormControl className="emergencyContactForm">
-            <InputLabel htmlFor="component-simple"> Mobile Phone </InputLabel>
+            <InputLabel htmlFor="formatted-text-mask-input"> Mobile Phone </InputLabel>
             <Input
-              id="component-simple"
+              id="formatted-text-mask-input"
               name={'mobilePhone' + formNumber}
-              value={valueList[5]}
+              value={valueList[6]}
               onChange={handleChange}
+              inputComponent={valueList[7] ? phoneMaskINTL : phoneMaskUS}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={valueList[7]}
+                  name={'mobilePhone' + formNumber + 'IN'}
+                  onChange={handleCheck}
+                />
+              }
+              label="International #"
             />
           </FormControl>
         </Grid>

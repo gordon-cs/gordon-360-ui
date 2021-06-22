@@ -1,4 +1,4 @@
-import React, { useState/*, useEffect*/ } from 'react';
+import React, { useState /*, useEffect*/ } from 'react';
 import AcademicCheckInWelcome from 'views/AcademicCheckIn/components/AcademicCheckInWelcome';
 import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyContactUpdate';
 import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
@@ -43,17 +43,23 @@ const AcademicCheckIn = () => {
     lastName1: '',
     relationship1: '',
     homePhone1: '',
+    homePhone1IN: false,
     mobilePhone1: '',
+    mobilePhone1IN: false,
     firstName2: '',
     lastName2: '',
     relationship2: '',
     homePhone2: '',
+    homePhone2IN: false,
     mobilePhone2: '',
+    mobilePhone2IN: false,
     firstName3: '',
     lastName3: '',
     relationship3: '',
     homePhone3: '',
+    homePhone3IN: false,
     mobilePhone3: '',
+    mobilePhone3IN: false,
     personalPhone: '',
     makePublic: false,
     noPhone: false,
@@ -77,10 +83,10 @@ const AcademicCheckIn = () => {
     setActiveStep((previousStep) => previousStep - 1);
   };
 
-  function handleChange(evt) {
+  const handleChange = (evt) => {
     setValues({ ...values, [evt.target.name]: evt.target.value });
     console.log(values);
-  }
+  };
 
   const handleCheck = (evt) => {
     setValues({ ...values, [evt.target.name]: evt.target.checked });
@@ -106,7 +112,11 @@ const AcademicCheckIn = () => {
                     {activeStep === 0 && <AcademicCheckInWelcome values={values} />}
 
                     {activeStep === 1 && (
-                      <EmergencyContactUpdate values={values} handleChange={handleChange} />
+                      <EmergencyContactUpdate
+                        values={values}
+                        handleChange={handleChange}
+                        handleCheck={handleCheck}
+                      />
                     )}
 
                     {activeStep === 2 && (
@@ -162,14 +172,15 @@ const AcademicCheckIn = () => {
                           (values.FERPA === false ||
                             values.dataUsage === false ||
                             values.photoConsent === false)) ||
-                        ((activeStep === 4 && values.ethnicity === '') ||
-                        (activeStep === 4 && !(
-                          values.nativeAmerican ||
-                          values.asian ||
-                          values.blackhawaiian ||
-                          values.white ||
-                          values.none
-                        )))
+                        (activeStep === 4 && values.ethnicity === '') ||
+                        (activeStep === 4 &&
+                          !(
+                            values.nativeAmerican ||
+                            values.asian ||
+                            values.blackhawaiian ||
+                            values.white ||
+                            values.none
+                          ))
                       }
                     >
                       {activeStep === 0 ? 'Begin Check-In' : 'Next'}
