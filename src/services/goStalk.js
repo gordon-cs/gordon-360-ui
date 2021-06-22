@@ -40,23 +40,29 @@ const search = (
   // Sanitize the params sent to the backend -- it can't handle &, /, -, or null/empty strings
   // Therefore we convert all of these things and in the backend we convert them back again
 
-  firstName = firstName
-    .trim()
-    .replace(/[^a-zA-Z\s,.'-]/g, '')
-    .toLowerCase();
+  if (firstName.trim() === '') firstName = '0';
+  //'0' as firstName shows no results
+  else {
+    firstName = firstName
+      .trim()
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .toLowerCase();
+  }
   if (firstName === '' || firstName === null) {
     // eslint-disable-next-line
     firstName = 'C' + '\u266F';
   }
-  lastName = lastName
-    .trim()
-    .replace(/[^a-zA-Z\s,.'-]/g, '')
-    .toLowerCase();
+  if (lastName.trim() === '') lastName = '0';
+  //'0' as lastName shows no results
+  else {
+    lastName = lastName
+      .trim()
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .toLowerCase();
+  }
   if (lastName === '' || lastName === null) {
     // eslint-disable-next-line
     lastName = 'C' + '\u266F';
-  } else {
-    lastName = lastName.toLowerCase();
   }
   if (major === '' || major === null) {
     // eslint-disable-next-line
@@ -89,10 +95,14 @@ const search = (
     // eslint-disable-next-line
     classType = 'C' + '\u266F';
   }
-  homeCity = homeCity
-    .trim()
-    .replace(/[^a-zA-Z\s,.'-]/g, '')
-    .toLowerCase();
+  if (homeCity.trim() === '') homeCity = '0';
+  //'0' as lastName shows no results
+  else {
+    homeCity = homeCity
+      .trim()
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .toLowerCase();
+  }
   if (homeCity === '' || homeCity === null) {
     // eslint-disable-next-line
     homeCity = 'C' + '\u266F';
