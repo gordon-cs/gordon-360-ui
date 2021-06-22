@@ -162,6 +162,7 @@ class PeopleSearch extends Component {
       // These values *must* be in the same order as services/goStalk.js search function
       searchValues: {
         includeAlumni: false,
+        onlyAlumni: false,
         firstName: '',
         lastName: '',
         major: '',
@@ -237,6 +238,7 @@ class PeopleSearch extends Component {
     this.setState({
       searchValues: {
         includeAlumni: urlParams.get('includeAlumni') || false,
+        onlyAlumni: urlParams.get('onlyAlumni') || false,
         firstName: urlParams.get('firstName')?.trim() || '',
         lastName: urlParams.get('lastName')?.trim() || '',
         major: urlParams.get('major')?.trim() || '',
@@ -286,6 +288,14 @@ class PeopleSearch extends Component {
       searchValues: {
         ...this.state.searchValues,
         includeAlumni: !this.state.searchValues.includeAlumni,
+      },
+    });
+  }
+  handleChangeOnlyAlumni() {
+    this.setState({
+      searchValues: {
+        ...this.state.searchValues,
+        onlyAlumni: !this.state.searchValues.onlyAlumni,
       },
     });
   }
@@ -404,7 +414,7 @@ class PeopleSearch extends Component {
 
   render() {
     const { classes } = this.props;
-    let includeAlumniCheckbox;
+    let AlumniCheckbox;
 
     const majorOptions = this.state.majors.map((major) => (
       <MenuItem value={major} key={major}>
@@ -476,18 +486,33 @@ class PeopleSearch extends Component {
 
     if (this.props.authentication) {
       if (this.state.personType && !this.state.personType.includes('stu')) {
-        includeAlumniCheckbox = (
+        AlumniCheckbox = (
           <Grid item xs={12} align="center">
             <FormControlLabel
               control={
                 <Checkbox
                   checked={this.state.searchValues.includeAlumni}
+                  {...this.state.searchValues.onlyAlumni}
                   onChange={() => {
                     this.handleChangeIncludeAlumni();
                   }}
                 />
               }
+              disabled={this.state.searchValues.onlyAlumni}
               label="Include Alumni"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.searchValues.onlyAlumni}
+                  {...this.state.searchValues.includeAlumni}
+                  onChange={() => {
+                    this.handleChangeOnlyAlumni();
+                  }}
+                />
+              }
+              disabled={this.state.searchValues.includeAlumni}
+              label="Only Alumni"
             />
           </Grid>
         );
@@ -657,7 +682,7 @@ class PeopleSearch extends Component {
                     <Grid item xs={12}>
                       {aprilFools}
                     </Grid>
-                    {includeAlumniCheckbox}
+                    {AlumniCheckbox}
                   </Grid>
 
                   <br />
@@ -970,6 +995,7 @@ class PeopleSearch extends Component {
                             {
                               searchValues: {
                                 includeAlumni: false,
+                                onlyAlumni: false,
                                 firstName: '',
                                 lastName: '',
                                 major: '',

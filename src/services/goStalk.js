@@ -9,6 +9,7 @@ import http from './http';
 /**
  * Search for (AKA GoStalk) a person/people based on the following queried parameters
  * @param {Boolean} includeAlumni For non-Students to decide if they want alumni in their search results or not
+ * @param {Boolean} onlyAlumni For non-Students to decide it they want only alumni in their search results or not
  * @param {String} firstName First name queried
  * @param {String} lastName Last name queried
  * @param {String} major Major (matches up against 3 majors listed for people)
@@ -25,6 +26,7 @@ import http from './http';
  */
 const search = (
   includeAlumni,
+  onlyAlumni,
   firstName,
   lastName,
   major,
@@ -122,7 +124,7 @@ const search = (
     building = building.replace('.', '_');
   }
   return http.get(
-    `accounts/advanced-people-search/${includeAlumni}/${firstName}/${lastName}/${major}/${minor}/${hall}/${classType}/${homeCity}/${state}/${country}/${department}/${building}`,
+    `accounts/advanced-people-search/${includeAlumni}/${onlyAlumni}/${firstName}/${lastName}/${major}/${minor}/${hall}/${classType}/${homeCity}/${state}/${country}/${department}/${building}`,
   );
 };
 
