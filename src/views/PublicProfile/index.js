@@ -45,7 +45,7 @@ const PublicProfile = ({ authentication }) => {
         return <Profile profile={profile} myProf={false} />;
       }
     } else {
-      return <GordonOffline feature={'Viewing a public profile'} />;
+      return <GordonOffline feature="Viewing a public profile" />;
     }
   } else {
     return <GordonUnauthorized feature={'this profile'} />;
