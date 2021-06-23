@@ -495,7 +495,7 @@ export default class StudentNews extends Component {
       }
       // If the user is offline
       else {
-        return <GordonOffline feature={'Viewing Student News'} />;
+        return <GordonOffline feature="Student News" />;
       }
       return news;
     } else {
