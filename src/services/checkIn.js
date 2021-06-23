@@ -5,112 +5,67 @@
  */
 
 import http from './http';
-import user from './user';
-
-/**
- * Enum of the AcademicCheckIn Status
- * @readonly
- * @enum {string}
- */
-export const Status = {
-  /** On campus and confirmed check in */
-  CHECKEDIN: 'CHECKEDIN',
-  /** Not yet completed check in */
-  NOTCHECKEDIN: 'NOTCHECKEDIN',
-  /** User has started check in and is on the emergency contact step */
-  EMERGENCYCONTACT: 'EMERGENCYCONTACT',
-  /** User has started check in and is on the phone number step */
-  PHONENUM: 'PHONENUM',
-  /** User has started check in and is on the privacy agreement step */
-  PRIVACYINFO: 'PRIVACYINFO',
-  /** User has started check in and is on the race question step */
-  RACEQUESTION: 'RACEQUESTION',
-};
 
 /**
  * @global
- * @typedef academicCheckInStatus
- * @property {Status} Status The user's status
- * @property {Date} Created when the status was created
- * @property {boolean} IsValid whether the status has expired
- *
+ * @typedef MajorHolds these holds prevent a student from checking in
+ * @property {boolean} registrationHold if a student has an registration hold on their account
+ * @property {boolean} transcriptHold if a student has a highschool transcript hold on their account
+ * @property {boolean} financialHold if a student has a financial hold on their account
+ * @property {boolean} medicalHold if a student has a medical hold on their account
  */
 
 /**
  * @global
- * @typedef academicCheckInQuestion
- * @property {string} academicCheckInQuestion the text content of the question
- * @property {string} yesPrompt the text disclaimer for a positive answer
- * @property {string} noPrompt the text disclaimer for a negative answer
- *
+ * @typedef MinorHolds these holds do not prevent a student from checking in, but they prompt a warning
+ * @property {boolean} laVidaHold if a student has an laVida hold on their account
+ * @property {boolean} declareMajorHold if a student has a declaration of major hold on their account
  */
 
-/** Returns current status of student
- *
- * @returns {Promise<AcademicCheckInStatus>} Response
+/**
+ * @global
+ * @typedef FormData all the other data to be filled out by the student
+ * @property {String} firstName1 first name of emergency contact 1
+ * @property {String} lastName1 last name of EC 1
+ * @property {String} relationship1 the relationship between the student and EC 1
+ * @property {Number} homePhone1 the home phone number of EC 1
+ * @property {Number} mobilePhone1 the mobile phone number of EC 1
+ * @property {String} firstName2 first name of emergency contact 2
+ * @property {String} lastName2 last name of EC 2
+ * @property {String} relationship2 the relationship between the student and EC 2
+ * @property {Number} homePhone2 the home phone number of EC 2
+ * @property {Number} mobilePhone2 the mobile phone number of EC 2
+ * @property {String} firstName3 first name of emergency contact 3
+ * @property {String} lastName3 last name of EC 3
+ * @property {String} relationship3 the relationship between the student and EC 3
+ * @property {Number} homePhone3 the home phone number of EC 3
+ * @property {Number} mobilePhone3 the mobile phone number of EC 3
+ * @property {Number} personalPhone the phone number of the student
+ * @property {String} ethnicity whether or not a student is Hispanic/Latino or prefers not to say
+ * @property {boolean} nativeAmerican whether or not a student is of Native American descent
+ * @property {boolean} asian whether or not a student is of Asian descent
+ * @property {boolean} black whether or not a student is of African-American/African descent
+ * @property {boolean} hawaiian whether or not a student is of Hawaiian descent
+ * @property {boolean} white whether or not a student is of Caucasian descent
+ * @property {boolean} none whether or not a student declined to submit a race
  */
-const getStatus = () => {
-  return http.get('academicCheckIn');
-};
 
-/** Adds answer to the checkIn question to the back end
- *
- * @param {Status} status status to be recorded
- * @return {Promise<AcademicCheckInStatus>} The status that was posted, if successful
- */
-const postAnswer = (status) => {
+const getHolds = (id) => http.get(`checkIn/holds`);
+
+const getFormData = (id) => http.get(`checkIn/formData`);
+
+async function submitData(data) {
   try {
-    return http.post('academicCheckIn', status);
-  } catch (error) {
-    return console.log(error);
+    return await http.post('checkIn', data);
+  } catch (reason) {
+    console.log('Caught checkIn submission error: ' + reason);
   }
-};
-
-/** Returns questions to be displayed in the UI
- * Note: This may not be neccessary for CheckIn, probably will remove
- * @returns {Promise<AcademicCheckInQuestion>} list of questions from backend
- */
-const getQuestion = async () => {
-  const question = await http.get('checkIn/question');
-  return formatQuestion(question);
-};
-
-/** Formats the checkIn question and answer prompts for display
- *
- * @param {Object} question The question stored in database
- * @param {string} question.question The text of the question
- * @param {string} question.yesPrompt The text disclaimer for a positive answer
- * @param {string} question.noPrompt The text disclaimer for a negative answer
- * @returns {Promise<AcademicCheckInQuestion>} The checkIn question parsed into an object for display
- *
- *  Note: If above is removed, will remove this function as well
- */
-const formatQuestion = async (question) => {
-  const { FirstName, LastName } = await user.getProfileInfo();
-  /* eslint-disable no-template-curly-in-string */
-  question.question = question.question
-    .replace('${user.FirstName}', `${FirstName}`)
-    .replace('${user.LastName}', `${LastName}`);
-
-  let [yesPrompt, link] = question.yesPrompt.split('https://');
-
-  question.yesPrompt = yesPrompt
-    .replace('${user.FirstName}', `${FirstName}`)
-    .replace('${user.LastName}', `${LastName}`);
-  question.link = 'https://' + link;
-
-  question.noPrompt = question.noPrompt
-    .replace('${user.FirstName}', `${FirstName}`)
-    .replace('${user.LastName}', `${LastName}`);
-  /* eslint-enable no-template-curly-in-string */
-
-  return question;
-};
+}
 
 const checkInService = {
-  getStatus,
-  getQuestion,
-  postAnswer,
+  getHolds,
+  getFormData,
+  submitData,
 };
 
 export default checkInService;
