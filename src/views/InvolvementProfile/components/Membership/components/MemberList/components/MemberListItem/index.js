@@ -17,6 +17,7 @@ import {
   Typography,
   Select,
   MenuItem,
+  Avatar,
 } from '@material-ui/core';
 
 import { gordonColors } from 'theme';
@@ -65,22 +66,18 @@ const MemberListItem = ({
   const [title, setTitle] = useState(member.Description);
   const [avatar, setAvatar] = useState();
 
+  const PlaceHolderAvatar = () => (
+    <svg width="50" height="50" viewBox="0 0 50 50">
+      <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+    </svg>
+  );
+
   useEffect(() => {
     const loadAvatar = async () => {
-      const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-        await user.getImage(member.AD_Username),
-      ]);
-      let MemAvatar;
       if (member.AD_Username) {
-        MemAvatar = preferredImage || defaultImage;
-      } else {
-        MemAvatar = (
-          <svg width="50" height="50" viewBox="0 0 50 50">
-            <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-          </svg>
-        );
+        const { def: defaultImage, pref: preferredImage } = await user.getImage(member.AD_Username);
+        setAvatar(preferredImage || defaultImage);
       }
-      setAvatar(MemAvatar);
     };
     loadAvatar();
   }, [member.AD_Username]);
@@ -149,9 +146,6 @@ const MemberListItem = ({
       setIsRemoveAlertOpen(true);
     }
   };
-
-  console.log(member.AD_Username);
-
   let content;
   let options;
 
@@ -261,13 +255,14 @@ const MemberListItem = ({
       <>
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={1} style={rowStyle}>
-            <IMG
-              className="people-search-avatar-mobile"
+            <Avatar
               src={`data:image/jpg;base64,${avatar}`}
-              alt=""
-              noLazyLoad="true"
-              placeholderColor="#eeeeee"
-            />
+              alt={`${member.FirstName} ${member.LastName}`}
+              variant="rounded"
+              style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+            >
+              {!avatar && <PlaceHolderAvatar />}
+            </Avatar>
           </Grid>
           <Grid item xs={3}>
             <Typography>
@@ -314,14 +309,15 @@ const MemberListItem = ({
             <Grid container alignItems="center" spacing={2}>
               <Grid item xs={9} sm={10}>
                 <Grid container spacing={3} wrap="nowrap" alignItems="center">
-                  <Grid item>
-                    <IMG
-                      className="people-search-avatar-mobile"
+                  <Grid>
+                    <Avatar
                       src={`data:image/jpg;base64,${avatar}`}
-                      alt=""
-                      noLazyLoad="true"
-                      placeholderColor="#eeeeee"
-                    />
+                      alt={`${member.FirstName} ${member.LastName}`}
+                      variant="rounded"
+                      style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+                    >
+                      {!avatar && <PlaceHolderAvatar />}
+                    </Avatar>
                   </Grid>
                   <Grid>
                     <Typography>
@@ -334,8 +330,6 @@ const MemberListItem = ({
                 <Typography>{member.ParticipationDescription} </Typography>
                 <Typography>{mailLoc}</Typography>
               </Grid>
-              {/* <Grid item xs={2}>
-              </Grid> */}
             </Grid>
           </AccordionSummary>
           <AccordionDetails>
@@ -360,13 +354,14 @@ const MemberListItem = ({
       <>
         <Grid container alignItems="center" spacing={2} wrap="nowrap">
           <Grid item md={1} style={rowStyle}>
-            <IMG
-              className="member-list-image"
+            <Avatar
               src={`data:image/jpg;base64,${avatar}`}
-              alt=""
-              noLazyLoad="true"
-              placeholderColor="#eeeeee"
-            />
+              alt={`${member.FirstName} ${member.LastName}`}
+              variant="rounded"
+              style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+            >
+              {!avatar && <PlaceHolderAvatar />}
+            </Avatar>
           </Grid>
           <Grid item xs={3} style={rowStyle}>
             <Typography>

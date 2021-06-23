@@ -41,7 +41,6 @@ const ContactListItem = ({ contact }) => {
           {!avatar && <PlaceHolderAvatar />}
         </Avatar>
       </ListItemAvatar>
-      <div />
       <ListItemText primary={`${contact.FirstName} ${contact.LastName}`} />
       <ListItemSecondaryAction>
         <IconButton color="primary" href={`mailto:${contact.Email}`}>
