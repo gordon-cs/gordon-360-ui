@@ -33,7 +33,7 @@ const GordonOffline = ({ feature }) => {
             </Grid>
             <br />
             <h1>Please Re-establish Connection</h1>
-            <h4>{feature} has been deactivated due to loss of network.</h4>
+            <h4>{feature} is unavailable because you are not connected to the network.</h4>
             <br />
             <br />
             <Button
