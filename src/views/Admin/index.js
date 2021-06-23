@@ -46,7 +46,7 @@ const Admin = ({ authentication }) => {
         return null;
       }
     } else {
-      return <GordonOffline feature={'Revision of Administrators'} />;
+      return <GordonOffline feature="Editing Administrators" />;
     }
   } else {
     return <GordonUnauthorized feature={'the admin page'} />;
