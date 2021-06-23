@@ -461,7 +461,7 @@ const InvolvementProfile = ({ authentication }) => {
       );
     }
   } else {
-    return <GordonOffline feature={'Viewing an involvement'} />;
+    return <GordonOffline feature="This involvement" />;
   }
 
   return (
