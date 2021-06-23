@@ -23,7 +23,7 @@ const Feedback = () => {
       </div>
     );
   } else {
-    return <GordonOffline feature={'Submitting feedback'} />;
+    return <GordonOffline feature="Submitting feedback" />;
   }
 };
 
