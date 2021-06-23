@@ -600,7 +600,7 @@ const Timesheets = (props) => {
       );
     } else {
       if (!isOnline) {
-        return <GordonOffline feature={'Timesheets entry'} />;
+        return <GordonOffline feature="Timesheets" />;
       } else if (!isUserStudent) {
         return (
           <Grid container justify="center" spacing="16">
