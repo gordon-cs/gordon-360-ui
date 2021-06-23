@@ -117,7 +117,7 @@ const ApartApp = ({ authentication }) => {
       );
     }
   } else {
-    return <GordonOffline feature={'Viewing Apartment Applications'} />;
+    return <GordonOffline feature="Apartment Applications" />;
   }
 };
 
