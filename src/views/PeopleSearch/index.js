@@ -1022,7 +1022,7 @@ class PeopleSearch extends Component {
           </Grid>
         );
       } else {
-        return <GordonOffline feature={'People Search'} />;
+        return <GordonOffline feature="People Search" />;
       }
 
       return PeopleSearch;
