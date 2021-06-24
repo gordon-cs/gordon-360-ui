@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import user from 'services/user';
+import React, { useState, useEffect } from 'react';
+import userService from 'services/user';
 import './index.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import LockIcon from '@material-ui/icons/Lock';
@@ -55,6 +55,7 @@ const PersonalInfoList = ({
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
   );
+  const [mailCombo, setMailCombo] = useState(null);
   const isOnline = useNetworkStatus();
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
@@ -88,9 +89,21 @@ const PersonalInfoList = ({
   // FacStaff spouses are private for private users
   const isSpousePrivate = isFacStaff && keepPrivate && SpouseName !== PRIVATE_INFO;
 
+  useEffect(() => {
+    async function loadMailInfo() {
+      if (myProf && isStudent) {
+        //needs to be a student? ^\._./^
+        const info = await userService.getMailInfo(Mail_Location);
+        setMailCombo(info.Combination);
+        console.log(info);
+      }
+    }
+    loadMailInfo();
+  }, [myProf, Mail_Location, isStudent]);
+
   const handleChangeMobilePhonePrivacy = async () => {
     try {
-      await user.setMobilePhonePrivacy(!isMobilePhonePrivate);
+      await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
       setIsMobilePhonePrivate(!isMobilePhonePrivate);
 
       createSnackbar(
@@ -213,6 +226,11 @@ const PersonalInfoList = ({
       <ProfileInfoListItem title="Mailbox:" contentText={`#${Mail_Location}`} />
     ) : null;
 
+  const mailLockCombination =
+    myProf && isStudent && Mail_Location ? (
+      <ProfileInfoListItem title="Mailbox lock combination:" contentText={`#${mailCombo}`} />
+    ) : null;
+
   const dormInfo =
     isStudent && (BuildingDescription || Hall) ? (
       <ProfileInfoListItem
@@ -312,6 +330,7 @@ const PersonalInfoList = ({
             {onOffCampus}
             {dormInfo}
             {mailLocation}
+            {mailLockCombination}
             {mobilePhoneListItem}
             {homePhoneListItem}
             {studentID}
