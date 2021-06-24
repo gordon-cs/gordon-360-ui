@@ -345,6 +345,7 @@ class PeopleSearch extends Component {
     });
   };
 
+  //This is to prevent search from blank
   canSearch = () => {
     const { includeAlumni: omit, ...valuesNeededForSearch } = this.state.searchValues;
     let result = Object.values(valuesNeededForSearch).some((x) => x);
@@ -353,8 +354,6 @@ class PeopleSearch extends Component {
 
   async search() {
     if (!this.canSearch()) {
-      // const { includeAlumni: omit, ...valuesNeededForSearch } = this.state.searchValues;
-      // if (!Object.values(valuesNeededForSearch).some((x) => x)) {
       // do not search, only search if there are some non-blank non-false values
     } else {
       this.setState({
