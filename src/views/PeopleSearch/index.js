@@ -8,6 +8,7 @@ import {
   CardActions,
   Checkbox,
   Collapse,
+  FormLabel,
   FormControl,
   FormControlLabel,
   Grid,
@@ -161,8 +162,8 @@ class PeopleSearch extends Component {
 
       // These values *must* be in the same order as services/goStalk.js search function
       searchValues: {
-        includeStudent: false,
-        includeFacStaff: false,
+        includeStudent: true,
+        includeFacStaff: true,
         includeAlumni: false,
         firstName: '',
         lastName: '',
@@ -223,10 +224,21 @@ class PeopleSearch extends Component {
           buildings,
           personType,
         });
+
+        if (personType.includes('alum')) {
+          this.setState({
+            searchValues: {
+              ...this.state.searchValues,
+              includeStudent: false,
+              includeAlumni: true,
+            },
+          });
+        }
       } catch (error) {
         // error
       }
 
+      this.updateURL();
       if (window.location.href.includes('?')) {
         this.loadSearchParamsFromURL();
       }
@@ -366,6 +378,7 @@ class PeopleSearch extends Component {
   };
 
   async search() {
+    console.log(this.state.searchValues);
     if (!Object.values(this.state.searchValues).some((x) => x)) {
       // do not search, only search if there are some non-blank non-false values
     } else {
@@ -497,6 +510,7 @@ class PeopleSearch extends Component {
     if (this.props.authentication) {
       PeopleSearchCheckbox = (
         <Grid item xs={12} align="center">
+          <FormLabel component="legend">Type of People:</FormLabel>
           {this.state.personType && !this.state.personType.includes('alum') ? (
             <FormControlLabel
               control={
@@ -1013,8 +1027,8 @@ class PeopleSearch extends Component {
                           this.setState(
                             {
                               searchValues: {
-                                includeStudent: false,
-                                includeStaff: false,
+                                includeStudent: true,
+                                includeStaff: true,
                                 includeAlumni: false,
                                 firstName: '',
                                 lastName: '',
