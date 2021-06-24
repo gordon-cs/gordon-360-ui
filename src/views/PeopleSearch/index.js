@@ -1034,9 +1034,13 @@ class PeopleSearch extends Component {
                           this.setState(
                             {
                               searchValues: {
-                                includeStudent: this.state.personType.includes('alum') ? false : true,
-                                includeStaff: true,
-                                includeAlumni: this.state.personType.includes('alum') ? true : false,
+                                includeStudent: this.state.personType.includes('alum')
+                                  ? false
+                                  : true,
+                                includeFacStaff: true,
+                                includeAlumni: this.state.personType.includes('alum')
+                                  ? true
+                                  : false,
                                 firstName: '',
                                 lastName: '',
                                 major: '',
