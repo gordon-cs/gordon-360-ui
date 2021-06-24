@@ -92,7 +92,7 @@ const noResultsCard = (
 const peopleSearchHeader = (
   <Media query="(min-width: 960px)">
     {(matches) =>
-      matches ? (
+      matches /*&& !displayLargeImage*/ ? (
         <div style={styles.headerStyle}>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={1} />
@@ -177,6 +177,8 @@ class PeopleSearch extends Component {
 
       // For April Fools:
       relationshipStatusValue: '',
+
+      displayLargeImage: false,
 
       peopleSearchResults: null,
       header: '',
@@ -289,6 +291,14 @@ class PeopleSearch extends Component {
       },
     });
   }
+
+  handleChangeDisplayLargeImages() {
+    this.setState({
+      ...this.state,
+      displayLargeImage: !this.state.displayLargeImage,
+    });
+  }
+
   handleFirstNameInputChange = (e) => {
     this.setState({
       searchValues: { ...this.state.searchValues, firstName: e.target.value.trim() },
@@ -379,7 +389,7 @@ class PeopleSearch extends Component {
                   <PeopleSearchResult
                     key={person.AD_Username}
                     Person={person}
-                    size={matches ? 'full' : 'single'}
+                    size={matches /*&& !displayLargeImage*/ ? 'full' : 'single'}
                   />
                 ))
               }
@@ -412,6 +422,7 @@ class PeopleSearch extends Component {
   render() {
     const { classes } = this.props;
     let includeAlumniCheckbox;
+    let displayLargeImageCheckbox;
 
     const majorOptions = this.state.majors.map((major) => (
       <MenuItem value={major} key={major}>
@@ -499,6 +510,21 @@ class PeopleSearch extends Component {
           </Grid>
         );
       }
+      displayLargeImageCheckbox = (
+        <Grid item xs={12} align="center">
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.displayLargeImage}
+                onChange={() => {
+                  this.handleChangeDisplayLargeImages();
+                }}
+              />
+            }
+            label="Display Large Images"
+          />
+        </Grid>
+      );
 
       // April Fools
       let aprilFools = '';
@@ -665,6 +691,7 @@ class PeopleSearch extends Component {
                       {aprilFools}
                     </Grid>
                     {includeAlumniCheckbox}
+                    {displayLargeImageCheckbox}
                   </Grid>
 
                   <br />

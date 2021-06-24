@@ -160,7 +160,7 @@ export default class PeopleSearchResult extends Component {
             >
               <Grid item xs={1}>
                 <IMG
-                  className="people-search-avatar"
+                  className={'people-search-avatar'}
                   src={`data:image/jpg;base64,${this.state.avatar}`}
                   alt=""
                   noLazyLoad="true"
