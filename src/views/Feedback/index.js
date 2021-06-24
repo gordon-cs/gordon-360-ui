@@ -1,8 +1,7 @@
 import React from 'react';
-import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import './feedback.css';
-import { Button, Grid, Card, CardContent } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+import GordonOffline from 'components/GordonOffline';
 
 const Feedback = () => {
   const isOnline = useNetworkStatus();
@@ -24,48 +23,7 @@ const Feedback = () => {
       </div>
     );
   } else {
-    return (
-      <Grid container justify="center" spacing="16">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <Grid
-                item
-                xs={2}
-                alignItems="center"
-                style={{
-                  display: 'block',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-              >
-                <NoConnectionImage />
-              </Grid>
-              <br />
-              <h1>Please Re-establish Connection</h1>
-              <h4>Submitting feedback has been deactivated due to loss of network.</h4>
-              <br />
-              <br />
-              <Button
-                color="primary"
-                backgroundColor="white"
-                variant="outlined"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Back To Home
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    return <GordonOffline feature="Submitting feedback" />;
   }
 };
 

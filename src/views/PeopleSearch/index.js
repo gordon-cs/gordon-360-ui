@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonOffline from 'components/GordonOffline';
 import {
   Button,
   Card,
@@ -36,7 +37,6 @@ import CityIcon from '@material-ui/icons/LocationCity';
 import goStalk from 'services/goStalk';
 import user from 'services/user';
 import { gordonColors } from 'theme';
-import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import GordonLoader from 'components/Loader';
 
@@ -323,12 +323,12 @@ class PeopleSearch extends Component {
   }
   handleFirstNameInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, firstName: e.target.value },
+      searchValues: { ...this.state.searchValues, firstName: e.target.value.trim() },
     });
   };
   handleLastNameInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, lastName: e.target.value },
+      searchValues: { ...this.state.searchValues, lastName: e.target.value.trim() },
     });
   };
   handleMajorInputChange = (e) => {
@@ -346,14 +346,14 @@ class PeopleSearch extends Component {
       searchValues: { ...this.state.searchValues, hall: e.target.value },
     });
   };
-  handleClassTypeInputChange = (event) => {
+  handleClassTypeInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, classType: event.target.value },
+      searchValues: { ...this.state.searchValues, classType: e.target.value },
     });
   };
   handleHomeCityInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, homeCity: e.target.value },
+      searchValues: { ...this.state.searchValues, homeCity: e.target.value.trim() },
     });
   };
   handleStateInputChange = (e) => {
@@ -377,9 +377,16 @@ class PeopleSearch extends Component {
     });
   };
 
+  //This is to prevent search from blank
+  canSearch = () => {
+    const { includeStudent, includeFacStaff, includeAlumni, ...valuesNeededForSearch } =
+      this.state.searchValues;
+    let result = Object.values(valuesNeededForSearch).some((x) => x);
+    return result;
+  };
+
   async search() {
-    console.log(this.state.searchValues);
-    if (!Object.values(this.state.searchValues).some((x) => x)) {
+    if (!this.canSearch()) {
       // do not search, only search if there are some non-blank non-false values
     } else {
       this.setState({
@@ -866,7 +873,7 @@ class PeopleSearch extends Component {
                             <MenuItem label="All Classes" value="">
                               <em>All</em>
                             </MenuItem>
-                            <MenuItem value={1}>Freshman</MenuItem>
+                            <MenuItem value={1}>First Year</MenuItem>
                             <MenuItem value={2}>Sophomore</MenuItem>
                             <MenuItem value={3}>Junior</MenuItem>
                             <MenuItem value={4}>Senior</MenuItem>
@@ -1065,6 +1072,7 @@ class PeopleSearch extends Component {
                         }}
                         fullWidth
                         variant="contained"
+                        disabled={!this.canSearch()}
                       >
                         SEARCH
                       </Button>
@@ -1082,48 +1090,7 @@ class PeopleSearch extends Component {
           </Grid>
         );
       } else {
-        PeopleSearch = (
-          <Grid container justify="center" spacing="16">
-            <Grid item xs={12} md={8}>
-              <Card>
-                <CardContent
-                  style={{
-                    margin: 'auto',
-                    textAlign: 'center',
-                  }}
-                >
-                  <Grid
-                    item
-                    xs={2}
-                    alignItems="center"
-                    style={{
-                      display: 'block',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                    }}
-                  >
-                    <NoConnectionImage />
-                  </Grid>
-                  <br />
-                  <h1>Please Re-establish Connection</h1>
-                  <h4>People Search has been deactivated due to loss of network.</h4>
-                  <br />
-                  <br />
-                  <Button
-                    color="primary"
-                    backgroundColor="white"
-                    variant="outlined"
-                    onClick={() => {
-                      window.location.pathname = '';
-                    }}
-                  >
-                    Back To Home
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        );
+        return <GordonOffline feature="People Search" />;
       }
 
       return PeopleSearch;

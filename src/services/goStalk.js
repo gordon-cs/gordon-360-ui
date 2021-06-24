@@ -16,7 +16,7 @@ import http from './http';
  * @param {String} major Major (matches up against 3 majors listed for people)
  * @param {String} minor Minor (matches up against 3 minors listed for people)
  * @param {String} hall Dorm hall that a student lives in
- * @param {String} classType 0-7: Unassigned, Freshman, Sophomore, Junior, Senior, Graduate Student,
+ * @param {String} classType 0-7: Unassigned, First Year, Sophomore, Junior, Senior, Graduate Student,
  * Undegraduate Conferred, Graduate Conferred
  * @param {String} homeCity Hometown/Home city queried
  * @param {String} state A US state or a Canadian Province
@@ -46,7 +46,7 @@ const search = (
 
   firstName = firstName
     .trim()
-    .replace(/[^a-zA-Z\s,.'-]/g, '')
+    .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
     .toLowerCase();
   if (firstName === '' || firstName === null) {
     // eslint-disable-next-line
@@ -54,13 +54,11 @@ const search = (
   }
   lastName = lastName
     .trim()
-    .replace(/[^a-zA-Z\s,.'-]/g, '')
+    .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
     .toLowerCase();
   if (lastName === '' || lastName === null) {
     // eslint-disable-next-line
     lastName = 'C' + '\u266F';
-  } else {
-    lastName = lastName.toLowerCase();
   }
   if (major === '' || major === null) {
     // eslint-disable-next-line
@@ -95,7 +93,7 @@ const search = (
   }
   homeCity = homeCity
     .trim()
-    .replace(/[^a-zA-Z\s,.'-]/g, '')
+    .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
     .toLowerCase();
   if (homeCity === '' || homeCity === null) {
     // eslint-disable-next-line
