@@ -291,12 +291,12 @@ class PeopleSearch extends Component {
   }
   handleFirstNameInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, firstName: e.target.value },
+      searchValues: { ...this.state.searchValues, firstName: e.target.value.trim() },
     });
   };
   handleLastNameInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, lastName: e.target.value },
+      searchValues: { ...this.state.searchValues, lastName: e.target.value.trim() },
     });
   };
   handleMajorInputChange = (e) => {
@@ -314,14 +314,14 @@ class PeopleSearch extends Component {
       searchValues: { ...this.state.searchValues, hall: e.target.value },
     });
   };
-  handleClassTypeInputChange = (event) => {
+  handleClassTypeInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, classType: event.target.value },
+      searchValues: { ...this.state.searchValues, classType: e.target.value },
     });
   };
   handleHomeCityInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, homeCity: e.target.value },
+      searchValues: { ...this.state.searchValues, homeCity: e.target.value.trim() },
     });
   };
   handleStateInputChange = (e) => {
@@ -345,8 +345,15 @@ class PeopleSearch extends Component {
     });
   };
 
+  //This is to prevent search from blank
+  canSearch = () => {
+    const { includeAlumni: omit, ...valuesNeededForSearch } = this.state.searchValues;
+    let result = Object.values(valuesNeededForSearch).some((x) => x);
+    return result;
+  };
+
   async search() {
-    if (!Object.values(this.state.searchValues).some((x) => x)) {
+    if (!this.canSearch()) {
       // do not search, only search if there are some non-blank non-false values
     } else {
       this.setState({
@@ -1005,6 +1012,7 @@ class PeopleSearch extends Component {
                         }}
                         fullWidth
                         variant="contained"
+                        disabled={!this.canSearch()}
                       >
                         SEARCH
                       </Button>

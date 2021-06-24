@@ -42,7 +42,7 @@ const search = (
 
   firstName = firstName
     .trim()
-    .replace(/[^a-zA-Z\s,.'-]/g, '')
+    .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
     .toLowerCase();
   if (firstName === '' || firstName === null) {
     // eslint-disable-next-line
@@ -50,13 +50,11 @@ const search = (
   }
   lastName = lastName
     .trim()
-    .replace(/[^a-zA-Z\s,.'-]/g, '')
+    .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
     .toLowerCase();
   if (lastName === '' || lastName === null) {
     // eslint-disable-next-line
     lastName = 'C' + '\u266F';
-  } else {
-    lastName = lastName.toLowerCase();
   }
   if (major === '' || major === null) {
     // eslint-disable-next-line
@@ -91,7 +89,7 @@ const search = (
   }
   homeCity = homeCity
     .trim()
-    .replace(/[^a-zA-Z\s,.'-]/g, '')
+    .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
     .toLowerCase();
   if (homeCity === '' || homeCity === null) {
     // eslint-disable-next-line
