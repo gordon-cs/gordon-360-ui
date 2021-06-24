@@ -161,8 +161,9 @@ class PeopleSearch extends Component {
 
       // These values *must* be in the same order as services/goStalk.js search function
       searchValues: {
+        includeStudent: false,
+        includeFacStaff: false,
         includeAlumni: false,
-        onlyAlumni: false,
         firstName: '',
         lastName: '',
         major: '',
@@ -237,8 +238,9 @@ class PeopleSearch extends Component {
 
     this.setState({
       searchValues: {
+        includeStudent: urlParams.get('includeStudent') || false,
+        includeFacStaff: urlParams.get('includeFacStaff') || false,
         includeAlumni: urlParams.get('includeAlumni') || false,
-        onlyAlumni: urlParams.get('onlyAlumni') || false,
         firstName: urlParams.get('firstName')?.trim() || '',
         lastName: urlParams.get('lastName')?.trim() || '',
         major: urlParams.get('major')?.trim() || '',
@@ -283,19 +285,27 @@ class PeopleSearch extends Component {
       relationshipStatusValue: e.target.value,
     });
   };
+  handleChangeIncludeStudent() {
+    this.setState({
+      searchValues: {
+        ...this.state.searchValues,
+        includeStudent: !this.state.searchValues.includeStudent,
+      },
+    });
+  }
+  handleChangeIncludeFacStaff() {
+    this.setState({
+      searchValues: {
+        ...this.state.searchValues,
+        includeFacStaff: !this.state.searchValues.includeFacStaff,
+      },
+    });
+  }
   handleChangeIncludeAlumni() {
     this.setState({
       searchValues: {
         ...this.state.searchValues,
         includeAlumni: !this.state.searchValues.includeAlumni,
-      },
-    });
-  }
-  handleChangeOnlyAlumni() {
-    this.setState({
-      searchValues: {
-        ...this.state.searchValues,
-        onlyAlumni: !this.state.searchValues.onlyAlumni,
       },
     });
   }
@@ -414,7 +424,7 @@ class PeopleSearch extends Component {
 
   render() {
     const { classes } = this.props;
-    let AlumniCheckbox;
+    let PeopleSearchCheckbox;
 
     const majorOptions = this.state.majors.map((major) => (
       <MenuItem value={major} key={major}>
@@ -485,38 +495,47 @@ class PeopleSearch extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.props.authentication) {
-      if (this.state.personType && !this.state.personType.includes('stu')) {
-        AlumniCheckbox = (
-          <Grid item xs={12} align="center">
+      PeopleSearchCheckbox = (
+        <Grid item xs={12} align="center">
+          {this.state.personType && !this.state.personType.includes('alum') ? (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.searchValues.includeStudent}
+                  onChange={() => {
+                    this.handleChangeIncludeStudent();
+                  }}
+                />
+              }
+              label="Student"
+            />
+          ) : null}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.searchValues.includeFacStaff}
+                onChange={() => {
+                  this.handleChangeIncludeFacStaff();
+                }}
+              />
+            }
+            label="Faculty/Staff"
+          />
+          {this.state.personType && !this.state.personType.includes('stu') ? (
             <FormControlLabel
               control={
                 <Checkbox
                   checked={this.state.searchValues.includeAlumni}
-                  {...this.state.searchValues.onlyAlumni}
                   onChange={() => {
                     this.handleChangeIncludeAlumni();
                   }}
                 />
               }
-              disabled={this.state.searchValues.onlyAlumni}
-              label="Include Alumni"
+              label="Alumni"
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.searchValues.onlyAlumni}
-                  {...this.state.searchValues.includeAlumni}
-                  onChange={() => {
-                    this.handleChangeOnlyAlumni();
-                  }}
-                />
-              }
-              disabled={this.state.searchValues.includeAlumni}
-              label="Only Alumni"
-            />
-          </Grid>
-        );
-      }
+          ) : null}
+        </Grid>
+      );
 
       // April Fools
       let aprilFools = '';
@@ -682,7 +701,7 @@ class PeopleSearch extends Component {
                     <Grid item xs={12}>
                       {aprilFools}
                     </Grid>
-                    {AlumniCheckbox}
+                    {PeopleSearchCheckbox}
                   </Grid>
 
                   <br />
@@ -994,8 +1013,9 @@ class PeopleSearch extends Component {
                           this.setState(
                             {
                               searchValues: {
+                                includeStudent: false,
+                                includeStaff: false,
                                 includeAlumni: false,
-                                onlyAlumni: false,
                                 firstName: '',
                                 lastName: '',
                                 major: '',
