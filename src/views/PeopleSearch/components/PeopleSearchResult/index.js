@@ -6,6 +6,7 @@ import user from 'services/user';
 import { Link } from 'react-router-dom';
 
 import './peopleSearchResult.css';
+import './printablePeopleSearchResult.css';
 
 export default class PeopleSearchResult extends Component {
   constructor(props) {

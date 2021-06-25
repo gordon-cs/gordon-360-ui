@@ -18,6 +18,7 @@ import {
   Select,
   TextField,
   Typography,
+  Fab,
   withStyles,
 } from '@material-ui/core';
 import Media from 'react-media';
@@ -30,6 +31,7 @@ import {
   FaBook,
   FaGlobeAmericas,
   FaSchool,
+  FaPrint,
 } from 'react-icons/fa';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
@@ -74,6 +76,13 @@ const styles = {
   colorChecked: {},
   icon: {
     color: gordonColors.neutral.grayShades[900],
+  },
+  printPeopleSearchButton: {
+    position: 'fixed',
+    margin: 0,
+    bottom: 'min(5vw, 4rem)',
+    right: 'max(2rem, 5vw)',
+    zIndex: 1,
   },
 };
 
@@ -138,6 +147,25 @@ const peopleSearchHeader = (
       )
     }
   </Media>
+);
+
+function testPrint() {
+  // this.focus();
+  window.print();
+}
+
+const printPeopleSearchButton = (
+  <Fab
+    variant="extended"
+    color="primary"
+    onClick={() => testPrint()}
+    style={styles.printPeopleSearchButton}
+  >
+    <FaPrint />
+    <Media query="(min-width: 960px)">
+      <span style={styles.printPeopleSearchButton__text}>&nbsp;&nbsp;Print Results</span>
+    </Media>
+  </Fab>
 );
 
 class PeopleSearch extends Component {
@@ -1027,6 +1055,7 @@ class PeopleSearch extends Component {
                 {this.state.peopleSearchResults}
               </Card>
             </Grid>
+            {printPeopleSearchButton}
           </Grid>
         );
       } else {
