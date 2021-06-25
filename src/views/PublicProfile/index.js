@@ -32,7 +32,7 @@ const PublicProfile = ({ authentication }) => {
     } else {
       setProfile(null);
     }
-  }, [authentication, username]);
+  }, [authentication, (username)]);
 
   if (authentication) {
     if (error && error.name === 'NotFoundError') {

@@ -305,6 +305,7 @@ function setClass(profile) {
  */
 const getImage = async (username) => {
   let pic;
+  console.log("profile: ", username);
   if (username) {
     pic = await http.get(`profiles/Image/${username}/`);
   } else {
