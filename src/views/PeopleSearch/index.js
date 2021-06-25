@@ -539,7 +539,7 @@ class PeopleSearch extends Component {
     if (this.props.authentication) {
       PeopleSearchCheckbox = !this.state.loading ? (
         <Grid item xs={12} align="center">
-          <FormLabel component="legend">Type of People:</FormLabel>
+          <FormLabel component="legend">Include:</FormLabel>
           {this.state.personType && !this.state.personType.includes('alum') ? (
             <FormControlLabel
               control={
@@ -598,8 +598,8 @@ class PeopleSearch extends Component {
         </Grid>
       ) : (
         <Grid item xs={12} align="center">
-          <FormLabel component="legend">Type of People:</FormLabel>
-          <GordonLoader size={38} />
+          <FormLabel component="legend">Include:</FormLabel>
+          <GordonLoader size={79} />
         </Grid>
       );
 
@@ -1103,6 +1103,7 @@ class PeopleSearch extends Component {
                               offDepExpanded: false,
                               header: '',
                               peopleSearchResults: null,
+                              displayLargeImage: false,
                             },
                             () => this.updateURL(),
                           );
