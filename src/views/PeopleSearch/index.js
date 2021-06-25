@@ -577,22 +577,24 @@ class PeopleSearch extends Component {
               label="Alumni"
             />
           ) : null}
-          {<Media query="(min-width: 960px)" /> ? (
-            <Grid item xs={12} align="center">
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={this.state.displayLargeImage}
-                    onChange={() => {
-                      this.handleChangeDisplayLargeImages();
-                    }}
-                  />
-                }
-                label="Display Large Images"
-              />
-            </Grid>
-          ) : null}
-          );
+          <Media
+            query="(min-width: 960px)"
+            render={() => (
+              <Grid item xs={12} align="center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.state.displayLargeImage}
+                      onChange={() => {
+                        this.handleChangeDisplayLargeImages();
+                      }}
+                    />
+                  }
+                  label="Display Large Images"
+                />
+              </Grid>
+            )}
+          />
         </Grid>
       ) : (
         <Grid item xs={12} align="center">
