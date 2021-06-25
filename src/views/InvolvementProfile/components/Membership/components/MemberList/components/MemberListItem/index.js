@@ -408,8 +408,8 @@ const MemberListItem = ({
 
 MemberListItem.propTypes = {
   member: PropTypes.shape({
-    MembershipID: PropTypes.number.isRequired,
-    ActivityCode: PropTypes.string.isRequired,
+    // MembershipID: PropTypes.number.isRequired,
+    // ActivityCode: PropTypes.string.isRequired,
     //ActivityImage: Not sure what the prop type should be, but it will be required.
     SessionCode: PropTypes.string.isRequired,
     IDNumber: PropTypes.number.isRequired,
@@ -421,9 +421,6 @@ MemberListItem.propTypes = {
     ParticipationDescription: PropTypes.string.isRequired,
     GroupAdmin: PropTypes.bool.isRequired,
     Description: PropTypes.string.isRequired,
-
-    //Following in object are never used in this file and never passed down to another component
-    //Could be removed and everything would be fine.
     ActivityDescription: PropTypes.string,
     ActivityImagePath: PropTypes.string,
     SessionDescription: PropTypes.string,
