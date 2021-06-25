@@ -89,55 +89,51 @@ const noResultsCard = (
   </Grid>
 );
 
-const peopleSearchHeader = (
-  <Media query="(min-width: 960px)">
-    {(matches) =>
-      matches /*&& !displayLargeImage*/ ? (
-        <div style={styles.headerStyle}>
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={1} />
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                FIRST NAME
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                LAST NAME
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle} noWrap>
-                DESCRIPTION
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                CLASS/JOB TITLE
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                @GORDON.EDU
-                <br />
-                MAIL LOCATION
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      ) : (
-        <div style={styles.headerStyle}>
-          <Grid container direction="row" justify="center">
-            <Grid item>
-              <Typography variant="body2" style={styles.headerStyle}>
-                RESULTS
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      )
-    }
-  </Media>
+const peopleSearchHeaderDesktop = (
+  <div style={styles.headerStyle}>
+    <Grid container direction="row" alignItems="center">
+      <Grid item xs={1} />
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          FIRST NAME
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          LAST NAME
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle} noWrap>
+          DESCRIPTION
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          CLASS/JOB TITLE
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          @GORDON.EDU
+          <br />
+          MAIL LOCATION
+        </Typography>
+      </Grid>
+    </Grid>
+  </div>
+);
+
+const peopleSearchHeaderMobile = (
+  <div style={styles.headerStyle}>
+    <Grid container direction="row" justify="center">
+      <Grid item>
+        <Typography variant="body2" style={styles.headerStyle}>
+          RESULTS
+        </Typography>
+      </Grid>
+    </Grid>
+  </div>
 );
 
 class PeopleSearch extends Component {
@@ -283,6 +279,7 @@ class PeopleSearch extends Component {
       relationshipStatusValue: e.target.value,
     });
   };
+
   handleChangeIncludeAlumni() {
     this.setState({
       searchValues: {
@@ -297,6 +294,7 @@ class PeopleSearch extends Component {
       ...this.state,
       displayLargeImage: !this.state.displayLargeImage,
     });
+    this.search();
   }
 
   handleFirstNameInputChange = (e) => {
@@ -389,13 +387,23 @@ class PeopleSearch extends Component {
                   <PeopleSearchResult
                     key={person.AD_Username}
                     Person={person}
-                    size={matches /*&& !displayLargeImage*/ ? 'full' : 'single'}
+                    size={
+                      !matches ? 'single' : this.state.displayLargeImage ? 'largeImages' : 'full'
+                    }
                   />
                 ))
               }
             </Media>
           ),
-          header: peopleSearchHeader,
+          header: (
+            <Media query="(min-width: 960px)">
+              {(matches) =>
+                matches && !this.state.displayLargeImage
+                  ? peopleSearchHeaderDesktop
+                  : peopleSearchHeaderMobile
+              }
+            </Media>
+          ),
         });
       }
     }
@@ -690,8 +698,10 @@ class PeopleSearch extends Component {
                     <Grid item xs={12}>
                       {aprilFools}
                     </Grid>
-                    {includeAlumniCheckbox}
-                    {displayLargeImageCheckbox}
+                    <Grid item xs={12}>
+                      {includeAlumniCheckbox}
+                      <Media query="(min-width: 960px)" render={() => displayLargeImageCheckbox} />
+                    </Grid>
                   </Grid>
 
                   <br />
