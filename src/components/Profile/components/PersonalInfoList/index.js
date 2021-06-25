@@ -13,6 +13,8 @@ import {
   List,
   Switch,
   FormControlLabel,
+  Divider,
+  ListItem,
 } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 
@@ -56,6 +58,7 @@ const PersonalInfoList = ({
     Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
   );
   const [mailCombo, setMailCombo] = useState(null);
+  const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
@@ -90,15 +93,14 @@ const PersonalInfoList = ({
   const isSpousePrivate = isFacStaff && keepPrivate && SpouseName !== PRIVATE_INFO;
 
   useEffect(() => {
-    async function loadMailInfo() {
+    async function loadMailboxCombination() {
       if (myProf && isStudent) {
-        //needs to be a student? ^\._./^
-        const info = await userService.getMailInfo(Mail_Location);
+        const info = await userService.getMailboxCombination();
         setMailCombo(info.Combination);
         console.log(info);
       }
     }
-    loadMailInfo();
+    loadMailboxCombination();
   }, [myProf, Mail_Location, isStudent]);
 
   const handleChangeMobilePhonePrivacy = async () => {
@@ -221,14 +223,42 @@ const PersonalInfoList = ({
       />
     ) : null;
 
-  const mailLocation =
+  const mail =
     isStudent && Mail_Location ? (
-      <ProfileInfoListItem title="Mailbox:" contentText={`#${Mail_Location}`} />
-    ) : null;
-
-  const mailLockCombination =
-    myProf && isStudent && Mail_Location ? (
-      <ProfileInfoListItem title="Mailbox lock combination:" contentText={`#${mailCombo}`} />
+      <>
+        <ListItem className="profile-info-list-item">
+          <Grid container justify="center" alignItems="center">
+            <Grid container item xs={5} alignItems="center">
+              <Typography>{'Mailbox:'}</Typography>
+            </Grid>
+            <Grid container item xs={myProf ? 2 : 7} alignItems="center">
+              <Typography className={null}>{`#${Mail_Location}`}</Typography>
+            </Grid>
+            {myProf && (
+              <>
+                <Grid container item xs={2} alignItems="center">
+                  {showMailCombo && <Typography className={'private'}>{`${mailCombo}`}</Typography>}
+                </Grid>
+                <Grid container item xs={3} md={3} lg={3} justify="center" alignItems="center">
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        onChange={() => {
+                          setShowMailCombo(!showMailCombo);
+                        }}
+                        checked={showMailCombo}
+                      />
+                    }
+                    label={showMailCombo ? 'Hide Lock Combo' : 'Show Lock Combo'}
+                    labelPlacement="bottom"
+                  />
+                </Grid>
+              </>
+            )}
+          </Grid>
+        </ListItem>
+        <Divider />
+      </>
     ) : null;
 
   const dormInfo =
@@ -329,8 +359,7 @@ const PersonalInfoList = ({
             {advisors}
             {onOffCampus}
             {dormInfo}
-            {mailLocation}
-            {mailLockCombination}
+            {mail}
             {mobilePhoneListItem}
             {homePhoneListItem}
             {studentID}

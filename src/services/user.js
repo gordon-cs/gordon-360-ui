@@ -436,8 +436,8 @@ const getCliftonStrengths = async (username) => {
   }
 };
 
-const getMailInfo = async (boxNumber) => {
-  return await http.get(`profiles/mail-info/${boxNumber}/`);
+const getMailboxCombination = async () => {
+  return await http.get(`profiles/mailbox-combination/`);
 };
 
 async function setAdvisors(profile) {
@@ -659,7 +659,7 @@ const userService = {
   getLeaderPositions,
   getSentMembershipRequests,
   getProfileInfo,
-  getMailInfo,
+  getMailboxCombination,
   getAdvisors,
   getCliftonStrengths,
   resetImage,
