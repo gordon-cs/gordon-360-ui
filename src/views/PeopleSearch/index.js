@@ -241,9 +241,10 @@ class PeopleSearch extends Component {
         // error
       }
 
-      this.updateURL();
       if (window.location.href.includes('?')) {
         this.loadSearchParamsFromURL();
+      } else {
+        this.updateURL();
       }
     }
 
@@ -1034,7 +1035,7 @@ class PeopleSearch extends Component {
 
                 <CardActions>
                   <Grid container justify="center" spacing={2}>
-                    {/* Clear All Button */}
+                    {/* Reset Button */}
                     <Grid item xs={8} sm={'auto'}>
                       <Button
                         style={{ backgroundColor: gordonColors.neutral.lightGray }}
