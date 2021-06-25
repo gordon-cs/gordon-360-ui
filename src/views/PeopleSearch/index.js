@@ -178,6 +178,8 @@ class PeopleSearch extends Component {
         building: '',
       },
 
+      loading: true,
+
       // For April Fools:
       relationshipStatusValue: '',
 
@@ -200,6 +202,7 @@ class PeopleSearch extends Component {
   }
 
   async componentDidMount() {
+    // this.setState({ loading: true });
     if (this.props.authentication) {
       try {
         const profile = await user.getProfileInfo();
@@ -243,6 +246,8 @@ class PeopleSearch extends Component {
         this.loadSearchParamsFromURL();
       }
     }
+
+    this.setState({ loading: false });
   }
 
   async loadSearchParamsFromURL() {
@@ -515,7 +520,7 @@ class PeopleSearch extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.props.authentication) {
-      PeopleSearchCheckbox = (
+      PeopleSearchCheckbox = !this.state.loading ? (
         <Grid item xs={12} align="center">
           <FormLabel component="legend">Type of People:</FormLabel>
           {this.state.personType && !this.state.personType.includes('alum') ? (
@@ -555,6 +560,11 @@ class PeopleSearch extends Component {
               label="Alumni"
             />
           ) : null}
+        </Grid>
+      ) : (
+        <Grid item xs={12} align="center">
+          <FormLabel component="legend">Type of People:</FormLabel>
+          <GordonLoader size={38} />
         </Grid>
       );
 
@@ -1063,7 +1073,7 @@ class PeopleSearch extends Component {
                           );
                         }}
                       >
-                        Clear All
+                        RESET
                       </Button>
                     </Grid>
                     {/* Search Button */}
