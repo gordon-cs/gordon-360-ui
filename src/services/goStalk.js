@@ -8,6 +8,8 @@ import http from './http';
 
 /**
  * Search for (AKA GoStalk) a person/people based on the following queried parameters
+ * @param {Boolean} includeStudent To decide if they want student in their search results or not
+ * @param {Boolean} includeFacStaff To decide if they want faculty and staff in their search results or not
  * @param {Boolean} includeAlumni For non-Students to decide if they want alumni in their search results or not
  * @param {String} firstName First name queried
  * @param {String} lastName Last name queried
@@ -24,6 +26,8 @@ import http from './http';
  * @return {Promise.<SearchResult[]>} List of search results that match these queried parameters
  */
 const search = (
+  includeStudent,
+  includeFacStaff,
   includeAlumni,
   firstName,
   lastName,
@@ -119,8 +123,9 @@ const search = (
     // workaround to avoid breaking the backend
     building = building.replace('.', '_');
   }
+
   return http.get(
-    `accounts/advanced-people-search/${includeAlumni}/${firstName}/${lastName}/${major}/${minor}/${hall}/${classType}/${homeCity}/${state}/${country}/${department}/${building}`,
+    `accounts/advanced-people-search/${includeStudent}/${includeFacStaff}/${includeAlumni}/${firstName}/${lastName}/${major}/${minor}/${hall}/${classType}/${homeCity}/${state}/${country}/${department}/${building}`,
   );
 };
 

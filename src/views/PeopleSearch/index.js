@@ -9,6 +9,7 @@ import {
   CardActions,
   Checkbox,
   Collapse,
+  FormLabel,
   FormControl,
   FormControlLabel,
   Grid,
@@ -161,6 +162,8 @@ class PeopleSearch extends Component {
 
       // These values *must* be in the same order as services/goStalk.js search function
       searchValues: {
+        includeStudent: true,
+        includeFacStaff: true,
         includeAlumni: false,
         firstName: '',
         lastName: '',
@@ -174,6 +177,8 @@ class PeopleSearch extends Component {
         department: '',
         building: '',
       },
+
+      loading: true,
 
       // For April Fools:
       relationshipStatusValue: '',
@@ -197,6 +202,7 @@ class PeopleSearch extends Component {
   }
 
   async componentDidMount() {
+    // this.setState({ loading: true });
     if (this.props.authentication) {
       try {
         const profile = await user.getProfileInfo();
@@ -221,14 +227,27 @@ class PeopleSearch extends Component {
           buildings,
           personType,
         });
+
+        if (personType.includes('alum')) {
+          this.setState({
+            searchValues: {
+              ...this.state.searchValues,
+              includeStudent: false,
+              includeAlumni: true,
+            },
+          });
+        }
       } catch (error) {
         // error
       }
 
+      this.updateURL();
       if (window.location.href.includes('?')) {
         this.loadSearchParamsFromURL();
       }
     }
+
+    this.setState({ loading: false });
   }
 
   async loadSearchParamsFromURL() {
@@ -236,6 +255,8 @@ class PeopleSearch extends Component {
 
     this.setState({
       searchValues: {
+        includeStudent: urlParams.get('includeStudent') || false,
+        includeFacStaff: urlParams.get('includeFacStaff') || false,
         includeAlumni: urlParams.get('includeAlumni') || false,
         firstName: urlParams.get('firstName')?.trim() || '',
         lastName: urlParams.get('lastName')?.trim() || '',
@@ -281,6 +302,22 @@ class PeopleSearch extends Component {
       relationshipStatusValue: e.target.value,
     });
   };
+  handleChangeIncludeStudent() {
+    this.setState({
+      searchValues: {
+        ...this.state.searchValues,
+        includeStudent: !this.state.searchValues.includeStudent,
+      },
+    });
+  }
+  handleChangeIncludeFacStaff() {
+    this.setState({
+      searchValues: {
+        ...this.state.searchValues,
+        includeFacStaff: !this.state.searchValues.includeFacStaff,
+      },
+    });
+  }
   handleChangeIncludeAlumni() {
     this.setState({
       searchValues: {
@@ -347,7 +384,8 @@ class PeopleSearch extends Component {
 
   //This is to prevent search from blank
   canSearch = () => {
-    const { includeAlumni: omit, ...valuesNeededForSearch } = this.state.searchValues;
+    const { includeStudent, includeFacStaff, includeAlumni, ...valuesNeededForSearch } =
+      this.state.searchValues;
     let result = Object.values(valuesNeededForSearch).some((x) => x);
     return result;
   };
@@ -411,7 +449,7 @@ class PeopleSearch extends Component {
 
   render() {
     const { classes } = this.props;
-    let includeAlumniCheckbox;
+    let PeopleSearchCheckbox;
 
     const majorOptions = this.state.majors.map((major) => (
       <MenuItem value={major} key={major}>
@@ -482,9 +520,34 @@ class PeopleSearch extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.props.authentication) {
-      if (this.state.personType && !this.state.personType.includes('stu')) {
-        includeAlumniCheckbox = (
-          <Grid item xs={12} align="center">
+      PeopleSearchCheckbox = !this.state.loading ? (
+        <Grid item xs={12} align="center">
+          <FormLabel component="legend">Type of People:</FormLabel>
+          {this.state.personType && !this.state.personType.includes('alum') ? (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={this.state.searchValues.includeStudent}
+                  onChange={() => {
+                    this.handleChangeIncludeStudent();
+                  }}
+                />
+              }
+              label="Student"
+            />
+          ) : null}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.searchValues.includeFacStaff}
+                onChange={() => {
+                  this.handleChangeIncludeFacStaff();
+                }}
+              />
+            }
+            label="Faculty/Staff"
+          />
+          {this.state.personType && !this.state.personType.includes('stu') ? (
             <FormControlLabel
               control={
                 <Checkbox
@@ -494,11 +557,16 @@ class PeopleSearch extends Component {
                   }}
                 />
               }
-              label="Include Alumni"
+              label="Alumni"
             />
-          </Grid>
-        );
-      }
+          ) : null}
+        </Grid>
+      ) : (
+        <Grid item xs={12} align="center">
+          <FormLabel component="legend">Type of People:</FormLabel>
+          <GordonLoader size={38} />
+        </Grid>
+      );
 
       // April Fools
       let aprilFools = '';
@@ -664,7 +732,7 @@ class PeopleSearch extends Component {
                     <Grid item xs={12}>
                       {aprilFools}
                     </Grid>
-                    {includeAlumniCheckbox}
+                    {PeopleSearchCheckbox}
                   </Grid>
 
                   <br />
@@ -976,7 +1044,13 @@ class PeopleSearch extends Component {
                           this.setState(
                             {
                               searchValues: {
-                                includeAlumni: false,
+                                includeStudent: this.state.personType.includes('alum')
+                                  ? false
+                                  : true,
+                                includeFacStaff: true,
+                                includeAlumni: this.state.personType.includes('alum')
+                                  ? true
+                                  : false,
                                 firstName: '',
                                 lastName: '',
                                 major: '',
@@ -999,7 +1073,7 @@ class PeopleSearch extends Component {
                           );
                         }}
                       >
-                        Clear All
+                        RESET
                       </Button>
                     </Grid>
                     {/* Search Button */}
