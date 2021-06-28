@@ -120,14 +120,43 @@ export default class PeopleSearchResult extends Component {
                   placeholderColor="#eeeeee"
                 />
               </Grid>
-              <Grid
-                item
-                style={{
-                  // a set width is necessary to keep profile images in line
-                  // while maintaining center alignment
-                  width: '260px',
-                }}
-              >
+              <Grid item xs={6}>
+                <Typography variant="h5">{fullName}</Typography>
+                <Typography variant="body2">{nickname}</Typography>
+                <Typography variant="body2">{personClassJobTitle}</Typography>
+                <Typography variant="body2">{Person.Email}</Typography>
+                <Typography variant="body2">{personMailLocation}</Typography>
+              </Grid>
+            </Grid>
+          </Link>
+          <Divider />
+        </>
+      );
+    } else if (size === 'largeImages') {
+      /*** Enlarged Images ***/
+      return (
+        <>
+          <Divider />
+          <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
+            <Grid
+              container
+              alignItems="center"
+              justify="center"
+              spacing={2}
+              style={{
+                padding: '1rem',
+              }}
+            >
+              <Grid item xs={6} container justify="flex-end">
+                <IMG
+                  className="people-search-avatar-large"
+                  src={`data:image/jpg;base64,${this.state.avatar}`}
+                  alt=""
+                  noLazyLoad="true"
+                  placeholderColor="#eeeeee"
+                />
+              </Grid>
+              <Grid item xs={6}>
                 <Typography variant="h5">{fullName}</Typography>
                 <Typography variant="body2">{nickname}</Typography>
                 <Typography variant="body2">{personClassJobTitle}</Typography>
