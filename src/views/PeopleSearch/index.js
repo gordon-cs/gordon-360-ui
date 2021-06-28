@@ -41,6 +41,7 @@ import user from 'services/user';
 import { gordonColors } from 'theme';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import GordonLoader from 'components/Loader';
+import ReactToPrint from 'react-to-print';
 
 const styles = {
   FontAwesome: {
@@ -151,15 +152,17 @@ const peopleSearchHeader = (
 );
 
 function testPrint() {
-  // this.focus();
-  window.print();
+  // const element = document.getElementById('people-search-results');
+  // const elementWindow = element;
+  // element.focus();
+  // elementWindow.print();
 }
 
 const printPeopleSearchButton = (
   <Fab
     variant="extended"
     color="primary"
-    onClick={() => testPrint()}
+    // onClick={() => testPrint()}
     style={styles.printPeopleSearchButton}
   >
     <FaPrint />
@@ -1124,12 +1127,21 @@ class PeopleSearch extends Component {
                 <br />
               </Card>
               <br />
-              <Card>
+              <Card ref={el => (this.componentRef = el)}>
                 {this.state.header}
                 {this.state.peopleSearchResults}
               </Card>
+              <ReactToPrint
+                trigger={() => {
+                  // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
+                  // to the root node of the returned component as it will be overwritten.
+                  return printPeopleSearchButton;
+                  // return <a href="#">Print this out!</a>;
+                }}
+                content={() => this.componentRef}
+              />
             </Grid>
-            {printPeopleSearchButton}
+            {/* {printPeopleSearchButton} */}
           </Grid>
         );
       } else {
