@@ -1,5 +1,5 @@
 import { Grid, Typography, TextField, Button } from '@material-ui/core';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { authenticate } from 'services/auth';
 import storage from 'services/storage';
 import session from 'services/session';

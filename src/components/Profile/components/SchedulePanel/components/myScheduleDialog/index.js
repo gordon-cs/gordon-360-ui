@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import { Component, Fragment } from 'react';
 
 import { gordonColors } from 'theme';
 import myschedule from 'services/myschedule';
@@ -22,7 +22,7 @@ import { KeyboardTimePicker } from '@material-ui/pickers';
 const STARTHOUR = '08:00';
 const ENDHOUR = '17:00';
 
-export default class MyScheduleDialog extends React.Component {
+export default class MyScheduleDialog extends Component {
   constructor(props) {
     super(props);
 

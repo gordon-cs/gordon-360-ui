@@ -4,7 +4,7 @@
 // This file is being preserved for now as the news features are still in development
 
 // import { ListItem, ListItemText } from 'material-ui/List';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Card, CardContent, Typography, Collapse } from '@material-ui/core';
 
 //Written by Jessica Guan

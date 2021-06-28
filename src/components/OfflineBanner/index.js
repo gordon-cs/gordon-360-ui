@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { gordonColors } from 'theme';
 import storage from 'services/storage';
 

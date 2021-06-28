@@ -1,5 +1,5 @@
 import Dropzone from 'react-dropzone';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './involvement-profile.css';
 import Cropper from 'react-cropper';
 import GordonLoader from 'components/Loader';

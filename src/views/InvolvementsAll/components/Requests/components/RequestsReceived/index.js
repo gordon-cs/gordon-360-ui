@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import parseISO from 'date-fns/parseISO';
 import {
@@ -59,7 +59,7 @@ const RequestReceived = ({ involvement }) => {
             {requests
               .sort((a, b) => parseISO(b.DateSent) - parseISO(a.DateSent))
               .map((request) => (
-                <React.Fragment key={request.RequestID}>
+                <Fragment key={request.RequestID}>
                   <ListItem key={request.RequestID}>
                     <ListItemText
                       primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
@@ -87,7 +87,7 @@ const RequestReceived = ({ involvement }) => {
                     </ListItemSecondaryAction>
                   </ListItem>
                   <Divider />
-                </React.Fragment>
+                </Fragment>
               ))}
           </List>
         ) : (

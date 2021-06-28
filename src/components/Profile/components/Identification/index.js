@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Dropzone from 'react-dropzone';
 import EmailIcon from '@material-ui/icons/Email';
 import user from 'services/user';

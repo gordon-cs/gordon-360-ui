@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import EditIcon from '@material-ui/icons/Edit';
 import LinksDialog from './components/LinksDialog/index';
 import { socialMediaInfo } from 'socialMedia';

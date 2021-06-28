@@ -1,4 +1,3 @@
-import React from 'react';
 import Email from '@material-ui/icons/Email';
 
 import { IconButton, List, ListItem, Typography } from '@material-ui/core';

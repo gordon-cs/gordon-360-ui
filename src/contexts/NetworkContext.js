@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import storage from 'services/storage';
 
 export const NetworkContext = createContext();

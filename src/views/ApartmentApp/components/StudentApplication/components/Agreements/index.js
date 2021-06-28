@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -90,7 +90,7 @@ const Agreements = ({ deleting, onChange }) => {
   };
 
   const AgreementChecklistItem = ({ checked, index, label, onChange }) => (
-    <React.Fragment>
+    <Fragment>
       <FormControlLabel
         className="apartment-agreements-form-control-option"
         control={
@@ -104,7 +104,7 @@ const Agreements = ({ deleting, onChange }) => {
         key={index}
       />
       <Divider />
-    </React.Fragment>
+    </Fragment>
   );
 
   const error = checkboxes.some((checkbox) => !checkbox.checked);

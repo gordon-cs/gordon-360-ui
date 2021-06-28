@@ -1,5 +1,5 @@
 //Handles the fetching and preperation for displaying of shifts
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Grid, Card, CardContent, CardHeader, Tabs, Tab } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
 import SavedShiftsList from '../SavedShiftsList';

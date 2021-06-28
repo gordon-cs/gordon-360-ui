@@ -1,4 +1,3 @@
-import React from 'react';
 import './feedback.css';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';

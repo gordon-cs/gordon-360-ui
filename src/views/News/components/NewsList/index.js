@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 import NewsItem from '../NewsItem';
 import { gordonColors } from 'theme';

@@ -1,10 +1,10 @@
-import React from 'react';
+import { Component } from 'react';
 import { gordonColors } from 'theme';
 import './editdescriptiondialog.css';
 
 import { Dialog, DialogTitle, DialogActions, Button, TextField } from '@material-ui/core';
 
-export default class EditDescriptionDialog extends React.Component {
+export default class EditDescriptionDialog extends Component {
   constructor(props) {
     super(props);
 

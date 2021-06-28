@@ -1,4 +1,3 @@
-import React from 'react';
 import './index.css';
 
 import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
