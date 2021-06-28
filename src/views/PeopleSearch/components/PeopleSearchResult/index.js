@@ -89,7 +89,7 @@ export default class PeopleSearchResult extends Component {
     }
     // set mailbox up
     if (Person.Mail_Location) {
-      if (size === 'single') {
+      if (size === 'single' || size === 'largeImages') {
         personMailLocation =
           Person.Type === 'Student'
             ? 'Mailbox #' + Person.Mail_Location
