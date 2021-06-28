@@ -100,55 +100,51 @@ const noResultsCard = (
   </Grid>
 );
 
-const peopleSearchHeader = (
-  <Media query="(min-width: 960px)">
-    {(matches) =>
-      matches ? (
-        <div style={styles.headerStyle}>
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={1} />
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                FIRST NAME
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                LAST NAME
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle} noWrap>
-                DESCRIPTION
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                CLASS/JOB TITLE
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                @GORDON.EDU
-                <br />
-                MAIL LOCATION
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      ) : (
-        <div style={styles.headerStyle}>
-          <Grid container direction="row" justify="center">
-            <Grid item>
-              <Typography variant="body2" style={styles.headerStyle}>
-                RESULTS
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      )
-    }
-  </Media>
+const peopleSearchHeaderDesktop = (
+  <div style={styles.headerStyle}>
+    <Grid container direction="row" alignItems="center">
+      <Grid item xs={1} />
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          FIRST NAME
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          LAST NAME
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle} noWrap>
+          DESCRIPTION
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          CLASS/JOB TITLE
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          @GORDON.EDU
+          <br />
+          MAILBOX #
+        </Typography>
+      </Grid>
+    </Grid>
+  </div>
+);
+
+const peopleSearchHeaderMobile = (
+  <div style={styles.headerStyle}>
+    <Grid container direction="row" justify="center">
+      <Grid item>
+        <Typography variant="body2" style={styles.headerStyle}>
+          RESULTS
+        </Typography>
+      </Grid>
+    </Grid>
+  </div>
 );
 
 const printPeopleSearchButton = (
@@ -210,6 +206,8 @@ class PeopleSearch extends Component {
       // For April Fools:
       relationshipStatusValue: '',
 
+      displayLargeImage: false,
+
       peopleSearchResults: null,
       header: '',
       searchButtons: '',
@@ -268,9 +266,10 @@ class PeopleSearch extends Component {
         // error
       }
 
-      this.updateURL();
       if (window.location.href.includes('?')) {
         this.loadSearchParamsFromURL();
+      } else {
+        this.updateURL();
       }
     }
 
@@ -353,6 +352,15 @@ class PeopleSearch extends Component {
       },
     });
   }
+
+  handleChangeDisplayLargeImages() {
+    this.setState({
+      ...this.state,
+      displayLargeImage: !this.state.displayLargeImage,
+    });
+    this.search();
+  }
+
   handleFirstNameInputChange = (e) => {
     this.setState({
       searchValues: { ...this.state.searchValues, firstName: e.target.value },
@@ -452,13 +460,23 @@ class PeopleSearch extends Component {
                   <PeopleSearchResult
                     key={person.AD_Username}
                     Person={person}
-                    size={matches ? 'full' : 'single'}
+                    size={
+                      !matches ? 'single' : this.state.displayLargeImage ? 'largeImages' : 'full'
+                    }
                   />
                 ))
               }
             </Media>
           ),
-          header: peopleSearchHeader,
+          header: (
+            <Media query="(min-width: 960px)">
+              {(matches) =>
+                matches && !this.state.displayLargeImage
+                  ? peopleSearchHeaderDesktop
+                  : peopleSearchHeaderMobile
+              }
+            </Media>
+          ),
         });
       }
       // will set url redundantly if loading from url, but not a major issue
@@ -573,7 +591,7 @@ class PeopleSearch extends Component {
     if (this.props.authentication) {
       PeopleSearchCheckbox = !this.state.loading ? (
         <Grid item xs={12} align="center">
-          <FormLabel component="legend">Type of People:</FormLabel>
+          <FormLabel component="legend">Include:</FormLabel>
           {this.state.personType && !this.state.personType.includes('alum') ? (
             <FormControlLabel
               control={
@@ -611,11 +629,29 @@ class PeopleSearch extends Component {
               label="Alumni"
             />
           ) : null}
+          <Media
+            query="(min-width: 960px)"
+            render={() => (
+              <Grid item xs={12} align="center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.state.displayLargeImage}
+                      onChange={() => {
+                        this.handleChangeDisplayLargeImages();
+                      }}
+                    />
+                  }
+                  label="Display Large Images"
+                />
+              </Grid>
+            )}
+          />
         </Grid>
       ) : (
         <Grid item xs={12} align="center">
-          <FormLabel component="legend">Type of People:</FormLabel>
-          <GordonLoader size={38} />
+          <FormLabel component="legend">Include:</FormLabel>
+          <GordonLoader size={79} />
         </Grid>
       );
 
@@ -757,7 +793,7 @@ class PeopleSearch extends Component {
                         />
                         <Grid item xs>
                           <FormControl fullWidth>
-                            <InputLabel>Hall</InputLabel>
+                            <InputLabel>Residence Hall</InputLabel>
                             <Select
                               value={this.state.searchValues.hall}
                               onChange={this.handleHallInputChange}
@@ -1078,7 +1114,7 @@ class PeopleSearch extends Component {
 
                 <CardActions>
                   <Grid container justify="center" spacing={2}>
-                    {/* Clear All Button */}
+                    {/* Reset Button */}
                     <Grid item xs={8} sm={'auto'}>
                       <Button
                         style={{ backgroundColor: gordonColors.neutral.lightGray }}
@@ -1112,6 +1148,7 @@ class PeopleSearch extends Component {
                               offDepExpanded: false,
                               header: '',
                               peopleSearchResults: null,
+                              displayLargeImage: false,
                             },
                             () => this.updateURL(),
                           );
