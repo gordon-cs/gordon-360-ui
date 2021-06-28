@@ -637,7 +637,7 @@ class PeopleSearch extends Component {
                         />
                         <Grid item xs>
                           <FormControl fullWidth>
-                            <InputLabel>Hall</InputLabel>
+                            <InputLabel>Residence Hall</InputLabel>
                             <Select
                               value={this.state.searchValues.hall}
                               onChange={this.handleHallInputChange}
