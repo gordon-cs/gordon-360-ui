@@ -1,9 +1,14 @@
 {
   "extends": "react-app",
   "rules": {
-    "valid-jsdoc": [ "error", {
-      "requireReturn": false,
-      "requireReturnType": true
-    }]
+    "valid-jsdoc": [
+      "error",
+      {
+        "requireReturn": false,
+        "requireReturnType": true
+      }
+    ],
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off"
   }
 }
