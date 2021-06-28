@@ -158,7 +158,7 @@ export default class PeopleSearchResult extends Component {
                 padding: '1rem',
               }}
             >
-              <Grid item>
+              <Grid item xs={6} container justify="flex-end">
                 <IMG
                   className="people-search-avatar-large"
                   src={`data:image/jpg;base64,${this.state.avatar}`}
@@ -167,14 +167,7 @@ export default class PeopleSearchResult extends Component {
                   placeholderColor="#eeeeee"
                 />
               </Grid>
-              <Grid
-                item
-                style={{
-                  // a set width is necessary to keep profile images in line
-                  // while maintaining center alignment
-                  width: '260px',
-                }}
-              >
+              <Grid item xs={6}>
                 <Typography variant="h5">{fullName}</Typography>
                 <Typography variant="body2">{nickname}</Typography>
                 <Typography variant="body2">{personClassJobTitle}</Typography>
