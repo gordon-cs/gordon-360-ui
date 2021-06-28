@@ -1144,7 +1144,7 @@ class PeopleSearch extends Component {
                 {this.state.header}
                 {this.state.peopleSearchResults}
               </Card>
-              {this.state.personType && this.state.personType.includes('stu') && (
+              {this.state.personType && !this.state.personType.includes('stu') && (
                 <ReactToPrint
                   trigger={() => {
                     return printPeopleSearchButton;
