@@ -408,8 +408,8 @@ const MemberListItem = ({
 
 MemberListItem.propTypes = {
   member: PropTypes.shape({
-    // MembershipID: PropTypes.number.isRequired,
-    // ActivityCode: PropTypes.string.isRequired,
+    MembershipID: PropTypes.number.isRequired,
+    ActivityCode: PropTypes.string.isRequired,
     //ActivityImage: Not sure what the prop type should be, but it will be required.
     SessionCode: PropTypes.string.isRequired,
     IDNumber: PropTypes.number.isRequired,
