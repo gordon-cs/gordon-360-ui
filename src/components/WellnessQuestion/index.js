@@ -81,36 +81,36 @@ const WellnessQuestion = ({ setStatus }) => {
                   </RadioGroup>
                 </FormControl>
               </Grid>
-              <Grid item>
-                <Collapse in={answer}>
-                  <Grid container direction="column" align="center" className={answer} spacing={1}>
-                    <Grid item>
-                      <Typography color="textPrimary" className="left">
-                        {answer === StatusColors.YELLOW
-                          ? wellnessQuestion.yesPrompt
-                          : wellnessQuestion.noPrompt}
-                        {answer === StatusColors.YELLOW ? (
-                          <a href={wellnessQuestion.link} target="_blank" rel="noopener noreferrer">
-                            this link
-                          </a>
-                        ) : null}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          answer === StatusColors.YELLOW ? setIsDialogOpen(true) : submitAnswer();
-                        }}
-                      >
-                        Submit
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Collapse>
-              </Grid>
             </Grid>
           </CardContent>
+          <Grid item>
+            <Collapse in={answer}>
+              <Grid container direction="column" align="center" className={answer} spacing={1}>
+                <Grid item>
+                  <Typography color="textPrimary" className="left">
+                    {answer === StatusColors.YELLOW
+                      ? wellnessQuestion.yesPrompt
+                      : wellnessQuestion.noPrompt}
+                    {answer === StatusColors.YELLOW ? (
+                      <a href={wellnessQuestion.link} target="_blank" rel="noopener noreferrer">
+                        this link
+                      </a>
+                    ) : null}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      answer === StatusColors.YELLOW ? setIsDialogOpen(true) : submitAnswer();
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </Grid>
+            </Collapse>
+          </Grid>
           <div className="wellness-header">Health Center (for students): (978) 867-4300</div>
           <SymptomsDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} setStatus={setStatus} />
         </Card>

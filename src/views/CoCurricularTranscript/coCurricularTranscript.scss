@@ -53,10 +53,10 @@
   }
 }
 
-/* @media print takes effect when in a print view (eg after hittig Print Co-Curricular Transcript).
+/* @media print takes effect when in a print view (eg after hitting Print Co-Curricular Transcript).
    Allows logo to only show when printing. */
 @media print {
-  body {
+  body header {
     // hides the header (with people search etc.)
     visibility: hidden;
   }

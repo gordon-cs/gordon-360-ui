@@ -8,8 +8,8 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 
 - [Getting Started](#getting-started)
 
-  - [Front End Development](#front-end)
-  - [Back End Development](#connect-local-backend-to-react)
+  - [Starting the Front End](#starting-the-front-end)
+  - [Connect to Local Backend](#connect-local-backend-to-react)
   - [Server Notes](#server-notes)
   - [Editor Recommendations](#editor-recommendations)
   - [Libraries](#libraries)
@@ -35,36 +35,34 @@ Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtua
 - Download the latest release of nvm from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
   - Extract the file and run it.
   - The installer will ask you where to install nvm. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
-  - After this, go to https://nodejs.org/en/ and look for the version labeled "lts" (which indicates the latest stable version).
+  - After this, go to https://nodejs.org/en/ and look for the version labeled "LTS" (which indicates the latest stable version).
   - Finally, run `nvm install <version>` where <version> is the version you found.
 
-#### Linux:
+#### Linux and Mac:
 
-- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm.
-- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`.
-- Then, tell nvm that you want to use that verion: `nvm use node`.
-  To use a specific Node version - usually the latest Long Term Support (LTS) version - replace `node` in the above commands with the desired version or alias, e.g. `nvm install 14.15.4` for version 14.15.4 or `nvm install --lts` for the latest LTS.
-
+- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm.  It may take a few minutes to run, and appear for a while to be hung. (After it finishes, you might need to close your terminal window and open another before nvm will work.)
+- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`.  Or, better yet, `nvm install --lts`, to use the current "long term support" version which is generally the most stable.
+- Then, tell nvm that you want to use that verion: `nvm use node`, or better yet, `nvm use --lts`.
+  (More generally, "node" and "--lts" in the above commands can be replaced by any specific version.)
+  
 #### Troubleshooting NVM
 
 - If a developer accidentally follows the above Windows instructions on CS-RDSH-02, the environment variable for NVM will be set by their installation to a path within their user directory. Thus, many if not all other users on the machine will lose access to NVM. To fix this, any user can open Powershell as administrator and run `choco install -y nvm`. (The `-y` option answers `yes` to any prompts that occur during the installation.) Then, in a Powershell terminal not running as admin, run `nvm install --lts`. Users should log out and back in to see the fix take effect. As usual, you can check if this worked by opening a terminal and running the command `nvm`. If the output says `Running version...`, then it is all set.
 
 - Sometimes, the .json package management files in develop are missing a dependency and `npm install` throws an error. The error says something like "This is most likely not a problem with npm itself...and is related to npm not being able to find a file". The best solution we have found is to delete the whole `node_modules` directory, delete the file `package-lock.json`, and then run `npm install`. Warning, the deletions can take several minutes because they are large files.
 
-<!-- ### Front End Development (Note) -->
-<h3 id="front-end">Front End Development (Note)</h3>
-
-When running the app, it will open in a browser at <http://localhost:3000>.
+### Starting the Front End
 
 After cloning this repo, and after any major changes to local code (like changing branches) run:
 
 - `npm install` (This gets the right packages installed in the directory)
 - `npm start` (This starts a local server, and prints the local URL)
+  
+When running the app, it will open in a browser at <http://localhost:3000>.
 
-<!--### Connect Local Backend To React-->
-<h3 id="connect-local-backend-to-react">Back End Development (Connect Local Backend To React)</h3>
+### Connect Local Backend To React
 
-By default, React will use the live server backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI repository, use the following steps:
+By default, React will use the live 360ApiTrain backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI, use the following steps:
 
 - After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-api-locally),
 
@@ -72,13 +70,12 @@ By default, React will use the live server backend to allow seamless front end d
   - Open the repo in Visual Studio Code (VS Code).
   - Open `setupProxy.js` in src:
 
-    - You will see two nearly identical function calls that start with `app.use(proxy...`. In both calls, change the string following the word `target` to reflect the URL of your local test backend. For example, if your test backend is operating on your local computer and listening on port 5555, you would change the string to say `'http://localhost:5555/'` in both.
+    - You will see three sets of two nearly identical `app.use(...)` function calls. Each set is marked with a comment explaining which environment they are for (`PROD` for `360Api`, `TRAIN` for `360ApiTrain`, and `LOCALHOST` for your local backend). Make sure that only the `LOCALHOST` lines are uncommented, and update the port number after `http:localhost:` to the port your local backend is listening on. For example, if your backend is listening on `localhost:9999`, then the `app.use` `target` should be `http://localhost:9999/`
 
-  - Open `.env.production`. Inside it, there should be a variable called `REACT_APP_API_URL`. If it exists, change it so that the line says `REACT_APP_API_URL=http://localhost:5555/` assuming the backend is listening on port 5555. If the variable doesn't exist, just add `REACT_APP_API_URL=http://localhost:5555/` to the bottom of the file.
-  - Do the same with `.env.development`.
+  - Open `.env.development` and set `REACT_APP_API_URL` equal to `http://localhost:9999/`, assuming `9999` is the port your backend is listening on.
+  - You do not need to change `.env.production`.
 
-- Now, you are ready to work on the frontend. Although, you may need to install npm, as shown [here](#getting-started).
-  Also, note that it is better to run npm start in a VS Code terminal. It then knows to warn you if someone is already using port 3000. Type `y` if it does say 'Something is already running on port 3000...'.
+- Now, you are ready to work on the frontend.
 
 - In some scenarios, (for example, when someone has made custom changes to the backend which you also want to use) it is preferable to skip setting up your own backend and connect to someone else's. To do this, make sure you are on the virtual machine. Then, just follow the above directions, replacing each instance of the port number you chose with the port number on which their backend is listening.
 
@@ -328,7 +325,7 @@ Similar to component folders, a view folder can have its own `components` folder
 
 ## Environment Variables
 
-Environment-specific variables are located in the root directory of the project in the files `.env` and `.env.production`. `.env` contains variables for local development and testing. `.env.production` contains overrides of those variables specific to the production environments (360 and 360Train).
+Environment-specific variables are located in the root directory of the project in the files `.env`, `.env.development` and `.env.production`. `.env` contains variables generic environment variables that are the same in train and production. `.env.development` contains variables for local development and testing. `.env.production` contains overrides of those variables specific to the production environments (360 and 360Train).
 
 To declare variables that should not be checked in to version control, create a file in the root directory called `.env.local`. This file will be ignored by git.
 
@@ -399,27 +396,17 @@ In the unusual case that Train or Production have not been automatically deploye
 
 ## Known Issues
 
-- Cannot login to 360 from Edge due to an authentication error that is caused from http request failing to return a token to edge which causes "Invalid Argument" error to be displayed
-
-- Internet Explorer does not work with 360 and never will due to the fact that IE is too old to support features that 360 currently uses
-
-- There is a problem with the first login hanging after the backend starts up, this might be due to an authentication error but refreshing is currently the only fix
-
-- Edge Authentication - Fails at creation of request object in getAuth() in auth.js service. Incompatability with URLSearchParams was fixed with an update to Edge in April, but different problem with request object must exist still.
-
 - The 'edit involvement' and 'change image' dialog boxes, accessible through the admin view of an involvement profile, are messy. Refer to the CSS styling and replacement of Material UI Grid in views/IDUploader/IDUploader.scss and ''/index.js for a proven fix.
 
-- ID and photo uploader dialog boxes are a bit squished for screens as small as iPhone 5's.
+- ID and photo uploader dialog boxes are rather compressed for screens as small as iPhone 5's.
 
 - An admin is able to remove themselves (on admin view), which causes major issues.
 
 - Staff-timesheets is almost working, with the exception of the edit shift and remove shift function. the API endpoints are all set up and seem to be working to send and get data. The add and save shift functions work like expected but the submit function has yet to be tested with a supervisor. In order to address these issues we have to make sure that we re work the ui in order to make sure that we are sending all the necessary info to edit and delete a saved shift. Previously it was thought that we would not have to change the way that the front end worked and we would simply have to integrate the backend for staff time sheets into the jobs controller. This proved to be wrong. It seems that there are more things that we have not accounted for that a staff's shift has and a student does not. Due to lack of testing and time we were not able to find the necessary changes that need to be made, however, we do know that it revolved around the fact that staff has an extra variable called HOURS_TYPE. We accounted for the variable in our submit and save shift functions in our back end and front end, as we expected that to be the case.
-
-- On the ApartApp admin page, the sort feature of the applications table is not yet working.
 
 ## History
 
 - The student timesheets project was done as a senior project by a trio of seniors Nathanial Rudenberg, Adam Princiotta, and Jacob Bradley. The handoff documentation for this project was a revision and update to the existing documentation which is in the [Connect Local Backend to React](#connect-local-backend-to-react) section of the README. The design document can be found [here](https://docs.google.com/document/d/1CepyCiMzBXQVM--JwKKstniU_H1TodzxHLuCqcHxLjk/edit?usp=sharing)
 - [Student Timesheets Final Presentation](https://docs.google.com/presentation/d/162V-DLuaEUyHDS2Diu09k5f4Tpo2iuoMtIDUyowa7eQ/edit?usp=sharing)
 
-- The apartment applications project ~was done as~ is a senior project by Josh Rogers, Christian Kunis, Gahngnin Kim, and Nick Noormand. The design document for the UI can be found [here](https://docs.google.com/document/d/16gvjNApyNMJbqjnwv2DSP0EvY4JJdjVZZAiST3MAZEo/edit?usp=sharing)
+- The apartment applications project was done as a senior project by Josh Rogers, Christian Kunis, Gahngnin Kim, and Nick Noormand. The design document for the UI can be found [here](https://docs.google.com/document/d/16gvjNApyNMJbqjnwv2DSP0EvY4JJdjVZZAiST3MAZEo/edit?usp=sharing)

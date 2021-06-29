@@ -1,12 +1,21 @@
 @import '../../../../vars';
 
-div.guest-landing-page {
+div.gw-card {
+  background-color: $primary-blue;
+  color: $neutral-white;
+  opacity: 0.92;
+}
+
+.gw-container {
+  padding: 1em;
+}
+
+.gw-background {
   background: url(./images/campusFull.jpg) no-repeat center center fixed;
   background-size: cover;
-  margin: -1em;
+  margin: -1rem;
   min-height: 100vh;
   min-width: 100vw;
-  padding: 1em;
 
   @media (min-width: 3840px) {
     // Larger than 4K
@@ -37,10 +46,4 @@ div.guest-landing-page {
     // 400 pixels or smaller (smaller mobile device)
     background-image: url(./images/campusMobileSM.jpg);
   }
-}
-
-.MuiCard-root.guest-welcome-card {
-  background-color: $primary-blue;
-  color: $neutral-white;
-  opacity: 0.92;
 }

@@ -3,6 +3,7 @@ import { gordonColors } from 'theme';
 import versionService from 'services/version';
 import { projectName } from 'project-name';
 import contributors from './contributors.json';
+import origins from './origins.json';
 import './about.css';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@material-ui/core';
@@ -62,6 +63,24 @@ const About = () => {
 
             <Card>
               <CardHeader className="about-header" title="Origins" />
+              <CardContent>
+                {origins.map((section) => {
+                  return (
+                    <React.Fragment key={section.title}>
+                      <Typography variant="subtitle1" gutterBottom>
+                        <strong>{section.title}</strong>
+                      </Typography>
+                      <Typography variant="body2" paragraph className="about-Origins">
+                        {section.body}
+                      </Typography>
+                    </React.Fragment>
+                  );
+                })}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="about-header" title="GoCo Tech Lab Developers" />
               <CardContent>
                 {contributors.map((section) => {
                   return (

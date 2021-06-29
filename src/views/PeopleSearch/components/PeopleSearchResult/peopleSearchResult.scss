@@ -1,5 +1,17 @@
 @import '../../../../vars';
 
+.people-search-avatar-mobile {
+  border-radius: 0.5rem;
+  height: 90px;
+  width: 90px;
+}
+
+.people-search-avatar-large {
+  border-radius: 0.5rem;
+  height: 200px;
+  width: 200px;
+}
+
 .people-search-avatar {
   border-radius: 0.5rem;
   height: 50px;
