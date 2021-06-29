@@ -32,7 +32,7 @@ const InstructionsCard = () => {
   }, []);
 
   const rows = [
-    { description: 'Current Freshman', points: 1 },
+    { description: 'Current First Year', points: 1 },
     { description: 'Current Sophomore', points: 2 },
     { description: 'Current Junior', points: 3 },
     { description: 'Current Senior', points: 4 },

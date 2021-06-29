@@ -1,6 +1,6 @@
-//Main apartment application page
 import React, { useState, useEffect } from 'react';
 import { Grid, Card, CardContent, Button } from '@material-ui/core/';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import StaffMenu from './components/StaffMenu';
 import StudentApplication from './components/StudentApplication';
@@ -9,6 +9,7 @@ import housing from 'services/housing';
 import user from 'services/user';
 import './apartmentApp.css';
 import { NotFoundError } from 'services/error';
+import GordonOffline from 'components/GordonOffline';
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -69,34 +70,7 @@ const ApartApp = ({ authentication }) => {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
     // The user is not logged in
-    return (
-      <Grid container justify="center">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <h1>You are not logged in.</h1>
-              <br />
-              <h4>You must be logged in to use the Apartment Applications page.</h4>
-              <br />
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Login
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    return <GordonUnauthorized feature={'the Apartment Application page'} />;
   } else if (isOnline) {
     if (canUseStaff) {
       return (
@@ -143,49 +117,7 @@ const ApartApp = ({ authentication }) => {
       );
     }
   } else {
-    // If the network is offline
-    return (
-      <Grid container justify="center">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <Grid
-                item
-                xs={2}
-                alignItems="center"
-                style={{
-                  display: 'block',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-              >
-                <img src={require(`${'../../NoConnection.svg'}`)} alt="Internet Connection Lost" />
-              </Grid>
-              <br />
-              <h1>Please Re-establish Connection</h1>
-              <h4>Viewing Apartment Applications has been deactivated due to loss of network.</h4>
-              <br />
-              <br />
-              <Button
-                className="back-home-button"
-                color="primary"
-                variant="outlined"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Back To Home
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    return <GordonOffline feature="Apartment Applications" />;
   }
 };
 

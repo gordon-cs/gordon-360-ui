@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
 import HealthStatus from './components/HealthStatus';
-import Login from 'views/Login';
+import Login from 'components/LoginDialogue';
 import wellness from 'services/wellness';
 import user from 'services/user';
 
@@ -32,10 +32,8 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
 
     if (status && status.IsValid) {
       setCurrentStatus(status.Status);
-      const [
-        { FirstName, LastName },
-        { def: defaultImage, pref: preferredImage },
-      ] = await Promise.all([user.getProfileInfo(), user.getImage()]);
+      const [{ FirstName, LastName }, { def: defaultImage, pref: preferredImage }] =
+        await Promise.all([user.getProfileInfo(), user.getImage()]);
 
       setUsername(`${FirstName} ${LastName}`);
       setImage(preferredImage ?? defaultImage);

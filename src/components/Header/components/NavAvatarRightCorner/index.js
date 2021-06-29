@@ -2,7 +2,6 @@ import { Avatar, IconButton, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { gordonColors } from 'theme';
 import React, { useState, useEffect } from 'react';
-import './nav-avatar-right-corner.css';
 import user from 'services/user';
 
 /**
