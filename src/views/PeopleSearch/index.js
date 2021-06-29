@@ -19,6 +19,7 @@ import {
   Select,
   TextField,
   Typography,
+  Fab,
   withStyles,
 } from '@material-ui/core';
 import Media from 'react-media';
@@ -31,6 +32,7 @@ import {
   FaBook,
   FaGlobeAmericas,
   FaSchool,
+  FaPrint,
 } from 'react-icons/fa';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
@@ -39,6 +41,7 @@ import user from 'services/user';
 import { gordonColors } from 'theme';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import GordonLoader from 'components/Loader';
+import ReactToPrint from 'react-to-print';
 
 const styles = {
   FontAwesome: {
@@ -75,6 +78,13 @@ const styles = {
   colorChecked: {},
   icon: {
     color: gordonColors.neutral.grayShades[900],
+  },
+  printPeopleSearchButton: {
+    position: 'fixed',
+    margin: 0,
+    bottom: 'min(5vw, 4rem)',
+    right: 'max(2rem, 5vw)',
+    zIndex: 1,
   },
 };
 
@@ -134,6 +144,23 @@ const peopleSearchHeaderMobile = (
         </Typography>
       </Grid>
     </Grid>
+  </div>
+);
+
+const printPeopleSearchButton = (
+  <Fab variant="extended" color="primary" style={styles.printPeopleSearchButton}>
+    <FaPrint />
+    <Media query="(min-width: 960px)">
+      <span style={styles.printPeopleSearchButton__text}>&nbsp;&nbsp;Print Results</span>
+    </Media>
+  </Fab>
+);
+
+const searchPageTitle = (
+  <div align="center">
+    Search the
+    <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+    Community
   </div>
 );
 
@@ -336,12 +363,12 @@ class PeopleSearch extends Component {
 
   handleFirstNameInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, firstName: e.target.value.trim() },
+      searchValues: { ...this.state.searchValues, firstName: e.target.value },
     });
   };
   handleLastNameInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, lastName: e.target.value.trim() },
+      searchValues: { ...this.state.searchValues, lastName: e.target.value },
     });
   };
   handleMajorInputChange = (e) => {
@@ -366,7 +393,7 @@ class PeopleSearch extends Component {
   };
   handleHomeCityInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, homeCity: e.target.value.trim() },
+      searchValues: { ...this.state.searchValues, homeCity: e.target.value },
     });
   };
   handleStateInputChange = (e) => {
@@ -394,7 +421,9 @@ class PeopleSearch extends Component {
   canSearch = () => {
     const { includeStudent, includeFacStaff, includeAlumni, ...valuesNeededForSearch } =
       this.state.searchValues;
-    let result = Object.values(valuesNeededForSearch).some((x) => x);
+    let result = Object.values(valuesNeededForSearch)
+      .map((x) => x.trim())
+      .some((x) => x);
     return result;
   };
 
@@ -408,6 +437,12 @@ class PeopleSearch extends Component {
         academicsExpanded: false,
         homeExpanded: false,
         offDepExpanded: false,
+        searchValues: {
+          ...this.state.searchValues,
+          firstName: this.state.searchValues.firstName?.trim(),
+          lastName: this.state.searchValues.lastName?.trim(),
+          homeCity: this.state.searchValues.homeCity?.trim(),
+        },
       });
       let peopleSearchResults = await goStalk.search(...Object.values(this.state.searchValues));
 
@@ -444,6 +479,8 @@ class PeopleSearch extends Component {
           ),
         });
       }
+      // will set url redundantly if loading from url, but not a major issue
+      this.updateURL();
     }
   }
 
@@ -461,13 +498,27 @@ class PeopleSearch extends Component {
   handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
       this.search();
-      this.updateURL();
     }
   };
 
   render() {
     const { classes } = this.props;
     let PeopleSearchCheckbox;
+
+    const printPeopleSearchHeader = (
+      <div class="test" align="center" style={{ display: 'none' }}>
+        {/* show on print only */}
+        <style>{`@media print {.test{display: block !important;}}`}</style>
+
+        <h1>{searchPageTitle}</h1>
+        <span>
+          Filters:{' '}
+          {window.location.search.substring(1).replaceAll('&', ', ').replaceAll('%20', ' ')}
+        </span>
+        <br />
+        <br />
+      </div>
+    );
 
     const majorOptions = this.state.majors.map((major) => (
       <MenuItem value={major} key={major}>
@@ -680,13 +731,6 @@ class PeopleSearch extends Component {
 
       // Creates the PeopleSearch page depending on the status of the network found in local storage
       let PeopleSearch;
-      let searchPageTitle = (
-        <div align="center">
-          Search the
-          <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
-          Community
-        </div>
-      );
 
       if (networkStatus === 'online') {
         PeopleSearch = (
@@ -1119,7 +1163,6 @@ class PeopleSearch extends Component {
                         color="primary"
                         onClick={() => {
                           this.search();
-                          this.updateURL();
                         }}
                         fullWidth
                         variant="contained"
@@ -1133,10 +1176,19 @@ class PeopleSearch extends Component {
                 <br />
               </Card>
               <br />
-              <Card>
+              <Card ref={(el) => (this.componentRef = el)}>
+                {printPeopleSearchHeader}
                 {this.state.header}
                 {this.state.peopleSearchResults}
               </Card>
+              {this.state.personType && !this.state.personType.includes('stu') && (
+                <ReactToPrint
+                  trigger={() => {
+                    return printPeopleSearchButton;
+                  }}
+                  content={() => this.componentRef}
+                />
+              )}
             </Grid>
           </Grid>
         );
