@@ -9,6 +9,7 @@ import housing from 'services/housing';
 import user from 'services/user';
 import './apartmentApp.css';
 import { NotFoundError } from 'services/error';
+import GordonOffline from 'components/GordonOffline';
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -116,49 +117,7 @@ const ApartApp = ({ authentication }) => {
       );
     }
   } else {
-    // If the network is offline
-    return (
-      <Grid container justify="center">
-        <Grid item xs={12} md={8}>
-          <Card>
-            <CardContent
-              style={{
-                margin: 'auto',
-                textAlign: 'center',
-              }}
-            >
-              <Grid
-                item
-                xs={2}
-                alignItems="center"
-                style={{
-                  display: 'block',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-              >
-                <img src={require(`${'../../NoConnection.svg'}`)} alt="Internet Connection Lost" />
-              </Grid>
-              <br />
-              <h1>Please Re-establish Connection</h1>
-              <h4>Viewing Apartment Applications has been deactivated due to loss of network.</h4>
-              <br />
-              <br />
-              <Button
-                className="back-home-button"
-                color="primary"
-                variant="outlined"
-                onClick={() => {
-                  window.location.pathname = '';
-                }}
-              >
-                Back To Home
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-    );
+    return <GordonOffline feature="Apartment Applications" />;
   }
 };
 

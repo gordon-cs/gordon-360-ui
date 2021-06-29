@@ -1,3 +1,4 @@
+export { default as EmergencyInfoList } from './EmergencyInfoList';
 export { default as Identification } from './Identification';
 export { default as MembershipsList } from './MembershipsList';
 export { default as OfficeInfoList } from './OfficeInfoList';

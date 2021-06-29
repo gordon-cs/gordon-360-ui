@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonOffline from 'components/GordonOffline';
 import user from 'services/user';
 import GordonLoader from 'components/Loader';
 import { Redirect } from 'react-router';
 import { useParams } from 'react-router-dom';
-import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
-import { Grid, Card, CardContent, Button } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import Profile from 'components/Profile';
 
@@ -46,48 +45,7 @@ const PublicProfile = ({ authentication }) => {
         return <Profile profile={profile} myProf={false} />;
       }
     } else {
-      return (
-        <Grid container justify="center" spacing={2}>
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <Grid
-                  item
-                  xs={2}
-                  alignItems="center"
-                  style={{
-                    display: 'block',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <NoConnectionImage />
-                </Grid>
-                <br />
-                <h1>Please Re-establish Connection</h1>
-                <h4>Viewing a public profile has been deactivated due to loss of network.</h4>
-                <br />
-                <br />
-                <Button
-                  color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
+      return <GordonOffline feature="Viewing a public profile" />;
     }
   } else {
     return <GordonUnauthorized feature={'this profile'} />;

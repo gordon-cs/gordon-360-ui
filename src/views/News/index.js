@@ -629,7 +629,6 @@ const StudentNews = (props) => {
                       </DialogActions>
                     </div>
                   </Grid>
-
                   <Grid item>
                     {/* SUBMISSION GUIDELINES */}
                     <Typography variant="caption" color="textSecondary" display="block">
@@ -689,7 +688,6 @@ const StudentNews = (props) => {
           </Grid>
         </>
       );
-
       return newsJSX;
     }
     // If the user is offline
