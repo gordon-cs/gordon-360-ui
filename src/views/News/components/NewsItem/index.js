@@ -42,24 +42,19 @@ const NewsItem = ({
     posting.dayPosted = <i>pending approval...</i>;
   }
 
-  let authorProfileLink;
-  if (!isOnline || unapproved) {
-    // offline or unapproved -> hide author profile link
-    authorProfileLink = (
-      <Typography variant="h6" className="news-column" style={{ textTransform: 'capitalize' }}>
-        {posting.author}
-      </Typography>
-    );
-  } else {
-    // online and approved -> show author profile link
-    authorProfileLink = (
+  const author = (
+    <Typography variant="h6" className="news-column" style={{ textTransform: 'capitalize' }}>
+      {posting.author}
+    </Typography>
+  );
+  const authorProfileLink =
+    !isOnline || unapproved ? (
+      author
+    ) : (
       <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
-        <Typography variant="h6" className="news-column" style={{ textTransform: 'capitalize' }}>
-          {posting.author}
-        </Typography>
+        {author}
       </Link>
     );
-  }
 
   // Only show the edit button if the current user is the author of the posting
   // AND posting is unapproved
