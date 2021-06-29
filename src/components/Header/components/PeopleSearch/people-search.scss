@@ -90,7 +90,6 @@
   }
 
   @media (min-width: $break-xs) {
-    //margin-left: -10rem;
     .people-search-root {
       width: 8rem;
       &:focus-within {
@@ -100,7 +99,6 @@
   }
 
   @media (min-width: 400px) {
-    //margin-left: -8rem;
     .people-search-root {
       width: 10rem;
       &:focus-within {
@@ -117,20 +115,6 @@
     .people-search-dropdown {
       right: 28px;
     }
-  }
-
-  @media (min-width: $break-sm) {
-    width: auto;
-    //margin-left: -18px;
-    .people-search-root {
-      width: 12rem;
-      &:focus-within {
-        width: 14.5rem;
-      }
-    }
-  }
-
-  @media (min-width: $break-sm) {
     .text-field {
       width: 14rem;
     }
@@ -145,32 +129,6 @@
 
   @media (min-width: $break-md) {
     .text-field {
-      width: 11.5rem;
-    }
-    .people-search-root {
-      align-self: flex-end;
-      width: 13rem;
-      &:focus-within {
-        width: 15rem;
-      }
-    }
-    .people-search-suggestion,
-    .people-search-suggestion-selected {
-      width: 12.25rem;
-    }
-  }
-  @media (min-width: 960px) {
-    .people-search-suggestion,
-    .people-search-suggestion-selected {
-      width: 8.5rem;
-    }
-    .people-search-dropdown {
-      right: auto;
-    }
-  }
-
-  @media (min-width: 1000px) {
-    .text-field {
       width: 14rem;
     }
     .people-search-root {
@@ -184,6 +142,9 @@
     .people-search-suggestion-selected {
       width: 11.15rem;
     }
+    .people-search-dropdown {
+      right: auto;
+    }
   }
 
   .people-search-root {
@@ -191,7 +152,6 @@
     color: inherit;
     background: $primary-blue;
     transition: box-shadow 0.3s, width 0.3s;
-    //margin-right: 0.75rem;
     border-radius: 4px;
     border: 1px solid $neutral-white;
     padding: 2px 10px;

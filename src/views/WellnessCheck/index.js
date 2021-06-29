@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
 import HealthStatus from './components/HealthStatus';
-import Login from 'views/Login';
+import Login from 'components/LoginDialogue';
 import wellness from 'services/wellness';
 import user from 'services/user';
 

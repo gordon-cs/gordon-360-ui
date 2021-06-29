@@ -213,7 +213,7 @@ function formatApplicantInfo(applicant) {
 
   // The following 'Class' property is needed for the staff page
   if (applicant.Class === null || Number(applicant.Class)) {
-    // Use converted Class from number ('1', '2', '3', ...) to words ('Freshman', 'Sophomore', ...)
+    // Use converted Class from number ('1', '2', '3', ...) to words ('First Year', 'Sophomore', ...)
     applicant.Class = applicant.Profile.Class;
   }
 

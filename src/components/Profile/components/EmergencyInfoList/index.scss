@@ -1,6 +1,6 @@
 @import '../../../../vars';
 
-.personal-info-list {
+.emrg-info-list {
   &-header {
     background-color: $primary-blue;
     color: $neutral-white;
@@ -24,7 +24,7 @@
   }
 }
 
-.my-personal-info {
+.my-emrg-info {
   & .private {
     color: $neutral-black-opacity40;
 
@@ -35,7 +35,7 @@
   }
 }
 
-.public-personal-info {
+.public-emrg-info {
   & .private {
     color: $secondary-red;
 
@@ -50,7 +50,7 @@
 }
 
 @media (max-width: $break-sm) {
-  .personal-info-list {
+  .emrg-info-list {
     &-header {
       padding-left: 0rem;
       justify-content: center;

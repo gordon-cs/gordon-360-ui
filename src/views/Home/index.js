@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
+import GuestWelcome from './components/GuestWelcome';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
 import DaysLeft from './components/DaysLeft';
@@ -9,7 +10,6 @@ import NewsCard from './components/NewsCard';
 import user from 'services/user';
 import wellness from 'services/wellness';
 import storage from 'services/storage';
-import GuestWelcome from './components/GuestWelcome';
 import './home.css';
 import { Grid } from '@material-ui/core';
 

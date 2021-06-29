@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
+import user from 'services/user';
 
 import {
+  EmergencyInfoList,
   Identification,
   MembershipsList,
   OfficeInfoList,
@@ -16,6 +18,7 @@ const Profile = ({ profile, myProf }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const isOnline = useNetworkStatus();
   const network = isOnline ? 'online' : 'offline';
+  const isPolice = user.getLocalInfo().college_role === 'gordon police';
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -56,6 +59,7 @@ const Profile = ({ profile, myProf }) => {
             network={network}
             createSnackbar={createSnackbar}
           />
+          {isPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
         </Grid>
       </Grid>
 

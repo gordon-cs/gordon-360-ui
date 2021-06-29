@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonOffline from 'components/GordonOffline';
 import {
   Button,
   Card,
@@ -7,6 +9,7 @@ import {
   CardActions,
   Checkbox,
   Collapse,
+  FormLabel,
   FormControl,
   FormControlLabel,
   Grid,
@@ -16,7 +19,9 @@ import {
   Select,
   TextField,
   Typography,
+  Fab,
   withStyles,
+  Switch,
 } from '@material-ui/core';
 import Media from 'react-media';
 import PersonIcon from '@material-ui/icons/Person';
@@ -28,16 +33,16 @@ import {
   FaBook,
   FaGlobeAmericas,
   FaSchool,
+  FaPrint,
 } from 'react-icons/fa';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
 import goStalk from 'services/goStalk';
 import user from 'services/user';
 import { gordonColors } from 'theme';
-import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import PeopleSearchResult from './components/PeopleSearchResult';
-import MobilePeopleSearchResult from './components/MobilePeopleSearchResult';
 import GordonLoader from 'components/Loader';
+import ReactToPrint from 'react-to-print';
 
 const styles = {
   FontAwesome: {
@@ -75,6 +80,13 @@ const styles = {
   icon: {
     color: gordonColors.neutral.grayShades[900],
   },
+  printPeopleSearchButton: {
+    position: 'fixed',
+    margin: 0,
+    bottom: 'min(5vw, 4rem)',
+    right: 'max(2rem, 5vw)',
+    zIndex: 1,
+  },
 };
 
 const noResultsCard = (
@@ -89,55 +101,68 @@ const noResultsCard = (
   </Grid>
 );
 
-const peopleSearchHeader = (
-  <Media query="(min-width: 960px)">
-    {(matches) =>
-      matches ? (
-        <div style={styles.headerStyle}>
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={1} />
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                FIRST NAME
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                LAST NAME
-              </Typography>
-            </Grid>
-            <Grid item xs={1}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                TYPE
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                CLASS/JOB TITLE
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="body2" style={styles.headerStyle}>
-                @GORDON.EDU
-                <br />
-                MAIL LOCATION
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      ) : (
-        <div style={styles.headerStyle}>
-          <Grid container direction="row" justify="center">
-            <Grid item>
-              <Typography variant="body2" style={styles.headerStyle}>
-                RESULTS
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      )
-    }
-  </Media>
+const peopleSearchHeaderDesktop = (
+  <div style={styles.headerStyle}>
+    <Grid container direction="row" alignItems="center">
+      <Grid item xs={1} />
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          FIRST NAME
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          LAST NAME
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle} noWrap>
+          DESCRIPTION
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          CLASS/JOB TITLE
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" style={styles.headerStyle}>
+          @GORDON.EDU
+          <br />
+          MAIL LOCATION
+        </Typography>
+      </Grid>
+    </Grid>
+  </div>
+);
+
+const peopleSearchHeaderMobile = (
+  <div style={styles.headerStyle}>
+    <Grid container direction="row" justify="center">
+      <Grid item>
+        <Typography variant="body2" style={styles.headerStyle}>
+          RESULTS
+        </Typography>
+      </Grid>
+    </Grid>
+  </div>
+);
+
+const printPeopleSearchButton = (
+  <Fab variant="extended" color="primary" style={styles.printPeopleSearchButton}>
+    <FaPrint />
+    <Media query="(min-width: 960px)">
+      <span style={styles.printPeopleSearchButton__text}>&nbsp;&nbsp;Print Results</span>
+    </Media>
+  </Fab>
+);
+
+const searchPageTitle = (
+  <div align="center">
+    Search the
+    <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+    Community
+  </div>
 );
 
 class PeopleSearch extends Component {
@@ -161,6 +186,8 @@ class PeopleSearch extends Component {
 
       // These values *must* be in the same order as services/goStalk.js search function
       searchValues: {
+        includeStudent: true,
+        includeFacStaff: true,
         includeAlumni: false,
         firstName: '',
         lastName: '',
@@ -175,8 +202,12 @@ class PeopleSearch extends Component {
         building: '',
       },
 
+      loading: true,
+
       // For April Fools:
       relationshipStatusValue: '',
+
+      displayLargeImage: false,
 
       peopleSearchResults: null,
       header: '',
@@ -197,6 +228,7 @@ class PeopleSearch extends Component {
   }
 
   async componentDidMount() {
+    // this.setState({ loading: true });
     if (this.props.authentication) {
       try {
         const profile = await user.getProfileInfo();
@@ -221,14 +253,28 @@ class PeopleSearch extends Component {
           buildings,
           personType,
         });
+
+        if (personType.includes('alum')) {
+          this.setState({
+            searchValues: {
+              ...this.state.searchValues,
+              includeStudent: false,
+              includeAlumni: true,
+            },
+          });
+        }
       } catch (error) {
         // error
       }
 
       if (window.location.href.includes('?')) {
         this.loadSearchParamsFromURL();
+      } else {
+        this.updateURL();
       }
     }
+
+    this.setState({ loading: false });
   }
 
   async loadSearchParamsFromURL() {
@@ -236,6 +282,8 @@ class PeopleSearch extends Component {
 
     this.setState({
       searchValues: {
+        includeStudent: urlParams.get('includeStudent') || false,
+        includeFacStaff: urlParams.get('includeFacStaff') || false,
         includeAlumni: urlParams.get('includeAlumni') || false,
         firstName: urlParams.get('firstName')?.trim() || '',
         lastName: urlParams.get('lastName')?.trim() || '',
@@ -281,11 +329,39 @@ class PeopleSearch extends Component {
       relationshipStatusValue: e.target.value,
     });
   };
-  handleChangeIncludeAlumni() {
+  handleChangeIncludeStudent() {
     this.setState({
-      searchValues: { ...this.state.searchValues, includeAlumni: !this.state.includeAlumni },
+      searchValues: {
+        ...this.state.searchValues,
+        includeStudent: !this.state.searchValues.includeStudent,
+      },
     });
   }
+  handleChangeIncludeFacStaff() {
+    this.setState({
+      searchValues: {
+        ...this.state.searchValues,
+        includeFacStaff: !this.state.searchValues.includeFacStaff,
+      },
+    });
+  }
+  handleChangeIncludeAlumni() {
+    this.setState({
+      searchValues: {
+        ...this.state.searchValues,
+        includeAlumni: !this.state.searchValues.includeAlumni,
+      },
+    });
+  }
+
+  handleChangeDisplayLargeImages() {
+    this.setState({
+      ...this.state,
+      displayLargeImage: !this.state.displayLargeImage,
+    });
+    this.search();
+  }
+
   handleFirstNameInputChange = (e) => {
     this.setState({
       searchValues: { ...this.state.searchValues, firstName: e.target.value },
@@ -311,9 +387,9 @@ class PeopleSearch extends Component {
       searchValues: { ...this.state.searchValues, hall: e.target.value },
     });
   };
-  handleClassTypeInputChange = (event) => {
+  handleClassTypeInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, classType: event.target.value },
+      searchValues: { ...this.state.searchValues, classType: e.target.value },
     });
   };
   handleHomeCityInputChange = (e) => {
@@ -342,8 +418,18 @@ class PeopleSearch extends Component {
     });
   };
 
+  //This is to prevent search from blank
+  canSearch = () => {
+    const { includeStudent, includeFacStaff, includeAlumni, ...valuesNeededForSearch } =
+      this.state.searchValues;
+    let result = Object.values(valuesNeededForSearch)
+      .map((x) => x.toString().trim())
+      .some((x) => x);
+    return result;
+  };
+
   async search() {
-    if (!Object.values(this.state.searchValues).some((x) => x)) {
+    if (!this.canSearch()) {
       // do not search, only search if there are some non-blank non-false values
     } else {
       this.setState({
@@ -352,6 +438,12 @@ class PeopleSearch extends Component {
         academicsExpanded: false,
         homeExpanded: false,
         offDepExpanded: false,
+        searchValues: {
+          ...this.state.searchValues,
+          firstName: this.state.searchValues.firstName?.trim(),
+          lastName: this.state.searchValues.lastName?.trim(),
+          homeCity: this.state.searchValues.homeCity?.trim(),
+        },
       });
       let peopleSearchResults = await goStalk.search(...Object.values(this.state.searchValues));
 
@@ -365,26 +457,38 @@ class PeopleSearch extends Component {
           peopleSearchResults: (
             <Media query="(min-width: 960px)">
               {(matches) =>
-                matches
-                  ? peopleSearchResults.map((person) => (
-                      <PeopleSearchResult key={person.AD_Username} Person={person} />
-                    ))
-                  : peopleSearchResults.map((person) => (
-                      <MobilePeopleSearchResult key={person.AD_Username} Person={person} />
-                    ))
+                peopleSearchResults.map((person) => (
+                  <PeopleSearchResult
+                    key={person.AD_Username}
+                    Person={person}
+                    size={
+                      !matches ? 'single' : this.state.displayLargeImage ? 'largeImages' : 'full'
+                    }
+                  />
+                ))
               }
             </Media>
           ),
-          header: peopleSearchHeader,
+          header: (
+            <Media query="(min-width: 960px)">
+              {(matches) =>
+                matches && !this.state.displayLargeImage
+                  ? peopleSearchHeaderDesktop
+                  : peopleSearchHeaderMobile
+              }
+            </Media>
+          ),
         });
       }
+      // will set url redundantly if loading from url, but not a major issue
+      this.updateURL();
     }
   }
 
   async updateURL() {
     const searchParameters = Object.entries(this.state.searchValues)
-      .filter((n) => n) // removes empty strings
-      .map(([key, value]) => (value ? `${key}=${value}` : '')) // [ 'firstName=value', 'state=texas']
+      .filter(([, value]) => value) // removes empty values
+      .map(([key, value]) => `${key}=${value}`) // [ 'firstName=value', 'state=texas']
       .join('&'); // 'firstName=value&state=texas'
 
     if (this.props.history.location.search !== searchParameters) {
@@ -395,13 +499,27 @@ class PeopleSearch extends Component {
   handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
       this.search();
-      this.updateURL();
     }
   };
 
   render() {
     const { classes } = this.props;
-    let includeAlumniCheckbox;
+    let PeopleSearchCheckbox;
+
+    const printPeopleSearchHeader = (
+      <div class="test" align="center" style={{ display: 'none' }}>
+        {/* show on print only */}
+        <style>{`@media print {.test{display: block !important;}}`}</style>
+
+        <h1>{searchPageTitle}</h1>
+        <span>
+          Filters:{' '}
+          {window.location.search.substring(1).replaceAll('&', ', ').replaceAll('%20', ' ')}
+        </span>
+        <br />
+        <br />
+      </div>
+    );
 
     const majorOptions = this.state.majors.map((major) => (
       <MenuItem value={major} key={major}>
@@ -472,23 +590,60 @@ class PeopleSearch extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.props.authentication) {
-      if (this.state.personType && !this.state.personType.includes('stu')) {
-        includeAlumniCheckbox = (
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.searchValues.includeAlumni}
-                  onChange={() => {
-                    this.handleChangeIncludeAlumni();
-                  }}
+      PeopleSearchCheckbox = (
+        <Grid item xs={12} lg={6} align="center">
+          <Grid container alignItems="center" justify="center">
+            <Grid item>
+              <FormLabel component="label">Include: &nbsp;</FormLabel>
+            </Grid>
+            {this.state.loading ? (
+              <Grid item>
+                <GordonLoader size={20} />
+              </Grid>
+            ) : (
+              <Grid item>
+                {this.state.personType && !this.state.personType.includes('alum') ? (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.searchValues.includeStudent}
+                        onChange={() => {
+                          this.handleChangeIncludeStudent();
+                        }}
+                      />
+                    }
+                    label="Student"
+                  />
+                ) : null}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={this.state.searchValues.includeFacStaff}
+                      onChange={() => {
+                        this.handleChangeIncludeFacStaff();
+                      }}
+                    />
+                  }
+                  label="Faculty/Staff"
                 />
-              }
-              label="Include Alumni"
-            />
+                {this.state.personType && !this.state.personType.includes('stu') ? (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.searchValues.includeAlumni}
+                        onChange={() => {
+                          this.handleChangeIncludeAlumni();
+                        }}
+                      />
+                    }
+                    label="Alumni"
+                  />
+                ) : null}
+              </Grid>
+            )}
           </Grid>
-        );
-      }
+        </Grid>
+      );
 
       // April Fools
       let aprilFools = '';
@@ -566,13 +721,6 @@ class PeopleSearch extends Component {
 
       // Creates the PeopleSearch page depending on the status of the network found in local storage
       let PeopleSearch;
-      let searchPageTitle = (
-        <div align="center">
-          Search the
-          <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
-          Community
-        </div>
-      );
 
       if (networkStatus === 'online') {
         PeopleSearch = (
@@ -635,7 +783,7 @@ class PeopleSearch extends Component {
                         />
                         <Grid item xs>
                           <FormControl fullWidth>
-                            <InputLabel>Hall</InputLabel>
+                            <InputLabel>Residence Hall</InputLabel>
                             <Select
                               value={this.state.searchValues.hall}
                               onChange={this.handleHallInputChange}
@@ -654,7 +802,25 @@ class PeopleSearch extends Component {
                     <Grid item xs={12}>
                       {aprilFools}
                     </Grid>
-                    {includeAlumniCheckbox}
+                    {PeopleSearchCheckbox}
+                    <Media
+                      query="(min-width: 960px)"
+                      render={() => (
+                        <Grid item xs={12} lg={6} align="center">
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={this.state.displayLargeImage}
+                                onChange={() => {
+                                  this.handleChangeDisplayLargeImages();
+                                }}
+                              />
+                            }
+                            label="Display Large Images"
+                          />
+                        </Grid>
+                      )}
+                    />
                   </Grid>
 
                   <br />
@@ -671,9 +837,9 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.majorSearchValue !== '' ||
-                          this.state.minorSearchValue !== '' ||
-                          this.state.classTypeSearchValue !== ''
+                          this.state.searchValues.major !== '' ||
+                          this.state.searchValues.minor !== '' ||
+                          this.state.searchValues.classType !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
@@ -691,9 +857,9 @@ class PeopleSearch extends Component {
                       <Button
                         color="primary"
                         style={
-                          this.state.homeCitySearchValue !== '' ||
-                          this.state.stateSearchValue !== '' ||
-                          this.state.countrySearchValue !== ''
+                          this.state.searchValues.homeCity !== '' ||
+                          this.state.searchValues.state !== '' ||
+                          this.state.searchValues.country !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
@@ -713,8 +879,8 @@ class PeopleSearch extends Component {
                         variant={this.state.offDepExpanded ? 'contained' : 'outlined'}
                         onClick={this.handleOffDepExpandClick}
                         style={
-                          this.state.departmentSearchValue !== '' ||
-                          this.state.buildingSearchValue !== ''
+                          this.state.searchValues.department !== '' ||
+                          this.state.searchValues.building !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: '#ffffff',
@@ -805,7 +971,7 @@ class PeopleSearch extends Component {
                             <MenuItem label="All Classes" value="">
                               <em>All</em>
                             </MenuItem>
-                            <MenuItem value={1}>Freshman</MenuItem>
+                            <MenuItem value={1}>First Year</MenuItem>
                             <MenuItem value={2}>Sophomore</MenuItem>
                             <MenuItem value={3}>Junior</MenuItem>
                             <MenuItem value={4}>Senior</MenuItem>
@@ -956,7 +1122,7 @@ class PeopleSearch extends Component {
 
                 <CardActions>
                   <Grid container justify="center" spacing={2}>
-                    {/* Clear All Button */}
+                    {/* Reset Button */}
                     <Grid item xs={8} sm={'auto'}>
                       <Button
                         style={{ backgroundColor: gordonColors.neutral.lightGray }}
@@ -966,7 +1132,13 @@ class PeopleSearch extends Component {
                           this.setState(
                             {
                               searchValues: {
-                                includeAlumni: false,
+                                includeStudent: this.state.personType.includes('alum')
+                                  ? false
+                                  : true,
+                                includeFacStaff: true,
+                                includeAlumni: this.state.personType.includes('alum')
+                                  ? true
+                                  : false,
                                 firstName: '',
                                 lastName: '',
                                 major: '',
@@ -984,12 +1156,13 @@ class PeopleSearch extends Component {
                               offDepExpanded: false,
                               header: '',
                               peopleSearchResults: null,
+                              displayLargeImage: false,
                             },
                             () => this.updateURL(),
                           );
                         }}
                       >
-                        Clear All
+                        RESET
                       </Button>
                     </Grid>
                     {/* Search Button */}
@@ -998,10 +1171,10 @@ class PeopleSearch extends Component {
                         color="primary"
                         onClick={() => {
                           this.search();
-                          this.updateURL();
                         }}
                         fullWidth
                         variant="contained"
+                        disabled={!this.canSearch()}
                       >
                         SEARCH
                       </Button>
@@ -1011,88 +1184,29 @@ class PeopleSearch extends Component {
                 <br />
               </Card>
               <br />
-              <Card>
+              <Card ref={(el) => (this.componentRef = el)}>
+                {printPeopleSearchHeader}
                 {this.state.header}
                 {this.state.peopleSearchResults}
               </Card>
+              {this.state.personType && !this.state.personType.includes('stu') && (
+                <ReactToPrint
+                  trigger={() => {
+                    return printPeopleSearchButton;
+                  }}
+                  content={() => this.componentRef}
+                />
+              )}
             </Grid>
           </Grid>
         );
       } else {
-        PeopleSearch = (
-          <Grid container justify="center" spacing="16">
-            <Grid item xs={12} md={8}>
-              <Card>
-                <CardContent
-                  style={{
-                    margin: 'auto',
-                    textAlign: 'center',
-                  }}
-                >
-                  <Grid
-                    item
-                    xs={2}
-                    alignItems="center"
-                    style={{
-                      display: 'block',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                    }}
-                  >
-                    <NoConnectionImage />
-                  </Grid>
-                  <br />
-                  <h1>Please Re-establish Connection</h1>
-                  <h4>People Search has been deactivated due to loss of network.</h4>
-                  <br />
-                  <br />
-                  <Button
-                    color="primary"
-                    backgroundColor="white"
-                    variant="outlined"
-                    onClick={() => {
-                      window.location.pathname = '';
-                    }}
-                  >
-                    Back To Home
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        );
+        return <GordonOffline feature="People Search" />;
       }
 
       return PeopleSearch;
     } else {
-      return (
-        <Grid container justify="center">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <h1>You are not logged in.</h1>
-                <br />
-                <h4>You must be logged in to view use People Search.</h4>
-                <br />
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Login
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
+      return <GordonUnauthorized feature={'People Search'} />;
     }
   }
 }
