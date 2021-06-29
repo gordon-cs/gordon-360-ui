@@ -85,7 +85,7 @@ const StudentNews = (props) => {
   const [newPostCategory, setNewPostCategory] = useState('');
   const [newPostSubject, setNewPostSubject] = useState('');
   const [newPostBody, setNewPostBody] = useState('');
-  const [showCropper, setShowCropper] = useState(null); //null if no picture chosen, else contains picture
+  const [cropperImageData, setCropperImageData] = useState(null); //null if no picture chosen, else contains picture
   const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState(null);
   const [photoDialogError, setPhotoDialogError] = useState(null);
   const [cropBoxDim, setCropBoxDim] = useState(null);
@@ -183,7 +183,7 @@ const StudentNews = (props) => {
     setNewPostSubject('');
     setNewPostBody('');
     setCurrentlyEditing(false);
-    setShowCropper(null);
+    setCropperImageData(null);
     setJustShowPicture(false);
   }
 
@@ -238,7 +238,7 @@ const StudentNews = (props) => {
     }
 
     // If no error occured and the cropper is shown, the cropper text is displayed
-    else if (showCropper && !justShowPicture) {
+    else if (cropperImageData && !justShowPicture) {
       message = 'Crop Photo to liking & Click Submit';
     }
 
@@ -283,10 +283,10 @@ const StudentNews = (props) => {
 
     if (base64Test.test(newsItem.Image) && newsItem.Image !== null) {
       let newImageData = 'data:image/jpg;base64,' + newsItem.Image;
-      setShowCropper(newImageData);
+      setCropperImageData(newImageData);
       setJustShowPicture(true);
     } else {
-      setShowCropper(null);
+      setCropperImageData(null);
     }
   }
 
@@ -343,8 +343,8 @@ const StudentNews = (props) => {
         .getCroppedCanvas({ width: CROP_DIM })
         .toDataURL()
         .replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-    } else if (showCropper !== null) {
-      imageData = showCropper.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+    } else if (cropperImageData !== null) {
+      imageData = cropperImageData.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
     }
 
     // create the JSON newData object to update with
@@ -372,7 +372,7 @@ const StudentNews = (props) => {
   async function handleSubmit() {
     let newImage;
 
-    if (showCropper !== null) {
+    if (cropperImageData !== null) {
       let croppedImage = cropperRef.current.cropper
         .getCroppedCanvas({ width: CROP_DIM })
         .toDataURL();
@@ -418,7 +418,7 @@ const StudentNews = (props) => {
       setPhotoDialogError(null);
       setCropBoxDim(cropDim);
       setAspectRatio(aRatio);
-      setShowCropper(dataURL);
+      setCropperImageData(dataURL);
     };
     i.src = dataURL;
   }
@@ -566,7 +566,7 @@ const StudentNews = (props) => {
                         <DialogContentText className="gc360-photo-dialog-box_content_text">
                           {createPhotoDialogBoxMessage()}
                         </DialogContentText>
-                        {!showCropper && (
+                        {!cropperImageData && (
                           <Dropzone
                             onDropAccepted={onDropAccepted}
                             onDropRejected={onDropRejected}
@@ -584,11 +584,11 @@ const StudentNews = (props) => {
                             )}
                           </Dropzone>
                         )}
-                        {showCropper && !justShowPicture && (
+                        {cropperImageData && !justShowPicture && (
                           <div className="gc360-photo-dialog-box_content_cropper">
                             <Cropper
                               ref={cropperRef}
-                              src={showCropper}
+                              src={cropperImageData}
                               autoCropArea={1}
                               viewMode={3}
                               aspectRatio={aspectRatio}
@@ -602,14 +602,14 @@ const StudentNews = (props) => {
                             />
                           </div>
                         )}
-                        {showCropper && justShowPicture && (
+                        {cropperImageData && justShowPicture && (
                           <Grid item xs={8} style={{ textAlign: 'left' }}>
-                            <img src={showCropper} alt=" " />
+                            <img src={cropperImageData} alt=" " />
                           </Grid>
                         )}
                       </DialogContent>
                       <DialogActions className="gc360-photo-dialog-box_actions-top">
-                        {showCropper && (
+                        {cropperImageData && (
                           <Tooltip
                             classes={{ tooltip: 'tooltip' }}
                             id="tooltip-hide"
@@ -618,7 +618,7 @@ const StudentNews = (props) => {
                             <Button
                               variant="contained"
                               onClick={() => {
-                                setShowCropper(null);
+                                setCropperImageData(null);
                                 setJustShowPicture(false);
                               }}
                               style={styles.button.cancelButton}
