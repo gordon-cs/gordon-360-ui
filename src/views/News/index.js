@@ -6,6 +6,7 @@ import NewsList from './components/NewsList';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonOffline from 'components/GordonOffline';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
@@ -17,8 +18,6 @@ import {
   Button,
   Fab,
   Typography,
-  Card,
-  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
@@ -26,7 +25,6 @@ import {
   DialogContentText,
   MenuItem,
 } from '@material-ui/core';
-import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 
 const BREAKPOINT_WIDTH = 540;
@@ -691,54 +689,13 @@ const StudentNews = (props) => {
           </Grid>
         </>
       );
+
+      return newsJSX;
     }
     // If the user is offline
     else {
-      newsJSX = (
-        <Grid container justify="center" spacing="16">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <Grid
-                  item
-                  xs={2}
-                  alignItems="center"
-                  style={{
-                    display: 'block',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <NoConnectionImage />
-                </Grid>
-                <br />
-                <h1>Please Re-establish Connection</h1>
-                <h4>Viewing Events has been deactivated due to loss of network.</h4>
-                <br />
-                <br />
-                <Button
-                  color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
+      return <GordonOffline feature="Student News" />;
     }
-
-    return newsJSX;
   } else {
     return <GordonUnauthorized feature={'the student news page'} />;
   }
