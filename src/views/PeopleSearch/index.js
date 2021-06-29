@@ -725,7 +725,7 @@ class PeopleSearch extends Component {
       if (networkStatus === 'online') {
         PeopleSearch = (
           <Grid container justify="center" spacing={6}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} lg={10} xl={8}>
               <Card style={{ padding: '0 3vw' }}>
                 <CardContent>
                   <CardHeader title={searchPageTitle} />
