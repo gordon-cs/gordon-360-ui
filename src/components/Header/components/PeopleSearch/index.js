@@ -183,7 +183,7 @@ export default class GordonPeopleSearch extends Component {
     let suggestionIndex = this.state.suggestionIndex;
     let suggestionList = this.state.suggestions;
     // Bail if any required properties are missing
-    if (!suggestion.UserName || !suggestion.FirstName || !suggestion.Nickname || !suggestion.LastName) {
+    if (!suggestion.UserName || !suggestion.FirstName || !suggestion.LastName) {
       return null;
     }
     return (
@@ -220,10 +220,16 @@ export default class GordonPeopleSearch extends Component {
                 ),
               ].map((e, key) => <span key={key}>{e}</span>)
             : this.getHighlightedText(
-              suggestion.Nickname !== suggestion.FirstName &&
-              suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
-              ? (suggestion.FirstName + ' ' + suggestion.LastName + " (" + suggestion.Nickname + ")")
-              : (suggestion.FirstName + ' ' + suggestion.LastName),
+                suggestion.Nickname !== suggestion.FirstName &&
+                  suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0] &&
+                  suggestion.Nickname !== null
+                  ? suggestion.FirstName +
+                      ' ' +
+                      suggestion.LastName +
+                      ' (' +
+                      suggestion.Nickname +
+                      ')'
+                  : suggestion.FirstName + ' ' + suggestion.LastName,
                 this.state.highlightQuery,
               )}
         </Typography>
