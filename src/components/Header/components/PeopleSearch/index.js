@@ -220,9 +220,9 @@ export default class GordonPeopleSearch extends Component {
                 ),
               ].map((e, key) => <span key={key}>{e}</span>)
             : this.getHighlightedText(
-                suggestion.Nickname !== suggestion.FirstName &&
-                  suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0] &&
-                  suggestion.Nickname !== null
+                suggestion.Nickname &&
+                  suggestion.Nickname !== suggestion.FirstName &&
+                  suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
                   ? suggestion.FirstName +
                       ' ' +
                       suggestion.LastName +
