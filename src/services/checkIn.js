@@ -24,7 +24,7 @@ import http from './http';
 
 /**
  * @global
- * @typedef FormData all the other data to be filled out by the student
+ * @typedef EmergencyContactData all the other data to be filled out by the student
  * @property {String} firstName1 first name of emergency contact 1
  * @property {String} lastName1 last name of EC 1
  * @property {String} relationship1 the relationship between the student and EC 1
@@ -40,6 +40,11 @@ import http from './http';
  * @property {String} relationship3 the relationship between the student and EC 3
  * @property {Number} homePhone3 the home phone number of EC 3
  * @property {Number} mobilePhone3 the mobile phone number of EC 3
+ */
+
+/**
+ * @global
+ * @typedef CheckInData
  * @property {Number} personalPhone the phone number of the student
  * @property {String} ethnicity whether or not a student is Hispanic/Latino or prefers not to say
  * @property {boolean} nativeAmerican whether or not a student is of Native American descent
@@ -52,11 +57,29 @@ import http from './http';
 
 const getHolds = (id) => http.get(`checkIn/holds`);
 
-const getFormData = (id) => http.get(`checkIn/formData`);
+const getPersonalPhone = (id) => http.get(`checkIn/phone`);
 
-async function submitData(data) {
+const getDemographic = (id) => http.get(`checkIn/demographic`);
+
+async function submitPhone(data) {
   try {
-    return await http.post('checkIn', data);
+    return await http.post(`checkIn/phone`, data);
+  } catch (reason) {
+    console.log('Caught checkIn submission error: ' + reason);
+  }
+}
+
+async function submitContact(data) {
+  try {
+    return await http.put(`checkIn/emergencycontact`, data);
+  } catch (reason) {
+    console.log('Caught checkIn submission error: ' + reason);
+  }
+}
+
+async function submitDemographic(data) {
+  try {
+    return await http.put(`checkIn/demographic`, data);
   } catch (reason) {
     console.log('Caught checkIn submission error: ' + reason);
   }
@@ -64,8 +87,11 @@ async function submitData(data) {
 
 const checkInService = {
   getHolds,
-  getFormData,
-  submitData,
+  getPersonalPhone,
+  getDemographic,
+  submitPhone,
+  submitContact,
+  submitDemographic,
 };
 
 export default checkInService;

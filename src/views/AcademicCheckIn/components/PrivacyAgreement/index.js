@@ -2,7 +2,7 @@ import { gordonColors } from 'theme';
 import { FormControl, FormControlLabel, Checkbox, Grid, Typography } from '@material-ui/core';
 import privacy from './privacy.json';
 
-const PrivacyAgreement = ({ values, handleCheck }) => {
+const PrivacyAgreement = ({ privacyAgreements, handleCheckPrivacyAgreements }) => {
   const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
@@ -80,7 +80,13 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
           <br />
           <FormControl>
             <FormControlLabel
-              control={<Checkbox checked={values.FERPA} name="FERPA" onChange={handleCheck} />}
+              control={
+                <Checkbox
+                  checked={privacyAgreements.FERPA}
+                  name="FERPA"
+                  onChange={handleCheckPrivacyAgreements}
+                />
+              }
               label="I have read and understand the FERPA Statement above."
               labelPlacement="end"
             />
@@ -103,7 +109,11 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
           <FormControl>
             <FormControlLabel
               control={
-                <Checkbox checked={values.dataUsage} name="dataUsage" onChange={handleCheck} />
+                <Checkbox
+                  checked={privacyAgreements.dataUsage}
+                  name="dataUsage"
+                  onChange={handleCheckPrivacyAgreements}
+                />
               }
               label="I have read and understand the On-Campus Data Usage paragraph above and I give
             Gordon College consent to store and process my personal information as outline in its
@@ -129,9 +139,9 @@ const PrivacyAgreement = ({ values, handleCheck }) => {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={values.photoConsent}
+                  checked={privacyAgreements.photoConsent}
                   name="photoConsent"
-                  onChange={handleCheck}
+                  onChange={handleCheckPrivacyAgreements}
                 />
               }
               label="I have read and understand the photography statement above and I agree that the

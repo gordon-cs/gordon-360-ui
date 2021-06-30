@@ -3,16 +3,16 @@ import { Typography, Grid } from '@material-ui/core';
 import { gordonColors } from 'theme';
 // import './index.css';
 
-const AcademicCheckInWelcome = ({ values }) => {
+const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
   const blue = gordonColors.primary.blue;
   // Checks if the student has any major or minor holds
   const hasMajorHold =
-    values.registrationHold ||
-    values.highSchoolTranscriptHold ||
-    values.financialHold ||
-    values.medicalHold;
+    holds.registrationHold ||
+    holds.highSchoolTranscriptHold ||
+    holds.financialHold ||
+    holds.medicalHold;
 
-  const hasMinorHold = values.laVidaHold || values.declarationOfMajorHold;
+  const hasMinorHold = holds.laVidaHold || holds.declarationOfMajorHold;
 
   // This function will return the corresponding JSX elements according to the major holds a student
   // has
@@ -21,7 +21,7 @@ const AcademicCheckInWelcome = ({ values }) => {
     let highSchoolContent;
     let financialContent;
     let medicalContent;
-    if (values.registrationHold) {
+    if (holds.registrationHold) {
       registrationContent = (
         <>
           <li>
@@ -33,7 +33,7 @@ const AcademicCheckInWelcome = ({ values }) => {
         </>
       );
     }
-    if (values.highSchoolTranscriptHold) {
+    if (holds.highSchoolTranscriptHold) {
       highSchoolContent = (
         <>
           <li>
@@ -45,7 +45,7 @@ const AcademicCheckInWelcome = ({ values }) => {
         </>
       );
     }
-    if (values.financialHold) {
+    if (holds.financialHold) {
       financialContent = (
         <>
           <li>
@@ -55,7 +55,7 @@ const AcademicCheckInWelcome = ({ values }) => {
         </>
       );
     }
-    if (values.medicalHold) {
+    if (holds.medicalHold) {
       medicalContent = (
         <>
           <li>
@@ -78,7 +78,7 @@ const AcademicCheckInWelcome = ({ values }) => {
   const displayMinorHolds = () => {
     let laVidaContent;
     let declarationOfMajorContent;
-    if (values.laVidaHold) {
+    if (holds.laVidaHold) {
       laVidaContent = (
         <li>
           You have a "La Vida Hold". Students are required to complete Discovery or La Vida in their
@@ -87,7 +87,7 @@ const AcademicCheckInWelcome = ({ values }) => {
         </li>
       );
     }
-    if (values.declarationOfMajorHold) {
+    if (holds.declarationOfMajorHold) {
       declarationOfMajorContent = (
         <li>
           You have a "Declaration of Major Hold". Please contact the <b>Registrar's Office</b> at{' '}
@@ -111,8 +111,8 @@ const AcademicCheckInWelcome = ({ values }) => {
           <b>Enrollment Check In</b>
         </Typography>
         <Typography justify="center" className="checkIn">
-          Hello, {values.studentFirstName}! Welcome to a new semester at Gordon College! Please take
-          a few moments to complete the check-in process in order to confirm your academic
+          Hello, {basicInfo.studentFirstName}! Welcome to a new semester at Gordon College! Please
+          take a few moments to complete the check-in process in order to confirm your academic
           enrollment and help Gordon College plan to provide services to you.
         </Typography>
         <br />
@@ -129,7 +129,7 @@ const AcademicCheckInWelcome = ({ values }) => {
             </Typography>
             <Typography>{displayMajorHolds()}</Typography>
           </Grid>
-        ) : !values.isRegistered ? ( // If a student is not registered for courses they cannot check in
+        ) : !holds.isRegistered ? ( // If a student is not registered for courses they cannot check in
           <Grid item>
             <Typography variant="h6" align="center" style={{ color: blue }}>
               <b>Register for Courses</b>
@@ -137,7 +137,7 @@ const AcademicCheckInWelcome = ({ values }) => {
             <Typography align="center" gutterBottom>
               <b>Before you can check in, you must be registered for courses.</b>
             </Typography>
-            {values.isIncoming ? ( // If a student is first year and not registered, display a special prompt
+            {holds.isIncoming ? ( // If a student is first year and not registered, display a special prompt
               <Typography>
                 You will meet with your advisor during Orientation and he/she can register you. The
                 name of your advisor can be found by logging onto{' '}
@@ -185,7 +185,7 @@ const AcademicCheckInWelcome = ({ values }) => {
             Once you have resolved each of the above holds, click the button below to begin the
             check-in process.
           </Typography>
-        ) : !values.isRegistered ? ( // If the student is not registered, display this prompt so they can register
+        ) : !holds.isRegistered ? ( // If the student is not registered, display this prompt so they can register
           <Typography>
             Once you have registered for courses and your advisor has approved your registration,
             come back to this page and click the button below to begin the check-in process.

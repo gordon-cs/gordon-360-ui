@@ -10,7 +10,7 @@ import {
 import MaskedInput from 'react-text-mask';
 import { gordonColors } from 'theme';
 
-const UpdatePhone = ({ values, handleCheck, handleChange }) => {
+const UpdatePhone = ({ personalPhone, handleChangePersonalPhone, handleCheckPersonalPhone }) => {
   const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
@@ -32,9 +32,9 @@ const UpdatePhone = ({ values, handleCheck, handleChange }) => {
           <Input
             id="formatted-text-mask-input"
             name="personalPhone"
-            value={values.personalPhone}
-            onChange={handleChange}
-            disabled={values.noPhone}
+            value={personalPhone.personalPhone}
+            onChange={handleChangePersonalPhone}
+            disabled={personalPhone.noPhone}
             inputComponent={phoneMaskUS}
             autoFocus
           />
@@ -44,12 +44,22 @@ const UpdatePhone = ({ values, handleCheck, handleChange }) => {
         <FormControl>
           <FormControlLabel
             control={
-              <Checkbox checked={values.makePublic} name="makePublic" onChange={handleCheck} />
+              <Checkbox
+                checked={personalPhone.makePublic}
+                name="makePublic"
+                onChange={handleCheckPersonalPhone}
+              />
             }
             label="Make my number public on People Search"
           />
           <FormControlLabel
-            control={<Checkbox checked={values.noPhone} name="noPhone" onChange={handleCheck} />}
+            control={
+              <Checkbox
+                checked={personalPhone.noPhone}
+                name="noPhone"
+                onChange={handleCheckPersonalPhone}
+              />
+            }
             label="I don't have a cell-phone"
           />
         </FormControl>

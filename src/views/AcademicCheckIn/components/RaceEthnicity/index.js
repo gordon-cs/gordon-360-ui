@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import info from './info.json';
 
-const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
+const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemographic }) => {
   const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
@@ -68,8 +68,8 @@ const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
           <RadioGroup
             aria-label="ethnicity"
             name="ethnicity"
-            value={values.ethnicity}
-            onChange={handleChange}
+            value={demographic.ethnicity}
+            onChange={handleChangeDemographic}
           >
             <FormControlLabel value="notH_L" control={<Radio />} label="Not Hispanic/Latino" />
             <FormControlLabel value="H_L" control={<Radio />} label="Hispanic/Latino" />
@@ -81,31 +81,57 @@ const RaceEthnicity = ({ values, handleChange, handleCheck }) => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={values.nativeAmerican}
+                checked={demographic.nativeAmerican}
                 name="nativeAmerican"
-                onChange={handleCheck}
+                onChange={handleCheckDemographic}
               />
             }
             label="American Indian or Alaska Native"
           />
           <FormControlLabel
-            control={<Checkbox checked={values.asian} name="asian" onChange={handleCheck} />}
+            control={
+              <Checkbox
+                checked={demographic.asian}
+                name="asian"
+                onChange={handleCheckDemographic}
+              />
+            }
             label="Asian"
           />
           <FormControlLabel
-            control={<Checkbox checked={values.black} name="black" onChange={handleCheck} />}
+            control={
+              <Checkbox
+                checked={demographic.black}
+                name="black"
+                onChange={handleCheckDemographic}
+              />
+            }
             label="Black or African American"
           />
           <FormControlLabel
-            control={<Checkbox checked={values.hawaiian} name="hawaiian" onChange={handleCheck} />}
+            control={
+              <Checkbox
+                checked={demographic.hawaiian}
+                name="hawaiian"
+                onChange={handleCheckDemographic}
+              />
+            }
             label="Native Hawaiian or Other Pacific Islander"
           />
           <FormControlLabel
-            control={<Checkbox checked={values.white} name="white" onChange={handleCheck} />}
+            control={
+              <Checkbox
+                checked={demographic.white}
+                name="white"
+                onChange={handleCheckDemographic}
+              />
+            }
             label="White"
           />
           <FormControlLabel
-            control={<Checkbox checked={values.none} name="none" onChange={handleCheck} />}
+            control={
+              <Checkbox checked={demographic.none} name="none" onChange={handleCheckDemographic} />
+            }
             label="Prefer not to say"
           />
         </FormControl>
