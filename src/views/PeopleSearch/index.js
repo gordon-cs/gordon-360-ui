@@ -21,6 +21,7 @@ import {
   Typography,
   Fab,
   withStyles,
+  Switch,
 } from '@material-ui/core';
 import Media from 'react-media';
 import PersonIcon from '@material-ui/icons/Person';
@@ -128,7 +129,7 @@ const peopleSearchHeaderDesktop = (
         <Typography variant="body2" style={styles.headerStyle}>
           @GORDON.EDU
           <br />
-          MAILBOX #
+          MAIL LOCATION
         </Typography>
       </Grid>
     </Grid>
@@ -422,7 +423,7 @@ class PeopleSearch extends Component {
     const { includeStudent, includeFacStaff, includeAlumni, ...valuesNeededForSearch } =
       this.state.searchValues;
     let result = Object.values(valuesNeededForSearch)
-      .map((x) => x.trim())
+      .map((x) => x.toString().trim())
       .some((x) => x);
     return result;
   };
@@ -589,69 +590,58 @@ class PeopleSearch extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.props.authentication) {
-      PeopleSearchCheckbox = !this.state.loading ? (
-        <Grid item xs={12} align="center">
-          <FormLabel component="legend">Include:</FormLabel>
-          {this.state.personType && !this.state.personType.includes('alum') ? (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.searchValues.includeStudent}
-                  onChange={() => {
-                    this.handleChangeIncludeStudent();
-                  }}
-                />
-              }
-              label="Student"
-            />
-          ) : null}
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={this.state.searchValues.includeFacStaff}
-                onChange={() => {
-                  this.handleChangeIncludeFacStaff();
-                }}
-              />
-            }
-            label="Faculty/Staff"
-          />
-          {this.state.personType && !this.state.personType.includes('stu') ? (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.searchValues.includeAlumni}
-                  onChange={() => {
-                    this.handleChangeIncludeAlumni();
-                  }}
-                />
-              }
-              label="Alumni"
-            />
-          ) : null}
-          <Media
-            query="(min-width: 960px)"
-            render={() => (
-              <Grid item xs={12} align="center">
+      PeopleSearchCheckbox = (
+        <Grid item xs={12} lg={6} align="center">
+          <Grid container alignItems="center" justify="center">
+            <Grid item>
+              <FormLabel component="label">Include: &nbsp;</FormLabel>
+            </Grid>
+            {this.state.loading ? (
+              <Grid item>
+                <GordonLoader size={20} />
+              </Grid>
+            ) : (
+              <Grid item>
+                {this.state.personType && !this.state.personType.includes('alum') ? (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.searchValues.includeStudent}
+                        onChange={() => {
+                          this.handleChangeIncludeStudent();
+                        }}
+                      />
+                    }
+                    label="Student"
+                  />
+                ) : null}
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={this.state.displayLargeImage}
+                      checked={this.state.searchValues.includeFacStaff}
                       onChange={() => {
-                        this.handleChangeDisplayLargeImages();
+                        this.handleChangeIncludeFacStaff();
                       }}
                     />
                   }
-                  label="Display Large Images"
+                  label="Faculty/Staff"
                 />
+                {this.state.personType && !this.state.personType.includes('stu') ? (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.searchValues.includeAlumni}
+                        onChange={() => {
+                          this.handleChangeIncludeAlumni();
+                        }}
+                      />
+                    }
+                    label="Alumni"
+                  />
+                ) : null}
               </Grid>
             )}
-          />
-        </Grid>
-      ) : (
-        <Grid item xs={12} align="center">
-          <FormLabel component="legend">Include:</FormLabel>
-          <GordonLoader size={79} />
+          </Grid>
         </Grid>
       );
 
@@ -735,7 +725,7 @@ class PeopleSearch extends Component {
       if (networkStatus === 'online') {
         PeopleSearch = (
           <Grid container justify="center" spacing={6}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} lg={10} xl={8}>
               <Card style={{ padding: '0 3vw' }}>
                 <CardContent>
                   <CardHeader title={searchPageTitle} />
@@ -813,6 +803,24 @@ class PeopleSearch extends Component {
                       {aprilFools}
                     </Grid>
                     {PeopleSearchCheckbox}
+                    <Media
+                      query="(min-width: 960px)"
+                      render={() => (
+                        <Grid item xs={12} lg={6} align="center">
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={this.state.displayLargeImage}
+                                onChange={() => {
+                                  this.handleChangeDisplayLargeImages();
+                                }}
+                              />
+                            }
+                            label="Display Large Images"
+                          />
+                        </Grid>
+                      )}
+                    />
                   </Grid>
 
                   <br />
