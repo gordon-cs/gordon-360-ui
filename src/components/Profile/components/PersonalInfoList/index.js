@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import EditPhoneDialog from './components/EditPhoneDialog/index.js';
+import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import user from 'services/user';
 import './index.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
@@ -14,7 +13,6 @@ import {
   CardContent,
   List,
   Switch,
-  Button,
   FormControlLabel,
 } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -22,12 +20,10 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 const PRIVATE_INFO = 'Private as requested.';
 
 const formatPhone = (phone) => {
-  let tele = String(phone);
-  if (tele.length === 10) {
-    return '(' + tele.slice(0, 3) + ') ' + tele.slice(3, 6) + '-' + tele.slice(6);
-  }
-  if (tele !== 'undefined') {
-    return tele;
+  if (phone?.length === 10) {
+    return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
+  } else {
+    return phone;
   }
 };
 
@@ -35,6 +31,7 @@ const PersonalInfoList = ({
   myProf,
   profile: {
     Advisors,
+    CliftonStrengths,
     BuildingDescription,
     Country,
     Hall,
@@ -127,7 +124,12 @@ const PersonalInfoList = ({
       title="Mobile Phone:"
       contentText={
         myProf ? (
-          formatPhone(MobilePhone)
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>{formatPhone(MobilePhone)}</Grid>
+            <Grid item>
+              <UpdatePhone />
+            </Grid>
+          </Grid>
         ) : MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
@@ -138,17 +140,14 @@ const PersonalInfoList = ({
       }
       ContentIcon={
         myProf && (
-          <>
-            <EditPhoneDialog />
-            <FormControlLabel
-              control={
-                <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
-              }
-              label={isMobilePhonePrivate ? 'Private' : 'Public'}
-              labelPlacement="bottom"
-              disabled={!isOnline}
-            />
-          </>
+          <FormControlLabel
+            control={
+              <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
+            }
+            label={isMobilePhonePrivate ? 'Private' : 'Public'}
+            labelPlacement="bottom"
+            disabled={!isOnline}
+          />
         )
       }
       contentClass={isMobilePhonePrivate ? 'private' : null}
@@ -170,13 +169,6 @@ const PersonalInfoList = ({
           </span>
         </>
       }
-      ContentIcon={
-        <Link className="gc360-link" to="/transcript">
-          <Button variant="contained" className="edit-info-button">
-            Edit
-          </Button>
-        </Link>
-      }
       contentClass={isAddressPrivate ? 'private' : null}
     />
   );
@@ -194,6 +186,10 @@ const PersonalInfoList = ({
       title={Majors?.length > 1 ? 'Majors:' : 'Major:'}
       contentText={Majors?.length < 1 ? 'Undecided' : Majors?.join(', ')}
     />
+  ) : null;
+
+  const cliftonStrengths = CliftonStrengths ? (
+    <ProfileInfoListItem title="Clifton Strengths:" contentText={CliftonStrengths.join(', ')} />
   ) : null;
 
   const advisors =
@@ -265,38 +261,33 @@ const PersonalInfoList = ({
       />
     ) : null;
 
-  const note = isFacStaff ? (
-    <Typography align="left" className="note">
-      NOTE:
-      <ul>
-        <li>
-          To prevent your picture from displaying click{' '}
-          <a href="https://360.gordon.edu/myprofile">here</a>.
-        </li>
-        <li>
-          To update your data contact <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
-        </li>
-      </ul>
-    </Typography>
-  ) : isStudent ? (
-    <Typography align="left" className="note">
-      NOTE:
-      <ul>
-        <li>
-          To prevent your picture or your cell phone number from displaying, click{' '}
-          <a href="https://360.gordon.edu/myprofile">here</a>.
-        </li>
-        <li>
-          To update your On Campus Address, contact <a href="mailto: housing@gordon.edu">Housing</a>{' '}
-          (x4263).
-        </li>
-        <li>
-          For all other changes or to partially/fully prevent your data from displaying, contact the{' '}
-          <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
-        </li>
-      </ul>
-    </Typography>
-  ) : null;
+  const note =
+    myProf &&
+    (isFacStaff ? (
+      <Typography align="left" className="note">
+        NOTE:
+        <ul>
+          <li>
+            To update your data, please contact <a href="mailto: hr@gordon.edu">Human Resources</a>{' '}
+            (x4828).
+          </li>
+        </ul>
+      </Typography>
+    ) : isStudent ? (
+      <Typography align="left" className="note">
+        NOTE:
+        <ul>
+          <li>
+            To update your On Campus Address, please contact{' '}
+            <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
+          </li>
+          <li>
+            For all other changes or to partially/fully prevent your data from displaying, please
+            contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+          </li>
+        </ul>
+      </Typography>
+    ) : null);
 
   const disclaimer =
     !myProf &&
@@ -322,6 +313,7 @@ const PersonalInfoList = ({
           <List>
             {majors}
             {minors}
+            {cliftonStrengths}
             {advisors}
             {onOffCampus}
             {dormInfo}

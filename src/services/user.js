@@ -270,7 +270,7 @@ function setClass(profile) {
   if (String(profile.PersonType).includes('stu')) {
     switch (profile.Class) {
       case '1':
-        profile.Class = 'Freshman';
+        profile.Class = 'First Year';
         break;
       case '2':
         profile.Class = 'Sophomore';
@@ -423,20 +423,31 @@ const getProfile = (username) => {
 };
 
 const getAdvisors = async (username) => {
-  let advisors;
-  advisors = await http.get(`profiles/Advisors/${username}/`);
-  return advisors;
+  return await http.get(`profiles/Advisors/${username}/`);
+};
+
+const getCliftonStrengths = async (username) => {
+  try {
+    return await http.get(`profiles/clifton/${username}/`);
+  } catch (error) {
+    console.log('Clifton strengths error:', error);
+    // TODO: currently throws an error whenever clifton strengths are missing,
+    // should just return null or empty
+  }
 };
 
 async function setAdvisors(profile) {
-  if (profile.AD_Username != null) {
-    profile.Advisors = await getAdvisors(profile.AD_Username);
-  }
+  profile.Advisors = await getAdvisors(profile.AD_Username);
+}
+
+async function setCliftonStrengths(profile) {
+  const cliftonStrengths = await getCliftonStrengths(profile.AD_Username);
+  profile.CliftonStrengths = cliftonStrengths?.Strengths;
 }
 
 async function setMobilePhoneNumber(value) {
-  console.log('setMobilePhoneNumber');
   await http.put(`profiles/mobile_phone_number/${value}/`);
+  console.log(value);
 }
 
 async function setMobilePhonePrivacy(makePrivate) {
@@ -607,8 +618,13 @@ const getProfileInfo = async (username) => {
   setOnOffCampus(profile);
   setMinorObject(profile);
   await setAdvisors(profile);
+  await setCliftonStrengths(profile);
   formatSocialMediaLinks(profile);
   return profile;
+};
+
+const getEmergencyInfo = async (username) => {
+  return await http.get(`profiles/emergency-contact/${username}/`);
 };
 
 function updateSocialLink(platform, link) {
@@ -630,6 +646,7 @@ const userService = {
   setFullname,
   setClass,
   setMobilePhonePrivacy,
+  setMobilePhoneNumber,
   setImagePrivacy,
   getMemberships,
   getChapelCredits,
@@ -645,12 +662,13 @@ const userService = {
   getSentMembershipRequests,
   getProfileInfo,
   getAdvisors,
-  setMobilePhoneNumber,
+  getCliftonStrengths,
   resetImage,
   postImage,
   postIDImage,
   getTranscriptMembershipsInfo,
   getEmploymentInfo,
+  getEmergencyInfo,
   updateSocialLink,
 };
 
