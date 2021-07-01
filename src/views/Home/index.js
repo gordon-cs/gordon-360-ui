@@ -75,9 +75,9 @@ const Home = ({ authentication, onLogIn }) => {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
     return <GuestWelcome onLogIn={onLogIn} />;
-  } else if (networkStatus === 'online' && !hasAnswered) {
-    return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
-  } else {
+  } //else if (networkStatus === 'online' && !hasAnswered) {
+  //return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;}
+  else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 
     return (
