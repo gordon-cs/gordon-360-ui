@@ -19,7 +19,7 @@ import './index.css';
 
 const UpdatePhone = () => {
   const [open, setOpen] = React.useState(false);
-  const [mobilePhoneNumber, setMobilePhoneNumber] = useState();
+  const [mobilePhoneNumber, setMobilePhoneNumber] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   const handleSubmit = async () => {
@@ -56,16 +56,11 @@ const UpdatePhone = () => {
 
           {/* PHONE NUMBER ENTRY */}
           <FormControl>
-            <InputLabel htmlFor="formatted-text-mask-input">
-              {' '}
-              Phone Number (US Number Only){' '}
-            </InputLabel>
+            <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
             <Input
               type="tel"
               id="mobile-phone-number-input"
               name="mobile-phone-number"
-              minlength={10}
-              maxlength={10}
               value={mobilePhoneNumber}
               onChange={(event) => setMobilePhoneNumber(event.target.value)}
               inputComponent={phoneMaskUS}
@@ -80,7 +75,12 @@ const UpdatePhone = () => {
           <Button onClick={() => setOpen(false)} variant="outlined" color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSubmit} variant="contained" color="primary">
+          <Button
+            onClick={handleSubmit}
+            variant="contained"
+            color="primary"
+            disabled={mobilePhoneNumber.replace(/[-()\s\D]/g, '').length !== 10}
+          >
             Update
           </Button>
         </DialogActions>
@@ -109,7 +109,6 @@ export function phoneMaskUS(props) {
       }}
       mask={['(', /[0-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
       placeholderChar={'\u2000'}
-      showMask
     />
   );
 }
