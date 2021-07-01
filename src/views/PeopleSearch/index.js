@@ -19,7 +19,9 @@ import {
   Select,
   TextField,
   Typography,
+  Fab,
   withStyles,
+  Switch,
 } from '@material-ui/core';
 import Media from 'react-media';
 import PersonIcon from '@material-ui/icons/Person';
@@ -31,6 +33,7 @@ import {
   FaBook,
   FaGlobeAmericas,
   FaSchool,
+  FaPrint,
 } from 'react-icons/fa';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
@@ -39,6 +42,7 @@ import user from 'services/user';
 import { gordonColors } from 'theme';
 import GordonLoader from 'components/Loader';
 import PeopleSearchResult from './components/PeopleSearchResult';
+import ReactToPrint from 'react-to-print';
 
 const styles = {
   FontAwesome: {
@@ -75,6 +79,13 @@ const styles = {
   colorChecked: {},
   icon: {
     color: gordonColors.neutral.grayShades[900],
+  },
+  printPeopleSearchButton: {
+    position: 'fixed',
+    margin: 0,
+    bottom: 'min(5vw, 4rem)',
+    right: 'max(2rem, 5vw)',
+    zIndex: 1,
   },
 };
 
@@ -118,7 +129,7 @@ const peopleSearchHeaderDesktop = (
         <Typography variant="body2" style={styles.headerStyle}>
           @GORDON.EDU
           <br />
-          MAILBOX #
+          MAIL LOCATION
         </Typography>
       </Grid>
     </Grid>
@@ -134,6 +145,23 @@ const peopleSearchHeaderMobile = (
         </Typography>
       </Grid>
     </Grid>
+  </div>
+);
+
+const printPeopleSearchButton = (
+  <Fab variant="extended" color="primary" style={styles.printPeopleSearchButton}>
+    <FaPrint />
+    <Media query="(min-width: 960px)">
+      <span style={styles.printPeopleSearchButton__text}>&nbsp;&nbsp;Print Results</span>
+    </Media>
+  </Fab>
+);
+
+const searchPageTitle = (
+  <div align="center">
+    Search the
+    <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+    Community
   </div>
 );
 
@@ -337,12 +365,12 @@ class PeopleSearch extends Component {
 
   handleFirstNameInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, firstName: e.target.value.trim() },
+      searchValues: { ...this.state.searchValues, firstName: e.target.value },
     });
   };
   handleLastNameInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, lastName: e.target.value.trim() },
+      searchValues: { ...this.state.searchValues, lastName: e.target.value },
     });
   };
   handleMajorInputChange = (e) => {
@@ -367,7 +395,7 @@ class PeopleSearch extends Component {
   };
   handleHomeCityInputChange = (e) => {
     this.setState({
-      searchValues: { ...this.state.searchValues, homeCity: e.target.value.trim() },
+      searchValues: { ...this.state.searchValues, homeCity: e.target.value },
     });
   };
   handleStateInputChange = (e) => {
@@ -395,7 +423,9 @@ class PeopleSearch extends Component {
   canSearch = () => {
     const { includeStudent, includeFacStaff, includeAlumni, ...valuesNeededForSearch } =
       this.state.searchValues;
-    let result = Object.values(valuesNeededForSearch).some((x) => x);
+    let result = Object.values(valuesNeededForSearch)
+      .map((x) => x.toString().trim())
+      .some((x) => x);
     return result;
   };
 
@@ -412,6 +442,12 @@ class PeopleSearch extends Component {
         academicsExpanded: false,
         homeExpanded: false,
         offDepExpanded: false,
+        searchValues: {
+          ...this.state.searchValues,
+          firstName: this.state.searchValues.firstName?.trim(),
+          lastName: this.state.searchValues.lastName?.trim(),
+          homeCity: this.state.searchValues.homeCity?.trim(),
+        },
       });
       let results = await goStalk.search(...Object.values(this.state.searchValues));
       if (results.length === 0) {
@@ -493,6 +529,8 @@ class PeopleSearch extends Component {
           });
         }
       }
+      // will set url redundantly if loading from url, but not a major issue
+      this.updateURL();
     }
   }
 
@@ -510,13 +548,27 @@ class PeopleSearch extends Component {
   handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
       this.search();
-      this.updateURL();
     }
   };
 
   render() {
     const { classes } = this.props;
     let PeopleSearchCheckbox;
+
+    const printPeopleSearchHeader = (
+      <div class="test" align="center" style={{ display: 'none' }}>
+        {/* show on print only */}
+        <style>{`@media print {.test{display: block !important;}}`}</style>
+
+        <h1>{searchPageTitle}</h1>
+        <span>
+          Filters:{' '}
+          {window.location.search.substring(1).replaceAll('&', ', ').replaceAll('%20', ' ')}
+        </span>
+        <br />
+        <br />
+      </div>
+    );
 
     const majorOptions = this.state.majors.map((major) => (
       <MenuItem value={major} key={major}>
@@ -587,69 +639,58 @@ class PeopleSearch extends Component {
     const networkStatus = JSON.parse(localStorage.getItem('network-status')) || 'online';
 
     if (this.props.authentication) {
-      PeopleSearchCheckbox = !this.state.loading ? (
-        <Grid item xs={12} align="center">
-          <FormLabel component="legend">Include:</FormLabel>
-          {this.state.personType && !this.state.personType.includes('alum') ? (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.searchValues.includeStudent}
-                  onChange={() => {
-                    this.handleChangeIncludeStudent();
-                  }}
-                />
-              }
-              label="Student"
-            />
-          ) : null}
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={this.state.searchValues.includeFacStaff}
-                onChange={() => {
-                  this.handleChangeIncludeFacStaff();
-                }}
-              />
-            }
-            label="Faculty/Staff"
-          />
-          {this.state.personType && !this.state.personType.includes('stu') ? (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={this.state.searchValues.includeAlumni}
-                  onChange={() => {
-                    this.handleChangeIncludeAlumni();
-                  }}
-                />
-              }
-              label="Alumni"
-            />
-          ) : null}
-          <Media
-            query="(min-width: 960px)"
-            render={() => (
-              <Grid item xs={12} align="center">
+      PeopleSearchCheckbox = (
+        <Grid item xs={12} lg={6} align="center">
+          <Grid container alignItems="center" justify="center">
+            <Grid item>
+              <FormLabel component="label">Include: &nbsp;</FormLabel>
+            </Grid>
+            {this.state.loading ? (
+              <Grid item>
+                <GordonLoader size={20} />
+              </Grid>
+            ) : (
+              <Grid item>
+                {this.state.personType && !this.state.personType.includes('alum') ? (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.searchValues.includeStudent}
+                        onChange={() => {
+                          this.handleChangeIncludeStudent();
+                        }}
+                      />
+                    }
+                    label="Student"
+                  />
+                ) : null}
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={this.state.displayLargeImage}
+                      checked={this.state.searchValues.includeFacStaff}
                       onChange={() => {
-                        this.handleChangeDisplayLargeImages();
+                        this.handleChangeIncludeFacStaff();
                       }}
                     />
                   }
-                  label="Display Large Images"
+                  label="Faculty/Staff"
                 />
+                {this.state.personType && !this.state.personType.includes('stu') ? (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={this.state.searchValues.includeAlumni}
+                        onChange={() => {
+                          this.handleChangeIncludeAlumni();
+                        }}
+                      />
+                    }
+                    label="Alumni"
+                  />
+                ) : null}
               </Grid>
             )}
-          />
-        </Grid>
-      ) : (
-        <Grid item xs={12} align="center">
-          <FormLabel component="legend">Include:</FormLabel>
-          <GordonLoader size={79} />
+          </Grid>
         </Grid>
       );
 
@@ -729,18 +770,11 @@ class PeopleSearch extends Component {
 
       // Creates the PeopleSearch page depending on the status of the network found in local storage
       let PeopleSearch;
-      let searchPageTitle = (
-        <div align="center">
-          Search the
-          <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
-          Community
-        </div>
-      );
 
       if (networkStatus === 'online') {
         PeopleSearch = (
           <Grid container justify="center" spacing={6}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} lg={10} xl={8}>
               <Card style={{ padding: '0 3vw' }}>
                 <CardContent>
                   <CardHeader title={searchPageTitle} />
@@ -818,6 +852,24 @@ class PeopleSearch extends Component {
                       {aprilFools}
                     </Grid>
                     {PeopleSearchCheckbox}
+                    <Media
+                      query="(min-width: 960px)"
+                      render={() => (
+                        <Grid item xs={12} lg={6} align="center">
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={this.state.displayLargeImage}
+                                onChange={() => {
+                                  this.handleChangeDisplayLargeImages();
+                                }}
+                              />
+                            }
+                            label="Display Large Images"
+                          />
+                        </Grid>
+                      )}
+                    />
                   </Grid>
 
                   <br />
@@ -1168,7 +1220,6 @@ class PeopleSearch extends Component {
                         color="primary"
                         onClick={() => {
                           this.search();
-                          this.updateURL();
                         }}
                         fullWidth
                         variant="contained"
@@ -1182,10 +1233,19 @@ class PeopleSearch extends Component {
                 <br />
               </Card>
               <br />
-              <Card>
+              <Card ref={(el) => (this.componentRef = el)}>
+                {printPeopleSearchHeader}
                 {this.state.header}
                 {this.state.resultData}
               </Card>
+              {this.state.personType && !this.state.personType.includes('stu') && (
+                <ReactToPrint
+                  trigger={() => {
+                    return printPeopleSearchButton;
+                  }}
+                  content={() => this.componentRef}
+                />
+              )}
             </Grid>
           </Grid>
         );

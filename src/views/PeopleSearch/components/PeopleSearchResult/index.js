@@ -90,15 +90,10 @@ export default class PeopleSearchResult extends Component {
     }
     // set mailbox up
     if (Person.Mail_Location) {
-      if (size === 'single' || size === 'largeImages') {
-        personMailLocation =
-          Person.Type === 'Student'
-            ? 'Mailbox #' + Person.Mail_Location
-            : 'Mailstop ' + Person.Mail_Location;
-      } else {
-        personMailLocation =
-          Person.Type === 'Student' ? '#' + Person.Mail_Location : Person.Mail_Location;
-      }
+      personMailLocation =
+        Person.Type === 'Student'
+          ? 'Mailbox #' + Person.Mail_Location
+          : 'Mailstop: ' + Person.Mail_Location;
     }
 
     /*** Single Size - One Column (Mobile View) ***/
