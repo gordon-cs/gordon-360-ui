@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import IMG from 'react-graceful-image';
 import { Typography, Grid, Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import user from 'services/user';
+// import user from 'services/user';
 import { Link } from 'react-router-dom';
 
 import './peopleSearchResult.css';
@@ -16,35 +16,36 @@ export default class PeopleSearchResult extends Component {
       prefImage: null,
       defImage: null,
     };
+    this.loadAvatar = this.loadAvatar.bind(this);
   }
 
   componentDidUpdate(newProps) {
     if (this.props.Person.AD_Username !== newProps.Person.AD_Username) {
-      this.loadAvatar();
+      // this.loadAvatar();
     }
   }
 
   componentDidMount() {
-    this.loadAvatar();
+    // this.loadAvatar();
   }
 
-  async loadAvatar() {
-    this.setState({ avatar: null });
-    const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-      await user.getImage(this.props.Person.AD_Username),
-    ]);
-    let avatar;
-    if (this.props.Person.AD_Username) {
-      avatar = preferredImage || defaultImage;
-    } else {
-      avatar = (
-        <svg width="50" height="50" viewBox="0 0 50 50">
-          <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-        </svg>
-      );
-    }
-    this.setState({ avatar });
-  }
+  // async loadAvatar() {
+  //   // this.setState({ avatar: null });
+  //   const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
+  //     await user.getImage(this.props.Person.AD_Username),
+  //   ]);
+  //   let avatar;
+  //   if (this.props.Person.AD_Username) {
+  //     avatar = preferredImage || defaultImage;
+  //   } else {
+  //     avatar = (
+  //       <svg width="50" height="50" viewBox="0 0 50 50">
+  //         <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+  //       </svg>
+  //     );
+  //   }
+  //   // this.setState({ avatar });
+  // }
 
   render() {
     const { Person, size } = this.props;
@@ -118,9 +119,9 @@ export default class PeopleSearchResult extends Component {
               <Grid item>
                 <IMG
                   className="people-search-avatar-mobile"
-                  src={`data:image/jpg;base64,${this.state.avatar}`}
+                  src={`data:image/jpg;base64,${this.props.Image}`}
                   alt=""
-                  noLazyLoad="true"
+                  noLazyLoad="false"
                   placeholderColor="#eeeeee"
                 />
               </Grid>
@@ -154,7 +155,7 @@ export default class PeopleSearchResult extends Component {
               <Grid item xs={6} container justify="flex-end">
                 <IMG
                   className="people-search-avatar-large"
-                  src={`data:image/jpg;base64,${this.state.avatar}`}
+                  src={`data:image/jpg;base64,${this.props.Image}`}
                   alt=""
                   noLazyLoad="true"
                   placeholderColor="#eeeeee"
@@ -190,7 +191,7 @@ export default class PeopleSearchResult extends Component {
               <Grid item xs={1}>
                 <IMG
                   className="people-search-avatar"
-                  src={`data:image/jpg;base64,${this.state.avatar}`}
+                  src={`data:image/jpg;base64,${this.props.Image}`}
                   alt=""
                   noLazyLoad="true"
                   placeholderColor="#eeeeee"

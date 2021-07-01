@@ -37,8 +37,8 @@ import CityIcon from '@material-ui/icons/LocationCity';
 import goStalk from 'services/goStalk';
 import user from 'services/user';
 import { gordonColors } from 'theme';
-import PeopleSearchResult from './components/PeopleSearchResult';
 import GordonLoader from 'components/Loader';
+import PeopleSearchResult from './components/PeopleSearchResult';
 
 const styles = {
   FontAwesome: {
@@ -79,7 +79,7 @@ const styles = {
 };
 
 const noResultsCard = (
-  <Grid item xs={12}>
+  <Grid item xs={12} direction="row" justify="center" alignItems="center">
     <Card>
       <CardContent>
         <Typography variant="headline" align="center">
@@ -181,7 +181,8 @@ class PeopleSearch extends Component {
 
       displayLargeImage: false,
 
-      peopleSearchResults: null,
+      resultData: [], //Array of collected data to be created
+      imageResults: [], //array of collected images
       header: '',
       searchButtons: '',
 
@@ -193,7 +194,7 @@ class PeopleSearch extends Component {
     // Browser 'back' arrow
     window.onpopstate = () => {
       if (!window.location.href.includes('?')) {
-        this.setState({ header: '', peopleSearchResults: null });
+        this.setState({ header: '', resultData: null });
       }
       this.loadSearchParamsFromURL();
     };
@@ -398,41 +399,45 @@ class PeopleSearch extends Component {
     return result;
   };
 
+  // async loadImages()
+
   async search() {
     if (!this.canSearch()) {
       // do not search, only search if there are some non-blank non-false values
     } else {
       this.setState({
         header: <GordonLoader />,
-        peopleSearchResults: null,
+        resultData: [],
+        imageResults: [],
         academicsExpanded: false,
         homeExpanded: false,
         offDepExpanded: false,
       });
-      let peopleSearchResults = await goStalk.search(...Object.values(this.state.searchValues));
-
-      if (peopleSearchResults.length === 0) {
+      let results = await goStalk.search(...Object.values(this.state.searchValues));
+      if (results.length === 0) {
         this.setState({
-          peopleSearchResults: noResultsCard,
+          resultData: noResultsCard,
           header: '',
         });
       } else {
+        // this.setState({
+        //   resultData: (
+        //     <Media query="(min-width: 960px)">
+        //       {(matches) =>
+        //         results.map((person) => (
+        //           <PeopleSearchResult
+        //             key={person.AD_Username}
+        //             Person={person}
+        //             size={
+        //               !matches ? 'single' : this.state.displayLargeImage ? 'largeImages' : 'full'
+        //             }
+        //           />
+        //         ))
+        //       }
+        //     </Media>
+        //   )});
+
         this.setState({
-          peopleSearchResults: (
-            <Media query="(min-width: 960px)">
-              {(matches) =>
-                peopleSearchResults.map((person) => (
-                  <PeopleSearchResult
-                    key={person.AD_Username}
-                    Person={person}
-                    size={
-                      !matches ? 'single' : this.state.displayLargeImage ? 'largeImages' : 'full'
-                    }
-                  />
-                ))
-              }
-            </Media>
-          ),
           header: (
             <Media query="(min-width: 960px)">
               {(matches) =>
@@ -443,6 +448,50 @@ class PeopleSearch extends Component {
             </Media>
           ),
         });
+
+        for (let i = 0; i < results.length; i++) {
+          const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
+            await user.getImage(results[i].AD_Username),
+          ]);
+          if (results[i].AD_Username) {
+            this.setState({
+              imageResults: this.state.imageResults.concat(defaultImage || preferredImage),
+            });
+          } else {
+            this.setState({
+              imageResults: this.state.imageResults.concat(
+                <svg width="50" height="50" viewBox="0 0 50 50">
+                  <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+                </svg>,
+              ),
+            });
+          }
+
+          this.setState({
+            resultData: (
+              <Media query="(min-width: 960px)">
+                {(matches) =>
+                  results
+                    .slice(0, i + 1)
+                    .map((person, index) => (
+                      <PeopleSearchResult
+                        key={person.AD_Username}
+                        Person={person}
+                        Image={this.state.imageResults[index]}
+                        size={
+                          !matches
+                            ? 'single'
+                            : this.state.displayLargeImage
+                            ? 'largeImages'
+                            : 'full'
+                        }
+                      />
+                    ))
+                }
+              </Media>
+            ),
+          });
+        }
       }
     }
   }
@@ -1103,7 +1152,7 @@ class PeopleSearch extends Component {
                               homeExpanded: false,
                               offDepExpanded: false,
                               header: '',
-                              peopleSearchResults: null,
+                              resultData: null,
                               displayLargeImage: false,
                             },
                             () => this.updateURL(),
@@ -1135,7 +1184,7 @@ class PeopleSearch extends Component {
               <br />
               <Card>
                 {this.state.header}
-                {this.state.peopleSearchResults}
+                {this.state.resultData}
               </Card>
             </Grid>
           </Grid>
