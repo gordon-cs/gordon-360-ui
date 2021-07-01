@@ -40,7 +40,6 @@ const MemberList = ({
    * @param {Object} a the first member to compare
    * @param {Object} b the second member to compare
    * @returns {-1 | 0 | 1} the sort order of the members: -1 if a before b, 1 if b before a, or 0 if equal
-   * compareByRoleThenLastThenFirst
    */
 
   const compareByRoleThenLastThenFirst = (a, b) => {
