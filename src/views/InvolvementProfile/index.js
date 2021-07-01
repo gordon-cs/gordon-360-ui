@@ -22,7 +22,7 @@ import membershipService from 'services/membership';
 import sessionService from 'services/session';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
-import ContactListItem from './components/ContactListItem/Index';
+import ContactListItem from './components/ContactListItem/index';
 import Membership from './components/Membership';
 import './involvement-profile.css';
 import GordonOffline from 'components/GordonOffline';
