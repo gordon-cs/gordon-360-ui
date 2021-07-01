@@ -16,6 +16,14 @@ const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
+
+  /*
+    Did disable the health check popup from the home page, but leave the health tab unchanged.
+    This way, nobody will be required to make a report in order to see the home page,
+    but they can still report if needed.
+    To undo the changes made you may just uncomment all the code that has been commented out
+  */
+
   // const [networkStatus, setNetworkStatus] = useState('online');
   // const [hasAnswered, setHasAnswered] = useState(null);
   ////
@@ -41,7 +49,7 @@ const Home = ({ authentication, onLogIn }) => {
   //       return prevStatus;
   //     });
   //   });
-
+  //
   //   return () => window.removeEventListener('message', () => {});
   // }, []);
 
