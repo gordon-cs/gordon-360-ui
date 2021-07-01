@@ -13,7 +13,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
-import { userService, user } from 'services/user';
+import userService from 'services/user';
 import GordonSnackbar from 'components/Snackbar';
 import './index.css';
 
@@ -22,17 +22,9 @@ const UpdatePhone = () => {
   const [mobilePhoneNumber, setMobilePhoneNumber] = useState();
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const handleSubmit = async () => {
     await userService.setMobilePhoneNumber(mobilePhoneNumber);
-    handleClose();
+    setOpen(false);
     handleChangeMobilePhoneNumber();
   };
 
@@ -42,7 +34,7 @@ const UpdatePhone = () => {
 
   const handleChangeMobilePhoneNumber = async (mobilePhoneNumber) => {
     try {
-      await user.setMobilePhoneNumber(mobilePhoneNumber);
+      await userService.setMobilePhoneNumber(mobilePhoneNumber);
       createSnackbar('Your phone number will update within a couple hours.', 'success');
     } catch {
       createSnackbar('Phone number failed to update. Please contact CTS.', 'error');
@@ -51,10 +43,10 @@ const UpdatePhone = () => {
 
   return (
     <div className="gc360-updatephone-dialog">
-      <IconButton className="gc360-my-profile_edit-icon" onClick={handleClickOpen}>
+      <IconButton className="gc360-my-profile_edit-icon" onClick={() => setOpen(true)}>
         <EditIcon style={{ fontSize: 20 }} />
       </IconButton>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle className="gc360-updatephone-dialog_title">Update Phone Number</DialogTitle>
         <DialogContent className="gc360-updatephone-dialog_content">
           {/* SUBMISSION GUIDELINES */}
@@ -85,7 +77,7 @@ const UpdatePhone = () => {
 
         {/* CANCEL/UPDATE */}
         <DialogActions className="gc360-updatephone-dialog_actions">
-          <Button onClick={handleClose} variant="outlined" color="primary">
+          <Button onClick={() => setOpen(false)} variant="outlined" color="primary">
             Cancel
           </Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">
