@@ -18,14 +18,13 @@ import {
   Button,
   Fab,
   Typography,
-  Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   DialogContentText,
   MenuItem,
 } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+import GordonDialogBox from 'components/GordonDialogBox';
 
 const BREAKPOINT_WIDTH = 540;
 const CROP_DIM = 200; // pixels
@@ -445,17 +444,6 @@ const StudentNews = (props) => {
       );
     }
 
-    let submitButton = (
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={currentlyEditing ? handleUpdate : handleSubmit}
-        disabled={submitButtonDisabled}
-      >
-        {currentlyEditing ? 'Update' : 'Submit'}
-      </Button>
-    );
-
     let newsJSX;
 
     // If the user is online
@@ -497,8 +485,15 @@ const StudentNews = (props) => {
             {/* NOTE: leaving helper text for now in case
             that is better than disabling submit button */}
             {/* Create Posting */}
-            <Dialog open={openPostActivity} fullWidth>
-              <DialogTitle> Post on Student News </DialogTitle>
+            <GordonDialogBox
+              open={openPostActivity}
+              title=" Post on Student News "
+              buttonClicked={currentlyEditing ? handleUpdate : handleSubmit}
+              buttonName={currentlyEditing ? 'Update' : 'Submit'}
+              isButtonDisabled={submitButtonDisabled}
+              cancelButtonClicked={handleWindowClose}
+              cancelButtonName="Cancel"
+            >
               <DialogContent>
                 <Grid container>
                   {/* CATEGORY ENTRY */}
@@ -642,17 +637,7 @@ const StudentNews = (props) => {
                   </Grid>
                 </Grid>
               </DialogContent>
-
-              {/* CANCEL/SUBMIT/EDIT */}
-              {
-                <DialogActions>
-                  <Button variant="contained" onClick={handleWindowClose}>
-                    Cancel
-                  </Button>
-                  {submitButton}
-                </DialogActions>
-              }
-            </Dialog>
+            </GordonDialogBox>
 
             {/* USER FEEDBACK */}
             {/* <Snackbar
