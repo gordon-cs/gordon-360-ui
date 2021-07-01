@@ -46,7 +46,7 @@ const UpdatePhone = () => {
       await user.setMobilePhoneNumber(mobilePhoneNumber);
       createSnackbar('Your phone number will update within a couple hours.', 'success');
     } catch {
-      createSnackbar('The phone number change Failed. Please contact CTS.', 'error');
+      createSnackbar('Phone number failed to update. Please contact CTS.', 'error');
     }
   };
 
