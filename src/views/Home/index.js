@@ -18,7 +18,7 @@ const Home = ({ authentication, onLogIn }) => {
   const [personType, setPersonType] = useState(null);
   // const [networkStatus, setNetworkStatus] = useState('online');
   // const [hasAnswered, setHasAnswered] = useState(null);
-
+  ////
   // useEffect(() => {
   //   // Retrieve network status from local storage or default to online
   //   try {
