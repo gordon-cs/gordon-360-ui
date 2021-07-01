@@ -447,7 +447,6 @@ async function setCliftonStrengths(profile) {
 
 async function setMobilePhoneNumber(value) {
   await http.put(`profiles/mobile_phone_number/${value}/`);
-  console.log(value);
 }
 
 async function setMobilePhonePrivacy(makePrivate) {

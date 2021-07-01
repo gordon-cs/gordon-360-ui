@@ -87,7 +87,6 @@ export default class GordonPeopleSearch extends Component {
     query = query.toLowerCase();
 
     let suggestions = await peopleSearch.search(query);
-
     this.setState({ suggestions });
   }
 
@@ -196,11 +195,11 @@ export default class GordonPeopleSearch extends Component {
         key={suggestion.UserName}
         onClick={this.handleClick.bind(this, suggestion.UserName)}
         className={
-          suggestionList && suggestionList[suggestionIndex] !== undefined
-            ? suggestion.UserName === suggestionList[suggestionIndex].UserName &&
-              suggestionIndex !== -1
-              ? 'people-search-suggestion-selected '
-              : 'people-search-suggestion'
+          suggestionList &&
+          suggestionList[suggestionIndex] !== undefined &&
+          suggestion.UserName === suggestionList[suggestionIndex].UserName &&
+          suggestionIndex !== -1
+            ? 'people-search-suggestion-selected '
             : 'people-search-suggestion'
         }
       >
@@ -221,7 +220,16 @@ export default class GordonPeopleSearch extends Component {
                 ),
               ].map((e, key) => <span key={key}>{e}</span>)
             : this.getHighlightedText(
-                suggestion.FirstName + ' ' + suggestion.LastName,
+                suggestion.Nickname &&
+                  suggestion.Nickname !== suggestion.FirstName &&
+                  suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
+                  ? suggestion.FirstName +
+                      ' ' +
+                      suggestion.LastName +
+                      ' (' +
+                      suggestion.Nickname +
+                      ')'
+                  : suggestion.FirstName + ' ' + suggestion.LastName,
                 this.state.highlightQuery,
               )}
         </Typography>

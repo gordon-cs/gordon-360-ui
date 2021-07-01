@@ -396,11 +396,9 @@ In the unusual case that Train or Production have not been automatically deploye
 
 ## Known Issues
 
-- Internet Explorer does not work with 360 and never will due to the fact that IE is too old to support features that 360 currently uses
-
 - The 'edit involvement' and 'change image' dialog boxes, accessible through the admin view of an involvement profile, are messy. Refer to the CSS styling and replacement of Material UI Grid in views/IDUploader/IDUploader.scss and ''/index.js for a proven fix.
 
-- ID and photo uploader dialog boxes are a bit squished for screens as small as iPhone 5's.
+- ID and photo uploader dialog boxes are rather compressed for screens as small as iPhone 5's.
 
 - An admin is able to remove themselves (on admin view), which causes major issues.
 

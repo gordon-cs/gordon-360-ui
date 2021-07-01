@@ -22,7 +22,7 @@ import 'cropperjs/dist/cropper.css';
 import './IDUploader.css';
 import user from 'services/user';
 import errorLog from 'services/errorLog';
-import Login from 'views/Login';
+import Login from 'components/LoginDialogue';
 
 const CROP_DIM = 1200; // pixels
 class IDUploader extends Component {
