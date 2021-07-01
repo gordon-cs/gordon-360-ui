@@ -29,6 +29,8 @@ const AcademicCheckIn = (authentication) => {
 
   const holdStatus = false;
 
+  const [prevState, setState] = useState([]);
+
   const [loading, setLoading] = useState(false);
   // funny refactor moment
   const [emergencyContacts, setEmergencyContacts] = useState({
@@ -136,7 +138,8 @@ const AcademicCheckIn = (authentication) => {
   };
 
   const handleCheckEmergContact = (evt) => {
-    setEmergencyContacts({ ...emergencyContacts, [evt.target.name]: evt.target.checked });
+    const { name, value } = evt.target;
+    setEmergencyContacts(prevState => ({ ...emergencyContacts, [evt.target.name]: evt.target.checked }));
   };
 
   const handleCheckPersonalPhone = (evt) => {
