@@ -33,10 +33,17 @@ const MemberList = ({
     return () => window.removeEventListener('resize', resize);
   });
 
-  // compare names by participation Hierarchy "Advisor" > "Leader" >
-  //"member" > "Guest" then alphabetically.
+  /**
+   * Compares two members by their role and then their names - last then first
+   *
+   * Roles follow this hierarchy: Advisor > Leader > Member > Guest
+   * @param {Object} a the first member to compare
+   * @param {Object} b the second member to compare
+   * @returns {-1 | 0 | 1} the sort order of the members: -1 if a before b, 1 if b before a, or 0 if equal
+   * compareByRoleThenLastThenFirst
+   */
 
-  const compareByLastThenFirst = (a, b) => {
+  const compareByRoleThenLastThenFirst = (a, b) => {
     if (a.ParticipationDescription !== b.ParticipationDescription) {
       if (a.ParticipationDescription === 'Advisor') return -1;
       if (b.ParticipationDescription === 'Advisor') return 1;
@@ -108,7 +115,7 @@ const MemberList = ({
     <Card>
       {header}
       <CardContent>
-        {members.sort(compareByLastThenFirst).map((member) => (
+        {members.sort(compareByRoleThenLastThenFirst).map((member) => (
           <MemberListItem
             member={member}
             key={member.MembershipID}
