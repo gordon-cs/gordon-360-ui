@@ -3,7 +3,7 @@ import AcademicCheckInWelcome from 'views/AcademicCheckIn/components/AcademicChe
 import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyContactUpdate';
 import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
 import { Button, Grid, Card, CardHeader, Box } from '@material-ui/core';
-import { submitContact } from 'services/checkIn';
+import checkInService from 'services/checkIn';
 import './index.css';
 import PrivacyAgreement from './components/PrivacyAgreement';
 import RaceEthnicity from './components/RaceEthnicity';
@@ -11,7 +11,7 @@ import ConfirmCheckIn from './components/ConfirmCheckIn';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 
-const AcademicCheckIn = (authentication) => {
+const AcademicCheckIn = ({ authentication }) => {
   const [activeStep, setActiveStep] = useState(0);
 
   const getSteps = () => {
@@ -29,38 +29,30 @@ const AcademicCheckIn = (authentication) => {
 
   const holdStatus = false;
 
-  const [prevState, setState] = useState([]);
-
   const [loading, setLoading] = useState(false);
-  // funny refactor moment
+
   const [emergencyContacts, setEmergencyContacts] = useState({
-    emergencyContact1: {
-      firstName: '',
-      lastName: '',
-      relationship: '',
-      homePhone: '',
-      homePhoneIN: false,
-      mobilePhone: '',
-      mobilePhoneIN: false,
-    },
-    emergencyContact2: {
-      firstName: '',
-      lastName: '',
-      relationship: '',
-      homePhone: '',
-      homePhoneIN: false,
-      mobilePhone: '',
-      mobilePhoneIN: false,
-    },
-    emergencyContact3: {
-      firstName: '',
-      lastName: '',
-      relationship: '',
-      homePhone: '',
-      homePhoneIN: false,
-      mobilePhone: '',
-      mobilePhoneIN: false,
-    },
+    firstName1: '',
+    lastName1: '',
+    relationship1: '',
+    homePhone1: '',
+    homePhone1IN: false,
+    mobilePhone1: '',
+    mobilePhone1IN: false,
+    firstName2: '',
+    lastName2: '',
+    relationship2: '',
+    homePhone2: '',
+    homePhone2IN: false,
+    mobilePhone2: '',
+    mobilePhone2IN: false,
+    firstName3: '',
+    lastName3: '',
+    relationship3: '',
+    homePhone3: '',
+    homePhone3IN: false,
+    mobilePhone3: '',
+    mobilePhone3IN: false,
   });
 
   const [holds, setHolds] = useState({
@@ -117,12 +109,7 @@ const AcademicCheckIn = (authentication) => {
   };
 
   const handleChangeEmergContact = (evt) => {
-    // setEmergencyContacts({ ...emergencyContacts, [evt.target.name]: evt.target.value });
-    setEmergencyContacts((emergencyContacts) => ({
-      ...emergencyContacts,
-      [evt.target.name]: evt.target.value,
-    }));
-    console.log(emergencyContacts.emergencyContact1);
+    setEmergencyContacts({ ...emergencyContacts, [evt.target.name]: evt.target.value });
   };
 
   const handleChangePersonalPhone = (evt) => {
@@ -138,8 +125,7 @@ const AcademicCheckIn = (authentication) => {
   };
 
   const handleCheckEmergContact = (evt) => {
-    const { name, value } = evt.target;
-    setEmergencyContacts(prevState => ({ ...emergencyContacts, [evt.target.name]: evt.target.checked }));
+    setEmergencyContacts({ ...emergencyContacts, [evt.target.name]: evt.target.checked });
   };
 
   const handleCheckPersonalPhone = (evt) => {
@@ -150,8 +136,37 @@ const AcademicCheckIn = (authentication) => {
     setDemographic({ ...demographic, [evt.target.name]: evt.target.checked });
   };
 
+  const splitEmergencyContacts = (emergencyContacts) => {
+    return [
+      {
+        firstName: emergencyContacts.firstName1,
+        lastName: emergencyContacts.lastName1,
+        homePhone: emergencyContacts.homePhone1,
+        mobilePhone: emergencyContacts.mobilePhone1,
+        relationship: emergencyContacts.relationship1,
+      },
+      {
+        firstName: emergencyContacts.firstName2,
+        lastName: emergencyContacts.lastName2,
+        homePhone: emergencyContacts.homePhone2,
+        mobilePhone: emergencyContacts.mobilePhone2,
+        relationship: emergencyContacts.relationship2,
+      },
+      {
+        firstName: emergencyContacts.firstName3,
+        lastName: emergencyContacts.lastName3,
+        homePhone: emergencyContacts.homePhone3,
+        mobilePhone: emergencyContacts.mobilePhone3,
+        relationship: emergencyContacts.relationship3,
+      },
+    ];
+  };
+
   const handleSubmit = () => {
-    alert(`🧙‍♂️`);
+    alert(`Done 🧙‍♂️`);
+    splitEmergencyContacts(emergencyContacts).map((contact) => {
+      checkInService.submitContact(contact);
+    });
   };
 
   let content;

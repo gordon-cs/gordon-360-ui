@@ -22,35 +22,35 @@ const EmergencyContactUpdate = ({
 
   const emergencyContact1 = [
     1,
-    emergencyContacts.emergencyContact1.firstName,
-    emergencyContacts.emergencyContact1.lastName,
-    emergencyContacts.emergencyContact1.relationship,
-    emergencyContacts.emergencyContact1.homePhone,
-    emergencyContacts.emergencyContact1.homePhoneIN,
-    emergencyContacts.emergencyContact1.mobilePhone,
-    emergencyContacts.emergencyContact1.mobilePhoneIN,
+    emergencyContacts.firstName1,
+    emergencyContacts.lastName1,
+    emergencyContacts.relationship1,
+    emergencyContacts.homePhone1,
+    emergencyContacts.homePhone1IN,
+    emergencyContacts.mobilePhone1,
+    emergencyContacts.mobilePhone1IN,
   ];
 
   const emergencyContact2 = [
     2,
-    emergencyContacts.emergencyContact2.firstName,
-    emergencyContacts.emergencyContact2.lastName,
-    emergencyContacts.emergencyContact2.relationship,
-    emergencyContacts.emergencyContact2.homePhone,
-    emergencyContacts.emergencyContact2.homePhoneIN,
-    emergencyContacts.emergencyContact2.mobilePhone,
-    emergencyContacts.emergencyContact2.mobilePhoneIN,
+    emergencyContacts.firstName2,
+    emergencyContacts.lastName2,
+    emergencyContacts.relationship2,
+    emergencyContacts.homePhone2,
+    emergencyContacts.homePhone2IN,
+    emergencyContacts.mobilePhone2,
+    emergencyContacts.mobilePhone2IN,
   ];
 
   const emergencyContact3 = [
     3,
-    emergencyContacts.emergencyContact3.firstName,
-    emergencyContacts.emergencyContact3.lastName,
-    emergencyContacts.emergencyContact3.relationship,
-    emergencyContacts.emergencyContact3.homePhone,
-    emergencyContacts.emergencyContact3.homePhoneIN,
-    emergencyContacts.emergencyContact3.mobilePhone,
-    emergencyContacts.emergencyContact3.mobilePhoneIN,
+    emergencyContacts.firstName3,
+    emergencyContacts.lastName3,
+    emergencyContacts.relationship3,
+    emergencyContacts.homePhone3,
+    emergencyContacts.homePhone3IN,
+    emergencyContacts.mobilePhone3,
+    emergencyContacts.mobilePhone3IN,
   ];
 
   return (
@@ -131,7 +131,7 @@ function createEmergencyContactFields(
             <InputLabel htmlFor="component-simple"> First Name </InputLabel>
             <Input
               id="component-simple"
-              name={'emergencyContacts.emergencyContact' + formNumber + '.firstName'}
+              name={'firstName' + formNumber}
               value={valueList[1]}
               onChange={handleChangeEmergContact}
             />
