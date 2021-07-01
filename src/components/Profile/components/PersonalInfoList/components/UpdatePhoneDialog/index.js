@@ -13,8 +13,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
-import userService from 'services/user';
-import user from 'services/user';
+import { userService, user } from 'services/user';
 import GordonSnackbar from 'components/Snackbar';
 import './index.css';
 
