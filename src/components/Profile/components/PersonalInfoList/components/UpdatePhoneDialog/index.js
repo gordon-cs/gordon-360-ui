@@ -18,7 +18,7 @@ import GordonSnackbar from 'components/Snackbar';
 import './index.css';
 
 const UpdatePhone = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [mobilePhoneNumber, setMobilePhoneNumber] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
