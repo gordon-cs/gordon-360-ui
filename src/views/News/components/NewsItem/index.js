@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { React, useState } from 'react';
-import newsService from 'services/news';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
@@ -15,27 +14,11 @@ const NewsItem = ({
   unapproved,
   size,
   currentUsername,
-  createSnackbar,
   handleNewsItemEdit,
+  handleNewsItemDelete,
 }) => {
   const [open, setOpen] = useState(false);
   const isOnline = useNetworkStatus();
-
-  /**
-   * When the delete button is clicked for a posting
-   */
-  async function handleDelete() {
-    const newsID = posting.SNID;
-    // delete the news item and give feedback
-    let result = await newsService.deleteStudentNews(newsID);
-    if (result === undefined) {
-      createSnackbar('News Posting Failed to Delete', 'error');
-    } else {
-      createSnackbar('News Posting Deleted Successfully', 'success');
-    }
-    // Should be changed in future to allow react to only reload the updated news list
-    window.top.location.reload();
-  }
 
   if (unapproved) {
     // Shows 'pending approval' instead of the date posted
@@ -90,7 +73,9 @@ const NewsItem = ({
         variant="outlined"
         color="primary"
         startIcon={<DeleteIcon />}
-        onClick={handleDelete}
+        onClick={() => {
+          handleNewsItemDelete(posting.SNID);
+        }}
         className="btn deleteButton"
       >
         Delete
@@ -202,8 +187,8 @@ NewsItem.propTypes = {
   unapproved: PropTypes.any,
   size: PropTypes.string.isRequired,
   currentUsername: PropTypes.string.isRequired,
-  createSnackbar: PropTypes.func.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
+  handleNewsItemDelete: PropTypes.func.isRequired,
 };
 
 export default NewsItem;

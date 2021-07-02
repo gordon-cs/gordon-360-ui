@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import newsService from 'services/news';
 import userService from 'services/user';
@@ -109,26 +109,27 @@ const StudentNews = (props) => {
 
   let cropperRef = React.createRef();
 
-  useEffect(() => {
-    const loadNews = async () => {
-      setLoading(true);
+  const loadNews = useCallback(async () => {
+    setLoading(true);
 
-      if (props.authentication) {
-        const newsCategories = await newsService.getCategories();
-        const personalUnapprovedNews = await newsService.getPersonalUnapprovedFormatted();
-        const unexpiredNews = await newsService.getNotExpiredFormatted();
-        setLoading(false);
-        setCategories(newsCategories);
-        setNews(unexpiredNews);
-        setPersonalUnapprovedNews(personalUnapprovedNews);
-        //setFilteredNews(unexpiredNews);
-      } else {
-        // TODO: test authentication handling and neaten code (ex. below)
-        // alert("Please sign in to access student news");
-      }
-    };
-    loadNews();
+    if (props.authentication) {
+      const newsCategories = await newsService.getCategories();
+      const personalUnapprovedNews = await newsService.getPersonalUnapprovedFormatted();
+      const unexpiredNews = await newsService.getNotExpiredFormatted();
+      setLoading(false);
+      setCategories(newsCategories);
+      setNews(unexpiredNews);
+      setPersonalUnapprovedNews(personalUnapprovedNews);
+      //setFilteredNews(unexpiredNews);
+    } else {
+      // TODO: test authentication handling and neaten code (ex. below)
+      // alert("Please sign in to access student news");
+    }
   }, [props.authentication]);
+
+  useEffect(() => {
+    loadNews();
+  });
 
   useEffect(() => {
     const loadUsername = async () => {
@@ -360,10 +361,8 @@ const StudentNews = (props) => {
       createSnackbar('News Posting Updated Successfully', 'success');
     }
 
-    // close the window and reload to update data
-    // (necessary since data is currently not pulled from render method)
     setOpenPostActivity(false);
-    window.top.location.reload();
+    loadNews(); //reload news
   }
 
   async function handleSubmit() {
@@ -393,12 +392,26 @@ const StudentNews = (props) => {
       createSnackbar('News Posting Failed to Submit', 'error');
     } else {
       createSnackbar('News Posting Submitted Successfully', 'success');
+      handleWindowClose();
+      loadNews(); //reload news
+    }
+  }
+
+  /**
+   * When the delete button is clicked for a posting
+   * @param {number} snid The SNID of the post to be deleted
+   */
+  async function handleNewsItemDelete(snid) {
+    console.log(typeof snid);
+    // delete the news item and give feedback
+    let result = await newsService.deleteStudentNews(snid);
+    if (result === undefined) {
+      createSnackbar('News Posting Failed to Delete', 'error');
+    } else {
+      createSnackbar('News Posting Deleted Successfully', 'success');
     }
 
-    // close the window and reload to update data
-    // (necessary since data is currently not pulled from render method)
-    setOpenPostActivity(false);
-    window.top.location.reload();
+    loadNews();
   }
 
   function imageOnLoadHelper(reader) {
@@ -438,8 +451,8 @@ const StudentNews = (props) => {
           news={news}
           personalUnapprovedNews={personalUnapprovedNews}
           currentUsername={currentUsername}
-          createSnackbar={createSnackbar}
           handleNewsItemEdit={handleNewsItemEdit}
+          handleNewsItemDelete={handleNewsItemDelete}
         />
       );
     }
