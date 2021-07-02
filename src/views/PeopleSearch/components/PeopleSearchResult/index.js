@@ -52,7 +52,7 @@ export default class PeopleSearchResult extends Component {
     fullName = Person.FirstName + ' ' + Person.LastName;
 
     // set nicknames up
-    if (Person.NickName && Person.FirstName !== Person.NickName) {
+    if (Person.FirstName !== Person.NickName) {
       nickname = '(' + Person.NickName + ')';
     }
     // set classes up
@@ -206,7 +206,9 @@ export default class PeopleSearchResult extends Component {
                 <Typography>{personClassJobTitle}</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography>{Person.AD_Username}</Typography>
+                <Typography>
+                  {Person.AD_Username.includes('.') ? Person.AD_Username : null}
+                </Typography>
                 <Typography>{personMailLocation}</Typography>
               </Grid>
             </Grid>
