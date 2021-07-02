@@ -61,6 +61,8 @@ const getPersonalPhone = (id) => http.get(`checkIn/phone`);
 
 const getDemographic = (id) => http.get(`checkIn/demographic`);
 
+const getEmergencyContacts = (id) => http.get(`checkIn/emergencycontact`);
+
 async function submitPhone(data) {
   try {
     return await http.post(`checkIn/phone`, data);

@@ -94,8 +94,18 @@ const AcademicCheckIn = ({ authentication }) => {
   });
 
   useEffect(() => {
+    async function loadEmergencyContacts() {
+      setLoading(true);
+      try {
+        setEmergencyContacts(await checkInService.getEmergencyContacts());
+        setLoading(false);
+      } catch (error) {
+        // Do Nothing
+      }
+    }
     const loadData = async () => {
       if (authentication) {
+        loadEmergencyContacts();
       }
     };
   });
