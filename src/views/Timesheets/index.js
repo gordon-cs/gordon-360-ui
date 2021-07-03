@@ -1,31 +1,60 @@
 //Main timesheets page
-import { Card, CardContent, CardHeader, Grid } from '@material-ui/core/';
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import GordonUnauthorized from 'components/GordonUnauthorized';
+import {
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
+  Link,
+  Tooltip,
+  FormControl,
+  InputLabel,
+  Select,
+  Input,
+  MenuItem,
+  Button,
+  Typography,
+  TextField,
+} from '@material-ui/core/';
+import DateFnsUtils from '@date-io/date-fns';
+import { isValid, isWithinInterval, addDays, set } from 'date-fns';
+import jobsService from 'services/jobs';
+import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
+import ShiftDisplay from './components/ShiftDisplay';
+import { withStyles } from '@material-ui/core/styles';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import { gordonColors } from 'theme';
 import './timesheets.css';
+import GordonLoader from 'components/Loader';
+import { makeStyles } from '@material-ui/core/styles';
+import SimpleSnackbar from 'components/Snackbar';
+import user from 'services/user';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import GordonOffline from 'components/GordonOffline';
 
-// const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
-// const MILLISECONDS_PER_HOUR = 3600000;
+const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
+const MILLISECONDS_PER_HOUR = 3600000;
 
-// const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
-// const withNoTime = (date) => set(date, { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
+const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
+const withNoTime = (date) => set(date, { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
 
-// const useStyles = makeStyles((theme) => ({
-//   customWidth: {
-//     maxWidth: 500,
-//   },
-// }));
+const useStyles = makeStyles((theme) => ({
+  customWidth: {
+    maxWidth: 500,
+  },
+}));
 
-// const CustomTooltip = withStyles((theme) => ({
-//   tooltip: {
-//     backgroundColor: theme.palette.common.black,
-//     color: 'rgba(255, 255, 255, 0.87)',
-//     boxShadow: theme.shadows[1],
-//     fontSize: 12,
-//   },
-// }))(Tooltip);
+const CustomTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.black,
+    color: 'rgba(255, 255, 255, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 12,
+  },
+}))(Tooltip);
 
 const Timesheets = (props) => {
-  /* BEGIN TEMPORARY SHUTDOWN
   const [userJobs, setUserJobs] = useState([]);
   const [selectedDateIn, setSelectedDateIn] = useState(null);
   const [selectedDateOut, setSelectedDateOut] = useState(null);
@@ -612,19 +641,6 @@ const Timesheets = (props) => {
   } else {
     return <GordonUnauthorized feature={'timesheets'} />;
   }
-  END TEMPORARY SHUTDOWN */
-  return (
-    <Grid container justify="center">
-      <Grid item xs={12} lg={8}>
-        <Card>
-          <CardHeader title="Timesheets Unavailable July 1st"></CardHeader>
-          <CardContent>
-            This page is currently offline until Friday 07/02/2021 for Maintenance.
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
-  );
 };
 
 export default Timesheets;
