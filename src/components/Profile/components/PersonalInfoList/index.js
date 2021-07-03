@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import user from 'services/user';
 import './index.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
@@ -123,7 +124,12 @@ const PersonalInfoList = ({
       title="Mobile Phone:"
       contentText={
         myProf ? (
-          formatPhone(MobilePhone)
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>{formatPhone(MobilePhone)}</Grid>
+            <Grid item>
+              <UpdatePhone />
+            </Grid>
+          </Grid>
         ) : MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
