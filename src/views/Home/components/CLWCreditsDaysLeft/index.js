@@ -105,7 +105,7 @@ const CLWCreditsDaysLeft = () => {
               {`${daysRemaining} Days Left`}
             </Typography>
           </Grid>
-          {required && current ? (
+          {required ? (
             <Grid item>
               <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
                 {`${remaining} CL&W Credit` + (remaining === 1 ? '' : 's') + ' Left'}
@@ -141,7 +141,7 @@ const CLWCreditsDaysLeft = () => {
             </div>
           </div>
 
-          {required && current ? (
+          {required ? (
             <div
               style={{
                 display: 'flex',
