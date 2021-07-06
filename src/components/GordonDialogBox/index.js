@@ -8,6 +8,7 @@ import {
   Button,
 } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import './index.css';
 
 // Learn more about Dialog's API at https://material-ui.com/api/dialog/
 // Learn more about Alert's API at https://material-ui.com/api/alert/
@@ -26,7 +27,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 
 /**
  * @param {Object} props the component props
- * @param  {Boolean} props.open Boolean that determines if the dialog should be visible or not
+ * @param {Boolean} props.open Boolean that determines if the dialog should be visible or not
  * @param {onCloseCallback} props.onClose A callback function fired after the component requests to be closed
  * @param {String} props.title The title of the dialog box
  * @param {onClickCallback} props.buttonClicked A function called when the confirming button is clicked
@@ -52,12 +53,13 @@ const GordonDialogBox = ({
 }) => {
   return (
     <Dialog
+      className="gc360-gordondialogbox"
       open={open}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
+      <DialogTitle className="gc360-gordondialogbox_title" id="alert-dialog-title">
         {severity ? (
           <Alert variant="filled" severity={severity}>
             <AlertTitle>
@@ -68,10 +70,10 @@ const GordonDialogBox = ({
           title
         )}
       </DialogTitle>
-      <DialogContent id="alert-dialog-description">
-        {typeof children === String ? <DialogContentText>{children}</DialogContentText> : children}
+      <DialogContent className="gc360-gordondialogbox_content" id="alert-dialog-description">
+        <DialogContentText className="gc360-gordondialogbox_text">{children}</DialogContentText>
       </DialogContent>
-      <DialogActions>
+      <DialogActions className="gc360-gordondialogbox_actions">
         {cancelButtonClicked && (
           <Button variant="contained" onClick={cancelButtonClicked}>
             {cancelButtonName ?? 'Cancel'}
