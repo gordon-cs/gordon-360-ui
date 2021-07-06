@@ -9,6 +9,7 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonOffline from 'components/GordonOffline';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
+import { isMobile } from 'react-device-detect';
 import 'cropperjs/dist/cropper.css';
 import { gordonColors } from 'theme';
 import {
@@ -26,8 +27,7 @@ import {
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonDialogBox from 'components/GordonDialogBox';
 
-const BREAKPOINT_WIDTH = 540;
-const CROP_DIM = 200; // pixels
+const CROP_DIM = 200; // Width of cropped image canvas
 
 const styles = {
   button: {
@@ -85,33 +85,15 @@ const StudentNews = (props) => {
   const [cropperImageData, setCropperImageData] = useState(null); //null if no picture chosen, else contains picture
   const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState(null);
   const [photoDialogError, setPhotoDialogError] = useState(null);
-  const [cropBoxDim, setCropBoxDim] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [currentUsername, setCurrentUsername] = useState('');
   const [currentlyEditing, setCurrentlyEditing] = useState(false); // false if not editing, newsID if editing
-  const [justShowPicture, setJustShowPicture] = useState(false);
-  /*justShowPicture is a more complicated state property. If an image was submitted
-   *to a news post, then if the user clicks on the edit button for the post later,
-   *we want to at first just show them the image, not the cropper (particularly since
-   *the cropper would only be able to contain what the API stored, so they can only
-   *crop more). If they remove the picture, then we want to show the dropzone. If they
-   *add a new picture, we want to display the cropper with the new data. When edit is
-   *clicked for the first time and when a new picture has been added, showCropper will
-   *have data, so we can't use showCropper to determine whether or not to show an img
-   *tag or a cropper. A new property was necessary. justShowPicture begins false and is
-   *made true when the edit button is clicked. When either the remove picture or cancel
-   *button is clicked from the edit window, it is set back to false. In this way there is
-   *the ability to update the view to the user. As a side note, this also creates the
-   *ability to change the message above the image in a way that makes sense in either the
-   *just-opened-an-edit or the just-submitted-new-image context.
-   */
 
   let cropperRef = React.createRef();
 
   const loadNews = useCallback(async () => {
     setLoading(true);
-
     if (props.authentication) {
       const newsCategories = await newsService.getCategories();
       const personalUnapprovedNews = await newsService.getPersonalUnapprovedFormatted();
@@ -129,7 +111,7 @@ const StudentNews = (props) => {
 
   useEffect(() => {
     loadNews();
-  });
+  }, [props.authentication, loadNews]);
 
   useEffect(() => {
     const loadUsername = async () => {
@@ -139,37 +121,6 @@ const StudentNews = (props) => {
 
     loadUsername();
   });
-
-  function maxCropPreviewWidth() {
-    /*
-    Known non-critical issue:
-    maxCropperWidth() never utilizes its other cases.
-    Previous use of this same method in other files has the same problem.
-
-    It always uses the default case below.
-    */
-    const smallScreenRatio = 0.5;
-    const largeScreenRatio = 0.25;
-    const w = BREAKPOINT_WIDTH;
-    switch (w) {
-      default:
-        return 960 * largeScreenRatio;
-      case 'xs':
-        return 360 * smallScreenRatio;
-      case 'sm':
-        return 600 * smallScreenRatio;
-      case 'md':
-        return 960 * largeScreenRatio;
-      case 'lg':
-        return 1280 * largeScreenRatio;
-      case 'xl':
-        return 1920 * largeScreenRatio;
-    }
-  }
-
-  function minCropBoxDim(imgWidth, dispWidth) {
-    return (CROP_DIM * dispWidth) / imgWidth;
-  }
 
   function handlePostClick() {
     setOpenPostActivity(true);
@@ -182,7 +133,6 @@ const StudentNews = (props) => {
     setNewPostBody('');
     setCurrentlyEditing(false);
     setCropperImageData(null);
-    setJustShowPicture(false);
   }
 
   // TODO: Currently disabled and unused
@@ -236,23 +186,15 @@ const StudentNews = (props) => {
     }
 
     // If no error occured and the cropper is shown, the cropper text is displayed
-    else if (cropperImageData && !justShowPicture) {
+    else if (cropperImageData) {
       message = 'Crop Photo to liking & Click Submit';
-    }
-
-    // If no error occured and the edit window has just been opened,
-    // show previously submitted photo
-    else if (justShowPicture) {
-      message = 'Previously submitted photo';
     }
 
     // If no error occured and the cropper is not shown, the pick a file text is displayed
     else {
-      message =
-        BREAKPOINT_WIDTH === 'md' || BREAKPOINT_WIDTH === 'sm' || BREAKPOINT_WIDTH === 'xs'
-          ? //currentWidth === 'md' || currentWidth === 'sm' || currentWidth === 'xs'
-            'Tap Image to Browse Files'
-          : 'Drag & Drop Picture, or Click to Browse Files';
+      message = isMobile
+        ? 'Tap Image to Browse Files'
+        : 'Drag & Drop Picture, or Click to Browse Files';
     }
     return message;
   }
@@ -282,7 +224,6 @@ const StudentNews = (props) => {
     if (base64Test.test(newsItem.Image) && newsItem.Image !== null) {
       let newImageData = 'data:image/jpg;base64,' + newsItem.Image;
       setCropperImageData(newImageData);
-      setJustShowPicture(true);
     } else {
       setCropperImageData(null);
     }
@@ -327,7 +268,6 @@ const StudentNews = (props) => {
   async function onDropRejected() {
     await clearPhotoDialogErrorTimeout();
     setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
-    setJustShowPicture(false);
   }
 
   // Handles the actual 'edit' submission
@@ -402,7 +342,6 @@ const StudentNews = (props) => {
    * @param {number} snid The SNID of the post to be deleted
    */
   async function handleNewsItemDelete(snid) {
-    console.log(typeof snid);
     // delete the news item and give feedback
     let result = await newsService.deleteStudentNews(snid);
     if (result === undefined) {
@@ -420,13 +359,7 @@ const StudentNews = (props) => {
     i.onload = async () => {
       var aRatio = i.width / i.height;
       setAspectRatio(aRatio);
-
-      var maxWidth = maxCropPreviewWidth();
-      var displayWidth = maxWidth > i.width ? i.width : maxWidth;
-      var cropDim = minCropBoxDim(i.width, displayWidth);
-
       setPhotoDialogError(null);
-      setCropBoxDim(cropDim);
       setAspectRatio(aRatio);
       setCropperImageData(dataURL);
     };
@@ -590,7 +523,7 @@ const StudentNews = (props) => {
                             )}
                           </Dropzone>
                         )}
-                        {cropperImageData && !justShowPicture && (
+                        {cropperImageData && (
                           <div className="gc360-photo-dialog-box_content_cropper">
                             <Cropper
                               ref={cropperRef}
@@ -603,15 +536,8 @@ const StudentNews = (props) => {
                               zoom={onCropperZoom}
                               zoomable={false}
                               dragMode={'none'}
-                              minCropBoxWidth={cropBoxDim}
-                              minCropBoxHeight={cropBoxDim}
                             />
                           </div>
-                        )}
-                        {cropperImageData && justShowPicture && (
-                          <Grid item xs={8} style={{ textAlign: 'left' }}>
-                            <img src={cropperImageData} alt=" " />
-                          </Grid>
                         )}
                       </DialogContent>
                       <DialogActions className="gc360-photo-dialog-box_actions-top">
@@ -625,7 +551,6 @@ const StudentNews = (props) => {
                               variant="contained"
                               onClick={() => {
                                 setCropperImageData(null);
-                                setJustShowPicture(false);
                               }}
                               style={styles.button.cancelButton}
                               className="gc360-photo-dialog-box_content_button"
