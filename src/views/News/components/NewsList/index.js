@@ -53,17 +53,6 @@ const fullHeader = (
   </Grid>
 );
 
-function debounce(fn, ms) {
-  let timer;
-  return (_) => {
-    clearTimeout(timer);
-    timer = setTimeout((_) => {
-      timer = null;
-      fn.apply(this, arguments);
-    }, ms);
-  };
-}
-
 const NewsList = ({
   news,
   personalUnapprovedNews,
@@ -74,12 +63,12 @@ const NewsList = ({
   const [width, setWidth] = useState(window.innerWidth);
 
   useEffect(() => {
-    const debouncedHandleResize = debounce(function handleResize() {
+    function handleResize() {
       setWidth(window.innerWidth);
-    }, 100);
-    window.addEventListener('resize', debouncedHandleResize);
+    }
+    window.addEventListener('resize', handleResize);
     return (_) => {
-      window.removeEventListener('resize', debouncedHandleResize);
+      window.removeEventListener('resize', handleResize);
     };
   });
 
