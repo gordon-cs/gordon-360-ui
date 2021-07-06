@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Doughnut, defaults } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
-
 import { gordonColors } from 'theme';
 import user from 'services/user';
 import session from 'services/session';
@@ -76,7 +75,6 @@ const CLWCreditsDaysLeft = () => {
 
     const { current, required } = chapelCredits;
     const remaining = current > required ? 0 : required - current;
-
     const data = {
       legendEntries: ['Days Finished', 'CL&W Credits'],
       legendColors: [gordonColors.primary.blue, gordonColors.primary.cyan],
@@ -107,11 +105,15 @@ const CLWCreditsDaysLeft = () => {
               {`${daysRemaining} Days Left`}
             </Typography>
           </Grid>
-          <Grid item>
-            <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
-              {`${remaining} CL&W Credit` + (remaining === 1 ? '' : 's') + ' Left'}
-            </Typography>
-          </Grid>
+          {required != 0 ? (
+            <Grid item>
+              <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
+                {`${remaining} CL&W Credit` + (remaining === 1 ? '' : 's') + ' Left'}
+              </Typography>
+            </Grid>
+          ) : (
+            ''
+          )}
         </Grid>
 
         <Doughnut data={data} height={175} options={options} />
@@ -138,19 +140,24 @@ const CLWCreditsDaysLeft = () => {
               {'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}
             </div>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <div className="label-text" style={{ color: chapelColor }}>
-              {current}
+
+          {required != 0 ? (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <div className="label-text" style={{ color: chapelColor }}>
+                {current}
+              </div>
+              <div className="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
             </div>
-            <div className="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
-          </div>
+          ) : (
+            ''
+          )}
         </div>
       </React.Fragment>
     );
