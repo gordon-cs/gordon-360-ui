@@ -4,20 +4,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
 import peopleSearch from 'services/people-search';
+import GordonDialogBox from 'components/GordonDialogBox/index';
 
-import {
-  TextField,
-  InputAdornment,
-  Paper,
-  MenuItem,
-  Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-} from '@material-ui/core';
+import { TextField, InputAdornment, Paper, MenuItem, Typography } from '@material-ui/core';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -415,24 +404,15 @@ export default class GordonPeopleSearch extends Component {
               ),
             }}
           />
-          <Dialog
+          <GordonDialogBox
             open={this.state.loginDialog}
             onClose={() => this.handleClose()}
-            aria-labelledby="login-dialog-title"
-            aria-describedby="login-dialog-description"
+            title="Login to use People Search"
+            buttonName="Okay"
+            buttonClicked={() => this.handleClose()}
           >
-            <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="login-dialog-description">
-                You are not logged in. Please log in to use People Search.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="contained" onClick={() => this.handleClose()} color="primary">
-                Okay
-              </Button>
-            </DialogActions>
-          </Dialog>
+            You are not logged in. Please log in to use People Search.
+          </GordonDialogBox>
         </span>
       );
     }

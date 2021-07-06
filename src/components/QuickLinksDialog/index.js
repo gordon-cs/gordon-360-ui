@@ -1,39 +1,7 @@
 import React, { Component } from 'react';
-
-import { withStyles } from '@material-ui/core/styles';
-
 import PropTypes from 'prop-types';
-
 import GordonLinksList from './components/LinksList';
-
-import {
-  Dialog as GordonDialog,
-  DialogTitle as MuiDialogTitle,
-  DialogContent as MuiDialogContent,
-  Typography,
-} from '@material-ui/core';
-
-const styles = (theme) => ({
-  root: {
-    margin: 0,
-  },
-  button: {
-    margin: 0,
-  },
-});
-
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes } = props;
-  return (
-    <MuiDialogTitle disableTypography className={classes.root}>
-      <Typography variant="h6">{children}</Typography>
-    </MuiDialogTitle>
-  );
-});
-
-const DialogContent = withStyles((theme) => ({
-  root: {},
-}))(MuiDialogContent);
+import GordonDialogBox from 'components/GordonDialogBox/index';
 
 export default class GordonQuickLinksDialog extends Component {
   constructor(props) {
@@ -59,16 +27,14 @@ export default class GordonQuickLinksDialog extends Component {
 
   render() {
     return (
-      <GordonDialog
+      <GordonDialogBox
         onClose={this.props.handleLinkClose}
         aria-labelledby="useful-links"
         open={this.props.linkopen}
+        title="Useful Links"
       >
-        <DialogTitle id="useful-links">Useful links</DialogTitle>
-        <DialogContent dividers>
-          <GordonLinksList onClose={this.props.handleLinkClose} />
-        </DialogContent>
-      </GordonDialog>
+        <GordonLinksList onClose={this.props.handleLinkClose} />
+      </GordonDialogBox>
     );
   }
 }
