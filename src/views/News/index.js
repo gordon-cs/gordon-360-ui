@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonOffline from 'components/GordonOffline';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import newsService from 'services/news';
 import userService from 'services/user';
@@ -13,8 +14,6 @@ import {
   Button,
   Fab,
   Typography,
-  Card,
-  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
@@ -22,7 +21,6 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 // testing for future feature to upload image
 // import IDUploader from '../IDUploader';
 // import Dropzone from 'react-dropzone';
@@ -497,48 +495,7 @@ export default class StudentNews extends Component {
       }
       // If the user is offline
       else {
-        news = (
-          <Grid container justify="center" spacing="16">
-            <Grid item xs={12} md={8}>
-              <Card>
-                <CardContent
-                  style={{
-                    margin: 'auto',
-                    textAlign: 'center',
-                  }}
-                >
-                  <Grid
-                    item
-                    xs={2}
-                    alignItems="center"
-                    style={{
-                      display: 'block',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                    }}
-                  >
-                    <NoConnectionImage />
-                  </Grid>
-                  <br />
-                  <h1>Please Re-establish Connection</h1>
-                  <h4>Viewing Events has been deactivated due to loss of network.</h4>
-                  <br />
-                  <br />
-                  <Button
-                    color="primary"
-                    backgroundColor="white"
-                    variant="outlined"
-                    onClick={() => {
-                      window.location.pathname = '';
-                    }}
-                  >
-                    Back To Home
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        );
+        return <GordonOffline feature="Student News" />;
       }
       return news;
     } else {

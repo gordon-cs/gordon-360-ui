@@ -270,7 +270,7 @@ function setClass(profile) {
   if (String(profile.PersonType).includes('stu')) {
     switch (profile.Class) {
       case '1':
-        profile.Class = 'Freshman';
+        profile.Class = 'First Year';
         break;
       case '2':
         profile.Class = 'Sophomore';
@@ -443,6 +443,10 @@ async function setAdvisors(profile) {
 async function setCliftonStrengths(profile) {
   const cliftonStrengths = await getCliftonStrengths(profile.AD_Username);
   profile.CliftonStrengths = cliftonStrengths?.Strengths;
+}
+
+async function setMobilePhoneNumber(value) {
+  await http.put(`profiles/mobile_phone_number/${value}/`);
 }
 
 async function setMobilePhonePrivacy(makePrivate) {
@@ -618,6 +622,10 @@ const getProfileInfo = async (username) => {
   return profile;
 };
 
+const getEmergencyInfo = async (username) => {
+  return await http.get(`profiles/emergency-contact/${username}/`);
+};
+
 function updateSocialLink(platform, link) {
   let linkToSend;
   if (link.indexOf(socialMediaInfo[platform].prefix2) === 0) {
@@ -637,6 +645,7 @@ const userService = {
   setFullname,
   setClass,
   setMobilePhonePrivacy,
+  setMobilePhoneNumber,
   setImagePrivacy,
   getMemberships,
   getChapelCredits,
@@ -658,6 +667,7 @@ const userService = {
   postIDImage,
   getTranscriptMembershipsInfo,
   getEmploymentInfo,
+  getEmergencyInfo,
   updateSocialLink,
 };
 

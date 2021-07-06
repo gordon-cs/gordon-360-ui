@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Grid, Card, CardContent } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import InvolvementStatusList from './components/InvolvementsStatus';
 import AdminList from './components/AdminList';
 import user from 'services/user';
 import { AuthError } from 'services/error';
-import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
+import GordonOffline from 'components/GordonOffline';
 
 const Admin = ({ authentication }) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -46,48 +46,7 @@ const Admin = ({ authentication }) => {
         return null;
       }
     } else {
-      return (
-        <Grid container justify="center" spacing="16">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <Grid
-                  item
-                  xs={2}
-                  alignItems="center"
-                  style={{
-                    display: 'block',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  <NoConnectionImage />
-                </Grid>
-                <br />
-                <h1>Please Re-establish Connection</h1>
-                <h4>Revision of administrators has been deactivated due to loss of network.</h4>
-                <br />
-                <br />
-                <Button
-                  color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      );
+      return <GordonOffline feature="Editing Administrators" />;
     }
   } else {
     return <GordonUnauthorized feature={'the admin page'} />;
