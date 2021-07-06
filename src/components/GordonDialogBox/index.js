@@ -71,7 +71,11 @@ const GordonDialogBox = ({
         )}
       </DialogTitle>
       <DialogContent className="gc360-gordondialogbox_content" id="alert-dialog-description">
-        <DialogContentText className="gc360-gordondialogbox_text">{children}</DialogContentText>
+        {typeof children === String ? (
+          <DialogContentText className="gc360-gordondialogbox_text">{children}</DialogContentText>
+        ) : (
+          children
+        )}
       </DialogContent>
       <DialogActions className="gc360-gordondialogbox_actions">
         {cancelButtonClicked && (
