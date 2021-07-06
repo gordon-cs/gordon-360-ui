@@ -23,8 +23,5 @@ module.exports = (app) => {
 
   // @LOCALHOST
   // app.use('/api', createProxyMiddleware({ target: 'http://localhost:2477/', changeOrigin: true }));
-  // app.use(
-  //   '/token',
-  //   createProxyMiddleware({ target: 'http://localhost:2477/', changeOrigin: true }),
-  // );
+  // app.use('/token', createProxyMiddleware({ target: 'http://localhost:2477/', changeOrigin: true }));
 };
