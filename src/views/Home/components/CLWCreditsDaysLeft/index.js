@@ -153,7 +153,7 @@ const CLWCreditsDaysLeft = () => {
               <div className="label-text" style={{ color: chapelColor }}>
                 {current}
               </div>
-              <div className="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
+              <div className="entry-text">{`CL&W Credit${current === 1 ? '' : 's')`}</div>
             </div>
           ) : (
             ''
