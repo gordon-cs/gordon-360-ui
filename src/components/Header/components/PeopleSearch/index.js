@@ -79,15 +79,18 @@ const GordonPeopleSearch = ({
   });
 
   useEffect(() => {
-    if (customPlaceholderText) {
-      setHolder(customPlaceholderText);
-    } else if (width < BREAKPOINT_WIDTH) {
-      setHolder('People');
-      if (!isOnline) {
-        setHolder('Offline');
+    if (isOnline) {
+      if (customPlaceholderText) {
+        setHolder(customPlaceholderText);
+      } else {
+        if (width < BREAKPOINT_WIDTH) {
+          setHolder('People');
+        } else {
+          setHolder('People Search');
+        }
       }
-    } else if (!isOnline) {
-      setHolder('Offline-Unavailable');
+    } else {
+      setHolder('Offline');
     }
   }, [isOnline, customPlaceholderText, width]);
 
