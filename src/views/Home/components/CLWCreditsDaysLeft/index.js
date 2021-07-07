@@ -155,9 +155,8 @@ const CLWCreditsDaysLeft = () => {
               </div>
               <div className="entry-text">{`CL&W Credit${current === 1 ? '' : 's')`}</div>
             </div>
-          ) : (
-            ''
-          )}
+          ) : null
+          }
         </div>
       </React.Fragment>
     );
