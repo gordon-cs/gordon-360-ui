@@ -4,6 +4,7 @@ import { Typography, Grid, Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import user from 'services/user';
 import { Link } from 'react-router-dom';
+//import EmailIcon from '@material-ui/icons/Email';
 
 import './peopleSearchResult.css';
 
@@ -48,8 +49,8 @@ export default class PeopleSearchResult extends Component {
 
   render() {
     const { Person, size } = this.props;
-    let personClassJobTitle, nickname, fullName, personMailLocation;
-    fullName = Person.FirstName + ' ' + Person.LastName;
+
+    let personClassJobTitle, nickname, personMailLocation;
 
     // set nicknames up
     if (Person.NickName && Person.FirstName !== Person.NickName) {
@@ -119,12 +120,29 @@ export default class PeopleSearchResult extends Component {
                   placeholderColor="#eeeeee"
                 />
               </Grid>
-              <Grid item xs={6}>
-                <Typography variant="h5">{fullName}</Typography>
-                <Typography variant="body2">{nickname}</Typography>
-                <Typography variant="body2">{personClassJobTitle}</Typography>
-                <Typography variant="body2">{Person.Email}</Typography>
-                <Typography variant="body2">{personMailLocation}</Typography>
+              <Grid item xs={8}>
+                <Typography variant="h5">
+                  {Person.FirstName} {nickname} {Person.LastName}
+                </Typography>
+                <div style={{ color: '#666666' }}>
+                  <Typography variant="body2">
+                    {personClassJobTitle ?? Person.Type}
+                    {Person.Type === 'Alum' ? ' ' + Person.PreferredClassYear : null}
+                  </Typography>
+                  <Typography variant="body2">
+                    {Person.Major1Description}
+                    {Person.Major2Description === null || Person.Major2Description === ''
+                      ? null
+                      : ', '}
+                    {Person.Major2Description}
+                    {Person.Major3Description === null || Person.Major3Description === ''
+                      ? null
+                      : ', '}
+                    {Person.Major3Description}
+                  </Typography>
+                  <Typography variant="body2">{Person.Email}</Typography>
+                  <Typography variant="body2">{personMailLocation}</Typography>
+                </div>
               </Grid>
             </Grid>
           </Link>
@@ -146,7 +164,7 @@ export default class PeopleSearchResult extends Component {
                 padding: '1rem',
               }}
             >
-              <Grid item xs={6} container justify="flex-end">
+              <Grid item xs={4} container justify="flex-end">
                 <IMG
                   className="people-search-avatar-large"
                   src={`data:image/jpg;base64,${this.state.avatar}`}
@@ -155,12 +173,29 @@ export default class PeopleSearchResult extends Component {
                   placeholderColor="#eeeeee"
                 />
               </Grid>
-              <Grid item xs={6}>
-                <Typography variant="h5">{fullName}</Typography>
-                <Typography variant="body2">{nickname}</Typography>
-                <Typography variant="body2">{personClassJobTitle}</Typography>
-                <Typography variant="body2">{Person.Email}</Typography>
-                <Typography variant="body2">{personMailLocation}</Typography>
+              <Grid item xs={8}>
+                <Typography variant="h5">
+                  {Person.FirstName} {nickname} {Person.LastName}
+                </Typography>
+                <div style={{ color: '#666666' }}>
+                  <Typography variant="body2">
+                    {personClassJobTitle ?? Person.Type}
+                    {Person.Type === 'Alum' ? ' ' + Person.PreferredClassYear : null}
+                  </Typography>
+                  <Typography variant="body2" style={{ fontStyle: 'italic' }}>
+                    {Person.Major1Description}
+                    {Person.Major2Description === null || Person.Major2Description === ''
+                      ? null
+                      : ', '}
+                    {Person.Major2Description}
+                    {Person.Major3Description === null || Person.Major3Description === ''
+                      ? null
+                      : ', '}
+                    {Person.Major3Description}
+                  </Typography>
+                  <Typography variant="body2">{Person.Email}</Typography>
+                  <Typography variant="body2">{personMailLocation}</Typography>
+                </div>
               </Grid>
             </Grid>
           </Link>
@@ -182,33 +217,43 @@ export default class PeopleSearchResult extends Component {
                 padding: '1rem',
               }}
             >
-              <Grid item xs={1}>
-                <IMG
-                  className="people-search-avatar"
-                  src={`data:image/jpg;base64,${this.state.avatar}`}
-                  alt=""
-                  noLazyLoad="true"
-                  placeholderColor="#eeeeee"
-                />
+              <Grid item xs={5}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <IMG
+                    className="people-search-avatar"
+                    src={`data:image/jpg;base64,${this.state.avatar}`}
+                    alt=""
+                    noLazyLoad="true"
+                    placeholderColor="#eeeeee"
+                  />
+                  <div>
+                    <Typography>
+                      {Person.FirstName} {nickname} {Person.LastName}
+                    </Typography>
+                    <Typography style={{ fontSize: '85%' }}>
+                      {Person.Email?.includes('.') ? Person.Email : null}
+                    </Typography>
+                  </div>
+                </div>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={5}>
                 <Typography>
-                  {Person.FirstName} {nickname}
+                  {personClassJobTitle ?? Person.Type}
+                  {Person.Type === 'Alum' ? ' ' + Person.PreferredClassYear : null}
+                </Typography>
+                <Typography style={{ fontSize: '85%', fontStyle: 'italic', color: '#666666' }}>
+                  {Person.Major1Description}
+                  {Person.Major2Description === null || Person.Major2Description === ''
+                    ? null
+                    : ', '}
+                  {Person.Major2Description}
+                  {Person.Major3Description === null || Person.Major3Description === ''
+                    ? null
+                    : ', '}
+                  {Person.Major3Description}
                 </Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography>{Person.LastName}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography>{Person.Type}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography>{personClassJobTitle}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography>
-                  {Person.AD_Username?.includes('.') ? Person.AD_Username : null}
-                </Typography>
                 <Typography>{personMailLocation}</Typography>
               </Grid>
             </Grid>
