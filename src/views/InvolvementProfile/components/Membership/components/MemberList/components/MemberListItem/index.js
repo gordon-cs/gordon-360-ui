@@ -19,6 +19,7 @@ import {
   Avatar,
 } from '@material-ui/core';
 
+import { Link } from 'react-router-dom';
 import { gordonColors } from 'theme';
 import user from 'services/user';
 import membership from 'services/membership';
@@ -264,9 +265,11 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3}>
-            <Typography>
-              {member.FirstName} {member.LastName}
-            </Typography>
+            <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
+              <Typography>
+                {member.FirstName} {member.LastName}
+              </Typography>
+            </Link>
           </Grid>
           <Grid item xs={4} style={rowStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
@@ -319,9 +322,11 @@ const MemberListItem = ({
                     </Avatar>
                   </Grid>
                   <Grid>
-                    <Typography>
-                      {member.FirstName} {member.LastName}
-                    </Typography>
+                    <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
+                      <Typography>
+                        {member.FirstName} {member.LastName}
+                      </Typography>
+                    </Link>
                   </Grid>
                 </Grid>
               </Grid>
@@ -363,9 +368,11 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3} style={rowStyle}>
-            <Typography>
-              {member.FirstName} {member.LastName}
-            </Typography>
+            <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
+              <Typography>
+                {member.FirstName} {member.LastName}
+              </Typography>
+            </Link>
           </Grid>
           <Grid item xs={4} style={rowStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
