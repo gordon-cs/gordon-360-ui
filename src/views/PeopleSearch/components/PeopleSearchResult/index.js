@@ -130,14 +130,8 @@ export default class PeopleSearchResult extends Component {
                   </Typography>
                   <Typography variant="body2">
                     {Person.Major1Description}
-                    {Person.Major2Description === null || Person.Major2Description === ''
-                      ? null
-                      : ', '}
-                    {Person.Major2Description}
-                    {Person.Major3Description === null || Person.Major3Description === ''
-                      ? null
-                      : ', '}
-                    {Person.Major3Description}
+                    {Person.Major2Description ? `, ${Person.Major2Description}` : null}
+                    {Person.Major3Description ? `, ${Person.Major3Description}` : null}
                   </Typography>
                   <Typography variant="body2">{Person.Email}</Typography>
                   <Typography variant="body2">{personMailLocation}</Typography>
@@ -183,14 +177,8 @@ export default class PeopleSearchResult extends Component {
                   </Typography>
                   <Typography variant="body2" style={{ fontStyle: 'italic' }}>
                     {Person.Major1Description}
-                    {Person.Major2Description === null || Person.Major2Description === ''
-                      ? null
-                      : ', '}
-                    {Person.Major2Description}
-                    {Person.Major3Description === null || Person.Major3Description === ''
-                      ? null
-                      : ', '}
-                    {Person.Major3Description}
+                    {Person.Major2Description ? `, ${Person.Major2Description}` : null}
+                    {Person.Major3Description ? `, ${Person.Major3Description}` : null}
                   </Typography>
                   <Typography variant="body2">{Person.Email}</Typography>
                   <Typography variant="body2">{personMailLocation}</Typography>
@@ -242,14 +230,8 @@ export default class PeopleSearchResult extends Component {
                 </Typography>
                 <Typography style={{ fontSize: '85%', fontStyle: 'italic', color: '#666666' }}>
                   {Person.Major1Description}
-                  {Person.Major2Description === null || Person.Major2Description === ''
-                    ? null
-                    : ', '}
-                  {Person.Major2Description}
-                  {Person.Major3Description === null || Person.Major3Description === ''
-                    ? null
-                    : ', '}
-                  {Person.Major3Description}
+                  {Person.Major2Description ? `, ${Person.Major2Description}` : null}
+                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
                 </Typography>
               </Grid>
               <Grid item xs={2}>
