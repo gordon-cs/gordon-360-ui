@@ -206,7 +206,9 @@ export default class PeopleSearchResult extends Component {
                 <Typography>{personClassJobTitle}</Typography>
               </Grid>
               <Grid item xs={2}>
-                <Typography>{Person.AD_Username}</Typography>
+                <Typography>
+                  {Person.AD_Username?.includes('.') ? Person.AD_Username : null}
+                </Typography>
                 <Typography>{personMailLocation}</Typography>
               </Grid>
             </Grid>

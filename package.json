@@ -39,6 +39,7 @@
     "react-responsive-carousel": "^3.2.18",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
+    "react-text-mask": "^5.4.3",
     "react-timeago": "^6.2.0",
     "react-to-print": "^2.12.6",
     "typescript": "^4.3.2",
