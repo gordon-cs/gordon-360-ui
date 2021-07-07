@@ -87,10 +87,10 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
   const animation = keyframes`
   from {
     background-color: ${wellnessColor};
-    color: $neutral-white;
+    color: ${altWellnessColor};
   }
   to {
-    background-color: $neutral-white;
+    background-color: ${altWellnessColor};
     color: ${wellnessColor};
   }
   `;
