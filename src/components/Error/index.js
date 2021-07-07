@@ -13,7 +13,7 @@ const GordonError = ({ error, errorInfo }) => {
         </Typography>
         <Typography variant="h5" gutterBottom>
           Please email the below error to
-          <a href={"mailto:cts@gordon.edu?subject=Gordon 360 Error"}> cts@gordon.edu</a>.
+          <a href="mailto:cts@gordon.edu?subject=Gordon 360 Error"> cts@gordon.edu</a>.
         </Typography>
         <br />
         <Typography color="error" variant="h6">
@@ -29,13 +29,11 @@ const GordonError = ({ error, errorInfo }) => {
   );
 };
 
-
 GordonError.propTypes = {
   error: PropTypes.instanceOf(Error).isRequired,
   errorInfo: PropTypes.shape({
     componentStack: PropTypes.string.isRequired,
   }).isRequired,
 };
-
 
 export default GordonError;
