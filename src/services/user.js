@@ -609,7 +609,6 @@ const getEmploymentInfo = async () => {
 
 const getProfileInfo = async (username) => {
   let profile = await getProfile(username);
-  console.log(profile);
   setFullname(profile);
   setClass(profile);
   setClassYear(profile);

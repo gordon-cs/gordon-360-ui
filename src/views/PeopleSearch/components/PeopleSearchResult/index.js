@@ -79,9 +79,6 @@ export default class PeopleSearchResult extends Component {
         case '7':
           personClassJobTitle = 'Graduate Conferred';
           break;
-        case '8':
-          personClassJobTitle = 'Class of ...';
-          break;
         default:
           personClassJobTitle = '-----';
           break;
@@ -125,7 +122,10 @@ export default class PeopleSearchResult extends Component {
               <Grid item xs={6}>
                 <Typography variant="h5">{fullName}</Typography>
                 <Typography variant="body2">{nickname}</Typography>
-                <Typography variant="body2">{personClassJobTitle}</Typography>
+                <Typography variant="body2">
+                  {personClassJobTitle}
+                  {Person.Type === 'Alum' ? 'CO ' + Person.PreferredClassYear : null}
+                </Typography>
                 <Typography variant="body2">{Person.Email}</Typography>
                 <Typography variant="body2">{personMailLocation}</Typography>
               </Grid>
@@ -161,7 +161,10 @@ export default class PeopleSearchResult extends Component {
               <Grid item xs={6}>
                 <Typography variant="h5">{fullName}</Typography>
                 <Typography variant="body2">{nickname}</Typography>
-                <Typography variant="body2">{personClassJobTitle}</Typography>
+                <Typography variant="body2">
+                  {personClassJobTitle}
+                  {Person.Type === 'Alum' ? 'CO ' + Person.PreferredClassYear : null}
+                </Typography>
                 <Typography variant="body2">{Person.Email}</Typography>
                 <Typography variant="body2">{personMailLocation}</Typography>
               </Grid>
