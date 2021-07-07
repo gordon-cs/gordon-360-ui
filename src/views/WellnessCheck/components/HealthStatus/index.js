@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, Grid, /*Typography,*/ styled } from '@material-ui/core';
 import { Check, Remove, Clear } from '@material-ui/icons';
+import { keyframes } from '@material-ui/styled-engine'
 import { StatusColors } from 'services/wellness';
 import SymptomsDialog from 'components/SymptomsDialog';
 import './index.css';
@@ -39,37 +40,87 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
     setIconSize(window.innerWidth * 0.03 + 69);
   };
 
+  let wellnessColor;
+  let altWellnessColor;
   let animatedIcon;
+
   switch (currentStatus) {
     case StatusColors.GREEN:
       animatedIcon = <Check style={{ fontSize: iconSize }} />;
+      wellnessColor = '#005500';
+      altWellnessColor = '#ffffff';
       break;
 
     case StatusColors.YELLOW:
       animatedIcon = <Remove style={{ fontSize: iconSize }} />;
+      wellnessColor = '#ffcc00';
+      altWellnessColor = '#31342b';
       break;
 
     case StatusColors.RED:
       animatedIcon = <Clear style={{ fontSize: iconSize }} />;
+      wellnessColor = 'a30000';
+      altWellnessColor = '#cccccb';
       break;
 
     default:
       break;
   }
 
+  const WellnessCard = styled(Card)({
+    textAlign: 'center',
+  });
+
+  const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+
+  const StatusBox = styled(CardContent)({
+    height: 250,
+    backgroundColor: wellnessColor,
+  });
+
+  const StatusTime = styled('div')({
+    fontSize: 14 + vw,
+    color: altWellnessColor,
+    paddingBottom: 30,
+  });
+
+  const animation = keyframes`
+  from {
+    background-color: ${wellnessColor};
+    color: $neutral-white;
+  }
+  to {
+    background-color: $neutral-white;
+    color: ${wellnessColor};
+  }
+  `;
+
+  const StatusAnimation = styled('div')({
+    textAlign: 'center',
+    height: 70 + 3 * vw,
+    width: 70 + 3 * vw,
+    backgroundColor: wellnessColor,
+    color: altWellnessColor,
+    borderRadius: 50,
+    display: 'inline-block',
+    animation: `${animation} 1s infinite alternate`
+  });
+
+
   return (
     <Grid container justify="center" spacing={2}>
       <Grid item xs={12} md={8}>
-        <Card className="wellness-check">
+        <WellnessCard>
           <CardHeader title={username} />
           <CardContent>
             <img
-              className="rounded-corners user-image"
+              className="rounded-corners"
               src={`data:image/jpg;base64,${image}`}
               alt={username}
+              style={{ maxHeight: 200, minWidth: 160 }}
             />
             {/* TODO: Remove following code block after Spring 2021 move in is complete */}
-            {/* START */}
+            {/* START
             {currentStatus === StatusColors.RED && (
               <Typography variant="h5">
                 Students must fill out{' '}
@@ -83,15 +134,15 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
                 </a>{' '}
                 before checking in.
               </Typography>
-            )}
+            )} */}
             {/* END */}
-            <Grid className="wellness-status">
-              <Card className={currentStatus}>
-                <CardContent className="status-box">
-                  <div className="status-time">{time}</div>
+            <Grid>
+              <Card>
+                <StatusBox>
+                  <StatusTime>{time}</StatusTime>
 
-                  <div className="status-animation">{animatedIcon}</div>
-                </CardContent>
+                  <StatusAnimation>{animatedIcon}</StatusAnimation>
+                </StatusBox>
               </Card>
               <br />
               {currentStatus === StatusColors.GREEN && (
@@ -106,8 +157,8 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
               />
             </Grid>
           </CardContent>
-          <div className="wellness-header">Questions? Health Center: (978) 867-4300 </div>
-        </Card>
+          <div textAlign="center">Questions? Health Center: (978) 867-4300 </div>
+        </WellnessCard>
       </Grid>
     </Grid>
   );
