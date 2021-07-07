@@ -370,6 +370,7 @@ export default class StudentNews extends Component {
                     <TextField
                       id="search"
                       label="Search news"
+                      type="search"
                       value={this.state.search}
                       onChange={this.search('search')}
                       margin="normal"
@@ -412,6 +413,7 @@ export default class StudentNews extends Component {
                         margin="dense"
                         fullWidth
                         name="newPostSubject"
+                        type="search"
                         value={this.state.newPostSubject}
                         onChange={this.onChange.bind(this)}
                         // helperText="Please enter a subject."

@@ -127,6 +127,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
             <TextField
               id="search"
               label="Search"
+              type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               margin="none"

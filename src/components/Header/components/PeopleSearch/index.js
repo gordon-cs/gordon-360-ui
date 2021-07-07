@@ -16,6 +16,7 @@ const renderInput = (inputProps) => {
 
   return (
     <TextField
+      type="search"
       autoFocus={autoFocus}
       value={value}
       inputRef={ref}
@@ -388,6 +389,7 @@ export default class GordonPeopleSearch extends Component {
         <span className="gordon-people-search">
           <TextField
             placeholder="People Search"
+            type="search"
             value={''}
             onChange={() => this.unauthenticatedSearch()}
             className={'text-field'}
