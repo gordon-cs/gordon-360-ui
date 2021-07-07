@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
 import peopleSearch from 'services/people-search';
-import GordonDialogBox from 'components/GordonDialogBox/index';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 
 import { TextField, InputAdornment, Paper, MenuItem, Typography } from '@material-ui/core';
 
@@ -404,15 +404,7 @@ export default class GordonPeopleSearch extends Component {
               ),
             }}
           />
-          <GordonDialogBox
-            open={this.state.loginDialog}
-            onClose={() => this.handleClose()}
-            title="Login to use People Search"
-            buttonName="Okay"
-            buttonClicked={() => this.handleClose()}
-          >
-            You are not logged in. Please log in to use People Search.
-          </GordonDialogBox>
+          <GordonUnauthorized feature={'the People Search page'} />
         </span>
       );
     }
