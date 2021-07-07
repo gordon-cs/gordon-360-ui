@@ -111,8 +111,7 @@ const CLWCreditsDaysLeft = () => {
                 {`${remaining} CL&W Credit${remaining === 1 ? '' : 's'} Left`}
               </Typography>
             </Grid>
-          ) : null
-          }
+          ) : null}
         </Grid>
 
         <Doughnut data={data} height={175} options={options} />
@@ -152,10 +151,9 @@ const CLWCreditsDaysLeft = () => {
               <div className="label-text" style={{ color: chapelColor }}>
                 {current}
               </div>
-              <div className="entry-text">{`CL&W Credit${current === 1 ? '' : 's')`}</div>
+              <div className="entry-text">{`CL&W Credit ${current === 1 ? '' : 's'}`}</div>
             </div>
-          ) : null
-          }
+          ) : null}
         </div>
       </React.Fragment>
     );
