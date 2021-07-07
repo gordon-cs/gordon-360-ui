@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import IMG from 'react-graceful-image';
 import { Typography, Grid, Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';

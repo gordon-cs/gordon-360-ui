@@ -3,7 +3,7 @@
 // Instead, the NewsItem.js file in the "News" view is being used
 // This file is being preserved for now as the news features are still in development
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Grid, Typography, Collapse } from '@material-ui/core';
 import { gordonColors } from 'theme';
 import NewsService from 'services/news';

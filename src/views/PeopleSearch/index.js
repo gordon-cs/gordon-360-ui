@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonOffline from 'components/GordonOffline';
 import {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaFacebookF, FaTwitter, FaLinkedin, FaInstagram, FaHandshake } from 'react-icons/fa';
 
 export const socialMediaInfo = {

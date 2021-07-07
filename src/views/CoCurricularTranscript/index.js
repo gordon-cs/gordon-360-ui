@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Button, Card, CardContent, Typography } from '@material-ui/core';
 import { gordonColors } from 'theme';
 import GordonUnauthorized from 'components/GordonUnauthorized';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Popover from '@material-ui/core/Popover';
 import List from '@material-ui/core/List';
 import { signOut } from 'services/auth';

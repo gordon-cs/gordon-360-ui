@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Grid, Typography, Divider } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 

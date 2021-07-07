@@ -1,5 +1,5 @@
 //Student apartment application page
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { sortBy } from 'lodash';
 import { Backdrop, Collapse, Grid } from '@material-ui/core/';
 import GordonDialogBox from 'components/GordonDialogBox';

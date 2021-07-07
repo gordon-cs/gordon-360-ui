@@ -1,9 +1,9 @@
-import React, { Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import { gordonColors } from 'theme';
 
 import { Dialog, DialogTitle, DialogActions, Button } from '@material-ui/core';
 
-export default class RemoveScheduleDialog extends React.Component {
+export default class RemoveScheduleDialog extends Component {
   constructor(props) {
     super(props);
 

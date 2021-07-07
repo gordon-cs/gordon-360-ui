@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import user from 'services/user';
 import './index.css';

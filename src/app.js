@@ -1,6 +1,6 @@
 import { createBrowserHistory } from 'history';
 import { ThemeProvider } from '@material-ui/core/styles';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';

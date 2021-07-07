@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';
 import GordonLoader from 'components/Loader';
 import activity from 'services/activity';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Doughnut, defaults } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 
@@ -95,7 +95,7 @@ const CLWCreditsDaysLeft = () => {
     };
 
     content = (
-      <React.Fragment>
+      <Fragment>
         <Grid
           container
           justify="space-around"
@@ -152,7 +152,7 @@ const CLWCreditsDaysLeft = () => {
             <div className="entry-text">{'CL&W Credit' + (current === 1 ? '' : 's')}</div>
           </div>
         </div>
-      </React.Fragment>
+      </Fragment>
     );
   }
 

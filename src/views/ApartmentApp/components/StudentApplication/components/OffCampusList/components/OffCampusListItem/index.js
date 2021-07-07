@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import {
   Divider,
   FormControl,
@@ -63,7 +63,7 @@ const OffCampusListItem = ({
     : `${profile.FirstName} ${profile.LastName}`;
 
   return (
-    <React.Fragment>
+    <Fragment>
       <ListItem key={profile.AD_Username} className="list-item">
         <Grid container alignItems="flex-end" spacing={1}>
           <Grid item xs={12} sm={4}>
@@ -94,7 +94,7 @@ const OffCampusListItem = ({
         </Grid>
       </ListItem>
       <Divider />
-    </React.Fragment>
+    </Fragment>
   );
 };
 

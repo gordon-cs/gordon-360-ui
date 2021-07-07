@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '@material-ui/core/';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';

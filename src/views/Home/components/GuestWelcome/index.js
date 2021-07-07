@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Typography, Grid, Fab, Card, CardHeader, CardContent } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { projectName } from 'project-name';

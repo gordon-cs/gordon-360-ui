@@ -1,5 +1,5 @@
 //Displays shifts and sets up buttons for submitting shifts
-import React, { Component } from 'react';
+import { Component } from 'react';
 import {
   Typography,
   Grid,

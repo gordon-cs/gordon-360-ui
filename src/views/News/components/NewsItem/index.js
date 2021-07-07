@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import newsService from 'services/news';
 import EditIcon from '@material-ui/icons/Edit';
 import storage from 'services/storage';

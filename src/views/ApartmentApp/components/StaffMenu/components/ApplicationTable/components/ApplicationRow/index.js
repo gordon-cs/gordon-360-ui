@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, Fragment } from 'react';
 import { Collapse, IconButton, TableCell, TableRow } from '@material-ui/core/';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -6,10 +6,10 @@ import ApplicantSubTable from './components/ApplicantSubTable';
 import HallSubTable from './components/HallSubTable';
 
 const ApplicationRow = ({ applicationDetails, labelId }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <TableRow key={applicationDetails.ApplicationID} onClick={() => setOpen(!open)}>
         <TableCell align="center" component="th" id={labelId} scope="row">
           {applicationDetails.ApplicationID}
@@ -40,7 +40,7 @@ const ApplicationRow = ({ applicationDetails, labelId }) => {
           </Collapse>
         </TableCell>
       </TableRow>
-    </React.Fragment>
+    </Fragment>
   );
 };
 

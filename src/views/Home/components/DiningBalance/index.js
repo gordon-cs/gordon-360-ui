@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Button, Grid, Typography, Card, CardContent, CardHeader } from '@material-ui/core';
 import GordonLoader from 'components/Loader';

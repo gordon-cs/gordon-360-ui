@@ -1,4 +1,3 @@
-import React from 'react';
 import { Grid, Card, CardContent, Button } from '@material-ui/core/';
 
 /**

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import { Component, Fragment } from 'react';
 import Moment from 'moment';
 
 import { Calendar, momentLocalizer } from 'react-big-calendar';
