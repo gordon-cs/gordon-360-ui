@@ -728,6 +728,7 @@ class PeopleSearch extends Component {
                           <TextField
                             id="first-name"
                             label="First Name"
+                            type="search"
                             fullWidth
                             value={this.state.searchValues.firstName}
                             onChange={this.handleFirstNameInputChange}
@@ -743,6 +744,7 @@ class PeopleSearch extends Component {
                           <TextField
                             id="last-name"
                             label="Last Name"
+                            type="search"
                             fullWidth
                             value={this.state.searchValues.lastName}
                             onChange={this.handleLastNameInputChange}
@@ -984,6 +986,7 @@ class PeopleSearch extends Component {
                         <TextField
                           id="hometown"
                           label="Hometown"
+                          type="search"
                           fullWidth
                           value={this.state.searchValues.homeCity}
                           onChange={this.handleHomeCityInputChange}

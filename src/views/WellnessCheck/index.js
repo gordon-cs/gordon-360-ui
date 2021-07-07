@@ -32,10 +32,8 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
 
     if (status && status.IsValid) {
       setCurrentStatus(status.Status);
-      const [
-        { FirstName, LastName },
-        { def: defaultImage, pref: preferredImage },
-      ] = await Promise.all([user.getProfileInfo(), user.getImage()]);
+      const [{ FirstName, LastName }, { def: defaultImage, pref: preferredImage }] =
+        await Promise.all([user.getProfileInfo(), user.getImage()]);
 
       setUsername(`${FirstName} ${LastName}`);
       setImage(preferredImage ?? defaultImage);

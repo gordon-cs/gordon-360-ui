@@ -45,6 +45,7 @@ const GordonCarousel = () => {
           originalTitle: slide.Title,
         }))}
         onClick={handleClickSlide}
+        lazyLoad={true}
       />
     );
   }
