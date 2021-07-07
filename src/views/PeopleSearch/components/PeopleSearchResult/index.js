@@ -4,7 +4,6 @@ import { Typography, Grid, Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import user from 'services/user';
 import { Link } from 'react-router-dom';
-//import EmailIcon from '@material-ui/icons/Email';
 
 import './peopleSearchResult.css';
 
