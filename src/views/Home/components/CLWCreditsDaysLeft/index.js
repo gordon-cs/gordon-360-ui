@@ -111,9 +111,8 @@ const CLWCreditsDaysLeft = () => {
                 {`${remaining} CL&W Credit` + (remaining === 1 ? '' : 's') + ' Left'}
               </Typography>
             </Grid>
-          ) : (
-            ''
-          )}
+          ) : null
+          }
         </Grid>
 
         <Doughnut data={data} height={175} options={options} />
