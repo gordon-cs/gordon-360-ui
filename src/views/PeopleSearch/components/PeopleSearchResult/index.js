@@ -124,7 +124,7 @@ export default class PeopleSearchResult extends Component {
                 <Typography variant="body2">{nickname}</Typography>
                 <Typography variant="body2">
                   {personClassJobTitle}
-                  {Person.Type === 'Alum' ? 'CO ' + Person.PreferredClassYear : null}
+                  {Person.Type === 'Alum' ? Person.PreferredClassYear : null}
                 </Typography>
                 <Typography variant="body2">{Person.Email}</Typography>
                 <Typography variant="body2">{personMailLocation}</Typography>
@@ -163,7 +163,7 @@ export default class PeopleSearchResult extends Component {
                 <Typography variant="body2">{nickname}</Typography>
                 <Typography variant="body2">
                   {personClassJobTitle}
-                  {Person.Type === 'Alum' ? 'CO ' + Person.PreferredClassYear : null}
+                  {Person.Type === 'Alum' ? Person.PreferredClassYear : null}
                 </Typography>
                 <Typography variant="body2">{Person.Email}</Typography>
                 <Typography variant="body2">{personMailLocation}</Typography>
@@ -210,9 +210,7 @@ export default class PeopleSearchResult extends Component {
               </Grid>
               <Grid item xs={2}>
                 <Typography>{personClassJobTitle}</Typography>
-                <Typography>
-                  {Person.Type === 'Alum' ? 'CO ' + Person.PreferredClassYear : null}
-                </Typography>
+                <Typography>{Person.Type === 'Alum' ? Person.PreferredClassYear : null}</Typography>
               </Grid>
               <Grid item xs={2}>
                 <Typography>
