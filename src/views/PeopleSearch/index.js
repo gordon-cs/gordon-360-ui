@@ -301,28 +301,35 @@ class PeopleSearch extends Component {
 
     this.search();
   }
-
-  handleAcademicsExpandClick = () => {
+  handleAdvanceSearchExpandClick = () => {
     this.setState((state) => ({
       academicsExpanded: !state.academicsExpanded,
-      homeExpanded: false,
-      offDepExpanded: false,
-    }));
-  };
-  handleHomeExpandClick = () => {
-    this.setState((state) => ({
       homeExpanded: !state.homeExpanded,
-      academicsExpanded: false,
-      offDepExpanded: false,
-    }));
-  };
-  handleOffDepExpandClick = () => {
-    this.setState((state) => ({
       offDepExpanded: !state.offDepExpanded,
-      academicsExpanded: false,
-      homeExpanded: false,
     }));
   };
+  // handleAcademicsExpandClick = () => {
+  //   this.setState((state) => ({
+  //     academicsExpanded: !state.academicsExpanded,
+  //     homeExpanded: false,
+  //     offDepExpanded: false,
+
+  //   }));
+  // };
+  // handleHomeExpandClick = () => {
+  //   this.setState((state) => ({
+  //     homeExpanded: !state.homeExpanded,
+  //     academicsExpanded: false,
+  //     offDepExpanded: false,
+  //   }));
+  // };
+  // handleOffDepExpandClick = () => {
+  //   this.setState((state) => ({
+  //     offDepExpanded: !state.offDepExpanded,
+  //     academicsExpanded: false,
+  //     homeExpanded: false,
+  //   }));
+  // };
 
   handleRelationshipStatusInputChange = (e) => {
     this.setState({
@@ -841,6 +848,34 @@ class PeopleSearch extends Component {
                         style={
                           this.state.searchValues.major !== '' ||
                           this.state.searchValues.minor !== '' ||
+                          this.state.searchValues.classType !== '' ||
+                          this.state.searchValues.homeCity !== '' ||
+                          this.state.searchValues.state !== '' ||
+                          this.state.searchValues.country !== '' ||
+                          this.state.searchValues.department !== '' ||
+                          this.state.searchValues.building !== ''
+                            ? {
+                                backgroundColor: gordonColors.primary.cyan,
+                                color: '#ffffff',
+                              }
+                            : {}
+                        }
+                        variant={
+                          this.state.handleAdvanceSearchExpandClick ? 'contained' : 'outlined'
+                        }
+                        onClick={this.handleAdvanceSearchExpandClick}
+                      >
+                        <AddIcon fontSize="inherit" />
+                        Advanced Search
+                      </Button>
+                    </Grid>
+
+                    {/* <Grid item>
+                      <Button
+                        color="primary"
+                        style={
+                          this.state.searchValues.major !== '' ||
+                          this.state.searchValues.minor !== '' ||
                           this.state.searchValues.classType !== ''
                             ? {
                                 backgroundColor: gordonColors.primary.cyan,
@@ -854,8 +889,8 @@ class PeopleSearch extends Component {
                         <AddIcon fontSize="inherit" />
                         Academic Info
                       </Button>
-                    </Grid>
-                    <Grid item>
+                    </Grid> */}
+                    {/* <Grid item>
                       <Button
                         color="primary"
                         style={
@@ -874,8 +909,8 @@ class PeopleSearch extends Component {
                         <AddIcon fontSize="inherit" />
                         Home Info
                       </Button>
-                    </Grid>
-                    <Grid item>
+                    </Grid> */}
+                    {/* <Grid item>
                       <Button
                         color="primary"
                         variant={this.state.offDepExpanded ? 'contained' : 'outlined'}
@@ -893,234 +928,256 @@ class PeopleSearch extends Component {
                         <AddIcon fontSize="inherit" />
                         Office Info
                       </Button>
-                    </Grid>
+                    </Grid> */}
                   </Grid>
 
                   {/* Expandable search filters */}
-                  <Collapse
-                    in={this.state.academicsExpanded}
-                    timeout="auto"
-                    unmountOnExit
-                    style={styles.CardContent}
-                  >
-                    <Grid container spacing={2} alignItems="flex-end">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <FaBook style={styles.FontAwesome} className={classes.icon} />
+                  <Grid container direction="row" spacing={2}>
+                    <Grid item xs="4">
+                      <Collapse
+                        in={this.state.academicsExpanded}
+                        timeout="auto"
+                        unmountOnExit
+                        style={styles.CardContent}
+                      >
+                        <InputLabel style={{ color: gordonColors.primary.blue }}>
+                          Student
+                        </InputLabel>
+                        <Grid container spacing={2} alignItems="flex-end">
+                          <Media
+                            query="(min-width: 600px)"
+                            render={() => (
+                              <Grid item xs="1">
+                                <FaBook style={styles.FontAwesome} className={classes.icon} />
+                              </Grid>
+                            )}
+                          />
+                          <Grid item xs={11}>
+                            <FormControl fullWidth>
+                              <InputLabel>Major</InputLabel>
+                              <Select
+                                value={this.state.searchValues.major}
+                                onChange={this.handleMajorInputChange}
+                                input={<Input id="major" />}
+                              >
+                                <MenuItem label="All Majors" value="">
+                                  <em>All Majors</em>
+                                </MenuItem>
+                                {majorOptions}
+                              </Select>
+                            </FormControl>
                           </Grid>
-                        )}
-                      />
-                      <Grid item xs={11}>
-                        <FormControl fullWidth>
-                          <InputLabel>Major</InputLabel>
-                          <Select
-                            value={this.state.searchValues.major}
-                            onChange={this.handleMajorInputChange}
-                            input={<Input id="major" />}
-                          >
-                            <MenuItem label="All Majors" value="">
-                              <em>All Majors</em>
-                            </MenuItem>
-                            {majorOptions}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={2} alignItems="flex-end">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <FaBook style={styles.FontAwesome} className={classes.icon} />
+                        </Grid>
+                        <Grid container spacing={2} alignItems="flex-end">
+                          <Media
+                            query="(min-width: 600px)"
+                            render={() => (
+                              <Grid item xs="1">
+                                <FaBook style={styles.FontAwesome} className={classes.icon} />
+                              </Grid>
+                            )}
+                          />
+                          <Grid item xs={11}>
+                            <FormControl fullWidth>
+                              <InputLabel>Minor</InputLabel>
+                              <Select
+                                value={this.state.searchValues.minor}
+                                onChange={this.handleMinorInputChange}
+                                input={<Input id="minor" />}
+                              >
+                                <MenuItem label="All Minors" value="">
+                                  <em>All Minors</em>
+                                </MenuItem>
+                                {minorOptions}
+                              </Select>
+                            </FormControl>
                           </Grid>
-                        )}
-                      />
-                      <Grid item xs={11}>
-                        <FormControl fullWidth>
-                          <InputLabel>Minor</InputLabel>
-                          <Select
-                            value={this.state.searchValues.minor}
-                            onChange={this.handleMinorInputChange}
-                            input={<Input id="minor" />}
-                          >
-                            <MenuItem label="All Minors" value="">
-                              <em>All Minors</em>
-                            </MenuItem>
-                            {minorOptions}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={2} alignItems="flex-end">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <FaSchool style={styles.FontAwesome} className={classes.icon} />
+                        </Grid>
+                        <Grid container spacing={2} alignItems="flex-end">
+                          <Media
+                            query="(min-width: 600px)"
+                            render={() => (
+                              <Grid item xs="1">
+                                <FaSchool style={styles.FontAwesome} className={classes.icon} />
+                              </Grid>
+                            )}
+                          />
+                          <Grid item xs={11}>
+                            <FormControl fullWidth>
+                              <InputLabel>Class</InputLabel>
+                              <Select
+                                value={this.state.searchValues.classType}
+                                onChange={this.handleClassTypeInputChange}
+                                input={<Input id="class" />}
+                              >
+                                <MenuItem label="All Classes" value="">
+                                  <em>All</em>
+                                </MenuItem>
+                                <MenuItem value={1}>First Year</MenuItem>
+                                <MenuItem value={2}>Sophomore</MenuItem>
+                                <MenuItem value={3}>Junior</MenuItem>
+                                <MenuItem value={4}>Senior</MenuItem>
+                                <MenuItem value={5}>Graduate Student</MenuItem>
+                                <MenuItem value={6}>Undergraduate Conferred</MenuItem>
+                                <MenuItem value={7}>Graduate Conferred</MenuItem>
+                                <MenuItem value={0}>Unassigned</MenuItem>
+                              </Select>
+                            </FormControl>
                           </Grid>
-                        )}
-                      />
-                      <Grid item xs={11}>
-                        <FormControl fullWidth>
-                          <InputLabel>Class</InputLabel>
-                          <Select
-                            value={this.state.searchValues.classType}
-                            onChange={this.handleClassTypeInputChange}
-                            input={<Input id="class" />}
-                          >
-                            <MenuItem label="All Classes" value="">
-                              <em>All</em>
-                            </MenuItem>
-                            <MenuItem value={1}>First Year</MenuItem>
-                            <MenuItem value={2}>Sophomore</MenuItem>
-                            <MenuItem value={3}>Junior</MenuItem>
-                            <MenuItem value={4}>Senior</MenuItem>
-                            <MenuItem value={5}>Graduate Student</MenuItem>
-                            <MenuItem value={6}>Undergraduate Conferred</MenuItem>
-                            <MenuItem value={7}>Graduate Conferred</MenuItem>
-                            <MenuItem value={0}>Unassigned</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
+                        </Grid>
+                      </Collapse>
                     </Grid>
-                  </Collapse>
-                  <Collapse
-                    in={this.state.homeExpanded}
-                    timeout="auto"
-                    unmountOnExit
-                    style={styles.CardContent}
-                  >
-                    <Grid container spacing={2} alignItems="flex-end">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <HomeIcon style={styles.FontAwesome} className={classes.icon} />
+
+                    <Grid item xs="4">
+                      <Collapse
+                        in={this.state.offDepExpanded}
+                        timeout="auto"
+                        unmountOnExit
+                        style={styles.CardContent}
+                      >
+                        <InputLabel style={{ color: gordonColors.primary.blue }}>
+                          Employee
+                        </InputLabel>
+                        <Grid container spacing={2} alignItems="flex-end">
+                          <Media
+                            query="(min-width: 600px)"
+                            render={() => (
+                              <Grid item xs="1">
+                                <FaBriefcase style={styles.FontAwesome} className={classes.icon} />
+                              </Grid>
+                            )}
+                          />
+                          <Grid item xs={11}>
+                            <FormControl fullWidth>
+                              <InputLabel>Dept.</InputLabel>
+                              <Select
+                                value={this.state.searchValues.department}
+                                onChange={this.handleDepartmentInputChange}
+                                input={<Input id="department-type" />}
+                              >
+                                <MenuItem label="All Departments" value="">
+                                  <em>All</em>
+                                </MenuItem>
+                                {departmentOptions}
+                              </Select>
+                            </FormControl>
                           </Grid>
-                        )}
-                      />
-                      <Grid item xs={11}>
-                        <TextField
-                          id="hometown"
-                          label="Hometown"
-                          type="search"
-                          fullWidth
-                          value={this.state.searchValues.homeCity}
-                          onChange={this.handleHomeCityInputChange}
-                          onKeyDown={this.handleEnterKeyPress}
-                        />
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={2} alignItems="flex-end">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <CityIcon style={styles.FontAwesome} className={classes.icon} />
+                        </Grid>
+                        <Grid container spacing={2} alignItems="flex-end">
+                          <Media
+                            query="(min-width: 600px)"
+                            render={() => (
+                              <Grid item xs="1">
+                                <FaBuilding style={styles.FontAwesome} className={classes.icon} />
+                              </Grid>
+                            )}
+                          />
+                          <Grid item xs={11}>
+                            <FormControl fullWidth>
+                              <InputLabel>Building</InputLabel>
+                              <Select
+                                value={this.state.searchValues.building}
+                                onChange={this.handleBuildingInputChange}
+                                input={<Input id="building-type" />}
+                              >
+                                <MenuItem label="All Buildings" value="">
+                                  <em>All</em>
+                                </MenuItem>
+                                {buildingOptions}
+                              </Select>
+                            </FormControl>
                           </Grid>
-                        )}
-                      />
-                      <Grid item xs={11}>
-                        <FormControl fullWidth>
-                          <InputLabel>State</InputLabel>
-                          <Select
-                            value={this.state.searchValues.state}
-                            onChange={this.handleStateInputChange}
-                            input={<Input id="state" />}
-                          >
-                            <MenuItem label="All States" value="">
-                              <em>All</em>
-                            </MenuItem>
-                            {stateOptions}
-                          </Select>
-                        </FormControl>
-                      </Grid>
+                        </Grid>
+                      </Collapse>
                     </Grid>
-                    <Grid container spacing={2} alignItems="flex-end">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <FaGlobeAmericas style={styles.FontAwesome} className={classes.icon} />
+
+                    <Grid item xs={4}>
+                      <Collapse
+                        in={this.state.homeExpanded}
+                        timeout="auto"
+                        unmountOnExit
+                        style={styles.CardContent}
+                      >
+                        <InputLabel style={{ color: gordonColors.primary.blue }}>
+                          Everyone
+                        </InputLabel>
+                        <Grid container spacing={2} alignItems="flex-end">
+                          <Media
+                            query="(min-width: 600px)"
+                            render={() => (
+                              <Grid item xs="1">
+                                <HomeIcon style={styles.FontAwesome} className={classes.icon} />
+                              </Grid>
+                            )}
+                          />
+                          <Grid item xs={11}>
+                            <TextField
+                              id="hometown"
+                              label="Hometown"
+                              type="search"
+                              fullWidth
+                              value={this.state.searchValues.homeCity}
+                              onChange={this.handleHomeCityInputChange}
+                              onKeyDown={this.handleEnterKeyPress}
+                            />
                           </Grid>
-                        )}
-                      />
-                      <Grid item xs={11}>
-                        <FormControl fullWidth>
-                          <InputLabel>Country</InputLabel>
-                          <Select
-                            value={this.state.searchValues.country}
-                            onChange={this.handleCountryInputChange}
-                            input={<Input id="country" />}
-                          >
-                            <MenuItem label="All Countries" value="">
-                              <em>All</em>
-                            </MenuItem>
-                            {countryOptions}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-                  </Collapse>
-                  <Collapse
-                    in={this.state.offDepExpanded}
-                    timeout="auto"
-                    unmountOnExit
-                    style={styles.CardContent}
-                  >
-                    <Grid container spacing={2} alignItems="flex-end">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <FaBriefcase style={styles.FontAwesome} className={classes.icon} />
+                        </Grid>
+                        <Grid container spacing={2} alignItems="flex-end">
+                          <Media
+                            query="(min-width: 600px)"
+                            render={() => (
+                              <Grid item xs="1">
+                                <CityIcon style={styles.FontAwesome} className={classes.icon} />
+                              </Grid>
+                            )}
+                          />
+                          <Grid item xs={11}>
+                            <FormControl fullWidth>
+                              <InputLabel>State</InputLabel>
+                              <Select
+                                value={this.state.searchValues.state}
+                                onChange={this.handleStateInputChange}
+                                input={<Input id="state" />}
+                              >
+                                <MenuItem label="All States" value="">
+                                  <em>All</em>
+                                </MenuItem>
+                                {stateOptions}
+                              </Select>
+                            </FormControl>
                           </Grid>
-                        )}
-                      />
-                      <Grid item xs={11}>
-                        <FormControl fullWidth>
-                          <InputLabel>Department</InputLabel>
-                          <Select
-                            value={this.state.searchValues.department}
-                            onChange={this.handleDepartmentInputChange}
-                            input={<Input id="department-type" />}
-                          >
-                            <MenuItem label="All Departments" value="">
-                              <em>All</em>
-                            </MenuItem>
-                            {departmentOptions}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={2} alignItems="flex-end">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <FaBuilding style={styles.FontAwesome} className={classes.icon} />
+                        </Grid>
+                        <Grid container spacing={2} alignItems="flex-end">
+                          <Media
+                            query="(min-width: 600px)"
+                            render={() => (
+                              <Grid item xs="1">
+                                <FaGlobeAmericas
+                                  style={styles.FontAwesome}
+                                  className={classes.icon}
+                                />
+                              </Grid>
+                            )}
+                          />
+                          <Grid item xs={11}>
+                            <FormControl fullWidth>
+                              <InputLabel>Country</InputLabel>
+                              <Select
+                                value={this.state.searchValues.country}
+                                onChange={this.handleCountryInputChange}
+                                input={<Input id="country" />}
+                              >
+                                <MenuItem label="All Countries" value="">
+                                  <em>All</em>
+                                </MenuItem>
+                                {countryOptions}
+                              </Select>
+                            </FormControl>
                           </Grid>
-                        )}
-                      />
-                      <Grid item xs={11}>
-                        <FormControl fullWidth>
-                          <InputLabel>Building</InputLabel>
-                          <Select
-                            value={this.state.searchValues.building}
-                            onChange={this.handleBuildingInputChange}
-                            input={<Input id="building-type" />}
-                          >
-                            <MenuItem label="All Buildings" value="">
-                              <em>All</em>
-                            </MenuItem>
-                            {buildingOptions}
-                          </Select>
-                        </FormControl>
-                      </Grid>
+                        </Grid>
+                      </Collapse>
                     </Grid>
-                  </Collapse>
+                  </Grid>
                 </CardContent>
 
                 <CardActions>
