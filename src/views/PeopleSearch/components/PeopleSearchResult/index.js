@@ -49,6 +49,8 @@ export default class PeopleSearchResult extends Component {
   render() {
     const { Person, size } = this.props;
 
+    console.log(Person);
+
     let personClassJobTitle, nickname, personMailLocation;
 
     // set nicknames up
@@ -132,7 +134,7 @@ export default class PeopleSearchResult extends Component {
                   </Typography>
                   <Typography variant="body2">
                     {Person.Major1Description}
-                    {Person.Major2Description ? `, ${Person.Major2Description}` : null}
+                    {Person.Major2Description ? (Person.Major1Description ? ", ": "") + `${Person.Major2Description}` : null}
                     {Person.Major3Description ? `, ${Person.Major3Description}` : null}
                   </Typography>
                   <Typography variant="body2">{Person.Email}</Typography>
@@ -181,7 +183,7 @@ export default class PeopleSearchResult extends Component {
                   </Typography>
                   <Typography variant="body2">
                     {Person.Major1Description}
-                    {Person.Major2Description ? `, ${Person.Major2Description}` : null}
+                    {Person.Major2Description ? (Person.Major1Description ? ", ": "") + `${Person.Major2Description}` : null}
                     {Person.Major3Description ? `, ${Person.Major3Description}` : null}
                   </Typography>
                   <Typography variant="body2">{Person.Email}</Typography>
@@ -236,7 +238,7 @@ export default class PeopleSearchResult extends Component {
                 </Typography>
                 <Typography style={{ fontStyle: 'italic' }} color="textSecondary" variant="subtitle2">
                   {Person.Major1Description}
-                  {Person.Major2Description ? `, ${Person.Major2Description}` : null}
+                  {Person.Major2Description ? (Person.Major1Description ? ", ": "") + `${Person.Major2Description}` : null}
                   {Person.Major3Description ? `, ${Person.Major3Description}` : null}
                 </Typography>
               </Grid>
