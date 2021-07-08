@@ -260,6 +260,6 @@ PeopleSearchResult.propTypes = {
     PreferredClassYear: PropTypes.string,
     Major1Description: PropTypes.string,
     Major2Description: PropTypes.string,
-    Major3Description: PropTypes.string,
+    // Major3Description: PropTypes.string,
   }).isRequired,
 };
