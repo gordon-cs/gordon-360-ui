@@ -5,7 +5,6 @@ import GordonLoader from 'components/Loader';
 import './event.css';
 import {
   Button,
-  Checkbox,
   Chip,
   Collapse,
   FormControl,
@@ -14,22 +13,25 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   TextField,
 } from '@material-ui/core';
+import useQueryState, { types } from 'hooks/useQueryState';
 
 const Events = (props) => {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
   const [allEvents, setAllEvents] = useState([]);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [includePast, setIncludePast] = useState(false);
+  //TODO: useQueryState('search', types.SingleValue); - needs debouncing
+  const [search, setSearch] = useState('');
+  const [includePast, setIncludePast] = useQueryState('past', types.Boolean, true);
+  const [filters, setFilters] = useQueryState('filters', types.Array);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState([]);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
 
   useEffect(() => {
-    const loadEvents = async () => {
+    const loadAllEventsData = async () => {
       setLoading(true);
       let allEvents;
       if (props.authentication) {
@@ -38,31 +40,10 @@ const Events = (props) => {
         allEvents = await gordonEvent.getAllGuestEvents();
       }
       setAllEvents(allEvents);
-
-      // Load filters from UrlParams if they exist
-      if (props.location.search) {
-        const urlParams = new URLSearchParams(props.location.search);
-        let willIncludePast = false;
-        const filtersFromURL = [];
-
-        for (const key of urlParams.keys()) {
-          if (key === 'Past') {
-            willIncludePast = true;
-          } else {
-            filtersFromURL.push(key);
-          }
-        }
-
-        setFilters(filtersFromURL);
-        setIncludePast(willIncludePast);
-        setOpen(willIncludePast || filtersFromURL.length > 0);
-      }
-
       setLoading(false);
     };
-
-    loadEvents();
-  }, [props.authentication, props.location.search]);
+    loadAllEventsData();
+  }, [props.authentication]);
 
   useEffect(() => {
     setEvents(includePast ? allEvents : futureEvents);
@@ -72,10 +53,9 @@ const Events = (props) => {
     setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
   }, [events, filters, search]);
 
-  const handleChangeFilters = async (event) => {
-    setFilters(event.target.value);
-    setURLParams(includePast, event.target.value);
-  };
+  useEffect(() => {
+    setOpen(filters.length > 0 || includePast);
+  }, [filters.length, includePast]);
 
   const handleExpandClick = () => {
     clearFilters();
@@ -85,24 +65,6 @@ const Events = (props) => {
   const clearFilters = () => {
     setIncludePast(false);
     setFilters([]);
-    setURLParams(false, []);
-  };
-
-  const handleChangeIncludePast = () => {
-    setIncludePast(!includePast);
-    setURLParams(!includePast, filters);
-  };
-
-  const setURLParams = (includePast, filters) => {
-    if (includePast || filters.length > 0) {
-      let url = '?';
-      if (includePast) url += '&Past';
-      url = filters.reduce((url, filter) => (url += `&${encodeURIComponent(filter)}`), url);
-      props.history.push(url);
-    } else if (props.location.search) {
-      // If no params but current url has params, then push url with no params
-      props.history.push();
-    }
   };
 
   let content;
@@ -123,7 +85,7 @@ const Events = (props) => {
             id="event-checkboxes"
             multiple
             value={filters}
-            onChange={handleChangeFilters}
+            onChange={(event) => setFilters(event.target.value)}
             renderValue={(selected) => (
               <div className="filter-chips">
                 {selected.map((value) => (
@@ -141,7 +103,7 @@ const Events = (props) => {
           </Select>
         </FormControl>
         <FormControlLabel
-          control={<Checkbox checked={includePast} onChange={handleChangeIncludePast} />}
+          control={<Switch checked={includePast} onChange={() => setIncludePast(!includePast)} />}
           label="Include Past"
         />
       </div>
