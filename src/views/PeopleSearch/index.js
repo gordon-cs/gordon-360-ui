@@ -308,28 +308,6 @@ class PeopleSearch extends Component {
       offDepExpanded: !state.offDepExpanded,
     }));
   };
-  // handleAcademicsExpandClick = () => {
-  //   this.setState((state) => ({
-  //     academicsExpanded: !state.academicsExpanded,
-  //     homeExpanded: false,
-  //     offDepExpanded: false,
-
-  //   }));
-  // };
-  // handleHomeExpandClick = () => {
-  //   this.setState((state) => ({
-  //     homeExpanded: !state.homeExpanded,
-  //     academicsExpanded: false,
-  //     offDepExpanded: false,
-  //   }));
-  // };
-  // handleOffDepExpandClick = () => {
-  //   this.setState((state) => ({
-  //     offDepExpanded: !state.offDepExpanded,
-  //     academicsExpanded: false,
-  //     homeExpanded: false,
-  //   }));
-  // };
 
   handleRelationshipStatusInputChange = (e) => {
     this.setState({
@@ -869,66 +847,6 @@ class PeopleSearch extends Component {
                         Advanced Search
                       </Button>
                     </Grid>
-
-                    {/* <Grid item>
-                      <Button
-                        color="primary"
-                        style={
-                          this.state.searchValues.major !== '' ||
-                          this.state.searchValues.minor !== '' ||
-                          this.state.searchValues.classType !== ''
-                            ? {
-                                backgroundColor: gordonColors.primary.cyan,
-                                color: '#ffffff',
-                              }
-                            : {}
-                        }
-                        variant={this.state.academicsExpanded ? 'contained' : 'outlined'}
-                        onClick={this.handleAcademicsExpandClick}
-                      >
-                        <AddIcon fontSize="inherit" />
-                        Academic Info
-                      </Button>
-                    </Grid> */}
-                    {/* <Grid item>
-                      <Button
-                        color="primary"
-                        style={
-                          this.state.searchValues.homeCity !== '' ||
-                          this.state.searchValues.state !== '' ||
-                          this.state.searchValues.country !== ''
-                            ? {
-                                backgroundColor: gordonColors.primary.cyan,
-                                color: '#ffffff',
-                              }
-                            : {}
-                        }
-                        variant={this.state.homeExpanded ? 'contained' : 'outlined'}
-                        onClick={this.handleHomeExpandClick}
-                      >
-                        <AddIcon fontSize="inherit" />
-                        Home Info
-                      </Button>
-                    </Grid> */}
-                    {/* <Grid item>
-                      <Button
-                        color="primary"
-                        variant={this.state.offDepExpanded ? 'contained' : 'outlined'}
-                        onClick={this.handleOffDepExpandClick}
-                        style={
-                          this.state.searchValues.department !== '' ||
-                          this.state.searchValues.building !== ''
-                            ? {
-                                backgroundColor: gordonColors.primary.cyan,
-                                color: '#ffffff',
-                              }
-                            : {}
-                        }
-                      >
-                        <AddIcon fontSize="inherit" />
-                        Office Info
-                      </Button>
-                    </Grid> */}
                   </Grid>
 
                   {/* Expandable search filters */}
