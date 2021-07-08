@@ -28,20 +28,16 @@ export default class DaysLeft extends Component {
   async loadDaysLeft() {
     this.setState({ loading: true });
     try {
-      const firstDayPromise = await session.getFirstDay();
-      const lastDayPromise = await session.getLastDay();
       const daysLeftPromise = await session.getDaysLeft();
       const currSessionPromise = session.getCurrent();
-      const firstDay = await firstDayPromise;
-      const lastDay = await lastDayPromise;
       const daysLeft = await daysLeftPromise;
       const currSession = await currSessionPromise;
       const currSessionDescription = currSession.SessionDescription.replace(
         /(Academic Year)|(Grad)/gm,
         '',
       );
-      this.setState({ loading: false, firstDay, lastDay, daysLeft, currSessionDescription });
-      this.setState({ loading: false, firstDay, lastDay, daysLeft });
+      this.setState({ loading: false, daysLeft, currSessionDescription });
+      this.setState({ loading: false, daysLeft });
     } catch (error) {
       this.setState({ error });
     }
@@ -55,8 +51,6 @@ export default class DaysLeft extends Component {
     if (this.state.loading === true) {
       content = <GordonLoader />;
     } else {
-      const firstDay = this.state.firstDay;
-      const lastDay = this.state.lastDay;
       const daysleft = this.state.daysLeft[0];
       const pastDays = this.state.daysLeft[1] - daysleft;
       const data = {
