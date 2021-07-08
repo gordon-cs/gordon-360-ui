@@ -222,7 +222,7 @@ export default class PeopleSearchResult extends Component {
                   <Typography>
                     {Person.FirstName} {nickname} {Person.LastName}
                   </Typography>
-                  <Typography style={{ fontSize: '85%' }}>
+                  <Typography variant="subtitle2">
                     {Person.Email?.includes('.') ? Person.Email : null}
                   </Typography>
                 </div>
