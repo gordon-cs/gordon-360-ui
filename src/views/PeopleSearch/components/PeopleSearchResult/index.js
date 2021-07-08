@@ -210,23 +210,21 @@ export default class PeopleSearchResult extends Component {
                 padding: '1rem',
               }}
             >
-              <Grid item xs={5}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <IMG
-                    className="people-search-avatar"
-                    src={`data:image/jpg;base64,${this.state.avatar}`}
-                    alt=""
-                    noLazyLoad="true"
-                    placeholderColor="#eeeeee"
-                  />
-                  <div>
-                    <Typography>
-                      {Person.FirstName} {nickname} {Person.LastName}
-                    </Typography>
-                    <Typography variant="subtitle2">
-                      {Person.Email?.includes('.') ? Person.Email : null}
-                    </Typography>
-                  </div>
+              <Grid item xs={5} container alignItems="center">
+                <IMG
+                  className="people-search-avatar"
+                  src={`data:image/jpg;base64,${this.state.avatar}`}
+                  alt=""
+                  noLazyLoad="true"
+                  placeholderColor="#eeeeee"
+                />
+                <div>
+                  <Typography>
+                    {Person.FirstName} {nickname} {Person.LastName}
+                  </Typography>
+                  <Typography style={{ fontSize: '85%' }}>
+                    {Person.Email?.includes('.') ? Person.Email : null}
+                  </Typography>
                 </div>
               </Grid>
               <Grid item xs={5}>
