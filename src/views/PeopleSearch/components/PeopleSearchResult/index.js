@@ -126,7 +126,9 @@ export default class PeopleSearchResult extends Component {
                 <div style={{ color: '#666666' }}>
                   <Typography variant="body2">
                     {personClassJobTitle ?? Person.Type}
-                    {Person.Type === 'Alum' ? ' ' + Person.PreferredClassYear : null}
+                    {Person.Type === 'Alum' && Person.PreferredClassYear
+                    ? ' ' + Person.PreferredClassYear
+                    : null}
                   </Typography>
                   <Typography variant="body2">
                     {Person.Major1Description}
@@ -173,7 +175,9 @@ export default class PeopleSearchResult extends Component {
                 <div style={{ color: '#666666' }}>
                   <Typography variant="body2">
                     {personClassJobTitle ?? Person.Type}
-                    {Person.Type === 'Alum' ? ' ' + Person.PreferredClassYear : null}
+                    {Person.Type === 'Alum' && Person.PreferredClassYear
+                    ? ' ' + Person.PreferredClassYear
+                    : null}
                   </Typography>
                   <Typography variant="body2">
                     {Person.Major1Description}
@@ -226,7 +230,9 @@ export default class PeopleSearchResult extends Component {
               <Grid item xs={5}>
                 <Typography>
                   {personClassJobTitle ?? Person.Type}
-                  {Person.Type === 'Alum' ? ' ' + Person.PreferredClassYear : null}
+                  {Person.Type === 'Alum' && Person.PreferredClassYear
+                    ? ' ' + Person.PreferredClassYear
+                    : null}
                 </Typography>
                 <Typography style={{ fontStyle: 'italic' }} color="textSecondary" variant="subtitle2">
                   {Person.Major1Description}
