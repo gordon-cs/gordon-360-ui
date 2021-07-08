@@ -61,7 +61,9 @@ const getPersonalPhone = (id) => http.get(`checkIn/phone`);
 
 const getDemographic = (id) => http.get(`checkIn/demographic`);
 
-const getEmergencyContacts = (id) => http.get(`checkIn/emergencycontact`);
+const getEmergencyContacts = async (username) => {
+  return await http.get(`profiles/emergency-contact/${username}/`);
+}
 
 async function submitPhone(data) {
   try {
@@ -91,6 +93,7 @@ const checkInService = {
   getHolds,
   getPersonalPhone,
   getDemographic,
+  getEmergencyContacts,
   submitPhone,
   submitContact,
   submitDemographic,

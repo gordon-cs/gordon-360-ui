@@ -10,6 +10,7 @@ import RaceEthnicity from './components/RaceEthnicity';
 import ConfirmCheckIn from './components/ConfirmCheckIn';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import user from 'services/user';
 
 const AcademicCheckIn = ({ authentication }) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -29,7 +30,7 @@ const AcademicCheckIn = ({ authentication }) => {
 
   const holdStatus = false;
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [emergencyContacts, setEmergencyContacts] = useState({
     firstName1: '',
@@ -93,22 +94,24 @@ const AcademicCheckIn = ({ authentication }) => {
     studentLastName: '',
   });
 
+  const [profile, setProfile] = useState(null);
+
   useEffect(() => {
-    async function loadEmergencyContacts() {
-      setLoading(true);
-      try {
-        setEmergencyContacts(await checkInService.getEmergencyContacts());
-        setLoading(false);
-      } catch (error) {
-        // Do Nothing
-      }
-    }
     const loadData = async () => {
-      if (authentication) {
-        loadEmergencyContacts();
+      try {
+        setProfile(await (user.getProfileInfo()))
+        console.log(profile)
+        setEmergencyContacts(await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase()))
+      } catch (error) {
+        console.log(error);
       }
     };
-  });
+
+    if (authentication) {
+      loadData();
+    }
+    setLoading(false);
+  }, [authentication, profile]);
 
   const handleNext = () => {
     setActiveStep((nextStep) => nextStep + 1);
@@ -174,7 +177,7 @@ const AcademicCheckIn = ({ authentication }) => {
 
   const handleSubmit = () => {
     alert(`Done 🧙‍♂️`);
-    splitEmergencyContacts(emergencyContacts).map((contact) => {
+    splitEmergencyContacts(emergencyContacts).forEach((contact) => {
       checkInService.submitContact(contact);
     });
   };
