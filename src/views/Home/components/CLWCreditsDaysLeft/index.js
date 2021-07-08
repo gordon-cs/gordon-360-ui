@@ -18,6 +18,8 @@ const style = {
 };
 
 const CLWCreditsDaysLeft = () => {
+  const [firstDay, setFirstDay] = useState('');
+  const [lastDay, setLastDay] = useState('');
   const [daysLeft, setDaysLeft] = useState([]);
   const [chapelCredits, setChapelCredits] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,6 +27,8 @@ const CLWCreditsDaysLeft = () => {
 
   useEffect(() => {
     const loadData = async () => {
+      const firstDay = await session.getFirstDay();
+      const lastDay = await session.getLastDay();
       const daysLeft = await session.getDaysLeft();
       const chapelCredits = await user.getChapelCredits();
       const currSession = await session.getCurrent();
@@ -33,6 +37,8 @@ const CLWCreditsDaysLeft = () => {
         '',
       );
 
+      setFirstDay(firstDay);
+      setLastDay(lastDay);
       setDaysLeft(daysLeft);
       setChapelCredits(chapelCredits);
       setCurrSessionDescription(currSessionDescription);
@@ -137,6 +143,9 @@ const CLWCreditsDaysLeft = () => {
             <div className="entry-text">
               {'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}
             </div>
+            <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
+              {`Current Term: ${firstDay} - ${lastDay}`}
+            </Typography>
           </div>
 
           {required ? (
