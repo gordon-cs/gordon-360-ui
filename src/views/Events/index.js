@@ -156,6 +156,7 @@ const Events = (props) => {
           <TextField
             id="search"
             label="Search"
+            type="search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             fullWidth
