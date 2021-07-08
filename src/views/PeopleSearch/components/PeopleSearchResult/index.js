@@ -175,7 +175,7 @@ export default class PeopleSearchResult extends Component {
                     {personClassJobTitle ?? Person.Type}
                     {Person.Type === 'Alum' ? ' ' + Person.PreferredClassYear : null}
                   </Typography>
-                  <Typography variant="body2" style={{ fontStyle: 'italic' }}>
+                  <Typography variant="body2">
                     {Person.Major1Description}
                     {Person.Major2Description ? `, ${Person.Major2Description}` : null}
                     {Person.Major3Description ? `, ${Person.Major3Description}` : null}
@@ -251,5 +251,15 @@ PeopleSearchResult.propTypes = {
     FirstName: PropTypes.string.isRequired,
     LastName: PropTypes.string.isRequired,
     Email: PropTypes.string.isRequired,
+    AD_Username: PropTypes.string,
+    Nickname: PropTypes.string,
+    Type: PropTypes.string,
+    Class: PropTypes.string,
+    JobTitle: PropTypes.string,
+    Mail_Location: PropTypes.string,
+    PreferredClassYear: PropTypes.string,
+    Major1Description: PropTypes.string,
+    Major2Description: PropTypes.string,
+    Major3Description: PropTypes.string,
   }).isRequired,
 };
