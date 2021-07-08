@@ -14,8 +14,6 @@ export default class DaysLeft extends Component {
     this.loadDaysLeft = this.loadDaysLeft.bind(this);
 
     this.state = {
-      firstDay: '',
-      lastDay: '',
       daysLeft: [],
       currSessionDescription: '',
       error: null,
