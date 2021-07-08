@@ -933,164 +933,173 @@ class PeopleSearch extends Component {
 
                   {/* Expandable search filters */}
                   <Grid container direction="row" spacing={2}>
-                    <Grid item xs="4">
-                      <Collapse
-                        in={this.state.academicsExpanded}
-                        timeout="auto"
-                        unmountOnExit
-                        style={styles.CardContent}
-                      >
-                        <InputLabel style={{ color: gordonColors.primary.blue }}>
-                          Student
-                        </InputLabel>
-                        <Grid container spacing={2} alignItems="flex-end">
-                          <Media
-                            query="(min-width: 600px)"
-                            render={() => (
-                              <Grid item xs="1">
-                                <FaBook style={styles.FontAwesome} className={classes.icon} />
-                              </Grid>
-                            )}
-                          />
-                          <Grid item xs={11}>
-                            <FormControl fullWidth>
-                              <InputLabel>Major</InputLabel>
-                              <Select
-                                value={this.state.searchValues.major}
-                                onChange={this.handleMajorInputChange}
-                                input={<Input id="major" />}
-                              >
-                                <MenuItem label="All Majors" value="">
-                                  <em>All Majors</em>
-                                </MenuItem>
-                                {majorOptions}
-                              </Select>
-                            </FormControl>
+                    {this.state.searchValues.includeStudent ? (
+                      <Grid item xs="4">
+                        <Collapse
+                          in={this.state.academicsExpanded}
+                          timeout="auto"
+                          unmountOnExit
+                          style={styles.CardContent}
+                        >
+                          <InputLabel style={{ color: gordonColors.primary.blue }}>
+                            Student
+                          </InputLabel>
+                          <Grid container spacing={2} alignItems="flex-end">
+                            <Media
+                              query="(min-width: 600px)"
+                              render={() => (
+                                <Grid item xs="1">
+                                  <FaBook style={styles.FontAwesome} className={classes.icon} />
+                                </Grid>
+                              )}
+                            />
+                            <Grid item xs={11}>
+                              <FormControl fullWidth>
+                                <InputLabel>Major</InputLabel>
+                                <Select
+                                  value={this.state.searchValues.major}
+                                  onChange={this.handleMajorInputChange}
+                                  input={<Input id="major" />}
+                                >
+                                  <MenuItem label="All Majors" value="">
+                                    <em>All Majors</em>
+                                  </MenuItem>
+                                  {majorOptions}
+                                </Select>
+                              </FormControl>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                        <Grid container spacing={2} alignItems="flex-end">
-                          <Media
-                            query="(min-width: 600px)"
-                            render={() => (
-                              <Grid item xs="1">
-                                <FaBook style={styles.FontAwesome} className={classes.icon} />
-                              </Grid>
-                            )}
-                          />
-                          <Grid item xs={11}>
-                            <FormControl fullWidth>
-                              <InputLabel>Minor</InputLabel>
-                              <Select
-                                value={this.state.searchValues.minor}
-                                onChange={this.handleMinorInputChange}
-                                input={<Input id="minor" />}
-                              >
-                                <MenuItem label="All Minors" value="">
-                                  <em>All Minors</em>
-                                </MenuItem>
-                                {minorOptions}
-                              </Select>
-                            </FormControl>
+                          <Grid container spacing={2} alignItems="flex-end">
+                            <Media
+                              query="(min-width: 600px)"
+                              render={() => (
+                                <Grid item xs="1">
+                                  <FaBook style={styles.FontAwesome} className={classes.icon} />
+                                </Grid>
+                              )}
+                            />
+                            <Grid item xs={11}>
+                              <FormControl fullWidth>
+                                <InputLabel>Minor</InputLabel>
+                                <Select
+                                  value={this.state.searchValues.minor}
+                                  onChange={this.handleMinorInputChange}
+                                  input={<Input id="minor" />}
+                                >
+                                  <MenuItem label="All Minors" value="">
+                                    <em>All Minors</em>
+                                  </MenuItem>
+                                  {minorOptions}
+                                </Select>
+                              </FormControl>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                        <Grid container spacing={2} alignItems="flex-end">
-                          <Media
-                            query="(min-width: 600px)"
-                            render={() => (
-                              <Grid item xs="1">
-                                <FaSchool style={styles.FontAwesome} className={classes.icon} />
-                              </Grid>
-                            )}
-                          />
-                          <Grid item xs={11}>
-                            <FormControl fullWidth>
-                              <InputLabel>Class</InputLabel>
-                              <Select
-                                value={this.state.searchValues.classType}
-                                onChange={this.handleClassTypeInputChange}
-                                input={<Input id="class" />}
-                              >
-                                <MenuItem label="All Classes" value="">
-                                  <em>All</em>
-                                </MenuItem>
-                                <MenuItem value={1}>First Year</MenuItem>
-                                <MenuItem value={2}>Sophomore</MenuItem>
-                                <MenuItem value={3}>Junior</MenuItem>
-                                <MenuItem value={4}>Senior</MenuItem>
-                                <MenuItem value={5}>Graduate Student</MenuItem>
-                                <MenuItem value={6}>Undergraduate Conferred</MenuItem>
-                                <MenuItem value={7}>Graduate Conferred</MenuItem>
-                                <MenuItem value={0}>Unassigned</MenuItem>
-                              </Select>
-                            </FormControl>
+                          <Grid container spacing={2} alignItems="flex-end">
+                            <Media
+                              query="(min-width: 600px)"
+                              render={() => (
+                                <Grid item xs="1">
+                                  <FaSchool style={styles.FontAwesome} className={classes.icon} />
+                                </Grid>
+                              )}
+                            />
+                            <Grid item xs={11}>
+                              <FormControl fullWidth>
+                                <InputLabel>Class</InputLabel>
+                                <Select
+                                  value={this.state.searchValues.classType}
+                                  onChange={this.handleClassTypeInputChange}
+                                  input={<Input id="class" />}
+                                >
+                                  <MenuItem label="All Classes" value="">
+                                    <em>All</em>
+                                  </MenuItem>
+                                  <MenuItem value={1}>First Year</MenuItem>
+                                  <MenuItem value={2}>Sophomore</MenuItem>
+                                  <MenuItem value={3}>Junior</MenuItem>
+                                  <MenuItem value={4}>Senior</MenuItem>
+                                  <MenuItem value={5}>Graduate Student</MenuItem>
+                                  <MenuItem value={6}>Undergraduate Conferred</MenuItem>
+                                  <MenuItem value={7}>Graduate Conferred</MenuItem>
+                                  <MenuItem value={0}>Unassigned</MenuItem>
+                                </Select>
+                              </FormControl>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      </Collapse>
-                    </Grid>
-
-                    <Grid item xs="4">
-                      <Collapse
-                        in={this.state.offDepExpanded}
-                        timeout="auto"
-                        unmountOnExit
-                        style={styles.CardContent}
-                      >
-                        <InputLabel style={{ color: gordonColors.primary.blue }}>
-                          Employee
-                        </InputLabel>
-                        <Grid container spacing={2} alignItems="flex-end">
-                          <Media
-                            query="(min-width: 600px)"
-                            render={() => (
-                              <Grid item xs="1">
-                                <FaBriefcase style={styles.FontAwesome} className={classes.icon} />
-                              </Grid>
-                            )}
-                          />
-                          <Grid item xs={11}>
-                            <FormControl fullWidth>
-                              <InputLabel>Dept.</InputLabel>
-                              <Select
-                                value={this.state.searchValues.department}
-                                onChange={this.handleDepartmentInputChange}
-                                input={<Input id="department-type" />}
-                              >
-                                <MenuItem label="All Departments" value="">
-                                  <em>All</em>
-                                </MenuItem>
-                                {departmentOptions}
-                              </Select>
-                            </FormControl>
+                        </Collapse>
+                      </Grid>
+                    ) : (
+                      ''
+                    )}
+                    {this.state.searchValues.includeFacStaff ? (
+                      <Grid item xs="4">
+                        <Collapse
+                          in={this.state.offDepExpanded}
+                          timeout="auto"
+                          unmountOnExit
+                          style={styles.CardContent}
+                        >
+                          <InputLabel style={{ color: gordonColors.primary.blue }}>
+                            Faculty & Staff
+                          </InputLabel>
+                          <Grid container spacing={2} alignItems="flex-end">
+                            <Media
+                              query="(min-width: 600px)"
+                              render={() => (
+                                <Grid item xs="1">
+                                  <FaBriefcase
+                                    style={styles.FontAwesome}
+                                    className={classes.icon}
+                                  />
+                                </Grid>
+                              )}
+                            />
+                            <Grid item xs={11}>
+                              <FormControl fullWidth>
+                                <InputLabel>Dept.</InputLabel>
+                                <Select
+                                  value={this.state.searchValues.department}
+                                  onChange={this.handleDepartmentInputChange}
+                                  input={<Input id="department-type" />}
+                                >
+                                  <MenuItem label="All Departments" value="">
+                                    <em>All</em>
+                                  </MenuItem>
+                                  {departmentOptions}
+                                </Select>
+                              </FormControl>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                        <Grid container spacing={2} alignItems="flex-end">
-                          <Media
-                            query="(min-width: 600px)"
-                            render={() => (
-                              <Grid item xs="1">
-                                <FaBuilding style={styles.FontAwesome} className={classes.icon} />
-                              </Grid>
-                            )}
-                          />
-                          <Grid item xs={11}>
-                            <FormControl fullWidth>
-                              <InputLabel>Building</InputLabel>
-                              <Select
-                                value={this.state.searchValues.building}
-                                onChange={this.handleBuildingInputChange}
-                                input={<Input id="building-type" />}
-                              >
-                                <MenuItem label="All Buildings" value="">
-                                  <em>All</em>
-                                </MenuItem>
-                                {buildingOptions}
-                              </Select>
-                            </FormControl>
+                          <Grid container spacing={2} alignItems="flex-end">
+                            <Media
+                              query="(min-width: 600px)"
+                              render={() => (
+                                <Grid item xs="1">
+                                  <FaBuilding style={styles.FontAwesome} className={classes.icon} />
+                                </Grid>
+                              )}
+                            />
+                            <Grid item xs={11}>
+                              <FormControl fullWidth>
+                                <InputLabel>Building</InputLabel>
+                                <Select
+                                  value={this.state.searchValues.building}
+                                  onChange={this.handleBuildingInputChange}
+                                  input={<Input id="building-type" />}
+                                >
+                                  <MenuItem label="All Buildings" value="">
+                                    <em>All</em>
+                                  </MenuItem>
+                                  {buildingOptions}
+                                </Select>
+                              </FormControl>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      </Collapse>
-                    </Grid>
-
+                        </Collapse>
+                      </Grid>
+                    ) : (
+                      ''
+                    )}
                     <Grid item xs={4}>
                       <Collapse
                         in={this.state.homeExpanded}
