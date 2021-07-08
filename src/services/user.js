@@ -445,6 +445,10 @@ async function setCliftonStrengths(profile) {
   profile.CliftonStrengths = cliftonStrengths?.Strengths;
 }
 
+async function setMobilePhoneNumber(value) {
+  await http.put(`profiles/mobile_phone_number/${value}/`);
+}
+
 async function setMobilePhonePrivacy(makePrivate) {
   // 'Y' = private, 'N' = public
   await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
@@ -641,6 +645,7 @@ const userService = {
   setFullname,
   setClass,
   setMobilePhonePrivacy,
+  setMobilePhoneNumber,
   setImagePrivacy,
   getMemberships,
   getChapelCredits,

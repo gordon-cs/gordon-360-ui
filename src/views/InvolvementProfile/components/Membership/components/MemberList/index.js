@@ -33,7 +33,25 @@ const MemberList = ({
     return () => window.removeEventListener('resize', resize);
   });
 
-  const compareByLastThenFirst = (a, b) => {
+  /**
+   * Compares two members by their role and then their names - last then first
+   *
+   * Roles follow this hierarchy: Advisor > Leader > Member > Guest
+   * @param {Object} a the first member to compare
+   * @param {Object} b the second member to compare
+   * @returns {-1 | 0 | 1} the sort order of the members: -1 if a before b, 1 if b before a, or 0 if equal
+   */
+
+  const compareByRoleThenLastThenFirst = (a, b) => {
+    if (a.ParticipationDescription !== b.ParticipationDescription) {
+      if (a.ParticipationDescription === 'Advisor') return -1;
+      if (b.ParticipationDescription === 'Advisor') return 1;
+      if (a.ParticipationDescription === 'Leader') return -1;
+      if (b.ParticipationDescription === 'Leader') return 1;
+      if (a.ParticipationDescription === 'Member') return -1;
+      if (b.ParticipationDescription === 'Member') return 1;
+    }
+
     if (a.LastName.toUpperCase() < b.LastName.toUpperCase()) {
       return -1;
     }
@@ -55,19 +73,17 @@ const MemberList = ({
     <CardHeader
       title={
         <Grid container direction="row">
-          <Grid item xs={2}>
+          <Grid item xs={1} />
+          <Grid item xs={3}>
             Name
           </Grid>
-          <Grid item xs={2}>
-            Participation
-          </Grid>
-          <Grid item xs={3}>
-            Title/Comment
+          <Grid item xs={4}>
+            Title/Participation
           </Grid>
           <Grid item xs={2}>
             Mail #
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={2}>
             Admin
           </Grid>
         </Grid>
@@ -79,11 +95,12 @@ const MemberList = ({
     <CardHeader
       title={
         <Grid container direction="row">
-          <Grid item xs={4}>
+          <Grid item xs={1} />
+          <Grid item xs={3}>
             Name
           </Grid>
           <Grid item xs={4}>
-            Participation
+            Title/Participation
           </Grid>
           <Grid item xs={4}>
             Mail #
@@ -93,12 +110,11 @@ const MemberList = ({
       style={headerStyle}
     />
   );
-
   return (
     <Card>
       {header}
       <CardContent>
-        {members.sort(compareByLastThenFirst).map((member) => (
+        {members.sort(compareByRoleThenLastThenFirst).map((member) => (
           <MemberListItem
             member={member}
             key={member.MembershipID}
