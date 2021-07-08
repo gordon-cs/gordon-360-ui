@@ -228,7 +228,7 @@ export default class PeopleSearchResult extends Component {
                   {personClassJobTitle ?? Person.Type}
                   {Person.Type === 'Alum' ? ' ' + Person.PreferredClassYear : null}
                 </Typography>
-                <Typography style={{ fontSize: '85%', fontStyle: 'italic', color: '#666666' }}>
+                <Typography style={{ fontStyle: 'italic' }} color="textSecondary" variant="subtitle2">
                   {Person.Major1Description}
                   {Person.Major2Description ? `, ${Person.Major2Description}` : null}
                   {Person.Major3Description ? `, ${Person.Major3Description}` : null}
