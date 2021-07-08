@@ -48,8 +48,7 @@ export default class PeopleSearchResult extends Component {
 
   render() {
     const { Person, size } = this.props;
-
-    console.log(Person);
+    const SecondaryText = ({children, otherProps}) => <Typography variant="body2" color="textSecondary" {...otherProps}>{children}</Typography>
 
     let personClassJobTitle, nickname, personMailLocation;
 
@@ -125,21 +124,19 @@ export default class PeopleSearchResult extends Component {
                 <Typography variant="h5">
                   {Person.FirstName} {nickname} {Person.LastName}
                 </Typography>
-                <div style={{ color: '#666666' }}>
-                  <Typography variant="body2">
-                    {personClassJobTitle ?? Person.Type}
-                    {Person.Type === 'Alum' && Person.PreferredClassYear
-                    ? ' ' + Person.PreferredClassYear
-                    : null}
-                  </Typography>
-                  <Typography variant="body2">
-                    {Person.Major1Description}
-                    {Person.Major2Description ? (Person.Major1Description ? ", ": "") + `${Person.Major2Description}` : null}
-                    {Person.Major3Description ? `, ${Person.Major3Description}` : null}
-                  </Typography>
-                  <Typography variant="body2">{Person.Email}</Typography>
-                  <Typography variant="body2">{personMailLocation}</Typography>
-                </div>
+                <SecondaryText>
+                  {personClassJobTitle ?? Person.Type}
+                  {Person.Type === 'Alum' && Person.PreferredClassYear
+                  ? ' ' + Person.PreferredClassYear
+                  : null}
+                </SecondaryText>
+                <SecondaryText>
+                  {Person.Major1Description}
+                  {Person.Major2Description ? (Person.Major1Description ? ", ": "") + `${Person.Major2Description}` : null}
+                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
+                </SecondaryText>
+                <SecondaryText variant="body2">{Person.Email}</SecondaryText>
+                <SecondaryText variant="body2">{personMailLocation}</SecondaryText>
               </Grid>
             </Grid>
           </Link>
@@ -174,21 +171,19 @@ export default class PeopleSearchResult extends Component {
                 <Typography variant="h5">
                   {Person.FirstName} {nickname} {Person.LastName}
                 </Typography>
-                <div style={{ color: '#666666' }}>
-                  <Typography variant="body2">
-                    {personClassJobTitle ?? Person.Type}
-                    {Person.Type === 'Alum' && Person.PreferredClassYear
-                    ? ' ' + Person.PreferredClassYear
-                    : null}
-                  </Typography>
-                  <Typography variant="body2">
-                    {Person.Major1Description}
-                    {Person.Major2Description ? (Person.Major1Description ? ", ": "") + `${Person.Major2Description}` : null}
-                    {Person.Major3Description ? `, ${Person.Major3Description}` : null}
-                  </Typography>
-                  <Typography variant="body2">{Person.Email}</Typography>
-                  <Typography variant="body2">{personMailLocation}</Typography>
-                </div>
+                <SecondaryText>
+                  {personClassJobTitle ?? Person.Type}
+                  {Person.Type === 'Alum' && Person.PreferredClassYear
+                  ? ' ' + Person.PreferredClassYear
+                  : null}
+                </SecondaryText>
+                <SecondaryText>
+                  {Person.Major1Description}
+                  {Person.Major2Description ? (Person.Major1Description ? ", ": "") + `${Person.Major2Description}` : null}
+                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
+                </SecondaryText>
+                <SecondaryText variant="body2">{Person.Email}</SecondaryText>
+                <SecondaryText variant="body2">{personMailLocation}</SecondaryText>
               </Grid>
             </Grid>
           </Link>
@@ -234,11 +229,11 @@ export default class PeopleSearchResult extends Component {
                     ? ' ' + Person.PreferredClassYear
                     : null}
                 </Typography>
-                <Typography style={{ fontStyle: 'italic' }} color="textSecondary" variant="subtitle2">
+                <SecondaryText>
                   {Person.Major1Description}
                   {Person.Major2Description ? (Person.Major1Description ? ", ": "") + `${Person.Major2Description}` : null}
                   {Person.Major3Description ? `, ${Person.Major3Description}` : null}
-                </Typography>
+                </SecondaryText>
               </Grid>
               <Grid item xs={2}>
                 <Typography>{personMailLocation}</Typography>
