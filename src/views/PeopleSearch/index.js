@@ -456,22 +456,23 @@ class PeopleSearch extends Component {
           header: '',
         });
       } else {
-        // this.setState({
-        //   resultData: (
-        //     <Media query="(min-width: 960px)">
-        //       {(matches) =>
-        //         results.map((person) => (
-        //           <PeopleSearchResult
-        //             key={person.AD_Username}
-        //             Person={person}
-        //             size={
-        //               !matches ? 'single' : this.state.displayLargeImage ? 'largeImages' : 'full'
-        //             }
-        //           />
-        //         ))
-        //       }
-        //     </Media>
-        //   )});
+        this.setState({
+          resultData: (
+            <Media query="(min-width: 960px)">
+              {(matches) =>
+                results.map((person) => (
+                  <PeopleSearchResult
+                    key={person.AD_Username}
+                    Person={person}
+                    size={
+                      !matches ? 'single' : this.state.displayLargeImage ? 'largeImages' : 'full'
+                    }
+                  />
+                ))
+              }
+            </Media>
+          ),
+        });
 
         this.setState({
           header: (
@@ -485,49 +486,49 @@ class PeopleSearch extends Component {
           ),
         });
 
-        for (let i = 0; i < results.length; i++) {
-          const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-            await user.getImage(results[i].AD_Username),
-          ]);
-          if (results[i].AD_Username) {
-            this.setState({
-              imageResults: this.state.imageResults.concat(defaultImage || preferredImage),
-            });
-          } else {
-            this.setState({
-              imageResults: this.state.imageResults.concat(
-                <svg width="50" height="50" viewBox="0 0 50 50">
-                  <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-                </svg>,
-              ),
-            });
-          }
+        //   for (let i = 0; i < results.length; i++) {
+        //     const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
+        //       await user.getImage(results[i].AD_Username),
+        //     ]);
+        //     if (results[i].AD_Username) {
+        //       this.setState({
+        //         imageResults: this.state.imageResults.concat(defaultImage || preferredImage),
+        //       });
+        //     } else {
+        //       this.setState({
+        //         imageResults: this.state.imageResults.concat(
+        //           <svg width="50" height="50" viewBox="0 0 50 50">
+        //             <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+        //           </svg>,
+        //         ),
+        //       });
+        //     }
 
-          this.setState({
-            resultData: (
-              <Media query="(min-width: 960px)">
-                {(matches) =>
-                  results
-                    .slice(0, i + 1)
-                    .map((person, index) => (
-                      <PeopleSearchResult
-                        key={person.AD_Username}
-                        Person={person}
-                        Image={this.state.imageResults[index]}
-                        size={
-                          !matches
-                            ? 'single'
-                            : this.state.displayLargeImage
-                            ? 'largeImages'
-                            : 'full'
-                        }
-                      />
-                    ))
-                }
-              </Media>
-            ),
-          });
-        }
+        //     this.setState({
+        //       resultData: (
+        //         <Media query="(min-width: 960px)">
+        //           {(matches) =>
+        //             results
+        //               .slice(0, i + 1)
+        //               .map((person, index) => (
+        //                 <PeopleSearchResult
+        //                   key={person.AD_Username}
+        //                   Person={person}
+        //                   Image={this.state.imageResults[index]}
+        //                   size={
+        //                     !matches
+        //                       ? 'single'
+        //                       : this.state.displayLargeImage
+        //                       ? 'largeImages'
+        //                       : 'full'
+        //                   }
+        //                 />
+        //               ))
+        //           }
+        //         </Media>
+        //       ),
+        //     });
+        //   }
       }
       // will set url redundantly if loading from url, but not a major issue
       this.updateURL();
