@@ -101,9 +101,9 @@ const AcademicCheckIn = ({ authentication }) => {
       try {
         setProfile(await (user.getProfileInfo()))
         console.log(profile)
-        setEmergencyContacts(await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase()))
+        console.log(await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase()))
       } catch (error) {
-        console.log(error);
+        // DO NOTHING
       }
     };
 
@@ -111,7 +111,7 @@ const AcademicCheckIn = ({ authentication }) => {
       loadData();
     }
     setLoading(false);
-  }, [authentication, profile]);
+  }, [authentication, profile, emergencyContacts]);
 
   const handleNext = () => {
     setActiveStep((nextStep) => nextStep + 1);
