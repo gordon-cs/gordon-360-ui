@@ -70,7 +70,6 @@ const Home = ({ authentication, onLogIn }) => {
       setLoading(false);
     }
   }, [authentication]);
-  // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
   const loadPage = async () => {
     setLoading(true);
     // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
