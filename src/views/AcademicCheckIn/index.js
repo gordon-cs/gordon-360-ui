@@ -32,29 +32,38 @@ const AcademicCheckIn = ({ authentication }) => {
 
   const [loading, setLoading] = useState(true);
 
-  const [emergencyContacts, setEmergencyContacts] = useState({
-    firstName1: '',
-    lastName1: '',
-    relationship1: '',
-    homePhone1: '',
-    homePhone1IN: false,
-    mobilePhone1: '',
-    mobilePhone1IN: false,
-    firstName2: '',
-    lastName2: '',
-    relationship2: '',
-    homePhone2: '',
-    homePhone2IN: false,
-    mobilePhone2: '',
-    mobilePhone2IN: false,
-    firstName3: '',
-    lastName3: '',
-    relationship3: '',
-    homePhone3: '',
-    homePhone3IN: false,
-    mobilePhone3: '',
-    mobilePhone3IN: false,
-  });
+  const [emergencyContact1, setEmergencyContact1] = useState({
+    SEQ_NUM: 1,
+    firstname: '',
+    lastname: '',
+    relationship: '',
+    HomePhone: '',
+    HomePhoneIN: false,
+    MobilePhone: '',
+    MobilePhoneIN: false,
+  })
+
+  const [emergencyContact2, setEmergencyContact2] = useState({
+    SEQ_NUM: 2,
+    firstname: '',
+    lastname: '',
+    relationship: '',
+    HomePhone: '',
+    HomePhoneIN: false,
+    MobilePhone: '',
+    MobilePhoneIN: false,
+  })
+
+  const [emergencyContact3, setEmergencyContact3] = useState({
+    SEQ_NUM: 3,
+    firstname: '',
+    lastname: '',
+    relationship: '',
+    HomePhone: '',
+    HomePhoneIN: false,
+    MobilePhone: '',
+    MobilePhoneIN: false,
+  })
 
   const [holds, setHolds] = useState({
     registrationHold: false,
@@ -89,6 +98,8 @@ const AcademicCheckIn = ({ authentication }) => {
     none: false,
   });
 
+
+  // TODO: Replace this in residual files with the profile object
   const [basicInfo, setBasicInfo] = useState({
     studentFirstName: '',
     studentLastName: '',
@@ -99,9 +110,12 @@ const AcademicCheckIn = ({ authentication }) => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        setProfile(await (user.getProfileInfo()))
-        console.log(profile)
-        console.log(await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase()))
+        let tempProfile = await user.getProfileInfo();
+        console.log(tempProfile);
+        setProfile(tempProfile);
+        let contacts = await checkInService.getEmergencyContacts(tempProfile.AD_Username.toLowerCase());
+        setEmergencyContact1(contacts[0]); setEmergencyContact2(contacts[1]);
+        setEmergencyContact3(contacts[2]);
       } catch (error) {
         // DO NOTHING
       }
@@ -111,7 +125,7 @@ const AcademicCheckIn = ({ authentication }) => {
       loadData();
     }
     setLoading(false);
-  }, [authentication, profile, emergencyContacts]);
+  }, [authentication, loading]);
 
   const handleNext = () => {
     setActiveStep((nextStep) => nextStep + 1);
@@ -121,8 +135,16 @@ const AcademicCheckIn = ({ authentication }) => {
     setActiveStep((previousStep) => previousStep - 1);
   };
 
-  const handleChangeEmergContact = (evt) => {
-    setEmergencyContacts({ ...emergencyContacts, [evt.target.name]: evt.target.value });
+  const handleChangeEmergContact1 = (evt) => {
+    setEmergencyContact1({ ...emergencyContact1, [evt.target.name]: evt.target.value });
+  };
+
+  const handleChangeEmergContact2 = (evt) => {
+    setEmergencyContact2({ ...emergencyContact2, [evt.target.name]: evt.target.value });
+  };
+
+  const handleChangeEmergContact3 = (evt) => {
+    setEmergencyContact3({ ...emergencyContact3, [evt.target.name]: evt.target.value });
   };
 
   const handleChangePersonalPhone = (evt) => {
@@ -137,8 +159,16 @@ const AcademicCheckIn = ({ authentication }) => {
     setPrivacyAgreements({ ...privacyAgreements, [evt.target.name]: evt.target.checked });
   };
 
-  const handleCheckEmergContact = (evt) => {
-    setEmergencyContacts({ ...emergencyContacts, [evt.target.name]: evt.target.checked });
+  const handleCheckEmergContact1 = (evt) => {
+    setEmergencyContact1({ ...emergencyContact1, [evt.target.name]: evt.target.checked });
+  };
+
+  const handleCheckEmergContact2 = (evt) => {
+    setEmergencyContact2({ ...emergencyContact2, [evt.target.name]: evt.target.checked });
+  };
+
+  const handleCheckEmergContact3 = (evt) => {
+    setEmergencyContact3({ ...emergencyContact3, [evt.target.name]: evt.target.checked });
   };
 
   const handleCheckPersonalPhone = (evt) => {
@@ -149,37 +179,11 @@ const AcademicCheckIn = ({ authentication }) => {
     setDemographic({ ...demographic, [evt.target.name]: evt.target.checked });
   };
 
-  const splitEmergencyContacts = (emergencyContacts) => {
-    return [
-      {
-        firstName: emergencyContacts.firstName1,
-        lastName: emergencyContacts.lastName1,
-        homePhone: emergencyContacts.homePhone1,
-        mobilePhone: emergencyContacts.mobilePhone1,
-        relationship: emergencyContacts.relationship1,
-      },
-      {
-        firstName: emergencyContacts.firstName2,
-        lastName: emergencyContacts.lastName2,
-        homePhone: emergencyContacts.homePhone2,
-        mobilePhone: emergencyContacts.mobilePhone2,
-        relationship: emergencyContacts.relationship2,
-      },
-      {
-        firstName: emergencyContacts.firstName3,
-        lastName: emergencyContacts.lastName3,
-        homePhone: emergencyContacts.homePhone3,
-        mobilePhone: emergencyContacts.mobilePhone3,
-        relationship: emergencyContacts.relationship3,
-      },
-    ];
-  };
-
   const handleSubmit = () => {
     alert(`Done 🧙‍♂️`);
-    splitEmergencyContacts(emergencyContacts).forEach((contact) => {
-      checkInService.submitContact(contact);
-    });
+    // splitEmergencyContacts(emergencyContacts).forEach((contact) => {
+    //   checkInService.submitContact(contact);
+    // });
   };
 
   let content;
@@ -204,9 +208,15 @@ const AcademicCheckIn = ({ authentication }) => {
 
                       {activeStep === 1 && (
                         <EmergencyContactUpdate
-                          emergencyContacts={emergencyContacts}
-                          handleChangeEmergContact={handleChangeEmergContact}
-                          handleCheckEmergContact={handleCheckEmergContact}
+                          emergencyContact1={emergencyContact1}
+                          emergencyContact2={emergencyContact2}
+                          emergencyContact3={emergencyContact3}
+                          handleChangeEmergContact1={handleChangeEmergContact1}
+                          handleChangeEmergContact2={handleChangeEmergContact2}
+                          handleChangeEmergContact3={handleChangeEmergContact3}
+                          handleCheckEmergContact1={handleCheckEmergContact1}
+                          handleCheckEmergContact2={handleCheckEmergContact2}
+                          handleCheckEmergContact3={handleCheckEmergContact3}
                         />
                       )}
 
@@ -234,7 +244,9 @@ const AcademicCheckIn = ({ authentication }) => {
                       )}
                       {activeStep === 5 && (
                         <ConfirmCheckIn
-                          emergencyContacts={emergencyContacts}
+                          emergencyContact1={emergencyContact1}
+                          emergencyContact2={emergencyContact2}
+                          emergencyContact3={emergencyContact3}
                           personalPhone={personalPhone}
                           demographic={demographic}
                         />
@@ -264,8 +276,8 @@ const AcademicCheckIn = ({ authentication }) => {
                         disabled={
                           (activeStep === 0 && holdStatus === true) ||
                           (activeStep === 1 &&
-                            (emergencyContacts.firstName1 === '' ||
-                              emergencyContacts.firstName2 === '')) ||
+                            (emergencyContact1.firstname === '' ||
+                              emergencyContact2.firstname === '')) ||
                           (activeStep === 2 &&
                             personalPhone.personalPhone === '' &&
                             personalPhone.noPhone === false) ||
