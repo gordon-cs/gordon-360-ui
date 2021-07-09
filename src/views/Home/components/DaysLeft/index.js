@@ -72,7 +72,7 @@ export default class DaysLeft extends Component {
               </Typography>
             </Grid>
           </Grid>
-          <Doughnut data={data} height={175} options={options}/>
+          <Doughnut data={data} height={175} options={options} />
           <div
             style={{
               marginTop: '1rem',
