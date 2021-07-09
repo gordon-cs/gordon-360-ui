@@ -54,6 +54,7 @@ const Home = ({ authentication, onLogIn }) => {
   //
   //   return () => window.removeEventListener('message', () => {});
   // }, []);
+  // END Wellness Check disabled code
 
   useEffect(() => {
     if (authentication) {
