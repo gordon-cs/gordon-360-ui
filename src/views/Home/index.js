@@ -73,6 +73,7 @@ const Home = ({ authentication, onLogIn }) => {
   // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
   const loadPage = async () => {
     setLoading(true);
+    // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
     const [{ PersonType } /*, { IsValid }*/] = await Promise.all([
       user.getProfileInfo(),
       // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
