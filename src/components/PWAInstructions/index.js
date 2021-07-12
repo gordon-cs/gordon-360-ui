@@ -462,7 +462,6 @@ const PWAInstructions = (props) => {
   return (
     <Dialog
       open={props.open}
-      disableBackdropClick
       fullWidth
       maxWidth="sm"
       aria-labelledby="alert-dialog-slide-title"

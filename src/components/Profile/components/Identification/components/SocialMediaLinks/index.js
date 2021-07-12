@@ -73,7 +73,6 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
       )}
       <Dialog
         open={socialLinksOpen}
-        disableBackdropClick
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
