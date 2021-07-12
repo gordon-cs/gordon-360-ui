@@ -16,20 +16,28 @@ import http from './http';
  * @property {String} ConcatonatedInfo All names combined in a single string
  */
 
+function Results(time, searchResult) {
+  this.now = time;
+  this.result = searchResult;
+}
+
 /**
  * Search for a person
  * @param {String} query Query to search
- * @return {Promise.<SearchResult[]>} List of search results
+ * @return {results} List of search results
  */
 const search = (query) => {
   let searchQuery = query;
+  let now = Date.now();
 
   // If query has a space in it or is a username, separate it into first and last names
   if (query.trim().includes(' ') || (query.includes('.') && query.indexOf('.') !== 0)) {
     // Replace period or space with a slash: 'first.last' or 'first last' become 'first/last'
     searchQuery = query.trim().replace(/\.|\s/g, '/');
   }
-  return http.get(`accounts/search/${searchQuery}`);
+
+  let results = new Results(now, http.get(`accounts/search/${searchQuery}`));
+  return results;
 };
 
 const peopleSearchService = {
