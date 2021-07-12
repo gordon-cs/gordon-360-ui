@@ -189,6 +189,7 @@ const PersonalInfoList = ({
   ) : null;
 
   const cliftonStrengths = CliftonStrengths ? (
+    // <ProfileInfoListItem title="Clifton Strengths:" contentText={<b>test</b>} />
     <ProfileInfoListItem title="Clifton Strengths:" contentText={CliftonStrengths.join(', ')} />
   ) : null;
 
