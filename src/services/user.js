@@ -181,6 +181,58 @@ import { socialMediaInfo } from 'socialMedia';
  * @property {String} CurrentBalance The current remaining meal plan balance
  */
 
+const cliftonStrengthCategories = {
+  Executing: [
+    'Achiever',
+    'Arranger',
+    'Belief',
+    'Consistency',
+    'Deliberative',
+    'Discipline',
+    'Focus',
+    'Responsibility',
+    'Restorative',
+  ],
+  Influencing: [
+    'Activator',
+    'Command',
+    'Communication',
+    'Competition',
+    'Maximizer',
+    'Self-Assurance',
+    'Significance',
+    'Woo',
+  ],
+  Relationship: [
+    'Adaptability',
+    'Connectedness',
+    'Developer',
+    'Empathy',
+    'Harmony',
+    'Includer',
+    'Individualization',
+    'Positivity',
+    'Relator',
+  ],
+  Thinking: [
+    'Analytical',
+    'Context',
+    'Futuristic',
+    'Ideation',
+    'Input',
+    'Intellection',
+    'Learner',
+    'Strategic',
+  ],
+};
+
+const cliftonStrengthColors = {
+  Executing: '#60409f',
+  Influencing: '#c88a2e',
+  Relationship: '#04668f',
+  Thinking: '#2c8b0f',
+};
+
 function setFullname(profile) {
   profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
   return profile;
@@ -428,7 +480,24 @@ const getAdvisors = async (username) => {
 
 const getCliftonStrengths = async (username) => {
   try {
-    return await http.get(`profiles/clifton/${username}/`);
+    let cliftonStrengths = await http.get(`profiles/clifton/${username}/`);
+
+    cliftonStrengths.Categories = cliftonStrengths.Strengths.map((strength) =>
+      cliftonStrengthCategories.Executing.includes(strength)
+        ? 'Executing'
+        : cliftonStrengthCategories.Influencing.includes(strength)
+        ? 'Influencing'
+        : cliftonStrengthCategories.Relationship.includes(strength)
+        ? 'Relationship'
+        : cliftonStrengthCategories.Thinking.includes(strength)
+        ? 'Thinking'
+        : null,
+    );
+
+    cliftonStrengths.Colors = cliftonStrengths.Categories.map(
+      (category) => cliftonStrengthColors[category],
+    );
+    return cliftonStrengths;
   } catch (error) {
     console.log('Clifton strengths error:', error);
     // TODO: currently throws an error whenever clifton strengths are missing,
@@ -442,7 +511,7 @@ async function setAdvisors(profile) {
 
 async function setCliftonStrengths(profile) {
   const cliftonStrengths = await getCliftonStrengths(profile.AD_Username);
-  profile.CliftonStrengths = cliftonStrengths?.Strengths;
+  profile.CliftonStrengths = cliftonStrengths;
 }
 
 async function setMobilePhoneNumber(value) {
