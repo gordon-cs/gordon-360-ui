@@ -481,7 +481,7 @@ const Timesheets = (props) => {
                     <Grid
                       container
                       spacing={2}
-                      justify="space-between"
+                      justifyContent="space-between"
                       alignItems="center"
                       alignContent="center"
                     >
@@ -603,7 +603,7 @@ const Timesheets = (props) => {
         return <GordonOffline feature="Timesheets" />;
       } else if (!isUserStudent) {
         return (
-          <Grid container justify="center" spacing="16">
+          <Grid container justifyContent="center" spacing="16">
             <Grid item xs={12} md={8}>
               <Card>
                 <CardContent
