@@ -8,7 +8,7 @@ import { Grid, Card, CardContent, Button } from '@material-ui/core/';
  */
 const GordonUnauthorized = ({ feature }) => {
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <Grid item xs={12} md={8}>
         <Card>
           <CardContent

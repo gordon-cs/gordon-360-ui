@@ -356,13 +356,13 @@ export default class StudentNews extends Component {
               Post Listing
             </Fab>
 
-            <Grid container justify="center">
+            <Grid container justifyContent="center">
               {/* Search */}
               <Grid item xs={12} md={12} lg={8}>
                 <Grid
                   container
                   alignItems="baseline"
-                  justify="center"
+                  justifyContent="center"
                   style={styles.searchBar}
                   spacing={5}
                 >
