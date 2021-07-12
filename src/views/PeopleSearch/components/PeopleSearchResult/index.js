@@ -48,7 +48,6 @@ const PeopleSearchResultBlock = ({ Person, size, lazyImages, inViewport }) => {
   function displayAvatar() {
     console.log(inViewport);
     if (inViewport && !hasBeenRun) {
-      console.log('hey');
       loadAvatar();
     }
     return avatar;
