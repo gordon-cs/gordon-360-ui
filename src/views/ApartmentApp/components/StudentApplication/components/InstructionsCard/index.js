@@ -95,7 +95,7 @@ const InstructionsCard = () => {
           6-person, etc.). Each individual on an application will have points given/taken away using
           the following scale:
         </Typography>
-        <Grid container justify="center" spacing={3}>
+        <Grid container justifyContent="center" spacing={3}>
           <Grid item xs={11} lg={9}>
             <TableContainer component={Paper}>
               <Table size="small">
