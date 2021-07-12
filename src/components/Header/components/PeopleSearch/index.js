@@ -78,7 +78,7 @@ export default class GordonPeopleSearch extends Component {
 
     let results = await peopleSearch.search(query);
     let suggestions = results.result;
-    console.log(results.result);
+    console.log(suggestions);
     this.setState({ suggestions });
   }
 

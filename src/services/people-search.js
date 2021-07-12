@@ -26,7 +26,7 @@ function Results(time, searchResult) {
  * @param {String} query Query to search
  * @return {results} List of search results
  */
-const search = (query) => {
+const search = async (query) => {
   let searchQuery = query;
   let now = Date.now();
 
