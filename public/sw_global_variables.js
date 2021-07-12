@@ -17,7 +17,7 @@ const apiSource = String('https://360api.gordon.edu/').toLowerCase() + 'api';
  * @TRAIN
  * Make sure the URL is the EXACT same as what the browser fetches. Letter casing is important.
  */
-//const apiSource = String('https://360apitrain.gordon.edu/').toLowerCase() + 'api';
+// const apiSource = String('https://360apitrain.gordon.edu/').toLowerCase() + 'api';
 
 // Font Styles
 /**
@@ -29,7 +29,7 @@ const fontKeySource = 'https://cloud.typography.com/7763712/7294392/css/fonts.cs
  * @TRAIN
  * Uncomment For Development Only (aka develop)
  */
-//const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
+// const fontKeySource = 'https://cloud.typography.com/7763712/6754392/css/fonts.css';
 
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
