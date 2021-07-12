@@ -213,12 +213,21 @@ export default class GordonPeopleSearch extends Component {
                   suggestion.Nickname !== suggestion.FirstName &&
                   suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
                   ? suggestion.FirstName +
-                      ' ' +
-                      suggestion.LastName +
-                      ' (' +
-                      suggestion.Nickname +
-                      ')'
-                  : suggestion.FirstName + ' ' + suggestion.LastName,
+                    ' (' +
+                    suggestion.Nickname +
+                    ') ' +
+                    suggestion.LastName
+                  : (suggestion.MaidenName &&
+                    suggestion.MaidenName !== suggestion.LastName &&
+                    suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1] 
+                  ? suggestion.FirstName +
+                    ' ' +
+                    suggestion.LastName +
+                    ' (' +
+                    suggestion.MaidenName +
+                    ')'
+                  :
+                  suggestion.FirstName + ' ' + suggestion.LastName),
                 this.state.highlightQuery,
               )}
         </Typography>
