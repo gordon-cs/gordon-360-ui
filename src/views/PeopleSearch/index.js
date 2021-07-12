@@ -47,6 +47,7 @@ import ReactToPrint from 'react-to-print';
 const styles = {
   FontAwesome: {
     fontSize: 20,
+    margin: 2,
   },
   actions: {
     display: 'flex',
@@ -65,6 +66,11 @@ const styles = {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
     padding: '10px',
+  },
+  palette: {
+    Text: {
+      disabled: gordonColors.primary.cyan,
+    },
   },
   colorSwitchBase: {
     color: gordonColors.neutral.lightGray,
@@ -739,6 +745,7 @@ class PeopleSearch extends Component {
                             value={this.state.searchValues.firstName}
                             onChange={this.handleFirstNameInputChange}
                             onKeyDown={this.handleEnterKeyPress}
+                            variant="filled"
                           />
                         </Grid>
                       </Grid>
@@ -755,6 +762,7 @@ class PeopleSearch extends Component {
                             value={this.state.searchValues.lastName}
                             onChange={this.handleLastNameInputChange}
                             onKeyDown={this.handleEnterKeyPress}
+                            variant="filled"
                           />
                         </Grid>
                       </Grid>
@@ -771,12 +779,15 @@ class PeopleSearch extends Component {
                           )}
                         />
                         <Grid item xs>
-                          <FormControl fullWidth>
-                            <InputLabel>Residence Hall</InputLabel>
+                          <FormControl variant="filled" fullWidth>
+                            <InputLabel id="demo-simple-select-filled-label">
+                              Residence Hall
+                            </InputLabel>
                             <Select
+                              labelId="demo-simple-select-filled-label"
+                              id="demo-simple-select-filled"
                               value={this.state.searchValues.hall}
                               onChange={this.handleHallInputChange}
-                              input={<Input id="hall" />}
                             >
                               <MenuItem label="All Halls" value="">
                                 <em>All Halls</em>
@@ -847,23 +858,27 @@ class PeopleSearch extends Component {
                         <AddIcon fontSize="inherit" />
                         Advanced Search
                       </Button>
+                      <br></br>
+                      <br></br>
                     </Grid>
                   </Grid>
 
                   {/* Expandable search filters */}
-                  <Grid container direction="row" spacing={2}>
-                    {/* {this.state.searchValues.includeStudent ? ( */}
-
-                    <Grid item xs="4">
+                  <Grid container direction="row">
+                    <Grid item xs="4" variant="filled">
                       <Collapse
                         in={this.state.advancedSearchExpanded}
                         timeout="auto"
                         unmountOnExit
                         style={styles.CardContent}
                       >
-                        <InputLabel style={{ color: gordonColors.primary.blue }}>
-                          Student
-                        </InputLabel>
+                        <Grid>
+                          <Typography align="center" gutterBottom>
+                            <InputLabel style={{ color: gordonColors.primary.blue }}>
+                              Student
+                            </InputLabel>
+                          </Typography>
+                        </Grid>
                         <Grid container spacing={2} alignItems="flex-end">
                           <Media
                             query="(min-width: 600px)"
@@ -875,14 +890,16 @@ class PeopleSearch extends Component {
                           />
                           <Grid item xs={11}>
                             <FormControl
+                              variant="filled"
                               fullWidth
                               disabled={!this.state.searchValues.includeStudent}
                             >
-                              <InputLabel>Major</InputLabel>
+                              <InputLabel id="major">Major</InputLabel>
                               <Select
+                                labelId="major"
+                                id="major"
                                 value={this.state.searchValues.major}
                                 onChange={this.handleMajorInputChange}
-                                input={<Input id="major" />}
                               >
                                 <MenuItem label="All Majors" value="">
                                   <em>All Majors</em>
@@ -903,14 +920,16 @@ class PeopleSearch extends Component {
                           />
                           <Grid item xs={11}>
                             <FormControl
+                              variant="filled"
                               fullWidth
                               disabled={!this.state.searchValues.includeStudent}
                             >
-                              <InputLabel>Minor</InputLabel>
+                              <InputLabel id="minor">Minor</InputLabel>
                               <Select
+                                labelId="minor"
+                                id="minor"
                                 value={this.state.searchValues.minor}
                                 onChange={this.handleMinorInputChange}
-                                input={<Input id="minor" />}
                               >
                                 <MenuItem label="All Minors" value="">
                                   <em>All Minors</em>
@@ -931,14 +950,16 @@ class PeopleSearch extends Component {
                           />
                           <Grid item xs={11}>
                             <FormControl
+                              variant="filled"
                               fullWidth
                               disabled={!this.state.searchValues.includeStudent}
                             >
-                              <InputLabel>Class</InputLabel>
+                              <InputLabel id="class">Class</InputLabel>
                               <Select
+                                labelId="class"
+                                id="class"
                                 value={this.state.searchValues.classType}
                                 onChange={this.handleClassTypeInputChange}
-                                input={<Input id="class" />}
                               >
                                 <MenuItem label="All Classes" value="">
                                   <em>All</em>
@@ -958,16 +979,18 @@ class PeopleSearch extends Component {
                       </Collapse>
                     </Grid>
 
-                    <Grid item xs="4">
+                    <Grid item xs="4" variant="h4">
                       <Collapse
                         in={this.state.advancedSearchExpanded}
                         timeout="auto"
                         unmountOnExit
                         style={styles.CardContent}
                       >
-                        <InputLabel style={{ color: gordonColors.primary.blue }}>
-                          Faculty/Staff
-                        </InputLabel>
+                        <Typography align="center" gutterBottom>
+                          <InputLabel style={{ color: gordonColors.primary.blue }}>
+                            Faculty/Staff
+                          </InputLabel>
+                        </Typography>
                         <Grid container spacing={2} alignItems="flex-end">
                           <Media
                             query="(min-width: 600px)"
@@ -979,14 +1002,16 @@ class PeopleSearch extends Component {
                           />
                           <Grid item xs={11}>
                             <FormControl
+                              variant="filled"
                               fullWidth
                               disabled={!this.state.searchValues.includeFacStaff}
                             >
-                              <InputLabel>Dept.</InputLabel>
+                              <InputLabel id="department-type">Dept.</InputLabel>
                               <Select
+                                labelId="department-type"
+                                id="department-type"
                                 value={this.state.searchValues.department}
                                 onChange={this.handleDepartmentInputChange}
-                                input={<Input id="department-type" />}
                               >
                                 <MenuItem label="All Departments" value="">
                                   <em>All</em>
@@ -1007,14 +1032,16 @@ class PeopleSearch extends Component {
                           />
                           <Grid item xs={11}>
                             <FormControl
+                              variant="filled"
                               fullWidth
                               disabled={!this.state.searchValues.includeFacStaff}
                             >
-                              <InputLabel>Building</InputLabel>
+                              <InputLabel id="building-type">Building</InputLabel>
                               <Select
+                                labelId="building-type"
+                                id="building-type"
                                 value={this.state.searchValues.building}
                                 onChange={this.handleBuildingInputChange}
-                                input={<Input id="building-type" />}
                               >
                                 <MenuItem label="All Buildings" value="">
                                   <em>All</em>
@@ -1027,16 +1054,19 @@ class PeopleSearch extends Component {
                       </Collapse>
                     </Grid>
 
-                    <Grid item xs={4}>
+                    <Grid item xs={4} spacing={3}>
                       <Collapse
                         in={this.state.advancedSearchExpanded}
                         timeout="auto"
                         unmountOnExit
                         style={styles.CardContent}
                       >
-                        <InputLabel style={{ color: gordonColors.primary.blue }}>
-                          Everyone
-                        </InputLabel>
+                        <Typography align="center" gutterBottom>
+                          <InputLabel style={{ color: gordonColors.primary.blue }}>
+                            {' '}
+                            Everyone
+                          </InputLabel>
+                        </Typography>
                         <Grid container spacing={2} alignItems="flex-end">
                           <Media
                             query="(min-width: 600px)"
@@ -1055,6 +1085,7 @@ class PeopleSearch extends Component {
                               value={this.state.searchValues.homeCity}
                               onChange={this.handleHomeCityInputChange}
                               onKeyDown={this.handleEnterKeyPress}
+                              variant="filled"
                             />
                           </Grid>
                         </Grid>
@@ -1068,12 +1099,13 @@ class PeopleSearch extends Component {
                             )}
                           />
                           <Grid item xs={11}>
-                            <FormControl fullWidth>
-                              <InputLabel>State</InputLabel>
+                            <FormControl variant="filled" fullWidth>
+                              <InputLabel id="state">State</InputLabel>
                               <Select
+                                labelId="state"
+                                id="state"
                                 value={this.state.searchValues.state}
                                 onChange={this.handleStateInputChange}
-                                input={<Input id="state" />}
                               >
                                 <MenuItem label="All States" value="">
                                   <em>All</em>
@@ -1096,12 +1128,13 @@ class PeopleSearch extends Component {
                             )}
                           />
                           <Grid item xs={11}>
-                            <FormControl fullWidth>
-                              <InputLabel>Country</InputLabel>
+                            <FormControl variant="filled" fullWidth>
+                              <InputLabel id="country">Country</InputLabel>
                               <Select
+                                labelId="country"
+                                id="country"
                                 value={this.state.searchValues.country}
                                 onChange={this.handleCountryInputChange}
-                                input={<Input id="country" />}
                               >
                                 <MenuItem label="All Countries" value="">
                                   <em>All</em>
