@@ -38,10 +38,8 @@ const AcademicCheckIn = ({ authentication }) => {
     lastname: '',
     relationship: '',
     HomePhone: '',
-    HomePhoneIN: false,
     MobilePhone: '',
-    MobilePhoneIN: false,
-  })
+  });
 
   const [emergencyContact2, setEmergencyContact2] = useState({
     SEQ_NUM: 2,
@@ -49,10 +47,8 @@ const AcademicCheckIn = ({ authentication }) => {
     lastname: '',
     relationship: '',
     HomePhone: '',
-    HomePhoneIN: false,
     MobilePhone: '',
-    MobilePhoneIN: false,
-  })
+  });
 
   const [emergencyContact3, setEmergencyContact3] = useState({
     SEQ_NUM: 3,
@@ -60,10 +56,10 @@ const AcademicCheckIn = ({ authentication }) => {
     lastname: '',
     relationship: '',
     HomePhone: '',
-    HomePhoneIN: false,
     MobilePhone: '',
-    MobilePhoneIN: false,
-  })
+  });
+
+  const [emergencyContactINTL, setEmergencyContactINTL] = useState(null);
 
   const [holds, setHolds] = useState({
     registrationHold: false,
@@ -98,7 +94,6 @@ const AcademicCheckIn = ({ authentication }) => {
     none: false,
   });
 
-
   // TODO: Replace this in residual files with the profile object
   const [basicInfo, setBasicInfo] = useState({
     studentFirstName: '',
@@ -109,16 +104,42 @@ const AcademicCheckIn = ({ authentication }) => {
 
   useEffect(() => {
     const loadData = async () => {
-      try {
-        let tempProfile = await user.getProfileInfo();
-        console.log(tempProfile);
-        setProfile(tempProfile);
-        let contacts = await checkInService.getEmergencyContacts(tempProfile.AD_Username.toLowerCase());
-        setEmergencyContact1(contacts[0]); setEmergencyContact2(contacts[1]);
-        setEmergencyContact3(contacts[2]);
-      } catch (error) {
-        // DO NOTHING
+      let tempProfile = await user.getProfileInfo();
+      setProfile(tempProfile);
+      let contacts = await checkInService.getEmergencyContacts(
+        tempProfile.AD_Username.toLowerCase(),
+      );
+
+      let isHomeINTL1 = false,
+        isMobileINTL1 = false,
+        isHomeINTL2 = false,
+        isMobileINTL2 = false,
+        isHomeINTL3 = false,
+        isMobileINTL3 = false;
+
+      if (contacts[0] !== undefined) {
+        setEmergencyContact1(contacts[0]);
+        isHomeINTL1 = contacts[0].HomePhone.startsWith('+');
+        isMobileINTL1 = contacts[0].MobilePhone.startsWith('+');
       }
+      if (contacts[1] !== undefined) {
+        setEmergencyContact1(contacts[1]);
+        isHomeINTL2 = contacts[1].HomePhone.startsWith('+');
+        isMobileINTL2 = contacts[1].MobilePhone.startsWith('+');
+      }
+      if (contacts[2] !== undefined) {
+        setEmergencyContact1(contacts[2]);
+        isHomeINTL3 = contacts[2].HomePhone.startsWith('+');
+        isMobileINTL3 = contacts[2].MobilePhone.startsWith('+');
+      }
+      setEmergencyContactINTL({
+        HomePhoneIN1: isHomeINTL1,
+        MobilePhoneIN1: isMobileINTL1,
+        HomePhoneIN2: isHomeINTL2,
+        MobilePhoneIN2: isMobileINTL2,
+        HomePhoneIN3: isHomeINTL3,
+        MobilePhoneIN3: isMobileINTL3,
+      });
     };
 
     if (authentication) {
@@ -159,16 +180,8 @@ const AcademicCheckIn = ({ authentication }) => {
     setPrivacyAgreements({ ...privacyAgreements, [evt.target.name]: evt.target.checked });
   };
 
-  const handleCheckEmergContact1 = (evt) => {
-    setEmergencyContact1({ ...emergencyContact1, [evt.target.name]: evt.target.checked });
-  };
-
-  const handleCheckEmergContact2 = (evt) => {
-    setEmergencyContact2({ ...emergencyContact2, [evt.target.name]: evt.target.checked });
-  };
-
-  const handleCheckEmergContact3 = (evt) => {
-    setEmergencyContact3({ ...emergencyContact3, [evt.target.name]: evt.target.checked });
+  const handleCheckEmergContact = (evt) => {
+    setEmergencyContactINTL({ ...emergencyContactINTL, [evt.target.name]: evt.target.checked });
   };
 
   const handleCheckPersonalPhone = (evt) => {
@@ -181,9 +194,9 @@ const AcademicCheckIn = ({ authentication }) => {
 
   const handleSubmit = () => {
     alert(`Done 🧙‍♂️`);
-    // splitEmergencyContacts(emergencyContacts).forEach((contact) => {
-    //   checkInService.submitContact(contact);
-    // });
+    checkInService.submitContact(emergencyContact1);
+    checkInService.submitContact(emergencyContact2);
+    checkInService.submitContact(emergencyContact3);
   };
 
   let content;
@@ -214,9 +227,7 @@ const AcademicCheckIn = ({ authentication }) => {
                           handleChangeEmergContact1={handleChangeEmergContact1}
                           handleChangeEmergContact2={handleChangeEmergContact2}
                           handleChangeEmergContact3={handleChangeEmergContact3}
-                          handleCheckEmergContact1={handleCheckEmergContact1}
-                          handleCheckEmergContact2={handleCheckEmergContact2}
-                          handleCheckEmergContact3={handleCheckEmergContact3}
+                          handleCheckEmergContact={handleCheckEmergContact}
                         />
                       )}
 

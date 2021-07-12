@@ -20,9 +20,7 @@ const EmergencyContactUpdate = ({
   handleChangeEmergContact1,
   handleChangeEmergContact2,
   handleChangeEmergContact3,
-  handleCheckEmergContact1,
-  handleCheckEmergContact2,
-  handleCheckEmergContact3,
+  handleCheckEmergContact,
 }) => {
   let cyan = gordonColors.primary.cyan;
 
@@ -45,22 +43,19 @@ const EmergencyContactUpdate = ({
         medical emergency.
       </Typography>
       {createEmergencyContactFields(
-        1,
         emergencyContact1,
         handleChangeEmergContact1,
-        handleCheckEmergContact1,
+        handleCheckEmergContact,
       )}
       {createEmergencyContactFields(
-        2,
         emergencyContact2,
         handleChangeEmergContact2,
-        handleCheckEmergContact2,
+        handleCheckEmergContact,
       )}
       {createEmergencyContactFields(
-        3,
         emergencyContact3,
         handleChangeEmergContact3,
-        handleCheckEmergContact3,
+        handleCheckEmergContact,
       )}
       <Grid item>
         <br />
@@ -92,11 +87,12 @@ function createEmergencyContactFields(
   handleChangeEmergContact,
   handleCheckEmergContact,
 ) {
+  const contactNum = emergencyContact.SEQ_NUM;
   return (
     <Box padding={2} align="center">
       <Typography variant="body1" gutterBottom>
         {' '}
-        <strong>Emergency Contact {emergencyContact.SEQ_NUM}</strong>{' '}
+        <strong>Emergency Contact {contactNum}</strong>{' '}
       </Typography>
       <Grid container spacing={2} justify="center">
         <Grid item>
@@ -147,7 +143,7 @@ function createEmergencyContactFields(
               control={
                 <Checkbox
                   checked={emergencyContact.HomePhoneIN}
-                  name={'HomePhoneIN'}
+                  name={'HomePhoneIN' + contactNum}
                   onChange={handleCheckEmergContact}
                 />
               }
@@ -169,7 +165,7 @@ function createEmergencyContactFields(
               control={
                 <Checkbox
                   checked={emergencyContact.MobilePhoneIN}
-                  name={'MobilePhoneIN'}
+                  name={'MobilePhoneIN' + contactNum}
                   onChange={handleCheckEmergContact}
                 />
               }

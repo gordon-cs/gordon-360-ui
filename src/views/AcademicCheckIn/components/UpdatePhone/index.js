@@ -81,7 +81,6 @@ export function phoneMaskUS(props) {
       }}
       mask={['(', /[0-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
       placeholderChar={'\u2000'}
-      showMask
     />
   );
 }
@@ -100,24 +99,21 @@ export function phoneMaskINTL(props) {
         /[0-9]/,
         /\d/,
         /\d/,
-        ' ',
-        '(',
         /\d/,
         /\d/,
         /\d/,
-        ')',
-        ' ',
         /\d/,
         /\d/,
         /\d/,
-        '-',
+        /\d/,
+        /\d/,
+        /\d/,
         /\d/,
         /\d/,
         /\d/,
         /\d/,
       ]}
       placeholderChar={'\u2000'}
-      showMask
     />
   );
 }

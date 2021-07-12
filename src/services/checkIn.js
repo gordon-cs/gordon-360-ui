@@ -40,6 +40,9 @@ import http from './http';
  * @property {String} relationship3 the relationship between the student and EC 3
  * @property {Number} homePhone3 the home phone number of EC 3
  * @property {Number} mobilePhone3 the mobile phone number of EC 3
+ *
+ *
+ * TODO: UPDATE THIS CUZ ITS NOT CONSISTENT
  */
 
 /**
@@ -75,7 +78,7 @@ async function submitPhone(data) {
 
 async function submitContact(data) {
   try {
-    return await http.put(`checkIn/emergencycontact`, data);
+    return await http.post(`checkIn/emergencycontact`, data);
   } catch (reason) {
     console.log('Caught checkIn submission error: ' + reason);
   }

@@ -2,8 +2,15 @@ import React from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import { gordonColors } from 'theme';
 
-const ConfirmCheckIn = ({ emergencyContacts, personalPhone, demographic }) => {
+const ConfirmCheckIn = ({
+  emergencyContact1,
+  emergencyContact2,
+  emergencyContact3,
+  personalPhone,
+  demographic,
+}) => {
   const cyan = gordonColors.primary.cyan;
+
   const raceValues = [
     demographic.nativeAmerican,
     demographic.asian,
@@ -41,11 +48,11 @@ const ConfirmCheckIn = ({ emergencyContacts, personalPhone, demographic }) => {
               <b>Emergency Contact 1:</b>
               <ul>
                 <li>
-                  Name: {emergencyContacts.firstName1} {emergencyContacts.lastName1}
+                  Name: {emergencyContact1.firstname} {emergencyContact1.lastname}
                 </li>
-                <li>Relationship: {emergencyContacts.relationship1}</li>
-                <li>Home #: {emergencyContacts.homePhone1}</li>
-                <li>Mobile #: {emergencyContacts.mobilePhone1}</li>
+                <li>Relationship: {emergencyContact1.relationship}</li>
+                <li>Home #: {emergencyContact1.HomePhone}</li>
+                <li>Mobile #: {emergencyContact1.MobilePhone}</li>
               </ul>
             </Typography>
           </Grid>
@@ -54,25 +61,25 @@ const ConfirmCheckIn = ({ emergencyContacts, personalPhone, demographic }) => {
               <b>Emergency Contact 2:</b>
               <ul>
                 <li>
-                  Name: {emergencyContacts.firstName2} {emergencyContacts.lastName2}
+                  Name: {emergencyContact2.firstname} {emergencyContact2.lastname}
                 </li>
-                <li>Relationship: {emergencyContacts.relationship2}</li>
-                <li>Home #: {emergencyContacts.homePhone2}</li>
-                <li>Mobile #: {emergencyContacts.mobilePhone2}</li>
+                <li>Relationship: {emergencyContact2.relationship}</li>
+                <li>Home #: {emergencyContact2.HomePhone}</li>
+                <li>Mobile #: {emergencyContact2.MobilePhone}</li>
               </ul>
             </Typography>
           </Grid>
-          {emergencyContacts.firstName3 !== '' ? (
+          {emergencyContact3.firstName3 !== '' ? (
             <Grid item>
               <Typography variant="body1" gutterbottom>
                 <b>Emergency Contact 3:</b>
                 <ul>
                   <li>
-                    Name: {emergencyContacts.firstName3} {emergencyContacts.lastName3}
+                    Name: {emergencyContact3.firstname} {emergencyContact3.lastname}
                   </li>
-                  <li>Relationship: {emergencyContacts.relationship3}</li>
-                  <li>Home #: {emergencyContacts.homePhone3}</li>
-                  <li>Mobile #: {emergencyContacts.mobilePhone3}</li>
+                  <li>Relationship: {emergencyContact3.relationship}</li>
+                  <li>Home #: {emergencyContact3.HomePhone}</li>
+                  <li>Mobile #: {emergencyContact3.MobilePhone}</li>
                 </ul>
               </Typography>
             </Grid>
