@@ -173,7 +173,7 @@ export default class PeopleSearchResult extends Component {
               </Grid>
               <Grid item xs={8}>
                 <Typography variant="h5">
-                  {Person.FirstName} {nickname} {Person.LastName} {maidenName}
+                  {Person.FirstName} {nickname} {Person.LastName} {maidenName} 
                 </Typography>
                 <SecondaryText>
                   {personClassJobTitle ?? Person.Type}
