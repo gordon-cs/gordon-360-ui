@@ -75,7 +75,7 @@ const LoginDialogue = ({ onLogIn }) => {
         <Typography className="error" variant="body2" color="error">
           {error}
         </Typography>
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Button
             variant="contained"
             className="submit-button"
