@@ -282,8 +282,8 @@ class PeopleSearch extends Component {
 
     this.setState({
       searchValues: {
-        includeStudent: urlParams.get('includeStudent') || false,
-        includeFacStaff: urlParams.get('includeFacStaff') || false,
+        includeStudent: urlParams.get('includeStudent') === 'true' ? true : false,
+        includeFacStaff: urlParams.get('includeFacStaff') === 'true' ? true : false,
         includeAlumni: urlParams.get('includeAlumni') || false,
         firstName: urlParams.get('firstName')?.trim() || '',
         lastName: urlParams.get('lastName')?.trim() || '',
@@ -507,7 +507,7 @@ class PeopleSearch extends Component {
     let PeopleSearchCheckbox;
 
     const printPeopleSearchHeader = (
-      <div class="test" align="center" style={{ display: 'none' }}>
+      <div className="test" align="center" style={{ display: 'none' }}>
         {/* show on print only */}
         <style>{`@media print {.test{display: block !important;}}`}</style>
 

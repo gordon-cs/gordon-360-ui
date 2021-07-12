@@ -265,13 +265,8 @@ const PersonalInfoList = ({
     myProf &&
     (isFacStaff ? (
       <Typography align="left" className="note">
-        NOTE:
-        <ul>
-          <li>
-            To update your data, please contact <a href="mailto: hr@gordon.edu">Human Resources</a>{' '}
-            (x4828).
-          </li>
-        </ul>
+        NOTE: To update your data, please contact{' '}
+        <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
       </Typography>
     ) : isStudent ? (
       <Typography align="left" className="note">
