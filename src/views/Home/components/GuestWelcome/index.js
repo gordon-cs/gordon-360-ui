@@ -55,13 +55,7 @@ const GuestWelcome = ({ onLogIn }) => {
 
   return (
     <div className="gw-background">
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        className="gw-container"
-        spacing={3}
-      >
+      <Grid container direction="column" alignItems="center" className="gw-container" spacing={3}>
         <Grid item>
           <Grid container style={{ textAlign: 'center' }}>
             <Card raised className="gw-card">

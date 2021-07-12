@@ -4,20 +4,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './people-search.css';
 import peopleSearch from 'services/people-search';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 
-import {
-  TextField,
-  InputAdornment,
-  Paper,
-  MenuItem,
-  Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-} from '@material-ui/core';
+import { TextField, InputAdornment, Paper, MenuItem, Typography } from '@material-ui/core';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -27,6 +16,7 @@ const renderInput = (inputProps) => {
 
   return (
     <TextField
+      type="search"
       autoFocus={autoFocus}
       value={value}
       inputRef={ref}
@@ -399,6 +389,7 @@ export default class GordonPeopleSearch extends Component {
         <span className="gordon-people-search">
           <TextField
             placeholder="People Search"
+            type="search"
             value={''}
             onChange={() => this.unauthenticatedSearch()}
             className={'text-field'}
@@ -415,24 +406,7 @@ export default class GordonPeopleSearch extends Component {
               ),
             }}
           />
-          <Dialog
-            open={this.state.loginDialog}
-            onClose={() => this.handleClose()}
-            aria-labelledby="login-dialog-title"
-            aria-describedby="login-dialog-description"
-          >
-            <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="login-dialog-description">
-                You are not logged in. Please log in to use People Search.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button variant="contained" onClick={() => this.handleClose()} color="primary">
-                Okay
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <GordonUnauthorized feature={'the People Search page'} />
         </span>
       );
     }
