@@ -86,7 +86,7 @@ const ApartApp = ({ authentication }) => {
       );
     } else {
       return (
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent

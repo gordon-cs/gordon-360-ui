@@ -31,7 +31,7 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
 
   return (
     <>
-      <Grid container alignItems="center" justify="center" className="membership-info-card">
+      <Grid container alignItems="center" justifyContent="center" className="membership-info-card">
         <Grid
           container
           item
@@ -39,7 +39,7 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
           sm={9}
           lg={8}
           xl={9}
-          justify="flex-start"
+          justifyContent="flex-start"
           alignItems="center"
           className="membership-info-card-description"
         >

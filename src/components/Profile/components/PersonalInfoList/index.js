@@ -242,8 +242,8 @@ const PersonalInfoList = ({
         title="Student ID:"
         contentText={ID}
         ContentIcon={
-          <Grid container justify="center">
-            <Grid container direction="column" justify="center" alignItems="center">
+          <Grid container justifyContent="center">
+            <Grid container direction="column" justifyContent="center" alignItems="center">
               <LockIcon />
               Private
             </Grid>

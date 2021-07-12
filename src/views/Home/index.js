@@ -81,7 +81,7 @@ const Home = ({ authentication, onLogIn }) => {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 
     return (
-      <Grid container justify="center" spacing={2}>
+      <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} md={10}>
           <Carousel />
         </Grid>

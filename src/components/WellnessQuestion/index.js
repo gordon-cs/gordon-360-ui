@@ -46,7 +46,7 @@ const WellnessQuestion = ({ setStatus }) => {
   }
 
   return (
-    <Grid container justify="center" spacing={2}>
+    <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={10} md={4}>
         <Card className="wellness-question">
           <CardHeader title="Wellness Check" className="wellness-header" />
