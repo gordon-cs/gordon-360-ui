@@ -6,7 +6,7 @@ import { Grid, CircularProgress } from '@material-ui/core';
 
 const GordonLoader = ({ size }) => {
   return (
-    <Grid className="gordon-loader" container justify="center" alignItems="center">
+    <Grid className="gordon-loader" container justifyContent="center" alignItems="center">
       <Grid item>
         <CircularProgress size={size || 100} />
       </Grid>
