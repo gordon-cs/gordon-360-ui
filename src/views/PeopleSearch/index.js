@@ -43,6 +43,7 @@ import { gordonColors } from 'theme';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import GordonLoader from 'components/Loader';
 import ReactToPrint from 'react-to-print';
+
 const styles = {
   FontAwesome: {
     fontSize: 20,
@@ -87,6 +88,7 @@ const styles = {
     zIndex: 1,
   },
 };
+
 const noResultsCard = (
   <Grid item xs={12}>
     <Card>
@@ -98,6 +100,7 @@ const noResultsCard = (
     </Card>
   </Grid>
 );
+
 const peopleSearchHeaderDesktop = (
   <div style={styles.headerStyle}>
     <Grid container direction="row" alignItems="center">
@@ -132,6 +135,7 @@ const peopleSearchHeaderDesktop = (
     </Grid>
   </div>
 );
+
 const peopleSearchHeaderMobile = (
   <div style={styles.headerStyle}>
     <Grid container direction="row" justify="center">
