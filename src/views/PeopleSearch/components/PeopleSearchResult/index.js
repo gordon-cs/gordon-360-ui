@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import IMG from 'react-graceful-image';
 import { Typography, Grid, Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import userService from 'services/user';
-import handleViewport from 'react-in-viewport';
+import VisibilitySensor from 'react-visibility-sensor';
 
 import './peopleSearchResult.css';
 
@@ -17,7 +17,7 @@ const GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/erVfwAJRwPA/3pinwAAAABJRU5ErkJggg==';
 const JPG_BASE64_HEADER = 'data:image/jpg;base64,';
 
-const PeopleSearchResultBlock = ({ Person, size, lazyImages, inViewport }) => {
+const PeopleSearchResult = ({ Person, size, lazyImages }) => {
   const [avatar, setAvatar] = useState(GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1);
   const [hasBeenRun, setHasBeenRun] = useState(false);
   const [fullName, setFullName] = useState('');
@@ -45,11 +45,8 @@ const PeopleSearchResultBlock = ({ Person, size, lazyImages, inViewport }) => {
     setHasBeenRun(true);
   }
 
-  function displayAvatar() {
-    if (inViewport && !hasBeenRun) {
-      loadAvatar();
-    }
-    return avatar;
+  function handleVisibilityChange(isVisible) {
+    if (isVisible && !hasBeenRun) loadAvatar();
   }
 
   function compileInfo() {
@@ -102,131 +99,118 @@ const PeopleSearchResultBlock = ({ Person, size, lazyImages, inViewport }) => {
   }
 
   return (
-    /*** Single Size - One Column (Mobile View) ***/
-    size === 'single' ? (
-      <>
+    <VisibilitySensor onChange={handleVisibilityChange}>
+      <Fragment>
         <Divider />
-        <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
-          <Grid
-            container
-            alignItems="center"
-            justify="center"
-            spacing={2}
-            style={{
-              padding: '1rem',
-            }}
-          >
-            <Grid item>
-              <IMG
-                className="people-search-avatar-mobile"
-                src={displayAvatar()}
-                alt={'Profile picture for ' + fullName}
-                noLazyLoad="true"
-                noPlaceHolder="true"
-              />
+        {size === 'single' /*** Single Size - One Column (Mobile View) ***/ ? (
+          <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
+            <Grid
+              container
+              alignItems="center"
+              justify="center"
+              spacing={2}
+              style={{
+                padding: '1rem',
+              }}
+            >
+              <Grid item>
+                <IMG
+                  className="people-search-avatar-mobile"
+                  src={avatar}
+                  alt={'Profile picture for ' + fullName}
+                  noLazyLoad="true"
+                  noPlaceHolder="true"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="h5">{fullName}</Typography>
+                <Typography variant="body2">{nickname}</Typography>
+                <Typography variant="body2">{personClassJobTitle}</Typography>
+                <Typography variant="body2">{Person.Email}</Typography>
+                <Typography variant="body2">{personMailLocation}</Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <Typography variant="h5">{fullName}</Typography>
-              <Typography variant="body2">{nickname}</Typography>
-              <Typography variant="body2">{personClassJobTitle}</Typography>
-              <Typography variant="body2">{Person.Email}</Typography>
-              <Typography variant="body2">{personMailLocation}</Typography>
+          </Link>
+        ) : size === 'largeImages' /*** Enlarged Images ***/ ? (
+          <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
+            <Grid
+              container
+              alignItems="center"
+              justify="center"
+              spacing={2}
+              style={{
+                padding: '1rem',
+              }}
+            >
+              <Grid item xs={6} container justify="flex-end">
+                <IMG
+                  className="people-search-avatar-large"
+                  src={avatar}
+                  alt={'Profile picture for ' + fullName}
+                  noLazyLoad="true"
+                  noPlaceHolder="true"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="h5">{fullName}</Typography>
+                <Typography variant="body2">{nickname}</Typography>
+                <Typography variant="body2">{personClassJobTitle}</Typography>
+                <Typography variant="body2">{Person.Email}</Typography>
+                <Typography variant="body2">{personMailLocation}</Typography>
+              </Grid>
             </Grid>
-          </Grid>
-        </Link>
+          </Link> /*** Full Size - Multiple Columns (Desktop View) ***/
+        ) : (
+          <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              spacing={2}
+              style={{
+                padding: '1rem',
+              }}
+            >
+              <Grid item xs={1}>
+                <IMG
+                  className="people-search-avatar"
+                  src={avatar}
+                  alt={'Profile picture for ' + fullName}
+                  noLazyLoad="true"
+                  noPlaceHolder="true"
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>
+                  {Person.FirstName} {nickname}
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>{Person.LastName}</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>{Person.Type}</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>{personClassJobTitle}</Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography>{Person.AD_Username}</Typography>
+                <Typography>{personMailLocation}</Typography>
+              </Grid>
+            </Grid>
+          </Link>
+        )}
         <Divider />
-      </>
-    ) : size === 'largeImages' ? (
-      /*** Enlarged Images ***/
-      <>
-        <Divider />
-        <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
-          <Grid
-            container
-            alignItems="center"
-            justify="center"
-            spacing={2}
-            style={{
-              padding: '1rem',
-            }}
-          >
-            <Grid item xs={6} container justify="flex-end">
-              <IMG
-                className="people-search-avatar-large"
-                src={displayAvatar()}
-                alt={'Profile picture for ' + fullName}
-                noLazyLoad="true"
-                noPlaceHolder="true"
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="h5">{fullName}</Typography>
-              <Typography variant="body2">{nickname}</Typography>
-              <Typography variant="body2">{personClassJobTitle}</Typography>
-              <Typography variant="body2">{Person.Email}</Typography>
-              <Typography variant="body2">{personMailLocation}</Typography>
-            </Grid>
-          </Grid>
-        </Link>
-        <Divider />
-      </>
-    ) : (
-      /*** Full Size - Multiple Columns (Desktop View) ***/
-      <>
-        <Divider />
-        <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            spacing={2}
-            style={{
-              padding: '1rem',
-            }}
-          >
-            <Grid item xs={1}>
-              <IMG
-                className="people-search-avatar"
-                src={displayAvatar()}
-                alt={'Profile picture for ' + fullName}
-                noLazyLoad="true"
-                noPlaceHolder="true"
-              />
-              {/* <img
-                className="people-search-avatar"
-                  src={displayAvatar()}
-                  alt=""></img> */}
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>
-                {Person.FirstName} {nickname}
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{Person.LastName}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{Person.Type}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{personClassJobTitle}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{Person.AD_Username}</Typography>
-              <Typography>{personMailLocation}</Typography>
-            </Grid>
-          </Grid>
-        </Link>
-        <Divider />
-      </>
-    )
+      </Fragment>
+    </VisibilitySensor>
   );
 };
 
-const PeopleSearchResult = handleViewport(PeopleSearchResultBlock);
+// const PeopleSearchResult = handleViewport(PeopleSearchResultBlock);
 export default PeopleSearchResult;
 
-PeopleSearchResultBlock.propTypes = {
+PeopleSearchResult.propTypes = {
   Person: PropTypes.shape({
     FirstName: PropTypes.string.isRequired,
     LastName: PropTypes.string.isRequired,
