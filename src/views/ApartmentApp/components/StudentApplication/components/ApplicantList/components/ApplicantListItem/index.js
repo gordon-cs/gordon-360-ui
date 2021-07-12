@@ -97,7 +97,7 @@ const ApplicantListItem = ({
           </Grid>
         </Grid>
         <ListItemSecondaryAction>
-          <Grid container justify="flex-end" alignItems="center" spacing={0}>
+          <Grid container justifyContent="flex-end" alignItems="center" spacing={0}>
             <Grid item xs>
               <IconButton
                 aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}

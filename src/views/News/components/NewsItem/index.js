@@ -189,7 +189,7 @@ export default class NewsItem extends Component {
           container
           onClick={this.handleExpandClick}
           className={`news-item ${unapproved ? 'unapproved' : 'approved'}`}
-          justify="center"
+          justifyContent="center"
         >
           <Grid item xs={12}>
             <Typography variant="h6" className="news-heading" style={{ fontWeight: 'bold' }}>
@@ -203,7 +203,7 @@ export default class NewsItem extends Component {
               <Typography className="news-content">"{posting.categoryName}"</Typography>
               <Typography className="news-content ">{posting.Body}</Typography>
             </CardContent>
-            <Grid container justify="space-evenly">
+            <Grid container justifyContent="space-evenly">
               {editButton}
               {deleteButton}
             </Grid>
@@ -238,7 +238,7 @@ export default class NewsItem extends Component {
           {/* Collapsable details */}
           <Collapse in={this.state.open} timeout="auto" unmountOnExit style={{ width: '100%' }}>
             <CardContent>
-              <Grid container direction="row" alignItems="center" justify="space-around">
+              <Grid container direction="row" alignItems="center" justifyContent="space-around">
                 <Grid item xs={8} style={{ textAlign: 'left' }}>
                   <Typography className="descriptionText">Description:</Typography>
                   <Typography type="caption" className="descriptionText">
@@ -247,7 +247,7 @@ export default class NewsItem extends Component {
                 </Grid>
                 {/* Possible action buttons */}
                 <Grid item xs={4}>
-                  <Grid container justify="space-evenly">
+                  <Grid container justifyContent="space-evenly">
                     {/* these conditionally render - see respective methods */}
                     {editButton}
                     {deleteButton}
