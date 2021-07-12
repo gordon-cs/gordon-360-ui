@@ -50,11 +50,15 @@ export default class PeopleSearchResult extends Component {
     const { Person, size } = this.props;
     const SecondaryText = ({children, otherProps}) => <Typography variant="body2" color="textSecondary" {...otherProps}>{children}</Typography>
 
-    let personClassJobTitle, nickname, personMailLocation;
+    let personClassJobTitle, nickname, maidenName, personMailLocation;
 
     // set nicknames up
     if (Person.NickName && Person.FirstName !== Person.NickName) {
       nickname = '(' + Person.NickName + ')';
+    }
+    // set maiden names up
+    if (Person.MaidenName && Person.LastName !== Person.MaidenName) {
+      maidenName = '(' + Person.MaidenName + ')';
     }
     // set classes up
     if (Person.Type === 'Student') {
@@ -122,7 +126,7 @@ export default class PeopleSearchResult extends Component {
               </Grid>
               <Grid item xs={8}>
                 <Typography variant="h5">
-                  {Person.FirstName} {nickname} {Person.LastName}
+                  {Person.FirstName} {nickname} {Person.LastName} {maidenName}
                 </Typography>
                 <SecondaryText>
                   {personClassJobTitle ?? Person.Type}
@@ -169,7 +173,7 @@ export default class PeopleSearchResult extends Component {
               </Grid>
               <Grid item xs={8}>
                 <Typography variant="h5">
-                  {Person.FirstName} {nickname} {Person.LastName}
+                  {Person.FirstName} {nickname} {Person.LastName} {maidenName}
                 </Typography>
                 <SecondaryText>
                   {personClassJobTitle ?? Person.Type}
@@ -215,7 +219,7 @@ export default class PeopleSearchResult extends Component {
                 />
                 <div>
                   <Typography>
-                    {Person.FirstName} {nickname} {Person.LastName}
+                    {Person.FirstName} {nickname} {Person.LastName} {maidenName}
                   </Typography>
                   <Typography variant="subtitle2">
                     {Person.Email?.includes('.') ? Person.Email : null}
