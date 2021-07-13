@@ -578,26 +578,6 @@ const StudentNews = (props) => {
             </GordonDialogBox>
 
             {/* USER FEEDBACK */}
-            {/* <Snackbar
-              open={snackbarOpen}
-              message={snackbarMessage}
-              onClose={handleSnackbarClose}
-              autoHideDuration={5000}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              action={[
-                <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
-                  onClick={handleSnackbarClose}
-                >
-                  <CloseIcon />
-                </IconButton>,
-              ]}
-            ></Snackbar> */}
             <GordonSnackbar
               {...snackbar}
               onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
