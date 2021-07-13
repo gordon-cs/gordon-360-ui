@@ -22,8 +22,8 @@ import './index.scss';
 
 const WellnessQuestion = ({ setStatus }) => {
   const [loading, setLoading] = useState(true);
-  const [answer, setAnswer] = useState(null);
-  const [wellnessQuestion, setWellnessQuestion] = useState(null);
+  const [answer, setAnswer] = useState();
+  const [wellnessQuestion, setWellnessQuestion] = useState();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const WellnessQuestion = ({ setStatus }) => {
   }
 
   return (
-    <Grid container justify="center" spacing={2}>
+    <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={10} md={4}>
         <Card className="wellness-question">
           <CardHeader title="Wellness Check" className="wellness-header" />
@@ -84,7 +84,7 @@ const WellnessQuestion = ({ setStatus }) => {
             </Grid>
           </CardContent>
           <Grid item>
-            <Collapse in={answer}>
+            <Collapse in={!!answer}>
               <Grid container direction="column" align="center" className={answer} spacing={1}>
                 <Grid item>
                   <Typography color="textPrimary" className="left">

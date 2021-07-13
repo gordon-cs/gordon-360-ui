@@ -356,13 +356,13 @@ export default class StudentNews extends Component {
               Post Listing
             </Fab>
 
-            <Grid container justify="center">
+            <Grid container justifyContent="center">
               {/* Search */}
               <Grid item xs={12} md={12} lg={8}>
                 <Grid
                   container
                   alignItems="baseline"
-                  justify="center"
+                  justifyContent="center"
                   style={styles.searchBar}
                   spacing={5}
                 >
@@ -370,6 +370,7 @@ export default class StudentNews extends Component {
                     <TextField
                       id="search"
                       label="Search news"
+                      type="search"
                       value={this.state.search}
                       onChange={this.search('search')}
                       margin="normal"
@@ -412,6 +413,7 @@ export default class StudentNews extends Component {
                         margin="dense"
                         fullWidth
                         name="newPostSubject"
+                        type="search"
                         value={this.state.newPostSubject}
                         onChange={this.onChange.bind(this)}
                         // helperText="Please enter a subject."

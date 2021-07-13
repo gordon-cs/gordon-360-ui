@@ -203,7 +203,7 @@ const PWAInstructions = (props) => {
         <Grid
           container
           xs={12}
-          justify="space-between"
+          justifyContent="space-between"
           alignItems="center"
           className="pwa-instructions-content-container-toggles-instructions"
         >
@@ -294,9 +294,14 @@ const PWAInstructions = (props) => {
     // If the browser has quick PWA installation capability
     if (props.deferredPWAPrompt) {
       return (
-        <Grid container xs={12} justify="center" className="pwa-instructions-content-install">
-          <Grid container xs={12} justify="center" alignItems="center">
-            <Grid item xs={2} sm={1} justify="center" alignItems="center">
+        <Grid
+          container
+          xs={12}
+          justifyContent="center"
+          className="pwa-instructions-content-install"
+        >
+          <Grid container xs={12} justifyContent="center" alignItems="center">
+            <Grid item xs={2} sm={1} justifyContent="center" alignItems="center">
               <GetAppIcon fontSize="large" color="primary" />
             </Grid>
             <Grid item xs={10} sm={11} alignItems="center">
@@ -337,7 +342,7 @@ const PWAInstructions = (props) => {
             <Grid
               container
               xs={12}
-              justify="space-between"
+              justifyContent="space-between"
               alignItems="center"
               className="pwa-instructions-content-container-toggles-platform"
             >
@@ -355,7 +360,7 @@ const PWAInstructions = (props) => {
                 container
                 xs={12}
                 sm={6}
-                justify="flex-end"
+                justifyContent="flex-end"
                 className="pwa-instructions-content-container-toggles-platform-toggles"
               >
                 <ToggleButtonGroup
@@ -384,7 +389,7 @@ const PWAInstructions = (props) => {
               <Grid
                 container
                 xs={12}
-                justify="space-between"
+                justifyContent="space-between"
                 alignItems="center"
                 className="pwa-instructions-content-container-toggles-platform"
               >
@@ -402,7 +407,7 @@ const PWAInstructions = (props) => {
                   container
                   xs={12}
                   sm={6}
-                  justify="flex-end"
+                  justifyContent="flex-end"
                   className="pwa-instructions-content-container-toggles-platform-toggles"
                 >
                   <ToggleButtonGroup
@@ -457,14 +462,13 @@ const PWAInstructions = (props) => {
   return (
     <Dialog
       open={props.open}
-      disableBackdropClick
       fullWidth
       maxWidth="sm"
       aria-labelledby="alert-dialog-slide-title"
       aria-describedby="alert-dialog-slide-description"
     >
       <Grid container className="pwa-instructions">
-        <Grid container xs={12} justify="center" className="pwa-instructions-title">
+        <Grid container xs={12} justifyContent="center" className="pwa-instructions-title">
           <Typography variant="h5">
             {props.deferredPWAPrompt
               ? 'Install Gordon 360'

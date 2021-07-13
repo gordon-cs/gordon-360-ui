@@ -104,7 +104,7 @@ export default class PeopleSearchResult extends Component {
             <Grid
               container
               alignItems="center"
-              justify="center"
+              justifyContent="center"
               spacing={2}
               style={{
                 padding: '1rem',
@@ -122,7 +122,10 @@ export default class PeopleSearchResult extends Component {
               <Grid item xs={6}>
                 <Typography variant="h5">{fullName}</Typography>
                 <Typography variant="body2">{nickname}</Typography>
-                <Typography variant="body2">{personClassJobTitle}</Typography>
+                <Typography variant="body2">
+                  {personClassJobTitle}
+                  {Person.Type === 'Alum' ? Person.PreferredClassYear : null}
+                </Typography>
                 <Typography variant="body2">{Person.Email}</Typography>
                 <Typography variant="body2">{personMailLocation}</Typography>
               </Grid>
@@ -140,13 +143,13 @@ export default class PeopleSearchResult extends Component {
             <Grid
               container
               alignItems="center"
-              justify="center"
+              justifyContent="center"
               spacing={2}
               style={{
                 padding: '1rem',
               }}
             >
-              <Grid item xs={6} container justify="flex-end">
+              <Grid item xs={6} container justifyContent="flex-end">
                 <IMG
                   className="people-search-avatar-large"
                   src={`data:image/jpg;base64,${this.state.avatar}`}
@@ -158,7 +161,10 @@ export default class PeopleSearchResult extends Component {
               <Grid item xs={6}>
                 <Typography variant="h5">{fullName}</Typography>
                 <Typography variant="body2">{nickname}</Typography>
-                <Typography variant="body2">{personClassJobTitle}</Typography>
+                <Typography variant="body2">
+                  {personClassJobTitle}
+                  {Person.Type === 'Alum' ? Person.PreferredClassYear : null}
+                </Typography>
                 <Typography variant="body2">{Person.Email}</Typography>
                 <Typography variant="body2">{personMailLocation}</Typography>
               </Grid>
@@ -204,6 +210,7 @@ export default class PeopleSearchResult extends Component {
               </Grid>
               <Grid item xs={2}>
                 <Typography>{personClassJobTitle}</Typography>
+                <Typography>{Person.Type === 'Alum' ? Person.PreferredClassYear : null}</Typography>
               </Grid>
               <Grid item xs={2}>
                 <Typography>

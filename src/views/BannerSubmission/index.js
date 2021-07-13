@@ -15,7 +15,7 @@ const style = {
 
 const BannerSubmission = () => {
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
         <Card>
           <CardHeader
@@ -27,7 +27,7 @@ const BannerSubmission = () => {
             }}
           />
           <CardContent>
-            <Grid container justify="center" direction="column">
+            <Grid container justifyContent="center" direction="column">
               <Grid item align="left">
                 <Typography variant="h6">Banner Image Guidelines</Typography>
                 <Typography variant="body2">

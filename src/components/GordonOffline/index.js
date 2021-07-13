@@ -10,7 +10,7 @@ import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
  */
 const GordonOffline = ({ feature }) => {
   return (
-    <Grid container justify="center" spacing="16">
+    <Grid container justifyContent="center" spacing="16">
       <Grid item xs={12} md={8}>
         <Card>
           <CardContent

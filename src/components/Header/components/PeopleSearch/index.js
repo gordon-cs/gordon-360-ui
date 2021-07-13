@@ -6,20 +6,9 @@ import './people-search.css';
 import peopleSearch from 'services/people-search';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import PropTypes from 'prop-types';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 
-import {
-  TextField,
-  InputAdornment,
-  Paper,
-  MenuItem,
-  Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-} from '@material-ui/core';
+import { TextField, InputAdornment, Paper, MenuItem, Typography } from '@material-ui/core';
 
 const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 400;
@@ -30,6 +19,7 @@ const renderInput = (inputProps) => {
 
   return (
     <TextField
+      type="search"
       autoFocus={autoFocus}
       value={value}
       inputRef={ref}
@@ -62,7 +52,6 @@ const GordonPeopleSearch = ({
   const [suggestionIndex, setSuggestionIndex] = useState(-1);
   const [query, setQuery] = useState(String);
   const [highlightQuery, setHighlightQuery] = useState(String);
-  const [loginDialog, setLoginDialog] = useState(false);
   const [width, setWidth] = useState(window.innerWidth);
   const [holder, setHolder] = useState('People Search');
   const isOnline = useNetworkStatus();
@@ -246,12 +235,16 @@ const GordonPeopleSearch = ({
                 suggestion.Nickname &&
                   suggestion.Nickname !== suggestion.FirstName &&
                   suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
+                  ? suggestion.FirstName + ' (' + suggestion.Nickname + ') ' + suggestion.LastName
+                  : suggestion.MaidenName &&
+                    suggestion.MaidenName !== suggestion.LastName &&
+                    suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
                   ? suggestion.FirstName +
-                      ' ' +
-                      suggestion.LastName +
-                      ' (' +
-                      suggestion.Nickname +
-                      ')'
+                    ' ' +
+                    suggestion.LastName +
+                    ' (' +
+                    suggestion.MaidenName +
+                    ')'
                   : suggestion.FirstName + ' ' + suggestion.LastName,
                 highlightQuery,
               )}
@@ -336,44 +329,7 @@ const GordonPeopleSearch = ({
       )}
     </Downshift>
   ) : (
-    <span className="gordon-people-search">
-      <TextField
-        placeholder="People Search"
-        value={''}
-        onChange={() => setLoginDialog(true)}
-        className={'text-field'}
-        InputProps={{
-          disableUnderline: true,
-          classes: {
-            root: 'people-search-root',
-            input: 'people-search-input',
-          },
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
-      <Dialog
-        open={loginDialog}
-        onClose={() => setLoginDialog(false)}
-        aria-labelledby="login-dialog-title"
-        aria-describedby="login-dialog-description"
-      >
-        <DialogTitle id="login-dialog-title">{'Login to use People Search'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="login-dialog-description">
-            You are not logged in. Please log in to use People Search.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={() => setLoginDialog(false)} color="primary">
-            Okay
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </span>
+    <GordonUnauthorized feature={'the People Search page'} />
   );
 };
 
