@@ -35,6 +35,7 @@ import {
   FaSchool,
   FaPrint,
 } from 'react-icons/fa';
+import { IconContext } from 'react-icons';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
 import goStalk from 'services/goStalk';
@@ -305,9 +306,6 @@ class PeopleSearch extends Component {
   }
   handleAdvanceSearchExpandClick = () => {
     this.setState((state) => ({
-      // academicsExpanded: !state.academicsExpanded,
-      // homeExpanded: !state.homeExpanded,
-      // offDepExpanded: !state.offDepExpanded,
       advancedSearchExpanded: !state.advancedSearchExpanded,
     }));
   };
@@ -869,7 +867,13 @@ class PeopleSearch extends Component {
                       >
                         <Grid>
                           <Typography align="center" gutterBottom>
-                            <InputLabel style={{ color: gordonColors.primary.blue }}>
+                            <InputLabel
+                              style={{
+                                color: this.state.searchValues.includeStudent
+                                  ? gordonColors.primary.blue
+                                  : gordonColors.neutral.lightGray,
+                              }}
+                            >
                               Student
                             </InputLabel>
                           </Typography>
@@ -879,7 +883,15 @@ class PeopleSearch extends Component {
                             query="(min-width: 600px)"
                             render={() => (
                               <Grid item xs="1">
-                                <FaBook style={styles.FontAwesome} className={classes.icon} />
+                                <IconContext.Provider
+                                  value={{
+                                    color: this.state.searchValues.includeStudent
+                                      ? gordonColors.neutral.grayShades[900]
+                                      : gordonColors.neutral.lightGray,
+                                  }}
+                                >
+                                  <FaBook style={styles.FontAwesome} className={classes.icon} />
+                                </IconContext.Provider>
                               </Grid>
                             )}
                           />
@@ -910,7 +922,15 @@ class PeopleSearch extends Component {
                             query="(min-width: 600px)"
                             render={() => (
                               <Grid item xs="1">
-                                <FaBook style={styles.FontAwesome} className={classes.icon} />
+                                <IconContext.Provider
+                                  value={{
+                                    color: this.state.searchValues.includeStudent
+                                      ? gordonColors.neutral.grayShades[900]
+                                      : gordonColors.neutral.lightGray,
+                                  }}
+                                >
+                                  <FaBook style={styles.FontAwesome} className={classes.icon} />
+                                </IconContext.Provider>
                               </Grid>
                             )}
                           />
@@ -941,7 +961,15 @@ class PeopleSearch extends Component {
                             query="(min-width: 600px)"
                             render={() => (
                               <Grid item xs="1">
-                                <FaSchool style={styles.FontAwesome} className={classes.icon} />
+                                <IconContext.Provider
+                                  value={{
+                                    color: this.state.searchValues.includeStudent
+                                      ? gordonColors.neutral.grayShades[900]
+                                      : gordonColors.neutral.lightGray,
+                                  }}
+                                >
+                                  <FaSchool style={styles.FontAwesome} className={classes.icon} />
+                                </IconContext.Provider>
                               </Grid>
                             )}
                           />
@@ -985,7 +1013,13 @@ class PeopleSearch extends Component {
                         style={styles.CardContent}
                       >
                         <Typography align="center" gutterBottom>
-                          <InputLabel style={{ color: gordonColors.primary.blue }}>
+                          <InputLabel
+                            style={{
+                              color: this.state.searchValues.includeFacStaff
+                                ? gordonColors.primary.blue
+                                : gordonColors.neutral.lightGray,
+                            }}
+                          >
                             Faculty/Staff
                           </InputLabel>
                         </Typography>
@@ -994,7 +1028,18 @@ class PeopleSearch extends Component {
                             query="(min-width: 600px)"
                             render={() => (
                               <Grid item xs="1">
-                                <FaBriefcase style={styles.FontAwesome} className={classes.icon} />
+                                <IconContext.Provider
+                                  value={{
+                                    color: this.state.searchValues.includeFacStaff
+                                      ? gordonColors.neutral.grayShades[900]
+                                      : gordonColors.neutral.lightGray,
+                                  }}
+                                >
+                                  <FaBriefcase
+                                    style={styles.FontAwesome}
+                                    className={classes.icon}
+                                  />
+                                </IconContext.Provider>
                               </Grid>
                             )}
                           />
@@ -1027,7 +1072,15 @@ class PeopleSearch extends Component {
                             query="(min-width: 600px)"
                             render={() => (
                               <Grid item xs="1">
-                                <FaBuilding style={styles.FontAwesome} className={classes.icon} />
+                                <IconContext.Provider
+                                  value={{
+                                    color: this.state.searchValues.includeFacStaff
+                                      ? gordonColors.neutral.grayShades[900]
+                                      : gordonColors.neutral.lightGray,
+                                  }}
+                                >
+                                  <FaBuilding style={styles.FontAwesome} className={classes.icon} />
+                                </IconContext.Provider>
                               </Grid>
                             )}
                           />
