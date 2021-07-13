@@ -560,7 +560,6 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
       </Dialog>
     );
   }
-  console.log('1rem ' + cliftonColor + ' solid !important');
   return (
     <div className="identification-card">
       <Grid container className="identification-card-header">
