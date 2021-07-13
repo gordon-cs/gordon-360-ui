@@ -433,7 +433,7 @@ const StudentNews = (props) => {
             {/* Create Posting */}
             <GordonDialogBox
               open={openPostActivity}
-              title=" Post on Student News "
+              title="Post on Student News"
               buttonClicked={currentlyEditing ? handleUpdate : handleSubmit}
               buttonName={currentlyEditing ? 'Update' : 'Submit'}
               isButtonDisabled={submitButtonDisabled}
