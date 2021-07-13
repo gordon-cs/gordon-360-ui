@@ -130,7 +130,7 @@ $image-side-width-desktop: 90px;
           &-main {
             border-radius: $image-border-radius;
             transition: width 500ms, height 500ms !important;
-            border: 1px solid $primary-blue;
+            border: 4px solid $primary-blue;
             z-index: 1 !important;
             overflow: hidden !important;
             width: $image-main-width-desktop;

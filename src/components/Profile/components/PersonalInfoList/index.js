@@ -225,10 +225,10 @@ const PersonalInfoList = ({
     <ProfileInfoListItem
       title="Clifton Strengths:"
       contentText={
-        <Grid container alignItems="baseline">
-          <Grid item>{strengthsText}</Grid>
-          <Grid item>{strengthsCaption}</Grid>
-        </Grid>
+        <span>
+          {strengthsText}
+          {strengthsCaption}
+        </span>
       }
     />
   ) : null;
