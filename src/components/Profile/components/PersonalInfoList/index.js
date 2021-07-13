@@ -15,6 +15,7 @@ import {
   Switch,
   FormControlLabel,
   Tooltip,
+  Link,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -199,7 +200,13 @@ const PersonalInfoList = ({
   ) : null;
 
   let strengthsText = CliftonStrengths?.Strengths.map((x) => (
-    <b style={{ color: CliftonStrengths.Colors[CliftonStrengths.Strengths.indexOf(x)] }}>{x}</b>
+    <Link
+      href={CliftonStrengths.Links[CliftonStrengths.Strengths.indexOf(x)]}
+      target="_blank"
+      rel="noopener"
+    >
+      <b style={{ color: CliftonStrengths.Colors[CliftonStrengths.Strengths.indexOf(x)] }}>{x}</b>
+    </Link>
   )).reduce((prev, curr) => [prev, ', ', curr]);
 
   let strengthsCaption = (
