@@ -243,7 +243,7 @@ const StudentNews = (props) => {
   function onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      React.cropperRef.current.cropper.zoomTo(1);
+     cropperRef.current.cropper.zoomTo(1);
     }
   }
 
