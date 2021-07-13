@@ -264,30 +264,16 @@ const PersonalInfoList = ({
   const note =
     myProf &&
     (isFacStaff ? (
-      <div align="left" className="note">
-        <Typography>NOTE:</Typography>
-        <ul>
-          <li>
-            <Typography>
-              To update your data, please contact{' '}
-              <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
-            </Typography>
-          </li>
-        </ul>
-      </div>
+      <Typography align="left" className="note">
+        NOTE: To update your data, please contact{' '}
+        <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
+      </Typography>
     ) : isStudent ? (
       <Typography align="left" className="note">
-        NOTE:
-        <ul>
-          <li>
-            To update your On Campus Address, please contact{' '}
-            <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
-          </li>
-          <li>
-            For all other changes or to partially/fully prevent your data from displaying, please
-            contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
-          </li>
-        </ul>
+        NOTE: To update your On Campus Address, please contact{' '}
+        <a href="mailto: housing@gordon.edu">Housing</a> (x4263). For all other changes or to
+        partially/fully prevent your data from displaying, please contact the{' '}
+        <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
       </Typography>
     ) : null);
 
