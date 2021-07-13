@@ -162,7 +162,7 @@ export default class PeopleSearchResult extends Component {
                 padding: '1rem',
               }}
             >
-              <Grid item xs={4} container justify="flex-end">
+              <Grid item xs={4} container justifyContent="flex-end">
                 <IMG
                   className="people-search-avatar-large"
                   src={`data:image/jpg;base64,${this.state.avatar}`}
