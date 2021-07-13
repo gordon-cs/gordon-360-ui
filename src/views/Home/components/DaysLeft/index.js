@@ -62,7 +62,7 @@ export default class DaysLeft extends Component {
         <div>
           <Grid
             container
-            justify="space-around"
+            justifyContent="space-around"
             spacing={0}
             style={{ paddingTop: 5, paddingBottom: 10 }}
           >

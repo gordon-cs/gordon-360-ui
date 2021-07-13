@@ -138,7 +138,7 @@ const peopleSearchHeaderDesktop = (
 
 const peopleSearchHeaderMobile = (
   <div style={styles.headerStyle}>
-    <Grid container direction="row" justify="center">
+    <Grid container direction="row" justifyContent="center">
       <Grid item>
         <Typography variant="body2" style={styles.headerStyle}>
           RESULTS
@@ -507,9 +507,9 @@ class PeopleSearch extends Component {
     let PeopleSearchCheckbox;
 
     const printPeopleSearchHeader = (
-      <div className="test" align="center" style={{ display: 'none' }}>
+      <div className="printHeader" align="center" style={{ display: 'none' }}>
         {/* show on print only */}
-        <style>{`@media print {.test{display: block !important;}}`}</style>
+        <style>{`@media print {.printHeader{display: block !important;}}`}</style>
 
         <h1>{searchPageTitle}</h1>
         <span>
@@ -592,7 +592,7 @@ class PeopleSearch extends Component {
     if (this.props.authentication) {
       PeopleSearchCheckbox = (
         <Grid item xs={12} lg={6} align="center">
-          <Grid container alignItems="center" justify="center">
+          <Grid container alignItems="center" justifyContent="center">
             <Grid item>
               <FormLabel component="label">Include: &nbsp;</FormLabel>
             </Grid>
@@ -724,7 +724,7 @@ class PeopleSearch extends Component {
 
       if (networkStatus === 'online') {
         PeopleSearch = (
-          <Grid container justify="center" spacing={6}>
+          <Grid container justifyContent="center" spacing={6}>
             <Grid item xs={12} lg={10} xl={8}>
               <Card style={{ padding: '0 3vw' }}>
                 <CardContent>
@@ -831,7 +831,7 @@ class PeopleSearch extends Component {
                   <Grid
                     container
                     spacing={2}
-                    justify="center"
+                    justifyContent="center"
                     alignItems="center"
                     style={{ padding: '8px' }}
                   >
@@ -1124,7 +1124,7 @@ class PeopleSearch extends Component {
                 </CardContent>
 
                 <CardActions>
-                  <Grid container justify="center" spacing={2}>
+                  <Grid container justifyContent="center" spacing={2}>
                     {/* Reset Button */}
                     <Grid item xs={8} sm={'auto'}>
                       <Button

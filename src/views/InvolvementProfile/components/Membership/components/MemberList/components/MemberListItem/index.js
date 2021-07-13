@@ -232,7 +232,7 @@ const MemberListItem = ({
     );
 
     options = (
-      <Grid container alignItems="center" justify="space-evenly">
+      <Grid container alignItems="center" justifyContent="space-evenly">
         <Grid item>
           <FormControlLabel
             control={
@@ -284,7 +284,7 @@ const MemberListItem = ({
 
     if (isMobileView) {
       options = (
-        <Grid container alignItems="center" justify="flex-end" spacing={3}>
+        <Grid container alignItems="center" justifyContent="flex-end" spacing={3}>
           <Grid item sm={2} align="center">
             <FormControlLabel
               control={

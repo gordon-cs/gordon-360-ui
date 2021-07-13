@@ -241,8 +241,8 @@ const PersonalInfoList = ({
         title="Student ID:"
         contentText={ID}
         ContentIcon={
-          <Grid container justify="center">
-            <Grid container direction="column" justify="center" alignItems="center">
+          <Grid container justifyContent="center">
+            <Grid container direction="column" justifyContent="center" alignItems="center">
               <LockIcon />
               Private
             </Grid>
@@ -264,10 +264,17 @@ const PersonalInfoList = ({
   const note =
     myProf &&
     (isFacStaff ? (
-      <Typography align="left" className="note">
-        NOTE: To update your data, please contact{' '}
-        <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
-      </Typography>
+      <div align="left" className="note">
+        <Typography>NOTE:</Typography>
+        <ul>
+          <li>
+            <Typography>
+              To update your data, please contact{' '}
+              <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
+            </Typography>
+          </li>
+        </ul>
+      </div>
     ) : isStudent ? (
       <Typography align="left" className="note">
         NOTE:
