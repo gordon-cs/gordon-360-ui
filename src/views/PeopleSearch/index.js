@@ -67,11 +67,6 @@ const styles = {
     color: '#FFF',
     padding: '10px',
   },
-  palette: {
-    Text: {
-      disabled: gordonColors.primary.cyan,
-    },
-  },
   colorSwitchBase: {
     color: gordonColors.neutral.lightGray,
     '&$colorChecked': {
@@ -892,6 +887,7 @@ class PeopleSearch extends Component {
                             <FormControl
                               variant="filled"
                               fullWidth
+                              className={this.state.searchValues.includeStudent ? null : 'disabled'}
                               disabled={!this.state.searchValues.includeStudent}
                             >
                               <InputLabel id="major">Major</InputLabel>
@@ -922,6 +918,7 @@ class PeopleSearch extends Component {
                             <FormControl
                               variant="filled"
                               fullWidth
+                              className={this.state.searchValues.includeStudent ? null : 'disabled'}
                               disabled={!this.state.searchValues.includeStudent}
                             >
                               <InputLabel id="minor">Minor</InputLabel>
@@ -952,6 +949,7 @@ class PeopleSearch extends Component {
                             <FormControl
                               variant="filled"
                               fullWidth
+                              className={this.state.searchValues.includeStudent ? null : 'disabled'}
                               disabled={!this.state.searchValues.includeStudent}
                             >
                               <InputLabel id="class">Class</InputLabel>
@@ -1004,6 +1002,9 @@ class PeopleSearch extends Component {
                             <FormControl
                               variant="filled"
                               fullWidth
+                              className={
+                                this.state.searchValues.includeFacStaff ? null : 'disabled'
+                              }
                               disabled={!this.state.searchValues.includeFacStaff}
                             >
                               <InputLabel id="department-type">Dept.</InputLabel>
@@ -1034,6 +1035,9 @@ class PeopleSearch extends Component {
                             <FormControl
                               variant="filled"
                               fullWidth
+                              className={
+                                this.state.searchValues.includeFacStaff ? null : 'disabled'
+                              }
                               disabled={!this.state.searchValues.includeFacStaff}
                             >
                               <InputLabel id="building-type">Building</InputLabel>
