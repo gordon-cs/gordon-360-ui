@@ -77,8 +77,6 @@ export default class GordonPeopleSearch extends Component {
     //but really its just that its capitalized what the heck
     query = query.toLowerCase();
 
-    console.log(query);
-
     let time,
       suggestions = [];
     let results = await peopleSearch.renderResults(query);
