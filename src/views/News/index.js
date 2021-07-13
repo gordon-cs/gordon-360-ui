@@ -243,7 +243,7 @@ const StudentNews = (props) => {
   function onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      React.cropperRef.current.cropper.zoomTo(1);
+     cropperRef.current.cropper.zoomTo(1);
     }
   }
 
@@ -429,7 +429,7 @@ const StudentNews = (props) => {
             {/* Create Posting */}
             <GordonDialogBox
               open={openPostActivity}
-              title=" Post on Student News "
+              title="Post on Student News"
               buttonClicked={currentlyEditing ? handleUpdate : handleSubmit}
               buttonName={currentlyEditing ? 'Update' : 'Submit'}
               isButtonDisabled={submitButtonDisabled}
@@ -572,26 +572,6 @@ const StudentNews = (props) => {
             </GordonDialogBox>
 
             {/* USER FEEDBACK */}
-            {/* <Snackbar
-              open={snackbarOpen}
-              message={snackbarMessage}
-              onClose={handleSnackbarClose}
-              autoHideDuration={5000}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              action={[
-                <IconButton
-                  key="close"
-                  aria-label="Close"
-                  color="inherit"
-                  onClick={handleSnackbarClose}
-                >
-                  <CloseIcon />
-                </IconButton>,
-              ]}
-            ></Snackbar> */}
             <GordonSnackbar
               {...snackbar}
               onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
