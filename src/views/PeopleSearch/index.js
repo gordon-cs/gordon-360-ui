@@ -64,7 +64,7 @@ const styles = {
   headerStyle: {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
-    padding: '10px',
+    padding: '1.5rem 0.75rem',
   },
   colorSwitchBase: {
     color: gordonColors.neutral.lightGray,
@@ -104,33 +104,16 @@ const noResultsCard = (
 const peopleSearchHeaderDesktop = (
   <div style={styles.headerStyle}>
     <Grid container direction="row" alignItems="center">
-      <Grid item xs={1} />
-      <Grid item xs={2}>
-        <Typography variant="body2" style={styles.headerStyle}>
-          FIRST NAME
+      <Grid item xs={5}>
+        <Typography variant="body2" style={{ marginLeft: '6rem' }}>
+          FULL NAME
         </Typography>
       </Grid>
-      <Grid item xs={2}>
-        <Typography variant="body2" style={styles.headerStyle}>
-          LAST NAME
-        </Typography>
+      <Grid item xs={5}>
+        <Typography variant="body2">TITLE/CLASS</Typography>
       </Grid>
       <Grid item xs={2}>
-        <Typography variant="body2" style={styles.headerStyle} noWrap>
-          DESCRIPTION
-        </Typography>
-      </Grid>
-      <Grid item xs={2}>
-        <Typography variant="body2" style={styles.headerStyle}>
-          CLASS/JOB TITLE
-        </Typography>
-      </Grid>
-      <Grid item xs={2}>
-        <Typography variant="body2" style={styles.headerStyle}>
-          @GORDON.EDU
-          <br />
-          MAIL LOCATION
-        </Typography>
+        <Typography variant="body2">MAIL LOCATION</Typography>
       </Grid>
     </Grid>
   </div>
@@ -140,9 +123,7 @@ const peopleSearchHeaderMobile = (
   <div style={styles.headerStyle}>
     <Grid container direction="row" justifyContent="center">
       <Grid item>
-        <Typography variant="body2" style={styles.headerStyle}>
-          RESULTS
-        </Typography>
+        <Typography variant="body2">RESULTS</Typography>
       </Grid>
     </Grid>
   </div>
