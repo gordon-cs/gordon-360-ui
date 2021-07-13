@@ -204,6 +204,7 @@ const PersonalInfoList = ({
       href={CliftonStrengths.Links[CliftonStrengths.Strengths.indexOf(x)]}
       target="_blank"
       rel="noopener"
+      key={x}
     >
       <b style={{ color: CliftonStrengths.Colors[CliftonStrengths.Strengths.indexOf(x)] }}>{x}</b>
     </Link>
@@ -221,8 +222,7 @@ const PersonalInfoList = ({
         </span>
       }
       aria-label="add"
-      enterTouchDelay="50"
-      style={{ backgroundColor: '#fff' }}
+      enterTouchDelay={50}
     >
       <HelpIcon style={{ cursor: 'pointer', margin: '0 1rem', fontSize: '1.2rem' }} />
     </CliftonTooltip>
