@@ -120,7 +120,7 @@ const StudentNews = (props) => {
     };
 
     loadUsername();
-  });
+  }, []);
 
   function handlePostClick() {
     setOpenPostActivity(true);
@@ -243,7 +243,7 @@ const StudentNews = (props) => {
   function onCropperZoom(event) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-     cropperRef.current.cropper.zoomTo(1);
+      cropperRef.current.cropper.zoomTo(1);
     }
   }
 
