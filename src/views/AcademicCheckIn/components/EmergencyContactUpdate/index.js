@@ -17,10 +17,15 @@ const EmergencyContactUpdate = ({
   emergencyContact1,
   emergencyContact2,
   emergencyContact3,
+  emergencyContactINTL1,
+  emergencyContactINTL2,
+  emergencyContactINTL3,
   handleChangeEmergContact1,
   handleChangeEmergContact2,
   handleChangeEmergContact3,
-  handleCheckEmergContact,
+  handleCheckEmergContact1,
+  handleCheckEmergContact2,
+  handleCheckEmergContact3,
 }) => {
   let cyan = gordonColors.primary.cyan;
 
@@ -44,18 +49,21 @@ const EmergencyContactUpdate = ({
       </Typography>
       {createEmergencyContactFields(
         emergencyContact1,
+        emergencyContactINTL1,
         handleChangeEmergContact1,
-        handleCheckEmergContact,
+        handleCheckEmergContact1,
       )}
       {createEmergencyContactFields(
         emergencyContact2,
+        emergencyContactINTL2,
         handleChangeEmergContact2,
-        handleCheckEmergContact,
+        handleCheckEmergContact2,
       )}
       {createEmergencyContactFields(
         emergencyContact3,
+        emergencyContactINTL3,
         handleChangeEmergContact3,
-        handleCheckEmergContact,
+        handleCheckEmergContact3,
       )}
       <Grid item>
         <br />
@@ -76,6 +84,8 @@ const EmergencyContactUpdate = ({
  *
  * @param {Object} emergencyContact the emergency contact to be updated.
  *
+ * @param {Object} emergencyContactINTL the check for if a number is an international number
+ *
  * @param {Function} handleChangeEmergContact a function to handle the updating of the fields
  *
  * @param {Function} handleCheckEmergContact a function to handle the updating of the checkbox fields
@@ -84,6 +94,7 @@ const EmergencyContactUpdate = ({
  */
 function createEmergencyContactFields(
   emergencyContact,
+  emergencyContactINTL,
   handleChangeEmergContact,
   handleCheckEmergContact,
 ) {
@@ -133,17 +144,17 @@ function createEmergencyContactFields(
             <InputLabel htmlFor="formatted-text-mask-input">Home Phone</InputLabel>
             <Input
               id="formatted-text-mask-input"
-              name={'homePhone'}
+              name={'HomePhone'}
               value={emergencyContact.HomePhone}
               onChange={handleChangeEmergContact}
-              inputComponent={emergencyContact.HomePhoneIN ? phoneMaskINTL : phoneMaskUS}
+              inputComponent={emergencyContactINTL.HomePhoneIN ? phoneMaskINTL : phoneMaskUS}
             />
 
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={emergencyContact.HomePhoneIN}
-                  name={'HomePhoneIN' + contactNum}
+                  checked={emergencyContactINTL.HomePhoneIN}
+                  name={'HomePhoneIN'}
                   onChange={handleCheckEmergContact}
                 />
               }
@@ -156,16 +167,16 @@ function createEmergencyContactFields(
             <InputLabel htmlFor="formatted-text-mask-input"> Mobile Phone </InputLabel>
             <Input
               id="formatted-text-mask-input"
-              name={'mobilePhone'}
+              name={'MobilePhone'}
               value={emergencyContact.MobilePhone}
               onChange={handleChangeEmergContact}
-              inputComponent={emergencyContact.MobilePhoneIN ? phoneMaskINTL : phoneMaskUS}
+              inputComponent={emergencyContactINTL.MobilePhoneIN ? phoneMaskINTL : phoneMaskUS}
             />
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={emergencyContact.MobilePhoneIN}
-                  name={'MobilePhoneIN' + contactNum}
+                  checked={emergencyContactINTL.MobilePhoneIN}
+                  name={'MobilePhoneIN'}
                   onChange={handleCheckEmergContact}
                 />
               }

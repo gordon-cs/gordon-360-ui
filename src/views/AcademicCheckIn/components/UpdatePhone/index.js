@@ -50,7 +50,7 @@ const UpdatePhone = ({ personalPhone, handleChangePersonalPhone, handleCheckPers
                 onChange={handleCheckPersonalPhone}
               />
             }
-            label="Make my number public on People Search"
+            label="Make my number private on People Search"
           />
           <FormControlLabel
             control={

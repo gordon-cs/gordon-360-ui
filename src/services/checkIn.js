@@ -70,7 +70,7 @@ const getEmergencyContacts = async (username) => {
 
 async function submitPhone(data) {
   try {
-    return await http.post(`checkIn/phone`, data);
+    return await http.put(`checkIn/cellphone`, data);
   } catch (reason) {
     console.log('Caught checkIn submission error: ' + reason);
   }

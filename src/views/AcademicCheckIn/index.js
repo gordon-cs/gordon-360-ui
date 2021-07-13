@@ -59,7 +59,20 @@ const AcademicCheckIn = ({ authentication }) => {
     MobilePhone: '',
   });
 
-  const [emergencyContactINTL, setEmergencyContactINTL] = useState(null);
+  const [emergencyContactINTL1, setEmergencyContactINTL1] = useState({
+    HomePhoneIN: false,
+    MobilePhoneIN: false,
+  });
+
+  const [emergencyContactINTL2, setEmergencyContactINTL2] = useState({
+    HomePhoneIN: false,
+    MobilePhoneIN: false,
+  });
+
+  const [emergencyContactINTL3, setEmergencyContactINTL3] = useState({
+    HomePhoneIN: false,
+    MobilePhoneIN: false,
+  });
 
   const [holds, setHolds] = useState({
     registrationHold: false,
@@ -74,7 +87,7 @@ const AcademicCheckIn = ({ authentication }) => {
 
   const [personalPhone, setPersonalPhone] = useState({
     personalPhone: '',
-    makePublic: false,
+    makePrivate: false,
     noPhone: false,
   });
 
@@ -105,47 +118,50 @@ const AcademicCheckIn = ({ authentication }) => {
   useEffect(() => {
     const loadData = async () => {
       let tempProfile = await user.getProfileInfo();
-      setProfile(tempProfile);
+      setBasicInfo({
+        studentFirstName: tempProfile.FirstName,
+        studentLastName: tempProfile.LastName,
+      });
       let contacts = await checkInService.getEmergencyContacts(
         tempProfile.AD_Username.toLowerCase(),
       );
 
-      let isHomeINTL1 = false,
-        isMobileINTL1 = false,
-        isHomeINTL2 = false,
-        isMobileINTL2 = false,
-        isHomeINTL3 = false,
-        isMobileINTL3 = false;
-
-      if (contacts[0] !== undefined) {
+      if (contacts[0]) {
         setEmergencyContact1(contacts[0]);
-        isHomeINTL1 = contacts[0].HomePhone.startsWith('+');
-        isMobileINTL1 = contacts[0].MobilePhone.startsWith('+');
+        setEmergencyContactINTL1({
+          HomePhoneIN: contacts[0].HomePhone.startsWith('+'),
+          MobilePhoneIN: contacts[0].MobilePhone.startsWith('+'),
+        });
       }
-      if (contacts[1] !== undefined) {
-        setEmergencyContact1(contacts[1]);
-        isHomeINTL2 = contacts[1].HomePhone.startsWith('+');
-        isMobileINTL2 = contacts[1].MobilePhone.startsWith('+');
+
+      if (contacts[1]) {
+        setEmergencyContact2(contacts[1]);
+        setEmergencyContactINTL2({
+          HomePhoneIN: contacts[1].HomePhone.startsWith('+'),
+          MobilePhoneIN: contacts[1].MobilePhone.startsWith('+'),
+        });
       }
-      if (contacts[2] !== undefined) {
-        setEmergencyContact1(contacts[2]);
-        isHomeINTL3 = contacts[2].HomePhone.startsWith('+');
-        isMobileINTL3 = contacts[2].MobilePhone.startsWith('+');
+
+      if (contacts[2]) {
+        setEmergencyContact3(contacts[2]);
+        setEmergencyContactINTL3({
+          HomePhoneIN: contacts[2].HomePhone.startsWith('+'),
+          MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
+        });
       }
-      setEmergencyContactINTL({
-        HomePhoneIN1: isHomeINTL1,
-        MobilePhoneIN1: isMobileINTL1,
-        HomePhoneIN2: isHomeINTL2,
-        MobilePhoneIN2: isMobileINTL2,
-        HomePhoneIN3: isHomeINTL3,
-        MobilePhoneIN3: isMobileINTL3,
+
+      console.log(tempProfile.MobilePhone);
+      setPersonalPhone({
+        personalPhone: tempProfile.MobilePhone,
       });
     };
 
     if (authentication) {
       loadData();
     }
+
     setLoading(false);
+
   }, [authentication, loading]);
 
   const handleNext = () => {
@@ -180,8 +196,16 @@ const AcademicCheckIn = ({ authentication }) => {
     setPrivacyAgreements({ ...privacyAgreements, [evt.target.name]: evt.target.checked });
   };
 
-  const handleCheckEmergContact = (evt) => {
-    setEmergencyContactINTL({ ...emergencyContactINTL, [evt.target.name]: evt.target.checked });
+  const handleCheckEmergContact1 = (evt) => {
+    setEmergencyContactINTL1({ ...emergencyContactINTL1, [evt.target.name]: evt.target.checked });
+  };
+
+  const handleCheckEmergContact2 = (evt) => {
+    setEmergencyContactINTL2({ ...emergencyContactINTL2, [evt.target.name]: evt.target.checked });
+  };
+
+  const handleCheckEmergContact3 = (evt) => {
+    setEmergencyContactINTL3({ ...emergencyContactINTL3, [evt.target.name]: evt.target.checked });
   };
 
   const handleCheckPersonalPhone = (evt) => {
@@ -197,6 +221,7 @@ const AcademicCheckIn = ({ authentication }) => {
     checkInService.submitContact(emergencyContact1);
     checkInService.submitContact(emergencyContact2);
     checkInService.submitContact(emergencyContact3);
+    checkInService.submitPhone(personalPhone);
   };
 
   let content;
@@ -224,10 +249,15 @@ const AcademicCheckIn = ({ authentication }) => {
                           emergencyContact1={emergencyContact1}
                           emergencyContact2={emergencyContact2}
                           emergencyContact3={emergencyContact3}
+                          emergencyContactINTL1={emergencyContactINTL1}
+                          emergencyContactINTL2={emergencyContactINTL2}
+                          emergencyContactINTL3={emergencyContactINTL3}
                           handleChangeEmergContact1={handleChangeEmergContact1}
                           handleChangeEmergContact2={handleChangeEmergContact2}
                           handleChangeEmergContact3={handleChangeEmergContact3}
-                          handleCheckEmergContact={handleCheckEmergContact}
+                          handleCheckEmergContact1={handleCheckEmergContact1}
+                          handleCheckEmergContact2={handleCheckEmergContact2}
+                          handleCheckEmergContact3={handleCheckEmergContact3}
                         />
                       )}
 
