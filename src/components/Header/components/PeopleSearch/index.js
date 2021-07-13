@@ -123,9 +123,6 @@ export default class GordonPeopleSearch extends Component {
       if (suggestionIndex === -1) suggestionIndex = suggestionList.length - 1;
       this.setState({ suggestionIndex });
     }
-    // if (key === 'Backspace') {
-    //   this.setState({ suggestions: [] });
-    // }
   };
 
   reset() {
