@@ -110,7 +110,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
 
   return (
     <VisibilitySensor onChange={handleVisibilityChange}>
-      <Fragment>
+      <>
         <Divider />
         {size === 'single' /*** Single Size - One Column (Mobile View) ***/ ? (
           <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
@@ -246,7 +246,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
           </Link>
         )}
         <Divider />
-      </Fragment>
+      </>
     </VisibilitySensor>
   );
 };
