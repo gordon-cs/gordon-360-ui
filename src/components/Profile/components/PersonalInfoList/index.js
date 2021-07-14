@@ -232,10 +232,10 @@ const PersonalInfoList = ({
     <ProfileInfoListItem
       title="Clifton Strengths:"
       contentText={
-        <span>
+        <Typography>
           {strengthsText}
           {strengthsCaption}
-        </span>
+        </Typography>
       }
     />
   ) : null;
