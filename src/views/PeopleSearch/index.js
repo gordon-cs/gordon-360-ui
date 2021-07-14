@@ -908,7 +908,6 @@ class PeopleSearch extends Component {
                                   ? null
                                   : 'disabled'
                               }
-                              // if alumni is checked then student should not be disabled because faculty can search alumni through major
                               disabled={
                                 !this.state.searchValues.includeAlumni &&
                                 !this.state.searchValues.includeStudent
