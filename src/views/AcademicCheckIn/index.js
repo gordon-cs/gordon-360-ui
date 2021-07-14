@@ -271,6 +271,7 @@ const AcademicCheckIn = ({ authentication }) => {
   };
 
   let content;
+
   if (loading === true) {
     content = <GordonLoader />;
   } else if (!authentication) {
