@@ -41,6 +41,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   const [currentWidth, setCurrentWidth] = useState();
   const [cliftonColor, setCliftonColor] = useState();
   const cropperRef = useRef();
+  const isStudent = profile.PersonType?.includes('stu');
   let photoDialogErrorTimeout;
 
   // Styles used throughout this component
@@ -563,7 +564,10 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   return (
     <div className="identification-card">
       <Grid container className="identification-card-header">
-        {userProfile && <CardHeader title={`${userProfile.FirstName}'s Profile`} />}
+        {isStudent && userProfile && <CardHeader title={`${userProfile.FirstName}'s Profile`} />}
+        {!isStudent && userProfile && (
+          <CardHeader title={`${userProfile.FirstName} ${userProfile.LastName}'s Profile`} />
+        )}
         {!userProfile && <CardHeader title="My Personal Profile" />}
       </Grid>
 
