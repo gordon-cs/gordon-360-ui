@@ -140,7 +140,7 @@ const Events = (props) => {
   );
 
   return (
-    <Grid container justify="center" spacing={6}>
+    <Grid container justifyContent="center" spacing={6}>
       <Grid item xs={12} lg={10} xl={8}>
         <Card style={{ padding: '0 3vw' }}>
           <CardContent>
@@ -196,7 +196,7 @@ const Events = (props) => {
                 <Grid
                   container
                   spacing={2}
-                  justify="center"
+                  justifyContent="center"
                   alignItems="center"
                   style={{ padding: '8px' }}
                 >
