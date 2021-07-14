@@ -817,7 +817,6 @@ class PeopleSearch extends Component {
                   </Grid>
 
                   <br />
-
                   {/* Advanced Filtering */}
                   <Grid
                     container
