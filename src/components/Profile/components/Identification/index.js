@@ -558,12 +558,12 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
       <div className="identification-card-content">
         {/* SHOWS THE CARD'S CONTENT IF THE GIVEN USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
         {userProfile && (defaultUserImage || preferredUserImage) ? (
-          <Grid container className="identification-card-content-card" justify="center">
+          <Grid container className="identification-card-content-card" justifyContent="center">
             <Grid
               container
               className="identification-card-content-card-container"
               alignItems="center"
-              justify="space-evenly"
+              justifyContent="space-evenly"
             >
               <Grid item className="identification-card-content-card-container-photo">
                 <div className="identification-card-content-card-container-photo-main">

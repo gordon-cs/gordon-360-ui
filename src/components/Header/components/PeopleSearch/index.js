@@ -48,6 +48,7 @@ export default class GordonPeopleSearch extends Component {
     this.reset = this.reset.bind(this);
     this.handleKeys = this.handleKeys.bind(this);
     this.state = {
+      time: 0,
       suggestions: [],
       suggestionIndex: -1,
       query: String,
@@ -76,8 +77,15 @@ export default class GordonPeopleSearch extends Component {
     //but really its just that its capitalized what the heck
     query = query.toLowerCase();
 
-    let suggestions = await peopleSearch.search(query);
-    this.setState({ suggestions });
+    let time,
+      suggestions = [];
+    let results = await peopleSearch.renderResults(query);
+    time = results.now;
+    if (this.state.time < time) {
+      this.state.time = time;
+      suggestions = results.result;
+      this.setState({ suggestions });
+    }
   }
 
   handleClick = (theChosenOne) => {
@@ -114,9 +122,6 @@ export default class GordonPeopleSearch extends Component {
       if (suggestionIndex !== -1) suggestionIndex--;
       if (suggestionIndex === -1) suggestionIndex = suggestionList.length - 1;
       this.setState({ suggestionIndex });
-    }
-    if (key === 'Backspace') {
-      this.setState({ suggestions: [] });
     }
   };
 
@@ -213,22 +218,17 @@ export default class GordonPeopleSearch extends Component {
                 suggestion.Nickname &&
                   suggestion.Nickname !== suggestion.FirstName &&
                   suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
-                  ? suggestion.FirstName +
-                    ' (' +
-                    suggestion.Nickname +
-                    ') ' +
-                    suggestion.LastName
-                  : (suggestion.MaidenName &&
+                  ? suggestion.FirstName + ' (' + suggestion.Nickname + ') ' + suggestion.LastName
+                  : suggestion.MaidenName &&
                     suggestion.MaidenName !== suggestion.LastName &&
-                    suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1] 
+                    suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
                   ? suggestion.FirstName +
                     ' ' +
                     suggestion.LastName +
                     ' (' +
                     suggestion.MaidenName +
                     ')'
-                  :
-                  suggestion.FirstName + ' ' + suggestion.LastName),
+                  : suggestion.FirstName + ' ' + suggestion.LastName,
                 this.state.highlightQuery,
               )}
         </Typography>

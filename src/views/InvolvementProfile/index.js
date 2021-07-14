@@ -240,7 +240,7 @@ const InvolvementProfile = ({ authentication }) => {
       const editInvolvement =
         isAdmin || isSuperAdmin ? (
           <Grid item>
-            <Grid container spacing={2} justify="center">
+            <Grid container spacing={2} justifyContent="center">
               <Grid item>
                 <Button
                   variant="contained"
@@ -271,7 +271,7 @@ const InvolvementProfile = ({ authentication }) => {
                   className="rounded-corners"
                 />
               </Grid>
-              <Grid container spacing={2} justify="center">
+              <Grid container spacing={2} justifyContent="center">
                 <Grid item>
                   <Button
                     variant="contained"
@@ -301,7 +301,7 @@ const InvolvementProfile = ({ authentication }) => {
                     ? 'Tap Image to Browse Files'
                     : 'Drag & Drop Picture, or Click to Browse Files'}
                 </DialogContentText>
-                <Grid container justify="center" spacing={2}>
+                <Grid container justifyContent="center" spacing={2}>
                   {!preview && (
                     <Dropzone
                       onDropAccepted={onDropAccepted.bind(this)}
@@ -480,7 +480,7 @@ const InvolvementProfile = ({ authentication }) => {
   }
 
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
         {content}
       </Grid>

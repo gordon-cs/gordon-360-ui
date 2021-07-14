@@ -28,7 +28,7 @@ const Admin = ({ authentication }) => {
     if (isOnline) {
       if (isAdmin) {
         return (
-          <Grid container justify="center" spacing={2}>
+          <Grid container justifyContent="center" spacing={2}>
             <Grid item xs={12} lg={8}>
               <InvolvementStatusList status={'Open'} />
             </Grid>

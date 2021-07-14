@@ -64,7 +64,7 @@ const styles = {
   headerStyle: {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
-    padding: '10px',
+    padding: '1.5rem 0.75rem',
   },
   colorSwitchBase: {
     color: gordonColors.neutral.lightGray,
@@ -104,33 +104,16 @@ const noResultsCard = (
 const peopleSearchHeaderDesktop = (
   <div style={styles.headerStyle}>
     <Grid container direction="row" alignItems="center">
-      <Grid item xs={1} />
-      <Grid item xs={2}>
-        <Typography variant="body2" style={styles.headerStyle}>
-          FIRST NAME
+      <Grid item xs={5}>
+        <Typography variant="body2" style={{ marginLeft: '6rem' }}>
+          FULL NAME
         </Typography>
       </Grid>
-      <Grid item xs={2}>
-        <Typography variant="body2" style={styles.headerStyle}>
-          LAST NAME
-        </Typography>
+      <Grid item xs={5}>
+        <Typography variant="body2">TITLE/CLASS</Typography>
       </Grid>
       <Grid item xs={2}>
-        <Typography variant="body2" style={styles.headerStyle} noWrap>
-          DESCRIPTION
-        </Typography>
-      </Grid>
-      <Grid item xs={2}>
-        <Typography variant="body2" style={styles.headerStyle}>
-          CLASS/JOB TITLE
-        </Typography>
-      </Grid>
-      <Grid item xs={2}>
-        <Typography variant="body2" style={styles.headerStyle}>
-          @GORDON.EDU
-          <br />
-          MAIL LOCATION
-        </Typography>
+        <Typography variant="body2">MAIL LOCATION</Typography>
       </Grid>
     </Grid>
   </div>
@@ -138,11 +121,9 @@ const peopleSearchHeaderDesktop = (
 
 const peopleSearchHeaderMobile = (
   <div style={styles.headerStyle}>
-    <Grid container direction="row" justify="center">
+    <Grid container direction="row" justifyContent="center">
       <Grid item>
-        <Typography variant="body2" style={styles.headerStyle}>
-          RESULTS
-        </Typography>
+        <Typography variant="body2">RESULTS</Typography>
       </Grid>
     </Grid>
   </div>
@@ -282,9 +263,9 @@ class PeopleSearch extends Component {
 
     this.setState({
       searchValues: {
-        includeStudent: urlParams.get('includeStudent') || false,
-        includeFacStaff: urlParams.get('includeFacStaff') || false,
-        includeAlumni: urlParams.get('includeAlumni') || false,
+        includeStudent: urlParams.get('includeStudent') === 'true' || false,
+        includeFacStaff: urlParams.get('includeFacStaff') === 'true' || false,
+        includeAlumni: urlParams.get('includeAlumni') === 'true' || false,
         firstName: urlParams.get('firstName')?.trim() || '',
         lastName: urlParams.get('lastName')?.trim() || '',
         major: urlParams.get('major')?.trim() || '',
@@ -507,9 +488,9 @@ class PeopleSearch extends Component {
     let PeopleSearchCheckbox;
 
     const printPeopleSearchHeader = (
-      <div class="test" align="center" style={{ display: 'none' }}>
+      <div className="printHeader" align="center" style={{ display: 'none' }}>
         {/* show on print only */}
-        <style>{`@media print {.test{display: block !important;}}`}</style>
+        <style>{`@media print {.printHeader{display: block !important;}}`}</style>
 
         <h1>{searchPageTitle}</h1>
         <span>
@@ -592,7 +573,7 @@ class PeopleSearch extends Component {
     if (this.props.authentication) {
       PeopleSearchCheckbox = (
         <Grid item xs={12} lg={6} align="center">
-          <Grid container alignItems="center" justify="center">
+          <Grid container alignItems="center" justifyContent="center">
             <Grid item>
               <FormLabel component="label">Include: &nbsp;</FormLabel>
             </Grid>
@@ -724,7 +705,7 @@ class PeopleSearch extends Component {
 
       if (networkStatus === 'online') {
         PeopleSearch = (
-          <Grid container justify="center" spacing={6}>
+          <Grid container justifyContent="center" spacing={6}>
             <Grid item xs={12} lg={10} xl={8}>
               <Card style={{ padding: '0 3vw' }}>
                 <CardContent>
@@ -831,7 +812,7 @@ class PeopleSearch extends Component {
                   <Grid
                     container
                     spacing={2}
-                    justify="center"
+                    justifyContent="center"
                     alignItems="center"
                     style={{ padding: '8px' }}
                   >
@@ -1124,7 +1105,7 @@ class PeopleSearch extends Component {
                 </CardContent>
 
                 <CardActions>
-                  <Grid container justify="center" spacing={2}>
+                  <Grid container justifyContent="center" spacing={2}>
                     {/* Reset Button */}
                     <Grid item xs={8} sm={'auto'}>
                       <Button
