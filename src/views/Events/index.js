@@ -256,7 +256,7 @@ const Events = (props) => {
                     />
                     <Grid item xs={11}>
                       <FormControl fullWidth>
-                        <InputLabel id="event-filters">Types</InputLabel>
+                        <InputLabel id="event-filters">Type</InputLabel>
                         <Select
                           labelId="event-filters"
                           id="event-checkboxes"
