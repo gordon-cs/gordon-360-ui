@@ -5,7 +5,7 @@ import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@materi
 
 const Help = () => {
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
         <Card className="help">
           <CardHeader
