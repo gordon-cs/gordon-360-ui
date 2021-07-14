@@ -232,6 +232,7 @@ const AcademicCheckIn = ({ authentication }) => {
   };
 
   let content;
+
   if (loading === true) {
     content = <GordonLoader />;
   } else if (!authentication) {
@@ -325,10 +326,10 @@ const AcademicCheckIn = ({ authentication }) => {
                           (activeStep === 0 && holdStatus === true) ||
                           (activeStep === 1 &&
                             (emergencyContact1.firstname === '' ||
-                            emergencyContact1.lastname === '' ||
-                            emergencyContact1.relationship === '' ||
-                            emergencyContact1.HomePhone === '' ||
-                            emergencyContact1.MobilePhone === '')) ||
+                             emergencyContact1.lastname === '' ||
+                             emergencyContact1.relationship === '' ||
+                             emergencyContact1.HomePhone === '' ||
+                             emergencyContact1.MobilePhone === '')) ||
                           (activeStep === 2 &&
                             personalPhone.personalPhone === '' &&
                             personalPhone.noPhone === false) ||
