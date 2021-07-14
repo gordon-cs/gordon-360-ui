@@ -324,19 +324,23 @@ const PersonalInfoList = ({
         </ul>
       </div>
     ) : isStudent ? (
-      <Typography align="left" className="note">
-        NOTE:
+      <div align="left" className="note">
+        <Typography>NOTE:</Typography>
         <ul>
           <li>
-            To update your On Campus Address, please contact{' '}
-            <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
+            <Typography>
+              To update your On Campus Address, please contact{' '}
+              <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
+            </Typography>
           </li>
           <li>
-            For all other changes or to partially/fully prevent your data from displaying, please
-            contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+            <Typography>
+              For all other changes or to partially/fully prevent your data from displaying, please
+              contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+            </Typography>
           </li>
         </ul>
-      </Typography>
+      </div>
     ) : null);
 
   const disclaimer =
