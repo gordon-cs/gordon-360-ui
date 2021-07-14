@@ -90,7 +90,7 @@ const styles = {
 };
 
 const noResultsCard = (
-  <Grid item xs={12} direction="row" justify="center" alignItems="center">
+  <Grid item xs={12} direction="row" justifyContent="center" alignItems="center">
     <Card>
       <CardContent>
         <Typography variant="headline" align="center">
