@@ -56,6 +56,7 @@ const GordonPeopleSearch = ({
   const [holder, setHolder] = useState('People Search');
   const isOnline = useNetworkStatus();
   const [downshift, setDownshift] = useState();
+  const [time, setTime] = useState(0);
 
   useEffect(() => {
     function handleResize() {
@@ -103,6 +104,11 @@ const GordonPeopleSearch = ({
 
     let suggestions = await peopleSearch.search(query);
     setSuggestions(suggestions);
+    let results = await peopleSearch.renderResults(query);
+    if (time < results.now) {
+      setTime(results.now);
+      setSuggestions(results.result);
+    }
   }
 
   function handleClick(theChosenOne) {
@@ -139,9 +145,6 @@ const GordonPeopleSearch = ({
       if (sIndex !== -1) sIndex--;
       if (sIndex === -1) sIndex = suggestionList.length - 1;
       setSuggestionIndex(sIndex);
-    }
-    if (key === 'Backspace') {
-      setSuggestions([]);
     }
   }
 
