@@ -127,7 +127,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
               According to our systems, you should contact the following department(s) in order to
               clear up certain administrative holds before beginning the check-in process.
             </Typography>
-            <Typography>{displayMajorHolds()}</Typography>
+            {displayMajorHolds()}
           </Grid>
         ) : !holds.isRegistered ? ( // If a student is not registered for courses they cannot check in
           <Grid item>
@@ -163,7 +163,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
               Even though you can still check in while maintaining the following holds, you should
               contact the following department(s) at your earliest availability:
             </Typography>
-            <Typography>{displayMinorHolds()}</Typography>
+            {displayMinorHolds()}
           </Grid>
         ) : (
           // Otherwise display nothing for this section
@@ -192,16 +192,16 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
           </Typography>
         ) : (
           // If the student has no major holds and is registered for courses, allow them to begin check in with this message
-          <Typography>
-            Enrollment Check-In consists of four parts:{' '}
+          <>
+            <Typography>Enrollment Check-In consists of four parts: </Typography>
             <ol>
               <li>Enter Your Emergency Contact Information</li>
               <li>Enter Your Cell Phone</li>
               <li>Review Privacy Policies</li>
               <li>Provide your Race and Ethnicity (optional)</li>
             </ol>
-            Click the button below to begin the check-in process.
-          </Typography>
+            <Typography>Click the button below to begin the check-in process.</Typography>
+          </>
         )}
       </Grid>
     </Grid>
