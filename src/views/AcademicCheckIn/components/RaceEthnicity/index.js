@@ -14,35 +14,37 @@ import info from './info.json';
 const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemographic }) => {
   const cyan = gordonColors.primary.cyan;
   return (
-    <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
+    <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
       <Grid item style={{ color: cyan }}>
-        <Typography variant="h5" gutterbottom>
+        <Typography variant="h5" gutterBottom>
           Step 4: Provide Your Race and Ethnicity
         </Typography>
       </Grid>
       <Grid item>
-        <Typography variant="h6" align="center" gutterbottom>
+        <Typography variant="h6" align="center" gutterBottom>
           <b>{info.header}</b>
         </Typography>
-        <Typography variant="body1" gutterbottom>
+        <Typography variant="body1" gutterBottom>
           {info.para1}
         </Typography>
         <br />
-        <Typography variant="body1" gutterbottom>
+        <Typography variant="body1">
           The first question asks students to designate ethnicity as either:{' '}
-          <ul>
+        </Typography>
+        <ul>
             <li>Hispanic or Latino OR</li>
             <li>Not Hispanic or Latino</li>
           </ul>
-        </Typography>
-        <Typography variant="body1" gutterbottom>
+          <br />
+        <Typography variant="body1" gutterBottom>
           {info.para2}
         </Typography>
         <br />
-        <Typography variant="body1" gutterbottom>
+        <Typography variant="body1">
           The second question asks individuals to indicate one or more races that apply from the
           following (you can select multiple categories):{' '}
-          <ul>
+        </Typography>
+        <ul>
             <li>
               American Indian or Alaska Native (Having origins in any of the original peoples of
               North and South America, including Central America)
@@ -56,8 +58,8 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
               Middle East)
             </li>
           </ul>
-        </Typography>
-        <Typography variant="subtitle1" gutterbottom>
+          <br />
+        <Typography variant="subtitle1" gutterBottom>
           Please provide/confirm the following information:
         </Typography>
         <br />
@@ -136,7 +138,7 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
           />
         </FormControl>
       </Grid>
-      <Typography variant="subtitle1" gutterbottom>
+      <Typography variant="subtitle1" gutterBottom>
         <b>
           {info.subtext}
           <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>.

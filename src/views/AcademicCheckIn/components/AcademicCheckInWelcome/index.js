@@ -105,7 +105,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
   };
 
   return (
-    <Grid container justify="center" alignItems="center" direction="column">
+    <Grid container justifyContent="center" alignItems="center" direction="column">
       <Grid item>
         <Typography align="center" variant="h5" style={{ color: blue }}>
           <b>Enrollment Check In</b>

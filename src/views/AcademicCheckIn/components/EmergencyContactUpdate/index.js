@@ -30,7 +30,7 @@ const EmergencyContactUpdate = ({
   let cyan = gordonColors.primary.cyan;
 
   return (
-    <Grid container justify="center" alignItems="center" direction="column">
+    <Grid container justifyContent="center" alignItems="center" direction="column">
       <Typography align="center" variant="h5" gutterBottom style={{ color: cyan }}>
         Step 1: Enter your Emergency Contact Information
       </Typography>
@@ -105,7 +105,7 @@ function createEmergencyContactFields(
         {' '}
         <strong>Emergency Contact {contactNum}</strong>{' '}
       </Typography>
-      <Grid container spacing={2} justify="center">
+      <Grid container spacing={2} justifyContent="center">
         <Grid item>
           <FormControl className="emergencyContactForm">
             <InputLabel htmlFor="component-simple"> First Name </InputLabel>
@@ -114,6 +114,7 @@ function createEmergencyContactFields(
               name={'firstname'}
               value={emergencyContact.firstname}
               onChange={handleChangeEmergContact}
+              required
             />
           </FormControl>
         </Grid>
@@ -125,6 +126,7 @@ function createEmergencyContactFields(
               name={'lastname'}
               value={emergencyContact.lastname}
               onChange={handleChangeEmergContact}
+              required
             />
           </FormControl>
         </Grid>
@@ -136,6 +138,7 @@ function createEmergencyContactFields(
               name={'relationship'}
               value={emergencyContact.relationship}
               onChange={handleChangeEmergContact}
+              required
             />
           </FormControl>
         </Grid>
@@ -148,6 +151,7 @@ function createEmergencyContactFields(
               value={emergencyContact.HomePhone}
               onChange={handleChangeEmergContact}
               inputComponent={emergencyContactINTL.HomePhoneIN ? phoneMaskINTL : phoneMaskUS}
+              required
             />
 
             <FormControlLabel
@@ -171,6 +175,7 @@ function createEmergencyContactFields(
               value={emergencyContact.MobilePhone}
               onChange={handleChangeEmergContact}
               inputComponent={emergencyContactINTL.MobilePhoneIN ? phoneMaskINTL : phoneMaskUS}
+              required
             />
             <FormControlLabel
               control={

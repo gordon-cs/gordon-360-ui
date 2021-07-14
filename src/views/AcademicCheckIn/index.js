@@ -107,23 +107,32 @@ const AcademicCheckIn = ({ authentication }) => {
     none: false,
   });
 
-  // TODO: Replace this in residual files with the profile object
   const [basicInfo, setBasicInfo] = useState({
     studentFirstName: '',
     studentLastName: '',
   });
 
-  const [profile, setProfile] = useState(null);
+  /** Formats a number for display
+  *   @param {string} phoneNum - the unformatted phone number
+  *   @returns {string} - the formatted phone number
+  */
+  function formatNumber(phoneNum){
+    let a, b, c;
+    a = phoneNum.slice(0, 2);
+    b = phoneNum.slice(3, 5);
+    c = phoneNum.slice(6,);
+    return ("(" + a + ")" + b + "-" + c);
+  }
 
   useEffect(() => {
     const loadData = async () => {
-      let tempProfile = await user.getProfileInfo();
+      let profile = await user.getProfileInfo();
       setBasicInfo({
-        studentFirstName: tempProfile.FirstName,
-        studentLastName: tempProfile.LastName,
+        studentFirstName: profile.FirstName,
+        studentLastName: profile.LastName,
       });
       let contacts = await checkInService.getEmergencyContacts(
-        tempProfile.AD_Username.toLowerCase(),
+        profile.AD_Username.toLowerCase(),
       );
 
       if (contacts[0]) {
@@ -150,17 +159,15 @@ const AcademicCheckIn = ({ authentication }) => {
         });
       }
 
-      console.log(tempProfile.MobilePhone);
       setPersonalPhone({
-        personalPhone: tempProfile.MobilePhone,
+        personalPhone: profile.MobilePhone,
       });
+      setLoading(false);
     };
 
     if (authentication) {
       loadData();
     }
-
-    setLoading(false);
 
   }, [authentication, loading]);
 
@@ -217,7 +224,7 @@ const AcademicCheckIn = ({ authentication }) => {
   };
 
   const handleSubmit = () => {
-    alert(`Done 🧙‍♂️`);
+    console.log(`Done 🧙‍♂️`);
     checkInService.submitContact(emergencyContact1);
     checkInService.submitContact(emergencyContact2);
     checkInService.submitContact(emergencyContact3);
@@ -231,14 +238,14 @@ const AcademicCheckIn = ({ authentication }) => {
     content = <GordonUnauthorized feature={'Academic Checkin'} />;
   } else {
     content = (
-      <Grid container justify="center" spacing={2}>
+      <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} md={9} lg={6}>
           <Card className="academicCheckIn">
             <CardHeader title="Academic Check In" className="checkIn-header" padding={30} />
             <Box m={2}>
-              <Grid container justify="center" alignItems="center" direction="column" spacing={1}>
+              <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
                 <Grid item>
-                  <Grid container justify="center" alignItems="center">
+                  <Grid container justifyContent="center" alignItems="center">
                     <Grid item>
                       {activeStep === 0 && (
                         <AcademicCheckInWelcome basicInfo={basicInfo} holds={holds} />
@@ -299,7 +306,7 @@ const AcademicCheckIn = ({ authentication }) => {
                   <br />
                 </Grid>
                 <Grid item>
-                  <Grid container justify="center" className="button-container" spacing={2}>
+                  <Grid container justifyContent="center" className="button-container" spacing={2}>
                     <Grid item>
                       <Button
                         style={activeStep === 0 ? { display: 'none' } : {}}
@@ -318,7 +325,10 @@ const AcademicCheckIn = ({ authentication }) => {
                           (activeStep === 0 && holdStatus === true) ||
                           (activeStep === 1 &&
                             (emergencyContact1.firstname === '' ||
-                              emergencyContact2.firstname === '')) ||
+                            emergencyContact1.lastname === '' ||
+                            emergencyContact1.relationship === '' ||
+                            emergencyContact1.HomePhone === '' ||
+                            emergencyContact1.MobilePhone === '')) ||
                           (activeStep === 2 &&
                             personalPhone.personalPhone === '' &&
                             personalPhone.noPhone === false) ||
