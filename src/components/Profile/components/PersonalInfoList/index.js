@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import user from 'services/user';
 import './index.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
@@ -123,7 +124,12 @@ const PersonalInfoList = ({
       title="Mobile Phone:"
       contentText={
         myProf ? (
-          formatPhone(MobilePhone)
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>{formatPhone(MobilePhone)}</Grid>
+            <Grid item>
+              <UpdatePhone />
+            </Grid>
+          </Grid>
         ) : MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
@@ -235,8 +241,8 @@ const PersonalInfoList = ({
         title="Student ID:"
         contentText={ID}
         ContentIcon={
-          <Grid container justify="center">
-            <Grid container direction="column" justify="center" alignItems="center">
+          <Grid container justifyContent="center">
+            <Grid container direction="column" justifyContent="center" alignItems="center">
               <LockIcon />
               Private
             </Grid>
@@ -258,15 +264,17 @@ const PersonalInfoList = ({
   const note =
     myProf &&
     (isFacStaff ? (
-      <Typography align="left" className="note">
-        NOTE:
+      <div align="left" className="note">
+        <Typography>NOTE:</Typography>
         <ul>
           <li>
-            To update your data, please contact <a href="mailto: hr@gordon.edu">Human Resources</a>{' '}
-            (x4828).
+            <Typography>
+              To update your data, please contact{' '}
+              <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
+            </Typography>
           </li>
         </ul>
-      </Typography>
+      </div>
     ) : isStudent ? (
       <Typography align="left" className="note">
         NOTE:

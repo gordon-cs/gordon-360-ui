@@ -738,11 +738,11 @@ const StudentApplication = ({ userProfile }) => {
   } else {
     return (
       <div className="apartment-application">
-        <Grid container justify="center">
-          <Grid container item xs={12} lg={10} xl={8} justify="center" spacing={2}>
+        <Grid container justifyContent="center">
+          <Grid container item xs={12} lg={10} xl={8} justifyContent="center" spacing={2}>
             {!applicationCardsOpen && (
               <Grid item xs={12}>
-                <Grid container direction="row" justify="center" spacing={2}>
+                <Grid container direction="row" justifyContent="center" spacing={2}>
                   {applicationDetails.ApplicationID > 0 && (
                     <Grid item xs={12} sm={8} md={6} lg={4} xl={4}>
                       <ApplicationDataTable applicationDetails={applicationDetails} />
@@ -756,7 +756,7 @@ const StudentApplication = ({ userProfile }) => {
             )}
             <Grid item xs={12}>
               <Collapse in={applicationCardsOpen} timeout="auto" unmountOnExit>
-                <Grid container direction="row" justify="center" spacing={2}>
+                <Grid container direction="row" justifyContent="center" spacing={2}>
                   <Grid container item md={7} xl={6} direction="column" spacing={2}>
                     <Grid item>
                       <ApplicantList

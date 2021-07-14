@@ -48,7 +48,7 @@ const HallChoiceList = ({
     <Card>
       <CardHeader title="Preferred Halls" className="apartment-card-header" />
       <CardContent>
-        <Grid container justify="space-between" spacing={2}>
+        <Grid container justifyContent="space-between" spacing={2}>
           <Grid item xs={12}>
             <List className="hall-list" aria-label="apartment preferred halls" disablePadding>
               {apartmentChoices?.length > 0 &&

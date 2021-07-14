@@ -103,7 +103,7 @@ const BottomBar = ({
   return (
     <Card className="sticky-page-bottom-bar" variant="outlined">
       <CardContent>
-        <Grid container direction="row" justify="flex-end" spacing={2}>
+        <Grid container direction="row" justifyContent="flex-end" spacing={2}>
           <Grid item xs={12} sm>
             <Typography variant="body1" {...dynamicContent.itemProps}>
               {dynamicContent.primaryText}
