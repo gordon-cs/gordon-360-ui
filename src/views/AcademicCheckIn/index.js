@@ -98,7 +98,7 @@ const AcademicCheckIn = ({ authentication }) => {
   });
 
   const [demographic, setDemographic] = useState({
-    ethnicity: '',
+    ethnicity: null,
     nativeAmerican: false,
     asian: false,
     black: false,
@@ -113,15 +113,15 @@ const AcademicCheckIn = ({ authentication }) => {
   });
 
   /** Formats a number for display
-  *   @param {string} phoneNum - the unformatted phone number
-  *   @returns {string} - the formatted phone number
-  */
-  function formatNumber(phoneNum){
+   *   @param {string} phoneNum - the unformatted phone number
+   *   @returns {string} - the formatted phone number
+   */
+  function formatNumber(phoneNum) {
     let a, b, c;
     a = phoneNum.slice(0, 2);
     b = phoneNum.slice(3, 5);
-    c = phoneNum.slice(6,);
-    return ("(" + a + ")" + b + "-" + c);
+    c = phoneNum.slice(6);
+    return '(' + a + ')' + b + '-' + c;
   }
 
   useEffect(() => {
@@ -131,9 +131,7 @@ const AcademicCheckIn = ({ authentication }) => {
         studentFirstName: profile.FirstName,
         studentLastName: profile.LastName,
       });
-      let contacts = await checkInService.getEmergencyContacts(
-        profile.AD_Username.toLowerCase(),
-      );
+      let contacts = await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase());
 
       if (contacts[0]) {
         setEmergencyContact1(contacts[0]);
@@ -168,7 +166,6 @@ const AcademicCheckIn = ({ authentication }) => {
     if (authentication) {
       loadData();
     }
-
   }, [authentication, loading]);
 
   const handleNext = () => {
@@ -223,12 +220,54 @@ const AcademicCheckIn = ({ authentication }) => {
     setDemographic({ ...demographic, [evt.target.name]: evt.target.checked });
   };
 
+  function formatDemographic(data) {
+    let hasOneRace = false;
+    let formattedData = {
+      ethnicity: data.ethnicity,
+      raceVal: 0,
+    };
+    if (data.none) {
+      formattedData.raceVal = 3;
+    } else if (data.nativeAmerican) {
+      formattedData.raceVal = 4;
+      hasOneRace = true;
+    } else if (data.asian) {
+      if (hasOneRace) {
+        formattedData.raceVal = 9;
+      } else {
+        formattedData.raceVal = 5;
+        hasOneRace = true;
+      }
+    } else if (data.black) {
+      if (hasOneRace) {
+        formattedData.raceVal = 9;
+      } else {
+        formattedData.raceVal = 6;
+        hasOneRace = true;
+      }
+    } else if (data.hawaiian) {
+      if (hasOneRace) {
+        formattedData.raceVal = 9;
+      } else {
+        formattedData.raceVal = 7;
+        hasOneRace = true;
+      }
+    } else if (data.white) {
+      if (hasOneRace) {
+        formattedData.raceVal = 9;
+      }
+      formattedData.raceVal = 8;
+    }
+    return formattedData;
+  }
+
   const handleSubmit = () => {
     console.log(`Done 🧙‍♂️`);
     checkInService.submitContact(emergencyContact1);
     checkInService.submitContact(emergencyContact2);
     checkInService.submitContact(emergencyContact3);
     checkInService.submitPhone(personalPhone);
+    checkInService.submitDemographic(formatDemographic(demographic));
   };
 
   let content;
@@ -243,7 +282,13 @@ const AcademicCheckIn = ({ authentication }) => {
           <Card className="academicCheckIn">
             <CardHeader title="Academic Check In" className="checkIn-header" padding={30} />
             <Box m={2}>
-              <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
+              <Grid
+                container
+                justifyContent="center"
+                alignItems="center"
+                direction="column"
+                spacing={1}
+              >
                 <Grid item>
                   <Grid container justifyContent="center" alignItems="center">
                     <Grid item>
@@ -325,10 +370,10 @@ const AcademicCheckIn = ({ authentication }) => {
                           (activeStep === 0 && holdStatus === true) ||
                           (activeStep === 1 &&
                             (emergencyContact1.firstname === '' ||
-                            emergencyContact1.lastname === '' ||
-                            emergencyContact1.relationship === '' ||
-                            emergencyContact1.HomePhone === '' ||
-                            emergencyContact1.MobilePhone === '')) ||
+                              emergencyContact1.lastname === '' ||
+                              emergencyContact1.relationship === '' ||
+                              emergencyContact1.HomePhone === '' ||
+                              emergencyContact1.MobilePhone === '')) ||
                           (activeStep === 2 &&
                             personalPhone.personalPhone === '' &&
                             personalPhone.noPhone === false) ||

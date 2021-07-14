@@ -32,10 +32,10 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
           The first question asks students to designate ethnicity as either:{' '}
         </Typography>
         <ul>
-            <li>Hispanic or Latino OR</li>
-            <li>Not Hispanic or Latino</li>
-          </ul>
-          <br />
+          <li>Hispanic or Latino OR</li>
+          <li>Not Hispanic or Latino</li>
+        </ul>
+        <br />
         <Typography variant="body1" gutterBottom>
           {info.para2}
         </Typography>
@@ -45,20 +45,20 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
           following (you can select multiple categories):{' '}
         </Typography>
         <ul>
-            <li>
-              American Indian or Alaska Native (Having origins in any of the original peoples of
-              North and South America, including Central America)
-            </li>
+          <li>
+            American Indian or Alaska Native (Having origins in any of the original peoples of North
+            and South America, including Central America)
+          </li>
 
-            <li> Asian</li>
-            <li>Black or African American</li>
-            <li> Native Hawaiian or Other Pacific Islander </li>
-            <li>
-              White (Having origins in any of the original peoples of Europe, North Africa, or the
-              Middle East)
-            </li>
-          </ul>
-          <br />
+          <li> Asian</li>
+          <li>Black or African American</li>
+          <li> Native Hawaiian or Other Pacific Islander </li>
+          <li>
+            White (Having origins in any of the original peoples of Europe, North Africa, or the
+            Middle East)
+          </li>
+        </ul>
+        <br />
         <Typography variant="subtitle1" gutterBottom>
           Please provide/confirm the following information:
         </Typography>
@@ -73,9 +73,9 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
             value={demographic.ethnicity}
             onChange={handleChangeDemographic}
           >
-            <FormControlLabel value="notH_L" control={<Radio />} label="Not Hispanic/Latino" />
-            <FormControlLabel value="H_L" control={<Radio />} label="Hispanic/Latino" />
-            <FormControlLabel value="none" control={<Radio />} label="Prefer not to say" />
+            <FormControlLabel value={-2} control={<Radio />} label="Not Hispanic/Latino" />
+            <FormControlLabel value={-1} control={<Radio />} label="Hispanic/Latino" />
+            <FormControlLabel value={0} control={<Radio />} label="Prefer not to say" />
           </RadioGroup>
         </FormControl>
         <FormControl>
