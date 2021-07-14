@@ -256,7 +256,6 @@ class PeopleSearch extends Component {
           buildings,
           personType,
         });
-        console.log(personType);
 
         if (personType.includes('alum')) {
           this.setState({
