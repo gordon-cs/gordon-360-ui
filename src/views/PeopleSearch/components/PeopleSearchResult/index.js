@@ -48,8 +48,13 @@ export default class PeopleSearchResult extends Component {
 
   render() {
     const { Person, size } = this.props;
-    let personClassJobTitle, nickname, personMailLocation;
-    let fullName = Person.FirstName + ' ' + Person.LastName;
+    const SecondaryText = ({ children, otherProps }) => (
+      <Typography variant="body2" color="textSecondary" {...otherProps}>
+        {children}
+      </Typography>
+    );
+
+    let personClassJobTitle, nickname, maidenName, personMailLocation;
 
     // set nicknames up
     if (Person.NickName && Person.FirstName !== Person.NickName) {
@@ -126,8 +131,21 @@ export default class PeopleSearchResult extends Component {
                   {personClassJobTitle}
                   {Person.Type === 'Alum' ? Person.PreferredClassYear : null}
                 </Typography>
-                <Typography variant="body2">{Person.Email}</Typography>
-                <Typography variant="body2">{personMailLocation}</Typography>
+                <SecondaryText>
+                  {personClassJobTitle ?? Person.Type}
+                  {Person.Type === 'Alum' && Person.PreferredClassYear
+                    ? ' ' + Person.PreferredClassYear
+                    : null}
+                </SecondaryText>
+                <SecondaryText>
+                  {Person.Major1Description}
+                  {Person.Major2Description
+                    ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
+                    : null}
+                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
+                </SecondaryText>
+                <SecondaryText variant="body2">{Person.Email}</SecondaryText>
+                <SecondaryText variant="body2">{personMailLocation}</SecondaryText>
               </Grid>
             </Grid>
           </Link>
@@ -165,8 +183,21 @@ export default class PeopleSearchResult extends Component {
                   {personClassJobTitle}
                   {Person.Type === 'Alum' ? Person.PreferredClassYear : null}
                 </Typography>
-                <Typography variant="body2">{Person.Email}</Typography>
-                <Typography variant="body2">{personMailLocation}</Typography>
+                <SecondaryText>
+                  {personClassJobTitle ?? Person.Type}
+                  {Person.Type === 'Alum' && Person.PreferredClassYear
+                    ? ' ' + Person.PreferredClassYear
+                    : null}
+                </SecondaryText>
+                <SecondaryText>
+                  {Person.Major1Description}
+                  {Person.Major2Description
+                    ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
+                    : null}
+                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
+                </SecondaryText>
+                <SecondaryText variant="body2">{Person.Email}</SecondaryText>
+                <SecondaryText variant="body2">{personMailLocation}</SecondaryText>
               </Grid>
             </Grid>
           </Link>
@@ -201,6 +232,13 @@ export default class PeopleSearchResult extends Component {
                 <Typography>
                   {Person.FirstName} {nickname}
                 </Typography>
+                <SecondaryText>
+                  {Person.Major1Description}
+                  {Person.Major2Description
+                    ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
+                    : null}
+                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
+                </SecondaryText>
               </Grid>
               <Grid item xs={2}>
                 <Typography>{Person.LastName}</Typography>
