@@ -253,34 +253,34 @@ const MemberListItem = ({
 
     content = (
       <>
-        <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
-          <Grid container alignItems="center" spacing={2}>
-            <Grid item xs={1} style={rowStyle}>
-              <Avatar
-                src={`data:image/jpg;base64,${avatar}`}
-                alt={`${member.FirstName} ${member.LastName}`}
-                variant="rounded"
-                style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
-              >
-                {!avatar && <PlaceHolderAvatar />}
-              </Avatar>
-            </Grid>
-            <Grid item xs={3}>
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item xs={1} style={rowStyle}>
+            <Avatar
+              src={`data:image/jpg;base64,${avatar}`}
+              alt={`${member.FirstName} ${member.LastName}`}
+              variant="rounded"
+              style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+            >
+              {!avatar && <PlaceHolderAvatar />}
+            </Avatar>
+          </Grid>
+          <Grid item xs={3}>
+            <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
-            </Grid>
-            <Grid item xs={4} style={rowStyle}>
-              <Typography>{title ? title : participationDescription}</Typography>
-            </Grid>
-            <Grid item xs={2} style={rowStyle}>
-              <Typography>{member.Mail_Location}</Typography>
-            </Grid>
-            <Grid item xs={2} style={rowStyle}>
-              {options}
-            </Grid>
+            </Link>
           </Grid>
-        </Link>
+          <Grid item xs={4} style={rowStyle}>
+            <Typography>{title ? title : participationDescription}</Typography>
+          </Grid>
+          <Grid item xs={2} style={rowStyle}>
+            <Typography>{member.Mail_Location}</Typography>
+          </Grid>
+          <Grid item xs={2} style={rowStyle}>
+            {options}
+          </Grid>
+        </Grid>
         <Divider />
       </>
     );
@@ -308,33 +308,33 @@ const MemberListItem = ({
       content = (
         <Accordion defaultExpanded={(isAdmin || isSuperAdmin) && !isMobileView}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
-              <Grid container alignItems="center" spacing={2}>
-                <Grid item xs={9} sm={10}>
-                  <Grid container spacing={3} wrap="nowrap" alignItems="center">
-                    <Grid>
-                      <Avatar
-                        src={`data:image/jpg;base64,${avatar}`}
-                        alt={`${member.FirstName} ${member.LastName}`}
-                        variant="rounded"
-                        style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
-                      >
-                        {!avatar && <PlaceHolderAvatar />}
-                      </Avatar>
-                    </Grid>
-                    <Grid>
+            <Grid container alignItems="center" spacing={2}>
+              <Grid item xs={9} sm={10}>
+                <Grid container spacing={3} wrap="nowrap" alignItems="center">
+                  <Grid>
+                    <Avatar
+                      src={`data:image/jpg;base64,${avatar}`}
+                      alt={`${member.FirstName} ${member.LastName}`}
+                      variant="rounded"
+                      style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+                    >
+                      {!avatar && <PlaceHolderAvatar />}
+                    </Avatar>
+                  </Grid>
+                  <Grid>
+                    <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
                       <Typography>
                         {member.FirstName} {member.LastName}
                       </Typography>
-                    </Grid>
+                    </Link>
                   </Grid>
                 </Grid>
-                <Grid item xs={3} sm={2}>
-                  <Typography>{member.ParticipationDescription} </Typography>
-                  <Typography>{mailLoc}</Typography>
-                </Grid>
               </Grid>
-            </Link>
+              <Grid item xs={3} sm={2}>
+                <Typography>{member.ParticipationDescription} </Typography>
+                <Typography>{mailLoc}</Typography>
+              </Grid>
+            </Grid>
           </AccordionSummary>
           <AccordionDetails>
             <Grid container direction="column">
@@ -357,34 +357,34 @@ const MemberListItem = ({
     content = (
       <>
         <Divider />
-        <Link className="gc360-link" to={`profile/${member.AD_Username}`}>
-          <Grid container alignItems="center" spacing={2} wrap="nowrap">
-            <Grid item md={1} style={rowStyle}>
-              <Avatar
-                src={`data:image/jpg;base64,${avatar}`}
-                alt={`${member.FirstName} ${member.LastName}`}
-                variant="rounded"
-                style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
-              >
-                {!avatar && <PlaceHolderAvatar />}
-              </Avatar>
-            </Grid>
-            <Grid item xs={3} style={rowStyle}>
+        <Grid container alignItems="center" spacing={2} wrap="nowrap">
+          <Grid item md={1} style={rowStyle}>
+            <Avatar
+              src={`data:image/jpg;base64,${avatar}`}
+              alt={`${member.FirstName} ${member.LastName}`}
+              variant="rounded"
+              style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+            >
+              {!avatar && <PlaceHolderAvatar />}
+            </Avatar>
+          </Grid>
+          <Grid item xs={3} style={rowStyle}>
+            <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
-            </Grid>
-            <Grid item xs={4} style={rowStyle}>
-              <Typography>{title ? title : participationDescription}</Typography>
-            </Grid>
-            <Grid item xs={2} style={rowStyle}>
-              <Typography>{mailLoc}</Typography>
-            </Grid>
-            <Grid item xs={2} style={rowStyle}>
-              {options}
-            </Grid>
+            </Link>
           </Grid>
-        </Link>
+          <Grid item xs={4} style={rowStyle}>
+            <Typography>{title ? title : participationDescription}</Typography>
+          </Grid>
+          <Grid item xs={2} style={rowStyle}>
+            <Typography>{mailLoc}</Typography>
+          </Grid>
+          <Grid item xs={2} style={rowStyle}>
+            {options}
+          </Grid>
+        </Grid>
         <Divider />
       </>
     );
