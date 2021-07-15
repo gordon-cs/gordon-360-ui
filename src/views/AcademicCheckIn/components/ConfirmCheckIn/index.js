@@ -104,9 +104,9 @@ const ConfirmCheckIn = ({
           <Grid item>
             <Typography variant="body1" gutterBottom>
               <b>Ethnicity:</b>{' '}
-              {demographic.ethnicity === 'H_L'
+              {demographic.ethnicity === '-1'
                 ? 'Hispanic/Latino'
-                : demographic.ethnicity === 'notH_L'
+                : demographic.ethnicity === '-2'
                 ? 'Not Hispanic/Latino'
                 : 'Prefer not to say'}
             </Typography>

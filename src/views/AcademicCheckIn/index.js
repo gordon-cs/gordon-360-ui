@@ -75,14 +75,14 @@ const AcademicCheckIn = ({ authentication }) => {
   });
 
   const [holds, setHolds] = useState({
-    registrationHold: false,
-    highSchoolTranscriptHold: false,
-    financialHold: false,
-    medicalHold: false,
-    laVidaHold: false,
-    declarationOfMajorHold: false,
-    isRegistered: true,
-    isIncoming: false,
+    RegistrationHold: false,
+    HighSchoolTranscriptHold: false,
+    FinancialHold: false,
+    MedicalHold: false,
+    LaVidaHold: false,
+    DeclarationOfMajorHold: false,
+    IsRegistered: true,
+    IsIncoming: false,
   });
 
   const [personalPhone, setPersonalPhone] = useState({
@@ -121,16 +121,22 @@ const AcademicCheckIn = ({ authentication }) => {
     a = phoneNum.slice(0, 2);
     b = phoneNum.slice(3, 5);
     c = phoneNum.slice(6);
-    return '(' + a + ')' + b + '-' + c;
+    return '(' + a + ') ' + b + '-' + c;
   }
 
   useEffect(() => {
     const loadData = async () => {
+
+
+
       let profile = await user.getProfileInfo();
       setBasicInfo({
         studentFirstName: profile.FirstName,
         studentLastName: profile.LastName,
       });
+
+      setHolds(await checkInService.getHolds(profile.ID));
+
       let contacts = await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase());
 
       if (contacts[0]) {
@@ -156,10 +162,11 @@ const AcademicCheckIn = ({ authentication }) => {
           MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
         });
       }
-
-      setPersonalPhone({
-        personalPhone: profile.MobilePhone,
-      });
+      if (profile.MobilePhone) {
+        setPersonalPhone({
+          personalPhone: profile.MobilePhone,
+        });
+      }
       setLoading(false);
     };
 
@@ -223,41 +230,28 @@ const AcademicCheckIn = ({ authentication }) => {
   function formatDemographic(data) {
     let hasOneRace = false;
     let formattedData = {
-      ethnicity: data.ethnicity,
-      raceVal: 0,
+      Ethnicity: parseInt(data.ethnicity),
+      Race: '',
     };
     if (data.none) {
-      formattedData.raceVal = 3;
-    } else if (data.nativeAmerican) {
-      formattedData.raceVal = 4;
-      hasOneRace = true;
-    } else if (data.asian) {
-      if (hasOneRace) {
-        formattedData.raceVal = 9;
-      } else {
-        formattedData.raceVal = 5;
-        hasOneRace = true;
+      formattedData.Race = '3';
+    } else {
+        if (data.nativeAmerican) {
+          formattedData.Race += '4,';
+        }
+        if (data.asian) {
+          formattedData.Race += '5,';
+        }
+        if (data.black) {
+          formattedData.Race += '6,';
+        }
+        if (data.hawaiian) {
+          formattedData.Race += '7,';
+        }
+        if (data.white) {
+          formattedData.Race += '8,';
+        }
       }
-    } else if (data.black) {
-      if (hasOneRace) {
-        formattedData.raceVal = 9;
-      } else {
-        formattedData.raceVal = 6;
-        hasOneRace = true;
-      }
-    } else if (data.hawaiian) {
-      if (hasOneRace) {
-        formattedData.raceVal = 9;
-      } else {
-        formattedData.raceVal = 7;
-        hasOneRace = true;
-      }
-    } else if (data.white) {
-      if (hasOneRace) {
-        formattedData.raceVal = 9;
-      }
-      formattedData.raceVal = 8;
-    }
     return formattedData;
   }
 
@@ -387,7 +381,8 @@ const AcademicCheckIn = ({ authentication }) => {
                             !(
                               demographic.nativeAmerican ||
                               demographic.asian ||
-                              demographic.blackhawaiian ||
+                              demographic.black ||
+                              demographic.hawaiian ||
                               demographic.white ||
                               demographic.none
                             ))
