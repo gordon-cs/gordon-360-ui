@@ -98,7 +98,7 @@ const AcademicCheckIn = ({ authentication }) => {
   });
 
   const [demographic, setDemographic] = useState({
-    ethnicity: null,
+    ethnicity: -3,
     nativeAmerican: false,
     asian: false,
     black: false,
@@ -224,10 +224,10 @@ const AcademicCheckIn = ({ authentication }) => {
     let hasOneRace = false;
     let formattedData = {
       ethnicity: data.ethnicity,
-      raceVal: 0,
+      raceVal: 2,
     };
     if (data.none) {
-      formattedData.raceVal = 3;
+      formattedData.raceVal = 2;
     } else if (data.nativeAmerican) {
       formattedData.raceVal = 4;
       hasOneRace = true;
