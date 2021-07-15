@@ -580,9 +580,9 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               title={`${
                 isAprilFools
                   ? profileTitleAprilFools
-                  : userProfile.NickName
+                  : (userProfile.NickName
                   ? userProfile.NickName
-                  : userProfile.FirstName
+                  : userProfile.FirstName)
               }'s Profile`}
             />
           ) : (
