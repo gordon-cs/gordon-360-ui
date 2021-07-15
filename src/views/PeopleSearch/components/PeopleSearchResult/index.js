@@ -48,8 +48,8 @@ export default class PeopleSearchResult extends Component {
 
   render() {
     const { Person, size } = this.props;
-    let personClassJobTitle, nickname, fullName, personMailLocation;
-    fullName = Person.FirstName + ' ' + Person.LastName;
+    let personClassJobTitle, nickname, personMailLocation;
+    let fullName = Person.FirstName + ' ' + Person.LastName;
 
     // set nicknames up
     if (Person.NickName && Person.FirstName !== Person.NickName) {
