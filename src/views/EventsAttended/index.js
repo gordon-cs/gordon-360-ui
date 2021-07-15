@@ -38,7 +38,7 @@ const EventsAttended = (authentication) => {
     content = <GordonUnauthorized feature={'your attended events'} />;
   } else if (events.length > 0) {
     content = (
-      <Grid container direction="row" justify="center" spacing="2">
+      <Grid container direction="row" justifyContent="center" spacing="2">
         <Grid item align="center">
           <Button
             variant="contained"
@@ -76,7 +76,7 @@ const EventsAttended = (authentication) => {
 
   return (
     <section>
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid item xs={12} md={12} lg={8}>
           <List>{content}</List>
         </Grid>

@@ -52,7 +52,7 @@ const ApplicantList = ({
     <Card>
       <CardHeader title="Student Applicants" className="apartment-card-header" />
       <CardContent>
-        <Grid container justify="space-between" spacing={2}>
+        <Grid container justifyContent="space-between" spacing={2}>
           <Grid item xs={12}>
             <List className="applicant-list" aria-label="apartment applicants">
               <ListItem
@@ -115,7 +115,7 @@ const ApplicantList = ({
               )}
             </List>
           </Grid>
-          <Grid container item justify="center" xs={12}>
+          <Grid container item justifyContent="center" xs={12}>
             <Grid item xs={9} sm={5} className="people-search-parent">
               <GordonPeopleSearch
                 disableLink

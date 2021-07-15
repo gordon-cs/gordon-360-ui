@@ -237,7 +237,7 @@ class IDUploader extends Component {
           <Grid item xs={12} md={6} lg={8}>
             <Card>
               <CardContent>
-                <Grid container justify="center" direction="column">
+                <Grid container justifyContent="center" direction="column">
                   <Grid item align="center">
                     <Typography align="center" variant="h6" style={{ fontWeight: 'bold' }}>
                       ID Photo Guidelines
@@ -267,7 +267,7 @@ class IDUploader extends Component {
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <Grid container justify="center">
+            <Grid container justifyContent="center">
               <Card raised={true}>
                 <Grid item style={{ margin: '10px' }}>
                   <img
@@ -304,7 +304,7 @@ class IDUploader extends Component {
       );
     } else {
       content = (
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent
@@ -338,7 +338,7 @@ class IDUploader extends Component {
     }
 
     return (
-      <Grid container justify="center" spacing={2}>
+      <Grid container justifyContent="center" spacing={2}>
         {content}
 
         <Dialog
@@ -452,7 +452,7 @@ class IDUploader extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Grid container spacing={2} justify="flex-end">
+            <Grid container spacing={2} justifyContent="flex-end">
               <Grid item />
               <Grid item>
                 <Button variant="contained" onClick={this.handleCloseOkay} style={style.button}>
@@ -475,7 +475,7 @@ class IDUploader extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Grid container spacing={2} justify="flex-end">
+            <Grid container spacing={2} justifyContent="flex-end">
               <Grid item />
               <Grid item>
                 <Button variant="contained" onClick={this.handleCloseOkay} style={style.button}>
