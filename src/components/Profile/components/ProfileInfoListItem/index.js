@@ -13,7 +13,7 @@ const ProfileInfoListItem = ({ title, contentText, ContentIcon = null, contentCl
             <Typography>{title}</Typography>
           </Grid>
           <Grid container item {...gridSizeProps} alignItems="center">
-            <Typography className={contentClass}>{contentText}</Typography>
+            {contentText}
           </Grid>
           {ContentIcon && (
             <Grid container item xs={3} md={4} lg={3} justifyContent="center">
