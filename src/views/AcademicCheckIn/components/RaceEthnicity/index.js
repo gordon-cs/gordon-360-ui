@@ -73,9 +73,9 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
             value={demographic.ethnicity}
             onChange={handleChangeDemographic}
           >
-            <FormControlLabel value={-2} control={<Radio />} label="Not Hispanic/Latino" />
-            <FormControlLabel value={-1} control={<Radio />} label="Hispanic/Latino" />
-            <FormControlLabel value={-3} control={<Radio />} label="Prefer not to say" />
+            <FormControlLabel value="-2" control={<Radio />} label="Not Hispanic/Latino" />
+            <FormControlLabel value="-1" control={<Radio />} label="Hispanic/Latino" />
+            <FormControlLabel value="-3" control={<Radio />} label="Prefer not to say" />
           </RadioGroup>
         </FormControl>
         <FormControl>

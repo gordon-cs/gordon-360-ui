@@ -7,12 +7,12 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
   const blue = gordonColors.primary.blue;
   // Checks if the student has any major or minor holds
   const hasMajorHold =
-    holds.registrationHold ||
-    holds.highSchoolTranscriptHold ||
-    holds.financialHold ||
-    holds.medicalHold;
+    holds.RegistrationHold ||
+    holds.HighSchoolTranscriptHold ||
+    holds.FinancialHold ||
+    holds.MedicalHold;
 
-  const hasMinorHold = holds.laVidaHold || holds.declarationOfMajorHold;
+  const hasMinorHold = holds.LaVidaHold || holds.DeclarationOfMajorHold;
 
   // This function will return the corresponding JSX elements according to the major holds a student
   // has
@@ -21,7 +21,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
     let highSchoolContent;
     let financialContent;
     let medicalContent;
-    if (holds.registrationHold) {
+    if (holds.RegistrationHold) {
       registrationContent = (
         <>
           <li>
@@ -33,7 +33,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
         </>
       );
     }
-    if (holds.highSchoolTranscriptHold) {
+    if (holds.HighSchoolTranscriptHold) {
       highSchoolContent = (
         <>
           <li>
@@ -45,7 +45,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
         </>
       );
     }
-    if (holds.financialHold) {
+    if (holds.FinancialHold) {
       financialContent = (
         <>
           <li>
@@ -55,7 +55,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
         </>
       );
     }
-    if (holds.medicalHold) {
+    if (holds.MedicalHold) {
       medicalContent = (
         <>
           <li>
@@ -78,7 +78,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
   const displayMinorHolds = () => {
     let laVidaContent;
     let declarationOfMajorContent;
-    if (holds.laVidaHold) {
+    if (holds.LaVidaHold) {
       laVidaContent = (
         <li>
           You have a "La Vida Hold". Students are required to complete Discovery or La Vida in their
@@ -87,7 +87,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
         </li>
       );
     }
-    if (holds.declarationOfMajorHold) {
+    if (holds.DeclarationOfMajorHold) {
       declarationOfMajorContent = (
         <li>
           You have a "Declaration of Major Hold". Please contact the <b>Registrar's Office</b> at{' '}
@@ -129,7 +129,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
             </Typography>
             {displayMajorHolds()}
           </Grid>
-        ) : !holds.isRegistered ? ( // If a student is not registered for courses they cannot check in
+        ) : !holds.IsRegistered ? ( // If a student is not registered for courses they cannot check in
           <Grid item>
             <Typography variant="h6" align="center" style={{ color: blue }}>
               <b>Register for Courses</b>
@@ -137,7 +137,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
             <Typography align="center" gutterBottom>
               <b>Before you can check in, you must be registered for courses.</b>
             </Typography>
-            {holds.isIncoming ? ( // If a student is first year and not registered, display a special prompt
+            {holds.IsIncoming ? ( // If a student is first year and not registered, display a special prompt
               <Typography>
                 You will meet with your advisor during Orientation and he/she can register you. The
                 name of your advisor can be found by logging onto{' '}
@@ -185,7 +185,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
             Once you have resolved each of the above holds, click the button below to begin the
             check-in process.
           </Typography>
-        ) : !holds.isRegistered ? ( // If the student is not registered, display this prompt so they can register
+        ) : !holds.IsRegistered ? ( // If the student is not registered, display this prompt so they can register
           <Typography>
             Once you have registered for courses and your advisor has approved your registration,
             come back to this page and click the button below to begin the check-in process.

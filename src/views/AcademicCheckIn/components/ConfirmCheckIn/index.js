@@ -57,23 +57,25 @@ const ConfirmCheckIn = ({
             </ul>
             <br />
           </Grid>
-          {emergencyContact2.firstName2 !== "" ? (
-          <Grid item>
-            <Typography variant="body1">
-              <b>Emergency Contact 2:</b>
-            </Typography>
-            <ul>
-              <li>
-                Name: {emergencyContact2.firstname} {emergencyContact2.lastname}
-              </li>
-              <li>Relationship: {emergencyContact2.relationship}</li>
-              <li>Home #: {emergencyContact2.HomePhone}</li>
-              <li>Mobile #: {emergencyContact2.MobilePhone}</li>
-            </ul>
-            <br />
+          {emergencyContact2.firstName2 !== '' ? (
+            <Grid item>
+              <Typography variant="body1">
+                <b>Emergency Contact 2:</b>
+              </Typography>
+              <ul>
+                <li>
+                  Name: {emergencyContact2.firstname} {emergencyContact2.lastname}
+                </li>
+                <li>Relationship: {emergencyContact2.relationship}</li>
+                <li>Home #: {emergencyContact2.HomePhone}</li>
+                <li>Mobile #: {emergencyContact2.MobilePhone}</li>
+              </ul>
+              <br />
             </Grid>
-            ) : ''}
-          {emergencyContact3.firstName3 !== "" ? (
+          ) : (
+            ''
+          )}
+          {emergencyContact3.firstName3 !== '' ? (
             <Grid item>
               <Typography variant="body1" gutterBottom>
                 <b>Emergency Contact 3:</b>
@@ -104,9 +106,9 @@ const ConfirmCheckIn = ({
           <Grid item>
             <Typography variant="body1" gutterBottom>
               <b>Ethnicity:</b>{' '}
-              {demographic.ethnicity === 'H_L'
+              {demographic.ethnicity === '-1'
                 ? 'Hispanic/Latino'
-                : demographic.ethnicity === 'notH_L'
+                : demographic.ethnicity === '-2'
                 ? 'Not Hispanic/Latino'
                 : 'Prefer not to say'}
             </Typography>
