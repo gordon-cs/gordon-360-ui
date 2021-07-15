@@ -26,6 +26,7 @@ import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import './involvement-profile.css';
 import GordonOffline from 'components/GordonOffline';
+import { Link } from 'react-router-dom';
 
 const CROP_DIM = 320; // pixels
 
@@ -442,7 +443,9 @@ const InvolvementProfile = ({ authentication }) => {
                     </Typography>
                     <List>
                       {groupAdmins.map((admin, index) => (
-                        <ContactListItem key={index} contact={admin} />
+                        <Link className="gc360-link" to={`/profile/${admin.Email.split('@')[0]}`}>
+                          <ContactListItem key={index} contact={admin} />
+                        </Link>
                       ))}
                     </List>
                   </Grid>
@@ -452,7 +455,9 @@ const InvolvementProfile = ({ authentication }) => {
                     </Typography>
                     <List>
                       {advisors.map((advisor, index) => (
-                        <ContactListItem key={index} contact={advisor} />
+                        <Link className="gc360-link" to={`/profile/${advisor.Email.split('@')[0]}`}>
+                          <ContactListItem key={index} contact={advisor} />
+                        </Link>
                       ))}
                     </List>
                   </Grid>
