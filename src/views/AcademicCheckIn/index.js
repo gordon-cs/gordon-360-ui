@@ -89,7 +89,7 @@ const AcademicCheckIn = ({ authentication }) => {
   });
 
   const [demographic, setDemographic] = useState({
-    ethnicity: null,
+    ethnicity: -3,
     nativeAmerican: false,
     asian: false,
     black: false,
