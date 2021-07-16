@@ -264,9 +264,9 @@ class PeopleSearch extends Component {
 
     this.setState({
       searchValues: {
-        includeStudent: urlParams.get('includeStudent') === 'true' || false,
-        includeFacStaff: urlParams.get('includeFacStaff') === 'true' || false,
-        includeAlumni: urlParams.get('includeAlumni') === 'true' || false,
+        includeStudent: urlParams.get('includeStudent') === 'true' ? true : false,
+        includeFacStaff: urlParams.get('includeFacStaff') === 'true' ? true : false,
+        includeAlumni: urlParams.get('includeAlumni') || false,
         firstName: urlParams.get('firstName')?.trim() || '',
         lastName: urlParams.get('lastName')?.trim() || '',
         major: urlParams.get('major')?.trim() || '',

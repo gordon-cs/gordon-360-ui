@@ -441,8 +441,8 @@ const InvolvementProfile = ({ authentication }) => {
                       <strong>Group Contacts</strong>
                     </Typography>
                     <List>
-                      {groupAdmins.map((admin) => (
-                        <ContactListItem contact={admin} />
+                      {groupAdmins.map((admin, index) => (
+                        <ContactListItem key={index} contact={admin} />
                       ))}
                     </List>
                   </Grid>
@@ -451,8 +451,8 @@ const InvolvementProfile = ({ authentication }) => {
                       <strong>Group Advisors</strong>
                     </Typography>
                     <List>
-                      {advisors.map((advisor) => (
-                        <ContactListItem contact={advisor} />
+                      {advisors.map((advisor, index) => (
+                        <ContactListItem key={index} contact={advisor} />
                       ))}
                     </List>
                   </Grid>

@@ -41,6 +41,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   const [currentWidth, setCurrentWidth] = useState();
   const [cliftonColor, setCliftonColor] = useState();
   const cropperRef = useRef();
+  const isStudent = profile.PersonType?.includes('stu');
   let photoDialogErrorTimeout;
 
   // Styles used throughout this component
@@ -560,10 +561,37 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
       </Dialog>
     );
   }
+
+  const todaysDate = new Date();
+  const isAprilFools = todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
+  const profileTitleAprilFools = userProfile?.Title
+    ? userProfile.Title.charAt(0).toUpperCase() +
+      userProfile.Title.slice(1).toLowerCase() +
+      '. ' +
+      userProfile.LastName
+    : '';
+
   return (
     <div className="identification-card">
       <Grid container className="identification-card-header">
-        {userProfile && <CardHeader title={`${userProfile.FirstName}'s Profile`} />}
+        {userProfile &&
+          (isStudent ? (
+            <CardHeader
+              title={`${
+                isAprilFools
+                  ? profileTitleAprilFools
+                  : userProfile.NickName
+                  ? userProfile.NickName
+                  : userProfile.FirstName
+              }'s Profile`}
+            />
+          ) : (
+            <CardHeader
+              title={`${userProfile.NickName ? userProfile.NickName : userProfile.FirstName} ${
+                userProfile.LastName
+              }'s Profile`}
+            />
+          ))}
         {!userProfile && <CardHeader title="My Personal Profile" />}
       </Grid>
 
