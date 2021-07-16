@@ -5,11 +5,11 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
+  Link,
 } from '@material-ui/core';
 import Email from '@material-ui/icons/Email';
 import React, { useEffect, useState } from 'react';
 import user from 'services/user';
-import { Link } from 'react-router-dom';
 
 const PlaceHolderAvatar = () => (
   <svg width="50" height="50" viewBox="0 0 50 50">
@@ -42,7 +42,7 @@ const ContactListItem = ({ contact }) => {
           {!avatar && <PlaceHolderAvatar />}
         </Avatar>
       </ListItemAvatar>
-      <Link className="gc360-link" to={`/profile/${contact.Email.split('@')[0]}`}>
+      <Link href={`/profile/${contact.Email.split('@')[0]}`}>
         <ListItemText primary={`${contact.FirstName} ${contact.LastName}`} />
       </Link>
       <ListItemSecondaryAction>

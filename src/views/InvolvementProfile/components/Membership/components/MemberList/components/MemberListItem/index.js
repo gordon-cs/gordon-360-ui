@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import {
   Accordion,
   AccordionDetails,
@@ -18,6 +17,7 @@ import {
   Select,
   MenuItem,
   Avatar,
+  Link,
 } from '@material-ui/core';
 
 import { gordonColors } from 'theme';
@@ -265,7 +265,7 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3}>
-            <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
+            <Link href={`/profile/${member.AD_Username}`}>
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
@@ -322,7 +322,7 @@ const MemberListItem = ({
                     </Avatar>
                   </Grid>
                   <Grid>
-                    <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
+                    <Link href={`/profile/${member.AD_Username}`}>
                       <Typography>
                         {member.FirstName} {member.LastName}
                       </Typography>
@@ -369,7 +369,7 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3} style={rowStyle}>
-            <Link className="gc360-link" to={`/profile/${member.AD_Username}`}>
+            <Link href={`/profile/${member.AD_Username}`}>
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
