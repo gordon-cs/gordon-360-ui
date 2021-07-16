@@ -120,13 +120,14 @@ const InvolvementsAll = ({ location, authentication, history }) => {
   }
 
   return (
-    <Grid container justify="center" spacing={4}>
+    <Grid container justifyContent="center" spacing={4}>
       <Grid item className="involvements-filter" xs={12} lg={8}>
         <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>
             <TextField
               id="search"
               label="Search"
+              type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               margin="none"

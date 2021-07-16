@@ -12,16 +12,22 @@ import http from './http';
  * @property {String} FirstName First name
  * @property {String} Nickname Nickname
  * @property {String} LastName Last name
+ * @property {String} MaidenName Maiden name
  * @property {String} UserName Firstname.Lastname format
  * @property {String} ConcatonatedInfo All names combined in a single string
  */
+
+function Results(time, searchResult) {
+  this.now = time;
+  this.result = searchResult;
+}
 
 /**
  * Search for a person
  * @param {String} query Query to search
  * @return {Promise.<SearchResult[]>} List of search results
  */
-const search = (query) => {
+const search = async (query) => {
   let searchQuery = query;
 
   // If query has a space in it or is a username, separate it into first and last names
@@ -29,11 +35,19 @@ const search = (query) => {
     // Replace period or space with a slash: 'first.last' or 'first last' become 'first/last'
     searchQuery = query.trim().replace(/\.|\s/g, '/');
   }
+
   return http.get(`accounts/search/${searchQuery}`);
 };
 
+const renderResults = async (query) => {
+  let now = Date.now();
+  let searchResult = await search(query).then();
+  let results = new Results(now, searchResult);
+  return results;
+};
+
 const peopleSearchService = {
-  search,
+  renderResults,
 };
 
 export default peopleSearchService;

@@ -2,13 +2,22 @@
 
 .people-search-avatar-mobile {
   border-radius: 0.5rem;
-  height: 70px;
-  width: 70px;
+  height: 6.5rem;
+  width: 6.5rem;
+}
+
+.people-search-avatar-large {
+  border-radius: 0.5rem;
+  height: 12rem;
+  width: 12rem;
 }
 
 .people-search-avatar {
   border-radius: 0.5rem;
-  height: 50px;
-  width: 50px;
-  margin-left: 0px;
+  height: 5rem;
+  width: 5rem;
+  margin-right: 1rem;
+}
+.disabled {
+  opacity: 0.4;
 }

@@ -149,19 +149,20 @@ const Events = (props) => {
   );
 
   return (
-    <Grid container justify="center" alignContent="flex-start">
+    <Grid container justifyContent="center" alignContent="flex-start">
       {/* Search Bar and Filters */}
-      <Grid item xs={12} lg={8} className="event-buttons" container justify="center">
+      <Grid item xs={12} lg={8} className="event-buttons" container justifyContent="center">
         <Grid item xs={12} sm={6} md={8}>
           <TextField
             id="search"
             label="Search"
+            type="search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             fullWidth
           />
         </Grid>
-        <Grid container justify="center" item xs={12} sm={6} md={4}>
+        <Grid container justifyContent="center" item xs={12} sm={6} md={4}>
           <Button variant="contained" onClick={handleExpandClick}>
             {open ? 'CLEAR FILTERS' : 'FILTERS'}
           </Button>

@@ -45,6 +45,18 @@ const getAll = () => http.get('sessions').then((sessions) => sessions.reverse())
 const getCurrent = () => http.get('sessions/current');
 
 /**
+ * Get first day in the session
+ * @return {Promise.<firstDay>} First day in session
+ */
+const getFirstDay = () => http.get('sessions/firstDay');
+
+/**
+ * Get last day in the session
+ * @return {Promise.<lastDay>} Last day in session
+ */
+const getLastDay = () => http.get('sessions/lastDay');
+
+/**
  * Get days left in the session
  * @return {Promise.<DaysLeft>} Days left in session
  */
@@ -77,6 +89,8 @@ const sessionService = {
   get,
   getAll,
   getCurrent,
+  getFirstDay,
+  getLastDay,
   getDaysLeft,
   getTermCode,
 };
