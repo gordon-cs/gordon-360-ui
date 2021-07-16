@@ -154,9 +154,6 @@ class PeopleSearch extends Component {
 
     this.state = {
       personType: '',
-      academicsExpanded: false,
-      homeExpanded: false,
-      offDepExpanded: false,
       advancedSearchExpanded: false,
 
       // arrays of table data from backend
@@ -403,8 +400,6 @@ class PeopleSearch extends Component {
         header: <GordonLoader />,
         peopleSearchResults: null,
         academicsExpanded: false,
-        homeExpanded: false,
-        offDepExpanded: false,
         searchValues: {
           ...this.state.searchValues,
           firstName: this.state.searchValues.firstName?.trim(),
@@ -617,12 +612,12 @@ class PeopleSearch extends Component {
       const todaysDate = new Date();
       if (todaysDate.getMonth() === 3 && todaysDate.getDate() === 1) {
         aprilFools = (
-          <Grid container spacing={2} alignItems="flex-end">
+          <Grid container spacing={2} alignItems="center">
             <Media
               query="(min-width: 600px)"
               render={() => (
-                <Grid item>
-                  <FaHeart style={styles.FontAwesome} Icon className={classes.icon} />
+                <Grid item style={{ marginBottom: '-4px' }}>
+                  <FaHeart style={styles.FontAwesome} className={classes.icon} />
                 </Grid>
               )}
             />
@@ -701,11 +696,11 @@ class PeopleSearch extends Component {
                   <Grid container spacing={2} direction="row">
                     {/* First Name */}
                     <Grid item xs={12} sm={6}>
-                      <Grid container spacing={2} alignItems="flex-end">
+                      <Grid container spacing={2} alignItems="center">
                         <Media
                           query="(min-width: 600px)"
                           render={() => (
-                            <Grid item>
+                            <Grid item align="center" style={{ marginBottom: '-4px' }}>
                               <PersonIcon className={classes.icon} />
                             </Grid>
                           )}
@@ -726,7 +721,7 @@ class PeopleSearch extends Component {
                     </Grid>
                     {/* Last Name */}
                     <Grid item xs={12} sm={6}>
-                      <Grid container spacing={2} alignItems="flex-end">
+                      <Grid container spacing={2} alignItems="center">
                         <Grid item xs>
                           <TextField
                             id="last-name"
@@ -743,23 +738,21 @@ class PeopleSearch extends Component {
                     </Grid>
                     {/* Hall */}
                     <Grid item xs={12}>
-                      <Grid container spacing={2} alignItems="flex-end">
+                      <Grid container spacing={2} alignItems="center">
                         <Media
                           query="(min-width: 600px)"
                           render={() => (
-                            <Grid item>
+                            <Grid item style={{ marginBottom: '-4px' }}>
                               <FaBuilding style={styles.FontAwesome} className={classes.icon} />
                             </Grid>
                           )}
                         />
                         <Grid item xs>
                           <FormControl variant="filled" fullWidth>
-                            <InputLabel id="demo-simple-select-filled-label">
-                              Residence Hall
-                            </InputLabel>
+                            <InputLabel id="residence-hall">Residence Hall</InputLabel>
                             <Select
-                              labelId="demo-simple-select-filled-label"
-                              id="demo-simple-select-filled"
+                              labelId="residence-hall"
+                              id="residence-hall"
                               value={this.state.searchValues.hall}
                               onChange={this.handleHallInputChange}
                             >
@@ -831,12 +824,11 @@ class PeopleSearch extends Component {
                         <AddIcon fontSize="inherit" />
                         Advanced Search
                       </Button>
-                      <br></br>
-                      <br></br>
                     </Grid>
                   </Grid>
 
                   {/* Expandable search filters */}
+                  {/* Advanced Search Filters: Student/Alumni */}
                   <Grid container spacing={2} direction="row">
                     <Grid item xs={12} sm={4} variant="filled">
                       <Collapse
@@ -845,6 +837,7 @@ class PeopleSearch extends Component {
                         unmountOnExit
                         style={styles.CardContent}
                       >
+                        <br />
                         <Grid>
                           <Typography align="center" gutterBottom>
                             <InputLabel
@@ -860,11 +853,11 @@ class PeopleSearch extends Component {
                             </InputLabel>
                           </Typography>
                         </Grid>
-                        <Grid container spacing={2} alignItems="flex-end">
+                        <Grid container spacing={2} alignItems="center">
                           <Media
                             query="(min-width: 600px)"
                             render={() => (
-                              <Grid item xs="1">
+                              <Grid item xs="1" style={{ marginBottom: '-4px' }}>
                                 <IconContext.Provider
                                   value={{
                                     color:
@@ -909,11 +902,11 @@ class PeopleSearch extends Component {
                             </FormControl>
                           </Grid>
                         </Grid>
-                        <Grid container spacing={2} alignItems="flex-end">
+                        <Grid container spacing={2} alignItems="center">
                           <Media
                             query="(min-width: 600px)"
                             render={() => (
-                              <Grid item xs="1">
+                              <Grid item xs="1" style={{ marginBottom: '-4px' }}>
                                 <IconContext.Provider
                                   value={{
                                     color: this.state.searchValues.includeStudent
@@ -948,11 +941,11 @@ class PeopleSearch extends Component {
                             </FormControl>
                           </Grid>
                         </Grid>
-                        <Grid container spacing={2} alignItems="flex-end">
+                        <Grid container spacing={2} alignItems="center">
                           <Media
                             query="(min-width: 600px)"
                             render={() => (
-                              <Grid item xs="1">
+                              <Grid item xs="1" style={{ marginBottom: '-4px' }}>
                                 <IconContext.Provider
                                   value={{
                                     color: this.state.searchValues.includeStudent
@@ -997,6 +990,7 @@ class PeopleSearch extends Component {
                       </Collapse>
                     </Grid>
 
+                    {/* Advanced Search Filters: Faculty/Staff */}
                     <Grid item xs={12} sm={4} variant="h4">
                       <Collapse
                         in={this.state.advancedSearchExpanded}
@@ -1004,6 +998,7 @@ class PeopleSearch extends Component {
                         unmountOnExit
                         style={styles.CardContent}
                       >
+                        <br />
                         <Typography align="center" gutterBottom>
                           <InputLabel
                             style={{
@@ -1015,11 +1010,11 @@ class PeopleSearch extends Component {
                             Faculty/Staff
                           </InputLabel>
                         </Typography>
-                        <Grid container spacing={2} alignItems="flex-end">
+                        <Grid container spacing={2} alignItems="center">
                           <Media
                             query="(min-width: 600px)"
                             render={() => (
-                              <Grid item xs="1">
+                              <Grid item xs="1" style={{ marginBottom: '-4px' }}>
                                 <IconContext.Provider
                                   value={{
                                     color: this.state.searchValues.includeFacStaff
@@ -1059,11 +1054,11 @@ class PeopleSearch extends Component {
                             </FormControl>
                           </Grid>
                         </Grid>
-                        <Grid container spacing={2} alignItems="flex-end">
+                        <Grid container spacing={2} alignItems="center">
                           <Media
                             query="(min-width: 600px)"
                             render={() => (
-                              <Grid item xs="1">
+                              <Grid item xs="1" style={{ marginBottom: '-4px' }}>
                                 <IconContext.Provider
                                   value={{
                                     color: this.state.searchValues.includeFacStaff
@@ -1103,6 +1098,7 @@ class PeopleSearch extends Component {
                       </Collapse>
                     </Grid>
 
+                    {/* Advanced Search Filters: Everyone */}
                     <Grid item xs={12} sm={4} spacing={3}>
                       <Collapse
                         in={this.state.advancedSearchExpanded}
@@ -1110,17 +1106,18 @@ class PeopleSearch extends Component {
                         unmountOnExit
                         style={styles.CardContent}
                       >
+                        <br />
                         <Typography align="center" gutterBottom>
                           <InputLabel style={{ color: gordonColors.primary.blue }}>
                             {' '}
                             Everyone
                           </InputLabel>
                         </Typography>
-                        <Grid container spacing={2} alignItems="flex-end">
+                        <Grid container spacing={2} alignItems="center">
                           <Media
                             query="(min-width: 600px)"
                             render={() => (
-                              <Grid item xs="1">
+                              <Grid item xs="1" style={{ marginBottom: '-4px' }}>
                                 <HomeIcon style={styles.FontAwesome} className={classes.icon} />
                               </Grid>
                             )}
@@ -1138,11 +1135,11 @@ class PeopleSearch extends Component {
                             />
                           </Grid>
                         </Grid>
-                        <Grid container spacing={2} alignItems="flex-end">
+                        <Grid container spacing={2} alignItems="center">
                           <Media
                             query="(min-width: 600px)"
                             render={() => (
-                              <Grid item xs="1">
+                              <Grid item xs="1" style={{ marginBottom: '-4px' }}>
                                 <CityIcon style={styles.FontAwesome} className={classes.icon} />
                               </Grid>
                             )}
@@ -1164,11 +1161,11 @@ class PeopleSearch extends Component {
                             </FormControl>
                           </Grid>
                         </Grid>
-                        <Grid container spacing={2} alignItems="flex-end">
+                        <Grid container spacing={2} alignItems="center">
                           <Media
                             query="(min-width: 600px)"
                             render={() => (
-                              <Grid item xs="1">
+                              <Grid item xs="1" style={{ marginBottom: '-4px' }}>
                                 <FaGlobeAmericas
                                   style={styles.FontAwesome}
                                   className={classes.icon}
@@ -1230,8 +1227,6 @@ class PeopleSearch extends Component {
                                 building: '',
                               },
                               academicsExpanded: false,
-                              homeExpanded: false,
-                              offDepExpanded: false,
                               header: '',
                               peopleSearchResults: null,
                               displayLargeImage: false,
