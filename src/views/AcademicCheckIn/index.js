@@ -28,8 +28,6 @@ const AcademicCheckIn = ({ authentication }) => {
 
   const steps = getSteps();
 
-  const holdStatus = false;
-
   const [loading, setLoading] = useState(true);
 
   const [emergencyContact1, setEmergencyContact1] = useState({
@@ -74,16 +72,9 @@ const AcademicCheckIn = ({ authentication }) => {
     MobilePhoneIN: false,
   });
 
-  const [holds, setHolds] = useState({
-    RegistrationHold: false,
-    HighSchoolTranscriptHold: false,
-    FinancialHold: false,
-    MedicalHold: false,
-    LaVidaHold: false,
-    DeclarationOfMajorHold: false,
-    IsRegistered: true,
-    IsIncoming: false,
-  });
+  const [holds, setHolds] = useState(null);
+
+  const [hasMajorHold, setMajorHold] = useState(false);
 
   const [personalPhone, setPersonalPhone] = useState({
     personalPhone: '',
@@ -110,62 +101,76 @@ const AcademicCheckIn = ({ authentication }) => {
   const [basicInfo, setBasicInfo] = useState({
     studentFirstName: '',
     studentLastName: '',
+    ID: '',
   });
 
-  /** Formats a number for display
-   *   @param {string} phoneNum - the unformatted phone number
-   *   @returns {string} - the formatted phone number
-   */
-  function formatNumber(phoneNum) {
-    let a, b, c;
-    a = phoneNum.slice(0, 2);
-    b = phoneNum.slice(3, 5);
-    c = phoneNum.slice(6);
-    return '(' + a + ') ' + b + '-' + c;
-  }
+  // /** Formats a number for display
+  //  *   @param {string} phoneNum - the unformatted phone number
+  //  *   @returns {string} - the formatted phone number
+  //  */
+  // function formatNumber(phoneNum) {
+  //   let a, b, c;
+  //   a = phoneNum.slice(0, 2);
+  //   b = phoneNum.slice(3, 5);
+  //   c = phoneNum.slice(6);
+  //   return '(' + a + ') ' + b + '-' + c;
+  // }
 
   useEffect(() => {
     const loadData = async () => {
-
-
-
       let profile = await user.getProfileInfo();
       setBasicInfo({
         studentFirstName: profile.FirstName,
         studentLastName: profile.LastName,
+        ID: profile.ID,
       });
+      let hasCheckedIn = await checkInService.getStatus(profile.ID);
+      if (!hasCheckedIn) {
+        let tempHolds = await checkInService.getHolds();
+        setHolds(tempHolds);
+        if (
+          tempHolds.RegistrarHold ||
+          tempHolds.HighSchoolTranscriptHold ||
+          tempHolds.FinancialHold ||
+          tempHolds.MedicalHold ||
+          tempHolds.MajorHold ||
+          tempHolds.MustRegisterForClasses
+        ) {
+          setMajorHold(true);
+        }
 
-      setHolds(await checkInService.getHolds(profile.ID));
+        let contacts = await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase());
 
-      let contacts = await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase());
+        if (contacts[0]) {
+          setEmergencyContact1(contacts[0]);
+          setEmergencyContactINTL1({
+            HomePhoneIN: contacts[0].HomePhone.startsWith('+'),
+            MobilePhoneIN: contacts[0].MobilePhone.startsWith('+'),
+          });
+        }
 
-      if (contacts[0]) {
-        setEmergencyContact1(contacts[0]);
-        setEmergencyContactINTL1({
-          HomePhoneIN: contacts[0].HomePhone.startsWith('+'),
-          MobilePhoneIN: contacts[0].MobilePhone.startsWith('+'),
-        });
-      }
+        if (contacts[1]) {
+          setEmergencyContact2(contacts[1]);
+          setEmergencyContactINTL2({
+            HomePhoneIN: contacts[1].HomePhone.startsWith('+'),
+            MobilePhoneIN: contacts[1].MobilePhone.startsWith('+'),
+          });
+        }
 
-      if (contacts[1]) {
-        setEmergencyContact2(contacts[1]);
-        setEmergencyContactINTL2({
-          HomePhoneIN: contacts[1].HomePhone.startsWith('+'),
-          MobilePhoneIN: contacts[1].MobilePhone.startsWith('+'),
-        });
-      }
-
-      if (contacts[2]) {
-        setEmergencyContact3(contacts[2]);
-        setEmergencyContactINTL3({
-          HomePhoneIN: contacts[2].HomePhone.startsWith('+'),
-          MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
-        });
-      }
-      if (profile.MobilePhone) {
-        setPersonalPhone({
-          personalPhone: profile.MobilePhone,
-        });
+        if (contacts[2]) {
+          setEmergencyContact3(contacts[2]);
+          setEmergencyContactINTL3({
+            HomePhoneIN: contacts[2].HomePhone.startsWith('+'),
+            MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
+          });
+        }
+        if (profile.MobilePhone) {
+          setPersonalPhone({
+            personalPhone: profile.MobilePhone,
+          });
+        }
+      } else {
+        // Go to the completed redirect page
       }
       setLoading(false);
     };
@@ -228,7 +233,6 @@ const AcademicCheckIn = ({ authentication }) => {
   };
 
   function formatDemographic(data) {
-    let hasOneRace = false;
     let formattedData = {
       Ethnicity: parseInt(data.ethnicity),
       Race: '',
@@ -236,22 +240,22 @@ const AcademicCheckIn = ({ authentication }) => {
     if (data.none) {
       formattedData.Race = '3';
     } else {
-        if (data.nativeAmerican) {
-          formattedData.Race += '4,';
-        }
-        if (data.asian) {
-          formattedData.Race += '5,';
-        }
-        if (data.black) {
-          formattedData.Race += '6,';
-        }
-        if (data.hawaiian) {
-          formattedData.Race += '7,';
-        }
-        if (data.white) {
-          formattedData.Race += '8,';
-        }
+      if (data.nativeAmerican) {
+        formattedData.Race += '4,';
       }
+      if (data.asian) {
+        formattedData.Race += '5,';
+      }
+      if (data.black) {
+        formattedData.Race += '6,';
+      }
+      if (data.hawaiian) {
+        formattedData.Race += '7,';
+      }
+      if (data.white) {
+        formattedData.Race += '8,';
+      }
+    }
     return formattedData;
   }
 
@@ -262,6 +266,7 @@ const AcademicCheckIn = ({ authentication }) => {
     checkInService.submitContact(emergencyContact3);
     checkInService.submitPhone(personalPhone);
     checkInService.submitDemographic(formatDemographic(demographic));
+    checkInService.markCompleted(basicInfo.ID);
   };
 
   let content;
@@ -288,7 +293,11 @@ const AcademicCheckIn = ({ authentication }) => {
                   <Grid container justifyContent="center" alignItems="center">
                     <Grid item>
                       {activeStep === 0 && (
-                        <AcademicCheckInWelcome basicInfo={basicInfo} holds={holds} />
+                        <AcademicCheckInWelcome
+                          basicInfo={basicInfo}
+                          hasMajorHold={hasMajorHold}
+                          holds={holds}
+                        />
                       )}
 
                       {activeStep === 1 && (
@@ -362,7 +371,7 @@ const AcademicCheckIn = ({ authentication }) => {
                         onClick={handleNext}
                         style={activeStep === steps.length - 1 ? { display: 'none' } : {}}
                         disabled={
-                          (activeStep === 0 && holdStatus === true) ||
+                          (activeStep === 0 && hasMajorHold) ||
                           (activeStep === 1 &&
                             (emergencyContact1.firstname === '' ||
                               emergencyContact1.lastname === '' ||

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
 //import WellnessQuestion from 'components/WellnessQuestion';
+import AcademicCheckIn from './AcademicCheckIn';
 import GuestWelcome from './components/GuestWelcome';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
@@ -9,6 +10,7 @@ import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
 import user from 'services/user';
+import checkInService from 'services/checkIn';
 // @WELLNESS-CHECK disabled to revert this import these commented out lines
 // import wellness from 'services/wellness';
 // import storage from 'services/storage';
@@ -18,7 +20,7 @@ const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
-
+  const [hasCheckedIn, setHasCheckedIn] = useState(null);
   /*
     // @WELLNESS-CHECK disabled to revert this from the home page, you must uncomment all the code below.
     This way, nobody will be required to make a report in order to see the home page,
@@ -65,6 +67,7 @@ const Home = ({ authentication, onLogIn }) => {
       // Clear out component's person-specific state when authentication becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
       // setHasAnswered(null);
+      setHasCheckedIn(null);
       setPersonType(null);
       setIsAuthenticated(false);
       setLoading(false);
@@ -73,12 +76,14 @@ const Home = ({ authentication, onLogIn }) => {
   const loadPage = async () => {
     setLoading(true);
     // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
-    const [{ PersonType } /*, { IsValid }*/] = await Promise.all([
+    const [{ PersonType, HasCheckedIn } /*, { IsValid }*/] = await Promise.all([
       user.getProfileInfo(),
+      checkInService.getStatus(),
       // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
       /*wellness.getStatus(),*/
     ]);
     setPersonType(PersonType);
+    setHasCheckedIn(HasCheckedIn);
     // setHasAnswered(IsValid);
     setLoading(false);
   };
@@ -90,6 +95,9 @@ const Home = ({ authentication, onLogIn }) => {
   } // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
   //else if (networkStatus === 'online' && !hasAnswered) {
   //return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;}
+  else if (networkStatus === 'online' && !hasCheckedIn) {
+    return <AcademicCheckIn />;
+    }
   else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 

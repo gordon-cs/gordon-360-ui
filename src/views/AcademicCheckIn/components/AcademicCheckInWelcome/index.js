@@ -3,15 +3,8 @@ import { Typography, Grid } from '@material-ui/core';
 import { gordonColors } from 'theme';
 // import './index.css';
 
-const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
+const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
   const blue = gordonColors.primary.blue;
-  // Checks if the student has any major or minor holds
-  const hasMajorHold =
-    holds.RegistrationHold ||
-    holds.HighSchoolTranscriptHold ||
-    holds.FinancialHold ||
-    holds.MedicalHold;
-
   const hasMinorHold = holds.LaVidaHold || holds.DeclarationOfMajorHold;
 
   // This function will return the corresponding JSX elements according to the major holds a student
@@ -21,7 +14,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
     let highSchoolContent;
     let financialContent;
     let medicalContent;
-    if (holds.RegistrationHold) {
+    if (holds.RegistrarHold) {
       registrationContent = (
         <>
           <li>
@@ -87,7 +80,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
         </li>
       );
     }
-    if (holds.DeclarationOfMajorHold) {
+    if (holds.MajorHold) {
       declarationOfMajorContent = (
         <li>
           You have a "Declaration of Major Hold". Please contact the <b>Registrar's Office</b> at{' '}
@@ -129,7 +122,8 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
             </Typography>
             {displayMajorHolds()}
           </Grid>
-        ) : !holds.IsRegistered ? ( // If a student is not registered for courses they cannot check in
+        ) : ''}
+        {holds.MustRegisterForClasses ? ( // If a student is not registered for courses they cannot check in
           <Grid item>
             <Typography variant="h6" align="center" style={{ color: blue }}>
               <b>Register for Courses</b>
@@ -137,18 +131,18 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
             <Typography align="center" gutterBottom>
               <b>Before you can check in, you must be registered for courses.</b>
             </Typography>
-            {holds.IsIncoming ? ( // If a student is first year and not registered, display a special prompt
+            {holds.NewStudent ? ( // If a student is first year and not registered, display a special prompt
               <Typography>
                 You will meet with your advisor during Orientation and he/she can register you. The
                 name of your advisor can be found by logging onto{' '}
-                <a href="my.gordon.edu">my.gordon</a> and clicking on the <b>Student</b> tab. You
+                <a href="https://my.gordon.edu">my.gordon.edu</a> and clicking on the <b>Student</b> tab. You
                 will see your advisor(s) listed under "My Advisors and Majors".
               </Typography>
             ) : (
               // Otherwise display a standard registration prompt
               <Typography gutterBottom>
                 Visit the registrar's office in Jenks 216 to register, or visit{' '}
-                <a href="my.gordon.edu">my.gordon.edu</a> (Student tab {'>'} Course Schedules {'>'}{' '}
+                <a href="https://my.gordon.edu">my.gordon.edu</a> (Student tab {'>'} Course Schedules {'>'}{' '}
                 Course Search) to register during the first five days of classes.
               </Typography>
             )}
@@ -185,7 +179,7 @@ const AcademicCheckInWelcome = ({ basicInfo, holds }) => {
             Once you have resolved each of the above holds, click the button below to begin the
             check-in process.
           </Typography>
-        ) : !holds.IsRegistered ? ( // If the student is not registered, display this prompt so they can register
+        ) : holds.MustRegisterForClasses ? ( // If the student is not registered, display this prompt so they can register
           <Typography>
             Once you have registered for courses and your advisor has approved your registration,
             come back to this page and click the button below to begin the check-in process.
