@@ -106,7 +106,7 @@ const About = () => {
         </Typography>
         <hr />
         <Typography variant="body2" paragraph>
-          Api Version - {version}
+          Api Version - {version} UTC
         </Typography>
       </Grid>
     </Grid>
