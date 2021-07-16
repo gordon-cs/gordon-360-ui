@@ -916,11 +916,9 @@ class PeopleSearch extends Component {
                               <Grid item xs="1">
                                 <IconContext.Provider
                                   value={{
-                                    color:
-                                      this.state.searchValues.includeStudent ||
-                                      this.state.searchValues.includeAlumni
-                                        ? gordonColors.neutral.grayShades[900]
-                                        : gordonColors.neutral.lightGray,
+                                    color: this.state.searchValues.includeStudent
+                                      ? gordonColors.neutral.grayShades[900]
+                                      : gordonColors.neutral.lightGray,
                                   }}
                                 >
                                   <FaBook style={styles.FontAwesome} className={classes.icon} />
@@ -932,16 +930,8 @@ class PeopleSearch extends Component {
                             <FormControl
                               variant="filled"
                               fullWidth
-                              className={
-                                this.state.searchValues.includeStudent ||
-                                this.state.searchValues.includeAlumni
-                                  ? null
-                                  : 'disabled'
-                              }
-                              disabled={
-                                !this.state.searchValues.includeAlumni &&
-                                !this.state.searchValues.includeStudent
-                              }
+                              className={this.state.searchValues.includeStudent ? null : 'disabled'}
+                              disabled={!this.state.searchValues.includeStudent}
                             >
                               <InputLabel id="minor">Minor</InputLabel>
                               <Select
@@ -965,11 +955,9 @@ class PeopleSearch extends Component {
                               <Grid item xs="1">
                                 <IconContext.Provider
                                   value={{
-                                    color:
-                                      this.state.searchValues.includeStudent ||
-                                      this.state.searchValues.includeAlumni
-                                        ? gordonColors.neutral.grayShades[900]
-                                        : gordonColors.neutral.lightGray,
+                                    color: this.state.searchValues.includeStudent
+                                      ? gordonColors.neutral.grayShades[900]
+                                      : gordonColors.neutral.lightGray,
                                   }}
                                 >
                                   <FaSchool style={styles.FontAwesome} className={classes.icon} />
@@ -981,16 +969,8 @@ class PeopleSearch extends Component {
                             <FormControl
                               variant="filled"
                               fullWidth
-                              className={
-                                this.state.searchValues.includeStudent ||
-                                this.state.searchValues.includeAlumni
-                                  ? null
-                                  : 'disabled'
-                              }
-                              disabled={
-                                !this.state.searchValues.includeAlumni &&
-                                !this.state.searchValues.includeStudent
-                              }
+                              className={this.state.searchValues.includeStudent ? null : 'disabled'}
+                              disabled={!this.state.searchValues.includeStudent}
                             >
                               <InputLabel id="class">Class</InputLabel>
                               <Select
