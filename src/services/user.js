@@ -227,10 +227,10 @@ const cliftonStrengthCategories = {
 };
 
 const cliftonStrengthColors = {
-  Executing: '#60409f',
+  Executing: '#9070bf',
   Influencing: '#c88a2e',
-  Relationship: '#04668f',
-  Thinking: '#2c8b0f',
+  Relationship: '#2486af',
+  Thinking: '#3c9b1f',
 };
 
 const cliftonStrengthLinks = {
