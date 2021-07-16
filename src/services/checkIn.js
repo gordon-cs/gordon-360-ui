@@ -58,9 +58,9 @@ import http from './http';
  * @property {boolean} none whether or not a student declined to submit a race
  */
 
-const getStatus = (id) => http.get(`checkIn/status`);
+const getStatus = () => {return true}//http.get(`checkIn/status`);
 
-const markCompleted = (id) => http.put(`checkIn/status`);
+// const markCompleted = (id) => http.put(`checkIn/status`);
 
 const getHolds = (id) => http.get(`checkIn/holds`);
 
@@ -97,6 +97,7 @@ async function submitDemographic(data) {
 }
 
 const checkInService = {
+  getStatus,
   getHolds,
   getPersonalPhone,
   getDemographic,

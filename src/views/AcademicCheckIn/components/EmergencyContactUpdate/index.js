@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import { gordonColors } from 'theme';
 import { phoneMaskUS, phoneMaskINTL } from 'views/AcademicCheckIn/components/UpdatePhone/';
-// import './index.css';
 
 const EmergencyContactUpdate = ({
   emergencyContact1,

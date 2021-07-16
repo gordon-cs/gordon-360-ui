@@ -8,11 +8,12 @@ import './index.css';
 import PrivacyAgreement from './components/PrivacyAgreement';
 import RaceEthnicity from './components/RaceEthnicity';
 import ConfirmCheckIn from './components/ConfirmCheckIn';
+import CompletedCheckIn from './components/CompletedCheckIn';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import user from 'services/user';
 
-const AcademicCheckIn = ({ authentication }) => {
+const AcademicCheckIn = (props) => {
   const [activeStep, setActiveStep] = useState(0);
 
   const getSteps = () => {
@@ -23,6 +24,7 @@ const AcademicCheckIn = ({ authentication }) => {
       'Privacy Terms',
       'Race Question',
       'Confirm',
+      'Completed Check In',
     ];
   };
 
@@ -170,22 +172,24 @@ const AcademicCheckIn = ({ authentication }) => {
           });
         }
       } else {
-        // Go to the completed redirect page
+        setActiveStep(6)
       }
       setLoading(false);
     };
 
-    if (authentication) {
+    if (props.authentication) {
       loadData();
     }
-  }, [authentication, loading]);
+  }, [props.authentication, loading]);
 
   const handleNext = () => {
     setActiveStep((nextStep) => nextStep + 1);
+    props.history.push();
   };
 
   const handlePrev = () => {
     setActiveStep((previousStep) => previousStep - 1);
+    props.history.push()
   };
 
   const handleChangeEmergContact1 = (evt) => {
@@ -266,14 +270,15 @@ const AcademicCheckIn = ({ authentication }) => {
     checkInService.submitContact(emergencyContact3);
     checkInService.submitPhone(personalPhone);
     checkInService.submitDemographic(formatDemographic(demographic));
-    checkInService.markCompleted(basicInfo.ID);
+    //checkInService.markCompleted(basicInfo.ID);
+    setActiveStep(6);
   };
 
   let content;
 
   if (loading === true) {
     content = <GordonLoader />;
-  } else if (!authentication) {
+  } else if (!props.authentication) {
     content = <GordonUnauthorized feature={'Academic Checkin'} />;
   } else {
     content = (
@@ -348,6 +353,9 @@ const AcademicCheckIn = ({ authentication }) => {
                           demographic={demographic}
                         />
                       )}
+                      {activeStep === 6 && (
+                        <CompletedCheckIn basicInfo={basicInfo}/>
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -358,7 +366,7 @@ const AcademicCheckIn = ({ authentication }) => {
                   <Grid container justifyContent="center" className="button-container" spacing={2}>
                     <Grid item>
                       <Button
-                        style={activeStep === 0 ? { display: 'none' } : {}}
+                        style={activeStep === 0 || activeStep === steps.length - 1 ? { display: 'none' } : {}}
                         variant="contained"
                         onClick={handlePrev}
                       >
@@ -369,7 +377,7 @@ const AcademicCheckIn = ({ authentication }) => {
                       <Button
                         variant="contained"
                         onClick={handleNext}
-                        style={activeStep === steps.length - 1 ? { display: 'none' } : {}}
+                        style={(activeStep >= steps.length - 2) ? { display: 'none' } : {}}
                         disabled={
                           (activeStep === 0 && hasMajorHold) ||
                           (activeStep === 1 &&
@@ -404,7 +412,7 @@ const AcademicCheckIn = ({ authentication }) => {
                       <Button
                         variant="contained"
                         onClick={handleSubmit}
-                        style={activeStep === steps.length - 1 ? {} : { display: 'none' }}
+                        style={activeStep === steps.length - 2 ? {} : { display: 'none' }}
                       >
                         Submit
                       </Button>

@@ -1,19 +1,33 @@
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography, Button } from '@material-ui/core';
 import { gordonColors } from 'theme';
+import { routes } from 'routes';
 
-const CompletedCheckIn = ({}) => {
+const CompletedCheckIn = ({ basicInfo }) => {
   const cyan = gordonColors.primary.cyan;
   return (
-    <Grid container alignItems="center" justify="center" direction="column">
-      <Grid item>
+    <Grid
+      container
+      alignItems="center"
+      justify="center"
+      direction="column"
+      className="button-container"
+    >
+      <Grid item xs={8}>
         <Typography variant="h5" gutterbottom align="center" style={{ color: cyan }}>
-          Thank you for completing Academic Checkin!
+          Congratulations {basicInfo.studentFirstName} on completing Academic Checkin!
         </Typography>
         <br />
-        <Typography variant="body1" gutterBottom>
-          We are excited to welcome you to your new semester at Gordon College!
+        <Typography variant="body1" align="center" gutterBottom>
+          We are excited to welcome you to your new semester at Gordon College! Please click the
+          button below to return to the homepage.
         </Typography>
+        <br />
+        <Grid item align="center">
+          <Button variant="contained" onClick={() => window.location.replace('')}>
+            Home
+          </Button>
+        </Grid>
       </Grid>
     </Grid>
   );
