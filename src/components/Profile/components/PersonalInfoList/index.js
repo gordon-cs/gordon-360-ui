@@ -328,6 +328,9 @@ const PersonalInfoList = ({
         <Typography>NOTE:</Typography>
         <ul>
           <li>
+            <Typography>Shaded areas are visible only to you.</Typography>
+          </li>
+          <li>
             <Typography>
               To update your On Campus Address, please contact{' '}
               <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
