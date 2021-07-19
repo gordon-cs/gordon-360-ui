@@ -215,20 +215,22 @@ export default class GordonPeopleSearch extends Component {
                 ),
               ].map((e, key) => <span key={key}>{e}</span>)
             : this.getHighlightedText(
-                suggestion.Nickname &&
-                  suggestion.Nickname !== suggestion.FirstName &&
-                  suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
-                  ? suggestion.FirstName + ' (' + suggestion.Nickname + ') ' + suggestion.LastName
-                  : suggestion.MaidenName &&
-                    suggestion.MaidenName !== suggestion.LastName &&
-                    suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
-                  ? suggestion.FirstName +
-                    ' ' +
-                    suggestion.LastName +
-                    ' (' +
-                    suggestion.MaidenName +
-                    ')'
-                  : suggestion.FirstName + ' ' + suggestion.LastName,
+                suggestion.FirstName +
+                // If having nickname that is unique, display that nickname
+                (suggestion.Nickname &&
+                suggestion.Nickname !== suggestion.FirstName &&
+                suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
+                ? ' (' + suggestion.Nickname + ') '
+                : ' ') +
+                suggestion.LastName +
+                // If having maiden name that is unique, display that maiden name
+                (suggestion.MaidenName &&
+                suggestion.MaidenName !== suggestion.LastName &&
+                suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
+                ? ' (' +
+                suggestion.MaidenName +
+                ')'
+                : ''),
                 this.state.highlightQuery,
               )}
         </Typography>
