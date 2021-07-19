@@ -27,20 +27,22 @@ import SocialMediaLinks from './components/SocialMediaLinks';
 
 const Identification = ({ profile, myProf, network, createSnackbar }) => {
   const CROP_DIM = 200; // pixels
-  const [isImagePublic, setIsImagePublic] = useState(null);
-  const [defaultUserImage, setDefaultUserImage] = useState(null);
-  const [preferredUserImage, setPreferredUserImage] = useState(null);
+  const [isImagePublic, setIsImagePublic] = useState();
+  const [defaultUserImage, setDefaultUserImage] = useState();
+  const [preferredUserImage, setPreferredUserImage] = useState();
   const [hasPreferredImage, setHasPreferredImage] = useState(false);
   const [isPhotosSwitched, setisPhotosSwitched] = useState(false);
-  const [showCropper, setShowCropper] = useState(null);
+  const [showCropper, setShowCropper] = useState();
   const [hasNickName, setHasNickname] = useState(Boolean);
   const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
-  const [photoDialogError, setPhotoDialogError] = useState(null);
+  const [photoDialogError, setPhotoDialogError] = useState();
   const [cropperData, setCropperData] = useState({ cropBoxDim: null, aspectRatio: null });
-  const [userProfile, setUserProfile] = useState(null);
-  const [currentWidth, setCurrentWidth] = useState(null);
+  const [userProfile, setUserProfile] = useState();
+  const [currentWidth, setCurrentWidth] = useState();
+  const [cliftonColor, setCliftonColor] = useState();
   const cropperRef = useRef();
-  let photoDialogErrorTimeout = null;
+  const isStudent = profile.PersonType?.includes('stu');
+  let photoDialogErrorTimeout;
 
   // Styles used throughout this component
   const style = {
@@ -111,6 +113,18 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
         // Sets the given user's default image. If a preferred image is given but the default is undefined,
         // then this, means that the currently signed-in user is not allowed to see the default picture.
         setDefaultUserImage(defaultImage);
+
+        const cliftonStrengthColors = await profile.CliftonStrengths.Colors;
+        // create a dictionary of color frequencies
+        let colorFrequencies = {};
+        cliftonStrengthColors.forEach((x) => {
+          colorFrequencies[x] = (colorFrequencies[x] || 0) + 1;
+        });
+        // find max frequency by always recursively keeping a from every (a,b) where a >= b
+        const cliftonColor = Object.keys(colorFrequencies).reduce((a, b) =>
+          colorFrequencies[a] >= colorFrequencies[b] ? a : b,
+        );
+        setCliftonColor(cliftonColor);
       } catch (error) {
         // Do nothing
       }
@@ -548,10 +562,36 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
     );
   }
 
+  const todaysDate = new Date();
+  const isAprilFools = todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
+  const profileTitleAprilFools = userProfile?.Title
+    ? userProfile.Title.charAt(0).toUpperCase() +
+      userProfile.Title.slice(1).toLowerCase() +
+      '. ' +
+      userProfile.LastName
+    : '';
+
   return (
     <div className="identification-card">
       <Grid container className="identification-card-header">
-        {userProfile && <CardHeader title={`${userProfile.FirstName}'s Profile`} />}
+        {userProfile &&
+          (isStudent ? (
+            <CardHeader
+              title={`${
+                isAprilFools
+                  ? profileTitleAprilFools
+                  : (userProfile.NickName
+                  ? userProfile.NickName
+                  : userProfile.FirstName)
+              }'s Profile`}
+            />
+          ) : (
+            <CardHeader
+              title={`${userProfile.NickName ? userProfile.NickName : userProfile.FirstName} ${
+                userProfile.LastName
+              }'s Profile`}
+            />
+          ))}
         {!userProfile && <CardHeader title="My Personal Profile" />}
       </Grid>
 
@@ -566,7 +606,23 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               justifyContent="space-evenly"
             >
               <Grid item className="identification-card-content-card-container-photo">
-                <div className="identification-card-content-card-container-photo-main">
+                <div
+                  className="identification-card-content-card-container-photo-main"
+                  style={
+                    cliftonColor
+                      ? {
+                          // border: '0.5rem solid' + cliftonColor,
+                          border: '10px solid transparent',
+                          boxSizing: 'content-box',
+                          margin: '-1rem',
+                          background:
+                            '-webkit-linear-gradient(135deg, #fff, ' +
+                            cliftonColor +
+                            ') border-box',
+                        }
+                      : null
+                  }
+                >
                   <div className="identification-card-content-card-container-photo-main-container">
                     <img
                       className="identification-card-content-card-container-photo-main-container-image"
