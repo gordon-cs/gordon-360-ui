@@ -75,7 +75,7 @@ const MemberList = ({
         <Grid container direction="row">
           <Grid item xs={1} />
           <Grid item xs={3}>
-            Name
+            Full Name
           </Grid>
           <Grid item xs={4}>
             Title/Participation

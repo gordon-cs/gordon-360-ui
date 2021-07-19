@@ -5,6 +5,7 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
+  Link,
 } from '@material-ui/core';
 import Email from '@material-ui/icons/Email';
 import React, { useEffect, useState } from 'react';
@@ -41,7 +42,9 @@ const ContactListItem = ({ contact }) => {
           {!avatar && <PlaceHolderAvatar />}
         </Avatar>
       </ListItemAvatar>
-      <ListItemText primary={`${contact.FirstName} ${contact.LastName}`} />
+      <Link href={`/profile/${contact.Email.split('@')[0]}`}>
+        <ListItemText primary={`${contact.FirstName} ${contact.LastName}`} />
+      </Link>
       <ListItemSecondaryAction>
         <IconButton color="primary" href={`mailto:${contact.Email}`}>
           <Email color="primary" />
