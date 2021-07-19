@@ -25,7 +25,7 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
         <Grid item className="identification-card-content-card-container-info-social-media">
           <Grid
             container
-            justify={numberOfLinks < 3 ? 'space-evenly' : 'space-between'}
+            justifyContent={numberOfLinks < 3 ? 'space-evenly' : 'space-between'}
             alignItems="center"
           >
             {socialMediaInfo.platforms.map((platform) => {
@@ -58,7 +58,7 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
                   </IconButton>
                 </Grid>
               ) : (
-                <Grid container justify="center">
+                <Grid container justifyContent="center">
                   <Button
                     onClick={() => setSocialLinksOpen(true)}
                     color="secondary"
@@ -73,7 +73,6 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
       )}
       <Dialog
         open={socialLinksOpen}
-        disableBackdropClick
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
