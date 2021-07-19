@@ -146,6 +146,9 @@ const searchPageTitle = (
   </div>
 );
 
+//Configuration constants
+const NUM_NONLAZY_IMAGES = 20; //The number of results for which images will be fetched immediately
+
 class PeopleSearch extends Component {
   constructor(props) {
     super(props);
@@ -456,7 +459,7 @@ class PeopleSearch extends Component {
                     size={
                       !matches ? 'single' : this.state.displayLargeImage ? 'largeImages' : 'full'
                     }
-                    lazyImages={index > 50 ? true : false}
+                    lazyImages={index > NUM_NONLAZY_IMAGES ? true : false}
                   />
                 ))
               }
