@@ -173,6 +173,14 @@ export default class GordonPeopleSearch extends Component {
     );
   }
 
+  checkMaidenName(maidenName, lastName, userName1) {
+    if (maidenName &&
+      maidenName !== lastName &&
+      maidenName !== userName1) {
+        return ' (' + maidenName + ')';
+      }
+  }
+
   renderSuggestion(params) {
     const { suggestion, itemProps } = params;
     let suggestionIndex = this.state.suggestionIndex;
@@ -215,6 +223,7 @@ export default class GordonPeopleSearch extends Component {
                 ),
               ].map((e, key) => <span key={key}>{e}</span>)
             : this.getHighlightedText(
+                // Displays first name
                 suggestion.FirstName +
                 // If having nickname that is unique, display that nickname
                 (suggestion.Nickname &&
@@ -222,15 +231,11 @@ export default class GordonPeopleSearch extends Component {
                 suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
                 ? ' (' + suggestion.Nickname + ') '
                 : ' ') +
+                // Displays last name
                 suggestion.LastName +
                 // If having maiden name that is unique, display that maiden name
-                (suggestion.MaidenName &&
-                suggestion.MaidenName !== suggestion.LastName &&
-                suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
-                ? ' (' +
-                suggestion.MaidenName +
-                ')'
-                : ''),
+                this.checkMaidenName(suggestion.maidenName, suggestion.lastName,
+                  suggestion.UserName.split(/ |\./)[1]),
                 this.state.highlightQuery,
               )}
         </Typography>
