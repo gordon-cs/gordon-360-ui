@@ -26,7 +26,13 @@ const styles = {
 
 const Page404 = () => {
   return (
-    <Grid container justify="center" alignContent="center" direction="column" style={styles.main}>
+    <Grid
+      container
+      justifyContent="center"
+      alignContent="center"
+      direction="column"
+      style={styles.main}
+    >
       {/* 404 message */}
       <Grid item style={styles.message}>
         <Typography
