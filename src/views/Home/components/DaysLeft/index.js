@@ -62,7 +62,7 @@ export default class DaysLeft extends Component {
         <div>
           <Grid
             container
-            justify="space-around"
+            justifyContent="space-around"
             spacing={0}
             style={{ paddingTop: 5, paddingBottom: 10 }}
           >
@@ -72,7 +72,7 @@ export default class DaysLeft extends Component {
               </Typography>
             </Grid>
           </Grid>
-          <Doughnut data={data} height={175} options={options}/>
+          <Doughnut data={data} height={175} options={options} />
           <div
             style={{
               marginTop: '1rem',
