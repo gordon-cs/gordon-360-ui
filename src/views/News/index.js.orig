@@ -169,7 +169,7 @@ export default class StudentNews extends Component {
     if (networkStatus === 'online' || (networkStatus === 'offline' && this.props.authentication)) {
       news = (
         <section>
-          <Grid container justify="center">
+          <Grid container justifyContent="center">
             <Grid item xs={12} md={12} lg={8}>
               <Grid container alignItems="baseline" style={styles.searchBar} spacing={8}>
               <Grid item xs={4} sm={2} md={2} lg={2} align="center">
@@ -261,7 +261,7 @@ export default class StudentNews extends Component {
     // If the user is offline
     else {
       news = (
-        <Grid container justify="center" spacing="16">
+        <Grid container justifyContent="center" spacing="16">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent

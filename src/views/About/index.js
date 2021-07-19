@@ -16,7 +16,7 @@ const About = () => {
   }, []);
 
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
         <Card className="about">
           <CardHeader
@@ -106,7 +106,7 @@ const About = () => {
         </Typography>
         <hr />
         <Typography variant="body2" paragraph>
-          Api Version - {version}
+          Api Version - {version} UTC
         </Typography>
       </Grid>
     </Grid>
