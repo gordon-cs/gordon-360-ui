@@ -145,10 +145,10 @@ const Events = (props) => {
         <Card style={{ padding: '0 3vw' }}>
           <CardContent>
             <Grid container direction="row" alignItems="center">
-              <Grid item xs={9} alignItems="left">
+              <Grid item xs={10}>
                 <CardHeader title={searchPageTitle} />
               </Grid>
-              <Grid item xs={3} alignItems="right">
+              <Grid item xs={2} alignItems="right">
                 {props.authentication && (
                   <Button
                     color="primary"
@@ -179,27 +179,18 @@ const Events = (props) => {
                       </Grid>
                     )}
                   />
-                  <Grid item xs={11}>
+                  <Grid item xs={8}>
                     <TextField
                       id="search"
                       label="Search"
                       type="search"
+                      variant="filled"
                       fullWidth
                       value={search}
                       onChange={(event) => setSearch(event.target.value)}
                     />
                   </Grid>
-                </Grid>
 
-                <br />
-
-                <Grid
-                  container
-                  spacing={2}
-                  justifyContent="center"
-                  alignItems="center"
-                  style={{ padding: '8px' }}
-                >
                   <Grid item>
                     <Button
                       style={{ backgroundColor: gordonColors.neutral.lightGray }}
@@ -226,19 +217,11 @@ const Events = (props) => {
                       onClick={handleExpandClick}
                     >
                       <AddIcon fontSize="inherit" />
-                      SEARCH BY TYPE
+                      Filters
                     </Button>
                   </Grid>
-
-                  <Grid container item xs={3}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
-                      }
-                      label="Include Past"
-                    />
-                  </Grid>
                 </Grid>
+                <br />
               </Grid>
 
               <Grid item xs={12}>
@@ -254,26 +237,28 @@ const Events = (props) => {
                         </Grid>
                       )}
                     />
-                    <Grid item xs={11}>
-                      <FormControl fullWidth>
-                        <InputLabel id="event-filters">Type</InputLabel>
+                    <Grid item xs={8}>
+                      <FormControl fullWidth variant="filled">
+                        <InputLabel id="event-filters">Filters</InputLabel>
                         <Select
-                          labelId="event-filters"
-                          id="event-checkboxes"
+                          labelId="event-filters-label"
+                          id="event-filters"
                           value={filters}
                           onChange={handleChangeFilters}
                           renderValue={(selected) => (
                             <div>
                               {selected.map((value) => (
                                 <Chip
+                                  key={value}
+                                  label={value}
                                   onMouseDown={(event) => {
                                     event.stopPropagation();
                                   }}
-                                  label={value}
                                   onDelete={() => handleDeleteFilters(value)}
                                   style={{
                                     backgroundColor: gordonColors.primary.cyan,
                                     color: gordonColors.neutral.grayShades[50],
+                                    margin: '2px',
                                   }}
                                 />
                               ))}
@@ -289,6 +274,14 @@ const Events = (props) => {
                           ))}
                         </Select>
                       </FormControl>
+                    </Grid>
+                    <Grid container item xs={3}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
+                        }
+                        label="Include Past"
+                      />
                     </Grid>
                   </Grid>
                 </Collapse>
