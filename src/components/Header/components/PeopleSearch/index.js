@@ -227,10 +227,10 @@ export default class GordonPeopleSearch extends Component {
                 suggestion.LastName +
                 // If having maiden name that is unique, display that maiden name
                 (suggestion.MaidenName &&
-                  suggestion.MaidenName !== suggestion.LastName &&
-                  suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
-                  ? ' (' + suggestion.MaidenName + ')'
-                  : ''),
+                suggestion.MaidenName !== suggestion.LastName &&
+                suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
+                ? ' (' + suggestion.MaidenName + ')'
+                : ''),
                 this.state.highlightQuery,
               )}
         </Typography>
