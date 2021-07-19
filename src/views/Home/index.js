@@ -9,7 +9,6 @@ import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
 import user from 'services/user';
-import getStatus from 'services/checkIn';
 // @WELLNESS-CHECK disabled to revert this import these commented out lines
 // import wellness from 'services/wellness';
 // import storage from 'services/storage';
@@ -94,7 +93,7 @@ const Home = ({ authentication, onLogIn }) => {
   } // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
   //else if (networkStatus === 'online' && !hasAnswered) {
   //return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;}
-  else if (!checkedIn) {
+  else if (!checkedIn && personType.includes('stu')) {
     window.location.replace("AcademicCheckIn")
   } else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;

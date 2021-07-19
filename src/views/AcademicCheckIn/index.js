@@ -12,7 +12,7 @@ import CompletedCheckIn from './components/CompletedCheckIn';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import user from 'services/user';
-
+//🧙‍♂️
 const AcademicCheckIn = (props) => {
   const [activeStep, setActiveStep] = useState(0);
 
@@ -106,18 +106,6 @@ const AcademicCheckIn = (props) => {
     ID: '',
   });
 
-  // /** Formats a number for display
-  //  *   @param {string} phoneNum - the unformatted phone number
-  //  *   @returns {string} - the formatted phone number
-  //  */
-  // function formatNumber(phoneNum) {
-  //   let a, b, c;
-  //   a = phoneNum.slice(0, 2);
-  //   b = phoneNum.slice(3, 5);
-  //   c = phoneNum.slice(6);
-  //   return '(' + a + ') ' + b + '-' + c;
-  // }
-
   useEffect(() => {
     const loadData = async () => {
       let profile = await user.getProfileInfo();
@@ -127,7 +115,7 @@ const AcademicCheckIn = (props) => {
         ID: profile.ID,
       });
       let hasCheckedIn = await checkInService.getStatus(profile.ID);
-      if (!hasCheckedIn) {
+      if (!hasCheckedIn && profile.PersonType.includes('stu')) {
         let tempHolds = await checkInService.getHolds();
         setHolds(tempHolds);
         if (
@@ -172,7 +160,7 @@ const AcademicCheckIn = (props) => {
           });
         }
       } else {
-        setActiveStep(6)
+        setActiveStep(6);
       }
       setLoading(false);
     };
@@ -184,12 +172,22 @@ const AcademicCheckIn = (props) => {
 
   const handleNext = () => {
     setActiveStep((nextStep) => nextStep + 1);
-    props.history.push();
+    window.history.pushState(activeStep, null, '');
+    console.log("pushing", activeStep, window.history.state)
   };
 
   const handlePrev = () => {
     setActiveStep((previousStep) => previousStep - 1);
-    props.history.push()
+    window.history.pushState(activeStep, null, '');
+  };
+
+  window.history.replaceState(activeStep, null, '');
+
+
+  window.onpopstate = function (event) {
+    if (event.state !== null) {
+      setActiveStep(event.state);
+    }
   };
 
   const handleChangeEmergContact1 = (evt) => {
@@ -264,7 +262,6 @@ const AcademicCheckIn = (props) => {
   }
 
   const handleSubmit = () => {
-    console.log(`Done 🧙‍♂️`);
     checkInService.submitContact(emergencyContact1);
     checkInService.submitContact(emergencyContact2);
     checkInService.submitContact(emergencyContact3);
@@ -297,7 +294,7 @@ const AcademicCheckIn = (props) => {
                 <Grid item>
                   <Grid container justifyContent="center" alignItems="center">
                     <Grid item>
-                      {activeStep === 0 && (
+                      {window.history.state === 0 && (
                         <AcademicCheckInWelcome
                           basicInfo={basicInfo}
                           hasMajorHold={hasMajorHold}
@@ -305,7 +302,7 @@ const AcademicCheckIn = (props) => {
                         />
                       )}
 
-                      {activeStep === 1 && (
+                      {window.history.state === 1 && (
                         <EmergencyContactUpdate
                           emergencyContact1={emergencyContact1}
                           emergencyContact2={emergencyContact2}
@@ -322,7 +319,7 @@ const AcademicCheckIn = (props) => {
                         />
                       )}
 
-                      {activeStep === 2 && (
+                      {window.history.state === 2 && (
                         <UpdatePhone
                           personalPhone={personalPhone}
                           handleChangePersonalPhone={handleChangePersonalPhone}
@@ -330,21 +327,21 @@ const AcademicCheckIn = (props) => {
                         />
                       )}
 
-                      {activeStep === 3 && (
+                      {window.history.state === 3 && (
                         <PrivacyAgreement
                           privacyAgreements={privacyAgreements}
                           handleCheckPrivacyAgreements={handleCheckPrivacyAgreements}
                         />
                       )}
 
-                      {activeStep === 4 && (
+                      {window.history.state === 4 && (
                         <RaceEthnicity
                           demographic={demographic}
                           handleChangeDemographic={handleChangeDemographic}
                           handleCheckDemographic={handleCheckDemographic}
                         />
                       )}
-                      {activeStep === 5 && (
+                      {window.history.state === 5 && (
                         <ConfirmCheckIn
                           emergencyContact1={emergencyContact1}
                           emergencyContact2={emergencyContact2}
@@ -353,9 +350,7 @@ const AcademicCheckIn = (props) => {
                           demographic={demographic}
                         />
                       )}
-                      {activeStep === 6 && (
-                        <CompletedCheckIn basicInfo={basicInfo}/>
-                      )}
+                      {window.history.state === 6 && <CompletedCheckIn basicInfo={basicInfo} />}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -366,7 +361,11 @@ const AcademicCheckIn = (props) => {
                   <Grid container justifyContent="center" className="button-container" spacing={2}>
                     <Grid item>
                       <Button
-                        style={activeStep === 0 || activeStep === steps.length - 1 ? { display: 'none' } : {}}
+                        style={
+                          activeStep === 0 || activeStep === steps.length - 1
+                            ? { display: 'none' }
+                            : {}
+                        }
                         variant="contained"
                         onClick={handlePrev}
                       >
@@ -377,7 +376,7 @@ const AcademicCheckIn = (props) => {
                       <Button
                         variant="contained"
                         onClick={handleNext}
-                        style={(activeStep >= steps.length - 2) ? { display: 'none' } : {}}
+                        style={activeStep >= steps.length - 2 ? { display: 'none' } : {}}
                         disabled={
                           (activeStep === 0 && hasMajorHold) ||
                           (activeStep === 1 &&

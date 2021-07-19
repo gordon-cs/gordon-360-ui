@@ -9,47 +9,45 @@ import http from './http';
 /**
  * @global
  * @typedef MajorHolds these holds prevent a student from checking in
- * @property {boolean} registrationHold if a student has an registration hold on their account
- * @property {boolean} transcriptHold if a student has a highschool transcript hold on their account
- * @property {boolean} financialHold if a student has a financial hold on their account
- * @property {boolean} medicalHold if a student has a medical hold on their account
+ * @property {boolean} RegistrarHold if a student has a Registrar hold on their account
+ * @property {boolean} HighSchoolTranscriptHold if a student has a highschool transcript hold on their account
+ * @property {boolean} FinancialHold if a student has a financial hold on their account
+ * @property {boolean} MedicalHold if a student has a medical hold on their account
+ * @property {boolean} MustRegisterForClasses if a student needs to register for classes
  */
 
 /**
  * @global
  * @typedef MinorHolds these holds do not prevent a student from checking in, but they prompt a warning
- * @property {boolean} laVidaHold if a student has an laVida hold on their account
- * @property {boolean} declareMajorHold if a student has a declaration of major hold on their account
+ * @property {boolean} LaVidaHold if a student has an LaVida hold on their account
+ * @property {boolean} MajorHold if a student has a declaration of major hold on their account
  */
 
 /**
  * @global
- * @typedef EmergencyContactData all the other data to be filled out by the student
- * @property {String} firstName1 first name of emergency contact 1
- * @property {String} lastName1 last name of EC 1
- * @property {String} relationship1 the relationship between the student and EC 1
- * @property {Number} homePhone1 the home phone number of EC 1
- * @property {Number} mobilePhone1 the mobile phone number of EC 1
- * @property {String} firstName2 first name of emergency contact 2
- * @property {String} lastName2 last name of EC 2
- * @property {String} relationship2 the relationship between the student and EC 2
- * @property {Number} homePhone2 the home phone number of EC 2
- * @property {Number} mobilePhone2 the mobile phone number of EC 2
- * @property {String} firstName3 first name of emergency contact 3
- * @property {String} lastName3 last name of EC 3
- * @property {String} relationship3 the relationship between the student and EC 3
- * @property {Number} homePhone3 the home phone number of EC 3
- * @property {Number} mobilePhone3 the mobile phone number of EC 3
- *
- *
- * TODO: UPDATE THIS CUZ ITS NOT CONSISTENT
+ * @typedef EmergencyContact1 all the data for a student's emergency contact
+ * @property {Number} SEQ_NUM the sequence number of the contact, (1, 2, or 3)
+ * @property {String} firstName first name of emergency contact
+ * @property {String} lastName last name of EC
+ * @property {String} relationship the relationship between the student and EC
+ * @property {Number} HomePhone the home phone number of EC
+ * @property {boolean} HomePhoneIN whether the home phone number is international
+ * @property {Number} MobilePhone the mobile phone number of EC
+ * @property {boolean} MobilePhoneIN whether the mobile phone number is international
  */
 
 /**
  * @global
- * @typedef CheckInData
+ * @typedef PersonalPhone all the data for a student's personal phone number
  * @property {Number} personalPhone the phone number of the student
- * @property {String} ethnicity whether or not a student is Hispanic/Latino or prefers not to say
+ * @property {boolean} makePrivate whether a student wants their phone private on their profile
+ * @property {boolean} noPhone whether a student does not have a personal phone
+ */
+
+/**
+ * @global
+ * @typedef Demographic all the data about a student's demographic
+ * @property {int} ethnicity whether or not a student is Hispanic/Latino or prefers not to say
  * @property {boolean} nativeAmerican whether or not a student is of Native American descent
  * @property {boolean} asian whether or not a student is of Asian descent
  * @property {boolean} black whether or not a student is of African-American/African descent
@@ -58,18 +56,37 @@ import http from './http';
  * @property {boolean} none whether or not a student declined to submit a race
  */
 
-const getStatus = () => {return true}//http.get(`checkIn/status`);
 
-// const markCompleted = (id) => http.put(`checkIn/status`);
+async function getStatus() {
+  try {
+    return await http.get(`checkIn/status`);
+  } catch(reason) {
+    console.log('Caught checkIn submission error: ' + reason);
+  }
+}
 
-const getHolds = (id) => http.get(`checkIn/holds`);
+async function markCompleted() {
+  try {
+    return await http.put(`checkIn/status`);
+  } catch(reason) {
+    console.log('Caught checkIn submission error: ' + reason);
+  }
+}
 
-const getPersonalPhone = (id) => http.get(`checkIn/phone`);
-
-const getDemographic = (id) => http.get(`checkIn/demographic`);
+async function getHolds() {
+  try {
+    return await http.get(`checkIn/holds`);
+  } catch(reason) {
+    console.log('Caught checkIn submission error: ' + reason);
+  }
+}
 
 const getEmergencyContacts = async (username) => {
-  return await http.get(`profiles/emergency-contact/${username}/`);
+  try {
+    return await http.get(`profiles/emergency-contact/${username}/`);
+  } catch(reason) {
+    console.log('Caught checkIn submission error: ' + reason)
+  }
 }
 
 async function submitPhone(data) {
@@ -98,9 +115,8 @@ async function submitDemographic(data) {
 
 const checkInService = {
   getStatus,
+  markCompleted,
   getHolds,
-  getPersonalPhone,
-  getDemographic,
   getEmergencyContacts,
   submitPhone,
   submitContact,

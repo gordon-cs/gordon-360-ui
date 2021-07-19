@@ -19,7 +19,7 @@ const ConfirmCheckIn = ({
     demographic.white,
     demographic.none,
   ];
-  const raceNames = ['Native American', 'Asian', 'Black', 'Hawaiian', 'White', '🧙‍♂️'];
+  const raceNames = ['Native American', 'Asian', 'Black', 'Hawaiian', 'White', 'Prefer not to say'];
 
   const displayRace = () => {
     var i;
