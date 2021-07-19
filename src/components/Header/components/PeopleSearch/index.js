@@ -179,6 +179,8 @@ export default class GordonPeopleSearch extends Component {
       maidenName !== userName1) {
         return ' (' + maidenName + ')';
       }
+      else
+      return "";
   }
 
   renderSuggestion(params) {
@@ -234,7 +236,7 @@ export default class GordonPeopleSearch extends Component {
                 // Displays last name
                 suggestion.LastName +
                 // If having maiden name that is unique, display that maiden name
-                this.checkMaidenName(suggestion.maidenName, suggestion.lastName,
+                this.checkMaidenName(suggestion.MaidenName, suggestion.LastName,
                   suggestion.UserName.split(/ |\./)[1]),
                 this.state.highlightQuery,
               )}
