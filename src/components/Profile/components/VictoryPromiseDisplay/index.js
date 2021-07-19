@@ -243,7 +243,7 @@ export default class VictoryPromiseDisplay extends React.Component {
           xs={12}
           item
           container
-          justify="center"
+          justifyContent="center"
           direction="column"
           className="victory-promise-container-card-container-content-box-layout"
         >
@@ -303,7 +303,7 @@ export default class VictoryPromiseDisplay extends React.Component {
       );
     } else {
       content = (
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Polar
             className="victory-promise"
             data={{ labels: this.state.labels, datasets: this.state.datasets }}
@@ -318,7 +318,12 @@ export default class VictoryPromiseDisplay extends React.Component {
         <Grid container item xs className="victory-promise-header">
           <CardHeader title="Victory Promise" />
         </Grid>
-        <Grid container className="victory-promise-container" alignItems="center" justify="center">
+        <Grid
+          container
+          className="victory-promise-container"
+          alignItems="center"
+          justifyContent="center"
+        >
           <Card className="victory-promise-container-card">
             <CardContent className="victory-promise-container-card-container">
               <Grid item align="center">
@@ -340,7 +345,7 @@ export default class VictoryPromiseDisplay extends React.Component {
               {this.props.network === 'online' && (
                 <Grid
                   container
-                  justify="center"
+                  justifyContent="center"
                   className="victory-promise-container-card-container-link"
                 >
                   <Typography

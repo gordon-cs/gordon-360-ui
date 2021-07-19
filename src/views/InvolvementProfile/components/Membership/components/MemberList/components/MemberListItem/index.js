@@ -17,6 +17,7 @@ import {
   Select,
   MenuItem,
   Avatar,
+  Link,
 } from '@material-ui/core';
 
 import { gordonColors } from 'theme';
@@ -232,7 +233,7 @@ const MemberListItem = ({
     );
 
     options = (
-      <Grid container alignItems="center" justify="space-evenly">
+      <Grid container alignItems="center" justifyContent="space-evenly">
         <Grid item>
           <FormControlLabel
             control={
@@ -264,9 +265,11 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3}>
-            <Typography>
-              {member.FirstName} {member.LastName}
-            </Typography>
+            <Link href={`/profile/${member.AD_Username}`}>
+              <Typography>
+                {member.FirstName} {member.LastName}
+              </Typography>
+            </Link>
           </Grid>
           <Grid item xs={4} style={rowStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
@@ -284,7 +287,7 @@ const MemberListItem = ({
 
     if (isMobileView) {
       options = (
-        <Grid container alignItems="center" justify="flex-end" spacing={3}>
+        <Grid container alignItems="center" justifyContent="flex-end" spacing={3}>
           <Grid item sm={2} align="center">
             <FormControlLabel
               control={
@@ -319,9 +322,11 @@ const MemberListItem = ({
                     </Avatar>
                   </Grid>
                   <Grid>
-                    <Typography>
-                      {member.FirstName} {member.LastName}
-                    </Typography>
+                    <Link href={`/profile/${member.AD_Username}`}>
+                      <Typography>
+                        {member.FirstName} {member.LastName}
+                      </Typography>
+                    </Link>
                   </Grid>
                 </Grid>
               </Grid>
@@ -351,6 +356,7 @@ const MemberListItem = ({
 
     content = (
       <>
+        <Divider />
         <Grid container alignItems="center" spacing={2} wrap="nowrap">
           <Grid item md={1} style={rowStyle}>
             <Avatar
@@ -363,9 +369,11 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3} style={rowStyle}>
-            <Typography>
-              {member.FirstName} {member.LastName}
-            </Typography>
+            <Link href={`/profile/${member.AD_Username}`}>
+              <Typography>
+                {member.FirstName} {member.LastName}
+              </Typography>
+            </Link>
           </Grid>
           <Grid item xs={4} style={rowStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
