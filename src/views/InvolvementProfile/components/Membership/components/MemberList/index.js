@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';
 
 import { Card, CardHeader, CardContent, Grid } from '@material-ui/core';
-import MemberListItem from './components/MemberListItem';
+import MemberListItem from './components/MemberListSingle';
 
 const breakpointWidth = 810;
 
