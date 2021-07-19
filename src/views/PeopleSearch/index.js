@@ -191,7 +191,6 @@ class PeopleSearch extends Component {
       displayLargeImage: false,
 
       resultData: [], //Array of collected data to be created
-      imageResults: [], //array of collected images
       header: '',
       searchButtons: '',
 
@@ -417,7 +416,6 @@ class PeopleSearch extends Component {
       this.setState({
         header: <GordonLoader />,
         resultData: [],
-        imageResults: [],
         academicsExpanded: false,
         homeExpanded: false,
         offDepExpanded: false,
