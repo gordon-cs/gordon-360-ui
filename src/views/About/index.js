@@ -16,7 +16,7 @@ const About = () => {
   }, []);
 
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
         <Card className="about">
           <CardHeader
