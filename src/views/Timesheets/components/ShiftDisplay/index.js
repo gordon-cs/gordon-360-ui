@@ -6,7 +6,7 @@ import SavedShiftsList from '../SavedShiftsList';
 import jobs from 'services/jobs';
 import SimpleSnackbar from 'components/Snackbar';
 import Media from 'react-media';
-import './ShiftDisplay.css';
+import styles from './ShiftDisplay.module.css';
 
 export default class ShiftDisplay extends Component {
   constructor(props) {

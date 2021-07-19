@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './coCurricularTranscriptActivity.css';
+import styles from './CoCurricularTranscriptActivity.module.css';
 
 export default class Activity extends Component {
   // Helper functions for parsing and translating sessionCode which is of the format "YYYYSE"

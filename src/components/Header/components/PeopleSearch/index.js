@@ -2,7 +2,7 @@ import Downshift from 'downshift';
 import SearchIcon from '@material-ui/icons/Search';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import './people-search.css';
+import styles from './PeopleSearch.module.css';
 import peopleSearch from 'services/people-search';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 

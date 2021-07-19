@@ -6,7 +6,7 @@ import user from 'services/user';
 import session from 'services/session';
 import GordonLoader from 'components/Loader';
 
-import './CLWChart.css';
+import styles from './CLWCreditsDaysLeft.module.css';
 
 import { Card, CardHeader, CardContent, Typography, Grid, Button } from '@material-ui/core';
 

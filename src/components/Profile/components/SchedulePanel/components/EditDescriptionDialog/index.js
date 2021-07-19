@@ -1,6 +1,6 @@
 import React from 'react';
 import { gordonColors } from 'theme';
-import './editdescriptiondialog.css';
+import styles from './EditDescriptionDialog.module.css';
 
 import { Dialog, DialogTitle, DialogActions, Button, TextField } from '@material-ui/core';
 

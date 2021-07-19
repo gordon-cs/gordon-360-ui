@@ -5,7 +5,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 
-import './newsItem.scss';
+import styles from './NewsItem.module.css';
 
 import { Typography, CardContent, Collapse, Grid, Button } from '@material-ui/core';
 

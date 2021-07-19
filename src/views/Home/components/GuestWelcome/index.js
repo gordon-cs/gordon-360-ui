@@ -7,7 +7,7 @@ import PWAInstructions from 'components/PWAInstructions/index';
 import LoginDialogue from 'components/LoginDialogue';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ga } from 'react-ga';
-import './guestWelcome.css';
+import styles from './GuestWelcome.module.css';
 
 const GuestWelcome = ({ onLogIn }) => {
   const isOnline = useNetworkStatus();

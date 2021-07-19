@@ -6,7 +6,7 @@ import membershipService from 'services/membership';
 import userService from 'services/user';
 import GordonLoader from 'components/Loader';
 import MembershipInfoCard from './components/MembershipInfoCard';
-import './index.css';
+import styles from './MembershipsList.module.css';
 
 /**
  * A List of memberships for display on the Profile and MyProfile views.

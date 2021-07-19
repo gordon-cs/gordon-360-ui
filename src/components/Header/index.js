@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
 import { Route, Switch, NavLink, Link } from 'react-router-dom';
-import './header.css';
+import styles from './Header.module.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';

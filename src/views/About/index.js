@@ -4,7 +4,7 @@ import versionService from 'services/version';
 import { projectName } from 'project-name';
 import contributors from './contributors.json';
 import origins from './origins.json';
-import './about.css';
+import styles from './About.module.css';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@material-ui/core';
 

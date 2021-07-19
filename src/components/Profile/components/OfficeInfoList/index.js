@@ -1,5 +1,5 @@
 import React from 'react';
-import './index.css';
+import styles from './OfficeInfoList.module.css';
 
 import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
 import ProfileInfoListItem from '../ProfileInfoListItem';

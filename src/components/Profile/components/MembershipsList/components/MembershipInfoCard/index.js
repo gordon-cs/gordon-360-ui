@@ -4,7 +4,7 @@ import { Divider, Grid, List, ListItem, Switch, Typography } from '@material-ui/
 import { Link } from 'react-router-dom';
 import LockIcon from '@material-ui/icons/Lock';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import './index.css';
+import styles from './MembershipInfoCard.module.css';
 
 const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
   const isOnline = useNetworkStatus();

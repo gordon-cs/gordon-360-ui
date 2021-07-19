@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './index.css';
+import styles from './EmergencyInfoList.module.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import user from 'services/user';
 

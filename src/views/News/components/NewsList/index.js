@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { React, useEffect, useState } from 'react';
 import NewsItem from '../NewsItem';
 import { gordonColors } from 'theme';
-import './newsList.scss';
+import styles from './NewsList.module.css';
 import { Grid, Typography, Card, List } from '@material-ui/core';
 
 //https://www.pluralsight.com/guides/re-render-react-component-on-window-resize

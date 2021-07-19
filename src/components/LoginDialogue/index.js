@@ -5,7 +5,7 @@ import storage from 'services/storage';
 import session from 'services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import GordonLoader from 'components/Loader';
-import './loginDialogue.css';
+import styles from './LoginDialogue.module.css';
 
 // TODO: Eventually abstract this out to be a global login component to be called anywhere
 const LoginDialogue = ({ onLogIn }) => {

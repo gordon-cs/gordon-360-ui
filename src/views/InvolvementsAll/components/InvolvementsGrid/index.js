@@ -2,7 +2,7 @@ import { Grid, Typography, Card, CardActionArea, CardMedia, CardContent } from '
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import './involvements-grid.css';
+import styles from './InvolvementsGrid.module.css';
 
 const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => {
   const isOnline = useNetworkStatus();

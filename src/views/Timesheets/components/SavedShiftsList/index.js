@@ -21,7 +21,7 @@ import ShiftItem from '../ShiftItem';
 import { gordonColors } from 'theme';
 import jobs from 'services/jobs';
 import GordonLoader from 'components/Loader';
-import './SavedShiftsList.css';
+import styles from './SavedShiftsList.module.css';
 
 export default class SavedShiftsList extends Component {
   constructor(props) {

@@ -3,7 +3,7 @@ import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@materi
 import { Check, Remove, Clear } from '@material-ui/icons';
 import { StatusColors } from 'services/wellness';
 import SymptomsDialog from 'components/SymptomsDialog';
-import './index.css';
+import styles from './HealthStatus.module.css';
 
 const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

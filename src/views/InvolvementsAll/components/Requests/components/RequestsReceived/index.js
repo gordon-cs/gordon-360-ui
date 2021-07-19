@@ -15,7 +15,7 @@ import {
   Badge,
 } from '@material-ui/core';
 import membershipService from 'services/membership';
-import './requests-received.css';
+import styles from './RequestsReceived.module.css';
 
 const RequestReceived = ({ involvement }) => {
   const [requests, setRequests] = useState([]);

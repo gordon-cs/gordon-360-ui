@@ -18,7 +18,7 @@ import userService from 'services/user';
 import involvementService from 'services/activity';
 import sessionService from 'services/session';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import './involvements-all.css';
+import styles from './InvolvementsAll.module.css';
 
 const InvolvementsAll = ({ location, authentication, history }) => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');

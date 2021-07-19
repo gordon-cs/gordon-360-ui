@@ -24,7 +24,7 @@ import userService from 'services/user';
 import { gordonColors } from 'theme';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
-import './involvement-profile.css';
+import styles from './InvolvementProfile.module.css';
 import GordonOffline from 'components/GordonOffline';
 
 const CROP_DIM = 320; // pixels

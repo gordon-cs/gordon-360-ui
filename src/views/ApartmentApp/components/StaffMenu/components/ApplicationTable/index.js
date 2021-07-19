@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core/';
 import ApplicationTableHead from './components/ApplicationTableHead';
 import ApplicationRow from './components/ApplicationRow';
-import './applicationTable.css';
+import styles from './ApplicationTable.module.css';
 
 const ApplicationsTable = ({ applications }) => {
   const [order, setOrder] = useState('asc');

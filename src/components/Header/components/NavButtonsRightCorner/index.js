@@ -6,7 +6,7 @@ import user from 'services/user';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import GordonNavButton from 'components/NavButton';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import './index.css';
+import styles from './NavButtonsRightCorner.module.css';
 
 /**
  *

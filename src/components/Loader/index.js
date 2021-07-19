@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './loader.css';
+import styles from './Loader.module.css';
 
 import { Grid, CircularProgress } from '@material-ui/core';
 

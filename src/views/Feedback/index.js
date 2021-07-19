@@ -1,5 +1,5 @@
 import React from 'react';
-import './feedback.css';
+import styles from './Feedback.module.css';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
 

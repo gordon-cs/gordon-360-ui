@@ -21,7 +21,7 @@ import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import './ShiftItem.css';
+import styles from './ShiftItem.module.css';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 

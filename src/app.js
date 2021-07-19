@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
-import './app.css';
+import styles from './app.module.css';
 import analytics from './services/analytics';
 import { isAuthenticated } from './services/auth';
 import NetworkContextProvider from './contexts/NetworkContext';

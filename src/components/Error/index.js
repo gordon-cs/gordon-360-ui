@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import './error.css';
+import styles from './Error.module.css';
 
 import { Grid, Typography } from '@material-ui/core';
 

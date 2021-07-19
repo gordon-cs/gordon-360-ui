@@ -25,7 +25,7 @@ import ShiftDisplay from './components/ShiftDisplay';
 import { withStyles } from '@material-ui/core/styles';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { gordonColors } from 'theme';
-import './timesheets.css';
+import styles from './Timesheets.module.css';
 import GordonLoader from 'components/Loader';
 import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from 'components/Snackbar';

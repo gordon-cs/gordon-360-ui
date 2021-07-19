@@ -18,7 +18,7 @@ import GordonLoader from 'components/Loader';
 import SymptomsDialog from 'components/SymptomsDialog';
 import wellness, { StatusColors } from 'services/wellness.js';
 
-import './index.scss';
+import styles from './WellnessQuestion.module.css';
 
 const WellnessQuestion = ({ setStatus }) => {
   const [loading, setLoading] = useState(true);

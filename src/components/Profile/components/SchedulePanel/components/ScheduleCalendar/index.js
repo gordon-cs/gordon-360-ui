@@ -8,7 +8,7 @@ import schedule from 'services/schedule';
 import myschedule from 'services/myschedule';
 import session from 'services/session';
 
-import './schedulecalendar.css';
+import styles from './ScheduleCalendar.module.css';
 
 export default class GordonScheduleCalendar extends Component {
   constructor(props) {

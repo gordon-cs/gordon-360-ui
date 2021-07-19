@@ -12,7 +12,7 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonNavButton from 'components/NavButton';
-import './nav-links.css';
+import styles from './NavLinks.module.css';
 
 const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
   const [areLinksOpen, setAreLinksOpen] = useState(false);

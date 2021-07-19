@@ -2,7 +2,7 @@ import { Divider, Drawer, Hidden } from '@material-ui/core';
 import React from 'react';
 import GordonNavAvatar from './components/NavAvatar';
 import GordonNavLinks from './components/NavLinks';
-import './nav.css';
+import styles from './Nav.module.css';
 
 const GordonNav = ({ onDrawerToggle, authentication, onSignOut, drawerOpen }) => {
   const drawer = (

@@ -4,7 +4,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { gordonColors } from 'theme';
-import './index.css';
+import styles from './PWAInstructions.module.css';
 
 import DesktopChromeInstall from './images/Desktop/Desktop-Chrome-Install-360.png';
 import DesktopOpenChrome from './images/Desktop/Desktop-Open-Chrome.png';

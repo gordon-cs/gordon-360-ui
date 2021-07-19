@@ -1,4 +1,4 @@
-import './scottieDog.scss';
+import styles from './ScottieDog.module.css';
 
 const ScottieDog = () => {
   return (

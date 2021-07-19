@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider, ListItem, Grid, Typography } from '@material-ui/core';
-import './index.css';
+import styles from './ProfileInfoListItem.module.css';
 
 const ProfileInfoListItem = ({ title, contentText, ContentIcon = null, contentClass = null }) => {
   const gridSizeProps = ContentIcon ? { xs: 4, md: 3, lg: 4 } : { xs: 7 };

@@ -9,7 +9,7 @@ import 'cropperjs/dist/cropper.css';
 import defaultGordonImage from './defaultGordonImage';
 import GordonLoader from 'components/Loader/index';
 import { windowBreakWidths } from 'theme';
-import './index.css';
+import styles from './Identification.module.css';
 
 import {
   Grid,

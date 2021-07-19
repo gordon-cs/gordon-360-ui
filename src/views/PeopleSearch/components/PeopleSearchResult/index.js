@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import userService from 'services/user';
 import VisibilitySensor from 'react-visibility-sensor';
 
-import './peopleSearchResult.css';
+import styles from './PeopleSearchResult.module.css';
 
 /*Const string was created with https://png-pixel.com/ .
  *It is a 1 x 1 pixel with the same color as gordonColors.neutral.lightGray (7/9/21)

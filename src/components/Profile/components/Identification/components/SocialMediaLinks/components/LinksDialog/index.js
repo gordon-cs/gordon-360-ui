@@ -9,7 +9,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import { socialMediaInfo } from 'socialMedia';
-import './linksDialog.css';
+import styles from './LinksDialog.module.css';
 
 const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   const [formErrors, setFormErrors] = useState([]);

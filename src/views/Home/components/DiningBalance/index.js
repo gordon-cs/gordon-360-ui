@@ -6,7 +6,7 @@ import { gordonColors } from 'theme';
 import user from 'services/user';
 import session from 'services/session';
 
-import './DiningBalance.css';
+import styles from './DiningBalance.module.css';
 
 export default class DiningBalance extends Component {
   constructor(props) {

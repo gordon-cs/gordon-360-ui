@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import './event-item.css';
+import styles from './EventItem.module.css';
 
 import { Typography, CardContent, Collapse, Grid } from '@material-ui/core';
 

@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 //import List from '@material-ui/core/List';
 //import Typography from '@material-ui/core/Typography';
-import './coCurricularTranscriptExperience.css';
+import styles from './CoCurricularTranscriptExperience.module.css';
 
 //This component is a child of the CoCurricularTranscript component.
 //Returns a formatted Experience item to be displayed by the Transcript component

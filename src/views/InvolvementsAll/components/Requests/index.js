@@ -14,7 +14,7 @@ import parseISO from 'date-fns/parseISO';
 import userService from 'services/user';
 import RequestReceived from './components/RequestsReceived';
 import RequestSent from './components/RequestSent';
-import './index.css';
+import styles from './Requests.module.css';
 
 const Requests = () => {
   const [requestsSent, setRequestsSent] = useState([]);

@@ -7,7 +7,7 @@ import Login from 'components/LoginDialogue';
 import wellness from 'services/wellness';
 import user from 'services/user';
 
-import './index.css';
+import styles from './WellnessCheck.module.css';
 
 const WellnessCheck = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);

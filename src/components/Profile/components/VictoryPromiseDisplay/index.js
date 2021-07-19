@@ -2,7 +2,7 @@ import React from 'react';
 import { gordonColors } from 'theme';
 import { Polar } from 'react-chartjs-2';
 import victory from 'services/victory';
-import './VictoryPromise.css';
+import styles from './VictoryPromiseDisplay.module.css';
 import { withStyles } from '@material-ui/core/styles';
 import { ReactComponent as OffCC } from './images/Off-CC.svg';
 import { ReactComponent as OnCC } from './images/On-CC.svg';

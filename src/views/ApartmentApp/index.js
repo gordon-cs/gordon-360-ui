@@ -7,7 +7,7 @@ import StudentApplication from './components/StudentApplication';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import housing from 'services/housing';
 import user from 'services/user';
-import './apartmentApp.css';
+import styles from './ApartmentApp.module.css';
 import { NotFoundError } from 'services/error';
 import GordonOffline from 'components/GordonOffline';
 

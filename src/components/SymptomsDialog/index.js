@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import wellness, { StatusColors } from 'services/wellness';
-import './index.css';
+import styles from './SymptomsDialog.module.css';
 
 const SymptomsDialog = ({ isOpen, setIsOpen, setStatus }) => {
   return (

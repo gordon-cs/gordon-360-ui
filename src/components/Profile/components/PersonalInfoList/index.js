@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import user from 'services/user';
-import './index.css';
+import styles from './PersonalInfoList.module.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import LockIcon from '@material-ui/icons/Lock';
 import HelpIcon from '@material-ui/icons/Help';
