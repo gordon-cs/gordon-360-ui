@@ -40,13 +40,13 @@ a {
   }
 }
 
-.app-wrapper {
+.app_wrapper {
   display: flex;
   position: relative;
   width: 100%;
 }
 
-.app-main {
+.app_main {
   height: calc(100vh - #{$header-height-xs});
   margin-top: $header-height-xs;
   overflow-y: auto; // change this to scroll for ios to make the scroll smoothly
@@ -61,7 +61,7 @@ a {
 }
 
 // style for links that are menu items or buttons (not just text)
-.gc360-link {
+.gc360_link {
   color: $neutral-black;
   &:hover {
     color: $neutral-black !important;
@@ -69,7 +69,7 @@ a {
   }
 }
 // style for links that are simply text and therefore need more of a sign that they are clickable
-.gc360-text-link {
+.gc360_text_link {
   color: $primary-blue;
   transition: color 200ms;
   &:hover {
@@ -78,21 +78,21 @@ a {
 }
 
 @media (min-width: $break-sm) {
-  .app-main {
+  .app_main {
     height: calc(100vh - #{$header-height-sm});
     margin-top: $header-height-sm;
     margin-left: 0;
   }
 }
 @media (min-width: $break-md) {
-  .app-main {
+  .app_main {
     height: calc(100vh - #{$header-height-md});
     margin-top: $header-height-md;
     padding: 1rem;
   }
 }
 @media (max-width: $break-md) {
-  .gc360-a-link {
+  .gc360_a_link {
     color: $primary-cyan !important;
   }
 }
@@ -103,10 +103,10 @@ strong {
   margin-top: 20px;
 }
 
-.disable-select {
+.disable_select {
   user-select: none;
 }
 
-.rounded-corners {
+.rounded_corners {
   border-radius: 0.5rem;
 }
