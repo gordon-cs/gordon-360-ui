@@ -410,8 +410,6 @@ class PeopleSearch extends Component {
     return result;
   };
 
-  // async loadImages()
-
   async search() {
     if (!this.canSearch()) {
       // do not search, only search if there are some non-blank non-false values
