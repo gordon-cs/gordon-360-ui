@@ -1,13 +1,13 @@
 @import '../../vars';
 
-.wellness-check {
+.wellness_check {
   text-align: center;
 
-  .MuiPaper-elevation1 {
+  .MuiPaper_elevation1 {
     box-shadow: none;
   }
 
-  .MuiButton-contained {
+  .MuiButton_contained {
     background-color: $primary-cyan;
     color: $neutral-white;
 
@@ -16,12 +16,12 @@
     }
   }
 
-  .user-image {
+  .user_image {
     max-height: 200px;
     min-width: 160px;
   }
 
-  .wellness-header {
+  .wellness_header {
     background-color: $primary-blue;
     color: $neutral-white;
     padding: 10px;

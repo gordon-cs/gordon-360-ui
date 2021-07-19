@@ -1,6 +1,6 @@
 @import '../../../../../../vars';
 
-.requests-received {
+.requests_received {
   &-list {
     flex-direction: column;
   }
@@ -12,7 +12,7 @@
     padding: 32px;
   }
 
-  .deny-request-button {
+  .deny_request_button {
     color: $secondary-red;
   }
 }

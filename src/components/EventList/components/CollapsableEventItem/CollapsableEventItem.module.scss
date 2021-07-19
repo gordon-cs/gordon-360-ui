@@ -1,26 +1,26 @@
 @import '../../../../vars';
 
-.event-item {
+.event_item {
   padding-left: 10px;
   padding-top: 10px;
   padding-right: 10px;
   padding-bottom: 10px;
 }
 
-.event-content {
+.event_content {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-.event-heading {
+.event_heading {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-.event-item:hover .event-content {
+.event_item:hover .event_content {
   color: $neutral-white;
 }
 
-.event-item:hover .event-heading {
+.event_item:hover .event_heading {
   color: $neutral-white;
 }

@@ -1,7 +1,7 @@
 /* Style sheet for CoCurricular Transcript view */
 @import '../../vars';
 
-.co-curricular-transcript {
+.co_curricular_transcript {
   display: grid;
   grid-template-columns: 15% 70% 15%;
   justify-items: stretch;
@@ -19,7 +19,7 @@
     }
   }
 
-  .card-content {
+  .card_content {
     display: grid;
     font-size: 48px;
     grid-template-columns: 100%;
@@ -36,13 +36,13 @@
     justify-self: flex-start;
   }
 
-  .activity-list {
+  .activity_list {
     font-size: 30%;
   }
 
   /* @media screen is css that is in effect when a certain view is on display */
   @media screen {
-    .print-only * {
+    .print_only * {
       visibility: hidden;
       border-spacing: 0;
       border-collapse: collapse;
@@ -61,10 +61,10 @@
     visibility: hidden;
   }
 
-  .co-curricular-transcript {
+  .co_curricular_transcript {
     .card-content,
     .subtitle,
-    .activity-list {
+    .activity_list {
       visibility: visible;
     }
 

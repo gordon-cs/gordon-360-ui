@@ -2,14 +2,14 @@
 .timesheets {
   // Make rows alternate white and grey
   /* stylelint-disable */
-  .shift-list > .shift-item:nth-child(even) {
+  .shift_list > .shift_item:nth_child(even) {
     background: $neutral-light-gray;
     &:hover {
       background-color: $primary-cyan;
     }
   }
 
-  .shift-list > .shift-item:nth-child(odd) {
+  .shift_list > .shift_item:nth_child(odd) {
     background: $neutral-white;
     &:hover {
       background-color: $primary-cyan;

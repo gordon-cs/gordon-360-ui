@@ -2,13 +2,13 @@
 
 $drawer-width: 240px;
 
-.gordon-header {
+.gordon_header {
   position: absolute;
   width: 100%;
   display: inline-flex;
   justify-content: center;
 
-  .app-bar {
+  .app_bar {
     position: absolute;
     background-repeat: no-repeat;
     background-image: url('./gc_seal_top_56.png');
@@ -21,7 +21,7 @@ $drawer-width: 240px;
     text-transform: capitalize;
     min-width: 90px;
 
-    &.disabled-tab {
+    &.disabled_tab {
       color: $neutral-white-opacity30;
     }
   }
@@ -30,16 +30,16 @@ $drawer-width: 240px;
     text-decoration: none;
   }
 
-  .menu-button {
+  .menu_button {
     margin-left: -12px;
   }
 
-  .center-container {
+  .center_container {
     visibility: hidden;
     width: 0;
   }
 
-  .right-side-container {
+  .right_side_container {
     margin-left: 16px;
     padding: 0;
     align-items: center;
@@ -47,22 +47,22 @@ $drawer-width: 240px;
   }
 
   @media (min-width: $break-sm) {
-    .app-bar {
+    .app_bar {
       background-image: url('./gc_seal_top_64.png');
       height: $header-height-sm;
     }
   }
 
   @media (min-width: $break-md) {
-    .menu-button {
+    .menu_button {
       display: none;
     }
-    .app-bar {
+    .app_bar {
       background-image: url('./gc_seal_top_72.png');
       height: $header-height-md;
     }
 
-    .center-container {
+    .center_container {
       flex: 3;
       justify-content: center;
       display: flex;
@@ -72,14 +72,14 @@ $drawer-width: 240px;
     .tab {
       min-width: 80px;
     }
-    .right-side-container {
+    .right_side_container {
       display: flex;
       margin-left: 24px;
     }
   }
 
   @media (min-width: $break-lg) {
-    .center-container {
+    .center_container {
       flex: 7;
     }
     .tab {
@@ -87,7 +87,7 @@ $drawer-width: 240px;
     }
   }
 
-  .header-button {
+  .header_button {
     margin-left: -12px;
     margin-right: -12px;
   }
@@ -98,11 +98,11 @@ $drawer-width: 240px;
     font-weight: bold;
   }
 
-  .menu-button-icon {
+  .menu_button_icon {
     color: $neutral-white;
   }
 
-  .login-button {
+  .login_button {
     color: $neutral-white;
   }
 }

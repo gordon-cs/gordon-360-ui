@@ -1,6 +1,6 @@
 @import '../../../../../../vars';
 
-.membership-info-card {
+.membership_info_card {
   &-description {
     hyphens: auto;
     -ms-hyphens: auto;
@@ -26,22 +26,22 @@
       }
     }
   }
-  .private-membership {
+  .private_membership {
     opacity: 0.5;
   }
 
-  .public-membership {
+  .public_membership {
     opacity: 1;
   }
 }
 
-.snackbar-icon {
+.snackbar_icon {
   margin-bottom: -4.5pt;
   margin-right: 0.5rem;
 }
 
 @media (max-width: 500px) {
-  .membership-info-card {
+  .membership_info_card {
     padding: 1.5rem 0rem;
     flex-direction: column-reverse;
     &-description {

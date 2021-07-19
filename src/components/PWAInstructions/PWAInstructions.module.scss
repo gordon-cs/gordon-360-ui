@@ -1,6 +1,6 @@
 @import '../../vars';
 
-.pwa-instructions {
+.pwa_instructions {
   &-title {
     background-color: $primary-blue !important;
     color: $neutral-white;
@@ -26,7 +26,7 @@
         &-platform {
           margin-bottom: 1rem;
           &-toggles {
-            .MuiToggleButtonGroup-grouped:not(:first-child) {
+            .MuiToggleButtonGroup_grouped:not(:first_child) {
               border-left: 1px solid $neutral-white-opacity50;
             }
           }
@@ -75,7 +75,7 @@
 }
 
 @media (max-width: 599px) {
-  .pwa-instructions {
+  .pwa_instructions {
     &-title {
       text-align: center;
     }
@@ -97,7 +97,7 @@
             }
             &-toggles {
               justify-content: center !important;
-              .MuiToggleButton-root {
+              .MuiToggleButton_root {
                 padding: 0rem 1rem;
               }
             }
@@ -116,7 +116,7 @@
 }
 
 @media (max-width: 450px) {
-  .pwa-instructions {
+  .pwa_instructions {
     &-title {
       text-align: center;
     }

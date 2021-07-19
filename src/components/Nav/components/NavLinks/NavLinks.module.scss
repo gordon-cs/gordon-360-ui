@@ -1,11 +1,11 @@
 @import '../../../../vars';
 
-.gordon-nav-links {
+.gordon_nav_links {
   .active > li {
     background: $neutral-gray2;
   }
 
-  .gordon-nav-links-bottom {
+  .gordon_nav_links_bottom {
     position: fixed;
     bottom: 0;
   }

@@ -1,15 +1,15 @@
 @import '../../vars';
 
-.wellness-question {
-  .MuiButtonBase-root {
+.wellness_question {
+  .MuiButtonBase_root {
     padding: 4px;
   }
 
-  .MuiFormLabel-root {
+  .MuiFormLabel_root {
     color: $neutral-black !important;
   }
 
-  .wellness-header {
+  .wellness_header {
     background-color: $primary-blue;
     color: $neutral-white;
     padding: 10px;
@@ -21,7 +21,7 @@
     border: 15px solid $wellness-green;
     border-radius: 2px;
     color: $neutral-white;
-    .MuiButton-contained {
+    .MuiButton_contained {
       background: $wellness-green;
       color: $neutral-white;
     }
@@ -31,7 +31,7 @@
     border: 15px solid $wellness-yellow;
     border-radius: 2px;
     color: $neutral-dark-gray;
-    .MuiButton-contained {
+    .MuiButton_contained {
       background: $wellness-yellow;
       color: $neutral-dark-gray;
     }

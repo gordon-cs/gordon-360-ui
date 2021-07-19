@@ -1,6 +1,6 @@
 @import '../../vars';
 
-.gc360-id-dialog {
+.gc360_id_dialog {
   display: grid;
   grid-template-rows: auto auto auto;
   &_title {
@@ -49,7 +49,7 @@
 }
 
 @media (max-width: $break-sm) {
-  .gc360-id-dialog {
+  .gc360_id_dialog {
     &_content {
       &_dropzone {
         width: 10rem;

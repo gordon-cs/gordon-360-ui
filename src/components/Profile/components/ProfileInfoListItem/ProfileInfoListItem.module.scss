@@ -1,13 +1,13 @@
 @import '../../../../vars.scss';
 
-.profile-info-list-item {
+.profile_info_list_item {
   hyphens: auto;
   -ms-hyphens: auto;
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
   word-break: break-word;
 
-  & p.MuiTypography-root {
+  & p.MuiTypography_root {
     text-align: left;
   }
 }

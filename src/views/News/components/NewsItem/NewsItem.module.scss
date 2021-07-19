@@ -1,12 +1,12 @@
 @import '../../../../vars';
 
-.news-item {
+.news_item {
   padding: 1rem;
   align-items: center;
   transition: background-color 150ms;
   border-top: solid 1.5px $neutral-light-gray;
 
-  .news-authorProfileLink {
+  .news_authorProfileLink {
     color: inherit;
   }
 
@@ -27,7 +27,7 @@
     .news-column,
     .descriptionText,
     .news-content,
-    .news-heading {
+    .news_heading {
       color: $neutral-white;
     }
   }
@@ -42,7 +42,7 @@
     .news-column,
     .descriptionText,
     .news-content,
-    .news-heading {
+    .news_heading {
       color: $neutral-dark-gray;
     }
   }

@@ -1,7 +1,7 @@
 @import '../../../../vars';
 
-.gordon-people-search {
-  .people-search-dropdown {
+.gordon_people_search {
+  .people_search_dropdown {
     position: absolute;
     max-height: 60vh;
     overflow-y: auto; // make this to scroll
@@ -19,30 +19,30 @@
     background-color: transparentize($color: $primary-cyan, $amount: 0.9);
   }
 
-  .people-search-suggestion {
+  .people_search_suggestion {
     display: block;
     align-self: left;
     padding-bottom: 25px;
   }
 
-  .people-search-suggestion-selected {
+  .people_search_suggestion_selected {
     background-color: $neutral-light-gray;
     display: block;
     align-self: left;
     padding-bottom: 25px;
   }
 
-  .people-search-suggestion-selected:hover {
+  .people_search_suggestion_selected:hover {
     background-color: $neutral-light-gray !important;
   }
 
-  .people-search-dropdown:hover .people-search-suggestion-selected {
+  .people_search_dropdown:hover .people_search_suggestion_selected {
     background-color: $neutral-white;
   }
 
   // .loading is shown first. After 350ms, .loading opacity and font-size go to 0. This is done
   // to give space for .no-results to increase in font size and change to normal opacity.
-  .no-results {
+  .no_results {
     font-size: 0;
     opacity: 0;
     font-style: italic;
@@ -81,7 +81,7 @@
   }
 
   @media (min-width: 0px) {
-    .people-search-root {
+    .people_search_root {
       width: 7rem;
       &:focus-within {
         width: 7rem;
@@ -90,7 +90,7 @@
   }
 
   @media (min-width: $break-xs) {
-    .people-search-root {
+    .people_search_root {
       width: 8rem;
       &:focus-within {
         width: 8rem;
@@ -99,7 +99,7 @@
   }
 
   @media (min-width: 400px) {
-    .people-search-root {
+    .people_search_root {
       width: 10rem;
       &:focus-within {
         width: 10rem;
@@ -109,16 +109,16 @@
 
   @media (min-width: $break-sm) {
     .people-search-suggestion,
-    .people-search-suggestion-selected {
+    .people_search_suggestion_selected {
       width: 12rem;
     }
-    .people-search-dropdown {
+    .people_search_dropdown {
       right: 28px;
     }
-    .text-field {
+    .text_field {
       width: 14rem;
     }
-    .people-search-root {
+    .people_search_root {
       align-self: flex-end;
       width: 15rem;
       &:focus-within {
@@ -128,10 +128,10 @@
   }
 
   @media (min-width: $break-md) {
-    .text-field {
+    .text_field {
       width: 14rem;
     }
-    .people-search-root {
+    .people_search_root {
       align-self: flex-end;
       width: 13.5rem;
       &:focus-within {
@@ -139,15 +139,15 @@
       }
     }
     .people-search-suggestion,
-    .people-search-suggestion-selected {
+    .people_search_suggestion_selected {
       width: 11.15rem;
     }
-    .people-search-dropdown {
+    .people_search_dropdown {
       right: auto;
     }
   }
 
-  .people-search-root {
+  .people_search_root {
     align-self: flex-end;
     color: inherit;
     background: $primary-blue;

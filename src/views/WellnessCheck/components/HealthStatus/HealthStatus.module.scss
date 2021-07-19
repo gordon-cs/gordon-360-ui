@@ -1,19 +1,19 @@
 @import '../../../../vars';
 
-.wellness-status {
+.wellness_status {
   .GREEN {
-    .status-box {
+    .status_box {
       height: 250px;
       background-color: $wellness-green;
     }
 
-    .status-time {
+    .status_time {
       font-size: calc(14px + 1vw);
       color: $neutral-white;
       padding-bottom: 30px;
     }
 
-    .status-animation {
+    .status_animation {
       text-align: center;
       height: calc(70px + 3vw);
       width: calc(70px + 3vw);
@@ -40,18 +40,18 @@
   }
 
   .YELLOW {
-    .status-box {
+    .status_box {
       height: 250px;
       background-color: $wellness-yellow;
     }
 
-    .status-time {
+    .status_time {
       font-size: calc(14px + 1vw);
       color: $neutral-dark-gray;
       padding-bottom: 30px;
     }
 
-    .status-animation {
+    .status_animation {
       text-align: center;
       height: calc(70px + 3vw);
       width: calc(70px + 3vw);
@@ -78,18 +78,18 @@
   }
 
   .RED {
-    .status-box {
+    .status_box {
       height: 250px;
       background-color: $wellness-red;
     }
 
-    .status-time {
+    .status_time {
       font-size: calc(14px + 1vw);
       color: $neutral-gray2;
       padding-bottom: 30px;
     }
 
-    .status-animation {
+    .status_animation {
       text-align: center;
       height: calc(70px + 3vw);
       width: calc(70px + 3vw);
@@ -116,12 +116,12 @@
   }
 }
 
-a.rtc-link {
+a.rtc_link {
   color: $primary-cyan;
   text-decoration: underline;
 }
 
-a.rtc-link:hover {
+a.rtc_link:hover {
   color: $primary-blue;
   text-decoration: underline;
 }

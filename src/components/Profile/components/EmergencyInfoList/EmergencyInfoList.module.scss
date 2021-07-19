@@ -1,6 +1,6 @@
 @import '../../../../vars';
 
-.emrg-info-list {
+.emrg_info_list {
   &-header {
     background-color: $primary-blue;
     color: $neutral-white;
@@ -24,33 +24,33 @@
   }
 }
 
-.my-emrg-info {
+.my_emrg_info {
   & .private {
     color: $neutral-black-opacity40;
 
-    & .not-private {
+    & .not_private {
       opacity: 1;
       color: $dark-text-color;
     }
   }
 }
 
-.public-emrg-info {
+.public_emrg_info {
   & .private {
     color: $secondary-red;
 
-    & a.gc360-text-link {
+    & a.gc360_text_link {
       color: inherit;
     }
 
-    & .not-private {
+    & .not_private {
       color: $dark-text-color;
     }
   }
 }
 
 @media (max-width: $break-sm) {
-  .emrg-info-list {
+  .emrg_info_list {
     &-header {
       padding-left: 0rem;
       justify-content: center;

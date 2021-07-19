@@ -3,29 +3,29 @@
 // This is direct import from the API scss file. Needs to clean up some unnecessary design formats.
 @import '../../../../../../../node_modules/react-big-calendar/lib/sass/styles.scss';
 
-.rbc-btn {
+.rbc_btn {
   color: inherit;
   font: inherit;
   margin: 0;
 }
 
-button.rbc-btn {
+button.rbc_btn {
   overflow: visible;
   text-transform: none;
   -webkit-appearance: button;
   cursor: pointer;
 }
 
-button[disabled].rbc-btn {
+button[disabled].rbc_btn {
   cursor: not-allowed;
 }
 
-button.rbc-input::-moz-focus-inner {
+button.rbc_input::_moz_focus_inner {
   border: 0;
   padding: 0;
 }
 
-.rbc-calendar {
+.rbc_calendar {
   box-sizing: border-box;
   height: 100%;
   display: flex;
@@ -35,12 +35,12 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-calendar *,
 .rbc-calendar *:before,
-.rbc-calendar *:after {
+.rbc_calendar *:after {
   box-sizing: inherit;
 }
 
 .rbc-abs-full,
-.rbc-row-bg {
+.rbc_row_bg {
   overflow: hidden;
   position: absolute;
   top: 0;
@@ -49,14 +49,14 @@ button.rbc-input::-moz-focus-inner {
   bottom: 0;
 }
 
-.rbc-event-label {
+.rbc_event_label {
   font-size: 60%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.rbc-row-segment .rbc-event-content {
+.rbc_row_segment .rbc_event_content {
   font-size: 80%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -64,7 +64,7 @@ button.rbc-input::-moz-focus-inner {
   max-width: 100%;
 }
 
-.rbc-day-slot .rbc-event-content {
+.rbc_day_slot .rbc_event_content {
   font-size: 90%;
   width: 100%;
   flex: 1 1 0;
@@ -73,7 +73,7 @@ button.rbc-input::-moz-focus-inner {
   height: 100%;
   min-height: 1em;
 }
-.rbc-time-view {
+.rbc_time_view {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -81,46 +81,46 @@ button.rbc-input::-moz-focus-inner {
   border: 1px solid $neutral-light-gray2;
   min-height: 0;
 }
-.rbc-time-view .rbc-time-gutter {
+.rbc_time_view .rbc_time_gutter {
   white-space: nowrap;
 }
-.rbc-time-view .rbc-allday-cell {
+.rbc_time_view .rbc_allday_cell {
   box-sizing: content-box;
   width: 100%;
   height: 100%;
   position: relative;
 }
-.rbc-time-view .rbc-allday-cell + .rbc-allday-cell {
+.rbc_time_view .rbc_allday_cell + .rbc_allday_cell {
   border-left: 1px solid $neutral-light-gray2;
 }
-.rbc-time-view .rbc-allday-events {
+.rbc_time_view .rbc_allday_events {
   position: relative;
   z-index: 4;
 }
-.rbc-time-view .rbc-row {
+.rbc_time_view .rbc_row {
   box-sizing: border-box;
   min-height: 0px;
 }
 
-.rbc-time-view-resources .rbc-time-header-content {
+.rbc_time_view_resources .rbc_time_header_content {
   min-width: 140px;
   flex: 1 0 0;
   flex-basis: 0px;
 }
 
-.rbc-rtl {
+.rbc_rtl {
   direction: rtl;
 }
 
-.rbc-off-range {
+.rbc_off_range {
   color: $neutral-gray3;
 }
 
-.rbc-off-range-bg {
+.rbc_off_range_bg {
   background: $neutral-light-gray;
 }
 
-.rbc-header {
+.rbc_header {
   overflow: hidden;
   flex: 1 0 0%;
   text-overflow: ellipsis;
@@ -133,68 +133,68 @@ button.rbc-input::-moz-focus-inner {
   min-height: 0;
   border-bottom: 1px solid $neutral-light-gray2;
 }
-.rbc-header + .rbc-header {
+.rbc_header + .rbc_header {
   border-left: 1px solid $neutral-light-gray2;
 }
-.rbc-rtl .rbc-header + .rbc-header {
+.rbc_rtl .rbc_header + .rbc_header {
   border-left-width: 0;
   border-right: 1px solid $neutral-light-gray2;
 }
 .rbc-header > a,
 .rbc-header > a:active,
-.rbc-header > a:visited {
+.rbc_header > a:visited {
   color: inherit;
   text-decoration: none;
 }
 
-.rbc-row-content {
+.rbc_row_content {
   position: relative;
   user-select: none;
   -webkit-user-select: none;
   z-index: 4;
 }
 
-.rbc-today {
+.rbc_today {
   background-color: $neutral-light-gray;
 }
 
-.rbc-btn-group {
+.rbc_btn_group {
   display: none;
   white-space: nowrap;
 }
-.rbc-btn-group + button {
+.rbc_btn_group + button {
   margin-left: 10px;
 }
-.rbc-btn-group button + button {
+.rbc_btn_group button + button {
   margin-left: -1px;
 }
-.rbc-rtl .rbc-btn-group button + button {
+.rbc_rtl .rbc_btn_group button + button {
   margin-left: 0;
   margin-right: -1px;
 }
-.rbc-btn-group > button:not(:first-child):not(:last-child) {
+.rbc_btn_group > button:not(:first_child):not(:last_child) {
   border-radius: 0;
 }
 .rbc-btn-group + .rbc-btn-group,
-.rbc-btn-group > button:first-child:not(:last-child) {
+.rbc_btn_group > button:first_child:not(:last_child) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.rbc-btn-group > button:last-child:not(:first-child) {
+.rbc_btn_group > button:last_child:not(:first_child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-.rbc-rtl .rbc-btn-group > button:first-child:not(:last-child) {
+.rbc_rtl .rbc_btn_group > button:first_child:not(:last_child) {
   border-radius: 4px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-.rbc-rtl .rbc-btn-group > button:last-child:not(:first-child) {
+.rbc_rtl .rbc_btn_group > button:last_child:not(:first_child) {
   border-radius: 4px;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 
-  .rbc-toolbar {
+  .rbc_toolbar {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -202,12 +202,12 @@ button.rbc-input::-moz-focus-inner {
     margin-bottom: 10px;
     font-size: 16px;
   }
-  .rbc-toolbar .rbc-toolbar-label {
+  .rbc_toolbar .rbc_toolbar_label {
     flex-grow: 1;
     padding: 0 10px;
     text-align: center;
   }
-  .rbc-toolbar button {
+  .rbc_toolbar button {
     color: #373a3c;
     display: inline-block;
     margin: 0;
@@ -221,19 +221,19 @@ button.rbc-input::-moz-focus-inner {
     line-height: normal;
     white-space: nowrap;
   }
-  .rbc-toolbar button:focus {
+  .rbc_toolbar button:focus {
     color: #373a3c;
     background-color: $neutral-light-gray;
     border-color: $neutral-gray3;
   }
-  .rbc-toolbar button:hover {
+  .rbc_toolbar button:hover {
     color: #373a3c;
     background-color: $neutral-light-gray;
     border-color: $neutral-gray3;
   }
 
   .rbc-toolbar button:active,
-  .rbc-toolbar button.rbc-active {
+  .rbc_toolbar button.rbc_active {
     background-image: none;
     box-shadow: inset 0 3px 5px $neutral-black-opacity125;
     background-color: $neutral-light-gray;
@@ -242,13 +242,13 @@ button.rbc-input::-moz-focus-inner {
   .rbc-toolbar button:active:hover,
   .rbc-toolbar button:active:focus,
   .rbc-toolbar button.rbc-active:hover,
-  .rbc-toolbar button.rbc-active:focus {
+  .rbc_toolbar button.rbc_active:focus {
     color: #373a3c;
     background-color: $neutral-light-gray2;
     border-color: $neutral-gray;
   }
 
-  .rbc-event {
+  .rbc_event {
     border: none;
     box-shadow: none;
     margin: 0;
@@ -260,55 +260,55 @@ button.rbc-input::-moz-focus-inner {
     width: 100%;
     text-align: left;
   }
-  .rbc-slot-selecting .rbc-event {
+  .rbc_slot_selecting .rbc_event {
     cursor: inherit;
     pointer-events: none;
   }
-  .rbc-event.rbc-selected {
+  .rbc_event.rbc_selected {
     background-color: #265985;
   }
-  .rbc-event:focus {
+  .rbc_event:focus {
     outline: 5px auto #3b99fc;
   }
 
-  .rbc-event-overlaps {
+  .rbc_event_overlaps {
     box-shadow: -1px 1px 5px 0px $neutral-black-opacity55;
   }
 
-  .rbc-event-continues-prior {
+  .rbc_event_continues_prior {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
 
-  .rbc-event-continues-after {
+  .rbc_event_continues_after {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
 
-  .rbc-event-continues-earlier {
+  .rbc_event_continues_earlier {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
 
-  .rbc-event-continues-later {
+  .rbc_event_continues_later {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
 
-  .rbc-row {
+  .rbc_row {
     display: flex;
     flex-direction: row;
   }
 
-  .rbc-row-segment {
+  .rbc_row_segment {
     padding: 0 1px 1px 1px;
   }
 
-  .rbc-selected-cell {
+  .rbc_selected_cell {
     background-color: $neutral-black-opacity10;
   }
 
-  .rbc-show-more {
+  .rbc_show_more {
     background-color: $neutral-white-opacity30;
     z-index: 4;
     font-weight: bold;
@@ -317,39 +317,39 @@ button.rbc-input::-moz-focus-inner {
     line-height: normal;
   }
 
-  .rbc-date-cell {
+  .rbc_date_cell {
     flex: 1 1 0;
     min-width: 0;
     padding-right: 5px;
     text-align: right;
   }
-  .rbc-date-cell.rbc-now {
+  .rbc_date_cell.rbc_now {
     font-weight: bold;
   }
   .rbc-date-cell > a,
   .rbc-date-cell > a:active,
-  .rbc-date-cell > a:visited {
+  .rbc_date_cell > a:visited {
     color: inherit;
     text-decoration: none;
   }
 
-  .rbc-row-bg {
+  .rbc_row_bg {
     display: flex;
     flex-direction: row;
     flex: 1 0 0;
     overflow: hidden;
   }
 
-  .rbc-time-header {
+  .rbc_time_header {
     display: flex;
     flex: 0 0 auto;
     flex-direction: row;
   }
-  .rbc-time-header-cell-single-day {
+  .rbc_time_header_cell_single_day {
     display: none;
   }
 
-  .rbc-time-header-content {
+  .rbc_time_header_content {
     flex: 1;
     display: flex;
     min-width: 0;
@@ -357,23 +357,23 @@ button.rbc-input::-moz-focus-inner {
     border-left: 1px solid $neutral-light-gray2;
   }
 
-  .rbc-day-bg {
+  .rbc_day_bg {
     flex: 1 0 0%;
   }
-  .rbc-time-view-resources .rbc-day-bg {
+  .rbc_time_view_resources .rbc_day_bg {
     width: 100%;
     flex: 1 1 0;
     flex-basis: 0 px;
   }
-  .rbc-day-bg + .rbc-day-bg {
+  .rbc_day_bg + .rbc_day_bg {
     border-left: 1px solid $neutral-light-gray2;
   }
-  .rbc-rtl .rbc-day-bg + .rbc-day-bg {
+  .rbc_rtl .rbc_day_bg + .rbc_day_bg {
     border-left-width: 0;
     border-right: 1px solid $neutral-light-gray2;
   }
 
-  .rbc-overlay {
+  .rbc_overlay {
     position: absolute;
     z-index: 5;
     border: 1px solid $neutral-light-gray;
@@ -381,51 +381,51 @@ button.rbc-input::-moz-focus-inner {
     box-shadow: 0 5px 15px $neutral-black-opacity20;
     padding: 10px;
   }
-  .rbc-overlay > * + * {
+  .rbc_overlay > * + * {
     margin-top: 1px;
   }
 
-  .rbc-overlay-header {
+  .rbc_overlay_header {
     border-bottom: 1px solid $neutral-light-gray;
     margin: -10px -10px 5px -10px;
     padding: 2px 10px;
   }
 
-  .rbc-time-column {
+  .rbc_time_column {
     display: flex;
     flex-direction: column;
     min-height: 100%;
   }
-  .rbc-time-slot {
+  .rbc_time_slot {
     flex: 1 0 0;
   }
-  .rbc-time-slot.rbc-now {
+  .rbc_time_slot.rbc_now {
     font-weight: bold;
   }
 
-  .rbc-timeslot-group {
+  .rbc_timeslot_group {
     border-bottom: 1px solid $neutral-light-gray2;
     min-height: 40px;
     display: flex;
     flex-flow: column nowrap;
   }
-  .rbc-time-column .rbc-timeslot-group {
+  .rbc_time_column .rbc_timeslot_group {
     flex: 1;
   }
 
   .rbc-time-gutter,
-  .rbc-header-gutter {
+  .rbc_header_gutter {
     flex: none;
   }
 
-  .rbc-label {
+  .rbc_label {
     padding: 0 5px;
   }
 
-  .rbc-day-slot {
+  .rbc_day_slot {
     position: relative;
   }
-  .rbc-day-slot .rbc-events-container {
+  .rbc_day_slot .rbc_events_container {
     bottom: 0;
     left: 0;
     position: absolute;
@@ -433,11 +433,11 @@ button.rbc-input::-moz-focus-inner {
     margin-right: 10px;
     top: 0;
   }
-  .rbc-day-slot .rbc-events-container.rbc-is-rtl {
+  .rbc_day_slot .rbc_events_container.rbc_is_rtl {
     left: 10px;
     right: 0;
   }
-  .rbc-day-slot .rbc-event {
+  .rbc_day_slot .rbc_event {
     border: 1px solid #265985;
     display: flex;
     max-height: 100%;
@@ -447,18 +447,18 @@ button.rbc-input::-moz-focus-inner {
     overflow: hidden;
     position: absolute;
   }
-  .rbc-day-slot .rbc-event-label {
+  .rbc_day_slot .rbc_event_label {
     flex: none;
     padding-right: 5px;
     width: auto;
   }
 
-  .rbc-day-slot .rbc-time-slot {
+  .rbc_day_slot .rbc_time_slot {
     border-top: 1px solid $neutral-white;
   }
 
   .rbc-time-view-resources .rbc-time-gutter,
-  .rbc-time-view-resources .rbc-time-header-gutter {
+  .rbc_time_view_resources .rbc_time_header_gutter {
     position: sticky;
     left: 0;
     background-color: $neutral-white;
@@ -467,28 +467,28 @@ button.rbc-input::-moz-focus-inner {
     margin-right: -1px;
   }
 
-  .rbc-time-view-resources .rbc-time-header {
+  .rbc_time_view_resources .rbc_time_header {
     overflow: hidden;
   }
 
-  .rbc-time-view-resources .rbc-time-header-cell-single-day {
+  .rbc_time_view_resources .rbc_time_header_cell_single_day {
     display: none;
   }
 
-  .rbc-time-view-resources .rbc-day-slot {
+  .rbc_time_view_resources .rbc_day_slot {
     min-width: 140px;
   }
 
   .rbc-time-view-resources .rbc-header,
-  .rbc-time-header-content + .rbc-time-header-content {
+  .rbc_time_header_content + .rbc_time_header_content {
     margin-left: -1px;
   }
 
-  .rbc-day-header {
+  .rbc_day_header {
     text-align: center;
   }
 
-  .rbc-slot-selection {
+  .rbc_slot_selection {
     z-index: 10;
     position: absolute;
     background-color: $neutral-black-opacity55;
@@ -498,34 +498,34 @@ button.rbc-input::-moz-focus-inner {
     padding: 3px;
   }
 
-  .rbc-slot-selecting {
+  .rbc_slot_selecting {
     cursor: move;
   }
 
-  .rbc-time-header.rbc-overflowing {
+  .rbc_time_header.rbc_overflowing {
     border-right: 1px solid $neutral-light-gray2;
   }
-  .rbc-rtl .rbc-time-header.rbc-overflowing {
+  .rbc_rtl .rbc_time_header.rbc_overflowing {
     border-right-width: 0;
     border-left: 1px solid $neutral-light-gray2;
   }
-  .rbc-time-header > .rbc-row:first-child {
+  .rbc_time_header > .rbc_row:first_child {
     border-bottom: 1px solid $neutral-light-gray2;
   }
-  .rbc-time-header > .rbc-row.rbc-row-resource {
+  .rbc_time_header > .rbc_row.rbc_row_resource {
     border-bottom: 1px solid $neutral-light-gray2;
   }
 
-  .rbc-rtl .rbc-time-header-content {
+  .rbc_rtl .rbc_time_header_content {
     border-left-width: 0;
     border-right: 1px solid $neutral-light-gray2;
   }
-  .rbc-time-header-content > .rbc-row.rbc-row-resource {
+  .rbc_time_header_content > .rbc_row.rbc_row_resource {
     border-bottom: 1px solid $neutral-light-gray2;
     flex-shrink: 0;
   }
 
-  .rbc-time-content {
+  .rbc_time_content {
     display: flex;
     flex: 1 0 0%;
     align-items: flex-start;
@@ -534,23 +534,23 @@ button.rbc-input::-moz-focus-inner {
     overflow-y: auto;
     position: relative;
   }
-  .rbc-time-content > .rbc-time-gutter {
+  .rbc_time_content > .rbc_time_gutter {
     flex: none;
   }
-  .rbc-time-content > * + * > * {
+  .rbc_time_content > * + * > * {
     border-left: 1px solid $neutral-light-gray2;
   }
-  .rbc-rtl .rbc-time-content > * + * > * {
+  .rbc_rtl .rbc_time_content > * + * > * {
     border-left-width: 0;
     border-right: 1px solid $neutral-light-gray2;
   }
-  .rbc-time-content > .rbc-day-slot {
+  .rbc_time_content > .rbc_day_slot {
     width: 100%;
     user-select: none;
     -webkit-user-select: none;
   }
 
-  .rbc-current-time-indicator {
+  .rbc_current_time_indicator {
     position: absolute;
     z-index: 3;
     left: 0;

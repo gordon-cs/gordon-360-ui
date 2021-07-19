@@ -1,6 +1,6 @@
 @import '../../vars.scss';
 
-.event-buttons {
+.event_buttons {
   padding-bottom: 1rem;
 
   button {
@@ -22,24 +22,24 @@
   }
 }
 
-.event-filters-wrapper {
+.event_filters_wrapper {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 
-  .filter-chips {
+  .filter_chips {
     display: flex;
     flex-wrap: wrap;
   }
 
-  .filter-chip {
+  .filter_chip {
     color: $neutral-white;
     background-color: $primary-cyan;
     margin: 2px;
   }
 }
 
-.event-filters-select {
+.event_filters_select {
   min-width: 200px;
   margin: 10px;
 }

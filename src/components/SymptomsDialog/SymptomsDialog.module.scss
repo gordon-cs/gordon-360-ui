@@ -1,13 +1,13 @@
 @import '../../vars';
 
-.symptoms-dialog {
-  .MuiDialog-paper {
+.symptoms_dialog {
+  .MuiDialog_paper {
     border: 15px solid $wellness-yellow;
     border-radius: 5px;
     color: $neutral-dark-gray;
   }
 
-  .confirm-symptoms {
+  .confirm_symptoms {
     background: $wellness-yellow;
   }
 }

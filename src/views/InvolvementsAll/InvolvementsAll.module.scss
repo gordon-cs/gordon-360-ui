@@ -1,6 +1,6 @@
 @import '../../vars';
 
-.involvements-filter {
+.involvements_filter {
   background-color: $neutral-light-gray;
   // Keep filter section visible after scrolling
   position: sticky;
@@ -8,7 +8,7 @@
   z-index: 2;
 }
 
-.involvements-header {
+.involvements_header {
   background-color: $primary-blue;
   color: white;
 }

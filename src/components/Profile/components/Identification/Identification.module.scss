@@ -15,7 +15,7 @@ $image-side-width-desktop: 90px;
 // SNACKBAR STYLES
 
 // PHOTO DIALOG STYLES
-.gc360-photo-dialog {
+.gc360_photo_dialog {
   &-box {
     display: grid;
     grid-template-rows: auto auto auto auto auto auto;
@@ -97,7 +97,7 @@ $image-side-width-desktop: 90px;
 }
 
 // IDENTIFICATION CARD STYLES
-.identification-card {
+.identification_card {
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -209,7 +209,7 @@ $image-side-width-desktop: 90px;
           &-social-media {
             border-bottom: 1px solid $neutral-black-opacity55;
             margin-bottom: 1rem !important;
-            .gc360-my-profile {
+            .gc360_my_profile {
               &_icon {
                 font-size: 36px;
                 color: $primary-blue;
@@ -265,7 +265,7 @@ $image-side-width-desktop: 90px;
 }
 
 @media (max-width: $break-sm) {
-  .gc360-photo-dialog {
+  .gc360_photo_dialog {
     height: 100%;
     &-box {
       &_content {
@@ -279,7 +279,7 @@ $image-side-width-desktop: 90px;
       }
     }
   }
-  .identification-card {
+  .identification_card {
     &-header {
       justify-content: center;
       padding-left: 0rem;

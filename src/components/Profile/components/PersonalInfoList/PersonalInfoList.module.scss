@@ -1,6 +1,6 @@
 @import '../../../../vars';
 
-.personal-info-list {
+.personal_info_list {
   &-header {
     background-color: $primary-blue;
     color: $neutral-white;
@@ -24,33 +24,33 @@
   }
 }
 
-.my-personal-info {
+.my_personal_info {
   & .private {
     color: $neutral-black-opacity40;
 
-    & .not-private {
+    & .not_private {
       opacity: 1;
       color: $dark-text-color;
     }
   }
 }
 
-.public-personal-info {
+.public_personal_info {
   & .private {
     color: $secondary-red;
 
-    & a.gc360-text-link {
+    & a.gc360_text_link {
       color: inherit;
     }
 
-    & .not-private {
+    & .not_private {
       color: $dark-text-color;
     }
   }
 }
 
 @media (max-width: $break-sm) {
-  .personal-info-list {
+  .personal_info_list {
     &-header {
       padding-left: 0rem;
       justify-content: center;

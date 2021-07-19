@@ -7,7 +7,7 @@
     list-style-type: '⮞ ';
   }
 
-  & .MuiCard-root {
+  & .MuiCard_root {
     box-shadow: none;
   }
 
@@ -16,7 +16,7 @@
     padding: 1rem;
   }
 
-  &-contributors.MuiTypography-root {
+  &-contributors.MuiTypography_root {
     white-space: pre-wrap;
     margin-left: 1rem;
   }

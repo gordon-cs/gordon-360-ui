@@ -1,51 +1,51 @@
 @import '../../../../../../vars';
 
-div.staff-apartment-application {
-  & .MuiToolbar-root.stylized-table-toolbar {
+div.staff_apartment_application {
+  & .MuiToolbar_root.stylized_table_toolbar {
     color: $primary-blue;
     padding-top: 0;
     padding-bottom: 0;
   }
 
-  & .MuiTableHead-root.stylized-table-head {
+  & .MuiTableHead_root.stylized_table_head {
     .MuiTableCell-head,
     .MuiTableCell-stickyHeader,
-    .MuiTableSortLabel-root {
+    .MuiTableSortLabel_root {
       background-color: $primary-blue;
       color: $neutral-white;
-      svg.MuiSvgIcon-root.MuiTableSortLabel-icon {
+      svg.MuiSvgIcon_root.MuiTableSortLabel_icon {
         color: $neutral-white;
       }
     }
   }
 
   // Make rows alternate white and grey
-  & .striped-table > tr:nth-child(even) {
+  & .striped_table > tr:nth_child(even) {
     background-color: $neutral-light-gray;
   }
 
-  & .striped-table > tr:nth-child(odd) {
+  & .striped_table > tr:nth_child(odd) {
     background-color: $neutral-white;
   }
 
   // Make rows alternate white and grey but in groups of two
   // (Needed to make the collapsible sub-tables match the row above
   & .double-striped-table > tr:nth-child(4n),
-  & .double-striped-table > tr:nth-child(4n - 1) {
+  & .double_striped_table > tr:nth_child(4n _ 1) {
     background-color: $neutral-light-gray;
   }
 
   & .double-striped-table > tr:nth-child(4n - 2),
-  & .double-striped-table > tr:nth-child(4n - 3) {
+  & .double_striped_table > tr:nth_child(4n _ 3) {
     background-color: $neutral-white;
   }
 
-  & .MuiTableCell-root.collapsible-row {
+  & .MuiTableCell_root.collapsible_row {
     padding-top: 0;
     padding-bottom: 0;
   }
 
-  & .MuiTable-root.sub-table {
+  & .MuiTable_root.sub_table {
     border-left: 2px solid $neutral-black-opacity10;
     border-right: 2px solid $neutral-black-opacity10;
     border-bottom: 1px solid $neutral-black-opacity10;

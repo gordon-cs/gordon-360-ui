@@ -1,16 +1,16 @@
 @import '../../../../vars';
 
-div.gw-card {
+div.gw_card {
   background-color: $primary-blue;
   color: $neutral-white;
   opacity: 0.92;
 }
 
-.gw-container {
+.gw_container {
   padding: 1em;
 }
 
-.gw-background {
+.gw_background {
   background: url(./images/campusFull.jpg) no-repeat center center fixed;
   background-size: cover;
   margin: -1rem;

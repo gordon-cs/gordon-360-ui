@@ -1,6 +1,6 @@
 @import '../../../../vars';
 
-.office-info-list {
+.office_info_list {
   background-color: $alternative-red;
   &-header {
     background-color: $primary-blue;
@@ -10,7 +10,7 @@
 }
 
 @media (max-width: $break-sm) {
-  .office-info-list {
+  .office_info_list {
     background-color: $alternative-red;
     &-header {
       padding-left: 0rem;

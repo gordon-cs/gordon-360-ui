@@ -22,14 +22,14 @@ $dog-body-height: 5em;
 .dog * {
   position: absolute;
 }
-.dog-body {
+.dog_body {
   background-color: $dog-color;
   width: $dog-body-width;
   height: $dog-body-height;
   top: 0;
   border-radius: 0 1.5em 0 1.5em;
 }
-.dog-head {
+.dog_head {
   background-color: $dog-color;
   height: calc(#{$dog-body-height} / 1.6);
   width: calc(#{$dog-body-width} / 1.8);
@@ -39,7 +39,7 @@ $dog-body-height: 5em;
     translateY(calc(#{-1 * $dog-body-height} / 2.5)) rotate(-15deg);
   border-radius: 0.2em;
 }
-.dog-eye {
+.dog_eye {
   background-color: $neutral-light-gray2;
   width: 0.7em;
   height: 0.7em;
@@ -47,14 +47,14 @@ $dog-body-height: 5em;
   right: 30%;
   top: 15%;
 }
-.dog-nose {
+.dog_nose {
   background-color: $neutral-black;
   width: 0.9em;
   height: 0.9em;
   border-radius: 50%;
   transform: translateX(-0.2em) translateY(-0.2em);
 }
-.dog-ear {
+.dog_ear {
   right: 0;
   top: 0;
   transform: translateY(-1.5em) rotate(15deg);
@@ -64,7 +64,7 @@ $dog-body-height: 5em;
   border-right: solid 1em transparent;
   border-bottom: solid 2em $dog-color;
 }
-.dog-collar {
+.dog_collar {
   background-color: rgb(165, 0, 0);
   bottom: 0;
   right: 0;
@@ -77,30 +77,30 @@ $dog-body-height: 5em;
   text-align: center;
   font-family: monospace;
 }
-.dog-leg {
+.dog_leg {
   background-color: $dog-color;
   width: 1.5em;
   height: 1.5em;
   top: 5em;
   left: 0;
 }
-.dog-leg1 {
+.dog_leg1 {
   transform: translateX(2em);
 }
-.dog-leg2 {
+.dog_leg2 {
   transform: translateX(4em);
   height: 1.2em;
   background-color: $neutral-dark-gray2;
 }
-.dog-leg3 {
+.dog_leg3 {
   transform: translateX($dog-body-width - 3.5em);
 }
-.dog-leg4 {
+.dog_leg4 {
   transform: translateX($dog-body-width - 1.5em);
   height: 1.2em;
   background-color: $neutral-dark-gray2;
 }
-.dog-tail {
+.dog_tail {
   transform: translateX($dog-body-width - 2em + 0.8em) translateY(-4.5em + 1em) rotate(30deg);
   width: 0;
   height: 0;
