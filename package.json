@@ -18,6 +18,7 @@
     "history": "^4.10.1",
     "http-proxy-middleware": "^2.0.0",
     "interweave": "^12.7.2",
+    "is-unicode-supported": "^1.1.0",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "luxon": "^1.27.0",
