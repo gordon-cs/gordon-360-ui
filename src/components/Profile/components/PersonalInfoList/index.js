@@ -285,10 +285,10 @@ const PersonalInfoList = ({
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
-            <Grid container item xs={myProf ? 2 : 7} alignItems="center">
+            <Grid container item xs={myProf && mailCombo ? 2 : 7} alignItems="center">
               <Typography className={null}>{`#${Mail_Location}`}</Typography>
             </Grid>
-            {myProf && (
+            {myProf && mailCombo && (
               <>
                 <Grid container item xs={2} alignItems="center">
                   {showMailCombo && <Typography className={'private'}>{`${mailCombo}`}</Typography>}
