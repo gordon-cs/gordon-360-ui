@@ -23,7 +23,7 @@ const CompletedCheckIn = ({ basicInfo }) => {
         </Typography>
         <br />
         <Grid item align="center">
-          <Button variant="contained" onClick={() => window.location.replace('')}>
+<Button variant="contained" component={Link} to="/">
             Home
           </Button>
         </Grid>
