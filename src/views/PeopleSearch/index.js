@@ -41,8 +41,8 @@ import CityIcon from '@material-ui/icons/LocationCity';
 import goStalk from 'services/goStalk';
 import user from 'services/user';
 import { gordonColors } from 'theme';
-import PeopleSearchResult from './components/PeopleSearchResult';
 import GordonLoader from 'components/Loader';
+import PeopleSearchResult from './components/PeopleSearchResult';
 import ReactToPrint from 'react-to-print';
 
 const styles = {
@@ -92,7 +92,7 @@ const styles = {
 };
 
 const noResultsCard = (
-  <Grid item xs={12}>
+  <Grid item xs={12} direction="row" justifyContent="center" alignItems="center">
     <Card>
       <CardContent>
         <Typography variant="headline" align="center">
@@ -148,6 +148,9 @@ const searchPageTitle = (
   </div>
 );
 
+//Configuration constants
+const NUM_NONLAZY_IMAGES = 20; //The number of results for which images will be fetched immediately
+
 class PeopleSearch extends Component {
   constructor(props) {
     super(props);
@@ -190,7 +193,7 @@ class PeopleSearch extends Component {
 
       displayLargeImage: false,
 
-      peopleSearchResults: null,
+      resultData: [], //Array of collected data to be created
       header: '',
       searchButtons: '',
 
@@ -202,7 +205,7 @@ class PeopleSearch extends Component {
     // Browser 'back' arrow
     window.onpopstate = () => {
       if (!window.location.href.includes('?')) {
-        this.setState({ header: '', peopleSearchResults: null });
+        this.setState({ header: '', resultData: null });
       }
       this.loadSearchParamsFromURL();
     };
@@ -387,7 +390,12 @@ class PeopleSearch extends Component {
     const { includeStudent, includeFacStaff, includeAlumni, ...valuesNeededForSearch } =
       this.state.searchValues;
     let result = Object.values(valuesNeededForSearch)
-      .map((x) => x.toString().trim())
+      .map((x) =>
+        x
+          .toString()
+          .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
+          .trim(),
+      )
       .some((x) => x);
     return result;
   };
@@ -398,7 +406,7 @@ class PeopleSearch extends Component {
     } else {
       this.setState({
         header: <GordonLoader />,
-        peopleSearchResults: null,
+        resultData: [],
         academicsExpanded: false,
         searchValues: {
           ...this.state.searchValues,
@@ -407,36 +415,39 @@ class PeopleSearch extends Component {
           homeCity: this.state.searchValues.homeCity?.trim(),
         },
       });
-      let peopleSearchResults = await goStalk.search(...Object.values(this.state.searchValues));
-
-      if (peopleSearchResults.length === 0) {
+      let results = await goStalk.search(...Object.values(this.state.searchValues));
+      if (results.length === 0) {
         this.setState({
-          peopleSearchResults: noResultsCard,
+          resultData: noResultsCard,
           header: '',
         });
       } else {
         this.setState({
-          peopleSearchResults: (
-            <Media query="(min-width: 960px)">
-              {(matches) =>
-                peopleSearchResults.map((person) => (
-                  <PeopleSearchResult
-                    key={person.AD_Username}
-                    Person={person}
-                    size={
-                      !matches ? 'single' : this.state.displayLargeImage ? 'largeImages' : 'full'
-                    }
-                  />
-                ))
-              }
-            </Media>
-          ),
           header: (
             <Media query="(min-width: 960px)">
               {(matches) =>
                 matches && !this.state.displayLargeImage
                   ? peopleSearchHeaderDesktop
                   : peopleSearchHeaderMobile
+              }
+            </Media>
+          ),
+        });
+
+        this.setState({
+          resultData: (
+            <Media query="(min-width: 960px)">
+              {(matches) =>
+                results.map((person, index) => (
+                  <PeopleSearchResult
+                    key={person.AD_Username}
+                    Person={person}
+                    size={
+                      !matches ? 'single' : this.state.displayLargeImage ? 'largeImages' : 'full'
+                    }
+                    lazyImages={index > NUM_NONLAZY_IMAGES ? true : false}
+                  />
+                ))
               }
             </Media>
           ),
@@ -1228,7 +1239,7 @@ class PeopleSearch extends Component {
                               },
                               academicsExpanded: false,
                               header: '',
-                              peopleSearchResults: null,
+                              resultData: null,
                               displayLargeImage: false,
                             },
                             () => this.updateURL(),
@@ -1260,7 +1271,7 @@ class PeopleSearch extends Component {
               <Card ref={(el) => (this.componentRef = el)}>
                 {printPeopleSearchHeader}
                 {this.state.header}
-                {this.state.peopleSearchResults}
+                {this.state.resultData}
               </Card>
               {this.state.personType && !this.state.personType.includes('stu') && (
                 <ReactToPrint
