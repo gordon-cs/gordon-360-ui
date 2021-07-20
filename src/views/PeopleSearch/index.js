@@ -390,7 +390,7 @@ class PeopleSearch extends Component {
     const { includeStudent, includeFacStaff, includeAlumni, ...valuesNeededForSearch } =
       this.state.searchValues;
     let result = Object.values(valuesNeededForSearch)
-      .map((x) => x.toString().trim())
+      .map((x) => x.toString().replace(/[^a-zA-Z0-9\s,.'-]/g, '').trim())
       .some((x) => x);
     return result;
   };
