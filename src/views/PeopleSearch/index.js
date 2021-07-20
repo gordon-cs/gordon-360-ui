@@ -406,7 +406,6 @@ class PeopleSearch extends Component {
     let result = Object.values(valuesNeededForSearch)
       .map((x) => x.toString().replace(/[^a-zA-Z0-9\s,.'-]/g, '').trim())
       .some((x) => x);
-    
     return result;
   };
 
