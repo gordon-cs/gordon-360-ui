@@ -9,7 +9,6 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
-import info from './info.json';
 
 const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemographic }) => {
   const cyan = gordonColors.primary.cyan;
@@ -22,10 +21,10 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
       </Grid>
       <Grid item>
         <Typography variant="h6" align="center" gutterBottom>
-          <b>{info.header}</b>
+          <b>Federal Reporting Status</b>
         </Typography>
         <Typography variant="body1" gutterBottom>
-          {info.para1}
+          The federal government has created new aggregate categories for reporting race and ethnicity. Reporting these has been mandatory for Gordon College since fall 2010. The categories describe groups to which individuals belong or identify with, not scientific definitions of anthropological origins. In order to transition to the new data standards, we need students to self-identify their ethnicity and race by responding to two questions.
         </Typography>
         <br />
         <Typography variant="body1">
@@ -37,12 +36,12 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
         </ul>
         <br />
         <Typography variant="body1" gutterBottom>
-          {info.para2}
+          Note: The federal government considers 'Hispanic/Latino' to be an ethnicity, not a race. It defines this ethnicity as: A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture of origin, regardless of race. That is why this question is asked separately and Hispanic/Latino is no longer listed as a race identification category.
         </Typography>
         <br />
         <Typography variant="body1">
           The second question asks individuals to indicate one or more races that apply from the
-          following (you can select multiple categories):{' '}
+          following (you can select multiple categories):
         </Typography>
         <ul>
           <li>
@@ -140,7 +139,7 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
       </Grid>
       <Typography variant="subtitle1" gutterBottom>
         <b>
-          {info.subtext}
+          For questions or more information regarding this section please contact the registrar's office at (978) 867-4243 or 
           <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>.
         </b>
       </Typography>

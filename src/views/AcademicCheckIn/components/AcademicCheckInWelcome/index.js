@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import { gordonColors } from 'theme';
-// import './index.css';
 
 const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
   const blue = gordonColors.primary.blue;
