@@ -109,7 +109,6 @@ const PersonalInfoList = ({
       if (myProf && isStudent) {
         const info = await userService.getMailboxCombination();
         setMailCombo(info.Combination);
-        console.log(info);
       }
     }
     loadMailboxCombination();
