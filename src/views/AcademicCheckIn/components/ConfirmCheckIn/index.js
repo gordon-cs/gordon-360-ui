@@ -11,24 +11,18 @@ const ConfirmCheckIn = ({
 }) => {
   const cyan = gordonColors.primary.cyan;
 
-  const raceValues = [
-    demographic.nativeAmerican,
-    demographic.asian,
-    demographic.black,
-    demographic.hawaiian,
-    demographic.white,
-    demographic.none,
-  ];
-  const raceNames = ['Native American', 'Asian', 'Black', 'Hawaiian', 'White', 'Prefer not to say'];
+  const { ethinicity, ...raceValues } = demographic;
 
-  const displayRace = () => {
-    var i;
-    var names = '';
-    for (i = 0; i < raceValues.length; i++) {
-      raceValues[i] === true ? (names += raceNames[i] + ' ') : (names += '');
-    }
-    return names;
+  const races = {
+    nativeAmerican: 'Native American',
+    asian: 'Asian',
+    black: 'Black',
+    hawaiian: 'Hawaiian',
+    white: 'White',
+    none: 'Prefer not to say',
   };
+
+  const displayRace = () => races.filter((race) => raceValues[race]).join(' ');
 
   return (
     <Grid container alignItems="center" justifyContent="center" direction="column">

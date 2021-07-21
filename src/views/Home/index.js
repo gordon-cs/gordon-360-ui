@@ -15,11 +15,13 @@ import user from 'services/user';
 import './home.css';
 import { Grid } from '@material-ui/core';
 import checkInService from 'services/checkIn';
+import { useHistory } from 'react-router';
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
   const [checkedIn, setCheckedIn] = useState(null);
+  const history = useHistory();
 
   /*
     // @WELLNESS-CHECK disabled to revert this from the home page, you must uncomment all the code below.
