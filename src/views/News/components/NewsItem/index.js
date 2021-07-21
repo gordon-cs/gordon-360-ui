@@ -76,7 +76,7 @@ const NewsItem = ({
         onClick={() => {
           handleNewsItemDelete(posting.SNID);
         }}
-        className={styles.btn deleteButton}
+        className={`${styles.btn} ${styles.deleteButton}`}
       >
         Delete
       </Button>
@@ -105,7 +105,7 @@ const NewsItem = ({
         <Collapse in={open} timeout="auto" unmountOnExit>
           <CardContent>
             <Typography className={styles.news-content}>"{posting.categoryName}"</Typography>
-            <Typography className={styles.news-content }>{posting.Body}</Typography>
+            <Typography className={styles.news-content}>{posting.Body}</Typography>
             {posting.Image !== null && (
               <img src={`data:image/jpg;base64,${posting.Image}`} alt=" " />
             )}

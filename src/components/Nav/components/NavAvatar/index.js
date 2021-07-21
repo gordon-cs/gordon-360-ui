@@ -68,12 +68,12 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
 
   const avatar = authentication ? (
     image ? (
-      <Avatar className={styles.avatar image} src={`data:image/jpg;base64,${image}`} />
+      <Avatar className={`${styles.avatar} ${image}`} src={`data:image/jpg;base64,${image}`} />
     ) : (
-      <Avatar className={styles.avatar placeholder}>{getInitials(username)}</Avatar>
+      <Avatar className={`${styles.avatar} ${styles.placeholder}`}>{getInitials(username)}</Avatar>
     )
   ) : (
-    <Avatar className={styles.avatar placeholder}>Guest</Avatar>
+    <Avatar className={`${styles.avatar} ${styles.placeholder}`}>Guest</Avatar>
   );
 
   const buttonLink = React.forwardRef((props, ref) => (

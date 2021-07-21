@@ -64,7 +64,7 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
           <CardHeader title={username} />
           <CardContent>
             <img
-              className={styles.rounded-corners user-image}
+              className={`${styles.rounded-corners} ${user-image}`}
               src={`data:image/jpg;base64,${image}`}
               alt={username}
             />

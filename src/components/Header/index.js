@@ -123,7 +123,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     if (!isOnline) {
       return (
         <Tab
-          className={styles.tab disabled-tab}
+          className={`${styles.tab} ${styles.disabled-tab}`}
           icon={icon}
           label={name}
           onClick={() => setDialog('offline')}
@@ -132,7 +132,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     } else if (!authentication) {
       return (
         <Tab
-          className={styles.tab disabled-tab}
+          className={`${styles.tab} ${styles.disabled-tab}`}
           icon={icon}
           label={name}
           onClick={() => setDialog('unauthorized')}
@@ -179,7 +179,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             <MenuIcon className={styles.menu-button-icon} />
           </IconButton>
 
-          <Typography className={styles.title disable-select} variant="h6" color="inherit">
+          <Typography className={`${styles.title} ${styles.disable-select}`} variant="h6" color="inherit">
             <Switch>
               {routes.map((route) => (
                 <Route

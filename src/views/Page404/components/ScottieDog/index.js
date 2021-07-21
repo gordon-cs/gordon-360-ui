@@ -10,10 +10,10 @@ const ScottieDog = () => {
         <div className={styles.dog-ear}></div>
         <div className={styles.dog-collar}>GORDON 360</div>
       </div>
-      <div className={styles.dog-leg dog-leg1}></div>
-      <div className={styles.dog-leg dog-leg2}></div>
-      <div className={styles.dog-leg dog-leg3}></div>
-      <div className={styles.dog-leg dog-leg4}></div>
+      <div className={`${styles.dog-leg} ${styles.dog-leg1}`}></div>
+      <div className={`${styles.dog-leg} ${styles.dog-leg2}`}></div>
+      <div className={`${styles.dog-leg} ${styles.dog-leg3}`}></div>
+      <div className={`${styles.dog-leg} ${styles.dog-leg4}`}></div>
       <div className={styles.dog-tail}></div>
     </div>
   );

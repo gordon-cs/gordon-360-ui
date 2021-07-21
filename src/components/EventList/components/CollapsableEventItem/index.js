@@ -32,7 +32,7 @@ export default class GordonCollapsableEventItem extends Component {
           </Grid>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography className={styles.event-content  }>Description:</Typography>
+              <Typography className={styles.event-content}>Description:</Typography>
               <Typography className={styles.event-content}>{event.Description}</Typography>
               <p>
                 <nbsp />
