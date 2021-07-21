@@ -29,7 +29,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
-const styles = {
+const styles2 = {
   button: {
     background: gordonColors.primary.blue,
     color: 'white',
@@ -393,7 +393,7 @@ const StudentNews = (props) => {
       newsJSX = (
         <>
           {/* Button to Create Posting */}
-          <Fab variant="extended" color="primary" onClick={handlePostClick} style={styles.fab}>
+          <Fab variant="extended" color="primary" onClick={handlePostClick} style={styles2.fab}>
             <PostAddIcon />
             Post Listing
           </Fab>
@@ -405,7 +405,7 @@ const StudentNews = (props) => {
                 container
                 alignItems="baseline"
                 justify="center"
-                style={styles.searchBar}
+                style={styles2.searchBar}
                 spacing={5}
               >
                 <Grid item xs={10} sm={8} md={8} lg={6}>
@@ -495,9 +495,9 @@ const StudentNews = (props) => {
 
                 {/* IMAGE ENTRY */}
                 <Grid item xs={12}>
-                  <div className={styles.gc360_photo_dialog_box}>
-                    <DialogContent className={styles.gc360_photo_dialog_box_content}>
-                      <DialogContentText className={styles.gc360_photo_dialog_box_content_text}>
+                  <div className={styles2.gc360_photo_dialog_box}>
+                    <DialogContent className={styles2.gc360_photo_dialog_box_content}>
+                      <DialogContentText className={styles2.gc360_photo_dialog_box_content_text}>
                         {createPhotoDialogBoxMessage()}
                       </DialogContentText>
                       {!cropperImageData && (
@@ -509,7 +509,7 @@ const StudentNews = (props) => {
                           {({ getRootProps, getInputProps }) => (
                             <section>
                               <div
-                                className={styles.gc360_photo_dialog_box_content_dropzone}
+                                className={styles2.gc360_photo_dialog_box_content_dropzone}
                                 {...getRootProps()}
                               >
                                 <input {...getInputProps()} />
@@ -519,7 +519,7 @@ const StudentNews = (props) => {
                         </Dropzone>
                       )}
                       {cropperImageData && (
-                        <div className={styles.gc360_photo_dialog_box_content_cropper}>
+                        <div className={styles2.gc360_photo_dialog_box_content_cropper}>
                           <Cropper
                             ref={cropperRef}
                             src={cropperImageData}
@@ -535,7 +535,7 @@ const StudentNews = (props) => {
                         </div>
                       )}
                     </DialogContent>
-                    <DialogActions className={styles.gc360_photo_dialog_box_actions_top}>
+                    <DialogActions className={styles2.gc360_photo_dialog_box_actions_top}>
                       {cropperImageData && (
                         <Tooltip
                           classes={{ tooltip: 'tooltip' }}
@@ -547,8 +547,8 @@ const StudentNews = (props) => {
                             onClick={() => {
                               setCropperImageData(null);
                             }}
-                            style={styles.button.cancelButton}
-                            className={styles.gc360_photo_dialog_box_content_button}
+                            style={styles2.button.cancelButton}
+                            className={styles2.gc360_photo_dialog_box_content_button}
                           >
                             Remove picture
                           </Button>

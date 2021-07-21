@@ -400,7 +400,7 @@ export default class ShiftItem extends Component {
                       });
                       this.onClose();
                     }}
-                    style={styles.redButton}
+                    style={styles2.redButton}
                   >
                     Yes
                   </Button>
@@ -580,7 +580,7 @@ export default class ShiftItem extends Component {
   }
 }
 
-const styles = {
+const styles2 = {
   redButton: {
     background: gordonColors.secondary.red,
     color: 'white',

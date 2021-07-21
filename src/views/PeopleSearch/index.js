@@ -45,7 +45,7 @@ import GordonLoader from 'components/Loader';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import ReactToPrint from 'react-to-print';
 
-const styles = {
+const styles2 = {
   FontAwesome: {
     fontSize: 20,
     margin: 2,
@@ -104,7 +104,7 @@ const noResultsCard = (
 );
 
 const peopleSearchHeaderDesktop = (
-  <div style={styles.headerStyle}>
+  <div style={styles2.headerStyle}>
     <Grid container direction="row" alignItems="center">
       <Grid item xs={5}>
         <Typography variant="body2" style={{ marginLeft: '6rem' }}>
@@ -122,7 +122,7 @@ const peopleSearchHeaderDesktop = (
 );
 
 const peopleSearchHeaderMobile = (
-  <div style={styles.headerStyle}>
+  <div style={styles2.headerStyle}>
     <Grid container direction="row" justifyContent="center">
       <Grid item>
         <Typography variant="body2">RESULTS</Typography>
@@ -132,10 +132,10 @@ const peopleSearchHeaderMobile = (
 );
 
 const printPeopleSearchButton = (
-  <Fab variant="extended" color="primary" style={styles.printPeopleSearchButton}>
+  <Fab variant="extended" color="primary" style={styles2.printPeopleSearchButton}>
     <FaPrint />
     <Media query="(min-width: 960px)">
-      <span style={styles.printPeopleSearchButton__text}>&nbsp;&nbsp;Print Results</span>
+      <span style={styles2.printPeopleSearchButton__text}>&nbsp;&nbsp;Print Results</span>
     </Media>
   </Fab>
 );
@@ -475,7 +475,7 @@ class PeopleSearch extends Component {
     let PeopleSearchCheckbox;
 
     const printPeopleSearchHeader = (
-      <div className={styles.printHeader} align="center" style={{ display: 'none' }}>
+      <div className={styles2.printHeader} align="center" style={{ display: 'none' }}>
         {/* show on print only */}
         <style>{`@media print {.printHeader{display: block !important;}}`}</style>
 
@@ -623,7 +623,7 @@ class PeopleSearch extends Component {
               query="(min-width: 600px)"
               render={() => (
                 <Grid item style={{ marginBottom: '-4px' }}>
-                  <FaHeart style={styles.FontAwesome} className={classes.icon} />
+                  <FaHeart style={styles2.FontAwesome} className={classes.icon} />
                 </Grid>
               )}
             />
@@ -749,7 +749,7 @@ class PeopleSearch extends Component {
                           query="(min-width: 600px)"
                           render={() => (
                             <Grid item style={{ marginBottom: '-4px' }}>
-                              <FaBuilding style={styles.FontAwesome} className={classes.icon} />
+                              <FaBuilding style={styles2.FontAwesome} className={classes.icon} />
                             </Grid>
                           )}
                         />
@@ -841,7 +841,7 @@ class PeopleSearch extends Component {
                         in={this.state.advancedSearchExpanded}
                         timeout="auto"
                         unmountOnExit
-                        style={styles.CardContent}
+                        style={styles2.CardContent}
                       >
                         <br />
                         <Grid>
@@ -873,7 +873,7 @@ class PeopleSearch extends Component {
                                         : gordonColors.neutral.lightGray,
                                   }}
                                 >
-                                  <FaBook style={styles.FontAwesome} className={classes.icon} />
+                                  <FaBook style={styles2.FontAwesome} className={classes.icon} />
                                 </IconContext.Provider>
                               </Grid>
                             )}
@@ -920,7 +920,7 @@ class PeopleSearch extends Component {
                                       : gordonColors.neutral.lightGray,
                                   }}
                                 >
-                                  <FaBook style={styles.FontAwesome} className={classes.icon} />
+                                  <FaBook style={styles2.FontAwesome} className={classes.icon} />
                                 </IconContext.Provider>
                               </Grid>
                             )}
@@ -959,7 +959,7 @@ class PeopleSearch extends Component {
                                       : gordonColors.neutral.lightGray,
                                   }}
                                 >
-                                  <FaSchool style={styles.FontAwesome} className={classes.icon} />
+                                  <FaSchool style={styles2.FontAwesome} className={classes.icon} />
                                 </IconContext.Provider>
                               </Grid>
                             )}
@@ -1002,7 +1002,7 @@ class PeopleSearch extends Component {
                         in={this.state.advancedSearchExpanded}
                         timeout="auto"
                         unmountOnExit
-                        style={styles.CardContent}
+                        style={styles2.CardContent}
                       >
                         <br />
                         <Typography align="center" gutterBottom>
@@ -1029,7 +1029,7 @@ class PeopleSearch extends Component {
                                   }}
                                 >
                                   <FaBriefcase
-                                    style={styles.FontAwesome}
+                                    style={styles2.FontAwesome}
                                     className={classes.icon}
                                   />
                                 </IconContext.Provider>
@@ -1072,7 +1072,10 @@ class PeopleSearch extends Component {
                                       : gordonColors.neutral.lightGray,
                                   }}
                                 >
-                                  <FaBuilding style={styles.FontAwesome} className={classes.icon} />
+                                  <FaBuilding
+                                    style={styles2.FontAwesome}
+                                    className={classes.icon}
+                                  />
                                 </IconContext.Provider>
                               </Grid>
                             )}
@@ -1110,7 +1113,7 @@ class PeopleSearch extends Component {
                         in={this.state.advancedSearchExpanded}
                         timeout="auto"
                         unmountOnExit
-                        style={styles.CardContent}
+                        style={styles2.CardContent}
                       >
                         <br />
                         <Typography align="center" gutterBottom>
@@ -1124,7 +1127,7 @@ class PeopleSearch extends Component {
                             query="(min-width: 600px)"
                             render={() => (
                               <Grid item xs="1" style={{ marginBottom: '-4px' }}>
-                                <HomeIcon style={styles.FontAwesome} className={classes.icon} />
+                                <HomeIcon style={styles2.FontAwesome} className={classes.icon} />
                               </Grid>
                             )}
                           />
@@ -1146,7 +1149,7 @@ class PeopleSearch extends Component {
                             query="(min-width: 600px)"
                             render={() => (
                               <Grid item xs="1" style={{ marginBottom: '-4px' }}>
-                                <CityIcon style={styles.FontAwesome} className={classes.icon} />
+                                <CityIcon style={styles2.FontAwesome} className={classes.icon} />
                               </Grid>
                             )}
                           />
@@ -1173,7 +1176,7 @@ class PeopleSearch extends Component {
                             render={() => (
                               <Grid item xs="1" style={{ marginBottom: '-4px' }}>
                                 <FaGlobeAmericas
-                                  style={styles.FontAwesome}
+                                  style={styles2.FontAwesome}
                                   className={classes.icon}
                                 />
                               </Grid>
@@ -1290,4 +1293,4 @@ class PeopleSearch extends Component {
   }
 }
 
-export default withStyles(styles)(PeopleSearch);
+export default withStyles(styles2)(PeopleSearch);

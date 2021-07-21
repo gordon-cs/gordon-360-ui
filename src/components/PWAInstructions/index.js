@@ -27,7 +27,7 @@ import AppleShareButton from './images/Mobile/Apple/iPhone-Share-Button.png';
 import { Button, Dialog, DialogContent, Typography, Grid } from '@material-ui/core';
 
 // Button styles
-let styles = {
+const styles2 = {
   button: {
     cancel: {
       border: `1px solid ${gordonColors.primary.blue}`,
@@ -231,13 +231,17 @@ const PWAInstructions = (props) => {
                   >
                     <Typography
                       variant="h6"
-                      className={styles.pwa_instructions_content_container_toggles_instructions_text-step}
+                      className={
+                        styles.pwa_instructions_content_container_toggles_instructions_text_step
+                      }
                     >
                       Step {index + 1}:&nbsp;
                     </Typography>
                     <Typography
                       variant="subtitle1"
-                      className={styles.pwa_instructions_content_container_toggles_instructions_text-instruction}
+                      className={
+                        styles.pwa_instructions_content_container_toggles_instructions_text_instruction
+                      }
                     >
                       {step[0]}&nbsp;
                       <a href={step[1]}>click here</a>.
@@ -264,13 +268,17 @@ const PWAInstructions = (props) => {
                 >
                   <Typography
                     variant="h6"
-                    className={styles.pwa_instructions_content_container_toggles_instructions_text-step}
+                    className={
+                      styles.pwa_instructions_content_container_toggles_instructions_text_step
+                    }
                   >
                     Step {index + 1}:&nbsp;
                   </Typography>
                   <Typography
                     variant="subtitle1"
-                    className={styles.pwa_instructions_content_container_toggles_instructions_text-instruction}
+                    className={
+                      styles.pwa_instructions_content_container_toggles_instructions_text_instruction
+                    }
                   >
                     {step[0]}
                   </Typography>
@@ -316,7 +324,7 @@ const PWAInstructions = (props) => {
                 // Exits out the dialog box
                 props.handleDisplay();
               }}
-              style={styles.button.cancel}
+              style={styles2.button.cancel}
             >
               Cancel
             </Button>
@@ -325,7 +333,7 @@ const PWAInstructions = (props) => {
                 // Calls the browser's default prompt to do a quick installation of the PWA
                 props.deferredPWAPrompt.prompt();
               }}
-              style={styles.button.install}
+              style={styles2.button.install}
             >
               Install
             </Button>
@@ -443,13 +451,17 @@ const PWAInstructions = (props) => {
             )}
             {device && platform && getInstructions()}
           </Grid>
-          <Grid container xs={12} className={styles.pwa_instructions_content_container_button_cancel}>
+          <Grid
+            container
+            xs={12}
+            className={styles.pwa_instructions_content_container_button_cancel}
+          >
             <Button
               onClick={() => {
                 // Exits out the dialog box
                 props.handleDisplay();
               }}
-              style={styles.button.cancel}
+              style={styles2.button.cancel}
             >
               Cancel
             </Button>

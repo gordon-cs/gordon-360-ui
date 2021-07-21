@@ -172,7 +172,7 @@ export default class SavedShiftsList extends Component {
             <DialogContent>
               <Grid container>
                 <Grid item xs={6} sm={6} md={6} lg={6}>
-                  <Button style={styles.redButton} onClick={this.onClose} variant="contained">
+                  <Button style={styles2.redButton} onClick={this.onClose} variant="contained">
                     Cancel
                   </Button>
                 </Grid>
@@ -198,31 +198,51 @@ export default class SavedShiftsList extends Component {
     );
 
     let header = (
-      <Grid item xs={12} style={styles.headerStyle}>
+      <Grid item xs={12} style={styles2.headerStyle}>
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
-              <Typography className={styles.disable_select} variant="body2" style={styles.headerItem}>
+              <Typography
+                className={styles.disable_select}
+                variant="body2"
+                style={styles2.headerItem}
+              >
                 JOB
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.disable_select} variant="body2" style={styles.headerItem}>
+              <Typography
+                className={styles.disable_select}
+                variant="body2"
+                style={styles2.headerItem}
+              >
                 IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.disable_select} variant="body2" style={styles.headerItem}>
+              <Typography
+                className={styles.disable_select}
+                variant="body2"
+                style={styles2.headerItem}
+              >
                 OUT
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.disable_select} variant="body2" style={styles.headerItem}>
+              <Typography
+                className={styles.disable_select}
+                variant="body2"
+                style={styles2.headerItem}
+              >
                 RATE
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.disable_select} variant="body2" style={styles.headerItem}>
+              <Typography
+                className={styles.disable_select}
+                variant="body2"
+                style={styles2.headerItem}
+              >
                 HOURS
               </Typography>
             </Grid>
@@ -297,7 +317,7 @@ export default class SavedShiftsList extends Component {
                 justifyContent="space-around"
                 alignItems="center"
                 alignContent="center"
-                style={styles.boxShadow}
+                style={styles2.boxShadow}
               >
                 {header}
                 {shiftsList}
@@ -350,7 +370,7 @@ export default class SavedShiftsList extends Component {
   }
 }
 
-const styles = {
+const styles2 = {
   redButton: {
     background: gordonColors.secondary.red,
     color: 'white',
