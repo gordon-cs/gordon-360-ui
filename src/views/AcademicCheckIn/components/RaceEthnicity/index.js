@@ -67,9 +67,9 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
         <FormControl>
           <FormLabel component="legend">Ethnicity:</FormLabel>
           <RadioGroup
-            aria-label="ethnicity"
-            name="ethnicity"
-            value={demographic.ethnicity}
+            aria-label="Ethnicity"
+            name="Ethnicity"
+            value={demographic.Ethnicity}
             onChange={handleChangeDemographic}
           >
             <FormControlLabel value="-2" control={<Radio />} label="Not Hispanic/Latino" />
@@ -82,8 +82,8 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
           <FormControlLabel
             control={
               <Checkbox
-                checked={demographic.nativeAmerican}
-                name="nativeAmerican"
+                checked={demographic.NativeAmerican}
+                name="NativeAmerican"
                 onChange={handleCheckDemographic}
               />
             }
@@ -92,8 +92,8 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
           <FormControlLabel
             control={
               <Checkbox
-                checked={demographic.asian}
-                name="asian"
+                checked={demographic.Asian}
+                name="Asian"
                 onChange={handleCheckDemographic}
               />
             }
@@ -102,8 +102,8 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
           <FormControlLabel
             control={
               <Checkbox
-                checked={demographic.black}
-                name="black"
+                checked={demographic.Black}
+                name="Black"
                 onChange={handleCheckDemographic}
               />
             }
@@ -112,8 +112,8 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
           <FormControlLabel
             control={
               <Checkbox
-                checked={demographic.hawaiian}
-                name="hawaiian"
+                checked={demographic.Hawaiian}
+                name="Hawaiian"
                 onChange={handleCheckDemographic}
               />
             }
@@ -122,8 +122,8 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
           <FormControlLabel
             control={
               <Checkbox
-                checked={demographic.white}
-                name="white"
+                checked={demographic.White}
+                name="White"
                 onChange={handleCheckDemographic}
               />
             }
@@ -131,7 +131,7 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
           />
           <FormControlLabel
             control={
-              <Checkbox checked={demographic.none} name="none" onChange={handleCheckDemographic} />
+              <Checkbox checked={demographic.None} name="None" onChange={handleCheckDemographic} />
             }
             label="Prefer not to say"
           />
@@ -139,8 +139,8 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
       </Grid>
       <Typography variant="subtitle1" gutterBottom>
         <b>
-          For questions or more information regarding this section please contact the registrar's office at (978) 867-4243 or 
-          <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>.
+          For questions or more information regarding this section please contact the registrar's office at (978) 867-4243 or
+          {' '} <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>.
         </b>
       </Typography>
     </Grid>

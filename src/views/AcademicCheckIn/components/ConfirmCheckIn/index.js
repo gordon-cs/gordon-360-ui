@@ -11,16 +11,9 @@ const ConfirmCheckIn = ({
 }) => {
   const cyan = gordonColors.primary.cyan;
 
-  const { ethinicity, ...raceValues } = demographic;
+  const { ethnicity, ...raceValues } = demographic;
 
-  const races = {
-    nativeAmerican: 'Native American',
-    asian: 'Asian',
-    black: 'Black',
-    hawaiian: 'Hawaiian',
-    white: 'White',
-    none: 'Prefer not to say',
-  };
+  const races = ['Native American','Asian','Black','Hawaiian','White','Prefer not to say'];
 
   const displayRace = () => races.filter((race) => raceValues[race]).join(' ');
 
@@ -51,7 +44,7 @@ const ConfirmCheckIn = ({
             </ul>
             <br />
           </Grid>
-          {emergencyContact2.firstName !== '' ? (
+          {emergencyContact2.firstname !== '' ? (
             <Grid item>
               <Typography variant="body1">
                 <b>Emergency Contact 2:</b>
@@ -69,7 +62,7 @@ const ConfirmCheckIn = ({
           ) : (
             ''
           )}
-          {emergencyContact3.firstName !== '' ? (
+          {emergencyContact3.firstname !== '' ? (
             <Grid item>
               <Typography variant="body1" gutterBottom>
                 <b>Emergency Contact 3:</b>

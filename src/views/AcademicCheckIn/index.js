@@ -91,13 +91,13 @@ const AcademicCheckIn = (props) => {
   });
 
   const [demographic, setDemographic] = useState({
-    ethnicity: -3,
-    nativeAmerican: false,
-    asian: false,
-    black: false,
-    hawaiian: false,
-    white: false,
-    none: false,
+    Ethnicity: -3,
+    NativeAmerican: false,
+    Asian: false,
+    Black: false,
+    Hawaiian: false,
+    White: false,
+    None: false,
   });
 
   const [basicInfo, setBasicInfo] = useState({
@@ -169,6 +169,7 @@ const AcademicCheckIn = (props) => {
     if (props.authentication) {
       loadData();
     }
+
   }, [props.authentication, loading]);
 
   const handleNext = () => {
@@ -185,7 +186,7 @@ const AcademicCheckIn = (props) => {
 
   window.onpopstate = function (event) {
     if (event.state !== null) {
-      setActiveStep(event.state);
+       setActiveStep(event.state);
     }
   };
 
@@ -238,22 +239,22 @@ const AcademicCheckIn = (props) => {
       Ethnicity: parseInt(data.ethnicity),
       Race: '',
     };
-    if (data.none) {
+    if (data.None) {
       formattedData.Race = '3';
     } else {
-      if (data.nativeAmerican) {
+      if (data.NativeAmerican) {
         formattedData.Race += '4,';
       }
-      if (data.asian) {
+      if (data.Asian) {
         formattedData.Race += '5,';
       }
-      if (data.black) {
+      if (data.Black) {
         formattedData.Race += '6,';
       }
-      if (data.hawaiian) {
+      if (data.Hawaiian) {
         formattedData.Race += '7,';
       }
-      if (data.white) {
+      if (data.White) {
         formattedData.Race += '8,';
       }
     }
@@ -264,9 +265,6 @@ const AcademicCheckIn = (props) => {
     checkInService.submitContact(emergencyContact1);
     checkInService.submitContact(emergencyContact2);
     checkInService.submitContact(emergencyContact3);
-    if (phoneInfo.NoPhone) {
-      setPhoneInfo({ ...phoneInfo, [phoneInfo.PersonalPhone]: '' });
-    }
     checkInService.submitPhone(phoneInfo);
     checkInService.submitDemographic(formatDemographic(demographic));
     checkInService.markCompleted(basicInfo.ID);
@@ -394,15 +392,15 @@ const AcademicCheckIn = (props) => {
                             (privacyAgreements.FERPA === false ||
                               privacyAgreements.dataUsage === false ||
                               privacyAgreements.photoConsent === false)) ||
-                          (activeStep === 4 && demographic.ethnicity === '') ||
+                          (activeStep === 4 && demographic.Ethnicity === '') ||
                           (activeStep === 4 &&
                             !(
-                              demographic.nativeAmerican ||
-                              demographic.asian ||
-                              demographic.black ||
-                              demographic.hawaiian ||
-                              demographic.white ||
-                              demographic.none
+                              demographic.NativeAmerican ||
+                              demographic.Asian ||
+                              demographic.Black ||
+                              demographic.Hawaiian ||
+                              demographic.White ||
+                              demographic.None
                             ))
                         }
                       >
