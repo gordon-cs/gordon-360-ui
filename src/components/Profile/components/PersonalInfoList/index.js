@@ -143,6 +143,7 @@ const PersonalInfoList = ({
           </a>
         )
       }
+      /// toggle for staff/fac that handle their home phone from public to private
       ContentIcon={
         myProf && (
           <FormControlLabel
@@ -394,9 +395,12 @@ const PersonalInfoList = ({
       >
         <Grid container className="personal-info-list-header">
           <CardHeader title="Personal Information" />
-          {myProf && (
-            <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
-          )}
+          <Grid item>
+            {/* visible on my profile only */}
+            {myProf && (
+              <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+            )}
+          </Grid>
         </Grid>
         <CardContent>
           <List>
