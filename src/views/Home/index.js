@@ -96,7 +96,7 @@ const Home = ({ authentication, onLogIn }) => {
   //else if (networkStatus === 'online' && !hasAnswered) {
   //return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;}
   else if (!checkedIn && personType.includes('stu')) {
-    window.location = '/AcademicCheckIn'
+    history.replace('AcademicCheckIn');
   } else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 
