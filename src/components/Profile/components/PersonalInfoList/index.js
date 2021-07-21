@@ -144,18 +144,7 @@ const PersonalInfoList = ({
         )
       }
       /// toggle for staff/fac that handle their home phone from public to private
-      ContentIcon={
-        myProf && (
-          <FormControlLabel
-            // control={
-            //   <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
-            // }
-            label={isHomePhonePrivate ? 'Private' : 'Public'}
-            labelPlacement="bottom"
-            disabled={!isOnline}
-          />
-        )
-      }
+
       contentClass={isHomePhonePrivate ? 'private' : null}
     />
   ) : null;
@@ -393,12 +382,26 @@ const PersonalInfoList = ({
       <Card
         className={`personal-info-list  ${myProf ? 'my-personal-info' : 'public-personal-info'}`}
       >
-        <Grid container className="personal-info-list-header">
-          <CardHeader title="Personal Information" />
-          <Grid item>
+        <Grid
+          container
+          justifyContent="flex-end"
+          alignItems="center"
+          className="personal-info-list-header"
+        >
+          <Grid item xs={10}>
+            <CardHeader title="Personal Information" />
+          </Grid>
+          <Grid item xs={2}>
             {/* visible on my profile only */}
             {myProf && (
-              <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+              <FormControlLabel
+                control={
+                  <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+                }
+                label={isHomePhonePrivate ? 'Private' : 'Public'}
+                labelPlacement="right"
+                disabled={!isOnline}
+              />
             )}
           </Grid>
         </Grid>
