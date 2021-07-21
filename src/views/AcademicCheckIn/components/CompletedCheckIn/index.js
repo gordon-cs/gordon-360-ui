@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Typography, Button } from '@material-ui/core';
-import { Link } from 'react-router';
 import { gordonColors } from 'theme';
+import { Link } from 'react-router-dom';
 
 const CompletedCheckIn = ({ basicInfo }) => {
   const cyan = gordonColors.primary.cyan;
