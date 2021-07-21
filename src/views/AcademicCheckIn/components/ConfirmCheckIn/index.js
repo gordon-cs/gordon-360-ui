@@ -51,7 +51,7 @@ const ConfirmCheckIn = ({
             </ul>
             <br />
           </Grid>
-          {emergencyContact2.firstName2 !== '' ? (
+          {emergencyContact2.firstName !== '' ? (
             <Grid item>
               <Typography variant="body1">
                 <b>Emergency Contact 2:</b>
@@ -69,7 +69,7 @@ const ConfirmCheckIn = ({
           ) : (
             ''
           )}
-          {emergencyContact3.firstName3 !== '' ? (
+          {emergencyContact3.firstName !== '' ? (
             <Grid item>
               <Typography variant="body1" gutterBottom>
                 <b>Emergency Contact 3:</b>

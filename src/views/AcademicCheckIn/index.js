@@ -103,8 +103,8 @@ const AcademicCheckIn = (props) => {
   const [basicInfo, setBasicInfo] = useState({
     studentFirstName: '',
     studentLastName: '',
-    ID: '',
   });
+
 
   useEffect(() => {
     const loadData = async () => {
@@ -112,9 +112,8 @@ const AcademicCheckIn = (props) => {
       setBasicInfo({
         studentFirstName: profile.FirstName,
         studentLastName: profile.LastName,
-        ID: profile.ID,
       });
-      let hasCheckedIn = await checkInService.getStatus(profile.ID);
+      let hasCheckedIn = await checkInService.getStatus();
       if (!hasCheckedIn && profile.PersonType.includes('stu')) {
         let tempHolds = await checkInService.getHolds();
         setHolds(tempHolds);
