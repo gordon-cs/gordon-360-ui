@@ -25,8 +25,8 @@ import user from 'services/user';
 import membership from 'services/membership';
 import GordonDialogBox from 'components/GordonDialogBox';
 const rowStyle = {
-  margin: '10px 0px',
-  padding: '10px 0px',
+  margin: '12px 0px',
+  padding: '12px 0px',
 };
 const redButton = {
   background: gordonColors.secondary.red,
@@ -288,7 +288,7 @@ const MemberListItem = ({
     if (isMobileView) {
       options = (
         <Grid container alignItems="center" justifyContent="flex-end" spacing={3}>
-          <Grid item sm={2} align="center">
+          <Grid item xs={1}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -309,7 +309,7 @@ const MemberListItem = ({
         <Accordion defaultExpanded={(isAdmin || isSuperAdmin) && !isMobileView}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Grid container alignItems="center" spacing={2}>
-              <Grid item xs={9} sm={10}>
+              <Grid item xs={12}>
                 <Grid container spacing={3} wrap="nowrap" alignItems="center">
                   <Grid>
                     <Avatar
@@ -330,7 +330,7 @@ const MemberListItem = ({
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={3} sm={2}>
+              <Grid item xs={12}>
                 <Typography>{member.ParticipationDescription} </Typography>
                 <Typography>{mailLoc}</Typography>
               </Grid>
@@ -363,7 +363,7 @@ const MemberListItem = ({
               src={`data:image/jpg;base64,${avatar}`}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
-              style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+              style={{ width: '8rem', height: '8rem', margin: '0 1rem 0 0' }}
             >
               {!avatar && <PlaceHolderAvatar />}
             </Avatar>

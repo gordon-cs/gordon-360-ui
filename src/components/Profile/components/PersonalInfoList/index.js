@@ -67,6 +67,7 @@ const PersonalInfoList = ({
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
   );
+
   const isOnline = useNetworkStatus();
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
@@ -92,7 +93,9 @@ const PersonalInfoList = ({
   const isCampusLocationPrivate = isStudent && keepPrivate && OnOffCampus !== PRIVATE_INFO;
 
   // Students' home phone is always private. FacStaffs' home phone is private for private users
-  const isHomePhonePrivate = (isStudent || keepPrivate) && Boolean(HomePhone);
+  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(
+    (isStudent || keepPrivate) && Boolean(HomePhone),
+  );
 
   // Street address info is always private, and City/State/Country info is private for private users
   const isAddressPrivate = (keepPrivate && HomeCity !== PRIVATE_INFO) || HomeStreet2;
@@ -114,6 +117,17 @@ const PersonalInfoList = ({
     }
   };
 
+  const handleChangeHomePhonePrivacy = async () => {
+    try {
+      await user.setHomePhonePrivacy(!isHomePhonePrivate);
+      setIsHomePhonePrivate(!isHomePhonePrivate);
+
+      createSnackbar(isHomePhonePrivate ? 'Home Phone Visible' : 'Home Phone Hidden', 'success');
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
+
   const homePhoneListItem = HomePhone ? (
     <ProfileInfoListItem
       title="Home Phone:"
@@ -124,6 +138,18 @@ const PersonalInfoList = ({
           <a href={`tel:${HomePhone}`} className="gc360-text-link">
             {formatPhone(HomePhone)}
           </a>
+        )
+      }
+      ContentIcon={
+        myProf && (
+          <FormControlLabel
+            control={
+              <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+            }
+            label={isHomePhonePrivate ? 'Private' : 'Public'}
+            labelPlacement="bottom"
+            disabled={!isOnline}
+          />
         )
       }
       contentClass={isHomePhonePrivate ? 'private' : null}
@@ -365,6 +391,9 @@ const PersonalInfoList = ({
       >
         <Grid container className="personal-info-list-header">
           <CardHeader title="Personal Information" />
+          {myProf && (
+            <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+          )}
         </Grid>
         <CardContent>
           <List>
