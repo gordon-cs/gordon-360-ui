@@ -122,7 +122,10 @@ const PersonalInfoList = ({
       await user.setHomePhonePrivacy(!isHomePhonePrivate);
       setIsHomePhonePrivate(!isHomePhonePrivate);
 
-      createSnackbar(isHomePhonePrivate ? 'Home Phone Visible' : 'Home Phone Hidden', 'success');
+      createSnackbar(
+        isHomePhonePrivate ? 'Personal Info Visible' : 'Personal Info Hidden',
+        'success',
+      );
     } catch {
       createSnackbar('Privacy Change Failed', 'error');
     }
@@ -143,9 +146,9 @@ const PersonalInfoList = ({
       ContentIcon={
         myProf && (
           <FormControlLabel
-            control={
-              <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
-            }
+            // control={
+            //   <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+            // }
             label={isHomePhonePrivate ? 'Private' : 'Public'}
             labelPlacement="bottom"
             disabled={!isOnline}
