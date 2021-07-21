@@ -143,8 +143,6 @@ const PersonalInfoList = ({
           </a>
         )
       }
-      /// toggle for staff/fac that handle their home phone from public to private
-
       contentClass={isHomePhonePrivate ? 'private' : null}
     />
   ) : null;
