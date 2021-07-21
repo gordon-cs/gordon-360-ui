@@ -8,12 +8,12 @@ const CompletedCheckIn = ({ basicInfo }) => {
     <Grid
       container
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       direction="column"
       className="button-container"
     >
       <Grid item xs={8}>
-        <Typography variant="h5" gutterbottom align="center" style={{ color: cyan }}>
+        <Typography variant="h5" gutterBottom align="center" style={{ color: cyan }}>
           Congratulations {basicInfo.studentFirstName} on completing Academic Checkin!
         </Typography>
         <br />

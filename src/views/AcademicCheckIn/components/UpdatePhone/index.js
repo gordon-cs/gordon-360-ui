@@ -10,7 +10,7 @@ import {
 import MaskedInput from 'react-text-mask';
 import { gordonColors } from 'theme';
 
-const UpdatePhone = ({ personalPhone, handleChangePersonalPhone, handleCheckPersonalPhone }) => {
+const UpdatePhone = ({ phoneInfo, handleChangePhoneInfo, handleCheckPhoneInfo }) => {
   const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
@@ -31,10 +31,10 @@ const UpdatePhone = ({ personalPhone, handleChangePersonalPhone, handleCheckPers
           <InputLabel htmlFor="formatted-text-mask-input"> Phone Number </InputLabel>
           <Input
             id="formatted-text-mask-input"
-            name="personalPhone"
-            value={personalPhone.personalPhone}
-            onChange={handleChangePersonalPhone}
-            disabled={personalPhone.noPhone}
+            name="PersonalPhone"
+            value={phoneInfo.PersonalPhone}
+            onChange={handleChangePhoneInfo}
+            disabled={phoneInfo.NoPhone}
             inputComponent={phoneMaskUS}
             autoFocus
           />
@@ -45,9 +45,9 @@ const UpdatePhone = ({ personalPhone, handleChangePersonalPhone, handleCheckPers
           <FormControlLabel
             control={
               <Checkbox
-                checked={personalPhone.makePublic}
-                name="makePublic"
-                onChange={handleCheckPersonalPhone}
+                checked={phoneInfo.MakePrivate}
+                name={'MakePrivate'}
+                onChange={handleCheckPhoneInfo}
               />
             }
             label="Make my number private on People Search"
@@ -55,9 +55,9 @@ const UpdatePhone = ({ personalPhone, handleChangePersonalPhone, handleCheckPers
           <FormControlLabel
             control={
               <Checkbox
-                checked={personalPhone.noPhone}
-                name="noPhone"
-                onChange={handleCheckPersonalPhone}
+                checked={phoneInfo.NoPhone}
+                name={'NoPhone'}
+                onChange={handleCheckPhoneInfo}
               />
             }
             label="I don't have a cell-phone"

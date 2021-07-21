@@ -6,7 +6,7 @@ const ConfirmCheckIn = ({
   emergencyContact1,
   emergencyContact2,
   emergencyContact3,
-  personalPhone,
+  phoneInfo,
   demographic,
 }) => {
   const cyan = gordonColors.primary.cyan;
@@ -100,7 +100,7 @@ const ConfirmCheckIn = ({
           <Grid item>
             <Typography variant="body1" gutterBottom>
               <b>Personal Cell-Phone Number:</b>{' '}
-              {personalPhone.noPhone === true ? 'None' : personalPhone.personalPhone}
+              {phoneInfo.NoPhone === true ? 'None' : phoneInfo.PersonalPhone}
             </Typography>
           </Grid>
           <Grid item>

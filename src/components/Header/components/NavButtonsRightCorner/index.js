@@ -44,16 +44,6 @@ const GordonNavButtonsRightCorner = ({
     />
   );
 
-  const academicCheckInButton = (
-    <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !authentication ? 'unauthorized' : null}
-      onLinkClick={onClose}
-      openUnavailableDialog={openDialogBox}
-      linkName={'Academic Check In'}
-      linkPath={'/AcademicCheckIn'}
-    />
-  );
-
   const linksButton = (
     <GordonNavButton
       unavailable={!isOnline ? 'offline' : null}
@@ -139,7 +129,6 @@ const GordonNavButtonsRightCorner = ({
             {feedbackButton}
             {adminButton}
             {signInOutButton}
-            {academicCheckInButton}
           </List>
         </Popover>
       </div>

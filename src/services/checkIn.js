@@ -25,7 +25,7 @@ import http from './http';
 
 /**
  * @global
- * @typedef EmergencyContact1 all the data for a student's emergency contact
+ * @typedef EmergencyContact all the data for a student's emergency contact
  * @property {Number} SEQ_NUM the sequence number of the contact, (1, 2, or 3)
  * @property {String} firstName first name of emergency contact
  * @property {String} lastName last name of EC
@@ -57,7 +57,7 @@ import http from './http';
  */
 
 
-async function getStatus() {
+const getStatus = async () => {
   try {
     return await http.get(`checkIn/status`);
   } catch(reason) {
@@ -65,7 +65,7 @@ async function getStatus() {
   }
 }
 
-async function markCompleted() {
+const markCompleted = async () => {
   try {
     return await http.put(`checkIn/status`);
   } catch(reason) {
@@ -73,7 +73,7 @@ async function markCompleted() {
   }
 }
 
-async function getHolds() {
+const getHolds = async () => {
   try {
     return await http.get(`checkIn/holds`);
   } catch(reason) {
@@ -89,7 +89,7 @@ const getEmergencyContacts = async (username) => {
   }
 }
 
-async function submitPhone(data) {
+const submitPhone = async (data) => {
   try {
     return await http.put(`checkIn/cellphone`, data);
   } catch (reason) {
@@ -97,7 +97,7 @@ async function submitPhone(data) {
   }
 }
 
-async function submitContact(data) {
+const submitContact  = async (data) => {
   try {
     return await http.post(`checkIn/emergencycontact`, data);
   } catch (reason) {
@@ -105,7 +105,7 @@ async function submitContact(data) {
   }
 }
 
-async function submitDemographic(data) {
+const submitDemographic = async (data) => {
   try {
     return await http.put(`checkIn/demographic`, data);
   } catch (reason) {

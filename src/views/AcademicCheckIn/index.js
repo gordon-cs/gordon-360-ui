@@ -78,10 +78,10 @@ const AcademicCheckIn = (props) => {
 
   const [hasMajorHold, setMajorHold] = useState(false);
 
-  const [personalPhone, setPersonalPhone] = useState({
-    personalPhone: '',
-    makePrivate: false,
-    noPhone: false,
+  const [phoneInfo, setPhoneInfo] = useState({
+    PersonalPhone: '',
+    MakePrivate: false,
+    NoPhone: false,
   });
 
   const [privacyAgreements, setPrivacyAgreements] = useState({
@@ -155,8 +155,10 @@ const AcademicCheckIn = (props) => {
           });
         }
         if (profile.MobilePhone) {
-          setPersonalPhone({
-            personalPhone: profile.MobilePhone,
+          setPhoneInfo({
+            PersonalPhone: profile.MobilePhone,
+            MakePrivate: false,
+            NoPhone: false,
           });
         }
       } else {
@@ -173,7 +175,6 @@ const AcademicCheckIn = (props) => {
   const handleNext = () => {
     setActiveStep((nextStep) => nextStep + 1);
     window.history.pushState(activeStep, null, '');
-    console.log("pushing", activeStep, window.history.state)
   };
 
   const handlePrev = () => {
@@ -182,7 +183,6 @@ const AcademicCheckIn = (props) => {
   };
 
   window.history.replaceState(activeStep, null, '');
-
 
   window.onpopstate = function (event) {
     if (event.state !== null) {
@@ -202,8 +202,8 @@ const AcademicCheckIn = (props) => {
     setEmergencyContact3({ ...emergencyContact3, [evt.target.name]: evt.target.value });
   };
 
-  const handleChangePersonalPhone = (evt) => {
-    setPersonalPhone({ ...personalPhone, [evt.target.name]: evt.target.value });
+  const handleChangePhoneInfo = (evt) => {
+    setPhoneInfo({ ...phoneInfo, [evt.target.name]: evt.target.value });
   };
 
   const handleChangeDemographic = (evt) => {
@@ -226,8 +226,8 @@ const AcademicCheckIn = (props) => {
     setEmergencyContactINTL3({ ...emergencyContactINTL3, [evt.target.name]: evt.target.checked });
   };
 
-  const handleCheckPersonalPhone = (evt) => {
-    setPersonalPhone({ ...personalPhone, [evt.target.name]: evt.target.checked });
+  const handleCheckPhoneInfo = (evt) => {
+    setPhoneInfo({ ...phoneInfo, [evt.target.name]: evt.target.checked });
   };
 
   const handleCheckDemographic = (evt) => {
@@ -265,9 +265,12 @@ const AcademicCheckIn = (props) => {
     checkInService.submitContact(emergencyContact1);
     checkInService.submitContact(emergencyContact2);
     checkInService.submitContact(emergencyContact3);
-    checkInService.submitPhone(personalPhone);
+    if (phoneInfo.NoPhone) {
+      setPhoneInfo({ ...phoneInfo, [phoneInfo.PersonalPhone]: '' });
+    }
+    checkInService.submitPhone(phoneInfo);
     checkInService.submitDemographic(formatDemographic(demographic));
-    //checkInService.markCompleted(basicInfo.ID);
+    checkInService.markCompleted(basicInfo.ID);
     setActiveStep(6);
   };
 
@@ -321,9 +324,9 @@ const AcademicCheckIn = (props) => {
 
                       {window.history.state === 2 && (
                         <UpdatePhone
-                          personalPhone={personalPhone}
-                          handleChangePersonalPhone={handleChangePersonalPhone}
-                          handleCheckPersonalPhone={handleCheckPersonalPhone}
+                          phoneInfo={phoneInfo}
+                          handleChangePhoneInfo={handleChangePhoneInfo}
+                          handleCheckPhoneInfo={handleCheckPhoneInfo}
                         />
                       )}
 
@@ -346,7 +349,7 @@ const AcademicCheckIn = (props) => {
                           emergencyContact1={emergencyContact1}
                           emergencyContact2={emergencyContact2}
                           emergencyContact3={emergencyContact3}
-                          personalPhone={personalPhone}
+                          phoneInfo={phoneInfo}
                           demographic={demographic}
                         />
                       )}
@@ -386,8 +389,8 @@ const AcademicCheckIn = (props) => {
                               emergencyContact1.HomePhone === '' ||
                               emergencyContact1.MobilePhone === '')) ||
                           (activeStep === 2 &&
-                            personalPhone.personalPhone === '' &&
-                            personalPhone.noPhone === false) ||
+                            phoneInfo.PersonalPhone === '' &&
+                            phoneInfo.NoPhone === false) ||
                           (activeStep === 3 &&
                             (privacyAgreements.FERPA === false ||
                               privacyAgreements.dataUsage === false ||

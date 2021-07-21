@@ -80,7 +80,7 @@ const Home = ({ authentication, onLogIn }) => {
       // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
       /*wellness.getStatus(),*/
     ]);
-    setCheckedIn(await checkInService.getStatus);
+    setCheckedIn(await checkInService.getStatus());
     setPersonType(PersonType);
     // setHasAnswered(IsValid);
     setLoading(false);
@@ -94,7 +94,7 @@ const Home = ({ authentication, onLogIn }) => {
   //else if (networkStatus === 'online' && !hasAnswered) {
   //return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;}
   else if (!checkedIn && personType.includes('stu')) {
-    window.location.replace("AcademicCheckIn")
+    window.location = '/AcademicCheckIn'
   } else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 

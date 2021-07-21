@@ -1,7 +1,6 @@
 import React from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import { gordonColors } from 'theme';
-// import './index.css';
 
 const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
   const blue = gordonColors.primary.blue;
@@ -101,7 +100,7 @@ const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
     <Grid container justifyContent="center" alignItems="center" direction="column">
       <Grid item>
         <Typography align="center" variant="h5" style={{ color: blue }}>
-          <b>Enrollment Check In</b>
+          <b>Enrollment Check-In</b>
         </Typography>
         <Typography justify="center" className="checkIn">
           Hello, {basicInfo.studentFirstName}! Welcome to a new semester at Gordon College! Please
