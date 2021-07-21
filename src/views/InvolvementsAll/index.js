@@ -121,7 +121,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
 
   return (
     <Grid container justifyContent="center" spacing={4}>
-      <Grid item className="involvements-filter" xs={12} lg={8}>
+      <Grid item className={styles.involvements-filter} xs={12} lg={8}>
         <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>
             <TextField
@@ -183,7 +183,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
           <Card>
             <CardHeader
               title={`My ${myInvolvementsHeadingText} Involvements`}
-              className="involvements-header"
+              className={styles.involvements-header}
             />
             <CardContent>
               {loading ? (
@@ -205,7 +205,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
         <Card>
           <CardHeader
             title={`${involvementSessionText} Involvements`}
-            className="involvements-header"
+            className={styles.involvements-header}
           />
           <CardContent>
             {loading ? (

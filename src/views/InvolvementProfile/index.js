@@ -264,11 +264,11 @@ const InvolvementProfile = ({ authentication }) => {
               buttonClicked={onEditInvolvement}
               cancelButtonClicked={() => setIsEditDialogOpen(false)}
             >
-              <Grid align="center" className="involvement-image" item>
+              <Grid align="center" className={styles.involvement-image} item>
                 <img
                   alt={ActivityDescription}
                   src={image || ActivityImagePath}
-                  className="rounded-corners"
+                  className={styles.rounded-corners}
                 />
               </Grid>
               <Grid container spacing={2} justifyContent="center">
@@ -310,10 +310,10 @@ const InvolvementProfile = ({ authentication }) => {
                     >
                       {({ getRootProps, getInputProps }) => (
                         <section>
-                          <div className="photoUploader" {...getRootProps()}>
+                          <div className={styles.photoUploader} {...getRootProps()}>
                             <input {...getInputProps()} />
                             <img
-                              className="rounded-corners"
+                              className={styles.rounded-corners}
                               src={ActivityImagePath}
                               alt=""
                               style={{ maxWidth: '320px', maxHeight: '320px' }}
@@ -413,7 +413,7 @@ const InvolvementProfile = ({ authentication }) => {
                 <img
                   alt={ActivityDescription}
                   src={ActivityImagePath}
-                  className="rounded-corners"
+                  className={styles.rounded-corners}
                 />
               </Grid>
               {editInvolvement}
@@ -423,7 +423,7 @@ const InvolvementProfile = ({ authentication }) => {
                   <Typography>
                     <a
                       href={ActivityURL}
-                      className="gc360-text-link"
+                      className={styles.gc360-text-link}
                       style={{ fontWeight: 'bold' }}
                     >
                       {ActivityURL}

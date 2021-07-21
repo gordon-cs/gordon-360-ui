@@ -24,7 +24,7 @@ export default class GordonNewsItem extends Component {
   render() {
     const { subject, submittedBy, description } = this.props;
     return (
-      <Card onClick={this.handleExpandClick} className="news-item">
+      <Card onClick={this.handleExpandClick} className={styles.news-item}>
         <CardContent>
           <Typography variant="h6">{subject}</Typography>
           <Typography variant="subtitle2">{submittedBy}</Typography>

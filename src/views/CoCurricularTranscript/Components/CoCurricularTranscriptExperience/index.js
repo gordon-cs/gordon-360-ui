@@ -77,11 +77,11 @@ export default class Experience extends Component {
     Duration = this.formatDuration(Experience);
 
     let content = (
-      <div className="experience-transcript-activities">
-        <div className="organization-role">
+      <div className={styles.experience-transcript-activities}>
+        <div className={styles.organization-role}>
           {Experience.Job_Department_Name}, {Experience.Job_Title}
         </div>
-        <div className="date"> {Duration} </div>
+        <div className={styles.date}> {Duration} </div>
       </div>
     );
     return content;

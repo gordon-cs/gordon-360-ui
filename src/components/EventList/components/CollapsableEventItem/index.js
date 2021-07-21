@@ -21,24 +21,24 @@ export default class GordonCollapsableEventItem extends Component {
 
     return (
       <section>
-        <Grid container onClick={this.handleExpandClick} className="event-item">
+        <Grid container onClick={this.handleExpandClick} className={styles.event-item}>
           <Grid item xs={12}>
-            <Typography variant="h6" className="event-heading">
+            <Typography variant="h6" className={styles.event-heading}>
               {' '}
               {event.title}{' '}
             </Typography>
-            <Typography className="event-content"> {event.timeRange} </Typography>
-            <Typography className="event-content"> {event.date} </Typography>
+            <Typography className={styles.event-content}> {event.timeRange} </Typography>
+            <Typography className={styles.event-content}> {event.date} </Typography>
           </Grid>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography className="event-content  ">Description:</Typography>
-              <Typography className="event-content">{event.Description}</Typography>
+              <Typography className={styles.event-content  }>Description:</Typography>
+              <Typography className={styles.event-content}>{event.Description}</Typography>
               <p>
                 <nbsp />
               </p>
-              <Typography className="event-content">Location:</Typography>
-              <Typography className="event-content">{event.location}</Typography>
+              <Typography className={styles.event-content}>Location:</Typography>
+              <Typography className={styles.event-content}>{event.location}</Typography>
             </CardContent>
           </Collapse>
         </Grid>

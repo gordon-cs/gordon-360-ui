@@ -54,11 +54,11 @@ const GuestWelcome = ({ onLogIn }) => {
   }, []);
 
   return (
-    <div className="gw-background">
-      <Grid container direction="column" alignItems="center" className="gw-container" spacing={3}>
+    <div className={styles.gw-background}>
+      <Grid container direction="column" alignItems="center" className={styles.gw-container} spacing={3}>
         <Grid item>
           <Grid container style={{ textAlign: 'center' }}>
-            <Card raised className="gw-card">
+            <Card raised className={styles.gw-card}>
               <CardHeader title="Welcome to Gordon360!" />
               <CardContent>
                 <Typography>

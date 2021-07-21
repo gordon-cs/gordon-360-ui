@@ -22,23 +22,23 @@ export default class GordonEventItem extends Component {
     eventDescription = eventDescription === '' ? 'No description available' : eventDescription;
     return (
       <section>
-        <Grid container direction="row" onClick={this.handleExpandClick} className="event-item">
+        <Grid container direction="row" onClick={this.handleExpandClick} className={styles.event-item}>
           <Grid item xs={4}>
-            <Typography className="event-column">{event.title}</Typography>
+            <Typography className={styles.event-column}>{event.title}</Typography>
           </Grid>
           <Grid item xs={4}>
-            <Typography className="event-column">{event.location}</Typography>
+            <Typography className={styles.event-column}>{event.location}</Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography className="event-column">{event.date}</Typography>
+            <Typography className={styles.event-column}>{event.date}</Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography className="event-column">{event.timeRange}</Typography>
+            <Typography className={styles.event-column}>{event.timeRange}</Typography>
           </Grid>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography className="descriptionText">Description:</Typography>
-              <Typography type="caption" className="descriptionText">
+              <Typography className={styles.descriptionText}>Description:</Typography>
+              <Typography type="caption" className={styles.descriptionText}>
                 {eventDescription}
               </Typography>
             </CardContent>

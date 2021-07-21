@@ -33,12 +33,12 @@ const OffCampusList = ({ disabled, applicants, onOffCampusInputChange }) => {
 
   return (
     <Card>
-      <CardHeader title="Off-Campus Work Study" className="apartment-card-header" />
+      <CardHeader title="Off-Campus Work Study" className={styles.apartment-card-header} />
       <CardContent>
         <Grid container justifyContent="space-between" spacing={2}>
           <Grid item xs={12}>
             <List
-              className="off-campus-list"
+              className={styles.off-campus-list}
               aria-label="apartment applicants off campus programs"
               disablePadding
             >

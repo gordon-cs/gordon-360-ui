@@ -48,9 +48,9 @@ const InstructionsCard = () => {
       <CardHeader
         title="On-Campus Apartments"
         subheader="Information and Guidelines"
-        className="apartment-card-header"
+        className={styles.apartment-card-header}
       />
-      <CardContent className="apartment-instructions">
+      <CardContent className={styles.apartment-instructions}>
         <Typography variant="body1" paragraph>
           Apartments provide an alternative to the traditional residence hall setting and offer a
           unique community experience. To be eligible to live in an apartment, students must be at
@@ -75,7 +75,7 @@ const InstructionsCard = () => {
         <Typography variant="body1" paragraph>
           <strong>Applications must be for a full apartment:</strong> If applying for a six-person
           apartment, there must be six people on the application who will be here for the{' '}
-          <strong className="over-emphasized">fall semester</strong> (four people on a four-person
+          <strong className={styles.over-emphasized}>fall semester</strong> (four people on a four-person
           application, etc.). Applications with an incorrect number of applicants will not be
           considered.
         </Typography>

@@ -18,9 +18,9 @@ const About = () => {
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
-        <Card className="about">
+        <Card className={styles.about}>
           <CardHeader
-            className="about-title"
+            className={styles.about-title}
             title="Conceived and Built at Gordon College"
             subheader="By Students for Students"
             titleTypographyProps={{ variant: 'h4' }}
@@ -28,7 +28,7 @@ const About = () => {
           <CardContent>
             <Card>
               <CardHeader
-                className="about-header"
+                className={styles.about-header}
                 title={`${projectName}: The Scottie Faire In Your Hand`}
               />
               <CardContent>
@@ -46,7 +46,7 @@ const About = () => {
             </Card>
 
             <Card>
-              <CardHeader className="about-header" title="Institutional Benefits" />
+              <CardHeader className={styles.about-header} title="Institutional Benefits" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>In-house Student Record relationship</li>
@@ -62,7 +62,7 @@ const About = () => {
             </Card>
 
             <Card>
-              <CardHeader className="about-header" title="Origins" />
+              <CardHeader className={styles.about-header} title="Origins" />
               <CardContent>
                 {origins.map((section) => {
                   return (
@@ -70,7 +70,7 @@ const About = () => {
                       <Typography variant="subtitle1" gutterBottom>
                         <strong>{section.title}</strong>
                       </Typography>
-                      <Typography variant="body2" paragraph className="about-Origins">
+                      <Typography variant="body2" paragraph className={styles.about-Origins}>
                         {section.body}
                       </Typography>
                     </React.Fragment>
@@ -80,7 +80,7 @@ const About = () => {
             </Card>
 
             <Card>
-              <CardHeader className="about-header" title="GoCo Tech Lab Developers" />
+              <CardHeader className={styles.about-header} title="GoCo Tech Lab Developers" />
               <CardContent>
                 {contributors.map((section) => {
                   return (
@@ -88,7 +88,7 @@ const About = () => {
                       <Typography variant="subtitle1" gutterBottom>
                         <strong>{section.title}</strong>
                       </Typography>
-                      <Typography variant="body2" paragraph className="about-contributors">
+                      <Typography variant="body2" paragraph className={styles.about-contributors}>
                         {section.body}
                       </Typography>
                     </React.Fragment>

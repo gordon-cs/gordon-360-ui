@@ -74,13 +74,13 @@ const ApartApp = ({ authentication }) => {
   } else if (isOnline) {
     if (canUseStaff) {
       return (
-        <div className="staff-apartment-application">
+        <div className={styles.staff-apartment-application}>
           <StaffMenu userProfile={userProfile} />
         </div>
       );
     } else if (isUserStudent) {
       return (
-        <div className="student-apartment-application">
+        <div className={styles.student-apartment-application}>
           <StudentApplication userProfile={userProfile} authentication={authentication} />
         </div>
       );
@@ -101,7 +101,7 @@ const ApartApp = ({ authentication }) => {
                 <br />
                 <br />
                 <Button
-                  className="back-home-button"
+                  className={styles.back-home-button}
                   color="primary"
                   variant="outlined"
                   onClick={() => {

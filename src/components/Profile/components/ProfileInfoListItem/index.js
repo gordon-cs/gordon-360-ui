@@ -7,7 +7,7 @@ const ProfileInfoListItem = ({ title, contentText, ContentIcon = null, contentCl
 
   return (
     <>
-      <ListItem className="profile-info-list-item">
+      <ListItem className={styles.profile-info-list-item}>
         <Grid container alignItems="center">
           <Grid container item xs={5} alignItems="center">
             <Typography>{title}</Typography>

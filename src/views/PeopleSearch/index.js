@@ -475,7 +475,7 @@ class PeopleSearch extends Component {
     let PeopleSearchCheckbox;
 
     const printPeopleSearchHeader = (
-      <div className="printHeader" align="center" style={{ display: 'none' }}>
+      <div className={styles.printHeader} align="center" style={{ display: 'none' }}>
         {/* show on print only */}
         <style>{`@media print {.printHeader{display: block !important;}}`}</style>
 

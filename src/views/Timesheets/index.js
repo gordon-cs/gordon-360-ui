@@ -369,7 +369,7 @@ const Timesheets = (props) => {
           width: 252,
         }}
       >
-        <InputLabel className="disable-select">Jobs</InputLabel>
+        <InputLabel className={styles.disable-select}>Jobs</InputLabel>
         <Select
           value={selectedJob}
           onChange={(e) => {
@@ -392,7 +392,7 @@ const Timesheets = (props) => {
           width: 252,
         }}
       >
-        <InputLabel className="disable-select">Hour Type</InputLabel>
+        <InputLabel className={styles.disable-select}>Hour Type</InputLabel>
         <Select
           value={selectedHourType}
           onChange={(e) => {
@@ -432,7 +432,7 @@ const Timesheets = (props) => {
     if (isOnline && isUserStudent) {
       return (
         <>
-          <Grid container spacing={2} className="timesheets">
+          <Grid container spacing={2} className={styles.timesheets}>
             <Grid item xs={12}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Card>
@@ -447,7 +447,7 @@ const Timesheets = (props) => {
                         <Button onClick={changeState}> {clockInOut}</Button>
                       </Grid>
                       <Grid item md={8}>
-                        <div className="header-tooltip-container">
+                        <div className={styles.header-tooltip-container}>
                           <CustomTooltip
                             classes={{ tooltip: classes.customWidth }}
                             interactive
@@ -466,9 +466,9 @@ const Timesheets = (props) => {
                             placement="bottom"
                           >
                             <div ref={tooltipRef}>
-                              <CardHeader className="disable-select" title="Enter a shift" />
+                              <CardHeader className={styles.disable-select} title="Enter a shift" />
                               <InfoOutlinedIcon
-                                className="tooltip-icon"
+                                className={styles.tooltip-icon}
                                 style={{
                                   fontSize: 18,
                                 }}
@@ -487,7 +487,7 @@ const Timesheets = (props) => {
                     >
                       <Grid item xs={12} md={6} lg={3}>
                         <KeyboardDateTimePicker
-                          className="disable-select"
+                          className={styles.disable-select}
                           style={{
                             width: 252,
                           }}
@@ -504,7 +504,7 @@ const Timesheets = (props) => {
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
                         <KeyboardDateTimePicker
-                          className="disable-select"
+                          className={styles.disable-select}
                           style={{
                             width: 252,
                           }}
@@ -531,7 +531,7 @@ const Timesheets = (props) => {
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
                         <TextField
-                          className="disable-select"
+                          className={styles.disable-select}
                           style={{
                             width: 252,
                           }}
@@ -543,7 +543,7 @@ const Timesheets = (props) => {
                         />
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
-                        <Typography className="disable-select">
+                        <Typography className={styles.disable-select}>
                           Hours worked: {hoursWorkedInDecimal}
                         </Typography>
                       </Grid>
@@ -560,7 +560,7 @@ const Timesheets = (props) => {
                       <Grid item xs={12}>
                         <Typography>
                           <Link
-                            className="disable-select"
+                            className={styles.disable-select}
                             style={{
                               borderBottom: '1px solid currentColor',
                               textDecoration: 'none',

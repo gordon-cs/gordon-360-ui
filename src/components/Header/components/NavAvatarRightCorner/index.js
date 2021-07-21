@@ -97,8 +97,8 @@ export const GordonNavAvatarRightCorner = ({ authentication, onClick }) => {
   );
 
   return (
-    <section className="right-side-container">
-      <Tooltip className="tooltip" id="tooltip-avatar" title={name ? name : 'Nav Avatar'}>
+    <section className={styles.right-side-container}>
+      <Tooltip className={styles.tooltip} id="tooltip-avatar" title={name ? name : 'Nav Avatar'}>
         <IconButton
           className={`gc360-nav-avatar-rc ${classes.root}`}
           aria-label="More"

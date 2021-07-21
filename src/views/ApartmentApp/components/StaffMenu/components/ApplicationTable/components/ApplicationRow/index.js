@@ -29,12 +29,12 @@ const ApplicationRow = ({ applicationDetails, labelId }) => {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell className="collapsible-row" colSpan={5}>
+        <TableCell className={styles.collapsible-row} colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <ApplicantSubTable applicants={applicationDetails.Applicants} />
           </Collapse>
         </TableCell>
-        <TableCell className="collapsible-row" colSpan={3}>
+        <TableCell className={styles.collapsible-row} colSpan={3}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <HallSubTable apartmentChoices={applicationDetails.ApartmentChoices} />
           </Collapse>

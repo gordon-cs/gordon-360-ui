@@ -46,8 +46,8 @@ const LoginDialogue = ({ onLogIn }) => {
   };
 
   return (
-    <Grid container direction="column" className="loginDialogue">
-      <img className="login-img" src={GordonLogoVerticalWhite} alt="Gordon Logo" />
+    <Grid container direction="column" className={styles.loginDialogue}>
+      <img className={styles.login-img} src={GordonLogoVerticalWhite} alt="Gordon Logo" />
       <form onSubmit={logIn}>
         <TextField
           id="username"
@@ -72,13 +72,13 @@ const LoginDialogue = ({ onLogIn }) => {
           fullWidth
           variant="filled"
         />
-        <Typography className="error" variant="body2" color="error">
+        <Typography className={styles.error} variant="body2" color="error">
           {error}
         </Typography>
         <Grid container justifyContent="center">
           <Button
             variant="contained"
-            className="submit-button"
+            className={styles.submit-button}
             type="submit"
             color="primary"
             disabled={!username || !password || loading}

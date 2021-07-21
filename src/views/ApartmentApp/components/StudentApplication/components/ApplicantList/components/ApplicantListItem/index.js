@@ -76,7 +76,7 @@ const ApplicantListItem = ({
         component={Link}
         target="_blank"
         to={`/profile/${profile.AD_Username}`}
-        className="list-item"
+        className={styles.list-item}
       >
         <ListItemAvatar>
           {avatar ? (
@@ -92,7 +92,7 @@ const ApplicantListItem = ({
             <ListItemText
               primary={displayName}
               secondary={profile.Class ?? ''}
-              className="list-item"
+              className={styles.list-item}
             />
           </Grid>
         </Grid>

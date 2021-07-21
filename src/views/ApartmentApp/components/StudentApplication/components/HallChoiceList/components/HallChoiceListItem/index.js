@@ -63,7 +63,7 @@ const HallChoiceListItem = ({
 
   return (
     <>
-      <ListItem key={index} className="list-item">
+      <ListItem key={index} className={styles.list-item}>
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={4} sm={2}>
             <FormControl fullWidth>

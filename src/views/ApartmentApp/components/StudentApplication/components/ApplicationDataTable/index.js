@@ -44,7 +44,7 @@ const ApplicationDataTable = ({ applicationDetails }) => {
 
   return (
     <Card>
-      <CardHeader title="Your Application Details" className="apartment-card-header" />
+      <CardHeader title="Your Application Details" className={styles.apartment-card-header} />
       <CardContent>
         <TableContainer>
           <Table>
@@ -61,8 +61,8 @@ const ApplicationDataTable = ({ applicationDetails }) => {
                 <TableRow>
                   <TableCell colSpan={2}>
                     <a href={`mailto:${editorEmail}`}>
-                      <div className="identification-card-content-card-container-info-email-container">
-                        <EmailIcon className="identification-card-content-card-container-info-email-container-icon" />
+                      <div className={styles.identification-card-content-card-container-info-email-container}>
+                        <EmailIcon className={styles.identification-card-content-card-container-info-email-container-icon} />
                         <Typography variant="body1">{editorEmail}</Typography>
                       </div>
                     </a>

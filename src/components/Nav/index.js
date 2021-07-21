@@ -18,7 +18,7 @@ const GordonNav = ({ onDrawerToggle, authentication, onSignOut, drawerOpen }) =>
   );
 
   return (
-    <section className="gordon-nav">
+    <section className={styles.gordon-nav}>
       <Hidden mdUp>
         <Drawer
           variant="temporary"

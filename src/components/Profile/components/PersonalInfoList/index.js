@@ -121,7 +121,7 @@ const PersonalInfoList = ({
         myProf ? (
           formatPhone(HomePhone)
         ) : (
-          <a href={`tel:${HomePhone}`} className="gc360-text-link">
+          <a href={`tel:${HomePhone}`} className={styles.gc360-text-link}>
             {formatPhone(HomePhone)}
           </a>
         )
@@ -144,7 +144,7 @@ const PersonalInfoList = ({
         ) : MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
-          <a href={`tel:${MobilePhone}`} className="gc360-text-link">
+          <a href={`tel:${MobilePhone}`} className={styles.gc360-text-link}>
             {formatPhone(MobilePhone)}
           </a>
         )
@@ -312,7 +312,7 @@ const PersonalInfoList = ({
   const note =
     myProf &&
     (isFacStaff ? (
-      <div align="left" className="note">
+      <div align="left" className={styles.note}>
         <Typography>NOTE:</Typography>
         <ul>
           <li>
@@ -324,7 +324,7 @@ const PersonalInfoList = ({
         </ul>
       </div>
     ) : isStudent ? (
-      <div align="left" className="note">
+      <div align="left" className={styles.note}>
         <Typography>NOTE:</Typography>
         <ul>
           <li>
@@ -353,7 +353,7 @@ const PersonalInfoList = ({
       isMobilePhonePrivate ||
       isCampusLocationPrivate ||
       isSpousePrivate) ? (
-      <Typography align="left" className="disclaimer">
+      <Typography align="left" className={styles.disclaimer}>
         Private by request, visible only to faculty and staff
       </Typography>
     ) : null;
@@ -363,7 +363,7 @@ const PersonalInfoList = ({
       <Card
         className={`personal-info-list  ${myProf ? 'my-personal-info' : 'public-personal-info'}`}
       >
-        <Grid container className="personal-info-list-header">
+        <Grid container className={styles.personal-info-list-header}>
           <CardHeader title="Personal Information" />
         </Grid>
         <CardContent>

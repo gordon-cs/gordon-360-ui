@@ -76,7 +76,7 @@ const NewsList = ({
     <Card>
       {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
       <Grid>
-        <List className="news-list" disablePadding>
+        <List className={styles.news-list} disablePadding>
           {personalUnapprovedNews.length > 0 &&
             personalUnapprovedNews.map((posting) => (
               <NewsItem

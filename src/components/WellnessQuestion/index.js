@@ -48,8 +48,8 @@ const WellnessQuestion = ({ setStatus }) => {
   return (
     <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={10} md={4}>
-        <Card className="wellness-question">
-          <CardHeader title="Wellness Check" className="wellness-header" />
+        <Card className={styles.wellness-question}>
+          <CardHeader title="Wellness Check" className={styles.wellness-header} />
           <CardContent>
             <Grid container direction="column" spacing={2}>
               <Grid item>
@@ -87,7 +87,7 @@ const WellnessQuestion = ({ setStatus }) => {
             <Collapse in={!!answer}>
               <Grid container direction="column" align="center" className={answer} spacing={1}>
                 <Grid item>
-                  <Typography color="textPrimary" className="left">
+                  <Typography color="textPrimary" className={styles.left}>
                     {answer === StatusColors.YELLOW
                       ? wellnessQuestion.yesPrompt
                       : wellnessQuestion.noPrompt}
@@ -111,7 +111,7 @@ const WellnessQuestion = ({ setStatus }) => {
               </Grid>
             </Collapse>
           </Grid>
-          <div className="wellness-header">Health Center (for students): (978) 867-4300</div>
+          <div className={styles.wellness-header}>Health Center (for students): (978) 867-4300</div>
           <SymptomsDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} setStatus={setStatus} />
         </Card>
       </Grid>

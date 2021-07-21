@@ -737,7 +737,7 @@ const StudentApplication = ({ userProfile }) => {
     return <GordonLoader />;
   } else {
     return (
-      <div className="apartment-application">
+      <div className={styles.apartment-application}>
         <Grid container justifyContent="center">
           <Grid container item xs={12} lg={10} xl={8} justifyContent="center" spacing={2}>
             {!applicationCardsOpen && (
@@ -811,7 +811,7 @@ const StudentApplication = ({ userProfile }) => {
                 </Grid>
               </Collapse>
             </Grid>
-            <Grid item xs={12} className="sticky-page-bottom-bar">
+            <Grid item xs={12} className={styles.sticky-page-bottom-bar}>
               <BottomBar
                 applicationCardsOpen={applicationCardsOpen}
                 applicationID={applicationDetails.ApplicationID}

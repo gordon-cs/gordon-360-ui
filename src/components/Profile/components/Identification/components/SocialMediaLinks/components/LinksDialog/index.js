@@ -67,10 +67,10 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   };
 
   return (
-    <div className="gc360-links-dialog">
-      <DialogTitle className="gc360-links-dialog_title">Social Media Links</DialogTitle>
-      <DialogContent className="gc360-links-dialog_content">
-        <Typography variant="body2" className="gc360-links-dialog_content_text">
+    <div className={styles.gc360-links-dialog}>
+      <DialogTitle className={styles.gc360-links-dialog_title}>Social Media Links</DialogTitle>
+      <DialogContent className={styles.gc360-links-dialog_content}>
+        <Typography variant="body2" className={styles.gc360-links-dialog_content_text}>
           Paste or Edit your links below. When done, click Submit
         </Typography>
         {socialMediaInfo.platforms.map((platform) => (
@@ -78,7 +78,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
             key={platform}
             className={`gc360-links-dialog_content_${platform} gc360-links-dialog_content_media`}
           >
-            <div className="gc360-links-dialog_content_icon">{socialMediaInfo[platform].icon}</div>
+            <div className={styles.gc360-links-dialog_content_icon}>{socialMediaInfo[platform].icon}</div>
             <TextField
               id={`${platform}-input`}
               label={`${platform} ${
@@ -95,13 +95,13 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
               margin="dense"
               fullWidth
               multiline
-              className="gc360-links-dialog_content_field"
+              className={styles.gc360-links-dialog_content_field}
               variant="outlined"
             />
           </div>
         ))}
       </DialogContent>
-      <DialogActions className="gc360-links-dialog_actions">
+      <DialogActions className={styles.gc360-links-dialog_actions}>
         <Button onClick={onClose} variant="outlined" color="primary">
           Cancel
         </Button>

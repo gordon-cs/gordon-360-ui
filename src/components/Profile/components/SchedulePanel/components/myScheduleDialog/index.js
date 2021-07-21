@@ -353,17 +353,17 @@ export default class MyScheduleDialog extends React.Component {
         onClose={this.props.handleMyScheduleClose}
         fullWidth="true"
         maxWidth="md"
-        className="time-tile"
+        className={styles.time-tile}
       >
         <DialogTitle>{dialogTitle} schedule item</DialogTitle>
 
         <DialogContent>
-          <form className="info" onSubmit={this.handleSubmit}>
+          <form className={styles.info} onSubmit={this.handleSubmit}>
             <FormControl error={!this.state.checkedValid}>
               <FormHelperText>
                 {this.state.checkedValid ? '' : this.state.formErrors.checkedInput}
               </FormHelperText>
-              <FormGroup row="true" className="dayWeek">
+              <FormGroup row="true" className={styles.dayWeek}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -479,7 +479,7 @@ export default class MyScheduleDialog extends React.Component {
                   />
                 }
                 label={<Typography style={{ fontSize: '0.9rem' }}>All Day</Typography>}
-                className="alldaycheckbox"
+                className={styles.alldaycheckbox}
                 style={{ verticalAlign: 'bottom', marginLeft: '1.5%' }}
               />
             </div>

@@ -46,7 +46,7 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
     return (
-      <div className="gordon-login">
+      <div className={styles.gordon-login}>
         <Login onLogIn={onLogIn} />
       </div>
     );

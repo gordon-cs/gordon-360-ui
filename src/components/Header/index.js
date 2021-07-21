@@ -123,7 +123,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     if (!isOnline) {
       return (
         <Tab
-          className="tab disabled-tab"
+          className={styles.tab disabled-tab}
           icon={icon}
           label={name}
           onClick={() => setDialog('offline')}
@@ -132,7 +132,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     } else if (!authentication) {
       return (
         <Tab
-          className="tab disabled-tab"
+          className={styles.tab disabled-tab}
           icon={icon}
           label={name}
           onClick={() => setDialog('unauthorized')}
@@ -140,7 +140,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
       );
     } else {
       const route = `/${name.toLowerCase()}`;
-      return <Tab className="tab" icon={icon} label={name} component={ForwardNavLink} to={route} />;
+      return <Tab className={styles.tab} icon={icon} label={name} component={ForwardNavLink} to={route} />;
     }
   };
 
@@ -156,7 +156,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
 
   const loginButton = (
     <Button
-      className="login-button"
+      className={styles.login-button}
       variant="contained"
       color="secondary"
       component={ForwardLink}
@@ -167,19 +167,19 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   );
 
   return (
-    <section className="gordon-header">
-      <AppBar className="app-bar" position="static">
+    <section className={styles.gordon-header}>
+      <AppBar className={styles.app-bar} position="static">
         <Toolbar>
           <IconButton
-            className="menu-button"
+            className={styles.menu-button}
             color="primary"
             aria-label="open drawer"
             onClick={onDrawerToggle}
           >
-            <MenuIcon className="menu-button-icon" />
+            <MenuIcon className={styles.menu-button-icon} />
           </IconButton>
 
-          <Typography className="title disable-select" variant="h6" color="inherit">
+          <Typography className={styles.title disable-select} variant="h6" color="inherit">
             <Switch>
               {routes.map((route) => (
                 <Route
@@ -192,24 +192,24 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             </Switch>
           </Typography>
 
-          <div className="center-container">
+          <div className={styles.center-container}>
             <Tabs centered value={tabIndex} onChange={(event, value) => setTabIndex(value)}>
               <Tab
-                className="tab"
+                className={styles.tab}
                 icon={<HomeIcon />}
                 label="Home"
                 component={ForwardNavLink}
                 to="/"
               />
               <Tab
-                className="tab"
+                className={styles.tab}
                 icon={<LocalActivityIcon />}
                 label="Involvements"
                 component={ForwardNavLink}
                 to="/involvements"
               />
               <Tab
-                className="tab"
+                className={styles.tab}
                 icon={<EventIcon />}
                 label="Events"
                 component={ForwardNavLink}

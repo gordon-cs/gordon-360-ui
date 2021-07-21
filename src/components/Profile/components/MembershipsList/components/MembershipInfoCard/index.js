@@ -31,7 +31,7 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
 
   return (
     <>
-      <Grid container alignItems="center" justifyContent="center" className="membership-info-card">
+      <Grid container alignItems="center" justifyContent="center" className={styles.membership-info-card}>
         <Grid
           container
           item
@@ -41,11 +41,11 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
           xl={9}
           justifyContent="flex-start"
           alignItems="center"
-          className="membership-info-card-description"
+          className={styles.membership-info-card-description}
         >
           <Grid item xs={8}>
             <List>
-              <ListItem className="my-profile-info-card-description-text">
+              <ListItem className={styles.my-profile-info-card-description-text}>
                 <OnlineOnlyLink>
                   <Typography fontWeight="fontWeightBold">
                     {membership.ActivityDescription}
@@ -62,7 +62,7 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
               <Grid item xs={12} align="center">
                 {isOnline &&
                   (membership.IsInvolvementPrivate ? (
-                    <LockIcon className="lock-icon" />
+                    <LockIcon className={styles.lock-icon} />
                   ) : (
                     <Switch
                       onChange={() => {
@@ -88,7 +88,7 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
           sm={3}
           lg={4}
           xl={3}
-          className="membership-info-card-image"
+          className={styles.membership-info-card-image}
           alignItems="center"
         >
           <OnlineOnlyLink>

@@ -68,12 +68,12 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
 
   const avatar = authentication ? (
     image ? (
-      <Avatar className="avatar image" src={`data:image/jpg;base64,${image}`} />
+      <Avatar className={styles.avatar image} src={`data:image/jpg;base64,${image}`} />
     ) : (
-      <Avatar className="avatar placeholder">{getInitials(username)}</Avatar>
+      <Avatar className={styles.avatar placeholder}>{getInitials(username)}</Avatar>
     )
   ) : (
-    <Avatar className="avatar placeholder">Guest</Avatar>
+    <Avatar className={styles.avatar placeholder}>Guest</Avatar>
   );
 
   const buttonLink = React.forwardRef((props, ref) => (
@@ -82,21 +82,21 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
       innerRef={ref}
       to={authentication ? `/myprofile` : '/'}
       onClick={onLinkClick}
-      className="gc360-link"
+      className={styles.gc360-link}
     />
   ));
 
   const label = authentication ? (
     <>
-      <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
+      <Typography variant="body2" className={styles.avatar-text} align="left" gutterBottom>
         {name}
       </Typography>
-      <Typography variant="caption" className="avatar-text" align="left" gutterBottom>
+      <Typography variant="caption" className={styles.avatar-text} align="left" gutterBottom>
         {email}
       </Typography>
     </>
   ) : (
-    <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
+    <Typography variant="body2" className={styles.avatar-text} align="left" gutterBottom>
       Guest
     </Typography>
   );
@@ -110,7 +110,7 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
       }}
       component={buttonLink}
     >
-      <div className="gordon-nav-avatar">
+      <div className={styles.gordon-nav-avatar}>
         {avatar}
         {label}
       </div>

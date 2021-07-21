@@ -25,8 +25,8 @@ const EmergencyInfoList = ({ username }) => {
 
   return (
     <Grid item xs={12}>
-      <Card className="emrg-info-list">
-        <Grid container className="emrg-info-list-header">
+      <Card className={styles.emrg-info-list}>
+        <Grid container className={styles.emrg-info-list-header}>
           <CardHeader title="Emergency Contact Information" />
         </Grid>
         <CardContent>
@@ -48,7 +48,7 @@ const EmergencyInfoList = ({ username }) => {
                     <ProfileInfoListItem
                       title="Mobile Phone:"
                       contentText={
-                        <a href={`tel:${emrgContact.MobilePhone}`} className="gc360-text-link">
+                        <a href={`tel:${emrgContact.MobilePhone}`} className={styles.gc360-text-link}>
                           {formatPhone(emrgContact.MobilePhone)}
                         </a>
                       }
@@ -59,7 +59,7 @@ const EmergencyInfoList = ({ username }) => {
                     <ProfileInfoListItem
                       title="Home Phone:"
                       contentText={
-                        <a href={`tel:${emrgContact.HomePhone}`} className="gc360-text-link">
+                        <a href={`tel:${emrgContact.HomePhone}`} className={styles.gc360-text-link}>
                           {formatPhone(emrgContact.HomePhone)}
                         </a>
                       }
@@ -70,7 +70,7 @@ const EmergencyInfoList = ({ username }) => {
                     <ProfileInfoListItem
                       title="Work Phone:"
                       contentText={
-                        <a href={`tel:${emrgContact.WorkPhone}`} className="gc360-text-link">
+                        <a href={`tel:${emrgContact.WorkPhone}`} className={styles.gc360-text-link}>
                           {formatPhone(emrgContact.WorkPhone)}
                         </a>
                       }
@@ -80,7 +80,7 @@ const EmergencyInfoList = ({ username }) => {
                 </ul>
               </>
             ))}
-            <Typography align="left" className="disclaimer">
+            <Typography align="left" className={styles.disclaimer}>
               Private: visible only to Gordon Police
             </Typography>
           </List>

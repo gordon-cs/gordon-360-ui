@@ -101,7 +101,7 @@ const BottomBar = ({
   }
 
   return (
-    <Card className="sticky-page-bottom-bar" variant="outlined">
+    <Card className={styles.sticky-page-bottom-bar} variant="outlined">
       <CardContent>
         <Grid container direction="row" justifyContent="flex-end" spacing={2}>
           <Grid item xs={12} sm>
@@ -124,7 +124,7 @@ const BottomBar = ({
             )}
             <Grid item xs>
               <DynamicButton
-                className="delete-button"
+                className={styles.delete-button}
                 disabled={!canEditApplication || !applicationID}
                 buttonText={'Delete'}
                 startIcon={<DeleteIcon />}

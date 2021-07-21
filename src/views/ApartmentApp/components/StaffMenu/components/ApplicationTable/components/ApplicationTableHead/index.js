@@ -18,7 +18,7 @@ const ApplicationTableHead = ({ iteratee, order, onRequestSort }) => {
   };
 
   return (
-    <TableHead className="stylized-table-head">
+    <TableHead className={styles.stylized-table-head}>
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell

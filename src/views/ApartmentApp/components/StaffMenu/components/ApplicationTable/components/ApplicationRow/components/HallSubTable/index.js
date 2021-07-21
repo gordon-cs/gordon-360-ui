@@ -12,19 +12,19 @@ import {
 
 const HallSubTable = ({ apartmentChoices }) => (
   <Box margin={1}>
-    <Toolbar className="stylized-table-toolbar" disableGutters>
+    <Toolbar className={styles.stylized-table-toolbar} disableGutters>
       <Typography variant="h6" gutterBottom component="div">
         Preferred Halls
       </Typography>
     </Toolbar>
-    <Table size="small" aria-label="halls" className="sub-table">
-      <TableHead className="stylized-table-head">
+    <Table size="small" aria-label="halls" className={styles.sub-table}>
+      <TableHead className={styles.stylized-table-head}>
         <TableRow>
           <TableCell align="right">Rank</TableCell>
           <TableCell>Name</TableCell>
         </TableRow>
       </TableHead>
-      <TableBody className="striped-table">
+      <TableBody className={styles.striped-table}>
         {apartmentChoices.map((apartmentChoice) => (
           <TableRow key={apartmentChoice.HallName}>
             <TableCell align="right">{apartmentChoice.HallRank}</TableCell>

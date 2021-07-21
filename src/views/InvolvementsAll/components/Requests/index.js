@@ -37,15 +37,15 @@ const Requests = () => {
   if(involvementsLeading?.length > 0) {
     return (
       <Grid item xs={12} lg={8}>
-          <Card className="requests">
-            <CardHeader title="Membership Requests" className="requests-header" />
+          <Card className={styles.requests}>
+            <CardHeader title="Membership Requests" className={styles.requests-header} />
             
             <CardContent>
               <Accordion>
                 <AccordionSummary
                   aria-controls="received-requests-content"
                   expandIcon={<ExpandMore style={{ color: 'white' }} />}
-                  className="requests-header"
+                  className={styles.requests-header}
                 >
                   <Typography variant="h6">Requests Received</Typography>
                 </AccordionSummary>
@@ -63,7 +63,7 @@ const Requests = () => {
                 <AccordionSummary
                   aria-controls="sent-requests-content"
                   expandIcon={<ExpandMore style={{ color: 'white' }} />}
-                  className="requests-header"
+                  className={styles.requests-header}
                 >
                   <Typography variant="h6">Requests Sent</Typography>
                 </AccordionSummary>
@@ -94,16 +94,16 @@ const Requests = () => {
   else if(requestsSent?.length > 0) {
     return (
       <Grid item xs={12} lg={8}>
-        <Card className="requests">
+        <Card className={styles.requests}>
           <Accordion defaultExpanded>
             <AccordionSummary
               aria-controls="received-requests-content"
               expandIcon={<ExpandMore style={{ color: 'white' }} />}
-              className="requests-header"
+              className={styles.requests-header}
             >
               <CardHeader 
                 title="Membership Requests"
-                className="requests-header"
+                className={styles.requests-header}
                   style={{padding: 0}} 
               />
             </AccordionSummary>

@@ -8,7 +8,7 @@ const Feedback = () => {
 
   if (isOnline) {
     return (
-      <div className="feedback-form">
+      <div className={styles.feedback-form}>
         <iframe
           title="Feedback Form"
           src="https://docs.google.com/forms/d/e/1FAIpQLSfB7MtIGiMbVcSOAbl38KWqKYU9NIEE-Sbi66rbpNPAmGBoqA/viewform?embedded=true"
