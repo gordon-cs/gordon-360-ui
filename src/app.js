@@ -59,7 +59,7 @@ export default class App extends Component {
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <NetworkContextProvider>
             <Router history={this.history}>
-              <section className={styles.app-wrapper}>
+              <section className={styles.app_wrapper}>
                 <GordonHeader
                   onDrawerToggle={this.onDrawerToggle}
                   onSignOut={this.onAuthChange}
@@ -71,7 +71,7 @@ export default class App extends Component {
                   onSignOut={this.onAuthChange}
                   authentication={this.state.authentication}
                 />
-                <main className={styles.app-main}>
+                <main className={styles.app_main}>
                   <Switch>
                     {routes.map((route) => (
                       <Route
@@ -79,7 +79,7 @@ export default class App extends Component {
                         path={route.path}
                         exact={route.exact}
                         render={(props) => (
-                          <div className={styles.app-main-container}>
+                          <div className={styles.app_main_container}>
                             <OfflineBanner
                               currentPath={route.path}
                               authentication={this.state.authentication}

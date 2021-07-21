@@ -9,14 +9,14 @@ const Help = () => {
       <Grid item xs={12} lg={8}>
         <Card className={styles.help}>
           <CardHeader
-            className={styles.help-title}
+            className={styles.help_title}
             title="Gordon 360 Help"
             titleTypographyProps={{ variant: 'h4' }}
           />
           <CardContent>
-            <Card className={styles.help-section}>
+            <Card className={styles.help_section}>
               <CardHeader
-                className={styles.help-header}
+                className={styles.help_header}
                 title="LOGIN INSTRUCTIONS"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -28,9 +28,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help-section}>
+            <Card className={styles.help_section}>
               <CardHeader
-                className={styles.help-header}
+                className={styles.help_header}
                 title="SITE NAVIGATION"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -98,9 +98,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help-section}>
+            <Card className={styles.help_section}>
               <CardHeader
-                className={styles.help-header}
+                className={styles.help_header}
                 title="INVOLVEMENT USER LEVELS"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -142,9 +142,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help-section}>
+            <Card className={styles.help_section}>
               <CardHeader
-                className={styles.help-header}
+                className={styles.help_header}
                 title="MANAGEMENT & EDITING INVOLVEMENTS"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -192,9 +192,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help-section}>
+            <Card className={styles.help_section}>
               <CardHeader
-                className={styles.help-header}
+                className={styles.help_header}
                 title="ISSUES & TROUBLESHOOTING"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -214,9 +214,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help-section}>
+            <Card className={styles.help_section}>
               <CardHeader
-                className={styles.help-header}
+                className={styles.help_header}
                 title="SUPPORTED PLATFORMS"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -231,9 +231,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help-section}>
+            <Card className={styles.help_section}>
               <CardHeader
-                className={styles.help-header}
+                className={styles.help_header}
                 title="FAQ"
                 titleTypographyProps={{ variant: 'body1' }}
               />

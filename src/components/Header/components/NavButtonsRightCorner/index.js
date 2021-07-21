@@ -116,7 +116,7 @@ const GordonNavButtonsRightCorner = ({
           }}
           open={open}
           onClose={onClose}
-          className={styles.right-side-nav-buttons}
+          className={styles.right_side_nav_buttons}
         >
           <List id="right-side-menu-list" disablePadding={true}>
             <div id="right-menu-triangle" />

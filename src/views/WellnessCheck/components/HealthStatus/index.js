@@ -60,11 +60,11 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
   return (
     <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={12} md={8}>
-        <Card className={styles.wellness-check}>
+        <Card className={styles.wellness_check}>
           <CardHeader title={username} />
           <CardContent>
             <img
-              className={`${styles.rounded-corners} ${user-image}`}
+              className={`${styles.rounded_corners} ${user_image}`}
               src={`data:image/jpg;base64,${image}`}
               alt={username}
             />
@@ -77,7 +77,7 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   href="https://forms.office.com/r/BFdQwaTBR1"
-                  className={styles.rtc-link}
+                  className={styles.rtc_link}
                 >
                   the Post-Easter Break Return to Campus form
                 </a>{' '}
@@ -85,12 +85,12 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
               </Typography>
             )}
             {/* END */}
-            <Grid className={styles.wellness-status}>
+            <Grid className={styles.wellness_status}>
               <Card className={currentStatus}>
-                <CardContent className={styles.status-box}>
-                  <div className={styles.status-time}>{time}</div>
+                <CardContent className={styles.status_box}>
+                  <div className={styles.status_time}>{time}</div>
 
-                  <div className={styles.status-animation}>{animatedIcon}</div>
+                  <div className={styles.status_animation}>{animatedIcon}</div>
                 </CardContent>
               </Card>
               <br />
@@ -106,7 +106,7 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
               />
             </Grid>
           </CardContent>
-          <div className={styles.wellness-header}>Questions? Health Center: (978) 867-4300 </div>
+          <div className={styles.wellness_header}>Questions? Health Center: (978) 867-4300 </div>
         </Card>
       </Grid>
     </Grid>

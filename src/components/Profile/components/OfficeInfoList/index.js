@@ -33,7 +33,7 @@ const OfficeInfoList = ({
     <ProfileInfoListItem
       title="Office Phone:"
       contentText={
-        <a href={'tel:978867' + OnCampusPhone} className={styles.gc360-text-link}>
+        <a href={'tel:978867' + OnCampusPhone} className={styles.gc360_text_link}>
           {'(978) 867-' + OnCampusPhone}
         </a>
       }
@@ -55,8 +55,8 @@ const OfficeInfoList = ({
 
   return (
     <Grid item xs={12}>
-      <Card className={styles.office-info-list}>
-        <Grid container className={styles.office-info-list-header}>
+      <Card className={styles.office_info_list}>
+        <Grid container className={styles.office_info_list_header}>
           <CardHeader title="Office Information" />
         </Grid>
         <CardContent>

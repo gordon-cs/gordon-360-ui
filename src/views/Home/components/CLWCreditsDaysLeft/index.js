@@ -137,10 +137,10 @@ const CLWCreditsDaysLeft = () => {
               alignItems: 'center',
             }}
           >
-            <div className={styles.label-text} style={{ color: daysColor }}>
+            <div className={styles.label_text} style={{ color: daysColor }}>
               {daysFinished}
             </div>
-            <div className={styles.entry-text}>
+            <div className={styles.entry_text}>
               {'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}
             </div>
             <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
@@ -157,10 +157,10 @@ const CLWCreditsDaysLeft = () => {
                 alignItems: 'center',
               }}
             >
-              <div className={styles.label-text} style={{ color: chapelColor }}>
+              <div className={styles.label_text} style={{ color: chapelColor }}>
                 {current}
               </div>
-              <div className={styles.entry-text}>{`CL&W Credit ${current === 1 ? '' : 's'}`}</div>
+              <div className={styles.entry_text}>{`CL&W Credit ${current === 1 ? '' : 's'}`}</div>
             </div>
           ) : null}
         </div>
@@ -169,7 +169,7 @@ const CLWCreditsDaysLeft = () => {
   }
 
   return (
-    <Card className={styles.clw-credits-days-left}>
+    <Card className={styles.clw_credits_days_left}>
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={4} align="left">

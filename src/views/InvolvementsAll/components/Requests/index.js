@@ -38,14 +38,14 @@ const Requests = () => {
     return (
       <Grid item xs={12} lg={8}>
           <Card className={styles.requests}>
-            <CardHeader title="Membership Requests" className={styles.requests-header} />
+            <CardHeader title="Membership Requests" className={styles.requests_header} />
             
             <CardContent>
               <Accordion>
                 <AccordionSummary
                   aria-controls="received-requests-content"
                   expandIcon={<ExpandMore style={{ color: 'white' }} />}
-                  className={styles.requests-header}
+                  className={styles.requests_header}
                 >
                   <Typography variant="h6">Requests Received</Typography>
                 </AccordionSummary>
@@ -63,7 +63,7 @@ const Requests = () => {
                 <AccordionSummary
                   aria-controls="sent-requests-content"
                   expandIcon={<ExpandMore style={{ color: 'white' }} />}
-                  className={styles.requests-header}
+                  className={styles.requests_header}
                 >
                   <Typography variant="h6">Requests Sent</Typography>
                 </AccordionSummary>
@@ -99,11 +99,11 @@ const Requests = () => {
             <AccordionSummary
               aria-controls="received-requests-content"
               expandIcon={<ExpandMore style={{ color: 'white' }} />}
-              className={styles.requests-header}
+              className={styles.requests_header}
             >
               <CardHeader 
                 title="Membership Requests"
-                className={styles.requests-header}
+                className={styles.requests_header}
                   style={{padding: 0}} 
               />
             </AccordionSummary>

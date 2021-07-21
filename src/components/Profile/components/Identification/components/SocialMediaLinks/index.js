@@ -22,7 +22,7 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
   return (
     <>
       {(myProf || socialMediaInfo.platforms.some((platform) => links[platform])) && (
-        <Grid item className={styles.identification-card-content-card-container-info-social-media}>
+        <Grid item className={styles.identification_card_content_card_container_info_social_media}>
           <Grid
             container
             justifyContent={numberOfLinks < 3 ? 'space-evenly' : 'space-between'}
@@ -34,7 +34,7 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
                   <Grid item key={platform}>
                     <a
                       href={links[platform]}
-                      className={styles.gc360-my-profile_icon}
+                      className={styles.gc360_my_profile_icon}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -51,7 +51,7 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
               (numberOfLinks > 0 ? (
                 <Grid item>
                   <IconButton
-                    className={styles.gc360-my-profile_edit-icon}
+                    className={styles.gc360_my_profile_edit_icon}
                     onClick={() => setSocialLinksOpen(true)}
                   >
                     <EditIcon />

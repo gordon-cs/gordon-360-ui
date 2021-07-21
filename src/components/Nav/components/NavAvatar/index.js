@@ -82,35 +82,35 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
       innerRef={ref}
       to={authentication ? `/myprofile` : '/'}
       onClick={onLinkClick}
-      className={styles.gc360-link}
+      className={styles.gc360_link}
     />
   ));
 
   const label = authentication ? (
     <>
-      <Typography variant="body2" className={styles.avatar-text} align="left" gutterBottom>
+      <Typography variant="body2" className={styles.avatar_text} align="left" gutterBottom>
         {name}
       </Typography>
-      <Typography variant="caption" className={styles.avatar-text} align="left" gutterBottom>
+      <Typography variant="caption" className={styles.avatar_text} align="left" gutterBottom>
         {email}
       </Typography>
     </>
   ) : (
-    <Typography variant="body2" className={styles.avatar-text} align="left" gutterBottom>
+    <Typography variant="body2" className={styles.avatar_text} align="left" gutterBottom>
       Guest
     </Typography>
   );
 
   return (
     <Button
-      className={styles.gordon-nav-avatar}
+      className={styles.gordon_nav_avatar}
       classes={{
         root: 'gordon-nav-avatar button',
         label: 'label',
       }}
       component={buttonLink}
     >
-      <div className={styles.gordon-nav-avatar}>
+      <div className={styles.gordon_nav_avatar}>
         {avatar}
         {label}
       </div>

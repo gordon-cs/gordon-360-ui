@@ -113,7 +113,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
       <>
         <Divider />
         {size === 'single' /*** Single Size - One Column (Mobile View) ***/ ? (
-          <Link className={styles.gc360-link} to={`profile/${Person.AD_Username}`}>
+          <Link className={styles.gc360_link} to={`profile/${Person.AD_Username}`}>
             <Grid
               container
               alignItems="center"
@@ -125,7 +125,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
             >
               <Grid item>
                 <IMG
-                  className={styles.people-search-avatar-mobile}
+                  className={styles.people_search_avatar_mobile}
                   src={avatar}
                   alt={'Profile picture for ' + fullName}
                   noLazyLoad="true"
@@ -155,7 +155,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
             </Grid>
           </Link>
         ) : size === 'largeImages' /*** Enlarged Images ***/ ? (
-          <Link className={styles.gc360-link} to={`profile/${Person.AD_Username}`}>
+          <Link className={styles.gc360_link} to={`profile/${Person.AD_Username}`}>
             <Grid
               container
               alignItems="center"
@@ -167,7 +167,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
             >
               <Grid item xs={4} container justifyContent="flex-end">
                 <IMG
-                  className={styles.people-search-avatar-large}
+                  className={styles.people_search_avatar_large}
                   src={avatar}
                   alt={'Profile picture for ' + fullName}
                   noLazyLoad="true"
@@ -197,7 +197,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
             </Grid>
           </Link> /*** Full Size - Multiple Columns (Desktop View) ***/
         ) : (
-          <Link className={styles.gc360-link} to={`profile/${Person.AD_Username}`}>
+          <Link className={styles.gc360_link} to={`profile/${Person.AD_Username}`}>
             <Grid
               container
               direction="row"
@@ -209,7 +209,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
             >
               <Grid item xs={5} container alignItems="center">
                 <IMG
-                  className={styles.people-search-avatar}
+                  className={styles.people_search_avatar}
                   src={avatar}
                   alt={'Profile picture for ' + fullName}
                   noLazyLoad="true"

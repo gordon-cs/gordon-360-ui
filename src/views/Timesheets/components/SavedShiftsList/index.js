@@ -202,27 +202,27 @@ export default class SavedShiftsList extends Component {
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
-              <Typography className={styles.disable-select} variant="body2" style={styles.headerItem}>
+              <Typography className={styles.disable_select} variant="body2" style={styles.headerItem}>
                 JOB
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.disable-select} variant="body2" style={styles.headerItem}>
+              <Typography className={styles.disable_select} variant="body2" style={styles.headerItem}>
                 IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.disable-select} variant="body2" style={styles.headerItem}>
+              <Typography className={styles.disable_select} variant="body2" style={styles.headerItem}>
                 OUT
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.disable-select} variant="body2" style={styles.headerItem}>
+              <Typography className={styles.disable_select} variant="body2" style={styles.headerItem}>
                 RATE
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.disable-select} variant="body2" style={styles.headerItem}>
+              <Typography className={styles.disable_select} variant="body2" style={styles.headerItem}>
                 HOURS
               </Typography>
             </Grid>
@@ -250,7 +250,7 @@ export default class SavedShiftsList extends Component {
         }}
         fullWidth
       >
-        <InputLabel className={styles.disable-select}>Submit To</InputLabel>
+        <InputLabel className={styles.disable_select}>Submit To</InputLabel>
         <Select
           value={this.state.selectedSupervisor}
           onChange={(e) => {
@@ -289,9 +289,9 @@ export default class SavedShiftsList extends Component {
           {confirmationBox}
           <Card>
             <CardContent>
-              <CardHeader className={styles.disable-select} title={cardTitle} />
+              <CardHeader className={styles.disable_select} title={cardTitle} />
               <Grid
-                className={styles.shift-list}
+                className={styles.shift_list}
                 container
                 spacing={2}
                 justifyContent="space-around"
@@ -309,12 +309,12 @@ export default class SavedShiftsList extends Component {
               <CardContent>
                 <Grid container>
                   <Grid item xs={12} sm={6}>
-                    <Typography className={styles.disable-select} variant="h6">
+                    <Typography className={styles.disable_select} variant="h6">
                       Total hours worked: {totalHoursWorked}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Typography className={styles.disable-select} variant="h6">
+                    <Typography className={styles.disable_select} variant="h6">
                       Estimated gross pay: ${totalEstimatedPay}
                     </Typography>
                   </Grid>

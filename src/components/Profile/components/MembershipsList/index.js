@@ -85,15 +85,15 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
   return (
     <>
       <Grid item xs={12} className={styles.memberships}>
-        <Grid container className={styles.memberships-header}>
+        <Grid container className={styles.memberships_header}>
           <CardHeader title="Involvements" />
         </Grid>
-        <Card className={styles.memberships-card}>
-          <CardContent className={styles.memberships-card-content}>
+        <Card className={styles.memberships_card}>
+          <CardContent className={styles.memberships_card_content}>
             {myProf && (
               <Grid container justifyContent="center">
-                <Link className={styles.gc360-link} to="/transcript">
-                  <Button variant="contained" className={styles.memberships-card-content-button}>
+                <Link className={styles.gc360_link} to="/transcript">
+                  <Button variant="contained" className={styles.memberships_card_content_button}>
                     Experience Transcript
                   </Button>
                 </Link>

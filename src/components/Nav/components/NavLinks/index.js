@@ -183,7 +183,7 @@ const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
 
   return (
     <>
-      <List className={styles.gordon-nav-links}>
+      <List className={styles.gordon_nav_links}>
         {homeButton}
         {involvementsButton}
         {eventsButton}
@@ -194,7 +194,7 @@ const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
 
       <Divider />
 
-      <List className={styles.gordon-nav-links-bottom}>
+      <List className={styles.gordon_nav_links_bottom}>
         {linksButton}
         {helpButton}
         {aboutButton}

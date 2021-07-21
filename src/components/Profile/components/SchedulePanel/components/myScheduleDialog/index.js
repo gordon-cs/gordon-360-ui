@@ -353,7 +353,7 @@ export default class MyScheduleDialog extends React.Component {
         onClose={this.props.handleMyScheduleClose}
         fullWidth="true"
         maxWidth="md"
-        className={styles.time-tile}
+        className={styles.time_tile}
       >
         <DialogTitle>{dialogTitle} schedule item</DialogTitle>
 

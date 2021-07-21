@@ -121,7 +121,7 @@ const PersonalInfoList = ({
         myProf ? (
           formatPhone(HomePhone)
         ) : (
-          <a href={`tel:${HomePhone}`} className={styles.gc360-text-link}>
+          <a href={`tel:${HomePhone}`} className={styles.gc360_text_link}>
             {formatPhone(HomePhone)}
           </a>
         )
@@ -144,7 +144,7 @@ const PersonalInfoList = ({
         ) : MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
-          <a href={`tel:${MobilePhone}`} className={styles.gc360-text-link}>
+          <a href={`tel:${MobilePhone}`} className={styles.gc360_text_link}>
             {formatPhone(MobilePhone)}
           </a>
         )
@@ -361,9 +361,9 @@ const PersonalInfoList = ({
   return (
     <Grid item xs={12}>
       <Card
-        className={`${styles.personal-info-list}  ${myProf ? styles.my-person-info : styles.public-personal-info}`}
+        className={`${styles.personal_info_list}  ${myProf ? styles.my_person_info : styles.public_personal_info}`}
       >
-        <Grid container className={styles.personal-info-list-header}>
+        <Grid container className={styles.personal_info_list_header}>
           <CardHeader title="Personal Information" />
         </Grid>
         <CardContent>

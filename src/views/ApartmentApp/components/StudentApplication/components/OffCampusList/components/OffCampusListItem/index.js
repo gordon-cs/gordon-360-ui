@@ -64,10 +64,10 @@ const OffCampusListItem = ({
 
   return (
     <React.Fragment>
-      <ListItem key={profile.AD_Username} className={styles.list-item}>
+      <ListItem key={profile.AD_Username} className={styles.list_item}>
         <Grid container alignItems="flex-end" spacing={1}>
           <Grid item xs={12} sm={4}>
-            <ListItemText primary={displayName ?? profile.AD_Username} className={styles.list-item} />
+            <ListItemText primary={displayName ?? profile.AD_Username} className={styles.list_item} />
           </Grid>
           <Grid item xs={12} sm={8}>
             <FormControl fullWidth error={!isSelectionValid}>

@@ -162,8 +162,8 @@ export default class GordonPeopleSearch extends Component {
 
   renderNoResult() {
     return (
-      <MenuItem className={styles.people-search-suggestion} style={{ paddingBottom: '5px' }}>
-        <Typography className={styles.no-results} variant="body2">
+      <MenuItem className={styles.people_search_suggestion} style={{ paddingBottom: '5px' }}>
+        <Typography className={styles.no_results} variant="body2">
           No results
         </Typography>
         <Typography className={styles.loading} variant="body2">
@@ -340,7 +340,7 @@ export default class GordonPeopleSearch extends Component {
           }}
         >
           {({ getInputProps, getItemProps, isOpen }) => (
-            <span className={styles.gordon-people-search} key="suggestion-list-span">
+            <span className={styles.gordon_people_search} key="suggestion-list-span">
               {networkStatus === 'online'
                 ? renderInput(
                     getInputProps({
@@ -360,7 +360,7 @@ export default class GordonPeopleSearch extends Component {
               this.state.suggestions.length > 0 &&
               this.state.query.length >= MIN_QUERY_LENGTH ? (
                 this.props.disableLink ? (
-                  <Paper square className={styles.people-search-dropdown}>
+                  <Paper square className={styles.people_search_dropdown}>
                     {this.state.suggestions.map((suggestion) =>
                       this.renderSuggestion({
                         suggestion,
@@ -369,7 +369,7 @@ export default class GordonPeopleSearch extends Component {
                     )}
                   </Paper>
                 ) : (
-                  <Paper square className={styles.people-search-dropdown}>
+                  <Paper square className={styles.people_search_dropdown}>
                     {this.state.suggestions.map((suggestion) =>
                       this.renderSuggestion({
                         suggestion,
@@ -387,7 +387,7 @@ export default class GordonPeopleSearch extends Component {
                 this.state.query.length >= MIN_QUERY_LENGTH ? (
                 // Styling copied from how renderSuggestion is done with
                 // only bottom padding changed and 'no-results' class used
-                <Paper square className={styles.people-search-dropdown}>
+                <Paper square className={styles.people_search_dropdown}>
                   {this.renderNoResult()}
                 </Paper>
               ) : null}
@@ -397,7 +397,7 @@ export default class GordonPeopleSearch extends Component {
       );
     } else {
       content = (
-        <span className={styles.gordon-people-search}>
+        <span className={styles.gordon_people_search}>
           <TextField
             placeholder="People Search"
             type="search"

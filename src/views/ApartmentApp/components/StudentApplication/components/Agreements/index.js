@@ -92,7 +92,7 @@ const Agreements = ({ deleting, onChange }) => {
   const AgreementChecklistItem = ({ checked, index, label, onChange }) => (
     <React.Fragment>
       <FormControlLabel
-        className={styles.apartment-agreements-form-control-option}
+        className={styles.apartment_agreements_form_control_option}
         control={
           <Checkbox
             checked={checked}
@@ -111,11 +111,11 @@ const Agreements = ({ deleting, onChange }) => {
 
   return (
     <Card>
-      <CardHeader title="Agreements" className={styles.apartment-card-header} />
+      <CardHeader title="Agreements" className={styles.apartment_card_header} />
       <CardContent>
-        <FormControl component="fieldset" className={styles.apartment-agreements-form-control}>
+        <FormControl component="fieldset" className={styles.apartment_agreements_form_control}>
           {error && (
-            <FormLabel component="legend" className={styles.apartment-agreements-form-control-label}>
+            <FormLabel component="legend" className={styles.apartment_agreements_form_control_label}>
               Use the checkboxes next to each statement to indicate your group's understanding
               and/or affirmative answer. Failure to complete this section will result in the
               disqualification of the application.

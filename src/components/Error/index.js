@@ -6,7 +6,7 @@ import { Grid, Typography } from '@material-ui/core';
 
 const GordonError = ({ error, errorInfo }) => {
   return (
-    <Grid className={styles.gordon-error} container justifyContent="center" alignItems="center">
+    <Grid className={styles.gordon_error} container justifyContent="center" alignItems="center">
       <Grid item xs={11} md={7} lg={5}>
         <Typography color="primary" variant="h3">
           Something went wrong.

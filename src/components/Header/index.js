@@ -123,7 +123,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     if (!isOnline) {
       return (
         <Tab
-          className={`${styles.tab} ${styles.disabled-tab}`}
+          className={`${styles.tab} ${styles.disabled_tab}`}
           icon={icon}
           label={name}
           onClick={() => setDialog('offline')}
@@ -132,7 +132,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     } else if (!authentication) {
       return (
         <Tab
-          className={`${styles.tab} ${styles.disabled-tab}`}
+          className={`${styles.tab} ${styles.disabled_tab}`}
           icon={icon}
           label={name}
           onClick={() => setDialog('unauthorized')}
@@ -156,7 +156,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
 
   const loginButton = (
     <Button
-      className={styles.login-button}
+      className={styles.login_button}
       variant="contained"
       color="secondary"
       component={ForwardLink}
@@ -167,19 +167,19 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   );
 
   return (
-    <section className={styles.gordon-header}>
-      <AppBar className={styles.app-bar} position="static">
+    <section className={styles.gordon_header}>
+      <AppBar className={styles.app_bar} position="static">
         <Toolbar>
           <IconButton
-            className={styles.menu-button}
+            className={styles.menu_button}
             color="primary"
             aria-label="open drawer"
             onClick={onDrawerToggle}
           >
-            <MenuIcon className={styles.menu-button-icon} />
+            <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
 
-          <Typography className={`${styles.title} ${styles.disable-select}`} variant="h6" color="inherit">
+          <Typography className={`${styles.title} ${styles.disable_select}`} variant="h6" color="inherit">
             <Switch>
               {routes.map((route) => (
                 <Route
@@ -192,7 +192,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             </Switch>
           </Typography>
 
-          <div className={styles.center-container}>
+          <div className={styles.center_container}>
             <Tabs centered value={tabIndex} onChange={(event, value) => setTabIndex(value)}>
               <Tab
                 className={styles.tab}

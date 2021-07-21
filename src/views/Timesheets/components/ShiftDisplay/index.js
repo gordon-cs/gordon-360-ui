@@ -160,7 +160,7 @@ export default class ShiftDisplay extends Component {
       this.state.jobNames && this.state.jobNames.length > 1 ? (
         this.state.jobNames.map((jobName, index) => (
           <Tab
-            className={styles.job-tab}
+            className={styles.job_tab}
             label={jobName}
             onClick={() => this.handleTabSelect(jobName)}
             key={index}
@@ -179,7 +179,7 @@ export default class ShiftDisplay extends Component {
               value={this.state.tabValue}
               onChange={this.handleTabChange}
               variant="fullWidth"
-              className={styles.job-tabs}
+              className={styles.job_tabs}
             >
               {jobTabs}
             </Tabs>
@@ -190,7 +190,7 @@ export default class ShiftDisplay extends Component {
               onChange={this.handleTabChange}
               orientation="vertical"
               variant="fullWidth"
-              className={styles.job-tabs}
+              className={styles.job_tabs}
             >
               {jobTabs}
             </Tabs>
@@ -204,7 +204,7 @@ export default class ShiftDisplay extends Component {
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <CardHeader className={styles.disable-select} title="Display shifts for:" />
+              <CardHeader className={styles.disable_select} title="Display shifts for:" />
               {theTabs}
             </CardContent>
           </Card>

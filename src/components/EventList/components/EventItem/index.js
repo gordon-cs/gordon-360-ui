@@ -22,18 +22,18 @@ export default class GordonEventItem extends Component {
     eventDescription = eventDescription === '' ? 'No description available' : eventDescription;
     return (
       <section>
-        <Grid container direction="row" onClick={this.handleExpandClick} className={styles.event-item}>
+        <Grid container direction="row" onClick={this.handleExpandClick} className={styles.event_item}>
           <Grid item xs={4}>
-            <Typography className={styles.event-column}>{event.title}</Typography>
+            <Typography className={styles.event_column}>{event.title}</Typography>
           </Grid>
           <Grid item xs={4}>
-            <Typography className={styles.event-column}>{event.location}</Typography>
+            <Typography className={styles.event_column}>{event.location}</Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography className={styles.event-column}>{event.date}</Typography>
+            <Typography className={styles.event_column}>{event.date}</Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography className={styles.event-column}>{event.timeRange}</Typography>
+            <Typography className={styles.event_column}>{event.timeRange}</Typography>
           </Grid>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>

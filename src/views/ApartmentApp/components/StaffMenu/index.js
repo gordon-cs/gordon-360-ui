@@ -115,7 +115,7 @@ const StaffMenu = ({ userProfile }) => {
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} lg={10}>
           <Card>
-            <CardHeader title="Download Apartment Applications" className={styles.apartment-card-header} />
+            <CardHeader title="Download Apartment Applications" className={styles.apartment_card_header} />
             <CardContent>
               <Grid container direction="row" spacing={2}>
                 <Grid item xs={12}>

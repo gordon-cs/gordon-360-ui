@@ -369,7 +369,7 @@ const Timesheets = (props) => {
           width: 252,
         }}
       >
-        <InputLabel className={styles.disable-select}>Jobs</InputLabel>
+        <InputLabel className={styles.disable_select}>Jobs</InputLabel>
         <Select
           value={selectedJob}
           onChange={(e) => {
@@ -392,7 +392,7 @@ const Timesheets = (props) => {
           width: 252,
         }}
       >
-        <InputLabel className={styles.disable-select}>Hour Type</InputLabel>
+        <InputLabel className={styles.disable_select}>Hour Type</InputLabel>
         <Select
           value={selectedHourType}
           onChange={(e) => {
@@ -447,7 +447,7 @@ const Timesheets = (props) => {
                         <Button onClick={changeState}> {clockInOut}</Button>
                       </Grid>
                       <Grid item md={8}>
-                        <div className={styles.header-tooltip-container}>
+                        <div className={styles.header_tooltip_container}>
                           <CustomTooltip
                             classes={{ tooltip: classes.customWidth }}
                             interactive
@@ -466,9 +466,9 @@ const Timesheets = (props) => {
                             placement="bottom"
                           >
                             <div ref={tooltipRef}>
-                              <CardHeader className={styles.disable-select} title="Enter a shift" />
+                              <CardHeader className={styles.disable_select} title="Enter a shift" />
                               <InfoOutlinedIcon
-                                className={styles.tooltip-icon}
+                                className={styles.tooltip_icon}
                                 style={{
                                   fontSize: 18,
                                 }}
@@ -487,7 +487,7 @@ const Timesheets = (props) => {
                     >
                       <Grid item xs={12} md={6} lg={3}>
                         <KeyboardDateTimePicker
-                          className={styles.disable-select}
+                          className={styles.disable_select}
                           style={{
                             width: 252,
                           }}
@@ -504,7 +504,7 @@ const Timesheets = (props) => {
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
                         <KeyboardDateTimePicker
-                          className={styles.disable-select}
+                          className={styles.disable_select}
                           style={{
                             width: 252,
                           }}
@@ -531,7 +531,7 @@ const Timesheets = (props) => {
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
                         <TextField
-                          className={styles.disable-select}
+                          className={styles.disable_select}
                           style={{
                             width: 252,
                           }}
@@ -543,7 +543,7 @@ const Timesheets = (props) => {
                         />
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
-                        <Typography className={styles.disable-select}>
+                        <Typography className={styles.disable_select}>
                           Hours worked: {hoursWorkedInDecimal}
                         </Typography>
                       </Grid>
@@ -560,7 +560,7 @@ const Timesheets = (props) => {
                       <Grid item xs={12}>
                         <Typography>
                           <Link
-                            className={styles.disable-select}
+                            className={styles.disable_select}
                             style={{
                               borderBottom: '1px solid currentColor',
                               textDecoration: 'none',

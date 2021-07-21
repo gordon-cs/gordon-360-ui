@@ -290,10 +290,10 @@ export default class Transcript extends Component {
       const otherInvolvements = this.state.otherInvolvements;
 
       return (
-        <div className={styles.co-curricular-transcript}>
+        <div className={styles.co_curricular_transcript}>
           <Card className={styles.card} elevation={10}>
-            <CardContent className={styles.card-content}>
-              <div className={styles.print-only}>{/* <img src={require('./logo.png')} alt="" /> */}</div>
+            <CardContent className={styles.card_content}>
+              <div className={styles.print_only}>{/* <img src={require('./logo.png')} alt="" /> */}</div>
               <div>
                 <Button
                   className={styles.button}
@@ -319,7 +319,7 @@ export default class Transcript extends Component {
                   </Typography>
                 </div>
               )}
-              <div className={styles.activity-list}>{honorsList}</div>
+              <div className={styles.activity_list}>{honorsList}</div>
               {experiences && (
                 <div className={styles.subtitle}>
                   <Typography variant="h5">
@@ -327,7 +327,7 @@ export default class Transcript extends Component {
                   </Typography>
                 </div>
               )}
-              <div className={styles.activity-list}>{experienceList}</div>
+              <div className={styles.activity_list}>{experienceList}</div>
               {serviceLearning && (
                 <div className={styles.subtitle}>
                   <Typography variant="h5">
@@ -335,7 +335,7 @@ export default class Transcript extends Component {
                   </Typography>
                 </div>
               )}
-              <div className={styles.activity-list}>{serviceList}</div>
+              <div className={styles.activity_list}>{serviceList}</div>
               {otherInvolvements && (
                 <div className={styles.subtitle}>
                   <Typography variant="h5">
@@ -343,7 +343,7 @@ export default class Transcript extends Component {
                   </Typography>
                 </div>
               )}
-              <div className={styles.activity-list}>{activityList}</div>
+              <div className={styles.activity_list}>{activityList}</div>
             </CardContent>
           </Card>
         </div>

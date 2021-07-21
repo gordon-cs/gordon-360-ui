@@ -31,8 +31,8 @@ const UpdatePhone = () => {
   };
 
   return (
-    <div className={styles.gc360-updatephone-dialog}>
-      <IconButton className={styles.gc360-my-profile_edit-icon} onClick={() => setOpen(true)}>
+    <div className={styles.gc360_updatephone_dialog}>
+      <IconButton className={styles.gc360_my_profile_edit_icon} onClick={() => setOpen(true)}>
         <EditIcon style={{ fontSize: 20 }} />
       </IconButton>
       <GordonDialogBox

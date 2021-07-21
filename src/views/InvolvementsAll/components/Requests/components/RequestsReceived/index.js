@@ -43,7 +43,7 @@ const RequestReceived = ({ involvement }) => {
   const title = <Typography variant="h6">{involvement.ActivityDescription}</Typography>;
 
   return (
-    <Accordion className={styles.requests-received}>
+    <Accordion className={styles.requests_received}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         {requests.length > 0 ? (
           <Badge color="error" badgeContent={requests.length}>
@@ -53,7 +53,7 @@ const RequestReceived = ({ involvement }) => {
           title
         )}
       </AccordionSummary>
-      <AccordionDetails className={styles.requests-received-list}>
+      <AccordionDetails className={styles.requests_received_list}>
         {requests?.length > 0 ? (
           <List>
             {requests
@@ -70,7 +70,7 @@ const RequestReceived = ({ involvement }) => {
 
                     <ListItemSecondaryAction>
                       <Button
-                        className={styles.deny-request-button}
+                        className={styles.deny_request_button}
                         onClick={() => onDeny(request.RequestID)}
                         size="small"
                       >

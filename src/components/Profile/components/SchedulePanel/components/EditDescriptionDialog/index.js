@@ -49,8 +49,8 @@ export default class EditDescriptionDialog extends React.Component {
 
     return (
       <Dialog open={this.props.editDescriptionOpen} keepMounted fullWidth="true" maxWidth="xs">
-        <div className={styles.desc-tile}>
-          <DialogTitle className={styles.desc-title}>Edit schedule description</DialogTitle>
+        <div className={styles.desc_tile}>
+          <DialogTitle className={styles.desc_title}>Edit schedule description</DialogTitle>
 
           <TextField
             id="descInput"
@@ -58,10 +58,10 @@ export default class EditDescriptionDialog extends React.Component {
             defaultValue={this.state.descInput}
             value={this.state.descInput}
             onChange={this.handleChange('descInput')}
-            className={styles.desc-description}
+            className={styles.desc_description}
           />
 
-          <DialogActions className={styles.desc-buttons}>
+          <DialogActions className={styles.desc_buttons}>
             <Button
               onClick={this.props.handleEditDescriptionClose}
               variant="contained"

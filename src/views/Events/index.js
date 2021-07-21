@@ -115,7 +115,7 @@ const Events = (props) => {
 
   const filter = (
     <Collapse in={open} timeout="auto" unmountOnExit>
-      <div className={styles.event-filters-wrapper}>
+      <div className={styles.event_filters_wrapper}>
         <FormControl>
           <InputLabel id="event-filters">Filters</InputLabel>
           <Select
@@ -125,13 +125,13 @@ const Events = (props) => {
             value={filters}
             onChange={handleChangeFilters}
             renderValue={(selected) => (
-              <div className={styles.filter-chips}>
+              <div className={styles.filter_chips}>
                 {selected.map((value) => (
-                  <Chip key={value} label={value} className={styles.filter-chip} />
+                  <Chip key={value} label={value} className={styles.filter_chip} />
                 ))}
               </div>
             )}
-            className={styles.event-filters-select}
+            className={styles.event_filters_select}
           >
             {EVENT_FILTERS.map((filterName) => (
               <MenuItem key={filterName} value={filterName}>
@@ -151,7 +151,7 @@ const Events = (props) => {
   return (
     <Grid container justifyContent="center" alignContent="flex-start">
       {/* Search Bar and Filters */}
-      <Grid item xs={12} lg={8} className={styles.event-buttons} container justifyContent="center">
+      <Grid item xs={12} lg={8} className={styles.event_buttons} container justifyContent="center">
         <Grid item xs={12} sm={6} md={8}>
           <TextField
             id="search"

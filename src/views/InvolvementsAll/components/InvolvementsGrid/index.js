@@ -9,7 +9,7 @@ const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => 
   const history = useHistory();
 
   return (
-    <Grid container direction="row" spacing={4} className={styles.involvements-grid}>
+    <Grid container direction="row" spacing={4} className={styles.involvements_grid}>
       {involvements?.length > 0 ? (
         involvements?.map((activity) => (
           <Grid item xs={6} sm={4} md={3} lg={2} key={activity.ActivityCode}>
@@ -28,7 +28,7 @@ const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => 
                   title={activity.ActivityDescription}
                 />
                 <CardContent>
-                  <Typography className={styles.involvement-description}>
+                  <Typography className={styles.involvement_description}>
                     {activity.ActivityDescription}
                   </Typography>
                 </CardContent>

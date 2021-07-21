@@ -89,10 +89,10 @@ export default class DaysLeft extends Component {
                 alignItems: 'center',
               }}
             >
-              <div className={styles.label-text} style={{ color: gordonColors.primary.blue }}>
+              <div className={styles.label_text} style={{ color: gordonColors.primary.blue }}>
                 {pastDays}
               </div>
-              <div className={styles.entry-text}>Days Finished</div>
+              <div className={styles.entry_text}>Days Finished</div>
             </div>
           </div>
         </div>

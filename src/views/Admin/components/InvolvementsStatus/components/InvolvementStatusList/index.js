@@ -8,7 +8,7 @@ const ListItemLink = (props) => <ListItem button component={Link} {...props} />;
 const InvolvementStatusListItem = ({ involvement, session }) => {
   return (
     <ListItemLink
-      className={styles.gc360-link}
+      className={styles.gc360_link}
       to={`/activity/${session}/${involvement.ActivityCode}`}
       divider
     >

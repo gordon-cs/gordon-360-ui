@@ -38,7 +38,7 @@ const PickerInput = (props) => {
   return (
     <>
       <TextField
-        className={styles.shift-edit-picker}
+        className={styles.shift_edit_picker}
         {...props}
         variant={'outlined'}
         multiline
@@ -487,7 +487,7 @@ export default class ShiftItem extends Component {
         <CustomTooltip
           disableFocusListener
           disableTouchListener
-          className={styles.tooltip-icon}
+          className={styles.tooltip_icon}
           title={'Shift note: ' + SHIFT_NOTES}
           placement="top"
         >
@@ -506,7 +506,7 @@ export default class ShiftItem extends Component {
         <CustomTooltip
           disableFocusListener
           disableTouchListener
-          className={styles.tooltip-icon}
+          className={styles.tooltip_icon}
           title={COMMENTS}
           placement="top"
         >
@@ -526,37 +526,37 @@ export default class ShiftItem extends Component {
 
     return (
       <>
-        <Grid item xs={12} className={styles.shift-item}>
+        <Grid item xs={12} className={styles.shift_item}>
           {confirmationBox}
           <div>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <Grid container direction="row" alignItems="center">
                 <Grid item xs={3}>
-                  <div className={styles.tooltip-container}>
-                    <Typography className={styles.disable-select} variant="body2">
+                  <div className={styles.tooltip_container}>
+                    <Typography className={styles.disable_select} variant="body2">
                       {descColumn}
                     </Typography>
                     {shiftCommentTooltip}
                   </div>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className={styles.disable-select} variant="body2">
+                  <Typography className={styles.disable_select} variant="body2">
                     {timeInDisp}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className={styles.disable-select} variant="body2">
+                  <Typography className={styles.disable_select} variant="body2">
                     {timeOutDisp}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className={styles.disable-select} variant="body2">
+                  <Typography className={styles.disable_select} variant="body2">
                     {this.props.canUse ? console.log('HERE', HOUR_TYPE) : HOURLY_RATE.toFixed(2)}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <div className={styles.tooltip-container}>
-                    <Typography className={styles.disable-select} variant="body2">
+                  <div className={styles.tooltip_container}>
+                    <Typography className={styles.disable_select} variant="body2">
                       {hoursWorkedDisp}
                     </Typography>
                     {shiftNotesTooltip}

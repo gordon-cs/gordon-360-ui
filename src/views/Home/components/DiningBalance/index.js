@@ -77,7 +77,7 @@ export default class DiningBalance extends Component {
               justifyContent: 'space-around',
             }}
           >
-            <div className={styles.label-text} style={{ color: balanceColor }}>
+            <div className={styles.label_text} style={{ color: balanceColor }}>
               ${this.facStaffBalance}
             </div>
           </div>
@@ -181,10 +181,10 @@ export default class DiningBalance extends Component {
                   alignItems: 'center',
                 }}
               >
-                <div className={styles.label-text} style={{ color: swipesColor }}>
+                <div className={styles.label_text} style={{ color: swipesColor }}>
                   {swipeInit === 0 ? '\u221E' : swipeCurr}
                 </div>
-                <div className={styles.entry-text}>Swipes</div>
+                <div className={styles.entry_text}>Swipes</div>
               </div>
               <div
                 style={{
@@ -194,10 +194,10 @@ export default class DiningBalance extends Component {
                   alignItems: 'center',
                 }}
               >
-                <div className={styles.label-text} style={{ color: dollarsColor }}>
+                <div className={styles.label_text} style={{ color: dollarsColor }}>
                   ${dollarCurr}
                 </div>
-                <div className={styles.entry-text}>Dining Dollars</div>
+                <div className={styles.entry_text}>Dining Dollars</div>
               </div>
               <div
                 style={{
@@ -207,10 +207,10 @@ export default class DiningBalance extends Component {
                   alignItems: 'center',
                 }}
               >
-                <div className={styles.label-text} style={{ color: guestColor }}>
+                <div className={styles.label_text} style={{ color: guestColor }}>
                   {guestCurr}
                 </div>
-                <div className={styles.entry-text}>Guest Swipes</div>
+                <div className={styles.entry_text}>Guest Swipes</div>
               </div>
             </div>
           </div>
@@ -218,7 +218,7 @@ export default class DiningBalance extends Component {
       }
     }
     return (
-      <Card className={styles.dining-balance}>
+      <Card className={styles.dining_balance}>
         <CardContent>
           <Grid container direction="row" alignItems="center">
             <Grid item xs={7} align="left">
