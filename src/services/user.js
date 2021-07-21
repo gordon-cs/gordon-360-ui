@@ -181,6 +181,96 @@ import { socialMediaInfo } from 'socialMedia';
  * @property {String} CurrentBalance The current remaining meal plan balance
  */
 
+const cliftonStrengthCategories = {
+  Executing: [
+    'Achiever',
+    'Arranger',
+    'Belief',
+    'Consistency',
+    'Deliberative',
+    'Discipline',
+    'Focus',
+    'Responsibility',
+    'Restorative',
+  ],
+  Influencing: [
+    'Activator',
+    'Command',
+    'Communication',
+    'Competition',
+    'Maximizer',
+    'Self-Assurance',
+    'Significance',
+    'Woo',
+  ],
+  Relationship: [
+    'Adaptability',
+    'Connectedness',
+    'Developer',
+    'Empathy',
+    'Harmony',
+    'Includer',
+    'Individualization',
+    'Positivity',
+    'Relator',
+  ],
+  Thinking: [
+    'Analytical',
+    'Context',
+    'Futuristic',
+    'Ideation',
+    'Input',
+    'Intellection',
+    'Learner',
+    'Strategic',
+  ],
+};
+
+const cliftonStrengthColors = {
+  Executing: '#9070bf',
+  Influencing: '#c88a2e',
+  Relationship: '#2486af',
+  Thinking: '#3c9b1f',
+};
+
+const cliftonStrengthLinks = {
+  Achiever: 'https://www.gallup.com/cliftonstrengths/en/252134/achiever-theme.aspx',
+  Arranger: 'https://www.gallup.com/cliftonstrengths/en/252161/arranger-theme.aspx',
+  Belief: 'https://www.gallup.com/cliftonstrengths/en/252170/belief-theme.aspx',
+  Consistency: 'https://www.gallup.com/cliftonstrengths/en/252203/consistency-theme.aspx',
+  Deliberative: 'https://www.gallup.com/cliftonstrengths/en/252215/deliberative-theme.aspx',
+  Discipline: 'https://www.gallup.com/cliftonstrengths/en/252227/discipline-theme.aspx',
+  Focus: 'https://www.gallup.com/cliftonstrengths/en/252239/focus-theme.aspx',
+  Responsibility: 'https://www.gallup.com/cliftonstrengths/en/252320/responsibility-theme.aspx',
+  Restorative: 'https://www.gallup.com/cliftonstrengths/en/252323/restorative-theme.aspx',
+  Activator: 'https://www.gallup.com/cliftonstrengths/en/252140/activator-theme.aspx',
+  Command: 'https://www.gallup.com/cliftonstrengths/en/252176/command-theme.aspx',
+  Communication: 'https://www.gallup.com/cliftonstrengths/en/252185/communication-theme.aspx',
+  Competition: 'https://www.gallup.com/cliftonstrengths/en/252191/competition-theme.aspx',
+  Maximizer: 'https://www.gallup.com/cliftonstrengths/en/252299/maximizer-theme.aspx',
+  'Self-Assurance': 'https://www.gallup.com/cliftonstrengths/en/252332/self-assurance-theme.aspx',
+  Significance: 'https://www.gallup.com/cliftonstrengths/en/252341/significance-theme.aspx',
+  Woo: 'https://www.gallup.com/cliftonstrengths/en/252359/woo-theme.aspx',
+  Adaptability: 'https://www.gallup.com/cliftonstrengths/en/252146/adaptability-theme.aspx',
+  Connectedness: 'https://www.gallup.com/cliftonstrengths/en/252197/connectedness-theme.aspx',
+  Developer: 'https://www.gallup.com/cliftonstrengths/en/252224/developer-theme.aspx',
+  Empathy: 'https://www.gallup.com/cliftonstrengths/en/252236/empathy-theme.aspx',
+  Harmony: 'https://www.gallup.com/cliftonstrengths/en/252254/harmony-theme.aspx',
+  Includer: 'https://www.gallup.com/cliftonstrengths/en/252266/includer-theme.aspx',
+  Individualization:
+    'https://www.gallup.com/cliftonstrengths/en/252272/individualization-theme.aspx',
+  Positivity: 'https://www.gallup.com/cliftonstrengths/en/252305/positivity-theme.aspx',
+  Relator: 'https://www.gallup.com/cliftonstrengths/en/252305/positivity-theme.aspx',
+  Analytical: 'https://www.gallup.com/cliftonstrengths/en/252152/analytical-theme.aspx',
+  Context: 'https://www.gallup.com/cliftonstrengths/en/252209/context-theme.aspx',
+  Futuristic: 'https://www.gallup.com/cliftonstrengths/en/252248/futuristic-theme.aspx',
+  Ideation: 'https://www.gallup.com/cliftonstrengths/en/252260/ideation-theme.aspx',
+  Input: 'https://www.gallup.com/cliftonstrengths/en/252278/input-theme.aspx',
+  Intellection: 'https://www.gallup.com/cliftonstrengths/en/252284/intellection-theme.aspx',
+  Learner: 'https://www.gallup.com/cliftonstrengths/en/252293/learner-theme.aspx',
+  Strategic: 'https://www.gallup.com/cliftonstrengths/en/252350/strategic-theme.aspx',
+};
+
 function setFullname(profile) {
   profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
   return profile;
@@ -428,7 +518,28 @@ const getAdvisors = async (username) => {
 
 const getCliftonStrengths = async (username) => {
   try {
-    return await http.get(`profiles/clifton/${username}/`);
+    let cliftonStrengths = await http.get(`profiles/clifton/${username}/`);
+
+    cliftonStrengths.Categories = cliftonStrengths.Strengths.map((strength) =>
+      cliftonStrengthCategories.Executing.includes(strength)
+        ? 'Executing'
+        : cliftonStrengthCategories.Influencing.includes(strength)
+        ? 'Influencing'
+        : cliftonStrengthCategories.Relationship.includes(strength)
+        ? 'Relationship'
+        : cliftonStrengthCategories.Thinking.includes(strength)
+        ? 'Thinking'
+        : null,
+    );
+
+    cliftonStrengths.Colors = cliftonStrengths.Categories.map(
+      (category) => cliftonStrengthColors[category],
+    );
+
+    cliftonStrengths.Links = cliftonStrengths.Strengths.map(
+      (strength) => cliftonStrengthLinks[strength],
+    );
+    return cliftonStrengths;
   } catch (error) {
     console.log('Clifton strengths error:', error);
     // TODO: currently throws an error whenever clifton strengths are missing,
@@ -442,7 +553,7 @@ async function setAdvisors(profile) {
 
 async function setCliftonStrengths(profile) {
   const cliftonStrengths = await getCliftonStrengths(profile.AD_Username);
-  profile.CliftonStrengths = cliftonStrengths?.Strengths;
+  profile.CliftonStrengths = cliftonStrengths;
 }
 
 async function setMobilePhoneNumber(value) {
