@@ -26,7 +26,7 @@
         &-platform {
           margin-bottom: 1rem;
           &-toggles {
-            .MuiToggleButtonGroup_grouped:not(:first_child) {
+            .MuiToggleButtonGroup_grouped:not(:first-child) {
               border-left: 1px solid $neutral-white-opacity50;
             }
           }

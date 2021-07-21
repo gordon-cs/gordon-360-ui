@@ -231,13 +231,13 @@ const PWAInstructions = (props) => {
                   >
                     <Typography
                       variant="h6"
-                      className={styles.pwa_instructions_content_container_toggles_instructions_text_step}
+                      className={styles.pwa_instructions_content_container_toggles_instructions_text-step}
                     >
                       Step {index + 1}:&nbsp;
                     </Typography>
                     <Typography
                       variant="subtitle1"
-                      className={styles.pwa_instructions_content_container_toggles_instructions_text_instruction}
+                      className={styles.pwa_instructions_content_container_toggles_instructions_text-instruction}
                     >
                       {step[0]}&nbsp;
                       <a href={step[1]}>click here</a>.
@@ -264,13 +264,13 @@ const PWAInstructions = (props) => {
                 >
                   <Typography
                     variant="h6"
-                    className={styles.pwa_instructions_content_container_toggles_instructions_text_step}
+                    className={styles.pwa_instructions_content_container_toggles_instructions_text-step}
                   >
                     Step {index + 1}:&nbsp;
                   </Typography>
                   <Typography
                     variant="subtitle1"
-                    className={styles.pwa_instructions_content_container_toggles_instructions_text_instruction}
+                    className={styles.pwa_instructions_content_container_toggles_instructions_text-instruction}
                   >
                     {step[0]}
                   </Typography>

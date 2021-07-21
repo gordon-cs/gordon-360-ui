@@ -20,23 +20,23 @@ div.staff_apartment_application {
   }
 
   // Make rows alternate white and grey
-  & .striped_table > tr:nth_child(even) {
+  & .striped_table > tr:nth-child(even) {
     background-color: $neutral-light-gray;
   }
 
-  & .striped_table > tr:nth_child(odd) {
+  & .striped_table > tr:nth-child(odd) {
     background-color: $neutral-white;
   }
 
   // Make rows alternate white and grey but in groups of two
   // (Needed to make the collapsible sub-tables match the row above
   & .double-striped-table > tr:nth-child(4n),
-  & .double_striped_table > tr:nth_child(4n _ 1) {
+  & .double_striped_table > tr:nth-child(4n _ 1) {
     background-color: $neutral-light-gray;
   }
 
   & .double-striped-table > tr:nth-child(4n - 2),
-  & .double_striped_table > tr:nth_child(4n _ 3) {
+  & .double_striped_table > tr:nth-child(4n _ 3) {
     background-color: $neutral-white;
   }
 

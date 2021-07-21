@@ -27,7 +27,6 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { gordonColors } from 'theme';
 import styles from './Timesheets.module.css';
 import GordonLoader from 'components/Loader';
-import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from 'components/Snackbar';
 import user from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -39,18 +38,13 @@ const MILLISECONDS_PER_HOUR = 3600000;
 const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
 const withNoTime = (date) => set(date, { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
 
-const useStyles = makeStyles((theme) => ({
-  customWidth: {
-    maxWidth: 500,
-  },
-}));
-
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
     boxShadow: theme.shadows[1],
     fontSize: 12,
+    maxWidth: 500,
   },
 }))(Tooltip);
 
@@ -181,7 +175,6 @@ const Timesheets = (props) => {
   };
 
   const tooltipRef = useRef();
-  const classes = useStyles();
 
   if (props.authentication) {
     const getSavedShiftsForUser = () => {
@@ -449,7 +442,6 @@ const Timesheets = (props) => {
                       <Grid item md={8}>
                         <div className={styles.header_tooltip_container}>
                           <CustomTooltip
-                            classes={{ tooltip: classes.customWidth }}
                             interactive
                             disableFocusListener
                             disableTouchListener

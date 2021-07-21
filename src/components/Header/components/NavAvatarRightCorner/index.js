@@ -4,6 +4,8 @@ import { gordonColors } from 'theme';
 import React, { useState, useEffect } from 'react';
 import user from 'services/user';
 
+import styles from './../Header.css';
+
 /**
  * Gets the initials of the current user
  * @param {String} username the username to extract initials from
@@ -81,26 +83,26 @@ export const GordonNavAvatarRightCorner = ({ authentication, onClick }) => {
   const avatar = authentication ? (
     image ? (
       <Avatar
-        className={`${styles.gc360_nav_avatar_rc_size} ${classes.root}`}
+        className={classes.root}
         src={`data:image/jpg;base64,${image}`}
         sizes="70px"
       />
     ) : (
       <Avatar
-        className={`${styles.gc360_nav_avatar_rc_size} ${styles.gc360_nav_avatar_rc_placeholder} ${classes.root}`}
+        className={classes.root}
       >
         {getInitials(username)}
       </Avatar>
     )
   ) : (
-    <Avatar className={`${styles.nav_avatar} ${styles.nav_avatar_placeholder} ${classes.root}`}>Guest</Avatar>
+    <Avatar className={classes.root}>Guest</Avatar>
   );
 
   return (
     <section className={styles.right_side_container}>
       <Tooltip className={styles.tooltip} id="tooltip_avatar" title={name ? name : 'Nav Avatar'}>
         <IconButton
-          className={`${styles.gc360_nav_avatar_rc} ${classes.root}`}
+          className={classes.root}
           aria-label="More"
           aria-owns={'global-menu'}
           aria-haspopup="true"

@@ -22,7 +22,7 @@
 
 // Make rows alternate white and grey
 /* stylelint-disable */
-.event_list > section:nth_child(even) {
+.event_list > section:nth-child(even) {
   background: $neutral-light-gray;
   &:hover {
     background-color: $primary-cyan;
@@ -30,7 +30,7 @@
   }
 }
 
-.event_list > section:nth_child(odd) {
+.event_list > section:nth-child(odd) {
   background: $neutral-white;
   &:hover {
     background-color: $primary-cyan;

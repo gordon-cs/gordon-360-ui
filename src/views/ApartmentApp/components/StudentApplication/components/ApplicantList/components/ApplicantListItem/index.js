@@ -16,6 +16,8 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import user from 'services/user';
 
+import styles from './../../../../../../../ApartmentApp.css';
+
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
