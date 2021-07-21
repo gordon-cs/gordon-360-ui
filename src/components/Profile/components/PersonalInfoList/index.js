@@ -4,7 +4,7 @@ import user from 'services/user';
 import './index.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import LockIcon from '@material-ui/icons/Lock';
-
+import HelpIcon from '@material-ui/icons/Help';
 import {
   Typography,
   Grid,
@@ -14,8 +14,19 @@ import {
   List,
   Switch,
   FormControlLabel,
+  Tooltip,
+  Link,
 } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+
+const CliftonTooltip = withStyles({
+  tooltip: {
+    color: '#555',
+    backgroundColor: '#fff',
+    boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
+  },
+})(Tooltip);
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -188,8 +199,45 @@ const PersonalInfoList = ({
     />
   ) : null;
 
+  let strengthsText = CliftonStrengths?.Strengths.map((x) => (
+    <Link
+      href={CliftonStrengths.Links[CliftonStrengths.Strengths.indexOf(x)]}
+      target="_blank"
+      rel="noopener"
+      key={x}
+    >
+      <b style={{ color: CliftonStrengths.Colors[CliftonStrengths.Strengths.indexOf(x)] }}>{x}</b>
+    </Link>
+  )).reduce((prev, curr) => [prev, ', ', curr]);
+
+  let strengthsCaption = (
+    <CliftonTooltip
+      title={
+        <span style={{ fontSize: '0.8rem' }}>
+          Categories:&nbsp;
+          <span style={{ color: '#60409f' }}>Executing</span>,{' '}
+          <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
+          <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
+          <span style={{ color: '#2c8b0f' }}>Thinking</span>
+        </span>
+      }
+      aria-label="add"
+      enterTouchDelay={50}
+    >
+      <HelpIcon style={{ cursor: 'pointer', margin: '0 1rem', fontSize: '1.2rem' }} />
+    </CliftonTooltip>
+  );
+
   const cliftonStrengths = CliftonStrengths ? (
-    <ProfileInfoListItem title="Clifton Strengths:" contentText={CliftonStrengths.join(', ')} />
+    <ProfileInfoListItem
+      title="Clifton Strengths:"
+      contentText={
+        <Typography>
+          {strengthsText}
+          {strengthsCaption}
+        </Typography>
+      }
+    />
   ) : null;
 
   const advisors =
@@ -276,19 +324,26 @@ const PersonalInfoList = ({
         </ul>
       </div>
     ) : isStudent ? (
-      <Typography align="left" className="note">
-        NOTE:
+      <div align="left" className="note">
+        <Typography>NOTE:</Typography>
         <ul>
           <li>
-            To update your On Campus Address, please contact{' '}
-            <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
+            <Typography>Shaded areas are visible only to you.</Typography>
           </li>
           <li>
-            For all other changes or to partially/fully prevent your data from displaying, please
-            contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+            <Typography>
+              To update your On Campus Address, please contact{' '}
+              <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              For all other changes or to partially/fully prevent your data from displaying, please
+              contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+            </Typography>
           </li>
         </ul>
-      </Typography>
+      </div>
     ) : null);
 
   const disclaimer =

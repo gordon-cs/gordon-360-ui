@@ -1,105 +1,118 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import IMG from 'react-graceful-image';
 import { Typography, Grid, Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import user from 'services/user';
 import { Link } from 'react-router-dom';
+import userService from 'services/user';
+import VisibilitySensor from 'react-visibility-sensor';
 
 import './peopleSearchResult.css';
 
-export default class PeopleSearchResult extends Component {
-  constructor(props) {
-    super(props);
+/*Const string was created with https://png-pixel.com/ .
+ *It is a 1 x 1 pixel with the same color as gordonColors.neutral.lightGray (7/9/21)
+ *Although this doesn't use the gordonColors themes directly,
+ *the end result is much cleaner and faster than using the placeholderColor tag of react-graceful-image.
+ */
+const GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/erVfwAJRwPA/3pinwAAAABJRU5ErkJggg==';
+const JPG_BASE64_HEADER = 'data:image/jpg;base64,';
 
-    this.state = {
-      avatar: null,
-      prefImage: null,
-      defImage: null,
-    };
-  }
+const PeopleSearchResult = ({ Person, size, lazyImages }) => {
+  const [avatar, setAvatar] = useState(GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1);
+  const [hasBeenRun, setHasBeenRun] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [personClassJobTitle, setPersonClassJobTitle] = useState('');
+  const [personMailLocation, setPersonMailLocation] = useState('');
+  const [maidenName, setMaidenName] = useState();
+  const SecondaryText = ({ children, otherProps }) => (
+    <Typography variant="body2" color="textSecondary" {...otherProps}>
+      {children}
+    </Typography>
+  );
 
-  componentDidUpdate(newProps) {
-    if (this.props.Person.AD_Username !== newProps.Person.AD_Username) {
-      this.loadAvatar();
+  useEffect(() => {
+    if (lazyImages === false) {
+      loadAvatar();
     }
-  }
+  });
 
-  componentDidMount() {
-    this.loadAvatar();
-  }
+  useEffect(compileInfo);
 
-  async loadAvatar() {
-    this.setState({ avatar: null });
-    const [{ def: defaultImage, pref: preferredImage }] = await Promise.all([
-      await user.getImage(this.props.Person.AD_Username),
-    ]);
-    let avatar;
-    if (this.props.Person.AD_Username) {
-      avatar = preferredImage || defaultImage;
-    } else {
-      avatar = (
-        <svg width="50" height="50" viewBox="0 0 50 50">
-          <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-        </svg>
-      );
+  async function loadAvatar() {
+    //Rename def to defaultImage and pref to preferredImage for clarity
+    const { def: defaultImage, pref: preferredImage } = await userService.getImage(
+      Person.AD_Username,
+    );
+
+    if (Person.AD_Username) {
+      setAvatar(JPG_BASE64_HEADER + (preferredImage || defaultImage));
     }
-    this.setState({ avatar });
+    setHasBeenRun(true);
   }
 
-  render() {
-    const { Person, size } = this.props;
-    let personClassJobTitle, nickname, fullName, personMailLocation;
-    fullName = Person.FirstName + ' ' + Person.LastName;
+  function handleVisibilityChange(isVisible) {
+    if (isVisible && !hasBeenRun) loadAvatar();
+  }
+
+  function compileInfo() {
+    setFullName(Person.FirstName + ' ' + Person.LastName);
 
     // set nicknames up
     if (Person.NickName && Person.FirstName !== Person.NickName) {
-      nickname = '(' + Person.NickName + ')';
+      setNickname('(' + Person.NickName + ')');
+    }
+    // set maiden names up
+    if (Person.MaidenName && Person.LastName !== Person.MaidenName) {
+      setMaidenName('(' + Person.MaidenName + ')');
     }
     // set classes up
     if (Person.Type === 'Student') {
       switch (Person.Class) {
         case '1':
-          personClassJobTitle = 'First Year';
+          setPersonClassJobTitle('First Year');
           break;
         case '2':
-          personClassJobTitle = 'Sophomore';
+          setPersonClassJobTitle('Sophomore');
           break;
         case '3':
-          personClassJobTitle = 'Junior';
+          setPersonClassJobTitle('Junior');
           break;
         case '4':
-          personClassJobTitle = 'Senior';
+          setPersonClassJobTitle('Senior');
           break;
         case '5':
-          personClassJobTitle = 'Graduate Student';
+          setPersonClassJobTitle('Graduate Student');
           break;
         case '6':
-          personClassJobTitle = 'Undergraduate Conferred';
+          setPersonClassJobTitle('Undergraduate Conferred');
           break;
         case '7':
-          personClassJobTitle = 'Graduate Conferred';
+          setPersonClassJobTitle('Graduate Conferred');
           break;
         default:
-          personClassJobTitle = '-----';
+          setPersonClassJobTitle('-----');
           break;
       }
       // set job titles up
     } else if (Person.JobTitle && Person.Type !== 'Student') {
-      personClassJobTitle = Person.JobTitle;
+      setPersonClassJobTitle(Person.JobTitle);
     }
     // set mailbox up
     if (Person.Mail_Location) {
-      personMailLocation =
+      setPersonMailLocation(
         Person.Type === 'Student'
           ? 'Mailbox #' + Person.Mail_Location
-          : 'Mailstop: ' + Person.Mail_Location;
+          : 'Mailstop: ' + Person.Mail_Location,
+      );
     }
+  }
 
-    /*** Single Size - One Column (Mobile View) ***/
-    if (size === 'single') {
-      return (
-        <>
-          <Divider />
+  return (
+    <VisibilitySensor onChange={handleVisibilityChange}>
+      <>
+        <Divider />
+        {size === 'single' /*** Single Size - One Column (Mobile View) ***/ ? (
           <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
             <Grid
               container
@@ -113,32 +126,35 @@ export default class PeopleSearchResult extends Component {
               <Grid item>
                 <IMG
                   className="people-search-avatar-mobile"
-                  src={`data:image/jpg;base64,${this.state.avatar}`}
-                  alt=""
+                  src={avatar}
+                  alt={'Profile picture for ' + fullName}
                   noLazyLoad="true"
-                  placeholderColor="#eeeeee"
+                  noPlaceHolder="true"
                 />
               </Grid>
-              <Grid item xs={6}>
-                <Typography variant="h5">{fullName}</Typography>
-                <Typography variant="body2">{nickname}</Typography>
-                <Typography variant="body2">
-                  {personClassJobTitle}
-                  {Person.Type === 'Alum' ? Person.PreferredClassYear : null}
+              <Grid item xs={8}>
+                <Typography variant="h5">
+                  {Person.FirstName} {nickname} {Person.LastName} {maidenName}
                 </Typography>
-                <Typography variant="body2">{Person.Email}</Typography>
-                <Typography variant="body2">{personMailLocation}</Typography>
+                <SecondaryText>
+                  {personClassJobTitle ?? Person.Type}
+                  {Person.Type === 'Alum' && Person.PreferredClassYear
+                    ? ' ' + Person.PreferredClassYear
+                    : null}
+                </SecondaryText>
+                <SecondaryText>
+                  {Person.Major1Description}
+                  {Person.Major2Description
+                    ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
+                    : null}
+                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
+                </SecondaryText>
+                <SecondaryText variant="body2">{Person.Email}</SecondaryText>
+                <SecondaryText variant="body2">{personMailLocation}</SecondaryText>
               </Grid>
             </Grid>
           </Link>
-          <Divider />
-        </>
-      );
-    } else if (size === 'largeImages') {
-      /*** Enlarged Images ***/
-      return (
-        <>
-          <Divider />
+        ) : size === 'largeImages' /*** Enlarged Images ***/ ? (
           <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
             <Grid
               container
@@ -149,35 +165,38 @@ export default class PeopleSearchResult extends Component {
                 padding: '1rem',
               }}
             >
-              <Grid item xs={6} container justifyContent="flex-end">
+              <Grid item xs={4} container justifyContent="flex-end">
                 <IMG
                   className="people-search-avatar-large"
-                  src={`data:image/jpg;base64,${this.state.avatar}`}
-                  alt=""
+                  src={avatar}
+                  alt={'Profile picture for ' + fullName}
                   noLazyLoad="true"
-                  placeholderColor="#eeeeee"
+                  noPlaceHolder="true"
                 />
               </Grid>
-              <Grid item xs={6}>
-                <Typography variant="h5">{fullName}</Typography>
-                <Typography variant="body2">{nickname}</Typography>
-                <Typography variant="body2">
-                  {personClassJobTitle}
-                  {Person.Type === 'Alum' ? Person.PreferredClassYear : null}
+              <Grid item xs={8}>
+                <Typography variant="h5">
+                  {Person.FirstName} {nickname} {Person.LastName} {maidenName}
                 </Typography>
-                <Typography variant="body2">{Person.Email}</Typography>
-                <Typography variant="body2">{personMailLocation}</Typography>
+                <SecondaryText>
+                  {personClassJobTitle ?? Person.Type}
+                  {Person.Type === 'Alum' && Person.PreferredClassYear
+                    ? ' ' + Person.PreferredClassYear
+                    : null}
+                </SecondaryText>
+                <SecondaryText>
+                  {Person.Major1Description}
+                  {Person.Major2Description
+                    ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
+                    : null}
+                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
+                </SecondaryText>
+                <SecondaryText variant="body2">{Person.Email}</SecondaryText>
+                <SecondaryText variant="body2">{personMailLocation}</SecondaryText>
               </Grid>
             </Grid>
-          </Link>
-          <Divider />
-        </>
-      );
-    } else {
-      /*** Full Size - Multiple Columns (Desktop View) ***/
-      return (
-        <>
-          <Divider />
+          </Link> /*** Full Size - Multiple Columns (Desktop View) ***/
+        ) : (
           <Link className="gc360-link" to={`profile/${Person.AD_Username}`}>
             <Grid
               container
@@ -188,49 +207,69 @@ export default class PeopleSearchResult extends Component {
                 padding: '1rem',
               }}
             >
-              <Grid item xs={1}>
+              <Grid item xs={5} container alignItems="center">
                 <IMG
                   className="people-search-avatar"
-                  src={`data:image/jpg;base64,${this.state.avatar}`}
-                  alt=""
+                  src={avatar}
+                  alt={'Profile picture for ' + fullName}
                   noLazyLoad="true"
-                  placeholderColor="#eeeeee"
+                  noPlaceHolder="true"
                 />
+                <div>
+                  <Typography>
+                    {Person.FirstName} {nickname} {Person.LastName} {maidenName}
+                  </Typography>
+                  <Typography variant="subtitle2">
+                    {Person.Email?.includes('.') ? Person.Email : null}
+                  </Typography>
+                </div>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={5}>
                 <Typography>
-                  {Person.FirstName} {nickname}
+                  {personClassJobTitle ?? Person.Type}
+                  {Person.Type === 'Alum' && Person.PreferredClassYear
+                    ? ' ' + Person.PreferredClassYear
+                    : null}
                 </Typography>
+                <SecondaryText>
+                  {Person.Major1Description}
+                  {Person.Major2Description
+                    ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
+                    : null}
+                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
+                </SecondaryText>
               </Grid>
               <Grid item xs={2}>
-                <Typography>{Person.LastName}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography>{Person.Type}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography>{personClassJobTitle}</Typography>
-                <Typography>{Person.Type === 'Alum' ? Person.PreferredClassYear : null}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Typography>
-                  {Person.AD_Username?.includes('.') ? Person.AD_Username : null}
-                </Typography>
                 <Typography>{personMailLocation}</Typography>
               </Grid>
             </Grid>
           </Link>
-          <Divider />
-        </>
-      );
-    }
-  }
-}
+        )}
+        <Divider />
+      </>
+    </VisibilitySensor>
+  );
+};
+
+// const PeopleSearchResult = handleViewport(PeopleSearchResultBlock);
+export default PeopleSearchResult;
 
 PeopleSearchResult.propTypes = {
   Person: PropTypes.shape({
     FirstName: PropTypes.string.isRequired,
     LastName: PropTypes.string.isRequired,
     Email: PropTypes.string.isRequired,
+    AD_Username: PropTypes.string.isRequired,
+    Nickname: PropTypes.string,
+    Type: PropTypes.string.isRequired,
+    Class: PropTypes.string,
+    JobTitle: PropTypes.string,
+    Mail_Location: PropTypes.string,
+    PreferredClassYear: PropTypes.string,
+    Major1Description: PropTypes.string,
+    Major2Description: PropTypes.string,
+    Major3Description: PropTypes.string,
   }).isRequired,
+  size: PropTypes.string.isRequired,
+  lazyImages: PropTypes.bool.isRequired,
 };
