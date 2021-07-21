@@ -81,26 +81,26 @@ export const GordonNavAvatarRightCorner = ({ authentication, onClick }) => {
   const avatar = authentication ? (
     image ? (
       <Avatar
-        className={`gc360-nav-avatar-rc_size ${classes.root}`}
+        className={`${styles.gc360-nav-avatar-rc_size} ${classes.root}`}
         src={`data:image/jpg;base64,${image}`}
         sizes="70px"
       />
     ) : (
       <Avatar
-        className={`gc360-nav-avatar-rc_size gc360-nav-avatar-rc_placeholder ${classes.root}`}
+        className={`${styles.gc360-nav-avatar-rc_size} ${styles.gc360-nav-avatar-rc_placeholder} ${classes.root}`}
       >
         {getInitials(username)}
       </Avatar>
     )
   ) : (
-    <Avatar className={`nav-avatar nav-avatar-placeholder ${classes.root}`}>Guest</Avatar>
+    <Avatar className={`${styles.nav-avatar} ${styles.nav-avatar-placeholder} ${classes.root}`}>Guest</Avatar>
   );
 
   return (
     <section className={styles.right-side-container}>
       <Tooltip className={styles.tooltip} id="tooltip-avatar" title={name ? name : 'Nav Avatar'}>
         <IconButton
-          className={`gc360-nav-avatar-rc ${classes.root}`}
+          className={`${styles.gc360-nav-avatar-rc} ${classes.root}`}
           aria-label="More"
           aria-owns={'global-menu'}
           aria-haspopup="true"

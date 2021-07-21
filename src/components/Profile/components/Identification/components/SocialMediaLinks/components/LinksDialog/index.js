@@ -76,7 +76,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
         {socialMediaInfo.platforms.map((platform) => (
           <div
             key={platform}
-            className={`gc360-links-dialog_content_${platform} gc360-links-dialog_content_media`}
+            className={`${styles.gc360-links-dialog_content_}${platform} ${styles.gc360-links-dialog_content_media}`}
           >
             <div className={styles.gc360-links-dialog_content_icon}>{socialMediaInfo[platform].icon}</div>
             <TextField

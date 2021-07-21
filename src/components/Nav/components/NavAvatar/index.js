@@ -103,7 +103,7 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
 
   return (
     <Button
-      className={` gordon-nav-avatar`}
+      className={styles.gordon-nav-avatar}
       classes={{
         root: 'gordon-nav-avatar button',
         label: 'label',

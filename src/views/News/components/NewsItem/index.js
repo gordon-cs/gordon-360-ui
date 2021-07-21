@@ -93,7 +93,7 @@ const NewsItem = ({
         onClick={() => {
           setOpen(!open);
         }}
-        className={`news-item ${unapproved ? 'unapproved' : 'approved'}`}
+        className={`${styles.news-item} ${unapproved ? styles.unapproved : styles.approved}`}
         justify="center"
       >
         <Grid item xs={12}>
@@ -127,7 +127,7 @@ const NewsItem = ({
         onClick={() => {
           setOpen(!open);
         }}
-        className={`news-item ${unapproved ? 'unapproved' : 'approved'}`}
+        className={`news-item ${unapproved ? styles.unapproved : styles.approved}`}
       >
         <Grid item xs={2}>
           <Typography className={styles.news-column}>{posting.categoryName}</Typography>

@@ -361,7 +361,7 @@ const PersonalInfoList = ({
   return (
     <Grid item xs={12}>
       <Card
-        className={`personal-info-list  ${myProf ? 'my-personal-info' : 'public-personal-info'}`}
+        className={`${styles.personal-info-list}  ${myProf ? styles.my-person-info : styles.public-personal-info}`}
       >
         <Grid container className={styles.personal-info-list-header}>
           <CardHeader title="Personal Information" />

@@ -80,7 +80,7 @@ const ApplicantListItem = ({
       >
         <ListItemAvatar>
           {avatar ? (
-            <Avatar className={`avatar`} src={`data:image/jpg;base64,${avatar}`} alt="" />
+            <Avatar className={styles.avatar} src={`data:image/jpg;base64,${avatar}`} alt="" />
           ) : (
             <Avatar>
               <PersonIcon color="primary" />
