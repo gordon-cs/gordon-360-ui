@@ -388,10 +388,10 @@ const PersonalInfoList = ({
           alignItems="center"
           className="personal-info-list-header"
         >
-          <Grid item xs={10}>
+          <Grid item xs={8}>
             <CardHeader title="Personal Information" />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={4} align="right">
             {/* visible only for fac/staff */}
             {isFacStaff && myProf && (
               <FormControlLabel
