@@ -98,14 +98,10 @@ const PersonalInfoList = ({
   );
 
   // Street address info is always private, and City/State/Country info is private for private users
-  const [isAddressPrivate, setIsAddressPrivate] = useState(
-    keepPrivate && HomeCity && Boolean(HomeStreet2),
-  );
+  const isAddressPrivate = (keepPrivate && HomeCity !== PRIVATE_INFO) || HomeStreet2;
 
   // FacStaff spouses are private for private users
-  const [isSpousePrivate, setIsSpousePrivate] = useState(
-    isFacStaff && keepPrivate && SpouseName !== PRIVATE_INFO,
-  );
+  const isSpousePrivate = isFacStaff && keepPrivate && SpouseName !== PRIVATE_INFO;
 
   const handleChangeMobilePhonePrivacy = async () => {
     try {
@@ -125,13 +121,11 @@ const PersonalInfoList = ({
     try {
       await user.setHomePhonePrivacy(!isHomePhonePrivate);
       setIsHomePhonePrivate(!isHomePhonePrivate);
-      await user.setAddressPrivacy(!isAddressPrivate);
-      setIsAddressPrivate(!isAddressPrivate);
-      await user.setSpousePrivacy(!isSpousePrivate);
-      setIsSpousePrivate(!isSpousePrivate);
 
       createSnackbar(
-        isHomePhonePrivate ? 'Personal Info Visible' : 'Personal Info Hidden',
+        isHomePhonePrivate
+          ? 'Personal Info Visible (This change may take several minutes)'
+          : 'Personal Info Hidden (This change may take several minutes)',
         'success',
       );
     } catch {
