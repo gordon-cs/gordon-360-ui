@@ -390,7 +390,7 @@ const PersonalInfoList = ({
             <CardHeader title="Personal Information" />
           </Grid>
           <Grid item xs={2}>
-            {/* visible on my profile only */}
+            {/* visible only for fac/staff */}
             {myProf && (
               <FormControlLabel
                 control={
