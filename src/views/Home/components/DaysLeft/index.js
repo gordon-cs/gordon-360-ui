@@ -5,6 +5,9 @@ import { gordonColors } from 'theme';
 import session from 'services/session';
 import GordonLoader from 'components/Loader';
 
+// @TODO CSSMODULES - outside directory
+import styles from './..//DiningBalance/DiningBalance.module.css';
+
 import { Card, CardHeader, CardContent, Typography, Grid } from '@material-ui/core';
 
 export default class DaysLeft extends Component {

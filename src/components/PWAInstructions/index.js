@@ -53,10 +53,11 @@ const toggleStyles = makeStyles({
       backgroundColor: `${gordonColors.primary.blueShades[400]} !important`,
     },
   },
-  selected: {
-    backgroundColor: `${gordonColors.primary.blueShades[700]} !important`,
-    color: 'white !important',
-  },
+  // @ TODO CSSMODULES FIX
+  // selected: {
+  //   backgroundColor: `${gordonColors.primary.blueShades[700]} !important`,
+  //   color: 'white !important',
+  // },
 });
 
 // Holds the instructions for every device with its corresponding pictures

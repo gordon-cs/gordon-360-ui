@@ -13,6 +13,9 @@ import {
 } from '@material-ui/core/';
 import housing from 'services/housing';
 
+// @TODO CSSMODULES - outside directory
+import styles from './../../../../ApartmentApp.module.css';
+
 /**
  * Renders a card displaying the apartment application instructions
  * @param {Object} props The React component props

@@ -14,6 +14,9 @@ import {
 } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 
+// @TODO CSSMODULES - outside directory
+import styles from './../../../../../../ApartmentApp.module.css';
+
 /**
  * @typedef { import('services/housing').ApartmentHall } ApartmentHall
  * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice

@@ -4,7 +4,7 @@ import { gordonColors } from 'theme';
 import React, { useState, useEffect } from 'react';
 import user from 'services/user';
 
-import styles from './../Header.css';
+import styles from './../../Header.module.css';
 
 /**
  * Gets the initials of the current user

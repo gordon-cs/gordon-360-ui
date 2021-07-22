@@ -5,6 +5,9 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { gordonColors } from 'theme';
 import membership from 'services/membership';
 
+// @TODO CSSMODULES - outside directory
+import styles from './../../Requests.module.css';
+
 const RequestSent = ({ member, onCancel }) => {
   const handleCancel = () => {
     membership.cancelRequest(member.RequestID);

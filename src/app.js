@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
-import styles from './app.module.css';
 import analytics from './services/analytics';
 import { isAuthenticated } from './services/auth';
 import NetworkContextProvider from './contexts/NetworkContext';
@@ -13,6 +12,11 @@ import GordonNav from './components/Nav';
 import OfflineBanner from './components/OfflineBanner';
 import theme from './theme';
 import routes from './routes';
+
+// Global styling that applies to entire site
+import './app.global.css';
+// local module for app.js
+import styles from './app.module.css';
 
 export default class App extends Component {
   constructor(props) {

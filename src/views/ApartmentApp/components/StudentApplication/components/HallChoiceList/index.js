@@ -4,6 +4,9 @@ import AddIcon from '@material-ui/icons/Add';
 import HallChoiceListItem from './components/HallChoiceListItem';
 import housing from 'services/housing';
 
+// @TODO CSSMODULES - outside directory
+import styles from './../../../../ApartmentApp.module.css';
+
 /**
  * @typedef { import('services/housing').ApartmentHall } ApartmentHall
  * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice

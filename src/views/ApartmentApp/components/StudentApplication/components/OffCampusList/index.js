@@ -3,6 +3,9 @@ import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
 import OffCampusListItem from './components/OffCampusListItem';
 import goStalk from 'services/goStalk';
 
+// @TODO CSSMODULES - outside directory
+import styles from './../../../../ApartmentApp.module.css';
+
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo

@@ -16,6 +16,9 @@ import { AuthError, createError, NotFoundError } from 'services/error';
 import housing from 'services/housing';
 import user from 'services/user';
 
+// @TODO CSSMODULES - outside directory
+import styles from './../../ApartmentApp.module.css';
+
 const DYNAMIC_ICON_TIMEOUT = 6000;
 const MAX_NUM_APPLICANTS = 8;
 const BLANK_APPLICATION_DETAILS = {

@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core/';
 
+// @TODO CSSMODULES - outside directory
+import styles from './../../../../../../ApartmentApp.module.css';
+
 const headCells = [
   { id: 'ApplicationID', numeric: true, disablePadding: false, label: 'Application ID' },
   { id: 'EditorUsername', numeric: false, disablePadding: true, label: 'Editor' },

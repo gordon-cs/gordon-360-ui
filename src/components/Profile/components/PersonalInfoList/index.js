@@ -121,7 +121,7 @@ const PersonalInfoList = ({
         myProf ? (
           formatPhone(HomePhone)
         ) : (
-          <a href={`tel:${HomePhone}`} className={styles.gc360_text_link}>
+          <a href={`tel:${HomePhone}`} className="gc360_text_link">
             {formatPhone(HomePhone)}
           </a>
         )
@@ -144,7 +144,7 @@ const PersonalInfoList = ({
         ) : MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
-          <a href={`tel:${MobilePhone}`} className={styles.gc360_text_link}>
+          <a href={`tel:${MobilePhone}`} className="gc360_text_link">
             {formatPhone(MobilePhone)}
           </a>
         )

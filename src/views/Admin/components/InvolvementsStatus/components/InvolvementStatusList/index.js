@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import { ListItem, ListItemAvatar, Avatar, ListItemText } from '@material-ui/core';
 
 const ListItemLink = (props) => <ListItem button component={Link} {...props} />;
@@ -8,7 +7,7 @@ const ListItemLink = (props) => <ListItem button component={Link} {...props} />;
 const InvolvementStatusListItem = ({ involvement, session }) => {
   return (
     <ListItemLink
-      className={styles.gc360_link}
+      className="gc360_link"
       to={`/activity/${session}/${involvement.ActivityCode}`}
       divider
     >

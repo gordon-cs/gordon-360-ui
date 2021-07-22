@@ -33,7 +33,7 @@ const OfficeInfoList = ({
     <ProfileInfoListItem
       title="Office Phone:"
       contentText={
-        <a href={'tel:978867' + OnCampusPhone} className={styles.gc360_text_link}>
+        <a href={'tel:978867' + OnCampusPhone} className="gc360_text_link">
           {'(978) 867-' + OnCampusPhone}
         </a>
       }

@@ -423,7 +423,7 @@ const InvolvementProfile = ({ authentication }) => {
                   <Typography>
                     <a
                       href={ActivityURL}
-                      className={styles.gc360_text_link}
+                      className="gc360_text_link"
                       style={{ fontWeight: 'bold' }}
                     >
                       {ActivityURL}

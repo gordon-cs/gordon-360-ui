@@ -10,6 +10,9 @@ import ApplicationsTable from './components/ApplicationTable';
 import { NotFoundError } from 'services/error';
 import housing from 'services/housing';
 
+// @TODO CSSMODULES - outside directory
+import styles from './../../ApartmentApp.module.css';
+
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice

@@ -82,7 +82,7 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
       innerRef={ref}
       to={authentication ? `/myprofile` : '/'}
       onClick={onLinkClick}
-      className={styles.gc360_link}
+      className="gc360_link"
     />
   ));
 

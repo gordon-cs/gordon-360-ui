@@ -1,0 +1,80 @@
+@import './vars';
+
+// Specifies global styling that applies to entire site
+// These selectors may be used by any component or view of the site
+
+// https://www.paulirish.com/2012/box-sizing-border-box-ftw/
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body,
+html,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  letter-spacing: 1px;
+  margin: 0;
+  max-width: 100%;
+  padding: 0;
+}
+
+a {
+  // Disable link underline
+  text-decoration: none;
+
+  &:hover {
+    // Disable link underline
+    text-decoration: none;
+  }
+
+  &:visited {
+    // Keep link color the same after visiting it
+    color: initial;
+  }
+}
+// style for links that are menu items or buttons (not just text)
+.gc360_link {
+  color: $neutral-black;
+  &:hover {
+    color: $neutral-black !important;
+    text-decoration: none !important;
+  }
+}
+// style for links that are simply text and therefore need more of a sign that they are clickable
+.gc360_text_link {
+  color: $primary-blue;
+  transition: color 200ms;
+  &:hover {
+    color: $primary-cyan !important;
+  }
+}
+
+@media (max-width: $break-md) {
+  .gc360_a_link {
+    color: $primary-cyan !important;
+  }
+}
+
+strong {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.disable_select {
+  user-select: none;
+}
+
+.rounded_corners {
+  border-radius: 0.5rem;
+}

@@ -113,7 +113,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
       <>
         <Divider />
         {size === 'single' /*** Single Size - One Column (Mobile View) ***/ ? (
-          <Link className={styles.gc360_link} to={`profile/${Person.AD_Username}`}>
+          <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
             <Grid
               container
               alignItems="center"
@@ -155,7 +155,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
             </Grid>
           </Link>
         ) : size === 'largeImages' /*** Enlarged Images ***/ ? (
-          <Link className={styles.gc360_link} to={`profile/${Person.AD_Username}`}>
+          <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
             <Grid
               container
               alignItems="center"
@@ -197,7 +197,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
             </Grid>
           </Link> /*** Full Size - Multiple Columns (Desktop View) ***/
         ) : (
-          <Link className={styles.gc360_link} to={`profile/${Person.AD_Username}`}>
+          <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
             <Grid
               container
               direction="row"
