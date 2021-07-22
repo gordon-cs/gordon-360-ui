@@ -72,7 +72,7 @@ const EmergencyContactUpdate = ({
         Student Life at 978.867.4263.
       </Typography>
       <Typography variant="body2" gutterBottom>
-        For international phone numbers, check the "Non-US Number" checkbox to enter information.
+        For international phone numbers, check the "International #" checkbox.
       </Typography>
     </Grid>
   );
