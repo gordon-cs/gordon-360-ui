@@ -98,10 +98,14 @@ const PersonalInfoList = ({
   );
 
   // Street address info is always private, and City/State/Country info is private for private users
-  const isAddressPrivate = (keepPrivate && HomeCity !== PRIVATE_INFO) || HomeStreet2;
+  const [isAddressPrivate, setIsAddressPrivate] = useState(
+    keepPrivate && HomeCity && Boolean(HomeStreet2),
+  );
 
   // FacStaff spouses are private for private users
-  const isSpousePrivate = isFacStaff && keepPrivate && SpouseName !== PRIVATE_INFO;
+  const [isSpousePrivate, setIsSpousePrivate] = useState(
+    isFacStaff && keepPrivate && SpouseName !== PRIVATE_INFO,
+  );
 
   const handleChangeMobilePhonePrivacy = async () => {
     try {
@@ -121,32 +125,13 @@ const PersonalInfoList = ({
     try {
       await user.setHomePhonePrivacy(!isHomePhonePrivate);
       setIsHomePhonePrivate(!isHomePhonePrivate);
+      await user.setAddressPrivacy(!isAddressPrivate);
+      setIsAddressPrivate(!isAddressPrivate);
+      await user.setSpousePrivacy(!isSpousePrivate);
+      setIsSpousePrivate(!isSpousePrivate);
 
       createSnackbar(
         isHomePhonePrivate ? 'Personal Info Visible' : 'Personal Info Hidden',
-        'success',
-      );
-    } catch {
-      createSnackbar('Privacy Change Failed', 'error');
-    }
-  };
-  const handleChangeSpousePrivacy = async () => {
-    try {
-      await user.setHomePhonePrivacy(!isSpousePrivate);
-      setIsHomePhonePrivate(!isSpousePrivate);
-
-      createSnackbar(isSpousePrivate ? 'Personal Info Visible' : 'Personal Info Hidden', 'success');
-    } catch {
-      createSnackbar('Privacy Change Failed', 'error');
-    }
-  };
-  const handleChangeHomeAddressPrivacy = async () => {
-    try {
-      await user.setHomePhonePrivacy(!isAddressPrivate);
-      setIsHomePhonePrivate(!isAddressPrivate);
-
-      createSnackbar(
-        isAddressPrivate ? 'Personal Info Visible' : 'Personal Info Hidden',
         'success',
       );
     } catch {
@@ -417,14 +402,7 @@ const PersonalInfoList = ({
             {isFacStaff && myProf && (
               <FormControlLabel
                 control={
-                  <Switch
-                    onChange={
-                      handleChangeHomePhonePrivacy &&
-                      handleChangeSpousePrivacy &&
-                      handleChangeHomeAddressPrivacy
-                    }
-                    checked={!isHomePhonePrivate}
-                  />
+                  <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
                 }
                 label={isHomePhonePrivate ? 'Private' : 'Public'}
                 labelPlacement="right"
