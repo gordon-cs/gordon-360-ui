@@ -391,7 +391,7 @@ const PersonalInfoList = ({
           </Grid>
           <Grid item xs={2}>
             {/* visible only for fac/staff */}
-            {myProf && (
+            {isFacStaff && myProf && (
               <FormControlLabel
                 control={
                   <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
