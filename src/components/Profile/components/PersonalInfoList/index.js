@@ -5,6 +5,9 @@ import './index.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import LockIcon from '@material-ui/icons/Lock';
 import HelpIcon from '@material-ui/icons/Help';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
 import {
   Typography,
   Grid,
@@ -290,25 +293,28 @@ const PersonalInfoList = ({
             {myProf && mailCombo && (
               <>
                 <Grid container item xs={2} alignItems="center">
-                  {showMailCombo && <Typography className={'private'}>{`${mailCombo}`}</Typography>}
+                  <Typography className={'private'}>
+                    {showMailCombo ? mailCombo : '****'}
+                  </Typography>
                 </Grid>
-                <Grid container item xs={3} md={3} lg={3} justify="center" alignItems="center">
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        onChange={() => {
-                          setShowMailCombo(!showMailCombo);
-                        }}
-                        checked={showMailCombo}
-                      />
-                    }
-                    label={
-                      <Typography variant="body2">
-                        {showMailCombo ? 'Hide Lock Combo' : 'Show Lock Combo'}
-                      </Typography>
-                    }
-                    labelPlacement="bottom"
-                  />
+                <Grid
+                  container
+                  direction="column"
+                  item
+                  xs={3}
+                  md={3}
+                  lg={3}
+                  justify="center"
+                  alignItems="center"
+                >
+                  <IconButton
+                    onClick={() => {
+                      setShowMailCombo(!showMailCombo);
+                    }}
+                    aria-label={showMailCombo ? 'Hide Mail Combo' : 'Show Mail Combo'}
+                  >
+                    {showMailCombo ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
                 </Grid>
               </>
             )}
