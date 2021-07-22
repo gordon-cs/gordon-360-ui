@@ -105,8 +105,8 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
     <Button
       className={styles.gordon_nav_avatar}
       classes={{
-        root: 'gordon-nav-avatar button',
-        label: 'label',
+        root: styles['gordon_nav_avatar button'],
+        label: styles.label,
       }}
       component={buttonLink}
     >

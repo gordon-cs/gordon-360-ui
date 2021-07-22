@@ -21,7 +21,7 @@
       max-width: 600px;
       margin: 1rem;
       &_container {
-        &_button-style {
+        &_button_style {
           background-color: $primary-cyan !important;
           color: $neutral-white !important;
           margin: 1rem auto 2rem auto !important;
@@ -30,7 +30,7 @@
           background-color: $primary-blue;
           border-radius: 0.5rem;
           padding: 2rem 1rem;
-          &_box-layout {
+          &_box_layout {
             max-width: 100%;
             max-height: auto;
             margin: 0%;
@@ -58,7 +58,7 @@
       &_card {
         &_container {
           padding: 0rem 0.5rem 1rem 0.5rem !important;
-          &_button-style {
+          &_button_style {
             margin: auto auto 1.5rem auto !important;
           }
           &_content {

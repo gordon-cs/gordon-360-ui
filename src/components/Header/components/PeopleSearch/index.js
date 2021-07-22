@@ -20,12 +20,12 @@ const renderInput = (inputProps) => {
       autoFocus={autoFocus}
       value={value}
       inputRef={ref}
-      className={'text-field'}
+      className={styles.text_field}
       InputProps={{
         disableUnderline: true,
         classes: {
-          root: 'people-search-root',
-          input: 'people-search-input',
+          root: styles.people_search_root,
+          input: styles.people_search_input,
           // inputDisabled: 'people-search-disabled', // `inputDisabled` is not a valid classes prop for this Material-UI component. See https://material-ui.com/api/autocomplete/#css
         },
         startAdornment: (
@@ -217,20 +217,20 @@ export default class GordonPeopleSearch extends Component {
             : this.getHighlightedText(
                 // Displays first name
                 suggestion.FirstName +
-                // If having nickname that is unique, display that nickname
-                (suggestion.Nickname &&
-                suggestion.Nickname !== suggestion.FirstName &&
-                suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
-                ? ' (' + suggestion.Nickname + ') '
-                : ' ') +
-                // Displays last name
-                suggestion.LastName +
-                // If having maiden name that is unique, display that maiden name
-                (suggestion.MaidenName &&
-                suggestion.MaidenName !== suggestion.LastName &&
-                suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
-                ? ' (' + suggestion.MaidenName + ')'
-                : ''),
+                  // If having nickname that is unique, display that nickname
+                  (suggestion.Nickname &&
+                  suggestion.Nickname !== suggestion.FirstName &&
+                  suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
+                    ? ' (' + suggestion.Nickname + ') '
+                    : ' ') +
+                  // Displays last name
+                  suggestion.LastName +
+                  // If having maiden name that is unique, display that maiden name
+                  (suggestion.MaidenName &&
+                  suggestion.MaidenName !== suggestion.LastName &&
+                  suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
+                    ? ' (' + suggestion.MaidenName + ')'
+                    : ''),
                 this.state.highlightQuery,
               )}
         </Typography>
@@ -403,12 +403,12 @@ export default class GordonPeopleSearch extends Component {
             type="search"
             value={''}
             onChange={() => this.unauthenticatedSearch()}
-            className={'text-field'}
+            className={styles.text_field}
             InputProps={{
               disableUnderline: true,
               classes: {
-                root: 'people-search-root',
-                input: 'people-search-input',
+                root: styles.people_search_root,
+                input: styles.people_search_input,
               },
               startAdornment: (
                 <InputAdornment position="start">

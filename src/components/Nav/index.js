@@ -24,7 +24,7 @@ const GordonNav = ({ onDrawerToggle, authentication, onSignOut, drawerOpen }) =>
           variant="temporary"
           open={drawerOpen}
           classes={{
-            paper: 'gordon-nav-drawer',
+            paper: styles.gordon_nav_drawer,
           }}
           onClose={onDrawerToggle}
           ModalProps={{
@@ -39,7 +39,7 @@ const GordonNav = ({ onDrawerToggle, authentication, onSignOut, drawerOpen }) =>
           variant="permanent"
           open
           classes={{
-            paper: 'drawer',
+            paper: styles.drawer,
           }}
         >
           {drawer}

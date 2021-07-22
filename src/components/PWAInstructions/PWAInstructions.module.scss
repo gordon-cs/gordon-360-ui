@@ -64,7 +64,7 @@
           }
         }
       }
-      &_button-cancel {
+      &_button_cancel {
         justify-content: flex-end;
         button {
           margin: 1rem 0.8rem 0rem 0.8rem;
@@ -102,12 +102,12 @@
               }
             }
           }
-          &_instructions-choice {
+          &_instructions_choice {
             justify-content: center;
             text-align: center;
           }
         }
-        &_button-cancel {
+        &_button_cancel {
           justify-content: space-evenly;
         }
       }
