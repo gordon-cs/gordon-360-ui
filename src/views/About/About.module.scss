@@ -11,17 +11,17 @@
     box-shadow: none;
   }
 
-  &-title {
+  &_title {
     text-align: center;
     padding: 1rem;
   }
 
-  &-contributors.MuiTypography_root {
+  &_contributors.MuiTypography_root {
     white-space: pre-wrap;
     margin-left: 1rem;
   }
 
-  &-header {
+  &_header {
     background-color: $primary-blue;
     color: $neutral-white;
   }

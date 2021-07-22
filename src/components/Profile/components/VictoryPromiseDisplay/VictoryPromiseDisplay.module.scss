@@ -8,38 +8,38 @@
   box-shadow: 0px 2px 1px -1px $neutral-black-opacity20, 0px 1px 1px 0px $neutral-black-opacity15,
     0px 1px 3px 0px $neutral-black-opacity125;
 
-  &-header {
+  &_header {
     background: $primary-blue;
     color: $neutral-white;
     padding-left: 1rem;
   }
-  &-container {
+  &_container {
     height: 90%;
-    &-card {
+    &_card {
       box-shadow: none !important;
       width: 100%;
       max-width: 600px;
       margin: 1rem;
-      &-container {
-        &-button-style {
+      &_container {
+        &_button-style {
           background-color: $primary-cyan !important;
           color: $neutral-white !important;
           margin: 1rem auto 2rem auto !important;
         }
-        &-content {
+        &_content {
           background-color: $primary-blue;
           border-radius: 0.5rem;
           padding: 2rem 1rem;
-          &-box-layout {
+          &_box-layout {
             max-width: 100%;
             max-height: auto;
             margin: 0%;
           }
         }
-        &-link {
+        &_link {
           color: $primary-cyan;
           margin-top: 2rem !important;
-          &-text {
+          &_text {
             cursor: pointer;
           }
         }
@@ -50,21 +50,21 @@
 
 @media (max-width: $break-sm) {
   .victory_promise {
-    &-header {
+    &_header {
       padding-left: 0rem;
       justify-content: center;
     }
-    &-container {
-      &-card {
-        &-container {
+    &_container {
+      &_card {
+        &_container {
           padding: 0rem 0.5rem 1rem 0.5rem !important;
-          &-button-style {
+          &_button-style {
             margin: auto auto 1.5rem auto !important;
           }
-          &-content {
+          &_content {
             padding: 1rem;
           }
-          &-link {
+          &_link {
             margin-top: 1.5rem !important;
           }
         }

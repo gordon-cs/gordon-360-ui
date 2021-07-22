@@ -16,7 +16,7 @@ $image-side-width-desktop: 90px;
 
 // PHOTO DIALOG STYLES
 .gc360_photo_dialog {
-  &-box {
+  &_box {
     display: grid;
     grid-template-rows: auto auto auto auto auto auto;
     padding-bottom: 1rem;
@@ -107,27 +107,27 @@ $image-side-width-desktop: 90px;
   height: 100%;
   box-shadow: 0px 2px 1px -1px $neutral-black-opacity20, 0px 1px 1px 0px $neutral-black-opacity15,
     0px 1px 3px 0px $neutral-black-opacity125;
-  &-header {
+  &_header {
     background-color: $primary-blue;
     color: $neutral-white;
     padding-left: 1rem;
     hyphens: auto;
   }
-  &-content {
+  &_content {
     height: 100%;
     width: 100%;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    &-card {
+    &_card {
       padding: 2rem 1rem 0rem 1rem;
-      &-container {
+      &_container {
         max-width: 800px;
         margin: auto 2rem;
-        &-photo {
+        &_photo {
           margin: 1rem 2rem 2rem 2rem !important;
           position: relative;
-          &-main {
+          &_main {
             border-radius: $image-border-radius;
             transition: width 500ms, height 500ms !important;
             border: 4px solid $primary-blue;
@@ -136,14 +136,14 @@ $image-side-width-desktop: 90px;
             width: $image-main-width-desktop;
             height: $image-main-height-desktop;
             position: relative;
-            &-container {
+            &_container {
               position: absolute;
-              &-image {
+              &_image {
                 width: $image-main-width-desktop;
                 height: $image-main-height-desktop;
                 object-fit: cover;
               }
-              &-tile-bar {
+              &_tile-bar {
                 position: absolute;
                 margin: 0rem;
                 padding: 0.5rem 0rem 2rem 0rem;
@@ -160,7 +160,7 @@ $image-side-width-desktop: 90px;
                 text-align: center;
               }
             }
-            &-button {
+            &_button {
               position: absolute;
               background-color: transparent;
               border-radius: $image-border-radius;
@@ -171,7 +171,7 @@ $image-side-width-desktop: 90px;
               }
             }
           }
-          &-side {
+          &_side {
             position: absolute;
             z-index: 2;
             border: 1px solid $primary-blue;
@@ -180,13 +180,13 @@ $image-side-width-desktop: 90px;
             border-radius: $image-border-radius;
             transform: translate(-35%, -270%);
             overflow: hidden !important;
-            &-image {
+            &_image {
               border-radius: $image-border-radius;
               width: $image-side-width-desktop;
               height: $image-side-height-desktop;
               object-fit: cover;
             }
-            &-button {
+            &_button {
               position: absolute;
               background-color: transparent;
               border-radius: $image-border-radius;
@@ -198,7 +198,7 @@ $image-side-width-desktop: 90px;
             }
           }
         }
-        &-info {
+        &_info {
           max-width: 600px;
           transition: width 500ms;
           margin: auto 1rem;
@@ -206,7 +206,7 @@ $image-side-width-desktop: 90px;
           overflow-wrap: anywhere;
           overflow: hidden;
           hyphens: auto;
-          &-social-media {
+          &_social-media {
             border-bottom: 1px solid $neutral-black-opacity55;
             margin-bottom: 1rem !important;
             .gc360_my_profile {
@@ -224,24 +224,24 @@ $image-side-width-desktop: 90px;
               }
             }
           }
-          &-class {
+          &_class {
             color: $neutral-black-opacity55;
           }
-          &-job-title {
+          &_job-title {
             opacity: 0.7;
           }
-          &-email {
+          &_email {
             display: inline-block;
             a:hover {
               text-decoration: none;
             }
-            &-container {
+            &_container {
               color: $primary-blue;
               display: flex;
               &:hover {
                 color: $primary-cyan;
               }
-              &-icon {
+              &_icon {
                 margin-right: 0.75rem;
               }
             }
@@ -249,12 +249,12 @@ $image-side-width-desktop: 90px;
         }
       }
     }
-    &-public-profile-link {
+    &_public-profile-link {
       margin: 1rem auto;
       &:hover {
         text-decoration: none;
       }
-      &-button {
+      &_button {
         font-size: 1rem !important;
         color: $neutral-white !important;
         background-color: $primary-cyan !important;
@@ -267,7 +267,7 @@ $image-side-width-desktop: 90px;
 @media (max-width: $break-sm) {
   .gc360_photo_dialog {
     height: 100%;
-    &-box {
+    &_box {
       &_content {
         &_dropzone {
           width: 12em;
@@ -280,36 +280,36 @@ $image-side-width-desktop: 90px;
     }
   }
   .identification_card {
-    &-header {
+    &_header {
       justify-content: center;
       padding-left: 0rem;
     }
-    &-content {
-      &-card {
-        &-container {
-          &-photo {
+    &_content {
+      &_card {
+        &_container {
+          &_photo {
             width: $image-main-width-mobile;
             height: $image-main-height-mobile;
-            &-main {
+            &_main {
               width: $image-main-width-mobile;
               height: $image-main-height-mobile;
-              &-container {
-                &-image {
+              &_container {
+                &_image {
                   width: $image-main-width-mobile;
                   height: $image-main-height-mobile;
                 }
-                &-tile-bar {
+                &_tile-bar {
                   top: 85%;
                   padding: 0.5rem 0rem 1.5rem 0rem;
                 }
               }
-              &-button {
+              &_button {
                 width: $image-main-width-mobile;
                 height: $image-main-height-mobile;
               }
             }
-            &-side {
-              &-image {
+            &_side {
+              &_image {
                 // transform: translateY(-50%);
                 width: $image-side-width-mobile;
                 height: $image-side-height-mobile;
@@ -319,11 +319,11 @@ $image-side-width-desktop: 90px;
               }
             }
           }
-          &-info {
+          &_info {
             width: 90%;
-            &-email {
-              &-container {
-                &-icon {
+            &_email {
+              &_container {
+                &_icon {
                   display: none !important;
                 }
               }

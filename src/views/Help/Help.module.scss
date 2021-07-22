@@ -11,17 +11,17 @@
     list-style-type: '⮚ ';
   }
 
-  &-title {
+  &_title {
     text-align: center;
     padding: 1rem;
   }
 
-  &-header {
+  &_header {
     background-color: $primary-blue;
     color: $neutral-white;
   }
 
-  &-section.MuiCard_root {
+  &_section.MuiCard_root {
     box-shadow: none;
   }
 }

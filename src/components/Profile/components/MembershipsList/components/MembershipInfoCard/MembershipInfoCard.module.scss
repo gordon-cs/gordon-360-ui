@@ -1,7 +1,7 @@
 @import '../../../../../../vars';
 
 .membership_info_card {
-  &-description {
+  &_description {
     hyphens: auto;
     -ms-hyphens: auto;
     -moz-hyphens: auto;
@@ -14,7 +14,7 @@
       }
     }
   }
-  &-image {
+  &_image {
     justify-content: flex-end;
     img {
       width: 100% !important;
@@ -44,17 +44,17 @@
   .membership_info_card {
     padding: 1.5rem 0rem;
     flex-direction: column-reverse;
-    &-description {
+    &_description {
       max-width: 100% !important;
       justify-content: center;
       flex-direction: row-reverse;
       padding: 0.5rem;
-      &-text {
+      &_text {
         // padding-right: 0rem !important;
         border-left: 2px solid $primary-blue;
       }
     }
-    &-image {
+    &_image {
       max-width: 100% !important;
       justify-content: center;
 

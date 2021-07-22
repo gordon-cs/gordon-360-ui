@@ -1,7 +1,7 @@
 @import '../../../../vars';
 
 .personal_info_list {
-  &-header {
+  &_header {
     background-color: $primary-blue;
     color: $neutral-white;
     padding-left: 1rem;
@@ -51,7 +51,7 @@
 
 @media (max-width: $break-sm) {
   .personal_info_list {
-    &-header {
+    &_header {
       padding-left: 0rem;
       justify-content: center;
     }

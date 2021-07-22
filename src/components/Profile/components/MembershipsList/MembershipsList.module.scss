@@ -1,19 +1,19 @@
 @import '../../../../vars';
 
 .memberships {
-  &-header {
+  &_header {
     padding-left: 1rem;
     background-color: $primary-blue;
     color: $neutral-white;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
   }
-  &-card {
+  &_card {
     border-top-left-radius: 0px !important;
     border-top-right-radius: 0px !important;
-    &-content {
+    &_content {
       padding: 1rem !important;
-      &-button {
+      &_button {
         background-color: $primary-cyan !important;
         color: $neutral-white !important;
         margin: 0.5rem 0.5rem 1rem 0.5rem !important;
@@ -28,7 +28,7 @@
 
 @media (max-width: $break-sm) {
   .memberships {
-    &-header {
+    &_header {
       padding-left: 0rem;
       justify-content: center;
       background-color: $primary-blue;

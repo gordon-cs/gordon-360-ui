@@ -1,47 +1,47 @@
 @import '../../vars';
 
 .pwa_instructions {
-  &-title {
+  &_title {
     background-color: $primary-blue !important;
     color: $neutral-white;
     padding: 1rem;
   }
-  &-content {
+  &_content {
     padding: 1rem !important;
-    &-install {
+    &_install {
       box-sizing: border-box;
-      &-text {
+      &_text {
         padding: 0.5rem !important;
         text-align: left;
       }
-      &-buttons {
+      &_buttons {
         justify-content: flex-end;
         button {
           margin: 1rem 0.8rem 0.5rem 0.8rem;
         }
       }
     }
-    &-container {
-      &-toggles {
-        &-platform {
+    &_container {
+      &_toggles {
+        &_platform {
           margin-bottom: 1rem;
-          &-toggles {
+          &_toggles {
             .MuiToggleButtonGroup_grouped:not(:first-child) {
               border-left: 1px solid $neutral-white-opacity50;
             }
           }
         }
-        &-instructions {
-          &-choice {
+        &_instructions {
+          &_choice {
             color: $secondary-red;
             padding: 1rem 0rem;
           }
-          &-text {
+          &_text {
             padding-bottom: 0.5rem;
-            &-step {
+            &_step {
               color: $primary-blue;
             }
-            &-instruction {
+            &_instruction {
               color: $neutral-dark-gray;
               a {
                 text-decoration: none;
@@ -52,7 +52,7 @@
               }
             }
           }
-          &-image {
+          &_image {
             margin-bottom: 2rem;
             img {
               object-fit: contain;
@@ -64,7 +64,7 @@
           }
         }
       }
-      &-button-cancel {
+      &_button-cancel {
         justify-content: flex-end;
         button {
           margin: 1rem 0.8rem 0rem 0.8rem;
@@ -76,38 +76,38 @@
 
 @media (max-width: 599px) {
   .pwa_instructions {
-    &-title {
+    &_title {
       text-align: center;
     }
-    &-content {
-      &-install {
-        &-text {
+    &_content {
+      &_install {
+        &_text {
           padding: 1rem;
         }
       }
-      &-container {
-        &-toggles {
+      &_container {
+        &_toggles {
           overflow: hidden;
-          &-platform {
+          &_platform {
             // flex-direction: column !important;
-            &-text {
+            &_text {
               justify-content: center !important;
               text-align: center;
               margin-bottom: 0.5rem;
             }
-            &-toggles {
+            &_toggles {
               justify-content: center !important;
               .MuiToggleButton_root {
                 padding: 0rem 1rem;
               }
             }
           }
-          &-instructions-choice {
+          &_instructions-choice {
             justify-content: center;
             text-align: center;
           }
         }
-        &-button-cancel {
+        &_button-cancel {
           justify-content: space-evenly;
         }
       }
@@ -117,24 +117,24 @@
 
 @media (max-width: 450px) {
   .pwa_instructions {
-    &-title {
+    &_title {
       text-align: center;
     }
-    &-content {
-      &-install {
-        &-text {
+    &_content {
+      &_install {
+        &_text {
           padding: 1rem;
         }
-        &-buttons {
+        &_buttons {
           justify-content: space-evenly;
           button {
             margin: 1rem 0.5rem 0.5rem 0.5rem;
           }
         }
       }
-      &-container {
-        &-toggles {
-          &-platform {
+      &_container {
+        &_toggles {
+          &_platform {
             text-align: center;
           }
         }
