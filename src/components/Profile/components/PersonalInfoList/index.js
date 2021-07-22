@@ -302,7 +302,11 @@ const PersonalInfoList = ({
                         checked={showMailCombo}
                       />
                     }
-                    label={showMailCombo ? 'Hide Lock Combo' : 'Show Lock Combo'}
+                    label={
+                      <Typography variant="body2">
+                        {showMailCombo ? 'Hide Lock Combo' : 'Show Lock Combo'}
+                      </Typography>
+                    }
                     labelPlacement="bottom"
                   />
                 </Grid>
