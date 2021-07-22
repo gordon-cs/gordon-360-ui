@@ -72,7 +72,6 @@ const PersonalInfoList = ({
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
   );
-
   const [mailCombo, setMailCombo] = useState();
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
@@ -439,8 +438,28 @@ const PersonalInfoList = ({
       <Card
         className={`personal-info-list  ${myProf ? 'my-personal-info' : 'public-personal-info'}`}
       >
-        <Grid container className="personal-info-list-header">
-          <CardHeader title="Personal Information" />
+        <Grid
+          container
+          justifyContent="flex-end"
+          alignItems="center"
+          className="personal-info-list-header"
+        >
+          <Grid item xs={8}>
+            <CardHeader title="Personal Information" />
+          </Grid>
+          <Grid item xs={4} align="right">
+            {/* visible only for fac/staff */}
+            {isFacStaff && myProf && (
+              <FormControlLabel
+                control={
+                  <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+                }
+                label={isHomePhonePrivate ? 'Private' : 'Public'}
+                labelPlacement="right"
+                disabled={!isOnline}
+              />
+            )}
+          </Grid>
         </Grid>
         <CardContent>
           <List>
