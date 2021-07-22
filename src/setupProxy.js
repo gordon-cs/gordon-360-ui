@@ -22,9 +22,9 @@ module.exports = (app) => {
   );
 
   // @LOCALHOST
-  // app.use('/api', createProxyMiddleware({ target: 'http://localhost:3000/', changeOrigin: true }));
+  // app.use('/api', createProxyMiddleware({ target: 'http://localhost:1995/', changeOrigin: true }));
   // app.use(
   //   '/token',
-  //   createProxyMiddleware({ target: 'http://localhost:3000/', changeOrigin: true }),
+  //   createProxyMiddleware({ target: 'http://localhost:1995/', changeOrigin: true }),
   // );
 };

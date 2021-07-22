@@ -569,11 +569,6 @@ async function setMobilePhonePrivacy(makePrivate) {
   await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
 }
 
-async function setHomePhonePrivacy(makePrivate) {
-  // 'Y' = private, 'N' = public
-  await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
-}
-
 async function setImagePrivacy(makePrivate) {
   // 'Y' = show image, 'N' = don't show image
   await http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y'));
@@ -765,7 +760,6 @@ const userService = {
   setFullname,
   setClass,
   setMobilePhonePrivacy,
-  setHomePhonePrivacy,
   setMobilePhoneNumber,
   setImagePrivacy,
   getMemberships,
