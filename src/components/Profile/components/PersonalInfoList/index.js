@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
-import user from 'services/user';
+import userService from 'services/user';
 import './index.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import LockIcon from '@material-ui/icons/Lock';
 import HelpIcon from '@material-ui/icons/Help';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
 import {
   Typography,
   Grid,
@@ -14,6 +17,8 @@ import {
   List,
   Switch,
   FormControlLabel,
+  Divider,
+  ListItem,
   Tooltip,
   Link,
 } from '@material-ui/core';
@@ -67,7 +72,8 @@ const PersonalInfoList = ({
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
   );
-
+  const [mailCombo, setMailCombo] = useState();
+  const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
@@ -103,9 +109,19 @@ const PersonalInfoList = ({
   // FacStaff spouses are private for private users
   const isSpousePrivate = isFacStaff && keepPrivate && SpouseName !== PRIVATE_INFO;
 
+  useEffect(() => {
+    async function loadMailboxCombination() {
+      if (myProf && isStudent) {
+        const info = await userService.getMailboxCombination();
+        setMailCombo(info.Combination);
+      }
+    }
+    loadMailboxCombination();
+  }, [myProf, Mail_Location, isStudent]);
+
   const handleChangeMobilePhonePrivacy = async () => {
     try {
-      await user.setMobilePhonePrivacy(!isMobilePhonePrivate);
+      await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
       setIsMobilePhonePrivate(!isMobilePhonePrivate);
 
       createSnackbar(
@@ -119,7 +135,7 @@ const PersonalInfoList = ({
 
   const handleChangeHomePhonePrivacy = async () => {
     try {
-      await user.setHomePhonePrivacy(!isHomePhonePrivate);
+      await userService.setHomePhonePrivacy(!isHomePhonePrivate);
       setIsHomePhonePrivate(!isHomePhonePrivate);
 
       createSnackbar(
@@ -281,9 +297,49 @@ const PersonalInfoList = ({
       />
     ) : null;
 
-  const mailLocation =
+  const mail =
     isStudent && Mail_Location ? (
-      <ProfileInfoListItem title="Mailbox:" contentText={`#${Mail_Location}`} />
+      <>
+        <ListItem className="profile-info-list-item">
+          <Grid container justify="center" alignItems="center">
+            <Grid container item xs={5} alignItems="center">
+              <Typography>{'Mailbox:'}</Typography>
+            </Grid>
+            <Grid container item xs={myProf && mailCombo ? 2 : 7} alignItems="center">
+              <Typography className={null}>{`#${Mail_Location}`}</Typography>
+            </Grid>
+            {myProf && mailCombo && (
+              <>
+                <Grid container item xs={2} alignItems="center">
+                  <Typography className={'private'}>
+                    {showMailCombo ? mailCombo : '****'}
+                  </Typography>
+                </Grid>
+                <Grid
+                  container
+                  direction="column"
+                  item
+                  xs={3}
+                  md={3}
+                  lg={3}
+                  justify="center"
+                  alignItems="center"
+                >
+                  <IconButton
+                    onClick={() => {
+                      setShowMailCombo(!showMailCombo);
+                    }}
+                    aria-label={showMailCombo ? 'Hide Mail Combo' : 'Show Mail Combo'}
+                  >
+                    {showMailCombo ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </Grid>
+              </>
+            )}
+          </Grid>
+        </ListItem>
+        <Divider />
+      </>
     ) : null;
 
   const dormInfo =
@@ -413,7 +469,7 @@ const PersonalInfoList = ({
             {advisors}
             {onOffCampus}
             {dormInfo}
-            {mailLocation}
+            {mail}
             {mobilePhoneListItem}
             {homePhoneListItem}
             {studentID}
