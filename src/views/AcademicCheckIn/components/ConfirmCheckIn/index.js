@@ -21,8 +21,10 @@ const ConfirmCheckIn = ({
     White: 'White',
   };
 
-  const displayRace = Object.keys(races).filter((race) => raceValues[race]).map((race) => races[race]).join(', ');
-
+  const displayRace = Object.keys(races)
+    .filter((race) => raceValues[race])
+    .map((race) => races[race])
+    .join(', ');
 
   return (
     <Grid container alignItems="center" justifyContent="center" direction="column">
@@ -94,7 +96,7 @@ const ConfirmCheckIn = ({
           <Grid item>
             <Typography variant="body1" gutterBottom>
               <b>Personal Cell-Phone Number:</b>{' '}
-              {phoneInfo.NoPhone === true ? 'None' : phoneInfo.PersonalPhone}
+              {phoneInfo.NoPhone ? 'None' : phoneInfo.PersonalPhone}
             </Typography>
           </Grid>
           <Grid item>
@@ -109,7 +111,7 @@ const ConfirmCheckIn = ({
           </Grid>
           <Grid item>
             <Typography variant="body1" gutterBottom>
-              <b>Race:</b> {raceValues.None ? 'Prefer not to say' : (displayRace)}
+              <b>Race:</b> {raceValues.None ? 'Prefer not to say' : displayRace}
             </Typography>
           </Grid>
         </Grid>
