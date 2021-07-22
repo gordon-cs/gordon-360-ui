@@ -67,6 +67,7 @@ const PersonalInfoList = ({
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
   );
+
   const isOnline = useNetworkStatus();
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
@@ -92,7 +93,9 @@ const PersonalInfoList = ({
   const isCampusLocationPrivate = isStudent && keepPrivate && OnOffCampus !== PRIVATE_INFO;
 
   // Students' home phone is always private. FacStaffs' home phone is private for private users
-  const isHomePhonePrivate = (isStudent || keepPrivate) && Boolean(HomePhone);
+  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(
+    (isStudent || keepPrivate) && Boolean(HomePhone),
+  );
 
   // Street address info is always private, and City/State/Country info is private for private users
   const isAddressPrivate = (keepPrivate && HomeCity !== PRIVATE_INFO) || HomeStreet2;
@@ -107,6 +110,22 @@ const PersonalInfoList = ({
 
       createSnackbar(
         isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
+
+  const handleChangeHomePhonePrivacy = async () => {
+    try {
+      await user.setHomePhonePrivacy(!isHomePhonePrivate);
+      setIsHomePhonePrivate(!isHomePhonePrivate);
+
+      createSnackbar(
+        isHomePhonePrivate
+          ? 'Personal Info Visible (This change may take several minutes)'
+          : 'Personal Info Hidden (This change may take several minutes)',
         'success',
       );
     } catch {
@@ -363,8 +382,28 @@ const PersonalInfoList = ({
       <Card
         className={`personal-info-list  ${myProf ? 'my-personal-info' : 'public-personal-info'}`}
       >
-        <Grid container className="personal-info-list-header">
-          <CardHeader title="Personal Information" />
+        <Grid
+          container
+          justifyContent="flex-end"
+          alignItems="center"
+          className="personal-info-list-header"
+        >
+          <Grid item xs={8}>
+            <CardHeader title="Personal Information" />
+          </Grid>
+          <Grid item xs={4} align="right">
+            {/* visible only for fac/staff */}
+            {isFacStaff && myProf && (
+              <FormControlLabel
+                control={
+                  <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+                }
+                label={isHomePhonePrivate ? 'Private' : 'Public'}
+                labelPlacement="right"
+                disabled={!isOnline}
+              />
+            )}
+          </Grid>
         </Grid>
         <CardContent>
           <List>
