@@ -130,6 +130,29 @@ const PersonalInfoList = ({
       createSnackbar('Privacy Change Failed', 'error');
     }
   };
+  const handleChangeSpousePrivacy = async () => {
+    try {
+      await user.setHomePhonePrivacy(!isSpousePrivate);
+      setIsHomePhonePrivate(!isSpousePrivate);
+
+      createSnackbar(isSpousePrivate ? 'Personal Info Visible' : 'Personal Info Hidden', 'success');
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
+  const handleChangeHomeAddressPrivacy = async () => {
+    try {
+      await user.setHomePhonePrivacy(!isAddressPrivate);
+      setIsHomePhonePrivate(!isAddressPrivate);
+
+      createSnackbar(
+        isAddressPrivate ? 'Personal Info Visible' : 'Personal Info Hidden',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
 
   const homePhoneListItem = HomePhone ? (
     <ProfileInfoListItem
@@ -394,7 +417,14 @@ const PersonalInfoList = ({
             {isFacStaff && myProf && (
               <FormControlLabel
                 control={
-                  <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+                  <Switch
+                    onChange={
+                      handleChangeHomePhonePrivacy &&
+                      handleChangeSpousePrivacy &&
+                      handleChangeHomeAddressPrivacy
+                    }
+                    checked={!isHomePhonePrivate}
+                  />
                 }
                 label={isHomePhonePrivate ? 'Private' : 'Public'}
                 labelPlacement="right"
