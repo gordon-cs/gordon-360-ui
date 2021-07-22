@@ -227,10 +227,10 @@ const cliftonStrengthCategories = {
 };
 
 const cliftonStrengthColors = {
-  Executing: '#60409f',
+  Executing: '#9070bf',
   Influencing: '#c88a2e',
-  Relationship: '#04668f',
-  Thinking: '#2c8b0f',
+  Relationship: '#2486af',
+  Thinking: '#3c9b1f',
 };
 
 const cliftonStrengthLinks = {
@@ -547,6 +547,10 @@ const getCliftonStrengths = async (username) => {
   }
 };
 
+const getMailboxCombination = async () => {
+  return await http.get(`profiles/mailbox-combination/`);
+};
+
 async function setAdvisors(profile) {
   profile.Advisors = await getAdvisors(profile.AD_Username);
 }
@@ -561,6 +565,11 @@ async function setMobilePhoneNumber(value) {
 }
 
 async function setMobilePhonePrivacy(makePrivate) {
+  // 'Y' = private, 'N' = public
+  await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
+}
+
+async function setHomePhonePrivacy(makePrivate) {
   // 'Y' = private, 'N' = public
   await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
 }
@@ -756,6 +765,7 @@ const userService = {
   setFullname,
   setClass,
   setMobilePhonePrivacy,
+  setHomePhonePrivacy,
   setMobilePhoneNumber,
   setImagePrivacy,
   getMemberships,
@@ -771,6 +781,7 @@ const userService = {
   getLeaderPositions,
   getSentMembershipRequests,
   getProfileInfo,
+  getMailboxCombination,
   getAdvisors,
   getCliftonStrengths,
   resetImage,

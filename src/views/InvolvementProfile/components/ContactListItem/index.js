@@ -5,6 +5,7 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
+  Grid,
 } from '@material-ui/core';
 import Email from '@material-ui/icons/Email';
 import React, { useEffect, useState } from 'react';
@@ -30,23 +31,31 @@ const ContactListItem = ({ contact }) => {
   }, [contact]);
 
   return (
-    <ListItem key={contact.Email} divider>
-      <ListItemAvatar>
-        <Avatar
-          alt={`${contact.FirstName} ${contact.LastName}`}
-          src={`data:image/jpg;base64,${avatar}`}
-          variant="rounded"
-          style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
-        >
-          {!avatar && <PlaceHolderAvatar />}
-        </Avatar>
-      </ListItemAvatar>
-      <ListItemText primary={`${contact.FirstName} ${contact.LastName}`} />
-      <ListItemSecondaryAction>
-        <IconButton color="primary" href={`mailto:${contact.Email}`}>
-          <Email color="primary" />
-        </IconButton>
-      </ListItemSecondaryAction>
+    <ListItem key={contact.Email}>
+      <Grid item xs={1} wrap="nowrap">
+        <Grid item sm={4}>
+          <ListItemAvatar>
+            <Avatar
+              alt={`${contact.FirstName} ${contact.LastName}`}
+              src={`data:image/jpg;base64,${avatar}`}
+              variant="rounded"
+              style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+            >
+              {!avatar && <PlaceHolderAvatar />}
+            </Avatar>
+          </ListItemAvatar>
+        </Grid>
+      </Grid>
+      <Grid item xs={10} spacing={4} wrap="nowrap">
+        <ListItemText primary={`${contact.FirstName} ${contact.LastName}`} />
+      </Grid>
+      <Grid item xs={1}>
+        <ListItemSecondaryAction>
+          <IconButton color="primary" href={`mailto:${contact.Email}`}>
+            <Email color="primary" />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </Grid>
     </ListItem>
   );
 };
