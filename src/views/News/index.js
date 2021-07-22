@@ -449,7 +449,7 @@ const StudentNews = (props) => {
                       setNewPostCategory(event.target.value);
                     }}
                     // helperText="Please choose a category."
-                    style={{ minWidth: '7rem' }}
+                    style={{ minWidth: '8rem' }}
                   >
                     {categories.map((category) => (
                       <MenuItem key={category.categoryID} value={category.categoryID}>
