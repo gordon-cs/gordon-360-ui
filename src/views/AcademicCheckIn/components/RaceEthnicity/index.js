@@ -45,7 +45,7 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
         </Typography>
         <ul>
           <li>
-            American Indian or Alaska Native (Having origins in any of the original peoples of North
+            Native American or Alaska Native (Having origins in any of the original peoples of North
             and South America, including Central America)
           </li>
 
@@ -87,7 +87,7 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
                 onChange={handleCheckDemographic}
               />
             }
-            label="American Indian or Alaska Native"
+            label="Native American or Alaska Native"
           />
           <FormControlLabel
             control={

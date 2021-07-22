@@ -13,9 +13,16 @@ const ConfirmCheckIn = ({
 
   const { ethnicity, ...raceValues } = demographic;
 
-  const races = ['Native American','Asian','Black','Hawaiian','White','Prefer not to say'];
+  const races = {
+    NativeAmerican: 'Native American or Alaskan Native',
+    Asian: 'Asian',
+    Black: 'Black or African American',
+    Hawaiian: 'Native Hawaiian or Other Pacific Islander',
+    White: 'White',
+  };
 
-  const displayRace = () => races.filter((race) => raceValues[race]).join(' ');
+  const displayRace = Object.keys(races).filter((race) => raceValues[race]).map((race) => races[race]).join(', ');
+
 
   return (
     <Grid container alignItems="center" justifyContent="center" direction="column">
@@ -93,16 +100,16 @@ const ConfirmCheckIn = ({
           <Grid item>
             <Typography variant="body1" gutterBottom>
               <b>Ethnicity:</b>{' '}
-              {demographic.ethnicity === '-1'
+              {demographic.Ethnicity === '-1'
                 ? 'Hispanic/Latino'
-                : demographic.ethnicity === '-2'
+                : demographic.Ethnicity === '-2'
                 ? 'Not Hispanic/Latino'
                 : 'Prefer not to say'}
             </Typography>
           </Grid>
           <Grid item>
             <Typography variant="body1" gutterBottom>
-              <b>Race:</b> {displayRace()}
+              <b>Race:</b> {raceValues.None ? 'Prefer not to say' : (displayRace)}
             </Typography>
           </Grid>
         </Grid>

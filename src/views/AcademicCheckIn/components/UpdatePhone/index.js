@@ -46,6 +46,7 @@ const UpdatePhone = ({ phoneInfo, handleChangePhoneInfo, handleCheckPhoneInfo })
             control={
               <Checkbox
                 checked={phoneInfo.MakePrivate}
+                disabled={phoneInfo.NoPhone}
                 name={'MakePrivate'}
                 onChange={handleCheckPhoneInfo}
               />
