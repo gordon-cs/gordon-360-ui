@@ -99,7 +99,9 @@ const PersonalInfoList = ({
   const isCampusLocationPrivate = isStudent && keepPrivate && OnOffCampus !== PRIVATE_INFO;
 
   // Students' home phone is always private. FacStaffs' home phone is private for private users
-  const isHomePhonePrivate = (isStudent || keepPrivate) && Boolean(HomePhone);
+  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(
+    (isStudent || keepPrivate) && Boolean(HomePhone),
+  );
 
   // Street address info is always private, and City/State/Country info is private for private users
   const isAddressPrivate = (keepPrivate && HomeCity !== PRIVATE_INFO) || HomeStreet2;
@@ -124,6 +126,22 @@ const PersonalInfoList = ({
 
       createSnackbar(
         isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
+
+  const handleChangeHomePhonePrivacy = async () => {
+    try {
+      await userService.setHomePhonePrivacy(!isHomePhonePrivate);
+      setIsHomePhonePrivate(!isHomePhonePrivate);
+
+      createSnackbar(
+        isHomePhonePrivate
+          ? 'Personal Info Visible (This change may take several minutes)'
+          : 'Personal Info Hidden (This change may take several minutes)',
         'success',
       );
     } catch {
