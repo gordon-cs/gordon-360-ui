@@ -105,7 +105,6 @@ const AcademicCheckIn = (props) => {
     studentLastName: '',
   });
 
-
   useEffect(() => {
     const loadData = async () => {
       let profile = await user.getProfileInfo();
@@ -169,24 +168,25 @@ const AcademicCheckIn = (props) => {
     if (props.authentication) {
       loadData();
     }
-
   }, [props.authentication, loading]);
 
+  useEffect(() => {
+    props.history.replace('/AcademicCheckIn', { step: activeStep });
+  }, [activeStep, props.history]);
+
   const handleNext = () => {
+    props.history.push('/AcademicCheckIn', { step: activeStep });
     setActiveStep((nextStep) => nextStep + 1);
-    window.history.pushState(activeStep, null, '');
   };
 
   const handlePrev = () => {
+    props.history.push('/AcademicCheckIn', { step: activeStep });
     setActiveStep((previousStep) => previousStep - 1);
-    window.history.pushState(activeStep, null, '');
   };
-
-  window.history.replaceState(activeStep, null, '');
 
   window.onpopstate = function (event) {
     if (event.state !== null) {
-       setActiveStep(event.state);
+      setActiveStep(event.state.state.step);
     }
   };
 
@@ -294,7 +294,7 @@ const AcademicCheckIn = (props) => {
                 <Grid item>
                   <Grid container justifyContent="center" alignItems="center">
                     <Grid item>
-                      {window.history.state === 0 && (
+                      {activeStep === 0 && (
                         <AcademicCheckInWelcome
                           basicInfo={basicInfo}
                           hasMajorHold={hasMajorHold}
@@ -302,7 +302,7 @@ const AcademicCheckIn = (props) => {
                         />
                       )}
 
-                      {window.history.state === 1 && (
+                      {activeStep === 1 && (
                         <EmergencyContactUpdate
                           emergencyContact1={emergencyContact1}
                           emergencyContact2={emergencyContact2}
@@ -319,7 +319,7 @@ const AcademicCheckIn = (props) => {
                         />
                       )}
 
-                      {window.history.state === 2 && (
+                      {activeStep === 2 && (
                         <UpdatePhone
                           phoneInfo={phoneInfo}
                           handleChangePhoneInfo={handleChangePhoneInfo}
@@ -327,21 +327,21 @@ const AcademicCheckIn = (props) => {
                         />
                       )}
 
-                      {window.history.state === 3 && (
+                      {activeStep === 3 && (
                         <PrivacyAgreement
                           privacyAgreements={privacyAgreements}
                           handleCheckPrivacyAgreements={handleCheckPrivacyAgreements}
                         />
                       )}
 
-                      {window.history.state === 4 && (
+                      {activeStep === 4 && (
                         <RaceEthnicity
                           demographic={demographic}
                           handleChangeDemographic={handleChangeDemographic}
                           handleCheckDemographic={handleCheckDemographic}
                         />
                       )}
-                      {window.history.state === 5 && (
+                      {activeStep === 5 && (
                         <ConfirmCheckIn
                           emergencyContact1={emergencyContact1}
                           emergencyContact2={emergencyContact2}
@@ -350,7 +350,7 @@ const AcademicCheckIn = (props) => {
                           demographic={demographic}
                         />
                       )}
-                      {window.history.state === 6 && <CompletedCheckIn basicInfo={basicInfo} />}
+                      {activeStep === 6 && <CompletedCheckIn basicInfo={basicInfo} />}
                     </Grid>
                   </Grid>
                 </Grid>
