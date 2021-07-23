@@ -127,7 +127,7 @@ const NewsItem = ({
         onClick={() => {
           setOpen(!open);
         }}
-        className={`news-item ${unapproved ? styles.unapproved : styles.approved}`}
+        className={`${styles.news_item} ${unapproved ? styles.unapproved : styles.approved}`}
       >
         <Grid item xs={2}>
           <Typography className={styles.news_column}>{posting.categoryName}</Typography>
