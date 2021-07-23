@@ -9,18 +9,21 @@ import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
 import user from 'services/user';
-import { Redirect } from 'react-router-dom'
+// @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+// import { Redirect } from 'react-router-dom';
 // @WELLNESS-CHECK disabled to revert this import these commented out lines
 // import wellness from 'services/wellness';
 // import storage from 'services/storage';
 import './home.css';
 import { Grid } from '@material-ui/core';
-import checkInService from 'services/checkIn';
+// @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+// import checkInService from 'services/checkIn';
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
-  const [checkedIn, setCheckedIn] = useState(null);
+  // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+  // const [checkedIn, setCheckedIn] = useState(null);
 
   /*
     // @WELLNESS-CHECK disabled to revert this from the home page, you must uncomment all the code below.
@@ -81,7 +84,8 @@ const Home = ({ authentication, onLogIn }) => {
       // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
       /*wellness.getStatus(),*/
     ]);
-    setCheckedIn(await checkInService.getStatus());
+    // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+    // setCheckedIn(await checkInService.getStatus());
     setPersonType(PersonType);
     // setHasAnswered(IsValid);
     setLoading(false);
@@ -94,9 +98,10 @@ const Home = ({ authentication, onLogIn }) => {
   } // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
   //else if (networkStatus === 'online' && !hasAnswered) {
   //return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;}
-  else if (!checkedIn && personType.includes('stu')) {
-    return (<Redirect to='/AcademicCheckIn' />);
-  } else {
+  // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+  // else if (!checkedIn && personType.includes('stu')) {
+  //   return (<Redirect to='/AcademicCheckIn' />);
+  else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 
     return (
