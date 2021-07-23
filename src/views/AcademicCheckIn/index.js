@@ -177,13 +177,11 @@ const AcademicCheckIn = (props) => {
   const handleNext = () => {
     props.history.push('/AcademicCheckIn', { step: activeStep });
     setActiveStep((nextStep) => nextStep + 1);
-    props.history.replace('/AcademicCheckIn', { step: activeStep });
   };
 
   const handlePrev = () => {
     props.history.push('/AcademicCheckIn', { step: activeStep });
     setActiveStep((previousStep) => previousStep - 1);
-    props.history.replace('/AcademicCheckIn', { step: activeStep });
   };
 
   window.onpopstate = function (event) {
