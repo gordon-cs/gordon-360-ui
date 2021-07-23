@@ -2,6 +2,9 @@ import React from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import { gordonColors } from 'theme';
 
+// @TODO CSSMODULES - outside directory
+import styles from './../../AcademicCheckIn.module.css';
+
 const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
   const blue = gordonColors.primary.blue;
   const hasMinorHold = holds.LaVidaHold || holds.DeclarationOfMajorHold;
@@ -102,7 +105,7 @@ const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
         <Typography align="center" variant="h5" style={{ color: blue }}>
           <b>Enrollment Check-In</b>
         </Typography>
-        <Typography justify="center" className="checkIn">
+        <Typography justify="center" className={styles.checkIn}>
           Hello, {basicInfo.studentFirstName}! Welcome to a new semester at Gordon College! Please
           take a few moments to complete the check-in process in order to confirm your academic
           enrollment and help Gordon College plan to provide services to you.
