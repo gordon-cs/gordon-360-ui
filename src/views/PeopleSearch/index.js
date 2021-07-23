@@ -45,6 +45,9 @@ import GordonLoader from 'components/Loader';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import ReactToPrint from 'react-to-print';
 
+// @TODO: CSSMODULES - outside directory
+import styles from './components/PeopleSearchResult/PeopleSearchResult.module.css';
+
 const styles2 = {
   FontAwesome: {
     fontSize: 20,
@@ -886,7 +889,7 @@ class PeopleSearch extends Component {
                                 this.state.searchValues.includeStudent ||
                                 this.state.searchValues.includeAlumni
                                   ? null
-                                  : 'disabled'
+                                  : styles.disabled
                               }
                               disabled={
                                 !this.state.searchValues.includeAlumni &&
@@ -1041,7 +1044,7 @@ class PeopleSearch extends Component {
                               variant="filled"
                               fullWidth
                               className={
-                                this.state.searchValues.includeFacStaff ? null : 'disabled'
+                                this.state.searchValues.includeFacStaff ? null : styles.disabled
                               }
                               disabled={!this.state.searchValues.includeFacStaff}
                             >
@@ -1085,7 +1088,7 @@ class PeopleSearch extends Component {
                               variant="filled"
                               fullWidth
                               className={
-                                this.state.searchValues.includeFacStaff ? null : 'disabled'
+                                this.state.searchValues.includeFacStaff ? null : styles.disabled
                               }
                               disabled={!this.state.searchValues.includeFacStaff}
                             >

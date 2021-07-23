@@ -26,7 +26,7 @@
         &_platform {
           margin-bottom: 1rem;
           &_toggles {
-            .MuiToggleButtonGroup-grouped:not(:first-child) {
+            :global(.MuiToggleButtonGroup-grouped:not(:first-child)) {
               border-left: 1px solid $neutral-white-opacity50;
             }
           }
@@ -97,7 +97,7 @@
             }
             &_toggles {
               justify-content: center !important;
-              .MuiToggleButton-root {
+              :global(.MuiToggleButton-root) {
                 padding: 0rem 1rem;
               }
             }

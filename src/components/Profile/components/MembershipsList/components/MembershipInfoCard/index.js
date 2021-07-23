@@ -31,7 +31,12 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
 
   return (
     <>
-      <Grid container alignItems="center" justifyContent="center" className={styles.membership_info_card}>
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="center"
+        className={styles.membership_info_card}
+      >
         <Grid
           container
           item
@@ -92,7 +97,11 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
           alignItems="center"
         >
           <OnlineOnlyLink>
-            <img src={membership.ActivityImagePath} alt="" className={isOnline ? 'active' : ''} />
+            <img
+              src={membership.ActivityImagePath}
+              alt=""
+              className={isOnline ? styles.active : ''}
+            />
           </OnlineOnlyLink>
         </Grid>
       </Grid>

@@ -171,7 +171,7 @@ const PersonalInfoList = ({
       contentText={
         <>
           {HomeStreet2 && `${HomeStreet2}, `}
-          <span className={keepPrivate ? null : 'not-private'}>
+          <span className={keepPrivate ? null : styles.not_private}>
             {HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
               : Country === 'United States of America' || !Country
@@ -273,7 +273,7 @@ const PersonalInfoList = ({
         title="Dormitory:"
         contentText={
           <>
-            <span className={keepPrivate ? null : 'not-private'}>
+            <span className={keepPrivate ? null : styles.not_private}>
               {BuildingDescription ?? Hall}
             </span>
             {myProf && OnCampusRoom && `, Room ${OnCampusRoom}`}
@@ -361,7 +361,9 @@ const PersonalInfoList = ({
   return (
     <Grid item xs={12}>
       <Card
-        className={`${styles.personal_info_list}  ${myProf ? styles.my_person_info : styles.public_personal_info}`}
+        className={`${styles.personal_info_list}  ${
+          myProf ? styles.my_person_info : styles.public_personal_info
+        }`}
       >
         <Grid container className={styles.personal_info_list_header}>
           <CardHeader title="Personal Information" />

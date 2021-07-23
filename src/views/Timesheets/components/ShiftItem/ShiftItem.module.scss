@@ -1,9 +1,9 @@
 .timesheets {
-  .shift_edit_picker .MuiOutlinedInput-input {
+  .shift_edit_picker :global(.MuiOutlinedInput-input) {
     text-align: center;
   }
 
-  .shift_edit_picker .MuiOutlinedInput-multiline {
+  .shift_edit_picker :global(.MuiOutlinedInput-multiline) {
     padding: 8px 4px !important;
   }
 

@@ -194,8 +194,8 @@ export default class GordonPeopleSearch extends Component {
           suggestionList[suggestionIndex] !== undefined &&
           suggestion.UserName === suggestionList[suggestionIndex].UserName &&
           suggestionIndex !== -1
-            ? 'people-search-suggestion-selected '
-            : 'people-search-suggestion'
+            ? styles.people_search_suggestion_selected
+            : styles.people_search_suggestion
         }
       >
         <Typography variant="body2">

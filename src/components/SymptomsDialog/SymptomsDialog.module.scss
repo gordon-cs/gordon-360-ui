@@ -1,7 +1,7 @@
 @import '../../vars';
 
 .symptoms_dialog {
-  .MuiDialog-paper {
+  :global(.MuiDialog-paper) {
     border: 15px solid $wellness-yellow;
     border-radius: 5px;
     color: $neutral-dark-gray;

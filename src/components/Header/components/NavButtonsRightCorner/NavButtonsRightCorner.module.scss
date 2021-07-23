@@ -14,7 +14,7 @@
 }
 
 .right_side_nav_buttons {
-  .MuiPopover-paper {
+  :global(.MuiPopover-paper) {
     overflow: visible;
   }
 }

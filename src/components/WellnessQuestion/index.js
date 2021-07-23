@@ -85,7 +85,13 @@ const WellnessQuestion = ({ setStatus }) => {
           </CardContent>
           <Grid item>
             <Collapse in={!!answer}>
-              <Grid container direction="column" align="center" className={answer} spacing={1}>
+              <Grid
+                container
+                direction="column"
+                align="center"
+                className={styles[answer]}
+                spacing={1}
+              >
                 <Grid item>
                   <Typography color="textPrimary" className={styles.left}>
                     {answer === StatusColors.YELLOW

@@ -7,7 +7,7 @@
   -webkit-hyphens: auto;
   word-break: break-word;
 
-  & p.MuiTypography-root {
+  & p:global(.MuiTypography-root) {
     text-align: left;
   }
 }

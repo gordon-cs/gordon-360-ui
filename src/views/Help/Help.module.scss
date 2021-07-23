@@ -21,7 +21,7 @@
     color: $neutral-white;
   }
 
-  &_section.MuiCard-root {
+  &_section:global(.MuiCard-root) {
     box-shadow: none;
   }
 }

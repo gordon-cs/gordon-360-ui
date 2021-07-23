@@ -11,11 +11,11 @@
     border-right: 0.5px solid $neutral-gray !important;
   }
 
-  .job_tab.Mui-selected {
+  .job_tab:global(.Mui-selected) {
     background-color: $neutral-light-gray !important;
   }
 
-  .job_tabs .MuiTabs-indicator {
+  .job_tabs :global(.MuiTabs-indicator) {
     display: none;
   }
 }
