@@ -119,7 +119,7 @@ const GordonNavButtonsRightCorner = ({
           className={styles.right_side_nav_buttons}
         >
           <List id="right-side-menu-list" disablePadding={true}>
-            <div id="right-menu-triangle" />
+            <div class={styles.right_menu_triangle} />
             {myProfileButton}
             {linksButton}
             {timesheetsButton}
