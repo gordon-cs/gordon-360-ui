@@ -5,7 +5,6 @@ import {
   CardContent,
   FormControl,
   Grid,
-  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -139,6 +138,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
               <Grid item xs={12} lg={6}>
                 <TextField
                   id="search"
+                  variant="filled"
                   label="Search"
                   type="search"
                   value={search}
@@ -148,12 +148,13 @@ const InvolvementsAll = ({ location, authentication, history }) => {
                 />
               </Grid>
               <Grid item xs={12} md={6} lg={3}>
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="activity-session">Term</InputLabel>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel id="activity-session">Term</InputLabel>
                   <Select
+                    labelId="activity-session"
+                    id="activity-session"
                     value={selectedSession}
                     onChange={(e) => handleSelectSession(e.target.value)}
-                    input={<Input id="activity-session" />}
                   >
                     {(isOnline
                       ? sessions
@@ -167,12 +168,13 @@ const InvolvementsAll = ({ location, authentication, history }) => {
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6} lg={3}>
-                <FormControl fullWidth>
-                  <InputLabel htmlFor="activity-type">Type</InputLabel>
+                <FormControl fullWidth variant="filled">
+                  <InputLabel id="activity-type">Type</InputLabel>
                   <Select
+                    labelId="activity-type"
+                    id="activity-type"
                     value={type}
                     onChange={(event) => setType(event.target.value)}
-                    input={<Input id="activity-type" />}
                   >
                     <MenuItem label="All" value="">
                       <em>All</em>

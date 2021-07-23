@@ -29,7 +29,7 @@ const About = () => {
             <Card>
               <CardHeader
                 className="about-header"
-                title={`${projectName}: The Scottie Faire In Your Hand`}
+                title={`${projectName}: For Students by Students`}
               />
               <CardContent>
                 <Typography variant="body1" component="ul" style={{ textAlign: 'start' }}>
