@@ -441,8 +441,8 @@ const PersonalInfoList = ({
             <CardHeader title="Personal Information" />
           </Grid>
           <Grid item xs={4} align="right">
-            {/* visible only for fac/staff */}
-            {isFacStaff && myProf && (
+            {/* visible only for fac/staff on their profile */}
+            {isFacStaff && myProf ? (
               <FormControlLabel
                 control={
                   <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
@@ -451,6 +451,8 @@ const PersonalInfoList = ({
                 labelPlacement="right"
                 disabled={!isOnline}
               />
+            ) : (
+              ''
             )}
           </Grid>
         </Grid>
