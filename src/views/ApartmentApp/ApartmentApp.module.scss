@@ -9,22 +9,22 @@
   & .apartment_card_header {
     background-color: $primary-blue;
     color: $neutral-white;
-    .MuiTypography_colorTextSecondary {
+    .MuiTypography-colorTextSecondary {
       color: $neutral-white-opacity80;
       font-size: 1.25rem;
     }
   }
 
   & .apartment_instructions {
-    & .MuiTypography_root {
+    & .MuiTypography-root {
       padding: 0.25rem 0.75rem;
     }
 
-    & .MuiTypography_paragraph {
+    & .MuiTypography-paragraph {
       text-align: left;
     }
 
-    & .MuiTableContainer_root {
+    & .MuiTableContainer-root {
       border: 1px solid $neutral-gray3;
       border-radius: 4px;
     }
@@ -88,7 +88,7 @@
     color: $secondary-red;
   }
 
-  & .MuiGrid_item.sticky_page_bottom_bar {
+  & .MuiGrid-item.sticky_page_bottom_bar {
     position: -webkit-sticky;
     position: sticky;
     bottom: 0px;
@@ -102,7 +102,7 @@
     }
   }
 
-  & .MuiButton_containedSecondary {
+  & .MuiButton-containedSecondary {
     color: $neutral-white;
   }
 
@@ -111,7 +111,7 @@
     &_label {
       color: $neutral-dark-gray;
     }
-    & .MuiDivider_root {
+    & .MuiDivider-root {
       margin-top: 0.5em;
       margin-bottom: 0.5em;
     }

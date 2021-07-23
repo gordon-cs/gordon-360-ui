@@ -1,19 +1,19 @@
 @import '../../../../../../vars';
 
 div.staff_apartment_application {
-  & .MuiToolbar_root.stylized_table_toolbar {
+  & .MuiToolbar-root.stylized_table_toolbar {
     color: $primary-blue;
     padding-top: 0;
     padding-bottom: 0;
   }
 
-  & .MuiTableHead_root.stylized_table_head {
+  & .MuiTableHead-root.stylized_table_head {
     .MuiTableCell-head,
     .MuiTableCell-stickyHeader,
-    .MuiTableSortLabel_root {
+    .MuiTableSortLabel-root {
       background-color: $primary-blue;
       color: $neutral-white;
-      svg.MuiSvgIcon_root.MuiTableSortLabel_icon {
+      svg.MuiSvgIcon-root.MuiTableSortLabel-icon {
         color: $neutral-white;
       }
     }
@@ -40,12 +40,12 @@ div.staff_apartment_application {
     background-color: $neutral-white;
   }
 
-  & .MuiTableCell_root.collapsible_row {
+  & .MuiTableCell-root.collapsible_row {
     padding-top: 0;
     padding-bottom: 0;
   }
 
-  & .MuiTable_root.sub_table {
+  & .MuiTable-root.sub_table {
     border-left: 2px solid $neutral-black-opacity10;
     border-right: 2px solid $neutral-black-opacity10;
     border-bottom: 1px solid $neutral-black-opacity10;
