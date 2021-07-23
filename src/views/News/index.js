@@ -495,9 +495,9 @@ const StudentNews = (props) => {
 
                 {/* IMAGE ENTRY */}
                 <Grid item xs={12}>
-                  <div className={styles2.gc360_photo_dialog_box}>
-                    <DialogContent className={styles2.gc360_photo_dialog_box_content}>
-                      <DialogContentText className={styles2.gc360_photo_dialog_box_content_text}>
+                  <div className="gc360_photo_dialog_box">
+                    <DialogContent className="gc360_photo_dialog_box_content">
+                      <DialogContentText className="gc360_photo_dialog_box_content_text">
                         {createPhotoDialogBoxMessage()}
                       </DialogContentText>
                       {!cropperImageData && (
@@ -509,7 +509,7 @@ const StudentNews = (props) => {
                           {({ getRootProps, getInputProps }) => (
                             <section>
                               <div
-                                className={styles2.gc360_photo_dialog_box_content_dropzone}
+                                className="gc360_photo_dialog_box_content_dropzone"
                                 {...getRootProps()}
                               >
                                 <input {...getInputProps()} />
@@ -519,7 +519,7 @@ const StudentNews = (props) => {
                         </Dropzone>
                       )}
                       {cropperImageData && (
-                        <div className={styles2.gc360_photo_dialog_box_content_cropper}>
+                        <div className="gc360_photo_dialog_box_content_cropper">
                           <Cropper
                             ref={cropperRef}
                             src={cropperImageData}
@@ -535,7 +535,7 @@ const StudentNews = (props) => {
                         </div>
                       )}
                     </DialogContent>
-                    <DialogActions className={styles2.gc360_photo_dialog_box_actions_top}>
+                    <DialogActions className="gc360_photo_dialog_box_actions_top">
                       {cropperImageData && (
                         <Tooltip
                           classes={{ tooltip: 'tooltip' }}
@@ -548,7 +548,7 @@ const StudentNews = (props) => {
                               setCropperImageData(null);
                             }}
                             style={styles2.button.cancelButton}
-                            className={styles2.gc360_photo_dialog_box_content_button}
+                            className="gc360_photo_dialog_box_content_button"
                           >
                             Remove picture
                           </Button>

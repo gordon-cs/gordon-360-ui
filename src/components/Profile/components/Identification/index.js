@@ -435,16 +435,16 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   function createPhotoDialogBox() {
     return (
       <Dialog
-        className={styles.gc360_photo_dialog}
+        className="gc360_photo_dialog"
         open={openPhotoDialog}
         keepMounted
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <div className={styles.gc360_photo_dialog_box}>
-          <DialogTitle className={styles.gc360_photo_dialog_box_title}>Update Photo</DialogTitle>
-          <DialogContent className={styles.gc360_photo_dialog_box_content}>
-            <DialogContentText className={styles.gc360_photo_dialog_box_content_text}>
+        <div className="gc360_photo_dialog_box">
+          <DialogTitle className="gc360_photo_dialog_box_title">Update Photo</DialogTitle>
+          <DialogContent className="gc360_photo_dialog_box_content">
+            <DialogContentText className="gc360_photo_dialog_box_content_text">
               {createPhotoDialogBoxMessage()}
             </DialogContentText>
             {!showCropper && (
@@ -455,10 +455,10 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               >
                 {({ getRootProps, getInputProps }) => (
                   <section>
-                    <div className={styles.gc360_photo_dialog_box_content_dropzone} {...getRootProps()}>
+                    <div className="gc360_photo_dialog_box_content_dropzone" {...getRootProps()}>
                       <input {...getInputProps()} />
                       <img
-                        className={styles.gc360_photo_dialog_box_content_dropzone_img}
+                        className="gc360_photo_dialog_box_content_dropzone_img"
                         src={`data:image/jpg;base64,${preferredUserImage || defaultUserImage}`}
                         alt="Profile"
                       />
@@ -468,7 +468,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               </Dropzone>
             )}
             {showCropper && (
-              <div className={styles.gc360_photo_dialog_box_content_cropper}>
+              <div className="gc360_photo_dialog_box_content_cropper">
                 <Cropper
                   ref={cropperRef}
                   src={showCropper}
@@ -490,20 +490,20 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               </div>
             )}
           </DialogContent>
-          <DialogActions className={styles.gc360_photo_dialog_box_actions_top}>
+          <DialogActions className="gc360_photo_dialog_box_actions_top">
             {showCropper && (
               <Button
                 variant="contained"
                 onClick={() => setShowCropper(null)}
                 style={style.button.changeImageButton}
-                className={styles.gc360_photo_dialog_box_content_button}
+                className="gc360_photo_dialog_box_content_button"
               >
                 Go Back
               </Button>
             )}
           </DialogActions>
           {!showCropper && (
-            <DialogActions className={styles.gc360_photo_dialog_box_actions_middle}>
+            <DialogActions className="gc360_photo_dialog_box_actions_middle">
               <Tooltip
                 classes={{ tooltip: 'tooltip' }}
                 id="tooltip-hide"
@@ -532,7 +532,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               </Tooltip>
             </DialogActions>
           )}
-          <DialogActions className={styles.gc360_photo_dialog_box_actions_bottom}>
+          <DialogActions className="gc360_photo_dialog_box_actions_bottom">
             <Button
               variant="contained"
               onClick={handleCloseCancel}
@@ -598,7 +598,11 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
       <div className={styles.identification_card_content}>
         {/* SHOWS THE CARD'S CONTENT IF THE GIVEN USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
         {userProfile && (defaultUserImage || preferredUserImage) ? (
-          <Grid container className={styles.identification_card_content_card} justifyContent="center">
+          <Grid
+            container
+            className={styles.identification_card_content_card}
+            justifyContent="center"
+          >
             <Grid
               container
               className={styles.identification_card_content_card_container}
@@ -623,9 +627,15 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                       : null
                   }
                 >
-                  <div className={styles.identification_card_content_card_container_photo_main_container}>
+                  <div
+                    className={
+                      styles.identification_card_content_card_container_photo_main_container
+                    }
+                  >
                     <img
-                      className={styles.identification_card_content_card_container_photo_main_container_image}
+                      className={
+                        styles.identification_card_content_card_container_photo_main_container_image
+                      }
                       src={`data:image/jpg;base64,${
                         // Checks to see if the default and preferred photos should switch between bubbles
                         isPhotosSwitched
@@ -643,7 +653,9 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                     {network === 'online' && myProf && (
                       <Typography
                         variant="body1"
-                        className={styles.identification_card_content_card_container_photo_main_container_tile_bar}
+                        className={
+                          styles.identification_card_content_card_container_photo_main_container_tile_bar
+                        }
                       >
                         Photo Options
                       </Typography>
@@ -652,7 +664,9 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   {network === 'online' && myProf && (
                     <div
                       onClick={handlePhotoOpen}
-                      className={styles.identification_card_content_card_container_photo_main_button}
+                      className={
+                        styles.identification_card_content_card_container_photo_main_button
+                      }
                     ></div>
                   )}
                 </div>
@@ -672,7 +686,9 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                     />
                     <div
                       onClick={handlePhotoSwitch}
-                      className={styles.identification_card_content_card_container_photo_side_button}
+                      className={
+                        styles.identification_card_content_card_container_photo_side_button
+                      }
                     ></div>
                   </div>
                 )}
@@ -692,7 +708,11 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   {userProfile.Class && <Typography>{userProfile.Class}</Typography>}
                 </Grid>
 
-                <Grid item xs={12} className={styles.identification_card_content_card_container_info_name}>
+                <Grid
+                  item
+                  xs={12}
+                  className={styles.identification_card_content_card_container_info_name}
+                >
                   <Typography variant="h6" paragraph>
                     {userProfile.Title &&
                     userProfile.Title !== '' &&
@@ -736,8 +756,16 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   className={styles.identification_card_content_card_container_info_email}
                 >
                   <a href={`mailto:${userProfile.Email}`}>
-                    <div className={styles.identification_card_content_card_container_info_email_container}>
-                      <EmailIcon className={styles.identification_card_content_card_container_info_email_container_icon} />
+                    <div
+                      className={
+                        styles.identification_card_content_card_container_info_email_container
+                      }
+                    >
+                      <EmailIcon
+                        className={
+                          styles.identification_card_content_card_container_info_email_container_icon
+                        }
+                      />
                       <Typography paragraph>{userProfile.Email}</Typography>
                     </div>
                   </a>
