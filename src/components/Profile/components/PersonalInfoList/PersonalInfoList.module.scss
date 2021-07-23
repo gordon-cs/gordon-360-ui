@@ -24,29 +24,14 @@
   }
 }
 
-.my_personal_info {
-  & .private {
-    color: $neutral-black-opacity40;
-
-    & .not_private {
-      opacity: 1;
-      color: $dark-text-color;
-    }
-  }
+// Needed for mail implementation, should be refactored into PersonalInfoListItem
+.private {
+  color: $neutral-black-opacity40;
 }
 
-.public_personal_info {
-  & .private {
-    color: $secondary-red;
-
-    & a.gc360_text_link {
-      color: inherit;
-    }
-
-    & .not_private {
-      color: $dark-text-color;
-    }
-  }
+.not_private {
+  opacity: 1;
+  color: $dark-text-color;
 }
 
 @media (max-width: $break-sm) {

@@ -2,7 +2,13 @@ import React from 'react';
 import { Divider, ListItem, Grid, Typography } from '@material-ui/core';
 import styles from './ProfileInfoListItem.module.css';
 
-const ProfileInfoListItem = ({ title, contentText, ContentIcon = null, contentClass = null }) => {
+const ProfileInfoListItem = ({
+  title,
+  contentText,
+  ContentIcon = null,
+  privateInfo = false,
+  myProf = false,
+}) => {
   const gridSizeProps = ContentIcon ? { xs: 4, md: 3, lg: 4 } : { xs: 7 };
 
   return (
@@ -17,7 +23,7 @@ const ProfileInfoListItem = ({ title, contentText, ContentIcon = null, contentCl
             item
             {...gridSizeProps}
             alignItems="center"
-            className={styles[contentClass]}
+            className={privateInfo ? (myProf ? styles.private : styles.privateNotMine) : null}
           >
             {contentText}
           </Grid>

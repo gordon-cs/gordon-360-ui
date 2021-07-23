@@ -161,7 +161,8 @@ const PersonalInfoList = ({
           </a>
         )
       }
-      contentClass={isHomePhonePrivate ? 'private' : null}
+      privateInfo={isHomePhonePrivate}
+      myProf={myProf}
     />
   ) : null;
 
@@ -196,7 +197,8 @@ const PersonalInfoList = ({
           />
         )
       }
-      contentClass={isMobilePhonePrivate ? 'private' : null}
+      privateInfo={isMobilePhonePrivate}
+      myProf={myProf}
     />
   ) : null;
 
@@ -215,7 +217,8 @@ const PersonalInfoList = ({
           </span>
         </>
       }
-      contentClass={isAddressPrivate ? 'private' : null}
+      privateInfo={isAddressPrivate}
+      myProf={myProf}
     />
   );
 
@@ -284,7 +287,8 @@ const PersonalInfoList = ({
             ? 'None Assigned'
             : Advisors?.map((a) => `${a.Firstname} ${a.Lastname}`)?.join(', ')
         }
-        contentClass={'private'}
+        privateInfo
+        myProf={myProf}
       />
     ) : null;
 
@@ -293,25 +297,26 @@ const PersonalInfoList = ({
       <ProfileInfoListItem
         title="On/Off Campus:"
         contentText={OnOffCampus}
-        contentClass={isCampusLocationPrivate ? 'private' : null}
+        private={isCampusLocationPrivate}
+        myProf={myProf}
       />
     ) : null;
 
   const mail =
     isStudent && Mail_Location ? (
       <>
-        <ListItem className="profile-info-list-item">
+        <ListItem className={styles.profile_info_list_item}>
           <Grid container justify="center" alignItems="center">
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
             <Grid container item xs={myProf && mailCombo ? 2 : 7} alignItems="center">
-              <Typography className={null}>{`#${Mail_Location}`}</Typography>
+              <Typography>{`#${Mail_Location}`}</Typography>
             </Grid>
             {myProf && mailCombo && (
               <>
                 <Grid container item xs={2} alignItems="center">
-                  <Typography className={'private'}>
+                  <Typography className={styles.private}>
                     {showMailCombo ? mailCombo : '****'}
                   </Typography>
                 </Grid>
@@ -354,7 +359,8 @@ const PersonalInfoList = ({
             {myProf && OnCampusRoom && `, Room ${OnCampusRoom}`}
           </>
         }
-        contentClass={'private'}
+        privateInfo
+        myProf={myProf}
       />
     ) : null;
 
@@ -371,7 +377,8 @@ const PersonalInfoList = ({
             </Grid>
           </Grid>
         }
-        contentClass={'private'}
+        privateInfo
+        myProf={myProf}
       />
     ) : null;
 
@@ -380,7 +387,7 @@ const PersonalInfoList = ({
       <ProfileInfoListItem
         title="Spouse:"
         contentText={SpouseName}
-        contentClass={(keepPrivate && myProf) || isSpousePrivate ? 'private' : null}
+        privateInfo={(keepPrivate && myProf) || isSpousePrivate}
       />
     ) : null;
 
@@ -430,7 +437,7 @@ const PersonalInfoList = ({
     <Grid item xs={12}>
       <Card
         className={`${styles.personal_info_list}  ${
-          myProf ? styles.my_person_info : styles.public_personal_info
+          myProf ? styles.my_personal_info : styles.public_personal_info
         }`}
       >
         <Grid
