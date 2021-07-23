@@ -172,15 +172,10 @@ const CLWCreditsDaysLeft = () => {
     <Card className={styles.clw_credits_days_left}>
       <CardContent>
         <Grid container direction="row" alignItems="center">
-          <Grid item xs={4} align="left">
-            <Button variant="contained" style={style.button} component={Link} to="/attended">
-              ATTENDED EVENTS
-            </Button>
-          </Grid>
-          <Grid item xs={4} align="center">
+          <Grid item xs={7} align="left">
             <CardHeader title={currSessionDescription} />
           </Grid>
-          <Grid item xs={4} align="right">
+          <Grid item xs={5} align="right">
             <Button
               variant="contained"
               style={style.button}

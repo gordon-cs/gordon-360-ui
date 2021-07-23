@@ -32,7 +32,7 @@ const UpdatePhone = () => {
 
   return (
     <div>
-      <IconButton style={{marginBottom: '0.5rem'}} onClick={() => setOpen(true)}>
+      <IconButton style={{ marginBottom: '0.5rem' }} onClick={() => setOpen(true)}>
         <EditIcon style={{ fontSize: 20 }} />
       </IconButton>
       <GordonDialogBox
@@ -45,7 +45,6 @@ const UpdatePhone = () => {
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
       >
-        Update your phone number below. When done, click update.
         <FormControl>
           <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
           <Input

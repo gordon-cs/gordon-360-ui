@@ -48,6 +48,7 @@ const renderResults = async (query) => {
 
 const peopleSearchService = {
   renderResults,
+  search,
 };
 
 export default peopleSearchService;

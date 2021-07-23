@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import HelpIcon from '@material-ui/icons/Help';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -122,8 +121,6 @@ const ApplicantList = ({
             <Grid item xs={9} sm={5} className={styles.people_search_parent}>
               <GordonPeopleSearch
                 disableLink
-                disabled={disabled}
-                icon={<GroupAddIcon />}
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={(selectedUsername) => disabled || onSearchSubmit(selectedUsername)}
                 authentication

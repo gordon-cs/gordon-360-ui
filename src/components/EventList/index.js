@@ -79,7 +79,15 @@ export default class EventList extends Component {
     } else if (events.length > 0) {
       content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
     } else if (events.length === 0) {
-      content = <Typography variant="h5">No Events To Show</Typography>;
+      content = (
+        <Grid item align="center">
+          <br />
+          <Typography variant="h5" align="center">
+            No Events To Show
+          </Typography>
+          <br />
+        </Grid>
+      );
     }
 
     header = (
