@@ -4,7 +4,7 @@ import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyCo
 import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
 import { Button, Grid, Card, CardHeader, Box } from '@material-ui/core';
 import checkInService from 'services/checkIn';
-import './index.css';
+import styles from './AcademicCheckIn.module.css';
 import PrivacyAgreement from './components/PrivacyAgreement';
 import RaceEthnicity from './components/RaceEthnicity';
 import ConfirmCheckIn from './components/ConfirmCheckIn';
@@ -281,8 +281,8 @@ const AcademicCheckIn = (props) => {
     content = (
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} md={9} lg={6}>
-          <Card className="academicCheckIn">
-            <CardHeader title="Academic Check In" className="checkIn-header" padding={30} />
+          <Card className={styles.academicCheckIn}>
+            <CardHeader title="Academic Check In" className={styles.checkIn_header} padding={30} />
             <Box m={2}>
               <Grid
                 container
@@ -358,7 +358,12 @@ const AcademicCheckIn = (props) => {
                   <br />
                 </Grid>
                 <Grid item>
-                  <Grid container justifyContent="center" className="button-container" spacing={2}>
+                  <Grid
+                    container
+                    justifyContent="center"
+                    className={styles.button_container}
+                    spacing={2}
+                  >
                     <Grid item>
                       <Button
                         style={

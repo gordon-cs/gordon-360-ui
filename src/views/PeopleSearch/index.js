@@ -45,7 +45,7 @@ import GordonLoader from 'components/Loader';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import ReactToPrint from 'react-to-print';
 
-// @TODO: CSSMODULES - outside directory
+// @TODO CSSMODULES - outside directory
 import styles from './components/PeopleSearchResult/PeopleSearchResult.module.css';
 
 const styles2 = {
