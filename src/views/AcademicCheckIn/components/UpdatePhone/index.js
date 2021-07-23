@@ -23,7 +23,9 @@ const UpdatePhone = ({ phoneInfo, handleChangePhoneInfo, handleCheckPhoneInfo })
         <Typography gutterBottom variant="body2">
           Note: This information will be used to contact you with information in the event of issues
           with registration etc, not for emergencies. Your number to contact you in emergencies is
-          handled by our 3rd-party company, RAVE.
+          handled by our 3rd-party company, RAVE. This number will also be visible to current
+          students, faculty, and staff unless you choose to make your number private on People
+          Search with the box below.
         </Typography>
       </Grid>
       <Grid item>
