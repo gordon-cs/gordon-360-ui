@@ -12,7 +12,8 @@ import user from 'services/user';
 // @WELLNESS-CHECK disabled to revert this import these commented out lines
 // import wellness from 'services/wellness';
 // import storage from 'services/storage';
-import styles from './Home.module.css';
+// @TODO CSSMODULES - moved to global styles until a better solution is found
+// import styles from './Home.module.css';
 import { Grid } from '@material-ui/core';
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);

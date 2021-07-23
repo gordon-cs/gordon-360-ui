@@ -1,7 +1,10 @@
-@import './vars';
-
 // Specifies global styling that applies to entire site
 // These selectors may be used by any component or view of the site
+
+@import './vars';
+
+// @TODO CSSMODULES - moved to global styles from Home.module.scss until a better solution is found
+@import '../node_modules/react-image-gallery/styles/scss/image-gallery.scss';
 
 // https://www.paulirish.com/2012/box-sizing-border-box-ftw/
 html {
