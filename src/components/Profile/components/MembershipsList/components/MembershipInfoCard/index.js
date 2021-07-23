@@ -10,22 +10,24 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
   const isOnline = useNetworkStatus();
 
   const OnlineOnlyLink = ({ children }) => {
-    const linkClass = classnames({
-      'gc360-link': isOnline,
-      'private-membership': membership.IsInvolvementPrivate || membership.Privacy,
-      'public-membership': !(membership.IsInvolvementPrivate || membership.Privacy),
-    });
+    const showPrivate = membership.IsInvolvementPrivate || membership.Privacy;
     if (isOnline) {
       return (
         <Link
-          className={linkClass}
+          className={`gc360_text_link ${
+            showPrivate ? styles.private_membership : styles.public_membership
+          }`}
           to={`/activity/${membership.SessionCode}/${membership.ActivityCode}`}
         >
           {children}
         </Link>
       );
     } else {
-      return <div className={linkClass}>{children}</div>;
+      return (
+        <div className={`${showPrivate ? styles.private_membership : styles.public_membership}`}>
+          {children}
+        </div>
+      );
     }
   };
 
