@@ -1,0 +1,24 @@
+@import '../../vars';
+
+.loginDialogue {
+  background-color: $primary-blue;
+  border-radius: 0.4rem;
+  opacity: 0.92;
+  box-shadow: 0 5px 22px $neutral-black-opacity55;
+
+  .login_img {
+    margin: 1rem;
+  }
+
+  form {
+    background-color: $neutral-light-gray;
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    padding: 2rem;
+    opacity: 0.9;
+  }
+
+  .submit_button {
+    margin-top: 1.5rem;
+  }
+}

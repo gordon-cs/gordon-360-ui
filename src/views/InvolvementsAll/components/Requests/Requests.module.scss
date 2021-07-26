@@ -1,0 +1,13 @@
+@import '../../../../vars.scss';
+
+.requests {
+  &_header.requests_header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+  }
+
+  & .weak {
+    color: $neutral-gray;
+    font-size: 85%;
+  }
+}

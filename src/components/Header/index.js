@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
 import { Route, Switch, NavLink, Link } from 'react-router-dom';
-import './header.css';
+import styles from './Header.module.css';
 import GordonPeopleSearch from './components/PeopleSearch';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
@@ -123,7 +123,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     if (!isOnline) {
       return (
         <Tab
-          className="tab disabled-tab"
+          className={`${styles.tab} ${styles.disabled_tab}`}
           icon={icon}
           label={name}
           onClick={() => setDialog('offline')}
@@ -132,7 +132,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
     } else if (!authentication) {
       return (
         <Tab
-          className="tab disabled-tab"
+          className={`${styles.tab} ${styles.disabled_tab}`}
           icon={icon}
           label={name}
           onClick={() => setDialog('unauthorized')}
@@ -140,7 +140,15 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
       );
     } else {
       const route = `/${name.toLowerCase()}`;
-      return <Tab className="tab" icon={icon} label={name} component={ForwardNavLink} to={route} />;
+      return (
+        <Tab
+          className={styles.tab}
+          icon={icon}
+          label={name}
+          component={ForwardNavLink}
+          to={route}
+        />
+      );
     }
   };
 
@@ -156,7 +164,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
 
   const loginButton = (
     <Button
-      className="login-button"
+      className={styles.login_button}
       variant="contained"
       color="secondary"
       component={ForwardLink}
@@ -167,19 +175,19 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   );
 
   return (
-    <section className="gordon-header">
-      <AppBar className="app-bar" position="static">
+    <section className={styles.gordon_header}>
+      <AppBar className={styles.app_bar} position="static">
         <Toolbar>
           <IconButton
-            className="menu-button"
+            className={styles.menu_button}
             color="primary"
             aria-label="open drawer"
             onClick={onDrawerToggle}
           >
-            <MenuIcon className="menu-button-icon" />
+            <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
 
-          <Typography className="title disable-select" variant="h6" color="inherit">
+          <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
             <Switch>
               {routes.map((route) => (
                 <Route
@@ -192,24 +200,24 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             </Switch>
           </Typography>
 
-          <div className="center-container">
+          <div className={styles.center_container}>
             <Tabs centered value={tabIndex} onChange={(event, value) => setTabIndex(value)}>
               <Tab
-                className="tab"
+                className={styles.tab}
                 icon={<HomeIcon />}
                 label="Home"
                 component={ForwardNavLink}
                 to="/"
               />
               <Tab
-                className="tab"
+                className={styles.tab}
                 icon={<LocalActivityIcon />}
                 label="Involvements"
                 component={ForwardNavLink}
                 to="/involvements"
               />
               <Tab
-                className="tab"
+                className={styles.tab}
                 icon={<EventIcon />}
                 label="Events"
                 component={ForwardNavLink}
@@ -221,7 +229,9 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             </Tabs>
           </div>
 
-          {authentication ? <GordonPeopleSearch authentication={authentication} /> : loginButton}
+          <div className={styles.people_search_container}>
+            {authentication ? <GordonPeopleSearch authentication={authentication} /> : loginButton}
+          </div>
 
           <GordonNavAvatarRightCorner
             onSignOut={onSignOut}

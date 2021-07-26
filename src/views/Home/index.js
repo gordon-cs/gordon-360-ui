@@ -14,7 +14,8 @@ import user from 'services/user';
 // @WELLNESS-CHECK disabled to revert this import these commented out lines
 // import wellness from 'services/wellness';
 // import storage from 'services/storage';
-import './home.css';
+// @TODO CSSMODULES - moved to global styles until a better solution is found
+// import styles from './Home.module.css';
 import { Grid } from '@material-ui/core';
 // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
 // import checkInService from 'services/checkIn';

@@ -6,7 +6,7 @@ import user from 'services/user';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import GordonNavButton from 'components/NavButton';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import './index.css';
+import styles from './NavButtonsRightCorner.module.css';
 
 /**
  *
@@ -101,7 +101,6 @@ const GordonNavButtonsRightCorner = ({
     />
   );
 
-
   return (
     <>
       <div id="right-side-menu">
@@ -117,10 +116,10 @@ const GordonNavButtonsRightCorner = ({
           }}
           open={open}
           onClose={onClose}
-          className="right-side-nav-buttons"
+          className={styles.right_side_nav_buttons}
         >
           <List id="right-side-menu-list" disablePadding={true}>
-            <div id="right-menu-triangle" />
+            <div class={styles.right_menu_triangle} />
             {myProfileButton}
             {linksButton}
             {timesheetsButton}

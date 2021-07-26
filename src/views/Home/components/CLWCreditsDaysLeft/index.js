@@ -6,7 +6,7 @@ import user from 'services/user';
 import session from 'services/session';
 import GordonLoader from 'components/Loader';
 
-import './CLWChart.css';
+import styles from './CLWCreditsDaysLeft.module.css';
 
 import { Card, CardHeader, CardContent, Typography, Grid, Button } from '@material-ui/core';
 
@@ -137,10 +137,10 @@ const CLWCreditsDaysLeft = () => {
               alignItems: 'center',
             }}
           >
-            <div className="label-text" style={{ color: daysColor }}>
+            <div className={styles.label_text} style={{ color: daysColor }}>
               {daysFinished}
             </div>
-            <div className="entry-text">
+            <div className={styles.entry_text}>
               {'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}
             </div>
             <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
@@ -157,10 +157,10 @@ const CLWCreditsDaysLeft = () => {
                 alignItems: 'center',
               }}
             >
-              <div className="label-text" style={{ color: chapelColor }}>
+              <div className={styles.label_text} style={{ color: chapelColor }}>
                 {current}
               </div>
-              <div className="entry-text">{`CL&W Credit ${current === 1 ? '' : 's'}`}</div>
+              <div className={styles.entry_text}>{`CL&W Credit ${current === 1 ? '' : 's'}`}</div>
             </div>
           ) : null}
         </div>
@@ -169,7 +169,7 @@ const CLWCreditsDaysLeft = () => {
   }
 
   return (
-    <Card className="clw-credits-days-left">
+    <Card className={styles.clw_credits_days_left}>
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">

@@ -24,7 +24,11 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
           <b>Federal Reporting Status</b>
         </Typography>
         <Typography variant="body1" gutterBottom>
-          The federal government has created new aggregate categories for reporting race and ethnicity. Reporting these has been mandatory for Gordon College since fall 2010. The categories describe groups to which individuals belong or identify with, not scientific definitions of anthropological origins. In order to transition to the new data standards, we need students to self-identify their ethnicity and race by responding to two questions.
+          The federal government has created new aggregate categories for reporting race and
+          ethnicity. Reporting these has been mandatory for Gordon College since fall 2010. The
+          categories describe groups to which individuals belong or identify with, not scientific
+          definitions of anthropological origins. In order to transition to the new data standards,
+          we need students to self-identify their ethnicity and race by responding to two questions.
         </Typography>
         <br />
         <Typography variant="body1">
@@ -36,7 +40,11 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
         </ul>
         <br />
         <Typography variant="body1" gutterBottom>
-          Note: The federal government considers 'Hispanic/Latino' to be an ethnicity, not a race. It defines this ethnicity as: A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture of origin, regardless of race. That is why this question is asked separately and Hispanic/Latino is no longer listed as a race identification category.
+          Note: The federal government considers 'Hispanic/Latino' to be an ethnicity, not a race.
+          It defines this ethnicity as: A person of Cuban, Mexican, Puerto Rican, South or Central
+          American, or other Spanish culture of origin, regardless of race. That is why this
+          question is asked separately and Hispanic/Latino is no longer listed as a race
+          identification category.
         </Typography>
         <br />
         <Typography variant="body1">
@@ -139,8 +147,9 @@ const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemogr
       </Grid>
       <Typography variant="subtitle1" gutterBottom>
         <b>
-          For questions or more information regarding this section please contact the registrar's office at (978) 867-4243 or
-          {' '} <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>.
+          For questions or more information regarding this section please contact the registrar's
+          office at (978) 867-4243 or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>
+          .
         </b>
       </Typography>
     </Grid>

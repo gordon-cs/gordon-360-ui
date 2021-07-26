@@ -9,7 +9,7 @@ import 'cropperjs/dist/cropper.css';
 import defaultGordonImage from './defaultGordonImage';
 import GordonLoader from 'components/Loader/index';
 import { windowBreakWidths } from 'theme';
-import './index.css';
+import styles from './Identification.module.css';
 
 import {
   Grid,
@@ -435,16 +435,16 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   function createPhotoDialogBox() {
     return (
       <Dialog
-        className="gc360-photo-dialog"
+        className="gc360_photo_dialog"
         open={openPhotoDialog}
         keepMounted
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <div className="gc360-photo-dialog-box">
-          <DialogTitle className="gc360-photo-dialog-box_title">Update Photo</DialogTitle>
-          <DialogContent className="gc360-photo-dialog-box_content">
-            <DialogContentText className="gc360-photo-dialog-box_content_text">
+        <div className="gc360_photo_dialog_box">
+          <DialogTitle className="gc360_photo_dialog_box_title">Update Photo</DialogTitle>
+          <DialogContent className="gc360_photo_dialog_box_content">
+            <DialogContentText className="gc360_photo_dialog_box_content_text">
               {createPhotoDialogBoxMessage()}
             </DialogContentText>
             {!showCropper && (
@@ -455,10 +455,10 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               >
                 {({ getRootProps, getInputProps }) => (
                   <section>
-                    <div className="gc360-photo-dialog-box_content_dropzone" {...getRootProps()}>
+                    <div className="gc360_photo_dialog_box_content_dropzone" {...getRootProps()}>
                       <input {...getInputProps()} />
                       <img
-                        className="gc360-photo-dialog-box_content_dropzone_img"
+                        className="gc360_photo_dialog_box_content_dropzone_img"
                         src={`data:image/jpg;base64,${preferredUserImage || defaultUserImage}`}
                         alt="Profile"
                       />
@@ -468,7 +468,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               </Dropzone>
             )}
             {showCropper && (
-              <div className="gc360-photo-dialog-box_content_cropper">
+              <div className="gc360_photo_dialog_box_content_cropper">
                 <Cropper
                   ref={cropperRef}
                   src={showCropper}
@@ -490,20 +490,20 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               </div>
             )}
           </DialogContent>
-          <DialogActions className="gc360-photo-dialog-box_actions-top">
+          <DialogActions className="gc360_photo_dialog_box_actions_top">
             {showCropper && (
               <Button
                 variant="contained"
                 onClick={() => setShowCropper(null)}
                 style={style.button.changeImageButton}
-                className="gc360-photo-dialog-box_content_button"
+                className="gc360_photo_dialog_box_content_button"
               >
                 Go Back
               </Button>
             )}
           </DialogActions>
           {!showCropper && (
-            <DialogActions className="gc360-photo-dialog-box_actions-middle">
+            <DialogActions className="gc360_photo_dialog_box_actions_middle">
               <Tooltip
                 classes={{ tooltip: 'tooltip' }}
                 id="tooltip-hide"
@@ -532,7 +532,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
               </Tooltip>
             </DialogActions>
           )}
-          <DialogActions className="gc360-photo-dialog-box_actions-bottom">
+          <DialogActions className="gc360_photo_dialog_box_actions_bottom">
             <Button
               variant="contained"
               onClick={handleCloseCancel}
@@ -572,8 +572,8 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
     : '';
 
   return (
-    <div className="identification-card">
-      <Grid container className="identification-card-header">
+    <div className={styles.identification_card}>
+      <Grid container className={styles.identification_card_header}>
         {userProfile &&
           (isStudent ? (
             <CardHeader
@@ -595,19 +595,23 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
         {!userProfile && <CardHeader title="My Personal Profile" />}
       </Grid>
 
-      <div className="identification-card-content">
+      <div className={styles.identification_card_content}>
         {/* SHOWS THE CARD'S CONTENT IF THE GIVEN USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
         {userProfile && (defaultUserImage || preferredUserImage) ? (
-          <Grid container className="identification-card-content-card" justifyContent="center">
+          <Grid
+            container
+            className={styles.identification_card_content_card}
+            justifyContent="center"
+          >
             <Grid
               container
-              className="identification-card-content-card-container"
+              className={styles.identification_card_content_card_container}
               alignItems="center"
               justifyContent="space-evenly"
             >
-              <Grid item className="identification-card-content-card-container-photo">
+              <Grid item className={styles.identification_card_content_card_container_photo}>
                 <div
-                  className="identification-card-content-card-container-photo-main"
+                  className={styles.identification_card_content_card_container_photo_main}
                   style={
                     cliftonColor
                       ? {
@@ -623,9 +627,15 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                       : null
                   }
                 >
-                  <div className="identification-card-content-card-container-photo-main-container">
+                  <div
+                    className={
+                      styles.identification_card_content_card_container_photo_main_container
+                    }
+                  >
                     <img
-                      className="identification-card-content-card-container-photo-main-container-image"
+                      className={
+                        styles.identification_card_content_card_container_photo_main_container_image
+                      }
                       src={`data:image/jpg;base64,${
                         // Checks to see if the default and preferred photos should switch between bubbles
                         isPhotosSwitched
@@ -643,7 +653,9 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                     {network === 'online' && myProf && (
                       <Typography
                         variant="body1"
-                        className="identification-card-content-card-container-photo-main-container-tile-bar"
+                        className={
+                          styles.identification_card_content_card_container_photo_main_container_tile_bar
+                        }
                       >
                         Photo Options
                       </Typography>
@@ -652,14 +664,16 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   {network === 'online' && myProf && (
                     <div
                       onClick={handlePhotoOpen}
-                      className="identification-card-content-card-container-photo-main-button"
+                      className={
+                        styles.identification_card_content_card_container_photo_main_button
+                      }
                     ></div>
                   )}
                 </div>
                 {preferredUserImage && defaultUserImage && (
-                  <div className="identification-card-content-card-container-photo-side">
+                  <div className={styles.identification_card_content_card_container_photo_side}>
                     <img
-                      className="identification-card-content-card-container-photo-side-image"
+                      className={styles.identification_card_content_card_container_photo_side_image}
                       src={`data:image/jpg;base64,${
                         // Checks to see if the default and preferred photos should switch between bubbles
                         isPhotosSwitched
@@ -672,13 +686,15 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                     />
                     <div
                       onClick={handlePhotoSwitch}
-                      className="identification-card-content-card-container-photo-side-button"
+                      className={
+                        styles.identification_card_content_card_container_photo_side_button
+                      }
                     ></div>
                   </div>
                 )}
               </Grid>
 
-              <Grid item className="identification-card-content-card-container-info">
+              <Grid item className={styles.identification_card_content_card_container_info}>
                 <SocialMediaLinks
                   profile={profile}
                   myProf={myProf}
@@ -687,12 +703,16 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                 <Grid
                   item
                   xs={12}
-                  className="identification-card-content-card-container-info-class"
+                  className={styles.identification_card_content_card_container_info_class}
                 >
                   {userProfile.Class && <Typography>{userProfile.Class}</Typography>}
                 </Grid>
 
-                <Grid item xs={12} className="identification-card-content-card-container-info-name">
+                <Grid
+                  item
+                  xs={12}
+                  className={styles.identification_card_content_card_container_info_name}
+                >
                   <Typography variant="h6" paragraph>
                     {userProfile.Title &&
                     userProfile.Title !== '' &&
@@ -723,7 +743,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   <Grid
                     item
                     xs={12}
-                    className="identification-card-content-card-container-info-job-title"
+                    className={styles.identification_card_content_card_container_info_job_title}
                   >
                     <Typography variant="h6" paragraph>
                       {userProfile.JobTitle}
@@ -733,11 +753,19 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                 <Grid
                   item
                   xs={12}
-                  className="identification-card-content-card-container-info-email"
+                  className={styles.identification_card_content_card_container_info_email}
                 >
                   <a href={`mailto:${userProfile.Email}`}>
-                    <div className="identification-card-content-card-container-info-email-container">
-                      <EmailIcon className="identification-card-content-card-container-info-email-container-icon" />
+                    <div
+                      className={
+                        styles.identification_card_content_card_container_info_email_container
+                      }
+                    >
+                      <EmailIcon
+                        className={
+                          styles.identification_card_content_card_container_info_email_container_icon
+                        }
+                      />
                       <Typography paragraph>{userProfile.Email}</Typography>
                     </div>
                   </a>
@@ -754,10 +782,10 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
         {userProfile && network === 'online' && myProf && (
           <Link
             to={`/profile/${userProfile.AD_Username}`}
-            className="identification-card-content-public-profile-link"
+            className={styles.identification_card_content_public_profile_link}
           >
             <Button
-              className="identification-card-content-public-profile-link-button"
+              className={styles.identification_card_content_public_profile_link_button}
               variant="contained"
             >
               View My Public Profile

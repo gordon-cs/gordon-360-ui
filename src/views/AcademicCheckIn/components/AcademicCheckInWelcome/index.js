@@ -2,6 +2,9 @@ import React from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import { gordonColors } from 'theme';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../AcademicCheckIn.module.css';
+
 const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
   const blue = gordonColors.primary.blue;
   const hasMinorHold = holds.LaVidaHold || holds.DeclarationOfMajorHold;
@@ -102,7 +105,7 @@ const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
         <Typography align="center" variant="h5" style={{ color: blue }}>
           <b>Enrollment Check-In</b>
         </Typography>
-        <Typography justify="center" className="checkIn">
+        <Typography justify="center" className={styles.checkIn}>
           Hello, {basicInfo.studentFirstName}! Welcome to a new semester at Gordon College! Please
           take a few moments to complete the check-in process in order to confirm your academic
           enrollment and help Gordon College plan to provide services to you.
@@ -121,7 +124,9 @@ const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
             </Typography>
             {displayMajorHolds()}
           </Grid>
-        ) : ''}
+        ) : (
+          ''
+        )}
         {holds.MustRegisterForClasses ? ( // If a student is not registered for courses they cannot check in
           <Grid item>
             <Typography variant="h6" align="center" style={{ color: blue }}>
@@ -134,15 +139,15 @@ const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
               <Typography>
                 You will meet with your advisor during Orientation and he/she can register you. The
                 name of your advisor can be found by logging onto{' '}
-                <a href="https://my.gordon.edu">my.gordon.edu</a> and clicking on the <b>Student</b> tab. You
-                will see your advisor(s) listed under "My Advisors and Majors".
+                <a href="https://my.gordon.edu">my.gordon.edu</a> and clicking on the <b>Student</b>{' '}
+                tab. You will see your advisor(s) listed under "My Advisors and Majors".
               </Typography>
             ) : (
               // Otherwise display a standard registration prompt
               <Typography gutterBottom>
                 Visit the registrar's office in Jenks 216 to register, or visit{' '}
-                <a href="https://my.gordon.edu">my.gordon.edu</a> (Student tab {'>'} Course Schedules {'>'}{' '}
-                Course Search) to register during the first five days of classes.
+                <a href="https://my.gordon.edu">my.gordon.edu</a> (Student tab {'>'} Course
+                Schedules {'>'} Course Search) to register during the first five days of classes.
               </Typography>
             )}
           </Grid>

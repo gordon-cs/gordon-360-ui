@@ -1,0 +1,20 @@
+@import '../../../../vars';
+
+.right_menu_triangle {
+  position: absolute;
+  right: 0.9rem;
+  top: -0.55rem;
+  background-color: $neutral-white;
+  height: 1.1rem;
+  width: 1.1rem;
+  border: 1.5px solid $primary-blue;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  transform: rotate(45deg);
+}
+
+.right_side_nav_buttons {
+  :global(.MuiPopover-paper) {
+    overflow: visible;
+  }
+}

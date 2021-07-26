@@ -5,7 +5,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 
-import './newsItem.scss';
+import styles from './NewsItem.module.css';
 
 import { Typography, CardContent, Collapse, Grid, Button } from '@material-ui/core';
 
@@ -26,7 +26,7 @@ const NewsItem = ({
   }
 
   const author = (
-    <Typography variant="h6" className="news-column" style={{ textTransform: 'capitalize' }}>
+    <Typography variant="h6" className={styles.news_column} style={{ textTransform: 'capitalize' }}>
       {posting.author}
     </Typography>
   );
@@ -34,7 +34,7 @@ const NewsItem = ({
     !isOnline || unapproved ? (
       author
     ) : (
-      <Link className="news-authorProfileLink" to={`/profile/${posting.ADUN}`}>
+      <Link className={styles.news_authorProfileLink} to={`/profile/${posting.ADUN}`}>
         {author}
       </Link>
     );
@@ -55,7 +55,7 @@ const NewsItem = ({
         color="primary"
         startIcon={<EditIcon />}
         onClick={() => handleNewsItemEdit(posting.SNID)}
-        className="btn"
+        className={styles.btn}
       >
         Edit
       </Button>
@@ -76,7 +76,7 @@ const NewsItem = ({
         onClick={() => {
           handleNewsItemDelete(posting.SNID);
         }}
-        className="btn deleteButton"
+        className={`${styles.btn} ${styles.deleteButton}`}
       >
         Delete
       </Button>
@@ -93,19 +93,19 @@ const NewsItem = ({
         onClick={() => {
           setOpen(!open);
         }}
-        className={`news-item ${unapproved ? 'unapproved' : 'approved'}`}
+        className={`${styles.news_item} ${unapproved ? styles.unapproved : styles.approved}`}
         justify="center"
       >
         <Grid item xs={12}>
-          <Typography variant="h6" className="news-heading" style={{ fontWeight: 'bold' }}>
+          <Typography variant="h6" className={styles.news_heading} style={{ fontWeight: 'bold' }}>
             {posting.Subject}
           </Typography>
           {authorProfileLink}
         </Grid>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography className="news-content">"{posting.categoryName}"</Typography>
-            <Typography className="news-content ">{posting.Body}</Typography>
+            <Typography className={styles.news_content}>"{posting.categoryName}"</Typography>
+            <Typography className={styles.news_content}>{posting.Body}</Typography>
             {posting.Image !== null && (
               <img src={`data:image/jpg;base64,${posting.Image}`} alt=" " />
             )}
@@ -127,13 +127,13 @@ const NewsItem = ({
         onClick={() => {
           setOpen(!open);
         }}
-        className={`news-item ${unapproved ? 'unapproved' : 'approved'}`}
+        className={`${styles.news_item} ${unapproved ? styles.unapproved : styles.approved}`}
       >
         <Grid item xs={2}>
-          <Typography className="news-column">{posting.categoryName}</Typography>
+          <Typography className={styles.news_column}>{posting.categoryName}</Typography>
         </Grid>
         <Grid item xs={5}>
-          <Typography className="news-column" style={{ fontWeight: 'bold' }}>
+          <Typography className={styles.news_column} style={{ fontWeight: 'bold' }}>
             {posting.Subject}
           </Typography>
         </Grid>
@@ -141,7 +141,7 @@ const NewsItem = ({
           {authorProfileLink}
         </Grid>
         <Grid item xs={2}>
-          <Typography className="news-column">{posting.dayPosted}</Typography>
+          <Typography className={styles.news_column}>{posting.dayPosted}</Typography>
         </Grid>
 
         {/* Collapsable details */}
@@ -149,8 +149,8 @@ const NewsItem = ({
           <CardContent>
             <Grid container direction="row" alignItems="center" justify="space-around">
               <Grid item xs={8} style={{ textAlign: 'left' }}>
-                <Typography className="descriptionText">Description:</Typography>
-                <Typography type="caption" className="descriptionText">
+                <Typography className={styles.descriptionText}>Description:</Typography>
+                <Typography type="caption" className={styles.descriptionText}>
                   {posting.Body}
                 </Typography>
                 {posting.Image !== null && (

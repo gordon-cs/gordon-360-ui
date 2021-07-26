@@ -15,7 +15,7 @@ import {
   Badge,
 } from '@material-ui/core';
 import membershipService from 'services/membership';
-import './requests-received.css';
+import styles from './RequestsReceived.module.css';
 
 const RequestReceived = ({ involvement }) => {
   const [requests, setRequests] = useState([]);
@@ -43,7 +43,7 @@ const RequestReceived = ({ involvement }) => {
   const title = <Typography variant="h6">{involvement.ActivityDescription}</Typography>;
 
   return (
-    <Accordion className="requests-received">
+    <Accordion className={styles.requests_received}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         {requests.length > 0 ? (
           <Badge color="error" badgeContent={requests.length}>
@@ -53,7 +53,7 @@ const RequestReceived = ({ involvement }) => {
           title
         )}
       </AccordionSummary>
-      <AccordionDetails className="requests-received-list">
+      <AccordionDetails className={styles.requests_received_list}>
         {requests?.length > 0 ? (
           <List>
             {requests
@@ -70,7 +70,7 @@ const RequestReceived = ({ involvement }) => {
 
                     <ListItemSecondaryAction>
                       <Button
-                        className="deny-request-button"
+                        className={styles.deny_request_button}
                         onClick={() => onDeny(request.RequestID)}
                         size="small"
                       >
@@ -91,7 +91,7 @@ const RequestReceived = ({ involvement }) => {
               ))}
           </List>
         ) : (
-          <Typography variant="body2" className="message_text">
+          <Typography variant="body2" className={styles.message_text}>
             No Requests to Show
           </Typography>
         )}

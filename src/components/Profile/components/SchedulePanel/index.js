@@ -29,7 +29,7 @@ import {
 const STARTHOUR = '08:00';
 const ENDHOUR = '17:00';
 
-const styles = {
+const styles2 = {
   colorSwitchBase: {
     color: gordonColors.neutral.lightGray,
     '&$colorChecked': {
@@ -443,4 +443,4 @@ class GordonSchedulePanel extends Component {
   }
 }
 
-export default withStyles(styles)(GordonSchedulePanel);
+export default withStyles(styles2)(GordonSchedulePanel);

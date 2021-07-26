@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { React, useEffect, useState } from 'react';
 import NewsItem from '../NewsItem';
 import { gordonColors } from 'theme';
-import './newsList.scss';
+import styles from './NewsList.module.css';
 import { Grid, Typography, Card, List } from '@material-ui/core';
 
 //https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
@@ -76,7 +76,7 @@ const NewsList = ({
     <Card>
       {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
       <Grid>
-        <List className="news-list" disablePadding>
+        <List className={styles.news_list} disablePadding>
           {personalUnapprovedNews.length > 0 &&
             personalUnapprovedNews.map((posting) => (
               <NewsItem

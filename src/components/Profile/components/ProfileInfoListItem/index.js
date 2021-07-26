@@ -1,18 +1,30 @@
 import React from 'react';
 import { Divider, ListItem, Grid, Typography } from '@material-ui/core';
-import './index.css';
+import styles from './ProfileInfoListItem.module.css';
 
-const ProfileInfoListItem = ({ title, contentText, ContentIcon = null, contentClass = null }) => {
+const ProfileInfoListItem = ({
+  title,
+  contentText,
+  ContentIcon = null,
+  privateInfo = false,
+  myProf = false,
+}) => {
   const gridSizeProps = ContentIcon ? { xs: 4, md: 3, lg: 4 } : { xs: 7 };
 
   return (
     <>
-      <ListItem className="profile-info-list-item">
+      <ListItem className={styles.profile_info_list_item}>
         <Grid container alignItems="center">
           <Grid container item xs={5} alignItems="center">
             <Typography>{title}</Typography>
           </Grid>
-          <Grid container item {...gridSizeProps} alignItems="center" className={contentClass}>
+          <Grid
+            container
+            item
+            {...gridSizeProps}
+            alignItems="center"
+            className={privateInfo ? (myProf ? styles.private : styles.privateNotMine) : null}
+          >
             {contentText}
           </Grid>
           {ContentIcon && (

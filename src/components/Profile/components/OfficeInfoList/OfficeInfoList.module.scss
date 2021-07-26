@@ -1,0 +1,20 @@
+@import '../../../../vars';
+
+.office_info_list {
+  background-color: $alternative-red;
+  &_header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+    padding-left: 1rem;
+  }
+}
+
+@media (max-width: $break-sm) {
+  .office_info_list {
+    background-color: $alternative-red;
+    &_header {
+      padding-left: 0rem;
+      justify-content: center;
+    }
+  }
+}

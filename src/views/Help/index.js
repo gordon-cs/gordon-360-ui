@@ -1,5 +1,5 @@
 import { gordonColors } from 'theme';
-import './help.css';
+import styles from './Help.module.css';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@material-ui/core';
 
@@ -7,16 +7,16 @@ const Help = () => {
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
-        <Card className="help">
+        <Card className={styles.help}>
           <CardHeader
-            className="help-title"
+            className={styles.help_title}
             title="Gordon 360 Help"
             titleTypographyProps={{ variant: 'h4' }}
           />
           <CardContent>
-            <Card className="help-section">
+            <Card className={styles.help_section}>
               <CardHeader
-                className="help-header"
+                className={styles.help_header}
                 title="LOGIN INSTRUCTIONS"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -28,9 +28,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className="help-section">
+            <Card className={styles.help_section}>
               <CardHeader
-                className="help-header"
+                className={styles.help_header}
                 title="SITE NAVIGATION"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -98,9 +98,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className="help-section">
+            <Card className={styles.help_section}>
               <CardHeader
-                className="help-header"
+                className={styles.help_header}
                 title="INVOLVEMENT USER LEVELS"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -142,9 +142,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className="help-section">
+            <Card className={styles.help_section}>
               <CardHeader
-                className="help-header"
+                className={styles.help_header}
                 title="MANAGEMENT & EDITING INVOLVEMENTS"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -192,9 +192,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className="help-section">
+            <Card className={styles.help_section}>
               <CardHeader
-                className="help-header"
+                className={styles.help_header}
                 title="ISSUES & TROUBLESHOOTING"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -214,9 +214,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className="help-section">
+            <Card className={styles.help_section}>
               <CardHeader
-                className="help-header"
+                className={styles.help_header}
                 title="SUPPORTED PLATFORMS"
                 titleTypographyProps={{ variant: 'body1' }}
               />
@@ -231,9 +231,9 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className="help-section">
+            <Card className={styles.help_section}>
               <CardHeader
-                className="help-header"
+                className={styles.help_header}
                 title="FAQ"
                 titleTypographyProps={{ variant: 'body1' }}
               />

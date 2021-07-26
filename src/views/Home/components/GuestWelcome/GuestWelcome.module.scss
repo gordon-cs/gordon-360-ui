@@ -1,0 +1,49 @@
+@import '../../../../vars';
+
+div.gw_card {
+  background-color: $primary-blue;
+  color: $neutral-white;
+  opacity: 0.92;
+}
+
+.gw_container {
+  padding: 1em;
+}
+
+.gw_background {
+  background: url(./images/campusFull.jpg) no-repeat center center fixed;
+  background-size: cover;
+  margin: -1rem;
+  min-height: 100vh;
+  min-width: 100vw;
+
+  @media (min-width: 3840px) {
+    // Larger than 4K
+    background-image: url(./images/campusFull.jpg);
+  }
+
+  @media (max-width: 3840px) {
+    // 4K or smaller
+    background-image: url(./images/campus4K.jpg);
+  }
+
+  @media (max-width: 1920px) {
+    // 1080p Full HD or smaller
+    background-image: url(./images/campusHD.jpg);
+  }
+
+  @media (max-width: 1366px) {
+    // 1366 x 768 or smaller
+    background-image: url(./images/campus1366.jpg);
+  }
+
+  @media (max-width: 600px) {
+    // 600 pixels or smaller (larger mobile device)
+    background-image: url(./images/campusMobileLG.jpg);
+  }
+
+  @media (max-width: 400px) {
+    // 400 pixels or smaller (smaller mobile device)
+    background-image: url(./images/campusMobileSM.jpg);
+  }
+}

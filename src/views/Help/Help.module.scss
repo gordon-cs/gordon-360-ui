@@ -1,0 +1,27 @@
+@import '../../vars';
+
+.help {
+  margin: 1rem;
+
+  li {
+    list-style-type: '• ';
+  }
+
+  li li {
+    list-style-type: '- ';
+  }
+
+  &_title {
+    text-align: center;
+    padding: 1rem;
+  }
+
+  &_header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+  }
+
+  &_section:global(.MuiCard-root) {
+    box-shadow: none;
+  }
+}
