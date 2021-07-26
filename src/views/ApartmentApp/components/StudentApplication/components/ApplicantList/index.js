@@ -21,7 +21,7 @@ import GordonPeopleSearch from 'components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
 
 // @TODO CSSMODULES - outside directory
-import styles from './../../../../ApartmentApp.module.css';
+import styles from '../../../../ApartmentApp.module.css';
 
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant

@@ -14,7 +14,7 @@ import {
 import housing from 'services/housing';
 
 // @TODO CSSMODULES - outside directory
-import styles from './../../../../ApartmentApp.module.css';
+import styles from '../../../../ApartmentApp.module.css';
 
 /**
  * Renders a card displaying the apartment application instructions
@@ -118,7 +118,10 @@ const Agreements = ({ deleting, onChange }) => {
       <CardContent>
         <FormControl component="fieldset" className={styles.apartment_agreements_form_control}>
           {error && (
-            <FormLabel component="legend" className={styles.apartment_agreements_form_control_label}>
+            <FormLabel
+              component="legend"
+              className={styles.apartment_agreements_form_control_label}
+            >
               Use the checkboxes next to each statement to indicate your group's understanding
               and/or affirmative answer. Failure to complete this section will result in the
               disqualification of the application.

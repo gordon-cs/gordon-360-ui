@@ -6,7 +6,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import DynamicButton from 'components/DynamicButton';
 
 // @TODO CSSMODULES - outside directory
-import styles from './../../../../ApartmentApp.module.css';
+import styles from '../../../../ApartmentApp.module.css';
 
 /**
  * Renders the bottom bar for the apartment application page

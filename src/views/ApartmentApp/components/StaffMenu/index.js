@@ -11,7 +11,7 @@ import { NotFoundError } from 'services/error';
 import housing from 'services/housing';
 
 // @TODO CSSMODULES - outside directory
-import styles from './../../ApartmentApp.module.css';
+import styles from '../../ApartmentApp.module.css';
 
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
@@ -118,7 +118,10 @@ const StaffMenu = ({ userProfile }) => {
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} lg={10}>
           <Card>
-            <CardHeader title="Download Apartment Applications" className={styles.apartment_card_header} />
+            <CardHeader
+              title="Download Apartment Applications"
+              className={styles.apartment_card_header}
+            />
             <CardContent>
               <Grid container direction="row" spacing={2}>
                 <Grid item xs={12}>

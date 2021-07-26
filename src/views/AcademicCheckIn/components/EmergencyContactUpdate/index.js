@@ -13,7 +13,7 @@ import { gordonColors } from 'theme';
 import { phoneMaskUS, phoneMaskINTL } from 'views/AcademicCheckIn/components/UpdatePhone/';
 
 // @TODO CSSMODULES - outside directory
-import styles from './../../AcademicCheckIn.module.css';
+import styles from '../../AcademicCheckIn.module.css';
 
 const EmergencyContactUpdate = ({
   emergencyContact1,

@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 
 // @TODO CSSMODULES - outside directory
-import styles from './../../../../../../ApartmentApp.module.css';
+import styles from '../../../../../../ApartmentApp.module.css';
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -70,7 +70,10 @@ const OffCampusListItem = ({
       <ListItem key={profile.AD_Username} className={styles.list_item}>
         <Grid container alignItems="flex-end" spacing={1}>
           <Grid item xs={12} sm={4}>
-            <ListItemText primary={displayName ?? profile.AD_Username} className={styles.list_item} />
+            <ListItemText
+              primary={displayName ?? profile.AD_Username}
+              className={styles.list_item}
+            />
           </Grid>
           <Grid item xs={12} sm={8}>
             <FormControl fullWidth error={!isSelectionValid}>

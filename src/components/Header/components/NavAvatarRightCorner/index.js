@@ -4,7 +4,7 @@ import { gordonColors } from 'theme';
 import React, { useState, useEffect } from 'react';
 import user from 'services/user';
 
-import styles from './../../Header.module.css';
+import styles from '../../Header.module.css';
 
 /**
  * Gets the initials of the current user
@@ -82,17 +82,9 @@ export const GordonNavAvatarRightCorner = ({ authentication, onClick }) => {
 
   const avatar = authentication ? (
     image ? (
-      <Avatar
-        className={classes.root}
-        src={`data:image/jpg;base64,${image}`}
-        sizes="70px"
-      />
+      <Avatar className={classes.root} src={`data:image/jpg;base64,${image}`} sizes="70px" />
     ) : (
-      <Avatar
-        className={classes.root}
-      >
-        {getInitials(username)}
-      </Avatar>
+      <Avatar className={classes.root}>{getInitials(username)}</Avatar>
     )
   ) : (
     <Avatar className={classes.root}>Guest</Avatar>

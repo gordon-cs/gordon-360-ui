@@ -68,7 +68,7 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
 
   const avatar = authentication ? (
     image ? (
-      <Avatar className={`${styles.avatar} ${image}`} src={`data:image/jpg;base64,${image}`} />
+      <Avatar className={`${styles.avatar}`} src={`data:image/jpg;base64,${image}`} />
     ) : (
       <Avatar className={`${styles.avatar} ${styles.placeholder}`}>{getInitials(username)}</Avatar>
     )
@@ -102,14 +102,7 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
   );
 
   return (
-    <Button
-      className={styles.gordon_nav_avatar}
-      classes={{
-        root: styles['gordon_nav_avatar button'],
-        label: styles.label,
-      }}
-      component={buttonLink}
-    >
+    <Button component={buttonLink}>
       <div className={styles.gordon_nav_avatar}>
         {avatar}
         {label}

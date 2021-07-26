@@ -6,7 +6,7 @@ import { Grid, Button, Dialog, IconButton } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 
 // @TODO CSSMODULES - outside directory
-import styles from './../../Identification.module.css';
+import styles from '../../Identification.module.css';
 
 const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
   const [socialLinksOpen, setSocialLinksOpen] = useState(false);

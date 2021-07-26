@@ -15,7 +15,7 @@ import {
 import ClearIcon from '@material-ui/icons/Clear';
 
 // @TODO CSSMODULES - outside directory
-import styles from './../../../../../../ApartmentApp.module.css';
+import styles from '../../../../../../ApartmentApp.module.css';
 
 /**
  * @typedef { import('services/housing').ApartmentHall } ApartmentHall
@@ -47,10 +47,10 @@ const HallChoiceListItem = ({
 }) => {
   const [isHallNameValid, setIsHallNameValid] = useState(false);
 
-  useEffect(() => setIsHallNameValid(hallName === '' || halls.some((hall) => hall === hallName)), [
-    hallName,
-    halls,
-  ]);
+  useEffect(
+    () => setIsHallNameValid(hallName === '' || halls.some((hall) => hall === hallName)),
+    [hallName, halls],
+  );
 
   const hallOptions = halls.map((hall) => (
     <MenuItem value={hall} key={hall}>

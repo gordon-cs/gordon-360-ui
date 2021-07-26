@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core/';
 
 // @TODO CSSMODULES - outside directory
-import styles from './../../../../../../../../ApartmentApp.module.css';
+import styles from '../../../../../../../../ApartmentApp.module.css';
 
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant

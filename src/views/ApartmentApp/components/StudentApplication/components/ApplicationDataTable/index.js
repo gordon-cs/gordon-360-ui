@@ -14,7 +14,7 @@ import EmailIcon from '@material-ui/icons/Email';
 import { DateTime } from 'luxon';
 
 // @TODO CSSMODULES - outside directory
-import styles from './../../../../ApartmentApp.module.css';
+import styles from '../../../../ApartmentApp.module.css';
 
 /** @typedef { import('services/housing').ApplicationDetails } ApplicationDetails */
 
@@ -64,8 +64,16 @@ const ApplicationDataTable = ({ applicationDetails }) => {
                 <TableRow>
                   <TableCell colSpan={2}>
                     <a href={`mailto:${editorEmail}`}>
-                      <div className={styles.identification_card_content_card_container_info_email_container}>
-                        <EmailIcon className={styles.identification_card_content_card_container_info_email_container_icon} />
+                      <div
+                        className={
+                          styles.identification_card_content_card_container_info_email_container
+                        }
+                      >
+                        <EmailIcon
+                          className={
+                            styles.identification_card_content_card_container_info_email_container_icon
+                          }
+                        />
                         <Typography variant="body1">{editorEmail}</Typography>
                       </div>
                     </a>

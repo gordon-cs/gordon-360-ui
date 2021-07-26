@@ -53,11 +53,12 @@ const toggleStyles = makeStyles({
       backgroundColor: `${gordonColors.primary.blueShades[400]} !important`,
     },
   },
-  // @ TODO CSSMODULES FIX
-  // selected: {
-  //   backgroundColor: `${gordonColors.primary.blueShades[700]} !important`,
-  //   color: 'white !important',
-  // },
+  // stylelint does not know this selector type, perhaps because of this being part of Mui lab
+  // stylelint-disable-next-line
+  selected: {
+    backgroundColor: `${gordonColors.primary.blueShades[700]} !important`,
+    color: 'white !important',
+  },
 });
 
 // Holds the instructions for every device with its corresponding pictures
