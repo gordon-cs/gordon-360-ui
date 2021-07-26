@@ -46,9 +46,16 @@ $drawer-width: 240px;
     display: none;
   }
 
-  .people_search_container {
-    width: 9rem;
+  .people_search_container_container {
+    width: 15rem;
     text-align: right;
+  }
+
+  .people_search_container {
+    text-align: right;
+    width: 9rem;
+    transition: width 0.3s;
+    display: inline-block;
   }
 
   @media (min-width: $break-xs) {
@@ -63,7 +70,10 @@ $drawer-width: 240px;
       height: $header-height-sm;
     }
     .people_search_container {
-      width: auto;
+      width: 13rem;
+      &:focus-within {
+        width: 15rem;
+      }
     }
   }
 

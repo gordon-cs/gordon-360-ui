@@ -1,6 +1,8 @@
 @import '../../../../vars';
 
 .gordon_people_search {
+  width: inherit;
+
   .people_search_root {
     align-self: flex-end;
     color: inherit;
@@ -22,8 +24,8 @@
   .people_search_dropdown {
     position: absolute;
     max-height: 60vh;
-    width: 14rem;
-    max-width: inherit;
+    width: inherit;
+    max-width: 15rem;
     overflow-y: auto; // make this to scroll
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
@@ -38,17 +40,16 @@
     background-color: transparentize($color: $primary-cyan, $amount: 0.9);
   }
 
-  .people_search_suggestion {
-    display: block;
-    align-self: left;
-    padding-bottom: 25px;
-  }
-
   .people_search_suggestion_selected {
     background-color: $neutral-light-gray;
+  }
+
+  .people_search_suggestion,
+  .people_search_suggestion_selected {
     display: block;
     align-self: left;
     padding-bottom: 25px;
+    white-space: normal; // wrap long names
   }
 
   .people_search_suggestion_selected:hover {
@@ -100,9 +101,6 @@
   }
 
   @media (min-width: $break-sm) {
-    .text_field {
-      width: 14rem;
-    }
     .people_search_root {
       align-self: flex-end;
     }
