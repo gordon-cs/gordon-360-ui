@@ -268,7 +268,7 @@ const InvolvementProfile = ({ authentication }) => {
                 <img
                   alt={ActivityDescription}
                   src={image || ActivityImagePath}
-                  className={styles.rounded_corners}
+                  className="rounded_corners"
                 />
               </Grid>
               <Grid container spacing={2} justifyContent="center">
@@ -313,7 +313,7 @@ const InvolvementProfile = ({ authentication }) => {
                           <div className={styles.photoUploader} {...getRootProps()}>
                             <input {...getInputProps()} />
                             <img
-                              className={styles.rounded_corners}
+                              className="rounded_corners"
                               src={ActivityImagePath}
                               alt=""
                               style={{ maxWidth: '320px', maxHeight: '320px' }}
@@ -413,7 +413,7 @@ const InvolvementProfile = ({ authentication }) => {
                 <img
                   alt={ActivityDescription}
                   src={ActivityImagePath}
-                  className={styles.rounded_corners}
+                  className="rounded_corners"
                 />
               </Grid>
               {editInvolvement}

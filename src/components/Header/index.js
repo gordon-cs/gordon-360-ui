@@ -140,7 +140,15 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
       );
     } else {
       const route = `/${name.toLowerCase()}`;
-      return <Tab className={styles.tab} icon={icon} label={name} component={ForwardNavLink} to={route} />;
+      return (
+        <Tab
+          className={styles.tab}
+          icon={icon}
+          label={name}
+          component={ForwardNavLink}
+          to={route}
+        />
+      );
     }
   };
 
@@ -179,7 +187,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
 
-          <Typography className={`${styles.title} ${styles.disable_select}`} variant="h6" color="inherit">
+          <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
             <Switch>
               {routes.map((route) => (
                 <Route

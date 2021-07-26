@@ -80,7 +80,7 @@ const ApartApp = ({ authentication }) => {
       );
     } else if (isUserStudent) {
       return (
-        <div className={styles.student_apartment_application}>
+        <div className={'student_apartment_application'}>
           <StudentApplication userProfile={userProfile} authentication={authentication} />
         </div>
       );

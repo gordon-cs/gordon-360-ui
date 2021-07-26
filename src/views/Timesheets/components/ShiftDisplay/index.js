@@ -204,7 +204,7 @@ export default class ShiftDisplay extends Component {
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <CardHeader className={styles.disable_select} title="Display shifts for:" />
+              <CardHeader className="disable_select" title="Display shifts for:" />
               {theTabs}
             </CardContent>
           </Card>

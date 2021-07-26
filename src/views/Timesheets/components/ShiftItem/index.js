@@ -533,30 +533,30 @@ export default class ShiftItem extends Component {
               <Grid container direction="row" alignItems="center">
                 <Grid item xs={3}>
                   <div className={styles.tooltip_container}>
-                    <Typography className={styles.disable_select} variant="body2">
+                    <Typography className="disable_select" variant="body2">
                       {descColumn}
                     </Typography>
                     {shiftCommentTooltip}
                   </div>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className={styles.disable_select} variant="body2">
+                  <Typography className="disable_select" variant="body2">
                     {timeInDisp}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className={styles.disable_select} variant="body2">
+                  <Typography className="disable_select" variant="body2">
                     {timeOutDisp}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className={styles.disable_select} variant="body2">
+                  <Typography className="disable_select" variant="body2">
                     {this.props.canUse ? console.log('HERE', HOUR_TYPE) : HOURLY_RATE.toFixed(2)}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
                   <div className={styles.tooltip_container}>
-                    <Typography className={styles.disable_select} variant="body2">
+                    <Typography className="disable_select" variant="body2">
                       {hoursWorkedDisp}
                     </Typography>
                     {shiftNotesTooltip}

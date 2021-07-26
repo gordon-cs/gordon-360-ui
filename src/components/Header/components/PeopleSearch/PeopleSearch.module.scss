@@ -150,10 +150,10 @@
   .people_search_root {
     align-self: flex-end;
     color: inherit;
-    background: $primary-blue;
     transition: box-shadow 0.3s, width 0.3s;
     border-radius: 4px;
     border: 1px solid $neutral-white;
+    border-color: inherit;
     padding: 2px 10px;
     &:focus-within {
       box-shadow: 0 3px 10px 0 $neutral-black-opacity20;
