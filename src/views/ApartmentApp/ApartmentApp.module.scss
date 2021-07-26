@@ -48,7 +48,7 @@
   & .people_search_parent {
     @extend .list_item;
 
-    // overrides some styles of .gordon-people-search,
+    // overrides some styles of .gordon_people_search,
     // others are inherited from src/components/Header/components/PeopleSearch/people-search.scss
     .gordon_people_search {
       .people_search_root {

@@ -24,9 +24,9 @@
     background-color: $primary-cyan;
     cursor: pointer;
 
-    .news-column,
+    .news_column,
     .descriptionText,
-    .news-content,
+    .news_content,
     .news_heading {
       color: $neutral-white;
     }
@@ -39,9 +39,9 @@
       opacity: 1;
     }
 
-    .news-column,
+    .news_column,
     .descriptionText,
-    .news-content,
+    .news_content,
     .news_heading {
       color: $neutral-dark-gray;
     }
