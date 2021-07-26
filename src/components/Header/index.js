@@ -229,7 +229,9 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             </Tabs>
           </div>
 
-          {authentication ? <GordonPeopleSearch authentication={authentication} /> : loginButton}
+          <div className={styles.people_search_container}>
+            {authentication ? <GordonPeopleSearch authentication={authentication} /> : loginButton}
+          </div>
 
           <GordonNavAvatarRightCorner
             onSignOut={onSignOut}

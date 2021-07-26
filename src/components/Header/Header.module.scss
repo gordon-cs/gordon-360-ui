@@ -46,10 +46,24 @@ $drawer-width: 240px;
     display: none;
   }
 
+  .people_search_container {
+    width: 9rem;
+    text-align: right;
+  }
+
+  @media (min-width: $break-xs) {
+    .people_search_container {
+      width: 40vw;
+    }
+  }
+
   @media (min-width: $break-sm) {
     .app_bar {
       background-image: url('./gc_seal_top_64.png');
       height: $header-height-sm;
+    }
+    .people_search_container {
+      width: auto;
     }
   }
 

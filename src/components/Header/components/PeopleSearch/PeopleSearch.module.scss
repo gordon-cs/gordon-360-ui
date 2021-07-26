@@ -1,13 +1,32 @@
 @import '../../../../vars';
 
 .gordon_people_search {
+  .people_search_root {
+    align-self: flex-end;
+    color: inherit;
+    transition: box-shadow 0.3s, width 0.3s;
+    border-radius: 4px;
+    border: 1px solid $neutral-white;
+    border-color: inherit;
+    padding: 2px 10px;
+    max-width: 15rem;
+    &:focus-within {
+      box-shadow: 0 3px 10px 0 $neutral-black-opacity20;
+      max-width: 15rem;
+    }
+    &:hover:not(:focus-within) {
+      box-shadow: 0 3px 5px 0 $neutral-black-opacity20;
+    }
+  }
+
   .people_search_dropdown {
     position: absolute;
     max-height: 60vh;
+    width: 14rem;
+    max-width: inherit;
     overflow-y: auto; // make this to scroll
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    right: 20px;
     border-radius: 4px;
     z-index: 10;
   }
@@ -80,86 +99,12 @@
     }
   }
 
-  @media (min-width: 0px) {
-    .people_search_root {
-      width: 7rem;
-      &:focus-within {
-        width: 7rem;
-      }
-    }
-  }
-
-  @media (min-width: $break-xs) {
-    .people_search_root {
-      width: 8rem;
-      &:focus-within {
-        width: 8rem;
-      }
-    }
-  }
-
-  @media (min-width: 400px) {
-    .people_search_root {
-      width: 10rem;
-      &:focus-within {
-        width: 10rem;
-      }
-    }
-  }
-
   @media (min-width: $break-sm) {
-    .people_search_suggestion,
-    .people_search_suggestion_selected {
-      width: 12rem;
-    }
-    .people_search_dropdown {
-      right: 28px;
-    }
     .text_field {
       width: 14rem;
     }
     .people_search_root {
       align-self: flex-end;
-      width: 15rem;
-      &:focus-within {
-        width: 17rem;
-      }
-    }
-  }
-
-  @media (min-width: $break-md) {
-    .text_field {
-      width: 14rem;
-    }
-    .people_search_root {
-      align-self: flex-end;
-      width: 13.5rem;
-      &:focus-within {
-        width: 16rem;
-      }
-    }
-    .people_search_suggestion,
-    .people_search_suggestion_selected {
-      width: 11.15rem;
-    }
-    .people_search_dropdown {
-      right: auto;
-    }
-  }
-
-  .people_search_root {
-    align-self: flex-end;
-    color: inherit;
-    transition: box-shadow 0.3s, width 0.3s;
-    border-radius: 4px;
-    border: 1px solid $neutral-white;
-    border-color: inherit;
-    padding: 2px 10px;
-    &:focus-within {
-      box-shadow: 0 3px 10px 0 $neutral-black-opacity20;
-    }
-    &:hover:not(:focus-within) {
-      box-shadow: 0 3px 5px 0 $neutral-black-opacity20;
     }
   }
 }
