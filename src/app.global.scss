@@ -83,6 +83,8 @@ strong {
 }
 
 // PHOTO DIALOG STYLES
+// Should be eventually refactored out into its own component
+
 .gc360_photo_dialog {
   &_box {
     display: grid;
@@ -159,6 +161,23 @@ strong {
       justify-content: space-evenly !important;
       button {
         width: 38%;
+      }
+    }
+  }
+}
+
+@media (max-width: $break-sm) {
+  .gc360_photo_dialog {
+    height: 100%;
+    &_box {
+      &_content {
+        &_dropzone {
+          width: 12em;
+          height: 12rem;
+        }
+        &_cropper {
+          padding-right: 20px;
+        }
       }
     }
   }

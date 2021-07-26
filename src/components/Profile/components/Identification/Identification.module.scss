@@ -183,20 +183,6 @@ $image-side-width-desktop: 90px;
 }
 
 @media (max-width: $break-sm) {
-  .gc360_photo_dialog {
-    height: 100%;
-    &_box {
-      &_content {
-        &_dropzone {
-          width: 12em;
-          height: 12rem;
-        }
-        &_cropper {
-          padding-right: 20px;
-        }
-      }
-    }
-  }
   .identification_card {
     &_header {
       justify-content: center;
