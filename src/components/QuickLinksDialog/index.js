@@ -12,8 +12,21 @@ const GordonQuickLinksDialog = (props) => {
       title="Useful Links"
     >
       <GordonLinksList onClose={props.handleLinkClose} />
+      <button style={closeButtonStyle} onClick={props.handleLinkClose}>
+        Close ✕
+      </button>
     </GordonDialogBox>
   );
+};
+
+const closeButtonStyle = {
+  color: 'white',
+  background: 'red',
+  cursor: 'pointer',
+  border: '2px solid red',
+  borderRadius: '4px',
+  fontWeight: 'bold',
+  padding: '4px',
 };
 
 GordonQuickLinksDialog.propTypes = {
