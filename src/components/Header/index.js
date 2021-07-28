@@ -229,8 +229,15 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
             </Tabs>
           </div>
 
-          <div className={styles.people_search_container}>
-            {authentication ? <GordonPeopleSearch authentication={authentication} /> : loginButton}
+          <div className={styles.people_search_container_container}>
+            {/* Width is dynamic */}
+            <div className={styles.people_search_container}>
+              {authentication ? (
+                <GordonPeopleSearch authentication={authentication} />
+              ) : (
+                loginButton
+              )}
+            </div>
           </div>
 
           <GordonNavAvatarRightCorner
