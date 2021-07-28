@@ -1,6 +1,6 @@
-import { Avatar, Button, Typography } from '@material-ui/core';
+import { Avatar, Button, Typography, Link as MuiLink } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styles from './NavAvatar.module.css';
 import user from 'services/user';
 
@@ -77,12 +77,14 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
   );
 
   const buttonLink = React.forwardRef((props, ref) => (
-    <Link
+    <MuiLink
+      component={NavLink}
       {...props}
       innerRef={ref}
       to={authentication ? `/myprofile` : '/'}
       onClick={onLinkClick}
       className="gc360_link"
+      color="inherit"
     />
   ));
 

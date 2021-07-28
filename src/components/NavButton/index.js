@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText, Link as MuiLink } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 
 /**
@@ -35,7 +35,14 @@ const GordonNavButton = ({
         <ListItemText primary={linkName} />
       </ListItem>
     ) : (
-      <NavLink exact to={linkPath} onClick={onLinkClick} className="gc360_link">
+      <MuiLink
+        color="inherit"
+        component={NavLink}
+        exact
+        to={linkPath}
+        onClick={onLinkClick}
+        className="gc360_link"
+      >
         <ListItem divider={divider} button>
           {LinkIcon && (
             <ListItemIcon>
@@ -44,7 +51,7 @@ const GordonNavButton = ({
           )}
           <ListItemText primary={linkName} />
         </ListItem>
-      </NavLink>
+      </MuiLink>
     );
 
   if (unavailable) {

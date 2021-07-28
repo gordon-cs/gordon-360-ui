@@ -13,6 +13,7 @@ import styles from './Identification.module.css';
 
 import {
   Grid,
+  Card,
   CardHeader,
   Button,
   Tooltip,
@@ -572,7 +573,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
     : '';
 
   return (
-    <div className={styles.identification_card}>
+    <Card className={styles.identification_card}>
       <Grid container className={styles.identification_card_header}>
         {userProfile &&
           (isStudent ? (
@@ -734,9 +735,6 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                         userProfile.fullName + ' (' + userProfile.NickName + ')'
                       : // If the user doesn't have a title or a nickname
                         userProfile.fullName}
-                    {/* {hasNickName
-                        ? userProfile.fullName + ' (' + userProfile.NickName + ')'
-                        : userProfile.fullName} */}
                   </Typography>
                 </Grid>
                 {userProfile.JobTitle && userProfile.JobTitle !== '' && (
@@ -782,7 +780,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
         {userProfile && network === 'online' && myProf && (
           <Link
             to={`/profile/${userProfile.AD_Username}`}
-            className={styles.identification_card_content_public_profile_link}
+            className={`gc360_link ${styles.identification_card_content_public_profile_link}`}
           >
             <Button
               className={styles.identification_card_content_public_profile_link_button}
@@ -793,7 +791,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
           </Link>
         )}
       </div>
-    </div>
+    </Card>
   );
 };
 

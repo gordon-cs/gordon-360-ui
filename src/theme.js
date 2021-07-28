@@ -40,6 +40,18 @@ export const gordonColors = {
       A700: '#09bcff',
       contrastDefaultColor: 'light',
     },
+    lightNavyShades: {
+      500: '#8fcdfe',
+      600: '#43aafe',
+      700: '#0b91fd',
+      800: '#016bc0',
+      900: '#015aa1',
+      A100: '#84c8ff',
+      A200: '#1e9bff',
+      A400: '#0065b7',
+      A700: '#00579d',
+      contrastDefaultColor: 'light',
+    },
   },
   secondary: {
     green: '#B2BB1C',
@@ -90,6 +102,23 @@ export const gordonColors = {
       A700: '#dbdbd6',
       contrastDefaultColor: 'dark',
     },
+    darkGrayShades: {
+      50: '#dbdbda',
+      100: '#cccccb',
+      200: '#bdbdbc',
+      300: '#aeaeac',
+      400: '#9f9f9d',
+      500: '#8f8f8d',
+      600: '#777777',
+      700: '#666666',
+      800: '#555555',
+      900: '#444444',
+      A100: '#ffffff',
+      A200: '#ffffff',
+      A400: '#e9e9e1',
+      A700: '#dbdbd6',
+      contrastDefaultColor: 'dark',
+    },
     darkGray: '#31342B',
   },
 };
@@ -123,6 +152,40 @@ const theme = createTheme({
         backgroundColor: gordonColors.neutral.darkGray,
       },
     },
+  },
+});
+
+export const darkTheme = createTheme({
+  palette: {
+    type: 'dark',
+    primary: gordonColors.primary.lightNavyShades,
+    // primary: gordonColors.neutral.grayShades,
+    // secondary: gordonColors.primary.cyanShades,
+    // error: gordonColors.secondary.redShades,
+    // success: gordonColors.secondary.greenShades,
+    // warning: gordonColors.secondary.yellowShades,
+    // info: gordonColors.primary.cyanShades,
+    // grey: gordonColors.neutral.grayShades,
+  },
+  typography: {
+    fontFamily: ['Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', 'sans-serif'].join(','),
+  },
+  overrides: {
+    MuiTooltip: {
+      tooltip: {
+        backgroundColor: gordonColors.neutral.darkGray,
+      },
+    },
+    // MuiCard: {
+    //   root: {
+    //     backgroundColor: gordonColors.neutral.darkGrayShades[800],
+    //   },
+    // },
+    // MuiCardHeader: {
+    //   title: {
+    //     color: gordonColors.neutral.grayShades[50],
+    //   }
+    // }
   },
 });
 

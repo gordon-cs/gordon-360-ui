@@ -20,7 +20,6 @@ $image-side-width-desktop: 90px;
   display: flex;
   align-items: center;
   flex-direction: column;
-  background-color: $neutral-white;
   border-radius: 4px;
   height: 100%;
   box-shadow: 0px 2px 1px -1px $neutral-black-opacity20, 0px 1px 1px 0px $neutral-black-opacity15,
@@ -120,7 +119,6 @@ $image-side-width-desktop: 90px;
           max-width: 600px;
           transition: width 500ms;
           margin: auto 1rem;
-          color: $neutral-black-opacity90;
           overflow-wrap: anywhere;
           overflow: hidden;
           hyphens: auto;
@@ -142,17 +140,12 @@ $image-side-width-desktop: 90px;
               }
             }
           }
-          &_class {
-            color: $neutral-black-opacity55;
-          }
+          &_class,
           &_job_title {
             opacity: 0.7;
           }
           &_email {
             display: inline-block;
-            a:hover {
-              text-decoration: none;
-            }
             &_container {
               color: $primary-blue;
               display: flex;

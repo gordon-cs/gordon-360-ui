@@ -10,7 +10,7 @@ import NetworkContextProvider from './contexts/NetworkContext';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import OfflineBanner from './components/OfflineBanner';
-import theme from './theme';
+import theme, { darkTheme } from './theme';
 import routes from './routes';
 
 // Global styling that applies to entire site
@@ -59,7 +59,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={darkTheme}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <NetworkContextProvider>
             <Router history={this.history}>

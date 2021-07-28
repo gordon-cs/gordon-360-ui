@@ -31,7 +31,7 @@
 
 .not_private {
   opacity: 1;
-  color: $dark-text-color;
+  color: inherit;
 }
 
 @media (max-width: $break-sm) {

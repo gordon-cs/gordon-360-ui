@@ -15,12 +15,12 @@ import { ReactComponent as OnLS } from './images/On-LS.svg';
 
 import {
   Grid,
+  Card,
   CardHeader,
+  CardContent,
   Tooltip,
   Button,
   Typography,
-  Card,
-  CardContent,
 } from '@material-ui/core';
 
 export default class VictoryPromiseDisplay extends React.Component {
@@ -314,7 +314,7 @@ export default class VictoryPromiseDisplay extends React.Component {
     }
 
     return (
-      <div className={styles.victory_promise}>
+      <Card className={styles.victory_promise}>
         <Grid container item xs className={styles.victory_promise_header}>
           <CardHeader title="Victory Promise" />
         </Grid>
@@ -360,7 +360,7 @@ export default class VictoryPromiseDisplay extends React.Component {
             </CardContent>
           </Card>
         </Grid>
-      </div>
+      </Card>
     );
   }
 }

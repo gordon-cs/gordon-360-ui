@@ -31,32 +31,38 @@ body {
   padding: 0;
 }
 
+// a {
+//   // Disable link underline
+//   text-decoration: none;
+//   &:hover {
+//     // Disable link underline
+//     text-decoration: none;
+//   }
+//   &:visited {
+//     // Keep link color the same after visiting it
+//     color: initial;
+//   }
+// }
+
 a {
-  // Disable link underline
   text-decoration: none;
-
-  &:hover {
-    // Disable link underline
-    text-decoration: none;
-  }
-
-  &:visited {
-    // Keep link color the same after visiting it
-    color: initial;
-  }
 }
+
 // style for links that are menu items or buttons (not just text)
 .gc360_link {
-  color: $neutral-black;
+  // color: inherit;
+  color: $neutral-black !important;
+  text-decoration: none;
   &:hover {
-    color: $neutral-black !important;
-    text-decoration: none !important;
+    // color: $neutral-black !important;
+    text-decoration: none !important; // TODO: fix Mui injection order if possible https://material-ui.com/guides/interoperability/#css-injection-order
   }
 }
 // style for links that are simply text and therefore need more of a sign that they are clickable
 .gc360_text_link {
   color: $primary-blue;
   transition: color 200ms;
+  text-decoration: none;
   &:hover {
     color: $primary-cyan !important;
   }

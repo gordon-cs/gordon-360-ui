@@ -1,8 +1,8 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import IMG from 'react-graceful-image';
-import { Typography, Grid, Divider } from '@material-ui/core';
+import { Typography, Grid, Divider, Link as MuiLink } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import userService from 'services/user';
 import VisibilitySensor from 'react-visibility-sensor';
 
@@ -113,7 +113,11 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
       <>
         <Divider />
         {size === 'single' /*** Single Size - One Column (Mobile View) ***/ ? (
-          <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
+          <MuiLink
+            component={RouterLink}
+            className="gc360_link"
+            to={`profile/${Person.AD_Username}`}
+          >
             <Grid
               container
               alignItems="center"
@@ -153,9 +157,13 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
                 <SecondaryText variant="body2">{personMailLocation}</SecondaryText>
               </Grid>
             </Grid>
-          </Link>
+          </MuiLink>
         ) : size === 'largeImages' /*** Enlarged Images ***/ ? (
-          <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
+          <MuiLink
+            component={RouterLink}
+            className="gc360_link"
+            to={`profile/${Person.AD_Username}`}
+          >
             <Grid
               container
               alignItems="center"
@@ -195,9 +203,13 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
                 <SecondaryText variant="body2">{personMailLocation}</SecondaryText>
               </Grid>
             </Grid>
-          </Link> /*** Full Size - Multiple Columns (Desktop View) ***/
+          </MuiLink> /*** Full Size - Multiple Columns (Desktop View) ***/
         ) : (
-          <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
+          <MuiLink
+            component={RouterLink}
+            className="gc360_link"
+            to={`profile/${Person.AD_Username}`}
+          >
             <Grid
               container
               direction="row"
@@ -243,7 +255,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
                 <Typography>{personMailLocation}</Typography>
               </Grid>
             </Grid>
-          </Link>
+          </MuiLink>
         )}
         <Divider />
       </>
