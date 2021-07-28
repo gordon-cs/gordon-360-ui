@@ -4,9 +4,12 @@ import List from '@material-ui/core/List';
 import { signOut } from 'services/auth';
 import user from 'services/user';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
+import GordonDialogBox from 'components/GordonDialogBox';
 import GordonNavButton from 'components/NavButton';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import styles from './NavButtonsRightCorner.module.css';
+import { Switch } from '@material-ui/core';
+import { themes, setPreferredTheme, preferredTheme } from 'services/preferences';
 
 /**
  *
@@ -26,6 +29,7 @@ const GordonNavButtonsRightCorner = ({
   anchorEl,
 }) => {
   const [linkOpen, setLinkOpen] = useState(false);
+  const [expFeaturesOpen, setExpFeaturesOpen] = useState(false);
   const isOnline = useNetworkStatus();
 
   function closeAndSignOut() {
@@ -93,6 +97,19 @@ const GordonNavButtonsRightCorner = ({
       />
     ) : null;
 
+  const coolKidsClub = ['cameron.abbot', 'evan.platzer'];
+  const expFeaturesButton = authentication &&
+    coolKidsClub.includes(user.getLocalInfo().user_name) && (
+      <GordonNavButton
+        unavailable={isOnline ? null : 'offline'}
+        divider={true}
+        onLinkClick={() => {
+          setExpFeaturesOpen(true);
+        }}
+        linkName={'Experiments'}
+      />
+    );
+
   const signInOutButton = (
     <GordonNavButton
       onLinkClick={authentication ? closeAndSignOut : onClose}
@@ -127,6 +144,7 @@ const GordonNavButtonsRightCorner = ({
             {aboutButton}
             {feedbackButton}
             {adminButton}
+            {expFeaturesButton}
             {signInOutButton}
           </List>
         </Popover>
@@ -137,6 +155,26 @@ const GordonNavButtonsRightCorner = ({
         handleLinkClose={() => setLinkOpen(false)}
         linkopen={linkOpen}
       />
+
+      <GordonDialogBox
+        onClose={() => {
+          setExpFeaturesOpen(false);
+        }}
+        open={expFeaturesOpen}
+        title="Experimental Features"
+      >
+        Enable Dark Theme:
+        <Switch
+          // checked={preferredTheme === themes.dark}
+          checked={localStorage.getItem('preferredTheme') === 'dark'}
+          onChange={() => {
+            setPreferredTheme(
+              localStorage.getItem('preferredTheme') === 'light' ? 'dark' : 'light',
+            );
+            // setPreferredTheme(preferredTheme === themes.dark ? themes.light : themes.dark);
+          }}
+        />
+      </GordonDialogBox>
     </>
   );
 };

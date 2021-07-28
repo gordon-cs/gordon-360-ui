@@ -16,7 +16,7 @@ import styles from './NavLinks.module.css';
 
 const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
   const [areLinksOpen, setAreLinksOpen] = useState(false);
-  const [dialog, setDialog] = useState(null);
+  const [dialog, setDialog] = useState();
   const isOnline = useNetworkStatus();
 
   const handleSignOut = () => {
@@ -161,6 +161,16 @@ const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
     />
   );
 
+  const expFeaturesButton = (
+    <GordonNavButton
+      unavailable={isOnline ? null : 'offline'}
+      // openUnavailableDialog={}
+      divider={false}
+      onLinkClick={() => {}}
+      linkName={'Experminents'}
+    />
+  );
+
   const adminButton =
     authentication && user.getLocalInfo().college_role === 'god' ? (
       <GordonNavButton
@@ -200,6 +210,7 @@ const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
         {aboutButton}
         {feedbackButton}
         {adminButton}
+        {expFeaturesButton}
         {signInOutButton}
       </List>
 

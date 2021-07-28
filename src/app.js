@@ -10,8 +10,9 @@ import NetworkContextProvider from './contexts/NetworkContext';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import OfflineBanner from './components/OfflineBanner';
-import theme, { darkTheme } from './theme';
+import theme from './theme'; // fallback to preferred theme
 import routes from './routes';
+import { themes } from './services/preferences';
 
 // Global styling that applies to entire site
 import './app.global.css';
@@ -38,8 +39,35 @@ export default class App extends Component {
       errorInfo: null,
       drawerOpen: false,
       authentication: isAuthenticated(),
+      preferredTheme: 'light',
     };
   }
+
+  // componentDidMount() {
+  //   // console.log('app: ', preferredTheme.palette.type);
+  //   let theme = localStorage.getItem("preferredTheme");
+  //   console.log("found this theme in local storage:", theme);
+  //   if(!theme) {
+  //     localStorage.setItem("preferredTheme", 'light');
+  //   }
+  //   this.setState({preferredTheme: theme});
+  //   console.log(this.state.preferredTheme);
+  // }
+
+  // componentDidUpdate() {
+  //   console.log("componentDidUpdate");
+  //   // console.log('app: ', preferredTheme.palette.type);
+  //   let theme = localStorage.getItem("preferredTheme");
+  //   if(!theme) {
+  //     localStorage.setItem("preferredTheme", 'light');
+  //   }
+  //   if(this.state.preferredTheme !== theme) {
+  //     console.log("setting state from local storage", theme);
+  //     this.setState({preferredTheme: theme});
+  //   }
+  //   console.log(this.state.preferredTheme);
+  // }
+
   onDrawerToggle() {
     this.setState({ drawerOpen: !this.state.drawerOpen });
   }
@@ -59,7 +87,8 @@ export default class App extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={darkTheme}>
+      // <ThemeProvider theme={preferredTheme ?? theme}>
+      <ThemeProvider theme={this.state.preferredTheme === 'dark' ? themes.dark : themes.light}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <NetworkContextProvider>
             <Router history={this.history}>
