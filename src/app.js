@@ -1,6 +1,7 @@
 import { createBrowserHistory } from 'history';
 import { ThemeProvider } from '@material-ui/core/styles';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+// import React, { useState, useContext, useEffect } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
 import { Router, Route, Switch } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -11,10 +12,8 @@ import NetworkContextProvider from './contexts/NetworkContext';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import OfflineBanner from './components/OfflineBanner';
-import theme from './theme'; // fallback to preferred theme
 import routes from './routes';
-import { themes } from './services/preferences';
-// import { themes, themeContext } from './services/preferences';
+import { themes, themeNames, getPreferredTheme, setPreferredTheme } from './services/preferences';
 
 // Global styling that applies to entire site
 import './app.global.css';
@@ -24,20 +23,12 @@ import styles from './app.module.css';
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [authentication, setAuthentication] = useState(isAuthenticated());
-  const [preferredTheme, setPreferredTheme] = useState('light');
   // const ThemeContext = useContext(themeContext);
   // const [theme, setTheme] = ThemeContext;
 
   useEffect(() => {
-    let theme = localStorage.getItem('preferredTheme');
-    if (!theme) {
-      localStorage.setItem('preferredTheme', 'light');
-    }
-    if (this.state.preferredTheme !== theme) {
-      this.setState({ preferredTheme: theme });
-    }
-
-    console.log(this.state.preferredTheme);
+    // console.log(preferredTheme);
+    setPreferredTheme(localStorage.getItem('preferredTheme') ?? themeNames.light);
   }, []);
 
   let history = createBrowserHistory();
@@ -55,7 +46,7 @@ const App = () => {
 
   return (
     <ErrorBoundary analytics>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={themes[getPreferredTheme()]}>
         {/* <ThemeProvider theme={preferredTheme ?? theme}> */}
         {/* <ThemeProvider theme={this.state.preferredTheme === 'dark' ? themes.dark : themes.light}> */}
         <MuiPickersUtilsProvider utils={MomentUtils}>

@@ -9,7 +9,7 @@ import GordonNavButton from 'components/NavButton';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import styles from './NavButtonsRightCorner.module.css';
 import { Switch } from '@material-ui/core';
-import { themes, setPreferredTheme, preferredTheme } from 'services/preferences';
+import { setPreferredTheme, themeNames } from 'services/preferences';
 
 /**
  *
@@ -136,7 +136,7 @@ const GordonNavButtonsRightCorner = ({
           className={styles.right_side_nav_buttons}
         >
           <List id="right-side-menu-list" disablePadding={true}>
-            <div class={styles.right_menu_triangle} />
+            <div className={styles.right_menu_triangle} />
             {myProfileButton}
             {linksButton}
             {timesheetsButton}
@@ -165,13 +165,14 @@ const GordonNavButtonsRightCorner = ({
       >
         Enable Dark Theme:
         <Switch
-          // checked={preferredTheme === themes.dark}
-          checked={localStorage.getItem('preferredTheme') === 'dark'}
+          checked={localStorage.getItem('preferredTheme') === themeNames.dark}
           onChange={() => {
-            // setPreferredTheme(
-            //   localStorage.getItem('preferredTheme') === 'light' ? 'dark' : 'light',
-            // );
-            // setPreferredTheme(preferredTheme === themes.dark ? themes.light : themes.dark);
+            setPreferredTheme(
+              localStorage.getItem('preferredTheme') === themeNames.light
+                ? themeNames.dark
+                : themeNames.light,
+            );
+            window.location.reload();
           }}
         />
       </GordonDialogBox>

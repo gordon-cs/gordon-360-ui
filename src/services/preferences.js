@@ -55,10 +55,19 @@ export const themes = {
   dark: darkTheme,
 };
 
-export let preferredTheme = themes.dark;
+export const themeNames = {
+  light: 'light',
+  dark: 'dark',
+};
+
+export let preferredTheme = themeNames.light;
+
+export const getPreferredTheme = () => {
+  return localStorage.getItem('preferredTheme');
+};
 
 export const setPreferredTheme = (themeSelection) => {
   localStorage.setItem('preferredTheme', themeSelection);
-  console.log('Theme changed to ', themeSelection);
-  // preferredTheme = themeSelection;
+  preferredTheme = themeSelection;
+  //   console.log('Preferred theme:', themeSelection);
 };
