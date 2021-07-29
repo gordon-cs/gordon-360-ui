@@ -13,7 +13,8 @@ import GordonNav from './components/Nav';
 import OfflineBanner from './components/OfflineBanner';
 import theme from './theme'; // fallback to preferred theme
 import routes from './routes';
-import { themes, themeContext } from './services/preferences';
+import { themes } from './services/preferences';
+// import { themes, themeContext } from './services/preferences';
 
 // Global styling that applies to entire site
 import './app.global.css';
@@ -23,12 +24,21 @@ import styles from './app.module.css';
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [authentication, setAuthentication] = useState(isAuthenticated());
-  const ThemeContext = useContext(themeContext);
-  const [theme, setTheme] = ThemeContext;
+  const [preferredTheme, setPreferredTheme] = useState('light');
+  // const ThemeContext = useContext(themeContext);
+  // const [theme, setTheme] = ThemeContext;
 
-  // useEffect(() => {
-  //   console.log();
-  // }, [])
+  useEffect(() => {
+    let theme = localStorage.getItem('preferredTheme');
+    if (!theme) {
+      localStorage.setItem('preferredTheme', 'light');
+    }
+    if (this.state.preferredTheme !== theme) {
+      this.setState({ preferredTheme: theme });
+    }
+
+    console.log(this.state.preferredTheme);
+  }, []);
 
   let history = createBrowserHistory();
   history.listen(() => analytics.onPageView());
@@ -45,11 +55,12 @@ const App = () => {
 
   return (
     <ErrorBoundary analytics>
-      {/* <ThemeProvider theme={preferredTheme ?? theme}> */}
-      <ThemeProvider theme={this.state.preferredTheme === 'dark' ? themes.dark : themes.light}>
+      <ThemeProvider theme={theme}>
+        {/* <ThemeProvider theme={preferredTheme ?? theme}> */}
+        {/* <ThemeProvider theme={this.state.preferredTheme === 'dark' ? themes.dark : themes.light}> */}
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <NetworkContextProvider>
-            <Router history={this.history}>
+            <Router history={history}>
               <section className={styles.app_wrapper}>
                 <GordonHeader
                   onDrawerToggle={() => setDrawerOpen(!drawerOpen)}

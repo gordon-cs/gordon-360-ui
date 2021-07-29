@@ -168,9 +168,9 @@ const GordonNavButtonsRightCorner = ({
           // checked={preferredTheme === themes.dark}
           checked={localStorage.getItem('preferredTheme') === 'dark'}
           onChange={() => {
-            setPreferredTheme(
-              localStorage.getItem('preferredTheme') === 'light' ? 'dark' : 'light',
-            );
+            // setPreferredTheme(
+            //   localStorage.getItem('preferredTheme') === 'light' ? 'dark' : 'light',
+            // );
             // setPreferredTheme(preferredTheme === themes.dark ? themes.light : themes.dark);
           }}
         />
