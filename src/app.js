@@ -1,6 +1,7 @@
 import { createBrowserHistory } from 'history';
 import { ThemeProvider } from '@material-ui/core/styles';
-import React, { Component } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
 import { Router, Route, Switch } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
@@ -12,97 +13,54 @@ import GordonNav from './components/Nav';
 import OfflineBanner from './components/OfflineBanner';
 import theme from './theme'; // fallback to preferred theme
 import routes from './routes';
-import { themes } from './services/preferences';
+import { themes, themeContext } from './services/preferences';
 
 // Global styling that applies to entire site
 import './app.global.css';
 // local module for app.js
 import styles from './app.module.css';
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
+const App = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [authentication, setAuthentication] = useState(isAuthenticated());
+  const ThemeContext = useContext(themeContext);
+  const [theme, setTheme] = ThemeContext;
 
-    // Only use analytics in production
-    if (process.env.NODE_ENV === 'production') {
-      analytics.initialize();
-    }
+  // useEffect(() => {
+  //   console.log();
+  // }, [])
 
-    this.history = createBrowserHistory();
-    this.history.listen(() => analytics.onPageView());
+  let history = createBrowserHistory();
+  history.listen(() => analytics.onPageView());
 
-    this.onDrawerToggle = this.onDrawerToggle.bind(this);
-    this.onAuthChange = this.onAuthChange.bind(this);
-
-    this.state = {
-      error: null,
-      errorInfo: null,
-      drawerOpen: false,
-      authentication: isAuthenticated(),
-      preferredTheme: 'light',
-    };
+  // Only use analytics in production
+  if (process.env.NODE_ENV === 'production') {
+    analytics.initialize();
   }
 
-  // componentDidMount() {
-  //   // console.log('app: ', preferredTheme.palette.type);
-  //   let theme = localStorage.getItem("preferredTheme");
-  //   console.log("found this theme in local storage:", theme);
-  //   if(!theme) {
-  //     localStorage.setItem("preferredTheme", 'light');
-  //   }
-  //   this.setState({preferredTheme: theme});
-  //   console.log(this.state.preferredTheme);
-  // }
+  const onAuthChange = () => {
+    let isAuth = isAuthenticated();
+    setAuthentication(isAuth);
+  };
 
-  // componentDidUpdate() {
-  //   console.log("componentDidUpdate");
-  //   // console.log('app: ', preferredTheme.palette.type);
-  //   let theme = localStorage.getItem("preferredTheme");
-  //   if(!theme) {
-  //     localStorage.setItem("preferredTheme", 'light');
-  //   }
-  //   if(this.state.preferredTheme !== theme) {
-  //     console.log("setting state from local storage", theme);
-  //     this.setState({preferredTheme: theme});
-  //   }
-  //   console.log(this.state.preferredTheme);
-  // }
-
-  onDrawerToggle() {
-    this.setState({ drawerOpen: !this.state.drawerOpen });
-  }
-
-  componentDidCatch(error, errorInfo) {
-    if (process.env.NODE_ENV === 'production') {
-      analytics.onError(`${error.toString()} ${errorInfo.componentStack}`);
-    }
-
-    this.setState({ error, errorInfo });
-  }
-
-  onAuthChange() {
-    let authentication = isAuthenticated();
-    this.setState({ authentication });
-  }
-
-  render() {
-    return (
-      // <ThemeProvider theme={preferredTheme ?? theme}>
+  return (
+    <ErrorBoundary analytics>
+      {/* <ThemeProvider theme={preferredTheme ?? theme}> */}
       <ThemeProvider theme={this.state.preferredTheme === 'dark' ? themes.dark : themes.light}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <NetworkContextProvider>
             <Router history={this.history}>
               <section className={styles.app_wrapper}>
                 <GordonHeader
-                  onDrawerToggle={this.onDrawerToggle}
-                  onSignOut={this.onAuthChange}
-                  authentication={this.state.authentication}
+                  onDrawerToggle={() => setDrawerOpen(!drawerOpen)}
+                  onSignOut={onAuthChange}
+                  authentication={authentication}
                 />
                 <GordonNav
-                  onDrawerToggle={this.onDrawerToggle}
-                  drawerOpen={this.state.drawerOpen}
-                  onSignOut={this.onAuthChange}
-                  authentication={this.state.authentication}
+                  onDrawerToggle={() => setDrawerOpen(!drawerOpen)}
+                  drawerOpen={drawerOpen}
+                  onSignOut={onAuthChange}
+                  authentication={authentication}
                 />
                 <main className={styles.app_main}>
                   <Switch>
@@ -115,11 +73,11 @@ export default class App extends Component {
                           <div className={styles.app_main_container}>
                             <OfflineBanner
                               currentPath={route.path}
-                              authentication={this.state.authentication}
+                              authentication={authentication}
                             />
                             <route.component
-                              onLogIn={this.onAuthChange}
-                              authentication={this.state.authentication}
+                              onLogIn={onAuthChange}
+                              authentication={authentication}
                               {...props}
                             />
                           </div>
@@ -133,6 +91,8 @@ export default class App extends Component {
           </NetworkContextProvider>
         </MuiPickersUtilsProvider>
       </ThemeProvider>
-    );
-  }
-}
+    </ErrorBoundary>
+  );
+};
+
+export default App;

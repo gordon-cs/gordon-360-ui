@@ -6,7 +6,10 @@
  * @module todo
  */
 
+import React, { createContext } from 'react';
 import theme, { darkTheme } from './../theme';
+
+export const themeContext = createContext();
 
 export const themes = {
   light: theme,
