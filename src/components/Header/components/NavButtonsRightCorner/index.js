@@ -97,7 +97,7 @@ const GordonNavButtonsRightCorner = ({
       />
     ) : null;
 
-  const coolKidsClub = ['cameron.abbot', 'evan.platzer'];
+  const coolKidsClub = ['cameron.abbot', 'evan.platzer', '360.stafftest'];
   const expFeaturesButton = authentication &&
     coolKidsClub.includes(user.getLocalInfo().user_name) && (
       <GordonNavButton

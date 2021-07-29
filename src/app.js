@@ -40,8 +40,7 @@ const App = () => {
   }
 
   const onAuthChange = () => {
-    let isAuth = isAuthenticated();
-    setAuthentication(isAuth);
+    setAuthentication(isAuthenticated());
   };
 
   return (

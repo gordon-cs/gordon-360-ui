@@ -159,7 +159,6 @@ export const darkTheme = createTheme({
   palette: {
     type: 'dark',
     primary: gordonColors.primary.lightNavyShades,
-    // primary: gordonColors.neutral.grayShades,
     // secondary: gordonColors.primary.cyanShades,
     // error: gordonColors.secondary.redShades,
     // success: gordonColors.secondary.greenShades,
@@ -176,16 +175,6 @@ export const darkTheme = createTheme({
         backgroundColor: gordonColors.neutral.darkGray,
       },
     },
-    // MuiCard: {
-    //   root: {
-    //     backgroundColor: gordonColors.neutral.darkGrayShades[800],
-    //   },
-    // },
-    // MuiCardHeader: {
-    //   title: {
-    //     color: gordonColors.neutral.grayShades[50],
-    //   }
-    // }
   },
 });
 

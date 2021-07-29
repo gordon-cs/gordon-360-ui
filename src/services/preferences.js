@@ -9,6 +9,10 @@
 // import React, { createContext, useReducer } from 'react';
 import theme, { darkTheme } from './../theme';
 
+// Note: The below commented out code is an attempt to use React useContext()
+// This still needs to be pursued and figured out
+// Example: https://snappywebdesign.net/blog/how-to-code-a-dark-theme-with-material-ui/
+
 // let SET_THEME;
 
 // export const themeContext = createContext();

@@ -31,30 +31,15 @@ body {
   padding: 0;
 }
 
-// a {
-//   // Disable link underline
-//   text-decoration: none;
-//   &:hover {
-//     // Disable link underline
-//     text-decoration: none;
-//   }
-//   &:visited {
-//     // Keep link color the same after visiting it
-//     color: initial;
-//   }
-// }
-
 a {
   text-decoration: none;
 }
 
 // style for links that are menu items or buttons (not just text)
 .gc360_link {
-  // color: inherit;
   color: $neutral-black !important;
   text-decoration: none;
   &:hover {
-    // color: $neutral-black !important;
     text-decoration: none !important; // TODO: fix Mui injection order if possible https://material-ui.com/guides/interoperability/#css-injection-order
   }
 }
