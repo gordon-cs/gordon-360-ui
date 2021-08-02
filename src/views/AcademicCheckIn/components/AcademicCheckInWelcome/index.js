@@ -126,7 +126,7 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
         ) : (
           ''
         )}
-        {true ? ( // If a student is not registered for courses they cannot check in
+        {holds.MustRegisterForClasses ? ( // If a student is not registered for courses they cannot check in
           <Grid item>
             <Typography variant="h6" align="center" style={{ color: blue }}>
               <b>Register for Courses</b>
