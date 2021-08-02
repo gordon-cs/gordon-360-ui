@@ -21,7 +21,7 @@ import NewsCard from './components/NewsCard';
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const [personType, setPersonType] = useState(null);
-  // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+  // @ENROLLMENT-CHECKIN disabled line below until getting the correct dates can be done
   // const [checkedIn, setCheckedIn] = useState(null);
 
   const [hasAnswered, setHasAnswered] = useState(null);
@@ -45,7 +45,7 @@ const Home = () => {
       user.getProfileInfo(),
       wellness.getStatus(),
     ]);
-    // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+    // @ENROLLMENT-CHECKIN disabled line below until getting the correct dates can be done
     // setCheckedIn(await checkInService.getStatus());
     setPersonType(PersonType);
     setHasAnswered(IsValid);

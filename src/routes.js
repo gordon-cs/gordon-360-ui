@@ -1,5 +1,5 @@
 import About from './views/About';
-import AcademicCheckIn from './views/AcademicCheckIn';
+import EnrollmentCheckIn from './views/AcademicCheckIn';
 import Admin from './views/Admin';
 import ApartmentApp from './views/ApartmentApp';
 import BannerSubmission from './views/BannerSubmission';
@@ -95,9 +95,9 @@ const routes = [
     component: MyProfile,
   },
   {
-    name: 'Enrollment Check-In',
+    name: 'Enrollment Check In',
     path: '/enrollmentcheckin',
-    component: AcademicCheckIn,
+    component: EnrollmentCheckIn,
   },
   {
     name: 'People',

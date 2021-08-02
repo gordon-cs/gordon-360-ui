@@ -3,7 +3,7 @@ import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory
 import styles from '../../AcademicCheckIn.module.css';
 
-const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
+const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
   const blue = gordonColors.primary.blue;
   console.log(holds);
   const hasMinorHold = holds?.LaVidaHold || holds?.DeclarationOfMajorHold;
@@ -126,7 +126,7 @@ const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
         ) : (
           ''
         )}
-        {holds?.MustRegisterForClasses ? ( // If a student is not registered for courses they cannot check in
+        {true ? ( // If a student is not registered for courses they cannot check in
           <Grid item>
             <Typography variant="h6" align="center" style={{ color: blue }}>
               <b>Register for Courses</b>
@@ -205,4 +205,4 @@ const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
   );
 };
 
-export default AcademicCheckInWelcome;
+export default EnrollmentCheckInWelcome;
