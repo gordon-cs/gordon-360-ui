@@ -58,11 +58,11 @@ const Home = () => {
     return <GuestWelcome />;
   } else if (isOnline && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
-  }
-  // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
-  // else if (!checkedIn && personType.includes('stu')) {
-  //   return (<Redirect to='/AcademicCheckIn' />);
-  else {
+    // }
+    // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+    // else if (!checkedIn && personType.includes('stu')) {
+    //   return <Redirect to="/AcademicCheckIn" />;
+  } else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 
     return (

@@ -14,23 +14,20 @@ import ConfirmCheckIn from './components/ConfirmCheckIn';
 import PrivacyAgreement from './components/PrivacyAgreement';
 import RaceEthnicity from './components/RaceEthnicity';
 //🧙‍♂️
+
+const steps = [
+  'Main Form',
+  'Emergency Contact',
+  'Update Phone',
+  'Privacy Terms',
+  'Race Question',
+  'Confirm',
+  'Completed Check In',
+];
+
 const AcademicCheckIn = (props) => {
   const [activeStep, setActiveStep] = useState(0);
   const authenticated = useAuth();
-
-  const getSteps = () => {
-    return [
-      'Main Form',
-      'Emergency Contact',
-      'Update Phone',
-      'Privacy Terms',
-      'Race Question',
-      'Confirm',
-      'Completed Check In',
-    ];
-  };
-
-  const steps = getSteps();
 
   const [loading, setLoading] = useState(true);
 
@@ -115,55 +112,55 @@ const AcademicCheckIn = (props) => {
         studentLastName: profile.LastName,
       });
       let hasCheckedIn = await checkInService.getStatus();
-      if (!hasCheckedIn && profile.PersonType.includes('stu')) {
-        let tempHolds = await checkInService.getHolds();
-        setHolds(tempHolds);
-        if (
-          tempHolds.RegistrarHold ||
-          tempHolds.HighSchoolTranscriptHold ||
-          tempHolds.FinancialHold ||
-          tempHolds.MedicalHold ||
-          tempHolds.MajorHold ||
-          tempHolds.MustRegisterForClasses
-        ) {
-          setMajorHold(true);
-        }
-
-        let contacts = await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase());
-
-        if (contacts[0]) {
-          setEmergencyContact1(contacts[0]);
-          setEmergencyContactINTL1({
-            HomePhoneIN: contacts[0].HomePhone.startsWith('+'),
-            MobilePhoneIN: contacts[0].MobilePhone.startsWith('+'),
-          });
-        }
-
-        if (contacts[1]) {
-          setEmergencyContact2(contacts[1]);
-          setEmergencyContactINTL2({
-            HomePhoneIN: contacts[1].HomePhone.startsWith('+'),
-            MobilePhoneIN: contacts[1].MobilePhone.startsWith('+'),
-          });
-        }
-
-        if (contacts[2]) {
-          setEmergencyContact3(contacts[2]);
-          setEmergencyContactINTL3({
-            HomePhoneIN: contacts[2].HomePhone.startsWith('+'),
-            MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
-          });
-        }
-        if (profile.MobilePhone) {
-          setPhoneInfo({
-            PersonalPhone: profile.MobilePhone,
-            MakePrivate: false,
-            NoPhone: false,
-          });
-        }
-      } else {
-        setActiveStep(6);
+      // if (!hasCheckedIn && profile.PersonType.includes('stu')) {
+      let tempHolds = await checkInService.getHolds();
+      setHolds(tempHolds);
+      if (
+        tempHolds?.RegistrarHold ||
+        tempHolds?.HighSchoolTranscriptHold ||
+        tempHolds?.FinancialHold ||
+        tempHolds?.MedicalHold ||
+        tempHolds?.MajorHold ||
+        tempHolds?.MustRegisterForClasses
+      ) {
+        setMajorHold(true);
       }
+
+      let contacts = await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase());
+
+      if (contacts[0]) {
+        setEmergencyContact1(contacts[0]);
+        setEmergencyContactINTL1({
+          HomePhoneIN: contacts[0].HomePhone.startsWith('+'),
+          MobilePhoneIN: contacts[0].MobilePhone.startsWith('+'),
+        });
+      }
+
+      if (contacts[1]) {
+        setEmergencyContact2(contacts[1]);
+        setEmergencyContactINTL2({
+          HomePhoneIN: contacts[1].HomePhone.startsWith('+'),
+          MobilePhoneIN: contacts[1].MobilePhone.startsWith('+'),
+        });
+      }
+
+      if (contacts[2]) {
+        setEmergencyContact3(contacts[2]);
+        setEmergencyContactINTL3({
+          HomePhoneIN: contacts[2].HomePhone.startsWith('+'),
+          MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
+        });
+      }
+      if (profile.MobilePhone) {
+        setPhoneInfo({
+          PersonalPhone: profile.MobilePhone,
+          MakePrivate: false,
+          NoPhone: false,
+        });
+      }
+      // } else {
+      //   setActiveStep(6);
+      // }
       setLoading(false);
     };
 
@@ -273,18 +270,20 @@ const AcademicCheckIn = (props) => {
     setActiveStep(6);
   };
 
-  let content;
-
   if (loading === true) {
-    content = <GordonLoader />;
+    return <GordonLoader />;
   } else if (!authenticated) {
-    content = <GordonUnauthorized feature={'Enrollment Check-in'} />;
+    return <GordonUnauthorized feature={'Enrollment Check-in'} />;
   } else {
-    content = (
+    return (
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} md={9} lg={6}>
           <Card className={styles.academicCheckIn}>
-            <CardHeader title="Enrollment Check In" className={styles.checkIn_header} padding={30} />
+            <CardHeader
+              title="Enrollment Check In"
+              className={styles.checkIn_header}
+              padding={30}
+            />
             <Box m={2}>
               <Grid
                 container
@@ -432,8 +431,6 @@ const AcademicCheckIn = (props) => {
       </Grid>
     );
   }
-
-  return content;
 };
 
 export default AcademicCheckIn;

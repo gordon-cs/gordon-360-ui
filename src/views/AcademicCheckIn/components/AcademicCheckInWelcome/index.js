@@ -5,7 +5,8 @@ import styles from '../../AcademicCheckIn.module.css';
 
 const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
   const blue = gordonColors.primary.blue;
-  const hasMinorHold = holds.LaVidaHold || holds.DeclarationOfMajorHold;
+  console.log(holds);
+  const hasMinorHold = holds?.LaVidaHold || holds?.DeclarationOfMajorHold;
 
   // This function will return the corresponding JSX elements according to the major holds a student
   // has
@@ -125,7 +126,7 @@ const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
         ) : (
           ''
         )}
-        {holds.MustRegisterForClasses ? ( // If a student is not registered for courses they cannot check in
+        {holds?.MustRegisterForClasses ? ( // If a student is not registered for courses they cannot check in
           <Grid item>
             <Typography variant="h6" align="center" style={{ color: blue }}>
               <b>Register for Courses</b>
@@ -181,7 +182,7 @@ const AcademicCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
             Once you have resolved each of the above holds, click the button below to begin the
             check-in process.
           </Typography>
-        ) : holds.MustRegisterForClasses ? ( // If the student is not registered, display this prompt so they can register
+        ) : holds?.MustRegisterForClasses ? ( // If the student is not registered, display this prompt so they can register
           <Typography>
             Once you have registered for courses and your advisor has approved your registration,
             come back to this page and click the button below to begin the check-in process.
