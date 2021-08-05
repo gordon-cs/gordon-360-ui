@@ -7,7 +7,7 @@ import {
   Grid,
   Input,
   InputLabel,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory
