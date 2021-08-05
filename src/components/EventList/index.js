@@ -3,7 +3,7 @@ import CollapsableEventItem from './components/CollapsableEventItem';
 import EventItem from './components/EventItem';
 import { gordonColors } from 'theme';
 
-import './event-list.css';
+import styles from './EventList.module.css';
 
 import { List, Grid, Typography, Card } from '@material-ui/core';
 
@@ -79,7 +79,15 @@ export default class EventList extends Component {
     } else if (events.length > 0) {
       content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
     } else if (events.length === 0) {
-      content = <Typography variant="h5">No Events To Show</Typography>;
+      content = (
+        <Grid item align="center">
+          <br />
+          <Typography variant="h5" align="center">
+            No Events To Show
+          </Typography>
+          <br />
+        </Grid>
+      );
     }
 
     header = (
@@ -114,7 +122,7 @@ export default class EventList extends Component {
         <Card>
           {header}
           <Grid>
-            <List className="event-list" disablePadding>
+            <List className={styles.event_list} disablePadding>
               {content}
             </List>
           </Grid>

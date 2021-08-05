@@ -163,6 +163,7 @@ const AdminCard = ({ createSnackbar, isSuperAdmin, involvementDescription, onAdd
             <TextField
               variant="filled"
               label="Title/Comment"
+              type="search"
               fullWidth
               onChange={(event) => setTitleComment(event.target.value)}
               value={titleComment}

@@ -25,9 +25,8 @@ import ShiftDisplay from './components/ShiftDisplay';
 import { withStyles } from '@material-ui/core/styles';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { gordonColors } from 'theme';
-import './timesheets.css';
+import styles from './Timesheets.module.css';
 import GordonLoader from 'components/Loader';
-import { makeStyles } from '@material-ui/core/styles';
 import SimpleSnackbar from 'components/Snackbar';
 import user from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -39,18 +38,13 @@ const MILLISECONDS_PER_HOUR = 3600000;
 const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
 const withNoTime = (date) => set(date, { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
 
-const useStyles = makeStyles((theme) => ({
-  customWidth: {
-    maxWidth: 500,
-  },
-}));
-
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
     boxShadow: theme.shadows[1],
     fontSize: 12,
+    maxWidth: 500,
   },
 }))(Tooltip);
 
@@ -181,7 +175,6 @@ const Timesheets = (props) => {
   };
 
   const tooltipRef = useRef();
-  const classes = useStyles();
 
   if (props.authentication) {
     const getSavedShiftsForUser = () => {
@@ -369,7 +362,7 @@ const Timesheets = (props) => {
           width: 252,
         }}
       >
-        <InputLabel className="disable-select">Jobs</InputLabel>
+        <InputLabel className="disable_select">Jobs</InputLabel>
         <Select
           value={selectedJob}
           onChange={(e) => {
@@ -392,7 +385,7 @@ const Timesheets = (props) => {
           width: 252,
         }}
       >
-        <InputLabel className="disable-select">Hour Type</InputLabel>
+        <InputLabel className="disable_select">Hour Type</InputLabel>
         <Select
           value={selectedHourType}
           onChange={(e) => {
@@ -432,7 +425,7 @@ const Timesheets = (props) => {
     if (isOnline && isUserStudent) {
       return (
         <>
-          <Grid container spacing={2} className="timesheets">
+          <Grid container spacing={2} className={styles.timesheets}>
             <Grid item xs={12}>
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <Card>
@@ -447,9 +440,8 @@ const Timesheets = (props) => {
                         <Button onClick={changeState}> {clockInOut}</Button>
                       </Grid>
                       <Grid item md={8}>
-                        <div className="header-tooltip-container">
+                        <div className={styles.header_tooltip_container}>
                           <CustomTooltip
-                            classes={{ tooltip: classes.customWidth }}
                             interactive
                             disableFocusListener
                             disableTouchListener
@@ -466,9 +458,9 @@ const Timesheets = (props) => {
                             placement="bottom"
                           >
                             <div ref={tooltipRef}>
-                              <CardHeader className="disable-select" title="Enter a shift" />
+                              <CardHeader className="disable_select" title="Enter a shift" />
                               <InfoOutlinedIcon
-                                className="tooltip-icon"
+                                className={styles.tooltip_icon}
                                 style={{
                                   fontSize: 18,
                                 }}
@@ -481,13 +473,13 @@ const Timesheets = (props) => {
                     <Grid
                       container
                       spacing={2}
-                      justify="space-between"
+                      justifyContent="space-between"
                       alignItems="center"
                       alignContent="center"
                     >
                       <Grid item xs={12} md={6} lg={3}>
                         <KeyboardDateTimePicker
-                          className="disable-select"
+                          className="disable_select"
                           style={{
                             width: 252,
                           }}
@@ -504,7 +496,7 @@ const Timesheets = (props) => {
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
                         <KeyboardDateTimePicker
-                          className="disable-select"
+                          className="disable_select"
                           style={{
                             width: 252,
                           }}
@@ -531,7 +523,7 @@ const Timesheets = (props) => {
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
                         <TextField
-                          className="disable-select"
+                          className="disable_select"
                           style={{
                             width: 252,
                           }}
@@ -543,7 +535,7 @@ const Timesheets = (props) => {
                         />
                       </Grid>
                       <Grid item xs={12} md={6} lg={3}>
-                        <Typography className="disable-select">
+                        <Typography className="disable_select">
                           Hours worked: {hoursWorkedInDecimal}
                         </Typography>
                       </Grid>
@@ -560,7 +552,7 @@ const Timesheets = (props) => {
                       <Grid item xs={12}>
                         <Typography>
                           <Link
-                            className="disable-select"
+                            className="disable_select"
                             style={{
                               borderBottom: '1px solid currentColor',
                               textDecoration: 'none',
@@ -603,7 +595,7 @@ const Timesheets = (props) => {
         return <GordonOffline feature="Timesheets" />;
       } else if (!isUserStudent) {
         return (
-          <Grid container justify="center" spacing="16">
+          <Grid container justifyContent="center" spacing="16">
             <Grid item xs={12} md={8}>
               <Card>
                 <CardContent

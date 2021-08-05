@@ -1,21 +1,37 @@
-import { useState } from 'react';
-import UpdatePhone from './components/UpdatePhoneDialog/index.js';
-import user from 'services/user';
-import './index.css';
-import ProfileInfoListItem from '../ProfileInfoListItem';
-import LockIcon from '@material-ui/icons/Lock';
-
 import {
-  Typography,
-  Grid,
   Card,
-  CardHeader,
   CardContent,
-  List,
-  Switch,
+  CardHeader,
+  Divider,
   FormControlLabel,
+  Grid,
+  Link,
+  List,
+  ListItem,
+  Switch,
+  Tooltip,
+  Typography,
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import { withStyles } from '@material-ui/core/styles';
+import HelpIcon from '@material-ui/icons/Help';
+import LockIcon from '@material-ui/icons/Lock';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useEffect, useState } from 'react';
+import userService from 'services/user';
+import ProfileInfoListItem from '../ProfileInfoListItem';
+import UpdatePhone from './components/UpdatePhoneDialog/index.js';
+import styles from './PersonalInfoList.module.css';
+
+const CliftonTooltip = withStyles({
+  tooltip: {
+    color: '#555',
+    backgroundColor: '#fff',
+    boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
+  },
+})(Tooltip);
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -56,6 +72,8 @@ const PersonalInfoList = ({
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
   );
+  const [mailCombo, setMailCombo] = useState();
+  const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
@@ -81,7 +99,9 @@ const PersonalInfoList = ({
   const isCampusLocationPrivate = isStudent && keepPrivate && OnOffCampus !== PRIVATE_INFO;
 
   // Students' home phone is always private. FacStaffs' home phone is private for private users
-  const isHomePhonePrivate = (isStudent || keepPrivate) && Boolean(HomePhone);
+  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(
+    (isStudent || keepPrivate) && Boolean(HomePhone),
+  );
 
   // Street address info is always private, and City/State/Country info is private for private users
   const isAddressPrivate = (keepPrivate && HomeCity !== PRIVATE_INFO) || HomeStreet2;
@@ -89,13 +109,39 @@ const PersonalInfoList = ({
   // FacStaff spouses are private for private users
   const isSpousePrivate = isFacStaff && keepPrivate && SpouseName !== PRIVATE_INFO;
 
+  useEffect(() => {
+    async function loadMailboxCombination() {
+      if (myProf && isStudent) {
+        const info = await userService.getMailboxCombination();
+        setMailCombo(info.Combination);
+      }
+    }
+    loadMailboxCombination();
+  }, [myProf, Mail_Location, isStudent]);
+
   const handleChangeMobilePhonePrivacy = async () => {
     try {
-      await user.setMobilePhonePrivacy(!isMobilePhonePrivate);
+      await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
       setIsMobilePhonePrivate(!isMobilePhonePrivate);
 
       createSnackbar(
         isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
+
+  const handleChangeHomePhonePrivacy = async () => {
+    try {
+      await userService.setHomePhonePrivacy(!isHomePhonePrivate);
+      setIsHomePhonePrivate(!isHomePhonePrivate);
+
+      createSnackbar(
+        isHomePhonePrivate
+          ? 'Personal Info Visible (This change may take several minutes)'
+          : 'Personal Info Hidden (This change may take several minutes)',
         'success',
       );
     } catch {
@@ -110,12 +156,13 @@ const PersonalInfoList = ({
         myProf ? (
           formatPhone(HomePhone)
         ) : (
-          <a href={`tel:${HomePhone}`} className="gc360-text-link">
+          <a href={`tel:${HomePhone}`} className="gc360_text_link">
             {formatPhone(HomePhone)}
           </a>
         )
       }
-      contentClass={isHomePhonePrivate ? 'private' : null}
+      privateInfo={isHomePhonePrivate}
+      myProf={myProf}
     />
   ) : null;
 
@@ -133,7 +180,7 @@ const PersonalInfoList = ({
         ) : MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
-          <a href={`tel:${MobilePhone}`} className="gc360-text-link">
+          <a href={`tel:${MobilePhone}`} className="gc360_text_link">
             {formatPhone(MobilePhone)}
           </a>
         )
@@ -150,7 +197,8 @@ const PersonalInfoList = ({
           />
         )
       }
-      contentClass={isMobilePhonePrivate ? 'private' : null}
+      privateInfo={isMobilePhonePrivate}
+      myProf={myProf}
     />
   ) : null;
 
@@ -160,7 +208,7 @@ const PersonalInfoList = ({
       contentText={
         <>
           {HomeStreet2 && `${HomeStreet2}, `}
-          <span className={keepPrivate ? null : 'not-private'}>
+          <span className={keepPrivate ? null : styles.not_private}>
             {HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
               : Country === 'United States of America' || !Country
@@ -169,7 +217,8 @@ const PersonalInfoList = ({
           </span>
         </>
       }
-      contentClass={isAddressPrivate ? 'private' : null}
+      privateInfo={isAddressPrivate}
+      myProf={myProf}
     />
   );
 
@@ -188,8 +237,45 @@ const PersonalInfoList = ({
     />
   ) : null;
 
+  let strengthsText = CliftonStrengths?.Strengths.map((x) => (
+    <Link
+      href={CliftonStrengths.Links[CliftonStrengths.Strengths.indexOf(x)]}
+      target="_blank"
+      rel="noopener"
+      key={x}
+    >
+      <b style={{ color: CliftonStrengths.Colors[CliftonStrengths.Strengths.indexOf(x)] }}>{x}</b>
+    </Link>
+  )).reduce((prev, curr) => [prev, ', ', curr]);
+
+  let strengthsCaption = (
+    <CliftonTooltip
+      title={
+        <span style={{ fontSize: '0.8rem' }}>
+          Categories:&nbsp;
+          <span style={{ color: '#60409f' }}>Executing</span>,{' '}
+          <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
+          <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
+          <span style={{ color: '#2c8b0f' }}>Thinking</span>
+        </span>
+      }
+      aria-label="add"
+      enterTouchDelay={50}
+    >
+      <HelpIcon style={{ cursor: 'pointer', margin: '0 1rem', fontSize: '1.2rem' }} />
+    </CliftonTooltip>
+  );
+
   const cliftonStrengths = CliftonStrengths ? (
-    <ProfileInfoListItem title="Clifton Strengths:" contentText={CliftonStrengths.join(', ')} />
+    <ProfileInfoListItem
+      title="Clifton Strengths:"
+      contentText={
+        <Typography>
+          {strengthsText}
+          {strengthsCaption}
+        </Typography>
+      }
+    />
   ) : null;
 
   const advisors =
@@ -201,7 +287,8 @@ const PersonalInfoList = ({
             ? 'None Assigned'
             : Advisors?.map((a) => `${a.Firstname} ${a.Lastname}`)?.join(', ')
         }
-        contentClass={'private'}
+        privateInfo
+        myProf={myProf}
       />
     ) : null;
 
@@ -210,13 +297,54 @@ const PersonalInfoList = ({
       <ProfileInfoListItem
         title="On/Off Campus:"
         contentText={OnOffCampus}
-        contentClass={isCampusLocationPrivate ? 'private' : null}
+        private={isCampusLocationPrivate}
+        myProf={myProf}
       />
     ) : null;
 
-  const mailLocation =
+  const mail =
     isStudent && Mail_Location ? (
-      <ProfileInfoListItem title="Mailbox:" contentText={`#${Mail_Location}`} />
+      <>
+        <ListItem className={styles.profile_info_list_item}>
+          <Grid container justify="center" alignItems="center">
+            <Grid container item xs={5} alignItems="center">
+              <Typography>{'Mailbox:'}</Typography>
+            </Grid>
+            <Grid container item xs={myProf && mailCombo ? 2 : 7} alignItems="center">
+              <Typography>{`#${Mail_Location}`}</Typography>
+            </Grid>
+            {myProf && mailCombo && (
+              <>
+                <Grid container item xs={2} alignItems="center">
+                  <Typography className={styles.private}>
+                    {showMailCombo ? mailCombo : '****'}
+                  </Typography>
+                </Grid>
+                <Grid
+                  container
+                  direction="column"
+                  item
+                  xs={3}
+                  md={3}
+                  lg={3}
+                  justify="center"
+                  alignItems="center"
+                >
+                  <IconButton
+                    onClick={() => {
+                      setShowMailCombo(!showMailCombo);
+                    }}
+                    aria-label={showMailCombo ? 'Hide Mail Combo' : 'Show Mail Combo'}
+                  >
+                    {showMailCombo ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </Grid>
+              </>
+            )}
+          </Grid>
+        </ListItem>
+        <Divider />
+      </>
     ) : null;
 
   const dormInfo =
@@ -225,13 +353,14 @@ const PersonalInfoList = ({
         title="Dormitory:"
         contentText={
           <>
-            <span className={keepPrivate ? null : 'not-private'}>
+            <span className={keepPrivate ? null : styles.not_private}>
               {BuildingDescription ?? Hall}
             </span>
             {myProf && OnCampusRoom && `, Room ${OnCampusRoom}`}
           </>
         }
-        contentClass={'private'}
+        privateInfo
+        myProf={myProf}
       />
     ) : null;
 
@@ -241,14 +370,15 @@ const PersonalInfoList = ({
         title="Student ID:"
         contentText={ID}
         ContentIcon={
-          <Grid container justify="center">
-            <Grid container direction="column" justify="center" alignItems="center">
+          <Grid container justifyContent="center">
+            <Grid container direction="column" justifyContent="center" alignItems="center">
               <LockIcon />
               Private
             </Grid>
           </Grid>
         }
-        contentClass={'private'}
+        privateInfo
+        myProf={myProf}
       />
     ) : null;
 
@@ -257,36 +387,38 @@ const PersonalInfoList = ({
       <ProfileInfoListItem
         title="Spouse:"
         contentText={SpouseName}
-        contentClass={(keepPrivate && myProf) || isSpousePrivate ? 'private' : null}
+        privateInfo={(keepPrivate && myProf) || isSpousePrivate}
       />
     ) : null;
 
   const note =
     myProf &&
     (isFacStaff ? (
-      <Typography align="left" className="note">
-        NOTE:
-        <ul>
-          <li>
-            To update your data, please contact <a href="mailto: hr@gordon.edu">Human Resources</a>{' '}
-            (x4828).
-          </li>
-        </ul>
+      <Typography align="left" className={styles.note}>
+        NOTE: To update your data, please contact{' '}
+        <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
       </Typography>
     ) : isStudent ? (
-      <Typography align="left" className="note">
-        NOTE:
+      <div align="left" className={styles.note}>
+        <Typography>NOTE:</Typography>
         <ul>
           <li>
-            To update your On Campus Address, please contact{' '}
-            <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
+            <Typography>Shaded areas are visible only to you.</Typography>
           </li>
           <li>
-            For all other changes or to partially/fully prevent your data from displaying, please
-            contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+            <Typography>
+              To update your On Campus Address, please contact{' '}
+              <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              For all other changes or to partially/fully prevent your data from displaying, please
+              contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+            </Typography>
           </li>
         </ul>
-      </Typography>
+      </div>
     ) : null);
 
   const disclaimer =
@@ -296,7 +428,7 @@ const PersonalInfoList = ({
       isMobilePhonePrivate ||
       isCampusLocationPrivate ||
       isSpousePrivate) ? (
-      <Typography align="left" className="disclaimer">
+      <Typography align="left" className={styles.disclaimer}>
         Private by request, visible only to faculty and staff
       </Typography>
     ) : null;
@@ -304,10 +436,34 @@ const PersonalInfoList = ({
   return (
     <Grid item xs={12}>
       <Card
-        className={`personal-info-list  ${myProf ? 'my-personal-info' : 'public-personal-info'}`}
+        className={`${styles.personal_info_list}  ${
+          myProf ? styles.my_personal_info : styles.public_personal_info
+        }`}
       >
-        <Grid container className="personal-info-list-header">
-          <CardHeader title="Personal Information" />
+        <Grid
+          container
+          justifyContent="flex-end"
+          alignItems="center"
+          className={styles.personal_info_list_header}
+        >
+          <Grid item xs={8}>
+            <CardHeader title="Personal Information" />
+          </Grid>
+          <Grid item xs={4} align="right">
+            {/* visible only for fac/staff on their profile */}
+            {isFacStaff && myProf ? (
+              <FormControlLabel
+                control={
+                  <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+                }
+                label={isHomePhonePrivate ? 'Private' : 'Public'}
+                labelPlacement="right"
+                disabled={!isOnline}
+              />
+            ) : (
+              ''
+            )}
+          </Grid>
         </Grid>
         <CardContent>
           <List>
@@ -317,7 +473,7 @@ const PersonalInfoList = ({
             {advisors}
             {onOffCampus}
             {dormInfo}
-            {mailLocation}
+            {mail}
             {mobilePhoneListItem}
             {homePhoneListItem}
             {studentID}

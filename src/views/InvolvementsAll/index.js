@@ -5,7 +5,6 @@ import {
   CardContent,
   FormControl,
   Grid,
-  Input,
   InputLabel,
   MenuItem,
   Select,
@@ -18,7 +17,7 @@ import userService from 'services/user';
 import involvementService from 'services/activity';
 import sessionService from 'services/session';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import './involvements-all.css';
+import { gordonColors } from 'theme';
 
 const InvolvementsAll = ({ location, authentication, history }) => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -119,59 +118,78 @@ const InvolvementsAll = ({ location, authentication, history }) => {
     myInvolvementsNoneText = 'No personal involvements found for this term';
   }
 
+  const searchPageTitle = (
+    <div align="center">
+      Search
+      <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+      Involvements
+    </div>
+  );
+
   return (
-    <Grid container justify="center" spacing={4}>
-      <Grid item className="involvements-filter" xs={12} lg={8}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} lg={6}>
-            <TextField
-              id="search"
-              label="Search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              margin="none"
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <FormControl fullWidth>
-              <InputLabel htmlFor="activity-session">Term</InputLabel>
-              <Select
-                value={selectedSession}
-                onChange={(e) => handleSelectSession(e.target.value)}
-                input={<Input id="activity-session" />}
-              >
-                {(isOnline
-                  ? sessions
-                  : sessions.filter((item) => item.SessionCode === selectedSession)
-                ).map(({ SessionDescription: description, SessionCode: code }) => (
-                  <MenuItem label={description} value={code} key={code}>
-                    {description}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <FormControl fullWidth>
-              <InputLabel htmlFor="activity-type">Type</InputLabel>
-              <Select
-                value={type}
-                onChange={(event) => setType(event.target.value)}
-                input={<Input id="activity-type" />}
-              >
-                <MenuItem label="All" value="">
-                  <em>All</em>
-                </MenuItem>
-                {types.map((type) => (
-                  <MenuItem value={type} key={type}>
-                    {type}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
+    <Grid container justifyContent="center" spacing={4}>
+      <Grid item xs={12} lg={8}>
+        <Card>
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <CardHeader title={searchPageTitle} />
+              </Grid>
+              <Grid item xs={12} lg={6}>
+                <TextField
+                  id="search"
+                  variant="filled"
+                  label="Search"
+                  type="search"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  margin="none"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} md={6} lg={3}>
+                <FormControl variant="filled" fullWidth>
+                  <InputLabel id="activity-session">Term</InputLabel>
+                  <Select
+                    labelId="activity-session"
+                    id="activity-session"
+                    value={selectedSession}
+                    onChange={(e) => handleSelectSession(e.target.value)}
+                  >
+                    {(isOnline
+                      ? sessions
+                      : sessions.filter((item) => item.SessionCode === selectedSession)
+                    ).map(({ SessionDescription: description, SessionCode: code }) => (
+                      <MenuItem label={description} value={code} key={code}>
+                        {description}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6} lg={3}>
+                <FormControl fullWidth variant="filled">
+                  <InputLabel id="activity-type">Type</InputLabel>
+                  <Select
+                    labelId="activity-type"
+                    id="activity-type"
+                    value={type}
+                    onChange={(event) => setType(event.target.value)}
+                  >
+                    <MenuItem label="All" value="">
+                      <em>All</em>
+                    </MenuItem>
+                    {types.map((type) => (
+                      <MenuItem value={type} key={type}>
+                        {type}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
       </Grid>
 
       {isOnline && authentication && <Requests />}
@@ -182,7 +200,10 @@ const InvolvementsAll = ({ location, authentication, history }) => {
           <Card>
             <CardHeader
               title={`My ${myInvolvementsHeadingText} Involvements`}
-              className="involvements-header"
+              style={{
+                backgroundColor: gordonColors.primary.blue,
+                color: gordonColors.neutral.grayShades[50],
+              }}
             />
             <CardContent>
               {loading ? (
@@ -204,7 +225,10 @@ const InvolvementsAll = ({ location, authentication, history }) => {
         <Card>
           <CardHeader
             title={`${involvementSessionText} Involvements`}
-            className="involvements-header"
+            style={{
+              backgroundColor: gordonColors.primary.blue,
+              color: gordonColors.neutral.grayShades[50],
+            }}
           />
           <CardContent>
             {loading ? (

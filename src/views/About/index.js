@@ -4,7 +4,7 @@ import versionService from 'services/version';
 import { projectName } from 'project-name';
 import contributors from './contributors.json';
 import origins from './origins.json';
-import './about.css';
+import styles from './About.module.css';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@material-ui/core';
 
@@ -16,11 +16,11 @@ const About = () => {
   }, []);
 
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
-        <Card className="about">
+        <Card className={styles.about}>
           <CardHeader
-            className="about-title"
+            className={styles.about_title}
             title="Conceived and Built at Gordon College"
             subheader="By Students for Students"
             titleTypographyProps={{ variant: 'h4' }}
@@ -28,8 +28,8 @@ const About = () => {
           <CardContent>
             <Card>
               <CardHeader
-                className="about-header"
-                title={`${projectName}: The Scottie Faire In Your Hand`}
+                className={styles.about_header}
+                title={`${projectName}: For Students by Students`}
               />
               <CardContent>
                 <Typography variant="body1" component="ul" style={{ textAlign: 'start' }}>
@@ -46,7 +46,7 @@ const About = () => {
             </Card>
 
             <Card>
-              <CardHeader className="about-header" title="Institutional Benefits" />
+              <CardHeader className={styles.about_header} title="Institutional Benefits" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>In-house Student Record relationship</li>
@@ -62,7 +62,7 @@ const About = () => {
             </Card>
 
             <Card>
-              <CardHeader className="about-header" title="Origins" />
+              <CardHeader className={styles.about_header} title="Origins" />
               <CardContent>
                 {origins.map((section) => {
                   return (
@@ -70,7 +70,7 @@ const About = () => {
                       <Typography variant="subtitle1" gutterBottom>
                         <strong>{section.title}</strong>
                       </Typography>
-                      <Typography variant="body2" paragraph className="about-Origins">
+                      <Typography variant="body2" paragraph className={styles.about_Origins}>
                         {section.body}
                       </Typography>
                     </Fragment>
@@ -80,7 +80,7 @@ const About = () => {
             </Card>
 
             <Card>
-              <CardHeader className="about-header" title="GoCo Tech Lab Developers" />
+              <CardHeader className={styles.about_header} title="GoCo Tech Lab Developers" />
               <CardContent>
                 {contributors.map((section) => {
                   return (
@@ -88,7 +88,7 @@ const About = () => {
                       <Typography variant="subtitle1" gutterBottom>
                         <strong>{section.title}</strong>
                       </Typography>
-                      <Typography variant="body2" paragraph className="about-contributors">
+                      <Typography variant="body2" paragraph className={styles.about_contributors}>
                         {section.body}
                       </Typography>
                     </Fragment>
@@ -106,7 +106,7 @@ const About = () => {
         </Typography>
         <hr />
         <Typography variant="body2" paragraph>
-          Api Version - {version}
+          Api Version - {version} UTC
         </Typography>
       </Grid>
     </Grid>

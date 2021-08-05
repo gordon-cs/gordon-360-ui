@@ -1,0 +1,18 @@
+@import '../../../../vars';
+
+.event_item {
+  padding: 10px;
+}
+
+.event_column {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.event_item:hover .event_column {
+  color: $neutral-white;
+}
+
+.event_item:hover .descriptionText {
+  color: $neutral-white;
+}

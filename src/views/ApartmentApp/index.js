@@ -7,7 +7,7 @@ import StudentApplication from './components/StudentApplication';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import housing from 'services/housing';
 import user from 'services/user';
-import './apartmentApp.css';
+import styles from './ApartmentApp.module.css';
 import { NotFoundError } from 'services/error';
 import GordonOffline from 'components/GordonOffline';
 
@@ -74,19 +74,19 @@ const ApartApp = ({ authentication }) => {
   } else if (isOnline) {
     if (canUseStaff) {
       return (
-        <div className="staff-apartment-application">
+        <div className={styles.staff_apartment_application}>
           <StaffMenu userProfile={userProfile} />
         </div>
       );
     } else if (isUserStudent) {
       return (
-        <div className="student-apartment-application">
+        <div className={'student_apartment_application'}>
           <StudentApplication userProfile={userProfile} authentication={authentication} />
         </div>
       );
     } else {
       return (
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent
@@ -101,7 +101,7 @@ const ApartApp = ({ authentication }) => {
                 <br />
                 <br />
                 <Button
-                  className="back-home-button"
+                  className={styles.back_home_button}
                   color="primary"
                   variant="outlined"
                   onClick={() => {

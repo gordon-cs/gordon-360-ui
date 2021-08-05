@@ -1,0 +1,132 @@
+@import '../../vars';
+
+$drawer-width: 240px;
+
+.gordon_header {
+  position: absolute;
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+
+  .app_bar {
+    position: absolute;
+    background-repeat: no-repeat;
+    background-image: url('./gc_seal_top_56.png');
+    height: $header-height-xs;
+  }
+
+  .tab {
+    transition: min-width 0.2s;
+    color: $neutral-white;
+    text-transform: capitalize;
+    min-width: 90px;
+
+    &.disabled_tab {
+      color: $neutral-white-opacity30;
+    }
+  }
+
+  & .tab.tab:hover {
+    text-decoration: none;
+  }
+
+  .menu_button {
+    margin-left: -12px;
+  }
+
+  .center_container {
+    visibility: hidden;
+    width: 0;
+  }
+
+  .right_side_container {
+    margin-left: 16px;
+    padding: 0;
+    align-items: center;
+    display: none;
+  }
+
+  .people_search_container_container {
+    width: 15rem;
+    text-align: right;
+  }
+
+  .people_search_container {
+    text-align: right;
+    width: 9rem;
+    transition: width 0.3s;
+    display: inline-block;
+  }
+
+  @media (min-width: $break-xs) {
+    .people_search_container {
+      width: 40vw;
+    }
+  }
+
+  @media (min-width: $break-sm) {
+    .app_bar {
+      background-image: url('./gc_seal_top_64.png');
+      height: $header-height-sm;
+    }
+    .people_search_container {
+      width: 13rem;
+      &:focus-within {
+        width: 15rem;
+      }
+    }
+  }
+
+  @media (min-width: $break-md) {
+    .menu_button {
+      display: none;
+    }
+    .app_bar {
+      background-image: url('./gc_seal_top_72.png');
+      height: $header-height-md;
+    }
+
+    .center_container {
+      flex: 3;
+      justify-content: center;
+      display: flex;
+      visibility: visible;
+    }
+
+    .tab {
+      min-width: 80px;
+    }
+    .right_side_container {
+      display: flex;
+      margin-left: 24px;
+    }
+  }
+
+  @media (min-width: $break-lg) {
+    .center_container {
+      flex: 7;
+    }
+    .tab {
+      min-width: 160px;
+    }
+  }
+
+  .header_button {
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+
+  .title {
+    flex: 1;
+    margin-right: 10px;
+    font-weight: bold;
+  }
+
+  .menu_button_icon {
+    color: $neutral-white;
+  }
+
+  .login_button {
+    color: $neutral-white;
+  }
+}

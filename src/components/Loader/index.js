@@ -1,10 +1,9 @@
-import './loader.css';
-
-import { Grid, CircularProgress } from '@material-ui/core';
+import { CircularProgress, Grid } from '@material-ui/core';
+import styles from './Loader.module.css';
 
 const GordonLoader = ({ size }) => {
   return (
-    <Grid className="gordon-loader" container justify="center" alignItems="center">
+    <Grid className={styles.gordon_loader} container justifyContent="center" alignItems="center">
       <Grid item>
         <CircularProgress size={size || 100} />
       </Grid>

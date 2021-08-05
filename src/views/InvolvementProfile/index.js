@@ -1,30 +1,31 @@
-import Dropzone from 'react-dropzone';
-import { useEffect, useRef, useState } from 'react';
-import './involvement-profile.css';
-import Cropper from 'react-cropper';
-import GordonLoader from 'components/Loader';
-import Membership from './components/Membership';
-import membershipService from 'services/membership';
-import emailsService from 'services/emails';
-import sessionService from 'services/session';
-import involvementService from 'services/activity';
-import { gordonColors } from 'theme';
-import userService from 'services/user';
 import {
-  CardHeader,
   Button,
   Card,
   CardContent,
+  CardHeader,
   DialogContentText,
   Grid,
+  List,
   TextField,
   Typography,
 } from '@material-ui/core';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useParams } from 'react-router';
-import ContactList from './components/ContactList';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
+import GordonLoader from 'components/Loader';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useEffect, useRef, useState } from 'react';
+import Cropper from 'react-cropper';
+import Dropzone from 'react-dropzone';
+import { useParams } from 'react-router';
+import involvementService from 'services/activity';
+import emailsService from 'services/emails';
+import membershipService from 'services/membership';
+import sessionService from 'services/session';
+import userService from 'services/user';
+import { gordonColors } from 'theme';
+import ContactListItem from './components/ContactListItem';
+import Membership from './components/Membership';
+import styles from './InvolvementProfile.module.css';
 
 const CROP_DIM = 320; // pixels
 
@@ -239,7 +240,7 @@ const InvolvementProfile = ({ authentication }) => {
       const editInvolvement =
         isAdmin || isSuperAdmin ? (
           <Grid item>
-            <Grid container spacing={2} justify="center">
+            <Grid container spacing={2} justifyContent="center">
               <Grid item>
                 <Button
                   variant="contained"
@@ -263,14 +264,14 @@ const InvolvementProfile = ({ authentication }) => {
               buttonClicked={onEditInvolvement}
               cancelButtonClicked={() => setIsEditDialogOpen(false)}
             >
-              <Grid align="center" className="involvement-image" item>
+              <Grid align="center" className={styles.involvement_image} item>
                 <img
                   alt={ActivityDescription}
                   src={image || ActivityImagePath}
-                  className="rounded-corners"
+                  className="rounded_corners"
                 />
               </Grid>
-              <Grid container spacing={2} justify="center">
+              <Grid container spacing={2} justifyContent="center">
                 <Grid item>
                   <Button
                     variant="contained"
@@ -300,7 +301,7 @@ const InvolvementProfile = ({ authentication }) => {
                     ? 'Tap Image to Browse Files'
                     : 'Drag & Drop Picture, or Click to Browse Files'}
                 </DialogContentText>
-                <Grid container justify="center" spacing={2}>
+                <Grid container justifyContent="center" spacing={2}>
                   {!preview && (
                     <Dropzone
                       onDropAccepted={onDropAccepted.bind(this)}
@@ -309,10 +310,10 @@ const InvolvementProfile = ({ authentication }) => {
                     >
                       {({ getRootProps, getInputProps }) => (
                         <section>
-                          <div className="photoUploader" {...getRootProps()}>
+                          <div className={styles.photoUploader} {...getRootProps()}>
                             <input {...getInputProps()} />
                             <img
-                              className="rounded-corners"
+                              className="rounded_corners"
                               src={ActivityImagePath}
                               alt=""
                               style={{ maxWidth: '320px', maxHeight: '320px' }}
@@ -412,7 +413,7 @@ const InvolvementProfile = ({ authentication }) => {
                 <img
                   alt={ActivityDescription}
                   src={ActivityImagePath}
-                  className="rounded-corners"
+                  className="rounded_corners"
                 />
               </Grid>
               {editInvolvement}
@@ -422,7 +423,7 @@ const InvolvementProfile = ({ authentication }) => {
                   <Typography>
                     <a
                       href={ActivityURL}
-                      className="gc360-text-link"
+                      className="gc360_text_link"
                       style={{ fontWeight: 'bold' }}
                     >
                       {ActivityURL}
@@ -436,10 +437,24 @@ const InvolvementProfile = ({ authentication }) => {
                   <hr width="70%"></hr>
 
                   <Grid item>
-                    <ContactList contacts={groupAdmins} listTitle="Group Contacts" />
+                    <Typography>
+                      <strong>Group Contacts</strong>
+                    </Typography>
+                    <List>
+                      {groupAdmins.map((admin, index) => (
+                        <ContactListItem key={index} contact={admin} />
+                      ))}
+                    </List>
                   </Grid>
                   <Grid item>
-                    <ContactList contacts={advisors} listTitle="Group Advisors" />
+                    <Typography>
+                      <strong>Group Advisors</strong>
+                    </Typography>
+                    <List>
+                      {advisors.map((advisor, index) => (
+                        <ContactListItem key={index} contact={advisor} />
+                      ))}
+                    </List>
                   </Grid>
                   <Grid item>
                     <Typography>
@@ -465,7 +480,7 @@ const InvolvementProfile = ({ authentication }) => {
   }
 
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
         {content}
       </Grid>

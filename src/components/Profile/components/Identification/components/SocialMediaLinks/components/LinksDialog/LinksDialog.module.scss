@@ -1,0 +1,59 @@
+@import '../../../../../../../../vars';
+
+.gc360_links_dialog {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  &_title {
+    background-color: $primary-blue;
+    color: $neutral-white;
+    text-align: center;
+    grid-row: 1;
+  }
+  &_content {
+    display: grid;
+    grid-row: 2;
+    grid-template-rows: auto auto auto auto auto;
+    grid-row-gap: 20px;
+    padding: 8px 20px 8px 16px !important;
+    &_text {
+      grid-row: 1;
+      grid-column: 1;
+      color: $neutral-gray;
+      text-align: center;
+    }
+    &_facebook {
+      grid-row: 2;
+    }
+    &_twitter {
+      grid-row: 3;
+    }
+    &_linkedin {
+      grid-row: 4;
+    }
+    &_instagram {
+      grid-row: 5;
+    }
+    &_handshake {
+      grid-row: 6;
+    }
+    &_media {
+      display: grid;
+      grid-template-columns: 15% 85%;
+      align-items: center;
+    }
+    &_icon {
+      grid-column: 1;
+      padding-top: 20px;
+      font-size: 26px;
+      color: $primary-blue;
+    }
+    &_field {
+      grid-column: 2;
+    }
+  }
+  &_actions {
+    grid-row: 3;
+    justify-content: space-evenly !important;
+    margin-bottom: 0.5rem;
+  }
+}

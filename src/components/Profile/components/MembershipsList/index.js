@@ -6,7 +6,7 @@ import membershipService from 'services/membership';
 import userService from 'services/user';
 import GordonLoader from 'components/Loader';
 import MembershipInfoCard from './components/MembershipInfoCard';
-import './index.css';
+import styles from './MembershipsList.module.css';
 
 /**
  * A List of memberships for display on the Profile and MyProfile views.
@@ -44,7 +44,7 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
     if (memberships.length === 0) {
       return (
         <Link to={`/involvements`}>
-          <Typography variant="body2" className="noMemberships">
+          <Typography variant="body2" className={styles.noMemberships}>
             No Involvements to display. Click here to see Involvements around campus!
           </Typography>
         </Link>
@@ -84,16 +84,16 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
 
   return (
     <>
-      <Grid item xs={12} className="memberships">
-        <Grid container className="memberships-header">
+      <Grid item xs={12} className={styles.memberships}>
+        <Grid container className={styles.memberships_header}>
           <CardHeader title="Involvements" />
         </Grid>
-        <Card className="memberships-card">
-          <CardContent className="memberships-card-content">
+        <Card className={styles.memberships_card}>
+          <CardContent className={styles.memberships_card_content}>
             {myProf && (
-              <Grid container justify="center">
-                <Link className="gc360-link" to="/transcript">
-                  <Button variant="contained" className="memberships-card-content-button">
+              <Grid container justifyContent="center">
+                <Link className="gc360_link" to="/transcript">
+                  <Button variant="contained" className={styles.memberships_card_content_button}>
                     Experience Transcript
                   </Button>
                 </Link>

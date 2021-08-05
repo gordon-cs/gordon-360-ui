@@ -5,6 +5,9 @@ import { socialMediaInfo } from 'socialMedia';
 import { Grid, Button, Dialog, IconButton } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../Identification.module.css';
+
 const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
   const [socialLinksOpen, setSocialLinksOpen] = useState(false);
   const [links, setLinks] = useState(
@@ -22,10 +25,10 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
   return (
     <>
       {(myProf || socialMediaInfo.platforms.some((platform) => links[platform])) && (
-        <Grid item className="identification-card-content-card-container-info-social-media">
+        <Grid item className={styles.identification_card_content_card_container_info_social_media}>
           <Grid
             container
-            justify={numberOfLinks < 3 ? 'space-evenly' : 'space-between'}
+            justifyContent={numberOfLinks < 3 ? 'space-evenly' : 'space-between'}
             alignItems="center"
           >
             {socialMediaInfo.platforms.map((platform) => {
@@ -34,7 +37,7 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
                   <Grid item key={platform}>
                     <a
                       href={links[platform]}
-                      className="gc360-my-profile_icon"
+                      className={styles.gc360_my_profile_icon}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -51,14 +54,14 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
               (numberOfLinks > 0 ? (
                 <Grid item>
                   <IconButton
-                    className="gc360-my-profile_edit-icon"
+                    className={styles.gc360_my_profile_edit_icon}
                     onClick={() => setSocialLinksOpen(true)}
                   >
                     <EditIcon />
                   </IconButton>
                 </Grid>
               ) : (
-                <Grid container justify="center">
+                <Grid container justifyContent="center">
                   <Button
                     onClick={() => setSocialLinksOpen(true)}
                     color="secondary"
@@ -73,7 +76,6 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
       )}
       <Dialog
         open={socialLinksOpen}
-        disableBackdropClick
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >

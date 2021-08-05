@@ -1,28 +1,32 @@
-import { useState } from 'react';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Avatar,
   Button,
+  Checkbox,
   Divider,
-  Grid,
   FormControl,
   FormControlLabel,
-  Checkbox,
+  Grid,
   InputLabel,
+  Link,
+  MenuItem,
+  Select,
   TextField,
   Typography,
-  Select,
-  MenuItem,
 } from '@material-ui/core';
-
-import { gordonColors } from 'theme';
-import user from 'services/user';
-import membership from 'services/membership';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import GordonDialogBox from 'components/GordonDialogBox';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import membership from 'services/membership';
+import user from 'services/user';
+import { gordonColors } from 'theme';
+
 const rowStyle = {
-  padding: '10px',
+  margin: '10px 0px',
+  padding: '10px 0px',
 };
 const redButton = {
   background: gordonColors.secondary.red,
@@ -49,6 +53,7 @@ const MemberListItem = ({
   onToggleIsAdmin,
 }) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [titleDialog, setTitleDialog] = useState(member.Description);
   const [isLeaveAlertOpen, setIsLeaveAlertOpen] = useState(false);
   const [isRemoveAlertOpen, setIsRemoveAlertOpen] = useState(false);
   const [isUnadminSelfDialogOpen, setIsUnadminSelfDialogOpen] = useState(false);
@@ -58,7 +63,24 @@ const MemberListItem = ({
     member.ParticipationDescription,
   );
   const [participation, setParticipation] = useState(member.Participation);
-  const [titleComment, setTitleComment] = useState(member.Description);
+  const [title, setTitle] = useState(member.Description);
+  const [avatar, setAvatar] = useState();
+
+  const PlaceHolderAvatar = () => (
+    <svg width="50" height="50" viewBox="0 0 50 50">
+      <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+    </svg>
+  );
+
+  useEffect(() => {
+    const loadAvatar = async () => {
+      if (member.AD_Username) {
+        const { def: defaultImage, pref: preferredImage } = await user.getImage(member.AD_Username);
+        setAvatar(preferredImage || defaultImage);
+      }
+    };
+    loadAvatar();
+  }, [member.AD_Username]);
 
   const handleToggleGroupAdmin = async () => {
     if (isAdmin && !isSuperAdmin && member.IDNumber === Number(user.getLocalInfo().id)) {
@@ -84,7 +106,7 @@ const MemberListItem = ({
   const handleCloseEditDialog = () => {
     setIsEditDialogOpen(false);
     setParticipationDescription(member.ParticipationDescription);
-    setTitleComment(member.Description);
+    setTitle(member.Description);
   };
 
   const onEditMember = async () => {
@@ -94,9 +116,10 @@ const MemberListItem = ({
       SESS_CDE: member.SessionCode,
       ID_NUM: member.IDNumber,
       PART_CDE: participation,
-      COMMENT_TXT: titleComment,
+      COMMENT_TXT: titleDialog,
     };
     await membership.editMembership(member.MembershipID, data);
+    setTitle(titleDialog);
     setIsEditDialogOpen(false);
   };
 
@@ -123,7 +146,6 @@ const MemberListItem = ({
       setIsRemoveAlertOpen(true);
     }
   };
-
   let content;
   let options;
 
@@ -190,9 +212,9 @@ const MemberListItem = ({
               <TextField
                 variant="filled"
                 fullWidth
-                onChange={(e) => setTitleComment(e.target.value)}
-                defaultValue={member.Description}
-                label="Title/Comment"
+                onChange={(e) => setTitleDialog(e.target.value)}
+                defaultValue={title}
+                label="Title"
               />
             </Grid>
           </Grid>
@@ -211,7 +233,7 @@ const MemberListItem = ({
     );
 
     options = (
-      <Grid container alignItems="center" justify="space-evenly">
+      <Grid container alignItems="center" justifyContent="space-evenly">
         <Grid item>
           <FormControlLabel
             control={
@@ -231,22 +253,31 @@ const MemberListItem = ({
 
     content = (
       <>
-        <Grid container direction="row" alignItems="center">
-          <Grid item xs={2} style={rowStyle}>
-            <Typography>
-              {member.FirstName} {member.LastName}
-            </Typography>
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item xs={1} style={rowStyle}>
+            <Avatar
+              src={`data:image/jpg;base64,${avatar}`}
+              alt={`${member.FirstName} ${member.LastName}`}
+              variant="rounded"
+              style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+            >
+              {!avatar && <PlaceHolderAvatar />}
+            </Avatar>
           </Grid>
-          <Grid item xs={2} style={rowStyle}>
-            <Typography>{participationDescription}</Typography>
+          <Grid item xs={3}>
+            <Link href={`/profile/${member.AD_Username}`}>
+              <Typography>
+                {member.FirstName} {member.LastName}
+              </Typography>
+            </Link>
           </Grid>
-          <Grid item xs={3} style={rowStyle}>
-            <Typography>{titleComment}</Typography>
+          <Grid item xs={4} style={rowStyle}>
+            <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
           <Grid item xs={2} style={rowStyle}>
             <Typography>{member.Mail_Location}</Typography>
           </Grid>
-          <Grid item xs={3} style={rowStyle}>
+          <Grid item xs={2} style={rowStyle}>
             {options}
           </Grid>
         </Grid>
@@ -256,8 +287,8 @@ const MemberListItem = ({
 
     if (isMobileView) {
       options = (
-        <Grid container alignItems="center" justify="flex-end" spacing={4}>
-          <Grid item sm={3} align="center">
+        <Grid container alignItems="center" justifyContent="flex-end" spacing={3}>
+          <Grid item sm={2} align="center">
             <FormControlLabel
               control={
                 <Checkbox
@@ -277,16 +308,30 @@ const MemberListItem = ({
       content = (
         <Accordion defaultExpanded={(isAdmin || isSuperAdmin) && !isMobileView}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Grid container>
-              <Grid item xs={6} sm={7} md={8}>
-                <Typography>
-                  {member.FirstName} {member.LastName}
-                </Typography>
+            <Grid container alignItems="center" spacing={2}>
+              <Grid item xs={9} sm={10}>
+                <Grid container spacing={3} wrap="nowrap" alignItems="center">
+                  <Grid>
+                    <Avatar
+                      src={`data:image/jpg;base64,${avatar}`}
+                      alt={`${member.FirstName} ${member.LastName}`}
+                      variant="rounded"
+                      style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+                    >
+                      {!avatar && <PlaceHolderAvatar />}
+                    </Avatar>
+                  </Grid>
+                  <Grid>
+                    <Link href={`/profile/${member.AD_Username}`}>
+                      <Typography>
+                        {member.FirstName} {member.LastName}
+                      </Typography>
+                    </Link>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item xs={4} sm={3} md={2}>
+              <Grid item xs={3} sm={2}>
                 <Typography>{member.ParticipationDescription} </Typography>
-              </Grid>
-              <Grid item xs={2}>
                 <Typography>{mailLoc}</Typography>
               </Grid>
             </Grid>
@@ -294,7 +339,7 @@ const MemberListItem = ({
           <AccordionDetails>
             <Grid container direction="column">
               <Grid item>{options}</Grid>
-              <Grid item>{titleComment}</Grid>
+              <Grid item>{title}</Grid>
             </Grid>
           </AccordionDetails>
         </Accordion>
@@ -311,19 +356,32 @@ const MemberListItem = ({
 
     content = (
       <>
-        <Grid container style={rowStyle} direction="row" alignItems="center">
-          <Grid item xs={4} style={rowStyle}>
-            <Typography>
-              {member.FirstName} {member.LastName}
-            </Typography>
+        <Divider />
+        <Grid container alignItems="center" spacing={2} wrap="nowrap">
+          <Grid item md={1} style={rowStyle}>
+            <Avatar
+              src={`data:image/jpg;base64,${avatar}`}
+              alt={`${member.FirstName} ${member.LastName}`}
+              variant="rounded"
+              style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+            >
+              {!avatar && <PlaceHolderAvatar />}
+            </Avatar>
+          </Grid>
+          <Grid item xs={3} style={rowStyle}>
+            <Link href={`/profile/${member.AD_Username}`}>
+              <Typography>
+                {member.FirstName} {member.LastName}
+              </Typography>
+            </Link>
           </Grid>
           <Grid item xs={4} style={rowStyle}>
-            <Typography>{participationDescription}</Typography>
+            <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
           <Grid item xs={2} style={rowStyle}>
             <Typography>{mailLoc}</Typography>
           </Grid>
-          <Grid item style={rowStyle} align="flex-end">
+          <Grid item xs={2} style={rowStyle}>
             {options}
           </Grid>
         </Grid>
@@ -354,6 +412,40 @@ const MemberListItem = ({
       </GordonDialogBox>
     </>
   );
+};
+
+MemberListItem.propTypes = {
+  member: PropTypes.shape({
+    MembershipID: PropTypes.number.isRequired,
+    ActivityCode: PropTypes.string.isRequired,
+    //ActivityImage: Not sure what the prop type should be, but it will be required.
+    SessionCode: PropTypes.string.isRequired,
+    IDNumber: PropTypes.number.isRequired,
+    AD_Username: PropTypes.string.isRequired,
+    FirstName: PropTypes.string.isRequired,
+    LastName: PropTypes.string.isRequired,
+    Mail_Location: PropTypes.string.isRequired,
+    Participation: PropTypes.string.isRequired,
+    ParticipationDescription: PropTypes.string.isRequired,
+    GroupAdmin: PropTypes.bool.isRequired,
+    Description: PropTypes.string.isRequired,
+    ActivityDescription: PropTypes.string,
+    ActivityImagePath: PropTypes.string,
+    SessionDescription: PropTypes.string,
+    StartDate: PropTypes.string,
+    EndDate: PropTypes.string,
+    ActivityType: PropTypes.string,
+    ActivityTypeDescription: PropTypes.string,
+    Privacy: PropTypes.string,
+    AccountPrivate: PropTypes.number,
+  }).isRequired,
+
+  isAdmin: PropTypes.bool.isRequired,
+  isSuperAdmin: PropTypes.bool.isRequired,
+  createSnackbar: PropTypes.func.isRequired,
+  isMobileView: PropTypes.bool.isRequired,
+  onLeave: PropTypes.func.isRequired,
+  onToggleIsAdmin: PropTypes.func.isRequired,
 };
 
 export default MemberListItem;

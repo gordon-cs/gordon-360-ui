@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
-import WellnessQuestion from 'components/WellnessQuestion';
+// @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
+//import WellnessQuestion from 'components/WellnessQuestion';
 import GuestWelcome from './components/GuestWelcome';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
@@ -8,66 +9,86 @@ import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import NewsCard from './components/NewsCard';
 import user from 'services/user';
-import wellness from 'services/wellness';
-import storage from 'services/storage';
-import './home.css';
+// @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+// import { Redirect } from 'react-router-dom';
+// @WELLNESS-CHECK disabled to revert this import these commented out lines
+// import wellness from 'services/wellness';
+// import storage from 'services/storage';
+// @TODO CSSMODULES - moved to global styles until a better solution is found
+// import styles from './Home.module.css';
 import { Grid } from '@material-ui/core';
-
+// @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+// import checkInService from 'services/checkIn';
 const Home = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
-  const [networkStatus, setNetworkStatus] = useState('online');
-  const [hasAnswered, setHasAnswered] = useState(null);
+  // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+  // const [checkedIn, setCheckedIn] = useState(null);
 
-  useEffect(() => {
-    // Retrieve network status from local storage or default to online
-    try {
-      setNetworkStatus(storage.get('network-status'));
-    } catch (error) {
-      setNetworkStatus('online');
-    }
+  /*
+    // @WELLNESS-CHECK disabled to revert this from the home page, you must uncomment all the code below.
+    This way, nobody will be required to make a report in order to see the home page,
+    but they can still report if needed.
+    To undo the changes made you may just uncomment all the code that has been commented out
+  */
 
-    /* Used to re-render the page when the network connection changes.
-     * The origin of the message is checked to prevent cross-site scripting attacks
-     */
-    window.addEventListener('message', (event) => {
-      setNetworkStatus((prevStatus) => {
-        if (
-          event.origin === window.location.origin &&
-          (event.data === 'online' || event.data === 'offline')
-        ) {
-          return event.data;
-        }
-        return prevStatus;
-      });
-    });
+  // const [networkStatus, setNetworkStatus] = useState('online');
+  // const [hasAnswered, setHasAnswered] = useState(null);
+  ////
+  // useEffect(() => {
+  //   // Retrieve network status from local storage or default to online
+  //   try {
+  //     setNetworkStatus(storage.get('network-status'));
+  //   } catch (error) {
+  //     setNetworkStatus('online');
+  //   }
 
-    return () => window.removeEventListener('message', () => {});
-  }, []);
+  //   /* Used to re-render the page when the network connection changes.
+  //    * The origin of the message is checked to prevent cross-site scripting attacks
+  //    */
+  //   window.addEventListener('message', (event) => {
+  //     setNetworkStatus((prevStatus) => {
+  //       if (
+  //         event.origin === window.location.origin &&
+  //         (event.data === 'online' || event.data === 'offline')
+  //       ) {
+  //         return event.data;
+  //       }
+  //       return prevStatus;
+  //     });
+  //   });
+  //
+  //   return () => window.removeEventListener('message', () => {});
+  // }, []);
+  // END Wellness Check disabled code
 
   useEffect(() => {
     if (authentication) {
       loadPage();
       setIsAuthenticated(true);
     } else {
+      // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
       // Clear out component's person-specific state when authentication becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
-      setHasAnswered(null);
+      // setHasAnswered(null);
       setPersonType(null);
       setIsAuthenticated(false);
       setLoading(false);
     }
   }, [authentication]);
-
   const loadPage = async () => {
     setLoading(true);
-    const [{ PersonType }, { IsValid }] = await Promise.all([
+    // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
+    const [{ PersonType } /*, { IsValid }*/] = await Promise.all([
       user.getProfileInfo(),
-      wellness.getStatus(),
+      // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
+      /*wellness.getStatus(),*/
     ]);
+    // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+    // setCheckedIn(await checkInService.getStatus());
     setPersonType(PersonType);
-    setHasAnswered(IsValid);
+    // setHasAnswered(IsValid);
     setLoading(false);
   };
 
@@ -75,13 +96,17 @@ const Home = ({ authentication, onLogIn }) => {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
     return <GuestWelcome onLogIn={onLogIn} />;
-  } else if (networkStatus === 'online' && !hasAnswered) {
-    return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
-  } else {
+  } // @WELLNESS-CHECK disabled to revert this you must uncomment this lines of code
+  //else if (networkStatus === 'online' && !hasAnswered) {
+  //return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;}
+  // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
+  // else if (!checkedIn && personType.includes('stu')) {
+  //   return (<Redirect to='/AcademicCheckIn' />);
+  else {
     let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 
     return (
-      <Grid container justify="center" spacing={2}>
+      <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} md={10}>
           <Carousel />
         </Grid>

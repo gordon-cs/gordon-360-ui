@@ -131,6 +131,7 @@ const NonMemberButtons = ({
             <TextField
               variant="filled"
               label="Title/Comment"
+              type="search"
               fullWidth
               onChange={(event) => setTitleComment(event.target.value)}
             />

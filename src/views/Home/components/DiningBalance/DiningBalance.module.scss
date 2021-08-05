@@ -1,0 +1,22 @@
+@import '../../../../vars';
+
+.dining_balance {
+  .entry_text {
+    // font-family: Arial, Helvetica, Tahoma, Verdana, Trebuchet MS, sans-serif;
+    font-size: 10pt;
+    color: $neutral-dark-gray3;
+  }
+
+  .label_text {
+    font-size: 8.5vw;
+    font-weight: bold;
+    letter-spacing: -0.8px;
+    text-shadow: 0px 1px 6px $neutral-black-opacity20;
+  }
+
+  @media (min-width: $break-md) {
+    .label_text {
+      font-size: 3.3vw;
+    }
+  }
+}

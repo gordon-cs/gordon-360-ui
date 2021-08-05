@@ -1,7 +1,7 @@
 import { Divider, Drawer, Hidden } from '@material-ui/core';
 import GordonNavAvatar from './components/NavAvatar';
 import GordonNavLinks from './components/NavLinks';
-import './nav.css';
+import styles from './Nav.module.css';
 
 const GordonNav = ({ onDrawerToggle, authentication, onSignOut, drawerOpen }) => {
   const drawer = (
@@ -17,13 +17,13 @@ const GordonNav = ({ onDrawerToggle, authentication, onSignOut, drawerOpen }) =>
   );
 
   return (
-    <section className="gordon-nav">
+    <section className={styles.gordon_nav}>
       <Hidden mdUp>
         <Drawer
           variant="temporary"
           open={drawerOpen}
           classes={{
-            paper: 'gordon-nav-drawer',
+            paper: styles.gordon_nav_drawer,
           }}
           onClose={onDrawerToggle}
           ModalProps={{
@@ -38,7 +38,7 @@ const GordonNav = ({ onDrawerToggle, authentication, onSignOut, drawerOpen }) =>
           variant="permanent"
           open
           classes={{
-            paper: 'drawer',
+            paper: styles.drawer,
           }}
         >
           {drawer}

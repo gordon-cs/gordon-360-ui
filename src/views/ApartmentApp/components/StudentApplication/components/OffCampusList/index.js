@@ -3,6 +3,9 @@ import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
 import OffCampusListItem from './components/OffCampusListItem';
 import goStalk from 'services/goStalk';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../../../ApartmentApp.module.css';
+
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -33,12 +36,12 @@ const OffCampusList = ({ disabled, applicants, onOffCampusInputChange }) => {
 
   return (
     <Card>
-      <CardHeader title="Off-Campus Work Study" className="apartment-card-header" />
+      <CardHeader title="Off-Campus Work Study" className={styles.apartment_card_header} />
       <CardContent>
-        <Grid container justify="space-between" spacing={2}>
+        <Grid container justifyContent="space-between" spacing={2}>
           <Grid item xs={12}>
             <List
-              className="off-campus-list"
+              className={styles.off_campus_list}
               aria-label="apartment applicants off campus programs"
               disablePadding
             >

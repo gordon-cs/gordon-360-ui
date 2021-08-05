@@ -4,6 +4,9 @@ import PublishIcon from '@material-ui/icons/Publish';
 import SaveIcon from '@material-ui/icons/Save';
 import DynamicButton from 'components/DynamicButton';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../../../ApartmentApp.module.css';
+
 /**
  * Renders the bottom bar for the apartment application page
  *
@@ -100,9 +103,9 @@ const BottomBar = ({
   }
 
   return (
-    <Card className="sticky-page-bottom-bar" variant="outlined">
+    <Card className={styles.sticky_page_bottom_bar} variant="outlined">
       <CardContent>
-        <Grid container direction="row" justify="flex-end" spacing={2}>
+        <Grid container direction="row" justifyContent="flex-end" spacing={2}>
           <Grid item xs={12} sm>
             <Typography variant="body1" {...dynamicContent.itemProps}>
               {dynamicContent.primaryText}
@@ -123,7 +126,7 @@ const BottomBar = ({
             )}
             <Grid item xs>
               <DynamicButton
-                className="delete-button"
+                className={styles.delete_button}
                 disabled={!canEditApplication || !applicationID}
                 buttonText={'Delete'}
                 startIcon={<DeleteIcon />}

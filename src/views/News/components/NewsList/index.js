@@ -1,164 +1,146 @@
-import { Component } from 'react';
-
-import NewsItem from '../NewsItem';
+import { Card, Grid, List, Typography } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';
-import './newsList.scss';
+import NewsItem from '../NewsItem';
+import styles from './NewsList.module.css';
 
-import { Grid, Typography, Card, List } from '@material-ui/core';
+//https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
+//Excellent resource for handling rerender on resize -Josh
 
-export default class NewsList extends Component {
-  constructor(props) {
-    super(props);
+const BREAKPOINT_WIDTH = 540;
 
-    this.handleExpandClick = this.handleExpandClick.bind(this);
+const headerStyle = {
+  backgroundColor: gordonColors.primary.blue,
+  color: '#FFF',
+  padding: '10px',
+};
 
-    this.state = {
-      open: false,
+const singleHeader = (
+  <div style={headerStyle}>
+    <Grid container direction="row">
+      <Grid item xs={12}>
+        <Typography variant="body2" style={headerStyle}>
+          NEWS
+        </Typography>
+      </Grid>
+    </Grid>
+  </div>
+);
+
+const fullHeader = (
+  <Grid container direction="row" style={headerStyle}>
+    <Grid item xs={2}>
+      <Typography variant="body1" style={headerStyle}>
+        CATEGORY
+      </Typography>
+    </Grid>
+    <Grid item xs={5}>
+      <Typography variant="body1" style={headerStyle}>
+        SUBJECT
+      </Typography>
+    </Grid>
+    <Grid item xs={3}>
+      <Typography variant="body1" style={headerStyle}>
+        POSTED BY
+      </Typography>
+    </Grid>
+    <Grid item xs={2}>
+      <Typography variant="body1" style={headerStyle}>
+        POSTED
+      </Typography>
+    </Grid>
+  </Grid>
+);
+
+const NewsList = ({
+  news,
+  personalUnapprovedNews,
+  currentUsername,
+  handleNewsItemEdit,
+  handleNewsItemDelete,
+}) => {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    function handleResize() {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener('resize', handleResize);
+    return (_) => {
+      window.removeEventListener('resize', handleResize);
     };
-    this.breakpointWidth = 540;
-  }
+  });
 
-  handleExpandClick() {
-    this.setState({ open: !this.state.open });
-  }
+  return news.length > 0 || personalUnapprovedNews.length > 0 ? (
+    <Card>
+      {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
+      <Grid>
+        <List className={styles.news_list} disablePadding>
+          {personalUnapprovedNews.length > 0 &&
+            personalUnapprovedNews.map((posting) => (
+              <NewsItem
+                posting={posting}
+                unapproved
+                size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
+                currentUsername={currentUsername}
+                handleNewsItemEdit={handleNewsItemEdit}
+                handleNewsItemDelete={handleNewsItemDelete}
+                key={posting.SNID}
+              />
+            ))}
 
-  //Has to rerender on screen resize in order for table to switch to the mobile view
-  resize = () => {
-    if (this.breakpointPassed()) {
-      this.isMobileView = !this.isMobileView;
-      this.forceUpdate();
-    }
-  };
+          {news.length > 0 &&
+            news.map((posting) => (
+              <NewsItem
+                posting={posting}
+                //approved
+                size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
+                currentUsername={currentUsername}
+                handleNewsItemEdit={handleNewsItemEdit}
+                handleNewsItemDelete={handleNewsItemDelete}
+                key={posting.SNID}
+              />
+            ))}
+        </List>
+      </Grid>
+    </Card>
+  ) : (
+    //No news
+    <Typography variant="h4" align="center">
+      No News To Show
+    </Typography>
+  );
+};
 
-  //checks if the screen has been resized past the mobile breakpoint
-  //allows for forceUpdate to only be called when necessary, improving resizing performance
-  breakpointPassed() {
-    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
-    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
-    else return false;
-  }
+NewsList.propTypes = {
+  news: PropTypes.arrayOf(
+    PropTypes.shape({
+      SNID: PropTypes.number.isRequired,
+      Subject: PropTypes.string.isRequired,
+      ADUN: PropTypes.string.isRequired,
+      Entered: PropTypes.string.isRequired,
+      categoryName: PropTypes.string.isRequired,
+      Body: PropTypes.string.isRequired,
+      // Expiration: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
-  }
+  personalUnapprovedNews: PropTypes.arrayOf(
+    PropTypes.shape({
+      SNID: PropTypes.number.isRequired,
+      Subject: PropTypes.string.isRequired,
+      ADUN: PropTypes.string.isRequired,
+      Entered: PropTypes.string.isRequired,
+      categoryName: PropTypes.string.isRequired,
+      Body: PropTypes.string.isRequired,
+      // Expiration: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
-  }
+  currentUsername: PropTypes.string.isRequired,
+  handleNewsItemEdit: PropTypes.func.isRequired,
+  handleNewsItemDelete: PropTypes.func.isRequired,
+};
 
-  render() {
-    const { news } = this.props;
-    const { personalUnapprovedNews } = this.props;
-    let postings;
-    let personalUnapprovedPostings;
-    let header;
-
-    const headerStyle = {
-      backgroundColor: gordonColors.primary.blue,
-      color: '#FFF',
-      padding: '10px',
-    };
-
-    /********** HEADER ***********/
-    // Show single 'news' column for narrrow viewports
-    if (window.innerWidth < this.breakpointWidth) {
-      personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="single"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-          unapproved
-        />
-      ));
-
-      postings = news.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="single"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-        />
-      ));
-
-      header = (
-        <div style={headerStyle}>
-          <Grid container direction="row">
-            <Grid item xs={12}>
-              <Typography variant="body2" style={headerStyle}>
-                NEWS
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
-      );
-    }
-
-    // Show full news columns in header for larger viewports
-    else if (news) {
-      personalUnapprovedPostings = personalUnapprovedNews.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          size="full"
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-          unapproved
-        />
-      ));
-
-      postings = news.map((posting) => (
-        <NewsItem
-          posting={posting}
-          key={posting.SNID}
-          updateSnackbar={this.props.updateSnackbar}
-          currentUsername={this.props.currentUsername}
-          callFunction={this.props.callFunction}
-          size="full"
-        />
-      ));
-
-      header = (
-        <Grid container direction="row" style={headerStyle}>
-          <Grid item xs={2}>
-            <Typography variant="body1" style={headerStyle}>
-              CATEGORY
-            </Typography>
-          </Grid>
-          <Grid item xs={5}>
-            <Typography variant="body1" style={headerStyle}>
-              SUBJECT
-            </Typography>
-          </Grid>
-          <Grid item xs={3}>
-            <Typography variant="body1" style={headerStyle}>
-              POSTED BY
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography variant="body1" style={headerStyle}>
-              POSTED
-            </Typography>
-          </Grid>
-        </Grid>
-      );
-    }
-
-    return (
-      <Card>
-        {header}
-        <Grid>
-          <List className="news-list" disablePadding>
-            {personalUnapprovedPostings}
-            {postings}
-          </List>
-        </Grid>
-      </Card>
-    );
-  }
-}
+export default NewsList;

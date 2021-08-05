@@ -4,7 +4,6 @@ import { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
-import './app.css';
 import analytics from './services/analytics';
 import { isAuthenticated } from './services/auth';
 import NetworkContextProvider from './contexts/NetworkContext';
@@ -13,6 +12,11 @@ import GordonNav from './components/Nav';
 import OfflineBanner from './components/OfflineBanner';
 import theme from './theme';
 import routes from './routes';
+
+// Global styling that applies to entire site
+import './app.global.css';
+// local module for app.js
+import styles from './app.module.css';
 
 export default class App extends Component {
   constructor(props) {
@@ -59,7 +63,7 @@ export default class App extends Component {
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <NetworkContextProvider>
             <Router history={this.history}>
-              <section className="app-wrapper">
+              <section className={styles.app_wrapper}>
                 <GordonHeader
                   onDrawerToggle={this.onDrawerToggle}
                   onSignOut={this.onAuthChange}
@@ -71,7 +75,7 @@ export default class App extends Component {
                   onSignOut={this.onAuthChange}
                   authentication={this.state.authentication}
                 />
-                <main className="app-main">
+                <main className={styles.app_main}>
                   <Switch>
                     {routes.map((route) => (
                       <Route
@@ -79,7 +83,7 @@ export default class App extends Component {
                         path={route.path}
                         exact={route.exact}
                         render={(props) => (
-                          <div className="app-main-container">
+                          <div className={styles.app_main_container}>
                             <OfflineBanner
                               currentPath={route.path}
                               authentication={this.state.authentication}

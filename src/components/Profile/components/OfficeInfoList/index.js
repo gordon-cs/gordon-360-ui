@@ -1,7 +1,6 @@
-import './index.css';
-
-import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, List } from '@material-ui/core';
 import ProfileInfoListItem from '../ProfileInfoListItem';
+import styles from './OfficeInfoList.module.css';
 
 const OfficeInfoList = ({
   profile: {
@@ -32,7 +31,7 @@ const OfficeInfoList = ({
     <ProfileInfoListItem
       title="Office Phone:"
       contentText={
-        <a href={'tel:978867' + OnCampusPhone} className="gc360-text-link">
+        <a href={'tel:978867' + OnCampusPhone} className="gc360_text_link">
           {'(978) 867-' + OnCampusPhone}
         </a>
       }
@@ -54,8 +53,8 @@ const OfficeInfoList = ({
 
   return (
     <Grid item xs={12}>
-      <Card className="office-info-list">
-        <Grid container className="office-info-list-header">
+      <Card className={styles.office_info_list}>
+        <Grid container className={styles.office_info_list_header}>
           <CardHeader title="Office Information" />
         </Grid>
         <CardContent>

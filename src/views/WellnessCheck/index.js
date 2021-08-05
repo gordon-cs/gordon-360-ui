@@ -7,8 +7,6 @@ import Login from 'components/LoginDialogue';
 import wellness from 'services/wellness';
 import user from 'services/user';
 
-import './index.css';
-
 const WellnessCheck = ({ authentication, onLogIn }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
@@ -32,10 +30,8 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
 
     if (status && status.IsValid) {
       setCurrentStatus(status.Status);
-      const [
-        { FirstName, LastName },
-        { def: defaultImage, pref: preferredImage },
-      ] = await Promise.all([user.getProfileInfo(), user.getImage()]);
+      const [{ FirstName, LastName }, { def: defaultImage, pref: preferredImage }] =
+        await Promise.all([user.getProfileInfo(), user.getImage()]);
 
       setUsername(`${FirstName} ${LastName}`);
       setImage(preferredImage ?? defaultImage);
@@ -48,7 +44,7 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
     return (
-      <div className="gordon-login">
+      <div>
         <Login onLogIn={onLogIn} />
       </div>
     );

@@ -4,6 +4,9 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { gordonColors } from 'theme';
 import membership from 'services/membership';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../Requests.module.css';
+
 const RequestSent = ({ member, onCancel }) => {
   const handleCancel = () => {
     membership.cancelRequest(member.RequestID);
@@ -38,7 +41,7 @@ const RequestSent = ({ member, onCancel }) => {
               <strong> {member.ActivityDescription} </strong>
             </Typography>
             <Typography>
-              <span className="weak">{membership.getDiffDays(member.DateSent)}</span>
+              <span className={styles.weak}>{membership.getDiffDays(member.DateSent)}</span>
             </Typography>
           </Grid>
           <Grid item xs={6} sm={4} align="center">

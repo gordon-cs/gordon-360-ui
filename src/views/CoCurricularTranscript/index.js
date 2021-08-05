@@ -6,7 +6,7 @@ import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
 import user from 'services/user';
 import GordonLoader from 'components/Loader';
-import './coCurricularTranscript.css';
+import styles from './CoCurricularTranscript.module.css';
 
 //This component creates the overall interface for the CoCurricularTranscript (card, heading,
 //download button), and contains a InvolvementsList object for displaying the content
@@ -290,13 +290,13 @@ export default class Transcript extends Component {
       const otherInvolvements = this.state.otherInvolvements;
 
       return (
-        <div className="co-curricular-transcript">
-          <Card className="card" elevation={10}>
-            <CardContent className="card-content">
-              <div className="print-only">{/* <img src={require('./logo.png')} alt="" /> */}</div>
+        <div className={styles.co_curricular_transcript}>
+          <Card className={styles.card} elevation={10}>
+            <CardContent className={styles.card_content}>
+              <div className={styles.print_only}>{/* <img src={require('./logo.png')} alt="" /> */}</div>
               <div>
                 <Button
-                  className="button"
+                  className={styles.button}
                   onClick={this.handleDownload}
                   style={buttonColors}
                   variant="contained"
@@ -305,45 +305,45 @@ export default class Transcript extends Component {
                 </Button>
               </div>
               <div>Gordon College Experience Transcript</div>
-              <div className="subtitle">
+              <div className={styles.subtitle}>
                 {' '}
                 <b>{this.state.profile.fullName}</b>{' '}
               </div>
-              <div className="subtitle">{this.getGradCohort()}</div>
-              <div className="subtitle">{this.getMajors(this.state.profile.Majors)}</div>
-              <div className="subtitle">{this.getMinors(this.state.profile.Minors)}</div>
+              <div className={styles.subtitle}>{this.getGradCohort()}</div>
+              <div className={styles.subtitle}>{this.getMajors(this.state.profile.Majors)}</div>
+              <div className={styles.subtitle}>{this.getMinors(this.state.profile.Minors)}</div>
               {honorsLeadership && (
-                <div className="subtitle">
+                <div className={styles.subtitle}>
                   <Typography variant="h5">
                     <b>Honors, Leadership, and Research</b>
                   </Typography>
                 </div>
               )}
-              <div className="activity-list">{honorsList}</div>
+              <div className={styles.activity_list}>{honorsList}</div>
               {experiences && (
-                <div className="subtitle">
+                <div className={styles.subtitle}>
                   <Typography variant="h5">
                     <b>Experience</b>
                   </Typography>
                 </div>
               )}
-              <div className="activity-list">{experienceList}</div>
+              <div className={styles.activity_list}>{experienceList}</div>
               {serviceLearning && (
-                <div className="subtitle">
+                <div className={styles.subtitle}>
                   <Typography variant="h5">
                     <b>Service Learning</b>
                   </Typography>
                 </div>
               )}
-              <div className="activity-list">{serviceList}</div>
+              <div className={styles.activity_list}>{serviceList}</div>
               {otherInvolvements && (
-                <div className="subtitle">
+                <div className={styles.subtitle}>
                   <Typography variant="h5">
                     <b>Activities</b>
                   </Typography>
                 </div>
               )}
-              <div className="activity-list">{activityList}</div>
+              <div className={styles.activity_list}>{activityList}</div>
             </CardContent>
           </Card>
         </div>

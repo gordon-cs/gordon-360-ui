@@ -1,0 +1,79 @@
+/* Style sheet for CoCurricular Transcript view */
+@import '../../vars';
+
+.co_curricular_transcript {
+  display: grid;
+  grid-template-columns: 15% 70% 15%;
+  justify-items: stretch;
+  text-align: center;
+
+  /* For large screens */
+  .card {
+    grid-column: 2;
+  }
+
+  /* For small and medium screens (1024px wide or less) */
+  @media (max-width: 1024px) {
+    .card {
+      grid-column: 1 / -1; /* -1 makes item go all the way to right edge of container */
+    }
+  }
+
+  .card_content {
+    display: grid;
+    font-size: 48px;
+    grid-template-columns: 100%;
+    grid-row-gap: 10px;
+  }
+
+  .button {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .subtitle {
+    font-size: 60%;
+    justify-self: flex-start;
+  }
+
+  .activity_list {
+    font-size: 30%;
+  }
+
+  /* @media screen is css that is in effect when a certain view is on display */
+  @media screen {
+    .print_only * {
+      visibility: hidden;
+      border-spacing: 0;
+      border-collapse: collapse;
+      height: 0;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}
+
+/* @media print takes effect when in a print view (eg after hitting Print Co-Curricular Transcript).
+   Allows logo to only show when printing. */
+@media print {
+  body header {
+    // hides the header (with people search etc.)
+    visibility: hidden;
+  }
+
+  .co_curricular_transcript {
+    .card_content,
+    .subtitle,
+    .activity_list {
+      visibility: visible;
+    }
+
+    .button {
+      display: none !important;
+    }
+
+    .card {
+      visibility: hidden;
+    }
+  }
+}

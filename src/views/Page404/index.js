@@ -4,7 +4,7 @@ import ScottieDog from './components/ScottieDog';
 
 const message = "Hmmm... We're not quite sure what you're looking for";
 
-const styles = {
+const styles2 = {
   main: {
     height: 'calc(100vh - 72px)',
     margin: '-16px 0px',
@@ -26,9 +26,15 @@ const styles = {
 
 const Page404 = () => {
   return (
-    <Grid container justify="center" alignContent="center" direction="column" style={styles.main}>
+    <Grid
+      container
+      justifyContent="center"
+      alignContent="center"
+      direction="column"
+      style={styles2.main}
+    >
       {/* 404 message */}
-      <Grid item style={styles.message}>
+      <Grid item style={styles2.message}>
         <Typography
           variant="h4"
           align="center"
@@ -42,8 +48,8 @@ const Page404 = () => {
         </Typography>
       </Grid>
       {/* Gordon mascot image */}
-      <Grid item align="center" style={styles.image}>
-        <img src={mascot} alt="Gordon Mascot" style={styles.mascot}></img>
+      <Grid item align="center" style={styles2.image}>
+        <img src={mascot} alt="Gordon Mascot" style={styles2.mascot}></img>
       </Grid>
       {/* Scottie dog walking across bottom animation */}
       <div

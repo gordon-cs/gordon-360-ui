@@ -10,6 +10,9 @@ import ApplicationsTable from './components/ApplicationTable';
 import { NotFoundError } from 'services/error';
 import housing from 'services/housing';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../ApartmentApp.module.css';
+
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('services/housing').ApartmentChoice } ApartmentChoice
@@ -112,10 +115,13 @@ const StaffMenu = ({ userProfile }) => {
     return <GordonLoader />;
   } else {
     return (
-      <Grid container justify="center" spacing={2}>
+      <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} lg={10}>
           <Card>
-            <CardHeader title="Download Apartment Applications" className="apartment-card-header" />
+            <CardHeader
+              title="Download Apartment Applications"
+              className={styles.apartment_card_header}
+            />
             <CardContent>
               <Grid container direction="row" spacing={2}>
                 <Grid item xs={12}>
@@ -125,7 +131,7 @@ const StaffMenu = ({ userProfile }) => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container justify="center" alignItems="center" spacing={2}>
+              <Grid container justifyContent="center" alignItems="center" spacing={2}>
                 <Grid item>
                   <Button
                     variant="contained"

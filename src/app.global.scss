@@ -1,0 +1,184 @@
+// Specifies global styling that applies to entire site
+// These selectors may be used by any component or view of the site
+
+@import './vars';
+
+// @TODO CSSMODULES - moved to global styles from Home.module.scss until a better solution is found
+@import '../node_modules/react-image-gallery/styles/scss/image-gallery.scss';
+
+// https://www.paulirish.com/2012/box-sizing-border-box-ftw/
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body,
+html,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  letter-spacing: 1px;
+  margin: 0;
+  max-width: 100%;
+  padding: 0;
+}
+
+a {
+  // Disable link underline
+  text-decoration: none;
+
+  &:hover {
+    // Disable link underline
+    text-decoration: none;
+  }
+
+  &:visited {
+    // Keep link color the same after visiting it
+    color: initial;
+  }
+}
+// style for links that are menu items or buttons (not just text)
+.gc360_link {
+  color: $neutral-black;
+  &:hover {
+    color: $neutral-black !important;
+    text-decoration: none !important;
+  }
+}
+// style for links that are simply text and therefore need more of a sign that they are clickable
+.gc360_text_link {
+  color: $primary-blue;
+  transition: color 200ms;
+  &:hover {
+    color: $primary-cyan !important;
+  }
+}
+
+@media (max-width: $break-md) {
+  .gc360_a_link {
+    color: $primary-cyan !important;
+  }
+}
+
+strong {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.disable_select {
+  user-select: none;
+}
+
+.rounded_corners {
+  border-radius: 0.5rem;
+}
+
+// PHOTO DIALOG STYLES
+// Should be eventually refactored out into its own component
+
+.gc360_photo_dialog {
+  &_box {
+    display: grid;
+    grid-template-rows: auto auto auto auto auto auto;
+    padding-bottom: 1rem;
+    &_alert {
+      grid-row: 1;
+    }
+    &_title {
+      grid-row: 2;
+      background-color: $primary-blue;
+      text-align: center;
+      color: $neutral-white; //white;
+    }
+    &_content {
+      display: grid;
+      grid-row: 3;
+      grid-template-rows: auto auto;
+      grid-row-gap: 10px;
+      justify-items: center;
+      &_text {
+        grid-row: 1;
+        text-align: center;
+        max-width: 285px;
+      }
+      &_dropzone {
+        transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+        width: 18rem;
+        height: 18rem;
+        display: flex;
+        border-style: dashed;
+        border-width: 0.2rem;
+        border-radius: 1rem;
+        border-color: darkgray;
+        justify-content: center;
+        align-items: center;
+        outline: none;
+        &:hover {
+          background-color: $neutral-light-gray2;
+          box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
+        }
+        &_img {
+          border-radius: 0.5rem;
+          height: 90%;
+          width: 90%;
+        }
+      }
+      &_cropper {
+        grid-row: 2;
+      }
+      &_button {
+        grid-row: 3;
+        margin-top: 1rem !important;
+      }
+    }
+    &_actions_top {
+      grid-row: 4;
+      padding-top: 0rem !important;
+      padding-bottom: 1rem !important;
+      justify-content: center !important;
+      button {
+        width: 86%;
+      }
+    }
+    &_actions_middle {
+      grid-row: 5;
+      justify-content: space-evenly !important;
+      button {
+        width: 38%;
+      }
+    }
+    &_actions_bottom {
+      grid-row: 6;
+      justify-content: space-evenly !important;
+      button {
+        width: 38%;
+      }
+    }
+  }
+}
+
+@media (max-width: $break-sm) {
+  .gc360_photo_dialog {
+    height: 100%;
+    &_box {
+      &_content {
+        &_dropzone {
+          width: 12em;
+          height: 12rem;
+        }
+        &_cropper {
+          padding-right: 20px;
+        }
+      }
+    }
+  }
+}

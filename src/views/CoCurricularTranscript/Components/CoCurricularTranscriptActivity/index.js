@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import './coCurricularTranscriptActivity.css';
+import styles from './CoCurricularTranscriptActivity.module.css';
 
 export default class Activity extends Component {
   // Helper functions for parsing and translating sessionCode which is of the format "YYYYSE"
@@ -126,13 +126,13 @@ export default class Activity extends Component {
     }
 
     return (
-      <div className="experience-transcript-activities">
-        <div className="organization-role">{Activity.ActivityDescription}</div>
-        <div className="date"> {duration} </div>
+      <div className={styles.experience_transcript_activities}>
+        <div className={styles.organization_role}>{Activity.ActivityDescription}</div>
+        <div className={styles.date}> {duration} </div>
         {!(leaderDuration === undefined) && (
-          <div className="leadership-line">
-            <div className="organization-role">Leader</div>
-            <div className="date">{leaderDuration}</div>
+          <div className={styles.leadership_line}>
+            <div className={styles.organization_role}>Leader</div>
+            <div className={styles.date}>{leaderDuration}</div>
           </div>
         )}
       </div>

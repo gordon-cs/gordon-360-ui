@@ -29,7 +29,7 @@ import {
 const STARTHOUR = '08:00';
 const ENDHOUR = '17:00';
 
-const styles = {
+const styles2 = {
   colorSwitchBase: {
     color: gordonColors.neutral.lightGray,
     '&$colorChecked': {
@@ -367,10 +367,17 @@ class GordonSchedulePanel extends Component {
             <Typography>{panelTitle} the Schedule</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Grid container direction="row" justify="center">
+            <Grid container direction="row" justifyContent="center">
               {this.props.network === 'online' && (
                 <Grid container direction="row" item xs={12} lg={10}>
-                  <Grid container item xs={12} lg={8} alignItems="center" justify="flex-start">
+                  <Grid
+                    container
+                    item
+                    xs={12}
+                    lg={8}
+                    alignItems="center"
+                    justifyContent="flex-start"
+                  >
                     <Markup content={replaced} />
                   </Grid>
 
@@ -381,7 +388,7 @@ class GordonSchedulePanel extends Component {
                     xs={12}
                     lg={4}
                     alignItems="flex-end"
-                    justify="flex-end"
+                    justifyContent="flex-end"
                   >
                     {privacyButton}
                   </Grid>
@@ -401,7 +408,7 @@ class GordonSchedulePanel extends Component {
                     xs={12}
                     lg={8}
                     alignItems="flex-end"
-                    justify="flex-end"
+                    justifyContent="flex-end"
                   >
                     {lastUpdate}
                   </Grid>
@@ -436,4 +443,4 @@ class GordonSchedulePanel extends Component {
   }
 }
 
-export default withStyles(styles)(GordonSchedulePanel);
+export default withStyles(styles2)(GordonSchedulePanel);

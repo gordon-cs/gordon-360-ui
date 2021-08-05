@@ -1,0 +1,67 @@
+@import '../../../../../../vars';
+
+.membership_info_card {
+  &_description {
+    hyphens: auto;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    word-break: break-word;
+    a {
+      color: $primary-blue;
+      &:hover {
+        color: $primary-cyan !important;
+      }
+    }
+  }
+  &_image {
+    justify-content: flex-end;
+    img {
+      width: 100% !important;
+      max-width: 120px !important;
+      border-radius: 5px !important;
+      margin: 0.5rem !important;
+      &.active:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+  .private_membership {
+    opacity: 0.5;
+  }
+
+  .public_membership {
+    opacity: 1;
+  }
+}
+
+.snackbar_icon {
+  margin-bottom: -4.5pt;
+  margin-right: 0.5rem;
+}
+
+@media (max-width: 500px) {
+  .membership_info_card {
+    padding: 1.5rem 0rem;
+    flex-direction: column-reverse;
+    &_description {
+      max-width: 100% !important;
+      justify-content: center;
+      flex-direction: row-reverse;
+      padding: 0.5rem;
+      &_text {
+        // padding-right: 0rem !important;
+        border-left: 2px solid $primary-blue;
+      }
+    }
+    &_image {
+      max-width: 100% !important;
+      justify-content: center;
+
+      img {
+        width: 70% !important;
+        max-width: 500px !important;
+      }
+    }
+  }
+}

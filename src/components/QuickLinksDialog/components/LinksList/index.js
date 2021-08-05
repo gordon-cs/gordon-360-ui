@@ -1,7 +1,5 @@
 import LinkIcon from '@material-ui/icons/InsertLink';
-
 import { ListItemIcon, ListItemText, ListSubheader, List, ListItem } from '@material-ui/core';
-
 import CanvasIcon from './images/Canvas.ico';
 import GordonIcon from './images/GordonFavicon.ico';
 import GOIcon from './images/GoGordonFavicon.ico';
@@ -25,7 +23,7 @@ const GordonLinksList = () => (
         target="_blank"
         rel="noopener"
         href="https://www.gordon.edu"
-        className="gc360-text-link"
+        className="gc360_text_link"
       >
         <ListItemIcon>
           <img src={GordonIcon} alt="gordon" width="16" height="16" />
@@ -36,7 +34,7 @@ const GordonLinksList = () => (
         target="_blank"
         rel="noopener"
         href="https://my.gordon.edu"
-        className="gc360-text-link"
+        className="gc360_text_link"
       >
         <ListItemIcon>
           <img src={MyGordonIcon} alt="my gordon" width="16" height="16" />
@@ -47,7 +45,7 @@ const GordonLinksList = () => (
         target="_blank"
         rel="noopener"
         href="https://go.gordon.edu"
-        className="gc360-text-link"
+        className="gc360_text_link"
       >
         <ListItemIcon>
           <img src={GOIcon} alt="go gordon" width="16" height="16" />
@@ -58,7 +56,7 @@ const GordonLinksList = () => (
         target="_blank"
         rel="noopener"
         href="https://canvas.gordon.edu"
-        className="gc360-text-link"
+        className="gc360_text_link"
       >
         <ListItemIcon>
           <img src={CanvasIcon} alt="canvas" width="16" height="16" />
@@ -71,7 +69,7 @@ const GordonLinksList = () => (
         target="_blank"
         rel="noopener"
         href="http://athletics.gordon.edu/"
-        className="gc360-text-link"
+        className="gc360_text_link"
       >
         <ListItemIcon>
           <LinkIcon style={{ fontSize: 16 }} />
@@ -82,7 +80,7 @@ const GordonLinksList = () => (
         target="_blank"
         rel="noopener"
         href="http://stories.gordon.edu/"
-        className="gc360-text-link"
+        className="gc360_text_link"
       >
         <ListItemIcon>
           <LinkIcon style={{ fontSize: 16 }} />
@@ -93,7 +91,7 @@ const GordonLinksList = () => (
         target="_blank"
         rel="noopener"
         href="https://www.gordon.edu/titleix"
-        className="gc360-text-link"
+        className="gc360_text_link"
       >
         <ListItemIcon>
           <LinkIcon style={{ fontSize: 16 }} />
@@ -104,7 +102,7 @@ const GordonLinksList = () => (
         target="_blank"
         rel="noopener"
         href="https://www.gordon.edu/map"
-        className="gc360-text-link"
+        className="gc360_text_link"
       >
         <ListItemIcon>
           <LinkIcon style={{ fontSize: 16 }} />

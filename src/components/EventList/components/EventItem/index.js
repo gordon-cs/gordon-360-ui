@@ -1,8 +1,7 @@
+import { CardContent, Collapse, Grid, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { Component } from 'react';
-import './event-item.css';
-
-import { Typography, CardContent, Collapse, Grid } from '@material-ui/core';
+import styles from './EventItem.module.css';
 
 //Switched to table rows
 export default class GordonEventItem extends Component {
@@ -22,23 +21,28 @@ export default class GordonEventItem extends Component {
     eventDescription = eventDescription === '' ? 'No description available' : eventDescription;
     return (
       <section>
-        <Grid container direction="row" onClick={this.handleExpandClick} className="event-item">
+        <Grid
+          container
+          direction="row"
+          onClick={this.handleExpandClick}
+          className={styles.event_item}
+        >
           <Grid item xs={4}>
-            <Typography className="event-column">{event.title}</Typography>
+            <Typography className={styles.event_column}>{event.title}</Typography>
           </Grid>
           <Grid item xs={4}>
-            <Typography className="event-column">{event.location}</Typography>
+            <Typography className={styles.event_column}>{event.location}</Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography className="event-column">{event.date}</Typography>
+            <Typography className={styles.event_column}>{event.date}</Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography className="event-column">{event.timeRange}</Typography>
+            <Typography className={styles.event_column}>{event.timeRange}</Typography>
           </Grid>
           <Collapse in={this.state.open} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography className="descriptionText">Description:</Typography>
-              <Typography type="caption" className="descriptionText">
+              <Typography className={styles.descriptionText}>Description:</Typography>
+              <Typography type="caption" className={styles.descriptionText}>
                 {eventDescription}
               </Typography>
             </CardContent>

@@ -7,7 +7,7 @@ import PWAInstructions from 'components/PWAInstructions/index';
 import LoginDialogue from 'components/LoginDialogue';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ga } from 'react-ga';
-import './guestWelcome.css';
+import styles from './GuestWelcome.module.css';
 
 const GuestWelcome = ({ onLogIn }) => {
   const isOnline = useNetworkStatus();
@@ -54,17 +54,11 @@ const GuestWelcome = ({ onLogIn }) => {
   }, []);
 
   return (
-    <div className="gw-background">
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        className="gw-container"
-        spacing={3}
-      >
+    <div className={styles.gw_background}>
+      <Grid container direction="column" alignItems="center" className={styles.gw_container} spacing={3}>
         <Grid item>
           <Grid container style={{ textAlign: 'center' }}>
-            <Card raised className="gw-card">
+            <Card raised className={styles.gw_card}>
               <CardHeader title="Welcome to Gordon360!" />
               <CardContent>
                 <Typography>

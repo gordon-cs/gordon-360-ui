@@ -1,13 +1,13 @@
-import './feedback.css';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import styles from './Feedback.module.css';
 
 const Feedback = () => {
   const isOnline = useNetworkStatus();
 
   if (isOnline) {
     return (
-      <div className="feedback-form">
+      <div className={styles.feedback_form}>
         <iframe
           title="Feedback Form"
           src="https://docs.google.com/forms/d/e/1FAIpQLSfB7MtIGiMbVcSOAbl38KWqKYU9NIEE-Sbi66rbpNPAmGBoqA/viewform?embedded=true"

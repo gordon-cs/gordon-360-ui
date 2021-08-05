@@ -10,6 +10,9 @@ import {
   Typography,
 } from '@material-ui/core/';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../../../../../../../ApartmentApp.module.css';
+
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
  */
@@ -29,13 +32,13 @@ const ApplicantSubTable = ({ applicants }) => {
 
   return (
     <Box margin={1}>
-      <Toolbar className="stylized-table-toolbar" disableGutters>
+      <Toolbar className={styles.stylized_table_toolbar} disableGutters>
         <Typography variant="h6" gutterBottom component="div">
           Applicants
         </Typography>
       </Toolbar>
-      <Table size="small" aria-label="applicants" className="sub-table">
-        <TableHead className="stylized-table-head">
+      <Table size="small" aria-label="applicants" className={styles.sub_table}>
+        <TableHead className={styles.stylized_table_head}>
           <TableRow>
             <TableCell>Name</TableCell>
             <TableCell align="center">Age (As of Sept. 1, {thisYear})</TableCell>
@@ -45,7 +48,7 @@ const ApplicantSubTable = ({ applicants }) => {
             <TableCell align="right">Points</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody className="striped-table">
+        <TableBody className={styles.striped_table}>
           {applicants.map((applicantInfo) => (
             <TableRow key={applicantInfo.Username}>
               <TableCell component="th" scope="row">

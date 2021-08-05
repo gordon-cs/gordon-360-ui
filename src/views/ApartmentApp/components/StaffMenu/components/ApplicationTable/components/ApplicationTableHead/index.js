@@ -1,6 +1,9 @@
 import PropTypes from 'prop-types';
 import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core/';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../../../../../ApartmentApp.module.css';
+
 const headCells = [
   { id: 'ApplicationID', numeric: true, disablePadding: false, label: 'Application ID' },
   { id: 'EditorUsername', numeric: false, disablePadding: true, label: 'Editor' },
@@ -17,7 +20,7 @@ const ApplicationTableHead = ({ iteratee, order, onRequestSort }) => {
   };
 
   return (
-    <TableHead className="stylized-table-head">
+    <TableHead className={styles.stylized_table_head}>
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell

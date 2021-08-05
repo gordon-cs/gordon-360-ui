@@ -1,0 +1,57 @@
+@import '../../../../../../vars';
+
+div.staff_apartment_application {
+  & :global(.MuiToolbar-root).stylized_table_toolbar {
+    color: $primary-blue;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  & :global(.MuiTableHead-root).stylized_table_head {
+    :global(.MuiTableCell-head),
+    :global(.MuiTableCell-stickyHeader),
+    :global(.MuiTableSortLabel-root) {
+      background-color: $primary-blue;
+      color: $neutral-white;
+      svg:global(.MuiSvgIcon-root).MuiTableSortLabel-icon {
+        color: $neutral-white;
+      }
+    }
+  }
+
+  // Make rows alternate white and grey
+  & .striped_table > tr:nth-child(even) {
+    background-color: $neutral-light-gray;
+  }
+
+  & .striped_table > tr:nth-child(odd) {
+    background-color: $neutral-white;
+  }
+
+  // Make rows alternate white and grey but in groups of two
+  // (Needed to make the collapsible sub-tables match the row above
+  & .double_striped_table > tr:nth-child(4n),
+  & .double_striped_table > tr:nth-child(4n - 1) {
+    background-color: $neutral-light-gray;
+  }
+
+  & .double_striped_table > tr:nth-child(4n - 2),
+  & .double_striped_table > tr:nth-child(4n - 3) {
+    background-color: $neutral-white;
+  }
+
+  // (CSSMODULES - fix mui overrides - disable no-descending-specificity)
+  /* stylelint-disable-next-line */
+  & :global(.MuiTableCell-root).collapsible_row {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  // (CSSMODULES - fix mui overrides - disable no-descending-specificity)
+  /* stylelint-disable-next-line */
+  & :global(.MuiTable-root).sub_table {
+    border-left: 2px solid $neutral-black-opacity10;
+    border-right: 2px solid $neutral-black-opacity10;
+    border-bottom: 1px solid $neutral-black-opacity10;
+  }
+}
