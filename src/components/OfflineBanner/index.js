@@ -95,7 +95,7 @@ export default class OfflineBanner extends Component {
         return <div></div>;
       } else {
         return (
-          <Grid className={this.getClass()} style={styles.card} item={true}>
+          <Grid className={this.getClass()} style={styles2.card} item={true}>
             <Typography>Offline Mode: Information may not be up to date...</Typography>
           </Grid>
         );
@@ -104,7 +104,7 @@ export default class OfflineBanner extends Component {
   }
 }
 
-const styles = {
+const styles2 = {
   card: {
     backgroundColor: gordonColors.primary.blue,
     color: 'white',

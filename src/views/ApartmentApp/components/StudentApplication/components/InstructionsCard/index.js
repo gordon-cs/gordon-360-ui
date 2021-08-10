@@ -14,6 +14,9 @@ import {
 } from '@material-ui/core/';
 import housing from 'services/housing';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../../../ApartmentApp.module.css';
+
 /**
  * Renders a card displaying the apartment application instructions
  * @returns {JSX.Element} JSX Element for the instructions card
@@ -48,9 +51,9 @@ const InstructionsCard = () => {
       <CardHeader
         title="On-Campus Apartments"
         subheader="Information and Guidelines"
-        className="apartment-card-header"
+        className={styles.apartment_card_header}
       />
-      <CardContent className="apartment-instructions">
+      <CardContent className={styles.apartment_instructions}>
         <Typography variant="body1" paragraph>
           Apartments provide an alternative to the traditional residence hall setting and offer a
           unique community experience. To be eligible to live in an apartment, students must be at
@@ -75,9 +78,9 @@ const InstructionsCard = () => {
         <Typography variant="body1" paragraph>
           <strong>Applications must be for a full apartment:</strong> If applying for a six-person
           apartment, there must be six people on the application who will be here for the{' '}
-          <strong className="over-emphasized">fall semester</strong> (four people on a four-person
-          application, etc.). Applications with an incorrect number of applicants will not be
-          considered.
+          <strong className={styles.over_emphasized}>fall semester</strong> (four people on a
+          four-person application, etc.). Applications with an incorrect number of applicants will
+          not be considered.
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
           <strong>An application is not a guarantee!</strong>

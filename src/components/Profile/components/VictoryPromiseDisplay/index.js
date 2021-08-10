@@ -2,7 +2,7 @@ import React from 'react';
 import { gordonColors } from 'theme';
 import { Polar } from 'react-chartjs-2';
 import victory from 'services/victory';
-import './VictoryPromise.css';
+import styles from './VictoryPromiseDisplay.module.css';
 import { withStyles } from '@material-ui/core/styles';
 import { ReactComponent as OffCC } from './images/Off-CC.svg';
 import { ReactComponent as OnCC } from './images/On-CC.svg';
@@ -202,27 +202,27 @@ export default class VictoryPromiseDisplay extends React.Component {
     let IMG_LW;
 
     if (this.state.CC_ON) {
-      IMG_CC = <OnCC className="victory-promise-icon" />;
+      IMG_CC = <OnCC className={styles.victory_promise_icon} />;
     } else {
-      IMG_CC = <OffCC className="victory-promise-icon" />;
+      IMG_CC = <OffCC className={styles.victory_promise_icon} />;
     }
 
     if (this.state.IM_ON) {
-      IMG_IM = <OnIM className="victory-promise-icon" />;
+      IMG_IM = <OnIM className={styles.victory_promise_icon} />;
     } else {
-      IMG_IM = <OffIM className="victory-promise-icon" />;
+      IMG_IM = <OffIM className={styles.victory_promise_icon} />;
     }
 
     if (this.state.LS_ON) {
-      IMG_LS = <OnLS className="victory-promise-icon" />;
+      IMG_LS = <OnLS className={styles.victory_promise_icon} />;
     } else {
-      IMG_LS = <OffLS className="victory-promise-icon" />;
+      IMG_LS = <OffLS className={styles.victory_promise_icon} />;
     }
 
     if (this.state.LW_ON) {
-      IMG_LW = <OnLW className="victory-promise-icon" />;
+      IMG_LW = <OnLW className={styles.victory_promise_icon} />;
     } else {
-      IMG_LW = <OffLW className="victory-promise-icon" />;
+      IMG_LW = <OffLW className={styles.victory_promise_icon} />;
     }
 
     const HoverText = withStyles((theme) => ({
@@ -245,7 +245,7 @@ export default class VictoryPromiseDisplay extends React.Component {
           container
           justifyContent="center"
           direction="column"
-          className="victory-promise-container-card-container-content-box-layout"
+          className={styles.victory_promise_container_card_container_content_box_layout}
         >
           <Grid>
             <HoverText
@@ -305,7 +305,7 @@ export default class VictoryPromiseDisplay extends React.Component {
       content = (
         <Grid container justifyContent="center">
           <Polar
-            className="victory-promise"
+            className={styles.victory_promise}
             data={{ labels: this.state.labels, datasets: this.state.datasets }}
             options={this.state.options}
           />
@@ -314,22 +314,22 @@ export default class VictoryPromiseDisplay extends React.Component {
     }
 
     return (
-      <div className="victory-promise">
-        <Grid container item xs className="victory-promise-header">
+      <div className={styles.victory_promise}>
+        <Grid container item xs className={styles.victory_promise_header}>
           <CardHeader title="Victory Promise" />
         </Grid>
         <Grid
           container
-          className="victory-promise-container"
+          className={styles.victory_promise_container}
           alignItems="center"
           justifyContent="center"
         >
-          <Card className="victory-promise-container-card">
-            <CardContent className="victory-promise-container-card-container">
+          <Card className={styles.victory_promise_container_card}>
+            <CardContent className={styles.victory_promise_container_card_container}>
               <Grid item align="center">
                 <Button
                   variant="contained"
-                  className="victory-promise-container-card-container-button-style"
+                  className={styles.victory_promise_container_card_container_button_style}
                   onClick={() => this.changeMode()}
                 >
                   Change Style
@@ -338,7 +338,7 @@ export default class VictoryPromiseDisplay extends React.Component {
               <Grid
                 container
                 align="center"
-                className="victory-promise-container-card-container-content"
+                className={styles.victory_promise_container_card_container_content}
               >
                 {content}
               </Grid>
@@ -346,11 +346,11 @@ export default class VictoryPromiseDisplay extends React.Component {
                 <Grid
                   container
                   justifyContent="center"
-                  className="victory-promise-container-card-container-link"
+                  className={styles.victory_promise_container_card_container_link}
                 >
                   <Typography
                     variant="body1"
-                    className="victory-promise-container-card-container-link-text"
+                    className={styles.victory_promise_container_card_container_link_text}
                     onClick={() => this.openVPLink()}
                   >
                     Click here for more information!

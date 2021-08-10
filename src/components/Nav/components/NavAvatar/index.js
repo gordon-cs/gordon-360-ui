@@ -1,7 +1,7 @@
 import { Avatar, Button, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import './nav-avatar.css';
+import styles from './NavAvatar.module.css';
 import user from 'services/user';
 
 /**
@@ -68,12 +68,12 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
 
   const avatar = authentication ? (
     image ? (
-      <Avatar className="avatar image" src={`data:image/jpg;base64,${image}`} />
+      <Avatar className={`${styles.avatar}`} src={`data:image/jpg;base64,${image}`} />
     ) : (
-      <Avatar className="avatar placeholder">{getInitials(username)}</Avatar>
+      <Avatar className={`${styles.avatar} ${styles.placeholder}`}>{getInitials(username)}</Avatar>
     )
   ) : (
-    <Avatar className="avatar placeholder">Guest</Avatar>
+    <Avatar className={`${styles.avatar} ${styles.placeholder}`}>Guest</Avatar>
   );
 
   const buttonLink = React.forwardRef((props, ref) => (
@@ -82,35 +82,28 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
       innerRef={ref}
       to={authentication ? `/myprofile` : '/'}
       onClick={onLinkClick}
-      className="gc360-link"
+      className="gc360_link"
     />
   ));
 
   const label = authentication ? (
     <>
-      <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
+      <Typography variant="body2" className={styles.avatar_text} align="left" gutterBottom>
         {name}
       </Typography>
-      <Typography variant="caption" className="avatar-text" align="left" gutterBottom>
+      <Typography variant="caption" className={styles.avatar_text} align="left" gutterBottom>
         {email}
       </Typography>
     </>
   ) : (
-    <Typography variant="body2" className="avatar-text" align="left" gutterBottom>
+    <Typography variant="body2" className={styles.avatar_text} align="left" gutterBottom>
       Guest
     </Typography>
   );
 
   return (
-    <Button
-      className={` gordon-nav-avatar`}
-      classes={{
-        root: 'gordon-nav-avatar button',
-        label: 'label',
-      }}
-      component={buttonLink}
-    >
-      <div className="gordon-nav-avatar">
+    <Button component={buttonLink}>
+      <div className={styles.gordon_nav_avatar}>
         {avatar}
         {label}
       </div>

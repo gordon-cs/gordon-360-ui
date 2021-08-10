@@ -1,0 +1,156 @@
+@import '../../../../vars';
+
+.wellness_check {
+  text-align: center;
+
+  :global(.MuiPaper-elevation1) {
+    box-shadow: none;
+  }
+
+  :global(.MuiButton-contained) {
+    background-color: $primary-cyan;
+    color: $neutral-white;
+
+    &:hover {
+      background-color: $primary-cyan;
+    }
+  }
+
+  .user_image {
+    max-height: 200px;
+    min-width: 160px;
+  }
+
+  .wellness_header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+    padding: 10px;
+    font-size: 20px;
+  }
+}
+
+.wellness_status {
+  .GREEN {
+    .status_box {
+      height: 250px;
+      background-color: $wellness-green;
+    }
+
+    .status_time {
+      font-size: calc(14px + 1vw);
+      color: $neutral-white;
+      padding-bottom: 30px;
+    }
+
+    .status_animation {
+      text-align: center;
+      height: calc(70px + 3vw);
+      width: calc(70px + 3vw);
+      background-color: $wellness-green;
+      color: $neutral-white;
+      border-radius: 50%;
+      display: inline-block;
+      animation-name: animationCheck;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+  }
+
+  @keyframes animationCheck {
+    from {
+      background-color: $wellness-green;
+      color: $neutral-white;
+    }
+    to {
+      background-color: $neutral-white;
+      color: $wellness-green;
+    }
+  }
+
+  .YELLOW {
+    .status_box {
+      height: 250px;
+      background-color: $wellness-yellow;
+    }
+
+    .status_time {
+      font-size: calc(14px + 1vw);
+      color: $neutral-dark-gray;
+      padding-bottom: 30px;
+    }
+
+    .status_animation {
+      text-align: center;
+      height: calc(70px + 3vw);
+      width: calc(70px + 3vw);
+      background-color: $wellness-yellow;
+      color: $neutral-dark-gray;
+      border-radius: 50%;
+      display: inline-block;
+      animation-name: animationBar;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+  }
+
+  @keyframes animationBar {
+    from {
+      background-color: $wellness-yellow;
+      color: $neutral-dark-gray;
+    }
+    to {
+      background-color: $neutral-dark-gray;
+      color: $wellness-yellow;
+    }
+  }
+
+  .RED {
+    .status_box {
+      height: 250px;
+      background-color: $wellness-red;
+    }
+
+    .status_time {
+      font-size: calc(14px + 1vw);
+      color: $neutral-gray2;
+      padding-bottom: 30px;
+    }
+
+    .status_animation {
+      text-align: center;
+      height: calc(70px + 3vw);
+      width: calc(70px + 3vw);
+      background-color: $wellness-red;
+      color: $neutral-gray2;
+      border-radius: 50%;
+      display: inline-block;
+      animation-name: animationCross;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+  }
+
+  @keyframes animationCross {
+    from {
+      background-color: $wellness-red;
+      color: $neutral-gray2;
+    }
+    to {
+      background-color: $neutral-gray2;
+      color: $wellness-red;
+    }
+  }
+}
+
+a.rtc_link {
+  color: $primary-cyan;
+  text-decoration: underline;
+}
+
+a.rtc_link:hover {
+  color: $primary-blue;
+  text-decoration: underline;
+}

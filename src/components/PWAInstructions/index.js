@@ -4,7 +4,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { gordonColors } from 'theme';
-import './index.css';
+import styles from './PWAInstructions.module.css';
 
 import DesktopChromeInstall from './images/Desktop/Desktop-Chrome-Install-360.png';
 import DesktopOpenChrome from './images/Desktop/Desktop-Open-Chrome.png';
@@ -27,7 +27,7 @@ import AppleShareButton from './images/Mobile/Apple/iPhone-Share-Button.png';
 import { Button, Dialog, DialogContent, Typography, Grid } from '@material-ui/core';
 
 // Button styles
-let styles = {
+const styles2 = {
   button: {
     cancel: {
       border: `1px solid ${gordonColors.primary.blue}`,
@@ -53,6 +53,8 @@ const toggleStyles = makeStyles({
       backgroundColor: `${gordonColors.primary.blueShades[400]} !important`,
     },
   },
+  // stylelint does not know this selector type, perhaps because of this being part of Mui lab
+  // stylelint-disable-next-line
   selected: {
     backgroundColor: `${gordonColors.primary.blueShades[700]} !important`,
     color: 'white !important',
@@ -205,12 +207,12 @@ const PWAInstructions = (props) => {
           xs={12}
           justifyContent="space-between"
           alignItems="center"
-          className="pwa-instructions-content-container-toggles-instructions"
+          className={styles.pwa_instructions_content_container_toggles_instructions}
         >
           <Grid
             container
             xs={12}
-            className="pwa-instructions-content-container-toggles-instructions-choice"
+            className={styles.pwa_instructions_content_container_toggles_instructions_choice}
           >
             <Typography variant="h5">Instructions for {preText}</Typography>
           </Grid>
@@ -227,17 +229,21 @@ const PWAInstructions = (props) => {
                     container
                     xs={12}
                     alignItems="center"
-                    className="pwa-instructions-content-container-toggles-instructions-text"
+                    className={styles.pwa_instructions_content_container_toggles_instructions_text}
                   >
                     <Typography
                       variant="h6"
-                      className="pwa-instructions-content-container-toggles-instructions-text-step"
+                      className={
+                        styles.pwa_instructions_content_container_toggles_instructions_text_step
+                      }
                     >
                       Step {index + 1}:&nbsp;
                     </Typography>
                     <Typography
                       variant="subtitle1"
-                      className="pwa-instructions-content-container-toggles-instructions-text-instruction"
+                      className={
+                        styles.pwa_instructions_content_container_toggles_instructions_text_instruction
+                      }
                     >
                       {step[0]}&nbsp;
                       <a href={step[1]}>click here</a>.
@@ -246,7 +252,7 @@ const PWAInstructions = (props) => {
                   <Grid
                     container
                     xs={12}
-                    className="pwa-instructions-content-container-toggles-instructions-image"
+                    className={styles.pwa_instructions_content_container_toggles_instructions_image}
                   >
                     <img src={step[2]} alt={step[3]} />
                   </Grid>
@@ -260,17 +266,21 @@ const PWAInstructions = (props) => {
                   container
                   xs={12}
                   alignItems="center"
-                  className="pwa-instructions-content-container-toggles-instructions-text"
+                  className={styles.pwa_instructions_content_container_toggles_instructions_text}
                 >
                   <Typography
                     variant="h6"
-                    className="pwa-instructions-content-container-toggles-instructions-text-step"
+                    className={
+                      styles.pwa_instructions_content_container_toggles_instructions_text_step
+                    }
                   >
                     Step {index + 1}:&nbsp;
                   </Typography>
                   <Typography
                     variant="subtitle1"
-                    className="pwa-instructions-content-container-toggles-instructions-text-instruction"
+                    className={
+                      styles.pwa_instructions_content_container_toggles_instructions_text_instruction
+                    }
                   >
                     {step[0]}
                   </Typography>
@@ -278,7 +288,7 @@ const PWAInstructions = (props) => {
                 <Grid
                   container
                   xs={12}
-                  className="pwa-instructions-content-container-toggles-instructions-image"
+                  className={styles.pwa_instructions_content_container_toggles_instructions_image}
                 >
                   <img src={step[1]} alt={step[2]} />
                 </Grid>
@@ -298,25 +308,25 @@ const PWAInstructions = (props) => {
           container
           xs={12}
           justifyContent="center"
-          className="pwa-instructions-content-install"
+          className={styles.pwa_instructions_content_install}
         >
           <Grid container xs={12} justifyContent="center" alignItems="center">
             <Grid item xs={2} sm={1} justifyContent="center" alignItems="center">
               <GetAppIcon fontSize="large" color="primary" />
             </Grid>
             <Grid item xs={10} sm={11} alignItems="center">
-              <Typography className="pwa-instructions-content-install-text">
+              <Typography className={styles.pwa_instructions_content_install_text}>
                 Click install below and follow the prompt to install Gordon 360 on your device.
               </Typography>
             </Grid>
           </Grid>
-          <Grid container className="pwa-instructions-content-install-buttons">
+          <Grid container className={styles.pwa_instructions_content_install_buttons}>
             <Button
               onClick={() => {
                 // Exits out the dialog box
                 props.handleDisplay();
               }}
-              style={styles.button.cancel}
+              style={styles2.button.cancel}
             >
               Cancel
             </Button>
@@ -325,7 +335,7 @@ const PWAInstructions = (props) => {
                 // Calls the browser's default prompt to do a quick installation of the PWA
                 props.deferredPWAPrompt.prompt();
               }}
-              style={styles.button.install}
+              style={styles2.button.install}
             >
               Install
             </Button>
@@ -336,21 +346,21 @@ const PWAInstructions = (props) => {
     // If the browser doesn't have quick PWA installation capability
     else {
       return (
-        <Grid container xs={12} className="pwa-instructions-content-container">
-          <Grid container xs={12} className="pwa-instructions-content-container-toggles">
+        <Grid container xs={12} className={styles.pwa_instructions_content_container}>
+          <Grid container xs={12} className={styles.pwa_instructions_content_container_toggles}>
             {/* Selection of Device's Type */}
             <Grid
               container
               xs={12}
               justifyContent="space-between"
               alignItems="center"
-              className="pwa-instructions-content-container-toggles-platform"
+              className={styles.pwa_instructions_content_container_toggles_platform}
             >
               <Grid
                 container
                 xs={12}
                 sm={6}
-                className="pwa-instructions-content-container-toggles-platform-text"
+                className={styles.pwa_instructions_content_container_toggles_platform_text}
               >
                 <Typography variant="h6" color="primary">
                   Select Device Type:
@@ -361,7 +371,7 @@ const PWAInstructions = (props) => {
                 xs={12}
                 sm={6}
                 justifyContent="flex-end"
-                className="pwa-instructions-content-container-toggles-platform-toggles"
+                className={styles.pwa_instructions_content_container_toggles_platform_toggles}
               >
                 <ToggleButtonGroup
                   value={device}
@@ -391,13 +401,13 @@ const PWAInstructions = (props) => {
                 xs={12}
                 justifyContent="space-between"
                 alignItems="center"
-                className="pwa-instructions-content-container-toggles-platform"
+                className={styles.pwa_instructions_content_container_toggles_platform}
               >
                 <Grid
                   container
                   xs={12}
                   sm={6}
-                  className="pwa-instructions-content-container-toggles-platform-text"
+                  className={styles.pwa_instructions_content_container_toggles_platform_text}
                 >
                   <Typography variant="h6" color="primary">
                     Select Platform:
@@ -408,7 +418,7 @@ const PWAInstructions = (props) => {
                   xs={12}
                   sm={6}
                   justifyContent="flex-end"
-                  className="pwa-instructions-content-container-toggles-platform-toggles"
+                  className={styles.pwa_instructions_content_container_toggles_platform_toggles}
                 >
                   <ToggleButtonGroup
                     value={platform}
@@ -443,13 +453,17 @@ const PWAInstructions = (props) => {
             )}
             {device && platform && getInstructions()}
           </Grid>
-          <Grid container xs={12} className="pwa-instructions-content-container-button-cancel">
+          <Grid
+            container
+            xs={12}
+            className={styles.pwa_instructions_content_container_button_cancel}
+          >
             <Button
               onClick={() => {
                 // Exits out the dialog box
                 props.handleDisplay();
               }}
-              style={styles.button.cancel}
+              style={styles2.button.cancel}
             >
               Cancel
             </Button>
@@ -467,15 +481,15 @@ const PWAInstructions = (props) => {
       aria-labelledby="alert-dialog-slide-title"
       aria-describedby="alert-dialog-slide-description"
     >
-      <Grid container className="pwa-instructions">
-        <Grid container xs={12} justifyContent="center" className="pwa-instructions-title">
+      <Grid container className={styles.pwa_instructions}>
+        <Grid container xs={12} justifyContent="center" className={styles.pwa_instructions_title}>
           <Typography variant="h5">
             {props.deferredPWAPrompt
               ? 'Install Gordon 360'
               : ' Instructions to install Gordon 360 '}
           </Typography>
         </Grid>
-        <DialogContent className="pwa-instructions-content">{createContent()}</DialogContent>
+        <DialogContent className={styles.pwa_instructions_content}>{createContent()}</DialogContent>
       </Grid>
     </Dialog>
   );

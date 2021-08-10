@@ -12,7 +12,7 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonNavButton from 'components/NavButton';
-import './nav-links.css';
+import styles from './NavLinks.module.css';
 
 const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
   const [areLinksOpen, setAreLinksOpen] = useState(false);
@@ -183,7 +183,7 @@ const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
 
   return (
     <>
-      <List className="gordon-nav-links">
+      <List className={styles.gordon_nav_links}>
         {homeButton}
         {involvementsButton}
         {eventsButton}
@@ -194,7 +194,7 @@ const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
 
       <Divider />
 
-      <List className="gordon-nav-links-bottom">
+      <List className={styles.gordon_nav_links_bottom}>
         {linksButton}
         {helpButton}
         {aboutButton}

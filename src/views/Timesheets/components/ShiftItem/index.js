@@ -21,7 +21,7 @@ import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import './ShiftItem.css';
+import styles from './ShiftItem.module.css';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 
@@ -38,7 +38,7 @@ const PickerInput = (props) => {
   return (
     <>
       <TextField
-        className="shift-edit-picker"
+        className={styles.shift_edit_picker}
         {...props}
         variant={'outlined'}
         multiline
@@ -400,7 +400,7 @@ export default class ShiftItem extends Component {
                       });
                       this.onClose();
                     }}
-                    style={styles.redButton}
+                    style={styles2.redButton}
                   >
                     Yes
                   </Button>
@@ -487,7 +487,7 @@ export default class ShiftItem extends Component {
         <CustomTooltip
           disableFocusListener
           disableTouchListener
-          className="tooltip-icon"
+          className={styles.tooltip_icon}
           title={'Shift note: ' + SHIFT_NOTES}
           placement="top"
         >
@@ -506,7 +506,7 @@ export default class ShiftItem extends Component {
         <CustomTooltip
           disableFocusListener
           disableTouchListener
-          className="tooltip-icon"
+          className={styles.tooltip_icon}
           title={COMMENTS}
           placement="top"
         >
@@ -526,37 +526,37 @@ export default class ShiftItem extends Component {
 
     return (
       <>
-        <Grid item xs={12} className="shift-item">
+        <Grid item xs={12} className={styles.shift_item}>
           {confirmationBox}
           <div>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <Grid container direction="row" alignItems="center">
                 <Grid item xs={3}>
-                  <div className="tooltip-container">
-                    <Typography className="disable-select" variant="body2">
+                  <div className={styles.tooltip_container}>
+                    <Typography className="disable_select" variant="body2">
                       {descColumn}
                     </Typography>
                     {shiftCommentTooltip}
                   </div>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className="disable-select" variant="body2">
+                  <Typography className="disable_select" variant="body2">
                     {timeInDisp}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className="disable-select" variant="body2">
+                  <Typography className="disable_select" variant="body2">
                     {timeOutDisp}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <Typography className="disable-select" variant="body2">
+                  <Typography className="disable_select" variant="body2">
                     {this.props.canUse ? console.log('HERE', HOUR_TYPE) : HOURLY_RATE.toFixed(2)}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  <div className="tooltip-container">
-                    <Typography className="disable-select" variant="body2">
+                  <div className={styles.tooltip_container}>
+                    <Typography className="disable_select" variant="body2">
                       {hoursWorkedDisp}
                     </Typography>
                     {shiftNotesTooltip}
@@ -580,7 +580,7 @@ export default class ShiftItem extends Component {
   }
 }
 
-const styles = {
+const styles2 = {
   redButton: {
     background: gordonColors.secondary.red,
     color: 'white',

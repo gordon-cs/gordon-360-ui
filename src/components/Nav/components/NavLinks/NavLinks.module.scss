@@ -1,0 +1,12 @@
+@import '../../../../vars';
+
+.gordon_nav_links {
+  .active > li {
+    background: $neutral-gray2;
+  }
+
+  .gordon_nav_links_bottom {
+    position: fixed;
+    bottom: 0;
+  }
+}

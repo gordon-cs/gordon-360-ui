@@ -21,7 +21,7 @@ import ShiftItem from '../ShiftItem';
 import { gordonColors } from 'theme';
 import jobs from 'services/jobs';
 import GordonLoader from 'components/Loader';
-import './SavedShiftsList.css';
+import styles from './SavedShiftsList.module.css';
 
 export default class SavedShiftsList extends Component {
   constructor(props) {
@@ -172,7 +172,7 @@ export default class SavedShiftsList extends Component {
             <DialogContent>
               <Grid container>
                 <Grid item xs={6} sm={6} md={6} lg={6}>
-                  <Button style={styles.redButton} onClick={this.onClose} variant="contained">
+                  <Button style={styles2.redButton} onClick={this.onClose} variant="contained">
                     Cancel
                   </Button>
                 </Grid>
@@ -198,31 +198,31 @@ export default class SavedShiftsList extends Component {
     );
 
     let header = (
-      <Grid item xs={12} style={styles.headerStyle}>
+      <Grid item xs={12} style={styles2.headerStyle}>
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
-              <Typography className="disable-select" variant="body2" style={styles.headerItem}>
+              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
                 JOB
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable-select" variant="body2" style={styles.headerItem}>
+              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
                 IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable-select" variant="body2" style={styles.headerItem}>
+              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
                 OUT
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable-select" variant="body2" style={styles.headerItem}>
+              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
                 RATE
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable-select" variant="body2" style={styles.headerItem}>
+              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
                 HOURS
               </Typography>
             </Grid>
@@ -250,7 +250,7 @@ export default class SavedShiftsList extends Component {
         }}
         fullWidth
       >
-        <InputLabel className="disable-select">Submit To</InputLabel>
+        <InputLabel className="disable_select">Submit To</InputLabel>
         <Select
           value={this.state.selectedSupervisor}
           onChange={(e) => {
@@ -289,15 +289,15 @@ export default class SavedShiftsList extends Component {
           {confirmationBox}
           <Card>
             <CardContent>
-              <CardHeader className="disable-select" title={cardTitle} />
+              <CardHeader className="disable_select" title={cardTitle} />
               <Grid
-                className="shift-list"
+                className={styles.shift_list}
                 container
                 spacing={2}
                 justifyContent="space-around"
                 alignItems="center"
                 alignContent="center"
-                style={styles.boxShadow}
+                style={styles2.boxShadow}
               >
                 {header}
                 {shiftsList}
@@ -309,12 +309,12 @@ export default class SavedShiftsList extends Component {
               <CardContent>
                 <Grid container>
                   <Grid item xs={12} sm={6}>
-                    <Typography className="disable-select" variant="h6">
+                    <Typography className="disable_select" variant="h6">
                       Total hours worked: {totalHoursWorked}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <Typography className="disable-select" variant="h6">
+                    <Typography className="disable_select" variant="h6">
                       Estimated gross pay: ${totalEstimatedPay}
                     </Typography>
                   </Grid>
@@ -350,7 +350,7 @@ export default class SavedShiftsList extends Component {
   }
 }
 
-const styles = {
+const styles2 = {
   redButton: {
     background: gordonColors.secondary.red,
     color: 'white',

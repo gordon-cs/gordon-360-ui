@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core/';
 import ApplicationTableHead from './components/ApplicationTableHead';
 import ApplicationRow from './components/ApplicationRow';
-import './applicationTable.css';
+import styles from './ApplicationTable.module.css';
 
 const ApplicationsTable = ({ applications }) => {
   const [order, setOrder] = useState('asc');
@@ -25,7 +25,7 @@ const ApplicationsTable = ({ applications }) => {
 
   return (
     <Card>
-      <CardHeader title="Apartment Applications" className="apartment-card-header" />
+      <CardHeader title="Apartment Applications" className={styles.apartment_card_header} />
       <CardContent>
         {applications?.length > 0 ? (
           <TableContainer>
@@ -35,7 +35,7 @@ const ApplicationsTable = ({ applications }) => {
                 iteratee={iteratee}
                 onRequestSort={handleRequestSort}
               />
-              <TableBody className="double-striped-table">
+              <TableBody className={styles.double_striped_table}>
                 {orderBy(applications, [iteratee], [order]).map((applicationDetails, index) => (
                   <ApplicationRow
                     key={applicationDetails.ApplicationID}

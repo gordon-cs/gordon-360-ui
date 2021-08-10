@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import wellness, { StatusColors } from 'services/wellness';
-import './index.css';
+import styles from './SymptomsDialog.module.css';
 
 const SymptomsDialog = ({ isOpen, setIsOpen, setStatus }) => {
   return (
@@ -17,7 +17,7 @@ const SymptomsDialog = ({ isOpen, setIsOpen, setStatus }) => {
       onClose={() => setIsOpen(false)}
       aria-labelledby="submit-dialog"
       aria-describedby="submit-symptoms"
-      className="symptoms-dialog"
+      className={styles.symptoms_dialog}
     >
       <DialogTitle>Symptom Confirmation</DialogTitle>
       <DialogContent>
@@ -35,7 +35,7 @@ const SymptomsDialog = ({ isOpen, setIsOpen, setStatus }) => {
             wellness.postAnswer(StatusColors.YELLOW).then((status) => setStatus(status));
             setIsOpen(false);
           }}
-          className="confirm-symptoms"
+          className={styles.confirm_symptoms}
         >
           Confirm
         </Button>

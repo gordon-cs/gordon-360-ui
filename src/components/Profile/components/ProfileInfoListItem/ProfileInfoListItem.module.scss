@@ -1,0 +1,52 @@
+@import '../../../../vars.scss';
+
+.profile_info_list_item {
+  hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  word-break: break-word;
+
+  & p:global(.MuiTypography-root) {
+    text-align: left;
+  }
+}
+
+.private {
+  color: $neutral-black-opacity40;
+}
+
+.privateNotMine,
+.privateNotMine a {
+  color: $secondary-red;
+}
+
+.not_private {
+  opacity: 1;
+  color: $dark-text-color;
+}
+
+.my_personal_info {
+  & .private {
+    color: $neutral-black-opacity40;
+
+    & .not_private {
+      opacity: 1;
+      color: $dark-text-color;
+    }
+  }
+}
+
+.public_personal_info {
+  & .private {
+    color: $secondary-red;
+
+    & a.gc360_text_link {
+      color: inherit;
+    }
+
+    & .not_private {
+      color: $dark-text-color;
+    }
+  }
+}

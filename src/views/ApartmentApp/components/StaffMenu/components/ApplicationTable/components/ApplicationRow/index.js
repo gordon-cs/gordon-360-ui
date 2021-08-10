@@ -5,6 +5,9 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import ApplicantSubTable from './components/ApplicantSubTable';
 import HallSubTable from './components/HallSubTable';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../../../../../ApartmentApp.module.css';
+
 const ApplicationRow = ({ applicationDetails, labelId }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -29,12 +32,12 @@ const ApplicationRow = ({ applicationDetails, labelId }) => {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell className="collapsible-row" colSpan={5}>
+        <TableCell className={styles.collapsible_row} colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <ApplicantSubTable applicants={applicationDetails.Applicants} />
           </Collapse>
         </TableCell>
-        <TableCell className="collapsible-row" colSpan={3}>
+        <TableCell className={styles.collapsible_row} colSpan={3}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <HallSubTable apartmentChoices={applicationDetails.ApartmentChoices} />
           </Collapse>

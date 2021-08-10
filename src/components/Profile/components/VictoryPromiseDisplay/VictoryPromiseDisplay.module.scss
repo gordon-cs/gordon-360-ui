@@ -1,0 +1,79 @@
+@import '../../../../vars';
+
+.victory_promise {
+  background-color: $neutral-white;
+  overflow: hidden;
+  border-radius: 4px;
+  height: 100%;
+  box-shadow: 0px 2px 1px -1px $neutral-black-opacity20, 0px 1px 1px 0px $neutral-black-opacity15,
+    0px 1px 3px 0px $neutral-black-opacity125;
+
+  &_header {
+    background: $primary-blue;
+    color: $neutral-white;
+    padding-left: 1rem;
+  }
+  &_container {
+    height: 90%;
+    &_card {
+      box-shadow: none !important;
+      width: 100%;
+      max-width: 600px;
+      margin: 1rem;
+      &_container {
+        &_button_style {
+          background-color: $primary-cyan !important;
+          color: $neutral-white !important;
+          margin: 1rem auto 2rem auto !important;
+        }
+        &_content {
+          background-color: $primary-blue;
+          border-radius: 0.5rem;
+          padding: 2rem 1rem;
+          &_box_layout {
+            max-width: 100%;
+            max-height: auto;
+            margin: 0%;
+          }
+        }
+        &_link {
+          color: $primary-cyan;
+          margin-top: 2rem !important;
+          &_text {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: $break-sm) {
+  .victory_promise {
+    &_header {
+      padding-left: 0rem;
+      justify-content: center;
+    }
+    &_container {
+      &_card {
+        &_container {
+          padding: 0rem 0.5rem 1rem 0.5rem !important;
+          &_button_style {
+            margin: auto auto 1.5rem auto !important;
+          }
+          &_content {
+            padding: 1rem;
+          }
+          &_link {
+            margin-top: 1.5rem !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.victory_promise_icon:hover {
+  transition: box-shadow 0.2s;
+  box-shadow: 0px 3px 10px 0px $neutral-black-opacity20;
+}

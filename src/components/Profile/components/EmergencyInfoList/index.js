@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './index.css';
+import styles from './EmergencyInfoList.module.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import user from 'services/user';
 
@@ -25,8 +25,8 @@ const EmergencyInfoList = ({ username }) => {
 
   return (
     <Grid item xs={12}>
-      <Card className="emrg-info-list">
-        <Grid container className="emrg-info-list-header">
+      <Card className={styles.emrg_info_list}>
+        <Grid container className={styles.emrg_info_list_header}>
           <CardHeader title="Emergency Contact Information" />
         </Grid>
         <CardContent>
@@ -48,7 +48,7 @@ const EmergencyInfoList = ({ username }) => {
                     <ProfileInfoListItem
                       title="Mobile Phone:"
                       contentText={
-                        <a href={`tel:${emrgContact.MobilePhone}`} className="gc360-text-link">
+                        <a href={`tel:${emrgContact.MobilePhone}`} className="gc360_text_link">
                           {formatPhone(emrgContact.MobilePhone)}
                         </a>
                       }
@@ -59,7 +59,7 @@ const EmergencyInfoList = ({ username }) => {
                     <ProfileInfoListItem
                       title="Home Phone:"
                       contentText={
-                        <a href={`tel:${emrgContact.HomePhone}`} className="gc360-text-link">
+                        <a href={`tel:${emrgContact.HomePhone}`} className="gc360_text_link">
                           {formatPhone(emrgContact.HomePhone)}
                         </a>
                       }
@@ -70,7 +70,7 @@ const EmergencyInfoList = ({ username }) => {
                     <ProfileInfoListItem
                       title="Work Phone:"
                       contentText={
-                        <a href={`tel:${emrgContact.WorkPhone}`} className="gc360-text-link">
+                        <a href={`tel:${emrgContact.WorkPhone}`} className="gc360_text_link">
                           {formatPhone(emrgContact.WorkPhone)}
                         </a>
                       }
@@ -80,7 +80,7 @@ const EmergencyInfoList = ({ username }) => {
                 </ul>
               </>
             ))}
-            <Typography align="left" className="disclaimer">
+            <Typography align="left" className={styles.disclaimer}>
               Private: visible only to Gordon Police
             </Typography>
           </List>

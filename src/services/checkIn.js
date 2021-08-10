@@ -56,38 +56,37 @@ import http from './http';
  * @property {boolean} none whether or not a student declined to submit a race
  */
 
-
 const getStatus = async () => {
   try {
     return await http.get(`checkIn/status`);
-  } catch(reason) {
+  } catch (reason) {
     console.log('Caught checkIn submission error: ' + reason);
   }
-}
+};
 
 const markCompleted = async () => {
   try {
     return await http.put(`checkIn/status`);
-  } catch(reason) {
+  } catch (reason) {
     console.log('Caught checkIn submission error: ' + reason);
   }
-}
+};
 
 const getHolds = async () => {
   try {
     return await http.get(`checkIn/holds`);
-  } catch(reason) {
+  } catch (reason) {
     console.log('Caught checkIn submission error: ' + reason);
   }
-}
+};
 
 const getEmergencyContacts = async (username) => {
   try {
     return await http.get(`profiles/emergency-contact/${username}/`);
-  } catch(reason) {
-    console.log('Caught checkIn submission error: ' + reason)
+  } catch (reason) {
+    console.log('Caught checkIn submission error: ' + reason);
   }
-}
+};
 
 const submitPhone = async (data) => {
   try {
@@ -95,15 +94,15 @@ const submitPhone = async (data) => {
   } catch (reason) {
     console.log('Caught checkIn submission error: ' + reason);
   }
-}
+};
 
-const submitContact  = async (data) => {
+const submitContact = async (data) => {
   try {
     return await http.post(`checkIn/emergencycontact`, data);
   } catch (reason) {
     console.log('Caught checkIn submission error: ' + reason);
   }
-}
+};
 
 const submitDemographic = async (data) => {
   try {
@@ -111,7 +110,7 @@ const submitDemographic = async (data) => {
   } catch (reason) {
     console.log('Caught checkIn submission error: ' + reason);
   }
-}
+};
 
 const checkInService = {
   getStatus,

@@ -16,6 +16,8 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import user from 'services/user';
 
+import styles from '../../../../../../ApartmentApp.module.css';
+
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
  */
@@ -76,11 +78,11 @@ const ApplicantListItem = ({
         component={Link}
         target="_blank"
         to={`/profile/${profile.AD_Username}`}
-        className="list-item"
+        className={styles.list_item}
       >
         <ListItemAvatar>
           {avatar ? (
-            <Avatar className={`avatar`} src={`data:image/jpg;base64,${avatar}`} alt="" />
+            <Avatar className={styles.avatar} src={`data:image/jpg;base64,${avatar}`} alt="" />
           ) : (
             <Avatar>
               <PersonIcon color="primary" />
@@ -92,7 +94,7 @@ const ApplicantListItem = ({
             <ListItemText
               primary={displayName}
               secondary={profile.Class ?? ''}
-              className="list-item"
+              className={styles.list_item}
             />
           </Grid>
         </Grid>

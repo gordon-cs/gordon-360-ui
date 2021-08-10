@@ -20,6 +20,9 @@ import StarBorder from '@material-ui/icons/StarBorder';
 import GordonPeopleSearch from 'components/Header/components/PeopleSearch';
 import ApplicantListItem from './components/ApplicantListItem';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../../../ApartmentApp.module.css';
+
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
  * @typedef { import('services/housing').ApplicationDetails } ApplicationDetails
@@ -49,15 +52,15 @@ const ApplicantList = ({
 
   return (
     <Card>
-      <CardHeader title="Student Applicants" className="apartment-card-header" />
+      <CardHeader title="Student Applicants" className={styles.apartment_card_header} />
       <CardContent>
         <Grid container justifyContent="space-between" spacing={2}>
           <Grid item xs={12}>
-            <List className="applicant-list" aria-label="apartment applicants">
+            <List className={styles.applicant_list} aria-label="apartment applicants">
               <ListItem
                 button
                 alignItems="center"
-                className="list-item"
+                className={styles.list_item}
                 onClick={() => setShowHelp((prev) => !prev)}
               >
                 <ListItemIcon>
@@ -67,22 +70,22 @@ const ApplicantList = ({
                 {showHelp ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
               <Collapse in={showHelp} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding className="bordered-list-item">
-                  <ListItem disableGutters className="nested-list-item">
+                <List component="div" disablePadding className={styles.bordered_list_item}>
+                  <ListItem disableGutters className={styles.nested_list_item}>
                     <ListItemIcon>
                       <AddIcon />
                     </ListItemIcon>
                     <ListItemText primary="Use the search bar below this list to add more applicants." />
                   </ListItem>
                   <Divider />
-                  <ListItem disableGutters className="nested-list-item">
+                  <ListItem disableGutters className={styles.nested_list_item}>
                     <ListItemIcon>
                       <StarBorder />
                     </ListItemIcon>
                     <ListItemText primary="Use the star button to change the editor of this applicant, if necessary." />
                   </ListItem>
                   <Divider />
-                  <ListItem disableGutters className="nested-list-item">
+                  <ListItem disableGutters className={styles.nested_list_item}>
                     <ListItemIcon>
                       <ClearIcon />
                     </ListItemIcon>
@@ -105,17 +108,17 @@ const ApplicantList = ({
                   />
                 ))
               ) : (
-                <ListItem key={'applicant-list-placeholder'} className="list-item">
+                <ListItem key={'applicant-list-placeholder'} className={styles.list_item}>
                   <ListItemText
                     primary={'If you are reading this, something went wrong. Please contact CTS'}
-                    className="list-item"
+                    className={styles.list_item}
                   />
                 </ListItem>
               )}
             </List>
           </Grid>
           <Grid container item justifyContent="center" xs={12}>
-            <Grid item xs={9} sm={5} className="people-search-parent">
+            <Grid item xs={9} sm={5} className={styles.people_search_parent}>
               <GordonPeopleSearch
                 disableLink
                 customPlaceholderText={'Add Applicant'}

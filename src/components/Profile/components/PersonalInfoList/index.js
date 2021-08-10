@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
+import styles from './PersonalInfoList.module.css';
 import userService from 'services/user';
-import './index.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import LockIcon from '@material-ui/icons/Lock';
 import HelpIcon from '@material-ui/icons/Help';
@@ -156,12 +156,13 @@ const PersonalInfoList = ({
         myProf ? (
           formatPhone(HomePhone)
         ) : (
-          <a href={`tel:${HomePhone}`} className="gc360-text-link">
+          <a href={`tel:${HomePhone}`} className="gc360_text_link">
             {formatPhone(HomePhone)}
           </a>
         )
       }
-      contentClass={isHomePhonePrivate ? 'private' : null}
+      privateInfo={isHomePhonePrivate}
+      myProf={myProf}
     />
   ) : null;
 
@@ -179,7 +180,7 @@ const PersonalInfoList = ({
         ) : MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
-          <a href={`tel:${MobilePhone}`} className="gc360-text-link">
+          <a href={`tel:${MobilePhone}`} className="gc360_text_link">
             {formatPhone(MobilePhone)}
           </a>
         )
@@ -196,7 +197,8 @@ const PersonalInfoList = ({
           />
         )
       }
-      contentClass={isMobilePhonePrivate ? 'private' : null}
+      privateInfo={isMobilePhonePrivate}
+      myProf={myProf}
     />
   ) : null;
 
@@ -206,7 +208,7 @@ const PersonalInfoList = ({
       contentText={
         <>
           {HomeStreet2 && `${HomeStreet2}, `}
-          <span className={keepPrivate ? null : 'not-private'}>
+          <span className={keepPrivate ? null : styles.not_private}>
             {HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
               : Country === 'United States of America' || !Country
@@ -215,7 +217,8 @@ const PersonalInfoList = ({
           </span>
         </>
       }
-      contentClass={isAddressPrivate ? 'private' : null}
+      privateInfo={isAddressPrivate}
+      myProf={myProf}
     />
   );
 
@@ -284,7 +287,8 @@ const PersonalInfoList = ({
             ? 'None Assigned'
             : Advisors?.map((a) => `${a.Firstname} ${a.Lastname}`)?.join(', ')
         }
-        contentClass={'private'}
+        privateInfo
+        myProf={myProf}
       />
     ) : null;
 
@@ -293,25 +297,26 @@ const PersonalInfoList = ({
       <ProfileInfoListItem
         title="On/Off Campus:"
         contentText={OnOffCampus}
-        contentClass={isCampusLocationPrivate ? 'private' : null}
+        private={isCampusLocationPrivate}
+        myProf={myProf}
       />
     ) : null;
 
   const mail =
     isStudent && Mail_Location ? (
       <>
-        <ListItem className="profile-info-list-item">
+        <ListItem className={styles.profile_info_list_item}>
           <Grid container justify="center" alignItems="center">
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
             <Grid container item xs={myProf && mailCombo ? 2 : 7} alignItems="center">
-              <Typography className={null}>{`#${Mail_Location}`}</Typography>
+              <Typography>{`#${Mail_Location}`}</Typography>
             </Grid>
             {myProf && mailCombo && (
               <>
                 <Grid container item xs={2} alignItems="center">
-                  <Typography className={'private'}>
+                  <Typography className={styles.private}>
                     {showMailCombo ? mailCombo : '****'}
                   </Typography>
                 </Grid>
@@ -348,13 +353,14 @@ const PersonalInfoList = ({
         title="Dormitory:"
         contentText={
           <>
-            <span className={keepPrivate ? null : 'not-private'}>
+            <span className={keepPrivate ? null : styles.not_private}>
               {BuildingDescription ?? Hall}
             </span>
             {myProf && OnCampusRoom && `, Room ${OnCampusRoom}`}
           </>
         }
-        contentClass={'private'}
+        privateInfo
+        myProf={myProf}
       />
     ) : null;
 
@@ -371,7 +377,8 @@ const PersonalInfoList = ({
             </Grid>
           </Grid>
         }
-        contentClass={'private'}
+        privateInfo
+        myProf={myProf}
       />
     ) : null;
 
@@ -380,19 +387,19 @@ const PersonalInfoList = ({
       <ProfileInfoListItem
         title="Spouse:"
         contentText={SpouseName}
-        contentClass={(keepPrivate && myProf) || isSpousePrivate ? 'private' : null}
+        privateInfo={(keepPrivate && myProf) || isSpousePrivate}
       />
     ) : null;
 
   const note =
     myProf &&
     (isFacStaff ? (
-      <Typography align="left" className="note">
+      <Typography align="left" className={styles.note}>
         NOTE: To update your data, please contact{' '}
         <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
       </Typography>
     ) : isStudent ? (
-      <div align="left" className="note">
+      <div align="left" className={styles.note}>
         <Typography>NOTE:</Typography>
         <ul>
           <li>
@@ -421,7 +428,7 @@ const PersonalInfoList = ({
       isMobilePhonePrivate ||
       isCampusLocationPrivate ||
       isSpousePrivate) ? (
-      <Typography align="left" className="disclaimer">
+      <Typography align="left" className={styles.disclaimer}>
         Private by request, visible only to faculty and staff
       </Typography>
     ) : null;
@@ -429,13 +436,15 @@ const PersonalInfoList = ({
   return (
     <Grid item xs={12}>
       <Card
-        className={`personal-info-list  ${myProf ? 'my-personal-info' : 'public-personal-info'}`}
+        className={`${styles.personal_info_list}  ${
+          myProf ? styles.my_personal_info : styles.public_personal_info
+        }`}
       >
         <Grid
           container
           justifyContent="flex-end"
           alignItems="center"
-          className="personal-info-list-header"
+          className={styles.personal_info_list_header}
         >
           <Grid item xs={8}>
             <CardHeader title="Personal Information" />

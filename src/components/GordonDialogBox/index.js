@@ -8,7 +8,7 @@ import {
   Button,
 } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
-import './index.css';
+import styles from './GordonDialogBox.module.css';
 
 // Learn more about Dialog's API at https://material-ui.com/api/dialog/
 // Learn more about Alert's API at https://material-ui.com/api/alert/
@@ -53,13 +53,13 @@ const GordonDialogBox = ({
 }) => {
   return (
     <Dialog
-      className="gc360-gordondialogbox"
+      className={styles.gc360_gordondialogbox}
       open={open}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle className="gc360-gordondialogbox_title" id="alert-dialog-title">
+      <DialogTitle className={styles.gc360_gordondialogbox_title} id="alert-dialog-title">
         {severity ? (
           <Alert variant="filled" severity={severity}>
             <AlertTitle>
@@ -70,14 +70,14 @@ const GordonDialogBox = ({
           title
         )}
       </DialogTitle>
-      <DialogContent className="gc360-gordondialogbox_content" id="alert-dialog-description">
+      <DialogContent className={styles.gc360_gordondialogbox_content} id="alert-dialog-description">
         {typeof children === String ? (
-          <DialogContentText className="gc360-gordondialogbox_text">{children}</DialogContentText>
+          <DialogContentText className={styles.gc360_gordondialogbox_text}>{children}</DialogContentText>
         ) : (
           children
         )}
       </DialogContent>
-      <DialogActions className="gc360-gordondialogbox_actions">
+      <DialogActions className={styles.gc360_gordondialogbox_actions}>
         {cancelButtonClicked && (
           <Button variant="contained" onClick={cancelButtonClicked}>
             {cancelButtonName ?? 'Cancel'}

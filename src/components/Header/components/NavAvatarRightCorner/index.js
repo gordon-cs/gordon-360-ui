@@ -4,6 +4,8 @@ import { gordonColors } from 'theme';
 import React, { useState, useEffect } from 'react';
 import user from 'services/user';
 
+import styles from '../../Header.module.css';
+
 /**
  * Gets the initials of the current user
  * @param {String} username the username to extract initials from
@@ -80,27 +82,19 @@ export const GordonNavAvatarRightCorner = ({ authentication, onClick }) => {
 
   const avatar = authentication ? (
     image ? (
-      <Avatar
-        className={`gc360-nav-avatar-rc_size ${classes.root}`}
-        src={`data:image/jpg;base64,${image}`}
-        sizes="70px"
-      />
+      <Avatar className={classes.root} src={`data:image/jpg;base64,${image}`} sizes="70px" />
     ) : (
-      <Avatar
-        className={`gc360-nav-avatar-rc_size gc360-nav-avatar-rc_placeholder ${classes.root}`}
-      >
-        {getInitials(username)}
-      </Avatar>
+      <Avatar className={classes.root}>{getInitials(username)}</Avatar>
     )
   ) : (
-    <Avatar className={`nav-avatar nav-avatar-placeholder ${classes.root}`}>Guest</Avatar>
+    <Avatar className={classes.root}>Guest</Avatar>
   );
 
   return (
-    <section className="right-side-container">
-      <Tooltip className="tooltip" id="tooltip-avatar" title={name ? name : 'Nav Avatar'}>
+    <section className={styles.right_side_container}>
+      <Tooltip className={styles.tooltip} id="tooltip_avatar" title={name ? name : 'Nav Avatar'}>
         <IconButton
-          className={`gc360-nav-avatar-rc ${classes.root}`}
+          className={classes.root}
           aria-label="More"
           aria-owns={'global-menu'}
           aria-haspopup="true"

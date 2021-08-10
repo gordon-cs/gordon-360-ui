@@ -19,7 +19,7 @@ import IdCardGreen from './image-green.png';
 import IdCardTop from './image-top.png';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import './IDUploader.css';
+import styles from './IDUploader.module.css';
 import user from 'services/user';
 import errorLog from 'services/errorLog';
 import Login from 'components/LoginDialogue';
@@ -273,7 +273,7 @@ class IDUploader extends Component {
                   <img
                     src={IdCardTop}
                     alt="ID card top with Gordon College logo."
-                    className="placeholder-id"
+                    className={styles.placeholder_id}
                     style={{ maxWidth: '100%', maxHeight: '100%' }}
                   />
                 </Grid>
@@ -283,7 +283,7 @@ class IDUploader extends Component {
                       <img
                         src={this.state.IdCardPlaceholder}
                         alt="Placeholder ID."
-                        className="placeholder-id"
+                        className={styles.placeholder_id}
                         style={{ maxWidth: '100%', maxHeight: '100%' }}
                       />
                     </Grid>
@@ -291,7 +291,7 @@ class IDUploader extends Component {
                       <img
                         src={IdCardGreen}
                         alt="Colored bar with text 'student'."
-                        className="placeholder-id"
+                        className={styles.placeholder_id}
                         style={{ maxWidth: '100%', maxHeight: '100%' }}
                       />
                     </Grid>
@@ -348,12 +348,12 @@ class IDUploader extends Component {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
-          <div className="gc360-id-dialog">
-            <DialogTitle className="gc360-id-dialog_title" id="simple-dialog-title">
+          <div className={styles.gc360_id_dialog}>
+            <DialogTitle className={styles.gc360_id_dialog_title} id="simple-dialog-title">
               Update ID Picture
             </DialogTitle>
-            <DialogContent className="gc360-id-dialog_content">
-              <DialogContentText className="gc360-id-dialog_content_text">
+            <DialogContent className={styles.gc360_id_dialog_content}>
+              <DialogContentText className={styles.gc360_id_dialog_content_text}>
                 {this.props.width === 'md' || this.props.width === 'sm' || this.props.width === 'xs'
                   ? 'Tap Image to Browse Files'
                   : 'Drag & Drop Picture, or Click to Browse Files'}
@@ -368,10 +368,10 @@ class IDUploader extends Component {
                 >
                   {({ getRootProps, getInputProps }) => (
                     <section>
-                      <div className="gc360-id-dialog_content_dropzone" {...getRootProps()}>
+                      <div className={styles.gc360_id_dialog_content_dropzone} {...getRootProps()}>
                         <input {...getInputProps()} />
                         <img
-                          className="gc360-id-dialog_content_dropzone_img"
+                          className={styles.gc360_id_dialog_content_dropzone_img}
                           src={`data:image/jpg;base64,${this.state.image}`}
                           alt=""
                           style={{ maxWidth: '140px', maxHeight: '140px' }}
@@ -382,7 +382,7 @@ class IDUploader extends Component {
                 </Dropzone>
               )}
               {preview && (
-                <div className="gc360-id-dialog_content_cropper">
+                <div className={styles.gc360_id_dialog_content_cropper}>
                   <Cropper
                     ref={this.cropperRef}
                     src={preview}
@@ -409,13 +409,13 @@ class IDUploader extends Component {
                   variant="contained"
                   onClick={() => this.setState({ preview: null })}
                   style={style.button}
-                  className="gc360-id-dialog_content_button"
+                  className={styles.gc360_id_dialog_content_button}
                 >
                   Choose Another Image
                 </Button>
               )}
             </DialogContent>
-            <DialogActions className="gc360-id-dialog_actions">
+            <DialogActions className={styles.gc360_id_dialog_actions}>
               <Button variant="contained" onClick={this.handleCloseCancel} style={style.button}>
                 Cancel
               </Button>
@@ -441,7 +441,7 @@ class IDUploader extends Component {
         >
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>
-            <DialogContentText className="submittedText">
+            <DialogContentText className={styles.submittedText}>
               We got your photo!
               <br />
               You should now see it on your MyProfile page, but it may
@@ -470,7 +470,7 @@ class IDUploader extends Component {
         >
           <DialogTitle id="simple-dialog-title">Photo Submitted</DialogTitle>
           <DialogContent>
-            <DialogContentText className="submittedText">
+            <DialogContentText className={styles.submittedText}>
               Looks like something went wrong on our end! <br /> Try resubmitting your photo.
             </DialogContentText>
           </DialogContent>

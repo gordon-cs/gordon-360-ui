@@ -12,6 +12,9 @@ import {
 import { gordonColors } from 'theme';
 import { phoneMaskUS, phoneMaskINTL } from 'views/AcademicCheckIn/components/UpdatePhone/';
 
+// @TODO CSSMODULES - outside directory
+import styles from '../../AcademicCheckIn.module.css';
+
 const EmergencyContactUpdate = ({
   emergencyContact1,
   emergencyContact2,
@@ -121,7 +124,7 @@ function createEmergencyContactFields(
       </Typography>
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
-          <FormControl className="emergencyContactForm">
+          <FormControl className={styles.emergencyContactForm}>
             <InputLabel required={required} htmlFor="component-simple">
               First Name
             </InputLabel>
@@ -134,7 +137,7 @@ function createEmergencyContactFields(
           </FormControl>
         </Grid>
         <Grid item>
-          <FormControl className="emergencyContactForm">
+          <FormControl className={styles.emergencyContactForm}>
             <InputLabel required={required} htmlFor="component-simple">
               Last Name
             </InputLabel>
@@ -148,7 +151,7 @@ function createEmergencyContactFields(
           </FormControl>
         </Grid>
         <Grid item>
-          <FormControl className="emergencyContactForm">
+          <FormControl className={styles.emergencyContactForm}>
             <InputLabel required={required} htmlFor="component-simple">
               Relationship
             </InputLabel>
@@ -162,7 +165,7 @@ function createEmergencyContactFields(
           </FormControl>
         </Grid>
         <Grid item>
-          <FormControl className="emergencyContactForm">
+          <FormControl className={styles.emergencyContactForm}>
             <InputLabel required={required} htmlFor="component-simple">
               Home Phone
             </InputLabel>
@@ -188,7 +191,7 @@ function createEmergencyContactFields(
           </FormControl>
         </Grid>
         <Grid item>
-          <FormControl className="emergencyContactForm">
+          <FormControl className={styles.emergencyContactForm}>
             <InputLabel required={required} htmlFor="component-simple">
               Mobile Phone
             </InputLabel>

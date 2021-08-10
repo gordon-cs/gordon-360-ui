@@ -2,7 +2,7 @@ import Downshift from 'downshift';
 import SearchIcon from '@material-ui/icons/Search';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './people-search.css';
+import styles from './PeopleSearch.module.css';
 import peopleSearch from 'services/people-search';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import PropTypes from 'prop-types';
@@ -23,12 +23,12 @@ const renderInput = (inputProps) => {
       autoFocus={autoFocus}
       value={value}
       inputRef={ref}
-      className={'text-field'}
+      className={styles.text_field}
       InputProps={{
         disableUnderline: true,
         classes: {
-          root: 'people-search-root',
-          input: 'people-search-input',
+          root: styles.people_search_root,
+          input: styles.people_search_input,
           // inputDisabled: 'people-search-disabled', // `inputDisabled` is not a valid classes prop for this Material-UI component. See https://material-ui.com/api/autocomplete/#css
         },
         startAdornment: (
@@ -173,7 +173,7 @@ const GordonPeopleSearch = ({
         {parts.map((part, key) =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
             ? (hasMatched = true && (
-                <span className="h" key={key}>
+                <span className={styles.h} key={key}>
                   {part}
                 </span>
               ))
@@ -185,11 +185,11 @@ const GordonPeopleSearch = ({
 
   function renderNoResult() {
     return (
-      <MenuItem className="people-search-suggestion" style={{ paddingBottom: '5px' }}>
-        <Typography className="no-results" variant="body2">
+      <MenuItem className={styles.people_search_suggestion} style={{ paddingBottom: '5px' }}>
+        <Typography className={styles.no_results} variant="body2">
           No results
         </Typography>
-        <Typography className="loading" variant="body2">
+        <Typography className={styles.loading} variant="body2">
           Loading...
         </Typography>
       </MenuItem>
@@ -220,8 +220,8 @@ const GordonPeopleSearch = ({
           suggestionList[sIndex] !== undefined &&
           suggestion.UserName === suggestionList[sIndex].UserName &&
           sIndex !== -1
-            ? 'people-search-suggestion-selected '
-            : 'people-search-suggestion'
+            ? styles.people_search_suggestion_selected
+            : styles.people_search_suggestion
         }
       >
         <Typography variant="body2">
@@ -283,7 +283,7 @@ const GordonPeopleSearch = ({
       }}
     >
       {({ getInputProps, getItemProps, isOpen }) => (
-        <span className="gordon-people-search" key="suggestion-list-span">
+        <span className={styles.gordon_people_search} key="suggestion-list-span">
           {isOnline
             ? renderInput(
                 getInputProps({
@@ -301,7 +301,7 @@ const GordonPeopleSearch = ({
               )}
           {isOpen && suggestions.length > 0 && query.length >= MIN_QUERY_LENGTH ? (
             disableLink ? (
-              <Paper square className="people-search-dropdown">
+              <Paper square className={styles.people_search_dropdown}>
                 {suggestions.map((suggestion) =>
                   renderSuggestion({
                     suggestion,
@@ -310,7 +310,7 @@ const GordonPeopleSearch = ({
                 )}
               </Paper>
             ) : (
-              <Paper square className="people-search-dropdown">
+              <Paper square className={styles.people_search_dropdown}>
                 {suggestions.map((suggestion) =>
                   renderSuggestion({
                     suggestion,
@@ -326,7 +326,7 @@ const GordonPeopleSearch = ({
           ) : isOpen && suggestions.length === 0 && query.length >= MIN_QUERY_LENGTH ? (
             // Styling copied from how renderSuggestion is done with
             // only bottom padding changed and 'no-results' class used
-            <Paper square className="people-search-dropdown">
+            <Paper square className={styles.people_search_dropdown}>
               {renderNoResult()}
             </Paper>
           ) : null}

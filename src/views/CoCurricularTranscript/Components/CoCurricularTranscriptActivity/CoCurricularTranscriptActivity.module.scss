@@ -1,0 +1,46 @@
+/* Divides the activities container into columns like so:
+
+================================================
+|5%|    70% organization and role   | 25% date |
+| i|                                |          |
+| n|                                |          |
+| d|                                |          |
+| e|                                |          |
+| n|                                |          |
+| t|                                |          |
+================================================
+
+*/
+.experience_transcript_activities {
+  display: grid;
+  grid-template-columns: 5% 70% 25%;
+  grid-template-rows: auto auto;
+  justify-items: stretch;
+
+  .organization_role {
+    grid-column: 2;
+    grid-row: 1;
+    text-align: left;
+  }
+
+  .date {
+    grid-column: 3;
+    grid-row: 1;
+    text-align: left;
+  }
+
+  .leadership_line {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: 5% 70% 25%;
+    grid-template-rows: auto auto;
+    justify-items: stretch;
+    grid-row-gap: 20px;
+  }
+
+  @media print {
+    .experience_transcript_activities {
+      grid-row-gap: 0px;
+    }
+  }
+}

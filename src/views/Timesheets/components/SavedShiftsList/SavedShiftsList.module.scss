@@ -1,0 +1,18 @@
+@import '../../../../vars';
+.timesheets {
+  // Make rows alternate white and grey
+  /* stylelint-disable */
+  .shift_list > .shift_item:nth-child(even) {
+    background: $neutral-light-gray;
+    &:hover {
+      background-color: $primary-cyan;
+    }
+  }
+
+  .shift_list > .shift_item:nth-child(odd) {
+    background: $neutral-white;
+    &:hover {
+      background-color: $primary-cyan;
+    }
+  }
+}

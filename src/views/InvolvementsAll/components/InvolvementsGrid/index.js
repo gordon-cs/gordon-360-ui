@@ -2,14 +2,14 @@ import { Grid, Typography, Card, CardActionArea, CardMedia, CardContent } from '
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import './involvements-grid.css';
+import styles from './InvolvementsGrid.module.css';
 
 const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => {
   const isOnline = useNetworkStatus();
   const history = useHistory();
 
   return (
-    <Grid container direction="row" spacing={4} className="involvements-grid">
+    <Grid container direction="row" spacing={4} className={styles.involvements_grid}>
       {involvements?.length > 0 ? (
         involvements?.map((activity) => (
           <Grid item xs={6} sm={4} md={3} lg={2} key={activity.ActivityCode}>
@@ -28,7 +28,7 @@ const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => 
                   title={activity.ActivityDescription}
                 />
                 <CardContent>
-                  <Typography className="involvement-description">
+                  <Typography className={styles.involvement_description}>
                     {activity.ActivityDescription}
                   </Typography>
                 </CardContent>

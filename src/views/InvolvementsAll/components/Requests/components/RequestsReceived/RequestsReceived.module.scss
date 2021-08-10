@@ -1,0 +1,18 @@
+@import '../../../../../../vars';
+
+.requests_received {
+  &_list {
+    flex-direction: column;
+  }
+
+  .message_text {
+    /* format for the dropdown "no requests" text **/
+    color: grey;
+    text-align: center;
+    padding: 32px;
+  }
+
+  .deny_request_button {
+    color: $secondary-red;
+  }
+}

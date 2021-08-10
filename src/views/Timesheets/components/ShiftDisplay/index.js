@@ -6,7 +6,7 @@ import SavedShiftsList from '../SavedShiftsList';
 import jobs from 'services/jobs';
 import SimpleSnackbar from 'components/Snackbar';
 import Media from 'react-media';
-import './ShiftDisplay.css';
+import styles from './ShiftDisplay.module.css';
 
 export default class ShiftDisplay extends Component {
   constructor(props) {
@@ -160,7 +160,7 @@ export default class ShiftDisplay extends Component {
       this.state.jobNames && this.state.jobNames.length > 1 ? (
         this.state.jobNames.map((jobName, index) => (
           <Tab
-            className="job-tab"
+            className={styles.job_tab}
             label={jobName}
             onClick={() => this.handleTabSelect(jobName)}
             key={index}
@@ -179,7 +179,7 @@ export default class ShiftDisplay extends Component {
               value={this.state.tabValue}
               onChange={this.handleTabChange}
               variant="fullWidth"
-              className="job-tabs"
+              className={styles.job_tabs}
             >
               {jobTabs}
             </Tabs>
@@ -190,7 +190,7 @@ export default class ShiftDisplay extends Component {
               onChange={this.handleTabChange}
               orientation="vertical"
               variant="fullWidth"
-              className="job-tabs"
+              className={styles.job_tabs}
             >
               {jobTabs}
             </Tabs>
@@ -204,7 +204,7 @@ export default class ShiftDisplay extends Component {
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <CardHeader className="disable-select" title="Display shifts for:" />
+              <CardHeader className="disable_select" title="Display shifts for:" />
               {theTabs}
             </CardContent>
           </Card>
