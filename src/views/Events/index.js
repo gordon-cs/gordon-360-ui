@@ -20,6 +20,7 @@ import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
 import GordonLoader from 'components/Loader';
 import { gordonColors } from 'theme';
+import useWindowSize from 'hooks/useWindowSize';
 
 const Events = (props) => {
   const [open, setOpen] = useState(false);
@@ -31,6 +32,7 @@ const Events = (props) => {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
+  const [width] = useWindowSize();
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -125,8 +127,6 @@ const Events = (props) => {
       Events
     </div>
   );
-
-  let width = window.innerWidth;
 
   if (width >= 920) {
     return (
