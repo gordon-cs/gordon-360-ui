@@ -94,11 +94,12 @@ const routes = [
     path: '/myprofile',
     component: MyProfile,
   },
-  {
+  // Bennett Forkner - 08/12/2021 09:34 AM - Commented out to disable Academic checkin after issues with submissions
+  /*{
     name: 'Academic Check In',
     path: '/academiccheckin',
     component: AcademicCheckIn,
-  },
+  },*/
   {
     name: 'People',
     path: '/people',
