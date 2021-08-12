@@ -19,7 +19,7 @@ import Timesheets from './views/Timesheets';
 import BannerSubmission from './views/BannerSubmission';
 import News from './views/News';
 import Page404 from './views/Page404';
-import AcademicCheckIn from './views/AcademicCheckIn';
+//import AcademicCheckIn from './views/AcademicCheckIn';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
