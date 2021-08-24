@@ -11,7 +11,7 @@ import {
   Typography,
   withWidth,
 } from '@material-ui/core';
-import React, { Component, Fragment } from 'react';
+import { createRef, Component, Fragment } from 'react';
 import Dropzone from 'react-dropzone';
 import { gordonColors } from 'theme';
 import IdCardDefault from './image-default.png';
@@ -39,7 +39,7 @@ class IDUploader extends Component {
       files: [],
       IdCardPlaceholder: IdCardDefault,
     };
-    this.cropperRef = React.createRef();
+    this.cropperRef = createRef();
   }
 
   handleUploadPhoto = () => {

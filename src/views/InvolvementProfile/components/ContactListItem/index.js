@@ -1,14 +1,14 @@
 import {
   Avatar,
   IconButton,
+  Link,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
-  Link,
 } from '@material-ui/core';
 import Email from '@material-ui/icons/Email';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import user from 'services/user';
 
 const PlaceHolderAvatar = () => (

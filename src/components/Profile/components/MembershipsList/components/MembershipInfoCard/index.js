@@ -1,8 +1,7 @@
-import React from 'react';
 import { Divider, Grid, List, ListItem, Switch, Typography } from '@material-ui/core/';
-import { Link } from 'react-router-dom';
 import LockIcon from '@material-ui/icons/Lock';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+import { Link } from 'react-router-dom';
 import styles from './MembershipInfoCard.module.css';
 
 const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {

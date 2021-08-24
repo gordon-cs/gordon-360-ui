@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Doughnut, defaults } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import { gordonColors } from 'theme';
@@ -99,7 +99,7 @@ const CLWCreditsDaysLeft = () => {
     };
 
     content = (
-      <React.Fragment>
+      <Fragment>
         <Grid
           container
           justifyContent="space-around"
@@ -164,7 +164,7 @@ const CLWCreditsDaysLeft = () => {
             </div>
           ) : null}
         </div>
-      </React.Fragment>
+      </Fragment>
     );
   }
 

@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 import { Check, Clear, Remove } from '@material-ui/icons';
 import SymptomsDialog from 'components/SymptomsDialog';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StatusColors } from 'services/wellness';
 import styles from './HealthStatus.module.css';
 

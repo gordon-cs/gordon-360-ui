@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Grid,
@@ -72,7 +72,7 @@ const ApplicantListItem = ({
     : `${profile.FirstName} ${profile.LastName}`;
 
   return (
-    <React.Fragment>
+    <Fragment>
       <ListItem
         key={profile.AD_Username}
         component={Link}
@@ -122,7 +122,7 @@ const ApplicantListItem = ({
         </ListItemSecondaryAction>
       </ListItem>
       <Divider />
-    </React.Fragment>
+    </Fragment>
   );
 };
 

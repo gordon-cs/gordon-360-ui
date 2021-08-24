@@ -1,5 +1,4 @@
-import React from 'react';
-import { Typography, Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { gordonColors } from 'theme';
 
 const ConfirmCheckIn = ({

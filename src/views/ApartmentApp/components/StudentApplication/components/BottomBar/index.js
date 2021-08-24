@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardContent, Grid, Typography } from '@material-ui/core/';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PublishIcon from '@material-ui/icons/Publish';

@@ -1,14 +1,13 @@
-import Downshift from 'downshift';
+import { InputAdornment, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import styles from './PeopleSearch.module.css';
-import peopleSearch from 'services/people-search';
+import GordonUnauthorized from 'components/GordonUnauthorized';
+import Downshift from 'downshift';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import PropTypes from 'prop-types';
-import GordonUnauthorized from 'components/GordonUnauthorized';
-
-import { TextField, InputAdornment, Paper, MenuItem, Typography } from '@material-ui/core';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import peopleSearch from 'services/people-search';
+import styles from './PeopleSearch.module.css';
 
 const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 400;

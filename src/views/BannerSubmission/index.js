@@ -1,4 +1,3 @@
-import React from 'react';
 import { gordonColors } from 'theme';
 
 import { Typography, Grid, Button, Card, CardContent, CardHeader } from '@material-ui/core';

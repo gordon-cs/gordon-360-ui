@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import cms from 'services/cms';
 import ImageGallery from 'react-image-gallery';

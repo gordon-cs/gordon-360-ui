@@ -1,5 +1,5 @@
 //Representation of a shift
-import React, { Component } from 'react';
+import { Component } from 'react';
 import {
   Typography,
   TextField,

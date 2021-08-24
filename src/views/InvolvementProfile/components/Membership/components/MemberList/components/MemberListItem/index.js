@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import PropTypes from 'prop-types';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Avatar,
   Button,
+  Checkbox,
   Divider,
-  Grid,
   FormControl,
   FormControlLabel,
-  Checkbox,
+  Grid,
   InputLabel,
+  Link,
+  MenuItem,
+  Select,
   TextField,
   Typography,
-  Select,
-  MenuItem,
-  Avatar,
-  Link,
 } from '@material-ui/core';
-
-import { gordonColors } from 'theme';
-import user from 'services/user';
-import membership from 'services/membership';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import GordonDialogBox from 'components/GordonDialogBox';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import membership from 'services/membership';
+import user from 'services/user';
+import { gordonColors } from 'theme';
+
 const rowStyle = {
   margin: '10px 0px',
   padding: '10px 0px',

@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import UpdatePhone from './components/UpdatePhoneDialog/index.js';
-import styles from './PersonalInfoList.module.css';
-import userService from 'services/user';
-import ProfileInfoListItem from '../ProfileInfoListItem';
-import LockIcon from '@material-ui/icons/Lock';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  FormControlLabel,
+  Grid,
+  Link,
+  List,
+  ListItem,
+  Switch,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import { withStyles } from '@material-ui/core/styles';
 import HelpIcon from '@material-ui/icons/Help';
+import LockIcon from '@material-ui/icons/Lock';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import IconButton from '@material-ui/core/IconButton';
-import {
-  Typography,
-  Grid,
-  Card,
-  CardHeader,
-  CardContent,
-  List,
-  Switch,
-  FormControlLabel,
-  Divider,
-  ListItem,
-  Tooltip,
-  Link,
-} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useEffect, useState } from 'react';
+import userService from 'services/user';
+import ProfileInfoListItem from '../ProfileInfoListItem';
+import UpdatePhone from './components/UpdatePhoneDialog/index.js';
+import styles from './PersonalInfoList.module.css';
 
 const CliftonTooltip = withStyles({
   tooltip: {

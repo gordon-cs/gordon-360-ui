@@ -1,4 +1,3 @@
-import React from 'react';
 import LinkIcon from '@material-ui/icons/InsertLink';
 import { ListItemIcon, ListItemText, ListSubheader, List, ListItem } from '@material-ui/core';
 import CanvasIcon from './images/Canvas.ico';

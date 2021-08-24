@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component, Fragment } from 'react';
 import { gordonColors } from 'theme';
 import { Polar } from 'react-chartjs-2';
 import victory from 'services/victory';
@@ -23,7 +23,7 @@ import {
   CardContent,
 } from '@material-ui/core';
 
-export default class VictoryPromiseDisplay extends React.Component {
+export default class VictoryPromiseDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -250,24 +250,24 @@ export default class VictoryPromiseDisplay extends React.Component {
           <Grid>
             <HoverText
               title={
-                <React.Fragment>
+                <Fragment>
                   <Typography color="inherit">Christian Character</Typography>
                   {
                     'Opportunities encouraging faith formation and its connection to living, learning and leading with others'
                   }
-                </React.Fragment>
+                </Fragment>
               }
             >
               {IMG_CC}
             </HoverText>
             <HoverText
               title={
-                <React.Fragment>
+                <Fragment>
                   <Typography color="inherit">Intellectual Maturity</Typography>
                   {
                     'Opportunities to extend critical reasoning, deepen understanding, and ignite imagination'
                   }
-                </React.Fragment>
+                </Fragment>
               }
             >
               {IMG_IM}
@@ -276,24 +276,24 @@ export default class VictoryPromiseDisplay extends React.Component {
           <Grid>
             <HoverText
               title={
-                <React.Fragment>
+                <Fragment>
                   <Typography color="inherit">Lives of Service</Typography>
                   {
                     "Opportunities to lend one's strengths and talents with our partners to our neighbors"
                   }
-                </React.Fragment>
+                </Fragment>
               }
             >
               {IMG_LS}
             </HoverText>
             <HoverText
               title={
-                <React.Fragment>
+                <Fragment>
                   <Typography color="inherit">Leadership Worldwide</Typography>
                   {
                     "Opportunities to develop one's understanding and influence in God's amazing, dynamic and challenging world"
                   }
-                </React.Fragment>
+                </Fragment>
               }
             >
               {IMG_LW}

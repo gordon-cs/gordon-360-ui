@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonUnauthorized from 'components/GordonUnauthorized';

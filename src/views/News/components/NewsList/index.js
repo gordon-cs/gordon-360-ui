@@ -1,9 +1,9 @@
+import { Card, Grid, List, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { React, useEffect, useState } from 'react';
-import NewsItem from '../NewsItem';
+import { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';
+import NewsItem from '../NewsItem';
 import styles from './NewsList.module.css';
-import { Grid, Typography, Card, List } from '@material-ui/core';
 
 //https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
 //Excellent resource for handling rerender on resize -Josh

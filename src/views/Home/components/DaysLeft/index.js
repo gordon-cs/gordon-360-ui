@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 
 import { gordonColors } from 'theme';

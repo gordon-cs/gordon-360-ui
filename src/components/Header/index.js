@@ -6,7 +6,7 @@ import PeopleIcon from '@material-ui/icons/People';
 // import WorkIcon from '@material-ui/icons/Work';
 import WellnessIcon from '@material-ui/icons/LocalHospital';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import DocumentTitle from 'react-document-title';
 import { Route, Switch, NavLink, Link } from 'react-router-dom';
 import styles from './Header.module.css';
@@ -39,8 +39,8 @@ const getRouteName = (route) => {
   );
 };
 
-const ForwardLink = React.forwardRef((props, ref) => <Link ref={ref} {...props} />);
-const ForwardNavLink = React.forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
+const ForwardLink = forwardRef((props, ref) => <Link ref={ref} {...props} />);
+const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
 const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   const [tabIndex, setTabIndex] = useState(0);

@@ -1,7 +1,6 @@
-import React from 'react';
+import GordonDialogBox from 'components/GordonDialogBox/index';
 import PropTypes from 'prop-types';
 import GordonLinksList from './components/LinksList';
-import GordonDialogBox from 'components/GordonDialogBox/index';
 
 const GordonQuickLinksDialog = (props) => {
   return (

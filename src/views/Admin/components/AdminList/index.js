@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import AdminListItem from './components/AdminListItem';
 import GordonLoader from 'components/Loader';
 import admin from 'services/admin';

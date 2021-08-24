@@ -1,7 +1,6 @@
-import React from 'react';
-import styles from './Feedback.module.css';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import styles from './Feedback.module.css';
 
 const Feedback = () => {
   const isOnline = useNetworkStatus();

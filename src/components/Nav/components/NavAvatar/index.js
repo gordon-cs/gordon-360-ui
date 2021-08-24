@@ -1,5 +1,5 @@
 import { Avatar, Button, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './NavAvatar.module.css';
 import user from 'services/user';
@@ -76,7 +76,7 @@ const GordonNavAvatar = ({ authentication, onLinkClick }) => {
     <Avatar className={`${styles.avatar} ${styles.placeholder}`}>Guest</Avatar>
   );
 
-  const buttonLink = React.forwardRef((props, ref) => (
+  const buttonLink = forwardRef((props, ref) => (
     <Link
       {...props}
       innerRef={ref}
