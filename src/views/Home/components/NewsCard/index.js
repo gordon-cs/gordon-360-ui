@@ -4,7 +4,7 @@
 // But currently it is not being implemented (commented out)
 // May be a potential future feature, but not sure
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { CardContent } from '@material-ui/core';
 import { Button, Grid, CardHeader, Card, Typography } from '@material-ui/core';
 import { gordonColors } from 'theme';

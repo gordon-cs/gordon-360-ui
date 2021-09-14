@@ -10,9 +10,10 @@ import {
   Typography,
 } from '@material-ui/core';
 import GordonDialogBox from 'components/GordonDialogBox';
+import GordonOffline from 'components/GordonOffline';
 import GordonLoader from 'components/Loader';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { useParams } from 'react-router';
@@ -25,7 +26,6 @@ import { gordonColors } from 'theme';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import styles from './InvolvementProfile.module.css';
-import GordonOffline from 'components/GordonOffline';
 
 const CROP_DIM = 320; // pixels
 

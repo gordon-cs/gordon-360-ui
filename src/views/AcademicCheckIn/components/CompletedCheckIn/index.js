@@ -1,8 +1,6 @@
-import React from 'react';
-import { Grid, Typography, Button } from '@material-ui/core';
-import { gordonColors } from 'theme';
+import { Button, Grid, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-
+import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory
 import styles from '../../AcademicCheckIn.module.css';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Divider, ListItem, Grid, Typography } from '@material-ui/core';
 import styles from './ProfileInfoListItem.module.css';
 

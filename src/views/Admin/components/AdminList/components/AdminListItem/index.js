@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { gordonColors } from 'theme';
 import admin from 'services/admin';
 

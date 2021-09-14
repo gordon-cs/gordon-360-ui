@@ -1,6 +1,6 @@
 //import Grid from '@material-ui/core/Grid';
 //import Divider from '@material-ui/core/Divider';
-import React, { Component } from 'react';
+import { Component } from 'react';
 //import List from '@material-ui/core/List';
 //import Typography from '@material-ui/core/Typography';
 import styles from './CoCurricularTranscriptExperience.module.css';

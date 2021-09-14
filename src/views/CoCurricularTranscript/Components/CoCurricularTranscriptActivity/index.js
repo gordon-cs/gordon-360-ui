@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styles from './CoCurricularTranscriptActivity.module.css';
 
 export default class Activity extends Component {

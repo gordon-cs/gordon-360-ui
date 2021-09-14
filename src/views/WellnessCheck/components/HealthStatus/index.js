@@ -1,7 +1,7 @@
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, Grid } from '@material-ui/core';
 import { Check, Clear, Remove } from '@material-ui/icons';
 import SymptomsDialog from 'components/SymptomsDialog';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StatusColors } from 'services/wellness';
 import styles from './HealthStatus.module.css';
 
@@ -68,29 +68,6 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
               src={`data:image/jpg;base64,${image}`}
               alt={username}
             />
-            {currentStatus === StatusColors.RED && (
-              <Typography variant="h5">
-                Students must fill out{' '}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://forms.office.com/r/RADyD1A86u"
-                  className={styles.rtc_link}
-                >
-                  the Fall 2021 Return to Campus form
-                </a>{' '}
-                and{' '}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://forms.office.com/r/CA3Vx8SRWR"
-                  className={styles.rtc_link}
-                >
-                  the Covid-19 Vaccination Status form
-                </a>{' '}
-                before checking in.
-              </Typography>
-            )}
             <Grid className={styles.wellness_status}>
               <Card className={styles[currentStatus]}>
                 <CardContent className={styles.status_box}>

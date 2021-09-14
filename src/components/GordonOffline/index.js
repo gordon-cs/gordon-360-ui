@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Card, CardContent, Button } from '@material-ui/core/';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';

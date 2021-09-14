@@ -1,8 +1,6 @@
-import React from 'react';
-import styles from './OfficeInfoList.module.css';
-
-import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, List } from '@material-ui/core';
 import ProfileInfoListItem from '../ProfileInfoListItem';
+import styles from './OfficeInfoList.module.css';
 
 const OfficeInfoList = ({
   profile: {

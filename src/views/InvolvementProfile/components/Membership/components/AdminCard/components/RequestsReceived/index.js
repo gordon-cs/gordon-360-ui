@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 
 import { gordonColors } from 'theme';
 import membershipService from 'services/membership';
@@ -60,7 +60,7 @@ const RequestsReceived = ({ onAddMember }) => {
     return (
       <List>
         {requests.map((request) => (
-          <React.Fragment key={request.RequestID}>
+          <Fragment key={request.RequestID}>
             <ListItem
               key={request.RequestID}
               classes={{ secondaryAction: classes.secondaryAction }}
@@ -83,7 +83,7 @@ const RequestsReceived = ({ onAddMember }) => {
               </ListItemSecondaryAction>
             </ListItem>
             <Divider />
-          </React.Fragment>
+          </Fragment>
         ))}
       </List>
     );

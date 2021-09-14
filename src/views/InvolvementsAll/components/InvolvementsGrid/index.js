@@ -1,6 +1,5 @@
 import { Grid, Typography, Card, CardActionArea, CardMedia, CardContent } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styles from './InvolvementsGrid.module.css';
 

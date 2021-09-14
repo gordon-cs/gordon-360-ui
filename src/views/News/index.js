@@ -1,31 +1,31 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import PostAddIcon from '@material-ui/icons/PostAdd';
-import newsService from 'services/news';
-import userService from 'services/user';
-import NewsList from './components/NewsList';
-import GordonLoader from 'components/Loader';
-import GordonSnackbar from 'components/Snackbar';
-import GordonUnauthorized from 'components/GordonUnauthorized';
-import GordonOffline from 'components/GordonOffline';
-import Dropzone from 'react-dropzone';
-import Cropper from 'react-cropper';
-import { isMobile } from 'react-device-detect';
-import 'cropperjs/dist/cropper.css';
-import { gordonColors } from 'theme';
 import {
-  Grid,
-  TextField,
-  Tooltip,
   Button,
-  Fab,
-  Typography,
   DialogActions,
   DialogContent,
   DialogContentText,
+  Fab,
+  Grid,
   MenuItem,
+  TextField,
+  Tooltip,
+  Typography,
 } from '@material-ui/core';
-import useNetworkStatus from 'hooks/useNetworkStatus';
+import PostAddIcon from '@material-ui/icons/PostAdd';
 import GordonDialogBox from 'components/GordonDialogBox';
+import GordonOffline from 'components/GordonOffline';
+import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonLoader from 'components/Loader';
+import GordonSnackbar from 'components/Snackbar';
+import 'cropperjs/dist/cropper.css';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Cropper from 'react-cropper';
+import { isMobile } from 'react-device-detect';
+import Dropzone from 'react-dropzone';
+import newsService from 'services/news';
+import userService from 'services/user';
+import { gordonColors } from 'theme';
+import NewsList from './components/NewsList';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -89,8 +89,7 @@ const StudentNews = (props) => {
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [currentUsername, setCurrentUsername] = useState('');
   const [currentlyEditing, setCurrentlyEditing] = useState(false); // false if not editing, newsID if editing
-
-  let cropperRef = React.createRef();
+  const cropperRef = useRef();
 
   const loadNews = useCallback(async () => {
     setLoading(true);

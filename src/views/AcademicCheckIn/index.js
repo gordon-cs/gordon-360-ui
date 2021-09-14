@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import { Box, Button, Card, CardHeader, Grid } from '@material-ui/core';
+import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonLoader from 'components/Loader';
+import { useEffect, useState } from 'react';
+import checkInService from 'services/checkIn';
+import user from 'services/user';
 import AcademicCheckInWelcome from 'views/AcademicCheckIn/components/AcademicCheckInWelcome';
 import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyContactUpdate';
 import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
-import { Button, Grid, Card, CardHeader, Box } from '@material-ui/core';
-import checkInService from 'services/checkIn';
 import styles from './AcademicCheckIn.module.css';
+import CompletedCheckIn from './components/CompletedCheckIn';
+import ConfirmCheckIn from './components/ConfirmCheckIn';
 import PrivacyAgreement from './components/PrivacyAgreement';
 import RaceEthnicity from './components/RaceEthnicity';
-import ConfirmCheckIn from './components/ConfirmCheckIn';
-import CompletedCheckIn from './components/CompletedCheckIn';
-import GordonLoader from 'components/Loader';
-import GordonUnauthorized from 'components/GordonUnauthorized';
-import user from 'services/user';
 //🧙‍♂️
 const AcademicCheckIn = (props) => {
   const [activeStep, setActiveStep] = useState(0);

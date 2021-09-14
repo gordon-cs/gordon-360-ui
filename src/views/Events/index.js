@@ -1,6 +1,3 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import EventList from 'components/EventList';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import {
   Button,
   Card,
@@ -13,12 +10,15 @@ import {
   Grid,
   TextField,
 } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import AddIcon from '@material-ui/icons/Add';
 import EventIcon from '@material-ui/icons/Event';
+import FilterListIcon from '@material-ui/icons/FilterList';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import EventList from 'components/EventList';
+import GordonLoader from 'components/Loader';
+import { useEffect, useMemo, useState } from 'react';
 import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
-import GordonLoader from 'components/Loader';
 import { gordonColors } from 'theme';
 
 const Events = (props) => {

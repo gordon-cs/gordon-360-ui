@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';

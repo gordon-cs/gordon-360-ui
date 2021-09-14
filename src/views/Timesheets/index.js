@@ -1,5 +1,5 @@
 //Main timesheets page
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import {
   Grid,

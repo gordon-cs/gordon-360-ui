@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import CollapsableEventItem from './components/CollapsableEventItem';
 import EventItem from './components/EventItem';
 import { gordonColors } from 'theme';

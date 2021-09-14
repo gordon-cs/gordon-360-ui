@@ -1,5 +1,4 @@
 import { Divider, Drawer, Hidden } from '@material-ui/core';
-import React from 'react';
 import GordonNavAvatar from './components/NavAvatar';
 import GordonNavLinks from './components/NavLinks';
 import styles from './Nav.module.css';

@@ -1,8 +1,7 @@
+import { CardContent, Collapse, Grid, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styles from './CollapsableEventItem.module.css';
-
-import { Typography, CardContent, Collapse, Grid } from '@material-ui/core';
 
 //Switched to table rows
 export default class GordonCollapsableEventItem extends Component {

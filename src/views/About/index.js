@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { gordonColors } from 'theme';
 import versionService from 'services/version';
 import { projectName } from 'project-name';
@@ -66,14 +66,14 @@ const About = () => {
               <CardContent>
                 {origins.map((section) => {
                   return (
-                    <React.Fragment key={section.title}>
+                    <Fragment key={section.title}>
                       <Typography variant="subtitle1" gutterBottom>
                         <strong>{section.title}</strong>
                       </Typography>
                       <Typography variant="body2" paragraph className={styles.about_Origins}>
                         {section.body}
                       </Typography>
-                    </React.Fragment>
+                    </Fragment>
                   );
                 })}
               </CardContent>
@@ -84,14 +84,14 @@ const About = () => {
               <CardContent>
                 {contributors.map((section) => {
                   return (
-                    <React.Fragment key={section.title}>
+                    <Fragment key={section.title}>
                       <Typography variant="subtitle1" gutterBottom>
                         <strong>{section.title}</strong>
                       </Typography>
                       <Typography variant="body2" paragraph className={styles.about_contributors}>
                         {section.body}
                       </Typography>
-                    </React.Fragment>
+                    </Fragment>
                   );
                 })}
               </CardContent>

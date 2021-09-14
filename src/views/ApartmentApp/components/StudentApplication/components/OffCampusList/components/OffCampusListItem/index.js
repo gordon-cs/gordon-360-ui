@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
   Divider,
   FormControl,
@@ -11,7 +10,7 @@ import {
   MenuItem,
   Select,
 } from '@material-ui/core';
-
+import { Fragment, useEffect, useState } from 'react';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../../../ApartmentApp.module.css';
 
@@ -66,7 +65,7 @@ const OffCampusListItem = ({
     : `${profile.FirstName} ${profile.LastName}`;
 
   return (
-    <React.Fragment>
+    <Fragment>
       <ListItem key={profile.AD_Username} className={styles.list_item}>
         <Grid container alignItems="flex-end" spacing={1}>
           <Grid item xs={12} sm={4}>
@@ -100,7 +99,7 @@ const OffCampusListItem = ({
         </Grid>
       </ListItem>
       <Divider />
-    </React.Fragment>
+    </Fragment>
   );
 };
 

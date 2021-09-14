@@ -1,13 +1,11 @@
-import PropTypes from 'prop-types';
-import { React, useState } from 'react';
-import EditIcon from '@material-ui/icons/Edit';
+import { Button, CardContent, Collapse, Grid, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Link } from 'react-router-dom';
+import EditIcon from '@material-ui/icons/Edit';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './NewsItem.module.css';
-
-import { Typography, CardContent, Collapse, Grid, Button } from '@material-ui/core';
 
 const NewsItem = ({
   posting,

@@ -4,7 +4,7 @@ import { Grid } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import user from 'services/user';
 // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
 // import { Redirect } from 'react-router-dom';

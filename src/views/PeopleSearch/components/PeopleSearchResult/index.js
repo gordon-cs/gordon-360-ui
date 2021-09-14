@@ -1,11 +1,10 @@
-import React, { useEffect, useState, Fragment } from 'react';
-import IMG from 'react-graceful-image';
-import { Typography, Grid, Divider } from '@material-ui/core';
+import { Divider, Grid, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
+import IMG from 'react-graceful-image';
 import { Link } from 'react-router-dom';
-import userService from 'services/user';
 import VisibilitySensor from 'react-visibility-sensor';
-
+import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
 
 /*Const string was created with https://png-pixel.com/ .

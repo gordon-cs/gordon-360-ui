@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import event from 'services/event';
 import GordonLoader from 'components/Loader';

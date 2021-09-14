@@ -1,8 +1,7 @@
+import { CardContent, Collapse, Grid, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import styles from './EventItem.module.css';
-
-import { Typography, CardContent, Collapse, Grid } from '@material-ui/core';
 
 //Switched to table rows
 export default class GordonEventItem extends Component {
@@ -22,7 +21,12 @@ export default class GordonEventItem extends Component {
     eventDescription = eventDescription === '' ? 'No description available' : eventDescription;
     return (
       <section>
-        <Grid container direction="row" onClick={this.handleExpandClick} className={styles.event_item}>
+        <Grid
+          container
+          direction="row"
+          onClick={this.handleExpandClick}
+          className={styles.event_item}
+        >
           <Grid item xs={4}>
             <Typography className={styles.event_column}>{event.title}</Typography>
           </Grid>
