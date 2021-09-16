@@ -101,8 +101,6 @@ const GordonPeopleSearch = ({
     //but really it's just that its capitalized what the heck
     query = query.toLowerCase();
 
-    let suggestions = await peopleSearch.search(query);
-    setSuggestions(suggestions);
     let results = await peopleSearch.renderResults(query);
     if (time < results.now) {
       setTime(results.now);
