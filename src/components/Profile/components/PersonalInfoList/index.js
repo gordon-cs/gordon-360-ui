@@ -261,6 +261,7 @@ const PersonalInfoList = ({
       }
       aria-label="add"
       enterTouchDelay={50}
+      leaveTouchDelay={5000}
     >
       <HelpIcon style={{ cursor: 'pointer', margin: '0 1rem', fontSize: '1.2rem' }} />
     </CliftonTooltip>
