@@ -9,12 +9,9 @@ import {
   List,
   ListItem,
   Switch,
-  Tooltip,
   Typography,
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-import { withStyles } from '@material-ui/core/styles';
-import HelpIcon from '@material-ui/icons/Help';
 import LockIcon from '@material-ui/icons/Lock';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -24,14 +21,7 @@ import userService from 'services/user';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
-
-const CliftonTooltip = withStyles({
-  tooltip: {
-    color: '#555',
-    backgroundColor: '#fff',
-    boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-  },
-})(Tooltip);
+import GordonTooltip from 'components/GordonTooltip';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -249,7 +239,7 @@ const PersonalInfoList = ({
   )).reduce((prev, curr) => [prev, ', ', curr]);
 
   let strengthsCaption = (
-    <CliftonTooltip
+    <GordonTooltip
       title={
         <span style={{ fontSize: '0.8rem' }}>
           Categories:&nbsp;
@@ -259,11 +249,9 @@ const PersonalInfoList = ({
           <span style={{ color: '#2c8b0f' }}>Thinking</span>
         </span>
       }
-      aria-label="add"
       enterTouchDelay={50}
-    >
-      <HelpIcon style={{ cursor: 'pointer', margin: '0 1rem', fontSize: '1.2rem' }} />
-    </CliftonTooltip>
+      leaveTouchDelay={5000}
+    ></GordonTooltip>
   );
 
   const cliftonStrengths = CliftonStrengths ? (
