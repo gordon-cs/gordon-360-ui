@@ -1,6 +1,4 @@
-import { Card, CardContent, CardHeader, Grid, List, Tooltip, Typography } from '@material-ui/core';
-import HelpIcon from '@material-ui/icons/Help';
-import { withStyles } from '@material-ui/core/styles';
+import { Card, CardContent, CardHeader, Grid, List, Typography } from '@material-ui/core';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
 import GordonTooltip from 'components/GordonTooltip';
