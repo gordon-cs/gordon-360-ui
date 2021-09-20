@@ -3,14 +3,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import { withStyles } from '@material-ui/core/styles';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
-
-const MailStopTooltip = withStyles({
-  tooltip: {
-    color: '#555',
-    backgroundColor: '#fff',
-    boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-  },
-})(Tooltip);
+import GordonTooltip from 'components/GordonTooltip';
 
 const OfficeInfoList = ({
   profile: {
@@ -59,14 +52,7 @@ const OfficeInfoList = ({
     ) : null;
 
   let mailstopTooltip = (
-    <MailStopTooltip
-      title={<span style={{ fontSize: '0.8rem' }}>{Mail_Description}</span>}
-      aria-label="add"
-      enterTouchDelay={50}
-      leaveTouchDelay={2000}
-    >
-      <HelpIcon style={{ cursor: 'pointer', margin: '0 1rem', fontSize: '1.2rem' }} />
-    </MailStopTooltip>
+    <GordonTooltip content={Mail_Description} enterTouchDelay={50} leaveTouchDelay={2000} />
   );
 
   const mailstop = Mail_Location ? (
