@@ -13,11 +13,7 @@ const StyledTooltip = withStyles({
 
 const GordonTooltip = ({ content, ...OtherProps }) => {
   return (
-    <StyledTooltip
-      title={<span style={{ fontSize: '0.8rem' }}>{content}</span>}
-      aria-label="add"
-      {...OtherProps}
-    >
+    <StyledTooltip title={<span style={{ fontSize: '0.8rem' }}>{content}</span>} {...OtherProps}>
       <HelpIcon
         style={{
           cursor: 'pointer',

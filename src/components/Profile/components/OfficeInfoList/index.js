@@ -51,17 +51,13 @@ const OfficeInfoList = ({
       <ProfileInfoListItem title="Room:" contentText={`${BuildingDescription}, ${OnCampusRoom}`} />
     ) : null;
 
-  let mailstopTooltip = (
-    <GordonTooltip content={Mail_Description} enterTouchDelay={50} leaveTouchDelay={2000} />
-  );
-
   const mailstop = Mail_Location ? (
     <ProfileInfoListItem
       title="Mailstop:"
       contentText={
         <Typography>
           {Mail_Location}
-          {mailstopTooltip}
+          {<GordonTooltip content={Mail_Description} enterTouchDelay={50} leaveTouchDelay={2000} />}
         </Typography>
       }
     />

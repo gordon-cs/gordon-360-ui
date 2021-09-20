@@ -252,12 +252,9 @@ const PersonalInfoList = ({
           <span style={{ color: '#2c8b0f' }}>Thinking</span>
         </span>
       }
-      aria-label="add"
       enterTouchDelay={50}
       leaveTouchDelay={5000}
-    >
-      <HelpIcon style={{ cursor: 'pointer', margin: '0 1rem', fontSize: '1.2rem' }} />
-    </GordonTooltip>
+    ></GordonTooltip>
   );
 
   const cliftonStrengths = CliftonStrengths ? (
