@@ -95,6 +95,9 @@ const getFilteredNews = (unexpiredNews, query) => {
     let queryparts = query.split(' ');
     for (let i = 0; i < queryparts.length; i++) {
       let querypart = queryparts[i];
+      if (querypart === '') {
+        continue;
+      }
       if (
         newsitem.Body.toLowerCase().includes(querypart) ||
         newsitem.ADUN.toLowerCase().includes(querypart) ||
@@ -103,9 +106,10 @@ const getFilteredNews = (unexpiredNews, query) => {
       ) {
         filteredNews.push(newsitem);
         // Break so as to only add news item once
-        break;
+        return true;
       }
     }
+    return false;
   });
   return filteredNews;
 };
