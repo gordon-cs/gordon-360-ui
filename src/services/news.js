@@ -90,8 +90,7 @@ const getNotExpiredFormatted = async () => {
  * @return {Promise<any>} Student news
  */
 const getFilteredNews = (unexpiredNews, query) => {
-  const filteredNews = [];
-  unexpiredNews.map((newsitem) => {
+  return unexpiredNews.filter((newsitem) => {
     let queryparts = query.split(' ');
     for (let i = 0; i < queryparts.length; i++) {
       let querypart = queryparts[i];
