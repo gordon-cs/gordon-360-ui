@@ -234,7 +234,6 @@ const newsService = {
   getNewNews,
   getNotExpiredFormatted,
   getFilteredNews,
-  getFilteredNews,
   submitStudentNews,
   deleteStudentNews,
   editStudentNews,
