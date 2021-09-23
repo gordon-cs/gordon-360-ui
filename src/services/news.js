@@ -75,7 +75,7 @@ function formatPosting(posting) {
  * and formats
  * @return {Promise<any>} Student news
  */
-const getNotExpiredSearchFormatted = async () => {
+const getNotExpiredFormatted = async () => {
   let unexpiredNews = await getNotExpired();
   const news = [];
   for (let i = 0; i < unexpiredNews.length; i += 1) {
@@ -91,7 +91,7 @@ const getNotExpiredSearchFormatted = async () => {
  * @param {String} query the search query
  * @return {Promise<any>} Student news
  */
-const getNotExpiredFormatted = async (query) => {
+const getNotExpiredSearchFormatted = async (query) => {
   let unexpiredNews = await getNotExpiredSearch(query);
   const news = [];
   for (let i = 0; i < unexpiredNews.length; i += 1) {

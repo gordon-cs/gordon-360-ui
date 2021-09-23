@@ -110,7 +110,7 @@ const StudentNews = (props) => {
 
   useEffect(() => {
     loadNews();
-  }, [props.authentication, loadNews, search]);
+  }, [props.authentication, loadNews]);
 
   useEffect(() => {
     const loadUsername = async () => {
@@ -122,7 +122,12 @@ const StudentNews = (props) => {
   }, []);
 
   useEffect(() => {
-    search != null ? setNews(newsService.getNotExpiredSearchFormatted(search)) : setNews(news);
+    if (search) {
+      newsService.getNotExpiredSearchFormatted(search).then((filteredNews) => {
+        if (filteredNews) setNews(filteredNews);
+        else setNews(null);
+      });
+    }
   }, [search]);
 
   function handlePostClick() {
