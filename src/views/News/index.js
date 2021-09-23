@@ -110,7 +110,7 @@ const StudentNews = (props) => {
 
   useEffect(() => {
     loadNews();
-  }, [props.authentication, loadNews]);
+  }, [props.authentication, loadNews, search]);
 
   useEffect(() => {
     const loadUsername = async () => {
@@ -120,6 +120,10 @@ const StudentNews = (props) => {
 
     loadUsername();
   }, []);
+
+  useEffect(() => {
+    search != null ? setNews(newsService.getNotExpiredSearchFormatted(search)) : setNews(news);
+  }, [search]);
 
   function handlePostClick() {
     setOpenPostActivity(true);

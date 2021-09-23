@@ -34,6 +34,8 @@ import http from './http';
 
 const getNotExpired = () => http.get(`news/not-expired`);
 
+const getNotExpiredSearch = async (query) => http.get(`news/not-expired/${query}`);
+
 // news since 10am (today's news)
 const getNewNews = () => http.get(`news/new`);
 
@@ -73,8 +75,24 @@ function formatPosting(posting) {
  * and formats
  * @return {Promise<any>} Student news
  */
-const getNotExpiredFormatted = async () => {
+const getNotExpiredSearchFormatted = async () => {
   let unexpiredNews = await getNotExpired();
+  const news = [];
+  for (let i = 0; i < unexpiredNews.length; i += 1) {
+    news.push(unexpiredNews[i]);
+    formatPosting(unexpiredNews[i]);
+  }
+  return news;
+};
+
+/**
+ * Gets unexpired student news matchting a search string
+ * and formats
+ * @param {String} query the search query
+ * @return {Promise<any>} Student news
+ */
+const getNotExpiredFormatted = async (query) => {
+  let unexpiredNews = await getNotExpiredSearch(query);
   const news = [];
   for (let i = 0; i < unexpiredNews.length; i += 1) {
     news.push(unexpiredNews[i]);
@@ -251,6 +269,7 @@ const newsService = {
   getPersonalUnapprovedFormatted,
   getNewNews,
   getNotExpiredFormatted,
+  getNotExpiredSearchFormatted,
   getFilteredNews,
   submitStudentNews,
   deleteStudentNews,
