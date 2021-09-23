@@ -4,7 +4,7 @@
  * @module errorLog
  */
 
-import http from './http.js';
+import http from './http.ts';
 
 const postErrorLog = (message) => {
   let currentTime = new Date();

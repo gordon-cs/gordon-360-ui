@@ -33,7 +33,7 @@ NotFoundError.prototype = Object.create(Error.prototype);
 /**
  * Create an error object based on an HTTP error from the backend
  *
- * @param {Error} err Error caught from HTTP request
+ * @param {Error | Object} err Error caught from HTTP request
  * @param {Response} res HTTP response
  * @returns {Error|AuthError} An error
  */

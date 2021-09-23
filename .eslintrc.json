@@ -5,7 +5,9 @@
     "react/react-in-jsx-scope": "off",
     "react/jsx-uses-react": "off",
     "jsdoc/require-jsdoc": 0,
-    "jsdoc/no-undefined-types": 0
+    "jsdoc/no-undefined-types": 0,
+    "jsdoc/require-param-type": "off",
+    "jsdoc/require-returns-type": "off"
   },
   "settings": {
     "jsdoc": {
