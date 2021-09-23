@@ -67,7 +67,7 @@
     "build-css": "sass src --no-source-map",
     "watch-css": "sass --watch src",
     "start-js": "react-scripts start",
-    "dev": "(npm run watch-css & npm run start-js)",
+    "dev": "(start npm run watch-css && npm run start-js) || (npm run watch-css & npm run start-js)",
     "start": "npm run dev",
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test",
