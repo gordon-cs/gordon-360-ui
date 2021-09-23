@@ -6,7 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
-import wellness, { StatusColors } from 'services/wellness';
+import wellness, { StatusColor } from 'services/wellness';
 import styles from './SymptomsDialog.module.css';
 
 const SymptomsDialog = ({ isOpen, setIsOpen, setStatus }) => {
@@ -31,7 +31,7 @@ const SymptomsDialog = ({ isOpen, setIsOpen, setStatus }) => {
         <Button
           variant="contained"
           onClick={() => {
-            wellness.postAnswer(StatusColors.YELLOW).then((status) => setStatus(status));
+            wellness.postAnswer(StatusColor.Yellow).then((status) => setStatus(status));
             setIsOpen(false);
           }}
           className={styles.confirm_symptoms}
