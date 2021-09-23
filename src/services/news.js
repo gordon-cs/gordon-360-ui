@@ -91,26 +91,19 @@ const getNotExpiredFormatted = async () => {
  */
 const getFilteredNews = (unexpiredNews, query) => {
   return unexpiredNews.filter((newsitem) => {
-    let queryparts = query.split(' ');
-    for (let i = 0; i < queryparts.length; i++) {
-      let querypart = queryparts[i];
-      if (querypart === '') {
-        continue;
-      }
+    let queryparts = query.split(' ').filter((q) => q !== '');
+    for (let querypart of queryparts) {
       if (
         newsitem.Body.toLowerCase().includes(querypart) ||
         newsitem.ADUN.toLowerCase().includes(querypart) ||
         newsitem.categoryName.toLowerCase().includes(querypart) ||
         newsitem.Subject.toLowerCase().includes(querypart)
       ) {
-        filteredNews.push(newsitem);
-        // Break so as to only add news item once
         return true;
       }
     }
     return false;
   });
-  return filteredNews;
 };
 
 /**
