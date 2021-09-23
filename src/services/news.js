@@ -88,17 +88,29 @@ const getNotExpiredFormatted = async () => {
 /**
  * Gets unexpired student news matchting a search string
  * and formats
+ * @param {NewsItem[]} unexpiredNews the list of unfiltered news items
  * @param {String} query the search query
  * @return {Promise<any>} Student news
  */
-const getNotExpiredSearchFormatted = async (query) => {
-  let unexpiredNews = await getNotExpiredSearch(query);
-  const news = [];
-  for (let i = 0; i < unexpiredNews.length; i += 1) {
-    news.push(unexpiredNews[i]);
-    formatPosting(unexpiredNews[i]);
-  }
-  return news;
+const getFilteredNews = (unexpiredNews, query) => {
+  const filteredNews = [];
+  unexpiredNews.map((newsitem) => {
+    let queryparts = query.split(' ');
+    for (let i = 0; i < queryparts.length; i++) {
+      let querypart = queryparts[i];
+      if (
+        newsitem.Body.toLowerCase().includes(querypart) ||
+        newsitem.ADUN.toLowerCase().includes(querypart) ||
+        newsitem.categoryName.toLowerCase().includes(querypart) ||
+        newsitem.Subject.toLowerCase().includes(querypart)
+      ) {
+        filteredNews.push(newsitem);
+        formatPosting(newsitem);
+        break;
+      }
+    }
+  });
+  return filteredNews;
 };
 
 /**
@@ -175,7 +187,7 @@ const getNewsByCategory = async (category) => {
  * @param {any} filters - the state of news that includes filter information
  * @return {Promise<any>} news that has been filtered
  */
-async function getFilteredNews(filters) {
+/*async function getFilteredNews(filters) {
   // source news
   let news = filters.news;
   // TODO: apply category filters
@@ -212,7 +224,7 @@ async function getFilteredNews(filters) {
     news = filteredNews;
   }
   return news;
-}
+}*/
 
 /******************* POST **********************/
 
@@ -269,7 +281,7 @@ const newsService = {
   getPersonalUnapprovedFormatted,
   getNewNews,
   getNotExpiredFormatted,
-  getNotExpiredSearchFormatted,
+  getFilteredNews,
   getFilteredNews,
   submitStudentNews,
   deleteStudentNews,
