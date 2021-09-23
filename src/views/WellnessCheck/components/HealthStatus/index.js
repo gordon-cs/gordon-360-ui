@@ -89,7 +89,12 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
               />
             </Grid>
           </CardContent>
-          <div className={styles.wellness_header}>Questions? Health Center: (978) 867-4300 </div>
+          <div className={styles.wellness_header}>
+            Questions? Email{' '}
+            <a className={styles.contact_link} href="mailto:covid-19@gordon.edu">
+              Covid-19@gordon.edu
+            </a>
+          </div>
         </Card>
       </Grid>
     </Grid>
