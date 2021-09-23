@@ -76,7 +76,7 @@ const StudentNews = (props) => {
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [news, setNews] = useState([]);
-  const [allNews, setAllNews] = useState([]);
+ const allNewsRef = useRef([]);
   const [personalUnapprovedNews, setPersonalUnapprovedNews] = useState([]);
   //const [filteredNews, setFilteredNews] = useState([]);
   const isOnline = useNetworkStatus();
