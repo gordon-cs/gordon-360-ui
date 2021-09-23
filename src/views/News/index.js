@@ -76,7 +76,7 @@ const StudentNews = (props) => {
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [news, setNews] = useState([]);
- const allNewsRef = useRef([]);
+  const allNewsRef = useRef([]);
   const [personalUnapprovedNews, setPersonalUnapprovedNews] = useState([]);
   //const [filteredNews, setFilteredNews] = useState([]);
   const isOnline = useNetworkStatus();
@@ -101,7 +101,7 @@ const StudentNews = (props) => {
       setLoading(false);
       setCategories(newsCategories);
       setNews(unexpiredNews);
-      setAllNews(unexpiredNews);
+      allNewsRef.current = unexpiredNews;
       setPersonalUnapprovedNews(personalUnapprovedNews);
       //setFilteredNews(unexpiredNews);
     } else {
@@ -125,11 +125,11 @@ const StudentNews = (props) => {
 
   useEffect(() => {
     if (search) {
-      setNews(newsService.getFilteredNews(allNews, search));
+      setNews(newsService.getFilteredNews(allNewsRef.current, search));
     } else {
-      setNews(allNews);
+      setNews(allNewsRef.current);
     }
-  }, [allNews, search]);
+  }, [search]);
 
   function handlePostClick() {
     setOpenPostActivity(true);
