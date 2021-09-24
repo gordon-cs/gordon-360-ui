@@ -352,7 +352,7 @@ const PersonalInfoList = ({
       />
     ) : null;
 
-  const studentID = myProf ? (
+  const gordonID = myProf ? (
     <ProfileInfoListItem
       title="Gordon ID:"
       contentText={ID}
@@ -463,7 +463,7 @@ const PersonalInfoList = ({
             {mail}
             {mobilePhoneListItem}
             {homePhoneListItem}
-            {studentID}
+            {gordonID}
             {home}
             {spouse}
             {note}
