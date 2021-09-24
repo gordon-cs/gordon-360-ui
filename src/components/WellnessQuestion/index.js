@@ -117,7 +117,12 @@ const WellnessQuestion = ({ setStatus }) => {
               </Grid>
             </Collapse>
           </Grid>
-          <div className={styles.wellness_header}>Health Center (for students): (978) 867-4300</div>
+          <div className={styles.wellness_header}>
+            Questions? Email{' '}
+            <a className={styles.contact_link} href="mailto:covid-19@gordon.edu">
+              Covid-19@gordon.edu
+            </a>
+          </div>
           <SymptomsDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} setStatus={setStatus} />
         </Card>
       </Grid>

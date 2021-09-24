@@ -84,6 +84,29 @@ const getNotExpiredFormatted = async () => {
 };
 
 /**
+ * Gets unexpired student news matching a search string
+ * @param {NewsItem[]} unexpiredNews the list of unfiltered news items
+ * @param {String} query the search query
+ * @return {Promise<any>} Student news
+ */
+const getFilteredNews = (unexpiredNews, query) => {
+  return unexpiredNews.filter((newsitem) => {
+    let queryparts = query.split(' ').filter((q) => q !== '');
+    for (let querypart of queryparts) {
+      if (
+        newsitem.Body.toLowerCase().includes(querypart) ||
+        newsitem.ADUN.toLowerCase().includes(querypart) ||
+        newsitem.categoryName.toLowerCase().includes(querypart) ||
+        newsitem.Subject.toLowerCase().includes(querypart)
+      ) {
+        return true;
+      }
+    }
+    return false;
+  });
+};
+
+/**
  * Gets today's news
  * for use on the Home Page card
  * and formats
@@ -150,51 +173,6 @@ const getNewsByCategory = async (category) => {
   }
   return categoryNews;
 };
-
-/**
- * Filter the news page
- * (currently only search)
- * @param {any} filters - the state of news that includes filter information
- * @return {Promise<any>} news that has been filtered
- */
-async function getFilteredNews(filters) {
-  // source news
-  let news = filters.news;
-  // TODO: apply category filters
-  // news = filterbyCategory(filters, allNews);
-  let filteredNews = [];
-
-  // TODO: This is incorrect in events.js -> should be length check rather than null check
-  // TODO: with category filters, if news becomes 0 then search should reset it here
-  // if (news.length === 0) {
-  //   news = filters.news;
-  // }
-
-  // SEARCH FILTER
-  if (filters.search !== '') {
-    // Approved News
-    for (let i = 0; i < news.length; i++) {
-      // subjects
-      if (news[i].Subject.toLowerCase().includes(filters.search.toLowerCase())) {
-        filteredNews.push(news[i]);
-      }
-      // categories
-      else if (news[i].categoryName.toLowerCase().includes(filters.search.toLowerCase())) {
-        filteredNews.push(news[i]);
-      }
-      // authors
-      else if (news[i].author.toLowerCase().includes(filters.search.toLowerCase())) {
-        filteredNews.push(news[i]);
-      }
-      // dates
-      else if (news[i].dayPosted.toLowerCase().includes(filters.search.toLowerCase())) {
-        filteredNews.push(news[i]);
-      }
-    }
-    news = filteredNews;
-  }
-  return news;
-}
 
 /******************* POST **********************/
 
