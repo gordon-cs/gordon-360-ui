@@ -352,23 +352,22 @@ const PersonalInfoList = ({
       />
     ) : null;
 
-  const studentID =
-    isStudent && myProf ? (
-      <ProfileInfoListItem
-        title="Student ID:"
-        contentText={ID}
-        ContentIcon={
-          <Grid container justifyContent="center">
-            <Grid container direction="column" justifyContent="center" alignItems="center">
-              <LockIcon />
-              Private
-            </Grid>
+  const gordonID = myProf ? (
+    <ProfileInfoListItem
+      title="Gordon ID:"
+      contentText={ID}
+      ContentIcon={
+        <Grid container justifyContent="center">
+          <Grid container direction="column" justifyContent="center" alignItems="center">
+            <LockIcon />
+            Private
           </Grid>
-        }
-        privateInfo
-        myProf={myProf}
-      />
-    ) : null;
+        </Grid>
+      }
+      privateInfo
+      myProf={myProf}
+    />
+  ) : null;
 
   const spouse =
     isFacStaff && SpouseName ? (
@@ -464,7 +463,7 @@ const PersonalInfoList = ({
             {mail}
             {mobilePhoneListItem}
             {homePhoneListItem}
-            {studentID}
+            {gordonID}
             {home}
             {spouse}
             {note}
