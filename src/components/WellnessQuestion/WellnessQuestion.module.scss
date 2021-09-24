@@ -47,4 +47,12 @@
       text-decoration: none;
     }
   }
+
+  a.contact_link {
+    color: $primary-cyan;
+    text-decoration: underline;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
