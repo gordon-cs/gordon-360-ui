@@ -1,6 +1,7 @@
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import PropTypes from 'prop-types';
 import GordonLinksList from './components/LinksList';
+import { Button } from '@material-ui/core';
 
 const GordonQuickLinksDialog = (props) => {
   return (
@@ -11,6 +12,9 @@ const GordonQuickLinksDialog = (props) => {
       title="Useful Links"
     >
       <GordonLinksList onClose={props.handleLinkClose} />
+      <Button onClick={props.handleLinkClose} variant="outlined" color="primary">
+        Close
+      </Button>
     </GordonDialogBox>
   );
 };
