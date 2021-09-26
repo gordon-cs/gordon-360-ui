@@ -17,7 +17,7 @@ type NewsItem = {
   Image?: string;
   Sent: boolean;
   thisPastMailing: boolean;
-  Entered: Date;
+  Entered: string;
   fname: string;
   lname: string;
   ManualExpirationDate: Date;
