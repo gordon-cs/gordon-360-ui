@@ -39,6 +39,50 @@ const get = (sessionCode) => http.get(`sessions/${sessionCode}`);
 const getAll = () => http.get('sessions').then((sessions) => sessions.reverse());
 
 /**
+ * Convert a session code to a readable session
+ * e.g. '202109' -> '2021fall'
+ * @param {string} sessionCode the session code
+ * @return {Promise.<Session[]>} List of sessions
+ */
+const decodeSessionCode = (sessionCode) => {
+  let sessionCodeYear = sessionCode.substr(0, 4);
+  let sessionCodeSeason = sessionCode.substr(4);
+  switch (sessionCodeSeason) {
+    case '01':
+      return sessionCodeYear + 'winter';
+    case '05':
+      return sessionCodeYear + 'summer';
+    case '09':
+      return sessionCodeYear + 'fall';
+    default:
+      break;
+  }
+  return sessionCode;
+};
+
+/**
+ * Convert a readable session code to a session code
+ * e.g. '2021fall' -> '202109'
+ * @param {string} readableSessionCode the readable session code
+ * @return {Promise.<Session[]>} List of sessions
+ */
+const encodeSessionCode = (readableSessionCode) => {
+  let sessionCodeYear = readableSessionCode.substr(0, 4);
+  let sessionCodeSeason = readableSessionCode.substr(4);
+  switch (sessionCodeSeason) {
+    case 'winter':
+      return sessionCodeYear + '01';
+    case 'summer':
+      return sessionCodeYear + '05';
+    case 'fall':
+      return sessionCodeYear + '09';
+    default:
+      break;
+  }
+  return readableSessionCode;
+};
+
+/**
  * Get current session
  * @return {Promise.<Session>} Current session
  */
@@ -88,6 +132,8 @@ const getTermCode = () => {
 const sessionService = {
   get,
   getAll,
+  decodeSessionCode,
+  encodeSessionCode,
   getCurrent,
   getFirstDay,
   getLastDay,
