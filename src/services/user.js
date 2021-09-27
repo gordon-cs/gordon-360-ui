@@ -260,7 +260,7 @@ const cliftonStrengthLinks = {
   Individualization:
     'https://www.gallup.com/cliftonstrengths/en/252272/individualization-theme.aspx',
   Positivity: 'https://www.gallup.com/cliftonstrengths/en/252305/positivity-theme.aspx',
-  Relator: 'https://www.gallup.com/cliftonstrengths/en/252305/positivity-theme.aspx',
+  Relator: 'https://www.gallup.com/cliftonstrengths/en/252311/relator-theme.aspx',
   Analytical: 'https://www.gallup.com/cliftonstrengths/en/252152/analytical-theme.aspx',
   Context: 'https://www.gallup.com/cliftonstrengths/en/252209/context-theme.aspx',
   Futuristic: 'https://www.gallup.com/cliftonstrengths/en/252248/futuristic-theme.aspx',
