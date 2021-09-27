@@ -24,6 +24,7 @@ import userService from 'services/user';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
+import { gordonColors } from 'theme';
 
 const CliftonTooltip = withStyles({
   tooltip: {
@@ -396,7 +397,7 @@ const PersonalInfoList = ({
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
         NOTE: To update your data, please contact{' '}
-        <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
+        <a style={{color: gordonColors.primary.blue}} href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
       </Typography>
     ) : isStudent ? (
       <div align="left" className={styles.note}>

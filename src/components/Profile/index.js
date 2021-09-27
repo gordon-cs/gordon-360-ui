@@ -52,7 +52,7 @@ const Profile = ({ profile, myProf }) => {
 
       <Grid item xs={12} lg={5}>
         <Grid container spacing={2}>
-          <OfficeInfoList profile={profile} />
+          <OfficeInfoList profile={profile} myProf={myProf} />
           <PersonalInfoList
             profile={profile}
             myProf={myProf}
