@@ -3,6 +3,9 @@
 # generated .css files (from .scss source files)
 src/**/*.css
 
+# generated .css maps
+src/**/*.css.map
+
 # dependencies
 /node_modules
 
