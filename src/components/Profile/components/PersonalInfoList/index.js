@@ -22,6 +22,7 @@ import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
 import GordonTooltip from 'components/GordonTooltip';
+import { gordonColors } from 'theme';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -383,7 +384,7 @@ const PersonalInfoList = ({
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
         NOTE: To update your data, please contact{' '}
-        <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
+        <a style={{color: gordonColors.primary.blue}} href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
       </Typography>
     ) : isStudent ? (
       <div align="left" className={styles.note}>
