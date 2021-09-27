@@ -21,16 +21,8 @@ import userService from 'services/user';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
-import { gordonColors } from 'theme';
-
-const CliftonTooltip = withStyles({
-  tooltip: {
-    color: '#555',
-    backgroundColor: '#fff',
-    boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-  },
-})(Tooltip);
 import GordonTooltip from 'components/GordonTooltip';
+import { gordonColors } from 'theme';
 
 const PRIVATE_INFO = 'Private as requested.';
 
