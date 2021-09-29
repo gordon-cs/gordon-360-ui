@@ -31,6 +31,7 @@ import SimpleSnackbar from 'components/Snackbar';
 import user from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
+import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
@@ -595,38 +596,12 @@ const Timesheets = (props) => {
         return <GordonOffline feature="Timesheets" />;
       } else if (!isUserStudent) {
         return (
-          <Grid container justifyContent="center" spacing="16">
-            <Grid item xs={12} md={8}>
-              <Card>
-                <CardContent
-                  style={{
-                    margin: 'auto',
-                    textAlign: 'center',
-                  }}
-                >
-                  <br />
-                  <h1>{'Timesheets Unavailable'}</h1>
-                  <h4>
-                    {
-                      'Timesheets is currently available for students only. Support for staff will come soon!'
-                    }
-                  </h4>
-                  <br />
-                  <br />
-                  <Button
-                    color="primary"
-                    backgroundColor="white"
-                    variant="outlined"
-                    onClick={() => {
-                      window.location.pathname = '';
-                    }}
-                  >
-                    Back To Home
-                  </Button>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+          <GordonLimitedAvailability
+            pageName="TimeSheets"
+            backToLocation="Home"
+            backToLink=""
+            availableTo="students"
+          />
         );
       }
     }

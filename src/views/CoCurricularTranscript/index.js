@@ -7,6 +7,7 @@ import Experience from './Components/CoCurricularTranscriptExperience';
 import user from 'services/user';
 import GordonLoader from 'components/Loader';
 import styles from './CoCurricularTranscript.module.css';
+import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 
 //This component creates the overall interface for the CoCurricularTranscript (card, heading,
 //download button), and contains a InvolvementsList object for displaying the content
@@ -355,34 +356,12 @@ export default class Transcript extends Component {
       );
     } else if (this.state.profile.PersonType?.includes('fac')) {
       return (
-        <Grid container justifyContent="center" spacing="16">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <br />
-                <h1>{'Experience Transcript Unavailable'}</h1>
-                <h4>{'The Experience Transcript is available for students and alumni only.'}</h4>
-                <br />
-                <br />
-                <Button
-                  color="primary"
-                  backgroundColor="white"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '/myprofile';
-                  }}
-                >
-                  Back To My Profile
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        <GordonLimitedAvailability
+          pageName="Experience Transcript"
+          backToLocation="My Profile"
+          backToLink="/myprofile"
+          availableTo="students and alumni"
+        />
       );
     } else {
       return <GordonUnauthorized feature={'your experience transcript'} />;
