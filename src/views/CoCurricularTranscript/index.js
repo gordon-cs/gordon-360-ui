@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Button, Card, CardContent, Typography, Grid } from '@material-ui/core';
+import { Button, Card, CardContent, Typography } from '@material-ui/core';
 import { gordonColors } from 'theme';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Activity from './Components/CoCurricularTranscriptActivity';
