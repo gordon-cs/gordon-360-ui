@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Button, Card, CardContent, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, Typography, Grid } from '@material-ui/core';
 import { gordonColors } from 'theme';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Activity from './Components/CoCurricularTranscriptActivity';
@@ -40,6 +40,8 @@ export default class Transcript extends Component {
     try {
       /* Retrieve data from server */
       const profile = await user.getProfileInfo();
+
+      this.state.profile = profile;
 
       const memberships = await user.getTranscriptMembershipsInfo(profile.ID);
       let categorizedMemberships = this.filterMemberships(memberships);
@@ -242,7 +244,8 @@ export default class Transcript extends Component {
   };
 
   render() {
-    if (this.props.authentication) {
+    console.log(this.state.profile.PersonType);
+    if (this.props.authentication && !this.state.profile.PersonType?.includes('fac')) {
       let activityList;
       if (!this.state.categorizedMemberships.activities) {
         activityList = <GordonLoader />;
@@ -293,7 +296,9 @@ export default class Transcript extends Component {
         <div className={styles.co_curricular_transcript}>
           <Card className={styles.card} elevation={10}>
             <CardContent className={styles.card_content}>
-              <div className={styles.print_only}>{/* <img src={require('./logo.png')} alt="" /> */}</div>
+              <div className={styles.print_only}>
+                {/* <img src={require('./logo.png')} alt="" /> */}
+              </div>
               <div>
                 <Button
                   className={styles.button}
@@ -347,6 +352,37 @@ export default class Transcript extends Component {
             </CardContent>
           </Card>
         </div>
+      );
+    } else if (this.state.profile.PersonType?.includes('fac')) {
+      return (
+        <Grid container justifyContent="center" spacing="16">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <br />
+                <h1>{'Experience Transcript Unavailable'}</h1>
+                <h4>{'The Experience Transcript is available for students and alumni only.'}</h4>
+                <br />
+                <br />
+                <Button
+                  color="primary"
+                  backgroundColor="white"
+                  variant="outlined"
+                  onClick={() => {
+                    window.location.pathname = '/myprofile';
+                  }}
+                >
+                  Back To My Profile
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       );
     } else {
       return <GordonUnauthorized feature={'your experience transcript'} />;
