@@ -15,7 +15,7 @@ import styles from './MembershipsList.module.css';
  * @param {Function} createSnackbar function to create a snackbar of whether an operation succeeded
  * @returns {JSX} A list of the user's memberships
  */
-const MembershipsList = ({ user, myProf, createSnackbar }) => {
+const MembershipsList = ({ user, myProf, createSnackbar, PersonType }) => {
   const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -82,6 +82,18 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
     return <GordonLoader />;
   }
 
+  const transcriptButton = !PersonType?.includes('fac')
+    ? myProf && (
+        <Grid container justifyContent="center">
+          <Link className="gc360_link" to="/transcript">
+            <Button variant="contained" className={styles.memberships_card_content_button}>
+              Experience Transcript
+            </Button>
+          </Link>
+        </Grid>
+      )
+    : null;
+
   return (
     <>
       <Grid item xs={12} className={styles.memberships}>
@@ -90,15 +102,7 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
         </Grid>
         <Card className={styles.memberships_card}>
           <CardContent className={styles.memberships_card_content}>
-            {myProf && (
-              <Grid container justifyContent="center">
-                <Link className="gc360_link" to="/transcript">
-                  <Button variant="contained" className={styles.memberships_card_content_button}>
-                    Experience Transcript
-                  </Button>
-                </Link>
-              </Grid>
-            )}
+            {transcriptButton}
             <List>
               <MembershipsList />
             </List>

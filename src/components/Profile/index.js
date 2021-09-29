@@ -67,6 +67,7 @@ const Profile = ({ profile, myProf }) => {
         <MembershipsList
           user={myProf ? profile.ID : profile.AD_Username}
           myProf={myProf}
+          PersonType={profile.PersonType}
           createSnackbar={createSnackbar}
         />
       </Grid>
