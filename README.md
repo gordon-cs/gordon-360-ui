@@ -40,11 +40,11 @@ Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtua
 
 #### Linux and Mac:
 
-- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm.  It may take a few minutes to run, and appear for a while to be hung. (After it finishes, you might need to close your terminal window and open another before nvm will work.)
-- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`.  Or, better yet, `nvm install --lts`, to use the current "long term support" version which is generally the most stable.
+- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm. It may take a few minutes to run, and appear for a while to be hung. (After it finishes, you might need to close your terminal window and open another before nvm will work.)
+- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`. Or, better yet, `nvm install --lts`, to use the current "long term support" version which is generally the most stable.
 - Then, tell nvm that you want to use that verion: `nvm use node`, or better yet, `nvm use --lts`.
   (More generally, "node" and "--lts" in the above commands can be replaced by any specific version.)
-  
+
 #### Troubleshooting NVM
 
 - If a developer accidentally follows the above Windows instructions on CS-RDSH-02, the environment variable for NVM will be set by their installation to a path within their user directory. Thus, many if not all other users on the machine will lose access to NVM. To fix this, any user can open Powershell as administrator and run `choco install -y nvm`. (The `-y` option answers `yes` to any prompts that occur during the installation.) Then, in a Powershell terminal not running as admin, run `nvm install --lts`. Users should log out and back in to see the fix take effect. As usual, you can check if this worked by opening a terminal and running the command `nvm`. If the output says `Running version...`, then it is all set.
@@ -57,7 +57,7 @@ After cloning this repo, and after any major changes to local code (like changin
 
 - `npm install` (This gets the right packages installed in the directory)
 - `npm start` (This starts a local server, and prints the local URL)
-  
+
 When running the app, it will open in a browser at <http://localhost:3000>.
 
 ### Connect Local Backend To React
@@ -113,18 +113,14 @@ VS Code users will also see a ruler at the 100 character mark, helping the devel
 
 Links to the homepages of libraries used in this project, listed here for easy reference.
 
-- [Material-UI](https://next.material-ui.com/)
+- [MUI](https://mui.com/)
 
-  Material-UI is a widely-used React implementation of Google's Material Design. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
+  MUI is a widely-used React component library originally based on Google's Material Design standards. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
 
 - [Chart-JS](http://www.chartjs.org/)
 
   Chart-JS is a Library that provides GUI charts
   An example can be found on the homepage. The React Component that is used can be found [here](https://github.com/jerairrest/react-chartjs-2)
-
-- [classnames](https://github.com/JedWatson/classnames)
-
-  A simple JavaScript utility for conditionally joining classNames together. See [Usage with React.js](https://github.com/JedWatson/classnames#usage-with-reactjs) for an explanation of why this library is useful with JSX.
 
 - [Cropper-JS](https://github.com/fengyuanchen/cropperjs/blob/master/README.md)
 
@@ -151,10 +147,9 @@ Links to the homepages of libraries used in this project, listed here for easy r
 
   A library that wraps the native Javascript DateTime class with and allows for easier use of dates
 
-- [react-responsive-carousel](http://react-responsive-carousel.js.org/)
+- [react-image-gallery](https://github.com/xiaolin/react-image-gallery)
 
   A React image carousel.
-  [Link to source code + readme](https://github.com/leandrowd/react-responsive-carousel)
 
 - [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
 
