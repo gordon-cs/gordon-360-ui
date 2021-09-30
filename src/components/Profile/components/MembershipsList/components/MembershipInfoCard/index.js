@@ -1,10 +1,21 @@
 import React from 'react';
 import classnames from 'classnames';
-import { Divider, Grid, List, ListItem, Switch, Typography } from '@material-ui/core/';
+import {
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  Switch,
+  Typography,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  ExpansionPanel,
+} from '@material-ui/core/';
 import { Link } from 'react-router-dom';
 import LockIcon from '@material-ui/icons/Lock';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import './index.css';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
   const isOnline = useNetworkStatus();
@@ -16,14 +27,9 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
       'public-membership': !(membership.IsInvolvementPrivate || membership.Privacy),
     });
     if (isOnline) {
-      return (
-        <Link
-          className={linkClass}
-          to={`/activity/${membership[0].SessionCode}/${membership[0].ActivityCode}`}
-        >
-          {children}
-        </Link>
-      );
+      <Link to={`/activity/${children.SessionCode}/${children.ActivityCode}`}>
+    </Link>
+      return <div>{children}</div>;
     } else {
       return <div className={linkClass}>{children}</div>;
     }
@@ -47,17 +53,28 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
             <List>
               <ListItem className="my-profile-info-card-description-text">
                 <OnlineOnlyLink>
-                  <Typography fontWeight="fontWeightBold">
-                    {membership[0].ActivityDescription}
-                  </Typography>
-                  <List>
-                    {membership.map((element) => (
-                      <ListItem>
-                        {element.SessionDescription + ' (' + element.ParticipationDescription + ')'}
-                      </ListItem>
-                    ))}
-                  </List>
-                  <Typography>{membership.ParticipationDescription}</Typography>
+                  <ExpansionPanel>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                      <Typography fontWeight="fontWeightBold">
+                        {membership[0].ActivityDescription}
+                      </Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                      <List>
+                        {membership.map((element) => (
+                          <ListItem>
+                            <Link to={`/activity/${element.SessionCode}/${element.ActivityCode}`}>
+                              {element.SessionDescription +
+                                ' (' +
+                                element.ParticipationDescription +
+                                ')'}
+                            </Link>
+                          </ListItem>
+                        ))}
+                      </List>
+                    </ExpansionPanelDetails>
+                    <Typography>{membership.ParticipationDescription}</Typography>
+                  </ExpansionPanel>
                 </OnlineOnlyLink>
               </ListItem>
             </List>
@@ -72,7 +89,7 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
                   ) : (
                     <Switch
                       onChange={() => {
-                        onTogglePrivacy(membership[0]);
+                        membership.map((element) => onTogglePrivacy(element));
                       }}
                       checked={!membership[0].Privacy}
                     />
