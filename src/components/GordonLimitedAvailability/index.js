@@ -1,4 +1,5 @@
 import { Grid, Card, CardContent, Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const GordonLimitedAvailability = ({
   pageName,
@@ -22,15 +23,8 @@ const GordonLimitedAvailability = ({
             <h4>{'The ' + pageName + ' page is available for ' + availableTo + ' only.'}</h4>
             <br />
             <br />
-            <Button
-              color="primary"
-              backgroundColor="white"
-              variant="outlined"
-              onClick={() => {
-                window.location.pathname = backToLink;
-              }}
-            >
-              Back To {backToLocation}
+            <Button variant="contained" component={Link} to={backToLink}>
+              Back to {backToLocation}
             </Button>
           </CardContent>
         </Card>

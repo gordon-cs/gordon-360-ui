@@ -42,7 +42,7 @@ export default class Transcript extends Component {
       /* Retrieve data from server */
       const profile = await user.getProfileInfo();
 
-      this.state.profile = profile;
+      this.setState({ profile });
 
       const memberships = await user.getTranscriptMembershipsInfo(profile.ID);
       let categorizedMemberships = this.filterMemberships(memberships);
@@ -244,9 +244,12 @@ export default class Transcript extends Component {
     return minorsString.substr(0, minorsString.length - 2);
   };
 
+  userIsFacStaff = () => {
+    return this.state.profile.PersonType?.includes('fac');
+  };
+
   render() {
-    console.log(this.state.profile.PersonType);
-    if (this.props.authentication && !this.state.profile.PersonType?.includes('fac')) {
+    if (this.props.authentication && !this.userIsFacStaff()) {
       let activityList;
       if (!this.state.categorizedMemberships.activities) {
         activityList = <GordonLoader />;
@@ -354,7 +357,7 @@ export default class Transcript extends Component {
           </Card>
         </div>
       );
-    } else if (this.state.profile.PersonType?.includes('fac')) {
+    } else if (this.userIsFacStaff()) {
       return (
         <GordonLimitedAvailability
           pageName="Experience Transcript"
