@@ -1,22 +1,35 @@
-import { useState } from 'react';
+import { Component } from 'react';
 import analytics from 'services/analytics';
+import GordonError from 'components/Error';
 
-const ErrorBoundary = (props) => {
-  const [hasError, setHasError] = useState();
-  const [error, setError] = useState();
-  const [errorInfo, setErrorInfo] = useState();
-
-  const getDerivedStateFromError = (error) => {
-    setHasError(true);
-    setError(error);
-    setErrorInfo(error.details);
-  };
-
-  if (process.env.NODE_ENV === 'production' && hasError) {
-    analytics.onError(`${error.toString()} ${errorInfo.componentStack}`);
+export default class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: '',
+      errorInfo: '',
+    };
   }
 
-  return hasError ? <h1>Error</h1> : props.children;
-};
+  static getDerivedStateFromError(error) {
+    return {
+      hasError: true,
+    };
+  }
 
-export default ErrorBoundary;
+  componentDidCatch(error, errorInfo) {
+    if (process.env.NODE_ENV === 'production' && this.state.hasError) {
+      analytics.onError(`${error.toString()} ${errorInfo.componentStack}`);
+    }
+
+    return {
+      error: error,
+      errorInfo: errorInfo,
+    };
+  }
+
+  render() {
+    return this.state.hasError ? <GordonError /> : this.props.children;
+  }
+}

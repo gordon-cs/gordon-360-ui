@@ -25,8 +25,6 @@ const App = (props) => {
     analytics.initialize();
   }
 
-  const [error, setError] = useState();
-  const [errorInfo, setErrorInfo] = useState();
   const [drawerOpen, setDrawerOpen] = useState();
   const [authentication, setAuthentication] = useState();
 
@@ -36,15 +34,6 @@ const App = (props) => {
   const onDrawerToggle = () => {
     setDrawerOpen(drawerOpen);
   };
-
-  // componentDidCatch(error, errorInfo) {
-  //   if (process.env.NODE_ENV === 'production') {
-  //     analytics.onError(`${error.toString()} ${errorInfo.componentStack}`);
-  //   }
-
-  //   setError(error);
-  //   setErrorInfo(errorInfo);
-  // }
 
   const onAuthChange = () => {
     let authentication = isAuthenticated();
