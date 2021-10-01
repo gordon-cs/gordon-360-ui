@@ -557,7 +557,14 @@ async function setAdvisors(profile) {
 
 async function setCliftonStrengths(profile) {
   const cliftonStrengths = await getCliftonStrengths(profile.AD_Username);
-  profile.CliftonStrengths = cliftonStrengths;
+  try {
+    if (cliftonStrengths.Categories[0] !== null) {
+      profile.CliftonStrengths = cliftonStrengths;
+    }
+  }
+  catch (e) {
+    console.log("Clifton strength error:", e);
+  }
 }
 
 async function setMobilePhoneNumber(value) {
