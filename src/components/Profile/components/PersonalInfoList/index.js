@@ -282,7 +282,7 @@ const PersonalInfoList = ({
     ) : null;
 
   const onOffCampus =
-    isStudent && OnOffCampus ? (
+    isStudent && OnOffCampus && !(BuildingDescription || Hall) ? (
       <ProfileInfoListItem
         title="On/Off Campus:"
         contentText={OnOffCampus}
