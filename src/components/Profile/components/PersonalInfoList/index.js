@@ -56,6 +56,7 @@ const PersonalInfoList = ({
     OnCampusRoom,
     OnOffCampus,
     PersonType,
+    PreferredClassYear,
     SpouseName,
   },
   createSnackbar,
@@ -214,17 +215,24 @@ const PersonalInfoList = ({
   );
 
   const minors =
-    Minors?.length > 0 && isStudent ? (
+    Minors?.length > 0 && !isFacStaff ? (
       <ProfileInfoListItem
         title={Minors?.length > 1 ? 'Minors:' : 'Minor:'}
         contentText={Minors?.join(', ')}
       />
     ) : null;
 
-  const majors = isStudent ? (
+  const majors = !isFacStaff ? (
     <ProfileInfoListItem
       title={Majors?.length > 1 ? 'Majors:' : 'Major:'}
       contentText={Majors?.length < 1 ? 'Undecided' : Majors?.join(', ')}
+    />
+  ) : null;
+
+  const graduationYear = (!isFacStaff && !isStudent) ? (
+    <ProfileInfoListItem
+      title={'Graduation Year:'}
+      contentText={PreferredClassYear}
     />
   ) : null;
 
@@ -457,6 +465,7 @@ const PersonalInfoList = ({
           <List>
             {majors}
             {minors}
+            {graduationYear}
             {cliftonStrengths}
             {advisors}
             {onOffCampus}

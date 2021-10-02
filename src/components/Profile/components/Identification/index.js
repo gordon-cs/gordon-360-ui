@@ -33,7 +33,8 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   const [hasPreferredImage, setHasPreferredImage] = useState(false);
   const [isPhotosSwitched, setisPhotosSwitched] = useState(false);
   const [showCropper, setShowCropper] = useState();
-  const [hasNickName, setHasNickname] = useState(Boolean);
+  const [hasNickname, setHasNickname] = useState(Boolean);
+  const [hasMaidenName, setHasMaidenName] = useState(Boolean);
   const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
   const [photoDialogError, setPhotoDialogError] = useState();
   const [cropperData, setCropperData] = useState({ cropBoxDim: null, aspectRatio: null });
@@ -132,6 +133,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
 
       setIsImagePublic(profile.show_pic);
       createNickname(profile);
+      createMaidenName(profile);
     }
 
     loadUserProfile();
@@ -427,6 +429,12 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
     setHasNickname(FirstName !== profile.NickName && profile.NickName !== '');
   }
 
+  function createMaidenName(profile) {
+    let Name = String(profile.fullName);
+    let LastName = Name.split(' ')[2];
+    setHasMaidenName(LastName !== profile.MaidenName && profile.MaidenName !== '');
+  }
+
   /**
    * Creates the Photo Updater Dialog Box
    *
@@ -718,23 +726,38 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                     userProfile.Title !== '' &&
                     userProfile.PersonType === 'fac'
                       ? // If the user has a title
-                        hasNickName
-                        ? // If the user has a title and a nickname
-                          userProfile.Title +
-                          ' ' +
-                          userProfile.fullName +
-                          ' (' +
-                          userProfile.NickName +
-                          ')'
-                        : // If the user has a title and no nickname
-                          userProfile.Title + ' ' + userProfile.fullName
+                        userProfile.Title +
+                        ' ' +
+                        userProfile.fullName.split(' ')[0] +
+                        (hasNickname
+                          ? 
+                            ' (' +
+                            userProfile.NickName +
+                            ') ' 
+                            : ' ') +
+                        userProfile.fullName.split(' ')[2] +
+                        (hasMaidenName
+                          ? 
+                            ' (' +
+                            userProfile.MaidenName +
+                            ') ' 
+                            : '')
                       : // If the user doesn't have a title
-                      hasNickName
-                      ? // If the user doesn't have a title but has a nickname
-                        userProfile.fullName + ' (' + userProfile.NickName + ')'
-                      : // If the user doesn't have a title or a nickname
-                        userProfile.fullName}
-                    {/* {hasNickName
+                        userProfile.fullName.split(' ')[0] +
+                        (hasNickname
+                          ? 
+                            ' (' +
+                            userProfile.NickName +
+                            ') ' 
+                            : ' ') +
+                        userProfile.fullName.split(' ')[2] +
+                        (hasMaidenName
+                          ? 
+                            ' (' +
+                            userProfile.MaidenName +
+                            ') ' 
+                            : '')}
+                    {/* {hasNickname
                         ? userProfile.fullName + ' (' + userProfile.NickName + ')'
                         : userProfile.fullName} */}
                   </Typography>
