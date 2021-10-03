@@ -81,6 +81,29 @@ const InvolvementProfile = ({ authentication }) => {
         setTempBlurb(involvementInfo.ActivityBlurb);
         setTempJoinInfo(involvementInfo.ActivityJoinInfo);
         setTempURL(involvementInfo.ActivityURL);
+        
+        // add the members' description to the same person in groupAdmins
+        let members = await membershipService.get(involvementCode, sessionCode);
+        for (let i = 0; i < groupAdmins.length; i++) {
+          for (let j = 0; j < members.length; j++) {
+            if (members[j].FirstName === groupAdmins[i].FirstName
+              && members[j].LastName === groupAdmins[i].LastName) {
+              groupAdmins[i].Description = members[j].Description;
+              break;
+            }
+          }
+        }
+
+        // add the members' description to the same person in advisors
+        for (let i = 0; i < advisors.length; i++) {
+          for (let j = 0; j < members.length; j++) {
+            if (members[j].FirstName === advisors[i].FirstName
+              && members[j].LastName === advisors[i].LastName) {
+              advisors[i].Description = members[j].Description;
+              break;
+            }
+          }
+        }
 
         if (isAdmin || isSuperAdmin) {
           setEmailList(await emailsService.get(involvementCode));
@@ -216,6 +239,20 @@ const InvolvementProfile = ({ authentication }) => {
     window.location =
       'mailto:' + parseEmailsFromList(groupAdmins) + '?bcc=' + parseEmailsFromList(emailList);
   };
+
+  // const getAdvisorsWithTitle = () => {
+  //   let memberList = [];
+  //   for (let i = 0; i < groupAdmins.length; i++) {
+  //     for (let j = 0; j < members.length; j++) {
+  //       if (members[j].FirstName === groupAdmins[i].FirstName
+  //         && members[j].LastName === groupAdmins[i].LastName) {
+  //           memberList += members[j];
+  //           break;
+  //       }
+  //     }
+  //   }
+  //   setGroupAdmins(memberList);
+  // }
 
   let content;
 
