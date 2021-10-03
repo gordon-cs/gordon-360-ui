@@ -148,6 +148,8 @@ const get = (activityCode, sessionCode) => {
 
 //Change the privacy value for a club membership
 const toggleMembershipPrivacy = async (userMembership) => {
+  console.log('pinapple');
+  console.log(userMembership.ActivityDescription, userMembership.MembershipID, userMembership.Privacy);
   return await http.put(
     `memberships/${userMembership.MembershipID}/privacy/${!userMembership.Privacy}`,
     !userMembership.Privacy,
@@ -231,7 +233,6 @@ const groupByActivityCode = async (id) => {
       grouped.push(x);
     }
   }
-  console.log(grouped);
   return grouped;
 };
 

@@ -500,8 +500,24 @@ const getMemberships = async (id) => {
 const getPublicMemberships = async (username) => {
   let memberships;
   memberships = await http.get(`memberships/student/username/${username}/`);
-  memberships.sort(compareByTitle);
-  return memberships;
+  let grouped = [];
+  var ogLen = memberships.length;
+  for (var i = 0; i < ogLen; i++) {
+    var curMembership = memberships.pop();
+    var curAct = curMembership.ActivityCode;
+    var condition = false;
+    // eslint-disable-next-line
+    condition = grouped.some((item) => item[0].ActivityCode === curAct);
+    if (condition) {
+      // eslint-disable-next-line
+      grouped.find((element) => element[0].ActivityCode === curAct).push(curMembership);
+    } else {
+      let x = [];
+      x.push(curMembership);
+      grouped.push(x);
+    }
+  }
+  return grouped;
 };
 
 const getMembershipsAlphabetically = async (id) => {

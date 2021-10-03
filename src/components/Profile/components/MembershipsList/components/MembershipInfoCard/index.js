@@ -96,13 +96,9 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
           className={styles.membership_info_card_image}
           alignItems="center"
         >
-          <OnlineOnlyLink>
-            <img
-              src={membership.ActivityImagePath}
-              alt=""
-              className={isOnline ? styles.active : ''}
-            />
-          </OnlineOnlyLink>
+          {/* <OnlineOnlyLink> */}
+          <img src={membership[0].ActivityImagePath} alt="" className={isOnline ? 'active' : ''} />
+          {/* </OnlineOnlyLink> */}
         </Grid>
       </Grid>
       <Divider />
