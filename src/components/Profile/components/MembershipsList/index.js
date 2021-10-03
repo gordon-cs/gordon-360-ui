@@ -61,18 +61,21 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
     }
   };
 
-  const toggleMembershipPrivacy = async (membership) => {
-    try {
-      await membershipService.toggleMembershipPrivacy(membership);
-      createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
-      setMemberships(
-        memberships.map((m) => {
-          if (m.MembershipID === membership.MembershipID) {
-            m.Privacy = !m.Privacy;
-          }
-          return m;
-        }),
-      );
+    const toggleMembershipPrivacy = async (membership) => {
+      try {
+        await membership.map((i) => membershipService.toggleMembershipPrivacy(i));
+        membership.IsInvolvementPrivate = !membership.IsInvolvmentPrivate;
+        createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
+        setMemberships(
+          memberships.map((m) => {
+            console.log(m.ActivityCode, membership[0].ActivityCode);
+            if (m[0].ActivityCode === membership[0].ActivityCode) {
+              console.log('sucess');
+              m.map((i) => i.Privacy = !i.Privacy);
+            }
+            return m;
+          }),
+        );
     } catch {
       createSnackbar('Privacy Change Failed', 'error');
     }
