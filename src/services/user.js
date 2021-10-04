@@ -519,7 +519,7 @@ const getAdvisors = async (username) => {
 const getCliftonStrengths = async (username) => {
   let cliftonStrengths = await http.get(`profiles/clifton/${username}/`);
 
-  if (cliftonStrengths.Strengths !== null && cliftonStrengths.Strengths[0] !== null) {
+  if (cliftonStrengths?.Strengths?.[0]) {
     cliftonStrengths.Categories = cliftonStrengths.Strengths.map((strength) =>
       cliftonStrengthCategories.Executing.includes(strength)
         ? 'Executing'
