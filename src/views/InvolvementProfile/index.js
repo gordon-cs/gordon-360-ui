@@ -244,20 +244,6 @@ const InvolvementProfile = ({ authentication }) => {
       'mailto:' + parseEmailsFromList(groupAdmins) + '?bcc=' + parseEmailsFromList(emailList);
   };
 
-  // const getAdvisorsWithTitle = () => {
-  //   let memberList = [];
-  //   for (let i = 0; i < groupAdmins.length; i++) {
-  //     for (let j = 0; j < members.length; j++) {
-  //       if (members[j].FirstName === groupAdmins[i].FirstName
-  //         && members[j].LastName === groupAdmins[i].LastName) {
-  //           memberList += members[j];
-  //           break;
-  //       }
-  //     }
-  //   }
-  //   setGroupAdmins(memberList);
-  // }
-
   let content;
 
   if (isOnline) {
