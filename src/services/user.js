@@ -517,9 +517,9 @@ const getAdvisors = async (username) => {
 };
 
 const getCliftonStrengths = async (username) => {
-  try {
-    let cliftonStrengths = await http.get(`profiles/clifton/${username}/`);
+  let cliftonStrengths = await http.get(`profiles/clifton/${username}/`);
 
+  if (cliftonStrengths?.Strengths?.[0]) {
     cliftonStrengths.Categories = cliftonStrengths.Strengths.map((strength) =>
       cliftonStrengthCategories.Executing.includes(strength)
         ? 'Executing'
@@ -539,12 +539,12 @@ const getCliftonStrengths = async (username) => {
     cliftonStrengths.Links = cliftonStrengths.Strengths.map(
       (strength) => cliftonStrengthLinks[strength],
     );
-    return cliftonStrengths;
-  } catch (error) {
-    console.log('Clifton strengths error:', error);
-    // TODO: currently throws an error whenever clifton strengths are missing,
-    // should just return null or empty
   }
+  else {
+    cliftonStrengths = null;
+  }
+  
+  return cliftonStrengths;
 };
 
 const getMailboxCombination = async () => {
@@ -556,8 +556,7 @@ async function setAdvisors(profile) {
 }
 
 async function setCliftonStrengths(profile) {
-  const cliftonStrengths = await getCliftonStrengths(profile.AD_Username);
-  profile.CliftonStrengths = cliftonStrengths;
+  profile.CliftonStrengths = await getCliftonStrengths(profile.AD_Username);
 }
 
 async function setMobilePhoneNumber(value) {
