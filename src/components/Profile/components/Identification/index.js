@@ -430,9 +430,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   }
 
   function createMaidenName(profile) {
-    let Name = String(profile.fullName);
-    let LastName = Name.split(' ')[2];
-    setHasMaidenName(LastName !== profile.MaidenName && profile.MaidenName !== '');
+    setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
   }
 
   /**
