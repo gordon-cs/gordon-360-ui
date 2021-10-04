@@ -20,7 +20,7 @@ const GordonLimitedAvailability = ({
           >
             <br />
             <h1>{pageName + ' Unavailable'}</h1>
-            <h4>{'The ' + pageName + ' page is available for ' + availableTo + ' only.'}</h4>
+            <h4>`The ${pageName} page is available for ${availableTo} only.`</h4>
             <br />
             <br />
             <Button variant="contained" component={Link} to={backToLink}>
