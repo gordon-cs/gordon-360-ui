@@ -88,7 +88,9 @@ const InvolvementProfile = ({ authentication }) => {
           for (let j = 0; j < members.length; j++) {
             if (members[j].FirstName === groupAdmins[i].FirstName
               && members[j].LastName === groupAdmins[i].LastName) {
-              groupAdmins[i].Description = members[j].Description;
+              groupAdmins[i].Description = (members[j].Description !== '')
+                                          ? members[j].Description
+                                          : members[j].ParticipationDescription;
               break;
             }
           }
@@ -99,7 +101,9 @@ const InvolvementProfile = ({ authentication }) => {
           for (let j = 0; j < members.length; j++) {
             if (members[j].FirstName === advisors[i].FirstName
               && members[j].LastName === advisors[i].LastName) {
-              advisors[i].Description = members[j].Description;
+              advisors[i].Description = (members[j].Description !== '')
+                                        ? members[j].Description
+                                        : members[j].ParticipationDescription;
               break;
             }
           }
