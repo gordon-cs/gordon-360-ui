@@ -249,7 +249,16 @@ export default class Transcript extends Component {
   };
 
   render() {
-    if (this.props.authentication && !this.userIsFacStaff()) {
+    if (this.userIsFacStaff()) {
+      return (
+        <GordonLimitedAvailability
+          pageName="Experience Transcript"
+          backToLocation="My Profile"
+          backToLink="/myprofile"
+          availableTo="students and alumni"
+        />
+      );
+    } else if (this.props.authentication) {
       let activityList;
       if (!this.state.categorizedMemberships.activities) {
         activityList = <GordonLoader />;
@@ -356,15 +365,6 @@ export default class Transcript extends Component {
             </CardContent>
           </Card>
         </div>
-      );
-    } else if (this.userIsFacStaff()) {
-      return (
-        <GordonLimitedAvailability
-          pageName="Experience Transcript"
-          backToLocation="My Profile"
-          backToLink="/myprofile"
-          availableTo="students and alumni"
-        />
       );
     } else {
       return <GordonUnauthorized feature={'your experience transcript'} />;

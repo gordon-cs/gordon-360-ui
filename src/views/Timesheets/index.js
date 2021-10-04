@@ -595,14 +595,7 @@ const Timesheets = (props) => {
       if (!isOnline) {
         return <GordonOffline feature="Timesheets" />;
       } else if (!isUserStudent) {
-        return (
-          <GordonLimitedAvailability
-            pageName="TimeSheets"
-            backToLocation="Home"
-            backToLink=""
-            availableTo="students"
-          />
-        );
+        return <GordonLimitedAvailability pageName="TimeSheets" />;
       }
     }
   } else {

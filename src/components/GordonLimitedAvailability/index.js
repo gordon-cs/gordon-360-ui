@@ -1,13 +1,7 @@
 import { Grid, Card, CardContent, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
-const GordonLimitedAvailability = ({
-  pageName,
-  backToLocation,
-  backToLink,
-  availableTo,
-  ...OtherProps
-}) => {
+const GordonLimitedAvailability = ({ pageName, backToLocation, backToLink, availableTo }) => {
   return (
     <Grid container justifyContent="center" spacing="16">
       <Grid item xs={12} md={8}>
@@ -20,7 +14,9 @@ const GordonLimitedAvailability = ({
           >
             <br />
             <h1>{pageName + ' Unavailable'}</h1>
-            <h4>`The ${pageName} page is available for ${availableTo} only.`</h4>
+            <h4>
+              `${pageName ? `The ${pageName}` : `This`} page is available for ${availableTo} only.`
+            </h4>
             <br />
             <br />
             <Button variant="contained" component={Link} to={backToLink}>
@@ -31,6 +27,13 @@ const GordonLimitedAvailability = ({
       </Grid>
     </Grid>
   );
+};
+
+GordonLimitedAvailability.defaultProps = {
+  backToLink: '',
+  backToLocation: 'Home',
+  availableTo: 'students',
+  pageName: '',
 };
 
 export default GordonLimitedAvailability;
