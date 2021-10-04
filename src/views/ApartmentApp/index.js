@@ -87,7 +87,7 @@ const ApartApp = ({ authentication }) => {
     } else {
       return (
         <GordonLimitedAvailability
-          pageName="Apartment application"
+          pageName="Apartment Application"
           availableTo="students or housing staff"
         />
       );
