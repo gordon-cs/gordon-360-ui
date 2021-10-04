@@ -724,22 +724,10 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                     userProfile.Title !== '' &&
                     userProfile.PersonType === 'fac'
                       ? // If the user has a title
-                        userProfile.Title +
-                        ' ' +
-                        userProfile.fullName.split(' ')[0] +
-                        (hasNickname
-                          ? 
-                            ' (' +
-                            userProfile.NickName +
-                            ') ' 
-                            : ' ') +
-                        userProfile.fullName.split(' ')[2] +
-                        (hasMaidenName
-                          ? 
-                            ' (' +
-                            userProfile.MaidenName +
-                            ') ' 
-                            : '')
+                        `${userProfile.Title} ${userProfile.FirstName}${
+                            hasNickname ? ` (${userProfile.NickName})` : ''
+                        } ${userProfile.LastName}${
+                            hasMaidenName ? ` (${userProfile.MaidenName})` : '')`
                       : // If the user doesn't have a title
                         userProfile.fullName.split(' ')[0] +
                         (hasNickname
