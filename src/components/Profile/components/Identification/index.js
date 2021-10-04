@@ -727,25 +727,13 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                         `${userProfile.Title} ${userProfile.FirstName}${
                             hasNickname ? ` (${userProfile.NickName})` : ''
                         } ${userProfile.LastName}${
-                            hasMaidenName ? ` (${userProfile.MaidenName})` : '')`
+                            hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`
                       : // If the user doesn't have a title
-                        userProfile.fullName.split(' ')[0] +
-                        (hasNickname
-                          ? 
-                            ' (' +
-                            userProfile.NickName +
-                            ') ' 
-                            : ' ') +
-                        userProfile.fullName.split(' ')[2] +
-                        (hasMaidenName
-                          ? 
-                            ' (' +
-                            userProfile.MaidenName +
-                            ') ' 
-                            : '')}
-                    {/* {hasNickname
-                        ? userProfile.fullName + ' (' + userProfile.NickName + ')'
-                        : userProfile.fullName} */}
+                      `${userProfile.FirstName}${
+                            hasNickname ? ` (${userProfile.NickName})` : ''
+                        } ${userProfile.LastName}${
+                            hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`
+                    }
                   </Typography>
                 </Grid>
                 {userProfile.JobTitle && userProfile.JobTitle !== '' && (
