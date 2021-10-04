@@ -521,15 +521,15 @@ const getCliftonStrengths = async (username) => {
 
   if (cliftonStrengths.Strengths !== null && cliftonStrengths.Strengths[0] !== null) {
     cliftonStrengths.Categories = cliftonStrengths.Strengths.map((strength) =>
-    cliftonStrengthCategories.Executing.includes(strength)
-      ? 'Executing'
-      : cliftonStrengthCategories.Influencing.includes(strength)
-      ? 'Influencing'
-      : cliftonStrengthCategories.Relationship.includes(strength)
-      ? 'Relationship'
-      : cliftonStrengthCategories.Thinking.includes(strength)
-      ? 'Thinking'
-      : null,
+      cliftonStrengthCategories.Executing.includes(strength)
+        ? 'Executing'
+        : cliftonStrengthCategories.Influencing.includes(strength)
+        ? 'Influencing'
+        : cliftonStrengthCategories.Relationship.includes(strength)
+        ? 'Relationship'
+        : cliftonStrengthCategories.Thinking.includes(strength)
+        ? 'Thinking'
+        : null,
     );
 
     cliftonStrengths.Colors = cliftonStrengths.Categories.map(
