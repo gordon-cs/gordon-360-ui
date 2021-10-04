@@ -16,7 +16,7 @@ const GordonLimitedAvailability = ({ pageName = '', backToLocation = 'Home', bac
             <br />
             <h1>{pageName + ' Unavailable'}</h1>
             <h4>
-              {pageNameFormatted} is available for {availableTo} only.
+              {pageName ? `The ${pageName} page` : 'This page'} is available for {availableTo} only.
             </h4>
             <br />
             <br />
