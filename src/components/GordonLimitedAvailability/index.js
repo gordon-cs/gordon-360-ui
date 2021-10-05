@@ -34,11 +34,4 @@ const GordonLimitedAvailability = ({
   );
 };
 
-GordonLimitedAvailability.defaultProps = {
-  backToLink: '',
-  backToLocation: 'Home',
-  availableTo: 'students',
-  pageName: '',
-};
-
 export default GordonLimitedAvailability;
