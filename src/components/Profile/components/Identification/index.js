@@ -33,7 +33,8 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   const [hasPreferredImage, setHasPreferredImage] = useState(false);
   const [isPhotosSwitched, setisPhotosSwitched] = useState(false);
   const [showCropper, setShowCropper] = useState();
-  const [hasNickName, setHasNickname] = useState(Boolean);
+  const [hasNickname, setHasNickname] = useState(Boolean);
+  const [hasMaidenName, setHasMaidenName] = useState(Boolean);
   const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
   const [photoDialogError, setPhotoDialogError] = useState();
   const [cropperData, setCropperData] = useState({ cropBoxDim: null, aspectRatio: null });
@@ -131,7 +132,9 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
       setUserProfile(profile);
 
       setIsImagePublic(profile.show_pic);
-      createNickname(profile);
+
+      setHasNickname(profile?.NickName && profile.NickName !== profile.FirstName);
+      setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
     }
 
     loadUserProfile();
@@ -421,12 +424,6 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
     }
   }
 
-  function createNickname(profile) {
-    let Name = String(profile.fullName);
-    let FirstName = Name.split(' ')[0];
-    setHasNickname(FirstName !== profile.NickName && profile.NickName !== '');
-  }
-
   /**
    * Creates the Photo Updater Dialog Box
    *
@@ -714,29 +711,14 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   className={styles.identification_card_content_card_container_info_name}
                 >
                   <Typography variant="h6" paragraph>
-                    {userProfile.Title &&
-                    userProfile.Title !== '' &&
-                    userProfile.PersonType === 'fac'
-                      ? // If the user has a title
-                        hasNickName
-                        ? // If the user has a title and a nickname
-                          userProfile.Title +
-                          ' ' +
-                          userProfile.fullName +
-                          ' (' +
-                          userProfile.NickName +
-                          ')'
-                        : // If the user has a title and no nickname
-                          userProfile.Title + ' ' + userProfile.fullName
-                      : // If the user doesn't have a title
-                      hasNickName
-                      ? // If the user doesn't have a title but has a nickname
-                        userProfile.fullName + ' (' + userProfile.NickName + ')'
-                      : // If the user doesn't have a title or a nickname
-                        userProfile.fullName}
-                    {/* {hasNickName
-                        ? userProfile.fullName + ' (' + userProfile.NickName + ')'
-                        : userProfile.fullName} */}
+                    {
+                      `${
+                        userProfile.Title && userProfile.PersonType === 'fac' ? `${userProfile.Title} ` : ''
+                   }${userProfile.FirstName}${
+                          hasNickname ? ` (${userProfile.NickName})` : ''
+                   } ${userProfile.LastName}${
+                          hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`
+                    }
                   </Typography>
                 </Grid>
                 {userProfile.JobTitle && userProfile.JobTitle !== '' && (
