@@ -62,13 +62,10 @@ const getAuth = (username, password) => {
  * @return {Promise.<undefined>} Resolved when token is refreshed
  */
 const authenticate = (username, password) =>
-  getAuth(username, password)
-    .then((token) => {
-      storage.store('token', token);
-    })
-    .then(() => {
-      console.log('auth.js: authenticate() - done');
-    });
+  getAuth(username, password).then((token) => {
+    storage.store('token', token);
+    console.log('auth.js: authenticate() - done');
+  });
 
 /**
  * Check if current session is authenticated

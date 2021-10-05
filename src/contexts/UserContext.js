@@ -1,26 +1,24 @@
-import React, { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { isAuthenticated } from 'services/auth';
 import userService from 'services/user';
 
 export const UserContext = createContext();
+export const AuthContext = createContext();
 
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const updateUser = async () =>
+    setUser(isAuthenticated() ? await userService.getProfileInfo() : null);
 
   useEffect(() => {
-    const fetchUser = async (auth) => {
-      if (auth) {
-        const user = await userService.getProfileInfo();
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    };
-
-    fetchUser(isAuthenticated());
+    updateUser();
   }, []);
 
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+  return (
+    <AuthContext.Provider value={updateUser}>
+      <UserContext.Provider value={user}>{children}</UserContext.Provider>
+    </AuthContext.Provider>
+  );
 };
 
 export default UserContextProvider;
