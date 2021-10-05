@@ -7,7 +7,6 @@ import Experience from './Components/CoCurricularTranscriptExperience';
 import user from 'services/user';
 import GordonLoader from 'components/Loader';
 import styles from './CoCurricularTranscript.module.css';
-import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 
 //This component creates the overall interface for the CoCurricularTranscript (card, heading,
 //download button), and contains a InvolvementsList object for displaying the content
