@@ -195,12 +195,14 @@ const PersonalInfoList = ({
     />
   ) : null;
 
+  let streetAddr = HomeStreet2 ? <span>{HomeStreet2},&nbsp;</span> : null;
+
   const home = (
     <ProfileInfoListItem
       title="Home:"
       contentText={
         <>
-          {HomeStreet2 && `${HomeStreet2}, `}
+          {streetAddr}
           <span className={keepPrivate ? null : styles.not_private}>
             {HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
@@ -393,7 +395,10 @@ const PersonalInfoList = ({
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
         NOTE: To update your data, please contact{' '}
-        <a style={{color: gordonColors.primary.blue}} href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
+        <a style={{ color: gordonColors.primary.blue }} href="mailto: hr@gordon.edu">
+          Human Resources
+        </a>{' '}
+        (x4828).
       </Typography>
     ) : isStudent ? (
       <div align="left" className={styles.note}>
