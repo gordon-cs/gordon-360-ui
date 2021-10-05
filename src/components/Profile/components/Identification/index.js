@@ -711,19 +711,13 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   className={styles.identification_card_content_card_container_info_name}
                 >
                   <Typography variant="h6" paragraph>
-                    {userProfile.Title &&
-                    userProfile.Title !== '' &&
-                    userProfile.PersonType === 'fac'
-                      ? // If the user has a title
-                        `${userProfile.Title} ${userProfile.FirstName}${
-                            hasNickname ? ` (${userProfile.NickName})` : ''
-                        } ${userProfile.LastName}${
-                            hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`
-                      : // If the user doesn't have a title
-                      `${userProfile.FirstName}${
-                            hasNickname ? ` (${userProfile.NickName})` : ''
-                        } ${userProfile.LastName}${
-                            hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`
+                    {
+                      `${
+                        userProfile.Title && userProfile.PersonType === 'fac' ? `${userProfile.Title} ` : ''
+                   }${userProfile.FirstName}${
+                          hasNickname ? ` (${userProfile.NickName})` : ''
+                   } ${userProfile.LastName}${
+                          hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`
                     }
                   </Typography>
                 </Grid>
