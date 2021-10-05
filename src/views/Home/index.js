@@ -42,8 +42,8 @@ const Home = ({ authentication, onLogIn }) => {
   }, [authentication]);
   const loadPage = async () => {
     setLoading(true);
-    const [{ PersonType }, { IsValid }] = await Promise.all([
-      user.getProfileInfo(),
+    const [PersonType, { IsValid }] = await Promise.all([
+      user.getPersonType(),
       wellness.getStatus(),
     ]);
     // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done

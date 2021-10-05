@@ -512,6 +512,15 @@ const getProfile = (username) => {
   return profile;
 };
 
+/**
+ * Get user person type for the current user
+ * @param {String} [username] Username in firstname.lastname format
+ * @returns {String} Type of person
+ */
+const getPersonType = () => {
+  return http.get('profiles/persontype');
+};
+
 const getAdvisors = async (username) => {
   return await http.get(`profiles/Advisors/${username}/`);
 };
@@ -539,11 +548,10 @@ const getCliftonStrengths = async (username) => {
     cliftonStrengths.Links = cliftonStrengths.Strengths.map(
       (strength) => cliftonStrengthLinks[strength],
     );
-  }
-  else {
+  } else {
     cliftonStrengths = null;
   }
-  
+
   return cliftonStrengths;
 };
 
@@ -779,6 +787,7 @@ const userService = {
   getLeaderPositions,
   getSentMembershipRequests,
   getProfileInfo,
+  getPersonType,
   getMailboxCombination,
   getAdvisors,
   getCliftonStrengths,

@@ -218,8 +218,7 @@ class PeopleSearch extends Component {
     // this.setState({ loading: true });
     if (this.props.authentication) {
       try {
-        const profile = await user.getProfileInfo();
-        const personType = profile.PersonType;
+        const personType = await user.getPersonType();
         const [majors, minors, halls, states, countries, departments, buildings] =
           await Promise.all([
             goStalk.getMajors(),

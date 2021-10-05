@@ -70,7 +70,7 @@ const Timesheets = (props) => {
 
   useEffect(() => {
     if (props.authentication) {
-      user.getProfileInfo().then((profile) => setIsUserStudent(profile.PersonType.includes('stu')));
+      user.getPersonType().then((pt) => setIsUserStudent(pt.includes('stu')));
     }
   }, [props.authentication]);
 
