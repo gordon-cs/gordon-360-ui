@@ -193,7 +193,7 @@ const PersonalInfoList = ({
     />
   ) : null;
 
-  let streetAddr = HomeStreet2 ? <span>{HomeStreet2},&nbsp;</span> : '';
+  let streetAddr = HomeStreet2 ? <span>{HomeStreet2},&nbsp;</span> : null;
 
   const home = (
     <ProfileInfoListItem
