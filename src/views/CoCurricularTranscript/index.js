@@ -244,12 +244,8 @@ export default class Transcript extends Component {
     return minorsString.substr(0, minorsString.length - 2);
   };
 
-  userIsFacStaff = () => {
-    return this.state.profile.PersonType?.includes('fac');
-  };
-
   render() {
-    if (this.userIsFacStaff()) {
+    if (this.state.profile.PersonType?.includes('fac')) {
       return (
         <GordonLimitedAvailability
           pageName="Experience Transcript"
