@@ -5,7 +5,6 @@ import UserContextProvider, { UserContext } from 'contexts/UserContext';
 import { createBrowserHistory } from 'history';
 import { Component } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
-import { isAuthenticated } from 'services/auth';
 // Global styling that applies to entire site
 import './app.global.css';
 // local module for app.js
@@ -24,9 +23,7 @@ const withContext = (App) => {
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <NetworkContextProvider>
           <UserContextProvider>
-            <UserContext.Consumer>
-              {(user) => <App auth={!!user || isAuthenticated()} />}
-            </UserContext.Consumer>
+            <UserContext.Consumer>{(user) => <App auth={!!user} />}</UserContext.Consumer>
           </UserContextProvider>
         </NetworkContextProvider>
       </MuiPickersUtilsProvider>

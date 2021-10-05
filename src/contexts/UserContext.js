@@ -6,7 +6,7 @@ export const UserContext = createContext();
 export const UpdateUserContext = createContext();
 
 const UserContextProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(isAuthenticated() ? true : null);
   const updateUser = async () =>
     setUser(isAuthenticated() ? await userService.getProfileInfo() : null);
 
