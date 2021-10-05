@@ -82,17 +82,16 @@ const MembershipsList = ({ user, myProf, createSnackbar, PersonType }) => {
     return <GordonLoader />;
   }
 
-  const transcriptButton = !PersonType?.includes('fac')
-    ? myProf && (
-        <Grid container justifyContent="center">
-          <Link className="gc360_link" to="/transcript">
-            <Button variant="contained" className={styles.memberships_card_content_button}>
-              Experience Transcript
-            </Button>
-          </Link>
-        </Grid>
-      )
-    : null;
+  const transcriptButton =
+    myProf && !PersonType?.includes('fac') ? (
+      <Grid container justifyContent="center">
+        <Link className="gc360_link" to="/transcript">
+          <Button variant="contained" className={styles.memberships_card_content_button}>
+            Experience Transcript
+          </Button>
+        </Link>
+      </Grid>
+    ) : null;
 
   return (
     <>
