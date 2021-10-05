@@ -4,6 +4,7 @@
  * @module auth
  */
 
+import session from 'services/session';
 import { parseResponse } from './http';
 import storage from './storage';
 
@@ -65,6 +66,20 @@ const authenticate = (username, password) =>
   getAuth(username, password).then((token) => {
     storage.store('token', token);
     console.log('auth.js: authenticate() - done');
+    /* Checks to see if the Service Worker API is available before attempting to access it
+     *  This is important because if the API is not available, the site will load
+     *  but not allow you to login due to the error "undefined is not a function"
+     */
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      // Sends the token, current term code, and a message to the service worker to update cache
+      navigator.serviceWorker.controller.postMessage({
+        message: 'update-cache-files',
+        token: storage.get('token'),
+        termCode: session.getTermCode(),
+      });
+      // Stores the current term in Local Storage for later use when updating the cache
+      storage.store('currentTerm', session.getTermCode());
+    }
   });
 
 /**
