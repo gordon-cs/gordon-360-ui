@@ -245,16 +245,7 @@ export default class Transcript extends Component {
   };
 
   render() {
-    if (this.state.profile.PersonType?.includes('fac')) {
-      return (
-        <GordonLimitedAvailability
-          pageName="Experience Transcript"
-          backToLocation="My Profile"
-          backToLink="/myprofile"
-          availableTo="students and alumni"
-        />
-      );
-    } else if (this.props.authentication) {
+    if (this.props.authentication) {
       let activityList;
       if (!this.state.categorizedMemberships.activities) {
         activityList = <GordonLoader />;
