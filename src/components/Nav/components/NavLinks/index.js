@@ -1,28 +1,30 @@
-import { useState } from 'react';
 import { Divider, List } from '@material-ui/core';
+import EventIcon from '@material-ui/icons/Event';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
-import EventIcon from '@material-ui/icons/Event';
+import WellnessIcon from '@material-ui/icons/LocalHospital';
 import PeopleIcon from '@material-ui/icons/People';
 import WorkIcon from '@material-ui/icons/Work';
-import WellnessIcon from '@material-ui/icons/LocalHospital';
-import { signOut } from 'services/auth';
-import user from 'services/user';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonNavButton from 'components/NavButton';
+import GordonQuickLinksDialog from 'components/QuickLinksDialog';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import useUpdateUser from 'hooks/useUpdateUser';
+import { useState } from 'react';
+import { signOut } from 'services/auth';
+import user from 'services/user';
 import styles from './NavLinks.module.css';
 
-const GordonNavLinks = ({ onLinkClick, onSignOut, authentication }) => {
+const GordonNavLinks = ({ onLinkClick, authentication }) => {
   const [areLinksOpen, setAreLinksOpen] = useState(false);
   const [dialog, setDialog] = useState(null);
   const isOnline = useNetworkStatus();
+  const updateUser = useUpdateUser();
 
   const handleSignOut = () => {
     signOut();
     onLinkClick();
-    onSignOut();
+    updateUser();
   };
 
   const dialogBox = () => {

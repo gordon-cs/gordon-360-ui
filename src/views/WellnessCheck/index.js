@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
-
 import GordonLoader from 'components/Loader';
-import WellnessQuestion from 'components/WellnessQuestion';
-import HealthStatus from './components/HealthStatus';
 import Login from 'components/LoginDialogue';
-import wellness from 'services/wellness';
+import WellnessQuestion from 'components/WellnessQuestion';
+import { useEffect, useState } from 'react';
 import user from 'services/user';
+import wellness from 'services/wellness';
+import HealthStatus from './components/HealthStatus';
 
-const WellnessCheck = ({ authentication, onLogIn }) => {
+const WellnessCheck = ({ authentication }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [currentStatus, setCurrentStatus] = useState(null);
@@ -43,11 +42,7 @@ const WellnessCheck = ({ authentication, onLogIn }) => {
   if (loading) {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
-    return (
-      <div>
-        <Login onLogIn={onLogIn} />
-      </div>
-    );
+    return <Login />;
   } else if (currentStatus === null) {
     return <WellnessQuestion setStatus={setCurrentStatus} />;
   } else {

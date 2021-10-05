@@ -3,7 +3,7 @@ import { isAuthenticated } from 'services/auth';
 import userService from 'services/user';
 
 export const UserContext = createContext();
-export const AuthContext = createContext();
+export const UpdateUserContext = createContext();
 
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -15,9 +15,9 @@ const UserContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={updateUser}>
+    <UpdateUserContext.Provider value={updateUser}>
       <UserContext.Provider value={user}>{children}</UserContext.Provider>
-    </AuthContext.Provider>
+    </UpdateUserContext.Provider>
   );
 };
 
