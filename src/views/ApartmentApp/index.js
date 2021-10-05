@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Grid, Card, CardContent, Button } from '@material-ui/core/';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import StaffMenu from './components/StaffMenu';
@@ -10,6 +9,7 @@ import user from 'services/user';
 import styles from './ApartmentApp.module.css';
 import { NotFoundError } from 'services/error';
 import GordonOffline from 'components/GordonOffline';
+import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -86,34 +86,10 @@ const ApartApp = ({ authentication }) => {
       );
     } else {
       return (
-        <Grid container justifyContent="center">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <br />
-                <h1>Apartment application Unavailable</h1>
-                <h4>Apartment application is available for students or housing staff only.</h4>
-                <br />
-                <br />
-                <Button
-                  className={styles.back_home_button}
-                  color="primary"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        <GordonLimitedAvailability
+          pageName="Apartment Application"
+          availableTo="students or housing staff"
+        />
       );
     }
   } else {
