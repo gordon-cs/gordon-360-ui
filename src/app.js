@@ -47,7 +47,6 @@ class App extends Component {
     this.history.listen(() => analytics.onPageView());
 
     this.onDrawerToggle = this.onDrawerToggle.bind(this);
-    this.onAuthChange = this.onAuthChange.bind(this);
 
     this.state = {
       error: null,
@@ -65,10 +64,6 @@ class App extends Component {
     }
 
     this.setState({ error, errorInfo });
-  }
-
-  onAuthChange() {
-    console.log('Legacy onAuthChange called');
   }
 
   render() {
