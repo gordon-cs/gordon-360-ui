@@ -1,8 +1,12 @@
 import { Grid, Card, CardContent, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
-const GordonLimitedAvailability = ({ pageName = '', backToLocation = 'Home', backToLink = '', availableTo = 'students' }) => {
-  let pageNameFormatted = pageName ? `The ${pageName} page` : 'This page';
+const GordonLimitedAvailability = ({
+  pageName = '',
+  backToLocation = 'Home',
+  backToLink = '',
+  availableTo = 'students',
+}) => {
   return (
     <Grid container justifyContent="center" spacing="16">
       <Grid item xs={12} md={8}>
