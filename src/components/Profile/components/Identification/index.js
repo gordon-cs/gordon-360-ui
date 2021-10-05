@@ -132,8 +132,9 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
       setUserProfile(profile);
 
       setIsImagePublic(profile.show_pic);
-      createNickname(profile);
-      createMaidenName(profile);
+
+      setHasNickname(profile?.NickName && profile.NickName !== profile.FirstName);
+      setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
     }
 
     loadUserProfile();
@@ -421,16 +422,6 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
       event.preventDefault();
       cropperRef.current.cropper.zoomTo(1);
     }
-  }
-
-  function createNickname(profile) {
-    let Name = String(profile.fullName);
-    let FirstName = Name.split(' ')[0];
-    setHasNickname(FirstName !== profile.NickName && profile.NickName !== '');
-  }
-
-  function createMaidenName(profile) {
-    setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
   }
 
   /**

@@ -69,6 +69,7 @@ const PersonalInfoList = ({
   const isOnline = useNetworkStatus();
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
+  const isAlumni = PersonType?.includes('alu');
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -229,7 +230,7 @@ const PersonalInfoList = ({
     />
   ) : null;
 
-  const graduationYear = (!isFacStaff && !isStudent) ? (
+  const graduationYear = isAlumni ? (
     <ProfileInfoListItem
       title={'Graduation Year:'}
       contentText={PreferredClassYear}
