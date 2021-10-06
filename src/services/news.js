@@ -91,7 +91,10 @@ const getNotExpiredFormatted = async () => {
  */
 const getFilteredNews = (unexpiredNews, query) => {
   return unexpiredNews.filter((newsitem) => {
-    let queryparts = query.split(' ').filter((q) => q !== '');
+    let queryparts = query
+      .toLowerCase()
+      .split(' ')
+      .filter((q) => q !== '');
     for (let querypart of queryparts) {
       if (
         newsitem.Body.toLowerCase().includes(querypart) ||
