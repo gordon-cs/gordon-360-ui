@@ -6,13 +6,20 @@ export const UserContext = createContext();
 export const UpdateUserContext = createContext();
 
 const UserContextProvider = ({ children }) => {
-  const [user, setUser] = useState(isAuthenticated() ? true : null);
-  const updateUser = async () =>
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const updateUser = async () => {
     setUser(isAuthenticated() ? await userService.getProfileInfo() : null);
+    setIsLoading(false);
+  };
 
   useEffect(() => {
     updateUser();
   }, []);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <UpdateUserContext.Provider value={updateUser}>
