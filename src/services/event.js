@@ -10,6 +10,7 @@ import session from './session';
 /**
  * The first element is the start time of the event, the second element is the end time of the
  * event, and the third element is the location of the event.
+ *
  * @global
  * @typedef EventOccurrence
  * @property {string} StartDate The datetime, as a string, when the occurence begins
@@ -20,29 +21,30 @@ import session from './session';
 /**
  * @global
  * @typedef Event
- * @property {String} Event_ID The ID of the event, from 25Live
- * @property {String} Event_Name The internal name of the event
- * @property {String} Event_Title The title, to be displayed, of the event
+ * @property {string} Event_ID The ID of the event, from 25Live
+ * @property {string} Event_Name The internal name of the event
+ * @property {string} Event_Title The title, to be displayed, of the event
  * @property {boolean} HasCLAWCredit Whether the event offers CL&W Credit
- * @property {String} Description The description of the event
+ * @property {string} Description The description of the event
  * @property {EventOccurrence[]} Occurrences All scheduled occurrences of the event
  */
 
 /**
  * @global
  * @typedef AttendedEvent
- * @property {String} CHDate The date and time that the user received CL&W credit
- * @property {String} CHTermCD Term code of the event
- * @property {String} Description Given description of the event
- * @property {String} Event_Name The generic name of the event
- * @property {String} Event_Title Specific title of the event
+ * @property {string} CHDate The date and time that the user received CL&W credit
+ * @property {string} CHTermCD Term code of the event
+ * @property {string} Description Given description of the event
+ * @property {string} Event_Name The generic name of the event
+ * @property {string} Event_Title Specific title of the event
  * @property {EventOccurrence[]} Occurrences All scheduled occurrences of the event
- * @property {String} Organization Organization hosting the event
- * @property {Number} Required Required CL&W credits for the user
+ * @property {string} Organization Organization hosting the event
+ * @property {number} Required Required CL&W credits for the user
  */
 
 /**
  * Gets all events from the backend, and then formats and sorts them
+ *
  * @returns {Promise<Event[]>} All events
  */
 const getAllEvents = async () => {
@@ -53,6 +55,7 @@ const getAllEvents = async () => {
 /**
  * Gets upcoming CL&W events and formats them for display
  * TODO: Unused. Consider removing
+ *
  * @returns {Promise<Event[]>} upcoming CL&W events
  */
 const getCLWEvents = async () => {
@@ -66,6 +69,7 @@ const getCLWEvents = async () => {
 
 /**
  * Gets all public events from the backend, and then formats and sorts them
+ *
  * @returns {Promise<Event[]>} All events
  */
 const getAllGuestEvents = async () => {
@@ -75,7 +79,8 @@ const getAllGuestEvents = async () => {
 
 /**
  * Get chapel events attended by the user during the current term
- * @return {Promise<AttendedEvent[]>} all CL&W events attended by the user, formatted and sorted
+ *
+ * @returns {Promise<AttendedEvent[]>} all CL&W events attended by the user, formatted and sorted
  */
 const getAttendedChapelEvents = async () => {
   const termCode = session.getTermCode();
@@ -85,6 +90,7 @@ const getAttendedChapelEvents = async () => {
 
 /**
  *  Format an event for display on the front end
+ *
  * @param {Event} event The event to format
  * @returns {Event} The formatted event
  */
@@ -116,6 +122,7 @@ function formatevent(event) {
 
 /**
  * Compares two events by the time of their first occurrence
+ *
  * @param {Event} a the first event to compare
  * @param {Event} b the second event to compare
  * @returns {int} the sort order of the two events. -1 if a is first, 1 if b is first, 0 otherwise
@@ -149,6 +156,7 @@ function sortAtndEventsByTime(a, b) {
 
 /**
  * Filters events for only those whose first occurrence is in the future
+ *
  * @param {Event[]} allEvents The events to filter
  * @returns {Event[]} all events that occur in the future
  */

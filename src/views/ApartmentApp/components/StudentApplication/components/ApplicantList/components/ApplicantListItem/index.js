@@ -1,21 +1,20 @@
-import { Fragment, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import {
-  Grid,
+  Avatar,
   Divider,
+  Grid,
+  IconButton,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
-  Avatar,
-  IconButton,
 } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 import PersonIcon from '@material-ui/icons/Person';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import { Fragment, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import user from 'services/user';
-
 import styles from '../../../../../../ApartmentApp.module.css';
 
 /**
@@ -24,12 +23,13 @@ import styles from '../../../../../../ApartmentApp.module.css';
 
 /**
  * Renders the list item for the apartment applicant list
+ *
  * @param {Object} props The React component props
- * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {boolean} props.disabled boolean to disable the interactive elements of this list item
  * @param {StudentProfileInfo} props.profile The StudentProfileInfo of the applicant
- * @param {Boolean} props.isApplicationEditor Boolean indicating whether this list item corresponds to the application editor
- * @param {CallbackFcn} props.onChangeEditor Callback for change editor button
- * @param {CallbackFcn} props.onApplicantRemove Callback for remove applicant button
+ * @param {boolean} props.isApplicationEditor boolean indicating whether this list item corresponds to the application editor
+ * @param {Function} props.onChangeEditor Callback for change editor button
+ * @param {Function} props.onApplicantRemove Callback for remove applicant button
  * @returns {JSX.Element} JSX Element for the applicant list item
  */
 const ApplicantListItem = ({

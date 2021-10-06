@@ -5,185 +5,183 @@
  */
 
 import jwtDecode from 'jwt-decode';
-
-import { AuthError } from './error';
-import http from './http';
-import session from './session';
-import storage from './storage';
 import { socialMediaInfo } from 'socialMedia';
 import {
   cliftonStrengthCategories,
   cliftonStrengthColors,
   cliftonStrengthLinks,
 } from './cliftonStrengthsData';
+import { AuthError } from './error';
+import http from './http';
+import session from './session';
+import storage from './storage';
 
 /**
  * @global
  * @typedef CLWCredits
- * @property {Number} current User's current CL&W credits
- * @property {Number} required User's required CL&W credits
+ * @property {number} current User's current CL&W credits
+ * @property {number} required User's required CL&W credits
  */
 
 /**
  * @global
  * @typedef LocalInfo
- * @property {String} aud Audience of token (URL)
- * @property {String} college_role User role
- * @property {Number} exp Token expiration time
- * @property {String} id User ID
- * @property {String} iss Token issuance URL
- * @property {String} name User name (for display purposes)
- * @property {Number} nbf identifies the time before which the JWT MUST NOT be accepted for
- * processing
- * @property {String} user_name Username (firstname.lastname format)
+ * @property {string} aud Audience of token (URL)
+ * @property {string} college_role User role
+ * @property {number} exp Token expiration time
+ * @property {string} id User ID
+ * @property {string} iss Token issuance URL
+ * @property {string} name User name (for display purposes)
+ * @property {number} nbf identifies the time before which the JWT MUST NOT be accepted for processing
+ * @property {string} user_name Username (firstname.lastname format)
  */
 
 /**
  * @global
  * @typedef StaffProfileInfo
- * @property {String} AD_Username Username
- * @property {String} Barcode Barcode
- * @property {String} BuildingDescription Building description
- * @property {String} Country Country
- * @property {String} Dept Department
- * @property {String} Email Email address
- * @property {String} Facebook Facebook
- * @property {String} FirstName First name
- * @property {String} Gender Gender
- * @property {String} Handshake Handshake
- * @property {String} HomeCity City
- * @property {String} HomeCountry Country
- * @property {String} HomeFax Home fax number
- * @property {String} HomePhone Home phone number
- * @property {String} HomePostalCode Postal code
- * @property {String} HomeState State
- * @property {String} HomeStreet1 Street address line 1
- * @property {String} HomeStreet2 Street address line 2
- * @property {String} ID ID
- * @property {String} Instagram Instagram
- * @property {String} JobTitle Job title
- * @property {String} KeepPrivate Keep private
- * @property {String} LastName Last name
- * @property {String} LinkedIn LinkedIn
- * @property {String} MaidenName Maiden name
- * @property {String} MiddleName Middle name
- * @property {String} NickName Nickname
- * @property {String} OnCampusBuilding Building
- * @property {String} OnCampusDepartment Department
- * @property {String} OnCampusFax Fax number
- * @property {String} OnCampusPhone Phone number
- * @property {String} OnCampusPrivatePhone Private phone number
- * @property {String} OnCampusRoom Room number
- * @property {String} PersonType Type of person
- * @property {String} SpouseName Name of spouse
- * @property {String} Suffix Suffix
- * @property {String} Title Title
- * @property {String} Twitter Twitter
- * @property {String} Type Type
- * @property {String} office_hours Office hours
- * @property {Number} preferred_photo Preferred photo
- * @property {Number} show_pic Whether or not to show picture
- * @property {String} Mail_Location On campus mailstop
+ * @property {string} AD_Username Username
+ * @property {string} Barcode Barcode
+ * @property {string} BuildingDescription Building description
+ * @property {string} Country Country
+ * @property {string} Dept Department
+ * @property {string} Email Email address
+ * @property {string} Facebook Facebook
+ * @property {string} FirstName First name
+ * @property {string} Gender Gender
+ * @property {string} Handshake Handshake
+ * @property {string} HomeCity City
+ * @property {string} HomeCountry Country
+ * @property {string} HomeFax Home fax number
+ * @property {string} HomePhone Home phone number
+ * @property {string} HomePostalCode Postal code
+ * @property {string} HomeState State
+ * @property {string} HomeStreet1 Street address line 1
+ * @property {string} HomeStreet2 Street address line 2
+ * @property {string} ID ID
+ * @property {string} Instagram Instagram
+ * @property {string} JobTitle Job title
+ * @property {string} KeepPrivate Keep private
+ * @property {string} LastName Last name
+ * @property {string} LinkedIn LinkedIn
+ * @property {string} MaidenName Maiden name
+ * @property {string} MiddleName Middle name
+ * @property {string} NickName Nickname
+ * @property {string} OnCampusBuilding Building
+ * @property {string} OnCampusDepartment Department
+ * @property {string} OnCampusFax Fax number
+ * @property {string} OnCampusPhone Phone number
+ * @property {string} OnCampusPrivatePhone Private phone number
+ * @property {string} OnCampusRoom Room number
+ * @property {string} PersonType Type of person
+ * @property {string} SpouseName Name of spouse
+ * @property {string} Suffix Suffix
+ * @property {string} Title Title
+ * @property {string} Twitter Twitter
+ * @property {string} Type Type
+ * @property {string} office_hours Office hours
+ * @property {number} preferred_photo Preferred photo
+ * @property {number} show_pic Whether or not to show picture
+ * @property {string} Mail_Location On campus mailstop
  */
 
 /**
  * @global
  * @typedef StudentProfileInfo
- * @property {String} ID ID
- * @property {String} Title Title
- * @property {String} FirstName First name
- * @property {String} MiddleName Middle name
- * @property {String} LastName Last name
- * @property {String} Suffix Suffix
- * @property {String} MaidenName Maiden name
- * @property {String} NickName Nick name
- * @property {String} OnOffCampus On off campus
- * @property {String} OnCampusBuilding On campus building
- * @property {String} OnCampusRoom On campus room
- * @property {String} OnCampusPhone On campus phone
- * @property {String} OnCampusPrivatePhone On campus private phone
- * @property {String} OnCampusFax On campus fax
- * @property {String} Mail_Location On campus mail location
- * @property {String} OffCampusStreet1 Off campus street 1
- * @property {String} OffCampusStreet2 Off campus street 2
- * @property {String} OffCampusCity Off campus city
- * @property {String} OffCampusState Off campus state
- * @property {String} OffCampusPostalCode Off campus postal code
- * @property {String} OffCampusCountry Off campus country
- * @property {String} OffCampusPhone Off campus phone
- * @property {String} OffCampusFax Off campus fax
- * @property {String} HomeStreet1 Home street 1
- * @property {String} HomeStreet2 Home street 2
- * @property {String} HomeCity Home city
- * @property {String} HomeState Home state
- * @property {String} HomePostalCode Home postal code
- * @property {String} HomeCountry Home country
- * @property {String} HomePhone Home phone
- * @property {String} HomeFax Home fax
- * @property {String} Cohort Cohort
- * @property {String} Class Class
- * @property {String} KeepPrivate Keep private
- * @property {String} Major Major
- * @property {String} Barcode Barcode
- * @property {String} AdvisorIDs Advisor IDs
- * @property {String} Married Whether student is married or not ('Y' or 'N')
- * @property {String} Commuter Whether student ia commuter or not ('Y' or 'N')
- * @property {String} Major2 Second major
- * @property {String} Email Email
- * @property {String} Gender Gender
- * @property {String} grad_student Whether student is a graduate student or not ('Y' or 'N')
- * @property {String} GradDate Date of graduation
- * @property {String} Major3 Third major
- * @property {String} Minor1 Minor
- * @property {String} Minor2 Second minor
- * @property {String} Minor3 Third minor
- * @property {String} MobilePhone Mobile phone number
- * @property {Number} IsMobilePhonePrivate Whether mobile phone number is private or not
- * @property {String} AD_Username Username
- * @property {Number} show_pic Whether or not to show picture
- * @property {Number} preferred_photo Whether or not to show preferred photo
- * @property {String} Country Country
- * @property {String} BuildingDescription Description of building
- * @property {String} Major1Description Description of first major
- * @property {String} Major2Description Description of second major
- * @property {String} Major3Description Description of third major
- * @property {String} Minor1Description Description of first minor
- * @property {String} Minor2Description Description of second minor
- * @property {String} Minor3Description Description of third minor
- * @property {String} Facebook Facebook
- * @property {String} Twitter Twitter
- * @property {String} Instagram Instagram
- * @property {String} Handshake Handshake
- * @property {String} LinkedIn LinkedIn
- * @property {String} PersonType Type of person
- * @property {Number} ChapelRequired The number of CL&W credits the Student needs for this session
- * @property {Number} ChapelAttended The number of CL&W credits the Student has attended
+ * @property {string} ID ID
+ * @property {string} Title Title
+ * @property {string} FirstName First name
+ * @property {string} MiddleName Middle name
+ * @property {string} LastName Last name
+ * @property {string} Suffix Suffix
+ * @property {string} MaidenName Maiden name
+ * @property {string} NickName Nick name
+ * @property {string} OnOffCampus On off campus
+ * @property {string} OnCampusBuilding On campus building
+ * @property {string} OnCampusRoom On campus room
+ * @property {string} OnCampusPhone On campus phone
+ * @property {string} OnCampusPrivatePhone On campus private phone
+ * @property {string} OnCampusFax On campus fax
+ * @property {string} Mail_Location On campus mail location
+ * @property {string} OffCampusStreet1 Off campus street 1
+ * @property {string} OffCampusStreet2 Off campus street 2
+ * @property {string} OffCampusCity Off campus city
+ * @property {string} OffCampusState Off campus state
+ * @property {string} OffCampusPostalCode Off campus postal code
+ * @property {string} OffCampusCountry Off campus country
+ * @property {string} OffCampusPhone Off campus phone
+ * @property {string} OffCampusFax Off campus fax
+ * @property {string} HomeStreet1 Home street 1
+ * @property {string} HomeStreet2 Home street 2
+ * @property {string} HomeCity Home city
+ * @property {string} HomeState Home state
+ * @property {string} HomePostalCode Home postal code
+ * @property {string} HomeCountry Home country
+ * @property {string} HomePhone Home phone
+ * @property {string} HomeFax Home fax
+ * @property {string} Cohort Cohort
+ * @property {string} Class Class
+ * @property {string} KeepPrivate Keep private
+ * @property {string} Major Major
+ * @property {string} Barcode Barcode
+ * @property {string} AdvisorIDs Advisor IDs
+ * @property {string} Married Whether student is married or not ('Y' or 'N')
+ * @property {string} Commuter Whether student ia commuter or not ('Y' or 'N')
+ * @property {string} Major2 Second major
+ * @property {string} Email Email
+ * @property {string} Gender Gender
+ * @property {string} grad_student Whether student is a graduate student or not ('Y' or 'N')
+ * @property {string} GradDate Date of graduation
+ * @property {string} Major3 Third major
+ * @property {string} Minor1 Minor
+ * @property {string} Minor2 Second minor
+ * @property {string} Minor3 Third minor
+ * @property {string} MobilePhone Mobile phone number
+ * @property {number} IsMobilePhonePrivate Whether mobile phone number is private or not
+ * @property {string} AD_Username Username
+ * @property {number} show_pic Whether or not to show picture
+ * @property {number} preferred_photo Whether or not to show preferred photo
+ * @property {string} Country Country
+ * @property {string} BuildingDescription Description of building
+ * @property {string} Major1Description Description of first major
+ * @property {string} Major2Description Description of second major
+ * @property {string} Major3Description Description of third major
+ * @property {string} Minor1Description Description of first minor
+ * @property {string} Minor2Description Description of second minor
+ * @property {string} Minor3Description Description of third minor
+ * @property {string} Facebook Facebook
+ * @property {string} Twitter Twitter
+ * @property {string} Instagram Instagram
+ * @property {string} Handshake Handshake
+ * @property {string} LinkedIn LinkedIn
+ * @property {string} PersonType Type of person
+ * @property {number} ChapelRequired The number of CL&W credits the Student needs for this session
+ * @property {number} ChapelAttended The number of CL&W credits the Student has attended
  */
 
 /**
  * @global
  * @typedef StudentAdvisorInfo
- * @property {String} Firstname First Name for advisor
- * @property {String} Lastname Last Name for advisor
- * @property {String} AD_Username User Name for advisor
+ * @property {string} Firstname First Name for advisor
+ * @property {string} Lastname Last Name for advisor
+ * @property {string} AD_Username User Name for advisor
  */
 
 /**
  * @global
  * @typedef DiningInfo
- * @property {String} ChoiceDescription
- * @property {MealPlanComponent} Swipes
- * @property {MealPlanComponent} DiningDollars
- * @property {MealPlanComponent} CurrentBalance
+ * @property {string} ChoiceDescription A description of the mealplan choice
+ * @property {MealPlanComponent} Swipes The swipes info
+ * @property {MealPlanComponent} DiningDollars The dining dollars info
+ * @property {MealPlanComponent} CurrentBalance The Current balance
  */
 
 /**
  * @global
  * @typedef MealPlanComponent
- * @property {String} PlanDescription Description of the meal plan component
- * @property {String} PlanID
- * @property {Number} InitialBalance The initial balance of the meal plan
- * @property {String} CurrentBalance The current remaining meal plan balance
+ * @property {string} PlanDescription Description of the meal plan component
+ * @property {string} PlanID The plan ID
+ * @property {number} InitialBalance The initial balance of the meal plan
+ * @property {string} CurrentBalance The current remaining meal plan balance
  */
 
 function setFullname(profile) {
@@ -305,8 +303,9 @@ function setClass(profile) {
 
 /**
  * Get image for a given user or the current user if `username` is not provided
- * @param {String} [username] Username in firstname.lastname format
- * @return {Promise.<String>} Image as a Base64-encoded string
+ *
+ * @param {string} [username] Username in firstname.lastname format
+ * @returns {Promise.<string>} Image as a Base64-encoded string
  */
 const getImage = async (username) => {
   let pic;
@@ -320,6 +319,7 @@ const getImage = async (username) => {
 
 /**
  * Reset the current user's from preferred image to user's default image
+ *
  * @returns {Response} Determines if the image was reset successfully
  */
 const resetImage = () => {
@@ -328,8 +328,9 @@ const resetImage = () => {
 
 /**
  * upload an ID image for a user to the __ folder
- * @param {String} dataURI of the image being uploaded
- * @return {Response} response of http request
+ *
+ * @param {string} dataURI of the image being uploaded
+ * @returns {Response} response of http request
  */
 const postIDImage = (dataURI) => {
   let imageData = new FormData();
@@ -342,8 +343,9 @@ const postIDImage = (dataURI) => {
 
 /**
  * upload a photo to user's profile, which is then used as the preferred photo
- * @param {String} dataURI of the image being uploaded
- * @return {Response} response of http request
+ *
+ * @param {string} dataURI of the image being uploaded
+ * @returns {Response} response of http request
  */
 const postImage = (dataURI) => {
   let imageData = new FormData();
@@ -375,7 +377,8 @@ function dataURItoBlob(dataURI) {
 
 /**
  * Get local info encoded in payload of token
- * @return {Promise.<LocalInfo>} Local user info
+ *
+ * @returns {Promise.<LocalInfo>} Local user info
  */
 const getLocalInfo = () => {
   let token;
@@ -393,7 +396,8 @@ const getLocalInfo = () => {
 
 /**
  * Get the number of cl&w credits acquired, and number of credits required.
- * @return {CLWCredits} An Object of their current and required number of CL&W events,
+ *
+ * @returns {CLWCredits} An Object of their current and required number of CL&W events,
  */
 const getChapelCredits = async () => {
   const { ChapelRequired: required, ChapelAttended: attended } = await getProfile();
@@ -406,7 +410,8 @@ const getChapelCredits = async () => {
 
 /**
  * Get all relevant info about user's dining plan
- * @return {Promise.<DiningInfo>} Dining plan info object
+ *
+ * @returns {Promise.<DiningInfo>} Dining plan info object
  */
 const getDiningInfo = async () => {
   return await http.get('dining');
@@ -414,8 +419,9 @@ const getDiningInfo = async () => {
 
 /**
  * Get user profile info for a given user or the current user if `username` is not provided
- * @param {String} [username] Username in firstname.lastname format
- * @return {Promise.<StaffProfileInfo|StudentProfileInfo>} Profile info
+ *
+ * @param {string} [username] Username in firstname.lastname format
+ * @returns {Promise.<StaffProfileInfo|StudentProfileInfo>} Profile info
  */
 const getProfile = (username) => {
   let profile;
@@ -569,17 +575,19 @@ const getSessionMembershipsWithoutGuests = async (id, session) => {
 
 /**
  * Get requests sent by a specific student
- * @param {String} id Identifier for student
- * @return {Request[]} List of requests for student
+ *
+ * @param {string} [id] Identifier for student
+ * @returns {Request[]} List of requests for student
  */
-const getSentMembershipRequests = () => {
-  return http.get(`requests/student/`);
+const getSentMembershipRequests = (id = null) => {
+  return http.get(`requests/student/${id}`);
 };
 
 /**
  * Get memberships for specific student where they hold admin status
- * @param {String} id Identifier for student
- * @return {Request[]} List of memberships
+ *
+ * @param {string} id Identifier for student
+ * @returns {Request[]} List of memberships
  */
 const getLeaderPositions = async (id) => {
   let leaderPositions = [];

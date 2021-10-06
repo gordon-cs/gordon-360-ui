@@ -1,8 +1,7 @@
-import { Component } from 'react';
-import { gordonColors } from 'theme';
-import storage from 'services/storage';
-
 import { Grid, Typography } from '@material-ui/core';
+import { Component } from 'react';
+import storage from 'services/storage';
+import { gordonColors } from 'theme';
 
 export default class OfflineBanner extends Component {
   constructor() {
@@ -51,7 +50,7 @@ export default class OfflineBanner extends Component {
   /**
    * Creates the classes for the offline banner depending on the current page
    *
-   * @returns {String} The classes to be applied to the offline banner
+   * @returns {string} The classes to be applied to the offline banner
    */
   getClass() {
     // Class for Home view

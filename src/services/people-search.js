@@ -9,12 +9,12 @@ import http from './http';
 /**
  * @global
  * @typedef SearchResult
- * @property {String} FirstName First name
- * @property {String} Nickname Nickname
- * @property {String} LastName Last name
- * @property {String} MaidenName Maiden name
- * @property {String} UserName Firstname.Lastname format
- * @property {String} ConcatonatedInfo All names combined in a single string
+ * @property {string} FirstName First name
+ * @property {string} Nickname Nickname
+ * @property {string} LastName Last name
+ * @property {string} MaidenName Maiden name
+ * @property {string} UserName Firstname.Lastname format
+ * @property {string} ConcatonatedInfo All names combined in a single string
  */
 
 function Results(time, searchResult) {
@@ -24,8 +24,9 @@ function Results(time, searchResult) {
 
 /**
  * Search for a person
- * @param {String} query Query to search
- * @return {Promise.<SearchResult[]>} List of search results
+ *
+ * @param {string} query Query to search
+ * @returns {Promise.<SearchResult[]>} List of search results
  */
 const search = async (query) => {
   let searchQuery = query;

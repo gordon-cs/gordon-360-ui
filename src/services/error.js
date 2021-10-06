@@ -6,9 +6,10 @@
 
 /**
  * authentication Error
+ *
  * @global
  * @class
- * @param {String} message Error message
+ * @param {string} message Error message
  */
 function AuthError(message) {
   this.name = 'AuthError';
@@ -18,9 +19,10 @@ AuthError.prototype = Object.create(Error.prototype);
 
 /**
  * Not found Error
+ *
  * @global
  * @class
- * @param {String} message Error message
+ * @param {string} message Error message
  */
 function NotFoundError(message) {
   this.name = 'NotFoundError';
@@ -30,9 +32,10 @@ NotFoundError.prototype = Object.create(Error.prototype);
 
 /**
  * Create an error object based on an HTTP error from the backend
+ *
  * @param {Error} err Error caught from HTTP request
  * @param {Response} res HTTP response
- * @return {Error|AuthError} An error
+ * @returns {Error|AuthError} An error
  */
 const createError = (err, res) => {
   if (res.status === 401) {
