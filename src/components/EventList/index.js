@@ -8,7 +8,7 @@ import styles from './EventList.module.css';
 import { List, Grid, Typography, Card } from '@material-ui/core';
 
 const EventList = (props) => {
-  const [isMobileView, setIsMovileView] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
   const breakpointWidth = 540;
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const EventList = (props) => {
     // Has to rerender on screen resize in order for table to switch to the mobile view
     const resize = () => {
       if (breakpointPassed()) {
-        setIsMovileView(!isMobileView);
+        setIsMobileView(!isMobileView);
       }
     };
 
