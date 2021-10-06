@@ -116,7 +116,7 @@ const Events = (props) => {
 
   if (loading) {
     content = <GordonLoader />;
-  } else if (events.length > 0) {
+  } else {
     content = <EventList events={filteredEvents} />;
   }
 
