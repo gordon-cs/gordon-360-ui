@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import CollapsableEventItem from './components/CollapsableEventItem';
 import EventItem from './components/EventItem';
 import { gordonColors } from 'theme';
@@ -7,133 +7,110 @@ import styles from './EventList.module.css';
 
 import { List, Grid, Typography, Card } from '@material-ui/core';
 
-export default class EventList extends Component {
-  constructor(props) {
-    super(props);
+const EventList = (props) => {
+  const [isMobileView, setIsMovileView] = useState(false);
+  const breakpointWidth = 540;
 
-    this.handleExpandClick = this.handleExpandClick.bind(this);
-
-    this.state = {
-      open: false,
-      isLoading: true,
+  useEffect(() => {
+    // Checks if the screen has been resized past the mobile breakpoint
+    const breakpointPassed = () => {
+      if (isMobileView && window.innerWidth > breakpointWidth) return true;
+      if (!isMobileView && window.innerWidth < breakpointWidth) return true;
+      else return false;
     };
-    this.breakpointWidth = 540;
-  }
+    // Has to rerender on screen resize in order for table to switch to the mobile view
+    const resize = () => {
+      if (breakpointPassed()) {
+        setIsMovileView(!isMobileView);
+      }
+    };
 
-  handleExpandClick() {
-    this.setState({ open: !this.state.open });
-  }
+    window.addEventListener('resize', resize);
+    return () => {
+      window.removeEventListener('resize', resize);
+    };
+  }, [isMobileView]);
 
-  //Has to rerender on screen resize in order for table to switch to the mobile view
-  resize = () => {
-    if (this.breakpointPassed()) {
-      this.isMobileView = !this.isMobileView;
-      this.forceUpdate();
-    }
+  const events = props.events;
+  let content;
+  let header;
+
+  const headerStyle = {
+    backgroundColor: gordonColors.primary.blue,
+    color: '#FFF',
+    padding: '10px',
   };
 
-  //checks if the screen has been resized past the mobile breakpoint
-  //allows for forceUpdate to only be called when necessary, improving resizing performance
-  breakpointPassed() {
-    if (this.isMobileView && window.innerWidth > this.breakpointWidth) return true;
-    if (!this.isMobileView && window.innerWidth < this.breakpointWidth) return true;
-    else return false;
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.resize);
-    this.setState({ isLoading: false });
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.resize);
-  }
-
-  render() {
-    const { events } = this.props;
-    let content;
-    let header;
-
-    const headerStyle = {
-      backgroundColor: gordonColors.primary.blue,
-      color: '#FFF',
-      padding: '10px',
-    };
-
-    const smallHeader = (
-      <div style={headerStyle}>
-        <Grid container direction="row">
-          <Grid item xs={12}>
-            <Typography variant="body2" style={headerStyle}>
-              EVENTS
-            </Typography>
-          </Grid>
-        </Grid>
-      </div>
-    );
-
-    const fullHeader = (
-      <div style={headerStyle}>
-        <Grid container direction="row">
-          <Grid item xs={4}>
-            <Typography variant="body2" style={headerStyle}>
-              EVENT
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <Typography variant="body2" style={headerStyle}>
-              LOCATION
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography variant="body2" style={headerStyle}>
-              DATE
-            </Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography variant="body2" style={headerStyle}>
-              TIME
-            </Typography>
-          </Grid>
-        </Grid>
-      </div>
-    );
-
-    /****** HEADER ******/
-    // Show single "events" column on narrow viewports
-    if (this.state.isLoading) {
-      content = null;
-    } else if (window.innerWidth < this.breakpointWidth) {
-      content = events.map((currEvent) => (
-        <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
-      ));
-    } else if (events.length > 0) {
-      content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
-    } else if (events.length === 0) {
-      content = (
-        <Grid item align="center">
-          <br />
-          <Typography variant="h5" align="center">
-            No Events To Show
+  const smallHeader = (
+    <div style={headerStyle}>
+      <Grid container direction="row">
+        <Grid item xs={12}>
+          <Typography variant="body2" style={headerStyle}>
+            EVENTS
           </Typography>
-          <br />
         </Grid>
-      );
-    }
+      </Grid>
+    </div>
+  );
 
-    header = window.innerWidth < this.breakpointWidth ? smallHeader : fullHeader;
+  const fullHeader = (
+    <div style={headerStyle}>
+      <Grid container direction="row">
+        <Grid item xs={4}>
+          <Typography variant="body2" style={headerStyle}>
+            EVENT
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography variant="body2" style={headerStyle}>
+            LOCATION
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant="body2" style={headerStyle}>
+            DATE
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant="body2" style={headerStyle}>
+            TIME
+          </Typography>
+        </Grid>
+      </Grid>
+    </div>
+  );
 
-    return (
-      <section>
-        <Card>
-          {header}
-          <Grid>
-            <List className={styles.event_list} disablePadding>
-              {content}
-            </List>
-          </Grid>
-        </Card>
-      </section>
+  if (window.innerWidth < breakpointWidth) {
+    content = events.map((currEvent) => (
+      <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
+    ));
+  } else if (events.length > 0) {
+    content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
+  } else if (events.length === 0) {
+    content = (
+      <Grid item align="center">
+        <br />
+        <Typography variant="h5" align="center">
+          No Events To Show
+        </Typography>
+        <br />
+      </Grid>
     );
   }
-}
+
+  header = window.innerWidth < breakpointWidth ? smallHeader : fullHeader;
+
+  return (
+    <section>
+      <Card>
+        {header}
+        <Grid>
+          <List className={styles.event_list} disablePadding>
+            {content}
+          </List>
+        </Grid>
+      </Card>
+    </section>
+  );
+};
+export default EventList;
