@@ -15,6 +15,7 @@ export default class EventList extends Component {
 
     this.state = {
       open: false,
+      isLoading: true,
     };
     this.breakpointWidth = 540;
   }
@@ -41,6 +42,7 @@ export default class EventList extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.resize);
+    this.setState({ isLoading: false });
   }
 
   componentWillUnmount() {
@@ -58,39 +60,19 @@ export default class EventList extends Component {
       padding: '10px',
     };
 
-    /****** HEADER ******/
-    // Show single "events" column on narrow viewports
-    if (window.innerWidth < this.breakpointWidth) {
-      content = events.map((currEvent) => (
-        <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
-      ));
-
-      header = (
-        <div style={headerStyle}>
-          <Grid container direction="row">
-            <Grid item xs={12}>
-              <Typography variant="body2" style={headerStyle}>
-                EVENTS
-              </Typography>
-            </Grid>
+    const smallHeader = (
+      <div style={headerStyle}>
+        <Grid container direction="row">
+          <Grid item xs={12}>
+            <Typography variant="body2" style={headerStyle}>
+              EVENTS
+            </Typography>
           </Grid>
-        </div>
-      );
-    } else if (events.length > 0) {
-      content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
-    } else if (events.length === 0) {
-      content = (
-        <Grid item align="center">
-          <br />
-          <Typography variant="h5" align="center">
-            No Events To Show
-          </Typography>
-          <br />
         </Grid>
-      );
-    }
+      </div>
+    );
 
-    header = (
+    const fullHeader = (
       <div style={headerStyle}>
         <Grid container direction="row">
           <Grid item xs={4}>
@@ -116,6 +98,30 @@ export default class EventList extends Component {
         </Grid>
       </div>
     );
+
+    /****** HEADER ******/
+    // Show single "events" column on narrow viewports
+    if (this.state.isLoading) {
+      content = null;
+    } else if (window.innerWidth < this.breakpointWidth) {
+      content = events.map((currEvent) => (
+        <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
+      ));
+    } else if (events.length > 0) {
+      content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
+    } else if (events.length === 0) {
+      content = (
+        <Grid item align="center">
+          <br />
+          <Typography variant="h5" align="center">
+            No Events To Show
+          </Typography>
+          <br />
+        </Grid>
+      );
+    }
+
+    header = window.innerWidth < this.breakpointWidth ? smallHeader : fullHeader;
 
     return (
       <section>
