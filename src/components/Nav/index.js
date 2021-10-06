@@ -3,16 +3,12 @@ import GordonNavAvatar from './components/NavAvatar';
 import GordonNavLinks from './components/NavLinks';
 import styles from './Nav.module.css';
 
-const GordonNav = ({ onDrawerToggle, authentication, onSignOut, drawerOpen }) => {
+const GordonNav = ({ onDrawerToggle, authentication, drawerOpen }) => {
   const drawer = (
     <>
       <GordonNavAvatar onLinkClick={onDrawerToggle} authentication={authentication} />
       <Divider />
-      <GordonNavLinks
-        onLinkClick={onDrawerToggle}
-        onSignOut={onSignOut}
-        authentication={authentication}
-      />
+      <GordonNavLinks onLinkClick={onDrawerToggle} authentication={authentication} />
     </>
   );
 

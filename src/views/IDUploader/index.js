@@ -1,28 +1,28 @@
 import {
   Button,
   Card,
+  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  CardContent,
   Grid,
   Typography,
   withWidth,
 } from '@material-ui/core';
-import { createRef, Component, Fragment } from 'react';
+import Login from 'components/LoginDialogue';
+import 'cropperjs/dist/cropper.css';
+import { Component, createRef, Fragment } from 'react';
+import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
+import errorLog from 'services/errorLog';
+import user from 'services/user';
 import { gordonColors } from 'theme';
+import styles from './IDUploader.module.css';
 import IdCardDefault from './image-default.png';
 import IdCardGreen from './image-green.png';
 import IdCardTop from './image-top.png';
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
-import styles from './IDUploader.module.css';
-import user from 'services/user';
-import errorLog from 'services/errorLog';
-import Login from 'components/LoginDialogue';
 
 const CROP_DIM = 1200; // pixels
 class IDUploader extends Component {
@@ -329,7 +329,7 @@ class IDUploader extends Component {
                 >
                   Login
                 </Button>*/}
-                <Login onLogIn={this.props.onLogIn} />
+                <Login />
               </CardContent>
             </Card>
           </Grid>

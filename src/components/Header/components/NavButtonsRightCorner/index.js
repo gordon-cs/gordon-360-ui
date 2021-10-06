@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import Popover from '@material-ui/core/Popover';
 import List from '@material-ui/core/List';
+import Popover from '@material-ui/core/Popover';
+import GordonNavButton from 'components/NavButton';
+import GordonQuickLinksDialog from 'components/QuickLinksDialog';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import useUpdateUser from 'hooks/useUpdateUser';
+import { useState } from 'react';
 import { signOut } from 'services/auth';
 import user from 'services/user';
-import GordonQuickLinksDialog from 'components/QuickLinksDialog';
-import GordonNavButton from 'components/NavButton';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 import styles from './NavButtonsRightCorner.module.css';
 
 /**
  *
  * @param {Function} onClose action to perform when closing the right side nav menu
- * @param {Function} onSignOut action to perform when signing out
  * @param {boolean} authentication whether the user is authenticated
  * @param {Function} openDialogBox function that opens the dialog for when a feature is unavailable
  * @param {boolean} open whether the right side menu is open
@@ -19,7 +19,6 @@ import styles from './NavButtonsRightCorner.module.css';
  */
 const GordonNavButtonsRightCorner = ({
   onClose,
-  onSignOut,
   authentication,
   openDialogBox,
   open,
@@ -27,11 +26,12 @@ const GordonNavButtonsRightCorner = ({
 }) => {
   const [linkOpen, setLinkOpen] = useState(false);
   const isOnline = useNetworkStatus();
+  const updateUser = useUpdateUser();
 
   function closeAndSignOut() {
     onClose();
     signOut();
-    onSignOut();
+    updateUser();
   }
 
   const myProfileButton = (

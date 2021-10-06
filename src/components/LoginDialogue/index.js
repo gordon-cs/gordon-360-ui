@@ -1,18 +1,18 @@
-import { Grid, Typography, TextField, Button } from '@material-ui/core';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import GordonLoader from 'components/Loader';
+import useUpdateUser from 'hooks/useUpdateUser';
 import { useState } from 'react';
 import { authenticate } from 'services/auth';
-import storage from 'services/storage';
-import session from 'services/session';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
-import GordonLoader from 'components/Loader';
 import styles from './LoginDialogue.module.css';
 
 // TODO: Eventually abstract this out to be a global login component to be called anywhere
-const LoginDialogue = ({ onLogIn }) => {
+const LoginDialogue = () => {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const updateUser = useUpdateUser();
 
   const logIn = async (event) => {
     event.preventDefault();
@@ -22,23 +22,7 @@ const LoginDialogue = ({ onLogIn }) => {
     try {
       await authenticate(username, password);
 
-      /* Checks to see if the Service Worker API is available before attempting to access it
-       *  This is important because if the API is not available, the site will load
-       *  but not allow you to login due to the error "undefined is not a function"
-       */
-      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-        // Sends the token, current term code, and a message to the service worker to update cache
-        navigator.serviceWorker.controller.postMessage({
-          message: 'update-cache-files',
-          token: storage.get('token'),
-          termCode: session.getTermCode(),
-        });
-        // Stores the current term in Local Storage for later use when updating the cache
-        storage.store('currentTerm', session.getTermCode());
-        // Saves the network state as online in local storage
-        localStorage.setItem('network-status', JSON.stringify('online'));
-      }
-      onLogIn();
+      updateUser();
     } catch (err) {
       setError(err.message);
       setLoading(false);
