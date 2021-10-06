@@ -26,8 +26,8 @@ const Events = (props) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [allEvents, setAllEvents] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [events, setEvents] = useState(null);
+  const [filteredEvents, setFilteredEvents] = useState(null);
   const [includePast, setIncludePast] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
@@ -71,11 +71,15 @@ const Events = (props) => {
   }, [props.authentication, props.location.search]);
 
   useEffect(() => {
+    setLoading(true);
     setEvents(includePast ? allEvents : futureEvents);
+    setLoading(false);
   }, [includePast, allEvents, futureEvents]);
 
   useEffect(() => {
+    setLoading(true);
     setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
+    setLoading(false);
   }, [events, filters, search]);
 
   const handleChangeFilters = async (value) => {
@@ -117,7 +121,7 @@ const Events = (props) => {
   if (loading) {
     content = <GordonLoader />;
   } else {
-    content = <EventList events={filteredEvents} />;
+    content = <EventList events={filteredEvents} loading={loading} />;
   }
 
   const searchPageTitle = (
