@@ -1,6 +1,8 @@
-import { useState, useCallback } from 'react';
+import { Grid } from '@material-ui/core';
+import GordonSnackbar from 'components/Snackbar';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useCallback, useState } from 'react';
 import user from 'services/user';
-
 import {
   EmergencyInfoList,
   Identification,
@@ -10,9 +12,6 @@ import {
   SchedulePanel,
   VictoryPromiseDisplay,
 } from './components';
-import { Grid } from '@material-ui/core';
-import GordonSnackbar from 'components/Snackbar';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 
 const Profile = ({ profile, myProf }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
@@ -46,13 +45,15 @@ const Profile = ({ profile, myProf }) => {
         </Grid>
       )}
 
-      <Grid item xs={12} lg={10} align="center">
-        <SchedulePanel profile={profile} myProf={myProf} network={network} />
-      </Grid>
+      {(myProf || !profile.PersonType?.includes('stu')) && (
+        <Grid item xs={12} lg={10} align="center">
+          <SchedulePanel profile={profile} myProf={myProf} network={network} />
+        </Grid>
+      )}
 
       <Grid item xs={12} lg={5}>
         <Grid container spacing={2}>
-          <OfficeInfoList profile={profile} />
+          <OfficeInfoList profile={profile} myProf={myProf} />
           <PersonalInfoList
             profile={profile}
             myProf={myProf}
@@ -67,6 +68,7 @@ const Profile = ({ profile, myProf }) => {
         <MembershipsList
           user={myProf ? profile.ID : profile.AD_Username}
           myProf={myProf}
+          PersonType={profile.PersonType}
           createSnackbar={createSnackbar}
         />
       </Grid>

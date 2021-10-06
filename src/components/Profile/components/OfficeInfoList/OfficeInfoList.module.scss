@@ -7,6 +7,13 @@
     color: $neutral-white;
     padding-left: 1rem;
   }
+  .note {
+    color: $neutral-black-opacity55;
+    background-color: $neutral-light-gray;
+    padding: 0.3rem 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+  }
 }
 
 @media (max-width: $break-sm) {

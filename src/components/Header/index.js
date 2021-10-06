@@ -1,43 +1,24 @@
-import MenuIcon from '@material-ui/icons/Menu';
+import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
+import EventIcon from '@material-ui/icons/Event';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
-import EventIcon from '@material-ui/icons/Event';
-import PeopleIcon from '@material-ui/icons/People';
 // import WorkIcon from '@material-ui/icons/Work';
 import WellnessIcon from '@material-ui/icons/LocalHospital';
+import MenuIcon from '@material-ui/icons/Menu';
+import PeopleIcon from '@material-ui/icons/People';
+import GordonDialogBox from 'components/GordonDialogBox/index';
+import useDocumentTitle from 'hooks/useDocumentTitle';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import { projectName } from 'project-name';
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect, useState } from 'react';
-import DocumentTitle from 'react-document-title';
-import { Route, Switch, NavLink, Link } from 'react-router-dom';
-import styles from './Header.module.css';
-import GordonPeopleSearch from './components/PeopleSearch';
+import { Link, NavLink, Route, Switch } from 'react-router-dom';
+import routes from 'routes';
+import { windowBreakWidths } from 'theme';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
-import routes from 'routes';
-import { projectName } from 'project-name';
-import GordonDialogBox from 'components/GordonDialogBox/index';
-import { windowBreakWidths } from 'theme';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import { AppBar, Toolbar, Typography, IconButton, Tabs, Tab, Button } from '@material-ui/core';
-
-const getRouteName = (route) => {
-  // TODO: replace this function with the following line of code once document title setting has been refactored
-  // return () => ( route.name ? <span>{route.name}</span> : <span>{projectName}</span>);
-  if (route.name) {
-    return () => (
-      <span>
-        <DocumentTitle title={`${route.name} | ${projectName}`} />
-        {route.name}
-      </span>
-    );
-  }
-  return () => (
-    <span>
-      <DocumentTitle title={`${projectName}`} />
-      {projectName}
-    </span>
-  );
-};
+import GordonPeopleSearch from './components/PeopleSearch';
+import styles from './Header.module.css';
 
 const ForwardLink = forwardRef((props, ref) => <Link ref={ref} {...props} />);
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
@@ -48,6 +29,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorElement, setAnchorElement] = useState(null);
   const isOnline = useNetworkStatus();
+  const setDocumentTitle = useDocumentTitle();
 
   /**
    * Update the tab highlight indicator based on the url
@@ -194,7 +176,10 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
                   key={route.path}
                   path={route.path}
                   exact={route.exact}
-                  component={getRouteName(route)}
+                  component={() => {
+                    setDocumentTitle(route.name || projectName);
+                    return <span>{route.name || projectName}</span>;
+                  }}
                 />
               ))}
             </Switch>

@@ -39,7 +39,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
       setSessions(await sessionService.getAll());
 
       if (sessionFromURL) {
-        setSelectedSession(sessionFromURL);
+        setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
       } else {
         const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
         setCurrentAcademicSession(currentSessionCode);
@@ -72,6 +72,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
 
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
+    value = sessionService.decodeSessionCode(value);
     history.push(`?session=${value}`);
   };
 

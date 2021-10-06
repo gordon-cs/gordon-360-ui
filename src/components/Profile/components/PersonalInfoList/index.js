@@ -22,6 +22,7 @@ import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
 import GordonTooltip from 'components/GordonTooltip';
+import { gordonColors } from 'theme';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -55,6 +56,7 @@ const PersonalInfoList = ({
     OnCampusRoom,
     OnOffCampus,
     PersonType,
+    PreferredClassYear,
     SpouseName,
   },
   createSnackbar,
@@ -67,6 +69,7 @@ const PersonalInfoList = ({
   const isOnline = useNetworkStatus();
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
+  const isAlumni = PersonType?.includes('alu');
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -192,12 +195,14 @@ const PersonalInfoList = ({
     />
   ) : null;
 
+  let streetAddr = HomeStreet2 ? <span>{HomeStreet2},&nbsp;</span> : null;
+
   const home = (
     <ProfileInfoListItem
       title="Home:"
       contentText={
         <>
-          {HomeStreet2 && `${HomeStreet2}, `}
+          {streetAddr}
           <span className={keepPrivate ? null : styles.not_private}>
             {HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
@@ -213,17 +218,24 @@ const PersonalInfoList = ({
   );
 
   const minors =
-    Minors?.length > 0 && isStudent ? (
+    Minors?.length > 0 && !isFacStaff ? (
       <ProfileInfoListItem
         title={Minors?.length > 1 ? 'Minors:' : 'Minor:'}
         contentText={Minors?.join(', ')}
       />
     ) : null;
 
-  const majors = isStudent ? (
+  const majors = !isFacStaff ? (
     <ProfileInfoListItem
       title={Majors?.length > 1 ? 'Majors:' : 'Major:'}
       contentText={Majors?.length < 1 ? 'Undecided' : Majors?.join(', ')}
+    />
+  ) : null;
+
+  const graduationYear = isAlumni ? (
+    <ProfileInfoListItem
+      title={'Graduation Year:'}
+      contentText={PreferredClassYear}
     />
   ) : null;
 
@@ -281,7 +293,7 @@ const PersonalInfoList = ({
     ) : null;
 
   const onOffCampus =
-    isStudent && OnOffCampus ? (
+    isStudent && OnOffCampus && !(BuildingDescription || Hall) ? (
       <ProfileInfoListItem
         title="On/Off Campus:"
         contentText={OnOffCampus}
@@ -383,7 +395,10 @@ const PersonalInfoList = ({
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
         NOTE: To update your data, please contact{' '}
-        <a href="mailto: hr@gordon.edu">Human Resources</a> (x4828).
+        <a style={{ color: gordonColors.primary.blue }} href="mailto: hr@gordon.edu">
+          Human Resources
+        </a>{' '}
+        (x4828).
       </Typography>
     ) : isStudent ? (
       <div align="left" className={styles.note}>
@@ -456,6 +471,7 @@ const PersonalInfoList = ({
           <List>
             {majors}
             {minors}
+            {graduationYear}
             {cliftonStrengths}
             {advisors}
             {onOffCampus}
