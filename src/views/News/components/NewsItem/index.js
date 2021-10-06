@@ -24,7 +24,7 @@ const NewsItem = ({
   }
 
   const author = (
-    <Typography variant="h6" className={styles.news_column} style={{ textTransform: 'capitalize' }}>
+    <Typography className={styles.news_column} style={{ textTransform: 'capitalize' }}>
       {posting.author}
     </Typography>
   );
