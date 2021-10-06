@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Grid, Card, CardHeader, CardContent, List, Button } from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, Grid, List } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import HallChoiceListItem from './components/HallChoiceListItem';
+// eslint-disable-next-line no-unused-vars
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
 import housing from 'services/housing';
-
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
+import HallChoiceListItem from './components/HallChoiceListItem';
 
 /**
  * @typedef { import('services/housing').ApartmentHall } ApartmentHall
@@ -14,12 +14,13 @@ import styles from '../../../../ApartmentApp.module.css';
 
 /**
  * Renders a list of selection boxes to choosing preferred halls
+ *
  * @param {Object} props The React component props
- * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {boolean} props.disabled boolean to disable the interactive elements of this list item
  * @param {ApartmentChoice[]} props.apartmentChoices Array of apartment choices
- * @param {CallbackFcn} props.onHallAdd Callback for "Add Hall" button
- * @param {CallbackFcn} props.onHallInputChange Callback for dropdown menu change
- * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
+ * @param {Function} props.onHallAdd Callback for "Add Hall" button
+ * @param {Function} props.onHallInputChange Callback for dropdown menu change
+ * @param {Function} props.onHallRemove Callback for remove hall button
  * @returns {JSX.Element} JSX Element for the hall list
  */
 const HallChoiceList = ({
@@ -29,7 +30,7 @@ const HallChoiceList = ({
   onHallInputChange,
   onHallRemove,
 }) => {
-  /** @type {[ApartmentHall[], React.Dispatch<React.SetStateAction<ApartmentHall[]>>]} Array of apartment halls */
+  /** @type {[ApartmentHall[], Dispatch<SetStateAction<ApartmentHall[]>>]} Array of apartment halls */
   const [halls, setHalls] = useState([]); // array of hall names from backend
 
   useEffect(() => {

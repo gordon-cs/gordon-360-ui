@@ -11,10 +11,12 @@ import styles from './NavButtonsRightCorner.module.css';
 
 /**
  *
- * @param {Function} onClose action to perform when closing the right side nav menu
- * @param {boolean} authentication whether the user is authenticated
- * @param {Function} openDialogBox function that opens the dialog for when a feature is unavailable
- * @param {boolean} open whether the right side menu is open
+ * @param {Object} props The component props
+ * @param {Function} props.onClose action to perform when closing the right side nav menu
+ * @param {boolean} props.authentication whether the user is authenticated
+ * @param {Function} props.openDialogBox function that opens the dialog for when a feature is unavailable
+ * @param {boolean} props.open whether the right side menu is open
+ * @param {Object} props.anchorEl The element to anchor on
  * @returns {JSX.Element} The Nav buttons for the rightside NavAvatar
  */
 const GordonNavButtonsRightCorner = ({

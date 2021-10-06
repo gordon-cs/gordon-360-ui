@@ -5,45 +5,46 @@
  */
 
 import sortBy from 'lodash/sortBy';
-
 import http from './http';
 
 /**
  * @global
  * @typedef Activity
- * @property {String} ActivityBlurb
- * @property {String} ActivityCode
- * @property {String} ActivityDescription
- * @property {String} ActivityImagePath
- * @property {String} ActivityJoinInfo
- * @property {String} ActivityType
- * @property {String} ActivityTypeDescription
- * @property {String} ActivityURL
- * @property {String} Privacy Whether the club is private or public to everyone, such as a scholars group etc. false=public true=private
+ * @property {string} ActivityBlurb The activity short blurb
+ * @property {string} ActivityCode The activity code
+ * @property {string} ActivityDescription The activity long description
+ * @property {string} ActivityImagePath The path to the activity image
+ * @property {string} ActivityJoinInfo The info for joining the activity
+ * @property {string} ActivityType The type of the activity
+ * @property {string} ActivityTypeDescription The description of the activity type
+ * @property {string} ActivityURL The url associated with the activity
+ * @property {string} Privacy Whether the club is private or public to everyone, such as a scholars group etc. false=public true=private
  */
 
 /**
  * @global
  * @typedef Person
- * @property {String} FirstName First name
- * @property {String} LastName Last name
+ * @property {string} FirstName First name
+ * @property {string} LastName Last name
  * @property {Stirng} Email Email address
  */
 
 /**
  * Close out an activity, like confirm final roster
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @return {Promise<any>} Response body
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @param {string} sessionCode Identifier for a session
+ * @returns {Promise<any>} Response body
  */
 const closeActivity = async (activityCode, sessionCode) => {
   return await http.put(`activities/${activityCode}/session/${sessionCode}/close`, null);
 };
 /**
  * Edit activity
- * @param {String} activityCode Identifier for an activity
+ *
+ * @param {string} activityCode Identifier for an activity
  * @param {Object} data Data passed in
- * @return {Promise.<Object>} Response body
+ * @returns {Promise.<Object>} Response body
  */
 const editActivity = async (activityCode, data) => {
   return await http.put(`activities/${activityCode}`, data);
@@ -51,9 +52,10 @@ const editActivity = async (activityCode, data) => {
 
 /**
  * Sets image to new image
- * @param {String} activityCode Identifier for an activity
+ *
+ * @param {string} activityCode Identifier for an activity
  * @param {string} dataURI of the image being uploaded
- * @return {Promis<any>} Response body
+ * @returns {Promis<any>} Response body
  */
 const setActivityImage = (activityCode, dataURI) => {
   let imageData = new FormData();
@@ -85,15 +87,17 @@ function dataURItoBlob(dataURI) {
 
 /**
  * Get an activity
- * @param {String} activityCode Identifier for an activity
- * @return {Promise.<Activity>} Activity
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @returns {Promise.<Activity>} Activity
  */
 const get = (activityCode) => http.get(`activities/${activityCode}`);
 
 /**
  * Get advisors for an activity
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @param {string} sessionCode Identifier for a session
  * @returns {Person[]} List of advisors
  */
 const getAdvisors = (activityCode, sessionCode) =>
@@ -101,8 +105,9 @@ const getAdvisors = (activityCode, sessionCode) =>
 
 /**
  * Get all activities for a session, sorted alphabetically by description
- * @param {String} sessionCode Identifier for a session
- * @return {Promise.<Activity[]>} List of activities
+ *
+ * @param {string} sessionCode Identifier for a session
+ * @returns {Promise.<Activity[]>} List of activities
  */
 const getAll = (sessionCode) =>
   http
@@ -111,8 +116,9 @@ const getAll = (sessionCode) =>
 
 /**
  * Get group administrators for an activity
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @param {string} sessionCode Identifier for a session
  * @returns {Person[]} List of group administrators
  */
 const getGroupAdmins = (activityCode, sessionCode) =>
@@ -120,38 +126,43 @@ const getGroupAdmins = (activityCode, sessionCode) =>
 
 /**
  * Get the status of an activity
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @returns {String} Status
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @param {string} sessionCode Identifier for a session
+ * @returns {string} Status
  */
 const getStatus = (activityCode, sessionCode) =>
   http.get(`activities/${sessionCode}/${activityCode}/status`);
 
 /**
  * Get all activity types for a session
- * @param {String} sessionCode Identifier for a session
- * @return {Promise.<String[]>} List of activity types for a session
+ *
+ * @param {string} sessionCode Identifier for a session
+ * @returns {Promise.<string[]>} List of activity types for a session
  */
 const getTypes = (sessionCode) => http.get(`activities/session/${sessionCode}/types`);
 
 /**
  * Get all open activities for a session
- * @return {Promise.<Activities[]>} List of open activities for a session
+ *
+ * @returns {Promise.<Activities[]>} List of open activities for a session
  */
 const getOpen = () => http.get(`activities/open`);
 
 /**
  * Get all closed activities for a session
- * @return {Promise.<Activities[]>} List of closed activities for a session
+ *
+ * @returns {Promise.<Activities[]>} List of closed activities for a session
  */
 const getClosed = () => http.get(`activities/closed`);
 
 /**
  * Filter a list of activities by type and description
+ *
  * @param {Activity[]} [activities=[]] List of activities
- * @param {String} typeDescription Activity type description to match exactly against
- * @param {String} [search=''] Search value to fuzzy match description against
- * @return {Activity[]} Filtered activities
+ * @param {string} typeDescription Activity type description to match exactly against
+ * @param {string} [search=''] Search value to fuzzy match description against
+ * @returns {Activity[]} Filtered activities
  */
 const filter = (activities = [], typeDescription, search = '') => {
   let filteredActivities = activities;
@@ -172,9 +183,10 @@ const filter = (activities = [], typeDescription, search = '') => {
 
 /**
  * Reopen a closed activity
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @return {Promise<any>} Response body
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @param {string} sessionCode Identifier for a session
+ * @returns {Promise<any>} Response body
  */
 const reopenActivity = async (activityCode, sessionCode) => {
   return await http.put(`activities/${activityCode}/session/${sessionCode}/open`, null);
@@ -182,8 +194,9 @@ const reopenActivity = async (activityCode, sessionCode) => {
 
 /**
  * Resets image to default image
- * @param {String} activityCode Identifier for an activity
- * @return {Promis<any>} Response body
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @returns {Promis<any>} Response body
  */
 const resetImage = async (activityCode) => {
   return await http.post(`activities/${activityCode}/image/reset`, null);

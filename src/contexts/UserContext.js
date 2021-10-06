@@ -2,7 +2,23 @@ import { createContext, useEffect, useState } from 'react';
 import { isAuthenticated } from 'services/auth';
 import userService from 'services/user';
 
+/**
+ * @template T
+ * @typedef {import('react').Context<T>} Context
+ */
+
+/**
+ * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
+ * @typedef { import('services/user').StaffProfileInfo } StaffProfileInfo
+ */
+
+/**
+ * @type {Context<StudentProfileInfo | StaffProfileInfo | null>}
+ */
 export const UserContext = createContext();
+/**
+ * @type {Context<function(): void>}
+ */
 export const UpdateUserContext = createContext();
 
 const UserContextProvider = ({ children }) => {

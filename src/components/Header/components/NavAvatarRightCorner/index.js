@@ -1,15 +1,15 @@
 import { Avatar, IconButton, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { gordonColors } from 'theme';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import user from 'services/user';
-
+import { gordonColors } from 'theme';
 import styles from '../../Header.module.css';
 
 /**
  * Gets the initials of the current user
- * @param {String} username the username to extract initials from
- * @returns {String} The initials of the user if available
+ *
+ * @param {string} username the username to extract initials from
+ * @returns {string} The initials of the user if available
  */
 function getInitials(username) {
   try {
