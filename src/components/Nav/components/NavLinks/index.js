@@ -8,18 +8,18 @@ import WorkIcon from '@material-ui/icons/Work';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import useUpdateUser from 'hooks/useUpdateUser';
+import { useNetworkStatus, useUpdateUser, useUser } from 'hooks';
 import { useState } from 'react';
 import { signOut } from 'services/auth';
-import user from 'services/user';
+import userService from 'services/user';
 import styles from './NavLinks.module.css';
 
-const GordonNavLinks = ({ onLinkClick, authentication }) => {
+const GordonNavLinks = ({ onLinkClick }) => {
   const [areLinksOpen, setAreLinksOpen] = useState(false);
   const [dialog, setDialog] = useState(null);
   const isOnline = useNetworkStatus();
   const updateUser = useUpdateUser();
+  const user = useUser();
 
   const handleSignOut = () => {
     signOut();
@@ -87,7 +87,7 @@ const GordonNavLinks = ({ onLinkClick, authentication }) => {
 
   const peopleButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !authentication ? 'unauthorized' : null}
+      unavailable={!isOnline ? 'offline' : !user ? 'unauthorized' : null}
       onLinkClick={onLinkClick}
       openUnavailableDialog={setDialog}
       divider={false}
@@ -99,7 +99,7 @@ const GordonNavLinks = ({ onLinkClick, authentication }) => {
 
   const timesheetsButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !authentication ? 'unauthorized' : null}
+      unavailable={!isOnline ? 'offline' : !user ? 'unauthorized' : null}
       openUnavailableDialog={setDialog}
       onLinkClick={onLinkClick}
       linkName={'Timesheets'}
@@ -111,7 +111,7 @@ const GordonNavLinks = ({ onLinkClick, authentication }) => {
 
   const wellnessButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !authentication ? 'unauthorized' : null}
+      unavailable={!isOnline ? 'offline' : !user ? 'unauthorized' : null}
       openUnavailableDialog={setDialog}
       onLinkClick={onLinkClick}
       linkName={'Wellness'}
@@ -164,7 +164,7 @@ const GordonNavLinks = ({ onLinkClick, authentication }) => {
   );
 
   const adminButton =
-    authentication && user.getLocalInfo().college_role === 'god' ? (
+    user && userService.getLocalInfo().college_role === 'god' ? (
       <GordonNavButton
         unavailable={!isOnline ? 'offline' : null}
         onLinkClick={onLinkClick}
@@ -177,8 +177,8 @@ const GordonNavLinks = ({ onLinkClick, authentication }) => {
 
   const signInOutButton = (
     <GordonNavButton
-      onLinkClick={authentication ? handleSignOut : onLinkClick}
-      linkName={authentication ? 'Sign Out' : 'Sign In'}
+      onLinkClick={user ? handleSignOut : onLinkClick}
+      linkName={user ? 'Sign Out' : 'Sign In'}
       linkPath={'/'}
     />
   );

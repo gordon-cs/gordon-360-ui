@@ -1,7 +1,8 @@
 import { Avatar, IconButton, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
-import user from 'services/user';
+import userService from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../../Header.module.css';
 
@@ -44,19 +45,20 @@ const useStyles = makeStyles({
   },
 });
 
-export const GordonNavAvatarRightCorner = ({ authentication, onClick }) => {
+export const GordonNavAvatarRightCorner = ({ onClick }) => {
   const [name, setName] = useState(null);
   const [username, setUsername] = useState(null);
   const [image, setImage] = useState(null);
   const classes = useStyles();
+  const user = useUser();
 
   useEffect(() => {
     async function loadAvatar() {
-      if (authentication) {
-        const { name, user_name } = user.getLocalInfo();
+      if (user) {
+        const { name, user_name } = userService.getLocalInfo();
         setName(name);
         setUsername(user_name);
-        const { def: defaultImage, pref: preferredImage } = await user.getImage();
+        const { def: defaultImage, pref: preferredImage } = await userService.getImage();
         const image = preferredImage || defaultImage;
         setImage(image);
       } else {
@@ -67,7 +69,7 @@ export const GordonNavAvatarRightCorner = ({ authentication, onClick }) => {
 
     loadAvatar();
 
-    if (authentication) {
+    if (user) {
       // Used to re-render the page when the user's profile picture changes
       // The origin of the message is checked to prevent cross-site scripting attacks
       window.addEventListener('message', (event) => {
@@ -78,9 +80,9 @@ export const GordonNavAvatarRightCorner = ({ authentication, onClick }) => {
 
       return window.removeEventListener('message', () => {});
     }
-  }, [authentication]);
+  }, [user]);
 
-  const avatar = authentication ? (
+  const avatar = user ? (
     image ? (
       <Avatar className={classes.root} src={`data:image/jpg;base64,${image}`} sizes="70px" />
     ) : (

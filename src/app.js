@@ -67,12 +67,8 @@ class App extends Component {
     return (
       <Router history={this.history}>
         <section className={styles.app_wrapper}>
-          <GordonHeader onDrawerToggle={this.onDrawerToggle} authentication={this.props.auth} />
-          <GordonNav
-            onDrawerToggle={this.onDrawerToggle}
-            drawerOpen={this.state.drawerOpen}
-            authentication={this.props.auth}
-          />
+          <GordonHeader onDrawerToggle={this.onDrawerToggle} />
+          <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
           <main className={styles.app_main}>
             <Switch>
               {routes.map((route) => (

@@ -7,8 +7,7 @@ import WellnessIcon from '@material-ui/icons/LocalHospital';
 import MenuIcon from '@material-ui/icons/Menu';
 import PeopleIcon from '@material-ui/icons/People';
 import GordonDialogBox from 'components/GordonDialogBox/index';
-import useDocumentTitle from 'hooks/useDocumentTitle';
-import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useDocumentTitle, useNetworkStatus, useUser } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
 import { Link, NavLink, Route, Switch } from 'react-router-dom';
@@ -22,13 +21,14 @@ import styles from './Header.module.css';
 const ForwardLink = forwardRef((props, ref) => <Link ref={ref} {...props} />);
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
-const GordonHeader = ({ authentication, onDrawerToggle }) => {
+const GordonHeader = ({ onDrawerToggle }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const [dialog, setDialog] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorElement, setAnchorElement] = useState(null);
   const isOnline = useNetworkStatus();
   const setDocumentTitle = useDocumentTitle();
+  const user = useUser();
 
   /**
    * Update the tab highlight indicator based on the url
@@ -110,7 +110,7 @@ const GordonHeader = ({ authentication, onDrawerToggle }) => {
           onClick={() => setDialog('offline')}
         />
       );
-    } else if (!authentication) {
+    } else if (!user) {
       return (
         <Tab
           className={`${styles.tab} ${styles.disabled_tab}`}
@@ -216,24 +216,15 @@ const GordonHeader = ({ authentication, onDrawerToggle }) => {
           <div className={styles.people_search_container_container}>
             {/* Width is dynamic */}
             <div className={styles.people_search_container}>
-              {authentication ? (
-                <GordonPeopleSearch authentication={authentication} />
-              ) : (
-                loginButton
-              )}
+              {user ? <GordonPeopleSearch /> : loginButton}
             </div>
           </div>
 
-          <GordonNavAvatarRightCorner
-            authentication={authentication}
-            onClick={handleOpenMenu}
-            menuOpened={isMenuOpen}
-          />
+          <GordonNavAvatarRightCorner onClick={handleOpenMenu} menuOpened={isMenuOpen} />
 
           <GordonNavButtonsRightCorner
             open={isMenuOpen}
             openDialogBox={setDialog}
-            authentication={authentication}
             anchorEl={anchorElement}
             onClose={handleCloseMenu}
           />
