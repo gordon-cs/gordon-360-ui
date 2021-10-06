@@ -1,14 +1,13 @@
 {
-  "extends": "react-app",
+  "extends": ["react-app", "plugin:jsdoc/recommended"],
+  "plugins": ["jsdoc"],
   "rules": {
-    "valid-jsdoc": [
-      "error",
-      {
-        "requireReturn": false,
-        "requireReturnType": true
-      }
-    ],
     "react/react-in-jsx-scope": "off",
     "react/jsx-uses-react": "off"
+  },
+  "settings": {
+    "jsdoc": {
+      "mode": "typescript"
+    }
   }
 }
