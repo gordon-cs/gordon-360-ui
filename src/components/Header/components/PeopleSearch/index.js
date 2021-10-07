@@ -2,7 +2,7 @@ import { InputAdornment, MenuItem, Paper, TextField, Typography } from '@materia
 import SearchIcon from '@material-ui/icons/Search';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Downshift from 'downshift';
-import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useAuth, useNetworkStatus } from 'hooks';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -41,12 +41,7 @@ const renderInput = (inputProps) => {
   );
 };
 
-const GordonPeopleSearch = ({
-  authentication,
-  customPlaceholderText,
-  disableLink,
-  onSearchSubmit,
-}) => {
+const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [suggestionIndex, setSuggestionIndex] = useState(-1);
   const [query, setQuery] = useState(String);
@@ -56,6 +51,7 @@ const GordonPeopleSearch = ({
   const isOnline = useNetworkStatus();
   const [downshift, setDownshift] = useState();
   const [time, setTime] = useState(0);
+  const authenticated = useAuth();
 
   useEffect(() => {
     function handleResize() {
@@ -271,10 +267,14 @@ const GordonPeopleSearch = ({
     );
   }
 
-  // Creates the People Search Bar depending on the status of the network found in local storage
-  return authentication ? (
-    // Assign reference to Downshift to state property for usage elsewhere in the component
+  if (!authenticated) {
+    return <GordonUnauthorized feature={'the People Search page'} />;
+  }
+
+  // Creates the People Search Bar
+  return (
     <Downshift
+      // Assign reference to Downshift to state property for usage elsewhere in the component
       ref={(downshift) => {
         setDownshift(downshift);
       }}
@@ -330,13 +330,10 @@ const GordonPeopleSearch = ({
         </span>
       )}
     </Downshift>
-  ) : (
-    <GordonUnauthorized feature={'the People Search page'} />
   );
 };
 
 GordonPeopleSearch.propTypes = {
-  authentication: PropTypes.bool.isRequired,
   customPlaceholderText: PropTypes.string,
   disableLink: PropTypes.any,
   onSearchSubmit: PropTypes.func,

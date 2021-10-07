@@ -1,7 +1,7 @@
 import MomentUtils from '@date-io/moment';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import UserContextProvider, { UserContext } from 'contexts/UserContext';
+import UserContextProvider, { AuthContext } from 'contexts/UserContext';
 import { createBrowserHistory } from 'history';
 import { Component } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
@@ -23,7 +23,9 @@ const withContext = (App) => {
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <NetworkContextProvider>
           <UserContextProvider>
-            <UserContext.Consumer>{(user) => <App auth={!!user} />}</UserContext.Consumer>
+            <AuthContext.Consumer>
+              {(authenticated) => <App auth={authenticated} />}
+            </AuthContext.Consumer>
           </UserContextProvider>
         </NetworkContextProvider>
       </MuiPickersUtilsProvider>
@@ -67,12 +69,8 @@ class App extends Component {
     return (
       <Router history={this.history}>
         <section className={styles.app_wrapper}>
-          <GordonHeader onDrawerToggle={this.onDrawerToggle} authentication={this.props.auth} />
-          <GordonNav
-            onDrawerToggle={this.onDrawerToggle}
-            drawerOpen={this.state.drawerOpen}
-            authentication={this.props.auth}
-          />
+          <GordonHeader onDrawerToggle={this.onDrawerToggle} />
+          <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
           <main className={styles.app_main}>
             <Switch>
               {routes.map((route) => (
@@ -95,4 +93,5 @@ class App extends Component {
     );
   }
 }
+
 export default withContext(App);

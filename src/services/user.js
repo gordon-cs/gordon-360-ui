@@ -305,7 +305,7 @@ function setClass(profile) {
  * Get image for a given user or the current user if `username` is not provided
  *
  * @param {string} [username] Username in firstname.lastname format
- * @returns {Promise.<string>} Image as a Base64-encoded string
+ * @returns {Promise.<{def: string, pref?: string}>} Image as a Base64-encoded string
  */
 const getImage = async (username) => {
   let pic;
