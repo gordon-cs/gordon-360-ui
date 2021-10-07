@@ -64,36 +64,15 @@ const noEvents = (
 );
 
 const EventList = ({ events }) => {
-  const [isMobileView, setIsMobileView] = useState(false);
   const breakpointWidth = 540;
   const [width] = useWindowSize();
-
-  useEffect(() => {
-    // Checks if the screen has been resized past the mobile breakpoint
-    const breakpointPassed = () => {
-      if (isMobileView && width > breakpointWidth) return true;
-      if (!isMobileView && width < breakpointWidth) return true;
-      else return false;
-    };
-    // Has to rerender on screen resize in order for table to switch to the mobile view
-    const resize = () => {
-      if (breakpointPassed()) {
-        setIsMobileView(!isMobileView);
-      }
-    };
-
-    window.addEventListener('resize', resize);
-    return () => {
-      window.removeEventListener('resize', resize);
-    };
-  }, [isMobileView, width]);
 
   let content;
   let header;
 
   if (!events || events.length === 0) {
     content = noEvents;
-  } else if (window.innerWidth < breakpointWidth) {
+  } else if (width < breakpointWidth) {
     content = events.map((currEvent) => (
       <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
     ));
@@ -101,7 +80,7 @@ const EventList = ({ events }) => {
     content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
   }
 
-  header = window.innerWidth < breakpointWidth ? smallHeader : fullHeader;
+  header = width < breakpointWidth ? smallHeader : fullHeader;
 
   return (
     <Card>
