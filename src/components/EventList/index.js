@@ -4,6 +4,7 @@ import EventItem from './components/EventItem';
 import { gordonColors } from 'theme';
 
 import styles from './EventList.module.css';
+import useWindowSize from 'hooks/useWindowSize';
 
 import { List, Grid, Typography, Card } from '@material-ui/core';
 
@@ -65,12 +66,13 @@ const noEvents = (
 const EventList = ({ events }) => {
   const [isMobileView, setIsMobileView] = useState(false);
   const breakpointWidth = 540;
+  const windowSize = useWindowSize();
 
   useEffect(() => {
     // Checks if the screen has been resized past the mobile breakpoint
     const breakpointPassed = () => {
-      if (isMobileView && window.innerWidth > breakpointWidth) return true;
-      if (!isMobileView && window.innerWidth < breakpointWidth) return true;
+      if (isMobileView && windowSize[0] > breakpointWidth) return true;
+      if (!isMobileView && windowSize[0] < breakpointWidth) return true;
       else return false;
     };
     // Has to rerender on screen resize in order for table to switch to the mobile view
@@ -84,7 +86,7 @@ const EventList = ({ events }) => {
     return () => {
       window.removeEventListener('resize', resize);
     };
-  }, [isMobileView]);
+  }, [isMobileView, windowSize]);
 
   let content;
   let header;
