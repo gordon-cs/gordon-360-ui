@@ -62,7 +62,7 @@ const noEvents = (
   </Grid>
 );
 
-const EventList = ({ events, loading }) => {
+const EventList = ({ events }) => {
   const [isMobileView, setIsMobileView] = useState(false);
   const breakpointWidth = 540;
 
@@ -89,9 +89,7 @@ const EventList = ({ events, loading }) => {
   let content;
   let header;
 
-  if (loading) {
-    return null;
-  } else if (events.length === 0) {
+  if (!events || events.length === 0) {
     content = noEvents;
   } else if (window.innerWidth < breakpointWidth) {
     content = events.map((currEvent) => (
