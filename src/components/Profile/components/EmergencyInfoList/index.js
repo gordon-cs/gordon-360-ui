@@ -35,8 +35,8 @@ const EmergencyInfoList = ({ username }) => {
               <>
                 <ProfileInfoListItem
                   title="Emergency Contact:"
-                  contentText={`${emrgContact.firstname} ${emrgContact.lastname} ${
-                    emrgContact.relationship ? ` (${emrgContact.relationship})` : ''
+                  contentText={`${emrgContact.FirstName} ${emrgContact.LastName} ${
+                    emrgContact.Relationship ? ` (${emrgContact.Relationship})` : ''
                   }`}
                   contentClass={'private'}
                 />
