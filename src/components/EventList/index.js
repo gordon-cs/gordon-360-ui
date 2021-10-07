@@ -66,13 +66,13 @@ const noEvents = (
 const EventList = ({ events }) => {
   const [isMobileView, setIsMobileView] = useState(false);
   const breakpointWidth = 540;
-  const windowSize = useWindowSize();
+  const [width] = useWindowSize();
 
   useEffect(() => {
     // Checks if the screen has been resized past the mobile breakpoint
     const breakpointPassed = () => {
-      if (isMobileView && windowSize[0] > breakpointWidth) return true;
-      if (!isMobileView && windowSize[0] < breakpointWidth) return true;
+      if (isMobileView && width > breakpointWidth) return true;
+      if (!isMobileView && width < breakpointWidth) return true;
       else return false;
     };
     // Has to rerender on screen resize in order for table to switch to the mobile view
@@ -86,7 +86,7 @@ const EventList = ({ events }) => {
     return () => {
       window.removeEventListener('resize', resize);
     };
-  }, [isMobileView, windowSize]);
+  }, [isMobileView, width]);
 
   let content;
   let header;
