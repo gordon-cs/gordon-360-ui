@@ -26,6 +26,8 @@ import { gordonColors } from 'theme';
 
 const PRIVATE_INFO = 'Private as requested.';
 
+const isPolice = userService.getLocalInfo().college_role === 'gordon police';
+
 const formatPhone = (phone) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
@@ -233,10 +235,7 @@ const PersonalInfoList = ({
   ) : null;
 
   const graduationYear = isAlumni ? (
-    <ProfileInfoListItem
-      title={'Graduation Year:'}
-      contentText={PreferredClassYear}
-    />
+    <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />
   ) : null;
 
   let strengthsText = CliftonStrengths?.Strengths.map((x) => (
@@ -356,7 +355,7 @@ const PersonalInfoList = ({
             <span className={keepPrivate ? null : styles.not_private}>
               {BuildingDescription ?? Hall}
             </span>
-            {myProf && OnCampusRoom && `, Room ${OnCampusRoom}`}
+            {(myProf || isPolice) && OnCampusRoom && `, Room ${OnCampusRoom}`}
           </>
         }
         privateInfo
