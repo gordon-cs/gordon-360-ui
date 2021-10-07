@@ -2,7 +2,7 @@ import { InputAdornment, MenuItem, Paper, TextField, Typography } from '@materia
 import SearchIcon from '@material-ui/icons/Search';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Downshift from 'downshift';
-import { useNetworkStatus, useUser } from 'hooks';
+import { useAuth, useNetworkStatus } from 'hooks';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -51,7 +51,7 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
   const isOnline = useNetworkStatus();
   const [downshift, setDownshift] = useState();
   const [time, setTime] = useState(0);
-  const user = useUser();
+  const authenticated = useAuth();
 
   useEffect(() => {
     function handleResize() {
@@ -267,10 +267,14 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
     );
   }
 
-  // Creates the People Search Bar depending on the status of the network found in local storage
-  return user ? (
-    // Assign reference to Downshift to state property for usage elsewhere in the component
+  if (!authenticated) {
+    return <GordonUnauthorized feature={'the People Search page'} />;
+  }
+
+  // Creates the People Search Bar
+  return (
     <Downshift
+      // Assign reference to Downshift to state property for usage elsewhere in the component
       ref={(downshift) => {
         setDownshift(downshift);
       }}
@@ -326,8 +330,6 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
         </span>
       )}
     </Downshift>
-  ) : (
-    <GordonUnauthorized feature={'the People Search page'} />
   );
 };
 

@@ -1,10 +1,10 @@
 import { Grid, Typography } from '@material-ui/core';
-import { useNetworkStatus, useUser } from 'hooks';
+import { useAuth, useNetworkStatus } from 'hooks';
 import { gordonColors } from 'theme';
 
 const OfflineBanner = ({ currentPath }) => {
   const isOnline = useNetworkStatus();
-  const user = useUser();
+  const authenticated = useAuth();
 
   /**
    * Creates the classes for the offline banner depending on the current page
@@ -46,7 +46,7 @@ const OfflineBanner = ({ currentPath }) => {
     return null;
   }
   // Network Status: Offline
-  if (!user && currentPath === '/') {
+  if (!authenticated && currentPath === '/') {
     return null;
   }
 

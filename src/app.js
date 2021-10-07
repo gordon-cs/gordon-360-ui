@@ -1,7 +1,7 @@
 import MomentUtils from '@date-io/moment';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import UserContextProvider, { UserContext } from 'contexts/UserContext';
+import UserContextProvider, { AuthContext } from 'contexts/UserContext';
 import { createBrowserHistory } from 'history';
 import { Component } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
@@ -23,7 +23,9 @@ const withContext = (App) => {
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <NetworkContextProvider>
           <UserContextProvider>
-            <UserContext.Consumer>{(user) => <App auth={!!user} />}</UserContext.Consumer>
+            <AuthContext.Consumer>
+              {(authenticated) => <App auth={authenticated} />}
+            </AuthContext.Consumer>
           </UserContextProvider>
         </NetworkContextProvider>
       </MuiPickersUtilsProvider>
@@ -91,4 +93,5 @@ class App extends Component {
     );
   }
 }
+
 export default withContext(App);

@@ -1,8 +1,7 @@
 import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
-import useUpdateUser from 'hooks/useUpdateUser';
+import useUserActions from 'hooks/useUserActions';
 import { useState } from 'react';
-import { authenticate } from 'services/auth';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import styles from './LoginDialogue.module.css';
 
@@ -12,7 +11,7 @@ const LoginDialogue = () => {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const updateUser = useUpdateUser();
+  const { login } = useUserActions();
 
   const logIn = async (event) => {
     event.preventDefault();
@@ -20,9 +19,7 @@ const LoginDialogue = () => {
     setError(null);
 
     try {
-      await authenticate(username, password);
-
-      updateUser();
+      login(username, password);
     } catch (err) {
       setError(err.message);
       setLoading(false);

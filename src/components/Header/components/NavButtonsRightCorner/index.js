@@ -2,9 +2,8 @@ import List from '@material-ui/core/List';
 import Popover from '@material-ui/core/Popover';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
-import { useNetworkStatus, useUpdateUser, useUser } from 'hooks';
+import { useAuth, useNetworkStatus, useUserActions } from 'hooks';
 import { useState } from 'react';
-import { signOut } from 'services/auth';
 import userService from 'services/user';
 import styles from './NavButtonsRightCorner.module.css';
 
@@ -20,18 +19,17 @@ import styles from './NavButtonsRightCorner.module.css';
 const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl }) => {
   const [linkOpen, setLinkOpen] = useState(false);
   const isOnline = useNetworkStatus();
-  const updateUser = useUpdateUser();
-  const user = useUser();
+  const { logout } = useUserActions();
+  const authenticated = useAuth();
 
   function closeAndSignOut() {
     onClose();
-    signOut();
-    updateUser();
+    logout();
   }
 
   const myProfileButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !user ? 'unauthorized' : null}
+      unavailable={!isOnline ? 'offline' : !authenticated ? 'unauthorized' : null}
       onLinkClick={onClose}
       openUnavailableDialog={openDialogBox}
       linkName={'My Profile'}
@@ -53,7 +51,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
 
   const timesheetsButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !user ? 'unauthorized' : null}
+      unavailable={!isOnline ? 'offline' : !authenticated ? 'unauthorized' : null}
       onLinkClick={onClose}
       openUnavailableDialog={openDialogBox}
       linkName={'Timesheets'}
@@ -78,7 +76,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
   );
 
   const adminButton =
-    user && userService.getLocalInfo().college_role === 'god' ? (
+    authenticated && userService.getLocalInfo().college_role === 'god' ? (
       <GordonNavButton
         unavailable={!isOnline ? 'offline' : null}
         onLinkClick={onClose}
@@ -90,8 +88,8 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
 
   const signInOutButton = (
     <GordonNavButton
-      onLinkClick={user ? closeAndSignOut : onClose}
-      linkName={user ? 'Sign Out' : 'Sign In'}
+      onLinkClick={authenticated ? closeAndSignOut : onClose}
+      linkName={authenticated ? 'Sign Out' : 'Sign In'}
       linkPath={'/'}
     />
   );
