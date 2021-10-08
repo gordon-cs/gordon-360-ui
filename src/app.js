@@ -17,16 +17,12 @@ import routes from './routes';
 import analytics from './services/analytics';
 import theme from './theme';
 
-const withContext = (App) => {
-  return () => (
+const ContextProviders = ({ children }) => {
+  return (
     <ThemeProvider theme={theme}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <NetworkContextProvider>
-          <UserContextProvider>
-            <AuthContext.Consumer>
-              {(authenticated) => <App auth={authenticated} />}
-            </AuthContext.Consumer>
-          </UserContextProvider>
+          <UserContextProvider>{children}</UserContextProvider>
         </NetworkContextProvider>
       </MuiPickersUtilsProvider>
     </ThemeProvider>
@@ -67,31 +63,40 @@ class App extends Component {
 
   render() {
     return (
-      <Router history={this.history}>
-        <section className={styles.app_wrapper}>
-          <GordonHeader onDrawerToggle={this.onDrawerToggle} />
-          <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
-          <main className={styles.app_main}>
-            <Switch>
-              {routes.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  exact={route.exact}
-                  render={(props) => (
-                    <div className={styles.app_main_container}>
-                      <OfflineBanner currentPath={route.path} authentication={this.props.auth} />
-                      <route.component authentication={this.props.auth} {...props} />
-                    </div>
-                  )}
-                />
-              ))}
-            </Switch>
-          </main>
-        </section>
-      </Router>
+      <ContextProviders>
+        <Router history={this.history}>
+          <section className={styles.app_wrapper}>
+            <GordonHeader onDrawerToggle={this.onDrawerToggle} />
+            <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
+            <main className={styles.app_main}>
+              <AuthContext.Consumer>
+                {(authenticated) => (
+                  <Switch>
+                    {routes.map((route) => (
+                      <Route
+                        key={route.path}
+                        path={route.path}
+                        exact={route.exact}
+                        render={(props) => (
+                          <div className={styles.app_main_container}>
+                            <OfflineBanner
+                              currentPath={route.path}
+                              authentication={this.props.auth}
+                            />
+                            <route.component authentication={authenticated} {...props} />
+                          </div>
+                        )}
+                      />
+                    ))}
+                  </Switch>
+                )}
+              </AuthContext.Consumer>
+            </main>
+          </section>
+        </Router>
+      </ContextProviders>
     );
   }
 }
 
-export default withContext(App);
+export default App;
