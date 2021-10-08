@@ -291,16 +291,6 @@ const PersonalInfoList = ({
       />
     ) : null;
 
-  const onOffCampus =
-    isStudent && OnOffCampus && !(BuildingDescription || Hall) ? (
-      <ProfileInfoListItem
-        title="On/Off Campus:"
-        contentText={OnOffCampus}
-        private={isCampusLocationPrivate}
-        myProf={myProf}
-      />
-    ) : null;
-
   const mail =
     isStudent && Mail_Location ? (
       <>
@@ -346,9 +336,16 @@ const PersonalInfoList = ({
       </>
     ) : null;
 
-  const dormInfo =
-    isStudent && (BuildingDescription || Hall) ? (
+    const campusDormInfo =
+    isStudent && OnOffCampus && !(BuildingDescription || Hall) ? (
       <ProfileInfoListItem
+        title="Dormitory:"
+        contentText={OnOffCampus}
+        private={isCampusLocationPrivate}
+        myProf={myProf}
+      />
+    ) : isStudent ? (
+    <ProfileInfoListItem
         title="Dormitory:"
         contentText={
           <>
@@ -360,8 +357,7 @@ const PersonalInfoList = ({
         }
         privateInfo
         myProf={myProf}
-      />
-    ) : null;
+      /> ) : null;
 
   const gordonID = myProf ? (
     <ProfileInfoListItem
@@ -473,8 +469,7 @@ const PersonalInfoList = ({
             {graduationYear}
             {cliftonStrengths}
             {advisors}
-            {onOffCampus}
-            {dormInfo}
+            {campusDormInfo}
             {mail}
             {mobilePhoneListItem}
             {homePhoneListItem}
