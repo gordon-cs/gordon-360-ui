@@ -7,9 +7,9 @@ import {
   ListItem,
   Switch,
   Typography,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  ExpansionPanel,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@material-ui/core/';
 import { Link } from 'react-router-dom';
 import LockIcon from '@material-ui/icons/Lock';
@@ -20,45 +20,62 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
   const isOnline = useNetworkStatus();
 
-  const OnlineOnlyLink = ({ children }) => {
+  const PriavacyToggle = ({ element }) => {
+    return (
+      myProf && (
+        <Grid container item xs={4} alignItems="center">
+          <Grid item xs={12} align="center">
+            {isOnline && element.IsInvolvementPrivate ? (
+              <LockIcon className="lock-icon" />
+            ) : (
+              <Switch
+                onChange={() => {
+                  onTogglePrivacy(element);
+                }}
+                checked={!element.Privacy}
+              />
+            )}
+          </Grid>
+          <Grid item xs={12} align="center">
+            <Typography>
+              {element.Privacy || element.IsInvolvementPrivate ? 'Private' : 'Public'}
+            </Typography>
+          </Grid>
+        </Grid>
+      )
+    );
+  };
 
-    const linkClass = classnames({
+  const OnlineOnlyLink = ({ children, element }) => {
+    const linkclass = classnames({
       'gc360-link': isOnline,
       'private-membership': membership.IsInvolvementPrivate || membership.Privacy,
       'public-membership': !(membership.IsInvolvementPrivate || membership.Privacy),
     });
     if (isOnline) {
-      console.log(membership);
-     return(
-      <List>
-      {membership.map((element) => (
-        <ListItem>
-          <Link linkClass= 'gc360-link' to= {`/activity/${element.SessionCode}/${element.ActivityCode}`}>
-            {element.SessionDescription +
-              ' (' +
-              element.ParticipationDescription +
-              ')'}
+      return (
+        <ListItem key={element.ActivityCode + element.SessionCode}>
+          <Link
+            linkclass="gc360-link"
+            to={`/activity/${element.SessionCode}/${element.ActivityCode}`}
+          >
+            {children}
           </Link>
         </ListItem>
-      ))}
-    </List>
-     )
+      );
     } else {
       console.log('oh no, no internet :(');
       return (
         <List>
-        {membership.map((element) => (
-          <ListItem>
-            <div>
-              {element.SessionDescription +
-                ' (' +
-                element.ParticipationDescription +
-                ')'}
-            </div>
-          </ListItem>
-        ))}
-      </List>
-      )
+          {membership.map((element) => (
+            <ListItem>
+              <div>
+                {element.SessionDescription + ' (' + element.ParticipationDescription + ')'}
+              </div>
+            </ListItem>
+          ))}
+        </List>
+      );
     }
   };
 
@@ -79,48 +96,38 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
           <Grid item xs={8}>
             <List>
               <ListItem className="my-profile-info-card-description-text">
-                <ExpansionPanel>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                <Accordion TransitionProps= {{unmountOnExit: false}}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography fontWeight="fontWeightBold">
                       {membership[0].ActivityDescription}
                     </Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <OnlineOnlyLink>
-
-                    </OnlineOnlyLink>
-                  </ExpansionPanelDetails>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Grid container>
+                      <List>
+                        {membership.map((element) => {
+                          return(
+                            <>
+                          <OnlineOnlyLink element={element}>
+                            {element.SessionDescription +
+                              ' (' +
+                              element.ParticipationDescription +
+                              ')'}
+                          </OnlineOnlyLink>
+                          <PriavacyToggle element={element}>
+                            {element}
+                          </PriavacyToggle>
+                          </>
+                          )
+                        })}
+                      </List>
+                    </Grid>
+                  </AccordionDetails>
                   <Typography>{membership.ParticipationDescription}</Typography>
-                </ExpansionPanel>
+                </Accordion>
               </ListItem>
             </List>
           </Grid>
-
-          {myProf && (
-            <Grid container item xs={4} alignItems="center">
-              <Grid item xs={12} align="center">
-                {isOnline &&
-                  (membership[0].IsInvolvementPrivate ? (
-                    <LockIcon className="lock-icon" />
-                  ) : (
-                    <Switch
-                      onChange={() => {
-                        onTogglePrivacy(membership);
-                      }
-                    }
-                      checked={!membership.IsInvolvementPrivate}
-                    />
-                  ))}
-              </Grid>
-              <Grid item xs={12} align="center">
-                <Typography>
-                  {membership.Privacy || membership.IsInvolvementPrivate
-                    ? 'Private'
-                    : 'Public'}
-                </Typography>
-              </Grid>
-            </Grid>
-          )}
         </Grid>
 
         <Grid
