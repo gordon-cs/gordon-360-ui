@@ -1,6 +1,7 @@
 /**
  * Housing API call functions
  * establishes the functions necessary to make calls to the back end.
+ *
  * @module housing
  */
 
@@ -13,56 +14,50 @@ import user from './user';
 
 /**
  * @global
- * @typedef boolean
- * @property {status}
- *
- */
-
-/**
- * @global
  * @typedef ApartmentHall
- * @property {Number} RoomCapacity Number of people per room/apartment   (not yet implemented in API)
- * @property {String} Gender Gender ('M', 'F', or '' for both)   (not yet implemented in API)
- * @property {String} Name The name of the hall
+ * @property {number} RoomCapacity Number of people per room/apartment   (not yet implemented in API)
+ * @property {string} Gender Gender ('M', 'F', or '' for both)   (not yet implemented in API)
+ * @property {string} Name The name of the hall
  */
 
 /**
  * @global
  * @typedef ApartmentApplicant
- * @property {Number} ApplicationID Application ID number of this application
+ * @property {number} ApplicationID Application ID number of this application
  * @property {StudentProfileInfo} Profile The StudentProfileInfo object representing this applicant
- * @property {String} [Username] The username of this applicant
+ * @property {string} [Username] The username of this applicant
  * @property {DateTime} [BirthDate] The birthday of this applicant (only visible to housing admin)
- * @property {Number} [Age] The age of the student (in years) (only visible to housing admin)
- * @property {String} [Class] Class
- * @property {String} OffCampusProgram The name of department of this applicant's off-campus program, or an empty string
- * @property {String} Probation Indicates whether the student has a disiplinary probation (visble only to housing admin)
- * @property {Number} Points The number of application points for this student (only visible to housing admin)
+ * @property {number} [Age] The age of the student (in years) (only visible to housing admin)
+ * @property {string} [Class] Class
+ * @property {string} OffCampusProgram The name of department of this applicant's off-campus program, or an empty string
+ * @property {string} Probation Indicates whether the student has a disiplinary probation (visble only to housing admin)
+ * @property {number} Points The number of application points for this student (only visible to housing admin)
  */
 
 /**
  * Note: Properties 'HallRank' and 'HallName' must be capitalized to match the backend
+ *
  * @global
  * @typedef ApartmentChoice
- * @property {Number} [ApplicationID] Application ID number of this application
- * @property {Number} HallRank The rank assigned to this hall by the user
- * @property {String} HallName The name of the apartment hall
+ * @property {number} [ApplicationID] Application ID number of this application
+ * @property {number} HallRank The rank assigned to this hall by the user
+ * @property {string} HallName The name of the apartment hall
  */
 
 /**
  * @global
  * @typedef ApplicationDetails
- * @property {Number} ApplicationID Application ID number of this application
- * @property {String} [DateSubmitted] The date the application was submitted, or null if not yet submitted
- * @property {String} [DateModified] The date the application was last modified, or null if not yet saved/modified
+ * @property {number} ApplicationID Application ID number of this application
+ * @property {string} [DateSubmitted] The date the application was submitted, or null if not yet submitted
+ * @property {string} [DateModified] The date the application was last modified, or null if not yet saved/modified
  * @property {StudentProfileInfo} EditorProfile The StudentProfileInfo object representing the application editor
- * @property {String} [EditorUsername] Username of the application editor
- * @property {String} [EditorEmail] Email address of the application editor
- * @property {String} [Gender] Gender
+ * @property {string} [EditorUsername] Username of the application editor
+ * @property {string} [EditorEmail] Email address of the application editor
+ * @property {string} [Gender] Gender
  * @property {ApartmentApplicant[]} Applicants Array of ApartmentApplicant objects
  * @property {ApartmentChoice[]} ApartmentChoices Array of ApartmentChoice objects
- * @property {Number} TotalPoints The total application points associated with this application
- * @property {Number} AvgPoints The average application points per applicant
+ * @property {number} TotalPoints The total application points associated with this application
+ * @property {number} AvgPoints The average application points per applicant
  */
 
 /**
@@ -70,7 +65,7 @@ import user from './user';
  *
  * @async
  * @function checkHousingAdmin
- * @return {Promise.<Boolean>} True if the user is authorized to view the housing application staff page
+ * @returns {Promise.<boolean>} True if the user is authorized to view the housing application staff page
  */
 const checkHousingAdmin = async () => {
   return await http.get(`housing/admin`);
@@ -78,8 +73,9 @@ const checkHousingAdmin = async () => {
 
 /**
  * Add a user to the housing admin whitelist
- * @param {String} username Username in firstname.lastname format
- * @return {Response} response of http request
+ *
+ * @param {string} username Username in firstname.lastname format
+ * @returns {Response} response of http request
  */
 const addHousingAdmin = (username) => {
   return http.post(`housing/admin/${username}/`);
@@ -87,8 +83,9 @@ const addHousingAdmin = (username) => {
 
 /**
  * Delete a user to the housing admin whitelist
- * @param {String} username Username in firstname.lastname format
- * @return {Response} response of http request
+ *
+ * @param {string} username Username in firstname.lastname format
+ * @returns {Response} response of http request
  */
 const deleteHousingAdmin = (username) => {
   return http.del(`housing/admin/${username}/`);
@@ -99,7 +96,7 @@ const deleteHousingAdmin = (username) => {
  *
  * @async
  * @function
- * @returns {Promise.<String>} The apartment selection date
+ * @returns {Promise.<string>} The apartment selection date
  */
 const getApartmentSelectionDate = async () => {
   return 'Apr. 27';
@@ -111,7 +108,7 @@ const getApartmentSelectionDate = async () => {
  *
  * @async
  * @function getApartmentHalls
- * @return {Promise.<ApartmentHall[]>} List of halls
+ * @returns {Promise.<ApartmentHall[]>} List of halls
  */
 const getApartmentHalls = async () => {
   return await http.get('housing/halls/apartments');
@@ -122,8 +119,8 @@ const getApartmentHalls = async () => {
  *
  * @async
  * @function getCurrentApplicationID
- * @param {String} [username] Username in firstname.lastname format
- * @return {Promise.<Number>} Application's ID number
+ * @param {string} [username] Username in firstname.lastname format
+ * @returns {Promise.<number>} Application's ID number
  */
 const getCurrentApplicationID = async (username) => {
   if (username) {
@@ -139,7 +136,7 @@ const getCurrentApplicationID = async (username) => {
  * @async
  * @function saveApartmentApplication
  * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
- * @return {Promise.<Number>} Application's ID number //TODO: Update these API endpoints to return the ApplicationDetails rather than just the ApplicationID (Suggested by Dr. Tuck)
+ * @returns {Promise.<number>} Application's ID number //TODO: Update these API endpoints to return the ApplicationDetails rather than just the ApplicationID (Suggested by Dr. Tuck)
  */
 const saveApartmentApplication = async (applicationDetails) => {
   // Filter out any hall entries that do not have a name selected
@@ -163,8 +160,8 @@ const saveApartmentApplication = async (applicationDetails) => {
  *
  * @async
  * @function deleteApartmentApplication
- * @param {Number} applicationID the application ID number
- * @return {Promise.<Boolean>} Status of whether or not the operation was successful
+ * @param {number} applicationID the application ID number
+ * @returns {Promise.<boolean>} Status of whether or not the operation was successful
  */
 const deleteApartmentApplication = async (applicationID) => {
   if (applicationID > 0) {
@@ -179,9 +176,9 @@ const deleteApartmentApplication = async (applicationID) => {
  *
  * @async
  * @function changeApartmentAppEditor
- * @param {Number} applicationID the application ID number
- * @param {String} newEditorUsername the student username of the person who will be allowed to edit this application
- * @return {Promise.<Boolean>} Status of whether or not the operation was successful
+ * @param {number} applicationID the application ID number
+ * @param {string} newEditorUsername the student username of the person who will be allowed to edit this application
+ * @returns {Promise.<boolean>} Status of whether or not the operation was successful
  */
 const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
   let newEditorDetails = {
@@ -199,7 +196,7 @@ const changeApartmentAppEditor = async (applicationID, newEditorUsername) => {
  *
  * @function formatApplicantInfo
  * @param {ApartmentApplicant} applicant an object representing an apartment applicant
- * @return {ApartmentApplicant} Applicant object after formatting
+ * @returns {ApartmentApplicant} Applicant object after formatting
  */
 function formatApplicantInfo(applicant) {
   // //! DEBUG: Temporary workaround for an API bug that causes 'Profile.PersonType' to be undefined
@@ -226,7 +223,7 @@ function formatApplicantInfo(applicant) {
  *
  * @function formatApplicationDetails
  * @param {ApplicationDetails} applicationDetails an object representing all of the details of a given apartment applications
- * @return {ApplicationDetails} Application details after formatting
+ * @returns {ApplicationDetails} Application details after formatting
  */
 function formatApplicationDetails(applicationDetails) {
   console.debug(`formatting application # ${applicationDetails.ApplicationID}`);
@@ -247,8 +244,8 @@ function formatApplicationDetails(applicationDetails) {
  *
  * @async
  * @function getApartmentApplication
- * @param {Number} applicationID the application ID number for the desired application
- * @return {Promise.<ApplicationDetails>} Application details
+ * @param {number} applicationID the application ID number for the desired application
+ * @returns {Promise.<ApplicationDetails>} Application details
  */
 const getApartmentApplication = async (applicationID) => {
   let applicationResult = await http.get(`housing/apartment/applications/${applicationID}/`);
@@ -261,7 +258,7 @@ const getApartmentApplication = async (applicationID) => {
  *
  * @async
  * @function getSubmittedApartmentApplications
- * @return {Promise.<ApplicationDetails>[]} Application details
+ * @returns {Promise.<ApplicationDetails>[]} Application details
  */
 const getSubmittedApartmentApplications = async () => {
   let applicationDetailsArray = await http.get(`housing/admin/apartment/applications/`);
@@ -276,8 +273,8 @@ const getSubmittedApartmentApplications = async () => {
  *
  * @async
  * @function submitApplication
- * @param {Number} applicationID the application ID number for the desired application
- * @return {Promise.<Boolean>} Status of whether the application was successfully marked as submitted
+ * @param {number} applicationID the application ID number for the desired application
+ * @returns {Promise.<boolean>} Status of whether the application was successfully marked as submitted
  */
 const submitApplication = async (applicationID) => {
   return await http.put(`housing/apartment/applications/${applicationID}/submit`);

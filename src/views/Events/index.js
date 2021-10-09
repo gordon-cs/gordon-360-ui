@@ -31,6 +31,7 @@ const Events = (props) => {
   const [includePast, setIncludePast] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
+  const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
 
@@ -44,6 +45,7 @@ const Events = (props) => {
         allEvents = await gordonEvent.getAllGuestEvents();
       }
       setAllEvents(allEvents);
+      setHasInitializedEvents(true);
 
       // Load filters from UrlParams if they exist
       if (props.location.search) {
@@ -71,7 +73,9 @@ const Events = (props) => {
   }, [props.authentication, props.location.search]);
 
   useEffect(() => {
+    setLoading(true);
     setEvents(includePast ? allEvents : futureEvents);
+    setLoading(false);
   }, [includePast, allEvents, futureEvents]);
 
   useEffect(() => {
@@ -114,10 +118,10 @@ const Events = (props) => {
 
   let content;
 
-  if (loading === true) {
+  if (loading || !hasInitializedEvents) {
     content = <GordonLoader />;
-  } else if (events.length > 0) {
-    content = <EventList events={filteredEvents} />;
+  } else {
+    content = <EventList events={filteredEvents} loading={loading} />;
   }
 
   const searchPageTitle = (

@@ -4,17 +4,18 @@
  * @module http
  */
 
+import { isAuthenticated } from './auth';
 import { createError } from './error';
 import storage from './storage';
-import { isAuthenticated } from './auth';
 
 const base = process.env.REACT_APP_API_URL;
 
 /**
  * Make a headers object with just authentication options for use with the API
+ *
  * @description Provides the correct authorization for API requests.
- * @param {object|array} headerOptions options to put in the header, if empty only auth is added
- * @return {Headers} A headers object
+ * @param {any} headerOptions options to put in the header, if empty only auth is added
+ * @returns {Headers} A headers object
  */
 const makeHeaders = (headerOptions) => {
   if (isAuthenticated()) {
@@ -48,11 +49,12 @@ const makeHeaders = (headerOptions) => {
 
 /**
  * Create a request object with the correct URL and headers for the API
- * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
- * @param {String} method HTTP method
- * @param {object|array} body data to send with request
- * @param {object|array} headerOptions options to put in the header, if empty only auth is added
- * @return {Request} A request object
+ *
+ * @param {string} url relative URL from base, ex: `activity/023487` (no leading slash)
+ * @param {string} method HTTP method
+ * @param {BodyInit} body data to send with request
+ * @param {any} headerOptions options to put in the header, if empty only auth is added
+ * @returns {Request} A request object
  */
 const createRequest = (url, method, body, headerOptions) =>
   new Request(`${base}api/${url}`, {
@@ -63,8 +65,9 @@ const createRequest = (url, method, body, headerOptions) =>
 
 /**
  * Parse an HTTP response
+ *
  * @param {Response} res HTTP response
- * @return {Promise.<Object|Array|String|Number>} Resolves with response body; rejects on non-2xx
+ * @returns {Promise.<Any>} Resolves with response body; rejects on non-2xx
  * response code
  */
 export const parseResponse = (res) => {
@@ -86,36 +89,40 @@ export const parseResponse = (res) => {
 
 /**
  * Make a request to the API
- * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
- * @param {String} method HTTP method
- * @param {object|array} body data to send with request
- * @param {object|array} headerOptions options to send to the header, only auth is added
- * @return {Promise.<Object>} Response body
+ *
+ * @param {string} url relative URL from base, ex: `activity/023487` (no leading slash)
+ * @param {string} method HTTP method
+ * @param {BodyInit} body data to send with request
+ * @param {any} headerOptions options to send to the header, only auth is added
+ * @returns {Promise.<Object>} Response body
  */
 const makeRequest = (url, method, body, headerOptions) =>
   fetch(createRequest(url, method, body, headerOptions)).then(parseResponse);
 
 /**
  * Get
- * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
- * @return {Promise.<Object>} Response body
+ *
+ * @param {string} url relative URL from base, ex: `activity/023487` (no leading slash)
+ * @returns {Promise.<Object>} Response body
  */
 const get = (url) => makeRequest(url, 'get');
 
 /**
  * Put
- * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
- * @param {object|array} body data to send with request
- * @return {Promise.<Object>} Response body
+ *
+ * @param {string} url relative URL from base, ex: `activity/023487` (no leading slash)
+ * @param {any} body data to send with request
+ * @returns {Promise.<Object>} Response body
  */
 const put = (url, body) => makeRequest(url, 'put', JSON.stringify(body));
 
 /**
  * Post
- * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
- * @param {object|array} body data to send with request, needs to be JSON object
- * @param {object|array} headerOptions options to put in the header, if not undefined options are added, if empty only auth is added
- * @return {Promise.<Object>} Response body
+ *
+ * @param {string} url relative URL from base, ex: `activity/023487` (no leading slash)
+ * @param {any} body data to send with request, needs to be JSON object
+ * @param {any} headerOptions options to put in the header, if not undefined options are added, if empty only auth is added
+ * @returns {Promise.<Object>} Response body
  */
 const post = (url, body, headerOptions) => {
   if (headerOptions !== undefined) {
@@ -127,8 +134,9 @@ const post = (url, body, headerOptions) => {
 
 /**
  * Delete
- * @param {String} url relative URL from base, ex: `activity/023487` (no leading slash)
- * @return {Promise.<Object>} Response body
+ *
+ * @param {string} url relative URL from base, ex: `activity/023487` (no leading slash)
+ * @returns {Promise.<Object>} Response body
  */
 const del = (url) => makeRequest(url, 'delete');
 

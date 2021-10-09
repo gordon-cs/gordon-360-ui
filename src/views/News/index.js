@@ -175,7 +175,7 @@ const StudentNews = (props) => {
   /**
    * Creates the Photo Dialog message that will be displayed to the user
    *
-   * @return {String} The message of the Photo Dialog
+   * @returns {string} The message of the Photo Dialog
    */
   function createPhotoDialogBoxMessage() {
     let message = '';
@@ -344,6 +344,7 @@ const StudentNews = (props) => {
 
   /**
    * When the delete button is clicked for a posting
+   *
    * @param {number} snid The SNID of the post to be deleted
    */
   async function handleNewsItemDelete(snid) {

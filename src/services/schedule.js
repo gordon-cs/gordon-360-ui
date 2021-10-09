@@ -10,24 +10,24 @@ import http from './http';
 /**
  * @global
  * @typedef Schedule
- * @property {String} CRS_CDE
- * @property {String} CRS_TITLE
- * @property {String} BLDG_CDE
- * @property {String} ROOM_CDE
- * @property {String} MONDAY_CDE
- * @property {String} TUESDAY_CDE
- * @property {String} WEDNESDAY_CDE
- * @property {String} THURSDAY_CDE
- * @property {String} FRIDAY_CDE
- * @property {TimeSpan} BEGIN_TIME
- * @property {TimeSpan} END_TIME
+ * @property {string} CRS_CDE The Course Code
+ * @property {string} CRS_TITLE The Course title
+ * @property {string} BLDG_CDE The building code
+ * @property {string} ROOM_CDE The room code
+ * @property {string} MONDAY_CDE The Monday code
+ * @property {string} TUESDAY_CDE The Tuesday code
+ * @property {string} WEDNESDAY_CDE The wednesday code
+ * @property {string} THURSDAY_CDE The Thursday code
+ * @property {string} FRIDAY_CDE The Friday code
+ * @property {TimeSpan} BEGIN_TIME The beginning of the event
+ * @property {TimeSpan} END_TIME The end of the event
  */
 
 /**
  * Get course schedule for the current user
- * @return {Promise.<Schedule[]>} returns all the course schedules
+ *
+ * @returns {Promise.<Schedule[]>} returns all the course schedules
  */
-
 const getScheduleMyProf = async () => {
   let schedule;
   schedule = await http.get('schedule');
@@ -36,10 +36,10 @@ const getScheduleMyProf = async () => {
 
 /**
  * Get course schedule for a given user
- * @param {String} [username] Username in firstname.lastname format
- * @return {Promise.<Schedule[]>} returns all the course schedules
+ *
+ * @param {string} [username] Username in firstname.lastname format
+ * @returns {Promise.<Schedule[]>} returns all the course schedules
  */
-
 const getSchedule = async (username) => {
   let schedule;
   schedule = await http.get(`schedule/${username}/`);
@@ -49,10 +49,10 @@ const getSchedule = async (username) => {
 
 /**
  * Find out which day of the week the course is assigned
+ *
  * @param {Promise.<Schedule>} course an individual course
- * @return {number[]} returns array of day in the format of ResourceID
+ * @returns {number[]} returns array of day in the format of ResourceID
  */
-
 function checkDayofWeek(course) {
   let dayArray = [];
 
@@ -77,10 +77,10 @@ function checkDayofWeek(course) {
 
 /**
  * Format the given schedule and make event array
+ *
  * @param {Promise.<Schedule[]>} schedule all course schedules
- * @return {Promise.Object[]} returns array of events
+ * @returns {Promise.Object[]} returns array of events
  */
-
 async function makeScheduleCourses(schedule) {
   let course = await schedule.then((courseSchedule) => {
     return courseSchedule;

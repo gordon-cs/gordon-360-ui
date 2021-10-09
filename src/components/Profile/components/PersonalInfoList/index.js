@@ -26,6 +26,8 @@ import { gordonColors } from 'theme';
 
 const PRIVATE_INFO = 'Private as requested.';
 
+const isPolice = userService.getLocalInfo().college_role === 'gordon police';
+
 const formatPhone = (phone) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
@@ -233,10 +235,7 @@ const PersonalInfoList = ({
   ) : null;
 
   const graduationYear = isAlumni ? (
-    <ProfileInfoListItem
-      title={'Graduation Year:'}
-      contentText={PreferredClassYear}
-    />
+    <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />
   ) : null;
 
   let strengthsText = CliftonStrengths?.Strengths.map((x) => (
@@ -292,16 +291,6 @@ const PersonalInfoList = ({
       />
     ) : null;
 
-  const onOffCampus =
-    isStudent && OnOffCampus && !(BuildingDescription || Hall) ? (
-      <ProfileInfoListItem
-        title="On/Off Campus:"
-        contentText={OnOffCampus}
-        private={isCampusLocationPrivate}
-        myProf={myProf}
-      />
-    ) : null;
-
   const mail =
     isStudent && Mail_Location ? (
       <>
@@ -347,22 +336,28 @@ const PersonalInfoList = ({
       </>
     ) : null;
 
-  const dormInfo =
-    isStudent && (BuildingDescription || Hall) ? (
+    const campusDormInfo =
+    isStudent && OnOffCampus && !(BuildingDescription || Hall) ? (
       <ProfileInfoListItem
+        title="Dormitory:"
+        contentText={OnOffCampus}
+        private={isCampusLocationPrivate}
+        myProf={myProf}
+      />
+    ) : isStudent ? (
+    <ProfileInfoListItem
         title="Dormitory:"
         contentText={
           <>
             <span className={keepPrivate ? null : styles.not_private}>
               {BuildingDescription ?? Hall}
             </span>
-            {myProf && OnCampusRoom && `, Room ${OnCampusRoom}`}
+            {(myProf || isPolice) && OnCampusRoom && `, Room ${OnCampusRoom}`}
           </>
         }
         privateInfo
         myProf={myProf}
-      />
-    ) : null;
+      /> ) : null;
 
   const gordonID = myProf ? (
     <ProfileInfoListItem
@@ -474,8 +469,7 @@ const PersonalInfoList = ({
             {graduationYear}
             {cliftonStrengths}
             {advisors}
-            {onOffCampus}
-            {dormInfo}
+            {campusDormInfo}
             {mail}
             {mobilePhoneListItem}
             {homePhoneListItem}

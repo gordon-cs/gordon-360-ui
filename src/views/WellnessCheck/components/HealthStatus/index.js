@@ -1,14 +1,16 @@
 import { Button, Card, CardContent, CardHeader, Grid } from '@material-ui/core';
 import { Check, Clear, Remove } from '@material-ui/icons';
 import SymptomsDialog from 'components/SymptomsDialog';
+import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { StatusColors } from 'services/wellness';
 import styles from './HealthStatus.module.css';
 
-const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
+const HealthStatus = ({ currentStatus, setCurrentStatus }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [time, setTime] = useState(null);
   const [iconSize, setIconSize] = useState(0);
+  const user = useUser();
 
   useEffect(() => {
     tick();
@@ -61,12 +63,12 @@ const HealthStatus = ({ currentStatus, setCurrentStatus, username, image }) => {
     <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={12} md={8}>
         <Card className={styles.wellness_check}>
-          <CardHeader title={username} />
+          <CardHeader title={user.profile.fullName} />
           <CardContent>
             <img
               className={`rounded_corners ${styles.user_image}`}
-              src={`data:image/jpg;base64,${image}`}
-              alt={username}
+              src={`data:image/jpg;base64,${user.images?.pref || user.images.def}`}
+              alt={user.profile.fullName}
             />
             <Grid className={styles.wellness_status}>
               <Card className={styles[currentStatus]}>

@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   Box,
   Table,
@@ -9,7 +8,7 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core/';
-
+import { useEffect, useState } from 'react';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../../../../../ApartmentApp.module.css';
 
@@ -19,6 +18,7 @@ import styles from '../../../../../../../../ApartmentApp.module.css';
 
 /**
  * Renders the applicant sub-table for the apartment application staff page
+ *
  * @param {Object} props The React component props
  * @param {ApartmentApplicant[]} props.applicants Array of applicant info
  * @returns {JSX.Element} JSX Element for the applicant sub-table

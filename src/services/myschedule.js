@@ -10,25 +10,26 @@ import http from './http';
 /**
  * @global
  * @typedef MySchedule
- * @property {number} EVENT_ID
- * @property {String} LOCATION
- * @property {String} DESCRIPTION
- * @property {String} MON_CDE
- * @property {String} TUE_CDE
- * @property {String} WED_CDE
- * @property {String} THU_CDE
- * @property {String} FRI_CDE
- * @property {String} SAT_CDE
- * @property {String} SUN_CDE
- * @property {boolean} IS_ALLDAY
- * @property {TimeSpan} BEGIN_TIME
- * @property {TimeSpan} END_TIME
+ * @property {number} EVENT_ID The event ID
+ * @property {string} LOCATION The event location
+ * @property {string} DESCRIPTION The event description
+ * @property {string} MON_CDE The Monday Code
+ * @property {string} TUE_CDE The Tuesday Code
+ * @property {string} WED_CDE The Wednesday Code
+ * @property {string} THU_CDE The Thursday Code
+ * @property {string} FRI_CDE The Friday Code
+ * @property {string} SAT_CDE The Saturday Code
+ * @property {string} SUN_CDE The Sunday Code
+ * @property {boolean} IS_ALLDAY Whether the Event is all day
+ * @property {TimeSpan} BEGIN_TIME The beginning of the event
+ * @property {TimeSpan} END_TIME The end of the event
  */
 
 /**
  * Get custom schedule for profile
- * @param {String} [username] Username in firstname.lastname format
- * @return {Promise.<MySchedule[]>} returns all the custom schedules
+ *
+ * @param {string} [username] Username in firstname.lastname format
+ * @returns {Promise.<MySchedule[]>} returns all the custom schedules
  */
 
 const getMySchedule = async (username) => {
@@ -43,8 +44,9 @@ const getMySchedule = async (username) => {
 
 /**
  * Get specific schedule for profile by event id
- * @param {String} eventId Event ID of myschedule
- * @return {Promise.<MySchedule>} returns the custom schedules
+ *
+ * @param {string} eventId Event ID of myschedule
+ * @returns {Promise.<MySchedule>} returns the custom schedules
  */
 
 const getMyScheduleEventId = async (eventId) => {
@@ -54,8 +56,9 @@ const getMyScheduleEventId = async (eventId) => {
 
 /**
  * Find out which day of the week the event is assigned
+ *
  * @param {Promise.<MySchedule>} event an individual course
- * @return {number[]} returns array of day in the format of ResourceID
+ * @returns {number[]} returns array of day in the format of ResourceID
  */
 
 function checkDayofWeek(event) {
@@ -88,8 +91,9 @@ function checkDayofWeek(event) {
 
 /**
  * Format the given schedule and make event array
+ *
  * @param {Promise.<MySchedule[]>} myschedule all custom schedules
- * @return {Promise.Object[]} returns array of events
+ * @returns {Promise.Object[]} returns array of events
  */
 
 async function makeMySchedule(myschedule) {
@@ -126,8 +130,9 @@ async function makeMySchedule(myschedule) {
 
 /**
  * Add mySchedule of the profile
+ *
  * @param {Object} mySchedule of the local user
- * @return {Promise<any>} Response body
+ * @returns {Promise<any>} Response body
  */
 
 const addMySchedule = async (mySchedule) => {
@@ -136,8 +141,9 @@ const addMySchedule = async (mySchedule) => {
 
 /**
  * Update mySchedule of the profile
+ *
  * @param {Object} mySchedule of the local user
- * @return {Promise<any>} Response body
+ * @returns {Promise<any>} Response body
  */
 
 const updateMySchedule = async (mySchedule) => {
@@ -146,8 +152,9 @@ const updateMySchedule = async (mySchedule) => {
 
 /**
  * Delete mySchedule of the profile
- * @param {String} eventID of the selected event
- * @return {Promise<any>} Response body
+ *
+ * @param {string} eventID of the selected event
+ * @returns {Promise<any>} Response body
  */
 
 const deleteMySchedule = (eventID) => {

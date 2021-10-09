@@ -1,17 +1,16 @@
 // import React, { useState, useEffect } from 'react';
 import {
+  Box,
+  Checkbox,
   FormControl,
   FormControlLabel,
-  InputLabel,
-  Checkbox,
-  Input,
   Grid,
+  Input,
+  InputLabel,
   Typography,
-  Box,
 } from '@material-ui/core';
 import { gordonColors } from 'theme';
-import { phoneMaskUS, phoneMaskINTL } from 'views/AcademicCheckIn/components/UpdatePhone/';
-
+import { phoneMaskINTL, phoneMaskUS } from 'views/AcademicCheckIn/components/UpdatePhone/';
 // @TODO CSSMODULES - outside directory
 import styles from '../../AcademicCheckIn.module.css';
 
@@ -85,13 +84,9 @@ const EmergencyContactUpdate = ({
  * Helper function to return the emergency contact fields.
  *
  * @param {Object} emergencyContact the emergency contact to be updated.
- *
  * @param {Object} emergencyContactINTL the check for if a number is an international number
- *
  * @param {Function} handleChangeEmergContact a function to handle the updating of the fields
- *
  * @param {Function} handleCheckEmergContact a function to handle the updating of the checkbox fields
- *
  * @returns {JSX.Element} valid JSX for the emergency contact fields
  */
 function createEmergencyContactFields(

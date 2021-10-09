@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -12,13 +11,14 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core/';
+import { useEffect, useState } from 'react';
 import housing from 'services/housing';
-
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
 
 /**
  * Renders a card displaying the apartment application instructions
+ *
  * @returns {JSX.Element} JSX Element for the instructions card
  */
 const InstructionsCard = () => {

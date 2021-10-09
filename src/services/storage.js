@@ -4,13 +4,13 @@
  * @description With app storage abstracted in this service, it is possible to change the underlying
  * storage driver from the current `localStorage` to a more featureful storage driver like
  * `IndexedDB` without needing to update any code that depends on this service.
- *
  * @module storage
  */
 
 /**
  * Store a value locally
- * @param {String} key Where to store the value
+ *
+ * @param {string} key Where to store the value
  * @param {any} value Data to store
  */
 const store = (key, value) => {
@@ -19,8 +19,9 @@ const store = (key, value) => {
 
 /**
  * Get a value stored locally
- * @param {String} key Where value is stored
- * @return {any} Stored value
+ *
+ * @param {string} key Where value is stored
+ * @returns {any} Stored value
  * @throws Will throw an error when the key is not set in local storage
  */
 const get = (key) => {
@@ -40,7 +41,8 @@ const get = (key) => {
 
 /**
  * Remove a value stored locally
- * @param {String} key Where value is stored
+ *
+ * @param {string} key Where value is stored
  */
 const remove = (key) => {
   localStorage.removeItem(key);
