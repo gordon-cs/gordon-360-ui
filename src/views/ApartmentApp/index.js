@@ -33,7 +33,6 @@ const ApartApp = () => {
   useEffect(() => {
     const loadPage = async () => {
       setLoading(true);
-      setIsAuthenticated(true);
       try {
         const profileInfo = await user.getProfileInfo();
         setUserProfile(profileInfo);
@@ -63,14 +62,13 @@ const ApartApp = () => {
       setUserProfile(null);
       setCanUseStaff(false);
       setIsUserStudent(false);
-      setIsAuthenticated(false);
       setLoading(false);
     }
   }, [authenticated]);
 
   if (loading) {
     return <GordonLoader />;
-  } else if (!isAuthenticated) {
+  } else if (!authenticated) {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Apartment Application page'} />;
   } else if (isOnline) {

@@ -31,13 +31,11 @@ const Home = () => {
   useEffect(() => {
     if (authenticated) {
       loadPage();
-      setIsAuthenticated(true);
     } else {
       // Clear out component's person-specific state when authenticated becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
       setHasAnswered(null);
       setPersonType(null);
-      setIsAuthenticated(false);
       setLoading(false);
     }
   }, [authenticated]);
