@@ -583,7 +583,7 @@ const getSessionMembershipsWithoutGuests = async (id, session) => {
   return myCurrentInvolvementsWithoutGuests;
 };
 
-//Take student's  memberships and group by activity code BETA
+//Take student's  memberships and group by activity code
 const getMembershipsByActivityCode = async (id, session) => {
   let myInvolvements = await getMemberships(id);
   myInvolvements.sort(compareByActCode);

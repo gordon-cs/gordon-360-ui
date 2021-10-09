@@ -221,7 +221,7 @@ const groupByActivityCode = async (id) => {
     var curAct = curMembership.ActivityCode;
     var condition = false;
     // eslint-disable-next-line
-    condition = grouped.some((item)=> item[0].ActivityCode === curAct);
+    condition = grouped.some((item) => item[0].ActivityCode === curAct);
     if (condition) {
       // eslint-disable-next-line
       grouped.find((element) => element[0].ActivityCode === curAct).push(curMembership);

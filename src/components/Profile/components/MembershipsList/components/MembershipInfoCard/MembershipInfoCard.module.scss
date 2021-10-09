@@ -11,6 +11,7 @@
       color: $primary-blue;
       &:hover {
         color: $primary-cyan !important;
+        text-decoration: none;
       }
     }
   }
@@ -21,9 +22,6 @@
       max-width: 120px !important;
       border-radius: 5px !important;
       margin: 0.5rem !important;
-      &.active:hover {
-        opacity: 0.8;
-      }
     }
   }
   .private_membership {
@@ -49,8 +47,8 @@
       justify-content: center;
       flex-direction: row-reverse;
       padding: 0.5rem;
-      &_text {
-        // padding-right: 0rem !important;
+      &-text {
+        padding-right: 0rem !important;
         border-left: 2px solid $primary-blue;
       }
     }
