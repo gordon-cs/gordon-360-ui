@@ -579,8 +579,8 @@ const getSessionMembershipsWithoutGuests = async (id, session) => {
  * @param {string} [id] Identifier for student
  * @returns {Request[]} List of requests for student
  */
-const getSentMembershipRequests = (id = null) => {
-  return http.get(`requests/student/${id ?? ''}`);
+const getSentMembershipRequests = (id = '') => {
+  return http.get(`requests/student/${id}`);
 };
 
 /**
