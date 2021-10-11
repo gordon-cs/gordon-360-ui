@@ -95,16 +95,12 @@ const getNotExpiredFormatted = async () => {
 const getFilteredNews = (unexpiredNews, query) => {
   query = query.toLowerCase();
   return unexpiredNews.filter((newsitem) => {
-    if (
+    return (
       newsitem.Body.toLowerCase().includes(query) ||
       newsitem.ADUN.toLowerCase().includes(query) ||
       newsitem.categoryName.toLowerCase().includes(query) ||
       newsitem.Subject.toLowerCase().includes(query)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    );
   });
 };
 
