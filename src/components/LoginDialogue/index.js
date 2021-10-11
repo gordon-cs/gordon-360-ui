@@ -19,7 +19,7 @@ const LoginDialogue = () => {
     setError(null);
 
     try {
-      login(username, password);
+      await login(username, password);
     } catch (err) {
       setError(err.message);
       setLoading(false);
