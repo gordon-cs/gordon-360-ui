@@ -132,307 +132,164 @@ const Events = (props) => {
     </div>
   );
 
-  if (width >= 920) {
-    return (
-      <Grid container justifyContent="center" spacing={6}>
-        <Grid item xs={12} lg={10} xl={8}>
-          <Card style={{ padding: '0 3vw' }}>
-            <CardContent>
-              <Grid container direction="row" alignItems="center">
-                <Grid item xs={4} />
-                <Grid item xs={4} align="center">
-                  <CardHeader title={searchPageTitle} />
+  return (
+    <Grid container justifyContent="center" spacing={6}>
+      <Grid item xs={12} lg={10} xl={8}>
+        <Card style={{ padding: '0 3vw' }}>
+          <CardContent>
+            <CardHeader title={searchPageTitle} />
+
+            <Grid container spacing={2} direction="row">
+              <Grid item xs={12} align="right">
+                {props.authentication && (
+                  <Button
+                    color="primary"
+                    style={{
+                      backgroundColor: gordonColors.primary.cyan,
+                      color: gordonColors.neutral.grayShades[50],
+                    }}
+                    variant="contained"
+                    onClick={() => props.history.push('/attended')}
+                  >
+                    ATTENDED CL&amp;W
+                  </Button>
+                )}
+              </Grid>
+
+              {/* Search Bar */}
+              <Grid item xs={12}>
+                <Grid container spacing={2} alignItems="center">
+                  <Media
+                    query="(min-width: 600px)"
+                    render={() => (
+                      <Grid item>
+                        <EventIcon
+                          style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
+                        />
+                      </Grid>
+                    )}
+                  />
+                  <Grid item xs>
+                    <TextField
+                      id="search"
+                      label="Search"
+                      type="search"
+                      variant="filled"
+                      fullWidth
+                      value={search}
+                      onChange={(event) => setSearch(event.target.value)}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={4} align="right">
-                  {props.authentication && (
+
+                <br />
+
+                <Grid
+                  container
+                  spacing={2}
+                  justifyContent="center"
+                  alignItems="center"
+                  style={{ padding: '8px' }}
+                >
+                  <Grid item>
                     <Button
-                      color="primary"
-                      style={{
-                        backgroundColor: gordonColors.primary.cyan,
-                        color: gordonColors.neutral.grayShades[50],
-                      }}
+                      style={{ backgroundColor: gordonColors.neutral.lightGray }}
                       variant="contained"
-                      onClick={() => props.history.push('/attended')}
+                      onClick={clearAll}
                     >
-                      ATTENDED CL&amp;W
+                      CLEAR ALL
                     </Button>
-                  )}
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      color={filters.length === 0 ? 'primary' : ''}
+                      style={
+                        filters.length !== 0
+                          ? {
+                              backgroundColor: gordonColors.primary.cyan,
+                              color: gordonColors.neutral.grayShades[50],
+                            }
+                          : {}
+                      }
+                      variant={open ? 'contained' : 'outlined'}
+                      onClick={handleExpandClick}
+                    >
+                      <AddIcon fontSize="inherit" />
+                      Filters
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
+            </Grid>
 
-              {/* Search Bar and Filters */}
-              <Grid container spacing={2} direction="row">
-                <Grid item xs={12}>
+            <br />
+
+            <Grid container spacing={2} direction="row">
+              <Grid item xs={12}>
+                <Collapse in={open} timeout="auto" unmountOnExit>
                   <Grid container spacing={2} alignItems="center">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <EventIcon
+                          <FilterListIcon
                             style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
                           />
                         </Grid>
                       )}
                     />
-                    <Grid item xs={8}>
-                      <TextField
-                        id="search"
-                        label="Search"
-                        type="search"
-                        variant="filled"
+                    <Grid item xs>
+                      <Autocomplete
+                        id="event-filters"
+                        multiple
                         fullWidth
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                      />
-                    </Grid>
-
-                    <Grid item>
-                      <Button
-                        style={{ backgroundColor: gordonColors.neutral.lightGray }}
-                        fullWidth
-                        variant="contained"
-                        onClick={clearAll}
-                      >
-                        CLEAR ALL
-                      </Button>
-                    </Grid>
-
-                    <Grid item>
-                      <Button
-                        color={filters.length === 0 ? 'primary' : ''}
-                        style={
-                          filters.length !== 0
-                            ? {
+                        options={EVENT_FILTERS}
+                        onChange={(event, value) => {
+                          handleChangeFilters(value);
+                        }}
+                        filterSelectedOptions
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip
+                              label={option}
+                              style={{
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: gordonColors.neutral.grayShades[50],
-                              }
-                            : {}
+                              }}
+                              {...getTagProps({ index })}
+                            />
+                          ))
                         }
-                        variant={open ? 'contained' : 'outlined'}
-                        onClick={handleExpandClick}
-                      >
-                        <AddIcon fontSize="inherit" />
-                        Filters
-                      </Button>
+                        renderInput={(param) => (
+                          <TextField {...param} variant="filled" label="Filters" />
+                        )}
+                      />
                     </Grid>
                   </Grid>
+
                   <br />
-                </Grid>
 
-                <Grid item xs={12}>
-                  <Collapse in={open} timeout="auto" unmountOnExit>
-                    <Grid container spacing={2} alignItems="center">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <FilterListIcon
-                              style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                            />
-                          </Grid>
-                        )}
-                      />
-                      <Grid item xs={8}>
-                        <Autocomplete
-                          id="event-filters"
-                          multiple
-                          fullWidth
-                          options={EVENT_FILTERS}
-                          onChange={(event, value) => {
-                            handleChangeFilters(value);
-                          }}
-                          filterSelectedOptions
-                          renderTags={(value, getTagProps) =>
-                            value.map((option, index) => (
-                              <Chip
-                                label={option}
-                                style={{
-                                  backgroundColor: gordonColors.primary.cyan,
-                                  color: gordonColors.neutral.grayShades[50],
-                                }}
-                                {...getTagProps({ index })}
-                              />
-                            ))
-                          }
-                          renderInput={(param) => (
-                            <TextField {...param} variant="filled" label="Filters" />
-                          )}
-                        />
-                      </Grid>
-                      <Grid container item xs={3}>
-                        <FormControlLabel
-                          control={
-                            <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
-                          }
-                          label="Include Past"
-                        />
-                      </Grid>
-                    </Grid>
-                  </Collapse>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-
-          <br />
-
-          {/* List of Events */}
-          <Grid item xs={12}>
-            {content}
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-  } else if (width < 920) {
-    return (
-      <Grid container justifyContent="center" spacing={6}>
-        <Grid item xs={12} lg={10} xl={8}>
-          <Card style={{ padding: '0 3vw' }}>
-            <CardContent>
-              <Grid container item xs={12} justifyContent="center">
-                <CardHeader title={searchPageTitle} />
-              </Grid>
-
-              {/* Search Bar and Filters */}
-              <Grid container spacing={2} direction="row">
-                <Grid item xs={12}>
-                  <Grid container spacing={2} alignItems="center">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <EventIcon
-                            style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                          />
-                        </Grid>
-                      )}
+                  <Grid container item justifyContent="center">
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
+                      }
+                      label="Include Past"
                     />
-                    <Grid item xs={11}>
-                      <TextField
-                        id="search"
-                        label="Search"
-                        type="search"
-                        variant="filled"
-                        fullWidth
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                      />
-                    </Grid>
                   </Grid>
-                  <Grid container spacing={2} justifyContent="center" alignItems="center">
-                    <Grid item>
-                      <Button
-                        style={{ backgroundColor: gordonColors.neutral.lightGray }}
-                        fullWidth
-                        variant="contained"
-                        onClick={clearAll}
-                      >
-                        CLEAR ALL
-                      </Button>
-                    </Grid>
-
-                    <Grid item>
-                      <Button
-                        color={filters.length === 0 ? 'primary' : ''}
-                        style={
-                          filters.length !== 0
-                            ? {
-                                backgroundColor: gordonColors.primary.cyan,
-                                color: gordonColors.neutral.grayShades[50],
-                              }
-                            : {}
-                        }
-                        variant={open ? 'contained' : 'outlined'}
-                        onClick={handleExpandClick}
-                      >
-                        <AddIcon fontSize="inherit" />
-                        Filters
-                      </Button>
-                    </Grid>
-
-                    <Grid item>
-                      {props.authentication && (
-                        <Button
-                          color="primary"
-                          style={{
-                            backgroundColor: gordonColors.primary.cyan,
-                            color: gordonColors.neutral.grayShades[50],
-                          }}
-                          variant="contained"
-                          onClick={() => props.history.push('/attended')}
-                        >
-                          ATTENDED CL&amp;W
-                        </Button>
-                      )}
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Collapse in={open} timeout="auto" unmountOnExit>
-                    <Grid container item justifyContent="center">
-                      <FormControlLabel
-                        control={
-                          <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
-                        }
-                        label="Include Past"
-                      />
-                    </Grid>
-                    <Grid container spacing={2} alignItems="center">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <FilterListIcon
-                              style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                            />
-                          </Grid>
-                        )}
-                      />
-                      <Grid item xs={11}>
-                        <Autocomplete
-                          id="event-filters"
-                          multiple
-                          fullWidth
-                          options={EVENT_FILTERS}
-                          onChange={(event, value) => {
-                            handleChangeFilters(value);
-                          }}
-                          filterSelectedOptions
-                          renderTags={(value, getTagProps) =>
-                            value.map((option, index) => (
-                              <Chip
-                                label={option}
-                                style={{
-                                  backgroundColor: gordonColors.primary.cyan,
-                                  color: gordonColors.neutral.grayShades[50],
-                                }}
-                                {...getTagProps({ index })}
-                              />
-                            ))
-                          }
-                          renderInput={(param) => (
-                            <TextField {...param} variant="filled" label="Filters" />
-                          )}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Collapse>
-                </Grid>
+                </Collapse>
               </Grid>
-            </CardContent>
-          </Card>
+            </Grid>
+          </CardContent>
+        </Card>
 
-          <br />
+        <br />
 
-          {/* List of Events */}
-          <Grid item xs={12}>
-            {content}
-          </Grid>
-        </Grid>
+        {/* List of Events */}
+        {content}
       </Grid>
-    );
-  }
+    </Grid>
+  );
 };
 
 export default Events;
