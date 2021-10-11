@@ -93,13 +93,13 @@ const getNotExpiredFormatted = async () => {
  * @returns {Promise<any>} Student news
  */
 const getFilteredNews = (unexpiredNews, query) => {
-  query = query.toLowerCase();
+  var lowerquery = query.toLowerCase();
   return unexpiredNews.filter((newsitem) => {
     return (
-      newsitem.Body.toLowerCase().includes(query) ||
-      newsitem.ADUN.toLowerCase().includes(query) ||
-      newsitem.categoryName.toLowerCase().includes(query) ||
-      newsitem.Subject.toLowerCase().includes(query)
+      newsitem.Body.toLowerCase().includes(lowerquery) ||
+      newsitem.ADUN.toLowerCase().includes(lowerquery) ||
+      newsitem.categoryName.toLowerCase().includes(lowerquery) ||
+      newsitem.Subject.toLowerCase().includes(lowerquery)
     );
   });
 };
