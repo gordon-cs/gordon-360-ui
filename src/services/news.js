@@ -93,7 +93,7 @@ const getNotExpiredFormatted = async () => {
  * @returns {Promise<any>} Student news
  */
 const getFilteredNews = (unexpiredNews, query) => {
-  let lowerquery = query.toLowerCase();
+  const lowerquery = query.toLowerCase();
   return unexpiredNews.filter((newsitem) => {
     return (
       newsitem.Body.toLowerCase().includes(lowerquery) ||
