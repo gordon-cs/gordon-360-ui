@@ -94,21 +94,17 @@ const getNotExpiredFormatted = async () => {
  */
 const getFilteredNews = (unexpiredNews, query) => {
   return unexpiredNews.filter((newsitem) => {
-    let queryparts = query
-      .toLowerCase()
-      .split(' ')
-      .filter((q) => q !== '');
-    for (let querypart of queryparts) {
-      if (
-        newsitem.Body.toLowerCase().includes(querypart) ||
-        newsitem.ADUN.toLowerCase().includes(querypart) ||
-        newsitem.categoryName.toLowerCase().includes(querypart) ||
-        newsitem.Subject.toLowerCase().includes(querypart)
-      ) {
-        return true;
-      }
+    query = query.toLowerCase();
+    if (
+      newsitem.Body.toLowerCase().includes(query) ||
+      newsitem.ADUN.toLowerCase().includes(query) ||
+      newsitem.categoryName.toLowerCase().includes(query) ||
+      newsitem.Subject.toLowerCase().includes(query)
+    ) {
+      return true;
+    } else {
+      return false;
     }
-    return false;
   });
 };
 
