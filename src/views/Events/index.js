@@ -266,9 +266,7 @@ const Events = (props) => {
                       />
                     </Grid>
                   </Grid>
-
                   <br />
-
                   <Grid container item justifyContent="center">
                     <FormControlLabel
                       control={
@@ -282,7 +280,6 @@ const Events = (props) => {
             </Grid>
           </CardContent>
         </Card>
-
         <br />
 
         {/* List of Events */}
