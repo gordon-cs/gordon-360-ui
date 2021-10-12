@@ -18,24 +18,29 @@ const Profile = ({ profile, myProf }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const isOnline = useNetworkStatus();
   const network = isOnline ? 'online' : 'offline';
-  const isPolice = user.getLocalInfo().college_role === 'gordon police';
+  const viewerIsPolice = user.getLocalInfo().college_role === 'gordon police';
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
-  const isStudent = profile.PersonType?.includes('stu');
+  const profileIsStudent = profile.PersonType?.includes('stu');
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
   useEffect(() => {
-    const temp = async () => {
+    const fetchReadStudentSchedulesPermission = async () => {
       setCanReadStudentSchedules(await scheduleService.getCanReadStudentSchedules());
     };
-    temp();
+    fetchReadStudentSchedulesPermission();
   });
 
   return (
     <Grid container justifyContent="center" spacing={2}>
-      <Grid item xs={12} md={myProf && isStudent ? 8 : 12} lg={myProf && isStudent ? 6 : 10}>
+      <Grid
+        item
+        xs={12}
+        md={myProf && profileIsStudent ? 8 : 12}
+        lg={myProf && profileIsStudent ? 6 : 10}
+      >
         <Identification
           profile={profile}
           network={network}
@@ -44,13 +49,13 @@ const Profile = ({ profile, myProf }) => {
         />
       </Grid>
 
-      {myProf && isStudent && (
+      {myProf && profileIsStudent && (
         <Grid item xs={12} md={4}>
           <VictoryPromiseDisplay network={network} />
         </Grid>
       )}
 
-      {(myProf || !isStudent || canReadStudentSchedules) && (
+      {(myProf || !profileIsStudent || canReadStudentSchedules) && (
         <Grid item xs={12} lg={10} align="center">
           <SchedulePanel profile={profile} myProf={myProf} network={network} />
         </Grid>
@@ -65,7 +70,7 @@ const Profile = ({ profile, myProf }) => {
             network={network}
             createSnackbar={createSnackbar}
           />
-          {isPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
+          {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
         </Grid>
       </Grid>
 
