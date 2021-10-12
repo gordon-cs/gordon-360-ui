@@ -19,7 +19,7 @@ const Profile = ({ profile, myProf }) => {
   const isOnline = useNetworkStatus();
   const network = isOnline ? 'online' : 'offline';
   const isPolice = user.getLocalInfo().college_role === 'gordon police';
-  const [canReadSchedules, setCanReadSchedules] = useState();
+  const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
   const isStudent = profile.PersonType?.includes('stu');
 
   const createSnackbar = useCallback((message, severity) => {
@@ -28,7 +28,7 @@ const Profile = ({ profile, myProf }) => {
 
   useEffect(() => {
     const temp = async () => {
-      setCanReadSchedules(await scheduleService.getCanReadStudentSchedules());
+      setCanReadStudentSchedules(await scheduleService.getCanReadStudentSchedules());
     };
     temp();
   });
@@ -50,7 +50,7 @@ const Profile = ({ profile, myProf }) => {
         </Grid>
       )}
 
-      {(myProf || !isStudent || canReadSchedules) && (
+      {(myProf || !isStudent || canReadStudentSchedules) && (
         <Grid item xs={12} lg={10} align="center">
           <SchedulePanel profile={profile} myProf={myProf} network={network} />
         </Grid>
