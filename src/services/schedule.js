@@ -41,7 +41,6 @@ const getScheduleMyProf = async () => {
  */
 const getCanReadStudentSchedules = () => {
   return http.get(`schedule/canreadstudent/`);
-  //return true;
 };
 
 /**
