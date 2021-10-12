@@ -39,6 +39,7 @@ const OnlineOnlyLink = ({ element, children }) => {
 };
 
 const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
+  //the whole list refreshes when privacy changes here
   const PrivacyToggle = ({ element }) => {
     const isOnline = useNetworkStatus();
     return (
