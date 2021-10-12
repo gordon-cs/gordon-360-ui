@@ -1,10 +1,16 @@
 //Student apartment application page
-import { useState, useEffect, useCallback } from 'react';
-import { sortBy } from 'lodash';
 import { Backdrop, Collapse, Grid } from '@material-ui/core/';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
+import { sortBy } from 'lodash';
+// eslint-disable-next-line no-unused-vars
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
+import { AuthError, createError, NotFoundError } from 'services/error';
+import housing from 'services/housing';
+import user from 'services/user';
+// @TODO CSSMODULES - outside directory
+import styles from '../../ApartmentApp.module.css';
 import Agreements from './components/Agreements';
 import ApplicantList from './components/ApplicantList';
 import ApplicationDataTable from './components/ApplicationDataTable';
@@ -12,12 +18,6 @@ import BottomBar from './components/BottomBar';
 import HallChoiceList from './components/HallChoiceList';
 import InstructionsCard from './components/InstructionsCard';
 import OffCampusList from './components/OffCampusList';
-import { AuthError, createError, NotFoundError } from 'services/error';
-import housing from 'services/housing';
-import user from 'services/user';
-
-// @TODO CSSMODULES - outside directory
-import styles from '../../ApartmentApp.module.css';
 
 const DYNAMIC_ICON_TIMEOUT = 6000;
 const MAX_NUM_APPLICANTS = 8;
@@ -84,6 +84,7 @@ const DIALOG_PROPS = {
 
 /**
  * Renders the page for the student apartment application
+ *
  * @param {Object} props The React component props
  * @param {StudentProfileInfo} props.userProfile The student profile info of the current user
  * @returns {JSX.Element} JSX Element for the student application web page
@@ -97,10 +98,10 @@ const StudentApplication = ({ userProfile }) => {
   const [canEditApplication, setCanEditApplication] = useState(false);
   const [agreements, setAgreements] = useState(false); // Represents the state of the agreements card. True if all checkboxes checked, false otherwise
 
-  /** @type {[ApplicationDetails, React.Dispatch<React.SetStateAction<ApplicationDetails>>]} */
+  /** @type {[ApplicationDetails, Dispatch<SetStateAction<ApplicationDetails>>]} */
   const [applicationDetails, setApplicationDetails] = useState(BLANK_APPLICATION_DETAILS);
 
-  /** @type {[StudentProfileInfo, React.Dispatch<React.SetStateAction<StudentProfileInfo>>]} */
+  /** @type {[StudentProfileInfo, Dispatch<SetStateAction<StudentProfileInfo>>]} */
   const [newEditorProfile, setNewEditorProfile] = useState(null); // Stores the StudentProfileInfo of the new editor before the user confirms the change
 
   const [applicationCardsOpen, setApplicationCardsOpen] = useState(false);
@@ -141,7 +142,7 @@ const StudentApplication = ({ userProfile }) => {
    *
    * @async
    * @function loadApplication
-   * @returns {Promise.<Boolean>} Indicates whether loading succeeded or failed
+   * @returns {Promise.<boolean>} Indicates whether loading succeeded or failed
    */
   const loadApplication = useCallback(async () => {
     const initializeNewApplication = () => {
@@ -215,7 +216,7 @@ const StudentApplication = ({ userProfile }) => {
    * @async
    * @function isApplicantValid
    * @param {ApartmentApplicant} applicant The applicant to be checked
-   * @return {Promise.<Boolean>} True if valid, otherwise false
+   * @returns {Promise.<boolean>} True if valid, otherwise false
    */
   const isApplicantValid = async (applicant) => {
     // Check that the applicant contains the required fields
@@ -288,7 +289,7 @@ const StudentApplication = ({ userProfile }) => {
    *
    * @async
    * @function addApplicant
-   * @param {String} newApplicantUsername Username for the new applicant
+   * @param {string} newApplicantUsername Username for the new applicant
    */
   const addApplicant = async (newApplicantUsername) => {
     try {
@@ -331,6 +332,7 @@ const StudentApplication = ({ userProfile }) => {
 
   /**
    * Callback for changing the application editor
+   *
    * @param {StudentProfileInfo} profile The StudentProfileInfo object for the person who is to be made the application editor
    */
   const handleChangeEditor = (profile) => {
@@ -448,7 +450,8 @@ const StudentApplication = ({ userProfile }) => {
 
   /**
    * Callback for applicant list remove button
-   * @param {String} usernameToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
+   *
+   * @param {string} usernameToRemove The StudentProfileInfo object for the person who is to be removed from the list of applicants
    */
   const handleApplicantRemove = (usernameToRemove) => {
     if (usernameToRemove) {
@@ -479,9 +482,10 @@ const StudentApplication = ({ userProfile }) => {
 
   /**
    * Callback for changes to hall list item name and/or rank
-   * @param {Number} hallRankValue The rank value that the user assigned to this hall
-   * @param {String} hallNameValue The name of the hall that was selected
-   * @param {Number} index The index of the hall in the list
+   *
+   * @param {number} hallRankValue The rank value that the user assigned to this hall
+   * @param {string} hallNameValue The name of the hall that was selected
+   * @param {number} index The index of the hall in the list
    */
   const handleHallInputChange = (hallRankValue, hallNameValue, index) => {
     if (index >= 0) {
@@ -529,7 +533,8 @@ const StudentApplication = ({ userProfile }) => {
 
   /**
    * Callback for hall list remove button
-   * @param {Number} indexToRemove The index of the hall to be removed from the list of preferred halls
+   *
+   * @param {number} indexToRemove The index of the hall to be removed from the list of preferred halls
    */
   const handleHallRemove = (indexToRemove) => {
     console.log('removing hall with index:', indexToRemove);
@@ -551,8 +556,9 @@ const StudentApplication = ({ userProfile }) => {
 
   /**
    * Callback for changes to off-campus program info
-   * @param {String} offCampusProgramValue The program that the applicant is doing an OC program for
-   * @param {Number} index The index of the applicant in the list
+   *
+   * @param {string} offCampusProgramValue The program that the applicant is doing an OC program for
+   * @param {number} index The index of the applicant in the list
    */
   const handleOffCampusInputChange = (offCampusProgramValue, index) => {
     if (index >= 0) {
@@ -623,7 +629,7 @@ const StudentApplication = ({ userProfile }) => {
    * @async
    * @function saveApartmentApplication
    * @param {ApplicationDetails} applicationDetails the ApplicationDetails object representing the state of this application
-   * @returns {Promise.<Boolean>} Indicates whether saving succeeded or failed
+   * @returns {Promise.<boolean>} Indicates whether saving succeeded or failed
    */
   const saveApartmentApplication = async (applicationDetails) => {
     setSaving(true);

@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core/';
 import EmailIcon from '@material-ui/icons/Email';
 import { DateTime } from 'luxon';
-
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
 
@@ -19,6 +18,7 @@ import styles from '../../../../ApartmentApp.module.css';
 
 /**
  * Renders a card displaying a table of data about the current application
+ *
  * @param {Object} props The React component props
  * @param {ApplicationDetails} props.applicationDetails Object containing the details of this application
  * @returns {JSX.Element} JSX Element for the data table card

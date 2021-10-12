@@ -8,7 +8,8 @@ import http from './http';
 
 /**
  * Get the version of backend
- * @return {Promise.<String>} Session
+ *
+ * @returns {Promise.<string>} Session
  */
 const getVersion = () => {
   let version;

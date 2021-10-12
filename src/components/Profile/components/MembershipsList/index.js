@@ -1,21 +1,23 @@
-import { useState, useEffect } from 'react';
 import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@material-ui/core';
+import GordonLoader from 'components/Loader';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import activity from 'services/activity';
 import membershipService from 'services/membership';
 import userService from 'services/user';
-import GordonLoader from 'components/Loader';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import styles from './MembershipsList.module.css';
 
 /**
  * A List of memberships for display on the Profile and MyProfile views.
- * @param {string} user Either the user's ID number for MyProfile or the username for Profile
- * @param {boolean} myProf Whether this is shown in MyProfile or not
- * @param {Function} createSnackbar function to create a snackbar of whether an operation succeeded
+ *
+ * @param {Object} props The component props
+ * @param {string} props.user Either the user's ID number for MyProfile or the username for Profile
+ * @param {boolean} props.myProf Whether this is shown in MyProfile or not
+ * @param {Function} props.createSnackbar function to create a snackbar of whether an operation succeeded
  * @returns {JSX} A list of the user's memberships
  */
-const MembershipsList = ({ user, myProf, createSnackbar, PersonType }) => {
+const MembershipsList = ({ user, myProf, createSnackbar }) => {
   const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
 

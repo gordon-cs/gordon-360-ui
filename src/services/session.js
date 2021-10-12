@@ -9,15 +9,15 @@ import http from './http';
 /**
  * @global
  * @typedef Session
- * @property {String} SessionBeginDate
- * @property {String} SessionCode
- * @property {String} SessionDescription
- * @property {String} SessionEndDate
+ * @property {string} SessionBeginDate The beginning of the session
+ * @property {string} SessionCode The session code
+ * @property {string} SessionDescription The session description
+ * @property {string} SessionEndDate The end of the session
  */
 
 /**
  * @global
- * @typedef {Number[]} DaysLeft contains remaining and completed days in current session
+ * @typedef {number[]} DaysLeft contains remaining and completed days in current session
  * @example
  * [
  *   17,  // 17 days remaining
@@ -27,22 +27,25 @@ import http from './http';
 
 /**
  * Get a session
- * @param {String} sessionCode Identifier for a session
- * @return {Promise.<Session>} Session
+ *
+ * @param {string} sessionCode Identifier for a session
+ * @returns {Promise.<Session>} Session
  */
 const get = (sessionCode) => http.get(`sessions/${sessionCode}`);
 
 /**
  * Get sessions
- * @return {Promise.<Session[]>} List of sessions
+ *
+ * @returns {Promise.<Session[]>} List of sessions
  */
 const getAll = () => http.get('sessions').then((sessions) => sessions.reverse());
 
 /**
  * Convert a session code to a readable session
  * e.g. '202109' -> '2021fall'
+ *
  * @param {string} sessionCode the session code
- * @return {Promise.<Session[]>} List of sessions
+ * @returns {Promise.<Session[]>} List of sessions
  */
 const decodeSessionCode = (sessionCode) => {
   let sessionCodeYear = sessionCode.substr(0, 4);
@@ -63,8 +66,9 @@ const decodeSessionCode = (sessionCode) => {
 /**
  * Convert a readable session code to a session code
  * e.g. '2021fall' -> '202109'
+ *
  * @param {string} readableSessionCode the readable session code
- * @return {Promise.<Session[]>} List of sessions
+ * @returns {Promise.<Session[]>} List of sessions
  */
 const encodeSessionCode = (readableSessionCode) => {
   let sessionCodeYear = readableSessionCode.substr(0, 4);
@@ -84,31 +88,36 @@ const encodeSessionCode = (readableSessionCode) => {
 
 /**
  * Get current session
- * @return {Promise.<Session>} Current session
+ *
+ * @returns {Promise.<Session>} Current session
  */
 const getCurrent = () => http.get('sessions/current');
 
 /**
  * Get first day in the session
- * @return {Promise.<firstDay>} First day in session
+ *
+ * @returns {Promise.<firstDay>} First day in session
  */
 const getFirstDay = () => http.get('sessions/firstDay');
 
 /**
  * Get last day in the session
- * @return {Promise.<lastDay>} Last day in session
+ *
+ * @returns {Promise.<lastDay>} Last day in session
  */
 const getLastDay = () => http.get('sessions/lastDay');
 
 /**
  * Get days left in the session
- * @return {Promise.<DaysLeft>} Days left in session
+ *
+ * @returns {Promise.<DaysLeft>} Days left in session
  */
 const getDaysLeft = () => http.get('sessions/daysLeft');
 
 /**
  * Get current term code
- * @return {String} Term code, ex: '17SP'
+ *
+ * @returns {string} Term code, ex: '17SP'
  */
 const getTermCode = () => {
   const now = new Date();

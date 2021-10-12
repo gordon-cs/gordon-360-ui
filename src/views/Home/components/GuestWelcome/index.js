@@ -1,15 +1,14 @@
-import { useEffect, useState } from 'react';
-import { Typography, Grid, Fab, Card, CardHeader, CardContent } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Fab, Grid, Typography } from '@material-ui/core';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import LoginDialogue from 'components/LoginDialogue';
+import PWAInstructions from 'components/PWAInstructions/index';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { projectName } from 'project-name';
-import PropTypes from 'prop-types';
-import PWAInstructions from 'components/PWAInstructions/index';
-import LoginDialogue from 'components/LoginDialogue';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import { useEffect, useState } from 'react';
 import { ga } from 'react-ga';
 import styles from './GuestWelcome.module.css';
 
-const GuestWelcome = ({ onLogIn }) => {
+const GuestWelcome = () => {
   const isOnline = useNetworkStatus();
   const [openPWAInstructions, setOpenPWAInstructions] = useState(false);
   const [showPWALink, setShowPWALink] = useState(false);
@@ -55,7 +54,13 @@ const GuestWelcome = ({ onLogIn }) => {
 
   return (
     <div className={styles.gw_background}>
-      <Grid container direction="column" alignItems="center" className={styles.gw_container} spacing={3}>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        className={styles.gw_container}
+        spacing={3}
+      >
         <Grid item>
           <Grid container style={{ textAlign: 'center' }}>
             <Card raised className={styles.gw_card}>
@@ -70,7 +75,7 @@ const GuestWelcome = ({ onLogIn }) => {
         </Grid>
 
         <Grid item>
-          <LoginDialogue onLogIn={onLogIn} />
+          <LoginDialogue />
         </Grid>
 
         {isOnline && showPWALink && (
@@ -95,10 +100,6 @@ const GuestWelcome = ({ onLogIn }) => {
       )}
     </div>
   );
-};
-
-GuestWelcome.propTypes = {
-  onLogIn: PropTypes.func.isRequired,
 };
 
 export default GuestWelcome;

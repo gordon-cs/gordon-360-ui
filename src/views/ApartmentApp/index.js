@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
+import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import StaffMenu from './components/StaffMenu';
-import StudentApplication from './components/StudentApplication';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+// eslint-disable-next-line no-unused-vars
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
+import { NotFoundError } from 'services/error';
 import housing from 'services/housing';
 import user from 'services/user';
 import styles from './ApartmentApp.module.css';
-import { NotFoundError } from 'services/error';
-import GordonOffline from 'components/GordonOffline';
-import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
+import StaffMenu from './components/StaffMenu';
+import StudentApplication from './components/StudentApplication';
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -20,7 +21,7 @@ const ApartApp = ({ authentication }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
 
   /**
-   * @type {[StudentProfileInfo, React.Dispatch<React.SetStateAction<StudentProfileInfo>>]} UserProfile
+   * @type {[StudentProfileInfo, Dispatch<SetStateAction<StudentProfileInfo>>]} UserProfile
    */
   const [userProfile, setUserProfile] = useState({});
   const [isUserStudent, setIsUserStudent] = useState(false);

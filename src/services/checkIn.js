@@ -1,6 +1,7 @@
 /**
  * AcademicCheckIn Check API call functions
  * establishes the functions necessary to make calls to the back end.
+ *
  * @module AcademicCheckIn
  */
 
@@ -26,20 +27,20 @@ import http from './http';
 /**
  * @global
  * @typedef EmergencyContact all the data for a student's emergency contact
- * @property {Number} SEQ_NUM the sequence number of the contact, (1, 2, or 3)
- * @property {String} firstName first name of emergency contact
- * @property {String} lastName last name of EC
- * @property {String} relationship the relationship between the student and EC
- * @property {Number} HomePhone the home phone number of EC
+ * @property {number} SEQ_NUM the sequence number of the contact, (1, 2, or 3)
+ * @property {string} firstName first name of emergency contact
+ * @property {string} lastName last name of EC
+ * @property {string} relationship the relationship between the student and EC
+ * @property {number} HomePhone the home phone number of EC
  * @property {boolean} HomePhoneIN whether the home phone number is international
- * @property {Number} MobilePhone the mobile phone number of EC
+ * @property {number} MobilePhone the mobile phone number of EC
  * @property {boolean} MobilePhoneIN whether the mobile phone number is international
  */
 
 /**
  * @global
  * @typedef PersonalPhone all the data for a student's personal phone number
- * @property {Number} personalPhone the phone number of the student
+ * @property {number} personalPhone the phone number of the student
  * @property {boolean} makePrivate whether a student wants their phone private on their profile
  * @property {boolean} noPhone whether a student does not have a personal phone
  */
