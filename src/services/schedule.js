@@ -35,13 +35,13 @@ const getScheduleMyProf = async () => {
 };
 
 /**
- * Check if the current user can see student schedules
+ * Check if the current user user can see student schedules
  *
- * @returns Bool true if user can see student schedule, else false
+ * @returns {bool} true if user can see student schedule, else false
  */
 const getCanReadStudentSchedules = () => {
-  //return http.get(`schedule/canreadstudent`);
-  return true;
+  return http.get(`schedule/canreadstudent/`);
+  //return true;
 };
 
 /**
