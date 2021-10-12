@@ -9,7 +9,7 @@ import myschedule from 'services/myschedule';
 import session from 'services/session';
 
 // @TODO CSSMODULES - Schedule Calendar needs work but left as normal for now
-import './ScheduleCalendar.css';
+import './schedulecalendar.css';
 
 export default class GordonScheduleCalendar extends Component {
   constructor(props) {

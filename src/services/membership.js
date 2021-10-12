@@ -222,8 +222,9 @@ const getIndividualMembership = (userID) =>
 
 /**
  * Group memberships by Activity code
- * @param {String} id ID of user
- * @return {grouped} array of activies containing arrays of each activitiy's instances
+ *
+ * @param {string} id ID of user
+ * @returns {grouped} array of activies containing arrays of each activitiy's instances
  */
 
 const groupByActivityCode = async (id) => {

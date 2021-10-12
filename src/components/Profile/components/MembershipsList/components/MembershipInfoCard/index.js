@@ -1,33 +1,72 @@
-import { Divider, Grid, List, ListItem, Switch, Typography } from '@material-ui/core/';
+import {
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  Switch,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  AccordionAction,
+} from '@material-ui/core/';
 import LockIcon from '@material-ui/icons/Lock';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { Link } from 'react-router-dom';
 import styles from './MembershipInfoCard.module.css';
 
-const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
+const OnlineOnlyLink = ({ element, children }) => {
   const isOnline = useNetworkStatus();
+  const showPrivate = element.IsInvolvementPrivate || element.Privacy;
+  if (isOnline) {
+    return (
+      <Link
+        className={`gc360_text_link ${
+          showPrivate ? styles.private_membership : styles.public_membership
+        }`}
+        to={`/activity/${element.SessionCode}/${element.ActivityCode}`}
+      >
+        {children}
+      </Link>
+    );
+  } else {
+    return (
+      <div className={`${showPrivate ? styles.private_membership : styles.public_membership}`}>
+        {children}
+      </div>
+    );
+  }
+};
 
-  const OnlineOnlyLink = ({ children }) => {
-    const showPrivate = membership.IsInvolvementPrivate || membership.Privacy;
-    if (isOnline) {
-      return (
-        <Link
-          className={`gc360_text_link ${
-            showPrivate ? styles.private_membership : styles.public_membership
-          }`}
-          to={`/activity/${membership.SessionCode}/${membership.ActivityCode}`}
-        >
-          {children}
-        </Link>
-      );
-    } else {
-      return (
-        <div className={`${showPrivate ? styles.private_membership : styles.public_membership}`}>
-          {children}
-        </div>
-      );
-    }
+const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
+  const PrivacyToggle = ({ element }) => {
+    const isOnline = useNetworkStatus();
+    return (
+      <Grid container item xs={4} alignItems="center">
+        <Grid item xs={12} align="center">
+          {isOnline &&
+            (element.IsInvolvementPrivate ? (
+              <LockIcon className={styles.lock_icon} />
+            ) : (
+              <Switch
+                onChange={() => {
+                  onTogglePrivacy(element);
+                }}
+                checked={!element.Privacy}
+                key={element.ActivityDescription + element.ActivityCode}
+              />
+            ))}
+        </Grid>
+        <Grid item xs={12} align="center">
+          <Typography>
+            {element.Privacy || element.IsInvolvementPrivate ? 'Private' : 'Public'}
+          </Typography>
+        </Grid>
+      </Grid>
+    );
   };
+
+  const isOnline = useNetworkStatus();
 
   return (
     <>
@@ -50,42 +89,40 @@ const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
         >
           <Grid item xs={8}>
             <List>
-              <ListItem className={styles.my_profile_info_card_description_text}>
-                <OnlineOnlyLink>
-                  <Typography fontWeight="fontWeightBold">
-                    {membership.ActivityDescription}
-                  </Typography>
-                  <Typography>{membership.SessionDescription}</Typography>
-                  <Typography>{membership.ParticipationDescription}</Typography>
-                </OnlineOnlyLink>
+              <ListItem
+                className={styles.my_profile_info_card_description_text}
+                key={membership[0].ActivityCode}
+              >
+                <Accordion expanded={true}>
+                  <AccordionSummary>
+                    <Typography fontWeight="fontWeightBold">
+                      {membership[0].ActivityDescription}
+                    </Typography>
+                  </AccordionSummary>
+                  {membership.map((element) => (
+                    <AccordionDetails>
+                      <OnlineOnlyLink element={element}>
+                        <Typography>
+                          {element.SessionDescription +
+                            ' (' +
+                            element.ParticipationDescription +
+                            ')'}
+                        </Typography>
+                      </OnlineOnlyLink>
+                      {myProf && (
+                        <PrivacyToggle
+                          key={element.ActivityCode + element.ActivityDescription}
+                          element={element}
+                          onTogglePrivacy={onTogglePrivacy}
+                        ></PrivacyToggle>
+                      )}
+                    </AccordionDetails>
+                  ))}
+                </Accordion>
               </ListItem>
             </List>
           </Grid>
-
-          {myProf && (
-            <Grid container item xs={4} alignItems="center">
-              <Grid item xs={12} align="center">
-                {isOnline &&
-                  (membership.IsInvolvementPrivate ? (
-                    <LockIcon className={styles.lock_icon} />
-                  ) : (
-                    <Switch
-                      onChange={() => {
-                        onTogglePrivacy(membership);
-                      }}
-                      checked={!membership.Privacy}
-                    />
-                  ))}
-              </Grid>
-              <Grid item xs={12} align="center">
-                <Typography>
-                  {membership.Privacy || membership.IsInvolvementPrivate ? 'Private' : 'Public'}
-                </Typography>
-              </Grid>
-            </Grid>
-          )}
         </Grid>
-
         <Grid
           container
           item
