@@ -28,7 +28,7 @@ const ContextProviders = ({ children }) => {
   );
 };
 
-const App = (props) => {
+const App = () => {
   const [drawerOpen, setDrawerOpen] = useState();
 
   const historyRef = useRef(createBrowserHistory());
