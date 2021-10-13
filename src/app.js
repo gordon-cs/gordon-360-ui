@@ -28,7 +28,7 @@ const ContextProviders = ({ children }) => {
   );
 };
 
-const App = (props) => {
+const App = () => {
   // Only use analytics in production
   if (process.env.NODE_ENV === 'production') {
     analytics.initialize();
