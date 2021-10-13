@@ -44,7 +44,7 @@ const App = () => {
     }
 
     historyRef.current.listen(() => analytics.onPageView());
-  });
+  }, []);
 
   return (
     <ErrorBoundary>
