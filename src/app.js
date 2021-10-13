@@ -26,7 +26,7 @@ const App = (props) => {
   }
 
   const [drawerOpen, setDrawerOpen] = useState();
-  const [authentication, setAuthentication] = useState();
+  const [authentication, setAuthentication] = useState(isAuthenticated());
 
   const historyRef = useRef(createBrowserHistory());
   historyRef.current.listen(() => analytics.onPageView());
@@ -41,31 +41,31 @@ const App = (props) => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <NetworkContextProvider>
-          <Router history={historyRef.current}>
-            <section className={styles.app_wrapper}>
-              <GordonHeader
-                onDrawerToggle={onDrawerToggle}
-                onSignOut={onAuthChange}
-                authentication={authentication}
-              />
-              <GordonNav
-                onDrawerToggle={onDrawerToggle}
-                drawerOpen={drawerOpen}
-                onSignOut={onAuthChange}
-                authentication={authentication}
-              />
-              <main className={styles.app_main}>
-                <Switch>
-                  {routes.map((route) => (
-                    <Route
-                      key={route.path}
-                      path={route.path}
-                      exact={route.exact}
-                      render={(props) => (
-                        <ErrorBoundary>
+    <ErrorBoundary>
+      <ThemeProvider theme={theme}>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <NetworkContextProvider>
+            <Router history={historyRef.current}>
+              <section className={styles.app_wrapper}>
+                <GordonHeader
+                  onDrawerToggle={onDrawerToggle}
+                  onSignOut={onAuthChange}
+                  authentication={authentication}
+                />
+                <GordonNav
+                  onDrawerToggle={onDrawerToggle}
+                  drawerOpen={drawerOpen}
+                  onSignOut={onAuthChange}
+                  authentication={authentication}
+                />
+                <main className={styles.app_main}>
+                  <Switch>
+                    {routes.map((route) => (
+                      <Route
+                        key={route.path}
+                        path={route.path}
+                        exact={route.exact}
+                        render={(props) => (
                           <div className={styles.app_main_container}>
                             <OfflineBanner
                               currentPath={route.path}
@@ -77,17 +77,17 @@ const App = (props) => {
                               {...props}
                             />
                           </div>
-                        </ErrorBoundary>
-                      )}
-                    />
-                  ))}
-                </Switch>
-              </main>
-            </section>
-          </Router>
-        </NetworkContextProvider>
-      </MuiPickersUtilsProvider>
-    </ThemeProvider>
+                        )}
+                      />
+                    ))}
+                  </Switch>
+                </main>
+              </section>
+            </Router>
+          </NetworkContextProvider>
+        </MuiPickersUtilsProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 
