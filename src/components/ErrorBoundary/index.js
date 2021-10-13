@@ -1,6 +1,6 @@
+import GordonError from 'components/Error';
 import { Component } from 'react';
 import analytics from 'services/analytics';
-import GordonError from 'components/Error';
 
 export default class ErrorBoundary extends Component {
   constructor(props) {
@@ -8,13 +8,13 @@ export default class ErrorBoundary extends Component {
     this.state = {
       hasError: false,
       error: '',
-      errorInfo: '',
     };
   }
 
   static getDerivedStateFromError(error) {
     return {
       hasError: true,
+      error: error,
     };
   }
 
@@ -22,14 +22,9 @@ export default class ErrorBoundary extends Component {
     if (process.env.NODE_ENV === 'production' && this.state.hasError) {
       analytics.onError(`${error.toString()} ${errorInfo.componentStack}`);
     }
-
-    return {
-      error: error,
-      errorInfo: errorInfo,
-    };
   }
 
   render() {
-    return this.state.hasError ? <GordonError /> : this.props.children;
+    return this.state.hasError ? <GordonError error={this.state.error} /> : this.props.children;
   }
 }
