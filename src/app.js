@@ -3,7 +3,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import UserContextProvider, { AuthContext } from 'contexts/UserContext';
 import { createBrowserHistory } from 'history';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
 import './app.global.css';
 import styles from './app.module.css';
@@ -29,19 +29,22 @@ const ContextProviders = ({ children }) => {
 };
 
 const App = (props) => {
-  // Only use analytics in production
-  if (process.env.NODE_ENV === 'production') {
-    analytics.initialize();
-  }
-
   const [drawerOpen, setDrawerOpen] = useState();
 
   const historyRef = useRef(createBrowserHistory());
-  historyRef.current.listen(() => analytics.onPageView());
 
   const onDrawerToggle = () => {
     setDrawerOpen(drawerOpen);
   };
+
+  useEffect(() => {
+    // Only use analytics in production
+    if (process.env.NODE_ENV === 'production') {
+      analytics.initialize();
+    }
+
+    historyRef.current.listen(() => analytics.onPageView());
+  });
 
   return (
     <ErrorBoundary>
