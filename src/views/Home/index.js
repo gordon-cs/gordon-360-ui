@@ -54,7 +54,7 @@ const Home = () => {
 
   if (loading) {
     return <GordonLoader />;
-  } else if (authenticated) {
+  } else if (!authenticated) {
     return <GuestWelcome />;
   } else if (isOnline && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
