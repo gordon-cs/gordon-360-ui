@@ -1,6 +1,13 @@
 name: Lint and Build
 
-on: push
+on:
+  # Run on PR for CI purposes
+  pull_request:
+  # Run on push to our deployed branches for CD purposes
+  push:
+    branches:
+      - develop
+      - master
 
 jobs:
   build:
