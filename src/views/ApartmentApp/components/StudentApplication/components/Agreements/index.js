@@ -1,26 +1,26 @@
-import { Fragment, useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
   CardHeader,
   Checkbox,
   Divider,
-  FormLabel,
   FormControl,
-  FormGroup,
   FormControlLabel,
+  FormGroup,
   FormHelperText,
+  FormLabel,
 } from '@material-ui/core/';
+import { Fragment, useEffect, useState } from 'react';
 import housing from 'services/housing';
-
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
 
 /**
  * Renders a card displaying the apartment application instructions
+ *
  * @param {Object} props The React component props
- * @param {Boolean | String} props.deleting Status of delete operation
- * @param {CallbackFcn} props.onChange Callback for change of the checkbox state
+ * @param {boolean | string} props.deleting Status of delete operation
+ * @param {Function} props.onChange Callback for change of the checkbox state
  * @returns {JSX.Element} JSX Element for the instructions card
  */
 const Agreements = ({ deleting, onChange }) => {

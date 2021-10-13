@@ -9,9 +9,9 @@ import http from './http';
 /**
  * @global
  * @typedef ScheduleControl
- * @property {Number} IsSchedulePrivate
- * @property {DateTime} ModifiedTimeStamp
- * @property {String} Description
+ * @property {number} IsSchedulePrivate Whether the schedule is private
+ * @property {DateTime} ModifiedTimeStamp When the schedule was last modified
+ * @property {string} Description A description of the schedule
  */
 
 async function setSchedulePrivacy(makePrivate) {
@@ -31,8 +31,9 @@ async function setScheduleDescription(Description) {
 
 /**
  * Get schedule control data for a given user or the current user if `username` is not provided
- * @param {String} [username] Username in firstname.lastname format
- * @return {Promise.<ScheduleControl>} returns the schedule control data
+ *
+ * @param {string} [username] Username in firstname.lastname format
+ * @returns {Promise.<ScheduleControl>} returns the schedule control data
  */
 
 const getScheduleControl = async (username) => {

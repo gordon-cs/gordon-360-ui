@@ -1,29 +1,27 @@
-import { useState, useEffect, useRef } from 'react';
-import Dropzone from 'react-dropzone';
-import EmailIcon from '@material-ui/icons/Email';
-import user from 'services/user';
-import { gordonColors } from 'theme';
-import { Link } from 'react-router-dom';
-import Cropper from 'react-cropper';
-import 'cropperjs/dist/cropper.css';
-import defaultGordonImage from './defaultGordonImage';
-import GordonLoader from 'components/Loader/index';
-import { windowBreakWidths } from 'theme';
-import styles from './Identification.module.css';
-
 import {
-  Grid,
-  CardHeader,
   Button,
-  Tooltip,
+  CardHeader,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
+import EmailIcon from '@material-ui/icons/Email';
+import GordonLoader from 'components/Loader/index';
+import 'cropperjs/dist/cropper.css';
+import { useEffect, useRef, useState } from 'react';
+import Cropper from 'react-cropper';
+import Dropzone from 'react-dropzone';
+import { Link } from 'react-router-dom';
+import user from 'services/user';
+import { gordonColors, windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
+import defaultGordonImage from './defaultGordonImage';
+import styles from './Identification.module.css';
 
 const Identification = ({ profile, myProf, network, createSnackbar }) => {
   const CROP_DIM = 200; // pixels
@@ -226,7 +224,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   async function handleCloseCancel() {
     setOpenPhotoDialog(false);
     setShowCropper(null);
-    await clearPhotoDialogErrorTimeout();
+    clearPhotoDialogErrorTimeout();
   }
 
   /**
@@ -259,7 +257,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
           createSnackbar('Failed Retrieving Photo', 'error');
         }
         // Deletes the preferred image, clears any timeouts errors and closes out of the photo updater
-        await clearPhotoDialogErrorTimeout();
+        clearPhotoDialogErrorTimeout();
         setPreferredUserImage(null);
         setHasPreferredImage(false);
         setOpenPhotoDialog(false);
@@ -281,7 +279,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
       .setImagePrivacy(isImagePublic)
       .then(async () => {
         // Closes out of Photo Updater and removes any error messages
-        await clearPhotoDialogErrorTimeout();
+        clearPhotoDialogErrorTimeout();
         setOpenPhotoDialog(false);
         setShowCropper(null);
         setIsImagePublic((isImagePublic + 1) % 2);
@@ -308,19 +306,16 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
    * to stop or remove the timeout to allow another one to be made (prevents memory leaks of
    * unreferenced timeouts)
    */
-  async function clearPhotoDialogErrorTimeout() {
-    return new Promise((resolve, reject) => {
-      clearTimeout(photoDialogErrorTimeout);
-      photoDialogErrorTimeout = null;
-      setPhotoDialogError(null);
-      resolve(true);
-    });
+  function clearPhotoDialogErrorTimeout() {
+    clearTimeout(photoDialogErrorTimeout);
+    photoDialogErrorTimeout = null;
+    setPhotoDialogError(null);
   }
 
   /**
    * Creates the Photo Dialog message that will be displayed to the user
    *
-   * @return {String} The message of the Photo Dialog
+   * @returns {string} The message of the Photo Dialog
    */
   function createPhotoDialogBoxMessage() {
     let message = '';
@@ -389,7 +384,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
       var i = new Image();
       i.onload = async () => {
         if (i.width < CROP_DIM || i.height < CROP_DIM) {
-          await clearPhotoDialogErrorTimeout();
+          clearPhotoDialogErrorTimeout();
           setPhotoDialogError(
             'Sorry, your image is too small! Image dimensions must be at least 200 x 200 pixels.',
           );
@@ -413,7 +408,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
    * Handles the rejection of the user dropping an invalid file in the Photo Updater Dialog Box
    */
   async function onDropRejected() {
-    await clearPhotoDialogErrorTimeout();
+    clearPhotoDialogErrorTimeout();
     setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
   }
 
@@ -427,7 +422,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   /**
    * Creates the Photo Updater Dialog Box
    *
-   * @return {JSX} The JSX of the Photo Updater
+   * @returns {JSX} The JSX of the Photo Updater
    */
   function createPhotoDialogBox() {
     return (
@@ -711,14 +706,13 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   className={styles.identification_card_content_card_container_info_name}
                 >
                   <Typography variant="h6" paragraph>
-                    {
-                      `${
-                        userProfile.Title && userProfile.PersonType === 'fac' ? `${userProfile.Title} ` : ''
-                   }${userProfile.FirstName}${
-                          hasNickname ? ` (${userProfile.NickName})` : ''
-                   } ${userProfile.LastName}${
-                          hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`
-                    }
+                    {`${
+                      userProfile.Title && userProfile.PersonType === 'fac'
+                        ? `${userProfile.Title} `
+                        : ''
+                    }${userProfile.FirstName}${hasNickname ? ` (${userProfile.NickName})` : ''} ${
+                      userProfile.LastName
+                    }${hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`}
                   </Typography>
                 </Grid>
                 {userProfile.JobTitle && userProfile.JobTitle !== '' && (

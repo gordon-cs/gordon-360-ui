@@ -1,8 +1,6 @@
+import { Card, CardContent, CardHeader, Grid } from '@material-ui/core';
 import { useEffect, useState } from 'react';
-
 import { gordonColors } from 'theme';
-
-import { Card, CardHeader, CardContent, Grid } from '@material-ui/core';
 import MemberListItem from './components/MemberListItem';
 
 const breakpointWidth = 810;
@@ -37,9 +35,10 @@ const MemberList = ({
    * Compares two members by their role and then their names - last then first
    *
    * Roles follow this hierarchy: Advisor > Leader > Member > Guest
+   *
    * @param {Object} a the first member to compare
    * @param {Object} b the second member to compare
-   * @returns {-1 | 0 | 1} the sort order of the members: -1 if a before b, 1 if b before a, or 0 if equal
+   * @returns {number} the sort order of the members: -1 if a before b, 1 if b before a, or 0 if equal
    */
 
   const compareByRoleThenLastThenFirst = (a, b) => {

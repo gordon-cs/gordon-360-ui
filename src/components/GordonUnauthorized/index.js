@@ -1,8 +1,7 @@
-import { Grid, Card, CardContent, Button } from '@material-ui/core/';
+import { Button, Card, CardContent, Grid } from '@material-ui/core/';
 
 /**
- * @param {String} feature - Text representing the content the user tried to access
- *
+ * @param {string} feature - Text representing the content the user tried to access
  * @returns {JSX.Element} A card with a message that the user must log in to view content
  */
 const GordonUnauthorized = ({ feature }) => {
