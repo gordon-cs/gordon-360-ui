@@ -35,6 +35,15 @@ const getScheduleMyProf = async () => {
 };
 
 /**
+ * Check if the current user user can see student schedules
+ *
+ * @returns {Promise<bool>} true if user can see student schedule, else false
+ */
+const getCanReadStudentSchedules = async () => {
+  return http.get(`schedule/canreadstudent/`);
+};
+
+/**
  * Get course schedule for a given user
  *
  * @param {string} [username] Username in firstname.lastname format
@@ -121,6 +130,7 @@ const scheduleService = {
   getSchedule,
   getScheduleMyProf,
   makeScheduleCourses,
+  getCanReadStudentSchedules,
 };
 
 export default scheduleService;

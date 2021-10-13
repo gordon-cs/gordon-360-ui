@@ -15,18 +15,16 @@ import IconButton from '@material-ui/core/IconButton';
 import LockIcon from '@material-ui/icons/Lock';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import GordonTooltip from 'components/GordonTooltip';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import userService from 'services/user';
+import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
-import GordonTooltip from 'components/GordonTooltip';
-import { gordonColors } from 'theme';
 
 const PRIVATE_INFO = 'Private as requested.';
-
-const isPolice = userService.getLocalInfo().college_role === 'gordon police';
 
 const formatPhone = (phone) => {
   if (phone?.length === 10) {
@@ -72,6 +70,7 @@ const PersonalInfoList = ({
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
   const isAlumni = PersonType?.includes('alu');
+  const isPolice = useMemo(() => userService.getLocalInfo().college_role === 'gordon police', []);
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -336,7 +335,7 @@ const PersonalInfoList = ({
       </>
     ) : null;
 
-    const campusDormInfo =
+  const campusDormInfo =
     isStudent && OnOffCampus && !(BuildingDescription || Hall) ? (
       <ProfileInfoListItem
         title="Dormitory:"
@@ -345,7 +344,7 @@ const PersonalInfoList = ({
         myProf={myProf}
       />
     ) : isStudent ? (
-    <ProfileInfoListItem
+      <ProfileInfoListItem
         title="Dormitory:"
         contentText={
           <>
@@ -357,7 +356,8 @@ const PersonalInfoList = ({
         }
         privateInfo
         myProf={myProf}
-      /> ) : null;
+      />
+    ) : null;
 
   const gordonID = myProf ? (
     <ProfileInfoListItem

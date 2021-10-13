@@ -1,50 +1,49 @@
-import { Component } from 'react';
-import GordonUnauthorized from 'components/GordonUnauthorized';
-import GordonOffline from 'components/GordonOffline';
 import {
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
-  CardActions,
   Checkbox,
   Collapse,
-  FormLabel,
+  Fab,
   FormControl,
   FormControlLabel,
+  FormLabel,
   Grid,
   Input,
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   TextField,
   Typography,
-  Fab,
   withStyles,
-  Switch,
 } from '@material-ui/core';
-import Media from 'react-media';
-import PersonIcon from '@material-ui/icons/Person';
 import AddIcon from '@material-ui/icons/Add';
-import {
-  FaHeart,
-  FaBriefcase,
-  FaBuilding,
-  FaBook,
-  FaGlobeAmericas,
-  FaSchool,
-  FaPrint,
-} from 'react-icons/fa';
-import { IconContext } from 'react-icons';
 import HomeIcon from '@material-ui/icons/Home';
 import CityIcon from '@material-ui/icons/LocationCity';
+import PersonIcon from '@material-ui/icons/Person';
+import GordonOffline from 'components/GordonOffline';
+import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonLoader from 'components/Loader';
+import { Component } from 'react';
+import { IconContext } from 'react-icons';
+import {
+  FaBook,
+  FaBriefcase,
+  FaBuilding,
+  FaGlobeAmericas,
+  FaHeart,
+  FaPrint,
+  FaSchool,
+} from 'react-icons/fa';
+import Media from 'react-media';
+import ReactToPrint from 'react-to-print';
 import goStalk from 'services/goStalk';
 import user from 'services/user';
 import { gordonColors } from 'theme';
-import GordonLoader from 'components/Loader';
 import PeopleSearchResult from './components/PeopleSearchResult';
-import ReactToPrint from 'react-to-print';
-
 // @TODO CSSMODULES - outside directory
 import styles from './components/PeopleSearchResult/PeopleSearchResult.module.css';
 
@@ -467,7 +466,11 @@ class PeopleSearch extends Component {
       .map(([key, value]) => `${key}=${value}`) // [ 'firstName=value', 'state=texas']
       .join('&'); // 'firstName=value&state=texas'
 
-    if (this.props.history.location.search !== searchParameters) {
+    // If the page is still the people page & the searchParameters are not the same as previous search
+    if (
+      this.props.history.location.pathname === '/people' &&
+      this.props.history.location.search !== searchParameters
+    ) {
       this.props.history.push(`?${searchParameters}`);
     }
   }
