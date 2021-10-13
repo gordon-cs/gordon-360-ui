@@ -63,7 +63,7 @@ const OfficeInfoList = ({
     />
   ) : null;
 
-  const updateProfile =
+  const updateOfficeInfo =
     myProf && PersonType?.includes('fac') ? (
       <Typography align="left" className={styles.note}>
         NOTE: Update your office info
@@ -92,7 +92,7 @@ const OfficeInfoList = ({
             {mailstop}
             {officePhone}
             {officeHours}
-            {updateProfile}
+            {updateOfficeInfo}
           </List>
         </CardContent>
       </Card>

@@ -20,13 +20,14 @@ import styles from '../../../../../../ApartmentApp.module.css';
 
 /**
  * Renders the list item for the apartment off-campus program list
+ *
  * @param {Object} props The React component props
- * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
- * @param {Number} props.index The index of this list item
+ * @param {boolean} props.disabled boolean to disable the interactive elements of this list item
+ * @param {number} props.index The index of this list item
  * @param {StudentProfileInfo} props.profile The StudentProfileInfo of the applicant
- * @param {String} props.offCampusProgram The name of the department of the off-campus program
- * @param {String[]} props.departments Array of departments available
- * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
+ * @param {string} props.offCampusProgram The name of the department of the off-campus program
+ * @param {string[]} props.departments Array of departments available
+ * @param {Function} props.onOffCampusInputChange Callback for dropdown menu change
  * @returns {JSX.Element} JSX Element for the off-campus program list
  */
 const OffCampusListItem = ({

@@ -1,17 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
-import { sortBy } from 'lodash';
-import { DateTime } from 'luxon';
-import { CSVLink } from 'react-csv';
-import { Grid, Card, CardHeader, CardContent, Button, Typography } from '@material-ui/core/';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core/';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import GordonLoader from 'components/Loader';
-import ApplicationsTable from './components/ApplicationTable';
+import { sortBy } from 'lodash';
+import { DateTime } from 'luxon';
+import { useCallback, useEffect, useState } from 'react';
+import { CSVLink } from 'react-csv';
 import { NotFoundError } from 'services/error';
 import housing from 'services/housing';
-
 // @TODO CSSMODULES - outside directory
 import styles from '../../ApartmentApp.module.css';
+import ApplicationsTable from './components/ApplicationTable';
 
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
@@ -21,6 +20,7 @@ import styles from '../../ApartmentApp.module.css';
 
 /**
  * Renders the page for the apartment application housing staff menu
+ *
  * @param {Object} props The React component props
  * @param {StudentProfileInfo} props.userProfile The student profile info of the current user
  * @returns {JSX.Element} JSX Element for the staff menu web page

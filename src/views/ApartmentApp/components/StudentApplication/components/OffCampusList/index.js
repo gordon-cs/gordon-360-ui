@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
-import OffCampusListItem from './components/OffCampusListItem';
+import { Card, CardContent, CardHeader, Grid, List } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 import goStalk from 'services/goStalk';
-
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
+import OffCampusListItem from './components/OffCampusListItem';
 
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
@@ -13,10 +12,11 @@ import styles from '../../../../ApartmentApp.module.css';
 
 /**
  * Renders the list of selection boxes to choosing which applicants are doing off campus programs.
+ *
  * @param {Object} props The React component props
- * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
+ * @param {boolean} props.disabled boolean to disable the interactive elements of this list item
  * @param {ApartmentApplicant[]} props.applicants Array of applicant info
- * @param {CallbackFcn} props.onOffCampusInputChange Callback for dropdown menu change
+ * @param {Function} props.onOffCampusInputChange Callback for dropdown menu change
  * @returns {JSX.Element} JSX Element for the off-campus program list
  */
 const OffCampusList = ({ disabled, applicants, onOffCampusInputChange }) => {

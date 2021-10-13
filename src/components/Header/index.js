@@ -1,53 +1,34 @@
-import MenuIcon from '@material-ui/icons/Menu';
+import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
+import EventIcon from '@material-ui/icons/Event';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
-import EventIcon from '@material-ui/icons/Event';
-import PeopleIcon from '@material-ui/icons/People';
 // import WorkIcon from '@material-ui/icons/Work';
 import WellnessIcon from '@material-ui/icons/LocalHospital';
-import PropTypes from 'prop-types';
+import MenuIcon from '@material-ui/icons/Menu';
+import PeopleIcon from '@material-ui/icons/People';
+import GordonDialogBox from 'components/GordonDialogBox/index';
+import { useAuth, useDocumentTitle, useNetworkStatus } from 'hooks';
+import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
-import DocumentTitle from 'react-document-title';
-import { Route, Switch, NavLink, Link } from 'react-router-dom';
-import styles from './Header.module.css';
-import GordonPeopleSearch from './components/PeopleSearch';
+import { Link, NavLink, Route, Switch } from 'react-router-dom';
+import routes from 'routes';
+import { windowBreakWidths } from 'theme';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
-import routes from 'routes';
-import { projectName } from 'project-name';
-import GordonDialogBox from 'components/GordonDialogBox/index';
-import { windowBreakWidths } from 'theme';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import { AppBar, Toolbar, Typography, IconButton, Tabs, Tab, Button } from '@material-ui/core';
-
-const getRouteName = (route) => {
-  // TODO: replace this function with the following line of code once document title setting has been refactored
-  // return () => ( route.name ? <span>{route.name}</span> : <span>{projectName}</span>);
-  if (route.name) {
-    return () => (
-      <span>
-        <DocumentTitle title={`${route.name} | ${projectName}`} />
-        {route.name}
-      </span>
-    );
-  }
-  return () => (
-    <span>
-      <DocumentTitle title={`${projectName}`} />
-      {projectName}
-    </span>
-  );
-};
+import GordonPeopleSearch from './components/PeopleSearch';
+import styles from './Header.module.css';
 
 const ForwardLink = forwardRef((props, ref) => <Link ref={ref} {...props} />);
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
-const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
+const GordonHeader = ({ onDrawerToggle }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const [dialog, setDialog] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorElement, setAnchorElement] = useState(null);
   const isOnline = useNetworkStatus();
+  const setDocumentTitle = useDocumentTitle();
+  const authenticated = useAuth();
 
   /**
    * Update the tab highlight indicator based on the url
@@ -129,7 +110,7 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
           onClick={() => setDialog('offline')}
         />
       );
-    } else if (!authentication) {
+    } else if (!authenticated) {
       return (
         <Tab
           className={`${styles.tab} ${styles.disabled_tab}`}
@@ -194,7 +175,10 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
                   key={route.path}
                   path={route.path}
                   exact={route.exact}
-                  component={getRouteName(route)}
+                  component={() => {
+                    setDocumentTitle(route.name || projectName);
+                    return <span>{route.name || projectName}</span>;
+                  }}
                 />
               ))}
             </Switch>
@@ -232,26 +216,15 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
           <div className={styles.people_search_container_container}>
             {/* Width is dynamic */}
             <div className={styles.people_search_container}>
-              {authentication ? (
-                <GordonPeopleSearch authentication={authentication} />
-              ) : (
-                loginButton
-              )}
+              {authenticated ? <GordonPeopleSearch /> : loginButton}
             </div>
           </div>
 
-          <GordonNavAvatarRightCorner
-            onSignOut={onSignOut}
-            authentication={authentication}
-            onClick={handleOpenMenu}
-            menuOpened={isMenuOpen}
-          />
+          <GordonNavAvatarRightCorner onClick={handleOpenMenu} menuOpened={isMenuOpen} />
 
           <GordonNavButtonsRightCorner
             open={isMenuOpen}
             openDialogBox={setDialog}
-            onSignOut={onSignOut}
-            authentication={authentication}
             anchorEl={anchorElement}
             onClose={handleCloseMenu}
           />
@@ -264,8 +237,3 @@ const GordonHeader = ({ authentication, onDrawerToggle, onSignOut }) => {
 };
 
 export default GordonHeader;
-
-GordonHeader.propTypes = {
-  onDrawerToggle: PropTypes.func.isRequired,
-  onSignOut: PropTypes.func.isRequired,
-};

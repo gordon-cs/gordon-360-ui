@@ -1,19 +1,18 @@
-import { useState, useEffect } from 'react';
 import {
-  Grid,
   Divider,
+  FormControl,
+  FormHelperText,
+  Grid,
+  IconButton,
+  Input,
+  InputLabel,
   ListItem,
   ListItemSecondaryAction,
   MenuItem,
-  FormControl,
-  FormHelperText,
-  Input,
-  InputLabel,
   Select,
-  IconButton,
 } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
-
+import { useEffect, useState } from 'react';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../../../ApartmentApp.module.css';
 
@@ -24,15 +23,16 @@ import styles from '../../../../../../ApartmentApp.module.css';
 
 /**
  * Renders the list item for the apartment hall choice list
+ *
  * @param {Object} props The React component props
- * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list item
- * @param {Number} props.index The index of this list item
- * @param {Number} props.hallRank The rank assigned to this hall by the user
- * @param {String} props.hallName The name of the apartment hall
+ * @param {boolean} props.disabled boolean to disable the interactive elements of this list item
+ * @param {number} props.index The index of this list item
+ * @param {number} props.hallRank The rank assigned to this hall by the user
+ * @param {string} props.hallName The name of the apartment hall
  * @param {ApartmentChoice[]} props.apartmentChoices Array of apartment choices
  * @param {ApartmentHall[]} props.halls Array of apartment halls available
- * @param {CallbackFcn} props.onHallInputChange Callback for dropdown menu change
- * @param {CallbackFcn} props.onHallRemove Callback for remove hall button
+ * @param {Function} props.onHallInputChange Callback for dropdown menu change
+ * @param {Function} props.onHallRemove Callback for remove hall button
  * @returns {JSX.Element} JSX Element for the hall list item
  */
 const HallChoiceListItem = ({

@@ -17,7 +17,7 @@ import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
 // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
 // import checkInService from 'services/checkIn';
-const Home = ({ authentication, onLogIn }) => {
+const Home = ({ authentication }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
@@ -56,7 +56,7 @@ const Home = ({ authentication, onLogIn }) => {
   if (loading) {
     return <GordonLoader />;
   } else if (!isAuthenticated) {
-    return <GuestWelcome onLogIn={onLogIn} />;
+    return <GuestWelcome />;
   } else if (isOnline && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   }

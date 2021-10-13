@@ -3,7 +3,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import PublishIcon from '@material-ui/icons/Publish';
 import SaveIcon from '@material-ui/icons/Save';
 import DynamicButton from 'components/DynamicButton';
-
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
 
@@ -11,18 +10,18 @@ import styles from '../../../../ApartmentApp.module.css';
  * Renders the bottom bar for the apartment application page
  *
  * @param {Object} props The React component props
- * @param {Boolean} props.applicationCardsOpen Indicates whether the application cards are open and visible
- * @param {Number} props.applicationID Application ID number of this application
- * @param {Boolean} props.canEditApplication Indicates whether the current using is authorized to edit the application
- * @param {Boolean | String} props.deleting Status of delete operation
- * @param {Object} props.disableSubmit Boolean to disable the submit button
- * @param {Boolean | String} props.saving Status of save operation
- * @param {Boolean | String} props.submitStatus Status of submit operation
- * @param {Boolean} props.unsavedChanges Indicates whether the page currently contains unsaved changes
- * @param {CallbackFcn} props.onDeleteButtonClick Callback
- * @param {CallbackFcn} props.onSaveButtonClick Callback
- * @param {CallbackFcn} props.onShowApplication Callback
- * @param {CallbackFcn} props.onSubmitButtonClick Callback for the submit application button
+ * @param {boolean} props.applicationCardsOpen Indicates whether the application cards are open and visible
+ * @param {number} props.applicationID Application ID number of this application
+ * @param {boolean} props.canEditApplication Indicates whether the current using is authorized to edit the application
+ * @param {boolean | string} props.deleting Status of delete operation
+ * @param {Object} props.disableSubmit boolean to disable the submit button
+ * @param {boolean | string} props.saving Status of save operation
+ * @param {boolean | string} props.submitStatus Status of submit operation
+ * @param {boolean} props.unsavedChanges Indicates whether the page currently contains unsaved changes
+ * @param {Function} props.onDeleteButtonClick Callback
+ * @param {Function} props.onSaveButtonClick Callback
+ * @param {Function} props.onShowApplication Callback
+ * @param {Function} props.onSubmitButtonClick Callback for the submit application button
  * @returns {JSX.Element} JSX Element for the bottom bar
  */
 const BottomBar = ({

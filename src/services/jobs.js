@@ -15,7 +15,8 @@ const dateFormatter = Intl.DateTimeFormat('en', {
 
 /**
  * Get Whether or not the user can use staff timesheets
- * @return {Promise.<Number>} User's employee ID
+ *
+ * @returns {Promise.<number>} User's employee ID
  */
 const getStaffPageForUser = async () => {
   return await http.get(`jobs/canUsePage`);
@@ -23,10 +24,11 @@ const getStaffPageForUser = async () => {
 
 /**
  * Get active jobs for current user
- * @param {Boolean} canUseStaff Whether user can use staff timesheets
+ *
+ * @param {boolean} canUseStaff Whether user can use staff timesheets
  * @param {Date} shiftStart The start of the shift to get jobs for
  * @param {Date} shiftEnd The end of the shift to get jobs for
- * @return {Promise.<String>} User's active jobs
+ * @returns {Promise.<string>} User's active jobs
  */
 const getJobs = (canUseStaff, shiftStart, shiftEnd) => {
   const urlParams = `?shiftStart=${dateFormatter.format(
@@ -42,8 +44,9 @@ const getJobs = (canUseStaff, shiftStart, shiftEnd) => {
 
 /**
  * Get saved shifts for current user
- * @param {Boolean} canUseStaff Whether user can use staff timesheets
- * @return {Promise.<String>} User's active jobs
+ *
+ * @param {boolean} canUseStaff Whether user can use staff timesheets
+ * @returns {Promise.<string>} User's active jobs
  */
 const getSavedShiftsForUser = (canUseStaff) => {
   if (canUseStaff) {
@@ -54,14 +57,15 @@ const getSavedShiftsForUser = (canUseStaff) => {
 
 /**
  * Get active jobs for current user
- * @param {Boolean} canUseStaff Whether user can use staff timesheets
- * @param {Number} eml we don't know what this means yet
+ *
+ * @param {boolean} canUseStaff Whether user can use staff timesheets
+ * @param {number} eml we don't know what this means yet
  * @param {DateTime} shiftStart The start time of the shift
  * @param {DateTime} shiftEnd The end time of the shift
- * @param {Number} hoursWorked The number of hours
+ * @param {number} hoursWorked The number of hours
  * @param {char} hoursType Type of hour for staff
- * @param {String} shiftNotes Shift notes
- * @return {Promise.<String>} User's active jobs
+ * @param {string} shiftNotes Shift notes
+ * @returns {Promise.<string>} User's active jobs
  */
 const saveShiftForUser = async (
   canUseStaff,

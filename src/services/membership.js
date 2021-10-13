@@ -9,48 +9,49 @@ import http from './http';
 /**
  * @global
  * @typedef Member
- * @property {Number} AccountPrivate 0 if false, 1 if private
- * @property {String} ActivityCode Identifier for activity
- * @property {String} ActivityDescription Activity Title
- * @property {String} ActivityImage Often null
- * @property {String} ActivityImagePath URL path for activity image
- * @property {String} Description Comment text for membership
- * @property {String} EndDate Often null
- * @property {String} FirstName First Name.
- * @property {boolean} GroupAdmin Boolean if Group Admin or not
- * @property {Number} IDNumber User id
- * @property {String} LastName Last Name
- * @property {Number} MembershipID Membership ID
- * @property {String} Participation Participation Code or abbreviation
- * @property {String} ParticipationDescription Participation description (eg. "Advisor", "Leader")
- * @property {String} Privacy false if public, true if private, sometimes null
- * @property {String} SessionCode Identifier for session
- * @property {String} SessionDescription Session description
- * @property {String} StartDate Beginning date of session
+ * @property {number} AccountPrivate 0 if false, 1 if private
+ * @property {string} ActivityCode Identifier for activity
+ * @property {string} ActivityDescription Activity Title
+ * @property {string} ActivityImage Often null
+ * @property {string} ActivityImagePath URL path for activity image
+ * @property {string} Description Comment text for membership
+ * @property {string} EndDate Often null
+ * @property {string} FirstName First Name.
+ * @property {boolean} GroupAdmin boolean if Group Admin or not
+ * @property {number} IDNumber User id
+ * @property {string} LastName Last Name
+ * @property {number} MembershipID Membership ID
+ * @property {string} Participation Participation Code or abbreviation
+ * @property {string} ParticipationDescription Participation description (eg. "Advisor", "Leader")
+ * @property {string} Privacy false if public, true if private, sometimes null
+ * @property {string} SessionCode Identifier for session
+ * @property {string} SessionDescription Session description
+ * @property {string} StartDate Beginning date of session
  */
 
 /**
  * @global
  * @typedef Request
- * @property {String} ActivityCode Identifier for activity
- * @property {String} ActivityDescription Activity Title
- * @property {String} CommentText Comment or text
- * @property {String} DateSent Date sent
- * @property {String} FirstName First Name
- * @property {Number} IDNumber User id
- * @property {String} LastName Last Name
- * @property {String} Participation Particpation Code or abbreviation
- * @property {String} ParticipationDescription Participation description (Advisor/Leader/Member/Guest)
- * @property {String} RequestApproved Status of request: Pending, Approved, or Denied
- * @property {Number} RequestID Request ID
- * @property {String} SessionCode Identifier for session
- * @property {String} SessionDescription Session description
+ * @property {string} ActivityCode Identifier for activity
+ * @property {string} ActivityDescription Activity Title
+ * @property {string} CommentText Comment or text
+ * @property {string} DateSent Date sent
+ * @property {string} FirstName First Name
+ * @property {number} IDNumber User id
+ * @property {string} LastName Last Name
+ * @property {string} Participation Particpation Code or abbreviation
+ * @property {string} ParticipationDescription Participation description (Advisor/Leader/Member/Guest)
+ * @property {string} RequestApproved Status of request: Pending, Approved, or Denied
+ * @property {number} RequestID Request ID
+ * @property {string} SessionCode Identifier for session
+ * @property {string} SessionDescription Session description
  */
 
 /**
  * Create a new membership
+ *
  * @param {Object} data Data passed in
- * @return {Promise<any>} Response
+ * @returns {Promise<any>} Response
  */
 function addMembership(data) {
   return http.post('memberships', data);
@@ -58,8 +59,9 @@ function addMembership(data) {
 
 /**
  * Approve request
- * @param {String} requestID Request object
- * @return {Promise<any>} Response
+ *
+ * @param {string} requestID Request object
+ * @returns {Promise<any>} Response
  */
 const approveRequest = (requestID) => {
   return http.post(`requests/${requestID}/approve`);
@@ -67,10 +69,11 @@ const approveRequest = (requestID) => {
 
 /**
  * Check if user is Admin of activity
- * @param {String} id ID of user
- * @param {String} sessionCode Identifier for a session
- * @param {String} activityCode Identifier for an activity
- * @return {boolean} True if given id is a group admin, else false
+ *
+ * @param {string} id ID of user
+ * @param {string} sessionCode Identifier for a session
+ * @param {string} activityCode Identifier for an activity
+ * @returns {boolean} True if given id is a group admin, else false
  */
 const checkAdmin = (id, sessionCode, activityCode) => {
   let isGroupAdmin = getAllGroupAdmins(activityCode).then(function (result) {
@@ -90,8 +93,9 @@ const checkAdmin = (id, sessionCode, activityCode) => {
 
 /**
  * Deny request
- * @param {String} requestID Request object
- * @return {Promise<any>} Response
+ *
+ * @param {string} requestID Request object
+ * @returns {Promise<any>} Response
  */
 const denyRequest = (requestID) => {
   return http.post(`requests/${requestID}/deny`);
@@ -99,8 +103,9 @@ const denyRequest = (requestID) => {
 
 /**
  * Cancel request with given request id
- * @param {String} requestID request id
- * @return {Promise.<Object>} deleted object
+ *
+ * @param {string} requestID request id
+ * @returns {Promise.<Object>} deleted object
  */
 const cancelRequest = (requestID) => {
   return http.del(`requests/${requestID}`);
@@ -108,9 +113,10 @@ const cancelRequest = (requestID) => {
 
 /**
  * Edit membership with given membership id
- * @param {String} id Membership id
+ *
+ * @param {string} id Membership id
  * @param {Object} data Data passed in
- * @return {Promise.<Object>} Response body
+ * @returns {Promise.<Object>} Response body
  */
 const editMembership = (id, data) => {
   return http.put(`memberships/${id}`, data);
@@ -118,9 +124,10 @@ const editMembership = (id, data) => {
 
 /**
  * Filters members for current session
+ *
  * @param {Member[]} memberArray List of all members in an activity
- * @param {String} sessionCode Identifier for a session
- * @return {Member[]} List of filtered members for given session
+ * @param {string} sessionCode Identifier for a session
+ * @returns {Member[]} List of filtered members for given session
  */
 const filterCurrent = (memberArray, sessionCode) => {
   let currentSessionMembership = [];
@@ -134,9 +141,10 @@ const filterCurrent = (memberArray, sessionCode) => {
 
 /**
  * Get specific membership for the activity and given session code
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @return {Member[]} List of members in given session
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @param {string} sessionCode Identifier for a session
+ * @returns {Member[]} List of members in given session
  */
 const get = (activityCode, sessionCode) => {
   let allMembership = getAll(activityCode).then(function (result) {
@@ -155,23 +163,26 @@ const toggleMembershipPrivacy = async (userMembership) => {
 
 /**
  * Get all memberships
- * @param {String} activityCode Identifier for an activity
- * @return {Member[]} List of all memberships for activity
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @returns {Member[]} List of all memberships for activity
  */
 const getAll = (activityCode) => http.get(`memberships/activity/${activityCode}`);
 
 /**
  * Get all group admins
- * @param {String} activityCode Identifier for an activity
- * @return {Member[]} List of all group admins
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @returns {Member[]} List of all group admins
  */
 const getAllGroupAdmins = (activityCode) =>
   http.get(`memberships/activity/${activityCode}/group-admin`);
 
 /**
  * Get email account details of given email
- * @param {String} email Email
- * @return {Object} Email details
+ *
+ * @param {string} email Email
+ * @returns {Object} Email details
  */
 const getEmailAccount = async (email) => {
   return await http.get(`accounts/email/${email}/`);
@@ -179,26 +190,29 @@ const getEmailAccount = async (email) => {
 
 /**
  * Get number of subscribers (guests) of an activity
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @returns {Number} Number of subscribers
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @param {string} sessionCode Identifier for a session
+ * @returns {number} Number of subscribers
  */
 const getFollowersNum = (activityCode, sessionCode) =>
   http.get(`memberships/activity/${activityCode}/followers/${sessionCode}`);
 
 /**
  * Get number of members of an activity
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @returns {Number} Number of members
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @param {string} sessionCode Identifier for a session
+ * @returns {number} Number of members
  */
 const getMembersNum = (activityCode, sessionCode) =>
   http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
 
 /**
  * Get a given user's list of memberships
- * @param {String} userID ID of user
- * @return {Member[]} Array of the given student's memberships
+ *
+ * @param {string} userID ID of user
+ * @returns {Member[]} Array of the given student's memberships
  */
 const getIndividualMembership = (userID) =>
   http.get(`memberships/student/${userID}`).then(function (result) {
@@ -207,9 +221,10 @@ const getIndividualMembership = (userID) =>
 
 /**
  * Get requests for specific activity and filtered by session code
- * @param {String} activityCode Identifier for an activity
- * @param {String} sessionCode Identifier for a session
- * @return {Request[]} List of requests for activity and session
+ *
+ * @param {string} activityCode Identifier for an activity
+ * @param {string} sessionCode Identifier for a session
+ * @returns {Request[]} List of requests for activity and session
  */
 const getRequests = (activityCode, sessionCode) => {
   let allRequests = http.get(`requests/activity/${activityCode}`).then(function (result) {
@@ -220,9 +235,10 @@ const getRequests = (activityCode, sessionCode) => {
 
 /**
  * Filters only penidng requests for an activity
+ *
  * @param {Request[]} requestsArray List of all the requests for an activity
- * @param {String} sessionCode Identifier for a session
- * @return {Request[]} Filtered requests
+ * @param {string} sessionCode Identifier for a session
+ * @returns {Request[]} Filtered requests
  */
 const filterCurrentRequests = (requestsArray, sessionCode) => {
   let filteredRequestsArray = [];
@@ -257,8 +273,9 @@ const getDiffDays = function (date) {
 
 /**
  * Remove given membershipID from membership table (Example of successful delete)
- * @param {String} membershipID The membershipID to remove
- * @return {Promise.<Object>} Response body
+ *
+ * @param {string} membershipID The membershipID to remove
+ * @returns {Promise.<Object>} Response body
  */
 const remove = (membershipID) => {
   return http.del(`memberships/${membershipID}`);
@@ -266,8 +283,9 @@ const remove = (membershipID) => {
 
 /**
  * Request membership
+ *
  * @param {Object} data Data passed in
- * @return {Promise<Object>} Response body
+ * @returns {Promise<Object>} Response body
  */
 function requestMembership(data) {
   return http.post(`requests`, data);
@@ -275,10 +293,11 @@ function requestMembership(data) {
 
 /**
  * Search to see details of user with given id relating to given activtiy and session
- * @param {String} id User id
- * @param {String} sessionCode Identifier for session
- * @param {String} activityCode Identifier for activity
- * @return {Array} 3 elements: boolean if in specific activity and session, string of participation description,
+ *
+ * @param {string} id User id
+ * @param {string} sessionCode Identifier for session
+ * @param {string} activityCode Identifier for activity
+ * @returns {Array} 3 elements: boolean if in specific activity and session, string of participation description,
  *                  and membershipID if in specific activity and session
  */
 const search = (id, sessionCode, activityCode) => {
@@ -297,9 +316,10 @@ const search = (id, sessionCode, activityCode) => {
 
 /**
  * Toggle whether or not a member with given membershipID is a groupAdmin (Example of succesful put)
+ *
  * @param {Object} membershipID MembershipID of user to edit groupAdmin status
  * @param {Object} data Data passed in
- * @return {Promise<any>} Response
+ * @returns {Promise<any>} Response
  */
 const toggleGroupAdmin = async (membershipID, data) => {
   return await http.put(`memberships/${membershipID}/group-admin`, data);
