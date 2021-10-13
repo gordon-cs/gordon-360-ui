@@ -34,7 +34,7 @@ const App = () => {
   const historyRef = useRef(createBrowserHistory());
 
   const onDrawerToggle = () => {
-    setDrawerOpen(drawerOpen);
+    setDrawerOpen(o => !o);
   };
 
   useEffect(() => {
