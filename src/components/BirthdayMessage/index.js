@@ -1,5 +1,6 @@
 import { Card } from '@material-ui/core';
 import GordonConfetti from 'components/GordonConfetti';
+import { useAuth } from 'hooks';
 import useWindowSize from 'hooks/useWindowSize';
 import { useEffect, useState } from 'react';
 import userService from 'services/user';
@@ -9,6 +10,8 @@ import BannerLarge from './HBDBannerLarge.png';
 const BirthdayMessage = ({ open, setOpen, name }) => {
   const [confetti, setConfetti] = useState(false);
   const [width] = useWindowSize();
+  const authenticated = useAuth();
+  const [isBirthday, setIsBirthday] = useState(false);
 
   const popConfetti = () => {
     setConfetti(true);
@@ -16,12 +19,19 @@ const BirthdayMessage = ({ open, setOpen, name }) => {
   };
 
   useEffect(() => {
-    setTimeout(popConfetti, 1000);
+    const checkIsBirthday = async () => {
+      setIsBirthday(await userService.isBirthdayToday());
+    };
+    checkIsBirthday();
+    if (!sessionStorage.getItem('birthdayConfettiHasPopped')) {
+      setTimeout(popConfetti, 1000);
+      sessionStorage.setItem('birthdayConfettiHasPopped', JSON.stringify(true));
+    }
   }, []);
 
   const Banner = width >= 1280 ? BannerLarge : BannerSmall;
 
-  return userService.isBirthdayToday() ? (
+  return authenticated && isBirthday ? (
     <Card
       style={{
         cursor: 'pointer',
@@ -32,7 +42,7 @@ const BirthdayMessage = ({ open, setOpen, name }) => {
       onClick={popConfetti}
     >
       <div style={{ position: 'fixed', zIndex: 999999, top: -60, left: '50vw' }}>
-        <GordonConfetti active={confetti} />
+        <GordonConfetti active={confetti} colorOption="Gordon" />
       </div>
       <img src={Banner} alt="Happy Birthday Banner" style={{ width: '100%' }} />
     </Card>

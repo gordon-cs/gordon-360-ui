@@ -57,22 +57,24 @@ const App = () => {
             <main className={styles.app_main}>
               <AuthContext.Consumer>
                 {(authenticated) => (
-                  <Switch>
-                    {routes.map((route) => (
-                      <Route
-                        key={route.path}
-                        path={route.path}
-                        exact={route.exact}
-                        render={(props) => (
-                          <div className={styles.app_main_container}>
-                            <OfflineBanner currentPath={route.path} authentication={props.auth} />
-                            <BirthdayMessage />
-                            <route.component authentication={authenticated} {...props} />
-                          </div>
-                        )}
-                      />
-                    ))}
-                  </Switch>
+                  <>
+                    <BirthdayMessage />
+                    <Switch>
+                      {routes.map((route) => (
+                        <Route
+                          key={route.path}
+                          path={route.path}
+                          exact={route.exact}
+                          render={(props) => (
+                            <div className={styles.app_main_container}>
+                              <OfflineBanner currentPath={route.path} authentication={props.auth} />
+                              <route.component authentication={authenticated} {...props} />
+                            </div>
+                          )}
+                        />
+                      ))}
+                    </Switch>
+                  </>
                 )}
               </AuthContext.Consumer>
             </main>

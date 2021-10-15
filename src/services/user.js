@@ -606,12 +606,13 @@ const getLeaderPositions = async (id) => {
  *
  * @returns {Date} The birthday of the current user
  */
-const getBirthday = () => {
-  return DateTime.fromISO('2021-10-14T16:03:44+00:00');
+const getBirthday = async () => {
+  return DateTime.fromISO(await http.get(`/profiles/dob`));
 };
 
-const isBirthdayToday = () => {
-  return getBirthday().toISODate() === DateTime.now().toISODate();
+const isBirthdayToday = async () => {
+  const birthday = await getBirthday();
+  return birthday && birthday.toISODate() === DateTime.now().toISODate();
 };
 
 //compares items by ActivityDescription, used by getMembershipsAlphabetically to sort by ActivityDescription
