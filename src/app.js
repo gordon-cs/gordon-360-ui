@@ -1,6 +1,7 @@
 import MomentUtils from '@date-io/moment';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import BirthdayMessage from 'components/BirthdayMessage';
 import UserContextProvider, { AuthContext } from 'contexts/UserContext';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
@@ -34,7 +35,7 @@ const App = () => {
   const historyRef = useRef(createBrowserHistory());
 
   const onDrawerToggle = () => {
-    setDrawerOpen(o => !o);
+    setDrawerOpen((o) => !o);
   };
 
   useEffect(() => {
@@ -65,6 +66,7 @@ const App = () => {
                         render={(props) => (
                           <div className={styles.app_main_container}>
                             <OfflineBanner currentPath={route.path} authentication={props.auth} />
+                            <BirthdayMessage />
                             <route.component authentication={authenticated} {...props} />
                           </div>
                         )}

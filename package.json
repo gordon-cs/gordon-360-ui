@@ -29,6 +29,7 @@
     "react-csv": "^2.0.3",
     "react-device-detect": "^1.17.0",
     "react-dom": "^17.0.2",
+    "react-dom-confetti": "^0.2.0",
     "react-dropzone": "^11.3.2",
     "react-ga": "^3.3.0",
     "react-graceful-image": "^1.5.0",

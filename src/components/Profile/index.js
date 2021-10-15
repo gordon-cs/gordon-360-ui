@@ -1,5 +1,4 @@
 import { Grid } from '@material-ui/core';
-import BirthdayMessage from 'components/BirthdayMessage';
 import GordonSnackbar from 'components/Snackbar';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
@@ -49,8 +48,6 @@ const Profile = ({ profile, myProf }) => {
           createSnackbar={createSnackbar}
         />
       </Grid>
-
-      <BirthdayMessage open={true} />
 
       {myProf && profileIsStudent && (
         <Grid item xs={12} md={4}>
