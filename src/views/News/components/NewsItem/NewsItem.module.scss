@@ -9,6 +9,10 @@
   .news_authorProfileLink {
     color: inherit;
   }
+  .news_authorProfileLink:hover {
+    text-decoration: underline;
+    text-decoration-color: $neutral-white;
+  }
 
   &.unapproved {
     background-color: $neutral-light-gray;
