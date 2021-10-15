@@ -1,6 +1,7 @@
 import { Box, Button, Card, CardHeader, Grid } from '@material-ui/core';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
+import { useAuth } from 'hooks';
 import { useEffect, useState } from 'react';
 import checkInService from 'services/checkIn';
 import user from 'services/user';
@@ -15,6 +16,7 @@ import RaceEthnicity from './components/RaceEthnicity';
 //🧙‍♂️
 const AcademicCheckIn = (props) => {
   const [activeStep, setActiveStep] = useState(0);
+  const authenticated = useAuth();
 
   const getSteps = () => {
     return [
@@ -165,10 +167,10 @@ const AcademicCheckIn = (props) => {
       setLoading(false);
     };
 
-    if (props.authentication) {
+    if (authenticated) {
       loadData();
     }
-  }, [props.authentication, loading]);
+  }, [authenticated, loading]);
 
   useEffect(() => {
     props.history.replace('/AcademicCheckIn', { step: activeStep });
@@ -275,7 +277,7 @@ const AcademicCheckIn = (props) => {
 
   if (loading === true) {
     content = <GordonLoader />;
-  } else if (!props.authentication) {
+  } else if (!authenticated) {
     content = <GordonUnauthorized feature={'Academic Checkin'} />;
   } else {
     content = (

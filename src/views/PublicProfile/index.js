@@ -1,20 +1,22 @@
-import { useEffect, useState } from 'react';
-import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonOffline from 'components/GordonOffline';
-import user from 'services/user';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
+import Profile from 'components/Profile';
+import { useAuth } from 'hooks';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
 import { useParams } from 'react-router-dom';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import Profile from 'components/Profile';
+import user from 'services/user';
 
-const PublicProfile = ({ authentication }) => {
+const PublicProfile = () => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState({});
   const [error, setError] = useState(null);
   const isOnline = useNetworkStatus();
   const network = isOnline ? 'online' : 'offline';
   const { username } = useParams();
+  const authenticated = useAuth();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -27,14 +29,14 @@ const PublicProfile = ({ authentication }) => {
       }
     };
 
-    if (authentication) {
+    if (authenticated) {
       loadProfile();
     } else {
       setProfile(null);
     }
-  }, [authentication, username]);
+  }, [authenticated, username]);
 
-  if (authentication) {
+  if (authenticated) {
     if (error && error.name === 'NotFoundError') {
       return <Redirect to="/profilenotfound" />;
     }
