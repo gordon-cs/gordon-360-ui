@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import GordonUnauthorized from 'components/GordonUnauthorized';
-import event from 'services/event';
-import GordonLoader from 'components/Loader';
+import { Button, Grid, List, Typography } from '@material-ui/core';
 import EventList from 'components/EventList';
+import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonLoader from 'components/Loader';
+import { useAuth } from 'hooks';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import event from 'services/event';
 import { gordonColors } from 'theme';
-
-import { List, Grid, Button, Typography } from '@material-ui/core';
 
 const style = {
   button: {
@@ -15,26 +15,27 @@ const style = {
   },
 };
 
-const EventsAttended = (authentication) => {
+const EventsAttended = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const authenticated = useAuth();
 
   useEffect(() => {
     const loadEvents = async () => {
-      if (authentication) {
+      if (authenticated) {
         const attendedEvents = await event.getAttendedChapelEvents();
         setEvents(attendedEvents);
       }
       setLoading(false);
     };
     loadEvents();
-  }, [authentication]);
+  }, [authenticated]);
 
   let content;
 
   if (loading === true) {
     content = <GordonLoader />;
-  } else if (!authentication) {
+  } else if (!authenticated) {
     content = <GordonUnauthorized feature={'your attended events'} />;
   } else if (events.length > 0) {
     content = (

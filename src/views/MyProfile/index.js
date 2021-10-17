@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import user from 'services/user';
 import Profile from 'components/Profile';
+import { useAuth } from 'hooks';
+import { useEffect, useState } from 'react';
+import user from 'services/user';
 
-const MyProfile = ({ authentication }) => {
+const MyProfile = () => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
+  const authenticated = useAuth();
 
   useEffect(() => {
     async function loadProfile() {
@@ -19,14 +21,14 @@ const MyProfile = ({ authentication }) => {
       }
     }
 
-    if (authentication) {
+    if (authenticated) {
       loadProfile();
     } else {
       setProfile(null);
     }
-  }, [authentication]);
+  }, [authenticated]);
 
-  if (authentication) {
+  if (authenticated) {
     return loading ? <GordonLoader /> : <Profile profile={profile} myProf />;
   }
   return <GordonUnauthorized feature={'your profile'} />;
