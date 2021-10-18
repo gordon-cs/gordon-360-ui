@@ -5,6 +5,7 @@
  */
 
 import jwtDecode from 'jwt-decode';
+import { DateTime } from 'luxon';
 import { socialMediaInfo } from 'socialMedia';
 import {
   cliftonStrengthCategories,
@@ -600,6 +601,20 @@ const getLeaderPositions = async (id) => {
   return leaderPositions;
 };
 
+/**
+ * Get the birthday of the current user
+ *
+ * @returns {Date} The birthday of the current user
+ */
+const getBirthday = async () => {
+  return DateTime.fromISO(await http.get(`/profiles/dob`));
+};
+
+const isBirthdayToday = async () => {
+  const birthday = await getBirthday();
+  return birthday && birthday.toISODate() === DateTime.now().toISODate();
+};
+
 //compares items by ActivityDescription, used by getMembershipsAlphabetically to sort by ActivityDescription
 function compareByTitle(a, b) {
   const involvementA = a.ActivityDescription;
@@ -711,6 +726,7 @@ const userService = {
   getEmploymentInfo,
   getEmergencyInfo,
   updateSocialLink,
+  isBirthdayToday,
 };
 
 export default userService;

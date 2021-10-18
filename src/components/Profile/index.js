@@ -2,8 +2,8 @@ import { Grid } from '@material-ui/core';
 import GordonSnackbar from 'components/Snackbar';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
-import user from 'services/user';
 import scheduleService from 'services/schedule';
+import user from 'services/user';
 import {
   EmergencyInfoList,
   Identification,
