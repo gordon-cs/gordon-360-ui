@@ -602,12 +602,12 @@ const getLeaderPositions = async (id) => {
 };
 
 /**
- * Get the birthday of the current user
+ * Get the birthdate of the current user
  *
- * @returns {Date} The birthday of the current user
+ * @returns {Date} The birthdate of the current user
  */
 const getBirthdate = async () => {
-  return DateTime.fromISO(await http.get(`/profiles/birthdate`));
+  return DateTime.fromISO(await http.get(`profiles/birthdate`));
 };
 
 const isBirthdayToday = async () => {
