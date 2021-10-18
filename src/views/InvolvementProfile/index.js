@@ -12,7 +12,7 @@ import {
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
 import GordonLoader from 'components/Loader';
-import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useAuth, useNetworkStatus } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
@@ -29,7 +29,7 @@ import styles from './InvolvementProfile.module.css';
 
 const CROP_DIM = 320; // pixels
 
-const InvolvementProfile = ({ authentication }) => {
+const InvolvementProfile = () => {
   const [involvementInfo, setInvolvementInfo] = useState(null);
   const [advisors, setAdvisors] = useState([]);
   const [groupAdmins, setGroupAdmins] = useState([]);
@@ -51,11 +51,12 @@ const InvolvementProfile = ({ authentication }) => {
   const isOnline = useNetworkStatus();
   const cropperRef = useRef();
   const { sessionCode, involvementCode } = useParams();
+  const authenticated = useAuth();
 
   useEffect(() => {
     const loadPage = async () => {
       setLoading(true);
-      if (authentication) {
+      if (authenticated) {
         const [involvementInfo, advisors, groupAdmins, sessionInfo, college_role, isAdmin] =
           await Promise.all([
             involvementService.get(involvementCode),
@@ -98,7 +99,7 @@ const InvolvementProfile = ({ authentication }) => {
       }
     };
     loadPage();
-  }, [involvementCode, authentication, sessionCode]);
+  }, [involvementCode, authenticated, sessionCode]);
 
   const onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];
@@ -432,7 +433,7 @@ const InvolvementProfile = ({ authentication }) => {
                 )}
               </Grid>
 
-              {authentication && (
+              {authenticated && (
                 <>
                   <hr width="70%"></hr>
 

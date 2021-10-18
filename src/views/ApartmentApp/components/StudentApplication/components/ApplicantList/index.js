@@ -123,7 +123,6 @@ const ApplicantList = ({
                 disableLink
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={(selectedUsername) => disabled || onSearchSubmit(selectedUsername)}
-                authentication
               />
             </Grid>
           </Grid>

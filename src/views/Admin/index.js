@@ -1,30 +1,24 @@
-import { useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import GordonUnauthorized from 'components/GordonUnauthorized';
-import InvolvementStatusList from './components/InvolvementsStatus';
-import AdminList from './components/AdminList';
-import user from 'services/user';
-import { AuthError } from 'services/error';
 import GordonOffline from 'components/GordonOffline';
+import GordonUnauthorized from 'components/GordonUnauthorized';
+import { useAuth, useNetworkStatus } from 'hooks';
+import { useEffect, useState } from 'react';
+import user from 'services/user';
+import AdminList from './components/AdminList';
+import InvolvementStatusList from './components/InvolvementsStatus';
 
-const Admin = ({ authentication }) => {
+const Admin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const isOnline = useNetworkStatus();
+  const authenticated = useAuth();
 
   useEffect(() => {
-    try {
+    if (authenticated) {
       setIsAdmin(user.getLocalInfo().college_role === 'god');
-    } catch (error) {
-      if (error instanceof AuthError) {
-        // Unauthorized exception expected when user not authenticated
-      } else {
-        throw error;
-      }
     }
-  }, [authentication]);
+  }, [authenticated]);
 
-  if (authentication) {
+  if (authenticated) {
     if (isOnline) {
       if (isAdmin) {
         return (
