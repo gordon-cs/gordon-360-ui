@@ -839,7 +839,7 @@ class PeopleSearch extends Component {
                         onClick={this.handleAdvancedSearchExpandClick}
                       >
                         <AddIcon fontSize="inherit" />
-                        Advanced Search
+                        More Search Options
                       </Button>
                     </Grid>
                   </Grid>
