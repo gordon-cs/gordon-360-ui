@@ -1,15 +1,13 @@
-import { useState, useEffect } from 'react';
-
-import membershipService from 'services/membership';
+import { Grid, Typography } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
-import MemberList from './components/MemberList';
-
-import { Grid, Typography } from '@material-ui/core';
-import AdminCard from './components/AdminCard';
-import userService from 'services/user';
-import NonMemberButtons from './components/NonMemberButtons';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import membershipService from 'services/membership';
+import userService from 'services/user';
+import AdminCard from './components/AdminCard';
+import MemberList from './components/MemberList';
+import NonMemberButtons from './components/NonMemberButtons';
 
 const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdmin }) => {
   const [members, setMembers] = useState([]);

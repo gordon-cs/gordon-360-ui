@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import {
   Button,
   Card,
@@ -9,17 +7,18 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  TextField,
   Select,
+  TextField,
 } from '@material-ui/core';
 import { PersonAdd as AddPersonIcon } from '@material-ui/icons';
-
+import GordonDialogBox from 'components/GordonDialogBox';
+import SpreadsheetUploader from 'components/SpreadsheetUploader';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
-import RequestsReceived from './components/RequestsReceived';
 import { gordonColors } from 'theme';
-import { useParams } from 'react-router';
-import GordonDialogBox from 'components/GordonDialogBox';
+import RequestsReceived from './components/RequestsReceived';
 
 const headerStyle = {
   backgroundColor: gordonColors.primary.blue,
@@ -33,6 +32,7 @@ const AdminCard = ({ createSnackbar, isSuperAdmin, involvementDescription, onAdd
   const [username, setUsername] = useState('');
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
+  const [isSpreadsheetUploaderOpen, setIsSpreadsheetUploaderOpen] = useState(false);
   const { involvementCode, sessionCode } = useParams();
 
   useEffect(() => {
@@ -49,6 +49,10 @@ const AdminCard = ({ createSnackbar, isSuperAdmin, involvementDescription, onAdd
   const onReopenRoster = async () => {
     await involvementService.reopenActivity(involvementCode, sessionCode);
     setIsRosterClosed(false);
+  };
+
+  const handleBulkImport = (data) => {
+    // TO DO:
   };
 
   const handleAddMember = async () => {
@@ -99,15 +103,30 @@ const AdminCard = ({ createSnackbar, isSuperAdmin, involvementDescription, onAdd
               <RequestsReceived onAddMember={onAddMember} />
             </Grid>
             <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={isRosterClosed}
-                onClick={() => setIsDialogOpen(true)}
-                startIcon={<AddPersonIcon />}
-              >
-                Add member
-              </Button>
+              <Grid container spacing={2} direction="row">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={isRosterClosed}
+                    onClick={() => setIsDialogOpen(true)}
+                    startIcon={<AddPersonIcon />}
+                  >
+                    Add member
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={isRosterClosed}
+                    onClick={() => setIsSpreadsheetUploaderOpen(true)}
+                    startIcon={<AddPersonIcon />}
+                  >
+                    Add multiple members
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item>
               {(!isRosterClosed || isSuperAdmin) && (
@@ -123,6 +142,17 @@ const AdminCard = ({ createSnackbar, isSuperAdmin, involvementDescription, onAdd
           </Grid>
         </CardContent>
       </Card>
+
+      <GordonDialogBox
+        open={isSpreadsheetUploaderOpen}
+        title={`Add a member to ${involvementDescription}`}
+        buttonName="Add Members"
+        buttonClicked={() => {}}
+        isButtonDisabled={false}
+        cancelButtonClicked={() => setIsSpreadsheetUploaderOpen(false)}
+      >
+        <SpreadsheetUploader onSubmitData={(data) => handleBulkImport(data)} />
+      </GordonDialogBox>
 
       <GordonDialogBox
         open={isDialogOpen}
