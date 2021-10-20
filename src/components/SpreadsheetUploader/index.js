@@ -1,15 +1,13 @@
-import { Button, Card, Typography } from '@material-ui/core';
-import GordonLoader from 'components/Loader';
+import { Card, Typography } from '@material-ui/core';
+import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import styles from './SpreadsheetUploader.module.css';
-import XLSX from 'xlsx';
-import SpreadsheetSVG from './spreadsheet.svg';
-import GordonDialogBox from 'components/GordonDialogBox';
-import { SettingsPowerRounded } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import { gordonColors } from 'theme';
+import XLSX from 'xlsx';
+import SpreadsheetSVG from './spreadsheet.svg';
+import styles from './SpreadsheetUploader.module.css';
 
 const SpreadsheetUploader = ({
   open,
@@ -24,18 +22,15 @@ const SpreadsheetUploader = ({
 }) => {
   const [data, setData] = useState();
   const [error, setError] = useState();
-  const [isDataLoading, setIsDataLoading] = useState(false);
 
   const acceptedTypes = ['application/vnd.ms-excel', 'text/csv'];
 
   const onDropAccepted = (fileList) => {
-    //setIsDataLoading((o) => !o);
     let file = fileList[0];
     if (!acceptedTypes.includes(file.type)) {
       setError('The file is not one of the supported file types.');
       return;
     }
-    //if (file.)
     let reader = new FileReader();
     reader.onload = function (event) {
       let data = event.target.result;
@@ -45,7 +40,6 @@ const SpreadsheetUploader = ({
       let sheet = workbook.Sheets[workbook.SheetNames[0]];
 
       let uploadedData = XLSX.utils.sheet_to_row_object_array(sheet);
-      let properties = Object.keys(uploadedData[0]);
 
       /* For each row:
           If the column count is less than required or greater than max
@@ -77,8 +71,6 @@ const SpreadsheetUploader = ({
     reader.readAsBinaryString(file);
   };
 
-  const downloadTemplate = () => {};
-
   const dropZone = (
     <>
       <Dropzone onDropAccepted={(files) => onDropAccepted(files)} multiple={false}>
@@ -87,7 +79,7 @@ const SpreadsheetUploader = ({
             <section>
               <div className={styles.gc360_spreadsheet_dialog_content_dropzone} {...getRootProps()}>
                 <input {...getInputProps()} />
-                <img src={SpreadsheetSVG} style={{ width: 40 }} />
+                <img alt={'Spreadsheet Icon'} src={SpreadsheetSVG} style={{ width: 40 }} />
                 Upload a Spreadsheet
               </div>
             </section>
@@ -116,8 +108,6 @@ const SpreadsheetUploader = ({
     }
   }, [error]);
 
-  //useEffect(() => setIsDataLoading(false),[data]);
-
   return (
     <>
       <GordonDialogBox
@@ -135,36 +125,32 @@ const SpreadsheetUploader = ({
           setData(null);
         }}
       >
-        {isDataLoading ? (
-          <GordonLoader />
-        ) : data ? (
-          //<div style={{ maxHeight: 300, overflowY: 'auto', overflowX: 'visible' }}>
-          data.map((row) => {
-            const title = row['Title/Comment'] ? (
-              <Typography variant="p">
-                <b>Title:</b> {row['Title/Comment']}
-                <br />
-              </Typography>
-            ) : null;
-            const part = row.Participation ? (
-              <Typography variant="p">
-                <b>Participation:</b> {row.Participation}
-              </Typography>
-            ) : null;
-            return (
-              <Card style={{ padding: '5px', lineHeight: '1.6em' }}>
-                <Typography color="primary" variant="h6">
-                  {row.Username}
+        {data
+          ? //<div style={{ maxHeight: 300, overflowY: 'auto', overflowX: 'visible' }}>
+            data.map((row) => {
+              const title = row['Title/Comment'] ? (
+                <Typography variant="p">
+                  <b>Title:</b> {row['Title/Comment']}
+                  <br />
                 </Typography>
-                {title}
-                {part}
-              </Card>
-            );
-          })
-        ) : (
-          //</div>
-          dropZone
-        )}
+              ) : null;
+              const part = row.Participation ? (
+                <Typography variant="p">
+                  <b>Participation:</b> {row.Participation}
+                </Typography>
+              ) : null;
+              return (
+                <Card style={{ padding: '5px', lineHeight: '1.6em' }}>
+                  <Typography color="primary" variant="h6">
+                    {row.Username}
+                  </Typography>
+                  {title}
+                  {part}
+                </Card>
+              );
+            })
+          : //</div>
+            dropZone}
         <GordonSnackbar
           open={error}
           text={error}
