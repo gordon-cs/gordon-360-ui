@@ -60,7 +60,7 @@ function addMembership(data) {
 /**
  * Create multiple new memberships
  *
- * @param {Object[]} data Data passed in
+ * @param {Object[]} dataArr Data passed in
  * @returns {Bool[]} Response
  */
 const addMemberships = async (dataArr) => {
