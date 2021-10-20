@@ -8,7 +8,8 @@ import ReactGA from 'react-ga';
 
 /**
  * Track an error
- * @param {String} description Error description
+ *
+ * @param {string} description Error description
  */
 const onError = (description) => {
   ReactGA.exception({ description });
@@ -16,10 +17,11 @@ const onError = (description) => {
 
 /**
  * Track an event
- * @param {String} category Top level category for the event, e.g. 'User', 'Navigation', etc.
- * @param {String} action Description of what happened in the event, e.g. 'Edited activity'
- * @param {String} [label] More specific description of the action
- * @param {Number} [value] If applicable, a numerical value for the event
+ *
+ * @param {string} category Top level category for the event, e.g. 'User', 'Navigation', etc.
+ * @param {string} action Description of what happened in the event, e.g. 'Edited activity'
+ * @param {string} [label] More specific description of the action
+ * @param {number} [value] If applicable, a numerical value for the event
  */
 const onEvent = (category, action, label, value) => {
   ReactGA.event({

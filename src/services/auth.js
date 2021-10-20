@@ -4,6 +4,7 @@
  * @module auth
  */
 
+import session from 'services/session';
 import { parseResponse } from './http';
 import storage from './storage';
 
@@ -11,6 +12,7 @@ const base = process.env.REACT_APP_API_URL;
 
 /**
  * Handle an authentication error
+ *
  * @param {Error} err An authentication error
  * @throws {Error} An error that can be shown to users (`error.message`)
  */
@@ -25,10 +27,10 @@ const handleError = (err) => {
 
 /**
  * Get token for user from backend
- * @param {String} username Username in firstname.lastname format
- * @param {String} password User's
  *
- * @return {String} Token for use on API requests
+ * @param {string} username Username in firstname.lastname format
+ * @param {string} password User's
+ * @returns {string} Token for use on API requests
  */
 const getAuth = (username, password) => {
   if (username.includes('@gordon.edu')) username = username.replace('@gordon.edu', '');
@@ -57,23 +59,35 @@ const getAuth = (username, password) => {
 /**
  * Authenticate a user, saving the returned token for later use and caching the user's credentials
  * for refreshing the token when it expires.
- * @param {String} username Username in firstname.lastname format
- * @param {String} password User's password
- * @return {Promise.<undefined>} Resolved when token is refreshed
+ *
+ * @param {string} username Username in firstname.lastname format
+ * @param {string} password User's password
+ * @returns {Promise.<undefined>} Resolved when token is refreshed
  */
-const authenticate = (username, password) =>
-  getAuth(username, password)
-    .then((token) => {
-      storage.store('token', token);
-    })
-    .then(() => {
-      console.log('auth.js: authenticate() - done');
+const authenticate = async (username, password) => {
+  const token = await getAuth(username, password);
+  storage.store('token', token);
+  /* Checks to see if the Service Worker API is available before attempting to access it
+   *  This is important because if the API is not available, the site will load
+   *  but not allow you to login due to the error "undefined is not a function"
+   */
+  if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+    // Sends the token, current term code, and a message to the service worker to update cache
+    navigator.serviceWorker.controller.postMessage({
+      message: 'update-cache-files',
+      token: storage.get('token'),
+      termCode: session.getTermCode(),
     });
+    // Stores the current term in Local Storage for later use when updating the cache
+    storage.store('currentTerm', session.getTermCode());
+  }
+};
 
 /**
  * Check if current session is authenticated
+ *
  * @description This is a naive check. The session is considered authenticated if
- * @return {boolean} Whether session is authenticated or not
+ * @returns {boolean} Whether session is authenticated or not
  */
 const isAuthenticated = () => {
   try {
@@ -104,6 +118,7 @@ const isAuthenticated = () => {
 
 /**
  * Sign a user out
+ *
  * @description Removes all data from storage and cache
  */
 const signOut = () => {

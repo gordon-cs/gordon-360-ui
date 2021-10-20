@@ -1,6 +1,7 @@
 /**
  * Wellness Check API call functions
  * establishes the functions necessary to make calls to the back end.
+ *
  * @module wellness
  */
 
@@ -9,6 +10,7 @@ import user from './user';
 
 /**
  * Enum of the Wellness Status Colors
+ *
  * @readonly
  * @enum {string}
  */
@@ -31,7 +33,6 @@ export const StatusColors = {
  * @property {StatusColor} Status The user's status
  * @property {Date} Created when the status was created
  * @property {boolean} IsValid whether the status has expired
- *
  */
 
 /**
@@ -42,11 +43,11 @@ export const StatusColors = {
  * @property {string} yesPrompt the text disclaimer for a positive answer
  * @property {string} noPrompt the text disclaimer for a negative answer
  * @property {string} link the text of the link to HR's flowchart
- *
  */
 
 /**
  * returns current status of student
+ *
  * @returns {Promise<WellnessStatus>} Response
  */
 const getStatus = () => {
@@ -55,8 +56,9 @@ const getStatus = () => {
 
 /**
  * add answer to the wellness question to the back end
+ *
  * @param {StatusColor} status status to be recorded
- * @return {Promise<WellnessStatus>} The status that was posted, if successful
+ * @returns {Promise<WellnessStatus>} The status that was posted, if successful
  */
 const postAnswer = (status) => {
   try {
@@ -68,6 +70,7 @@ const postAnswer = (status) => {
 
 /**
  * returns questions to be displayed in the UI
+ *
  * @returns {Promise<WellnessQuestion>} list of questions from backend
  */
 const getQuestion = async () => {
@@ -77,12 +80,12 @@ const getQuestion = async () => {
 
 /**
  * Formats the wellness question and answer prompts for display
+ *
  * @param {Object} question The question stored in database
  * @param {string} question.question The text of the question
  * @param {string} question.yesPrompt The text disclaimer for a symptoms-positive answer
  * @param {string} question.noPrompt The text disclaimer for a symptoms-negative answer
  * @returns {Promise<WellnessQuestion>} The wellness question parsed into an object for display
- *
  */
 const formatQuestion = async (question) => {
   const { FirstName, LastName } = await user.getProfileInfo();

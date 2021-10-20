@@ -31,22 +31,22 @@ const singleHeader = (
 const fullHeader = (
   <Grid container direction="row" style={headerStyle}>
     <Grid item xs={2}>
-      <Typography variant="body1" style={headerStyle}>
+      <Typography variant="body2" style={headerStyle}>
         CATEGORY
       </Typography>
     </Grid>
     <Grid item xs={5}>
-      <Typography variant="body1" style={headerStyle}>
+      <Typography variant="body2" style={headerStyle}>
         SUBJECT
       </Typography>
     </Grid>
     <Grid item xs={3}>
-      <Typography variant="body1" style={headerStyle}>
+      <Typography variant="body2" style={headerStyle}>
         POSTED BY
       </Typography>
     </Grid>
     <Grid item xs={2}>
-      <Typography variant="body1" style={headerStyle}>
+      <Typography variant="body2" style={headerStyle}>
         POSTED
       </Typography>
     </Grid>

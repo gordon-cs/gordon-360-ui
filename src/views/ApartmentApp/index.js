@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
-import { Grid, Card, CardContent, Button } from '@material-ui/core/';
+import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
+import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import StaffMenu from './components/StaffMenu';
-import StudentApplication from './components/StudentApplication';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+// eslint-disable-next-line no-unused-vars
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
+import { NotFoundError } from 'services/error';
 import housing from 'services/housing';
 import user from 'services/user';
 import styles from './ApartmentApp.module.css';
-import { NotFoundError } from 'services/error';
-import GordonOffline from 'components/GordonOffline';
+import StaffMenu from './components/StaffMenu';
+import StudentApplication from './components/StudentApplication';
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -20,7 +21,7 @@ const ApartApp = ({ authentication }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(authentication);
 
   /**
-   * @type {[StudentProfileInfo, React.Dispatch<React.SetStateAction<StudentProfileInfo>>]} UserProfile
+   * @type {[StudentProfileInfo, Dispatch<SetStateAction<StudentProfileInfo>>]} UserProfile
    */
   const [userProfile, setUserProfile] = useState({});
   const [isUserStudent, setIsUserStudent] = useState(false);
@@ -86,34 +87,10 @@ const ApartApp = ({ authentication }) => {
       );
     } else {
       return (
-        <Grid container justifyContent="center">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <br />
-                <h1>Apartment application Unavailable</h1>
-                <h4>Apartment application is available for students or housing staff only.</h4>
-                <br />
-                <br />
-                <Button
-                  className={styles.back_home_button}
-                  color="primary"
-                  variant="outlined"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        <GordonLimitedAvailability
+          pageName="Apartment Application"
+          availableTo="students or housing staff"
+        />
       );
     }
   } else {

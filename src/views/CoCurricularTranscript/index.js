@@ -41,6 +41,8 @@ export default class Transcript extends Component {
       /* Retrieve data from server */
       const profile = await user.getProfileInfo();
 
+      this.setState({ profile });
+
       const memberships = await user.getTranscriptMembershipsInfo(profile.ID);
       let categorizedMemberships = this.filterMemberships(memberships);
 
@@ -293,7 +295,9 @@ export default class Transcript extends Component {
         <div className={styles.co_curricular_transcript}>
           <Card className={styles.card} elevation={10}>
             <CardContent className={styles.card_content}>
-              <div className={styles.print_only}>{/* <img src={require('./logo.png')} alt="" /> */}</div>
+              <div className={styles.print_only}>
+                {/* <img src={require('./logo.png')} alt="" /> */}
+              </div>
               <div>
                 <Button
                   className={styles.button}

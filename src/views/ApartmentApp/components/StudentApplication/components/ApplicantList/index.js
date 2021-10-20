@@ -1,11 +1,10 @@
-import { useState } from 'react';
 import {
-  Grid,
   Card,
-  CardHeader,
   CardContent,
+  CardHeader,
   Collapse,
   Divider,
+  Grid,
   List,
   ListItem,
   ListItemIcon,
@@ -13,15 +12,15 @@ import {
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import ClearIcon from '@material-ui/icons/Clear';
-import HelpIcon from '@material-ui/icons/Help';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import HelpIcon from '@material-ui/icons/Help';
 import StarBorder from '@material-ui/icons/StarBorder';
 import GordonPeopleSearch from 'components/Header/components/PeopleSearch';
-import ApplicantListItem from './components/ApplicantListItem';
-
+import { useState } from 'react';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
+import ApplicantListItem from './components/ApplicantListItem';
 
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
@@ -31,13 +30,14 @@ import styles from '../../../../ApartmentApp.module.css';
 
 /**
  * Renders the list of applicants, displayed by name, username, and class standing.
+ *
  * @param {Object} props The React component props
- * @param {Boolean} props.disabled Boolean to disable the interactive elements of this list
+ * @param {boolean} props.disabled boolean to disable the interactive elements of this list
  * @param {StudentProfileInfo} props.editorProfile The StudentProfileInfo of the application editor
  * @param {ApartmentApplicant[]} props.applicants Array of applicant info
- * @param {CallbackFcn} props.onSearchSubmit Callback for apartment people search submission
- * @param {CallbackFcn} props.onChangeEditor Callback for change editor button
- * @param {CallbackFcn} props.onApplicantRemove Callback for remove applicant button
+ * @param {Function} props.onSearchSubmit Callback for apartment people search submission
+ * @param {Function} props.onChangeEditor Callback for change editor button
+ * @param {Function} props.onApplicantRemove Callback for remove applicant button
  * @returns {JSX.Element} JSX Element for the applicant list
  */
 const ApplicantList = ({
