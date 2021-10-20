@@ -19,6 +19,7 @@ import involvementService from 'services/activity';
 import membershipService from 'services/membership';
 import { gordonColors } from 'theme';
 import RequestsReceived from './components/RequestsReceived';
+import MemberUploadTemplate from './memberUploadTemplate.csv';
 
 const headerStyle = {
   backgroundColor: gordonColors.primary.blue,
@@ -51,8 +52,29 @@ const AdminCard = ({ createSnackbar, isSuperAdmin, involvementDescription, onAdd
     setIsRosterClosed(false);
   };
 
-  const handleBulkImport = (data) => {
-    // TO DO:
+  const handleBulkImport = async (data) => {
+    let partMap = { Leader: 'LEAD', Member: 'MEMBR', Advisor: 'ADV', Guest: 'GUEST' };
+    let formattedData = await Promise.all(
+      data.map(async (row) => {
+        if (!row.Username.toLowerCase().includes('@gordon.edu')) {
+          row.Username = row.Username + '@gordon.edu';
+        }
+        let data = {
+          ACT_CDE: involvementCode,
+          SESS_CDE: sessionCode,
+          // TODO: Fix API to accept username instead of ID and then remove Group Admin privilege to access ID.
+          ID_NUM: (await membershipService.getEmailAccount(row.Username)).GordonID,
+          PART_CDE: partMap[row.Participation],
+          COMMENT_TXT: row['Title/Comment'],
+          GRP_ADMIN: false,
+        };
+        return data;
+      }),
+    );
+    console.log(formattedData);
+    let resp = await membershipService.addMemberships(formattedData);
+    console.log(resp);
+    onAddMember();
   };
 
   const handleAddMember = async () => {
@@ -143,16 +165,17 @@ const AdminCard = ({ createSnackbar, isSuperAdmin, involvementDescription, onAdd
         </CardContent>
       </Card>
 
-      <GordonDialogBox
+      <SpreadsheetUploader
+        onSubmitData={(data) => handleBulkImport(data)}
         open={isSpreadsheetUploaderOpen}
-        title={`Add a member to ${involvementDescription}`}
-        buttonName="Add Members"
-        buttonClicked={() => {}}
-        isButtonDisabled={false}
-        cancelButtonClicked={() => setIsSpreadsheetUploaderOpen(false)}
-      >
-        <SpreadsheetUploader onSubmitData={(data) => handleBulkImport(data)} />
-      </GordonDialogBox>
+        title={`Add members to ${involvementDescription}`}
+        buttonName={'Add Members'}
+        setOpen={setIsSpreadsheetUploaderOpen}
+        requiredColumns={['Username', 'Participation']}
+        otherColumns={['Title/Comment']}
+        maxColumns={3}
+        template={MemberUploadTemplate}
+      />
 
       <GordonDialogBox
         open={isDialogOpen}

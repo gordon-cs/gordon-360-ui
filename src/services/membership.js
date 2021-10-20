@@ -58,6 +58,22 @@ function addMembership(data) {
 }
 
 /**
+ * Create multiple new memberships
+ *
+ * @param {Object[]} data Data passed in
+ * @returns {Bool[]} Response
+ */
+const addMemberships = async (dataArr) => {
+  console.log('DATAARR: ' + dataArr);
+  return await Promise.all(
+    dataArr.map(async (data) => {
+      console.log('DATA: ' + data);
+      return (await http.post('memberships', data)) ? true : false;
+    }),
+  );
+};
+
+/**
  * Approve request
  *
  * @param {string} requestID Request object
@@ -327,6 +343,7 @@ const toggleGroupAdmin = async (membershipID, data) => {
 
 const membershipService = {
   addMembership,
+  addMemberships,
   approveRequest,
   checkAdmin,
   denyRequest,
