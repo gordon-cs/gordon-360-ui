@@ -402,48 +402,6 @@ const PeopleSearch = (props) => {
     </div>
   );
 
-  const majorOptions = majors.map((major) => (
-    <MenuItem value={major} key={major}>
-      {major}
-    </MenuItem>
-  ));
-
-  const minorOptions = minors.map((minor) => (
-    <MenuItem value={minor} key={minor}>
-      {minor}
-    </MenuItem>
-  ));
-  const hallOptions = halls.map((hall) => (
-    <MenuItem value={hall} key={hall}>
-      {hall}
-    </MenuItem>
-  ));
-
-  const stateOptions = states.map((state) => (
-    <MenuItem value={state} key={state}>
-      {state}
-    </MenuItem>
-  ));
-
-  // Lower case using js to remove all caps, then capitalize with css
-  const countryOptions = countries.map((country) => (
-    <MenuItem value={country} key={country} style={{ textTransform: 'capitalize' }}>
-      {country.toLowerCase()}
-    </MenuItem>
-  ));
-
-  const departmentOptions = departments.map((department) => (
-    <MenuItem value={department} key={department}>
-      {department}
-    </MenuItem>
-  ));
-
-  const buildingOptions = buildings.map((building) => (
-    <MenuItem value={building} key={building}>
-      {building}
-    </MenuItem>
-  ));
-
   if (!authenticated) {
     return <GordonUnauthorized feature={'People Search'} />;
   }
@@ -645,7 +603,11 @@ const PeopleSearch = (props) => {
                         <MenuItem label="All Halls" value="">
                           <em>All Halls</em>
                         </MenuItem>
-                        {hallOptions}
+                        {halls.map((hall) => (
+                          <MenuItem value={hall} key={hall}>
+                            {hall}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                   </Grid>
@@ -741,7 +703,11 @@ const PeopleSearch = (props) => {
                               <MenuItem label="All Majors" value="">
                                 <em>All Majors</em>
                               </MenuItem>
-                              {majorOptions}
+                              {majors.map((major) => (
+                                <MenuItem value={major} key={major}>
+                                  {major}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Grid>
@@ -780,7 +746,11 @@ const PeopleSearch = (props) => {
                               <MenuItem label="All Minors" value="">
                                 <em>All Minors</em>
                               </MenuItem>
-                              {minorOptions}
+                              {minors.map((minor) => (
+                                <MenuItem value={minor} key={minor}>
+                                  {minor}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Grid>
@@ -881,7 +851,11 @@ const PeopleSearch = (props) => {
                               <MenuItem label="All Departments" value="">
                                 <em>All</em>
                               </MenuItem>
-                              {departmentOptions}
+                              {departments.map((department) => (
+                                <MenuItem value={department} key={department}>
+                                  {department}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Grid>
@@ -920,7 +894,11 @@ const PeopleSearch = (props) => {
                               <MenuItem label="All Buildings" value="">
                                 <em>All</em>
                               </MenuItem>
-                              {buildingOptions}
+                              {buildings.map((building) => (
+                                <MenuItem value={building} key={building}>
+                                  {building}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Grid>
@@ -979,7 +957,11 @@ const PeopleSearch = (props) => {
                               <MenuItem label="All States" value="">
                                 <em>All</em>
                               </MenuItem>
-                              {stateOptions}
+                              {states.map((state) => (
+                                <MenuItem value={state} key={state}>
+                                  {state}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Grid>
@@ -1008,7 +990,18 @@ const PeopleSearch = (props) => {
                               <MenuItem label="All Countries" value="">
                                 <em>All</em>
                               </MenuItem>
-                              {countryOptions}
+                              {
+                                // Lower case using js to remove all caps, then capitalize with css
+                                countries.map((country) => (
+                                  <MenuItem
+                                    value={country}
+                                    key={country}
+                                    style={{ textTransform: 'capitalize' }}
+                                  >
+                                    {country.toLowerCase()}
+                                  </MenuItem>
+                                ))
+                              }
                             </Select>
                           </FormControl>
                         </Grid>
