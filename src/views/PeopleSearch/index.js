@@ -156,7 +156,7 @@ const searchPageTitle = (
 //Configuration constants
 const NUM_NONLAZY_IMAGES = 20; //The number of results for which images will be fetched immediately
 
-const PeopleSearch = (props) => {
+const PeopleSearch = ({ history, classes }) => {
   const user = useUser();
   // advancedSearchExpanded: false,
 
@@ -252,13 +252,10 @@ const PeopleSearch = (props) => {
       .join('&'); // 'firstName=value&state=texas'
 
     // If the page is still the people page & the searchParameters are not the same as previous search
-    if (
-      props.history.location.pathname === '/people' &&
-      props.history.location.search !== searchParameters
-    ) {
-      props.history.push(`?${searchParameters}`);
+    if (history.location.pathname === '/people' && history.location.search !== searchParameters) {
+      history.push(`?${searchParameters}`);
     }
-  }, [props.history, searchValues]);
+  }, [history, searchValues]);
 
   //This is to prevent search from blank
   const canSearch = useCallback(() => {
@@ -385,7 +382,6 @@ const PeopleSearch = (props) => {
     }
   };
 
-  const { classes } = props;
   let PeopleSearchCheckbox;
 
   const printPeopleSearchHeader = (
@@ -409,6 +405,7 @@ const PeopleSearch = (props) => {
   if (!isOnline) {
     return <GordonOffline feature="People Search" />;
   }
+
   PeopleSearchCheckbox = (
     <Grid item xs={12} lg={6} align="center">
       <Grid container alignItems="center" justifyContent="center">
