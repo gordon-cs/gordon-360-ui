@@ -46,6 +46,7 @@
     "url-regex-safe": "^2.0.2"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.176",
     "@types/luxon": "^2.0.4",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-flowtype": "^5.7.2",
