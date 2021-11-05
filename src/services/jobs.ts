@@ -1,8 +1,3 @@
-/**
- *
- * @module jobs
- */
-
 import http from './http';
 
 const dateFormatter = Intl.DateTimeFormat('en', {
@@ -16,21 +11,22 @@ const dateFormatter = Intl.DateTimeFormat('en', {
 /**
  * Get Whether or not the user can use staff timesheets
  *
- * @returns {Promise.<number>} User's employee ID
+ * @returns Whether the user can use staff timesheets
  */
-const getStaffPageForUser = async () => {
-  return await http.get(`jobs/canUsePage`);
+const getStaffPageForUser = async (): Promise<boolean> => {
+  const id: number | null = await http.get(`jobs/canUsePage`);
+  return id === null;
 };
 
 /**
  * Get active jobs for current user
  *
- * @param {boolean} canUseStaff Whether user can use staff timesheets
- * @param {Date} shiftStart The start of the shift to get jobs for
- * @param {Date} shiftEnd The end of the shift to get jobs for
+ * @param canUseStaff Whether user can use staff timesheets
+ * @param shiftStart The start of the shift to get jobs for
+ * @param shiftEnd The end of the shift to get jobs for
  * @returns {Promise.<string>} User's active jobs
  */
-const getJobs = (canUseStaff, shiftStart, shiftEnd) => {
+const getJobs = (canUseStaff: boolean, shiftStart: Date, shiftEnd: Date): Promise<string> => {
   const urlParams = `?shiftStart=${dateFormatter.format(
     shiftStart,
   )}&shiftEnd=${dateFormatter.format(shiftEnd)}`;
@@ -45,10 +41,10 @@ const getJobs = (canUseStaff, shiftStart, shiftEnd) => {
 /**
  * Get saved shifts for current user
  *
- * @param {boolean} canUseStaff Whether user can use staff timesheets
- * @returns {Promise.<string>} User's active jobs
+ * @param canUseStaff Whether user can use staff timesheets
+ * @returns User's active jobs
  */
-const getSavedShiftsForUser = (canUseStaff) => {
+const getSavedShiftsForUser = (canUseStaff: boolean): Promise<string> => {
   if (canUseStaff) {
     return http.get(`jobs/savedShiftsForStaff/`);
   }
@@ -58,24 +54,24 @@ const getSavedShiftsForUser = (canUseStaff) => {
 /**
  * Get active jobs for current user
  *
- * @param {boolean} canUseStaff Whether user can use staff timesheets
- * @param {number} eml we don't know what this means yet
- * @param {DateTime} shiftStart The start time of the shift
- * @param {DateTime} shiftEnd The end time of the shift
- * @param {number} hoursWorked The number of hours
- * @param {char} hoursType Type of hour for staff
- * @param {string} shiftNotes Shift notes
+ * @param canUseStaff Whether user can use staff timesheets
+ * @param eml we don't know what this means yet
+ * @param shiftStart The start time of the shift
+ * @param shiftEnd The end time of the shift
+ * @param hoursWorked The number of hours
+ * @param hoursType Type of hour for staff
+ * @param shiftNotes Shift notes
  * @returns {Promise.<string>} User's active jobs
  */
 const saveShiftForUser = async (
-  canUseStaff,
-  eml,
-  shiftStart,
-  shiftEnd,
-  hoursWorked,
-  hoursType,
-  shiftNotes,
-) => {
+  canUseStaff: boolean,
+  eml: number,
+  shiftStart: Date,
+  shiftEnd: Date,
+  hoursWorked: number,
+  hoursType: string,
+  shiftNotes: string,
+): Promise<string> => {
   const shiftDetails = {
     EML: eml,
     SHIFT_START_DATETIME: dateFormatter.format(shiftStart),
@@ -91,7 +87,13 @@ const saveShiftForUser = async (
   }
 };
 
-const editShift = async (canUseStaff, rowID, newShiftStart, newShiftEnd, newHoursWorked) => {
+const editShift = async (
+  canUseStaff: boolean,
+  rowID: number,
+  newShiftStart: Date,
+  newShiftEnd: Date,
+  newHoursWorked: number,
+) => {
   let newShiftDetails = {
     ID: rowID,
     EML: null,
@@ -107,22 +109,22 @@ const editShift = async (canUseStaff, rowID, newShiftStart, newShiftEnd, newHour
   return await http.put(`jobs/editShift/`, newShiftDetails);
 };
 
-const deleteShiftForUser = async (canUseStaff, rowID) => {
+const deleteShiftForUser = async (canUseStaff: boolean, rowID: number) => {
   if (canUseStaff) {
     return await http.del(`jobs/deleteShiftStaff/${rowID}`);
   }
   return await http.del(`jobs/deleteShift/${rowID}`);
 };
 
-const getSupervisorNameForJob = (canUseStaff, supervisorID) => {
+const getSupervisorNameForJob = (canUseStaff: boolean, supervisorID: number) => {
   if (canUseStaff) {
     return http.get(`jobs/supervisorNameStaff/${supervisorID}`);
   }
   return http.get(`jobs/supervisorName/${supervisorID}`);
 };
 
-const submitShiftsForUser = (canUseStaff, shifts, submittedTo) => {
-  const shiftDetails = (shift) => ({
+const submitShiftsForUser = (canUseStaff: boolean, shifts: Object[], submittedTo: number) => {
+  const shiftDetails = (shift: any) => ({
     ID_NUM: shift.ID_NUM,
     EML: shift.EML,
     SHIFT_END_DATETIME: dateFormatter.format(new Date(shift.SHIFT_END_DATETIME)),
@@ -138,7 +140,7 @@ const submitShiftsForUser = (canUseStaff, shifts, submittedTo) => {
   }
 };
 
-const clockIn = (data) => {
+const clockIn = (data: any) => {
   return http.post(`jobs/clockIn`, data);
 };
 
