@@ -1,9 +1,3 @@
-/**
- * Authenticate with the API
- *
- * @module auth
- */
-
 import session from 'services/session';
 import { parseResponse } from './http';
 import storage from './storage';
@@ -11,28 +5,13 @@ import storage from './storage';
 const base = process.env.REACT_APP_API_URL;
 
 /**
- * Handle an authentication error
- *
- * @param {Error} err An authentication error
- * @throws {Error} An error that can be shown to users (`error.message`)
- */
-const handleError = (err) => {
-  console.error('Could not authenticate user:', err);
-  if (err.error && err.error_description) {
-    throw new Error(err.error_description);
-  } else {
-    throw new Error('Something went wrong! Please contact CTS for help.');
-  }
-};
-
-/**
  * Get token for user from backend
  *
- * @param {string} username Username in firstname.lastname format
- * @param {string} password User's
- * @returns {string} Token for use on API requests
+ * @param username Username in firstname.lastname format
+ * @param password User's
+ * @returns Token for use on API requests
  */
-const getAuth = (username, password) => {
+const getAuth = async (username: string, password: string): Promise<string> => {
   if (username.includes('@gordon.edu')) username = username.replace('@gordon.edu', '');
   else if (username.includes('Gordon.edu')) username = username.replace('@Gordon.edu', '');
 
@@ -50,21 +29,20 @@ const getAuth = (username, password) => {
     body: loginInfo,
   });
 
-  return fetch(request)
-    .then(parseResponse)
-    .then((data) => data.access_token)
-    .catch(handleError);
+  const response = await fetch(request);
+  const data: { access_token: string } = await parseResponse(response);
+  return data.access_token;
 };
 
 /**
  * Authenticate a user, saving the returned token for later use and caching the user's credentials
  * for refreshing the token when it expires.
  *
- * @param {string} username Username in firstname.lastname format
- * @param {string} password User's password
- * @returns {Promise.<undefined>} Resolved when token is refreshed
+ * @param username Username in firstname.lastname format
+ * @param password User's password
+ * @returns Resolved when token is refreshed
  */
-const authenticate = async (username, password) => {
+const authenticate = async (username: string, password: string) => {
   const token = await getAuth(username, password);
   storage.store('token', token);
   /* Checks to see if the Service Worker API is available before attempting to access it
@@ -87,13 +65,13 @@ const authenticate = async (username, password) => {
  * Check if current session is authenticated
  *
  * @description This is a naive check. The session is considered authenticated if
- * @returns {boolean} Whether session is authenticated or not
+ * @returns Whether session is authenticated or not
  */
 const isAuthenticated = () => {
   try {
-    const token = storage.get('token');
+    const token: string = storage.get('token');
     // Check that auth contains a token
-    return token && token.length > 0;
+    return token?.length > 0;
   } catch (err) {
     console.log('auth.js: error occured getting token');
     // Checks to see if Cache API is available
