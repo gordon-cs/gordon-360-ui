@@ -9,7 +9,9 @@ type SearchResult = {
   ConcatonatedInfo: string;
 };
 
-const search = async (query: string): Promise<[number, SearchResult[]]> => {
+type TimedResult = [time: number, results: SearchResult[]];
+
+const search = async (query: string): Promise<TimedResult> => {
   // Replace period or space with a slash: 'first.last' or 'first last' become 'first/last'
   const searchQuery = query.trim().replace(/\.|\s/g, '/');
   const searchResults: SearchResult[] = await http.get(`accounts/search/${searchQuery}`);
