@@ -1,5 +1,5 @@
 import http from './http';
-import { ParticipationLevel } from './membership';
+import { Membership, ParticipationLevel } from './membership';
 
 const enum RequestStatus {
   Pending = 'Pending',
@@ -7,7 +7,7 @@ const enum RequestStatus {
   Denied = 'Denied',
 }
 
-type Request = {
+type MembershipRequest = {
   ActivityCode: string;
   ActivityDescription: string;
   /** Comment or text */
@@ -24,90 +24,60 @@ type Request = {
   SessionDescription: string;
 };
 
-/**
- * Approve request
- *
- * @param {string} requestID Request object
- * @returns {Promise<any>} Response
- */
-const approveRequest = (requestID: string): Promise<any> => {
+type Request = {
+  REQUEST_ID: number;
+  SESS_CDE: string;
+  ACT_CDE: string;
+  ID_NUM: number;
+  PART_CDE: ParticipationLevel;
+  DATE_SENT: Date;
+  COMMENT_TXT: string;
+  STATUS: RequestStatus;
+};
+
+const approveRequest = (requestID: string): Promise<Membership> => {
   return http.post(`requests/${requestID}/approve`);
 };
 
-/**
- * Cancel request with given request id
- *
- * @param {string} requestID request id
- * @returns {Promise.<Object>} deleted object
- */
-const cancelRequest = (requestID: string): Promise<object> => {
+const cancelRequest = (requestID: string): Promise<Request> => {
   return http.del(`requests/${requestID}`);
 };
 
-/**
- * Deny request
- *
- * @param {string} requestID Request object
- * @returns {Promise<any>} Response
- */
-const denyRequest = (requestID: string): Promise<any> => {
+const denyRequest = (requestID: string): Promise<Request> => {
   return http.post(`requests/${requestID}/deny`);
 };
 
-const getRequests = async (activityCode: string, sessionCode: string): Promise<Request[]> => {
-  let allRequests: Request[] = await http.get(`requests/activity/${activityCode}`);
+const getRequests = async (
+  activityCode: string,
+  sessionCode: string,
+): Promise<MembershipRequest[]> => {
+  let allRequests: MembershipRequest[] = await http.get(`requests/activity/${activityCode}`);
   return filterCurrentRequests(allRequests, sessionCode);
 };
 
 /**
  * Filters only penidng requests for an activity
  *
- * @param {Request[]} requests List of all the requests for an activity
- * @param {string} sessionCode Identifier for a session
- * @returns {Request[]} Filtered requests
+ * @param requests List of all the requests for an activity
+ * @param sessionCode Identifier for a session
+ * @returns Filtered requests
  */
-const filterCurrentRequests = (requests: Request[], sessionCode: string): Request[] =>
+const filterCurrentRequests = (
+  requests: MembershipRequest[],
+  sessionCode: string,
+): MembershipRequest[] =>
   requests.filter(
     (r) => r.SessionCode === sessionCode && r.RequestApproved === RequestStatus.Approved,
   );
 
-/**
- * Request membership
- *
- * @param {Object} data Data passed in
- * @returns {Promise<Object>} Response body
- */
-function requestMembership(data: object): Promise<object> {
+function requestMembership(data: object): Promise<Request> {
   return http.post(`requests`, data);
 }
-
-/**
- * Get the difference in days bewteen today and specified date
- *
- * @param date The date to diff against
- * @returns integer and printable string
- */
-const getDiffDays = function (date: Date) {
-  let currentDate = new Date();
-  let requestDate = new Date(date);
-  let timeDiff = Math.abs(currentDate.getTime() - requestDate.getTime());
-  let diffDays = Math.floor(timeDiff / (1000 * 3600 * 24));
-  let diffString;
-  if (diffDays === 0) {
-    diffString = 'Today';
-  } else if (diffDays === 1) {
-    diffString = 'Yesterday';
-  } else {
-    diffString = diffDays.toString() + ' days ago';
-  }
-  return diffString;
-};
 
 const requestService = {
   approveRequest,
   cancelRequest,
   denyRequest,
-  getDiffDays,
   getRequests,
   requestMembership,
 };

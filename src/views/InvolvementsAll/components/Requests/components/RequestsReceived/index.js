@@ -12,6 +12,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { formatDistanceToNow } from 'date-fns';
 import parseISO from 'date-fns/parseISO';
 import { Fragment, useEffect, useState } from 'react';
 import requestService from 'services/request';
@@ -63,7 +64,7 @@ const RequestReceived = ({ involvement }) => {
                   <ListItem key={request.RequestID}>
                     <ListItemText
                       primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
-                      secondary={`${requestService.getDiffDays(request.DateSent)} - ${
+                      secondary={`${formatDistanceToNow(request.DateSent)} - ${
                         request.CommentText
                       }`}
                     />

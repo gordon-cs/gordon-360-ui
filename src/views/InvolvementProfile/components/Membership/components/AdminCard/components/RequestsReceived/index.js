@@ -8,6 +8,7 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { formatDistanceToNow } from 'date-fns';
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import requestService from 'services/request';
@@ -65,9 +66,7 @@ const RequestsReceived = ({ onAddMember }) => {
             >
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
-                secondary={`${requestService.getDiffDays(request.DateSent)} - ${
-                  request.CommentText
-                }`}
+                secondary={`${formatDistanceToNow(request.DateSent)} - ${request.CommentText}`}
               />
 
               <ListItemSecondaryAction>

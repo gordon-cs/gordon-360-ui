@@ -1,5 +1,6 @@
 import { Button, Divider, Grid, Typography } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
+import { formatDistanceToNow } from 'date-fns';
 import requestService from 'services/request';
 import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory
@@ -39,7 +40,7 @@ const RequestSent = ({ member, onCancel }) => {
               <strong> {member.ActivityDescription} </strong>
             </Typography>
             <Typography>
-              <span className={styles.weak}>{requestService.getDiffDays(member.DateSent)}</span>
+              <span className={styles.weak}>{formatDistanceToNow(member.DateSent)}</span>
             </Typography>
           </Grid>
           <Grid item xs={6} sm={4} align="center">
