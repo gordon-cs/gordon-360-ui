@@ -1,7 +1,7 @@
 import http from './http';
 import user from './user';
 
-export enum StatusColor {
+export const enum StatusColor {
   Green = 'GREEN',
   Yellow = 'YELLOW',
   Red = 'RED',

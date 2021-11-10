@@ -1,6 +1,6 @@
 import http from './http';
 
-enum Class {
+const enum Class {
   'Unassigned',
   'First Year',
   'Sophomore',
