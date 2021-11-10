@@ -46,27 +46,22 @@ const makeHeaders = (headerOptions: any): Headers => {
   }
 };
 
-/**
- * Parse an HTTP response
- *
- * @param res The response to parse
- * @returns The parsed response
- */
-export const parseResponse = <TResponse>(res: Response): Promise<TResponse> => {
-  // Parse body of response if not empty
-  //    Make sure text of response is not empty before trying to convert it
-  //    to a JSON object
-  const json: Promise<TResponse> = res
-    .text()
-    .then((text) => (text.length ? JSON.parse(text) : {}))
-    // Handle error if response body is not valid JSON
-    .catch((err) => Promise.reject(createError(err, res)));
+export const parseResponse = async <TResponse>(res: Response): Promise<TResponse> => {
+  try {
+    const json = await res.text();
+    const data: TResponse = json.length ? JSON.parse(json) : {};
 
-  // Handle error when response body is valid but status code is not
-  if (!res.ok) {
-    return json.then((data) => Promise.reject(createError(data, res)));
+    // Throw error when response status code is bad
+    if (!res.ok) {
+      // @ts-ignore
+      return Promise.reject(createError(data, res));
+    }
+
+    return data;
+  } catch (err) {
+    // Handle error if response body is not valid JSON
+    return Promise.reject(err instanceof Error ? createError(err, res) : err);
   }
-  return json;
 };
 
 /**

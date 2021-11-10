@@ -6,7 +6,6 @@ class AuthError {
     this.message = message || 'User is not authorized to access this resource';
   }
 }
-AuthError.prototype = Object.create(Error.prototype);
 
 class NotFoundError {
   name: string;
@@ -16,7 +15,6 @@ class NotFoundError {
     this.message = message || 'Resource not found';
   }
 }
-NotFoundError.prototype = Object.create(Error.prototype);
 
 /**
  * Create an error object based on an HTTP error from the backend
