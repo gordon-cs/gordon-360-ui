@@ -1,5 +1,5 @@
 import http from './http';
-import { Membership, ParticipationLevel } from './membership';
+import { Membership, Participation, ParticipationDesc } from './membership';
 
 const enum RequestStatus {
   Pending = 'Pending',
@@ -16,8 +16,8 @@ type MembershipRequest = {
   FirstName: string;
   IDNumber: number;
   LastName: string;
-  Participation: ParticipationLevel;
-  ParticipationDescription: keyof typeof ParticipationLevel;
+  Participation: Participation;
+  ParticipationDescription: ParticipationDesc;
   RequestApproved: RequestStatus;
   RequestID: number;
   SessionCode: string;
@@ -29,7 +29,7 @@ type Request = {
   SESS_CDE: string;
   ACT_CDE: string;
   ID_NUM: number;
-  PART_CDE: ParticipationLevel;
+  PART_CDE: Participation;
   DATE_SENT: Date;
   COMMENT_TXT: string;
   STATUS: RequestStatus;
