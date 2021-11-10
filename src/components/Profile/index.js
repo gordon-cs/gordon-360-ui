@@ -31,7 +31,7 @@ const Profile = ({ profile, myProf }) => {
       setCanReadStudentSchedules(await scheduleService.getCanReadStudentSchedules());
     };
     fetchReadStudentSchedulesPermission();
-  });
+  }, []);
 
   return (
     <Grid container justifyContent="center" spacing={2}>
