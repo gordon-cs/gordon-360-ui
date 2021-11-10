@@ -1,20 +1,20 @@
-import { Fragment, useEffect, useState } from 'react';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import parseISO from 'date-fns/parseISO';
 import {
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  Typography,
-  Divider,
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Badge,
+  Button,
+  Divider,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  Typography,
 } from '@material-ui/core';
-import membershipService from 'services/membership';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import parseISO from 'date-fns/parseISO';
+import { Fragment, useEffect, useState } from 'react';
+import requestService from 'services/request';
 import styles from './RequestsReceived.module.css';
 
 const RequestReceived = ({ involvement }) => {
@@ -23,7 +23,7 @@ const RequestReceived = ({ involvement }) => {
   useEffect(() => {
     const loadRequests = async () => {
       setRequests(
-        await membershipService.getRequests(involvement.ActivityCode, involvement.SessionCode),
+        await requestService.getRequests(involvement.ActivityCode, involvement.SessionCode),
       );
     };
 
@@ -31,12 +31,12 @@ const RequestReceived = ({ involvement }) => {
   }, [involvement]);
 
   const onApprove = async (id) => {
-    await membershipService.approveRequest(id);
+    await requestService.approveRequest(id);
     setRequests((prevRequests) => prevRequests.filter((r) => r.RequestID !== id));
   };
 
   const onDeny = async (id) => {
-    await membershipService.denyRequest(id);
+    await requestService.denyRequest(id);
     setRequests((prevRequests) => prevRequests.filter((r) => r.RequestID !== id));
   };
 
@@ -63,7 +63,7 @@ const RequestReceived = ({ involvement }) => {
                   <ListItem key={request.RequestID}>
                     <ListItemText
                       primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
-                      secondary={`${membershipService.getDiffDays(request.DateSent)} - ${
+                      secondary={`${requestService.getDiffDays(request.DateSent)} - ${
                         request.CommentText
                       }`}
                     />

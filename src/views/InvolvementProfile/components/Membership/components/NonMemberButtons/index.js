@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'react';
-
 import {
-  CardActions,
   Button,
-  Grid,
+  CardActions,
   FormControl,
+  Grid,
   InputLabel,
-  Select,
   MenuItem,
+  Select,
   TextField,
 } from '@material-ui/core';
-import membershipService from 'services/membership';
-import { useParams } from 'react-router';
-import userService from 'services/user';
-import involvementService from 'services/activity';
 import GordonDialogBox from 'components/GordonDialogBox';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import involvementService from 'services/activity';
+import requestService from 'services/request';
+import userService from 'services/user';
 
 const NonMemberButtons = ({
   isGuest,
@@ -55,7 +54,7 @@ const NonMemberButtons = ({
     };
 
     try {
-      await membershipService.requestMembership(data);
+      await requestService.requestMembership(data);
       onClose();
       createSnackbar('Request sent, awaiting approval from a group leader', 'success');
     } catch (err) {
