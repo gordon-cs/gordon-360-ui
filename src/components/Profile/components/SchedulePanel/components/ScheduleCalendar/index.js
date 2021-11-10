@@ -2,7 +2,7 @@ import GordonLoader from 'components/Loader';
 import Moment from 'moment';
 import { Component, Fragment } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import myschedule from 'services/myschedule';
+import myscheduleService from 'services/myschedule';
 import scheduleService from 'services/schedule';
 import session from 'services/session';
 // @TODO CSSMODULES - Schedule Calendar needs work but left as normal for now
@@ -56,8 +56,8 @@ export default class GordonScheduleCalendar extends Component {
     } catch (e) {
       this.setState({ loading: false });
     }
-    const myschedulePromise = myschedule.getMySchedule(searchedUser.AD_Username);
-    let myscheduleInfo = await myschedule.makeMySchedule(myschedulePromise);
+    const myschedule = await myscheduleService.getMySchedule(searchedUser.AD_Username);
+    const myscheduleInfo = myscheduleService.makeMySchedule(myschedule);
 
     if (courseInfo) {
       this.eventInfo = courseInfo.concat(myscheduleInfo);
