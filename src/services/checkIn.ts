@@ -45,7 +45,7 @@ type Demographic = {
   Race: Race;
 };
 
-export const enum Race {
+export enum Race {
   NativeAmerican = 'Native American or Alaskan Native',
   Asian = 'Asian',
   Black = 'Black or African American',

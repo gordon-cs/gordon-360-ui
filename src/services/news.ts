@@ -64,6 +64,7 @@ const getNotExpiredFormatted = async (): Promise<FormattedNewsItem[]> => {
 };
 
 const getFilteredNews = (unexpiredNews: NewsItem[], query: string): NewsItem[] => {
+  const lowerquery = query.toLowerCase();
   return unexpiredNews.filter((newsitem) => {
     return (
       newsitem.Body.toLowerCase().includes(lowerquery) ||

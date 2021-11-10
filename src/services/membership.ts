@@ -27,7 +27,7 @@ enum Privacy {
   Private,
 }
 
-export const enum Participation {
+export enum Participation {
   Member = 'MEMBR',
   Leader = 'LEAD',
   Advisor = 'ADV',

@@ -1,7 +1,7 @@
 import http from './http';
 import { Membership, Participation, ParticipationDesc } from './membership';
 
-const enum RequestStatus {
+enum RequestStatus {
   Pending = 'Pending',
   Approved = 'Approved',
   Denied = 'Denied',
