@@ -1,12 +1,6 @@
+import { Class } from './goStalk';
 import http from './http';
-import user from './user';
-
-// TODO Create common type from user, this is a temporary shim type
-type StudentProfileInfo = {
-  Class: string;
-  PersonType: string;
-  Gender: string;
-};
+import user, { StudentProfileInfo, UnformattedStudentProfileInfo } from './user';
 
 type ApartmentHall = {
   /** Number of people per room/apartment   (not yet implemented in API) */
@@ -18,13 +12,13 @@ type ApartmentHall = {
 
 type ApartmentApplicant = {
   ApplicationID: number;
-  Profile: StudentProfileInfo;
+  Profile: UnformattedStudentProfileInfo;
   Username?: string;
   /** The birthday of this applicant (only visible to housing admin) */
   BirthDate?: Date;
   /** The age of the student (in years) (only visible to housing admin) */
   Age?: number;
-  Class?: string;
+  Class?: Class;
   OffCampusProgram: string;
   /** Indicates whether the student has a disiplinary probation (visble only to housing admin) */
   Probation: string;
@@ -140,13 +134,6 @@ function formatApplicantInfo(applicant: ApartmentApplicant): ApartmentApplicant 
 
   applicant.Profile.PersonType = 'stu';
   user.setFullname(applicant.Profile);
-  user.setClass(applicant.Profile);
-
-  // The following 'Class' property is needed for the staff page
-  if (applicant.Class === null || Number(applicant.Class)) {
-    // Use converted Class from number ('1', '2', '3', ...) to words ('First Year', 'Sophomore', ...)
-    applicant.Class = applicant.Profile.Class;
-  }
 
   applicant.OffCampusProgram ?? (applicant.OffCampusProgram = '');
 

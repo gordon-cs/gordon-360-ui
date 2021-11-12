@@ -1,6 +1,6 @@
 import http from './http';
 
-type Member = {
+export type Membership = {
   // TODO: Currently never set by the API, always null
   AccountPrivate: Privacy | null;
   ActivityCode: string;
@@ -36,7 +36,7 @@ export enum Participation {
 
 export type ParticipationDesc = keyof typeof Participation;
 
-export type Membership = {
+export type MEMBERSHIP = {
   ACT_CDE: string;
   SESS_CDE: string;
   ID_NUM: number;
@@ -45,7 +45,7 @@ export type Membership = {
   GRP_ADMIN?: boolean;
 };
 
-function addMembership(data: Membership): Promise<Membership> {
+function addMembership(data: MEMBERSHIP): Promise<MEMBERSHIP> {
   return http.post('memberships', data);
 }
 
@@ -58,23 +58,23 @@ const checkAdmin = async (
   return admins.some((a) => a.SessionCode === sessionCode && a.IDNumber === parseInt(userID));
 };
 
-const editMembership = (membershipID: string, data: Membership): Promise<Membership> => {
+const editMembership = (membershipID: string, data: MEMBERSHIP): Promise<MEMBERSHIP> => {
   return http.put(`memberships/${membershipID}`, data);
 };
 
-const get = async (activityCode: string, sessionCode: string): Promise<Member[]> => {
+const get = async (activityCode: string, sessionCode: string): Promise<Membership[]> => {
   const activityMembers = await getAll(activityCode);
   return activityMembers.filter((m) => m.SessionCode === sessionCode);
 };
 
 //Change the privacy value for a club membership
-const toggleMembershipPrivacy = async (userMembership: Member): Promise<void> =>
+const toggleMembershipPrivacy = async (userMembership: Membership): Promise<void> =>
   http.put(`memberships/${userMembership.MembershipID}/privacy/${!userMembership.Privacy}`);
 
-const getAll = (activityCode: string): Promise<Member[]> =>
+const getAll = (activityCode: string): Promise<Membership[]> =>
   http.get(`memberships/activity/${activityCode}`);
 
-const getGroupAdminsForInvolvement = (activityCode: string): Promise<Member[]> =>
+const getGroupAdminsForInvolvement = (activityCode: string): Promise<Membership[]> =>
   http.get(`memberships/activity/${activityCode}/group-admin`);
 
 const getEmailAccount = async (email: string): Promise<Object> => {
@@ -87,10 +87,10 @@ const getFollowersNum = (activityCode: string, sessionCode: string): Promise<num
 const getMembersNum = (activityCode: string, sessionCode: string): Promise<number> =>
   http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
 
-const getMembershipsForUser = (userID: string): Promise<Member[]> =>
+const getMembershipsForUser = (userID: string): Promise<Membership[]> =>
   http.get(`memberships/student/${userID}`);
 
-const remove = (membershipID: string): Promise<Membership> => {
+const remove = (membershipID: string): Promise<MEMBERSHIP> => {
   return http.del(`memberships/${membershipID}`);
 };
 
@@ -101,7 +101,7 @@ const search = async (
 ): Promise<
   [isMember: boolean, participation: ParticipationDesc | null, membershipID: number | null]
 > => {
-  const memberships: Member[] = await http.get(`memberships/student/${userID}`);
+  const memberships: Membership[] = await http.get(`memberships/student/${userID}`);
   const membership = memberships.find(
     (m) => m.ActivityCode === activityCode && m.SessionCode === sessionCode,
   );
@@ -111,7 +111,7 @@ const search = async (
 };
 
 // TODO: Refactor API to not require unused Membership body
-const toggleGroupAdmin = async (membershipID: number, data: Membership): Promise<Membership> => {
+const toggleGroupAdmin = async (membershipID: number, data: MEMBERSHIP): Promise<MEMBERSHIP> => {
   return await http.put(`memberships/${membershipID}/group-admin`, data);
 };
 

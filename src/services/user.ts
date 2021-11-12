@@ -1,19 +1,93 @@
 import jwtDecode from 'jwt-decode';
 import { DateTime } from 'luxon';
-import { socialMediaInfo } from 'socialMedia';
+import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import {
-  cliftonStrengthCategories,
-  cliftonStrengthColors,
+  CliftonStrength,
+  CliftonStrengthColors,
   cliftonStrengthLinks,
+  CliftonStrengthsCategory,
+  getCategoryOfStrength,
 } from './cliftonStrengthsData';
 import { AuthError } from './error';
+import { Class } from './goStalk';
 import http from './http';
+import { Membership } from './membership';
+import { Request } from './request';
 import session from './session';
 import storage from './storage';
+import { Override } from './utils';
 
 type CLWCredits = {
   current: number;
   required: number;
+};
+
+enum OnOffCampusStatus {
+  'Off Campus' = 'O',
+  Away = 'A',
+  Remote = 'D',
+  'Private as requested.' = 'P',
+  'On Campus' = '',
+}
+
+type OnOffCampusDescription = keyof typeof OnOffCampusStatus;
+
+const onOffCampusDescriptions = {
+  O: 'Off Campus' as OnOffCampusDescription,
+  A: 'Away' as OnOffCampusDescription,
+  D: 'Remote' as OnOffCampusDescription,
+  P: 'Private as requested.' as OnOffCampusDescription,
+  '': 'On Campus' as OnOffCampusDescription,
+};
+
+// TODO: Refactor to not depend on array indexing to find link
+type CliftonStrengths = {
+  Strengths: CliftonStrength[];
+  Categories: CliftonStrengthsCategory[];
+  Colors: CliftonStrengthColors[];
+  Links: string[];
+};
+
+type BaseProfileInfo = {
+  ID: string;
+  Title: string;
+  FirstName: string;
+  MiddleName: string;
+  LastName: string;
+  Suffix: string;
+  MaidenName: string;
+  NickName: string;
+  OnCampusBuilding: string;
+  OnCampusRoom: string;
+  OnCampusPhone: string;
+  OnCampusPrivatePhone: string;
+  OnCampusFax: string;
+  Mail_Location: string;
+  HomeStreet1: string;
+  HomeStreet2: string;
+  HomeCity: string;
+  HomeState: string;
+  HomePostalCode: string;
+  HomeCountry: string;
+  HomePhone: string;
+  HomeFax: string;
+  KeepPrivate: string;
+  Barcode: string;
+  Email: string;
+  Gender: string;
+  AD_Username: string;
+  show_pic: number;
+  preferred_photo: number;
+  Country: string;
+  BuildingDescription: string;
+  Facebook: string;
+  Twitter: string;
+  Instagram: string;
+  Handshake: string;
+  LinkedIn: string;
+  PersonType: string;
+  fullName?: string;
+  CliftonStrengths?: CliftonStrengths;
 };
 
 type LocalInfo = {
@@ -35,68 +109,17 @@ type LocalInfo = {
   user_name: string;
 };
 
-type StaffProfileInfo = {
-  AD_Username: string;
-  Barcode: string;
-  BuildingDescription: string;
-  Country: string;
+export type UnformattedStaffProfileInfo = BaseProfileInfo & {
   Dept: string;
-  Email: string;
-  Facebook: string;
-  FirstName: string;
-  Gender: string;
-  Handshake: string;
-  HomeCity: string;
-  HomeCountry: string;
-  HomeFax: string;
-  HomePhone: string;
-  HomePostalCode: string;
-  HomeState: string;
-  HomeStreet1: string;
-  HomeStreet2: string;
-  ID: string;
-  Instagram: string;
   JobTitle: string;
-  KeepPrivate: string;
-  LastName: string;
-  LinkedIn: string;
-  MaidenName: string;
-  MiddleName: string;
-  NickName: string;
-  OnCampusBuilding: string;
   OnCampusDepartment: string;
-  OnCampusFax: string;
-  OnCampusPhone: string;
-  OnCampusPrivatePhone: string;
-  OnCampusRoom: string;
-  PersonType: string;
   SpouseName: string;
-  Suffix: string;
-  Title: string;
-  Twitter: string;
   Type: string;
   office_hours: string;
-  preferred_photo: number;
-  show_pic: number;
-  Mail_Location: string;
 };
 
-type StudentProfileInfo = {
-  ID: string;
-  Title: string;
-  FirstName: string;
-  MiddleName: string;
-  LastName: string;
-  Suffix: string;
-  MaidenName: string;
-  NickName: string;
-  OnOffCampus: string;
-  OnCampusBuilding: string;
-  OnCampusRoom: string;
-  OnCampusPhone: string;
-  OnCampusPrivatePhone: string;
-  OnCampusFax: string;
-  Mail_Location: string;
+export type UnformattedStudentProfileInfo = BaseProfileInfo & {
+  OnOffCampus: OnOffCampusStatus;
   OffCampusStreet1: string;
   OffCampusStreet2: string;
   OffCampusCity: string;
@@ -105,27 +128,15 @@ type StudentProfileInfo = {
   OffCampusCountry: string;
   OffCampusPhone: string;
   OffCampusFax: string;
-  HomeStreet1: string;
-  HomeStreet2: string;
-  HomeCity: string;
-  HomeState: string;
-  HomePostalCode: string;
-  HomeCountry: string;
-  HomePhone: string;
-  HomeFax: string;
   Cohort: string;
-  Class: string;
-  KeepPrivate: string;
+  Class: Class;
   Major: string;
-  Barcode: string;
   AdvisorIDs: string;
   /** Whether student is married or not ('Y' or 'N') */
   Married: string;
   /** Whether student ia commuter or not ('Y' or 'N') */
   Commuter: string;
   Major2: string;
-  Email: string;
-  Gender: string;
   /** Whether student is a graduate student or not ('Y' or 'N') */
   grad_student: string;
   GradDate: string;
@@ -135,27 +146,30 @@ type StudentProfileInfo = {
   Minor3: string;
   MobilePhone: string;
   IsMobilePhonePrivate: number;
-  AD_Username: string;
-  show_pic: number;
-  /** Whether or not to show preferred photo */
-  preferred_photo: number;
-  Country: string;
-  BuildingDescription: string;
   Major1Description: string;
   Major2Description: string;
   Major3Description: string;
   Minor1Description: string;
   Minor2Description: string;
   Minor3Description: string;
-  Facebook: string;
-  Twitter: string;
-  Instagram: string;
-  Handshake: string;
-  LinkedIn: string;
-  PersonType: string;
   ChapelRequired: number;
   ChapelAttended: number;
 };
+
+export type UnformattedProfileInfo = UnformattedStaffProfileInfo | UnformattedStudentProfileInfo;
+
+export type StaffProfileInfo = UnformattedStaffProfileInfo & {
+  fullName: string;
+};
+
+export type StudentProfileInfo = {
+  fullName: string;
+  Majors: string[];
+  Minors: string[];
+  Advisors: StudentAdvisorInfo[];
+} & Override<UnformattedStudentProfileInfo, { OnOffCampus: OnOffCampusDescription }>;
+
+export type Profile = StaffProfileInfo | StudentProfileInfo;
 
 type StudentAdvisorInfo = {
   Firstname: string;
@@ -177,67 +191,42 @@ type MealPlanComponent = {
   CurrentBalance: string;
 };
 
-function setFullname(profile) {
+const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo => {
+  return (profile as UnformattedStudentProfileInfo).OnOffCampus !== undefined;
+};
+
+const isStaff = (profile: UnformattedProfileInfo): profile is UnformattedStaffProfileInfo => {
+  return (profile as UnformattedStaffProfileInfo).Dept !== undefined;
+};
+
+const filter =
+  <T>(predicate: (element: T, index: number, array: T[]) => boolean) =>
+  (array: T[]): T[] =>
+    array.filter(predicate);
+
+const sort =
+  <T>(predicate?: (a: T, b: T) => number) =>
+  (array: T[]): T[] =>
+    array.sort(predicate);
+
+const compareByProperty =
+  <Type, Key extends keyof Type>(property: Key) =>
+  (a: Type, b: Type): -1 | 0 | 1 => {
+    if (a[property] > b[property]) {
+      return 1;
+    } else if (a[property] < b[property]) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
+function setFullname(profile: UnformattedProfileInfo): UnformattedProfileInfo {
   profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
   return profile;
 }
 
-function setOnOffCampus(data) {
-  switch (data.OnOffCampus) {
-    case 'O':
-      data.OnOffCampus = 'Off Campus';
-      break;
-    case 'A':
-      data.OnOffCampus = 'Away';
-      break;
-    case 'D':
-      data.OnOffCampus = '';
-      break;
-    case 'P': //Private
-      data.OnOffCampus = 'Private as requested.';
-      break;
-    default:
-      data.OnOffCampus = 'On Campus';
-  }
-  return data;
-}
-
-function setClassYear(data) {
-  if (data.PreferredClassYear) {
-    data.ClassYear = data.PreferredClassYear;
-  }
-  return data;
-}
-
-function setMajorObject(data) {
-  data.Majors = [];
-  if (data.Major1Description) {
-    data.Majors.push(data.Major1Description);
-  }
-  if (data.Major2Description) {
-    data.Majors.push(data.Major2Description);
-  }
-  if (data.Major3Description) {
-    data.Majors.push(data.Major3Description);
-  }
-  return data;
-}
-
-function setMinorObject(data) {
-  data.Minors = [];
-  if (data.Minor1Description) {
-    data.Minors.push(data.Minor1Description);
-  }
-  if (data.Minor2Description) {
-    data.Minors.push(data.Minor2Description);
-  }
-  if (data.Minor3Description) {
-    data.Minors.push(data.Minor3Description);
-  }
-  return data;
-}
-
-function formatCountry(profile) {
+function formatCountry(profile: UnformattedProfileInfo) {
   if (profile.Country) {
     profile.Country = profile.Country.replace(/\w\S*/g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -252,8 +241,8 @@ function formatCountry(profile) {
   return profile;
 }
 
-const formatSocialMediaLinks = (profile) => {
-  socialMediaInfo.platforms.map(
+const formatSocialMediaLinks = (profile: UnformattedProfileInfo) => {
+  platforms.forEach(
     (platform) =>
       (profile[platform] = profile[platform]
         ? socialMediaInfo[platform].prefix + decodeURIComponent(profile[platform])
@@ -262,106 +251,39 @@ const formatSocialMediaLinks = (profile) => {
   return profile;
 };
 
-function setClass(profile) {
-  if (String(profile.PersonType).includes('stu')) {
-    switch (profile.Class) {
-      case '1':
-        profile.Class = 'First Year';
-        break;
-      case '2':
-        profile.Class = 'Sophomore';
-        break;
-      case '3':
-        profile.Class = 'Junior';
-        break;
-      case '4':
-        profile.Class = 'Senior';
-        break;
-      case '5':
-        profile.Class = 'Graduate Student';
-        break;
-      case '6':
-        profile.Class = 'Undergraduate Conferred';
-        break;
-      case '7':
-        profile.Class = 'Graduate Conferred';
-        break;
-      default:
-        profile.Class = 'Student';
-    }
-  }
+const getImage = (username: string = ''): Promise<{ def: string; pref?: string }> =>
+  http.get(`profiles/Image/${username}/`);
 
-  return profile;
-}
+const resetImage = (): Promise<void> => http.post('/profiles/image/reset', '');
 
-/**
- * Get image for a given user or the current user if `username` is not provided
- *
- * @param {string} [username] Username in firstname.lastname format
- * @returns {Promise.<{def: string, pref?: string}>} Image as a Base64-encoded string
- */
-const getImage = async (username: string): Promise<{ def: string; pref?: string }> => {
-  let pic;
-  if (username) {
-    pic = await http.get(`profiles/Image/${username}/`);
-  } else {
-    pic = await http.get('profiles/Image');
-  }
-  return pic;
+const postIDImage = (dataURI: string): Promise<void> => {
+  const blob = dataURItoBlob(dataURI);
+  const fileType = blob.type.replace('image/', '');
+  const imageData = new FormData();
+  imageData.append('canvasImage', blob, 'canvasImage.' + fileType);
+  return http.post('profiles/IDimage', imageData);
 };
 
-/**
- * Reset the current user's from preferred image to user's default image
- *
- * @returns {Response} Determines if the image was reset successfully
- */
-const resetImage = (): Response => {
-  return http.post('/profiles/image/reset', '');
+const postImage = (dataURI: string): Promise<void> => {
+  const blob = dataURItoBlob(dataURI);
+  const fileType = blob.type.replace('image/', '');
+  const imageData = new FormData();
+  imageData.append('canvasImage', blob, 'canvasImage.' + fileType);
+  return http.post('profiles/image', imageData);
 };
 
-/**
- * upload an ID image for a user to the __ folder
- *
- * @param {string} dataURI of the image being uploaded
- * @returns {Response} response of http request
- */
-const postIDImage = (dataURI: string): Response => {
-  let imageData = new FormData();
-  let blob = dataURItoBlob(dataURI);
-  let type = blob.type.replace('image/', '');
-  let headerOptions = { key: 'this is a post' };
-  imageData.append('canvasImage', blob, 'canvasImage.' + type);
-  return http.post('profiles/IDimage', imageData, headerOptions);
-};
-
-/**
- * upload a photo to user's profile, which is then used as the preferred photo
- *
- * @param {string} dataURI of the image being uploaded
- * @returns {Response} response of http request
- */
-const postImage = (dataURI: string): Response => {
-  let imageData = new FormData();
-  let blob = dataURItoBlob(dataURI);
-  let type = blob.type.replace('image/', '');
-  let headerOptions = { key: 'this is a post' };
-  imageData.append('canvasImage', blob, 'canvasImage.' + type);
-  return http.post('profiles/image', imageData, headerOptions);
-};
-
-// convert data to blob
-function dataURItoBlob(dataURI) {
+function dataURItoBlob(dataURI: string) {
   // convert base64/URLEncoded data component to raw binary data held in a string
-  var byteString;
+  let byteString;
   if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
   else byteString = unescape(dataURI.split(',')[1]);
 
   // separate out the mime component
-  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+  let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
 
   // write the bytes of the string to a typed array
-  var ia = new Uint8Array(byteString.length);
-  for (var i = 0; i < byteString.length; i++) {
+  let ia = new Uint8Array(byteString.length);
+  for (let i = 0; i < byteString.length; i++) {
     ia[i] = byteString.charCodeAt(i);
   }
 
@@ -371,10 +293,10 @@ function dataURItoBlob(dataURI) {
 /**
  * Get local info encoded in payload of token
  *
- * @returns {Promise.<LocalInfo>} Local user info
+ * @returns Local user info
  */
 const getLocalInfo = (): Promise<LocalInfo> => {
-  let token;
+  let token: string;
   try {
     token = storage.get('token');
   } catch (err) {
@@ -387,281 +309,150 @@ const getLocalInfo = (): Promise<LocalInfo> => {
   }
 };
 
-/**
- * Get the number of cl&w credits acquired, and number of credits required.
- *
- * @returns {CLWCredits} An Object of their current and required number of CL&W events,
- */
-const getChapelCredits = async (): CLWCredits => {
-  const { ChapelRequired: required, ChapelAttended: attended } = await getProfile();
+const getChapelCredits = async (): Promise<CLWCredits | null> => {
+  const profile = await getProfile();
 
-  return {
-    current: attended || 0,
-    required,
-  };
+  return isStudent(profile)
+    ? {
+        current: profile.ChapelAttended || 0,
+        required: profile.ChapelRequired,
+      }
+    : null;
 };
 
-const getDiningInfo = async (): Promise<DiningInfo> => {
-  return await http.get('dining');
-};
+const getDiningInfo = (): Promise<DiningInfo> => http.get('dining');
 
-const getProfile = (username: string = ''): Promise<StaffProfileInfo | StudentProfileInfo> =>
+const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
   http.get(`profiles/${username}/`);
 
-const getAdvisors = async (username) => {
-  return await http.get(`profiles/Advisors/${username}/`);
-};
+const getAdvisors = (username: string = ''): Promise<StudentAdvisorInfo[]> =>
+  http.get(`profiles/Advisors/${username}/`);
 
-const getCliftonStrengths = async (username) => {
-  let cliftonStrengths = await http.get(`profiles/clifton/${username}/`);
+const getCliftonStrengths = async (
+  username: string = '',
+): Promise<CliftonStrengths | undefined> => {
+  const { Strengths } = await http.get<{ Strengths?: CliftonStrength[] }>(
+    `profiles/clifton/${username}/`,
+  );
 
-  if (cliftonStrengths?.Strengths?.[0]) {
-    cliftonStrengths.Categories = cliftonStrengths.Strengths.map((strength) =>
-      cliftonStrengthCategories.Executing.includes(strength)
-        ? 'Executing'
-        : cliftonStrengthCategories.Influencing.includes(strength)
-        ? 'Influencing'
-        : cliftonStrengthCategories.Relationship.includes(strength)
-        ? 'Relationship'
-        : cliftonStrengthCategories.Thinking.includes(strength)
-        ? 'Thinking'
-        : null,
-    );
-
-    cliftonStrengths.Colors = cliftonStrengths.Categories.map(
-      (category) => cliftonStrengthColors[category],
-    );
-
-    cliftonStrengths.Links = cliftonStrengths.Strengths.map(
-      (strength) => cliftonStrengthLinks[strength],
-    );
+  if (Strengths) {
+    const Categories = Strengths.map((strength) => getCategoryOfStrength(strength));
+    return {
+      Strengths,
+      Categories,
+      Colors: Categories.map((category) => CliftonStrengthColors[category]),
+      Links: Strengths.map((strength) => cliftonStrengthLinks[strength]),
+    };
   } else {
-    cliftonStrengths = null;
+    return undefined;
   }
-
-  return cliftonStrengths;
 };
 
-const getMailboxCombination = async () => {
-  return await http.get(`profiles/mailbox-combination/`);
-};
+const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
-async function setAdvisors(profile) {
-  profile.Advisors = await getAdvisors(profile.AD_Username);
-}
+const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
-async function setCliftonStrengths(profile) {
-  profile.CliftonStrengths = await getCliftonStrengths(profile.AD_Username);
-}
+const setMobilePhonePrivacy = (makePrivate: boolean) =>
+  http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
-async function setMobilePhoneNumber(value) {
-  await http.put(`profiles/mobile_phone_number/${value}/`);
-}
+const setHomePhonePrivacy = (makePrivate: boolean) =>
+  http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
-async function setMobilePhonePrivacy(makePrivate) {
-  // 'Y' = private, 'N' = public
-  await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
-}
-async function setHomePhonePrivacy(makePrivate) {
-  // 'Y' = private, 'N' = public
-  await http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N'));
-}
+const setImagePrivacy = (makePrivate: boolean) =>
+  http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-async function setImagePrivacy(makePrivate) {
-  // 'Y' = show image, 'N' = don't show image
-  await http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y'));
-}
+const getMemberships = (userID: string = ''): Promise<Membership[]> =>
+  http.get(`memberships/student/${userID}`);
 
-const getMemberships = async (id) => {
-  let memberships;
-  memberships = await http.get(`memberships/student/${id}`);
-  return memberships;
-};
+const getPublicMemberships = (username: string = ''): Promise<Membership[]> =>
+  http
+    .get<Membership[]>(`memberships/student/username/${username}/`)
+    .then(sort(compareByProperty('ActivityDescription')));
 
-const getPublicMemberships = async (username) => {
-  let memberships;
-  memberships = await http.get(`memberships/student/username/${username}/`);
-  memberships.sort(compareByTitle);
-  return memberships;
-};
+const getMembershipsAlphabetically = (userID: string) =>
+  getMemberships(userID).then(sort(compareByProperty('ActivityDescription')));
 
-const getMembershipsAlphabetically = async (id) => {
-  let memberships;
-  memberships = await http.get(`memberships/student/${id}`);
-  memberships.sort(compareByTitle);
-  return memberships;
-};
+const getMembershipsBySession = (userID: string, sessionCode: string) =>
+  getMembershipsAlphabetically(userID).then(filter((m) => m.SessionCode === sessionCode));
 
-//Take student's memberships and filter for current only
-const getCurrentMemberships = async (id) => {
-  let myInvolvements = await getMembershipsAlphabetically(id);
-  let myCurrentInvolvements = [];
-  const { SessionCode: sessionCode } = await session.getCurrent();
-  for (let i = 0; i < myInvolvements.length; i += 1) {
-    if (myInvolvements[i].SessionCode === sessionCode) {
-      myCurrentInvolvements.push(myInvolvements[i]);
-    }
-  }
-  return myCurrentInvolvements;
-};
+const getCurrentMemberships = async (userID: string) =>
+  session.getCurrent().then(({ SessionCode }) => getMembershipsBySession(userID, SessionCode));
 
-//Take student's memberships and filter out "Guest" memberships
-const getMembershipsWithoutGuests = async (id) => {
-  let myInvolvements = await getMemberships(id);
-  let myInvolvementsWithoutGuests = [];
-  for (let i = 0; i < myInvolvements.length; i += 1) {
-    if (!(myInvolvements[i].ParticipationDescription === 'Guest')) {
-      myInvolvementsWithoutGuests.push(myInvolvements[i]);
-    }
-  }
-  return myInvolvementsWithoutGuests;
-};
+const getMembershipsWithoutGuests = (id: string) =>
+  getMemberships(id).then(filter((i) => i.ParticipationDescription !== 'Guest'));
 
-//Take student's non-"Guest" memberships and filter for current only
-const getCurrentMembershipsWithoutGuests = async (id) => {
-  let myInvolvements = await getMembershipsWithoutGuests(id);
-  let myCurrentInvolvementsWithoutGuests = [];
-  const { SessionCode: sessionCode } = await session.getCurrent();
-  for (let i = 0; i < myInvolvements.length; i += 1) {
-    if (myInvolvements[i].SessionCode === sessionCode) {
-      myCurrentInvolvementsWithoutGuests.push(myInvolvements[i]);
-    }
-  }
-  return myCurrentInvolvementsWithoutGuests;
-};
+const getSessionMembershipsWithoutGuests = (userID: string, sessionCode: string) =>
+  getMembershipsBySession(userID, sessionCode).then(
+    filter((m) => m.ParticipationDescription !== 'Guest'),
+  );
 
-const getEmployment = async () => {
-  let employments;
-  employments = await http.get(`studentemployment/`);
-  return employments;
-};
+const getEmployment = () => http.get('studentemployment/');
 
-//Take student's non-"Guest" memberships and filter for specifiied session only
-const getSessionMembershipsWithoutGuests = async (id, session) => {
-  let myInvolvements = await getMembershipsWithoutGuests(id);
-  let myCurrentInvolvementsWithoutGuests = [];
-  for (let i = 0; i < myInvolvements.length; i += 1) {
-    if (myInvolvements[i].SessionCode === session) {
-      myCurrentInvolvementsWithoutGuests.push(myInvolvements[i]);
-    }
-  }
-  return myCurrentInvolvementsWithoutGuests;
-};
+const getSentMembershipRequests = (userID: string = ''): Promise<Request[]> =>
+  http.get(`requests/student/${userID}`);
 
-/**
- * Get requests sent by a specific student
- *
- * @param {string} [id] Identifier for student
- * @returns {Request[]} List of requests for student
- */
-const getSentMembershipRequests = (id: string = ''): Request[] => {
-  return http.get(`requests/student/${id}`);
-};
+const getLeaderPositions = async (userID: string): Promise<Membership[]> =>
+  getCurrentMemberships(userID).then(filter((m) => m.GroupAdmin));
 
-/**
- * Get memberships for specific student where they hold admin status
- *
- * @param {string} id Identifier for student
- * @returns {Request[]} List of memberships
- */
-const getLeaderPositions = async (id: string): Request[] => {
-  let leaderPositions = [];
-  let allMemberships = await getCurrentMemberships(id);
-  for (let i = 0; i < allMemberships.length; i += 1) {
-    if (allMemberships[i].GroupAdmin) {
-      leaderPositions.push(allMemberships[i]);
-    }
-  }
-  return leaderPositions;
-};
-
-/**
- * Get the birthdate of the current user
- *
- * @returns {Date} The birthdate of the current user
- */
-const getBirthdate = async (): Date => {
-  return DateTime.fromISO(await http.get(`profiles/birthdate`));
-};
+const getBirthdate = async (): Promise<DateTime> =>
+  DateTime.fromISO(await http.get('profiles/birthdate'));
 
 const isBirthdayToday = async () => {
   const birthday = await getBirthdate();
-  return birthday && birthday.toISODate() === DateTime.now().toISODate();
+  return birthday?.toISODate() === DateTime.now().toISODate();
 };
 
-//compares items by ActivityDescription, used by getMembershipsAlphabetically to sort by ActivityDescription
-function compareByTitle(a, b) {
-  const involvementA = a.ActivityDescription;
-  const involvementB = b.ActivityDescription;
+const getTranscriptMembershipsInfo = (id: string) =>
+  getMembershipsWithoutGuests(id).then(sort(compareByProperty('ActivityCode')));
 
-  let comparison = 0;
-  if (involvementA > involvementB) {
-    comparison = 1;
-  } else if (involvementA < involvementB) {
-    comparison = -1;
-  }
-  return comparison;
-}
+// TODO: Add type info
+const getEmploymentInfo = () => getEmployment();
+//.then(sort(compareBySession))
 
-//compares items by ActivityCode, used by getTranscriptMembershipsInfo to sort by ActivityCode
-function compareByActCode(a, b) {
-  const codeA = a.ActivityCode;
-  const codeB = b.ActivityCode;
+const getProfileInfo = async (username: string = ''): Promise<Profile> =>
+  getProfile(username)
+    .then(formatCountry)
+    .then(formatSocialMediaLinks)
+    .then(async (profile) => {
+      if (isStudent(profile)) {
+        return {
+          ...profile,
+          fullName: `${profile.FirstName}  ${profile.LastName}`,
+          Advisors: await getAdvisors(profile.AD_Username),
+          CliftonStrengths: await getCliftonStrengths(profile.AD_Username),
+          Majors: [
+            profile.Major1Description,
+            profile.Major2Description,
+            profile.Major3Description,
+          ].filter(Boolean),
+          Minors: [
+            profile.Minor1Description,
+            profile.Minor2Description,
+            profile.Minor3Description,
+          ].filter(Boolean),
+          OnOffCampus: onOffCampusDescriptions[profile.OnOffCampus],
+        };
+      } else if (isStaff(profile)) {
+        return {
+          ...profile,
+          fullName: `${profile.FirstName}  ${profile.LastName}`,
+          CliftonStrengths: await getCliftonStrengths(profile.AD_Username),
+        };
+      } else {
+        throw new TypeError();
+      }
+    });
 
-  let comparison = 0;
-  if (codeA > codeB) {
-    comparison = 1;
-  } else if (codeA < codeB) {
-    comparison = -1;
-  }
-  return comparison;
-}
-
-//returns an array of membership objects from backend server,
-//not including Guest memberships
-//using asynchronous http.get request (via getMemberships function)
-//sorts by SessionCode and ActivityCode
-const getTranscriptMembershipsInfo = async (id) => {
-  let transcriptInfo = await getMembershipsWithoutGuests(id);
-  transcriptInfo.sort(compareByActCode);
-  return transcriptInfo;
-};
-
-//returns an array of employment objects from backend server
-//using asynchronous http.get request (via getEmployment function)
-//sorts by
-const getEmploymentInfo = async () => {
-  let employmentInfo = await getEmployment();
-  //employmentInfo.sort(compareBySession);
-  return employmentInfo;
-};
-
-const getProfileInfo = async (username) => {
-  let profile = await getProfile(username);
-  setFullname(profile);
-  setClass(profile);
-  setClassYear(profile);
-  setMajorObject(profile);
-  formatCountry(profile);
-  setOnOffCampus(profile);
-  setMinorObject(profile);
-  await setAdvisors(profile);
-  await setCliftonStrengths(profile);
-  formatSocialMediaLinks(profile);
-  return profile;
-};
-
-const getEmergencyInfo = async (username) => {
+const getEmergencyInfo = async (username: string = '') => {
   return await http.get(`profiles/emergency-contact/${username}/`);
 };
 
-function updateSocialLink(platform, link) {
-  let linkToSend;
-  if (link.indexOf(socialMediaInfo[platform].prefix2) === 0) {
-    linkToSend = link.substring(socialMediaInfo[platform].prefix2.length);
-  } else {
-    linkToSend = link.substring(socialMediaInfo[platform].prefix.length);
-  }
+function updateSocialLink(platform: Platform, link: string) {
+  const { prefix, prefix2 } = socialMediaInfo[platform];
+  const linkToSend =
+    prefix2 && link.indexOf(prefix2) === 0
+      ? link.substring(prefix2.length)
+      : link.substring(prefix.length);
 
   const body = {
     [platform]: encodeURIComponent(linkToSend),
@@ -672,27 +463,21 @@ function updateSocialLink(platform, link) {
 
 const userService = {
   setFullname,
-  setClass,
   setMobilePhonePrivacy,
   setHomePhonePrivacy,
   setMobilePhoneNumber,
   setImagePrivacy,
-  getMemberships,
   getChapelCredits,
   getImage,
   getLocalInfo,
   getDiningInfo,
   getPublicMemberships,
   getMembershipsAlphabetically,
-  getCurrentMemberships,
-  getCurrentMembershipsWithoutGuests,
   getSessionMembershipsWithoutGuests,
   getLeaderPositions,
   getSentMembershipRequests,
   getProfileInfo,
   getMailboxCombination,
-  getAdvisors,
-  getCliftonStrengths,
   resetImage,
   postImage,
   postIDImage,

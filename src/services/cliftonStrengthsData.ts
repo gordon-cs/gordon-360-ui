@@ -1,93 +1,151 @@
-const cliftonStrengthCategories = {
-  Executing: [
-    'Achiever',
-    'Arranger',
-    'Belief',
-    'Consistency',
-    'Deliberative',
-    'Discipline',
-    'Focus',
-    'Responsibility',
-    'Restorative',
-  ],
-  Influencing: [
-    'Activator',
-    'Command',
-    'Communication',
-    'Competition',
-    'Maximizer',
-    'Self-Assurance',
-    'Significance',
-    'Woo',
-  ],
-  Relationship: [
-    'Adaptability',
-    'Connectedness',
-    'Developer',
-    'Empathy',
-    'Harmony',
-    'Includer',
-    'Individualization',
-    'Positivity',
-    'Relator',
-  ],
-  Thinking: [
-    'Analytical',
-    'Context',
-    'Futuristic',
-    'Ideation',
-    'Input',
-    'Intellection',
-    'Learner',
-    'Strategic',
-  ],
+export enum CliftonStrengthsCategory {
+  Executing = 'Executing',
+  Influencing = 'Influencing',
+  Relationship = 'Relationship',
+  Thinking = 'Thinking',
+}
+
+export enum CliftonStrength {
+  Achiever = 'Achiever',
+  Arranger = 'Arranger',
+  Belief = 'Belief',
+  Consistency = 'Consistency',
+  Deliberative = 'Deliberative',
+  Discipline = 'Discipline',
+  Focus = 'Focus',
+  Responsibility = 'Responsibility',
+  Restorative = 'Restorative',
+  Activator = 'Activator',
+  Command = 'Command',
+  Communication = 'Communication',
+  Competition = 'Competition',
+  Maximizer = 'Maximizer',
+  'Self-Assurance' = 'Self-Assurance',
+  Significance = 'Significance',
+  Woo = 'Woo',
+  Adaptability = 'Adaptability',
+  Connectedness = 'Connectedness',
+  Developer = 'Developer',
+  Empathy = 'Empathy',
+  Harmony = 'Harmony',
+  Includer = 'Includer',
+  Individualization = 'Individualization',
+  Positivity = 'Positivity',
+  Relator = 'Relator',
+  Analytical = 'Analytical',
+  Context = 'Context',
+  Futuristic = 'Futuristic',
+  Ideation = 'Ideation',
+  Input = 'Input',
+  Intellection = 'Intellection',
+  Learner = 'Learner',
+  Strategic = 'Strategic',
+}
+
+const CliftonStrengthsCategoryPerStrength = {
+  [CliftonStrength.Achiever]: CliftonStrengthsCategory.Executing,
+  [CliftonStrength.Arranger]: CliftonStrengthsCategory.Executing,
+  [CliftonStrength.Belief]: CliftonStrengthsCategory.Executing,
+  [CliftonStrength.Consistency]: CliftonStrengthsCategory.Executing,
+  [CliftonStrength.Deliberative]: CliftonStrengthsCategory.Executing,
+  [CliftonStrength.Discipline]: CliftonStrengthsCategory.Executing,
+  [CliftonStrength.Focus]: CliftonStrengthsCategory.Executing,
+  [CliftonStrength.Responsibility]: CliftonStrengthsCategory.Executing,
+  [CliftonStrength.Restorative]: CliftonStrengthsCategory.Executing,
+  [CliftonStrength.Activator]: CliftonStrengthsCategory.Influencing,
+  [CliftonStrength.Command]: CliftonStrengthsCategory.Influencing,
+  [CliftonStrength.Communication]: CliftonStrengthsCategory.Influencing,
+  [CliftonStrength.Competition]: CliftonStrengthsCategory.Influencing,
+  [CliftonStrength.Maximizer]: CliftonStrengthsCategory.Influencing,
+  'Self-Assurance': CliftonStrengthsCategory.Influencing,
+  [CliftonStrength.Significance]: CliftonStrengthsCategory.Influencing,
+  [CliftonStrength.Woo]: CliftonStrengthsCategory.Influencing,
+  [CliftonStrength.Adaptability]: CliftonStrengthsCategory.Relationship,
+  [CliftonStrength.Connectedness]: CliftonStrengthsCategory.Relationship,
+  [CliftonStrength.Developer]: CliftonStrengthsCategory.Relationship,
+  [CliftonStrength.Empathy]: CliftonStrengthsCategory.Relationship,
+  [CliftonStrength.Harmony]: CliftonStrengthsCategory.Relationship,
+  [CliftonStrength.Includer]: CliftonStrengthsCategory.Relationship,
+  [CliftonStrength.Individualization]: CliftonStrengthsCategory.Relationship,
+  [CliftonStrength.Positivity]: CliftonStrengthsCategory.Relationship,
+  [CliftonStrength.Relator]: CliftonStrengthsCategory.Relationship,
+  [CliftonStrength.Analytical]: CliftonStrengthsCategory.Thinking,
+  [CliftonStrength.Context]: CliftonStrengthsCategory.Thinking,
+  [CliftonStrength.Futuristic]: CliftonStrengthsCategory.Thinking,
+  [CliftonStrength.Ideation]: CliftonStrengthsCategory.Thinking,
+  [CliftonStrength.Input]: CliftonStrengthsCategory.Thinking,
+  [CliftonStrength.Intellection]: CliftonStrengthsCategory.Thinking,
+  [CliftonStrength.Learner]: CliftonStrengthsCategory.Thinking,
+  [CliftonStrength.Strategic]: CliftonStrengthsCategory.Thinking,
 };
 
-const cliftonStrengthColors = {
-  Executing: '#9070bf',
-  Influencing: '#c88a2e',
-  Relationship: '#2486af',
-  Thinking: '#3c9b1f',
-};
+export const getCategoryOfStrength = (strength: CliftonStrength) =>
+  CliftonStrengthsCategoryPerStrength[strength];
 
-const cliftonStrengthLinks = {
-  Achiever: 'https://www.gallup.com/cliftonstrengths/en/252134/achiever-theme.aspx',
-  Arranger: 'https://www.gallup.com/cliftonstrengths/en/252161/arranger-theme.aspx',
-  Belief: 'https://www.gallup.com/cliftonstrengths/en/252170/belief-theme.aspx',
-  Consistency: 'https://www.gallup.com/cliftonstrengths/en/252203/consistency-theme.aspx',
-  Deliberative: 'https://www.gallup.com/cliftonstrengths/en/252215/deliberative-theme.aspx',
-  Discipline: 'https://www.gallup.com/cliftonstrengths/en/252227/discipline-theme.aspx',
-  Focus: 'https://www.gallup.com/cliftonstrengths/en/252239/focus-theme.aspx',
-  Responsibility: 'https://www.gallup.com/cliftonstrengths/en/252320/responsibility-theme.aspx',
-  Restorative: 'https://www.gallup.com/cliftonstrengths/en/252323/restorative-theme.aspx',
-  Activator: 'https://www.gallup.com/cliftonstrengths/en/252140/activator-theme.aspx',
-  Command: 'https://www.gallup.com/cliftonstrengths/en/252176/command-theme.aspx',
-  Communication: 'https://www.gallup.com/cliftonstrengths/en/252185/communication-theme.aspx',
-  Competition: 'https://www.gallup.com/cliftonstrengths/en/252191/competition-theme.aspx',
-  Maximizer: 'https://www.gallup.com/cliftonstrengths/en/252299/maximizer-theme.aspx',
-  'Self-Assurance': 'https://www.gallup.com/cliftonstrengths/en/252332/self-assurance-theme.aspx',
-  Significance: 'https://www.gallup.com/cliftonstrengths/en/252341/significance-theme.aspx',
-  Woo: 'https://www.gallup.com/cliftonstrengths/en/252359/woo-theme.aspx',
-  Adaptability: 'https://www.gallup.com/cliftonstrengths/en/252146/adaptability-theme.aspx',
-  Connectedness: 'https://www.gallup.com/cliftonstrengths/en/252197/connectedness-theme.aspx',
-  Developer: 'https://www.gallup.com/cliftonstrengths/en/252224/developer-theme.aspx',
-  Empathy: 'https://www.gallup.com/cliftonstrengths/en/252236/empathy-theme.aspx',
-  Harmony: 'https://www.gallup.com/cliftonstrengths/en/252254/harmony-theme.aspx',
-  Includer: 'https://www.gallup.com/cliftonstrengths/en/252266/includer-theme.aspx',
-  Individualization:
-    'https://www.gallup.com/cliftonstrengths/en/252272/individualization-theme.aspx',
-  Positivity: 'https://www.gallup.com/cliftonstrengths/en/252305/positivity-theme.aspx',
-  Relator: 'https://www.gallup.com/cliftonstrengths/en/252311/relator-theme.aspx',
-  Analytical: 'https://www.gallup.com/cliftonstrengths/en/252152/analytical-theme.aspx',
-  Context: 'https://www.gallup.com/cliftonstrengths/en/252209/context-theme.aspx',
-  Futuristic: 'https://www.gallup.com/cliftonstrengths/en/252248/futuristic-theme.aspx',
-  Ideation: 'https://www.gallup.com/cliftonstrengths/en/252260/ideation-theme.aspx',
-  Input: 'https://www.gallup.com/cliftonstrengths/en/252278/input-theme.aspx',
-  Intellection: 'https://www.gallup.com/cliftonstrengths/en/252284/intellection-theme.aspx',
-  Learner: 'https://www.gallup.com/cliftonstrengths/en/252293/learner-theme.aspx',
-  Strategic: 'https://www.gallup.com/cliftonstrengths/en/252350/strategic-theme.aspx',
-};
+export enum CliftonStrengthColors {
+  Executing = '#9070bf',
+  Influencing = '#c88a2e',
+  Relationship = '#2486af',
+  Thinking = '#3c9b1f',
+}
 
-export { cliftonStrengthCategories };
-export { cliftonStrengthColors };
-export { cliftonStrengthLinks };
+export const cliftonStrengthLinks = {
+  [CliftonStrength.Achiever]:
+    'https://www.gallup.com/cliftonstrengths/en/252134/achiever-theme.aspx',
+  [CliftonStrength.Arranger]:
+    'https://www.gallup.com/cliftonstrengths/en/252161/arranger-theme.aspx',
+  [CliftonStrength.Belief]: 'https://www.gallup.com/cliftonstrengths/en/252170/belief-theme.aspx',
+  [CliftonStrength.Consistency]:
+    'https://www.gallup.com/cliftonstrengths/en/252203/consistency-theme.aspx',
+  [CliftonStrength.Deliberative]:
+    'https://www.gallup.com/cliftonstrengths/en/252215/deliberative-theme.aspx',
+  [CliftonStrength.Discipline]:
+    'https://www.gallup.com/cliftonstrengths/en/252227/discipline-theme.aspx',
+  [CliftonStrength.Focus]: 'https://www.gallup.com/cliftonstrengths/en/252239/focus-theme.aspx',
+  [CliftonStrength.Responsibility]:
+    'https://www.gallup.com/cliftonstrengths/en/252320/responsibility-theme.aspx',
+  [CliftonStrength.Restorative]:
+    'https://www.gallup.com/cliftonstrengths/en/252323/restorative-theme.aspx',
+  [CliftonStrength.Activator]:
+    'https://www.gallup.com/cliftonstrengths/en/252140/activator-theme.aspx',
+  [CliftonStrength.Command]: 'https://www.gallup.com/cliftonstrengths/en/252176/command-theme.aspx',
+  [CliftonStrength.Communication]:
+    'https://www.gallup.com/cliftonstrengths/en/252185/communication-theme.aspx',
+  [CliftonStrength.Competition]:
+    'https://www.gallup.com/cliftonstrengths/en/252191/competition-theme.aspx',
+  [CliftonStrength.Maximizer]:
+    'https://www.gallup.com/cliftonstrengths/en/252299/maximizer-theme.aspx',
+  'Self-Assurance':
+    '[CliftonStrength.https]://www.gallup.com/cliftonstrengths/en/252332/self-assurance-theme.aspx',
+  [CliftonStrength.Significance]:
+    'https://www.gallup.com/cliftonstrengths/en/252341/significance-theme.aspx',
+  [CliftonStrength.Woo]: 'https://www.gallup.com/cliftonstrengths/en/252359/woo-theme.aspx',
+  [CliftonStrength.Adaptability]:
+    'https://www.gallup.com/cliftonstrengths/en/252146/adaptability-theme.aspx',
+  [CliftonStrength.Connectedness]:
+    'https://www.gallup.com/cliftonstrengths/en/252197/connectedness-theme.aspx',
+  [CliftonStrength.Developer]:
+    'https://www.gallup.com/cliftonstrengths/en/252224/developer-theme.aspx',
+  [CliftonStrength.Empathy]: 'https://www.gallup.com/cliftonstrengths/en/252236/empathy-theme.aspx',
+  [CliftonStrength.Harmony]: 'https://www.gallup.com/cliftonstrengths/en/252254/harmony-theme.aspx',
+  [CliftonStrength.Includer]:
+    'https://www.gallup.com/cliftonstrengths/en/252266/includer-theme.aspx',
+  [CliftonStrength.Individualization]:
+    '[CliftonStrength.https]://www.gallup.com/cliftonstrengths/en/252272/individualization-theme.aspx',
+  [CliftonStrength.Positivity]:
+    'https://www.gallup.com/cliftonstrengths/en/252305/positivity-theme.aspx',
+  [CliftonStrength.Relator]: 'https://www.gallup.com/cliftonstrengths/en/252311/relator-theme.aspx',
+  [CliftonStrength.Analytical]:
+    'https://www.gallup.com/cliftonstrengths/en/252152/analytical-theme.aspx',
+  [CliftonStrength.Context]: 'https://www.gallup.com/cliftonstrengths/en/252209/context-theme.aspx',
+  [CliftonStrength.Futuristic]:
+    'https://www.gallup.com/cliftonstrengths/en/252248/futuristic-theme.aspx',
+  [CliftonStrength.Ideation]:
+    'https://www.gallup.com/cliftonstrengths/en/252260/ideation-theme.aspx',
+  [CliftonStrength.Input]: 'https://www.gallup.com/cliftonstrengths/en/252278/input-theme.aspx',
+  [CliftonStrength.Intellection]:
+    'https://www.gallup.com/cliftonstrengths/en/252284/intellection-theme.aspx',
+  [CliftonStrength.Learner]: 'https://www.gallup.com/cliftonstrengths/en/252293/learner-theme.aspx',
+  [CliftonStrength.Strategic]:
+    'https://www.gallup.com/cliftonstrengths/en/252350/strategic-theme.aspx',
+};

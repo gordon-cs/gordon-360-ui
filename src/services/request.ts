@@ -1,5 +1,5 @@
 import http from './http';
-import { Membership, Participation, ParticipationDesc } from './membership';
+import { MEMBERSHIP, Participation, ParticipationDesc } from './membership';
 
 enum RequestStatus {
   Pending = 'Pending',
@@ -24,7 +24,7 @@ type MembershipRequest = {
   SessionDescription: string;
 };
 
-type Request = {
+export type Request = {
   REQUEST_ID: number;
   SESS_CDE: string;
   ACT_CDE: string;
@@ -35,7 +35,7 @@ type Request = {
   STATUS: RequestStatus;
 };
 
-const approveRequest = (requestID: string): Promise<Membership> => {
+const approveRequest = (requestID: string): Promise<MEMBERSHIP> => {
   return http.post(`requests/${requestID}/approve`);
 };
 
