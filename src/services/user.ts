@@ -1,15 +1,12 @@
-import jwtDecode from 'jwt-decode';
 import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import { CliftonStrengths, getCliftonStrengths } from './cliftonStrengths';
-import { AuthError } from './error';
 import { Class } from './goStalk';
 import http from './http';
 import { Membership } from './membership';
 import { MembershipRequest } from './request';
 import session from './session';
-import storage from './storage';
-import { Override } from './utils';
+import { compareByProperty, filter, Override, sort } from './utils';
 
 type CLWCredits = {
   current: number;
@@ -74,25 +71,6 @@ type BaseProfileInfo = {
   PersonType: string;
   fullName?: string;
   CliftonStrengths?: CliftonStrengths;
-};
-
-type LocalInfo = {
-  /** Audience of token (URL) */
-  aud: string;
-  /** User role */
-  college_role: string;
-  /** Token expiration time */
-  exp: number;
-  /** User ID */
-  id: string;
-  /** Token issuance URL */
-  iss: string;
-  /** User name (for display purposes) */
-  name: string;
-  /** identifies the time before which the JWT MUST NOT be accepted for processing */
-  nbf: number;
-  /** Username (firstname.lastname format) */
-  user_name: string;
 };
 
 export type UnformattedStaffProfileInfo = BaseProfileInfo & {
@@ -177,6 +155,8 @@ type MealPlanComponent = {
   CurrentBalance: string;
 };
 
+type ProfileImages = { def: string; pref?: string };
+
 const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo => {
   return (profile as UnformattedStudentProfileInfo).OnOffCampus !== undefined;
 };
@@ -184,33 +164,6 @@ const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStude
 const isStaff = (profile: UnformattedProfileInfo): profile is UnformattedStaffProfileInfo => {
   return (profile as UnformattedStaffProfileInfo).Dept !== undefined;
 };
-
-const filter =
-  <T>(predicate: (element: T, index: number, array: T[]) => boolean) =>
-  (array: T[]): T[] =>
-    array.filter(predicate);
-
-const sort =
-  <T>(predicate?: (a: T, b: T) => number) =>
-  (array: T[]): T[] =>
-    array.sort(predicate);
-
-const compareByProperty =
-  <Type, Key extends keyof Type>(property: Key) =>
-  (a: Type, b: Type): -1 | 0 | 1 => {
-    if (a[property] > b[property]) {
-      return 1;
-    } else if (a[property] < b[property]) {
-      return -1;
-    } else {
-      return 0;
-    }
-  };
-
-function setFullname(profile: UnformattedProfileInfo): UnformattedProfileInfo {
-  profile.fullName = `${profile.FirstName}  ${profile.LastName}`;
-  return profile;
-}
 
 function formatCountry(profile: UnformattedProfileInfo) {
   if (profile.Country) {
@@ -237,7 +190,7 @@ const formatSocialMediaLinks = (profile: UnformattedProfileInfo) => {
   return profile;
 };
 
-const getImage = (username: string): Promise<{ def: string; pref?: string }> =>
+const getImage = (username: string): Promise<ProfileImages> =>
   http.get(`profiles/Image/${username}/`);
 
 const resetImage = (): Promise<void> => http.post('/profiles/image/reset', '');
@@ -275,25 +228,6 @@ function dataURItoBlob(dataURI: string) {
 
   return new Blob([ia], { type: mimeString });
 }
-
-/**
- * Get local info encoded in payload of token
- *
- * @returns Local user info
- */
-const getLocalInfo = (): Promise<LocalInfo> => {
-  let token: string;
-  try {
-    token = storage.get('token');
-  } catch (err) {
-    throw new AuthError('Could not get local auth');
-  }
-  try {
-    return jwtDecode(token);
-  } catch (err) {
-    throw new AuthError(`Saved token "${token}" could not be parsed`);
-  }
-};
 
 const getChapelCredits = async (): Promise<CLWCredits | null> => {
   const profile = await getProfile();
@@ -430,14 +364,12 @@ function updateSocialLink(platform: Platform, link: string) {
 }
 
 const userService = {
-  setFullname,
   setMobilePhonePrivacy,
   setHomePhonePrivacy,
   setMobilePhoneNumber,
   setImagePrivacy,
   getChapelCredits,
   getImage,
-  getLocalInfo,
   getDiningInfo,
   getPublicMemberships,
   getMembershipsAlphabetically,

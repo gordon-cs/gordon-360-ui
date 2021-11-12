@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import involvementService from 'services/activity';
 import requestService from 'services/request';
-import userService from 'services/user';
+import storageService from 'services/storage';
 
 const NonMemberButtons = ({
   isGuest,
@@ -46,7 +46,7 @@ const NonMemberButtons = ({
     let data = {
       ACT_CDE: involvementCode,
       SESS_CDE: sessionCode,
-      ID_NUM: userService.getLocalInfo().id,
+      ID_NUM: storageService.getLocalInfo().id,
       PART_CDE: participationCode,
       DATE_SENT: new Date().toLocaleString(),
       COMMENT_TXT: titleComment,

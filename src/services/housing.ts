@@ -1,6 +1,6 @@
 import { Class } from './goStalk';
 import http from './http';
-import user, { StudentProfileInfo, UnformattedStudentProfileInfo } from './user';
+import { StudentProfileInfo, UnformattedStudentProfileInfo } from './user';
 
 type ApartmentHall = {
   /** Number of people per room/apartment   (not yet implemented in API) */
@@ -133,7 +133,7 @@ function formatApplicantInfo(applicant: ApartmentApplicant): ApartmentApplicant 
   // });
 
   applicant.Profile.PersonType = 'stu';
-  user.setFullname(applicant.Profile);
+  applicant.Profile.fullName = `${applicant.Profile.FirstName} ${applicant.Profile.LastName}`;
 
   applicant.OffCampusProgram ?? (applicant.OffCampusProgram = '');
 

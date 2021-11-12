@@ -3,7 +3,7 @@ import GordonSnackbar from 'components/Snackbar';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
 import scheduleService from 'services/schedule';
-import user from 'services/user';
+import storageService from 'services/storage';
 import {
   EmergencyInfoList,
   Identification,
@@ -18,7 +18,7 @@ const Profile = ({ profile, myProf }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const isOnline = useNetworkStatus();
   const network = isOnline ? 'online' : 'offline';
-  const viewerIsPolice = user.getLocalInfo().college_role === 'gordon police';
+  const viewerIsPolice = storageService.getLocalInfo().college_role === 'gordon police';
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
   const profileIsStudent = profile.PersonType?.includes('stu');
 

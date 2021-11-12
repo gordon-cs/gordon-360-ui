@@ -21,7 +21,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import membership from 'services/membership';
-import user from 'services/user';
+import storageService from 'services/storage';
 import { gordonColors } from 'theme';
 
 const rowStyle = {
@@ -75,7 +75,9 @@ const MemberListItem = ({
   useEffect(() => {
     const loadAvatar = async () => {
       if (member.AD_Username) {
-        const { def: defaultImage, pref: preferredImage } = await user.getImage(member.AD_Username);
+        const { def: defaultImage, pref: preferredImage } = await storageService.getImage(
+          member.AD_Username,
+        );
         setAvatar(preferredImage || defaultImage);
       }
     };
@@ -83,7 +85,7 @@ const MemberListItem = ({
   }, [member.AD_Username]);
 
   const handleToggleGroupAdmin = async () => {
-    if (isAdmin && !isSuperAdmin && member.IDNumber === Number(user.getLocalInfo().id)) {
+    if (isAdmin && !isSuperAdmin && member.IDNumber === Number(storageService.getLocalInfo().id)) {
       setIsUnadminSelfDialogOpen(true);
     } else {
       let data = {
@@ -140,7 +142,7 @@ const MemberListItem = ({
   };
 
   const handleRemove = () => {
-    if (member.IDNumber === Number(user.getLocalInfo().id)) {
+    if (member.IDNumber === Number(storageService.getLocalInfo().id)) {
       setIsLeaveAlertOpen(true);
     } else {
       setIsRemoveAlertOpen(true);
@@ -346,7 +348,7 @@ const MemberListItem = ({
       );
     }
   } else {
-    if (member.IDNumber.toString() === user.getLocalInfo().id) {
+    if (member.IDNumber.toString() === storageService.getLocalInfo().id) {
       options = (
         <Button variant="contained" style={redButton} onClick={() => setIsLeaveAlertOpen(true)}>
           LEAVE
