@@ -6,7 +6,7 @@ import { AuthError } from './error';
 import { Class } from './goStalk';
 import http from './http';
 import { Membership } from './membership';
-import { Request } from './request';
+import { MembershipRequest } from './request';
 import session from './session';
 import storage from './storage';
 import { Override } from './utils';
@@ -237,7 +237,7 @@ const formatSocialMediaLinks = (profile: UnformattedProfileInfo) => {
   return profile;
 };
 
-const getImage = (username: string = ''): Promise<{ def: string; pref?: string }> =>
+const getImage = (username: string): Promise<{ def: string; pref?: string }> =>
   http.get(`profiles/Image/${username}/`);
 
 const resetImage = (): Promise<void> => http.post('/profiles/image/reset', '');
@@ -311,7 +311,7 @@ const getDiningInfo = (): Promise<DiningInfo> => http.get('dining');
 const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
   http.get(`profiles/${username}/`);
 
-const getAdvisors = (username: string = ''): Promise<StudentAdvisorInfo[]> =>
+const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
   http.get(`profiles/Advisors/${username}/`);
 
 const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
@@ -327,10 +327,10 @@ const setHomePhonePrivacy = (makePrivate: boolean) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getMemberships = (userID: string = ''): Promise<Membership[]> =>
+const getMemberships = (userID: string): Promise<Membership[]> =>
   http.get(`memberships/student/${userID}`);
 
-const getPublicMemberships = (username: string = ''): Promise<Membership[]> =>
+const getPublicMemberships = (username: string): Promise<Membership[]> =>
   http
     .get<Membership[]>(`memberships/student/username/${username}/`)
     .then(sort(compareByProperty('ActivityDescription')));
@@ -354,8 +354,7 @@ const getSessionMembershipsWithoutGuests = (userID: string, sessionCode: string)
 
 const getEmployment = () => http.get('studentemployment/');
 
-const getSentMembershipRequests = (userID: string = ''): Promise<Request[]> =>
-  http.get(`requests/student/${userID}`);
+const getSentMembershipRequests = (): Promise<MembershipRequest[]> => http.get('requests/student/');
 
 const getLeaderPositions = async (userID: string): Promise<Membership[]> =>
   getCurrentMemberships(userID).then(filter((m) => m.GroupAdmin));
@@ -375,8 +374,8 @@ const getTranscriptMembershipsInfo = (id: string) =>
 const getEmploymentInfo = () => getEmployment();
 //.then(sort(compareBySession))
 
-const getProfileInfo = async (username: string = ''): Promise<Profile> =>
-  getProfile(username)
+const getProfileInfo = async (username: string = ''): Promise<Profile> => {
+  return getProfile(username)
     .then(formatCountry)
     .then(formatSocialMediaLinks)
     .then(async (profile) => {
@@ -410,8 +409,9 @@ const getProfileInfo = async (username: string = ''): Promise<Profile> =>
         throw new TypeError();
       }
     });
+};
 
-const getEmergencyInfo = async (username: string = '') => {
+const getEmergencyInfo = async (username: string) => {
   return await http.get(`profiles/emergency-contact/${username}/`);
 };
 

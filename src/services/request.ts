@@ -7,7 +7,7 @@ enum RequestStatus {
   Denied = 'Denied',
 }
 
-type MembershipRequest = {
+export type MembershipRequest = {
   ActivityCode: string;
   ActivityDescription: string;
   /** Comment or text */
@@ -24,7 +24,7 @@ type MembershipRequest = {
   SessionDescription: string;
 };
 
-export type Request = {
+type REQUEST = {
   REQUEST_ID: number;
   SESS_CDE: string;
   ACT_CDE: string;
@@ -39,11 +39,11 @@ const approveRequest = (requestID: string): Promise<MEMBERSHIP> => {
   return http.post(`requests/${requestID}/approve`);
 };
 
-const cancelRequest = (requestID: string): Promise<Request> => {
+const cancelRequest = (requestID: string): Promise<REQUEST> => {
   return http.del(`requests/${requestID}`);
 };
 
-const denyRequest = (requestID: string): Promise<Request> => {
+const denyRequest = (requestID: string): Promise<REQUEST> => {
   return http.post(`requests/${requestID}/deny`);
 };
 
@@ -70,7 +70,7 @@ const filterCurrentRequests = (
     (r) => r.SessionCode === sessionCode && r.RequestApproved === RequestStatus.Approved,
   );
 
-function requestMembership(data: object): Promise<Request> {
+function requestMembership(data: REQUEST): Promise<REQUEST> {
   return http.post(`requests`, data);
 }
 
