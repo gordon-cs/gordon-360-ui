@@ -1,13 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
-import {
-  CliftonStrength,
-  CliftonStrengthColors,
-  cliftonStrengthLinks,
-  CliftonStrengthsCategory,
-  getCategoryOfStrength,
-} from './cliftonStrengthsData';
+import { CliftonStrengths, getCliftonStrengths } from './cliftonStrengths';
 import { AuthError } from './error';
 import { Class } from './goStalk';
 import http from './http';
@@ -38,14 +32,6 @@ const onOffCampusDescriptions = {
   D: 'Remote' as OnOffCampusDescription,
   P: 'Private as requested.' as OnOffCampusDescription,
   '': 'On Campus' as OnOffCampusDescription,
-};
-
-// TODO: Refactor to not depend on array indexing to find link
-type CliftonStrengths = {
-  Strengths: CliftonStrength[];
-  Categories: CliftonStrengthsCategory[];
-  Colors: CliftonStrengthColors[];
-  Links: string[];
 };
 
 type BaseProfileInfo = {
@@ -328,26 +314,6 @@ const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
 const getAdvisors = (username: string = ''): Promise<StudentAdvisorInfo[]> =>
   http.get(`profiles/Advisors/${username}/`);
 
-const getCliftonStrengths = async (
-  username: string = '',
-): Promise<CliftonStrengths | undefined> => {
-  const { Strengths } = await http.get<{ Strengths?: CliftonStrength[] }>(
-    `profiles/clifton/${username}/`,
-  );
-
-  if (Strengths) {
-    const Categories = Strengths.map((strength) => getCategoryOfStrength(strength));
-    return {
-      Strengths,
-      Categories,
-      Colors: Categories.map((category) => CliftonStrengthColors[category]),
-      Links: Strengths.map((strength) => cliftonStrengthLinks[strength]),
-    };
-  } else {
-    return undefined;
-  }
-};
-
 const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
@@ -414,10 +380,12 @@ const getProfileInfo = async (username: string = ''): Promise<Profile> =>
     .then(formatCountry)
     .then(formatSocialMediaLinks)
     .then(async (profile) => {
+      const fullName = `${profile.FirstName}  ${profile.LastName}`;
+      const CliftonStrengths = await getCliftonStrengths(profile.AD_Username);
       if (isStudent(profile)) {
         return {
           ...profile,
-          fullName: `${profile.FirstName}  ${profile.LastName}`,
+          fullName,
           Advisors: await getAdvisors(profile.AD_Username),
           CliftonStrengths: await getCliftonStrengths(profile.AD_Username),
           Majors: [
@@ -435,8 +403,8 @@ const getProfileInfo = async (username: string = ''): Promise<Profile> =>
       } else if (isStaff(profile)) {
         return {
           ...profile,
-          fullName: `${profile.FirstName}  ${profile.LastName}`,
-          CliftonStrengths: await getCliftonStrengths(profile.AD_Username),
+          fullName,
+          CliftonStrengths,
         };
       } else {
         throw new TypeError();

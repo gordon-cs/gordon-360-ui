@@ -1,11 +1,13 @@
-export enum CliftonStrengthsCategory {
+import http from './http';
+
+enum CliftonStrengthsCategory {
   Executing = 'Executing',
   Influencing = 'Influencing',
   Relationship = 'Relationship',
   Thinking = 'Thinking',
 }
 
-export enum CliftonStrength {
+enum CliftonStrength {
   Achiever = 'Achiever',
   Arranger = 'Arranger',
   Belief = 'Belief',
@@ -79,17 +81,14 @@ const CliftonStrengthsCategoryPerStrength = {
   [CliftonStrength.Strategic]: CliftonStrengthsCategory.Thinking,
 };
 
-export const getCategoryOfStrength = (strength: CliftonStrength) =>
-  CliftonStrengthsCategoryPerStrength[strength];
-
-export enum CliftonStrengthColors {
+enum CliftonStrengthColors {
   Executing = '#9070bf',
   Influencing = '#c88a2e',
   Relationship = '#2486af',
   Thinking = '#3c9b1f',
 }
 
-export const cliftonStrengthLinks = {
+const cliftonStrengthLinks = {
   [CliftonStrength.Achiever]:
     'https://www.gallup.com/cliftonstrengths/en/252134/achiever-theme.aspx',
   [CliftonStrength.Arranger]:
@@ -148,4 +147,32 @@ export const cliftonStrengthLinks = {
   [CliftonStrength.Learner]: 'https://www.gallup.com/cliftonstrengths/en/252293/learner-theme.aspx',
   [CliftonStrength.Strategic]:
     'https://www.gallup.com/cliftonstrengths/en/252350/strategic-theme.aspx',
+};
+
+// TODO: Refactor to not depend on array indexing to find link
+export type CliftonStrengths = {
+  Strengths: CliftonStrength[];
+  Categories: CliftonStrengthsCategory[];
+  Colors: CliftonStrengthColors[];
+  Links: string[];
+};
+
+export const getCliftonStrengths = async (
+  username: string,
+): Promise<CliftonStrengths | undefined> => {
+  const { Strengths } = await http.get<{ Strengths?: CliftonStrength[] }>(
+    `profiles/clifton/${username}/`,
+  );
+
+  if (Strengths) {
+    const Categories = Strengths.map((strength) => CliftonStrengthsCategoryPerStrength[strength]);
+    return {
+      Strengths,
+      Categories,
+      Colors: Categories.map((category) => CliftonStrengthColors[category]),
+      Links: Strengths.map((strength) => cliftonStrengthLinks[strength]),
+    };
+  } else {
+    return undefined;
+  }
 };
