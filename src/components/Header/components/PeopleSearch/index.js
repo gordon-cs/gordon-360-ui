@@ -98,7 +98,6 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
     query = query.toLowerCase();
 
     const [searchTime, searchResults] = await peopleSearch.search(query);
-    console.log('Received search output with time:', searchTime, 'and results:', searchResults);
     if (time < searchTime) {
       setTime(searchTime);
       setSuggestions(searchResults);
