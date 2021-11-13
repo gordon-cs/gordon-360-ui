@@ -1,5 +1,5 @@
-import sortBy from 'lodash/sortBy';
 import http from './http';
+import { compareByProperty, sort } from './utils';
 
 type Activity = {
   ActivityBlurb: string;
@@ -31,9 +31,8 @@ type ActivityEdit = {
   ACT_JOIN_INFO: string;
 };
 
-const editActivity = async (activityCode: string, data: ActivityEdit): Promise<ActivityEdit> => {
-  return await http.put(`activities/${activityCode}`, data);
-};
+const editActivity = (activityCode: string, data: ActivityEdit): Promise<ActivityEdit> =>
+  http.put(`activities/${activityCode}`, data);
 
 const setActivityImage = (activityCode: string, dataURI: string): Promise<any> => {
   const imageData = new FormData();
@@ -64,10 +63,10 @@ function dataURItoBlob(dataURI: string) {
 
 const get = (activityCode: string): Promise<Activity> => http.get(`activities/${activityCode}`);
 
-const getAll = async (sessionCode: string): Promise<Activity[]> => {
-  const activities: Activity[] = await http.get(`activities/session/${sessionCode}`);
-  return sortBy(activities, (activity) => activity.ActivityDescription);
-};
+const getAll = (sessionCode: string) =>
+  http
+    .get<Activity[]>(`activities/session/${sessionCode}`)
+    .then(sort(compareByProperty('ActivityDescription')));
 
 const getAdvisors = (activityCode: string, sessionCode: string): Promise<Person[]> =>
   http.get(`emails/activity/${activityCode}/advisors/session/${sessionCode}`);
