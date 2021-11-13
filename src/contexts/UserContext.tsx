@@ -30,7 +30,7 @@ const getUserProfile = () => userService.getProfileInfo();
 const getUserImages = () => userService.getImage();
 const getAllUserData = () => Promise.all([getUserProfile(), getUserImages()]);
 
-const UserContextProvider = ({ children }: {children?: JSX.Element | JSX.Element[]}) => {
+const UserContextProvider = ({ children }: { children?: JSX.Element | JSX.Element[] }) => {
   const isAuthenticated = useIsAuthenticated();
   const [user, setUser] = useState<User>(initialUserState);
 
@@ -42,7 +42,7 @@ const UserContextProvider = ({ children }: {children?: JSX.Element | JSX.Element
   useEffect(() => {
     const loadUser = async () => {
       if (isAuthenticated) {
-        setUser(u => ({...u, loading: true}))
+        setUser(u => ({ ...u, loading: true }))
         const [profile, images] = await getAllUserData();
         setUser({ profile, images, loading: false });
         // setUser({ profile, images, loading: true });
@@ -54,8 +54,8 @@ const UserContextProvider = ({ children }: {children?: JSX.Element | JSX.Element
   }, [isAuthenticated]);
 
   return (
-    <UserActionsContext.Provider value={{  updateProfile, updateImage }}>
-        <UserContext.Provider value={user}>{children}</UserContext.Provider>
+    <UserActionsContext.Provider value={{ updateProfile, updateImage }}>
+      <UserContext.Provider value={user}>{children}</UserContext.Provider>
     </UserActionsContext.Provider>
   );
 };
