@@ -1,7 +1,12 @@
 export type Override<What, With> = Omit<What, keyof With> & With;
 
+export const map =
+  <T, S>(predicate: (value: T, index: number, array: T[]) => S) =>
+  (array: T[]): S[] =>
+    array.map(predicate);
+
 export const filter =
-  <T>(predicate: (element: T, index: number, array: T[]) => boolean) =>
+  <T>(predicate: (value: T, index: number, array: T[]) => boolean) =>
   (array: T[]): T[] =>
     array.filter(predicate);
 
