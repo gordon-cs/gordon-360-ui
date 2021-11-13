@@ -13,6 +13,7 @@ export enum Class {
 
 const CSharp = 'C\u266F';
 
+// TODO: Document return type
 const search = (
   includeStudent: boolean,
   includeFacStaff: boolean,
