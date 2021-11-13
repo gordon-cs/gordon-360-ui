@@ -46,6 +46,12 @@ const makeHeaders = (headerOptions: any): Headers => {
   }
 };
 
+/**
+ * Parse an HTTP response
+ *
+ * @param res the response to parse
+ * @returns Resolves with the response body; Rejects on a non-2xx response code
+ */
 export const parseResponse = async <TResponse>(res: Response): Promise<TResponse> => {
   try {
     const json = await res.text();
