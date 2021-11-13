@@ -2,7 +2,9 @@ import { AuthContext } from 'contexts/UserContext';
 import createUseContext from './createUseContext';
 
 /**
- * Update the logged-in user.
+ * Hook to Subscribe to Authentication updates.
+ *
+ * @returns whether the user is logged in or not
  */
 const useAuth = createUseContext('Auth', AuthContext);
 export default useAuth;
