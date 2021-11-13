@@ -21,9 +21,7 @@ type WellnessQuestion = {
   link?: string;
 };
 
-const getStatus = (): Promise<WellnessStatus> => {
-  return http.get('wellness');
-};
+const getStatus = (): Promise<WellnessStatus> => http.get('wellness');
 
 const postAnswer = (status: StatusColor): Promise<unknown> | void => {
   try {

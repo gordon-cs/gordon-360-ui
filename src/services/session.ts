@@ -11,10 +11,8 @@ type DaysLeft = [daysRemaining: number, daysCompleted: number];
 
 const get = (sessionCode: string): Promise<Session> => http.get(`sessions/${sessionCode}`);
 
-const getAll = async (): Promise<Session[]> => {
-  const sessions: Session[] = await http.get('sessions');
-  return sessions.reverse();
-};
+const getAll = (): Promise<Session[]> =>
+  http.get<Session[]>('sessions').then((sessions) => sessions.reverse());
 
 const getCurrent = (): Promise<Session> => http.get('sessions/current');
 

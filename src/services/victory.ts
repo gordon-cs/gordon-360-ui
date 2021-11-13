@@ -11,9 +11,7 @@ type VPScores = {
   lw: number;
 };
 
-const getVPScore = async (): Promise<VPScores[]> => {
-  return await http.get(`vpscore`);
-};
+const getVPScore = (): Promise<VPScores[]> => http.get(`vpscore`);
 
 const victoryPromiseService = {
   getVPScore,

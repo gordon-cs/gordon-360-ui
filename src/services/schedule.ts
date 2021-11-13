@@ -25,13 +25,10 @@ type ScheduleEvent = {
   resourceId: number;
 };
 
-const getCanReadStudentSchedules = async (): Promise<boolean> => {
-  return http.get(`schedule/canreadstudent/`);
-};
+const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
 
-const getSchedule = async (username: string = ''): Promise<CourseSchedule[]> => {
-  return await http.get(`schedule/${username}/`);
-};
+const getSchedule = (username: string = ''): Promise<CourseSchedule[]> =>
+  http.get(`schedule/${username}/`);
 
 function getMeetingDays(course: CourseSchedule): number[] {
   let dayArray = [];

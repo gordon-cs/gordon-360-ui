@@ -20,9 +20,8 @@ type Person = {
   Email: string;
 };
 
-const closeActivity = async (activityCode: string, sessionCode: string): Promise<void> => {
-  return await http.put(`activities/${activityCode}/session/${sessionCode}/close`);
-};
+const closeActivity = (activityCode: string, sessionCode: string): Promise<void> =>
+  http.put(`activities/${activityCode}/session/${sessionCode}/close`);
 
 type ActivityEdit = {
   ACT_CDE: string;
@@ -117,13 +116,11 @@ const filter = (
   }
 };
 
-const reopenActivity = async (activityCode: string, sessionCode: string): Promise<void> => {
-  return await http.put(`activities/${activityCode}/session/${sessionCode}/open`);
-};
+const reopenActivity = (activityCode: string, sessionCode: string): Promise<void> =>
+  http.put(`activities/${activityCode}/session/${sessionCode}/open`);
 
-const resetImage = async (activityCode: string): Promise<void> => {
-  return await http.post(`activities/${activityCode}/image/reset`);
-};
+const resetImage = (activityCode: string): Promise<void> =>
+  http.post(`activities/${activityCode}/image/reset`);
 
 const involvementService = {
   closeActivity,

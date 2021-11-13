@@ -1,17 +1,9 @@
 import http from './http';
 
-const postErrorLog = (message: string) => {
-  let currentTime = new Date();
-  let data = {
-    LOG_MESSAGE: message,
-    LOG_TIME: currentTime,
-  };
-  return http.post('log/add', data);
-};
+const postErrorLog = (message: string) =>
+  http.post('log/add', { LOG_MESSAGE: message, LOG_TIME: Date.now() });
 
-const postErrorMessage = (message: string) => {
-  return http.post('log', message);
-};
+const postErrorMessage = (message: string) => http.post('log', message);
 
 //Code modified from https://medium.com/creative-technology-concepts-code/detect-device-browser-and-version-using-javascript-8b511906745
 const matchItem = (string: string, data: { name: string; value: string }[]): string => {

@@ -1,9 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import { AuthError } from './error';
 
-const store = (key: string, value: string) => {
-  localStorage.setItem(key, JSON.stringify(value));
-};
+const store = (key: string, value: string) => localStorage.setItem(key, JSON.stringify(value));
 
 /**
  * Get a value stored locally
@@ -25,9 +23,7 @@ const get = <T>(key: string): T => {
   }
 };
 
-const remove = (key: string) => {
-  localStorage.removeItem(key);
-};
+const remove = (key: string) => localStorage.removeItem(key);
 
 type LocalInfo = {
   /** Audience of token (URL) */

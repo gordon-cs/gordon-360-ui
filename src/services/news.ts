@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import http from './http';
+import { filter, map } from './utils';
 
 type NewsCategory = {
   categoryID: number;
@@ -27,8 +28,6 @@ const getNotExpired = (): Promise<NewsItem[]> => http.get(`news/not-expired`);
 
 // news since 10am (today's news)
 const getNewNews = (): Promise<NewsItem[]> => http.get(`news/new`);
-
-const getPersonalUnapproved = (): Promise<NewsItem[]> => http.get('news/personal-unapproved');
 
 const getCategories = (): Promise<NewsCategory[]> => http.get(`news/categories`);
 
@@ -58,27 +57,21 @@ function formatPosting(posting: NewsItem): FormattedNewsItem {
 
 /******************* GET **********************/
 
-const getNotExpiredFormatted = async (): Promise<FormattedNewsItem[]> => {
-  const unexpiredNews = await getNotExpired();
-  return unexpiredNews.map((newsItem) => formatPosting(newsItem));
-};
+const getNotExpiredFormatted = (): Promise<FormattedNewsItem[]> =>
+  getNotExpired().then(map(formatPosting));
 
 const getFilteredNews = (unexpiredNews: NewsItem[], query: string): NewsItem[] => {
   const lowerquery = query.toLowerCase();
-  return unexpiredNews.filter((newsitem) => {
-    return (
+  return unexpiredNews.filter(
+    (newsitem) =>
       newsitem.Body.toLowerCase().includes(lowerquery) ||
       newsitem.ADUN.toLowerCase().includes(lowerquery) ||
       newsitem.categoryName.toLowerCase().includes(lowerquery) ||
-      newsitem.Subject.toLowerCase().includes(lowerquery)
-    );
-  });
+      newsitem.Subject.toLowerCase().includes(lowerquery),
+  );
 };
 
-const getTodaysNews = async (): Promise<FormattedNewsItem[]> => {
-  const todaysNews = await getNewNews();
-  return todaysNews.map((posting) => formatPosting(posting));
-};
+const getTodaysNews = (): Promise<FormattedNewsItem[]> => getNewNews().then(map(formatPosting));
 
 /*
  * NOTE: not currently used, might be used in future filter features
@@ -99,23 +92,12 @@ const getTodaysNews = async (): Promise<FormattedNewsItem[]> => {
 //   return categoryNews;
 // }
 
-const getPersonalUnapprovedFormatted = async (): Promise<FormattedNewsItem[]> => {
-  const news = await getPersonalUnapproved();
-  return news.map((posting) => formatPosting(posting));
-};
+const getPersonalUnapproved = (): Promise<FormattedNewsItem[]> =>
+  http.get<FormattedNewsItem[]>('news/personal-unapproved').then(map(formatPosting));
 
-/**
- * NOTE: Not currently used
- * Get all unexpired news for given category
- * For use on the News Page
- *
- * @param category The category to get news for
- * @returns All unexpired news for the given category
- */
-const getNewsByCategory = async (category: number): Promise<NewsItem[]> => {
-  const news = await getNotExpired();
-  return news.filter((posting) => posting.categoryID === category);
-};
+// TODO: Not currently used
+const getNewsByCategory = async (category: number): Promise<NewsItem[]> =>
+  getNotExpired().then(filter((posting) => posting.categoryID === category));
 
 /******************* POST **********************/
 
@@ -160,7 +142,7 @@ const newsService = {
   getNewsByCategory,
   getCategories,
   getTodaysNews,
-  getPersonalUnapprovedFormatted,
+  getPersonalUnapproved,
   getNewNews,
   getNotExpiredFormatted,
   getFilteredNews,

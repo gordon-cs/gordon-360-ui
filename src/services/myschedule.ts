@@ -25,13 +25,11 @@ type MyScheduleEvent = {
   END_TIME: string;
 };
 
-const getMySchedule = async (username: string = ''): Promise<MyScheduleEvent[]> => {
-  return await http.get(`myschedule/${username}/`);
-};
+const getMySchedule = (username: string = ''): Promise<MyScheduleEvent[]> =>
+  http.get(`myschedule/${username}/`);
 
-const getMyScheduleEventId = async (eventId: string): Promise<MyScheduleEvent> => {
-  return await http.get(`myschedule/event/${eventId}/`);
-};
+const getMyScheduleEventId = (eventId: string): Promise<MyScheduleEvent> =>
+  http.get(`myschedule/event/${eventId}/`);
 
 function getEventDays(event: MyScheduleEvent): number[] {
   let dayArray = [];
@@ -89,17 +87,14 @@ function makeMySchedule(myschedule: MyScheduleEvent[]): Object[] {
   return eventArray;
 }
 
-const addMySchedule = async (mySchedule: object): Promise<MyScheduleEvent> => {
-  return http.post(`myschedule/`, mySchedule);
-};
+const addMySchedule = (mySchedule: object): Promise<MyScheduleEvent> =>
+  http.post(`myschedule/`, mySchedule);
 
-const updateMySchedule = async (mySchedule: object): Promise<MyScheduleEvent> => {
-  return http.put(`myschedule/`, mySchedule);
-};
+const updateMySchedule = (mySchedule: object): Promise<MyScheduleEvent> =>
+  http.put(`myschedule/`, mySchedule);
 
-const deleteMySchedule = (eventID: string): Promise<MyScheduleEvent> => {
-  return http.del(`myschedule/${eventID}`);
-};
+const deleteMySchedule = (eventID: string): Promise<MyScheduleEvent> =>
+  http.del(`myschedule/${eventID}`);
 
 const myScheduleService = {
   getMyScheduleEventId,

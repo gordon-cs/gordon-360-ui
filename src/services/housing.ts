@@ -54,30 +54,23 @@ type ApplicationDetails = UnformattedApplicationDetails & {
   FirstHall: string;
 };
 
-const checkHousingAdmin = async (): Promise<boolean> => {
-  return await http.get(`housing/admin`);
-};
+const checkHousingAdmin = (): Promise<boolean> => http.get(`housing/admin`);
 
-const addHousingAdmin = (username: string): Promise<boolean> => {
-  return http.post(`housing/admin/${username}/`);
-};
+const addHousingAdmin = (username: string): Promise<boolean> =>
+  http.post(`housing/admin/${username}/`);
 
-const deleteHousingAdmin = (username: string): Promise<boolean> => {
-  return http.del(`housing/admin/${username}/`);
-};
+const deleteHousingAdmin = (username: string): Promise<boolean> =>
+  http.del(`housing/admin/${username}/`);
 
 const getApartmentSelectionDate = async (): Promise<string> => {
   return 'Apr. 27';
   // return await http.get('housing/apartment/selection-date); // Not yet implemented in the API
 };
 
-const getApartmentHalls = async (): Promise<ApartmentHall[]> => {
-  return await http.get('housing/halls/apartments');
-};
+const getApartmentHalls = (): Promise<ApartmentHall[]> => http.get('housing/halls/apartments');
 
-const getCurrentApplicationID = async (username: string = ''): Promise<number> => {
-  return await http.get(`housing/apartment/${username}/`);
-};
+const getCurrentApplicationID = (username: string = ''): Promise<number> =>
+  http.get(`housing/apartment/${username}/`);
 
 /**
  * Save the current state of the application to the database
@@ -185,9 +178,8 @@ const getSubmittedApartmentApplications = async (): Promise<UnformattedApplicati
   return applicationDetailsArray;
 };
 
-const submitApplication = async (applicationID: number): Promise<boolean> => {
-  return await http.put(`housing/apartment/applications/${applicationID}/submit`);
-};
+const submitApplication = (applicationID: number): Promise<boolean> =>
+  http.put(`housing/apartment/applications/${applicationID}/submit`);
 
 const housingService = {
   checkHousingAdmin,

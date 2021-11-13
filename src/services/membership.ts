@@ -45,9 +45,7 @@ export type MEMBERSHIP = {
   GRP_ADMIN?: boolean;
 };
 
-function addMembership(data: MEMBERSHIP): Promise<MEMBERSHIP> {
-  return http.post('memberships', data);
-}
+const addMembership = (data: MEMBERSHIP): Promise<MEMBERSHIP> => http.post('memberships', data);
 
 const checkAdmin = async (
   userID: string,
@@ -58,9 +56,8 @@ const checkAdmin = async (
   return admins.some((a) => a.SessionCode === sessionCode && a.IDNumber === parseInt(userID));
 };
 
-const editMembership = (membershipID: string, data: MEMBERSHIP): Promise<MEMBERSHIP> => {
-  return http.put(`memberships/${membershipID}`, data);
-};
+const editMembership = (membershipID: string, data: MEMBERSHIP): Promise<MEMBERSHIP> =>
+  http.put(`memberships/${membershipID}`, data);
 
 const get = async (activityCode: string, sessionCode: string): Promise<Membership[]> => {
   const activityMembers = await getAll(activityCode);
@@ -68,7 +65,7 @@ const get = async (activityCode: string, sessionCode: string): Promise<Membershi
 };
 
 //Change the privacy value for a club membership
-const toggleMembershipPrivacy = async (userMembership: Membership): Promise<void> =>
+const toggleMembershipPrivacy = (userMembership: Membership): Promise<void> =>
   http.put(`memberships/${userMembership.MembershipID}/privacy/${!userMembership.Privacy}`);
 
 const getAll = (activityCode: string): Promise<Membership[]> =>
@@ -77,9 +74,7 @@ const getAll = (activityCode: string): Promise<Membership[]> =>
 const getGroupAdminsForInvolvement = (activityCode: string): Promise<Membership[]> =>
   http.get(`memberships/activity/${activityCode}/group-admin`);
 
-const getEmailAccount = async (email: string): Promise<Object> => {
-  return await http.get(`accounts/email/${email}/`);
-};
+const getEmailAccount = (email: string): Promise<Object> => http.get(`accounts/email/${email}/`);
 
 const getFollowersNum = (activityCode: string, sessionCode: string): Promise<number> =>
   http.get(`memberships/activity/${activityCode}/followers/${sessionCode}`);
@@ -90,9 +85,8 @@ const getMembersNum = (activityCode: string, sessionCode: string): Promise<numbe
 const getMembershipsForUser = (userID: string): Promise<Membership[]> =>
   http.get(`memberships/student/${userID}`);
 
-const remove = (membershipID: string): Promise<MEMBERSHIP> => {
-  return http.del(`memberships/${membershipID}`);
-};
+const remove = (membershipID: string): Promise<MEMBERSHIP> =>
+  http.del(`memberships/${membershipID}`);
 
 const search = async (
   userID: string,

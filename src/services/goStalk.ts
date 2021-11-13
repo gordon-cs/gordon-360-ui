@@ -11,6 +11,51 @@ export enum Class {
   'Graduate Conferred',
 }
 
+type SearchResultBase = {
+  FirstName: string;
+  LastName: string;
+  NickName: string;
+  MaidenName: string;
+  HomeCity: string;
+  HomeState: string;
+  Country: string;
+  Email: string;
+  AD_Username: string;
+};
+
+type SearchResult = SearchResultBase &
+  (
+    | {
+        Type: 'Student';
+        Hall: string;
+        Class: string; // TODO
+        Major1Description: string;
+        Major2Description: string;
+        Major3Description: string;
+        Minor1Description: string;
+        Minor2Description: string;
+        Minor3Description: string;
+        KeepPrivate: string; //TODO
+        Mail_Location: string;
+      }
+    | {
+        OnCampusDepartment: string;
+        BuildingDescription: string;
+        KeepPrivate: string;
+        JobTitle: string;
+        Type: string; //TODO
+        Mail_Location: string;
+      }
+    | {
+        Type: 'Alum';
+        Major1Description: string;
+        Major2Description: string;
+        ShareName: string;
+        PreferredClassYear: string;
+        ShareAddress: string;
+      }
+  );
+
 const CSharp = 'C\u266F';
 
 // TODO: Document return type
@@ -29,7 +74,7 @@ const search = (
   country: string,
   department: string,
   building: string,
-): Promise<Object[]> => {
+): Promise<SearchResult[]> => {
   // Sanitize the params sent to the backend -- it can't handle &, /, -, or null/empty strings
   // Therefore we convert all of these things and in the backend we convert them back again
 
@@ -108,33 +153,19 @@ const search = (
   );
 };
 
-const getMajors = (): Promise<string[]> => {
-  return http.get(`advanced-search/majors`);
-};
+const getMajors = (): Promise<string[]> => http.get(`advanced-search/majors`);
 
-const getMinors = (): Promise<string[]> => {
-  return http.get(`advanced-search/minors`);
-};
+const getMinors = (): Promise<string[]> => http.get(`advanced-search/minors`);
 
-const getHalls = (): Promise<string[]> => {
-  return http.get(`advanced-search/halls`);
-};
+const getHalls = (): Promise<string[]> => http.get(`advanced-search/halls`);
 
-const getStates = (): Promise<string[]> => {
-  return http.get(`advanced-search/states`);
-};
+const getStates = (): Promise<string[]> => http.get(`advanced-search/states`);
 
-const getCountries = (): Promise<string[]> => {
-  return http.get(`advanced-search/countries`);
-};
+const getCountries = (): Promise<string[]> => http.get(`advanced-search/countries`);
 
-const getDepartments = (): Promise<string[]> => {
-  return http.get(`advanced-search/departments`);
-};
+const getDepartments = (): Promise<string[]> => http.get(`advanced-search/departments`);
 
-const getBuildings = (): Promise<string[]> => {
-  return http.get(`advanced-search/buildings`);
-};
+const getBuildings = (): Promise<string[]> => http.get(`advanced-search/buildings`);
 
 const advancedSearchService = {
   search,

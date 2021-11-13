@@ -61,23 +61,23 @@ type AcademicCheckin = {
   MinorHolds &
   Demographic;
 
-const getStatus = async (): Promise<boolean> => await http.get(`checkIn/status`);
+const getStatus = (): Promise<boolean> => http.get(`checkIn/status`);
 
-const markCompleted = async (): Promise<void> => await http.put(`checkIn/status`);
+const markCompleted = (): Promise<void> => http.put(`checkIn/status`);
 
-const getHolds = async (): Promise<AcademicCheckin> => await http.get(`checkIn/holds`);
+const getHolds = (): Promise<AcademicCheckin> => http.get(`checkIn/holds`);
 
-const getEmergencyContacts = async (username: string): Promise<EmergencyContact[] | void> =>
-  await http.get(`profiles/emergency-contact/${username}/`);
+const getEmergencyContacts = (username: string): Promise<EmergencyContact[] | void> =>
+  http.get(`profiles/emergency-contact/${username}/`);
 
-const submitPhone = async (data: AcademicCheckin): Promise<AcademicCheckin> =>
-  await http.put(`checkIn/cellphone`, data);
+const submitPhone = (data: AcademicCheckin): Promise<AcademicCheckin> =>
+  http.put(`checkIn/cellphone`, data);
 
-const submitContact = async (data: EmergencyContact): Promise<EmergencyContact> =>
-  await http.post(`checkIn/emergencycontact`, data);
+const submitContact = (data: EmergencyContact): Promise<EmergencyContact> =>
+  http.post(`checkIn/emergencycontact`, data);
 
-const submitDemographic = async (data: AcademicCheckin): Promise<AcademicCheckin> =>
-  await http.put(`checkIn/demographic`, data);
+const submitDemographic = (data: AcademicCheckin): Promise<AcademicCheckin> =>
+  http.put(`checkIn/demographic`, data);
 
 const checkInService = {
   getStatus,
