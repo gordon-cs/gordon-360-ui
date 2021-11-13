@@ -8,7 +8,7 @@ type Admin = {
   SUPER_ADMIN: boolean;
 };
 
-const getAdmins = (): Promise<Admin> => http.get(`/admins`);
+const getAdmins = (): Promise<Admin[]> => http.get(`/admins`);
 
 const removeAdmin = (id: number): Promise<boolean> => http.del(`/admins/${id}`);
 
