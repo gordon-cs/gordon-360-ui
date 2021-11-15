@@ -4,7 +4,7 @@
  * @module cms
  */
 
-import http from './http';
+// import http from './http';
 
 /**
  * @global
@@ -24,9 +24,33 @@ import http from './http';
 /**
  * Get slides
  *
+ * @description Temporarily hard-coded while WWW is under maintenance
  * @returns {Promise.<Slide[]>} List of slides
  */
-const getSlides = () => http.get('cms/slider');
+const getSlides = () =>
+  // http.get('cms/slider');
+  Promise.resolve(() => [
+    {
+      ImagePath:
+        'https://gordonedu.sharepoint.com/StudentLife/Gordon360/Shared%20Documents/360%20Banner%20Images/Current-Next%20posts/1Chapel_20211115.jpg',
+      AltTag: 'Next Chapel',
+      HasCaption: false,
+      ActionLink: '',
+      Width: 1500,
+      Height: 600,
+      SortOrder: 1,
+    },
+    {
+      ImagePath:
+        'https://gordonedu.sharepoint.com/StudentLife/Gordon360/Shared%20Documents/360%20Banner%20Images/Current-Next%20posts/3AthleticsSchedule_20211115.jpg',
+      AltTag: 'Athletics Schedule',
+      HasCaption: false,
+      ActionLink: '',
+      Width: 1500,
+      Height: 600,
+      SortOrder: 3,
+    },
+  ]);
 
 const cmsService = {
   getSlides,
