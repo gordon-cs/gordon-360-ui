@@ -31,8 +31,7 @@ const getSlides = () =>
   // http.get('cms/slider');
   Promise.resolve(() => [
     {
-      ImagePath:
-        'https://gordonedu.sharepoint.com/StudentLife/Gordon360/Shared%20Documents/360%20Banner%20Images/Current-Next%20posts/1Chapel_20211115.jpg',
+      ImagePath: 'https://i.ibb.co/jTYz32x/1-Chapel-20211115.jpg',
       AltTag: 'Next Chapel',
       HasCaption: false,
       ActionLink: '',
@@ -41,14 +40,31 @@ const getSlides = () =>
       SortOrder: 1,
     },
     {
-      ImagePath:
-        'https://gordonedu.sharepoint.com/StudentLife/Gordon360/Shared%20Documents/360%20Banner%20Images/Current-Next%20posts/3AthleticsSchedule_20211115.jpg',
+      ImagePath: 'https://i.ibb.co/Wff0b6B/2-Dining-Services-20211122.png',
+      AltTag: 'Dining Services',
+      HasCaption: false,
+      ActionLink: 'https://gordon.cafebonappetit.com/',
+      Width: 1500,
+      Height: 600,
+      SortOrder: 1,
+    },
+    {
+      ImagePath: 'https://i.ibb.co/gFPC2DY/3-Athletics-Schedule-20211115.jpg',
       AltTag: 'Athletics Schedule',
       HasCaption: false,
       ActionLink: '',
       Width: 1500,
       Height: 600,
       SortOrder: 3,
+    },
+    {
+      ImagePath: 'https://i.ibb.co/gS8yHW7/5-Theatre-Shorts-20211115.jpg',
+      AltTag: 'Theatre Shorts',
+      HasCaption: false,
+      ActionLink: '',
+      Width: 1500,
+      Height: 600,
+      SortOrder: 1,
     },
   ]);
 
