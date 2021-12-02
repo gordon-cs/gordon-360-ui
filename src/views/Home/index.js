@@ -3,6 +3,7 @@
 import { Grid } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
+import { useAuth } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
 import user from 'services/user';
@@ -17,29 +18,27 @@ import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
 // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
 // import checkInService from 'services/checkIn';
-const Home = ({ authentication }) => {
+const Home = () => {
   const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(authentication);
   const [personType, setPersonType] = useState(null);
   // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
   // const [checkedIn, setCheckedIn] = useState(null);
 
   const [hasAnswered, setHasAnswered] = useState(null);
   const isOnline = useNetworkStatus();
+  const authenticated = useAuth();
 
   useEffect(() => {
-    if (authentication) {
+    if (authenticated) {
       loadPage();
-      setIsAuthenticated(true);
     } else {
-      // Clear out component's person-specific state when authentication becomes false
+      // Clear out component's person-specific state when authenticated becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
       setHasAnswered(null);
       setPersonType(null);
-      setIsAuthenticated(false);
       setLoading(false);
     }
-  }, [authentication]);
+  }, [authenticated]);
   const loadPage = async () => {
     setLoading(true);
     const [{ PersonType }, { IsValid }] = await Promise.all([
@@ -55,7 +54,7 @@ const Home = ({ authentication }) => {
 
   if (loading) {
     return <GordonLoader />;
-  } else if (!isAuthenticated) {
+  } else if (!authenticated) {
     return <GuestWelcome />;
   } else if (isOnline && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;

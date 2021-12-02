@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
 import {
   Card,
-  CardHeader,
   CardContent,
+  CardHeader,
   FormControl,
   Grid,
   InputLabel,
@@ -10,16 +9,17 @@ import {
   Select,
   TextField,
 } from '@material-ui/core';
-import InvolvementsGrid from './components/InvolvementsGrid';
 import GordonLoader from 'components/Loader';
-import Requests from './components/Requests';
-import userService from 'services/user';
+import { useAuth, useNetworkStatus } from 'hooks';
+import { useEffect, useState } from 'react';
 import involvementService from 'services/activity';
 import sessionService from 'services/session';
-import useNetworkStatus from 'hooks/useNetworkStatus';
+import userService from 'services/user';
 import { gordonColors } from 'theme';
+import InvolvementsGrid from './components/InvolvementsGrid';
+import Requests from './components/Requests';
 
-const InvolvementsAll = ({ location, authentication, history }) => {
+const InvolvementsAll = ({ location, history }) => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [involvements, setInvolvements] = useState([]);
   const [allInvolvements, setAllInvolvements] = useState([]);
@@ -31,6 +31,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
   const [type, setType] = useState('');
   const [types, setTypes] = useState([]);
   const isOnline = useNetworkStatus();
+  const authenticated = useAuth();
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
@@ -68,7 +69,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
       }
     };
     loadPage();
-  }, [authentication, sessionFromURL]);
+  }, [authenticated, sessionFromURL]);
 
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
@@ -81,7 +82,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
       setLoading(true);
       setAllInvolvements(await involvementService.getAll(selectedSession));
       setTypes(await involvementService.getTypes(selectedSession));
-      if (authentication) {
+      if (authenticated) {
         const { id } = await userService.getLocalInfo();
         setMyInvolvements(
           await userService.getSessionMembershipsWithoutGuests(id, selectedSession),
@@ -93,7 +94,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
     if (selectedSession) {
       updateInvolvements();
     }
-  }, [selectedSession, authentication]);
+  }, [selectedSession, authenticated]);
 
   useEffect(() => {
     setInvolvements(involvementService.filter(allInvolvements, type, search));
@@ -193,10 +194,10 @@ const InvolvementsAll = ({ location, authentication, history }) => {
         </Card>
       </Grid>
 
-      {isOnline && authentication && <Requests />}
+      {isOnline && authenticated && <Requests />}
 
       {/* My Involvements (private) */}
-      {authentication && (
+      {authenticated && (
         <Grid item xs={12} lg={8}>
           <Card>
             <CardHeader

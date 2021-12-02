@@ -1,37 +1,37 @@
 //Main timesheets page
-import { useState, useRef, useEffect } from 'react';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import DateFnsUtils from '@date-io/date-fns';
 import {
-  Grid,
+  Button,
   Card,
   CardContent,
   CardHeader,
-  Link,
-  Tooltip,
   FormControl,
-  InputLabel,
-  Select,
+  Grid,
   Input,
+  InputLabel,
+  Link,
   MenuItem,
-  Button,
-  Typography,
+  Select,
   TextField,
+  Tooltip,
+  Typography,
 } from '@material-ui/core/';
-import DateFnsUtils from '@date-io/date-fns';
-import { isValid, isWithinInterval, addDays, set } from 'date-fns';
-import jobsService from 'services/jobs';
-import { MuiPickersUtilsProvider, KeyboardDateTimePicker } from '@material-ui/pickers';
-import ShiftDisplay from './components/ShiftDisplay';
 import { withStyles } from '@material-ui/core/styles';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { gordonColors } from 'theme';
-import styles from './Timesheets.module.css';
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
+import GordonOffline from 'components/GordonOffline';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
+import { addDays, isValid, isWithinInterval, set } from 'date-fns';
+import { useAuth, useNetworkStatus } from 'hooks';
+import { useEffect, useRef, useState } from 'react';
+import jobsService from 'services/jobs';
 import user from 'services/user';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import GordonOffline from 'components/GordonOffline';
-import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
+import { gordonColors } from 'theme';
+import ShiftDisplay from './components/ShiftDisplay';
+import styles from './Timesheets.module.css';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
@@ -68,12 +68,13 @@ const Timesheets = (props) => {
   const [selectedHourType, setSelectedHourType] = useState('R');
   const [errorText, setErrorText] = useState(null);
   const isOnline = useNetworkStatus();
+  const authenticated = useAuth();
 
   useEffect(() => {
-    if (props.authentication) {
+    if (authenticated) {
       user.getProfileInfo().then((profile) => setIsUserStudent(profile.PersonType.includes('stu')));
     }
-  }, [props.authentication]);
+  }, [authenticated]);
 
   useEffect(() => {
     async function getCanUseStaff() {
@@ -177,7 +178,7 @@ const Timesheets = (props) => {
 
   const tooltipRef = useRef();
 
-  if (props.authentication) {
+  if (authenticated) {
     const getSavedShiftsForUser = () => {
       return jobsService.getSavedShiftsForUser(canUseStaff);
     };
