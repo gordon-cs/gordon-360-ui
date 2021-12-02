@@ -37,7 +37,7 @@
     text-decoration: none;
     padding-bottom: 1px;
     border-bottom: 2px solid $primary-cyan;
-    background-color: transparentize($color: $primary-cyan, $amount: 0.9);
+    background-color: color.adjust($color: $primary-cyan, $amount: -0.9);
   }
 
   .people_search_suggestion_selected {

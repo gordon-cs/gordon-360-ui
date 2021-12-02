@@ -70,9 +70,9 @@ $image-side-width-desktop: 90px;
                 transform: translate(-50%, -50%);
                 width: 100%;
                 color: $neutral-white;
-                background: transparentize(
+                background:color.adjust(
                   $primary-blue,
-                  0.5
+                  -0.5
                 ); // Make titles more readable over image background
                 // Make space for a two-line title
                 text-align: center;
