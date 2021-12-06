@@ -2,7 +2,6 @@ import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import activity from 'services/activity';
 import membershipService from 'services/membership';
 import userService from 'services/user';
 import MembershipInfoCard from './components/MembershipInfoCard';
@@ -26,12 +25,6 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
       setLoading(true);
       if (myProf) {
         const myMemberships = await membershipService.groupByActivityCode(user);
-        await Promise.all(
-          myMemberships.map(async (membership) => {
-            const involvement = await activity.get(membership[0].ActivityCode);
-            membership.IsInvolvementPrivate = involvement.Privacy;
-          }),
-        );
         setMemberships(myMemberships);
       } else {
         const publicMemberships = await userService.getPublicMemberships(user);
@@ -57,28 +50,29 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
           myProf={myProf}
           membership={membership}
           key={membership.MembershipID}
-          onTogglePrivacy={toggleMembershipPrivacy}
+        //   onTogglePrivacy={toggleMembershipPrivacy}
+          createSnackbar={createSnackbar}
         />
       ));
     }
   };
 
-  const toggleMembershipPrivacy = async (membership) => {
-    try {
-      await membershipService.toggleMembershipPrivacy(membership);
-      createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
-      setMemberships(
-        memberships.map((m) => {
-          if (m.MembershipID === membership.MembershipID) {
-            m.Privacy = !m.Privacy;
-          }
-          return m;
-        }),
-      );
-    } catch {
-      createSnackbar('Privacy Change Failed', 'error');
-    }
-  };
+//   const toggleMembershipPrivacy = async (membership) => {
+//     try {
+//       await membershipService.toggleMembershipPrivacy(membership);
+//       createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
+//       setMemberships(
+//         memberships.map((m) => {
+//           if (m.MembershipID === membership.MembershipID) {
+//             m.Privacy = !m.Privacy;
+//           }
+//           return m;
+//         }),
+//       );
+//     } catch {
+//       createSnackbar('Privacy Change Failed', 'error');
+//     }
+//   };
 
   if (loading) {
     return <GordonLoader />;

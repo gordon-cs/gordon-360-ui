@@ -12,12 +12,12 @@ const cacheVersion = 'cache v1.3';
  * @PROD
  * Make sure the URL is the EXACT same as what the browser fetches. Letter casing is important.
  */
-const apiSource = String('https://360api.gordon.edu/').toLowerCase() + 'api';
+// const apiSource = String('https://360api.gordon.edu/').toLowerCase() + 'api';
 /**
  * @TRAIN
  * Make sure the URL is the EXACT same as what the browser fetches. Letter casing is important.
  */
-// const apiSource = String('https://360apitrain.gordon.edu/').toLowerCase() + 'api';
+const apiSource = String('https://360apitrain.gordon.edu/').toLowerCase() + 'api';
 
 // Font Styles
 /**
