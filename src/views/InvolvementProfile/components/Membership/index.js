@@ -107,6 +107,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
                 sessionCode={sessionCode}
                 isSuperAdmin={isSuperAdmin}
                 onAddMember={handleAddMember}
+                involvementDescription={involvementDescription}
               />
             </Grid>
           )}

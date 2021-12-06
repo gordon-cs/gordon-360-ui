@@ -1,6 +1,7 @@
 import MomentUtils from '@date-io/moment';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import BirthdayMessage from 'components/BirthdayMessage';
 import UserContextProvider, { AuthContext } from 'contexts/UserContext';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
@@ -56,21 +57,24 @@ const App = () => {
             <main className={styles.app_main}>
               <AuthContext.Consumer>
                 {(authenticated) => (
-                  <Switch>
-                    {routes.map((route) => (
-                      <Route
-                        key={route.path}
-                        path={route.path}
-                        exact={route.exact}
-                        render={(props) => (
-                          <div className={styles.app_main_container}>
-                            <OfflineBanner currentPath={route.path} authentication={props.auth} />
-                            <route.component authentication={authenticated} {...props} />
-                          </div>
-                        )}
-                      />
-                    ))}
-                  </Switch>
+                  <>
+                    <BirthdayMessage />
+                    <Switch>
+                      {routes.map((route) => (
+                        <Route
+                          key={route.path}
+                          path={route.path}
+                          exact={route.exact}
+                          render={(props) => (
+                            <div className={styles.app_main_container}>
+                              <OfflineBanner currentPath={route.path} authentication={props.auth} />
+                              <route.component authentication={authenticated} {...props} />
+                            </div>
+                          )}
+                        />
+                      ))}
+                    </Switch>
+                  </>
                 )}
               </AuthContext.Consumer>
             </main>

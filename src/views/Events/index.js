@@ -16,11 +16,11 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import EventList from 'components/EventList';
 import GordonLoader from 'components/Loader';
+import { useAuth, useWindowSize } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
 import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
 import { gordonColors } from 'theme';
-import useWindowSize from 'hooks/useWindowSize';
 
 const Events = (props) => {
   const [open, setOpen] = useState(false);
@@ -34,12 +34,13 @@ const Events = (props) => {
   const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
+  const authenticated = useAuth();
 
   useEffect(() => {
     const loadEvents = async () => {
       setLoading(true);
       let allEvents;
-      if (props.authentication) {
+      if (authenticated) {
         allEvents = await gordonEvent.getAllEvents();
       } else {
         allEvents = await gordonEvent.getAllGuestEvents();
@@ -70,7 +71,7 @@ const Events = (props) => {
     };
 
     loadEvents();
-  }, [props.authentication, props.location.search]);
+  }, [authenticated, props.location.search]);
 
   useEffect(() => {
     setLoading(true);
@@ -144,7 +145,7 @@ const Events = (props) => {
                   <CardHeader title={searchPageTitle} />
                 </Grid>
                 <Grid item xs={4} align="right">
-                  {props.authentication && (
+                  {authenticated && (
                     <Button
                       color="primary"
                       style={{
@@ -351,7 +352,7 @@ const Events = (props) => {
                     </Grid>
 
                     <Grid item>
-                      {props.authentication && (
+                      {authenticated && (
                         <Button
                           color="primary"
                           style={{
