@@ -34,7 +34,7 @@ import GordonSnackbar from 'components/Snackbar';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 
 //Subcomponents
-import BannerList from './components/BannerList'; //This won't work yet.
+import BannerList from './components/BannerList';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -100,7 +100,7 @@ const BannerSubmission = () => {
   const [banners, setBanners] = useState([]);
   const [newBannerTitle, setNewBannerTitle] = useState('');
   const [newBannerWebLink, setNewBannerWebLink] = useState('');
-  const [newBannerSortOrder, setNewBannerSortOrder] = useState(100);
+  const [newBannerSortOrder, setNewBannerSortOrder] = useState(-1);
   const [openBannerActivity, setOpenBannerActivity] = useState(false);
 
   //Solely for photo functions
@@ -233,19 +233,18 @@ const BannerSubmission = () => {
 
   async function handleSubmit() {
     let newImage;
-
-    if (cropperImageData !== null) {
-      let croppedImage = cropperRef.current.cropper
-        .getCroppedCanvas({ width: CROP_DIM })
-        .toDataURL();
-      newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-    }
+    //No check required because the submit button is not enabled if the cropper doesn't have anything.
+    //Theoretically.
+    //if (cropperImageData !== null) {
+    let croppedImage = cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+    newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+    //}
 
     let bannerItem = {
-      categoryID: 1, //bad
-      Subject: newBannerTitle,
-      Body: newBannerWebLink,
-      Image: newImage,
+      Picture: newImage,
+      Title: newBannerTitle,
+      LinkURL: newBannerWebLink,
+      Order: newBannerSortOrder,
     };
 
     // submit the banner item and give feedback
@@ -260,13 +259,13 @@ const BannerSubmission = () => {
   }
 
   /**
-   * When the delete button is clicked for a submission
+   * When the delete button is clicked on a banner
    *
-   * @param {number} snid The SNID of the submission to be deleted
+   * @param {number} ID The ID of the banner to be deleted
    */
-  async function handleBannerDelete(snid) {
+  async function handleBannerDelete(ID) {
     // delete the banner item and give feedback
-    let result = await cmsService.deleteBanner(snid);
+    let result = await cmsService.deleteBanner(ID);
     if (result === undefined) {
       createSnackbar('Banner Failed to Delete', 'error');
     } else {
@@ -295,7 +294,8 @@ const BannerSubmission = () => {
 
   // if all of the inputs are filled, enable 'submit' button
   //URL not here because a URL is not required
-  let submitButtonDisabled = newBannerTitle === '' || cropperImageData === '';
+  let submitButtonDisabled =
+    newBannerTitle === '' || cropperImageData === '' || newBannerSortOrder === -1;
 
   let content;
 
@@ -308,7 +308,6 @@ const BannerSubmission = () => {
         <BannerList
           banners={banners}
           currentUsername={currentUsername}
-          //handleNewsItemEdit={handleNewsItemEdit}
           handleBannerDelete={handleBannerDelete}
         />
       );
