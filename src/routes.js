@@ -95,7 +95,7 @@ const routes = [
     component: MyProfile,
   },
   {
-    name: 'Enrollment Check In',
+    name: 'Enrollment Check-In',
     path: '/enrollmentcheckin',
     component: EnrollmentCheckIn,
   },
