@@ -119,8 +119,7 @@ const EnrollmentCheckIn = (props) => {
           tempHolds?.HighSchoolTranscriptHold ||
           tempHolds?.FinancialHold ||
           tempHolds?.MedicalHold ||
-          tempHolds?.MajorHold ||
-          tempHolds?.MustRegisterForClasses
+          tempHolds?.MajorHold
         ) {
           setMajorHold(true);
         }
@@ -383,7 +382,7 @@ const EnrollmentCheckIn = (props) => {
                         onClick={handleNext}
                         style={activeStep >= steps.length - 2 ? { display: 'none' } : {}}
                         disabled={
-                          (activeStep === 0 && hasMajorHold) ||
+                          (activeStep === 0 && (hasMajorHold || holds?.MustRegisterForClasses)) ||
                           (activeStep === 1 &&
                             (emergencyContact1.firstname === '' ||
                               emergencyContact1.lastname === '' ||
