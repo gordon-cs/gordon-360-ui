@@ -173,16 +173,16 @@ const AcademicCheckIn = (props) => {
   }, [authenticated, loading]);
 
   useEffect(() => {
-    props.history.replace('/AcademicCheckIn', { step: activeStep });
+    props.history.replace('/EnrollmentCheckIn', { step: activeStep });
   }, [activeStep, props.history]);
 
   const handleNext = () => {
-    props.history.push('/AcademicCheckIn', { step: activeStep });
+    props.history.push('/EnrollmentCheckIn', { step: activeStep });
     setActiveStep((nextStep) => nextStep + 1);
   };
 
   const handlePrev = () => {
-    props.history.push('/AcademicCheckIn', { step: activeStep });
+    props.history.push('/EnrollmentCheckIn', { step: activeStep });
     setActiveStep((previousStep) => previousStep - 1);
   };
 
@@ -278,13 +278,13 @@ const AcademicCheckIn = (props) => {
   if (loading === true) {
     content = <GordonLoader />;
   } else if (!authenticated) {
-    content = <GordonUnauthorized feature={'Academic Checkin'} />;
+    content = <GordonUnauthorized feature={'Enrollment Check-in'} />;
   } else {
     content = (
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} md={9} lg={6}>
           <Card className={styles.academicCheckIn}>
-            <CardHeader title="Academic Check In" className={styles.checkIn_header} padding={30} />
+            <CardHeader title="Enrollment Check In" className={styles.checkIn_header} padding={30} />
             <Box m={2}>
               <Grid
                 container
