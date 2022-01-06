@@ -33,6 +33,7 @@ export const StatusColors = {
  * @property {StatusColor} Status The user's status
  * @property {Date} Created when the status was created
  * @property {boolean} IsValid whether the status has expired
+ * @property {string} [StatusDescription] A custom description of the user's status
  */
 
 /**

@@ -18,7 +18,7 @@ const WellnessCheck = () => {
 
         const status = await wellness.getStatus();
         if (status && status.IsValid) {
-          setCurrentStatus(status.Status);
+          setCurrentStatus(status);
         }
 
         setLoading(false);
@@ -26,7 +26,7 @@ const WellnessCheck = () => {
     };
 
     loadPage();
-  }, [authenticated, currentStatus]);
+  }, [authenticated]);
 
   if (loading) {
     return <GordonLoader />;
