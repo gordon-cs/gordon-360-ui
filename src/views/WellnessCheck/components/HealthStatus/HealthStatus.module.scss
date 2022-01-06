@@ -29,120 +29,61 @@
   }
 }
 
-.wellness_status {
-  .GREEN {
-    .status_box {
-      height: 250px;
-      background-color: $wellness-green;
-    }
+.animation {
+  text-align: center;
+  height: calc(70px + 3vw);
+  width: calc(70px + 3vw);
+  border-radius: 50%;
+  display: inline-block;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  background-color: var(--status-background-color);
+  color: var(--status-color);
+  animation-name: statusAnimation;
+}
 
-    .status_time {
-      font-size: calc(14px + 1vw);
-      color: $neutral-white;
-      padding-bottom: 30px;
-    }
+.time {
+  font-size: calc(14px + 1vw);
+  color: var(--status-color);
+  padding-bottom: 30px;
+}
 
-    .status_animation {
-      text-align: center;
-      height: calc(70px + 3vw);
-      width: calc(70px + 3vw);
-      background-color: $wellness-green;
-      color: $neutral-white;
-      border-radius: 50%;
-      display: inline-block;
-      animation-name: animationCheck;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-      animation-direction: alternate;
-    }
+.box {
+  height: 250px;
+  background-color: var(--status-background-color);
+}
+
+.status_description {
+  font-size: calc(14px + 1vw);
+  color: var(--status-color);
+}
+
+@keyframes statusAnimation {
+  from {
+    background-color: var(--status-background-color);
+    color: var(--status-color);
   }
 
-  @keyframes animationCheck {
-    from {
-      background-color: $wellness-green;
-      color: $neutral-white;
-    }
-    to {
-      background-color: $neutral-white;
-      color: $wellness-green;
-    }
+  to {
+    background-color: var(--status-color);
+    color: var(--status-background-color);
   }
+}
 
-  .YELLOW {
-    .status_box {
-      height: 250px;
-      background-color: $wellness-yellow;
-    }
+.GREEN {
+  --status-background-color: #{$wellness-green};
+  --status-color: #{$neutral-white};
+}
 
-    .status_time {
-      font-size: calc(14px + 1vw);
-      color: $neutral-dark-gray;
-      padding-bottom: 30px;
-    }
+.YELLOW {
+  --status-background-color: #{$wellness-yellow};
+  --status-color: #{$neutral-dark-gray};
+}
 
-    .status_animation {
-      text-align: center;
-      height: calc(70px + 3vw);
-      width: calc(70px + 3vw);
-      background-color: $wellness-yellow;
-      color: $neutral-dark-gray;
-      border-radius: 50%;
-      display: inline-block;
-      animation-name: animationBar;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-      animation-direction: alternate;
-    }
-  }
-
-  @keyframes animationBar {
-    from {
-      background-color: $wellness-yellow;
-      color: $neutral-dark-gray;
-    }
-    to {
-      background-color: $neutral-dark-gray;
-      color: $wellness-yellow;
-    }
-  }
-
-  .RED {
-    .status_box {
-      height: 250px;
-      background-color: $wellness-red;
-    }
-
-    .status_time {
-      font-size: calc(14px + 1vw);
-      color: $neutral-gray2;
-      padding-bottom: 30px;
-    }
-
-    .status_animation {
-      text-align: center;
-      height: calc(70px + 3vw);
-      width: calc(70px + 3vw);
-      background-color: $wellness-red;
-      color: $neutral-gray2;
-      border-radius: 50%;
-      display: inline-block;
-      animation-name: animationCross;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-      animation-direction: alternate;
-    }
-  }
-
-  @keyframes animationCross {
-    from {
-      background-color: $wellness-red;
-      color: $neutral-gray2;
-    }
-    to {
-      background-color: $neutral-gray2;
-      color: $wellness-red;
-    }
-  }
+.RED {
+  --status-background-color: #{$wellness-red};
+  --status-color: #{$neutral-gray2};
 }
 
 a.rtc_link {
@@ -158,6 +99,7 @@ a.rtc_link:hover {
 a.contact_link {
   color: $primary-cyan;
   text-decoration: underline;
+
   &:hover {
     text-decoration: underline;
   }
