@@ -92,8 +92,7 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
     }
     return (
       <ul>
-        {' '}
-        {laVidaContent} <br /> {declarationOfMajorContent}{' '}
+        {laVidaContent} <br /> {declarationOfMajorContent}
       </ul>
     );
   };
@@ -112,7 +111,7 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
         <br />
       </Grid>
       <Grid item>
-        {hasMajorHold ? ( // If the student has a major hold, they cannot check in
+        {hasMajorHold && ( // If the student has a major hold, they cannot check in
           <Grid item>
             <Typography style={{ color: blue }} align="center" variant="h6">
               <b>Review Your Holds</b>
@@ -123,10 +122,8 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
             </Typography>
             {displayMajorHolds()}
           </Grid>
-        ) : (
-          ''
         )}
-        {holds?.MustRegisterForClasses ? ( // If a student is not registered for courses they cannot check in
+        {holds?.MustRegisterForClasses && ( // If a student is not registered for courses they cannot check in
           <Grid item>
             <Typography variant="h6" align="center" style={{ color: blue }}>
               <b>Register for Courses</b>
@@ -144,17 +141,13 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
             ) : (
               // Otherwise display a standard registration prompt
               <Typography gutterBottom>
-                Visit the registrar's office in Jenks 216 to register, or visit{' '}
-                <a href="https://my.gordon.edu">my.gordon.edu</a> (Student tab {'>'} Course
-                Schedules {'>'} Course Search) to register during the first five days of classes.
+                Register online at <a href="https://my.gordon.edu">my.gordon.edu</a> anytime between
+                8AM on January 11, 2022 and 11:59PM on January 19, 2022.
               </Typography>
             )}
           </Grid>
-        ) : (
-          // If a student has no major holds and is registered, don't display this section
-          ''
         )}
-        {hasMinorHold ? ( // If a student has a minor hold, warn them about it
+        {hasMinorHold && ( // If a student has a minor hold, warn them about it
           <Grid item>
             <Typography>
               Even though you can still check in while maintaining the following holds, you should
@@ -162,9 +155,6 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
             </Typography>
             {displayMinorHolds()}
           </Grid>
-        ) : (
-          // Otherwise display nothing for this section
-          ''
         )}
         <Typography>
           If you are planning to withdraw or take a leave of absence, please contact Student Life at{' '}
