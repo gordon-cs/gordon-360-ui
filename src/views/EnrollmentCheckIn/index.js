@@ -164,6 +164,8 @@ const EnrollmentCheckIn = (props) => {
 
     if (authenticated) {
       loadData();
+    } else {
+      setLoading(false);
     }
   }, [authenticated, loading]);
 
