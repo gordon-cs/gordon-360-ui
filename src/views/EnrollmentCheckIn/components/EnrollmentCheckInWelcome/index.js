@@ -3,104 +3,79 @@ import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory
 import styles from '../../EnrollmentCheckIn.module.css';
 
+const displayMajorHolds = (holds) => {
+  const majorHolds = [];
+  if (holds.RegistrarHold) {
+    majorHolds.push(
+      <li>
+        You have a "Registration Hold". Please contact the Registrar's Office at{' '}
+        <b>(978)-867-4243</b> or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>
+      </li>,
+    );
+  }
+  if (holds.HighSchoolTranscriptHold) {
+    majorHolds.push(
+      <li>
+        You have a "High School Transcript Hold". Please contact the Registrar's Office at{' '}
+        <b>(978)-867-4243</b> or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>
+      </li>,
+    );
+  }
+  if (holds.FinancialHold) {
+    majorHolds.push(
+      <li>
+        You have a "Financial Hold". Please contact Student Financial Services at{' '}
+        <b>(978) 867-4246</b> or <a href="sfs@gordon.edu">sfs@gordon.edu</a>.
+      </li>,
+    );
+  }
+  if (holds.MedicalHold) {
+    majorHolds.push(
+      <li>
+        You have a "Medical Hold". Please contact the Health Center at <b>(978)-867-4300</b> or{' '}
+        <a href="mailto:healthcenter@gordon.edu">healthcenter@gordon.edu</a>.
+      </li>,
+    );
+  }
+  return <ul>{majorHolds.join('\n<br />\n')}</ul>;
+};
+
+const displayMinorHolds = (holds) => {
+  let laVidaContent;
+  let declarationOfMajorContent;
+  if (holds.LaVidaHold) {
+    laVidaContent = (
+      <li>
+        You have a "La Vida Hold". Students are required to complete Discovery or La Vida in their
+        first year at Gordon College. Please contact the Registrar's Office at <b>(978) 867-4243</b>{' '}
+        or <a href="registrar@gordon.edu">registrar@gordon.edu</a> so that we can register you for
+        Discovery or La Vida.
+      </li>
+    );
+  }
+  if (holds.MajorHold) {
+    declarationOfMajorContent = (
+      <li>
+        You have a "Declaration of Major Hold". Please contact the <b>Registrar's Office</b> at{' '}
+        <b>(978)-867-4243</b> or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a> to
+        discuss declaring a major.
+      </li>
+    );
+  }
+  return (
+    <ul>
+      {laVidaContent} <br /> {declarationOfMajorContent}
+    </ul>
+  );
+};
+
 const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
-  const blue = gordonColors.primary.blue;
-  console.log(holds);
   const hasMinorHold = holds?.LaVidaHold || holds?.DeclarationOfMajorHold;
-
-  // This function will return the corresponding JSX elements according to the major holds a student
-  // has
-  const displayMajorHolds = () => {
-    let registrationContent;
-    let highSchoolContent;
-    let financialContent;
-    let medicalContent;
-    if (holds.RegistrarHold) {
-      registrationContent = (
-        <>
-          <li>
-            You have a "Registration Hold". Please contact the Registrar's Office at{' '}
-            <b>(978)-867-4243</b> or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>{' '}
-            or visit Jenks 216. )
-          </li>
-          <br />
-        </>
-      );
-    }
-    if (holds.HighSchoolTranscriptHold) {
-      highSchoolContent = (
-        <>
-          <li>
-            You have a "High School Transcript Hold". Please contact the Registrar's Office at{' '}
-            <b>(978)-867-4243</b> or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>{' '}
-            or visit Jenks 216.
-          </li>
-          <br />
-        </>
-      );
-    }
-    if (holds.FinancialHold) {
-      financialContent = (
-        <>
-          <li>
-            You have a "Financial Hold". Please visit Student Financial Services in MacDonald 205.
-          </li>
-          <br />
-        </>
-      );
-    }
-    if (holds.MedicalHold) {
-      medicalContent = (
-        <>
-          <li>
-            You have a "Medical Hold". Please contact the Health Center at <b>(978)-867-4300</b> or{' '}
-            <a href="mailto:healthcenter@gordon.edu">healthcenter@gordon.edu</a> or visit Lane 135.{' '}
-          </li>
-          <br />
-        </>
-      );
-    }
-    return (
-      <ul>
-        {registrationContent} {highSchoolContent} {financialContent} {medicalContent}
-      </ul>
-    );
-  };
-
-  // This function will return the corresponding JSX elements according to the minor holds a student
-  // has
-  const displayMinorHolds = () => {
-    let laVidaContent;
-    let declarationOfMajorContent;
-    if (holds.LaVidaHold) {
-      laVidaContent = (
-        <li>
-          You have a "La Vida Hold". Students are required to complete Discovery or La Vida in their
-          first year at Gordon College. Please come to the registrar's office (Jenks 216) so that we
-          can register you for Discovery or La Vida.
-        </li>
-      );
-    }
-    if (holds.MajorHold) {
-      declarationOfMajorContent = (
-        <li>
-          You have a "Declaration of Major Hold". Please contact the <b>Registrar's Office</b> at{' '}
-          <b>(978)-867-4243</b> or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a> or
-          visit Jenks 216 to discuss declaring a major.
-        </li>
-      );
-    }
-    return (
-      <ul>
-        {laVidaContent} <br /> {declarationOfMajorContent}
-      </ul>
-    );
-  };
 
   return (
     <Grid container justifyContent="center" alignItems="center" direction="column">
       <Grid item>
-        <Typography align="center" variant="h5" style={{ color: blue }}>
+        <Typography align="center" variant="h5" style={{ color: gordonColors.primary.blue }}>
           <b>Enrollment Check-In</b>
         </Typography>
         <Typography justify="center" className={styles.checkIn}>
@@ -113,19 +88,19 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
       <Grid item>
         {hasMajorHold && ( // If the student has a major hold, they cannot check in
           <Grid item>
-            <Typography style={{ color: blue }} align="center" variant="h6">
+            <Typography style={{ color: gordonColors.primary.blue }} align="center" variant="h6">
               <b>Review Your Holds</b>
             </Typography>
             <Typography align="center">
               According to our systems, you should contact the following department(s) in order to
               clear up certain administrative holds before beginning the check-in process.
             </Typography>
-            {displayMajorHolds()}
+            {displayMajorHolds(holds)}
           </Grid>
         )}
         {holds?.MustRegisterForClasses && ( // If a student is not registered for courses they cannot check in
           <Grid item>
-            <Typography variant="h6" align="center" style={{ color: blue }}>
+            <Typography variant="h6" align="center" style={{ color: gordonColors.primary.blue }}>
               <b>Register for Courses</b>
             </Typography>
             <Typography align="center" gutterBottom>
@@ -153,7 +128,7 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
               Even though you can still check in while maintaining the following holds, you should
               contact the following department(s) at your earliest availability:
             </Typography>
-            {displayMinorHolds()}
+            {displayMinorHolds(holds)}
           </Grid>
         )}
         <Typography>
@@ -164,7 +139,7 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
         <br />
       </Grid>
       <Grid item>
-        <Typography align="center" variant="h6" style={{ color: blue }}>
+        <Typography align="center" variant="h6" style={{ color: gordonColors.primary.blue }}>
           <b>Begin the Check-In Process</b>
         </Typography>
         {hasMajorHold ? ( // If the student has a major hold, display this prompt to resolve them
