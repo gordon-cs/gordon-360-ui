@@ -170,16 +170,16 @@ const EnrollmentCheckIn = (props) => {
   }, [authenticated, loading]);
 
   useEffect(() => {
-    props.history.replace('/EnrollmentCheckIn', { step: activeStep });
+    props.history.replace('/enrollmentcheckin', { step: activeStep });
   }, [activeStep, props.history]);
 
   const handleNext = () => {
-    props.history.push('/EnrollmentCheckIn', { step: activeStep });
+    props.history.push('/enrollmentcheckin', { step: activeStep });
     setActiveStep((nextStep) => nextStep + 1);
   };
 
   const handlePrev = () => {
-    props.history.push('/EnrollmentCheckIn', { step: activeStep });
+    props.history.push('/enrollmentcheckin', { step: activeStep });
     setActiveStep((previousStep) => previousStep - 1);
   };
 
