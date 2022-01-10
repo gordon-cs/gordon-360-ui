@@ -58,7 +58,7 @@ After cloning this repo, and after any major changes to local code (like changin
 - `npm install` (This gets the right packages installed in the directory)
 - `npm start` (This starts a local server, and prints the local URL)
 
-When running the app, it will open in a browser at <http://localhost:3000>.
+When running the app, it will open in a browser at http://localhost:3000.
 
 ### Connect Local Backend To React
 
@@ -68,16 +68,12 @@ By default, React will use the live 360ApiTrain backend to allow seamless front 
 
   - Clone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
-  - Open `setupProxy.js` in src:
-
-    - You will see three sets of two nearly identical `app.use(...)` function calls. Each set is marked with a comment explaining which environment they are for (`PROD` for `360Api`, `TRAIN` for `360ApiTrain`, and `LOCALHOST` for your local backend). Make sure that only the `LOCALHOST` lines are uncommented, and update the port number after `http:localhost:` to the port your local backend is listening on. For example, if your backend is listening on `localhost:9999`, then the `app.use` `target` should be `http://localhost:9999/`
-
-  - Open `.env.development` and set `REACT_APP_API_URL` equal to `http://localhost:9999/`, assuming `9999` is the port your backend is listening on.
+  - Open `.env.development`. You will see three sets of environment variables, marked `@PROD`, `@TRAIN`, and `@LOCALHOST`. Ensure that the `@PROD` and `@TRAIN` variables are commented out, and that `@LOCALHOST` is not commented out. Then set `REACT_APP_API_URL` equal to `http://localhost:NNNN/`, where `NNNN` is the port your backend is listening on (e.g. `9999`).
   - You do not need to change `.env.production`.
 
 - Now, you are ready to work on the frontend.
 
-- In some scenarios, (for example, when someone has made custom changes to the backend which you also want to use) it is preferable to skip setting up your own backend and connect to someone else's. To do this, make sure you are on the virtual machine. Then, just follow the above directions, replacing each instance of the port number you chose with the port number on which their backend is listening.
+- In some scenarios, (for example, when someone has made custom changes to the backend which you also want to use) it is preferable to skip setting up your own backend and connect to someone else's. To do this, make sure you are on the virtual machine. Then, just follow the above directions, replacing the port number you chose with the port number on which their backend is listening.
 
 ### Server Notes
 

@@ -226,12 +226,13 @@ const PersonalInfoList = ({
       />
     ) : null;
 
-  const majors = !isFacStaff ? (
-    <ProfileInfoListItem
-      title={Majors?.length > 1 ? 'Majors:' : 'Major:'}
-      contentText={Majors?.length < 1 ? 'Undecided' : Majors?.join(', ')}
-    />
-  ) : null;
+  const majors =
+    isFacStaff || (isAlumni && !Majors?.length) ? null : (
+      <ProfileInfoListItem
+        title={Majors?.length > 1 ? 'Majors:' : 'Major:'}
+        contentText={!Majors?.length ? 'Deciding' : Majors?.join(', ')}
+      />
+    );
 
   const graduationYear = isAlumni ? (
     <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />

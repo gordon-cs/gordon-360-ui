@@ -1,8 +1,8 @@
 /**
- * AcademicCheckIn Check API call functions
+ * EnrollmentCheckIn Check API call functions
  * establishes the functions necessary to make calls to the back end.
  *
- * @module AcademicCheckIn
+ * @module EnrollmentCheckIn
  */
 
 import http from './http';
@@ -27,10 +27,10 @@ import http from './http';
 /**
  * @global
  * @typedef EmergencyContact all the data for a student's emergency contact
- * @property {number} SEQ_NUM the sequence number of the contact, (1, 2, or 3)
- * @property {string} firstName first name of emergency contact
- * @property {string} lastName last name of EC
- * @property {string} relationship the relationship between the student and EC
+ * @property {number} SEQ_NUMBER the sequence number of the contact, (1, 2, or 3)
+ * @property {string} FirstName first name of emergency contact
+ * @property {string} LastName last name of EC
+ * @property {string} Relationship the relationship between the student and EC
  * @property {number} HomePhone the home phone number of EC
  * @property {boolean} HomePhoneIN whether the home phone number is international
  * @property {number} MobilePhone the mobile phone number of EC
@@ -57,13 +57,7 @@ import http from './http';
  * @property {boolean} none whether or not a student declined to submit a race
  */
 
-const getStatus = async () => {
-  try {
-    return await http.get(`checkIn/status`);
-  } catch (reason) {
-    console.log('Caught checkIn submission error: ' + reason);
-  }
-};
+const getStatus = async () => http.get(`checkIn/status`);
 
 const markCompleted = async () => {
   try {
