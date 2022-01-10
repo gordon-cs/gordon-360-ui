@@ -2,10 +2,10 @@
 import {
   Box,
   Checkbox,
+  FilledInput,
   FormControl,
   FormControlLabel,
   Grid,
-  Input,
   InputLabel,
   Typography,
 } from '@material-ui/core';
@@ -99,9 +99,9 @@ function createEmergencyContactFields(
   let required;
   if (
     contactNum === 1 ||
-    emergencyContact.firstname !== '' ||
-    emergencyContact.lastname !== '' ||
-    emergencyContact.relationship !== '' ||
+    emergencyContact.FirstName !== '' ||
+    emergencyContact.LastName !== '' ||
+    emergencyContact.Relationship !== '' ||
     emergencyContact.HomePhone !== '' ||
     emergencyContact.MobilePhone !== ''
   ) {
@@ -112,34 +112,33 @@ function createEmergencyContactFields(
   return (
     <Box padding={2} align="center">
       <Typography variant="body1" gutterBottom>
-        {' '}
         <strong>
           Emergency Contact {contactNum} {contactNum !== 1 ? '(optional)' : '(required)'}
-        </strong>{' '}
+        </strong>
       </Typography>
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
           <FormControl className={styles.emergencyContactForm}>
-            <InputLabel required={required} htmlFor="component-simple">
+            <InputLabel required={required} htmlFor={'FirstNameInput' + contactNum}>
               First Name
             </InputLabel>
-            <Input
-              id="component-simple"
-              name={'firstname'}
-              value={emergencyContact.firstname}
+            <FilledInput
+              id={'FirstNameInput' + contactNum}
+              name={'FirstName'}
+              value={emergencyContact.FirstName}
               onChange={handleChangeEmergContact}
             />
           </FormControl>
         </Grid>
         <Grid item>
           <FormControl className={styles.emergencyContactForm}>
-            <InputLabel required={required} htmlFor="component-simple">
+            <InputLabel required={required} htmlFor={'LastNameInput' + contactNum}>
               Last Name
             </InputLabel>
-            <Input
-              id="component-simple"
-              name={'lastname'}
-              value={emergencyContact.lastname}
+            <FilledInput
+              id={'LastNameInput' + contactNum}
+              name={'LastName'}
+              value={emergencyContact.LastName}
               onChange={handleChangeEmergContact}
               required
             />
@@ -150,10 +149,10 @@ function createEmergencyContactFields(
             <InputLabel required={required} htmlFor="component-simple">
               Relationship
             </InputLabel>
-            <Input
+            <FilledInput
               id="component-simple"
-              name={'relationship'}
-              value={emergencyContact.relationship}
+              name={'Relationship'}
+              value={emergencyContact.Relationship}
               onChange={handleChangeEmergContact}
               required
             />
@@ -164,7 +163,7 @@ function createEmergencyContactFields(
             <InputLabel required={required} htmlFor="component-simple">
               Home Phone
             </InputLabel>
-            <Input
+            <FilledInput
               id="formatted-text-mask-input"
               name={'HomePhone'}
               value={emergencyContact.HomePhone}
@@ -190,7 +189,7 @@ function createEmergencyContactFields(
             <InputLabel required={required} htmlFor="component-simple">
               Mobile Phone
             </InputLabel>
-            <Input
+            <FilledInput
               id="formatted-text-mask-input"
               name={'MobilePhone'}
               value={emergencyContact.MobilePhone}

@@ -152,7 +152,7 @@ const EnrollmentCheckIn = (props) => {
         if (profile.MobilePhone) {
           setPhoneInfo({
             PersonalPhone: profile.MobilePhone,
-            MakePrivate: false,
+            MakePrivate: Boolean(profile.IsMobilePhonePrivate),
             NoPhone: false,
           });
         }
@@ -386,9 +386,9 @@ const EnrollmentCheckIn = (props) => {
                         disabled={
                           (activeStep === 0 && (hasMajorHold || holds?.MustRegisterForClasses)) ||
                           (activeStep === 1 &&
-                            (emergencyContact1.firstname === '' ||
-                              emergencyContact1.lastname === '' ||
-                              emergencyContact1.relationship === '' ||
+                            (emergencyContact1.FirstName === '' ||
+                              emergencyContact1.LastName === '' ||
+                              emergencyContact1.Relationship === '' ||
                               emergencyContact1.HomePhone === '' ||
                               emergencyContact1.MobilePhone === '')) ||
                           (activeStep === 2 &&
