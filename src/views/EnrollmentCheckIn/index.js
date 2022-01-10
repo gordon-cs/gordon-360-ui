@@ -31,28 +31,28 @@ const EnrollmentCheckIn = (props) => {
   const [loading, setLoading] = useState(true);
 
   const [emergencyContact1, setEmergencyContact1] = useState({
-    SEQ_NUM: 1,
-    firstname: '',
-    lastname: '',
-    relationship: '',
+    SEQ_NUMBER: 1,
+    FirstName: '',
+    LastName: '',
+    Relationship: '',
     HomePhone: '',
     MobilePhone: '',
   });
 
   const [emergencyContact2, setEmergencyContact2] = useState({
-    SEQ_NUM: 2,
-    firstname: '',
-    lastname: '',
-    relationship: '',
+    SEQ_NUMBER: 2,
+    FirstName: '',
+    LastName: '',
+    Relationship: '',
     HomePhone: '',
     MobilePhone: '',
   });
 
   const [emergencyContact3, setEmergencyContact3] = useState({
-    SEQ_NUM: 3,
-    firstname: '',
-    lastname: '',
-    relationship: '',
+    SEQ_NUMBER: 3,
+    FirstName: '',
+    LastName: '',
+    Relationship: '',
     HomePhone: '',
     MobilePhone: '',
   });

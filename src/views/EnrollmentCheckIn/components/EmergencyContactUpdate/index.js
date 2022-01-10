@@ -95,7 +95,7 @@ function createEmergencyContactFields(
   handleChangeEmergContact,
   handleCheckEmergContact,
 ) {
-  const contactNum = emergencyContact.SEQ_NUM;
+  const contactNum = emergencyContact.SEQ_NUMBER;
   let required;
   if (
     contactNum === 1 ||
