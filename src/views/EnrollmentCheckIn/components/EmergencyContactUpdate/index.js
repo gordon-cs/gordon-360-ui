@@ -10,9 +10,9 @@ import {
   Typography,
 } from '@material-ui/core';
 import { gordonColors } from 'theme';
-import { phoneMaskINTL, phoneMaskUS } from 'views/AcademicCheckIn/components/UpdatePhone/';
 // @TODO CSSMODULES - outside directory
-import styles from '../../AcademicCheckIn.module.css';
+import styles from '../../EnrollmentCheckIn.module.css';
+import { phoneMaskINTL, phoneMaskUS } from '../UpdatePhone';
 
 const EmergencyContactUpdate = ({
   emergencyContact1,

@@ -1,8 +1,8 @@
 /**
- * AcademicCheckIn Check API call functions
+ * EnrollmentCheckIn Check API call functions
  * establishes the functions necessary to make calls to the back end.
  *
- * @module AcademicCheckIn
+ * @module EnrollmentCheckIn
  */
 
 import http from './http';
@@ -57,13 +57,7 @@ import http from './http';
  * @property {boolean} none whether or not a student declined to submit a race
  */
 
-const getStatus = async () => {
-  try {
-    return await http.get(`checkIn/status`);
-  } catch (reason) {
-    console.log('Caught checkIn submission error: ' + reason);
-  }
-};
+const getStatus = async () => http.get(`checkIn/status`);
 
 const markCompleted = async () => {
   try {

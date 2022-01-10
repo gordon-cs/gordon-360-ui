@@ -1,9 +1,9 @@
 import About from './views/About';
-import AcademicCheckIn from './views/AcademicCheckIn';
 import Admin from './views/Admin';
 import ApartmentApp from './views/ApartmentApp';
 import BannerSubmission from './views/BannerSubmission';
 import CoCurricularTranscript from './views/CoCurricularTranscript';
+import EnrollmentCheckIn from './views/EnrollmentCheckIn';
 import Events from './views/Events';
 import EventsAttended from './views/EventsAttended';
 import Feedback from './views/Feedback';
@@ -97,7 +97,7 @@ const routes = [
   {
     name: 'Enrollment Check-In',
     path: '/enrollmentcheckin',
-    component: AcademicCheckIn,
+    component: EnrollmentCheckIn,
   },
   {
     name: 'People',
