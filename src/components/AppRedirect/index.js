@@ -1,11 +1,11 @@
 import { useAuth } from 'hooks';
 import { useEffect, useState } from 'react';
-import { Redirect, useHistory } from 'react-router';
+import { Redirect, useLocation } from 'react-router';
 import checkInService from 'services/checkIn';
 
 const AppRedirect = () => {
   const [enrollmentCheckinComplete, setEnrollmentCheckinComplete] = useState(true);
-  const history = useHistory();
+  const location = useLocation();
   const authenticated = useAuth();
 
   useEffect(() => {
@@ -14,11 +14,7 @@ const AppRedirect = () => {
     }
   }, [authenticated]);
 
-  if (
-    authenticated &&
-    !enrollmentCheckinComplete &&
-    history.location.pathname !== '/enrollmentcheckin'
-  ) {
+  if (authenticated && !enrollmentCheckinComplete && location.pathname !== '/enrollmentcheckin') {
     return <Redirect to="/enrollmentcheckin" />;
   }
 
