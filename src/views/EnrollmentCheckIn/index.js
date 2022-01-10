@@ -235,7 +235,7 @@ const EnrollmentCheckIn = (props) => {
 
   function formatDemographic(data) {
     let formattedData = {
-      Ethnicity: parseInt(data.ethnicity),
+      Ethnicity: data.Ethnicity,
       Race: '',
     };
     if (data.None) {
