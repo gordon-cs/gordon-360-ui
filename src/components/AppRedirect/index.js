@@ -14,7 +14,12 @@ const AppRedirect = () => {
     }
   }, [authenticated]);
 
-  if (authenticated && !enrollmentCheckinComplete && location.pathname !== '/enrollmentcheckin') {
+  if (
+    authenticated &&
+    !enrollmentCheckinComplete &&
+    location.pathname !== '/enrollmentcheckin' &&
+    location.pathname !== '/wellness'
+  ) {
     return <Redirect to="/enrollmentcheckin" />;
   }
 
