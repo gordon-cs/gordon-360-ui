@@ -37,7 +37,7 @@ const displayMajorHolds = (holds) => {
       </li>,
     );
   }
-  return <ul>{majorHolds.join('\n<br />\n')}</ul>;
+  return <ul>{majorHolds.length === 1 ? majorHolds[0] : majorHolds.join('\n<br />\n')}</ul>;
 };
 
 const displayMinorHolds = (holds) => {
