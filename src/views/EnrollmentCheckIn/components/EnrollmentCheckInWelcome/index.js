@@ -2,72 +2,8 @@ import { Grid, Typography } from '@material-ui/core';
 import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory
 import styles from '../../EnrollmentCheckIn.module.css';
-
-const displayMajorHolds = (holds) => {
-  const majorHolds = [];
-  if (holds.RegistrarHold) {
-    majorHolds.push(
-      <li>
-        You have a "Registration Hold". Please contact the Registrar's Office at{' '}
-        <b>(978)-867-4243</b> or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>
-      </li>,
-    );
-  }
-  if (holds.HighSchoolTranscriptHold) {
-    majorHolds.push(
-      <li>
-        You have a "High School Transcript Hold". Please contact the Registrar's Office at{' '}
-        <b>(978)-867-4243</b> or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>
-      </li>,
-    );
-  }
-  if (holds.FinancialHold) {
-    majorHolds.push(
-      <li>
-        You have a "Financial Hold". Please contact Student Financial Services at{' '}
-        <b>(978) 867-4246</b> or <a href="sfs@gordon.edu">sfs@gordon.edu</a>.
-      </li>,
-    );
-  }
-  if (holds.MedicalHold) {
-    majorHolds.push(
-      <li>
-        You have a "Medical Hold". Please contact the Health Center at <b>(978)-867-4300</b> or{' '}
-        <a href="mailto:healthcenter@gordon.edu">healthcenter@gordon.edu</a>.
-      </li>,
-    );
-  }
-  return <ul>{majorHolds.length === 1 ? majorHolds[0] : majorHolds.join('\n<br />\n')}</ul>;
-};
-
-const displayMinorHolds = (holds) => {
-  let laVidaContent;
-  let declarationOfMajorContent;
-  if (holds.LaVidaHold) {
-    laVidaContent = (
-      <li>
-        You have a "La Vida Hold". Students are required to complete Discovery or La Vida in their
-        first year at Gordon College. Please contact the Registrar's Office at <b>(978) 867-4243</b>{' '}
-        or <a href="registrar@gordon.edu">registrar@gordon.edu</a> so that we can register you for
-        Discovery or La Vida.
-      </li>
-    );
-  }
-  if (holds.MajorHold) {
-    declarationOfMajorContent = (
-      <li>
-        You have a "Declaration of Major Hold". Please contact the <b>Registrar's Office</b> at{' '}
-        <b>(978)-867-4243</b> or <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a> to
-        discuss declaring a major.
-      </li>
-    );
-  }
-  return (
-    <ul>
-      {laVidaContent} <br /> {declarationOfMajorContent}
-    </ul>
-  );
-};
+import MajorHolds from './components/MajorHolds';
+import MinorHolds from './components/MinorHolds';
 
 const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
   const hasMinorHold = holds?.LaVidaHold || holds?.DeclarationOfMajorHold;
@@ -86,18 +22,7 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
         <br />
       </Grid>
       <Grid item>
-        {hasMajorHold && ( // If the student has a major hold, they cannot check in
-          <Grid item>
-            <Typography style={{ color: gordonColors.primary.blue }} align="center" variant="h6">
-              <b>Review Your Holds</b>
-            </Typography>
-            <Typography align="center">
-              According to our systems, you should contact the following department(s) in order to
-              clear up certain administrative holds before beginning the check-in process.
-            </Typography>
-            {displayMajorHolds(holds)}
-          </Grid>
-        )}
+        {hasMajorHold && <MajorHolds holds={holds} />}
         {holds?.MustRegisterForClasses && ( // If a student is not registered for courses they cannot check in
           <Grid item>
             <Typography variant="h6" align="center" style={{ color: gordonColors.primary.blue }}>
@@ -122,15 +47,7 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
             )}
           </Grid>
         )}
-        {hasMinorHold && ( // If a student has a minor hold, warn them about it
-          <Grid item>
-            <Typography>
-              Even though you can still check in while maintaining the following holds, you should
-              contact the following department(s) at your earliest availability:
-            </Typography>
-            {displayMinorHolds(holds)}
-          </Grid>
-        )}
+        {hasMinorHold && <MinorHolds holds={holds} />}
         <Typography>
           If you are planning to withdraw or take a leave of absence, please contact Student Life at{' '}
           <b>(978)-867-4263</b> or{' '}
