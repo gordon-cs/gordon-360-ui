@@ -6,6 +6,7 @@ import CoCurricularTranscript from './views/CoCurricularTranscript';
 import EnrollmentCheckIn from './views/EnrollmentCheckIn';
 import Events from './views/Events';
 import EventsAttended from './views/EventsAttended';
+import Update from './views/Update';
 import Feedback from './views/Feedback';
 import Help from './views/Help';
 import Home from './views/Home';
@@ -73,6 +74,11 @@ const routes = [
     name: 'Attended',
     path: '/attended',
     component: EventsAttended,
+  },
+  {
+    name: 'Update',
+    path: '/update',
+    component: Update,
   },
   {
     name: 'Feedback',

@@ -65,6 +65,8 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     <GordonNavButton onLinkClick={onClose} linkName={'About'} linkPath={'/about'} />
   );
 
+  const updateButton = <GordonNavButton onLinkClick={onClose} linkName={'Update Alumni Info'} linkPath={'/update'} />;
+
   const feedbackButton = (
     <GordonNavButton
       unavailable={!isOnline ? 'offline' : null}
@@ -120,6 +122,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             {aboutButton}
             {feedbackButton}
             {adminButton}
+            {updateButton}
             {signInOutButton}
           </List>
         </Popover>

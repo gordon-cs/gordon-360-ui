@@ -150,6 +150,15 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
+  const updateButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName={'Update Alumni Info'}
+      linkPath={'/update'}
+      divider={false}
+    />
+  );
+
   const feedbackButton = (
     <GordonNavButton
       unavailable={isOnline ? null : 'offline'}
@@ -200,6 +209,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {aboutButton}
         {feedbackButton}
         {adminButton}
+        {updateButton}
         {signInOutButton}
       </List>
 
