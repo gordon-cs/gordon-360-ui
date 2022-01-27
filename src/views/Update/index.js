@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import {
-  Grid,
-  Card,
-  CardContent,
-  CardHeader,
-  Button,
-  TextField,
-} from '@material-ui/core/';
+import { Grid, Card, CardContent, CardHeader, Button, TextField } from '@material-ui/core/';
 import updateAlumniInfo from 'services/update';
 import styles from './Update.module.css';
 import GordonLoader from 'components/Loader';
@@ -15,6 +8,8 @@ import SimpleSnackbar from 'components/Snackbar';
 import user from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
+import userInfo from 'components/Profile/components/PersonalInfoList';
+import userService from 'services/user';
 
 const Update = (props) => {
   const [userEmail, setEmail] = useState('');
@@ -31,6 +26,7 @@ const Update = (props) => {
   const isOnline = useNetworkStatus();
 
   useEffect(() => {
+    setEmail('Test123');
     if (props.authentication) {
       user.getProfileInfo().then((profile) => setIsUserStudent(profile.PersonType.includes('stu')));
     }
@@ -38,15 +34,18 @@ const Update = (props) => {
 
   if (props.authentication) {
     const handleSaveButtonClick = () => {
-      if (userEmail === '' && userHomePhone === '' && userMobilePhone === '' &&
-      userAddress === '' && userCity === '' && userState === '') {
+      if (
+        userEmail === '' &&
+        userHomePhone === '' &&
+        userMobilePhone === '' &&
+        userAddress === '' &&
+        userCity === '' &&
+        userState === ''
+      ) {
         setSnackbarSeverity('error');
-        setSnackbarText(
-          'Please fill in at least one field.',
-        );
+        setSnackbarText('Please fill in at least one field.');
         setSnackbarOpen(true);
-      }
-      else{
+      } else {
         setSaving(true);
         updateInfo(
           userEmail,
@@ -55,12 +54,9 @@ const Update = (props) => {
           userAddress,
           userCity,
           userState,
-        )
-        .then(() => {
+        ).then(() => {
           setSnackbarSeverity('info');
-          setSnackbarText(
-            'An update request has been sent.',
-          );
+          setSnackbarText('An update request has been sent.');
           setSnackbarOpen(true);
           setEmail('');
           setHomePhone('');
@@ -69,11 +65,18 @@ const Update = (props) => {
           setCity('');
           setState('');
           setSaving(false);
-        })
+        });
       }
     };
 
-    const updateInfo = async (userEmail, userHomePhone, userMobilePhone, userAddress, userCity, userState) => {
+    const updateInfo = async (
+      userEmail,
+      userHomePhone,
+      userMobilePhone,
+      userAddress,
+      userCity,
+      userState,
+    ) => {
       await updateAlumniInfo.requestInfoUpdate(
         userEmail,
         userHomePhone,
@@ -118,11 +121,7 @@ const Update = (props) => {
     const saveButton = saving ? (
       <GordonLoader size={32} />
     ) : (
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleSaveButtonClick}
-      >
+      <Button variant="contained" color="primary" onClick={handleSaveButtonClick}>
         Update Info
       </Button>
     );
@@ -130,111 +129,88 @@ const Update = (props) => {
     if (isOnline && isUserStudent) {
       return (
         <>
-          <Grid container spacing={2} className={styles.timesheets}>
-            <Grid item xs={12}>
-                <Card>
-                  <CardContent
-                    style={{
-                      marginLeft: 16,
-                      marginTop: 16,
-                    }}
-                  >
-                    <Grid container spacing={2} alignItems="center" alignContent="center">
-                      <Grid item md={8}>
-                        <CardHeader className="disable_select" title="Update student info" />
-                      </Grid>
-                    </Grid>
-                    <Grid
-                      container
-                      spacing={2}
-                      justifyContent="space-between"
-                      alignItems="center"
-                      alignContent="center"
-                    >
-                    <Grid item xs={12} md={6} lg={3}>
-                        <TextField
-                          className="disable_select"
-                          style={{
-                            width: 252,
-                          }}
-                          label="Email Address"
-                          multiline
-                          rowsMax="3"
-                          value={userEmail}
-                          onChange={handleEmail}
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={6} lg={3}>
-                        <TextField
-                          className="disable_select"
-                          style={{
-                            width: 252,
-                          }}
-                          label="Home Phone Number"
-                          multiline
-                          rowsMax="3"
-                          value={userHomePhone}
-                          onChange={handleHomePhone}
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={6} lg={3}>
-                        <TextField
-                          className="disable_select"
-                          style={{
-                            width: 252,
-                          }}
-                          label="Mobile Phone Number"
-                          multiline
-                          rowsMax="3"
-                          value={userMobilePhone}
-                          onChange={handleMobilePhone}
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={6} lg={3}>
-                      <TextField
-                          className="disable_select"
-                          style={{
-                            width: 252,
-                          }}
-                          label="Street Address"
-                          multiline
-                          rowsMax="3"
-                          value={userAddress}
-                          onChange={handleAddress}
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={6} lg={3}>
-                      <TextField
-                          className="disable_select"
-                          style={{
-                            width: 252,
-                          }}
-                          label="City"
-                          multiline
-                          rowsMax="3"
-                          value={userCity}
-                          onChange={handleCity}
-                        />
-                      </Grid>
-                      <Grid item xs={12} md={6} lg={3}>
-                      <TextField
-                          className="disable_select"
-                          style={{
-                            width: 252,
-                          }}
-                          label="State"
-                          multiline
-                          rowsMax="3"
-                          value={userState}
-                          onChange={handleState}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        {saveButton}
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
+          <Grid container justifyContent="center" spacing={2}>
+            <Grid item xs={12} md={8}>
+              <Card className={styles.timesheets}>
+                <CardHeader title="Update Your Information" />
+                <CardContent>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Email Address"
+                      value={userEmail}
+                      onChange={handleEmail}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Home Phone Number"
+                      multiline
+                      rowsMax="3"
+                      value={userHomePhone}
+                      onChange={handleHomePhone}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Mobile Phone Number"
+                      multiline
+                      rowsMax="3"
+                      value={userMobilePhone}
+                      onChange={handleMobilePhone}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Street Address"
+                      multiline
+                      rowsMax="3"
+                      value={userAddress}
+                      onChange={handleAddress}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="City"
+                      value={userCity}
+                      onChange={handleCity}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="State"
+                      value={userState}
+                      onChange={handleState}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    {saveButton}
+                  </Grid>
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
           <SimpleSnackbar
@@ -261,11 +237,7 @@ const Update = (props) => {
                 >
                   <br />
                   <h1>{'Update Information Unavailable'}</h1>
-                  <h4>
-                    {
-                      'Updating alumni info is currently available for alumni only'
-                    }
-                  </h4>
+                  <h4>{'Updating alumni info is currently available for alumni only'}</h4>
                   <br />
                   <br />
                   <Button

@@ -1,33 +1,32 @@
 /**
  *
  * @module update
+ * import http from './http';
  */
-
-import http from './http';
-
+import user from './user';
 const requestInfoUpdate = async (
-    userEmail,
-    userHomePhone,
-    userMobilePhone,
-    userAddress,
-    userCity,
-    userState,
+  userEmail,
+  userHomePhone,
+  userMobilePhone,
+  userAddress,
+  userCity,
+  userState,
 ) => {
-    const alumniInfo = {
-        EMAIL: userEmail,
-        HOME_PHONE: userHomePhone,
-        MOBILE_PHONE: userMobilePhone,
-        ADDRESS: userAddress,
-        CITY: userCity,
-        STATE: userState,
-    };
-    console.log('update/updateRequest/');
-    console.log(alumniInfo);
-    // return await http.post(`update/updateRequest/`, alumniInfo);
+  const alumniInfo = {
+    EMAIL: userEmail,
+    HOME_PHONE: userHomePhone,
+    MOBILE_PHONE: userMobilePhone,
+    ADDRESS: userAddress,
+    CITY: userCity,
+    STATE: userState,
+  };
+  console.log('update/updateRequest/');
+  console.log(alumniInfo);
+  // return await http.post(`update/updateRequest/`, alumniInfo);
 };
 
 const updateAlumniInfo = {
-    requestInfoUpdate,
+  requestInfoUpdate,
 };
- 
-export default updateAlumniInfo; 
+
+export default updateAlumniInfo;

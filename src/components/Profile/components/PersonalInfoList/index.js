@@ -5,13 +5,13 @@ import {
   Divider,
   FormControlLabel,
   Grid,
-  Link,
   List,
   ListItem,
   Switch,
   Typography,
 } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
+import { Link } from 'react-router-dom';
+import { IconButton, Button } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -234,6 +234,26 @@ const PersonalInfoList = ({
       />
     );
 
+  /* TODO: UPDATE RESTRICTED FOR ALUM VIEW ONLY, LIKELY FINAL CODE BLOCK, COMMENTED FOR TESTING
+    const updateInfoButton = isAlumni ? (
+    <Grid container justifyContent="center">
+      <Link className="gc360_link" to="/update">
+        <Button variant="contained" className={styles.update_info_button}>
+          Update Information
+        </Button>
+      </Link>
+    </Grid>
+  ) : null;
+  */
+  const updateInfoButton = (
+    <Grid container justifyContent="center">
+      <Link className="gc360_link" to="/update">
+        <Button variant="contained" className={styles.update_info_button}>
+          Update Information
+        </Button>
+      </Link>
+    </Grid>
+  );
   const graduationYear = isAlumni ? (
     <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />
   ) : null;
@@ -464,6 +484,7 @@ const PersonalInfoList = ({
           </Grid>
         </Grid>
         <CardContent>
+          {updateInfoButton}
           <List>
             {majors}
             {minors}
