@@ -8,7 +8,8 @@ const requestInfoUpdate = async (
   userEmail,
   userHomePhone,
   userMobilePhone,
-  userAddress,
+  userAddress1,
+  userAddress2,
   userCity,
   userState,
 ) => {
@@ -16,7 +17,8 @@ const requestInfoUpdate = async (
     EMAIL: userEmail,
     HOME_PHONE: userHomePhone,
     MOBILE_PHONE: userMobilePhone,
-    ADDRESS: userAddress,
+    ADDRESS1: userAddress1,
+    ADDRESS2: userAddress2,
     CITY: userCity,
     STATE: userState,
   };

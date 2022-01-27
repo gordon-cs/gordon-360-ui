@@ -15,7 +15,8 @@ const Update = (props) => {
   const [userEmail, setEmail] = useState('');
   const [userHomePhone, setHomePhone] = useState('');
   const [userMobilePhone, setMobilePhone] = useState('');
-  const [userAddress, setAddress] = useState('');
+  const [userAddress1, setAddress1] = useState('');
+  const [userAddress2, setAddress2] = useState('');
   const [userCity, setCity] = useState('');
   const [userState, setState] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -38,7 +39,8 @@ const Update = (props) => {
         userEmail === '' &&
         userHomePhone === '' &&
         userMobilePhone === '' &&
-        userAddress === '' &&
+        userAddress1 === '' &&
+        userAddress2 === '' &&
         userCity === '' &&
         userState === ''
       ) {
@@ -51,7 +53,8 @@ const Update = (props) => {
           userEmail,
           userHomePhone,
           userMobilePhone,
-          userAddress,
+          userAddress1,
+          userAddress2,
           userCity,
           userState,
         ).then(() => {
@@ -61,7 +64,8 @@ const Update = (props) => {
           setEmail('');
           setHomePhone('');
           setMobilePhone('');
-          setAddress('');
+          setAddress1('');
+          setAddress2('');
           setCity('');
           setState('');
           setSaving(false);
@@ -73,7 +77,8 @@ const Update = (props) => {
       userEmail,
       userHomePhone,
       userMobilePhone,
-      userAddress,
+      userAddress1,
+      userAddress2,
       userCity,
       userState,
     ) => {
@@ -81,7 +86,8 @@ const Update = (props) => {
         userEmail,
         userHomePhone,
         userMobilePhone,
-        userAddress,
+        userAddress1,
+        userAddress2,
         userCity,
         userState,
       );
@@ -106,8 +112,11 @@ const Update = (props) => {
       setMobilePhone(event.target.value);
     };
 
-    const handleAddress = (event) => {
-      setAddress(event.target.value);
+    const handleAddress1 = (event) => {
+      setAddress1(event.target.value);
+    };
+    const handleAddress2 = (event) => {
+      setAddress2(event.target.value);
     };
 
     const handleCity = (event) => {
@@ -152,8 +161,6 @@ const Update = (props) => {
                         width: 252,
                       }}
                       label="Home Phone Number"
-                      multiline
-                      rowsMax="3"
                       value={userHomePhone}
                       onChange={handleHomePhone}
                     />
@@ -177,11 +184,20 @@ const Update = (props) => {
                       style={{
                         width: 252,
                       }}
-                      label="Street Address"
-                      multiline
-                      rowsMax="3"
-                      value={userAddress}
-                      onChange={handleAddress}
+                      label="Street Address 1"
+                      value={userAddress1}
+                      onChange={handleAddress1}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Street Address 2"
+                      value={userAddress2}
+                      onChange={handleAddress2}
                     />
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
