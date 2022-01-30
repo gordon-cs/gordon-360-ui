@@ -59,7 +59,7 @@ const Update = (props) => {
           userState,
         ).then(() => {
           setSnackbarSeverity('info');
-          setSnackbarText('An update request has been sent.');
+          setSnackbarText('Your information has been updated!');
           setSnackbarOpen(true);
           setEmail('');
           setHomePhone('');
@@ -130,8 +130,12 @@ const Update = (props) => {
     const saveButton = saving ? (
       <GordonLoader size={32} />
     ) : (
-      <Button variant="contained" color="primary" onClick={handleSaveButtonClick}>
-        Update Info
+      <Button
+        variant="contained"
+        className={styles.update_info_button}
+        onClick={handleSaveButtonClick}
+      >
+        Update
       </Button>
     );
 
