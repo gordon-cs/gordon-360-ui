@@ -75,7 +75,7 @@ const PersonalInfoList = ({
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
   //    or 'P' for Private (not visible to other students)
-  // FacStaff: '0' for public, '1' for private
+  // FacStaff: '0' for public, '1' for private.
   const keepPrivate = Boolean(KeepPrivate === '1' || KeepPrivate === 'S' || KeepPrivate === 'P');
 
   /**
