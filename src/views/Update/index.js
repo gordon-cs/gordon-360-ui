@@ -12,13 +12,27 @@ import userInfo from 'components/Profile/components/PersonalInfoList';
 import userService from 'services/user';
 
 const Update = (props) => {
-  const [userEmail, setEmail] = useState('');
+  const [userSalutation, setSalutation] = useState('');
+  const [userFirstName, setFirstName] = useState('');
+  const [userLastName, setLastName] = useState('');
+  const [userMiddleName, setMiddleName] = useState('');
+  const [userPreferredName, setPreferredName] = useState('');
+  const [userPersonalEmail, setPersonalEmail] = useState('');
+  const [userWorkEmail, setWorkEmail] = useState('');
+  const [userAlternateEmail, setAlternateEmail] = useState('');
+  const [userPreferredEmail, setPreferredEmail] = useState('');
+  const [userDoNotContact, setDoNotContact] = useState('');
+  const [userDoNotMail, setDoNotMail] = useState('');
   const [userHomePhone, setHomePhone] = useState('');
+  const [userWorkPhone, setWorkPhone] = useState('');
   const [userMobilePhone, setMobilePhone] = useState('');
-  const [userAddress1, setAddress1] = useState('');
-  const [userAddress2, setAddress2] = useState('');
-  const [userCity, setCity] = useState('');
-  const [userState, setState] = useState('');
+  const [userPreferredPhone, setPreferredPhone] = useState('');
+  const [userMailingStreet, setMailingStreet] = useState('');
+  const [userMailingCity, setMailingCity] = useState('');
+  const [userMailingState, setMailingState] = useState('');
+  const [userMailingZip, setMailingZip] = useState('');
+  const [userMailingCountry, setMailingCountry] = useState('');
+  const [userMaritalStatus, setMaritalStatus] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
@@ -27,7 +41,7 @@ const Update = (props) => {
   const isOnline = useNetworkStatus();
 
   useEffect(() => {
-    setEmail('Test123');
+    setPersonalEmail('Test123');
     if (props.authentication) {
       user.getProfileInfo().then((profile) => setIsUserStudent(profile.PersonType.includes('stu')));
     }
@@ -36,13 +50,27 @@ const Update = (props) => {
   if (props.authentication) {
     const handleSaveButtonClick = () => {
       if (
-        userEmail === '' &&
+        userSalutation === '' &&
+        userFirstName === '' &&
+        userLastName === '' &&
+        userMiddleName === '' &&
+        userPreferredName === '' &&
+        userPersonalEmail === '' &&
+        userWorkEmail === '' &&
+        userAlternateEmail === '' &&
+        userPreferredEmail === '' &&
+        userDoNotContact === '' &&
+        userDoNotMail === '' &&
         userHomePhone === '' &&
+        userWorkPhone === '' &&
         userMobilePhone === '' &&
-        userAddress1 === '' &&
-        userAddress2 === '' &&
-        userCity === '' &&
-        userState === ''
+        userPreferredPhone === '' &&
+        userMailingStreet === '' &&
+        userMailingCity === '' &&
+        userMailingState === '' &&
+        userMailingZip === '' &&
+        userMailingCountry === '' &&
+        userMaritalStatus === ''
       ) {
         setSnackbarSeverity('error');
         setSnackbarText('Please fill in at least one field.');
@@ -50,46 +78,102 @@ const Update = (props) => {
       } else {
         setSaving(true);
         updateInfo(
-          userEmail,
+          userSalutation,
+          userFirstName,
+          userLastName,
+          userMiddleName,
+          userPreferredName,
+          userPersonalEmail,
+          userWorkEmail,
+          userAlternateEmail,
+          userPreferredEmail,
+          userDoNotContact,
+          userDoNotMail,
           userHomePhone,
+          userWorkPhone,
           userMobilePhone,
-          userAddress1,
-          userAddress2,
-          userCity,
-          userState,
+          userPreferredPhone,
+          userMailingStreet,
+          userMailingCity,
+          userMailingState,
+          userMailingZip,
+          userMailingCountry,
+          userMaritalStatus,
         ).then(() => {
           setSnackbarSeverity('info');
           setSnackbarText('Your information has been updated!');
           setSnackbarOpen(true);
-          setEmail('');
+          setSalutation('');
+          setFirstName('');
+          setLastName('');
+          setMiddleName('');
+          setPreferredName('');
+          setPersonalEmail('');
+          setWorkEmail('');
+          setAlternateEmail('');
+          setPreferredEmail('');
+          setDoNotContact('');
+          setDoNotMail('');
           setHomePhone('');
+          setWorkPhone('');
           setMobilePhone('');
-          setAddress1('');
-          setAddress2('');
-          setCity('');
-          setState('');
+          setPreferredPhone('');
+          setMailingStreet('');
+          setMailingCity('');
+          setMailingState('');
+          setMailingZip('');
+          setMailingCountry('');
+          setMaritalStatus('');
           setSaving(false);
         });
       }
     };
 
     const updateInfo = async (
-      userEmail,
+      userSalutation,
+      userFirstName,
+      userLastName,
+      userMiddleName,
+      userPreferredName,
+      userPersonalEmail,
+      userWorkEmail,
+      userAlternateEmail,
+      userPreferredEmail,
+      userDoNotContact,
+      userDoNotMail,
       userHomePhone,
+      userWorkPhone,
       userMobilePhone,
-      userAddress1,
-      userAddress2,
-      userCity,
-      userState,
+      userPreferredPhone,
+      userMailingStreet,
+      userMailingCity,
+      userMailingState,
+      userMailingZip,
+      userMailingCountry,
+      userMaritalStatus,
     ) => {
       await updateAlumniInfo.requestInfoUpdate(
-        userEmail,
+        userSalutation,
+        userFirstName,
+        userLastName,
+        userMiddleName,
+        userPreferredName,
+        userPersonalEmail,
+        userWorkEmail,
+        userAlternateEmail,
+        userPreferredEmail,
+        userDoNotContact,
+        userDoNotMail,
         userHomePhone,
+        userWorkPhone,
         userMobilePhone,
-        userAddress1,
-        userAddress2,
-        userCity,
-        userState,
+        userPreferredPhone,
+        userMailingStreet,
+        userMailingCity,
+        userMailingState,
+        userMailingZip,
+        userMailingCountry,
+        userMaritalStatus,
       );
     };
 
@@ -100,31 +184,82 @@ const Update = (props) => {
       setSnackbarOpen(false);
     };
 
-    const handleEmail = (event) => {
-      setEmail(event.target.value);
+    const handleSalutation = (event) => {
+      setSalutation(event.target.value);
+    };
+
+    const handleFirstName = (event) => {
+      setFirstName(event.target.value);
+    };
+
+    const handleLastName = (event) => {
+      setLastName(event.target.value);
+    };
+
+    const handleMiddleName = (event) => {
+      setMiddleName(event.target.value);
+    };
+    const handlePreferredName = (event) => {
+      setPreferredName(event.target.value);
+    };
+
+    const handlePersonalEmail = (event) => {
+      setPersonalEmail(event.target.value);
+    };
+    const handleWorkEmail = (event) => {
+      setWorkEmail(event.target.value);
+    };
+
+    const handleAlternateEmail = (event) => {
+      setAlternateEmail(event.target.value);
+    };
+
+    const handlePreferredEmail = (event) => {
+      setPreferredEmail(event.target.value);
+    };
+
+    const handleDoNotContact = (event) => {
+      setDoNotContact(event.target.value);
+    };
+    const handleDoNotMail = (event) => {
+      setDoNotMail(event.target.value);
     };
 
     const handleHomePhone = (event) => {
       setHomePhone(event.target.value);
+    };
+    const handleWorkPhone = (event) => {
+      setWorkPhone(event.target.value);
     };
 
     const handleMobilePhone = (event) => {
       setMobilePhone(event.target.value);
     };
 
-    const handleAddress1 = (event) => {
-      setAddress1(event.target.value);
-    };
-    const handleAddress2 = (event) => {
-      setAddress2(event.target.value);
+    const handlePreferredPhone = (event) => {
+      setPreferredPhone(event.target.value);
     };
 
-    const handleCity = (event) => {
-      setCity(event.target.value);
+    const handleMailingStreet = (event) => {
+      setMailingStreet(event.target.value);
+    };
+    const handleMailingCity = (event) => {
+      setMailingCity(event.target.value);
     };
 
-    const handleState = (event) => {
-      setState(event.target.value);
+    const handleMailingState = (event) => {
+      setMailingState(event.target.value);
+    };
+
+    const handleMailingZip = (event) => {
+      setMailingZip(event.target.value);
+    };
+    const handleMailingCountry = (event) => {
+      setMailingCountry(event.target.value);
+    };
+
+    const handleMaritalStatus = (event) => {
+      setMaritalStatus(event.target.value);
     };
 
     const saveButton = saving ? (
@@ -153,9 +288,9 @@ const Update = (props) => {
                       style={{
                         width: 252,
                       }}
-                      label="Email Address"
-                      value={userEmail}
-                      onChange={handleEmail}
+                      label="Salutation"
+                      value={userSalutation}
+                      onChange={handleSalutation}
                     />
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
@@ -164,7 +299,118 @@ const Update = (props) => {
                       style={{
                         width: 252,
                       }}
-                      label="Home Phone Number"
+                      label="First Name"
+                      value={userFirstName}
+                      onChange={handleFirstName}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Last Name"
+                      value={userLastName}
+                      onChange={handleLastName}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Middle Name"
+                      value={userMiddleName}
+                      onChange={handleMiddleName}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Preferred Name"
+                      value={userPreferredName}
+                      onChange={handlePreferredName}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Personal Email"
+                      value={userPersonalEmail}
+                      onChange={handlePersonalEmail}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Work Email"
+                      value={userWorkEmail}
+                      onChange={handleWorkEmail}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Alternate Email"
+                      value={userAlternateEmail}
+                      onChange={handleAlternateEmail}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Preferred Email"
+                      value={userPreferredEmail}
+                      onChange={handlePreferredEmail}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Do Not Contact"
+                      value={userDoNotContact}
+                      onChange={handleDoNotContact}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Do Not Mail"
+                      value={userDoNotMail}
+                      onChange={handleDoNotMail}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Home Phone"
                       value={userHomePhone}
                       onChange={handleHomePhone}
                     />
@@ -175,9 +421,19 @@ const Update = (props) => {
                       style={{
                         width: 252,
                       }}
-                      label="Mobile Phone Number"
-                      multiline
-                      rowsMax="3"
+                      label="Work Phone"
+                      value={userWorkPhone}
+                      onChange={handleWorkPhone}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Mobile Phone"
                       value={userMobilePhone}
                       onChange={handleMobilePhone}
                     />
@@ -188,9 +444,9 @@ const Update = (props) => {
                       style={{
                         width: 252,
                       }}
-                      label="Street Address 1"
-                      value={userAddress1}
-                      onChange={handleAddress1}
+                      label="Preferred Phone"
+                      value={userPreferredPhone}
+                      onChange={handlePreferredPhone}
                     />
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
@@ -199,9 +455,9 @@ const Update = (props) => {
                       style={{
                         width: 252,
                       }}
-                      label="Street Address 2"
-                      value={userAddress2}
-                      onChange={handleAddress2}
+                      label="Mailing Street"
+                      value={userMailingStreet}
+                      onChange={handleMailingStreet}
                     />
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
@@ -210,9 +466,9 @@ const Update = (props) => {
                       style={{
                         width: 252,
                       }}
-                      label="City"
-                      value={userCity}
-                      onChange={handleCity}
+                      label="Mailing City"
+                      value={userMailingCity}
+                      onChange={handleMailingCity}
                     />
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
@@ -221,11 +477,45 @@ const Update = (props) => {
                       style={{
                         width: 252,
                       }}
-                      label="State"
-                      value={userState}
-                      onChange={handleState}
+                      label="Mailing State"
+                      value={userMailingState}
+                      onChange={handleMailingState}
                     />
                   </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Mailing Zip"
+                      value={userMailingZip}
+                      onChange={handleMailingZip}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Mailing Country"
+                      value={userMailingCountry}
+                      onChange={handleMailingCountry}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
+                      className="disable_select"
+                      style={{
+                        width: 252,
+                      }}
+                      label="Marital Statue"
+                      value={userMaritalStatus}
+                      onChange={handleMaritalStatus}
+                    />
+                  </Grid>
+
                   <Grid item xs={12}>
                     {saveButton}
                   </Grid>
