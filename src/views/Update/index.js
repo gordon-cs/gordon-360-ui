@@ -1,6 +1,19 @@
+import {
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  Button,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField
+} from '@material-ui/core/';
 import { useState, useEffect } from 'react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { Grid, Card, CardContent, CardHeader, Button, TextField } from '@material-ui/core/';
 import updateAlumniInfo from 'services/update';
 import styles from './Update.module.css';
 import GordonLoader from 'components/Loader';
@@ -21,7 +34,7 @@ const Update = (props) => {
   const [userWorkEmail, setWorkEmail] = useState('');
   const [userAlternateEmail, setAlternateEmail] = useState('');
   const [userPreferredEmail, setPreferredEmail] = useState('');
-  const [userDoNotContact, setDoNotContact] = useState('');
+  const [userDoNotContact, setDoNotContact] = useState(false);
   const [userDoNotMail, setDoNotMail] = useState('');
   const [userHomePhone, setHomePhone] = useState('');
   const [userWorkPhone, setWorkPhone] = useState('');
@@ -59,8 +72,8 @@ const Update = (props) => {
         userWorkEmail === '' &&
         userAlternateEmail === '' &&
         userPreferredEmail === '' &&
-        userDoNotContact === '' &&
-        userDoNotMail === '' &&
+        userDoNotContact === false &&
+        userDoNotMail === false &&
         userHomePhone === '' &&
         userWorkPhone === '' &&
         userMobilePhone === '' &&
@@ -218,11 +231,11 @@ const Update = (props) => {
       setPreferredEmail(event.target.value);
     };
 
-    const handleDoNotContact = (event) => {
-      setDoNotContact(event.target.value);
+    const handleDoNotContact = () => {
+      setDoNotContact(!userDoNotContact);
     };
-    const handleDoNotMail = (event) => {
-      setDoNotMail(event.target.value);
+    const handleDoNotMail = () => {
+      setDoNotMail(!userDoNotMail);
     };
 
     const handleHomePhone = (event) => {
@@ -372,36 +385,39 @@ const Update = (props) => {
                     />
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
-                    <TextField
-                      className="disable_select"
-                      style={{
-                        width: 252,
-                      }}
-                      label="Preferred Email"
-                      value={userPreferredEmail}
-                      onChange={handlePreferredEmail}
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel>Preferred Email</InputLabel>
+                      <Select
+                        label="Preferred Email"
+                        value={userPreferredEmail}
+                        onChange={handlePreferredEmail}
+                      >
+                        <MenuItem value="Personal Email">
+                          Personal Email
+                        </MenuItem>
+                        <MenuItem value="Work Email">
+                          Work Email
+                        </MenuItem>
+                        <MenuItem value="Alternate Email">
+                          Alternate Email
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
-                    <TextField
-                      className="disable_select"
-                      style={{
-                        width: 252,
-                      }}
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked={userDoNotContact} onChange={handleDoNotContact} />
+                      }
                       label="Do Not Contact"
-                      value={userDoNotContact}
-                      onChange={handleDoNotContact}
                     />
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
-                    <TextField
-                      className="disable_select"
-                      style={{
-                        width: 252,
-                      }}
+                    <FormControlLabel
+                      control={
+                        <Checkbox checked={userDoNotMail} onChange={handleDoNotMail} />
+                      }
                       label="Do Not Mail"
-                      value={userDoNotMail}
-                      onChange={handleDoNotMail}
                     />
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
@@ -426,7 +442,6 @@ const Update = (props) => {
                       onChange={handleWorkPhone}
                     />
                   </Grid>
-
                   <Grid item xs={12} md={6} lg={3}>
                     <TextField
                       className="disable_select"
@@ -439,16 +454,26 @@ const Update = (props) => {
                     />
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
-                    <TextField
-                      className="disable_select"
-                      style={{
-                        width: 252,
-                      }}
-                      label="Preferred Phone"
-                      value={userPreferredPhone}
-                      onChange={handlePreferredPhone}
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel>Preferred Phone</InputLabel>
+                      <Select
+                        label="Preferred Phone"
+                        value={userPreferredPhone}
+                        onChange={handlePreferredPhone}
+                      >
+                        <MenuItem value="Home Phone">
+                          Home Phone
+                        </MenuItem>
+                        <MenuItem value="Work Phone">
+                          Work Phone
+                        </MenuItem>
+                        <MenuItem value="Mobile Phone">
+                          Mobile Phone
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
                   </Grid>
+
                   <Grid item xs={12} md={6} lg={3}>
                     <TextField
                       className="disable_select"
