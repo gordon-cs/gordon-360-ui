@@ -290,266 +290,294 @@ const Update = (props) => {
     if (isOnline && isUserStudent) {
       return (
         <>
-          <Grid container spacing={2} className={styles.update} display="flex">
-            <Grid container justifyContent="center" spacing={2} display="flex">
-              <Grid item xs={12} md={8}>
-                <Card className={styles.update}>
-                  <CardHeader title="Update Your Information" />
-                  <CardContent>
-                    <CardHeader title="Personal Information" />
-                    <CardContent class={ styles.info_box }>
-                        <Grid item xs={12} md={6} lg={3} class={styles.form}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Salutation"
-                            value={userSalutation}
-                            onChange={handleSalutation}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3} class={styles.form}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="First Name"
-                            value={userFirstName}
-                            onChange={handleFirstName}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3} class={styles.form}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Last Name"
-                            value={userLastName}
-                            onChange={handleLastName}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3} class={styles.form}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Middle Name"
-                            value={userMiddleName}
-                            onChange={handleMiddleName}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Preferred Name"
-                            value={userPreferredName}
-                            onChange={handlePreferredName}
-                          />
-                        </Grid>
-                        </CardContent>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Personal Email"
-                            value={userPersonalEmail}
-                            onChange={handlePersonalEmail}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Work Email"
-                            value={userWorkEmail}
-                            onChange={handleWorkEmail}
-                          />
-                        </Grid>
-
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Alternate Email"
-                            value={userAlternateEmail}
-                            onChange={handleAlternateEmail}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <FormControl fullWidth>
-                            <InputLabel>Preferred Email</InputLabel>
-                            <Select
-                              label="Preferred Email"
-                              value={userPreferredEmail}
-                              onChange={handlePreferredEmail}
-                            >
-                              <MenuItem value="Personal Email">
-                                Personal Email
-                              </MenuItem>
-                              <MenuItem value="Work Email">
-                                Work Email
-                              </MenuItem>
-                              <MenuItem value="Alternate Email">
-                                Alternate Email
-                              </MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox checked={userDoNotContact} onChange={handleDoNotContact} />
-                            }
-                            label="Do Not Contact"
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox checked={userDoNotMail} onChange={handleDoNotMail} />
-                            }
-                            label="Do Not Mail"
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Home Phone"
-                            value={userHomePhone}
-                            onChange={handleHomePhone}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Work Phone"
-                            value={userWorkPhone}
-                            onChange={handleWorkPhone}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Mobile Phone"
-                            value={userMobilePhone}
-                            onChange={handleMobilePhone}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <FormControl fullWidth>
-                            <InputLabel>Preferred Phone</InputLabel>
-                            <Select
-                              label="Preferred Phone"
-                              value={userPreferredPhone}
-                              onChange={handlePreferredPhone}
-                            >
-                              <MenuItem value="Home Phone">
-                                Home Phone
-                              </MenuItem>
-                              <MenuItem value="Work Phone">
-                                Work Phone
-                              </MenuItem>
-                              <MenuItem value="Mobile Phone">
-                                Mobile Phone
-                              </MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Mailing Street"
-                            value={userMailingStreet}
-                            onChange={handleMailingStreet}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Mailing City"
-                            value={userMailingCity}
-                            onChange={handleMailingCity}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Mailing State"
-                            value={userMailingState}
-                            onChange={handleMailingState}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Mailing Zip"
-                            value={userMailingZip}
-                            onChange={handleMailingZip}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Mailing Country"
-                            value={userMailingCountry}
-                            onChange={handleMailingCountry}
-                          />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Marital Statue"
-                            value={userMaritalStatus}
-                            onChange={handleMaritalStatus}
-                          />
-                        </Grid>
-                    </CardContent> 
-                    <Grid item xs={12}>
-                      {saveButton}
+          <Grid container spacing={2} justifyContent="center" className={styles.update}>
+            <Grid item xs={9}>
+              <Card>
+                <CardContent style={{marginLeft: 16, marginTop: 16,}}>
+                  <Grid container spacing={2}
+                    alignItems="center"
+                    alignContent="center"
+                    justifyContent="center"
+                    direction="column"
+                  >
+                    <div>
+                      <CardHeader className="disable_select" title="Update Information" />
+                    </div>
+                  </Grid>
+                  <Grid
+                    container
+                    spacing={2}
+                    justifyContent="space-between"
+                    alignItems="center"
+                    alignContent="center"
+                    direction="row"
+                    columns="4"
+                  >
+                    <Grid container>
+                      <CardHeader container className="disable_select" title="Personal Information" />
                     </Grid>
-                </Card>
-              </Grid>        
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Salutation"
+                        value={userSalutation}
+                        onChange={handleSalutation}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="First Name"
+                        value={userFirstName}
+                        onChange={handleFirstName}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Last Name"
+                        value={userLastName}
+                        onChange={handleLastName}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Middle Name"
+                        value={userMiddleName}
+                        onChange={handleMiddleName}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Preferred Name"
+                        value={userPreferredName}
+                        onChange={handlePreferredName}
+                      />
+                    </Grid>
+                    <Grid container>
+                      <CardHeader className="disable_select" title="Email Address" />
+                    </Grid>
+                    <Grid item xs={9} md={6} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Personal Email"
+                        value={userPersonalEmail}
+                        onChange={handlePersonalEmail}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Work Email"
+                        value={userWorkEmail}
+                        onChange={handleWorkEmail}
+                      />
+                    </Grid>
+
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Alternate Email"
+                        value={userAlternateEmail}
+                        onChange={handleAlternateEmail}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <FormControl style={{width: 252}}>
+                        <InputLabel>Preferred Email</InputLabel>
+                        <Select
+                          label="Preferred Email"
+                          value={userPreferredEmail}
+                          onChange={handlePreferredEmail}
+                        >
+                          <MenuItem value="Personal Email">
+                            Personal Email
+                          </MenuItem>
+                          <MenuItem value="Work Email">
+                            Work Email
+                          </MenuItem>
+                          <MenuItem value="Alternate Email">
+                            Alternate Email
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={userDoNotContact} onChange={handleDoNotContact} />
+                        }
+                        label="Do Not Contact"
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={userDoNotMail} onChange={handleDoNotMail} />
+                        }
+                        label="Do Not Mail"
+                      />
+                    </Grid>
+                    <Grid container>
+                      <CardHeader className="disable_select" title="Phone Number" />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Home Phone"
+                        value={userHomePhone}
+                        onChange={handleHomePhone}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Work Phone"
+                        value={userWorkPhone}
+                        onChange={handleWorkPhone}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Mobile Phone"
+                        value={userMobilePhone}
+                        onChange={handleMobilePhone}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <FormControl style={{width: 252}}>
+                        <InputLabel>Preferred Phone</InputLabel>
+                        <Select
+                          label="Preferred Phone"
+                          value={userPreferredPhone}
+                          onChange={handlePreferredPhone}
+                        >
+                          <MenuItem value="Home Phone">
+                            Home Phone
+                          </MenuItem>
+                          <MenuItem value="Work Phone">
+                            Work Phone
+                          </MenuItem>
+                          <MenuItem value="Mobile Phone">
+                            Mobile Phone
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid container>
+                      <CardHeader className="disable_select" title="Home Address" />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Mailing Street"
+                        value={userMailingStreet}
+                        onChange={handleMailingStreet}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Mailing City"
+                        value={userMailingCity}
+                        onChange={handleMailingCity}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Mailing State"
+                        value={userMailingState}
+                        onChange={handleMailingState}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Mailing Zip"
+                        value={userMailingZip}
+                        onChange={handleMailingZip}
+                      />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Mailing Country"
+                        value={userMailingCountry}
+                        onChange={handleMailingCountry}
+                      />
+                    </Grid>
+                    <Grid container>
+                      <CardHeader className="disable_select" title="Other info (change this lol)?" />
+                    </Grid>
+                    <Grid item xs={9} md={3} lg={3}>
+                      <TextField
+                        className="disable_select"
+                        style={{
+                          width: 252,
+                        }}
+                        label="Marital Statue"
+                        value={userMaritalStatus}
+                        onChange={handleMaritalStatus}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {saveButton}
+                  </Grid>
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
           <SimpleSnackbar

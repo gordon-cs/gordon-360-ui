@@ -1,8 +1,4 @@
 .update {
-  :global(.MuiGrid-item) {
-    text-align: center;
-  }
-
   .header_tooltip_container {
     display: inline-flex;
     position: relative;
@@ -14,15 +10,5 @@
     top: 0;
     margin-right: -2px;
     margin-top: 8px;
-  }
-
-  .info_box {
-    display: inline-flex;
-  }
-
-  .form {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    position: relative;
   }
 }
