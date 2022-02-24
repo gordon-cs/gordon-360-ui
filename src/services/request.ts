@@ -48,7 +48,7 @@ const getRequests = (activityCode: string, sessionCode: string) =>
   http
     .get<MembershipRequest[]>(`requests/activity/${activityCode}`)
     .then(
-      filter((r) => r.SessionCode === sessionCode && r.RequestApproved === RequestStatus.Approved),
+      filter((r) => r.SessionCode === sessionCode && r.RequestApproved === RequestStatus.Pending),
     );
 
 const requestMembership = (data: REQUEST): Promise<REQUEST> => http.post(`requests`, data);

@@ -22,13 +22,7 @@ const RequestReceived = ({ involvement }) => {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    const loadRequests = async () => {
-      setRequests(
-        await requestService.getRequests(involvement.ActivityCode, involvement.SessionCode),
-      );
-    };
-
-    loadRequests();
+    requestService.getRequests(involvement.ActivityCode, involvement.SessionCode).then(setRequests);
   }, [involvement]);
 
   const onApprove = async (id) => {
@@ -64,7 +58,7 @@ const RequestReceived = ({ involvement }) => {
                   <ListItem key={request.RequestID}>
                     <ListItemText
                       primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
-                      secondary={`${formatDistanceToNow(request.DateSent)} - ${
+                      secondary={`${formatDistanceToNow(new Date(request.DateSent))} - ${
                         request.CommentText
                       }`}
                     />

@@ -22,6 +22,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import membership from 'services/membership';
 import storageService from 'services/storage';
+import userService from 'services/user';
 import { gordonColors } from 'theme';
 
 const rowStyle = {
@@ -75,7 +76,7 @@ const MemberListItem = ({
   useEffect(() => {
     const loadAvatar = async () => {
       if (member.AD_Username) {
-        const { def: defaultImage, pref: preferredImage } = await storageService.getImage(
+        const { def: defaultImage, pref: preferredImage } = await userService.getImage(
           member.AD_Username,
         );
         setAvatar(preferredImage || defaultImage);

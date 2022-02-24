@@ -40,7 +40,7 @@ const RequestSent = ({ member, onCancel }) => {
               <strong> {member.ActivityDescription} </strong>
             </Typography>
             <Typography>
-              <span className={styles.weak}>{formatDistanceToNow(member.DateSent)}</span>
+              <span className={styles.weak}>{formatDistanceToNow(new Date(member.DateSent))}</span>
             </Typography>
           </Grid>
           <Grid item xs={6} sm={4} align="center">

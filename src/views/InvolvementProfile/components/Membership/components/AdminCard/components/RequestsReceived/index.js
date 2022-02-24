@@ -33,13 +33,7 @@ const RequestsReceived = ({ onAddMember }) => {
   const { involvementCode, sessionCode } = useParams();
 
   useEffect(() => {
-    const loadRequests = async () => {
-      const requests = await requestService.getRequests(involvementCode, sessionCode);
-
-      setRequests(requests);
-    };
-
-    loadRequests();
+    requestService.getRequests(involvementCode, sessionCode).then(setRequests);
   }, [involvementCode, sessionCode]);
 
   const onApprove = async (id) => {
@@ -66,7 +60,9 @@ const RequestsReceived = ({ onAddMember }) => {
             >
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
-                secondary={`${formatDistanceToNow(request.DateSent)} - ${request.CommentText}`}
+                secondary={`${formatDistanceToNow(new Date(request.DateSent))} - ${
+                  request.CommentText
+                }`}
               />
 
               <ListItemSecondaryAction>
