@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Card,
   CardContent,
   CardHeader,
   Grid,
   Typography,
-  Card,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import parseISO from 'date-fns/parseISO';
+import { useEffect, useState } from 'react';
+import storageService from 'services/storage';
 import userService from 'services/user';
-import RequestReceived from './components/RequestsReceived';
 import RequestSent from './components/RequestSent';
+import RequestReceived from './components/RequestsReceived';
 import styles from './Requests.module.css';
 
 const Requests = () => {
@@ -22,8 +23,9 @@ const Requests = () => {
 
   useEffect(() => {
     const loadRequests = async () => {
-      const id = userService.getLocalInfo().id;
-      setInvolvementsLeading(await userService.getLeaderPositions(id));
+      setInvolvementsLeading(
+        await userService.getLeaderPositions(storageService.getLocalInfo().id),
+      );
       setRequestsSent(await userService.getSentMembershipRequests());
     };
     loadRequests();
@@ -34,64 +36,64 @@ const Requests = () => {
   };
 
   // if leading involvements, show two dropdowns for requests received/sent
-  if(involvementsLeading?.length > 0) {
+  if (involvementsLeading?.length > 0) {
     return (
       <Grid item xs={12} lg={8}>
-          <Card className={styles.requests}>
-            <CardHeader title="Membership Requests" className={styles.requests_header} />
-            
-            <CardContent>
-              <Accordion>
-                <AccordionSummary
-                  aria-controls="received-requests-content"
-                  expandIcon={<ExpandMore style={{ color: 'white' }} />}
-                  className={styles.requests_header}
-                >
-                  <Typography variant="h6">Requests Received</Typography>
-                </AccordionSummary>
-                <AccordionDetails style={{ flexDirection: 'column' }}>
-                  {involvementsLeading.map((involvement) => (
-                    <RequestReceived
-                      key={involvement.ActivityCode + involvement.SessioinCode}
-                      involvement={involvement}
-                    />
-                  ))}
-                </AccordionDetails>
-              </Accordion>
-    
-              <Accordion>
-                <AccordionSummary
-                  aria-controls="sent-requests-content"
-                  expandIcon={<ExpandMore style={{ color: 'white' }} />}
-                  className={styles.requests_header}
-                >
-                  <Typography variant="h6">Requests Sent</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid container align="right" direction="row">
-                    {requestsSent?.length > 0 ? (
-                      requestsSent
-                        .sort((a, b) => parseISO(b.DateSent) - parseISO(a.DateSent))
-                        .map((request) => (
-                          <RequestSent
-                            member={request}
-                            key={request.RequestID}
-                            onCancel={handleCancelRequest}
-                          />
-                        ))
-                    ) : (
-                      <Typography variant="h6">You haven't sent any requests</Typography>
-                    )}
-                  </Grid>
-                </AccordionDetails>
-              </Accordion>
-            </CardContent>
-          </Card>
+        <Card className={styles.requests}>
+          <CardHeader title="Membership Requests" className={styles.requests_header} />
+
+          <CardContent>
+            <Accordion>
+              <AccordionSummary
+                aria-controls="received-requests-content"
+                expandIcon={<ExpandMore style={{ color: 'white' }} />}
+                className={styles.requests_header}
+              >
+                <Typography variant="h6">Requests Received</Typography>
+              </AccordionSummary>
+              <AccordionDetails style={{ flexDirection: 'column' }}>
+                {involvementsLeading.map((involvement) => (
+                  <RequestReceived
+                    key={involvement.ActivityCode + involvement.SessioinCode}
+                    involvement={involvement}
+                  />
+                ))}
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion>
+              <AccordionSummary
+                aria-controls="sent-requests-content"
+                expandIcon={<ExpandMore style={{ color: 'white' }} />}
+                className={styles.requests_header}
+              >
+                <Typography variant="h6">Requests Sent</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container align="right" direction="row">
+                  {requestsSent?.length > 0 ? (
+                    requestsSent
+                      .sort((a, b) => parseISO(b.DateSent) - parseISO(a.DateSent))
+                      .map((request) => (
+                        <RequestSent
+                          member={request}
+                          key={request.RequestID}
+                          onCancel={handleCancelRequest}
+                        />
+                      ))
+                  ) : (
+                    <Typography variant="h6">You haven't sent any requests</Typography>
+                  )}
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
+          </CardContent>
+        </Card>
       </Grid>
     );
   }
   // otherwise just show the requests sent (if there are any)
-  else if(requestsSent?.length > 0) {
+  else if (requestsSent?.length > 0) {
     return (
       <Grid item xs={12} lg={8}>
         <Card className={styles.requests}>
@@ -101,10 +103,10 @@ const Requests = () => {
               expandIcon={<ExpandMore style={{ color: 'white' }} />}
               className={styles.requests_header}
             >
-              <CardHeader 
+              <CardHeader
                 title="Membership Requests"
                 className={styles.requests_header}
-                  style={{padding: 0}} 
+                style={{ padding: 0 }}
               />
             </AccordionSummary>
             <AccordionDetails style={{ flexDirection: 'column' }}>

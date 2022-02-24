@@ -14,6 +14,7 @@ import { useAuth, useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
 import involvementService from 'services/activity';
 import sessionService from 'services/session';
+import storageService from 'services/storage';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
@@ -83,7 +84,7 @@ const InvolvementsAll = ({ location, history }) => {
       setAllInvolvements(await involvementService.getAll(selectedSession));
       setTypes(await involvementService.getTypes(selectedSession));
       if (authenticated) {
-        const { id } = await userService.getLocalInfo();
+        const { id } = await storageService.getLocalInfo();
         setMyInvolvements(
           await userService.getSessionMembershipsWithoutGuests(id, selectedSession),
         );

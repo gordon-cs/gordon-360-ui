@@ -3,7 +3,7 @@ import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useAuth, useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
-import user from 'services/user';
+import storageService from 'services/storage';
 import AdminList from './components/AdminList';
 import InvolvementStatusList from './components/InvolvementsStatus';
 
@@ -14,7 +14,7 @@ const Admin = () => {
 
   useEffect(() => {
     if (authenticated) {
-      setIsAdmin(user.getLocalInfo().college_role === 'god');
+      setIsAdmin(storageService.getLocalInfo().college_role === 'god');
     }
   }, [authenticated]);
 

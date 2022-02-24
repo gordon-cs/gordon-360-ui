@@ -21,7 +21,7 @@ import involvementService from 'services/activity';
 import emailsService from 'services/emails';
 import membershipService from 'services/membership';
 import sessionService from 'services/session';
-import userService from 'services/user';
+import storageService from 'services/storage';
 import { gordonColors } from 'theme';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
@@ -57,19 +57,14 @@ const InvolvementProfile = () => {
     const loadPage = async () => {
       setLoading(true);
       if (authenticated) {
-        const [involvementInfo, advisors, groupAdmins, sessionInfo, college_role, isAdmin] =
-          await Promise.all([
-            involvementService.get(involvementCode),
-            involvementService.getAdvisors(involvementCode, sessionCode),
-            involvementService.getGroupAdmins(involvementCode, sessionCode),
-            sessionService.get(sessionCode),
-            userService.getLocalInfo().college_role,
-            membershipService.checkAdmin(
-              userService.getLocalInfo().id,
-              sessionCode,
-              involvementCode,
-            ),
-          ]);
+        const { id, college_role } = storageService.getLocalInfo();
+        const [involvementInfo, advisors, groupAdmins, sessionInfo, isAdmin] = await Promise.all([
+          involvementService.get(involvementCode),
+          involvementService.getAdvisors(involvementCode, sessionCode),
+          involvementService.getGroupAdmins(involvementCode, sessionCode),
+          sessionService.get(sessionCode),
+          membershipService.checkAdmin(id, sessionCode, involvementCode),
+        ]);
 
         const isSuperAdmin = college_role === 'god';
 

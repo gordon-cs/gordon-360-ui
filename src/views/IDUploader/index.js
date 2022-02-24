@@ -65,19 +65,14 @@ class IDUploader extends Component {
 
   async postCroppedImage(croppedImage, attemptNumber) {
     let profile = await user.getProfileInfo();
-    let logMessage =
-      'ID photo submission #' +
-      attemptNumber +
-      ' for ' +
-      profile.fullName +
-      ' from ' +
-      errorLog.parseNavigator(navigator);
+    let logMessage = `ID photo submission #${attemptNumber} for ${
+      profile.fullName
+    } from ${errorLog.parseNavigator(navigator)}`;
     try {
       await user.postIDImage(croppedImage);
       this.setState({ submitDialogOpen: true });
     } catch (error) {
-      let errorMessage = ', but image failed to post with error: ' + error;
-      logMessage += errorMessage;
+      logMessage += `, but image failed to post with error: ${error}`;
       if (attemptNumber < 5) {
         this.postCroppedImage(croppedImage, attemptNumber + 1);
       } else {

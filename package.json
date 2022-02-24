@@ -46,6 +46,8 @@
     "url-regex-safe": "^2.1.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.176",
+    "@types/luxon": "^2.0.4",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsdoc": "^37.1.0",
@@ -70,16 +72,16 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "docs": "jsdoc --configure .jsdoc.json --recurse",
-    "format": "prettier --write '{**/*.md,src/**/*.{js,scss}}'",
+    "format": "prettier --write '{**/*.md,src/**/*.{js,scss,ts,tsx}}'",
     "lint": "npm run --silent lint-js && npm run --silent lint-scss",
-    "lint-js": "eslint --ext .js src",
+    "lint-js": "eslint --ext .js,.ts,.tsx src",
     "lint-scss": "stylelint 'src/**/*.scss'",
     "prepare": "husky install",
     "lint-staged": "lint-staged"
   },
   "lint-staged": {
-    "{**/*.md,src/**/*.{js,scss}}": "prettier --write",
-    "src/**/*.js": "eslint",
+    "{**/*.md,src/**/*.{js,scss,ts,tsx}}": "prettier --write",
+    "src/**/*.{js,ts,tsx}": "eslint",
     "src/**/*.scss": "stylelint"
   },
   "browserslist": {
