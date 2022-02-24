@@ -21,10 +21,10 @@ type MinorHolds = {
 
 type EmergencyContact = {
   /** the sequence number of the contact, (1, 2, or 3) */
-  SEQ_NUM: number;
-  firstName: string;
-  lastName: string;
-  relationship: string;
+  SEQ_NUMBER: number;
+  FirstName: string;
+  LastName: string;
+  Relationship: string;
   HomePhone: number;
   /** whether the home phone number is international */
   HomePhoneIN: boolean;
@@ -53,7 +53,7 @@ export enum Race {
   White = 'White',
 }
 
-type AcademicCheckin = {
+type EnrollmentCheckin = {
   Holds: string;
   NewStudent: number;
 } & PersonalPhone &
@@ -65,18 +65,18 @@ const getStatus = (): Promise<boolean> => http.get(`checkIn/status`);
 
 const markCompleted = (): Promise<void> => http.put(`checkIn/status`);
 
-const getHolds = (): Promise<AcademicCheckin> => http.get(`checkIn/holds`);
+const getHolds = (): Promise<EnrollmentCheckin> => http.get(`checkIn/holds`);
 
 const getEmergencyContacts = (username: string): Promise<EmergencyContact[] | void> =>
   http.get(`profiles/emergency-contact/${username}/`);
 
-const submitPhone = (data: AcademicCheckin): Promise<AcademicCheckin> =>
+const submitPhone = (data: EnrollmentCheckin): Promise<EnrollmentCheckin> =>
   http.put(`checkIn/cellphone`, data);
 
 const submitContact = (data: EmergencyContact): Promise<EmergencyContact> =>
   http.post(`checkIn/emergencycontact`, data);
 
-const submitDemographic = (data: AcademicCheckin): Promise<AcademicCheckin> =>
+const submitDemographic = (data: EnrollmentCheckin): Promise<EnrollmentCheckin> =>
   http.put(`checkIn/demographic`, data);
 
 const checkInService = {

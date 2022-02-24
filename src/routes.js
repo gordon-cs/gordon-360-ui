@@ -1,25 +1,25 @@
 import About from './views/About';
-import InvolvementsAll from './views/InvolvementsAll';
-import InvolvementProfile from './views/InvolvementProfile';
-import Home from './views/Home';
-import WellnessCheck from './views/WellnessCheck';
+import Admin from './views/Admin';
 import ApartmentApp from './views/ApartmentApp';
-import Help from './views/Help';
+import BannerSubmission from './views/BannerSubmission';
 import CoCurricularTranscript from './views/CoCurricularTranscript';
+import EnrollmentCheckIn from './views/EnrollmentCheckIn';
 import Events from './views/Events';
 import EventsAttended from './views/EventsAttended';
-import PublicProfile from './views/PublicProfile';
-import MyProfile from './views/MyProfile';
 import Feedback from './views/Feedback';
-import PeopleSearch from './views/PeopleSearch';
-import ProfileNotFound from './views/ProfileNotFound';
+import Help from './views/Help';
+import Home from './views/Home';
 import IDUploader from './views/IDUploader';
-import Admin from './views/Admin';
-import Timesheets from './views/Timesheets';
-import BannerSubmission from './views/BannerSubmission';
+import InvolvementProfile from './views/InvolvementProfile';
+import InvolvementsAll from './views/InvolvementsAll';
+import MyProfile from './views/MyProfile';
 import News from './views/News';
 import Page404 from './views/Page404';
-import AcademicCheckIn from './views/AcademicCheckIn';
+import PeopleSearch from './views/PeopleSearch';
+import ProfileNotFound from './views/ProfileNotFound';
+import PublicProfile from './views/PublicProfile';
+import Timesheets from './views/Timesheets';
+import WellnessCheck from './views/WellnessCheck';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
@@ -95,9 +95,9 @@ const routes = [
     component: MyProfile,
   },
   {
-    name: 'Academic Check In',
-    path: '/academiccheckin',
-    component: AcademicCheckIn,
+    name: 'Enrollment Check-In',
+    path: '/enrollmentcheckin',
+    component: EnrollmentCheckIn,
   },
   {
     name: 'People',

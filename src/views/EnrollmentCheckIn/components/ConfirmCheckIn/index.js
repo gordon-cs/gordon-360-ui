@@ -44,24 +44,24 @@ const ConfirmCheckIn = ({
             </Typography>
             <ul>
               <li>
-                Name: {emergencyContact1.firstname} {emergencyContact1.lastname}
+                Name: {emergencyContact1.FirstName} {emergencyContact1.LastName}
               </li>
-              <li>Relationship: {emergencyContact1.relationship}</li>
+              <li>Relationship: {emergencyContact1.Relationship}</li>
               <li>Home #: {emergencyContact1.HomePhone}</li>
               <li>Mobile #: {emergencyContact1.MobilePhone}</li>
             </ul>
             <br />
           </Grid>
-          {emergencyContact2.firstname !== '' ? (
+          {emergencyContact2.FirstName !== '' ? (
             <Grid item>
               <Typography variant="body1">
                 <b>Emergency Contact 2:</b>
               </Typography>
               <ul>
                 <li>
-                  Name: {emergencyContact2.firstname} {emergencyContact2.lastname}
+                  Name: {emergencyContact2.FirstName} {emergencyContact2.LastName}
                 </li>
-                <li>Relationship: {emergencyContact2.relationship}</li>
+                <li>Relationship: {emergencyContact2.Relationship}</li>
                 <li>Home #: {emergencyContact2.HomePhone}</li>
                 <li>Mobile #: {emergencyContact2.MobilePhone}</li>
               </ul>
@@ -70,16 +70,16 @@ const ConfirmCheckIn = ({
           ) : (
             ''
           )}
-          {emergencyContact3.firstname !== '' ? (
+          {emergencyContact3.FirstName !== '' ? (
             <Grid item>
               <Typography variant="body1" gutterBottom>
                 <b>Emergency Contact 3:</b>
               </Typography>
               <ul>
                 <li>
-                  Name: {emergencyContact3.firstname} {emergencyContact3.lastname}
+                  Name: {emergencyContact3.FirstName} {emergencyContact3.LastName}
                 </li>
-                <li>Relationship: {emergencyContact3.relationship}</li>
+                <li>Relationship: {emergencyContact3.Relationship}</li>
                 <li>Home #: {emergencyContact3.HomePhone}</li>
                 <li>Mobile #: {emergencyContact3.MobilePhone}</li>
               </ul>

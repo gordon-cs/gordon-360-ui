@@ -11,6 +11,7 @@ type WellnessStatus = {
   Status: StatusColor;
   Created: Date;
   IsValid: Boolean;
+  StatusDescription?: String;
 };
 
 type WellnessQuestion = {

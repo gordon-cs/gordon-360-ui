@@ -3,60 +3,57 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { useAuth } from 'hooks';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import checkInService from 'services/checkIn';
 import user from 'services/user';
-import AcademicCheckInWelcome from 'views/AcademicCheckIn/components/AcademicCheckInWelcome';
-import EmergencyContactUpdate from 'views/AcademicCheckIn/components/EmergencyContactUpdate';
-import UpdatePhone from 'views/AcademicCheckIn/components/UpdatePhone';
-import styles from './AcademicCheckIn.module.css';
+import EmergencyContactUpdate from 'views/EnrollmentCheckIn/components/EmergencyContactUpdate';
+import EnrollmentCheckInWelcome from 'views/EnrollmentCheckIn/components/EnrollmentCheckInWelcome';
+import UpdatePhone from 'views/EnrollmentCheckIn/components/UpdatePhone';
 import CompletedCheckIn from './components/CompletedCheckIn';
 import ConfirmCheckIn from './components/ConfirmCheckIn';
 import PrivacyAgreement from './components/PrivacyAgreement';
 import RaceEthnicity from './components/RaceEthnicity';
-//🧙‍♂️
-const AcademicCheckIn = (props) => {
+import styles from './EnrollmentCheckIn.module.css';
+
+const steps = [
+  'Main Form',
+  'Emergency Contact',
+  'Update Phone',
+  'Privacy Terms',
+  'Race Question',
+  'Confirm',
+  'Completed Check In',
+];
+
+const EnrollmentCheckIn = (props) => {
   const [activeStep, setActiveStep] = useState(0);
   const authenticated = useAuth();
-
-  const getSteps = () => {
-    return [
-      'Main Form',
-      'Emergency Contact',
-      'Update Phone',
-      'Privacy Terms',
-      'Race Question',
-      'Confirm',
-      'Completed Check In',
-    ];
-  };
-
-  const steps = getSteps();
 
   const [loading, setLoading] = useState(true);
 
   const [emergencyContact1, setEmergencyContact1] = useState({
-    SEQ_NUM: 1,
-    firstname: '',
-    lastname: '',
-    relationship: '',
+    SEQ_NUMBER: 1,
+    FirstName: '',
+    LastName: '',
+    Relationship: '',
     HomePhone: '',
     MobilePhone: '',
   });
 
   const [emergencyContact2, setEmergencyContact2] = useState({
-    SEQ_NUM: 2,
-    firstname: '',
-    lastname: '',
-    relationship: '',
+    SEQ_NUMBER: 2,
+    FirstName: '',
+    LastName: '',
+    Relationship: '',
     HomePhone: '',
     MobilePhone: '',
   });
 
   const [emergencyContact3, setEmergencyContact3] = useState({
-    SEQ_NUM: 3,
-    firstname: '',
-    lastname: '',
-    relationship: '',
+    SEQ_NUMBER: 3,
+    FirstName: '',
+    LastName: '',
+    Relationship: '',
     HomePhone: '',
     MobilePhone: '',
   });
@@ -119,12 +116,11 @@ const AcademicCheckIn = (props) => {
         let tempHolds = await checkInService.getHolds();
         setHolds(tempHolds);
         if (
-          tempHolds.RegistrarHold ||
-          tempHolds.HighSchoolTranscriptHold ||
-          tempHolds.FinancialHold ||
-          tempHolds.MedicalHold ||
-          tempHolds.MajorHold ||
-          tempHolds.MustRegisterForClasses
+          tempHolds?.RegistrarHold ||
+          tempHolds?.HighSchoolTranscriptHold ||
+          tempHolds?.FinancialHold ||
+          tempHolds?.MedicalHold ||
+          tempHolds?.MajorHold
         ) {
           setMajorHold(true);
         }
@@ -157,7 +153,7 @@ const AcademicCheckIn = (props) => {
         if (profile.MobilePhone) {
           setPhoneInfo({
             PersonalPhone: profile.MobilePhone,
-            MakePrivate: false,
+            MakePrivate: Boolean(profile.IsMobilePhonePrivate),
             NoPhone: false,
           });
         }
@@ -169,20 +165,22 @@ const AcademicCheckIn = (props) => {
 
     if (authenticated) {
       loadData();
+    } else {
+      setLoading(false);
     }
   }, [authenticated, loading]);
 
   useEffect(() => {
-    props.history.replace('/AcademicCheckIn', { step: activeStep });
+    props.history.replace('/enrollmentcheckin', { step: activeStep });
   }, [activeStep, props.history]);
 
   const handleNext = () => {
-    props.history.push('/AcademicCheckIn', { step: activeStep });
+    props.history.push('/enrollmentcheckin', { step: activeStep });
     setActiveStep((nextStep) => nextStep + 1);
   };
 
   const handlePrev = () => {
-    props.history.push('/AcademicCheckIn', { step: activeStep });
+    props.history.push('/enrollmentcheckin', { step: activeStep });
     setActiveStep((previousStep) => previousStep - 1);
   };
 
@@ -238,7 +236,7 @@ const AcademicCheckIn = (props) => {
 
   function formatDemographic(data) {
     let formattedData = {
-      Ethnicity: parseInt(data.ethnicity),
+      Ethnicity: data.Ethnicity,
       Race: '',
     };
     if (data.None) {
@@ -273,18 +271,20 @@ const AcademicCheckIn = (props) => {
     setActiveStep(6);
   };
 
-  let content;
-
   if (loading === true) {
-    content = <GordonLoader />;
+    return <GordonLoader />;
   } else if (!authenticated) {
-    content = <GordonUnauthorized feature={'Academic Checkin'} />;
+    return <GordonUnauthorized feature={'Enrollment Check-in'} />;
   } else {
-    content = (
+    return (
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} md={9} lg={6}>
-          <Card className={styles.academicCheckIn}>
-            <CardHeader title="Academic Check In" className={styles.checkIn_header} padding={30} />
+          <Card className={styles.enrollmentCheckIn}>
+            <CardHeader
+              title="Enrollment Check In"
+              className={styles.checkIn_header}
+              padding={30}
+            />
             <Box m={2}>
               <Grid
                 container
@@ -297,7 +297,7 @@ const AcademicCheckIn = (props) => {
                   <Grid container justifyContent="center" alignItems="center">
                     <Grid item>
                       {activeStep === 0 && (
-                        <AcademicCheckInWelcome
+                        <EnrollmentCheckInWelcome
                           basicInfo={basicInfo}
                           hasMajorHold={hasMajorHold}
                           holds={holds}
@@ -385,11 +385,11 @@ const AcademicCheckIn = (props) => {
                         onClick={handleNext}
                         style={activeStep >= steps.length - 2 ? { display: 'none' } : {}}
                         disabled={
-                          (activeStep === 0 && hasMajorHold) ||
+                          (activeStep === 0 && (hasMajorHold || holds?.MustRegisterForClasses)) ||
                           (activeStep === 1 &&
-                            (emergencyContact1.firstname === '' ||
-                              emergencyContact1.lastname === '' ||
-                              emergencyContact1.relationship === '' ||
+                            (emergencyContact1.FirstName === '' ||
+                              emergencyContact1.LastName === '' ||
+                              emergencyContact1.Relationship === '' ||
                               emergencyContact1.HomePhone === '' ||
                               emergencyContact1.MobilePhone === '')) ||
                           (activeStep === 2 &&
@@ -423,6 +423,13 @@ const AcademicCheckIn = (props) => {
                         Submit
                       </Button>
                     </Grid>
+                    {activeStep === 0 && (
+                      <Grid item>
+                        <Button variant="contained" component={Link} to="/wellness">
+                          Wellness Check-in
+                        </Button>
+                      </Grid>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
@@ -432,8 +439,6 @@ const AcademicCheckIn = (props) => {
       </Grid>
     );
   }
-
-  return content;
 };
 
-export default AcademicCheckIn;
+export default EnrollmentCheckIn;
