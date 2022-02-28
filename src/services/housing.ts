@@ -63,7 +63,7 @@ const deleteHousingAdmin = (username: string): Promise<boolean> =>
   http.del(`housing/admin/${username}/`);
 
 const getApartmentSelectionDate = async (): Promise<string> => {
-  return 'Apr. 27';
+  return 'Apr. 11';
   // return await http.get('housing/apartment/selection-date); // Not yet implemented in the API
 };
 
