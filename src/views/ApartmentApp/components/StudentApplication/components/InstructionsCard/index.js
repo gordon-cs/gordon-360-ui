@@ -61,8 +61,8 @@ const InstructionsCard = () => {
           academic standing. Students who were on disciplinary probation at any time during the{' '}
           {thisYear - 1}-{thisYear} academic year must also receive approval from the Dean of
           Student Life or the Assistant Dean of Student Life to be eligible to apply for an
-          apartment. Each applicant must be registered as a full-time student by (
-          {apartmentSelectionDate}).
+          apartment. Each applicant must be registered as a full-time student by
+          {apartmentSelectionDate}.
         </Typography>
         <Typography variant="body1" paragraph>
           Each group of students desiring to live in a Tavilla or Bromley apartment or in The
