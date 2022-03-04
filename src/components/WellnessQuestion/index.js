@@ -1,23 +1,21 @@
-import { useState, useEffect } from 'react';
 import {
   Button,
   Card,
   CardContent,
+  CardHeader,
+  Collapse,
   FormControl,
   FormControlLabel,
   FormLabel,
   Grid,
-  Typography,
   Radio,
   RadioGroup,
-  CardHeader,
-  Collapse,
+  Typography,
 } from '@material-ui/core';
-
 import GordonLoader from 'components/Loader';
 import SymptomsDialog from 'components/SymptomsDialog';
-import wellness, { StatusColors } from 'services/wellness.js';
-
+import { useEffect, useState } from 'react';
+import wellness, { StatusColor } from 'services/wellness';
 import styles from './WellnessQuestion.module.css';
 
 const WellnessQuestion = ({ setStatus }) => {
@@ -66,7 +64,7 @@ const WellnessQuestion = ({ setStatus }) => {
                       control={<Radio />}
                       label={`Yes`}
                       onChange={() => {
-                        setAnswer(StatusColors.YELLOW);
+                        setAnswer(StatusColor.Yellow);
                       }}
                     />
                     <br></br>
@@ -75,7 +73,7 @@ const WellnessQuestion = ({ setStatus }) => {
                       control={<Radio />}
                       label={'No'}
                       onChange={() => {
-                        setAnswer(StatusColors.GREEN);
+                        setAnswer(StatusColor.Green);
                       }}
                     />
                   </RadioGroup>
@@ -94,10 +92,10 @@ const WellnessQuestion = ({ setStatus }) => {
               >
                 <Grid item>
                   <Typography color="textPrimary" className={styles.left}>
-                    {answer === StatusColors.YELLOW
+                    {answer === StatusColor.Yellow
                       ? wellnessQuestion.yesPrompt
                       : wellnessQuestion.noPrompt}
-                    {answer === StatusColors.YELLOW ? (
+                    {answer === StatusColor.Yellow ? (
                       <a href={wellnessQuestion.link} target="_blank" rel="noopener noreferrer">
                         this link
                       </a>
@@ -108,7 +106,7 @@ const WellnessQuestion = ({ setStatus }) => {
                   <Button
                     variant="contained"
                     onClick={() => {
-                      answer === StatusColors.YELLOW ? setIsDialogOpen(true) : submitAnswer();
+                      answer === StatusColor.Yellow ? setIsDialogOpen(true) : submitAnswer();
                     }}
                   >
                     Submit

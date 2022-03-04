@@ -3,7 +3,7 @@ import { Check, Clear, Remove } from '@material-ui/icons';
 import SymptomsDialog from 'components/SymptomsDialog';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
-import { StatusColors } from 'services/wellness';
+import { StatusColor } from 'services/wellness';
 import styles from './HealthStatus.module.css';
 
 const HealthStatus = ({
@@ -46,15 +46,15 @@ const HealthStatus = ({
 
   let animatedIcon;
   switch (currentStatus) {
-    case StatusColors.GREEN:
+    case StatusColor.Green:
       animatedIcon = <Check style={{ fontSize: iconSize }} />;
       break;
 
-    case StatusColors.YELLOW:
+    case StatusColor.Yellow:
       animatedIcon = <Remove style={{ fontSize: iconSize }} />;
       break;
 
-    case StatusColors.RED:
+    case StatusColor.Red:
       animatedIcon = <Clear style={{ fontSize: iconSize }} />;
       break;
 
@@ -85,7 +85,7 @@ const HealthStatus = ({
                 </CardContent>
               </Card>
               <br />
-              {currentStatus === StatusColors.GREEN && (
+              {currentStatus === StatusColor.Green && (
                 <Button variant="contained" onClick={() => setIsDialogOpen(true)}>
                   Report Symptoms
                 </Button>

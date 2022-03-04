@@ -97,7 +97,7 @@ const StudentNews = (props) => {
     setLoading(true);
     if (authenticated) {
       const newsCategories = await newsService.getCategories();
-      const personalUnapprovedNews = await newsService.getPersonalUnapprovedFormatted();
+      const personalUnapprovedNews = await newsService.getPersonalUnapproved();
       const unexpiredNews = await newsService.getNotExpiredFormatted();
       setLoading(false);
       setCategories(newsCategories);

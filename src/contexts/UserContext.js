@@ -8,12 +8,7 @@ import userService from 'services/user';
  */
 
 /**
- * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
- * @typedef { import('services/user').StaffProfileInfo } StaffProfileInfo
- */
-
-/**
- * @typedef {(StudentProfileInfo | StaffProfileInfo | null)} Profile
+ * @typedef { import('services/user').Profile } Profile
  */
 
 /**
@@ -89,9 +84,9 @@ const userReducer = (state = initialState, action) => {
   }
 };
 
-const getUserProfile = async () => await userService.getProfileInfo();
-const getUserImages = async () => await userService.getImage();
-const getAllUserData = async () => await Promise.all([getUserProfile(), getUserImages()]);
+const getUserProfile = () => userService.getProfileInfo();
+const getUserImages = () => userService.getImage();
+const getAllUserData = () => Promise.all([getUserProfile(), getUserImages()]);
 
 const UserContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialState);

@@ -1,23 +1,21 @@
-import { useState } from 'react';
-import user from 'services/user';
 import {
   Button,
-  DialogTitle,
   DialogActions,
   DialogContent,
-  Typography,
+  DialogTitle,
   TextField,
+  Typography,
 } from '@material-ui/core';
-import { socialMediaInfo } from 'socialMedia';
+import { useState } from 'react';
+import { platforms, socialMediaInfo } from 'services/socialMedia';
+import user from 'services/user';
 import styles from './LinksDialog.module.css';
 
 const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   const [formErrors, setFormErrors] = useState([]);
   const [updatedLinks, setUpdatedLinks] = useState(links);
   const [failedUpdates, setFailedUpdates] = useState([]);
-  const hasUpdatedLink = socialMediaInfo.platforms.some(
-    (platform) => updatedLinks[platform] !== links[platform],
-  );
+  const hasUpdatedLink = platforms.some((platform) => updatedLinks[platform] !== links[platform]);
 
   const handleLinkUpdated = (platform, value) => {
     setUpdatedLinks((prev) => ({ ...prev, [platform]: value }));
@@ -37,7 +35,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
 
   const handleSubmit = async () => {
     const responses = await Promise.all(
-      socialMediaInfo.platforms
+      platforms
         .filter((platform) => updatedLinks[platform] !== links[platform]) // Remove unchanged links
         .map(async (platform) => ({
           platform: platform,
@@ -73,12 +71,14 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
         <Typography variant="body2" className={styles.gc360_links_dialog_content_text}>
           Paste or Edit your links below. When done, click Submit
         </Typography>
-        {socialMediaInfo.platforms.map((platform) => (
+        {platforms.map((platform) => (
           <div
             key={platform}
             className={`${styles.gc360_links_dialog_content_}${platform} ${styles.gc360_links_dialog_content_media}`}
           >
-            <div className={styles.gc360_links_dialog_content_icon}>{socialMediaInfo[platform].icon}</div>
+            <div className={styles.gc360_links_dialog_content_icon}>
+              {socialMediaInfo[platform].Icon}
+            </div>
             <TextField
               id={`${platform}-input`}
               label={`${platform} ${

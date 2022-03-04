@@ -47,10 +47,10 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
   const [query, setQuery] = useState(String);
   const [highlightQuery, setHighlightQuery] = useState(String);
   const [width, setWidth] = useState(window.innerWidth);
-  const [holder, setHolder] = useState('People Search');
-  const isOnline = useNetworkStatus();
+  const [placeholder, setPlaceholder] = useState('People Search');
   const [downshift, setDownshift] = useState();
   const [time, setTime] = useState(0);
+  const isOnline = useNetworkStatus();
   const authenticated = useAuth();
 
   useEffect(() => {
@@ -66,16 +66,16 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
   useEffect(() => {
     if (isOnline) {
       if (customPlaceholderText) {
-        setHolder(customPlaceholderText);
+        setPlaceholder(customPlaceholderText);
       } else {
         if (width < BREAKPOINT_WIDTH) {
-          setHolder('People');
+          setPlaceholder('People');
         } else {
-          setHolder('People Search');
+          setPlaceholder('People Search');
         }
       }
     } else {
-      setHolder('Offline');
+      setPlaceholder('Offline');
     }
   }, [isOnline, customPlaceholderText, width]);
 
@@ -97,10 +97,10 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
     //but really it's just that its capitalized what the heck
     query = query.toLowerCase();
 
-    let results = await peopleSearch.renderResults(query);
-    if (time < results.now) {
-      setTime(results.now);
-      setSuggestions(results.result);
+    const [searchTime, searchResults] = await peopleSearch.search(query);
+    if (time < searchTime) {
+      setTime(searchTime);
+      setSuggestions(searchResults);
     }
   }
 
@@ -284,14 +284,14 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
           {isOnline
             ? renderInput(
                 getInputProps({
-                  placeholder: holder,
+                  placeholder: placeholder,
                   onChange: (event) => getSuggestions(event.target.value),
                   onKeyDown: (event) => handleKeys(event.key),
                 }),
               )
             : renderInput(
                 getInputProps({
-                  placeholder: holder,
+                  placeholder: placeholder,
                   style: { color: 'white' },
                   disabled: { isOnline },
                 }),
