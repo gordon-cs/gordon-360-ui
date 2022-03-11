@@ -22,12 +22,14 @@ const BirthdayMessage = ({ open, setOpen, name }) => {
     const checkIsBirthday = async () => {
       setIsBirthday(await userService.isBirthdayToday());
     };
-    checkIsBirthday();
-    if (!sessionStorage.getItem('birthdayConfettiHasPopped')) {
-      setTimeout(popConfetti, 1000);
-      sessionStorage.setItem('birthdayConfettiHasPopped', JSON.stringify(true));
+    if (authenticated) {
+      checkIsBirthday();
+      if (!sessionStorage.getItem('birthdayConfettiHasPopped')) {
+        setTimeout(popConfetti, 1000);
+        sessionStorage.setItem('birthdayConfettiHasPopped', JSON.stringify(true));
+      }
     }
-  }, []);
+  }, [authenticated]);
 
   const Banner = width >= 1280 ? BannerLarge : BannerSmall;
 
