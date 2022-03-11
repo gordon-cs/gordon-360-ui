@@ -3,7 +3,7 @@
  * @module update
  * import http from './http';
  */
-import user from './user';
+//import user from './user';
 const requestInfoUpdate = async (
   userSalutation,
   userFirstName,

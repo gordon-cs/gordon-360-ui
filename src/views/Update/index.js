@@ -21,8 +21,8 @@ import SimpleSnackbar from 'components/Snackbar';
 import user from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
-import userInfo from 'components/Profile/components/PersonalInfoList';
-import userService from 'services/user';
+/*import userInfo from 'components/Profile/components/PersonalInfoList';
+import userService from 'services/user'; Commenting out as we may use it later to preload the data*/
 
 const Update = (props) => {
   const [userSalutation, setSalutation] = useState('');
