@@ -1,3 +1,5 @@
+import { PublicClientApplication } from '@azure/msal-browser';
+import { MsalProvider } from '@azure/msal-react';
 import MomentUtils from '@date-io/moment';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -7,6 +9,7 @@ import UserContextProvider, { AuthContext } from 'contexts/UserContext';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
+import { configureMSAL, msalConfig } from 'services/auth';
 import './app.global.css';
 import styles from './app.module.css';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -18,15 +21,20 @@ import routes from './routes';
 import analytics from './services/analytics';
 import theme from './theme';
 
+export const msalInstance = new PublicClientApplication(msalConfig);
+configureMSAL(msalInstance);
+
 const ContextProviders = ({ children }) => {
   return (
-    <ThemeProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <NetworkContextProvider>
-          <UserContextProvider>{children}</UserContextProvider>
-        </NetworkContextProvider>
-      </MuiPickersUtilsProvider>
-    </ThemeProvider>
+    <MsalProvider instance={msalInstance}>
+      <ThemeProvider theme={theme}>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <NetworkContextProvider>
+            <UserContextProvider>{children}</UserContextProvider>
+          </NetworkContextProvider>
+        </MuiPickersUtilsProvider>
+      </ThemeProvider>
+    </MsalProvider>
   );
 };
 
@@ -69,7 +77,7 @@ const App = () => {
                           render={(props) => (
                             <div className={styles.app_main_container}>
                               <AppRedirect />
-                              <OfflineBanner currentPath={route.path} authentication={props.auth} />
+                              <OfflineBanner currentPath={route.path} />
                               <route.component authentication={authenticated} {...props} />
                             </div>
                           )}

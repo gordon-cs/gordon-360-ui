@@ -1,5 +1,7 @@
+import { useAccount, useIsAuthenticated } from '@azure/msal-react';
+import { msalInstance } from 'app';
 import { createContext, useEffect, useReducer } from 'react';
-import { authenticate, isAuthenticated, signOut } from 'services/auth';
+import { authenticate, signOut } from 'services/auth';
 import userService from 'services/user';
 
 /**
@@ -89,10 +91,14 @@ const getUserImages = () => userService.getImage();
 const getAllUserData = () => Promise.all([getUserProfile(), getUserImages()]);
 
 const UserContextProvider = ({ children }) => {
+  const isAuthenticated = useIsAuthenticated();
+  const account = useAccount();
   const [state, dispatch] = useReducer(userReducer, initialState);
 
-  const login = async (username, password) => {
-    await authenticate(username, password);
+  const login = async () => {
+    await authenticate();
+    const user = msalInstance.getActiveAccount();
+    console.log('Just authenticated. Found active user', user);
     const [profile, images] = await getAllUserData();
 
     dispatch({ type: UserActions.Login, payload: { profile, images } });
@@ -111,18 +117,23 @@ const UserContextProvider = ({ children }) => {
 
   useEffect(() => {
     const loadUser = async () => {
-      if (isAuthenticated()) {
-        const [profile, images] = await getAllUserData();
-        dispatch({
-          type: UserActions.Login,
-          payload: { profile, images },
-        });
+      if (isAuthenticated) {
+        // const [profile, images] = await getAllUserData();
+        try {
+          const profile = await getUserProfile();
+          dispatch({
+            type: UserActions.Login,
+            payload: { profile, images: null },
+          });
+        } catch (e) {
+          console.error(e);
+        }
       } else {
         dispatch({ type: UserActions.Logout });
       }
     };
     loadUser();
-  }, []);
+  }, [isAuthenticated]);
 
   if (state.loading) {
     return null;
@@ -130,7 +141,7 @@ const UserContextProvider = ({ children }) => {
 
   return (
     <UserActionsContext.Provider value={{ login, logout, updateProfile, updateImage }}>
-      <AuthContext.Provider value={state.authenticated}>
+      <AuthContext.Provider value={isAuthenticated}>
         <UserContext.Provider value={state.user}>{children}</UserContext.Provider>
       </AuthContext.Provider>
     </UserActionsContext.Provider>

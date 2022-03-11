@@ -1,6 +1,6 @@
-import { Button, Grid, TextField, Typography } from '@material-ui/core';
-import GordonLoader from 'components/Loader';
-import useUserActions from 'hooks/useUserActions';
+import { useMsal } from '@azure/msal-react';
+import { Button, Grid } from '@material-ui/core';
+import { msalInstance } from 'app';
 import { useState } from 'react';
 import GordonLogoVerticalWhite from './gordon-logo-vertical-white.svg';
 import styles from './LoginDialogue.module.css';
@@ -11,7 +11,7 @@ const LoginDialogue = () => {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useUserActions();
+  const { instance } = useMsal();
 
   const logIn = async (event) => {
     event.preventDefault();
@@ -19,7 +19,13 @@ const LoginDialogue = () => {
     setError(null);
 
     try {
-      await login(username, password);
+      // await login(username, password);
+      console.log('Logging in from loginDialogue');
+      const tokenResponse = await msalInstance.loginPopup({
+        scopes: ['api://b19c300a-00dc-4adc-bcd1-b678b25d7ad1/access_as_user'],
+      });
+      const accountResponse = tokenResponse.account;
+      msalInstance.setActiveAccount(accountResponse);
     } catch (err) {
       setError(err.message);
       setLoading(false);
@@ -29,7 +35,7 @@ const LoginDialogue = () => {
   return (
     <Grid container direction="column" className={styles.loginDialogue}>
       <img className={styles.login_img} src={GordonLogoVerticalWhite} alt="Gordon Logo" />
-      <form onSubmit={logIn}>
+      {/* <form onSubmit={logIn}>
         <TextField
           id="username"
           label="Username"
@@ -67,7 +73,10 @@ const LoginDialogue = () => {
             {loading ? <GordonLoader size={24} /> : 'Log in'}
           </Button>
         </Grid>
-      </form>
+      </form> */}
+      <Button variant="contained" color="primary" onClick={logIn}>
+        Sign in
+      </Button>
     </Grid>
   );
 };

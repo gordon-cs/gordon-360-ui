@@ -1,5 +1,5 @@
-import jwtDecode from 'jwt-decode';
-import { AuthError } from './error';
+import { AccountInfo } from '@azure/msal-browser';
+import { msalInstance } from 'app';
 
 const store = (key: string, value: string) => localStorage.setItem(key, JSON.stringify(value));
 
@@ -25,38 +25,7 @@ const get = <T>(key: string): T => {
 
 const remove = (key: string) => localStorage.removeItem(key);
 
-type LocalInfo = {
-  /** Audience of token (URL) */
-  aud: string;
-  /** User role */
-  college_role: string;
-  /** Token expiration time */
-  exp: number;
-  /** User ID */
-  id: string;
-  /** Token issuance URL */
-  iss: string;
-  /** User name (for display purposes) */
-  name: string;
-  /** identifies the time before which the JWT MUST NOT be accepted for processing */
-  nbf: number;
-  /** Username (firstname.lastname format) */
-  user_name: string;
-};
-
-const getLocalInfo = (): LocalInfo => {
-  let token: string;
-  try {
-    token = get('token');
-  } catch (err) {
-    throw new AuthError('Could not get local auth');
-  }
-  try {
-    return jwtDecode(token);
-  } catch (err) {
-    throw new AuthError(`Saved token "${token}" could not be parsed`);
-  }
-};
+const getLocalInfo = (): AccountInfo | null => msalInstance.getActiveAccount();
 
 /**
  * Store and retrieve app data locally
