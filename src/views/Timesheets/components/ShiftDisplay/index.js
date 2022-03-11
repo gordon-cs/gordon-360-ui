@@ -1,11 +1,11 @@
 //Handles the fetching and preperation for displaying of shifts
-import { Component } from 'react';
-import { Grid, Card, CardContent, CardHeader, Tabs, Tab } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, Tab, Tabs } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
-import SavedShiftsList from '../SavedShiftsList';
-import jobs from 'services/jobs';
 import SimpleSnackbar from 'components/Snackbar';
+import { Component } from 'react';
 import Media from 'react-media';
+import jobs from 'services/jobs';
+import SavedShiftsList from '../SavedShiftsList';
 import styles from './ShiftDisplay.module.css';
 
 export default class ShiftDisplay extends Component {
@@ -93,22 +93,13 @@ export default class ShiftDisplay extends Component {
     });
   }
 
-  editShift = (rowID, startTime, endTime, hoursWorked) => {
-    let promise = jobs.editShift(
-      this.state.getStaffPageForUser,
-      rowID,
-      startTime,
-      endTime,
-      hoursWorked,
-    );
-    promise.then((response) => {
-      this.loadShifts();
-    });
-    return promise;
-  };
+  editShift = (rowID, startTime, endTime, hoursWorked) =>
+    jobs
+      .editShift(this.state.getStaffPageForUser, rowID, startTime, endTime, hoursWorked)
+      .then(this.loadShifts);
 
-  deleteShiftForUser(rowID, emlDesc) {
-    let result = jobs
+  deleteShiftForUser = (rowID, emlDesc) =>
+    jobs
       .deleteShiftForUser(this.state.getStaffPageForUser, rowID)
       .then(() => {
         this.jobNamesSet.delete(emlDesc);
@@ -118,8 +109,6 @@ export default class ShiftDisplay extends Component {
         this.snackbarText = 'There was a problem deleting the shift.';
         this.setState({ snackbarOpen: true });
       });
-    return result;
-  }
 
   handleTabChange = (event, value) => {
     this.setState({ tabValue: value });

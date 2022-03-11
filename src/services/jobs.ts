@@ -14,8 +14,9 @@ const dateFormatter = Intl.DateTimeFormat('en', {
  * @returns Whether the user can use staff timesheets
  */
 const getStaffPageForUser = async (): Promise<boolean> => {
-  const id: number | null = await http.get(`jobs/canUsePage`);
-  return id === null;
+  // const id: number | null = await http.get(`jobs/canUsePage`);
+  // return id === null;
+  return false;
 };
 
 /**
@@ -104,16 +105,16 @@ const editShift = async (
     LAST_CHANGED_BY: null,
   };
   if (canUseStaff) {
-    return await http.put(`jobs/editShiftStaff/`, newShiftDetails);
+    await http.put(`jobs/editShiftStaff/`, newShiftDetails);
   }
-  return await http.put(`jobs/editShift/`, newShiftDetails);
+  await http.put(`jobs/editShift/`, newShiftDetails);
 };
 
 const deleteShiftForUser = async (canUseStaff: boolean, rowID: number) => {
   if (canUseStaff) {
-    return await http.del(`jobs/deleteShiftStaff/${rowID}`);
+    await http.del(`jobs/deleteShiftStaff/${rowID}`);
   }
-  return await http.del(`jobs/deleteShift/${rowID}`);
+  await http.del(`jobs/deleteShift/${rowID}`);
 };
 
 const getSupervisorNameForJob = (canUseStaff: boolean, supervisorID: number) => {
@@ -123,7 +124,7 @@ const getSupervisorNameForJob = (canUseStaff: boolean, supervisorID: number) => 
   return http.get(`jobs/supervisorName/${supervisorID}`);
 };
 
-const submitShiftsForUser = (canUseStaff: boolean, shifts: Object[], submittedTo: number) => {
+const submitShiftsForUser = async (canUseStaff: boolean, shifts: Object[], submittedTo: number) => {
   const shiftDetails = (shift: any) => ({
     ID_NUM: shift.ID_NUM,
     EML: shift.EML,
@@ -134,27 +135,19 @@ const submitShiftsForUser = (canUseStaff: boolean, shifts: Object[], submittedTo
   });
 
   if (canUseStaff) {
-    return http.post(`jobs/submitShiftsStaff`, shifts.map(shiftDetails));
+    await http.post(`jobs/submitShiftsStaff`, shifts.map(shiftDetails));
   } else {
-    return http.post(`jobs/submitShifts`, shifts.map(shiftDetails));
+    await http.post(`jobs/submitShifts`, shifts.map(shiftDetails));
   }
 };
 
-const clockIn = (data: any) => {
-  return http.post(`jobs/clockIn`, data);
-};
+const clockIn = (data: any) => http.post(`jobs/clockIn`, data);
 
-const clockOut = () => {
-  return http.get(`jobs/clockOut`);
-};
+const clockOut = () => http.get(`jobs/clockOut`);
 
-const deleteClockIn = async () => {
-  return http.put(`jobs/deleteClockIn`);
-};
+const deleteClockIn = async () => http.put(`jobs/deleteClockIn`);
 
-const getHourTypes = () => {
-  return http.get(`jobs/hourTypes`);
-};
+const getHourTypes = () => http.get(`jobs/hourTypes`);
 
 const jobsService = {
   getStaffPageForUser,

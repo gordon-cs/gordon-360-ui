@@ -1,26 +1,26 @@
 //Displays shifts and sets up buttons for submitting shifts
-import { Component } from 'react';
 import {
-  Typography,
-  Grid,
+  Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
-  CardActions,
-  Button,
-  FormControl,
-  Input,
-  InputLabel,
-  Select,
-  MenuItem,
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControl,
+  Grid,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
 } from '@material-ui/core';
-import ShiftItem from '../ShiftItem';
-import { gordonColors } from 'theme';
-import jobs from 'services/jobs';
 import GordonLoader from 'components/Loader';
+import { Component } from 'react';
+import jobs from 'services/jobs';
+import { gordonColors } from 'theme';
+import ShiftItem from '../ShiftItem';
 import styles from './SavedShiftsList.module.css';
 
 export default class SavedShiftsList extends Component {
@@ -60,17 +60,14 @@ export default class SavedShiftsList extends Component {
     this.setState({ showSubmissionConfirmation: false });
   };
 
-  submitShiftsToSupervisor = (shifts, supervisorID) => {
-    jobs
-      .submitShiftsForUser(this.state.getStaffPageForUser, shifts, supervisorID)
-      .then((response) => {
-        this.setState({
-          selectedSupervisor: null,
-          showSubmissionConfirmation: false,
-        });
-        this.props.loadShifts();
+  submitShiftsToSupervisor = (shifts, supervisorID) =>
+    jobs.submitShiftsForUser(this.state.getStaffPageForUser, shifts, supervisorID).then(() => {
+      this.setState({
+        selectedSupervisor: null,
+        showSubmissionConfirmation: false,
       });
-  };
+      this.props.loadShifts();
+    });
 
   getTotalHours = (total, currentShift) => {
     return total + currentShift.HOURS_WORKED;
