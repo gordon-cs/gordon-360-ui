@@ -21,8 +21,8 @@ import SimpleSnackbar from 'components/Snackbar';
 import user from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
-import userInfo from 'components/Profile/components/PersonalInfoList';
-import userService from 'services/user';
+//import userInfo from 'components/Profile/components/PersonalInfoList';
+//import userService from 'services/user';
 
 const Update = (props) => {
   const [userSalutation, setSalutation] = useState('');
@@ -53,8 +53,18 @@ const Update = (props) => {
   const [isUserStudent, setIsUserStudent] = useState(true);
   const isOnline = useNetworkStatus();
 
+  // I considered using a HashMap to get the names, but I don't think it's necessary.
+  // Both arrays are constant. Many reasons why 2 arrays is better than one HashMap here.
+  const formFields = [userSalutation, userMiddleName, userPreferredName,
+  userPersonalEmail, userWorkEmail, userAlternateEmail, userPreferredEmail, userDoNotContact,
+  userDoNotMail, userHomePhone, userWorkPhone, userMobilePhone, userPreferredPhone, userMailingStreet,
+  userMailingCity, userMailingState, userMailingZip, userMailingCountry, userMaritalStatus]
+
+  const formHeadings = ["Salutation", "Middle Name", "Preferred Name", "Personal Email", "Work Email",
+  "Alternate Email", "Preferred Email", "Do Not Contact", "Do Not Mail", "Home Phone", "Work Phone",
+  "Mobile Phone", "Preferred Phone", "Street", "City", "State", "Zipcode", "Country", "Marital Status"]
+
   useEffect(() => {
-    setPersonalEmail('Test123');
     if (props.authentication) {
       user.getProfileInfo().then((profile) => setIsUserStudent(profile.PersonType.includes('stu')));
     }
@@ -62,56 +72,19 @@ const Update = (props) => {
 
   if (props.authentication) {
     const handleSaveButtonClick = () => {
-      if (
-        userSalutation === '' &&
-        userFirstName === '' &&
-        userLastName === '' &&
-        userMiddleName === '' &&
-        userPreferredName === '' &&
-        userPersonalEmail === '' &&
-        userWorkEmail === '' &&
-        userAlternateEmail === '' &&
-        userPreferredEmail === '' &&
-        userDoNotContact === false &&
-        userDoNotMail === false &&
-        userHomePhone === '' &&
-        userWorkPhone === '' &&
-        userMobilePhone === '' &&
-        userPreferredPhone === '' &&
-        userMailingStreet === '' &&
-        userMailingCity === '' &&
-        userMailingState === '' &&
-        userMailingZip === '' &&
-        userMailingCountry === '' &&
-        userMaritalStatus === ''
-      ) {
+      if (userFirstName === "" || userLastName === "") {
+        setSnackbarSeverity('error');
+        setSnackbarText('Please fill in your first and last name.');
+        setSnackbarOpen(true);
+      }
+      else if (formEmpty()) {
         setSnackbarSeverity('error');
         setSnackbarText('Please fill in at least one field.');
         setSnackbarOpen(true);
       } else {
         setSaving(true);
         updateInfo(
-          userSalutation,
-          userFirstName,
-          userLastName,
-          userMiddleName,
-          userPreferredName,
-          userPersonalEmail,
-          userWorkEmail,
-          userAlternateEmail,
-          userPreferredEmail,
-          userDoNotContact,
-          userDoNotMail,
-          userHomePhone,
-          userWorkPhone,
-          userMobilePhone,
-          userPreferredPhone,
-          userMailingStreet,
-          userMailingCity,
-          userMailingState,
-          userMailingZip,
-          userMailingCountry,
-          userMaritalStatus,
+          emailBody()
         ).then(() => {
           setSnackbarSeverity('info');
           setSnackbarText('Your information has been updated!');
@@ -142,51 +115,27 @@ const Update = (props) => {
       }
     };
 
+    function formEmpty() {
+      if (formFields.every(element => !element)){
+        return true;
+      }
+    }
+
+    function emailBody() {
+      var email_content = `Name: ${userFirstName} ${userLastName}\n\n`;
+      for (var i in formFields) {
+        if (formFields[i]){
+          email_content = `${email_content} ${formHeadings[i]}: ${formFields[i]}\n`;
+        }
+      }
+      return email_content;
+    }
+
     const updateInfo = async (
-      userSalutation,
-      userFirstName,
-      userLastName,
-      userMiddleName,
-      userPreferredName,
-      userPersonalEmail,
-      userWorkEmail,
-      userAlternateEmail,
-      userPreferredEmail,
-      userDoNotContact,
-      userDoNotMail,
-      userHomePhone,
-      userWorkPhone,
-      userMobilePhone,
-      userPreferredPhone,
-      userMailingStreet,
-      userMailingCity,
-      userMailingState,
-      userMailingZip,
-      userMailingCountry,
-      userMaritalStatus,
+      email_content
     ) => {
-      await updateAlumniInfo.requestInfoUpdate(
-        userSalutation,
-        userFirstName,
-        userLastName,
-        userMiddleName,
-        userPreferredName,
-        userPersonalEmail,
-        userWorkEmail,
-        userAlternateEmail,
-        userPreferredEmail,
-        userDoNotContact,
-        userDoNotMail,
-        userHomePhone,
-        userWorkPhone,
-        userMobilePhone,
-        userPreferredPhone,
-        userMailingStreet,
-        userMailingCity,
-        userMailingState,
-        userMailingZip,
-        userMailingCountry,
-        userMaritalStatus,
+      updateAlumniInfo.requestInfoUpdate(
+        email_content,
       );
     };
 
@@ -267,6 +216,7 @@ const Update = (props) => {
     const handleMailingZip = (event) => {
       setMailingZip(event.target.value);
     };
+    
     const handleMailingCountry = (event) => {
       setMailingCountry(event.target.value);
     };
