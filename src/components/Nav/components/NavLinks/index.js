@@ -150,6 +150,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
+  /* TODO: COMMENTED OUT SO WE FIGURE OUT WHERE IS BEST PLACEMENT
   const updateButton = (
     <GordonNavButton
       onLinkClick={onLinkClick}
@@ -158,6 +159,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
       divider={false}
     />
   );
+*/
 
   const feedbackButton = (
     <GordonNavButton
@@ -209,7 +211,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {aboutButton}
         {feedbackButton}
         {adminButton}
-        {updateButton}
+        {/* TODO: Commented out until placement is determined {updateButton} */}
         {signInOutButton}
       </List>
 

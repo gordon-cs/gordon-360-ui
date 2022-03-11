@@ -1,0 +1,42 @@
+.personal_info_list_header {
+  background-color: #014983;
+  color: #ffffff;
+  padding-left: 1rem;
+}
+.personal_info_list .note {
+  color: #0000008c;
+  background-color: #ebeaea;
+  padding: 0.3rem 1rem;
+  margin-top: 1rem;
+  border-radius: 5px;
+}
+.personal_info_list .disclaimer {
+  color: #b53228;
+  background-color: #ebeaea;
+  padding: 0.3rem 1rem;
+  margin-top: 1rem;
+  border-radius: 5px;
+}
+.update_info_button {
+  background-color: #00aeef !important;
+  color: #ffffff !important;
+  margin: 0.5rem 0.5rem 1rem 0.5rem !important;
+}
+
+.private {
+  color: #00000066;
+}
+
+.not_private {
+  opacity: 1;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+@media (max-width: 600px) {
+  .personal_info_list_header {
+    padding-left: 0rem;
+    justify-content: center;
+  }
+}
+
+/*# sourceMappingURL=PersonalInfoList.module.css.map */
