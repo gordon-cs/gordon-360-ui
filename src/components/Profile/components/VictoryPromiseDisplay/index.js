@@ -1,27 +1,26 @@
-import { Component, Fragment } from 'react';
-import { gordonColors } from 'theme';
-import { Polar } from 'react-chartjs-2';
-import victory from 'services/victory';
-import styles from './VictoryPromiseDisplay.module.css';
-import { withStyles } from '@material-ui/core/styles';
-import { ReactComponent as OffCC } from './images/Off-CC.svg';
-import { ReactComponent as OnCC } from './images/On-CC.svg';
-import { ReactComponent as OffIM } from './images/Off-IM.svg';
-import { ReactComponent as OnIM } from './images/On-IM.svg';
-import { ReactComponent as OffLW } from './images/Off-LW.svg';
-import { ReactComponent as OnLW } from './images/On-LW.svg';
-import { ReactComponent as OffLS } from './images/Off-LS.svg';
-import { ReactComponent as OnLS } from './images/On-LS.svg';
-
 import {
-  Grid,
-  CardHeader,
-  Tooltip,
   Button,
-  Typography,
   Card,
   CardContent,
+  CardHeader,
+  Grid,
+  Tooltip,
+  Typography,
 } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { Component, Fragment } from 'react';
+import { Polar } from 'react-chartjs-2';
+import victoryPromiseService from 'services/victoryPromise';
+import { gordonColors } from 'theme';
+import { ReactComponent as OffCC } from './images/Off-CC.svg';
+import { ReactComponent as OffIM } from './images/Off-IM.svg';
+import { ReactComponent as OffLS } from './images/Off-LS.svg';
+import { ReactComponent as OffLW } from './images/Off-LW.svg';
+import { ReactComponent as OnCC } from './images/On-CC.svg';
+import { ReactComponent as OnIM } from './images/On-IM.svg';
+import { ReactComponent as OnLS } from './images/On-LS.svg';
+import { ReactComponent as OnLW } from './images/On-LW.svg';
+import styles from './VictoryPromiseDisplay.module.css';
 
 export default class VictoryPromiseDisplay extends Component {
   constructor(props) {
@@ -72,7 +71,7 @@ export default class VictoryPromiseDisplay extends Component {
   }
 
   async getVPScores() {
-    const scores = await victory.getVPScore();
+    const scores = await victoryPromiseService.getVPScore();
     const CC = scores[0].TOTAL_VP_CC_SCORE;
     const IM = scores[0].TOTAL_VP_IM_SCORE;
     const LS = scores[0].TOTAL_VP_LS_SCORE;
