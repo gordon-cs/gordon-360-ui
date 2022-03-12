@@ -26,6 +26,7 @@ import userService from 'services/user'; Commenting out as we may use it later t
 
 /**
  * Sends an update form to the development office with the following queried parameters
+ *
  * @param {string} userSaluation updated with the user's new salutation
  * @param {string} userFirstName updated with the user's new first name
  * @param {string} userLastName updated with the user's new last name
