@@ -1,0 +1,21 @@
+.update .header_tooltip_container {
+  display: inline-flex;
+  position: relative;
+}
+.update_header {
+  background-color: #014983;
+  color: #ffffff;
+}
+.update .header_tooltip_container .tooltip_icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: -2px;
+  margin-top: 8px;
+}
+.update_info_button {
+  background-color: #00aeef !important;
+  color: #ffffff !important;
+  margin: 0.5rem 0.5rem 1rem 0.5rem !important;
+}
+/*# sourceMappingURL=Update.module.css.map */
