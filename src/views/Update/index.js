@@ -122,11 +122,12 @@ const Update = (props) => {
     }
 
     function emailBody() {
-      var email_content = `Name: ${userFirstName} ${userLastName}\n\n`;
+      var email_content = `<p> <b>Name:</b> ${userFirstName} ${userLastName} <br />`;
       for (var i in formFields) {
         if (formFields[i]){
-          email_content = `${email_content} ${formHeadings[i]}: ${formFields[i]}\n`;
+          email_content = `${email_content} <b>${formHeadings[i]}:</b> ${formFields[i]} <br />`;
         }
+        email_content = `${email_content} </p>`
       }
       return email_content;
     }
