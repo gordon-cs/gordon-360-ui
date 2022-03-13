@@ -24,6 +24,32 @@ import GordonOffline from 'components/GordonOffline';
 //import userInfo from 'components/Profile/components/PersonalInfoList';
 //import userService from 'services/user';
 
+/**
+ * Sends an update form to the development office with the following queried parameters
+ *
+ * @param {string} userSaluation updated with the user's new salutation
+ * @param {string} userFirstName updated with the user's new first name
+ * @param {string} userLastName updated with the user's new last name
+ * @param {string} userMiddleName updated with the user's new middle name
+ * @param {string} userPreferredName updated with the user's new preferred name
+ * @param {string} userPersonalEmail updated with the user's new personal email
+ * @param {string} userWorkEmail updated with the user's new work email
+ * @param {string} userAlternateEmail updated with the user's new alternate email
+ * @param {string} userPreferredEmail updated with the user's new preferred email
+ * @param {boolean} userDoNotContact updated with the user's new do not contact preference
+ * @param {boolean} userDoNotMail updated with the user's new do not mail preference
+ * @param {string} userHomePhone updated with the user's new home phone
+ * @param {string} userWorkPhone updated with the user's new work phone
+ * @param {string} userMobilePhone updated with the user's new mobile phone
+ * @param {string} userPreferredPhone updated with the user's new preferred phone
+ * @param {string} userMailingStreet updated with the user's new mailing street
+ * @param {string} userMailingCity updated with the user's new mailing city
+ * @param {string} userMailingState updated with the user's new mailing state
+ * @param {string} userMailingZip updated with the user's new mailing zip
+ * @param {string} userMailingCountry updated with the user's new mailing country
+ * @param {string} userMaritalStatus updated with the user's new marital status
+ */
+
 const Update = (props) => {
   const [userSalutation, setSalutation] = useState('');
   const [userFirstName, setFirstName] = useState('');
@@ -35,7 +61,7 @@ const Update = (props) => {
   const [userAlternateEmail, setAlternateEmail] = useState('');
   const [userPreferredEmail, setPreferredEmail] = useState('');
   const [userDoNotContact, setDoNotContact] = useState(false);
-  const [userDoNotMail, setDoNotMail] = useState('');
+  const [userDoNotMail, setDoNotMail] = useState(false);
   const [userHomePhone, setHomePhone] = useState('');
   const [userWorkPhone, setWorkPhone] = useState('');
   const [userMobilePhone, setMobilePhone] = useState('');
