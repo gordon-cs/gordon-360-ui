@@ -325,15 +325,13 @@ const StudentNews = (props) => {
       newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
     }
 
-    let newsItem = {
-      categoryID: newPostCategory,
-      Subject: newPostSubject,
-      Body: newPostBody,
-      Image: newImage,
-    };
-
     // submit the news item and give feedback
-    let result = await newsService.submitStudentNews(newsItem);
+    let result = await newsService.submitStudentNews(
+      newPostSubject,
+      newPostCategory,
+      newPostBody,
+      newImage,
+    );
     if (result === undefined) {
       createSnackbar('News Posting Failed to Submit', 'error');
     } else {
