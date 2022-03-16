@@ -48,11 +48,7 @@ export const configureMSAL = (msalInstance: PublicClientApplication) => {
   return msalInstance;
 };
 
-const authenticate = () => {
-  console.log('Called auth.login with msalInstace', msalInstance);
-
-  msalInstance.loginPopup(loginRequest);
-};
+const authenticate = () => msalInstance.loginPopup(loginRequest);
 
 const acquireAccessToken = async () => {
   const activeAccount = msalInstance.getActiveAccount();
@@ -71,8 +67,6 @@ const acquireAccessToken = async () => {
 
   const authResult = await msalInstance.acquireTokenSilent(request).catch(async (error) => {
     if (error instanceof InteractionRequiredAuthError) {
-      console.log('Acquiring token silently failed, showing popup');
-
       return await msalInstance.acquireTokenPopup(apiRequest);
     }
   });
@@ -88,7 +82,6 @@ const acquireAccessToken = async () => {
  */
 const isAuthenticated = () => {
   const account = msalInstance.getActiveAccount();
-  console.log('Calling isAuthenticated with account', account);
 
   return account !== null;
 };
