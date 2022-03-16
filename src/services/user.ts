@@ -155,7 +155,7 @@ type MealPlanComponent = {
   CurrentBalance: string;
 };
 
-type ProfileImages = { def: string; pref?: string };
+export type ProfileImages = { def: string; pref?: string };
 
 const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo => {
   return (profile as UnformattedStudentProfileInfo).OnOffCampus !== undefined;
@@ -191,7 +191,7 @@ const formatSocialMediaLinks = (profile: UnformattedProfileInfo) => {
 };
 
 const getImage = (username: string = ''): Promise<ProfileImages> =>
-  http.get(username ? `profiles/Image/${username}/` : 'profiles/Image/');
+  http.get(`profiles/Image/${username}`);
 
 const resetImage = (): Promise<void> => http.post('/profiles/image/reset');
 
