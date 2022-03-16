@@ -153,19 +153,19 @@ const search = (
   );
 };
 
-const getMajors = (): Promise<string[]> => http.get(`advanced-search/majors`);
+const getMajors = (): Promise<string[]> => http.get(`advancedsearch/majors`);
 
-const getMinors = (): Promise<string[]> => http.get(`advanced-search/minors`);
+const getMinors = (): Promise<string[]> => http.get(`advancedsearch/minors`);
 
-const getHalls = (): Promise<string[]> => http.get(`advanced-search/halls`);
+const getHalls = (): Promise<string[]> => http.get(`advancedsearch/halls`);
 
-const getStates = (): Promise<string[]> => http.get(`advanced-search/states`);
+const getStates = (): Promise<string[]> => http.get(`advancedsearch/states`);
 
-const getCountries = (): Promise<string[]> => http.get(`advanced-search/countries`);
+const getCountries = (): Promise<string[]> => http.get(`advancedsearch/countries`);
 
-const getDepartments = (): Promise<string[]> => http.get(`advanced-search/departments`);
+const getDepartments = (): Promise<string[]> => http.get(`advancedsearch/departments`);
 
-const getBuildings = (): Promise<string[]> => http.get(`advanced-search/buildings`);
+const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
 const advancedSearchService = {
   search,
