@@ -68,7 +68,7 @@ const search = (
   major: string,
   minor: string,
   hall: string,
-  classType: Class,
+  classType: Class | '',
   homeCity: string,
   state: string,
   country: string,
@@ -116,7 +116,7 @@ const search = (
   if (hall === '' || hall === null) {
     hall = CSharp;
   }
-  if (classType === null) {
+  if (classType === '') {
     // @ts-ignore
     classType = CSharp;
   }
