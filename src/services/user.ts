@@ -190,8 +190,8 @@ const formatSocialMediaLinks = (profile: UnformattedProfileInfo) => {
   return profile;
 };
 
-const getImage = (username: string): Promise<ProfileImages> =>
-  http.get(`profiles/Image/${username}/`);
+const getImage = (username: string = ''): Promise<ProfileImages> =>
+  http.get(username ? `profiles/Image/${username}/` : 'profiles/Image/');
 
 const resetImage = (): Promise<void> => http.post('/profiles/image/reset', '');
 
@@ -243,7 +243,7 @@ const getChapelCredits = async (): Promise<CLWCredits | null> => {
 const getDiningInfo = (): Promise<DiningInfo> => http.get('dining');
 
 const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
-  http.get(`profiles/${username}/`);
+  http.get(username ? `profiles/${username}/` : 'profiles/');
 
 const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
   http.get(`profiles/Advisors/${username}/`);
