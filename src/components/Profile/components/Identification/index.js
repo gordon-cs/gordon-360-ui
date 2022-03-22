@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
+import { Class } from 'services/goStalk';
 import user from 'services/user';
 import { gordonColors, windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
@@ -697,7 +698,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   xs={12}
                   className={styles.identification_card_content_card_container_info_class}
                 >
-                  {userProfile.Class && <Typography>{userProfile.Class}</Typography>}
+                  {userProfile.Class && <Typography>{Class[userProfile.Class]}</Typography>}
                 </Grid>
 
                 <Grid

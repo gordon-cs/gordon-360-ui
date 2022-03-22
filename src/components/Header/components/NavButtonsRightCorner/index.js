@@ -4,7 +4,7 @@ import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import { useAuth, useNetworkStatus, useUserActions } from 'hooks';
 import { useState } from 'react';
-import userService from 'services/user';
+import storageService from 'services/storage';
 import styles from './NavButtonsRightCorner.module.css';
 
 /**
@@ -76,7 +76,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
   );
 
   const adminButton =
-    authenticated && userService.getLocalInfo().college_role === 'god' ? (
+    authenticated && storageService.getLocalInfo().college_role === 'god' ? (
       <GordonNavButton
         unavailable={!isOnline ? 'offline' : null}
         onLinkClick={onClose}

@@ -7,15 +7,6 @@
 // Cache version
 const cacheVersion = 'cache v1.3';
 
-// API Source
-/**
- * Make sure the URL is the EXACT same as what the browser fetches. Letter casing is important.
- */
-const apiSource = String(process.env.REACT_APP_API_URL).toLowerCase() + 'api';
-
-// Font Styles
-const fontKeySource = process.env.REACT_APP_FONT_URL;
-
 // Console log decorations
 const successfulLog = ['color: #17b534', 'margin-left: 20px'].join(';');
 const successfulEmoji = `\u{2705}`;

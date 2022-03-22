@@ -26,7 +26,6 @@
  * (sw_global_variables.js) | errorLog                | Console log styling for cache related logs
  * (sw_global_variables.js) | successfulEmoji         | The emoji symbol used to display in the console log for successful related logs
  * (sw_global_variables.js) | successfulLog           | Console log styling for successful related logs
- * (sw.js)                  | apiSource               | The API source where all fetch requests are directed to
  * (sw.js)                  | isFetchCanceled         | Determines if there's a cancelation of all fetches
  * (sw.js)                  | token                   | Holds the token of the authenticated user
  * (sw.js)                  | termCode                | Holds the current term code to retrieve user's attended chapel events
@@ -40,7 +39,7 @@ let canceledUserFetches = [],
   successfulUserFetches = [],
   badResponseUserFetches = {},
   // Source needed to create user links
-  userRequiredSource = `${apiSource}/profiles`;
+  userRequiredSource = `${API_URL}/profiles`;
 
 /**
  * Creates the list of remote links to be fetched and cached for offline mode for an authenticated user
@@ -58,44 +57,44 @@ async function createRemoteUserLinks() {
   // Checks to make sure that the token and semester term code is available before attempting any fetches
   if (token && termCode) {
     userRemoteLinks = [
-      `${apiSource}/cms/slider`,
-      `${apiSource}/dining`,
-      `${apiSource}/events/25Live/All`,
+      `${API_URL}/cms/slider`,
+      `${API_URL}/dining`,
+      `${API_URL}/events/25Live/All`,
       userRequiredSource,
-      `${apiSource}/profiles/Image`,
-      `${apiSource}/sessions/daysLeft`,
-      `${apiSource}/news/categories`,
-      `${apiSource}/news/not-expired`,
-      `${apiSource}/version`,
-      `${apiSource}/events/chapel/${termCode}`,
-      `${apiSource}/vpscore`,
-      `${apiSource}/schedule`,
-      `${apiSource}/news/personal-unapproved`,
+      `${API_URL}/profiles/Image`,
+      `${API_URL}/sessions/daysLeft`,
+      `${API_URL}/news/categories`,
+      `${API_URL}/news/not-expired`,
+      `${API_URL}/version`,
+      `${API_URL}/events/chapel/${termCode}`,
+      `${API_URL}/vpscore`,
+      `${API_URL}/schedule`,
+      `${API_URL}/news/personal-unapproved`,
     ];
 
     try {
       // Fetches the user's profile info to create the remote links. Their profile info is also cached
       let userProfile = await fetch(
-        (request = new Request(`${apiSource}/profiles`, { method: 'GET', headers })),
-      ).then(async response => {
+        (request = new Request(`${API_URL}/profiles`, { method: 'GET', headers })),
+      ).then(async (response) => {
         // Checks to make sure the response of the fetch is okay before adding links to the list
         // of remote links for the user
         if (response.ok && !isFetchCanceled) {
           // Adds user's profile info to cache
-          await caches.open(cacheVersion).then(cache => {
+          await caches.open(cacheVersion).then((cache) => {
             cache.put(request.url, response.clone());
           });
           // Creates the user's remote links
           const profile = await response.json();
           userRemoteLinks.push(
-            `${apiSource}/memberships/student/username/${profile.AD_Username}/`,
-            `${apiSource}/profiles/${profile.AD_Username}/`,
-            `${apiSource}/profiles/Image/${profile.AD_Username}/`,
-            `${apiSource}/profiles/Advisors/${profile.AD_Username}/`,
-            `${apiSource}/schedule/${profile.AD_Username}/`,
-            `${apiSource}/myschedule/${profile.AD_Username}/`,
-            `${apiSource}/schedulecontrol/${profile.AD_Username}/`,
-            `${apiSource}/studentemployment/`,
+            `${API_URL}/memberships/student/username/${profile.AD_Username}/`,
+            `${API_URL}/profiles/${profile.AD_Username}/`,
+            `${API_URL}/profiles/Image/${profile.AD_Username}/`,
+            `${API_URL}/profiles/Advisors/${profile.AD_Username}/`,
+            `${API_URL}/schedule/${profile.AD_Username}/`,
+            `${API_URL}/myschedule/${profile.AD_Username}/`,
+            `${API_URL}/schedulecontrol/${profile.AD_Username}/`,
+            `${API_URL}/studentemployment/`,
           );
           saveSuccessfulUserLink(userRequiredSource);
           return profile;
@@ -113,24 +112,24 @@ async function createRemoteUserLinks() {
 
       // Fetches the user's memberships to cache each membership's data
       await fetch(
-        (request = new Request(`${apiSource}/memberships/student/${userProfile.ID}`, {
+        (request = new Request(`${API_URL}/memberships/student/${userProfile.ID}`, {
           method: 'GET',
           headers,
         })),
-      ).then(async response => {
+      ).then(async (response) => {
         // Adds the request to the links of remote user links
-        userRemoteLinks.push(`${apiSource}/memberships/student/${userProfile.ID}`);
+        userRemoteLinks.push(`${API_URL}/memberships/student/${userProfile.ID}`);
         // Checks to make sure the response of the fetch is okay before adding links to the list
         // of remote links for the user
         if (response.ok && !isFetchCanceled) {
           // Adds user's profile info to cache
-          await caches.open(cacheVersion).then(cache => {
+          await caches.open(cacheVersion).then((cache) => {
             cache.put(request.url, response.clone());
           });
           // Creates the user's memberships links
           const memberships = await response.json();
           for (const activity of memberships) {
-            userRemoteLinks.push(`${apiSource}/activities/${activity.ActivityCode}`);
+            userRemoteLinks.push(`${API_URL}/activities/${activity.ActivityCode}`);
           }
           saveSuccessfulUserLink(request.url);
         } else {
@@ -239,11 +238,11 @@ async function fetchUserFile(link, headers, attemptsLeft = 2) {
       headers,
     }),
   )
-    .then(async response => {
+    .then(async (response) => {
       // Checks to make sure the response of the fetch is okay. If so, attempts to add the response
       // to cache if fetch wasn't canceled
       if (response.ok && !isFetchCanceled) {
-        await caches.open(cacheVersion).then(cache => {
+        await caches.open(cacheVersion).then((cache) => {
           cache.put(link, response.clone());
         });
         saveSuccessfulUserLink(response.url);
@@ -261,7 +260,7 @@ async function fetchUserFile(link, headers, attemptsLeft = 2) {
         return fetchUserFile(response.url, headers, attemptsLeft - 1);
       }
     })
-    .catch(error => {
+    .catch((error) => {
       // Since the fetch failed, if the fetch wasn't canceled, the fetch is attempted again until
       // there are no attempts left
       if (isFetchCanceled) {
@@ -284,16 +283,16 @@ async function removeUserCache() {
   // Opens the cache and parses through all data
   await caches
     .open(cacheVersion)
-    .then(cache => {
-      cache.keys().then(items => {
-        items.forEach(item => {
+    .then((cache) => {
+      cache.keys().then((items) => {
+        items.forEach((item) => {
           /**
            * Checks to see if the item's URL is apart of the list of user's remote links. If so,
            * the link is removed from cache and from the list of the user's remote links
            */
           if (userRemoteLinks.includes(item.url)) {
             cache.delete(item);
-            userRemoteLinks = userRemoteLinks.filter(link => link !== item.url);
+            userRemoteLinks = userRemoteLinks.filter((link) => link !== item.url);
           } else if (
             /**
              * This is a fallback check if the statement above does not run. If the item's URL is not
@@ -301,7 +300,7 @@ async function removeUserCache() {
              * guest mode (and the font css) are checked to see if they contain the link. If not, the
              * item is removed from cache.
              */
-            item.url !== fontKeySource &&
+            item.url !== FONT_URL &&
             !guestRemoteLinks.includes(item.url) &&
             !static360Cache.includes(item.url.replace(location.origin, ''))
           ) {
