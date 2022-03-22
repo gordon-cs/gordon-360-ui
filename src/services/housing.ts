@@ -70,7 +70,7 @@ const getApartmentSelectionDate = async (): Promise<string> => {
 const getApartmentHalls = (): Promise<ApartmentHall[]> => http.get('housing/halls/apartments');
 
 const getCurrentApplicationID = (username: string = ''): Promise<number> =>
-  http.get(`housing/apartment/${username}/`);
+  http.get(username ? `housing/apartment/${username}/` : 'housing/apartment/');
 
 /**
  * Save the current state of the application to the database
@@ -154,7 +154,7 @@ function formatApplicationDetails(
     ),
     ApartmentChoices: applicationDetails.ApartmentChoices ?? [],
     NumApplicants: applicationDetails.Applicants?.length ?? 0,
-    FirstHall: applicationDetails.ApartmentChoices[0]?.HallName ?? '',
+    FirstHall: applicationDetails.ApartmentChoices?.[0]?.HallName ?? '',
   };
 }
 
