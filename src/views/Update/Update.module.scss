@@ -1,14 +1,36 @@
+@import '../../vars';
+
 .update {
-  .header_tooltip_container {
-    display: inline-flex;
-    position: relative;
+  margin: 1rem;
+
+  & :global(.MuiCard-root) {
+    margin-bottom: 1em;
   }
 
-  .header_tooltip_container .tooltip_icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin-right: -2px;
-    margin-top: 8px;
+  & :global(.MuiGrid-root) {
+    margin-left: 1em;
+    margin-right: 3em;
+  }
+
+  &_title {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  &_button {
+    background-color: #00aeef !important;
+    color: #ffffff !important;
+    margin: 0.5rem !important;
+  }
+
+  &_contributors:global(.MuiTypography-root) {
+    white-space: pre-wrap;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  &_header {
+    background-color: $primary-blue;
+    color: $neutral-white;
   }
 }
