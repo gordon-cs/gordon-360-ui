@@ -36,7 +36,7 @@ const OffCampusList = ({ disabled, applicants, onOffCampusInputChange }) => {
 
   return (
     <Card>
-      <CardHeader title="Off-Campus Work Study" className={styles.apartment_card_header} />
+      <CardHeader title="Off-Campus Program Credit" className={styles.apartment_card_header} />
       <CardContent>
         <Grid container justifyContent="space-between" spacing={2}>
           <Grid item xs={12}>
