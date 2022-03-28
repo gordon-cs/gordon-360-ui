@@ -33,32 +33,8 @@ type ActivityEdit = {
 const editActivity = (activityCode: string, data: ActivityEdit): Promise<ActivityEdit> =>
   http.put(`activities/${activityCode}`, data);
 
-const setActivityImage = (activityCode: string, dataURI: string): Promise<any> => {
-  const imageData = new FormData();
-  const blob = dataURItoBlob(dataURI);
-  const type = blob.type.replace('image/', '');
-  imageData.append('canvasImage', blob, 'canvasImage.' + type);
-  return http.post(`activities/${activityCode}/image/`, imageData);
-};
-
-// convert data to blob
-function dataURItoBlob(dataURI: string) {
-  // convert base64/URLEncoded data component to raw binary data held in a string
-  var byteString;
-  if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
-  else byteString = unescape(dataURI.split(',')[1]);
-
-  // separate out the mime component
-  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-  // write the bytes of the string to a typed array
-  var ia = new Uint8Array(byteString.length);
-  for (var i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
-  }
-
-  return new Blob([ia], { type: mimeString });
-}
+const setActivityImage = (activityCode: string, imageDataURI: string): Promise<any> =>
+  http.postImage(`activities/${activityCode}/image/`, imageDataURI);
 
 const get = (activityCode: string): Promise<Activity> => http.get(`activities/${activityCode}`);
 
@@ -120,7 +96,7 @@ const reopenActivity = (activityCode: string, sessionCode: string): Promise<void
   http.put(`activities/${activityCode}/session/${sessionCode}/open`);
 
 const resetImage = (activityCode: string): Promise<void> =>
-  http.post(`activities/${activityCode}/image/reset`);
+  http.post(`activities/${activityCode}/image/reset`, '');
 
 const involvementService = {
   closeActivity,
