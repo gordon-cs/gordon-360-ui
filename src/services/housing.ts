@@ -57,7 +57,7 @@ type ApplicationDetails = UnformattedApplicationDetails & {
 const checkHousingAdmin = (): Promise<boolean> => http.get(`housing/admin`);
 
 const addHousingAdmin = (username: string): Promise<boolean> =>
-  http.post(`housing/admin/${username}/`);
+  http.post(`housing/admin/${username}/`, '');
 
 const deleteHousingAdmin = (username: string): Promise<boolean> =>
   http.del(`housing/admin/${username}/`);
@@ -179,7 +179,7 @@ const getSubmittedApartmentApplications = async (): Promise<UnformattedApplicati
 };
 
 const submitApplication = (applicationID: number): Promise<boolean> =>
-  http.put(`housing/apartment/applications/${applicationID}/submit`);
+  http.put(`housing/apartment/applications/${applicationID}/submit`, '');
 
 const housingService = {
   checkHousingAdmin,

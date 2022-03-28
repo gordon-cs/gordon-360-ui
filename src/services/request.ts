@@ -37,12 +37,12 @@ type REQUEST = {
 };
 
 const approveRequest = (requestID: string): Promise<MEMBERSHIP> =>
-  http.post(`requests/${requestID}/approve`);
+  http.post(`requests/${requestID}/approve`, '');
 
 const cancelRequest = (requestID: string): Promise<REQUEST> => http.del(`requests/${requestID}`);
 
 const denyRequest = (requestID: string): Promise<REQUEST> =>
-  http.post(`requests/${requestID}/deny`);
+  http.post(`requests/${requestID}/deny`, '');
 
 const getRequests = (activityCode: string, sessionCode: string) =>
   http
