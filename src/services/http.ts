@@ -4,46 +4,75 @@ import storage from './storage';
 
 const base = process.env.REACT_APP_API_URL;
 
-type HttpRequest = <TResponse>(
-  url: string,
+type HttpRequestBody =
+  | string
+  | FormData
+  | URLSearchParams
+  | Blob
+  | File
+  | ArrayBuffer
+  | ArrayBufferView;
+
+const get = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'get');
+
+const put = <TResponse>(
+  endpoint: string,
   body?: Object,
-  headerOptions?: Object,
-) => Promise<TResponse>;
+  headers = new Headers(),
+): Promise<TResponse> =>
+  makeRequest(endpoint, 'put', JSON.stringify(body), setContentTypeJSON(headers));
 
 /**
- * Make a headers object with authentication options for use with the API
+ * Post image data to the API
  *
- * @param headerOptions Options to put in the Header. If empty, only auth is added
- * @returns Headers for the request
+ * @param endpoint url of the endpoint to post the image to
+ * @param imageData base64 encoded data URI of the image to post
+ * @param headers HTTP headers to include in the request
+ * @returns Response from the server
  */
-const makeHeaders = (headerOptions: any): Headers => {
-  if (isAuthenticated()) {
-    if (headerOptions === undefined) {
-      try {
-        const token = storage.get('token');
-        return new Headers({
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        });
-      } catch (err) {
-        throw new Error('Token is not available');
-      }
-    } else {
-      try {
-        const token = storage.get('token');
-        return new Headers({
-          Authorization: `Bearer ${token}`,
-        });
-      } catch (err) {
-        throw new Error('Token is not available');
-      }
-    }
-  } else {
-    return new Headers({
-      Authorization: `Bearer `,
-      'Content-Type': 'application/json',
-    });
-  }
+const postImage = <TResponse>(
+  endpoint: string,
+  imageData: string,
+  headers?: Headers,
+): Promise<TResponse> => {
+  const blob = dataURItoBlob(imageData);
+  const fileType = blob.type.replace('image/', '');
+  const imageDataForm = new FormData();
+  imageDataForm.append('canvasImage', blob, 'canvasImage.' + fileType);
+  return makeRequest(endpoint, 'post', imageDataForm, headers);
+};
+
+const post = <TResponse>(
+  endpoint: string,
+  body: Object,
+  headers = new Headers(),
+): Promise<TResponse> =>
+  makeRequest(endpoint, 'post', JSON.stringify(body), setContentTypeJSON(headers));
+
+const del = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'delete');
+
+/**
+ * Make a request to the API
+ *
+ * @param endpoint API endpoint to request, a URL relative to API base URL, ex: `activity/023487` (no leading slash)
+ * @param method HTTP method to use
+ * @param body Body of the request
+ * @param headers Options to put in the Header
+ * @returns The parsed response to the request
+ */
+const makeRequest = async <TResponse>(
+  endpoint: string,
+  method: string,
+  body?: HttpRequestBody,
+  headers?: Headers,
+): Promise<TResponse> => {
+  const request = new Request(`${base}api/${endpoint}`, {
+    method,
+    body,
+    headers: handleAuthHeader(headers ?? new Headers()),
+  });
+  const response = await fetch(request);
+  return parseResponse(response);
 };
 
 /**
@@ -70,48 +99,46 @@ export const parseResponse = async <TResponse>(res: Response): Promise<TResponse
   }
 };
 
-/**
- * Make a request to the API
- *
- * @param url URL to request, relative to base, ex: `activity/023487` (no leading slash)
- * @param method HTTP method to use
- * @param body Body of the request
- * @param headerOptions Options to put in the Header
- * @returns The parsed response to the request
- */
-const makeRequest = async <TResponse>(
-  url: string,
-  method: string,
-  body?: any,
-  headerOptions?: any,
-): Promise<TResponse> => {
-  const request = new Request(`${base}api/${url}`, {
-    method,
-    body,
-    headers: makeHeaders(headerOptions),
-  });
-  const response = await fetch(request);
-  return parseResponse(response);
-};
-
-const get: HttpRequest = (url) => makeRequest(url, 'get');
-
-const put: HttpRequest = (url, body) => makeRequest(url, 'put', JSON.stringify(body));
-
-const post: HttpRequest = (url, body, headerOptions?) => {
-  if (headerOptions !== undefined) {
-    return makeRequest(url, 'post', body, headerOptions);
-  } else {
-    return makeRequest(url, 'post', JSON.stringify(body));
+const handleAuthHeader = (headers: Headers): Headers => {
+  if (isAuthenticated()) {
+    try {
+      const token = storage.get('token');
+      headers.append('Authorization', `Bearer ${token}`);
+    } catch (err) {
+      throw new Error('Token is not available');
+    }
   }
+  return headers;
 };
 
-const del: HttpRequest = (url) => makeRequest(url, 'delete');
+const setContentTypeJSON = (headers: Headers) => {
+  headers.append('Content-Type', 'application/json');
+  return headers;
+};
+
+const dataURItoBlob = (dataURI: string) => {
+  // convert base64/URLEncoded data component to raw binary data held in a string
+  let byteString;
+  if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
+  else byteString = unescape(dataURI.split(',')[1]);
+
+  // separate out the mime component
+  let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+  // write the bytes of the string to a typed array
+  let ia = new Uint8Array(byteString.length);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+
+  return new Blob([ia], { type: mimeString });
+};
 
 const httpUtils = {
   del,
   get,
   post,
+  postImage,
   put,
 };
 
