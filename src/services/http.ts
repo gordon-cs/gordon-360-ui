@@ -17,7 +17,7 @@ const get = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(end
 
 const put = <TResponse>(
   endpoint: string,
-  body?: Object,
+  body: Object = '',
   headers = new Headers(),
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'put', JSON.stringify(body), setContentTypeJSON(headers));
@@ -44,7 +44,7 @@ const postImage = <TResponse>(
 
 const post = <TResponse>(
   endpoint: string,
-  body: Object,
+  body: Object = '',
   headers = new Headers(),
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'post', JSON.stringify(body), setContentTypeJSON(headers));
