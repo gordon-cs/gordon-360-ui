@@ -10,9 +10,16 @@ type Slide = {
   SortOrder: number;
 };
 
+type SlidePosting = {
+  Title: string;
+  LinkURL: string;
+  SortOrder: number;
+  ImageData: string;
+};
+
 const getSlides = (): Promise<Slide[]> => http.get('cms/banner');
 
-const submitSlide = (slide: Slide): Promise<Slide> => http.post('cms/banner', slide);
+const submitSlide = (slide: SlidePosting): Promise<Slide> => http.post('cms/banner', slide);
 
 const deleteSlide = (ID: number): Promise<Slide> => http.del(`cms/banner/${ID}`);
 

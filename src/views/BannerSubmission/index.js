@@ -1,38 +1,36 @@
 //Theme and styling
-import { gordonColors } from 'theme';
 import {
   Button,
+  Card,
+  CardContent,
+  CardHeader,
   DialogActions,
   DialogContent,
   DialogContentText,
   Fab,
   Grid,
-  MenuItem,
   TextField,
   Tooltip,
   Typography,
 } from '@material-ui/core';
 import PostAddIcon from '@material-ui/icons/PostAdd';
-import { Card, CardContent, CardHeader } from '@material-ui/core';
-
-//External components
-import Cropper from 'react-cropper';
-import Dropzone from 'react-dropzone';
-import { isMobile } from 'react-device-detect';
-
-//React and local services/hooks
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useAuth, useNetworkStatus } from 'hooks';
-import userService from 'services/user';
-import cmsService from 'services/cms';
-
 //Designed components
 import GordonDialogBox from 'components/GordonDialogBox';
-import GordonLoader from 'components/Loader';
 import GordonOffline from 'components/GordonOffline';
-import GordonSnackbar from 'components/Snackbar';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-
+import GordonLoader from 'components/Loader';
+import GordonSnackbar from 'components/Snackbar';
+import { useAuth, useNetworkStatus } from 'hooks';
+//React and local services/hooks
+import { useCallback, useEffect, useRef, useState } from 'react';
+//External components
+import Cropper from 'react-cropper';
+import { isMobile } from 'react-device-detect';
+import Dropzone from 'react-dropzone';
+import cmsService from 'services/cms';
+import storageService from 'services/storage';
+import userService from 'services/user';
+import { gordonColors } from 'theme';
 //Subcomponents
 import BannerList from './components/BannerList';
 
@@ -136,7 +134,7 @@ const BannerSubmission = () => {
 
   useEffect(() => {
     if (authenticated) {
-      setIsAdmin(userService.getLocalInfo().college_role === 'god');
+      setIsAdmin(storageService.getLocalInfo().college_role === 'god');
     }
   }, [authenticated]);
 
@@ -232,23 +230,19 @@ const BannerSubmission = () => {
   }
 
   async function handleSubmit() {
-    let newImage;
-    //No check required because the submit button is not enabled if the cropper doesn't have anything.
-    //Theoretically.
-    //if (cropperImageData !== null) {
-    let croppedImage = cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-    newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-    //}
+    const newImage = cropperRef.current.cropper
+      .getCroppedCanvas({ width: CROP_DIM })
+      .toDataURL()
+      .replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
 
     let bannerItem = {
-      Picture: newImage,
       Title: newBannerTitle,
       LinkURL: newBannerWebLink,
-      Order: newBannerSortOrder,
+      SortOrder: newBannerSortOrder,
+      ImageData: newImage,
     };
 
-    // submit the banner item and give feedback
-    let result = await cmsService.submitBanner(bannerItem);
+    let result = await cmsService.submitSlide(bannerItem);
     if (result === undefined) {
       createSnackbar('Banner Submission Failed to Submit', 'error');
     } else {
@@ -265,7 +259,7 @@ const BannerSubmission = () => {
    */
   async function handleBannerDelete(ID) {
     // delete the banner item and give feedback
-    let result = await cmsService.deleteBanner(ID);
+    let result = await cmsService.deleteSlide(ID);
     if (result === undefined) {
       createSnackbar('Banner Failed to Delete', 'error');
     } else {
@@ -318,14 +312,12 @@ const BannerSubmission = () => {
     if (isOnline) {
       bannerJSX = (
         <>
-          <>
-            {isAdmin && (
-              <Fab variant="extended" color="primary" onClick={handlePostClick} style={styles2.fab}>
-                <PostAddIcon />
-                Add a Banner
-              </Fab>
-            )}
-          </>
+          {isAdmin && (
+            <Fab variant="extended" color="primary" onClick={handlePostClick} style={styles2.fab}>
+              <PostAddIcon />
+              Add a Banner
+            </Fab>
+          )}
 
           <Grid container justifyContent="center">
             <Grid item xs={12} lg={8}>

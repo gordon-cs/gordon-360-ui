@@ -1,12 +1,8 @@
 import { Card, Grid, List, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useWindowSize } from 'hooks';
 import { gordonColors } from 'theme';
 import Banner from '../Banner';
 //import styles from './NewsList.module.css';
-
-//https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
-//Excellent resource for handling rerender on resize -Josh
 
 const BREAKPOINT_WIDTH = 540;
 
@@ -30,80 +26,51 @@ const singleHeader = (
 
 const fullHeader = (
   <Grid container direction="row" style={headerStyle}>
-    <Grid item xs={4}>
-      <Typography variant="body2" style={headerStyle}>
-        PICTURE
-      </Typography>
+    <Grid item xs={1}>
+      <Typography style={headerStyle}>ID</Typography>
     </Grid>
     <Grid item xs={3}>
       <Typography variant="body2" style={headerStyle}>
-        TITLE
+        Title
       </Typography>
     </Grid>
-    <Grid item xs={3}>
+    <Grid item xs={7}>
       <Typography variant="body2" style={headerStyle}>
-        URL
+        Link URL
       </Typography>
     </Grid>
-    <Grid item xs={2}>
+    <Grid item xs={1}>
       <Typography variant="body2" style={headerStyle}>
-        ORDER
+        Sort Order
       </Typography>
     </Grid>
   </Grid>
 );
 
-const BannerList = ({ banners, currentUsername, handleNewsItemDelete }) => {
-  const [width, setWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    function handleResize() {
-      setWidth(window.innerWidth);
-    }
-    window.addEventListener('resize', handleResize);
-    return (_) => {
-      window.removeEventListener('resize', handleResize);
-    };
-  });
+const BannerList = ({ banners, currentUsername, handleBannerDelete }) => {
+  const [width] = useWindowSize();
 
   return banners.length > 0 ? (
     <Card>
       {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
-      <Grid>
-        <List disablePadding>
-          {/* //className={styles.news_list} disablePadding> */}
-          {banners.length > 0 &&
-            banners.map((posting) => (
-              <Banner
-                posting={posting}
-                size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-                currentUsername={currentUsername}
-                handleNewsItemDelete={handleNewsItemDelete}
-                key={posting.ID}
-              />
-            ))}
-        </List>
-      </Grid>
+      <List disablePadding>
+        {banners.length > 0 &&
+          banners.map((posting) => (
+            <Banner
+              posting={posting}
+              size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
+              currentUsername={currentUsername}
+              handleNewsItemDelete={handleBannerDelete}
+              key={posting.ID}
+            />
+          ))}
+      </List>
     </Card>
   ) : (
     <Typography variant="h4" align="center">
       No Banners
     </Typography>
   );
-};
-
-BannerList.propTypes = {
-  banner: PropTypes.arrayOf(
-    PropTypes.shape({
-      Picture: PropTypes.string.isRequired,
-      Title: PropTypes.string.isRequired,
-      LinkURL: PropTypes.string,
-      Order: PropTypes.number.isRequired,
-    }),
-  ).isRequired,
-
-  currentUsername: PropTypes.string.isRequired,
-  handleNewsItemDelete: PropTypes.func.isRequired,
 };
 
 export default BannerList;

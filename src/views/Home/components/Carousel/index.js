@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
-
-import cms from 'services/cms';
-import ImageGallery from 'react-image-gallery';
 import GordonLoader from 'components/Loader';
+import { useEffect, useState } from 'react';
+import ImageGallery from 'react-image-gallery';
+import cms from 'services/cms';
 
 const GordonCarousel = () => {
   const [loading, setLoading] = useState(true);
@@ -19,8 +18,9 @@ const GordonCarousel = () => {
   }, []);
 
   const handleClickSlide = () => {
-    if (carouselContent[imageGallery.getCurrentIndex()].ActionLink !== '') {
-      window.location = carouselContent[imageGallery.getCurrentIndex()].ActionLink;
+    const currentSlideLink = carouselContent[imageGallery.getCurrentIndex()].LinkURL;
+    if (currentSlideLink !== '') {
+      window.location = currentSlideLink;
     }
   };
 
@@ -40,8 +40,8 @@ const GordonCarousel = () => {
         showNav={false}
         slideInterval={5000}
         items={carouselContent.map((slide) => ({
-          original: slide.ImagePath,
-          originalAlt: slide.AltTag,
+          original: slide.Path,
+          originalAlt: slide.Title,
           originalTitle: slide.Title,
         }))}
         onClick={handleClickSlide}

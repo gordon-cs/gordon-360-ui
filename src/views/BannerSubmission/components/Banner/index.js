@@ -1,9 +1,7 @@
 import { Button, CardContent, Collapse, Grid, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import styles from './Banner.module.css';
 
 const Banner = ({ posting, size, currentUsername, handleNewsItemDelete }) => {
@@ -64,17 +62,19 @@ const Banner = ({ posting, size, currentUsername, handleNewsItemDelete }) => {
         }}
         className={`${styles.news_item} ${styles.approved}`}
       >
-        <Grid item xs={2}>
+        <Grid item xs={1}>
+          <Typography className={styles.news_column}>{posting.ID}</Typography>
+        </Grid>
+        <Grid item xs={3}>
           <Typography className={styles.news_column}>{posting.Title}</Typography>
         </Grid>
-        <Grid item xs={5}>
+        <Grid item xs={7}>
           <Typography className={styles.news_column} style={{ fontWeight: 'bold' }}>
             {posting.LinkURL}
           </Typography>
         </Grid>
-        <Grid item xs={3}></Grid>
-        <Grid item xs={2}>
-          <Typography className={styles.news_column}>{posting.dayPosted}</Typography>
+        <Grid item xs={1}>
+          <Typography className={styles.news_column}>{posting.SortOrder}</Typography>
         </Grid>
 
         {/* Collapsable details */}
@@ -82,11 +82,7 @@ const Banner = ({ posting, size, currentUsername, handleNewsItemDelete }) => {
           <CardContent>
             <Grid container direction="row" alignItems="center" justify="space-around">
               <Grid item xs={8} style={{ textAlign: 'left' }}>
-                <Typography className={styles.descriptionText}>Description:</Typography>
-                <Typography type="caption" className={styles.descriptionText}>
-                  {posting.Order}
-                </Typography>
-                <img src={`data:image/jpg;base64,${posting.Picture}`} alt=" " />
+                <img src={posting.Path} alt=" " />
               </Grid>
               {/* Possible action buttons */}
               <Grid item xs={4}>
@@ -100,19 +96,6 @@ const Banner = ({ posting, size, currentUsername, handleNewsItemDelete }) => {
       </Grid>
     );
   }
-};
-
-Banner.propTypes = {
-  posting: PropTypes.shape({
-    Picture: PropTypes.string.isRequired,
-    Title: PropTypes.string.isRequired,
-    LinkURL: PropTypes.string,
-    Order: PropTypes.number.isRequired,
-  }).isRequired,
-
-  size: PropTypes.string.isRequired,
-  currentUsername: PropTypes.string.isRequired,
-  handleNewsItemDelete: PropTypes.func.isRequired,
 };
 
 export default Banner;
