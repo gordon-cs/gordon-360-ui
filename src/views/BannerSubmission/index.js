@@ -22,14 +22,13 @@ import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import { useAuth, useNetworkStatus } from 'hooks';
 //React and local services/hooks
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 //External components
 import Cropper from 'react-cropper';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import cmsService from 'services/cms';
 import storageService from 'services/storage';
-import userService from 'services/user';
 import { gordonColors } from 'theme';
 //Subcomponents
 import BannerList from './components/BannerList';
@@ -89,7 +88,6 @@ const styles2 = {
 
 const BannerSubmission = () => {
   const authenticated = useAuth();
-  const [currentUsername, setCurrentUsername] = useState('');
   const isOnline = useNetworkStatus();
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -98,7 +96,7 @@ const BannerSubmission = () => {
   const [banners, setBanners] = useState([]);
   const [newBannerTitle, setNewBannerTitle] = useState('');
   const [newBannerWebLink, setNewBannerWebLink] = useState('');
-  const [newBannerSortOrder, setNewBannerSortOrder] = useState(-1);
+  const [newBannerSortOrder, setNewBannerSortOrder] = useState(0);
   const [openBannerActivity, setOpenBannerActivity] = useState(false);
 
   //Solely for photo functions
@@ -109,33 +107,18 @@ const BannerSubmission = () => {
   const cropperRef = useRef();
   const [aspectRatio, setAspectRatio] = useState(null);
 
-  const loadBanners = useCallback(async () => {
-    setLoading(true);
-    if (authenticated) {
-      const existingBanners = await cmsService.getSlides();
+  useEffect(() => {
+    const loadPage = async () => {
+      setLoading(true);
+      if (authenticated) {
+        setIsAdmin(storageService.getLocalInfo().college_role === 'god');
+        const existingBanners = await cmsService.getSlides();
+        setBanners(existingBanners);
+      }
       setLoading(false);
-      setBanners(existingBanners);
-    } else {
-    }
-  }, [authenticated]);
-
-  useEffect(() => {
-    loadBanners();
-  }, [authenticated, loadBanners]);
-
-  useEffect(() => {
-    const loadUsername = async () => {
-      const user = await userService.getProfileInfo();
-      setCurrentUsername(user.AD_Username);
     };
 
-    loadUsername();
-  }, []);
-
-  useEffect(() => {
-    if (authenticated) {
-      setIsAdmin(storageService.getLocalInfo().college_role === 'god');
-    }
+    loadPage();
   }, [authenticated]);
 
   function handlePostClick() {
@@ -248,25 +231,18 @@ const BannerSubmission = () => {
     } else {
       createSnackbar('Banner Submission Submitted Successfully', 'success');
       handleWindowClose();
-      loadBanners(); //reload banners
+      setBanners((b) => [...b, result]);
     }
   }
 
-  /**
-   * When the delete button is clicked on a banner
-   *
-   * @param {number} ID The ID of the banner to be deleted
-   */
   async function handleBannerDelete(ID) {
-    // delete the banner item and give feedback
     let result = await cmsService.deleteSlide(ID);
     if (result === undefined) {
       createSnackbar('Banner Failed to Delete', 'error');
     } else {
+      setBanners((b) => b.filter((banner) => banner.ID !== ID));
       createSnackbar('Banner Deleted Successfully', 'success');
     }
-
-    loadBanners();
   }
 
   function imageOnLoadHelper(reader) {
@@ -286,238 +262,208 @@ const BannerSubmission = () => {
   /*End of methods solely related to photo submission*
   /***************************************************/
 
-  // if all of the inputs are filled, enable 'submit' button
-  //URL not here because a URL is not required
-  let submitButtonDisabled =
-    newBannerTitle === '' || cropperImageData === '' || newBannerSortOrder === -1;
-
-  let content;
-
-  //If user is online
-  if (authenticated) {
-    if (loading === true) {
-      content = <GordonLoader />;
-    } else {
-      content = (
-        <BannerList
-          banners={banners}
-          currentUsername={currentUsername}
-          handleBannerDelete={handleBannerDelete}
-        />
-      );
-    }
-
-    let bannerJSX;
-
-    if (isOnline) {
-      bannerJSX = (
-        <>
-          {isAdmin && (
-            <Fab variant="extended" color="primary" onClick={handlePostClick} style={styles2.fab}>
-              <PostAddIcon />
-              Add a Banner
-            </Fab>
-          )}
-
-          <Grid container justifyContent="center">
-            <Grid item xs={12} lg={8}>
-              <Card>
-                <CardHeader
-                  title="Advertise your club or event on the 360 Homepage!"
-                  titleTypographyProps={{ variant: 'h4', align: 'center' }}
-                  style={{
-                    backgroundColor: gordonColors.primary.blue,
-                    color: 'white',
-                  }}
-                />
-                <CardContent>
-                  <Grid container justifyContent="center" direction="column">
-                    <Grid item align="left">
-                      <Typography variant="h6">Banner Image Guidelines</Typography>
-                      <Typography variant="body2">
-                        1. Attach JPG image with a resolution of 1500 by 600.
-                        <br />
-                        2. Text must be clearly legible.
-                        <br />
-                        3. Include a url that you would like the banner image to link to in your
-                        email.
-                        <br />
-                        4. All banner images must be approved. There is limited space, so not all
-                        images will be.
-                      </Typography>
-                    </Grid>
-                    <Grid item align="center">
-                      <a href="mailto:360@gordon.edu?Subject=Banner Image Submission">
-                        <Button variant="contained" style={style.uploadButton}>
-                          Email the 360 Team
-                        </Button>
-                      </a>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {/* Create Posting */}
-            {isAdmin && (
-              <>
-                <GordonDialogBox
-                  open={openBannerActivity}
-                  title="Make a new Banner"
-                  buttonClicked={handleSubmit}
-                  buttonName={'Submit'}
-                  isButtonDisabled={submitButtonDisabled}
-                  cancelButtonClicked={handleWindowClose}
-                  cancelButtonName="Cancel"
-                >
-                  <Grid container>
-                    {/* TITLE ENTRY */}
-                    <Grid item xs={12}>
-                      <TextField
-                        label="Subject"
-                        variant="filled"
-                        margin="dense"
-                        fullWidth
-                        name="newBannerTitle"
-                        value={newBannerTitle}
-                        onChange={(event) => {
-                          setNewBannerTitle(event.target.value);
-                        }}
-                        // helperText="Please enter a title."
-                      />
-                    </Grid>
-
-                    {/* LINK ENTRY */}
-                    <Grid item xs={12}>
-                      <TextField
-                        variant="filled"
-                        label="URL"
-                        // margin="normal"
-                        margin="dense"
-                        //multiline
-                        fullWidth
-                        //rows={4}
-                        name="newBannerWebLink"
-                        value={newBannerWebLink}
-                        onChange={(event) => {
-                          setNewBannerWebLink(event.target.value);
-                        }}
-                        // helperText="Please enter a link."
-                      />
-                    </Grid>
-
-                    {/* IMAGE ENTRY */}
-                    <Grid item xs={12}>
-                      <div className="gc360_photo_dialog_box">
-                        <DialogContent className="gc360_photo_dialog_box_content">
-                          <DialogContentText className="gc360_photo_dialog_box_content_text">
-                            {createPhotoDialogBoxMessage()}
-                          </DialogContentText>
-                          {!cropperImageData && (
-                            <Dropzone
-                              onDropAccepted={onDropAccepted}
-                              onDropRejected={onDropRejected}
-                              accept="image/jpeg, image/jpg, image/png"
-                            >
-                              {({ getRootProps, getInputProps }) => (
-                                <section>
-                                  <div
-                                    className="gc360_photo_dialog_box_content_dropzone"
-                                    {...getRootProps()}
-                                  >
-                                    <input {...getInputProps()} />
-                                  </div>
-                                </section>
-                              )}
-                            </Dropzone>
-                          )}
-                          {cropperImageData && (
-                            <div className="gc360_photo_dialog_box_content_cropper">
-                              <Cropper
-                                ref={cropperRef}
-                                src={cropperImageData}
-                                autoCropArea={1}
-                                viewMode={3}
-                                aspectRatio={aspectRatio}
-                                highlight={false}
-                                background={false}
-                                zoom={onCropperZoom}
-                                zoomable={false}
-                                dragMode={'none'}
-                              />
-                            </div>
-                          )}
-                        </DialogContent>
-                        <DialogActions className="gc360_photo_dialog_box_actions_top">
-                          {cropperImageData && (
-                            <Tooltip
-                              classes={{ tooltip: 'tooltip' }}
-                              id="tooltip-hide"
-                              title="Remove this image from the submission"
-                            >
-                              <Button
-                                variant="contained"
-                                onClick={() => {
-                                  setCropperImageData(null);
-                                }}
-                                style={styles2.button.cancelButton}
-                                className="gc360_photo_dialog_box_content_button"
-                              >
-                                Remove picture
-                              </Button>
-                            </Tooltip>
-                          )}
-                        </DialogActions>
-                      </div>
-                    </Grid>
-                  </Grid>
-
-                  {/* SORT ORDER NUMBER ENTRY */}
-                  <Grid item xs={12}>
-                    <TextField
-                      id="outlined-number"
-                      variant="filled"
-                      label="Number"
-                      type="number"
-                      margin="dense"
-                      fullWidth
-                      name="newBannerSortOrderNumber"
-                      value={newBannerSortOrder}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      onChange={(event) => {
-                        setNewBannerSortOrder(event.target.value);
-                      }}
-                    />
-                  </Grid>
-                </GordonDialogBox>
-
-                {/* USER FEEDBACK */}
-                <GordonSnackbar
-                  {...snackbar}
-                  onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-                  anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-                />
-
-                <Grid item xs={12} lg={8} style={{ marginBottom: '7rem' }}>
-                  {/* list of banners */}
-                  {content}
-                </Grid>
-              </>
-            )}
-          </Grid>
-        </>
-      );
-      return bannerJSX;
-    }
-    //else if user is not online
-    else {
-      return <GordonOffline feature="Banner Sumission" />;
-    }
-  } else {
+  if (!authenticated) {
     return <GordonUnauthorized feature={'the banner submission'} />;
   }
+
+  if (!isOnline) {
+    return <GordonOffline feature="Banner Sumission" />;
+  }
+
+  return isAdmin ? (
+    <>
+      <Fab variant="extended" color="primary" onClick={handlePostClick} style={styles2.fab}>
+        <PostAddIcon />
+        Add a Banner
+      </Fab>
+      <GordonDialogBox
+        open={openBannerActivity}
+        title="Make a new Banner"
+        buttonClicked={handleSubmit}
+        buttonName={'Submit'}
+        isButtonDisabled={!Boolean(newBannerTitle && cropperImageData && newBannerSortOrder)}
+        cancelButtonClicked={handleWindowClose}
+        cancelButtonName="Cancel"
+      >
+        <Grid container>
+          {/* TITLE ENTRY */}
+          <Grid item xs={12}>
+            <TextField
+              label="Subject"
+              variant="filled"
+              margin="dense"
+              fullWidth
+              name="newBannerTitle"
+              value={newBannerTitle}
+              onChange={(event) => {
+                setNewBannerTitle(event.target.value);
+              }}
+              // helperText="Please enter a title."
+            />
+          </Grid>
+
+          {/* LINK ENTRY */}
+          <Grid item xs={12}>
+            <TextField
+              variant="filled"
+              label="URL"
+              // margin="normal"
+              margin="dense"
+              //multiline
+              fullWidth
+              //rows={4}
+              name="newBannerWebLink"
+              value={newBannerWebLink}
+              onChange={(event) => {
+                setNewBannerWebLink(event.target.value);
+              }}
+              // helperText="Please enter a link."
+            />
+          </Grid>
+
+          {/* IMAGE ENTRY */}
+          <Grid item xs={12}>
+            <div className="gc360_photo_dialog_box">
+              <DialogContent className="gc360_photo_dialog_box_content">
+                <DialogContentText className="gc360_photo_dialog_box_content_text">
+                  {createPhotoDialogBoxMessage()}
+                </DialogContentText>
+                {!cropperImageData && (
+                  <Dropzone
+                    onDropAccepted={onDropAccepted}
+                    onDropRejected={onDropRejected}
+                    accept="image/jpeg, image/jpg, image/png"
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <section>
+                        <div
+                          className="gc360_photo_dialog_box_content_dropzone"
+                          {...getRootProps()}
+                        >
+                          <input {...getInputProps()} />
+                        </div>
+                      </section>
+                    )}
+                  </Dropzone>
+                )}
+                {cropperImageData && (
+                  <div className="gc360_photo_dialog_box_content_cropper">
+                    <Cropper
+                      ref={cropperRef}
+                      src={cropperImageData}
+                      autoCropArea={1}
+                      viewMode={3}
+                      aspectRatio={aspectRatio}
+                      highlight={false}
+                      background={false}
+                      zoom={onCropperZoom}
+                      zoomable={false}
+                      dragMode={'none'}
+                    />
+                  </div>
+                )}
+              </DialogContent>
+              <DialogActions className="gc360_photo_dialog_box_actions_top">
+                {cropperImageData && (
+                  <Tooltip
+                    classes={{ tooltip: 'tooltip' }}
+                    id="tooltip-hide"
+                    title="Remove this image from the submission"
+                  >
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setCropperImageData(null);
+                      }}
+                      style={styles2.button.cancelButton}
+                      className="gc360_photo_dialog_box_content_button"
+                    >
+                      Remove picture
+                    </Button>
+                  </Tooltip>
+                )}
+              </DialogActions>
+            </div>
+          </Grid>
+        </Grid>
+
+        {/* SORT ORDER NUMBER ENTRY */}
+        <Grid item xs={12}>
+          <TextField
+            id="outlined-number"
+            variant="filled"
+            label="Number"
+            type="number"
+            margin="dense"
+            fullWidth
+            name="newBannerSortOrderNumber"
+            value={newBannerSortOrder}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(event) => {
+              setNewBannerSortOrder(event.target.value);
+            }}
+          />
+        </Grid>
+      </GordonDialogBox>
+
+      {/* USER FEEDBACK */}
+      <GordonSnackbar
+        {...snackbar}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+      />
+
+      <Grid item xs={12} lg={8} style={{ marginBottom: '7rem' }}>
+        {/* list of banners */}
+        {loading ? (
+          <GordonLoader />
+        ) : (
+          <BannerList banners={banners} handleBannerDelete={handleBannerDelete} />
+        )}
+      </Grid>
+    </>
+  ) : (
+    <Grid container justifyContent="center">
+      <Grid item xs={12} lg={8}>
+        <Card>
+          <CardHeader
+            title="Advertise your club or event on the 360 Homepage!"
+            titleTypographyProps={{ variant: 'h4', align: 'center' }}
+            style={{
+              backgroundColor: gordonColors.primary.blue,
+              color: 'white',
+            }}
+          />
+          <CardContent>
+            <Grid container justifyContent="center" direction="column">
+              <Grid item align="left">
+                <Typography variant="h6">Banner Image Guidelines</Typography>
+                <Typography variant="body2">
+                  1. Attach JPG image with a resolution of 1500 by 600.
+                  <br />
+                  2. Text must be clearly legible.
+                  <br />
+                  3. Include a url that you would like the banner image to link to in your email.
+                  <br />
+                  4. All banner images must be approved. There is limited space, so not all images
+                  will be.
+                </Typography>
+              </Grid>
+              <Grid item align="center">
+                <a href="mailto:360@gordon.edu?Subject=Banner Image Submission">
+                  <Button variant="contained" style={style.uploadButton}>
+                    Email the 360 Team
+                  </Button>
+                </a>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
+  );
 };
 
 export default BannerSubmission;

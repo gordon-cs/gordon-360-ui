@@ -47,29 +47,29 @@ const fullHeader = (
   </Grid>
 );
 
-const BannerList = ({ banners, currentUsername, handleBannerDelete }) => {
+const BannerList = ({ banners, handleBannerDelete }) => {
   const [width] = useWindowSize();
 
-  return banners.length > 0 ? (
+  return (
     <Card>
       {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
       <List disablePadding>
-        {banners.length > 0 &&
-          banners.map((posting) => (
+        {banners.length > 0 ? (
+          banners.map((banner) => (
             <Banner
-              posting={posting}
+              banner={banner}
               size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-              currentUsername={currentUsername}
               handleNewsItemDelete={handleBannerDelete}
-              key={posting.ID}
+              key={banner.ID}
             />
-          ))}
+          ))
+        ) : (
+          <Typography variant="h6" align="center">
+            No Banners
+          </Typography>
+        )}
       </List>
     </Card>
-  ) : (
-    <Typography variant="h4" align="center">
-      No Banners
-    </Typography>
   );
 };
 
