@@ -140,7 +140,7 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
   return (
     <GordonDialogBox
       open={open}
-      title="Make a new Banner"
+      title="Add a new Banner"
       buttonClicked={handleSubmit}
       buttonName={'Submit'}
       isButtonDisabled={!Boolean(title && cropperImageData && sortOrder)}
@@ -148,11 +148,11 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
       cancelButtonName="Cancel"
     >
       <TextField
-        label="Subject"
+        label="Banner Title"
         variant="filled"
         margin="dense"
         fullWidth
-        name="newBannerTitle"
+        name="title"
         value={title}
         onChange={(event) => setTitle(event.target.value)}
         helperText="Enter title to show if image fails to load"
@@ -161,10 +161,10 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
 
       <TextField
         variant="filled"
-        label="URL"
+        label="Banner Link URL"
         margin="dense"
         fullWidth
-        name="newBannerWebLink"
+        name="link"
         value={link}
         onChange={(event) => setLink(event.target.value)}
         helperText="Enter URL that banner should link to, if any"
@@ -234,7 +234,7 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
         type="number"
         margin="dense"
         fullWidth
-        name="newBannerSortOrderNumber"
+        name="sortOrder"
         value={sortOrder}
         InputLabelProps={{
           shrink: true,
