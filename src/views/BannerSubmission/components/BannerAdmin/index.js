@@ -2,10 +2,13 @@ import { Fab } from '@material-ui/core';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
+import { useWindowSize } from 'hooks';
 import { useEffect, useState } from 'react';
 import cmsService from 'services/cms';
 import BannerList from '../BannerList';
 import NewBannerDialog from '../NewBannerDialog';
+
+const BREAKPOINT_WIDTH = 1500;
 
 const styles = {
   fab: {
@@ -24,6 +27,7 @@ const BannerAdmin = () => {
   const [isNewBannerDialogOpen, setIsNewBannerDialogOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [loading, setLoading] = useState(true);
+  const [width] = useWindowSize();
 
   useEffect(() => {
     const loadPage = async () => {
@@ -59,7 +63,7 @@ const BannerAdmin = () => {
         style={styles.fab}
       >
         <PostAddIcon />
-        Add a Banner
+        {width > BREAKPOINT_WIDTH ? 'Add Banner' : ''}
       </Fab>
 
       <NewBannerDialog

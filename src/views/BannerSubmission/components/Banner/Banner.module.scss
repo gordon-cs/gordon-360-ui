@@ -24,6 +24,17 @@ button.deleteButton {
   color: $secondary-red;
 }
 
-.banner_details {
+img.banner_image {
+  height: auto;
+  max-width: 1500px;
+  margin: auto;
+}
+
+.banner_details_large {
+  width: 100%;
+  padding-top: 1rem;
+}
+
+.banner_details_small {
   flex-direction: column;
 }
