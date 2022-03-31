@@ -18,7 +18,7 @@ import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import cmsService from 'services/cms';
 import { gordonColors } from 'theme';
-import BannerList from './components/BannerList';
+import BannerList from '../BannerList';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 

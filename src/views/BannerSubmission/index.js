@@ -5,7 +5,7 @@ import { useAuth, useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
 import storageService from 'services/storage';
 import { gordonColors } from 'theme';
-import { BannerAdmin } from './components/BannerAdmin';
+import BannerAdmin from './components/BannerAdmin';
 
 const style = {
   color: gordonColors.primary.blue,
