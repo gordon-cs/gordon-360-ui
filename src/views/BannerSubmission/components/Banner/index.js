@@ -34,7 +34,7 @@ const Banner = ({ banner, handleNewsItemDelete }) => (
         )}
       </Typography>
     </CardContent>
-    <CardActions style={{ justifyContent: 'flex-end' }}>
+    <CardActions className={styles.banner_actions}>
       <Button
         variant="outlined"
         startIcon={<DeleteIcon />}

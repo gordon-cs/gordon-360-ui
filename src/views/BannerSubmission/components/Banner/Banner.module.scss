@@ -1,24 +1,5 @@
 @import '../../../../vars';
 
-.news_item {
-  padding: 1rem;
-  align-items: center;
-  transition: background-color 150ms;
-  border-top: solid 1.5px $neutral-light-gray;
-
-  &:hover {
-    background-color: $primary-cyan;
-    cursor: pointer;
-
-    .news_column,
-    .descriptionText,
-    .news_content,
-    .news_heading {
-      color: $neutral-white;
-    }
-  }
-}
-
 button.deleteButton {
   border-color: $secondary-red;
   color: $secondary-red;
@@ -30,11 +11,6 @@ img.banner_image {
   margin: auto;
 }
 
-.banner_details_large {
-  width: 100%;
-  padding-top: 1rem;
-}
-
-.banner_details_small {
-  flex-direction: column;
+div.banner_actions {
+  justify-content: flex-end;
 }

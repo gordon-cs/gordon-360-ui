@@ -1,9 +1,10 @@
 import { Container, Typography } from '@material-ui/core';
 import Banner from '../Banner';
+import styles from './BannerList.module.css';
 
 const BannerList = ({ banners, handleBannerDelete }) => {
   return (
-    <Container style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <Container className={styles.banner_list}>
       {banners.length > 0 ? (
         banners.map((banner) => (
           <Banner banner={banner} handleNewsItemDelete={handleBannerDelete} key={banner.ID} />

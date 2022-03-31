@@ -7,20 +7,9 @@ import { useEffect, useState } from 'react';
 import cmsService from 'services/cms';
 import BannerList from '../BannerList';
 import NewBannerDialog from '../NewBannerDialog';
+import styles from './BannerAdmin.module.scss';
 
-const BREAKPOINT_WIDTH = 1500;
-
-const styles = {
-  fab: {
-    margin: 0,
-    top: 'auto',
-    right: 40,
-    bottom: 40,
-    left: 'auto',
-    position: 'fixed',
-    zIndex: 1,
-  },
-};
+const BREAKPOINT_WIDTH = 1580; //The width at which the FAB no longer overlaps the banners
 
 const BannerAdmin = () => {
   const [banners, setBanners] = useState([]);
@@ -57,10 +46,11 @@ const BannerAdmin = () => {
   return (
     <>
       <Fab
-        variant="extended"
+        aria-label="add"
         color="primary"
         onClick={() => setIsNewBannerDialogOpen(true)}
-        style={styles.fab}
+        className={styles.fab}
+        variant={width > BREAKPOINT_WIDTH ? 'extended' : 'circular'}
       >
         <PostAddIcon />
         {width > BREAKPOINT_WIDTH ? 'Add Banner' : ''}

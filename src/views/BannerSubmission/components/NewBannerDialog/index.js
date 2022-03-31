@@ -12,18 +12,8 @@ import Cropper from 'react-cropper';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import cmsService from 'services/cms';
-import { gordonColors } from 'theme';
 
 const CROP_DIM = 200; // Width of cropped image canvas
-
-const styles = {
-  cancelButton: {
-    backgroundColor: 'white',
-    color: gordonColors.primary.blue,
-    border: `1px solid ${gordonColors.primary.blue}`,
-    width: '38%',
-  },
-};
 
 const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
   const [title, setTitle] = useState('');
@@ -217,7 +207,6 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
               <Button
                 variant="contained"
                 onClick={() => setCropperImageData(null)}
-                style={styles.cancelButton}
                 className="gc360_photo_dialog_box_content_button"
               >
                 Remove picture
