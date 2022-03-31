@@ -11,9 +11,7 @@ const Banner = ({ banner, size, handleNewsItemDelete }) => {
       variant="outlined"
       color="primary"
       startIcon={<DeleteIcon />}
-      onClick={() => {
-        handleNewsItemDelete(banner.ID);
-      }}
+      onClick={() => handleNewsItemDelete(banner.ID)}
       className={`${styles.btn} ${styles.deleteButton}`}
     >
       Delete
@@ -55,9 +53,7 @@ const Banner = ({ banner, size, handleNewsItemDelete }) => {
       <Grid
         container
         direction="row"
-        onClick={() => {
-          setOpen(!open);
-        }}
+        onClick={() => setOpen((o) => !o)}
         className={`${styles.news_item} ${styles.approved}`}
       >
         <Grid item xs={1}>
@@ -75,14 +71,12 @@ const Banner = ({ banner, size, handleNewsItemDelete }) => {
           <Typography className={styles.news_column}>{banner.SortOrder}</Typography>
         </Grid>
 
-        {/* Collapsable details */}
         <Collapse in={open} timeout="auto" unmountOnExit style={{ width: '100%' }}>
           <CardContent>
             <Grid container direction="row" alignItems="center" justify="space-around">
               <Grid item xs={8} style={{ textAlign: 'left' }}>
                 <img src={banner.Path} alt=" " />
               </Grid>
-              {/* Possible action buttons */}
               <Grid item xs={4}>
                 <Grid container justify="space-evenly">
                   {deleteButton}
