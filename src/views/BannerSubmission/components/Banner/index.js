@@ -1,4 +1,15 @@
-import { Button, CardContent, Collapse, Grid, Typography } from '@material-ui/core';
+import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  CardContent,
+  Collapse,
+  Grid,
+  Typography,
+} from '@material-ui/core';
+import { ExpandMore } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useState } from 'react';
 import styles from './Banner.module.css';
@@ -9,46 +20,31 @@ const Banner = ({ banner, size, handleNewsItemDelete }) => {
   const deleteButton = (
     <Button
       variant="outlined"
-      color="primary"
       startIcon={<DeleteIcon />}
       onClick={() => handleNewsItemDelete(banner.ID)}
-      className={`${styles.btn} ${styles.deleteButton}`}
+      className={styles.deleteButton}
     >
       Delete
     </Button>
   );
 
-  // SINGLE SIZE - single column per news item
   if (size === 'single') {
     return (
-      <Grid
-        container
-        onClick={() => {
-          setOpen(!open);
-        }}
-        className={`${styles.news_item} ${styles.approved}`}
-        justify="center"
-      >
-        <Grid item xs={12}>
-          <Typography variant="h6" className={styles.news_heading} style={{ fontWeight: 'bold' }}>
+      <Accordion className={styles.news_item}>
+        <AccordionSummary expandIcon={<ExpandMore />}>
+          <Typography variant="h6" className={styles.news_heading}>
             {banner.Title}
           </Typography>
-        </Grid>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <CardContent>
-            <Typography className={styles.news_content}>"{banner.Order}"</Typography>
-            <Typography className={styles.news_content}>{banner.LinkURL}</Typography>
-            <img src={`data:image/jpg;base64,${banner.Image}`} alt=" " />
-          </CardContent>
-          <Grid container justify="space-evenly">
-            {deleteButton}
-          </Grid>
-        </Collapse>
-      </Grid>
+        </AccordionSummary>
+        <AccordionDetails className={styles.banner_details}>
+          <Typography className={styles.news_content}>Sort Order: {banner.SortOrder}</Typography>
+          <Typography className={styles.news_content}>Link URL: {banner.LinkURL}</Typography>
+          <img src={`data:image/jpg;base64,${banner.Image}`} alt=" " />
+        </AccordionDetails>
+        <AccordionActions>{deleteButton}</AccordionActions>
+      </Accordion>
     );
-  }
-  // FULL SIZE - many columns per news item
-  else if (size === 'full') {
+  } else if (size === 'full') {
     return (
       <Grid
         container
