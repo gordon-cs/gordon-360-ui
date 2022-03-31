@@ -4,7 +4,6 @@ import {
   DialogContent,
   DialogContentText,
   Fab,
-  Grid,
   TextField,
   Tooltip,
 } from '@material-ui/core';
@@ -226,119 +225,101 @@ const BannerAdmin = () => {
         cancelButtonClicked={handleWindowClose}
         cancelButtonName="Cancel"
       >
-        <Grid container>
-          <Grid item xs={12}>
-            <TextField
-              label="Subject"
-              variant="filled"
-              margin="dense"
-              fullWidth
-              name="newBannerTitle"
-              value={newBannerTitle}
-              onChange={(event) => {
-                setNewBannerTitle(event.target.value);
-              }}
-              // helperText="Please enter a title."
-            />
-          </Grid>
+        <TextField
+          label="Subject"
+          variant="filled"
+          margin="dense"
+          fullWidth
+          name="newBannerTitle"
+          value={newBannerTitle}
+          onChange={(event) => setNewBannerTitle(event.target.value)}
+          helperText="Enter title to show if image fails to load"
+          required
+        />
 
-          <Grid item xs={12}>
-            <TextField
-              variant="filled"
-              label="URL"
-              // margin="normal"
-              margin="dense"
-              //multiline
-              fullWidth
-              //rows={4}
-              name="newBannerWebLink"
-              value={newBannerWebLink}
-              onChange={(event) => {
-                setNewBannerWebLink(event.target.value);
-              }}
-              // helperText="Please enter a link."
-            />
-          </Grid>
+        <TextField
+          variant="filled"
+          label="URL"
+          margin="dense"
+          fullWidth
+          name="newBannerWebLink"
+          value={newBannerWebLink}
+          onChange={(event) => setNewBannerWebLink(event.target.value)}
+          helperText="Enter URL that banner should link to, if any"
+        />
 
-          <Grid item xs={12}>
-            <div className="gc360_photo_dialog_box">
-              <DialogContent className="gc360_photo_dialog_box_content">
-                <DialogContentText className="gc360_photo_dialog_box_content_text">
-                  {createPhotoDialogBoxMessage()}
-                </DialogContentText>
-                {!cropperImageData && (
-                  <Dropzone
-                    onDropAccepted={onDropAccepted}
-                    onDropRejected={onDropRejected}
-                    accept="image/jpeg, image/jpg, image/png"
-                  >
-                    {({ getRootProps, getInputProps }) => (
-                      <section>
-                        <div
-                          className="gc360_photo_dialog_box_content_dropzone"
-                          {...getRootProps()}
-                        >
-                          <input {...getInputProps()} />
-                        </div>
-                      </section>
-                    )}
-                  </Dropzone>
+        <div className="gc360_photo_dialog_box">
+          <DialogContent className="gc360_photo_dialog_box_content">
+            <DialogContentText className="gc360_photo_dialog_box_content_text">
+              {createPhotoDialogBoxMessage()}
+            </DialogContentText>
+            {!cropperImageData && (
+              <Dropzone
+                onDropAccepted={onDropAccepted}
+                onDropRejected={onDropRejected}
+                accept="image/jpeg, image/jpg, image/png"
+              >
+                {({ getRootProps, getInputProps }) => (
+                  <section>
+                    <div className="gc360_photo_dialog_box_content_dropzone" {...getRootProps()}>
+                      <input {...getInputProps()} />
+                    </div>
+                  </section>
                 )}
-                {cropperImageData && (
-                  <div className="gc360_photo_dialog_box_content_cropper">
-                    <Cropper
-                      ref={cropperRef}
-                      src={cropperImageData}
-                      autoCropArea={1}
-                      viewMode={3}
-                      aspectRatio={aspectRatio}
-                      highlight={false}
-                      background={false}
-                      zoom={onCropperZoom}
-                      zoomable={false}
-                      dragMode={'none'}
-                    />
-                  </div>
-                )}
-              </DialogContent>
-              <DialogActions className="gc360_photo_dialog_box_actions_top">
-                {cropperImageData && (
-                  <Tooltip
-                    classes={{ tooltip: 'tooltip' }}
-                    id="tooltip-hide"
-                    title="Remove this image from the submission"
-                  >
-                    <Button
-                      variant="contained"
-                      onClick={() => setCropperImageData(null)}
-                      style={styles.button.cancelButton}
-                      className="gc360_photo_dialog_box_content_button"
-                    >
-                      Remove picture
-                    </Button>
-                  </Tooltip>
-                )}
-              </DialogActions>
-            </div>
-          </Grid>
-        </Grid>
+              </Dropzone>
+            )}
+            {cropperImageData && (
+              <div className="gc360_photo_dialog_box_content_cropper">
+                <Cropper
+                  ref={cropperRef}
+                  src={cropperImageData}
+                  autoCropArea={1}
+                  viewMode={3}
+                  aspectRatio={aspectRatio}
+                  highlight={false}
+                  background={false}
+                  zoom={onCropperZoom}
+                  zoomable={false}
+                  dragMode={'none'}
+                />
+              </div>
+            )}
+          </DialogContent>
+          <DialogActions className="gc360_photo_dialog_box_actions_top">
+            {cropperImageData && (
+              <Tooltip
+                classes={{ tooltip: 'tooltip' }}
+                id="tooltip-hide"
+                title="Remove this image from the submission"
+              >
+                <Button
+                  variant="contained"
+                  onClick={() => setCropperImageData(null)}
+                  style={styles.button.cancelButton}
+                  className="gc360_photo_dialog_box_content_button"
+                >
+                  Remove picture
+                </Button>
+              </Tooltip>
+            )}
+          </DialogActions>
+        </div>
 
-        <Grid item xs={12}>
-          <TextField
-            id="outlined-number"
-            variant="filled"
-            label="Number"
-            type="number"
-            margin="dense"
-            fullWidth
-            name="newBannerSortOrderNumber"
-            value={newBannerSortOrder}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={(event) => setNewBannerSortOrder(event.target.value)}
-          />
-        </Grid>
+        <TextField
+          id="outlined-number"
+          variant="filled"
+          label="Sort Order"
+          type="number"
+          margin="dense"
+          fullWidth
+          name="newBannerSortOrderNumber"
+          value={newBannerSortOrder}
+          InputLabelProps={{
+            shrink: true,
+          }}
+          onChange={(event) => setNewBannerSortOrder(event.target.value)}
+          required
+        />
       </GordonDialogBox>
 
       <GordonSnackbar
@@ -347,13 +328,11 @@ const BannerAdmin = () => {
         anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
       />
 
-      <Grid item xs={12} lg={8} style={{ marginBottom: '7rem' }}>
-        {loading ? (
-          <GordonLoader />
-        ) : (
-          <BannerList banners={banners} handleBannerDelete={handleBannerDelete} />
-        )}
-      </Grid>
+      {loading ? (
+        <GordonLoader />
+      ) : (
+        <BannerList banners={banners} handleBannerDelete={handleBannerDelete} />
+      )}
     </>
   );
 };
