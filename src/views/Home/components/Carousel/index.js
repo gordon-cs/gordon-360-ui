@@ -1,54 +1,52 @@
-import { useState, useEffect } from 'react';
-
-import cms from 'services/cms';
-import ImageGallery from 'react-image-gallery';
 import GordonLoader from 'components/Loader';
+import { useEffect, useRef, useState } from 'react';
+import ImageGallery from 'react-image-gallery';
+import cmsService from 'services/cms';
+import { compareByProperty, sort } from 'services/utils';
 
 const GordonCarousel = () => {
   const [loading, setLoading] = useState(true);
   const [carouselContent, setCarouselContent] = useState(null);
-  const [imageGallery, setImageGallery] = useState(null);
+  const imageGalleryRef = useRef();
 
   useEffect(() => {
-    const loadCarousel = async () => {
-      setCarouselContent(await cms.getSlides());
-      setLoading(false);
-    };
-
-    loadCarousel();
+    cmsService
+      .getSlides()
+      .then(sort(compareByProperty('SortOrder')))
+      .then(setCarouselContent)
+      .then(() => setLoading(false));
   }, []);
 
   const handleClickSlide = () => {
-    if (carouselContent[imageGallery.getCurrentIndex()].ActionLink !== '') {
-      window.location = carouselContent[imageGallery.getCurrentIndex()].ActionLink;
+    const currentSlideLink = carouselContent[imageGalleryRef.current.getCurrentIndex()].LinkURL;
+    if (currentSlideLink !== '') {
+      window.location = currentSlideLink;
     }
   };
 
-  if (loading === true) {
+  if (loading) {
     return <GordonLoader />;
-  } else {
-    return (
-      <ImageGallery
-        ref={(i) => {
-          setImageGallery(i);
-        }}
-        showThumbnails={false}
-        showFullscreenButton={false}
-        showPlayButton={false}
-        showBullets={true}
-        autoPlay={true}
-        showNav={false}
-        slideInterval={5000}
-        items={carouselContent.map((slide) => ({
-          original: slide.ImagePath,
-          originalAlt: slide.AltTag,
-          originalTitle: slide.Title,
-        }))}
-        onClick={handleClickSlide}
-        lazyLoad={true}
-      />
-    );
   }
+
+  return (
+    <ImageGallery
+      ref={imageGalleryRef}
+      showThumbnails={false}
+      showFullscreenButton={false}
+      showPlayButton={false}
+      showBullets={true}
+      autoPlay={true}
+      showNav={false}
+      slideInterval={5000}
+      items={carouselContent.map((slide) => ({
+        original: slide.Path,
+        originalAlt: slide.Title,
+        originalTitle: slide.Title,
+      }))}
+      onClick={handleClickSlide}
+      lazyLoad={true}
+    />
+  );
 };
 
 export default GordonCarousel;
