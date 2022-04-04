@@ -30,9 +30,9 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
 
     let result = await cmsService.submitSlide(bannerItem);
     if (result === undefined) {
-      createSnackbar('Banner Submission Failed to Submit', 'error');
+      createSnackbar('Sorry, banner submission failed', 'error');
     } else {
-      createSnackbar('Banner Submission Submitted Successfully', 'success');
+      createSnackbar('Successfully submitted banner', 'success');
       handleWindowClose();
       addBanner(result);
     }
@@ -85,17 +85,14 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
             reader.onload = () => setImage(reader.result);
             reader.onerror = () =>
               createSnackbar(
-                'That image failed to load. Please try a different image or contact CTS for help.',
+                'Image failed to load. Please try a different image or contact CTS for help.',
                 'error',
               );
 
             reader.readAsDataURL(file);
           }}
           onDropRejected={() =>
-            createSnackbar(
-              'Sorry, invalid image file! Only PNG and JPEG images are accepted.',
-              'error',
-            )
+            createSnackbar('Invalid image file. Only PNG and JPEG images are accepted.', 'error')
           }
           accept="image/jpeg, image/jpg, image/png"
           maxFiles={1}

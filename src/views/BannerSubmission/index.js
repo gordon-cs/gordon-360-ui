@@ -63,14 +63,14 @@ const BannerSubmission = () => {
           <CardContent>
             <Typography variant="h6">Banner Image Guidelines</Typography>
             <Typography variant="body2">
-              1. Attach JPG image with a resolution of 1500 by 600.
+              1. Attach JPG or PNG image with a resolution of 1500 by 600.
               <br />
               2. Text must be clearly legible.
               <br />
               3. Include a url that you would like the banner image to link to in your email.
               <br />
-              4. All banner images must be approved. There is limited space, so not all images will
-              be.
+              4. All banner images must be approved. There is limited space, some images may not be
+              accepted.
             </Typography>
           </CardContent>
           <CardActions style={style.cardAction}>
