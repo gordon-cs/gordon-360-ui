@@ -15,8 +15,9 @@ const requestInfoUpdate = async (
   email_content
   ) => {
   const alumniInfo = {
-    UpdateContent: email_content,
+    Content: email_content,
   };
+  console.log('email: ', alumniInfo);
   http.post('profiles/updateRequest/', alumniInfo);
 };
  
