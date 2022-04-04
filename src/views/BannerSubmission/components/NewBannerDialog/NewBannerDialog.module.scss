@@ -1,0 +1,21 @@
+@import '../../../../vars';
+
+.image_preview {
+  width: 100%;
+}
+
+.dropzone {
+  transition: border-color 100ms, background-color 100ms, box-shadow 100ms;
+  height: 20vh;
+  display: flex;
+  border: 0.2rem dashed darkgray;
+  border-radius: 0.75rem;
+  align-items: center;
+  cursor: pointer;
+  padding-inline: 1rem;
+
+  &:hover {
+    background-color: $neutral-light-gray2;
+    box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
+  }
+}
