@@ -1,3 +1,5 @@
+// import StudentApplication from './components/StudentApplication';
+import { Button, Card, CardContent, Grid } from '@material-ui/core';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -6,12 +8,12 @@ import { useAuth } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 // eslint-disable-next-line no-unused-vars
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
+import { Link } from 'react-router-dom';
 import { NotFoundError } from 'services/error';
 import housing from 'services/housing';
 import user from 'services/user';
 import styles from './ApartmentApp.module.css';
 import StaffMenu from './components/StaffMenu';
-import StudentApplication from './components/StudentApplication';
 
 /**
  * @typedef { import('services/user').StudentProfileInfo } StudentProfileInfo
@@ -80,9 +82,37 @@ const ApartApp = () => {
       );
     } else if (isUserStudent) {
       return (
-        <div className={'student_apartment_application'}>
-          <StudentApplication userProfile={userProfile} />
-        </div>
+        // <div className={'student_apartment_application'}>
+        //   <StudentApplication userProfile={userProfile} />
+        // </div>
+        <Grid container justifyContent="center" spacing="16">
+          <Grid item xs={12} md={8}>
+            <Card>
+              <CardContent
+                style={{
+                  margin: 'auto',
+                  textAlign: 'center',
+                }}
+              >
+                <br />
+                <h1>Apartment Application Period Closed</h1>
+                <h4>
+                  The apartment application period closed at 5PM, Monday April 4th, 2022. Please
+                  contact{' '}
+                  <a href="mailto:housing@gordon.edu" className="gc360_text_link">
+                    the Housing Office (Housing@gordon.edu)
+                  </a>{' '}
+                  with any questions.
+                </h4>
+                <br />
+                <br />
+                <Button variant="contained" component={Link} to="">
+                  Back to Home
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
       );
     } else {
       return (
