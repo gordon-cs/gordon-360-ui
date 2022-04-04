@@ -83,12 +83,12 @@ const Update = (props) => {
 
   // I considered using a HashMap to get the names, but I don't think it's necessary.
   // Both arrays are constant. Many reasons why 2 arrays is better than one HashMap here.
-  const formFields = [userSalutation, userMiddleName, userPreferredName,
+  const formFields = [userSalutation, userFirstName, userLastName, userMiddleName, userPreferredName,
   userPersonalEmail, userWorkEmail, userAlternateEmail, userPreferredEmail, userDoNotContact,
   userDoNotMail, userHomePhone, userWorkPhone, userMobilePhone, userPreferredPhone, userMailingStreet,
   userMailingCity, userMailingState, userMailingZip, userMailingCountry, userMaritalStatus]
 
-  const formHeadings = ["Salutation", "Middle Name", "Preferred Name", "Personal Email", "Work Email",
+  const formHeadings = ["Salutation", "First Name", "Last Name", "Middle Name", "Preferred Name", "Personal Email", "Work Email",
   "Alternate Email", "Preferred Email", "Do Not Contact", "Do Not Mail", "Home Phone", "Work Phone",
   "Mobile Phone", "Preferred Phone", "Street", "City", "State", "Zipcode", "Country", "Marital Status"]
 
@@ -150,13 +150,13 @@ const Update = (props) => {
     }
 
     function emailBody() {
-      var email_content = `<p> <b>Name:</b> ${userFirstName} ${userLastName} <br />`;
       for (var i in formFields) {
         if (formFields[i]){
-          email_content = `${email_content} <b>${formHeadings[i]}:</b> ${formFields[i]} <br />`;
+          var email_content = `${email_content} <b>${formHeadings[i]}:</b> ${formFields[i]} <br />`;
         }
-        email_content = `${email_content} </p>`
       }
+      email_content = `<p> ${email_content} </p>`
+      
       return email_content;
     }
 
@@ -472,7 +472,7 @@ const Update = (props) => {
                   <Card>
                     <CardHeader
                       className={styles.update_header}
-                      title="Home Address"
+                      title="Mailing Address"
                     />
                     <CardContent>
                       <Grid container>
@@ -482,7 +482,7 @@ const Update = (props) => {
                             style={{
                               width: 252,
                             }}
-                            label="Mailing Street"
+                            label="Street"
                             value={userMailingStreet}
                             onChange={handleMailingStreet}
                           />
@@ -493,7 +493,7 @@ const Update = (props) => {
                             style={{
                               width: 252,
                             }}
-                            label="Mailing City"
+                            label="City"
                             value={userMailingCity}
                             onChange={handleMailingCity}
                           />
@@ -504,7 +504,7 @@ const Update = (props) => {
                             style={{
                               width: 252,
                             }}
-                            label="Mailing State"
+                            label="State"
                             value={userMailingState}
                             onChange={handleMailingState}
                           />
@@ -515,7 +515,7 @@ const Update = (props) => {
                             style={{
                               width: 252,
                             }}
-                            label="Mailing Zip"
+                            label="Zip"
                             value={userMailingZip}
                             onChange={handleMailingZip}
                           />
@@ -526,7 +526,7 @@ const Update = (props) => {
                             style={{
                               width: 252,
                             }}
-                            label="Mailing Country"
+                            label="Country"
                             value={userMailingCountry}
                             onChange={handleMailingCountry}
                           />
