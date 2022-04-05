@@ -1,6 +1,5 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import { createContext, useEffect, useState } from 'react';
-import { authenticate, signOut } from 'services/auth';
 import userService, { Profile, ProfileImages } from 'services/user';
 
 type User = {
@@ -16,8 +15,6 @@ const initialUserState = {
 };
 
 type UserActions = {
-  login: () => void;
-  logout: () => void;
   updateProfile: () => void;
   updateImage: () => void;
 };
@@ -36,17 +33,6 @@ const UserContextProvider = ({ children }: {children?: JSX.Element | JSX.Element
   const isAuthenticated = useIsAuthenticated();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User>(initialUserState);
-
-  const login = async () => {
-    await authenticate();
-    const [profile, images] = await getAllUserData();
-
-    setUser({ profile, images });
-  };
-
-  const logout = () => {
-    signOut();
-  };
 
   const updateProfile = () => getUserProfile().then((p) => setUser((u) => ({ ...u, profile: p })));
 
@@ -72,7 +58,7 @@ const UserContextProvider = ({ children }: {children?: JSX.Element | JSX.Element
   }
 
   return (
-    <UserActionsContext.Provider value={{ login, logout, updateProfile, updateImage }}>
+    <UserActionsContext.Provider value={{  updateProfile, updateImage }}>
       <AuthContext.Provider value={isAuthenticated && user.profile !== null}>
         <UserContext.Provider value={user}>{children}</UserContext.Provider>
       </AuthContext.Provider>

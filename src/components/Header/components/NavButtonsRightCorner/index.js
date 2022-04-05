@@ -2,8 +2,9 @@ import List from '@material-ui/core/List';
 import Popover from '@material-ui/core/Popover';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
-import { useAuth, useNetworkStatus, useUserActions } from 'hooks';
+import { useAuth, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
+import { signOut } from 'services/auth';
 import storageService from 'services/storage';
 import styles from './NavButtonsRightCorner.module.css';
 
@@ -19,12 +20,11 @@ import styles from './NavButtonsRightCorner.module.css';
 const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl }) => {
   const [linkOpen, setLinkOpen] = useState(false);
   const isOnline = useNetworkStatus();
-  const { logout } = useUserActions();
   const authenticated = useAuth();
 
   function closeAndSignOut() {
     onClose();
-    logout();
+    signOut();
   }
 
   const myProfileButton = (
@@ -86,13 +86,9 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
       />
     ) : null;
 
-  const signInOutButton = (
-    <GordonNavButton
-      onLinkClick={authenticated ? closeAndSignOut : onClose}
-      linkName={authenticated ? 'Sign Out' : 'Sign In'}
-      linkPath={'/'}
-    />
-  );
+  const signInOutButton = authenticated ? (
+    <GordonNavButton onLinkClick={closeAndSignOut} linkName="Sign Out" />
+  ) : null;
 
   return (
     <>

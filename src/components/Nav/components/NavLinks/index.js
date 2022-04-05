@@ -8,8 +8,9 @@ import WorkIcon from '@material-ui/icons/Work';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
-import { useAuth, useNetworkStatus, useUserActions } from 'hooks';
+import { useAuth, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
+import { signOut } from 'services/auth';
 import storageService from 'services/storage';
 import styles from './NavLinks.module.css';
 
@@ -17,12 +18,11 @@ const GordonNavLinks = ({ onLinkClick }) => {
   const [areLinksOpen, setAreLinksOpen] = useState(false);
   const [dialog, setDialog] = useState(null);
   const isOnline = useNetworkStatus();
-  const { logout } = useUserActions();
   const authenticated = useAuth();
 
   const handleSignOut = () => {
     onLinkClick();
-    logout();
+    signOut();
   };
 
   const dialogBox = () => {
@@ -173,13 +173,9 @@ const GordonNavLinks = ({ onLinkClick }) => {
       />
     ) : null;
 
-  const signInOutButton = (
-    <GordonNavButton
-      onLinkClick={authenticated ? handleSignOut : onLinkClick}
-      linkName={authenticated ? 'Sign Out' : 'Sign In'}
-      linkPath={'/'}
-    />
-  );
+  const signOutButton = authenticated ? (
+    <GordonNavButton onLinkClick={handleSignOut} linkName={'Sign Out'} />
+  ) : null;
 
   return (
     <>
@@ -200,7 +196,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {aboutButton}
         {feedbackButton}
         {adminButton}
-        {signInOutButton}
+        {signOutButton}
       </List>
 
       <GordonQuickLinksDialog

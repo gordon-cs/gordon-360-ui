@@ -10,15 +10,15 @@ import GordonDialogBox from 'components/GordonDialogBox/index';
 import { useAuth, useDocumentTitle, useNetworkStatus } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
-import { Link, NavLink, Route, Switch } from 'react-router-dom';
+import { NavLink, Route, Switch } from 'react-router-dom';
 import routes from 'routes';
+import { authenticate } from 'services/auth';
 import { windowBreakWidths } from 'theme';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
 import GordonPeopleSearch from './components/PeopleSearch';
 import styles from './Header.module.css';
 
-const ForwardLink = forwardRef((props, ref) => <Link ref={ref} {...props} />);
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
 const GordonHeader = ({ onDrawerToggle }) => {
@@ -148,8 +148,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
       className={styles.login_button}
       variant="contained"
       color="secondary"
-      component={ForwardLink}
-      to="/"
+      onClick={authenticate}
     >
       Login
     </Button>

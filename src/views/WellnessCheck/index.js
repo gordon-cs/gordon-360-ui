@@ -1,5 +1,5 @@
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import Login from 'components/LoginDialogue';
 import WellnessQuestion from 'components/WellnessQuestion';
 import { useAuth } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -20,9 +20,8 @@ const WellnessCheck = () => {
         if (status && status.IsValid) {
           setCurrentStatus(status);
         }
-
-        setLoading(false);
       }
+      setLoading(false);
     };
 
     loadPage();
@@ -31,7 +30,7 @@ const WellnessCheck = () => {
   if (loading) {
     return <GordonLoader />;
   } else if (!authenticated) {
-    return <Login />;
+    return <GordonUnauthorized feature="the wellness check in" />;
   } else if (currentStatus === null) {
     return <WellnessQuestion setStatus={setCurrentStatus} />;
   } else {

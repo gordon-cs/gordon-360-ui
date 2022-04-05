@@ -25,7 +25,8 @@ const get = <T>(key: string): T => {
 
 const remove = (key: string) => localStorage.removeItem(key);
 
-const getLocalInfo = (): AccountInfo | null => msalInstance.getActiveAccount();
+const getLocalInfo = (): AccountInfo | { college_role: string } | null =>
+  msalInstance.getActiveAccount() ?? { college_role: '' };
 
 /**
  * Store and retrieve app data locally
