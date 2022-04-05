@@ -1,4 +1,5 @@
 //Main timesheets page
+import { useIsAuthenticated } from '@azure/msal-react';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   Button,
@@ -25,7 +26,7 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import { addDays, isValid, isWithinInterval, set } from 'date-fns';
-import { useAuth, useNetworkStatus } from 'hooks';
+import { useNetworkStatus } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
 import user from 'services/user';
@@ -68,7 +69,7 @@ const Timesheets = (props) => {
   const [selectedHourType, setSelectedHourType] = useState('R');
   const [errorText, setErrorText] = useState(null);
   const isOnline = useNetworkStatus();
-  const authenticated = useAuth();
+  const authenticated = useIsAuthenticated();
 
   useEffect(() => {
     if (authenticated) {

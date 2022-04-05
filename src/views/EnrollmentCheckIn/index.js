@@ -1,7 +1,7 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import { Box, Button, Card, CardHeader, Grid } from '@material-ui/core';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import { useAuth } from 'hooks';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import checkInService from 'services/checkIn';
@@ -27,7 +27,7 @@ const steps = [
 
 const EnrollmentCheckIn = (props) => {
   const [activeStep, setActiveStep] = useState(0);
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
 
   const [loading, setLoading] = useState(true);
 
@@ -163,12 +163,12 @@ const EnrollmentCheckIn = (props) => {
       setLoading(false);
     };
 
-    if (authenticated) {
+    if (isAuthenticated) {
       loadData();
     } else {
       setLoading(false);
     }
-  }, [authenticated, loading]);
+  }, [isAuthenticated, loading]);
 
   useEffect(() => {
     props.history.replace('/enrollmentcheckin', { step: activeStep });
@@ -273,7 +273,7 @@ const EnrollmentCheckIn = (props) => {
 
   if (loading === true) {
     return <GordonLoader />;
-  } else if (!authenticated) {
+  } else if (!isAuthenticated) {
     return <GordonUnauthorized feature={'Enrollment Check-in'} />;
   } else {
     return (

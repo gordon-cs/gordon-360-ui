@@ -1,3 +1,4 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Button,
   Card,
@@ -12,7 +13,7 @@ import {
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
 import GordonLoader from 'components/Loader';
-import { useAuth, useNetworkStatus } from 'hooks';
+import { useNetworkStatus } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
@@ -51,12 +52,12 @@ const InvolvementProfile = () => {
   const isOnline = useNetworkStatus();
   const cropperRef = useRef();
   const { sessionCode, involvementCode } = useParams();
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
     const loadPage = async () => {
       setLoading(true);
-      if (authenticated) {
+      if (isAuthenticated) {
         const { id, college_role } = storageService.getLocalInfo();
         const [involvementInfo, advisors, groupAdmins, sessionInfo, isAdmin] = await Promise.all([
           involvementService.get(involvementCode),
@@ -94,7 +95,7 @@ const InvolvementProfile = () => {
       }
     };
     loadPage();
-  }, [involvementCode, authenticated, sessionCode]);
+  }, [involvementCode, isAuthenticated, sessionCode]);
 
   const onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];
@@ -428,7 +429,7 @@ const InvolvementProfile = () => {
                 )}
               </Grid>
 
-              {authenticated && (
+              {isAuthenticated && (
                 <>
                   <hr width="70%"></hr>
 

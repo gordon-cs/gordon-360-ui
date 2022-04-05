@@ -1,9 +1,9 @@
 // @TODO CSSMODULES - moved to global styles until a better solution is found
 // import styles from './Home.module.css';
+import { useIsAuthenticated } from '@azure/msal-react';
 import { Grid } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
-import { useAuth } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
 import user from 'services/user';
@@ -26,10 +26,10 @@ const Home = () => {
 
   const [hasAnswered, setHasAnswered] = useState(null);
   const isOnline = useNetworkStatus();
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    if (authenticated) {
+    if (isAuthenticated) {
       loadPage();
     } else {
       // Clear out component's person-specific state when authenticated becomes false
@@ -38,7 +38,7 @@ const Home = () => {
       setPersonType(null);
       setLoading(false);
     }
-  }, [authenticated]);
+  }, [isAuthenticated]);
   const loadPage = async () => {
     setLoading(true);
     const [{ PersonType }, { IsValid }] = await Promise.all([
@@ -54,7 +54,7 @@ const Home = () => {
 
   if (loading) {
     return <GordonLoader />;
-  } else if (!authenticated) {
+  } else if (!isAuthenticated) {
     return <GuestWelcome />;
   } else if (isOnline && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;

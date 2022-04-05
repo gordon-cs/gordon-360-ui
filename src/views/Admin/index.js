@@ -1,7 +1,8 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import { Grid } from '@material-ui/core';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { useAuth, useNetworkStatus } from 'hooks';
+import { useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
 import storageService from 'services/storage';
 import AdminList from './components/AdminList';
@@ -10,15 +11,15 @@ import InvolvementStatusList from './components/InvolvementsStatus';
 const Admin = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const isOnline = useNetworkStatus();
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    if (authenticated) {
+    if (isAuthenticated) {
       setIsAdmin(storageService.getLocalInfo().college_role === 'god');
     }
-  }, [authenticated]);
+  }, [isAuthenticated]);
 
-  if (authenticated) {
+  if (isAuthenticated) {
     if (isOnline) {
       if (isAdmin) {
         return (

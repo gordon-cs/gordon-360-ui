@@ -1,6 +1,6 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import { Card } from '@material-ui/core';
 import GordonConfetti from 'components/GordonConfetti';
-import { useAuth } from 'hooks';
 import useWindowSize from 'hooks/useWindowSize';
 import { useEffect, useState } from 'react';
 import userService from 'services/user';
@@ -10,7 +10,7 @@ import BannerLarge from './HBDBannerLarge.png';
 const BirthdayMessage = ({ open, setOpen, name }) => {
   const [confetti, setConfetti] = useState(false);
   const [width] = useWindowSize();
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
   const [isBirthday, setIsBirthday] = useState(false);
 
   const popConfetti = () => {
@@ -22,18 +22,18 @@ const BirthdayMessage = ({ open, setOpen, name }) => {
     const checkIsBirthday = async () => {
       setIsBirthday(await userService.isBirthdayToday());
     };
-    if (authenticated) {
+    if (isAuthenticated) {
       checkIsBirthday();
       if (!sessionStorage.getItem('birthdayConfettiHasPopped')) {
         setTimeout(popConfetti, 1000);
         sessionStorage.setItem('birthdayConfettiHasPopped', JSON.stringify(true));
       }
     }
-  }, [authenticated]);
+  }, [isAuthenticated]);
 
   const Banner = width >= 1280 ? BannerLarge : BannerSmall;
 
-  return authenticated && isBirthday ? (
+  return isAuthenticated && isBirthday ? (
     <Card
       style={{
         cursor: 'pointer',

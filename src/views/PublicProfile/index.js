@@ -1,8 +1,8 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import Profile from 'components/Profile';
-import { useAuth } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
@@ -16,7 +16,7 @@ const PublicProfile = () => {
   const isOnline = useNetworkStatus();
   const network = isOnline ? 'online' : 'offline';
   const { username } = useParams();
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -29,14 +29,14 @@ const PublicProfile = () => {
       }
     };
 
-    if (authenticated) {
+    if (isAuthenticated) {
       loadProfile();
     } else {
       setProfile(null);
     }
-  }, [authenticated, username]);
+  }, [isAuthenticated, username]);
 
-  if (authenticated) {
+  if (isAuthenticated) {
     if (error && error.name === 'NotFoundError') {
       return <Redirect to="/profilenotfound" />;
     }

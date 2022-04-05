@@ -1,4 +1,5 @@
 import { useIsAuthenticated } from '@azure/msal-react';
+import GordonLoader from 'components/Loader';
 import { createContext, useEffect, useState } from 'react';
 import userService, { Profile, ProfileImages } from 'services/user';
 
@@ -22,8 +23,6 @@ type UserActions = {
 export const UserContext = createContext<User>(initialUserState);
 
 export const UserActionsContext = createContext<UserActions | undefined>(undefined);
-
-export const AuthContext = createContext<boolean | undefined>(undefined);
 
 const getUserProfile = () => userService.getProfileInfo();
 const getUserImages = () => userService.getImage();
@@ -54,14 +53,12 @@ const UserContextProvider = ({ children }: {children?: JSX.Element | JSX.Element
   }, [isAuthenticated]);
 
   if (loading) {
-    return null;
+    return <GordonLoader />
   }
 
   return (
     <UserActionsContext.Provider value={{  updateProfile, updateImage }}>
-      <AuthContext.Provider value={isAuthenticated && user.profile !== null}>
         <UserContext.Provider value={user}>{children}</UserContext.Provider>
-      </AuthContext.Provider>
     </UserActionsContext.Provider>
   );
 };

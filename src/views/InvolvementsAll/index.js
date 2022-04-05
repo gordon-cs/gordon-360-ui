@@ -1,3 +1,4 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Card,
   CardContent,
@@ -10,7 +11,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
-import { useAuth, useNetworkStatus } from 'hooks';
+import { useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
 import involvementService from 'services/activity';
 import sessionService from 'services/session';
@@ -32,7 +33,7 @@ const InvolvementsAll = ({ location, history }) => {
   const [type, setType] = useState('');
   const [types, setTypes] = useState([]);
   const isOnline = useNetworkStatus();
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
@@ -70,7 +71,7 @@ const InvolvementsAll = ({ location, history }) => {
       }
     };
     loadPage();
-  }, [authenticated, sessionFromURL]);
+  }, [isAuthenticated, sessionFromURL]);
 
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
@@ -83,7 +84,7 @@ const InvolvementsAll = ({ location, history }) => {
       setLoading(true);
       setAllInvolvements(await involvementService.getAll(selectedSession));
       setTypes(await involvementService.getTypes(selectedSession));
-      if (authenticated) {
+      if (isAuthenticated) {
         const { id } = await storageService.getLocalInfo();
         setMyInvolvements(
           await userService.getSessionMembershipsWithoutGuests(id, selectedSession),
@@ -95,7 +96,7 @@ const InvolvementsAll = ({ location, history }) => {
     if (selectedSession) {
       updateInvolvements();
     }
-  }, [selectedSession, authenticated]);
+  }, [selectedSession, isAuthenticated]);
 
   useEffect(() => {
     setInvolvements(involvementService.filter(allInvolvements, type, search));
@@ -195,10 +196,10 @@ const InvolvementsAll = ({ location, history }) => {
         </Card>
       </Grid>
 
-      {isOnline && authenticated && <Requests />}
+      {isOnline && isAuthenticated && <Requests />}
 
       {/* My Involvements (private) */}
-      {authenticated && (
+      {isAuthenticated && (
         <Grid item xs={12} lg={8}>
           <Card>
             <CardHeader
