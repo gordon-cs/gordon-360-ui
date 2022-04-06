@@ -1,7 +1,10 @@
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react';
 import {
   Button,
   Card,
+  CardActions,
   CardContent,
+  CardHeader,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,11 +14,11 @@ import {
   Typography,
   withWidth,
 } from '@material-ui/core';
-import Login from 'components/LoginDialogue';
 import 'cropperjs/dist/cropper.css';
-import { Component, createRef, Fragment } from 'react';
+import { Component, createRef } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
+import { authenticate } from 'services/auth';
 import errorLog from 'services/errorLog';
 import user from 'services/user';
 import { gordonColors } from 'theme';
@@ -225,10 +228,9 @@ class IDUploader extends Component {
       },
     };
 
-    let content;
-    if (this.props.authentication) {
-      content = (
-        <Fragment>
+    return (
+      <Grid container justifyContent="center" spacing={2}>
+        <AuthenticatedTemplate>
           <Grid item xs={12} md={6} lg={8}>
             <Card>
               <CardContent>
@@ -295,46 +297,25 @@ class IDUploader extends Component {
               </Card>
             </Grid>
           </Grid>
-        </Fragment>
-      );
-    } else {
-      content = (
-        <Grid container justifyContent="center">
-          <Grid item xs={12} md={8}>
-            <Card>
-              <CardContent
-                style={{
-                  margin: 'auto',
-                  textAlign: 'center',
-                }}
-              >
-                <h1>You are not logged in.</h1>
-                <br />
-                <h4>
+        </AuthenticatedTemplate>
+        <UnauthenticatedTemplate>
+          <Grid container justifyContent="center">
+            <Grid item xs={12} md={8}>
+              <Card>
+                <CardHeader title="You are not logged in" />
+                <CardContent>
                   Please log in to upload an ID photo. You can press the back button or follow the
                   URL "360.gordon.edu/id" to return to this page.
-                </h4>
-                <br />
-                {/*<Button
-                  color="primary"
-                  variant="contained"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Login
-                </Button>*/}
-                <Login />
-              </CardContent>
-            </Card>
+                </CardContent>
+                <CardActions>
+                  <Button color="secondary" variant="contained" onClick={authenticate}>
+                    Login
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
-      );
-    }
-
-    return (
-      <Grid container justifyContent="center" spacing={2}>
-        {content}
+        </UnauthenticatedTemplate>
 
         <Dialog
           open={this.state.photoOpen}
