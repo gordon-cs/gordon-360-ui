@@ -18,7 +18,6 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import GordonDialogBox from 'components/GordonDialogBox';
-import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import membership from 'services/membership';
 import storageService from 'services/storage';
@@ -415,40 +414,6 @@ const MemberListItem = ({
       </GordonDialogBox>
     </>
   );
-};
-
-MemberListItem.propTypes = {
-  member: PropTypes.shape({
-    MembershipID: PropTypes.number.isRequired,
-    ActivityCode: PropTypes.string.isRequired,
-    //ActivityImage: Not sure what the prop type should be, but it will be required.
-    SessionCode: PropTypes.string.isRequired,
-    IDNumber: PropTypes.number.isRequired,
-    AD_Username: PropTypes.string.isRequired,
-    FirstName: PropTypes.string.isRequired,
-    LastName: PropTypes.string.isRequired,
-    Mail_Location: PropTypes.string.isRequired,
-    Participation: PropTypes.string.isRequired,
-    ParticipationDescription: PropTypes.string.isRequired,
-    GroupAdmin: PropTypes.bool.isRequired,
-    Description: PropTypes.string.isRequired,
-    ActivityDescription: PropTypes.string,
-    ActivityImagePath: PropTypes.string,
-    SessionDescription: PropTypes.string,
-    StartDate: PropTypes.string,
-    EndDate: PropTypes.string,
-    ActivityType: PropTypes.string,
-    ActivityTypeDescription: PropTypes.string,
-    Privacy: PropTypes.string,
-    AccountPrivate: PropTypes.number,
-  }).isRequired,
-
-  isAdmin: PropTypes.bool.isRequired,
-  isSuperAdmin: PropTypes.bool.isRequired,
-  createSnackbar: PropTypes.func.isRequired,
-  isMobileView: PropTypes.bool.isRequired,
-  onLeave: PropTypes.func.isRequired,
-  onToggleIsAdmin: PropTypes.func.isRequired,
 };
 
 export default MemberListItem;

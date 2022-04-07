@@ -10,9 +10,10 @@ import {
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import parseISO from 'date-fns/parseISO';
+import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
-import storageService from 'services/storage';
-import userService from 'services/user';
+import membershipService from 'services/membership';
+import requestService from 'services/request';
 import RequestSent from './components/RequestSent';
 import RequestReceived from './components/RequestsReceived';
 import styles from './Requests.module.css';
@@ -20,16 +21,12 @@ import styles from './Requests.module.css';
 const Requests = () => {
   const [requestsSent, setRequestsSent] = useState([]);
   const [involvementsLeading, setInvolvementsLeading] = useState([]);
+  const { profile } = useUser();
 
   useEffect(() => {
-    const loadRequests = async () => {
-      setInvolvementsLeading(
-        await userService.getLeaderPositions(storageService.getLocalInfo().id),
-      );
-      setRequestsSent(await userService.getSentMembershipRequests());
-    };
-    loadRequests();
-  }, []);
+    membershipService.getLeaderPositions(profile.AD_Username).then(setInvolvementsLeading);
+    requestService.getSentMembershipRequests().then(setRequestsSent);
+  }, [profile]);
 
   const handleCancelRequest = (request) => {
     setRequestsSent((prevRequestsSent) => prevRequestsSent.filter((r) => r !== request));

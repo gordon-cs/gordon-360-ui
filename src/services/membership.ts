@@ -1,4 +1,6 @@
 import http from './http';
+import sessionService from './session';
+import { compareByProperty, filter, sort } from './utils';
 
 export type Membership = {
   // TODO: Currently never set by the API, always null
@@ -59,10 +61,8 @@ const checkAdmin = async (
 const editMembership = (membershipID: string, data: MEMBERSHIP): Promise<MEMBERSHIP> =>
   http.put(`memberships/${membershipID}`, data);
 
-const get = async (activityCode: string, sessionCode: string): Promise<Membership[]> => {
-  const activityMembers = await getAll(activityCode);
-  return activityMembers.filter((m) => m.SessionCode === sessionCode);
-};
+const get = async (activityCode: string, sessionCode: string): Promise<Membership[]> =>
+  http.get(`memberships/activity/${activityCode}?sessionCode=${sessionCode}`);
 
 //Change the privacy value for a club membership
 const toggleMembershipPrivacy = (userMembership: Membership): Promise<void> =>
@@ -82,20 +82,48 @@ const getFollowersNum = (activityCode: string, sessionCode: string): Promise<num
 const getMembersNum = (activityCode: string, sessionCode: string): Promise<number> =>
   http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
 
-const getMembershipsForUser = (userID: string): Promise<Membership[]> =>
-  http.get(`memberships/student/${userID}`);
+const getMembershipsForUser = (username: string): Promise<Membership[]> =>
+  http.get(`memberships/student/${username}`);
+
+const getMembershipsAlphabetically = (username: string) =>
+  getMembershipsForUser(username).then(sort(compareByProperty('ActivityDescription')));
+
+const getMembershipsBySession = (username: string, sessionCode: string) =>
+  getMembershipsAlphabetically(username).then(filter((m) => m.SessionCode === sessionCode));
+
+const getCurrentMemberships = async (username: string) =>
+  sessionService
+    .getCurrent()
+    .then(({ SessionCode }) => getMembershipsBySession(username, SessionCode));
+
+const getMembershipsWithoutGuests = (username: string) =>
+  getMembershipsForUser(username).then(filter((i) => i.ParticipationDescription !== 'Guest'));
+
+const getSessionMembershipsWithoutGuests = (username: string, sessionCode: string) =>
+  getMembershipsBySession(username, sessionCode).then(
+    filter((m) => m.ParticipationDescription !== 'Guest'),
+  );
+
+const getLeaderPositions = async (username: string): Promise<Membership[]> =>
+  getCurrentMemberships(username).then(filter((m) => m.GroupAdmin));
+
+const getTranscriptMembershipsInfo = (username: string) =>
+  getMembershipsWithoutGuests(username).then(sort(compareByProperty('ActivityCode')));
+
+const getPublicMemberships = (username: string): Promise<Membership[]> =>
+  getMembershipsForUser(username).then(sort(compareByProperty('ActivityDescription')));
 
 const remove = (membershipID: string): Promise<MEMBERSHIP> =>
   http.del(`memberships/${membershipID}`);
 
 const search = async (
-  userID: string,
+  username: string,
   sessionCode: string,
   activityCode: string,
 ): Promise<
   [isMember: boolean, participation: ParticipationDesc | null, membershipID: number | null]
 > => {
-  const memberships: Membership[] = await http.get(`memberships/student/${userID}`);
+  const memberships: Membership[] = await getMembershipsForUser(username);
   const membership = memberships.find(
     (m) => m.ActivityCode === activityCode && m.SessionCode === sessionCode,
   );
@@ -119,11 +147,15 @@ const membershipService = {
   getEmailAccount,
   getFollowersNum,
   getMembersNum,
-  getIndividualMembership: getMembershipsForUser,
   remove,
   search,
   toggleGroupAdmin,
   toggleMembershipPrivacy,
+  getTranscriptMembershipsInfo,
+  getPublicMemberships,
+  getMembershipsAlphabetically,
+  getSessionMembershipsWithoutGuests,
+  getLeaderPositions,
 };
 
 export default membershipService;

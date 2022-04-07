@@ -27,10 +27,7 @@ const Profile = ({ profile, myProf }) => {
   }, []);
 
   useEffect(() => {
-    const fetchReadStudentSchedulesPermission = async () => {
-      setCanReadStudentSchedules(await scheduleService.getCanReadStudentSchedules());
-    };
-    fetchReadStudentSchedulesPermission();
+    scheduleService.getCanReadStudentSchedules().then(setCanReadStudentSchedules);
   }, []);
 
   return (
@@ -76,7 +73,7 @@ const Profile = ({ profile, myProf }) => {
 
       <Grid item xs={12} lg={5}>
         <MembershipsList
-          user={myProf ? profile.ID : profile.AD_Username}
+          username={profile.AD_Username}
           myProf={myProf}
           PersonType={profile.PersonType}
           createSnackbar={createSnackbar}

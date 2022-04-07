@@ -1,6 +1,7 @@
 import { Grid, Typography } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
+import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import membershipService from 'services/membership';
@@ -17,6 +18,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [loading, setLoading] = useState(true);
   const { involvementCode, sessionCode } = useParams();
+  const { profile } = useUser();
 
   useEffect(() => {
     const loadMembers = async () => {
@@ -24,7 +26,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
 
       try {
         const [participationDetail, followersNum, membersNum] = await Promise.all([
-          membershipService.search(storageService.getLocalInfo().id, sessionCode, involvementCode),
+          membershipService.search(profile.AD_Username, sessionCode, involvementCode),
           membershipService.getFollowersNum(involvementCode, sessionCode),
           membershipService.getMembersNum(involvementCode, sessionCode),
         ]);
@@ -43,7 +45,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
     };
 
     loadMembers();
-  }, [involvementCode, isAdmin, isSuperAdmin, sessionCode]);
+  }, [involvementCode, isAdmin, isSuperAdmin, sessionCode, profile.AD_Username]);
 
   const createSnackbar = (text, severity) => {
     setSnackbar({ open: true, text, severity });
@@ -60,11 +62,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
     };
     await membershipService.addMembership(data);
     setParticipationDetail(
-      await membershipService.search(
-        storageService.getLocalInfo().id,
-        sessionCode,
-        involvementCode,
-      ),
+      await membershipService.search(profile.AD_Username, sessionCode, involvementCode),
     );
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
@@ -72,11 +70,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
   const handleUnsubscribe = async () => {
     await membershipService.remove(participationDetail[2]);
     setParticipationDetail(
-      await membershipService.search(
-        storageService.getLocalInfo().id,
-        sessionCode,
-        involvementCode,
-      ),
+      await membershipService.search(profile.AD_Username, sessionCode, involvementCode),
     );
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
@@ -87,7 +81,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
 
   const handleLeave = async () => {
     const newParticipationDetail = await membershipService.search(
-      storageService.getLocalInfo().id,
+      profile.AD_Username,
       sessionCode,
       involvementCode,
     );

@@ -11,12 +11,11 @@ import {
   TextField,
 } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
-import { useNetworkStatus } from 'hooks';
+import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import involvementService from 'services/activity';
+import membershipService from 'services/membership';
 import sessionService from 'services/session';
-import storageService from 'services/storage';
-import userService from 'services/user';
 import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
@@ -32,6 +31,7 @@ const InvolvementsAll = ({ location, history }) => {
   const [sessions, setSessions] = useState([]);
   const [type, setType] = useState('');
   const [types, setTypes] = useState([]);
+  const { profile } = useUser();
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
 
@@ -85,9 +85,11 @@ const InvolvementsAll = ({ location, history }) => {
       setAllInvolvements(await involvementService.getAll(selectedSession));
       setTypes(await involvementService.getTypes(selectedSession));
       if (isAuthenticated) {
-        const { id } = await storageService.getLocalInfo();
         setMyInvolvements(
-          await userService.getSessionMembershipsWithoutGuests(id, selectedSession),
+          await membershipService.getSessionMembershipsWithoutGuests(
+            profile.AD_Username,
+            selectedSession,
+          ),
         );
       }
       setLoading(false);
@@ -96,7 +98,7 @@ const InvolvementsAll = ({ location, history }) => {
     if (selectedSession) {
       updateInvolvements();
     }
-  }, [selectedSession, isAuthenticated]);
+  }, [selectedSession, isAuthenticated, profile.AD_Username]);
 
   useEffect(() => {
     setInvolvements(involvementService.filter(allInvolvements, type, search));
@@ -104,9 +106,8 @@ const InvolvementsAll = ({ location, history }) => {
 
   let myInvolvementsHeadingText;
   let myInvolvementsNoneText;
-  let involvementSessionText = selectedSession
-    ? sessions.find((s) => s.SessionCode === selectedSession)?.SessionDescription
-    : '';
+  let involvementSessionText =
+    sessions.find((s) => s.SessionCode === selectedSession)?.SessionDescription ?? '';
   if (involvementSessionText.includes('Academic Year')) {
     involvementSessionText = involvementSessionText.substring(
       0,

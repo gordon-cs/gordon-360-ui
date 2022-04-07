@@ -3,10 +3,7 @@ import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import { CliftonStrengths, getCliftonStrengths } from './cliftonStrengths';
 import { Class } from './goStalk';
 import http from './http';
-import { Membership } from './membership';
-import { MembershipRequest } from './request';
-import session from './session';
-import { compareByProperty, filter, Override, sort } from './utils';
+import { Override } from './utils';
 
 type CLWCredits = {
   current: number;
@@ -191,7 +188,7 @@ const formatSocialMediaLinks = (profile: UnformattedProfileInfo) => {
 };
 
 const getImage = (username: string = ''): Promise<ProfileImages> =>
-  http.get(`profiles/Image/${username}`);
+  http.get(`profiles/image/${username}`);
 
 const resetImage = (): Promise<void> => http.post('/profiles/image/reset');
 
@@ -233,37 +230,7 @@ const setHomePhonePrivacy = (makePrivate: boolean) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getMemberships = (userID: string): Promise<Membership[]> =>
-  http.get(`memberships/student/${userID}`);
-
-const getPublicMemberships = (username: string): Promise<Membership[]> =>
-  http
-    .get<Membership[]>(`memberships/student/username/${username}/`)
-    .then(sort(compareByProperty('ActivityDescription')));
-
-const getMembershipsAlphabetically = (userID: string) =>
-  getMemberships(userID).then(sort(compareByProperty('ActivityDescription')));
-
-const getMembershipsBySession = (userID: string, sessionCode: string) =>
-  getMembershipsAlphabetically(userID).then(filter((m) => m.SessionCode === sessionCode));
-
-const getCurrentMemberships = async (userID: string) =>
-  session.getCurrent().then(({ SessionCode }) => getMembershipsBySession(userID, SessionCode));
-
-const getMembershipsWithoutGuests = (id: string) =>
-  getMemberships(id).then(filter((i) => i.ParticipationDescription !== 'Guest'));
-
-const getSessionMembershipsWithoutGuests = (userID: string, sessionCode: string) =>
-  getMembershipsBySession(userID, sessionCode).then(
-    filter((m) => m.ParticipationDescription !== 'Guest'),
-  );
-
 const getEmployment = () => http.get('studentemployment/');
-
-const getSentMembershipRequests = (): Promise<MembershipRequest[]> => http.get('requests/student/');
-
-const getLeaderPositions = async (userID: string): Promise<Membership[]> =>
-  getCurrentMemberships(userID).then(filter((m) => m.GroupAdmin));
 
 const getBirthdate = async (): Promise<DateTime> =>
   DateTime.fromISO(await http.get('profiles/birthdate'));
@@ -272,9 +239,6 @@ const isBirthdayToday = async () => {
   const birthday = await getBirthdate();
   return birthday?.toISODate() === DateTime.now().toISODate();
 };
-
-const getTranscriptMembershipsInfo = (id: string) =>
-  getMembershipsWithoutGuests(id).then(sort(compareByProperty('ActivityCode')));
 
 // TODO: Add type info
 const getEmploymentInfo = () => getEmployment();
@@ -343,17 +307,11 @@ const userService = {
   getChapelCredits,
   getImage,
   getDiningInfo,
-  getPublicMemberships,
-  getMembershipsAlphabetically,
-  getSessionMembershipsWithoutGuests,
-  getLeaderPositions,
-  getSentMembershipRequests,
   getProfileInfo,
   getMailboxCombination,
   resetImage,
   postImage,
   postIDImage,
-  getTranscriptMembershipsInfo,
   getEmploymentInfo,
   getEmergencyInfo,
   updateSocialLink,

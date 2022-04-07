@@ -13,7 +13,7 @@ import {
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
 import GordonLoader from 'components/Loader';
-import { useNetworkStatus } from 'hooks';
+import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
@@ -53,18 +53,19 @@ const InvolvementProfile = () => {
   const cropperRef = useRef();
   const { sessionCode, involvementCode } = useParams();
   const isAuthenticated = useIsAuthenticated();
+  const { profile } = useUser();
 
   useEffect(() => {
     const loadPage = async () => {
       setLoading(true);
       if (isAuthenticated) {
-        const { id, college_role } = storageService.getLocalInfo();
+        const { college_role } = storageService.getLocalInfo();
         const [involvementInfo, advisors, groupAdmins, sessionInfo, isAdmin] = await Promise.all([
           involvementService.get(involvementCode),
           involvementService.getAdvisors(involvementCode, sessionCode),
           involvementService.getGroupAdmins(involvementCode, sessionCode),
           sessionService.get(sessionCode),
-          membershipService.checkAdmin(id, sessionCode, involvementCode),
+          membershipService.checkAdmin(profile.ID, sessionCode, involvementCode),
         ]);
 
         const isSuperAdmin = college_role === 'god';
@@ -80,7 +81,7 @@ const InvolvementProfile = () => {
         setTempURL(involvementInfo.ActivityURL);
 
         if (isAdmin || isSuperAdmin) {
-          setEmailList(await emailsService.get(involvementCode));
+          setEmailList(await emailsService.getPerActivity(involvementCode, sessionCode));
         }
 
         setLoading(false);
@@ -95,7 +96,7 @@ const InvolvementProfile = () => {
       }
     };
     loadPage();
-  }, [involvementCode, isAuthenticated, sessionCode]);
+  }, [involvementCode, isAuthenticated, sessionCode, profile.ID]);
 
   const onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];
