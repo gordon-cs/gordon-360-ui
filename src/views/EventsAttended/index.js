@@ -1,8 +1,8 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import { Button, Grid, List, Typography } from '@material-ui/core';
 import EventList from 'components/EventList';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
+import { useAuth } from 'hooks';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import event from 'services/event';
@@ -18,24 +18,24 @@ const style = {
 const EventsAttended = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const isAuthenticated = useIsAuthenticated();
+  const authenticated = useAuth();
 
   useEffect(() => {
     const loadEvents = async () => {
-      if (isAuthenticated) {
+      if (authenticated) {
         const attendedEvents = await event.getAttendedChapelEvents();
         setEvents(attendedEvents);
       }
       setLoading(false);
     };
     loadEvents();
-  }, [isAuthenticated]);
+  }, [authenticated]);
 
   let content;
 
   if (loading === true) {
     content = <GordonLoader />;
-  } else if (!isAuthenticated) {
+  } else if (!authenticated) {
     content = <GordonUnauthorized feature={'your attended events'} />;
   } else if (events.length > 0) {
     content = (

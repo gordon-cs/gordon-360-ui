@@ -1,10 +1,10 @@
 // import StudentApplication from './components/StudentApplication';
-import { useIsAuthenticated } from '@azure/msal-react';
 import { Button, Card, CardContent, Grid } from '@material-ui/core';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
+import { useAuth } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 // eslint-disable-next-line no-unused-vars
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
@@ -21,7 +21,7 @@ import StaffMenu from './components/StaffMenu';
 
 const ApartApp = () => {
   const [loading, setLoading] = useState(true);
-  const isAuthenticated = useIsAuthenticated();
+  const authenticated = useAuth();
 
   /**
    * @type {[StudentProfileInfo, Dispatch<SetStateAction<StudentProfileInfo>>]} UserProfile
@@ -56,7 +56,7 @@ const ApartApp = () => {
       }
     };
 
-    if (isAuthenticated) {
+    if (authenticated) {
       loadPage();
     } else {
       // Clear out component's person-specific state when authenticated becomes false
@@ -66,11 +66,11 @@ const ApartApp = () => {
       setIsUserStudent(false);
       setLoading(false);
     }
-  }, [isAuthenticated]);
+  }, [authenticated]);
 
   if (loading) {
     return <GordonLoader />;
-  } else if (!isAuthenticated) {
+  } else if (!authenticated) {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Apartment Application page'} />;
   } else if (isOnline) {

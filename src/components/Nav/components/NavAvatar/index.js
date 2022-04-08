@@ -1,6 +1,5 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import { Avatar, Button, Typography } from '@material-ui/core';
-import { useUser } from 'hooks';
+import { useAuth, useUser } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import userService from 'services/user';
@@ -11,11 +10,11 @@ const GordonNavAvatar = ({ onLinkClick }) => {
   const [image, setImage] = useState();
   const [name, setName] = useState();
   const user = useUser();
-  const isAuthenticated = useIsAuthenticated();
+  const authenticated = useAuth();
 
   useEffect(() => {
     async function loadAvatar() {
-      if (isAuthenticated) {
+      if (authenticated) {
         setName(user.profile.fullName);
         setEmail(user.profile.Email);
         setImage(user.images?.pref || user.images?.def);
@@ -26,7 +25,7 @@ const GordonNavAvatar = ({ onLinkClick }) => {
 
     loadAvatar();
 
-    if (isAuthenticated) {
+    if (authenticated) {
       // Used to re-render the page when the user's profile picture changes
       // The origin of the message is checked to prevent cross-site scripting attacks
       window.addEventListener('message', async (event) => {
@@ -39,9 +38,9 @@ const GordonNavAvatar = ({ onLinkClick }) => {
 
       return window.removeEventListener('message', () => {});
     }
-  }, [user, isAuthenticated]);
+  }, [user, authenticated]);
 
-  const avatar = isAuthenticated ? (
+  const avatar = authenticated ? (
     image ? (
       <Avatar className={`${styles.avatar}`} src={`data:image/jpg;base64,${image}`} />
     ) : (
@@ -57,13 +56,13 @@ const GordonNavAvatar = ({ onLinkClick }) => {
     <Link
       {...props}
       innerRef={ref}
-      to={isAuthenticated ? `/myprofile` : '/'}
+      to={authenticated ? `/myprofile` : '/'}
       onClick={onLinkClick}
       className="gc360_link"
     />
   ));
 
-  const label = isAuthenticated ? (
+  const label = authenticated ? (
     <>
       <Typography variant="body2" className={styles.avatar_text} align="left" gutterBottom>
         {name}

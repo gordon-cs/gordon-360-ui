@@ -1,4 +1,3 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
 import HomeIcon from '@material-ui/icons/Home';
@@ -8,7 +7,7 @@ import WellnessIcon from '@material-ui/icons/LocalHospital';
 import MenuIcon from '@material-ui/icons/Menu';
 import PeopleIcon from '@material-ui/icons/People';
 import GordonDialogBox from 'components/GordonDialogBox/index';
-import { useDocumentTitle, useNetworkStatus } from 'hooks';
+import { useAuth, useDocumentTitle, useNetworkStatus } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
 import { NavLink, Route, Switch } from 'react-router-dom';
@@ -29,7 +28,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
   const [anchorElement, setAnchorElement] = useState(null);
   const isOnline = useNetworkStatus();
   const setDocumentTitle = useDocumentTitle();
-  const isAuthenticated = useIsAuthenticated();
+  const authenticated = useAuth();
 
   /**
    * Update the tab highlight indicator based on the url
@@ -111,7 +110,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
           onClick={() => setDialog('offline')}
         />
       );
-    } else if (!isAuthenticated) {
+    } else if (!authenticated) {
       return (
         <Tab
           className={`${styles.tab} ${styles.disabled_tab}`}
@@ -216,7 +215,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
           <div className={styles.people_search_container_container}>
             {/* Width is dynamic */}
             <div className={styles.people_search_container}>
-              {isAuthenticated ? <GordonPeopleSearch /> : loginButton}
+              {authenticated ? <GordonPeopleSearch /> : loginButton}
             </div>
           </div>
 

@@ -1,4 +1,3 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Button,
   Card,
@@ -17,7 +16,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import EventList from 'components/EventList';
 import GordonLoader from 'components/Loader';
-import { useWindowSize } from 'hooks';
+import { useAuth, useWindowSize } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
 import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
@@ -35,13 +34,13 @@ const Events = (props) => {
   const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
-  const isAuthenticated = useIsAuthenticated();
+  const authenticated = useAuth();
 
   useEffect(() => {
     const loadEvents = async () => {
       setLoading(true);
       let allEvents;
-      if (isAuthenticated) {
+      if (authenticated) {
         allEvents = await gordonEvent.getAllEvents();
       } else {
         allEvents = await gordonEvent.getAllGuestEvents();
@@ -72,7 +71,7 @@ const Events = (props) => {
     };
 
     loadEvents();
-  }, [isAuthenticated, props.location.search]);
+  }, [authenticated, props.location.search]);
 
   useEffect(() => {
     setLoading(true);
@@ -146,7 +145,7 @@ const Events = (props) => {
                   <CardHeader title={searchPageTitle} />
                 </Grid>
                 <Grid item xs={4} align="right">
-                  {isAuthenticated && (
+                  {authenticated && (
                     <Button
                       color="primary"
                       style={{
@@ -353,7 +352,7 @@ const Events = (props) => {
                     </Grid>
 
                     <Grid item>
-                      {isAuthenticated && (
+                      {authenticated && (
                         <Button
                           color="primary"
                           style={{

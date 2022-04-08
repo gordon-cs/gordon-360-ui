@@ -1,14 +1,14 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import Profile from 'components/Profile';
+import { useAuth } from 'hooks';
 import { useEffect, useState } from 'react';
 import user from 'services/user';
 
 const MyProfile = () => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
-  const isAuthenticated = useIsAuthenticated();
+  const authenticated = useAuth();
 
   useEffect(() => {
     async function loadProfile() {
@@ -21,14 +21,14 @@ const MyProfile = () => {
       }
     }
 
-    if (isAuthenticated) {
+    if (authenticated) {
       loadProfile();
     } else {
       setProfile(null);
     }
-  }, [isAuthenticated]);
+  }, [authenticated]);
 
-  if (isAuthenticated) {
+  if (authenticated) {
     return loading ? <GordonLoader /> : <Profile profile={profile} myProf />;
   }
   return <GordonUnauthorized feature={'your profile'} />;

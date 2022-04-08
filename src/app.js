@@ -1,11 +1,11 @@
 import { PublicClientApplication } from '@azure/msal-browser';
-import { MsalProvider, useIsAuthenticated } from '@azure/msal-react';
+import { MsalProvider } from '@azure/msal-react';
 import MomentUtils from '@date-io/moment';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
-import UserContextProvider from 'contexts/UserContext';
+import UserContextProvider, { AuthContext } from 'contexts/UserContext';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
@@ -40,7 +40,6 @@ const ContextProviders = ({ children }) => {
 
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState();
-  const isAuthenticated = useIsAuthenticated();
 
   const historyRef = useRef(createBrowserHistory());
 
@@ -65,25 +64,29 @@ const App = () => {
             <GordonHeader onDrawerToggle={onDrawerToggle} />
             <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
             <main className={styles.app_main}>
-              <>
-                <BirthdayMessage />
-                <Switch>
-                  {routes.map((route) => (
-                    <Route
-                      key={route.path}
-                      path={route.path}
-                      exact={route.exact}
-                      render={(props) => (
-                        <div className={styles.app_main_container}>
-                          <AppRedirect />
-                          <OfflineBanner currentPath={route.path} />
-                          <route.component authentication={isAuthenticated} {...props} />
-                        </div>
-                      )}
-                    />
-                  ))}
-                </Switch>
-              </>
+              <AuthContext.Consumer>
+                {(authenticated) => (
+                  <>
+                    <BirthdayMessage />
+                    <Switch>
+                      {routes.map((route) => (
+                        <Route
+                          key={route.path}
+                          path={route.path}
+                          exact={route.exact}
+                          render={(props) => (
+                            <div className={styles.app_main_container}>
+                              <AppRedirect />
+                              <OfflineBanner currentPath={route.path} />
+                              <route.component authentication={authenticated} {...props} />
+                            </div>
+                          )}
+                        />
+                      ))}
+                    </Switch>
+                  </>
+                )}
+              </AuthContext.Consumer>
             </main>
           </section>
         </Router>

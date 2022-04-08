@@ -1,4 +1,3 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Button,
   DialogActions,
@@ -18,7 +17,7 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import 'cropperjs/dist/cropper.css';
-import { useNetworkStatus } from 'hooks';
+import { useAuth, useNetworkStatus } from 'hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import { isMobile } from 'react-device-detect';
@@ -92,11 +91,11 @@ const StudentNews = (props) => {
   const [currentUsername, setCurrentUsername] = useState('');
   const [currentlyEditing, setCurrentlyEditing] = useState(false); // false if not editing, newsID if editing
   const cropperRef = useRef();
-  const isAuthenticated = useIsAuthenticated();
+  const authenticated = useAuth();
 
   const loadNews = useCallback(async () => {
     setLoading(true);
-    if (isAuthenticated) {
+    if (authenticated) {
       const newsCategories = await newsService.getCategories();
       const personalUnapprovedNews = await newsService.getPersonalUnapproved();
       const unexpiredNews = await newsService.getNotExpiredFormatted();
@@ -110,11 +109,11 @@ const StudentNews = (props) => {
       // TODO: test authentication handling and neaten code (ex. below)
       // alert("Please sign in to access student news");
     }
-  }, [isAuthenticated]);
+  }, [authenticated]);
 
   useEffect(() => {
     loadNews();
-  }, [isAuthenticated, loadNews]);
+  }, [authenticated, loadNews]);
 
   useEffect(() => {
     const loadUsername = async () => {
@@ -381,7 +380,7 @@ const StudentNews = (props) => {
   //Image isn't here because an image is optional
   let content;
 
-  if (isAuthenticated) {
+  if (authenticated) {
     if (loading === true) {
       content = <GordonLoader />;
     } else {

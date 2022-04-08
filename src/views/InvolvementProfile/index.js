@@ -1,4 +1,3 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Button,
   Card,
@@ -13,7 +12,7 @@ import {
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
 import GordonLoader from 'components/Loader';
-import { useNetworkStatus, useUser } from 'hooks';
+import { useAuth, useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
@@ -52,7 +51,7 @@ const InvolvementProfile = () => {
   const isOnline = useNetworkStatus();
   const cropperRef = useRef();
   const { sessionCode, involvementCode } = useParams();
-  const isAuthenticated = useIsAuthenticated();
+  const isAuthenticated = useAuth();
   const { profile } = useUser();
 
   useEffect(() => {
@@ -96,7 +95,7 @@ const InvolvementProfile = () => {
       }
     };
     loadPage();
-  }, [involvementCode, isAuthenticated, sessionCode, profile.ID]);
+  }, [involvementCode, isAuthenticated, sessionCode, profile?.ID]);
 
   const onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];

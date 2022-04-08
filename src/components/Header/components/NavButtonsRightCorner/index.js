@@ -1,9 +1,8 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import List from '@material-ui/core/List';
 import Popover from '@material-ui/core/Popover';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
-import { useNetworkStatus } from 'hooks';
+import { useAuth, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
 import { signOut } from 'services/auth';
 import storageService from 'services/storage';
@@ -21,7 +20,7 @@ import styles from './NavButtonsRightCorner.module.css';
 const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl }) => {
   const [linkOpen, setLinkOpen] = useState(false);
   const isOnline = useNetworkStatus();
-  const isAuthenticated = useIsAuthenticated();
+  const authenticated = useAuth();
 
   function closeAndSignOut() {
     onClose();
@@ -30,7 +29,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
 
   const myProfileButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      unavailable={!isOnline ? 'offline' : !authenticated ? 'unauthorized' : null}
       onLinkClick={onClose}
       openUnavailableDialog={openDialogBox}
       linkName={'My Profile'}
@@ -52,7 +51,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
 
   const timesheetsButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      unavailable={!isOnline ? 'offline' : !authenticated ? 'unauthorized' : null}
       onLinkClick={onClose}
       openUnavailableDialog={openDialogBox}
       linkName={'Timesheets'}
@@ -77,7 +76,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
   );
 
   const adminButton =
-    isAuthenticated && storageService.getLocalInfo().college_role === 'god' ? (
+    authenticated && storageService.getLocalInfo().college_role === 'god' ? (
       <GordonNavButton
         unavailable={!isOnline ? 'offline' : null}
         onLinkClick={onClose}
@@ -87,7 +86,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
       />
     ) : null;
 
-  const signInOutButton = isAuthenticated ? (
+  const signInOutButton = authenticated ? (
     <GordonNavButton onLinkClick={closeAndSignOut} linkName="Sign Out" />
   ) : null;
 

@@ -1,4 +1,3 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Card,
   CardContent,
@@ -11,7 +10,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
-import { useNetworkStatus, useUser } from 'hooks';
+import { useAuth, useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
@@ -33,7 +32,7 @@ const InvolvementsAll = ({ location, history }) => {
   const [types, setTypes] = useState([]);
   const { profile } = useUser();
   const isOnline = useNetworkStatus();
-  const isAuthenticated = useIsAuthenticated();
+  const isAuthenticated = useAuth();
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
