@@ -23,7 +23,6 @@ export const UserContext = createContext<User>(initialUserState);
 
 export const UserActionsContext = createContext<UserActions | undefined>(undefined);
 
-export const AuthContext = createContext<boolean | undefined>(undefined);
 
 const getUserProfile = () => userService.getProfileInfo();
 const getUserImages = () => userService.getImage();
@@ -31,7 +30,6 @@ const getAllUserData = () => Promise.all([getUserProfile(), getUserImages()]);
 
 const UserContextProvider = ({ children }: {children?: JSX.Element | JSX.Element[]}) => {
   const isAuthenticated = useIsAuthenticated();
-  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User>(initialUserState);
 
   const updateProfile = () => getUserProfile().then((p) => setUser((u) => ({ ...u, profile: p })));
@@ -41,27 +39,19 @@ const UserContextProvider = ({ children }: {children?: JSX.Element | JSX.Element
 
   useEffect(() => {
     const loadUser = async () => {
-      setLoading(true);
       if (isAuthenticated) {
         const [profile, images] = await getAllUserData();
         setUser({ profile, images });
       } else {
         setUser(initialUserState);
       }
-      setLoading(false);
     };
     loadUser();
   }, [isAuthenticated]);
 
-  if (loading) {
-    return null;
-  }
-
   return (
     <UserActionsContext.Provider value={{  updateProfile, updateImage }}>
-      <AuthContext.Provider value={isAuthenticated && user !== initialUserState}>
         <UserContext.Provider value={user}>{children}</UserContext.Provider>
-      </AuthContext.Provider>
     </UserActionsContext.Provider>
   );
 };

@@ -1,6 +1,6 @@
 import { Avatar, IconButton, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useAuth, useUser } from 'hooks';
+import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';
 import styles from '../../Header.module.css';
@@ -28,14 +28,13 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
   const [name, setName] = useState(null);
   const [image, setImage] = useState(null);
   const classes = useStyles();
-  const authenticated = useAuth();
   const user = useUser();
 
   useEffect(() => {
-    async function loadAvatar() {
-      if (authenticated) {
-        setName(user.profile?.fullName);
-        const image = user.images?.pref || user.images?.def;
+    function loadAvatar() {
+      if (user.profile) {
+        setName(user.profile.fullName);
+        const image = user.images.pref || user.images.def;
         setImage(image);
       } else {
         setName('Guest');
@@ -44,7 +43,7 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
 
     loadAvatar();
 
-    if (authenticated) {
+    if (user.profile) {
       // Used to re-render the page when the user's profile picture changes
       // The origin of the message is checked to prevent cross-site scripting attacks
       window.addEventListener('message', (event) => {
@@ -55,9 +54,9 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
 
       return window.removeEventListener('message', () => {});
     }
-  }, [authenticated, user]);
+  }, [user]);
 
-  const avatar = authenticated ? (
+  const avatar = user.profile ? (
     image ? (
       <Avatar className={classes.root} src={`data:image/jpg;base64,${image}`} sizes="70px" />
     ) : (

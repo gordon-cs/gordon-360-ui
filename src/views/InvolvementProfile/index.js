@@ -12,7 +12,7 @@ import {
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
 import GordonLoader from 'components/Loader';
-import { useAuth, useNetworkStatus, useUser } from 'hooks';
+import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
@@ -51,13 +51,12 @@ const InvolvementProfile = () => {
   const isOnline = useNetworkStatus();
   const cropperRef = useRef();
   const { sessionCode, involvementCode } = useParams();
-  const isAuthenticated = useAuth();
   const { profile } = useUser();
 
   useEffect(() => {
     const loadPage = async () => {
       setLoading(true);
-      if (isAuthenticated) {
+      if (profile) {
         const { college_role } = storageService.getLocalInfo();
         const [involvementInfo, advisors, groupAdmins, sessionInfo, isAdmin] = await Promise.all([
           involvementService.get(involvementCode),
@@ -95,7 +94,7 @@ const InvolvementProfile = () => {
       }
     };
     loadPage();
-  }, [involvementCode, isAuthenticated, sessionCode, profile?.ID]);
+  }, [involvementCode, sessionCode, profile]);
 
   const onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];
@@ -429,7 +428,7 @@ const InvolvementProfile = () => {
                 )}
               </Grid>
 
-              {isAuthenticated && (
+              {profile && (
                 <>
                   <hr width="70%"></hr>
 

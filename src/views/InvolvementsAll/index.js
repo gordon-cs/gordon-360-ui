@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
-import { useAuth, useNetworkStatus, useUser } from 'hooks';
+import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
@@ -32,7 +32,6 @@ const InvolvementsAll = ({ location, history }) => {
   const [types, setTypes] = useState([]);
   const { profile } = useUser();
   const isOnline = useNetworkStatus();
-  const isAuthenticated = useAuth();
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
@@ -70,7 +69,7 @@ const InvolvementsAll = ({ location, history }) => {
       }
     };
     loadPage();
-  }, [isAuthenticated, sessionFromURL]);
+  }, [sessionFromURL]);
 
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
@@ -83,7 +82,7 @@ const InvolvementsAll = ({ location, history }) => {
       setLoading(true);
       setAllInvolvements(await involvementService.getAll(selectedSession));
       setTypes(await involvementService.getTypes(selectedSession));
-      if (isAuthenticated) {
+      if (profile) {
         setMyInvolvements(
           await membershipService.getSessionMembershipsWithoutGuests(
             profile.AD_Username,
@@ -97,7 +96,7 @@ const InvolvementsAll = ({ location, history }) => {
     if (selectedSession) {
       updateInvolvements();
     }
-  }, [selectedSession, isAuthenticated, profile.AD_Username]);
+  }, [selectedSession, profile]);
 
   useEffect(() => {
     setInvolvements(involvementService.filter(allInvolvements, type, search));
@@ -196,10 +195,10 @@ const InvolvementsAll = ({ location, history }) => {
         </Card>
       </Grid>
 
-      {isOnline && isAuthenticated && <Requests />}
+      {isOnline && profile && <Requests />}
 
       {/* My Involvements (private) */}
-      {isAuthenticated && (
+      {profile && (
         <Grid item xs={12} lg={8}>
           <Card>
             <CardHeader

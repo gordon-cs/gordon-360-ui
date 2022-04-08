@@ -1,8 +1,7 @@
 import { InputAdornment, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import GordonUnauthorized from 'components/GordonUnauthorized';
 import Downshift from 'downshift';
-import { useAuth, useNetworkStatus } from 'hooks';
+import { useNetworkStatus } from 'hooks';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -51,7 +50,6 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
   const [downshift, setDownshift] = useState();
   const [time, setTime] = useState(0);
   const isOnline = useNetworkStatus();
-  const authenticated = useAuth();
 
   useEffect(() => {
     function handleResize() {
@@ -265,10 +263,6 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
         </Typography>
       </MenuItem>
     );
-  }
-
-  if (!authenticated) {
-    return <GordonUnauthorized feature={'the People Search page'} />;
   }
 
   // Creates the People Search Bar

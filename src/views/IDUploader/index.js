@@ -1,4 +1,3 @@
-import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react';
 import {
   Button,
   Card,
@@ -230,75 +229,79 @@ class IDUploader extends Component {
 
     return (
       <Grid container justifyContent="center" spacing={2}>
-        <AuthenticatedTemplate>
-          <Grid item xs={12} md={6} lg={8}>
-            <Card>
-              <CardContent>
-                <Grid container justifyContent="center" direction="column">
-                  <Grid item align="center">
-                    <Typography align="center" variant="h6" style={{ fontWeight: 'bold' }}>
-                      ID Photo Guidelines
-                    </Typography>
-                    <Typography align="left" variant="body2" style={style.instructionsText}>
-                      <br />
-                      1. Facial features must be identifiable. <br />
-                      2. No sunglasses or hats. <br />
-                      3. Photo must include your shoulders to the top of your head. <br />
-                      4. While this does not need to be a professional photo, it does need to be a
-                      reasonable representation of your face for an official campus ID card. As long
-                      as it meets the criteria, most cameras on a phone will work fine.
-                    </Typography>
-                  </Grid>
-                  <Grid item align="center">
-                    <Button
-                      variant="contained"
-                      style={style.uploadButton}
-                      onClick={this.handleUploadPhoto}
-                    >
-                      Tap to Upload
-                    </Button>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <Grid container justifyContent="center">
-              <Card raised={true}>
-                <Grid item style={{ margin: '10px' }}>
-                  <img
-                    src={IdCardTop}
-                    alt="ID card top with Gordon College logo."
-                    className={styles.placeholder_id}
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                  />
-                </Grid>
-                <Grid item>
-                  <Grid container style={{ width: '406px' }}>
-                    <Grid item style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}>
-                      <img
-                        src={this.state.IdCardPlaceholder}
-                        alt="Placeholder ID."
-                        className={styles.placeholder_id}
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
-                      />
+        {this.props.authentication ? (
+          <>
+            <Grid item xs={12} md={6} lg={8}>
+              <Card>
+                <CardContent>
+                  <Grid container justifyContent="center" direction="column">
+                    <Grid item align="center">
+                      <Typography align="center" variant="h6" style={{ fontWeight: 'bold' }}>
+                        ID Photo Guidelines
+                      </Typography>
+                      <Typography align="left" variant="body2" style={style.instructionsText}>
+                        <br />
+                        1. Facial features must be identifiable. <br />
+                        2. No sunglasses or hats. <br />
+                        3. Photo must include your shoulders to the top of your head. <br />
+                        4. While this does not need to be a professional photo, it does need to be a
+                        reasonable representation of your face for an official campus ID card. As
+                        long as it meets the criteria, most cameras on a phone will work fine.
+                      </Typography>
                     </Grid>
-                    <Grid item style={{ marginLeft: '7px', width: '53px', marginBottom: '5px' }}>
-                      <img
-                        src={IdCardGreen}
-                        alt="Colored bar with text 'student'."
-                        className={styles.placeholder_id}
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
-                      />
+                    <Grid item align="center">
+                      <Button
+                        variant="contained"
+                        style={style.uploadButton}
+                        onClick={this.handleUploadPhoto}
+                      >
+                        Tap to Upload
+                      </Button>
                     </Grid>
                   </Grid>
-                </Grid>
+                </CardContent>
               </Card>
             </Grid>
-          </Grid>
-        </AuthenticatedTemplate>
-        <UnauthenticatedTemplate>
+
+            <Grid item xs={12} md={6} lg={4}>
+              <Grid container justifyContent="center">
+                <Card raised={true}>
+                  <Grid item style={{ margin: '10px' }}>
+                    <img
+                      src={IdCardTop}
+                      alt="ID card top with Gordon College logo."
+                      className={styles.placeholder_id}
+                      style={{ maxWidth: '100%', maxHeight: '100%' }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Grid container style={{ width: '406px' }}>
+                      <Grid
+                        item
+                        style={{ marginLeft: '10px', width: '320px', marginBottom: '5px' }}
+                      >
+                        <img
+                          src={this.state.IdCardPlaceholder}
+                          alt="Placeholder ID."
+                          className={styles.placeholder_id}
+                          style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        />
+                      </Grid>
+                      <Grid item style={{ marginLeft: '7px', width: '53px', marginBottom: '5px' }}>
+                        <img
+                          src={IdCardGreen}
+                          alt="Colored bar with text 'student'."
+                          className={styles.placeholder_id}
+                          style={{ maxWidth: '100%', maxHeight: '100%' }}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Card>
+              </Grid>
+            </Grid>
+          </>
+        ) : (
           <Grid container justifyContent="center">
             <Grid item xs={12} md={8}>
               <Card>
@@ -315,7 +318,7 @@ class IDUploader extends Component {
               </Card>
             </Grid>
           </Grid>
-        </UnauthenticatedTemplate>
+        )}
 
         <Dialog
           open={this.state.photoOpen}

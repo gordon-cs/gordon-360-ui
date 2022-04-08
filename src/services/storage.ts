@@ -1,5 +1,5 @@
 import { AccountInfo } from '@azure/msal-browser';
-import { msalInstance } from 'app';
+import { msalInstance } from 'index';
 
 const store = (key: string, value: string) => localStorage.setItem(key, JSON.stringify(value));
 

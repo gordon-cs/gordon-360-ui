@@ -1,4 +1,4 @@
-import { useAuth } from 'hooks';
+import { useIsAuthenticated } from '@azure/msal-react';
 import { useEffect, useState } from 'react';
 import { Redirect, useLocation } from 'react-router';
 import checkInService from 'services/checkIn';
@@ -6,16 +6,16 @@ import checkInService from 'services/checkIn';
 const AppRedirect = () => {
   const [enrollmentCheckinComplete, setEnrollmentCheckinComplete] = useState(true);
   const location = useLocation();
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    if (authenticated) {
+    if (isAuthenticated) {
       checkInService.getStatus().then((status) => setEnrollmentCheckinComplete(status ?? true));
     }
-  }, [authenticated]);
+  }, [isAuthenticated]);
 
   if (
-    authenticated &&
+    isAuthenticated &&
     !enrollmentCheckinComplete &&
     location.pathname !== '/enrollmentcheckin' &&
     location.pathname !== '/wellness'

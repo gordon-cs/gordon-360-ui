@@ -6,7 +6,7 @@ import {
   PublicClientApplication,
   SilentRequest,
 } from '@azure/msal-browser';
-import { msalInstance } from 'app';
+import { msalInstance } from 'index';
 import storage from './storage';
 
 export const msalConfig = {
@@ -51,9 +51,7 @@ export const configureMSAL = (msalInstance: PublicClientApplication) => {
 };
 
 const authenticate = async () => {
-  const tokenResponse = await msalInstance.loginPopup({
-    scopes: ['api://b19c300a-00dc-4adc-bcd1-b678b25d7ad1/access_as_user'],
-  });
+  const tokenResponse = await msalInstance.loginPopup(apiRequest);
   const accountResponse = tokenResponse.account;
   msalInstance.setActiveAccount(accountResponse);
 };
@@ -69,7 +67,7 @@ const acquireAccessToken = async () => {
      */
   }
   const request: SilentRequest = {
-    scopes: ['api://b19c300a-00dc-4adc-bcd1-b678b25d7ad1/access_as_user'],
+    ...apiRequest,
     account: activeAccount || accounts[0],
   };
 
