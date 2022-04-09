@@ -13,6 +13,7 @@ import {
   Select,
   TextField,
 } from '@material-ui/core/';
+import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import updateAlumniInfo from 'services/update';
@@ -20,7 +21,7 @@ import styles from './Update.module.css';
 import GordonLoader from 'components/Loader';
 import { gordonColors } from 'theme';
 import SimpleSnackbar from 'components/Snackbar';
-import user from 'services/user';
+import userService from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
 //import userInfo from 'components/Profile/components/PersonalInfoList';
@@ -53,33 +54,41 @@ import GordonOffline from 'components/GordonOffline';
  */
 
 const Update = (props) => {
-  const [userSalutation, setSalutation] = useState('');
-  const [userFirstName, setFirstName] = useState('');
-  const [userLastName, setLastName] = useState('');
-  const [userMiddleName, setMiddleName] = useState('');
-  const [userPreferredName, setPreferredName] = useState('');
+  const isOnline = useNetworkStatus();
+  const user = useUser();
+
+  const profileSalutaton = user.profile?.Title
+  ? user.profile.Title.charAt(0).toUpperCase() + user.profile.Title.slice(1).toLowerCase(): '';
+
+  const address = (user.profile.HomeStreet1.length === 0)
+  ? user.profile.HomeStreet2 : user.profile.HomeStreet1;
+
+  const [userSalutation, setSalutation] = useState(profileSalutaton);
+  const [userFirstName, setFirstName] = useState(user.profile.FirstName);
+  const [userLastName, setLastName] = useState(user.profile.LastName);
+  const [userMiddleName, setMiddleName] = useState(user.profile.MiddleName);
+  const [userPreferredName, setPreferredName] = useState(user.profile.NickName);
   const [userPersonalEmail, setPersonalEmail] = useState('');
   const [userWorkEmail, setWorkEmail] = useState('');
-  const [userAlternateEmail, setAlternateEmail] = useState('');
+  const [userAlternateEmail, setAlternateEmail] = useState(user.profile.Email);
   const [userPreferredEmail, setPreferredEmail] = useState('');
   const [userDoNotContact, setDoNotContact] = useState(false);
   const [userDoNotMail, setDoNotMail] = useState(false);
-  const [userHomePhone, setHomePhone] = useState('');
+  const [userHomePhone, setHomePhone] = useState(user.profile.HomePhone);
   const [userWorkPhone, setWorkPhone] = useState('');
-  const [userMobilePhone, setMobilePhone] = useState('');
+  const [userMobilePhone, setMobilePhone] = useState(user.profile.MobilePhone);
   const [userPreferredPhone, setPreferredPhone] = useState('');
-  const [userMailingStreet, setMailingStreet] = useState('');
-  const [userMailingCity, setMailingCity] = useState('');
-  const [userMailingState, setMailingState] = useState('');
-  const [userMailingZip, setMailingZip] = useState('');
-  const [userMailingCountry, setMailingCountry] = useState('');
-  const [userMaritalStatus, setMaritalStatus] = useState('');
+  const [userMailingStreet, setMailingStreet] = useState(address);
+  const [userMailingCity, setMailingCity] = useState(user.profile.HomeCity);
+  const [userMailingState, setMailingState] = useState(user.profile.HomeState);
+  const [userMailingZip, setMailingZip] = useState(user.profile.HomePostalCode);
+  const [userMailingCountry, setMailingCountry] = useState(user.profile.HomeCountry);
+  const [userMaritalStatus, setMaritalStatus] = useState(user.profile.Married);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [isUserStudent, setIsUserStudent] = useState(true);
-  const isOnline = useNetworkStatus();
 
   // I considered using a HashMap to get the names, but I don't think it's necessary.
   // Both arrays are constant. Many reasons why 2 arrays is better than one HashMap here.
@@ -94,7 +103,7 @@ const Update = (props) => {
 
   useEffect(() => {
     if (props.authentication) {
-      user.getProfileInfo().then((profile) => setIsUserStudent(profile.PersonType.includes('stu')));
+      userService.getProfileInfo().then((profile) => setIsUserStudent(profile.PersonType.includes('stu')));
     }
   }, [props.authentication]);
 
@@ -103,11 +112,6 @@ const Update = (props) => {
       if (userFirstName === "" || userLastName === "") {
         setSnackbarSeverity('error');
         setSnackbarText('Please fill in your first and last name.');
-        setSnackbarOpen(true);
-      }
-      else if (formEmpty()) {
-        setSnackbarSeverity('error');
-        setSnackbarText('Please fill in at least one field.');
         setSnackbarOpen(true);
       } else {
         setSaving(true);
@@ -142,12 +146,6 @@ const Update = (props) => {
         });
       }
     };
-
-    function formEmpty() {
-      if (formFields.every(element => !element)){
-        return true;
-      }
-    }
 
     function emailBody() {
       for (var i in formFields) {
