@@ -209,7 +209,7 @@ const getChapelCredits = async (): Promise<CLWCredits | null> => {
     : null;
 };
 
-const getDiningInfo = (): Promise<DiningInfo> => http.get('dining');
+const getDiningInfo = (): Promise<DiningInfo | string> => http.get('dining');
 
 const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
   http.get(`profiles/${username}`);
