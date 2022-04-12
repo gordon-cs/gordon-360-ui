@@ -168,14 +168,12 @@ const getApartmentApplication = async (
   return applicationResult;
 };
 
-const getSubmittedApartmentApplications = async (): Promise<UnformattedApplicationDetails[]> => {
+const getSubmittedApartmentApplications = async (): Promise<ApplicationDetails[]> => {
   const applicationDetailsArray: UnformattedApplicationDetails[] = await http.get(
     `housing/admin/apartment/applications/`,
   );
-  applicationDetailsArray.forEach((applicationDetails) =>
-    formatApplicationDetails(applicationDetails),
-  );
-  return applicationDetailsArray;
+
+  return applicationDetailsArray.map((app) => formatApplicationDetails(app));
 };
 
 const submitApplication = (applicationID: number): Promise<boolean> =>
