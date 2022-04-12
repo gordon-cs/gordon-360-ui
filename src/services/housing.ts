@@ -1,6 +1,7 @@
 import { Class } from './goStalk';
 import http from './http';
 import { StudentProfileInfo, UnformattedStudentProfileInfo } from './user';
+import { map } from './utils';
 
 type ApartmentHall = {
   /** Number of people per room/apartment   (not yet implemented in API) */
@@ -158,23 +159,15 @@ function formatApplicationDetails(
   };
 }
 
-const getApartmentApplication = async (
-  applicationID: number,
-): Promise<UnformattedApplicationDetails> => {
-  const applicationResult: UnformattedApplicationDetails = await http.get(
-    `housing/apartment/applications/${applicationID}/`,
-  );
-  formatApplicationDetails(applicationResult);
-  return applicationResult;
-};
+const getApartmentApplication = async (applicationID: number): Promise<ApplicationDetails> =>
+  http
+    .get<UnformattedApplicationDetails>(`housing/apartment/applications/${applicationID}/`)
+    .then(formatApplicationDetails);
 
-const getSubmittedApartmentApplications = async (): Promise<ApplicationDetails[]> => {
-  const applicationDetailsArray: UnformattedApplicationDetails[] = await http.get(
-    `housing/admin/apartment/applications/`,
-  );
-
-  return applicationDetailsArray.map((app) => formatApplicationDetails(app));
-};
+const getSubmittedApartmentApplications = async (): Promise<ApplicationDetails[]> =>
+  http
+    .get<UnformattedApplicationDetails[]>(`housing/admin/apartment/applications/`)
+    .then(map(formatApplicationDetails));
 
 const submitApplication = (applicationID: number): Promise<boolean> =>
   http.put(`housing/apartment/applications/${applicationID}/submit`);
