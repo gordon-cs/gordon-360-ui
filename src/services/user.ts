@@ -77,6 +77,7 @@ export type UnformattedStaffProfileInfo = BaseProfileInfo & {
   SpouseName: string;
   Type: string;
   office_hours: string;
+  Mail_Description: string;
 };
 
 export type UnformattedStudentProfileInfo = BaseProfileInfo & {
