@@ -119,7 +119,7 @@ const Update = (props) => {
           emailBody()
         ).then(() => {
           setSnackbarSeverity('info');
-          setSnackbarText('Your information has been updated!');
+          setSnackbarText('A request to update your information has been sent. Please check back later.');
           setSnackbarOpen(true);
           setSalutation('');
           setFirstName('');
