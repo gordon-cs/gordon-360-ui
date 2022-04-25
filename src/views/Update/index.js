@@ -60,6 +60,9 @@ const Update = (props) => {
   const profileSalutaton = user.profile?.Title
   ? user.profile.Title.charAt(0).toUpperCase() + user.profile.Title.slice(1).toLowerCase(): '';
 
+  const profileMaritalStatus = user.profile.Married === 'N'
+  ? 'No' : user.profile.Married === 'Y' ? 'Yes' : '';
+
   const address = (user.profile.HomeStreet1.length === 0)
   ? user.profile.HomeStreet2 : user.profile.HomeStreet1;
 
@@ -83,7 +86,7 @@ const Update = (props) => {
   const [userMailingState, setMailingState] = useState(user.profile.HomeState);
   const [userMailingZip, setMailingZip] = useState(user.profile.HomePostalCode);
   const [userMailingCountry, setMailingCountry] = useState(user.profile.HomeCountry);
-  const [userMaritalStatus, setMaritalStatus] = useState(user.profile.Married);
+  const [userMaritalStatus, setMaritalStatus] = useState(profileMaritalStatus);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [snackbarText, setSnackbarText] = useState('');
@@ -92,14 +95,22 @@ const Update = (props) => {
 
   // I considered using a HashMap to get the names, but I don't think it's necessary.
   // Both arrays are constant. Many reasons why 2 arrays is better than one HashMap here.
-  const formFields = [userSalutation, userFirstName, userLastName, userMiddleName, userPreferredName,
-  userPersonalEmail, userWorkEmail, userAlternateEmail, userPreferredEmail, userDoNotContact,
-  userDoNotMail, userHomePhone, userWorkPhone, userMobilePhone, userPreferredPhone, userMailingStreet,
-  userMailingCity, userMailingState, userMailingZip, userMailingCountry, userMaritalStatus]
+  const formFields = [userPersonalEmail, userWorkEmail, userPreferredEmail, userDoNotContact,
+  userDoNotMail, userWorkPhone, userPreferredPhone]
 
-  const formHeadings = ["Salutation", "First Name", "Last Name", "Middle Name", "Preferred Name", "Personal Email", "Work Email",
-  "Alternate Email", "Preferred Email", "Do Not Contact", "Do Not Mail", "Home Phone", "Work Phone",
-  "Mobile Phone", "Preferred Phone", "Street", "City", "State", "Zipcode", "Country", "Marital Status"]
+  const formHeadings = ["Personal Email", "Work Email", "Preferred Email", "Do Not Contact",
+  "Do Not Mail", "Work Phone", "Preferred Phone"]
+
+  const autoFill = [user.profile.MiddleName, user.profile.NickName, user.profile.Email,
+  user.profile.HomePhone, user.profile.MobilePhone, user.profile.HomeCity, user.profile.HomeState,
+  user.profile.HomePostalCode, user.profile.HomeCountry, profileSalutaton, address, profileMaritalStatus]
+
+  const currentFields = [userMiddleName, userPreferredName, userAlternateEmail,
+  userHomePhone, userMobilePhone, userMailingCity, userMailingState, userMailingZip, userMailingCountry,
+  userSalutation, userMailingStreet, profileMaritalStatus]
+
+  const currentHeadings = ["Middle Name", "Preferred Name", "Alternate Email", "Home Phone", "Mobile Phone",
+  "City", "Sttate", "Zip", "Country", "Salutation", "Mailing Address", "Married"]
 
   useEffect(() => {
     if (props.authentication) {
@@ -148,9 +159,15 @@ const Update = (props) => {
     };
 
     function emailBody() {
-      for (var i in formFields) {
-        if (formFields[i]){
-          var email_content = `${email_content} <b>${formHeadings[i]}:</b> ${formFields[i]} <br />`;
+      var email_content = `<b>First name:</b> ${userFirstName} <br /> <b>Last name:</b> ${userLastName} <br />`;
+      for (let i = 0; i < autoFill.length; i++) {
+        if (autoFill[i] !== currentFields[i]) {
+          email_content = `${email_content} <b>${currentHeadings[i]}:</b> ${currentFields[i]} <br />`;
+        }
+      }
+      for (let i = 0; i < formFields.length; i++) {
+          if (formFields[i] !== ''){
+          email_content = `${email_content} <b>${formHeadings[i]}:</b> ${formFields[i]} <br />`;
         }
       }
       email_content = `<p> ${email_content} </p>`
@@ -342,7 +359,7 @@ const Update = (props) => {
                             style={{
                               width: 252,
                             }}
-                            label="Marital Status"
+                            label="Married"
                             value={userMaritalStatus}
                             onChange={handleMaritalStatus}
                           />
