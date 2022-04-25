@@ -250,8 +250,7 @@ const getProfileInfo = async (username: string = ''): Promise<Profile> => {
     .then(formatCountry)
     .then(formatSocialMediaLinks)
     .then(async (profile) => {
-      const fullName = `${profile.FirstName}  ${profile.LastName}`;
-      const CliftonStrengths = await getCliftonStrengths(profile.AD_Username);
+      const fullName = `${profile.FirstName} ${profile.LastName}`;
       if (isStudent(profile)) {
         return {
           ...profile,
@@ -274,7 +273,6 @@ const getProfileInfo = async (username: string = ''): Promise<Profile> => {
         return {
           ...profile,
           fullName,
-          CliftonStrengths,
         };
       } else {
         throw new TypeError();

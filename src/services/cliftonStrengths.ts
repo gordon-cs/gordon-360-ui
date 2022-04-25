@@ -160,11 +160,9 @@ export type CliftonStrengths = {
 export const getCliftonStrengths = async (
   username: string,
 ): Promise<CliftonStrengths | undefined> => {
-  const { Strengths } = await http.get<{ Strengths?: CliftonStrength[] }>(
-    `profiles/clifton/${username}/`,
-  );
+  const Strengths = await http.get<CliftonStrength[]>(`profiles/clifton/${username}/`);
 
-  if (Strengths) {
+  if (Strengths.length) {
     const Categories = Strengths.map((strength) => CliftonStrengthsCategoryPerStrength[strength]);
     return {
       Strengths,
