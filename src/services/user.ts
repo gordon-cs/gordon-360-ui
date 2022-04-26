@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
-import { CliftonStrengths, getCliftonStrengths } from './cliftonStrengths';
+import { CliftonStrength, getCliftonStrengths } from './cliftonStrengths';
 import { Class } from './goStalk';
 import http from './http';
 import { Override } from './utils';
@@ -67,7 +67,7 @@ type BaseProfileInfo = {
   LinkedIn: string;
   PersonType: string;
   fullName?: string;
-  CliftonStrengths?: CliftonStrengths;
+  CliftonStrengths?: CliftonStrength[];
 };
 
 export type UnformattedStaffProfileInfo = BaseProfileInfo & {

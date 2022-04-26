@@ -114,16 +114,15 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
         // then this, means that the currently signed-in user is not allowed to see the default picture.
         setDefaultUserImage(defaultImage);
 
-        const cliftonStrengthColors = await profile.CliftonStrengths.Colors;
-        // create a dictionary of color frequencies
-        let colorFrequencies = {};
-        cliftonStrengthColors.forEach((x) => {
-          colorFrequencies[x] = (colorFrequencies[x] || 0) + 1;
-        });
+        let colorFrequencies = profile.CliftonStrengths?.reduce((colorFrequencies, strength) => {
+          colorFrequencies[strength.color] = (colorFrequencies[strength.color] || 0) + 1;
+        }, {});
+
         // find max frequency by always recursively keeping a from every (a,b) where a >= b
         const cliftonColor = Object.keys(colorFrequencies).reduce((a, b) =>
           colorFrequencies[a] >= colorFrequencies[b] ? a : b,
         );
+
         setCliftonColor(cliftonColor);
       } catch (error) {
         // Do nothing

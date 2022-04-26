@@ -242,40 +242,29 @@ const PersonalInfoList = ({
     <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />
   ) : null;
 
-  let strengthsText = CliftonStrengths?.Strengths.map((x) => (
-    <Link
-      href={CliftonStrengths.Links[CliftonStrengths.Strengths.indexOf(x)]}
-      target="_blank"
-      rel="noopener"
-      key={x}
-    >
-      <b style={{ color: CliftonStrengths.Colors[CliftonStrengths.Strengths.indexOf(x)] }}>{x}</b>
-    </Link>
-  )).reduce((prev, curr) => [prev, ', ', curr]);
-
-  let strengthsCaption = (
-    <GordonTooltip
-      title={
-        <span style={{ fontSize: '0.8rem' }}>
-          Categories:&nbsp;
-          <span style={{ color: '#60409f' }}>Executing</span>,{' '}
-          <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
-          <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
-          <span style={{ color: '#2c8b0f' }}>Thinking</span>
-        </span>
-      }
-      enterTouchDelay={50}
-      leaveTouchDelay={5000}
-    ></GordonTooltip>
-  );
-
-  const cliftonStrengths = CliftonStrengths ? (
+  const cliftonStrengths = CliftonStrengths.length ? (
     <ProfileInfoListItem
       title="Clifton Strengths:"
       contentText={
         <Typography>
-          {strengthsText}
-          {strengthsCaption}
+          {CliftonStrengths.map((strength) => (
+            <Link href={strength.link} target="_blank" rel="noopener" key={strength.name}>
+              <b style={{ color: strength.color }}>{strength.name}</b>
+            </Link>
+          )).reduce((prev, curr) => [prev, ', ', curr])}
+          <GordonTooltip
+            title={
+              <span style={{ fontSize: '0.8rem' }}>
+                Categories:&nbsp;
+                <span style={{ color: '#60409f' }}>Executing</span>,{' '}
+                <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
+                <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
+                <span style={{ color: '#2c8b0f' }}>Thinking</span>
+              </span>
+            }
+            enterTouchDelay={50}
+            leaveTouchDelay={5000}
+          />
         </Typography>
       }
     />
