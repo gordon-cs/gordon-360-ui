@@ -44,7 +44,7 @@ export default class Transcript extends Component {
 
       this.setState({ profile });
 
-      const memberships = await membershipService.getTranscriptMembershipsInfo(profile.ID);
+      const memberships = await membershipService.getTranscriptMembershipsInfo(profile.AD_Username);
       let categorizedMemberships = this.filterMemberships(memberships);
 
       let otherInvolvements = false;
