@@ -51,11 +51,10 @@ const InvolvementProfile = () => {
   const isOnline = useNetworkStatus();
   const cropperRef = useRef();
   const { sessionCode, involvementCode } = useParams();
-  const { profile } = useUser();
+  const { profile, loading: loadingProfile } = useUser();
 
   useEffect(() => {
     const loadPage = async () => {
-      setLoading(true);
       if (profile) {
         const { college_role } = storageService.getLocalInfo();
         const [involvementInfo, advisors, groupAdmins, sessionInfo, isAdmin] = await Promise.all([
@@ -213,266 +212,251 @@ const InvolvementProfile = () => {
       'mailto:' + parseEmailsFromList(groupAdmins) + '?bcc=' + parseEmailsFromList(emailList);
   };
 
+  if (!isOnline) {
+    return <GordonOffline feature="This involvement" />;
+  }
+
   let content;
+  if (loading) {
+    content = <GordonLoader />;
+  } else {
+    const { SessionDescription } = sessionInfo;
+    const { ActivityBlurb, ActivityDescription, ActivityURL, ActivityImagePath, ActivityJoinInfo } =
+      involvementInfo;
 
-  if (isOnline) {
-    if (loading) {
-      content = <GordonLoader />;
-    } else {
-      const { SessionDescription } = sessionInfo;
-      const {
-        ActivityBlurb,
-        ActivityDescription,
-        ActivityURL,
-        ActivityImagePath,
-        ActivityJoinInfo,
-      } = involvementInfo;
+    const redButton = {
+      background: gordonColors.secondary.red,
+      color: 'white',
+    };
 
-      const redButton = {
-        background: gordonColors.secondary.red,
-        color: 'white',
-      };
-
-      const editInvolvement =
-        isAdmin || isSuperAdmin ? (
+    const editInvolvement = loadingProfile ? (
+      <GordonLoader />
+    ) : isAdmin || isSuperAdmin ? (
+      <Grid item>
+        <Grid container spacing={2} justifyContent="center">
           <Grid item>
-            <Grid container spacing={2} justifyContent="center">
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setIsEditDialogOpen(true)}
-                >
-                  Edit Involvement
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" color="primary" onClick={sendEmail}>
-                  Email Members/Subscribers
-                </Button>
-              </Grid>
-            </Grid>
-
-            <GordonDialogBox
-              open={isEditDialogOpen}
-              title={`Edit ${ActivityDescription}`}
-              buttonName="Submit"
-              buttonClicked={onEditInvolvement}
-              cancelButtonClicked={() => setIsEditDialogOpen(false)}
-            >
-              <Grid align="center" className={styles.involvement_image} item>
-                <img
-                  alt={ActivityDescription}
-                  src={image || ActivityImagePath}
-                  className="rounded_corners"
-                />
-              </Grid>
-              <Grid container spacing={2} justifyContent="center">
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    onClick={() => setIsRemoveImageDialogOpen(true)}
-                    style={redButton}
-                  >
-                    Remove image
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="contained" onClick={() => setPhotoOpen(true)} color="primary">
-                    Change Image
-                  </Button>
-                </Grid>
-              </Grid>
-
-              <GordonDialogBox
-                open={photoOpen}
-                title="Update Involvement Picture"
-                buttonName="Select"
-                buttonClicked={handleCloseSelect}
-                isButtonDisabled={!preview}
-                cancelButtonClicked={handleCloseCancel}
-              >
-                <DialogContentText id="edit-involvement-image-dialog-description">
-                  {window.innerWidth < 600
-                    ? 'Tap Image to Browse Files'
-                    : 'Drag & Drop Picture, or Click to Browse Files'}
-                </DialogContentText>
-                <Grid container justifyContent="center" spacing={2}>
-                  {!preview && (
-                    <Dropzone
-                      onDropAccepted={onDropAccepted.bind(this)}
-                      onDropRejected={onDropRejected.bind(this)}
-                      accept="image/jpeg, image/jpg, image/png"
-                    >
-                      {({ getRootProps, getInputProps }) => (
-                        <section>
-                          <div className={styles.photoUploader} {...getRootProps()}>
-                            <input {...getInputProps()} />
-                            <img
-                              className="rounded_corners"
-                              src={ActivityImagePath}
-                              alt=""
-                              style={{ maxWidth: '320px', maxHeight: '320px' }}
-                            />
-                          </div>
-                        </section>
-                      )}
-                    </Dropzone>
-                  )}
-                  {preview && (
-                    <>
-                      <Grid item>
-                        <Cropper
-                          ref={cropperRef}
-                          src={preview}
-                          style={{
-                            maxWidth: maxCropPreviewWidth(),
-                            maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
-                          }}
-                          autoCropArea={1}
-                          viewMode={3}
-                          aspectRatio={1}
-                          highlight={false}
-                          background={false}
-                          zoom={onCropperZoom.bind(this)}
-                          zoomable={false}
-                          dragMode={'none'}
-                          minCropBoxWidth={cropperData.cropBoxDim}
-                          minCropBoxHeight={cropperData.cropBoxDim}
-                        />
-                      </Grid>
-
-                      <Grid item>
-                        <Button variant="contained" onClick={() => setPreview(null)}>
-                          Choose Another Image
-                        </Button>
-                      </Grid>
-                    </>
-                  )}
-                </Grid>
-              </GordonDialogBox>
-
-              <GordonDialogBox
-                open={isRemoveImageDialogOpen}
-                title="Confirm Removing Image"
-                buttonClicked={onRemoveImage}
-                cancelButtonClicked={() => setIsRemoveImageDialogOpen(false)}
-              >
-                Are you sure you want to remove the involvement image?
-              </GordonDialogBox>
-              <form>
-                <Grid container>
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Description"
-                      margin="dense"
-                      multiline
-                      fullWidth
-                      defaultValue={ActivityBlurb}
-                      onChange={(event) => setTempBlurb(event.target.value)}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Special Information for Joining"
-                      margin="dense"
-                      multiline
-                      fullWidth
-                      defaultValue={ActivityJoinInfo}
-                      onChange={(event) => setTempJoinInfo(event.target.value)}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <TextField
-                      label="Website"
-                      margin="dense"
-                      multiline
-                      fullWidth
-                      defaultValue={ActivityURL}
-                      onChange={(event) => setTempURL(event.target.value)}
-                    />
-                  </Grid>
-                </Grid>
-              </form>
-            </GordonDialogBox>
+            <Button variant="contained" color="primary" onClick={() => setIsEditDialogOpen(true)}>
+              Edit Involvement
+            </Button>
           </Grid>
-        ) : null;
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={sendEmail}>
+              Email Members/Subscribers
+            </Button>
+          </Grid>
+        </Grid>
 
-      content = (
-        <Card>
-          <CardHeader align="center" title={ActivityDescription} subheader={SessionDescription} />
-          <CardContent>
-            <Grid container direction="column" spacing={2}>
-              <Grid align="center" item>
-                <img
-                  alt={ActivityDescription}
-                  src={ActivityImagePath}
-                  className="rounded_corners"
-                />
-              </Grid>
-              {editInvolvement}
-              <Grid item align="center">
-                {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
-                {ActivityURL?.length !== 0 && (
-                  <Typography>
-                    <a
-                      href={ActivityURL}
-                      className="gc360_text_link"
-                      style={{ fontWeight: 'bold' }}
-                    >
-                      {ActivityURL}
-                    </a>
-                  </Typography>
-                )}
-              </Grid>
+        <GordonDialogBox
+          open={isEditDialogOpen}
+          title={`Edit ${ActivityDescription}`}
+          buttonName="Submit"
+          buttonClicked={onEditInvolvement}
+          cancelButtonClicked={() => setIsEditDialogOpen(false)}
+        >
+          <Grid align="center" className={styles.involvement_image} item>
+            <img
+              alt={ActivityDescription}
+              src={image || ActivityImagePath}
+              className="rounded_corners"
+            />
+          </Grid>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item>
+              <Button
+                variant="contained"
+                onClick={() => setIsRemoveImageDialogOpen(true)}
+                style={redButton}
+              >
+                Remove image
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" onClick={() => setPhotoOpen(true)} color="primary">
+                Change Image
+              </Button>
+            </Grid>
+          </Grid>
 
-              {profile && (
+          <GordonDialogBox
+            open={photoOpen}
+            title="Update Involvement Picture"
+            buttonName="Select"
+            buttonClicked={handleCloseSelect}
+            isButtonDisabled={!preview}
+            cancelButtonClicked={handleCloseCancel}
+          >
+            <DialogContentText id="edit-involvement-image-dialog-description">
+              {window.innerWidth < 600
+                ? 'Tap Image to Browse Files'
+                : 'Drag & Drop Picture, or Click to Browse Files'}
+            </DialogContentText>
+            <Grid container justifyContent="center" spacing={2}>
+              {!preview && (
+                <Dropzone
+                  onDropAccepted={onDropAccepted.bind(this)}
+                  onDropRejected={onDropRejected.bind(this)}
+                  accept="image/jpeg, image/jpg, image/png"
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <section>
+                      <div className={styles.photoUploader} {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <img
+                          className="rounded_corners"
+                          src={ActivityImagePath}
+                          alt=""
+                          style={{ maxWidth: '320px', maxHeight: '320px' }}
+                        />
+                      </div>
+                    </section>
+                  )}
+                </Dropzone>
+              )}
+              {preview && (
                 <>
-                  <hr width="70%"></hr>
+                  <Grid item>
+                    <Cropper
+                      ref={cropperRef}
+                      src={preview}
+                      style={{
+                        maxWidth: maxCropPreviewWidth(),
+                        maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
+                      }}
+                      autoCropArea={1}
+                      viewMode={3}
+                      aspectRatio={1}
+                      highlight={false}
+                      background={false}
+                      zoom={onCropperZoom.bind(this)}
+                      zoomable={false}
+                      dragMode={'none'}
+                      minCropBoxWidth={cropperData.cropBoxDim}
+                      minCropBoxHeight={cropperData.cropBoxDim}
+                    />
+                  </Grid>
 
                   <Grid item>
-                    <Typography>
-                      <strong>Group Contacts</strong>
-                    </Typography>
-                    <List>
-                      {groupAdmins.map((admin, index) => (
-                        <ContactListItem key={index} contact={admin} />
-                      ))}
-                    </List>
+                    <Button variant="contained" onClick={() => setPreview(null)}>
+                      Choose Another Image
+                    </Button>
                   </Grid>
-                  <Grid item>
-                    <Typography>
-                      <strong>Group Advisors</strong>
-                    </Typography>
-                    <List>
-                      {advisors.map((advisor, index) => (
-                        <ContactListItem key={index} contact={advisor} />
-                      ))}
-                    </List>
-                  </Grid>
-                  <Grid item>
-                    <Typography>
-                      <strong>To join: </strong>
-                      {ActivityJoinInfo}
-                    </Typography>
-                  </Grid>
-                  <Membership
-                    involvementDescription={ActivityDescription}
-                    isAdmin={isAdmin}
-                    isSuperAdmin={isSuperAdmin}
-                    toggleIsAdmin={() => setIsAdmin((a) => !a)}
-                  />
                 </>
               )}
             </Grid>
-          </CardContent>
-        </Card>
-      );
-    }
-  } else {
-    return <GordonOffline feature="This involvement" />;
+          </GordonDialogBox>
+
+          <GordonDialogBox
+            open={isRemoveImageDialogOpen}
+            title="Confirm Removing Image"
+            buttonClicked={onRemoveImage}
+            cancelButtonClicked={() => setIsRemoveImageDialogOpen(false)}
+          >
+            Are you sure you want to remove the involvement image?
+          </GordonDialogBox>
+          <form>
+            <Grid container>
+              <Grid item xs={12}>
+                <TextField
+                  label="Description"
+                  margin="dense"
+                  multiline
+                  fullWidth
+                  defaultValue={ActivityBlurb}
+                  onChange={(event) => setTempBlurb(event.target.value)}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  label="Special Information for Joining"
+                  margin="dense"
+                  multiline
+                  fullWidth
+                  defaultValue={ActivityJoinInfo}
+                  onChange={(event) => setTempJoinInfo(event.target.value)}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  label="Website"
+                  margin="dense"
+                  multiline
+                  fullWidth
+                  defaultValue={ActivityURL}
+                  onChange={(event) => setTempURL(event.target.value)}
+                />
+              </Grid>
+            </Grid>
+          </form>
+        </GordonDialogBox>
+      </Grid>
+    ) : null;
+
+    content = (
+      <Card>
+        <CardHeader align="center" title={ActivityDescription} subheader={SessionDescription} />
+        <CardContent>
+          <Grid container direction="column" spacing={2}>
+            <Grid align="center" item>
+              <img alt={ActivityDescription} src={ActivityImagePath} className="rounded_corners" />
+            </Grid>
+            {editInvolvement}
+            <Grid item align="center">
+              {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
+              {ActivityURL?.length !== 0 && (
+                <Typography>
+                  <a href={ActivityURL} className="gc360_text_link" style={{ fontWeight: 'bold' }}>
+                    {ActivityURL}
+                  </a>
+                </Typography>
+              )}
+            </Grid>
+
+            {loadingProfile ? (
+              <GordonLoader />
+            ) : profile ? (
+              <>
+                <hr width="70%"></hr>
+
+                <Grid item>
+                  <Typography>
+                    <strong>Group Contacts</strong>
+                  </Typography>
+                  <List>
+                    {groupAdmins.map((admin, index) => (
+                      <ContactListItem key={index} contact={admin} />
+                    ))}
+                  </List>
+                </Grid>
+                <Grid item>
+                  <Typography>
+                    <strong>Group Advisors</strong>
+                  </Typography>
+                  <List>
+                    {advisors.map((advisor, index) => (
+                      <ContactListItem key={index} contact={advisor} />
+                    ))}
+                  </List>
+                </Grid>
+                <Grid item>
+                  <Typography>
+                    <strong>To join: </strong>
+                    {ActivityJoinInfo}
+                  </Typography>
+                </Grid>
+                <Membership
+                  involvementDescription={ActivityDescription}
+                  isAdmin={isAdmin}
+                  isSuperAdmin={isSuperAdmin}
+                  toggleIsAdmin={() => setIsAdmin((a) => !a)}
+                />
+              </>
+            ) : null}
+          </Grid>
+        </CardContent>
+      </Card>
+    );
   }
 
   return (

@@ -26,7 +26,7 @@ const steps = [
 
 const EnrollmentCheckIn = (props) => {
   const [activeStep, setActiveStep] = useState(0);
-  const { profile } = useUser();
+  const { profile, loading: loadingProfile } = useUser();
 
   const [loading, setLoading] = useState(true);
 
@@ -100,64 +100,61 @@ const EnrollmentCheckIn = (props) => {
 
   useEffect(() => {
     const loadData = async () => {
-      let hasCheckedIn = await checkInService.getStatus();
-      if (!hasCheckedIn && profile.PersonType.includes('stu')) {
-        let tempHolds = await checkInService.getHolds();
-        setHolds(tempHolds);
-        if (
-          tempHolds?.RegistrarHold ||
-          tempHolds?.HighSchoolTranscriptHold ||
-          tempHolds?.FinancialHold ||
-          tempHolds?.MedicalHold ||
-          tempHolds?.MajorHold
-        ) {
-          setMajorHold(true);
-        }
+      if (profile) {
+        let hasCheckedIn = await checkInService.getStatus();
+        if (!hasCheckedIn && profile.PersonType.includes('stu')) {
+          let tempHolds = await checkInService.getHolds();
+          setHolds(tempHolds);
+          setMajorHold(
+            tempHolds?.RegistrarHold ||
+              tempHolds?.HighSchoolTranscriptHold ||
+              tempHolds?.FinancialHold ||
+              tempHolds?.MedicalHold ||
+              tempHolds?.MajorHold,
+          );
 
-        let contacts = await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase());
+          let contacts = await checkInService.getEmergencyContacts(
+            profile.AD_Username.toLowerCase(),
+          );
 
-        if (contacts[0]) {
-          setEmergencyContact1(contacts[0]);
-          setEmergencyContactINTL1({
-            HomePhoneIN: contacts[0].HomePhone.startsWith('+'),
-            MobilePhoneIN: contacts[0].MobilePhone.startsWith('+'),
-          });
-        }
+          if (contacts[0]) {
+            setEmergencyContact1(contacts[0]);
+            setEmergencyContactINTL1({
+              HomePhoneIN: contacts[0].HomePhone.startsWith('+'),
+              MobilePhoneIN: contacts[0].MobilePhone.startsWith('+'),
+            });
+          }
 
-        if (contacts[1]) {
-          setEmergencyContact2(contacts[1]);
-          setEmergencyContactINTL2({
-            HomePhoneIN: contacts[1].HomePhone.startsWith('+'),
-            MobilePhoneIN: contacts[1].MobilePhone.startsWith('+'),
-          });
-        }
+          if (contacts[1]) {
+            setEmergencyContact2(contacts[1]);
+            setEmergencyContactINTL2({
+              HomePhoneIN: contacts[1].HomePhone.startsWith('+'),
+              MobilePhoneIN: contacts[1].MobilePhone.startsWith('+'),
+            });
+          }
 
-        if (contacts[2]) {
-          setEmergencyContact3(contacts[2]);
-          setEmergencyContactINTL3({
-            HomePhoneIN: contacts[2].HomePhone.startsWith('+'),
-            MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
-          });
+          if (contacts[2]) {
+            setEmergencyContact3(contacts[2]);
+            setEmergencyContactINTL3({
+              HomePhoneIN: contacts[2].HomePhone.startsWith('+'),
+              MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
+            });
+          }
+          if (profile.MobilePhone) {
+            setPhoneInfo({
+              PersonalPhone: profile.MobilePhone,
+              MakePrivate: Boolean(profile.IsMobilePhonePrivate),
+              NoPhone: false,
+            });
+          }
+        } else {
+          setActiveStep(6);
         }
-        if (profile.MobilePhone) {
-          setPhoneInfo({
-            PersonalPhone: profile.MobilePhone,
-            MakePrivate: Boolean(profile.IsMobilePhonePrivate),
-            NoPhone: false,
-          });
-        }
-      } else {
-        setActiveStep(6);
       }
       setLoading(false);
     };
-
-    if (profile) {
-      loadData();
-    } else {
-      setLoading(false);
-    }
-  }, [profile, loading]);
+    loadData();
+  }, [profile]);
 
   useEffect(() => {
     props.history.replace('/enrollmentcheckin', { step: activeStep });
@@ -260,7 +257,7 @@ const EnrollmentCheckIn = (props) => {
     setActiveStep(6);
   };
 
-  if (loading === true) {
+  if (loading || loadingProfile) {
     return <GordonLoader />;
   } else if (!profile) {
     return <GordonUnauthorized feature={'Enrollment Check-in'} />;

@@ -1,4 +1,5 @@
 import { Avatar, Button, Typography } from '@material-ui/core';
+import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -9,7 +10,7 @@ const GordonNavAvatar = ({ onLinkClick }) => {
   const [email, setEmail] = useState();
   const [image, setImage] = useState();
   const [name, setName] = useState();
-  const { profile, images } = useUser();
+  const { profile, images, loading } = useUser();
 
   useEffect(() => {
     async function loadAvatar() {
@@ -39,7 +40,9 @@ const GordonNavAvatar = ({ onLinkClick }) => {
     }
   }, [profile, images]);
 
-  const avatar = profile ? (
+  const avatar = loading ? (
+    <GordonLoader />
+  ) : profile ? (
     image ? (
       <Avatar className={`${styles.avatar}`} src={`data:image/jpg;base64,${image}`} />
     ) : (
@@ -61,7 +64,11 @@ const GordonNavAvatar = ({ onLinkClick }) => {
     />
   ));
 
-  const label = profile ? (
+  const label = loading ? (
+    <Typography variant="body2" className={styles.avatar_text} align="left" gutterBottom>
+      loading profile
+    </Typography>
+  ) : profile ? (
     <>
       <Typography variant="body2" className={styles.avatar_text} align="left" gutterBottom>
         {name}

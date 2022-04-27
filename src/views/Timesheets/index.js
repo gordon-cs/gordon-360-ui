@@ -67,7 +67,7 @@ const Timesheets = (props) => {
   const [selectedHourType, setSelectedHourType] = useState('R');
   const [errorText, setErrorText] = useState(null);
   const isOnline = useNetworkStatus();
-  const { profile } = useUser();
+  const { profile, loading } = useUser();
 
   useEffect(() => {
     if (profile) {
@@ -179,12 +179,16 @@ const Timesheets = (props) => {
 
   const tooltipRef = useRef();
 
-  if (!profile) {
-    return <GordonUnauthorized feature={'timesheets'} />;
-  }
-
   if (!isOnline) {
     return <GordonOffline feature="Timesheets" />;
+  }
+
+  if (loading) {
+    return <GordonLoader />;
+  }
+
+  if (!profile) {
+    return <GordonUnauthorized feature={'timesheets'} />;
   }
 
   if (!isUserStudent) {

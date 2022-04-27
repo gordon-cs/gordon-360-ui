@@ -9,7 +9,7 @@ import HealthStatus from './components/HealthStatus';
 const WellnessCheck = () => {
   const [loading, setLoading] = useState(true);
   const [currentStatus, setCurrentStatus] = useState(null);
-  const { profile } = useUser();
+  const { profile, loading: loadingProfile } = useUser();
 
   useEffect(() => {
     const loadPage = async () => {
@@ -27,7 +27,7 @@ const WellnessCheck = () => {
     loadPage();
   }, [profile]);
 
-  if (loading) {
+  if (loading || loadingProfile) {
     return <GordonLoader />;
   } else if (!profile) {
     return <GordonUnauthorized feature="the wellness check in" />;

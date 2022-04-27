@@ -19,7 +19,7 @@ const Home = () => {
 
   const [hasAnswered, setHasAnswered] = useState(null);
   const isOnline = useNetworkStatus();
-  const { profile } = useUser();
+  const { profile, loading: loadingProfile } = useUser();
 
   useEffect(() => {
     if (profile) {
@@ -35,7 +35,7 @@ const Home = () => {
     setLoading(false);
   }, [profile]);
 
-  if (loading) {
+  if (loading || loadingProfile) {
     return <GordonLoader />;
   } else if (!profile) {
     return <GuestWelcome />;

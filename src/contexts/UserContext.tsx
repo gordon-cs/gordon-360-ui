@@ -5,6 +5,7 @@ import userService, { Profile, ProfileImages } from 'services/user';
 type User = {
   profile: Profile | null;
   images: ProfileImages;
+  loading: boolean;
 };
 
 const initialUserState = {
@@ -12,6 +13,7 @@ const initialUserState = {
   images: {
     def: '',
   },
+  loading: false
 };
 
 type UserActions = {
@@ -40,8 +42,10 @@ const UserContextProvider = ({ children }: {children?: JSX.Element | JSX.Element
   useEffect(() => {
     const loadUser = async () => {
       if (isAuthenticated) {
+        setUser(u => ({...u, loading: true}))
         const [profile, images] = await getAllUserData();
-        setUser({ profile, images });
+        setUser({ profile, images, loading: false });
+        // setUser({ profile, images, loading: true });
       } else {
         setUser(initialUserState);
       }

@@ -30,7 +30,7 @@ const InvolvementsAll = ({ location, history }) => {
   const [sessions, setSessions] = useState([]);
   const [type, setType] = useState('');
   const [types, setTypes] = useState([]);
-  const { profile } = useUser();
+  const { profile, loading: loadingProfile } = useUser();
   const isOnline = useNetworkStatus();
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
@@ -195,32 +195,35 @@ const InvolvementsAll = ({ location, history }) => {
         </Card>
       </Grid>
 
-      {isOnline && profile && <Requests />}
+      {isOnline ? loadingProfile ? <GordonLoader /> : profile && <Requests /> : null}
 
-      {/* My Involvements (private) */}
-      {profile && (
-        <Grid item xs={12} lg={8}>
-          <Card>
-            <CardHeader
-              title={`My ${myInvolvementsHeadingText} Involvements`}
-              style={{
-                backgroundColor: gordonColors.primary.blue,
-                color: gordonColors.neutral.grayShades[50],
-              }}
-            />
-            <CardContent>
-              {loading ? (
-                <GordonLoader />
-              ) : (
-                <InvolvementsGrid
-                  involvements={myInvolvements}
-                  sessionCode={selectedSession}
-                  noInvolvementsText={myInvolvementsNoneText}
-                />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
+      {loadingProfile ? (
+        <GordonLoader />
+      ) : (
+        profile && (
+          <Grid item xs={12} lg={8}>
+            <Card>
+              <CardHeader
+                title={`My ${myInvolvementsHeadingText} Involvements`}
+                style={{
+                  backgroundColor: gordonColors.primary.blue,
+                  color: gordonColors.neutral.grayShades[50],
+                }}
+              />
+              <CardContent>
+                {loading ? (
+                  <GordonLoader />
+                ) : (
+                  <InvolvementsGrid
+                    involvements={myInvolvements}
+                    sessionCode={selectedSession}
+                    noInvolvementsText={myInvolvementsNoneText}
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        )
       )}
 
       {/* All Involvements (public) */}

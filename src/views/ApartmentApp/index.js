@@ -16,7 +16,7 @@ import StaffMenu from './components/StaffMenu';
 
 const ApartApp = () => {
   const [loading, setLoading] = useState(true);
-  const { profile } = useUser();
+  const { profile, loading: loadingProfile } = useUser();
   const [isUserStudent, setIsUserStudent] = useState(false);
   const [canUseStaff, setCanUseStaff] = useState(false);
 
@@ -54,7 +54,7 @@ const ApartApp = () => {
     }
   }, [profile]);
 
-  if (loading) {
+  if (loading || loadingProfile) {
     return <GordonLoader />;
   } else if (!profile) {
     // The user is not logged in

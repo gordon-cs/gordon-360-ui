@@ -1,5 +1,6 @@
 import { Avatar, IconButton, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';
@@ -56,7 +57,9 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
     }
   }, [user]);
 
-  const avatar = user.profile ? (
+  const avatar = user.loading ? (
+    <GordonLoader size={68} color="secondary" />
+  ) : user.profile ? (
     image ? (
       <Avatar className={classes.root} src={`data:image/jpg;base64,${image}`} sizes="70px" />
     ) : (
