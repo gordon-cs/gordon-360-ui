@@ -1,9 +1,9 @@
 import { InputAdornment, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import Downshift from 'downshift';
-import { useNetworkStatus } from 'hooks';
+import { useNetworkStatus, useWindowSize } from 'hooks';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import peopleSearch from 'services/people-search';
 import styles from './PeopleSearch.module.css';
@@ -45,39 +45,17 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
   const [suggestionIndex, setSuggestionIndex] = useState(-1);
   const [query, setQuery] = useState(String);
   const [highlightQuery, setHighlightQuery] = useState(String);
-  const [width, setWidth] = useState(window.innerWidth);
-  const [placeholder, setPlaceholder] = useState('People Search');
   const [downshift, setDownshift] = useState();
   const [time, setTime] = useState(0);
+  const [width] = useWindowSize();
   const isOnline = useNetworkStatus();
+  const placeholder = !isOnline
+    ? 'Offline'
+    : customPlaceholderText ?? width < BREAKPOINT_WIDTH
+    ? 'People'
+    : 'People Search';
 
-  useEffect(() => {
-    function handleResize() {
-      setWidth(window.innerWidth);
-    }
-    window.addEventListener('resize', handleResize);
-    return (_) => {
-      window.removeEventListener('resize', handleResize);
-    };
-  });
-
-  useEffect(() => {
-    if (isOnline) {
-      if (customPlaceholderText) {
-        setPlaceholder(customPlaceholderText);
-      } else {
-        if (width < BREAKPOINT_WIDTH) {
-          setPlaceholder('People');
-        } else {
-          setPlaceholder('People Search');
-        }
-      }
-    } else {
-      setPlaceholder('Offline');
-    }
-  }, [isOnline, customPlaceholderText, width]);
-
-  async function getSuggestions(query) {
+  async function updateQuery(query) {
     query = query.replace(/[^a-zA-Z0-9'\-.\s]/gm, '');
 
     // Trim beginning or trailing spaces or periods from query text
@@ -85,20 +63,17 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
     setQuery(query);
     setHighlightQuery(highlightQuery);
 
-    // Bail if query is missing or is less than minimum query length
-    if (!query || query.length < MIN_QUERY_LENGTH) {
-      return;
-    }
-
-    //so apparently everything breaks if the first letter is capital, which is what happens on mobile
-    //sometimes and then you spend four hours trying to figure out why downshift is not working
-    //but really it's just that its capitalized what the heck
-    query = query.toLowerCase();
-
-    const [searchTime, searchResults] = await peopleSearch.search(query);
-    if (time < searchTime) {
-      setTime(searchTime);
-      setSuggestions(searchResults);
+    // Only load suggestions if query is of minimum length
+    if (query?.length >= MIN_QUERY_LENGTH) {
+      //so apparently everything breaks if the first letter is capital, which is what happens on mobile
+      //sometimes and then you spend four hours trying to figure out why downshift is not working
+      //but really it's just that its capitalized what the heck
+      peopleSearch.search(query.toLowerCase()).then(([searchTime, searchResults]) => {
+        if (time < searchTime) {
+          setTime(searchTime);
+          setSuggestions(searchResults);
+        }
+      });
     }
   }
 
@@ -187,8 +162,7 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
     );
   }
 
-  function renderSuggestion(params) {
-    const { suggestion, itemProps } = params;
+  function renderSuggestion({ suggestion, itemProps }) {
     let sIndex = suggestionIndex;
     let suggestionList = suggestions;
     // Bail if any required properties are missing
@@ -275,21 +249,21 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
     >
       {({ getInputProps, getItemProps, isOpen }) => (
         <span className={styles.gordon_people_search} key="suggestion-list-span">
-          {isOnline
-            ? renderInput(
-                getInputProps({
-                  placeholder: placeholder,
-                  onChange: (event) => getSuggestions(event.target.value),
-                  onKeyDown: (event) => handleKeys(event.key),
-                }),
-              )
-            : renderInput(
-                getInputProps({
-                  placeholder: placeholder,
-                  style: { color: 'white' },
-                  disabled: { isOnline },
-                }),
-              )}
+          {renderInput(
+            getInputProps(
+              isOnline
+                ? {
+                    placeholder: placeholder,
+                    onChange: (event) => updateQuery(event.target.value),
+                    onKeyDown: (event) => handleKeys(event.key),
+                  }
+                : {
+                    placeholder: placeholder,
+                    style: { color: 'white' },
+                    disabled: { isOnline },
+                  },
+            ),
+          )}
           {isOpen && suggestions.length > 0 && query.length >= MIN_QUERY_LENGTH ? (
             disableLink ? (
               <Paper square className={styles.people_search_dropdown}>
