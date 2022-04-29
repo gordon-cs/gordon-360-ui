@@ -39,15 +39,15 @@ type SearchResult = SearchResultBase &
         Mail_Location: string;
       }
     | {
+        Type: 'Staff' | 'Faculty' | 'Student' | '';
         OnCampusDepartment: string;
         BuildingDescription: string;
         KeepPrivate: string;
         JobTitle: string;
-        Type: string; //TODO
         Mail_Location: string;
       }
     | {
-        Type: 'Alum';
+        Type: 'Alumni';
         Major1Description: string;
         Major2Description: string;
         ShareName: string;
@@ -55,8 +55,6 @@ type SearchResult = SearchResultBase &
         ShareAddress: string;
       }
   );
-
-const CSharp = 'C\u266F';
 
 // TODO: Document return type
 const search = (
@@ -75,82 +73,36 @@ const search = (
   department: string,
   building: string,
 ): Promise<SearchResult[]> => {
-  // Sanitize the params sent to the backend -- it can't handle &, /, -, or null/empty strings
-  // Therefore we convert all of these things and in the backend we convert them back again
+  let params = Object.entries({
+    firstName,
+    lastName,
+    major,
+    minor,
+    hall,
+    classType: typeof classType == 'string' ? '' : Class[classType],
+    homeCity,
+    state,
+    country,
+    department,
+    building,
+  })
+    .filter(([_key, value]) => Boolean(value))
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+    .join('&');
 
-  firstName = firstName
-    .trim()
-    .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
-    .toLowerCase();
-  if (firstName === '' || firstName === null) {
-    firstName = CSharp;
-  }
-  lastName = lastName
-    .trim()
-    .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
-    .toLowerCase();
-  if (lastName === '' || lastName === null) {
-    lastName = CSharp;
-  }
-  if (major === '' || major === null) {
-    major = CSharp;
-  } else if (
-    major.includes('&') ||
-    major.includes('-') ||
-    major.includes(':') ||
-    major.includes('/')
-  ) {
-    // workaround to avoid breaking the backend
-    major = major.replace('&', '_');
-    major = major.replace('-', 'dash');
-    major = major.replace(':', 'colon');
-    major = major.replace('/', 'slash');
-  }
-  if (minor === '' || minor === null) {
-    minor = CSharp;
-  } else if (minor.includes('&')) {
-    // workaround to avoid breaking the backend
-    minor = minor.replace('&', '_');
-  }
-  hall = hall.trim();
-  if (hall === '' || hall === null) {
-    hall = CSharp;
-  }
-  if (classType === '') {
-    // @ts-ignore
-    classType = CSharp;
-  }
-  homeCity = homeCity
-    .trim()
-    .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
-    .toLowerCase();
-  if (homeCity === '' || homeCity === null) {
-    homeCity = CSharp;
-  } else {
-    homeCity = homeCity.toLowerCase();
-  }
-  if (state === '' || state === null) {
-    state = CSharp;
-  }
-  if (country === '' || country === null) {
-    country = CSharp;
-  }
-  if (department === '' || department === null) {
-    department = CSharp;
-  } else if (department.includes('&')) {
-    // workaround to avoid breaking the backend
-    department = department.replace('&', '_');
-  }
-  if (building === '' || building === null) {
-    building = CSharp;
-  } else if (building.includes('.')) {
-    // workaround to avoid breaking the backend
-    building = building.replace('.', '_');
+  if (includeStudent) {
+    params += '&accountTypes=student';
   }
 
-  return http.get(
-    `accounts/advanced-people-search/${includeStudent}/${includeFacStaff}/${includeAlumni}/${firstName}/${lastName}/${major}/${minor}/${hall}/${classType}/${homeCity}/${state}/${country}/${department}/${building}`,
-  );
+  if (includeFacStaff) {
+    params += '&accountTypes=facstaff';
+  }
+
+  if (includeAlumni) {
+    params += '&accountTypes=facstaff';
+  }
+
+  return http.get(`accounts/advanced-people-search?${params}`);
 };
 
 const getMajors = (): Promise<string[]> => http.get(`advancedsearch/majors`);
