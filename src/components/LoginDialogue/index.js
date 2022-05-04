@@ -21,7 +21,8 @@ const LoginDialogue = () => {
     try {
       await login(username, password);
     } catch (err) {
-      setError(err.message);
+      console.log(err);
+      setError(err.message ?? err.error_description);
       setLoading(false);
     }
   };
