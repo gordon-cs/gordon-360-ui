@@ -139,6 +139,7 @@ const MemberListItem = ({
     }
     onLeave();
     setIsLeaveAlertOpen(false);
+    setIsRemoveAlertOpen(false);
   };
 
   const handleRemove = () => {
