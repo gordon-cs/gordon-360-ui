@@ -1,3 +1,4 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Button,
   Card,
@@ -9,7 +10,7 @@ import {
 } from '@material-ui/core';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { useAuth, useNetworkStatus } from 'hooks';
+import { useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
 import storageService from 'services/storage';
 import { gordonColors } from 'theme';
@@ -26,13 +27,16 @@ const style = {
 };
 
 const BannerSubmission = () => {
-  const authenticated = useAuth();
+  const authenticated = useIsAuthenticated();
   const isOnline = useNetworkStatus();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (authenticated) {
-      setIsAdmin(storageService.getLocalInfo().college_role === 'god');
+      // TODO: Extract groups-based authorization, and make admin group. Long term, work with Chris C. to break up superadmin role into smaller pieces.
+      const token = storageService.getLocalInfo();
+      console.log(token);
+      setIsAdmin(token.idTokenClaims.groups.find((g) => g === 'CTS-SG'));
     }
   }, [authenticated]);
 
