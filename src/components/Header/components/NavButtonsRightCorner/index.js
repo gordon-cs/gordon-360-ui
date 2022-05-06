@@ -3,9 +3,9 @@ import List from '@material-ui/core/List';
 import Popover from '@material-ui/core/Popover';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
-import { useNetworkStatus } from 'hooks';
+import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
-import { AuthGroup, signOut, userIsInGroup } from 'services/auth';
+import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavButtonsRightCorner.module.css';
 
 /**
@@ -21,6 +21,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
   const [linkOpen, setLinkOpen] = useState(false);
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
+  const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
 
   function closeAndSignOut() {
     onClose();
@@ -76,7 +77,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
   );
 
   const adminButton =
-    isAuthenticated && userIsInGroup(AuthGroup.SiteAdmin) ? (
+    isAuthenticated && isSiteAdmin ? (
       <GordonNavButton
         unavailable={!isOnline ? 'offline' : null}
         onLinkClick={onClose}

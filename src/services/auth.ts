@@ -112,19 +112,19 @@ const signOut = async () => {
   }
 };
 
-const getAuthGroups = () => {
+const getAuthGroups = (): AuthGroup[] => {
   const claims = msalInstance.getActiveAccount()?.idTokenClaims;
 
   console.log(claims);
 
   if (claims && claims.hasOwnProperty('groups')) {
-    return (claims as { groups: string[] }).groups;
+    return (claims as { groups: AuthGroup[] }).groups;
   } else {
     return [];
   }
 };
 
-const userIsInGroup = (group: AuthGroup) => getAuthGroups().some((g) => g === group);
+const userIsInAuthGroup = (group: AuthGroup) => getAuthGroups().some((g) => g === group);
 
 export enum AuthGroup {
   Alumni = '360-Alumni-SG',
@@ -144,5 +144,5 @@ export {
   authenticate,
   signOut,
   getAuthGroups,
-  userIsInGroup,
+  userIsInAuthGroup,
 };

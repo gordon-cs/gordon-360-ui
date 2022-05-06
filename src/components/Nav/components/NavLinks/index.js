@@ -9,9 +9,9 @@ import WorkIcon from '@material-ui/icons/Work';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
-import { useNetworkStatus } from 'hooks';
+import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
-import { AuthGroup, signOut, userIsInGroup } from 'services/auth';
+import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavLinks.module.css';
 
 const GordonNavLinks = ({ onLinkClick }) => {
@@ -19,6 +19,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
   const [dialog, setDialog] = useState(null);
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
+  const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
 
   const handleSignOut = () => {
     onLinkClick();
@@ -162,7 +163,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
   );
 
   const adminButton =
-    isAuthenticated && userIsInGroup(AuthGroup.SiteAdmin) === 'god' ? (
+    isAuthenticated && isSiteAdmin ? (
       <GordonNavButton
         unavailable={!isOnline ? 'offline' : null}
         onLinkClick={onLinkClick}

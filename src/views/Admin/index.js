@@ -2,14 +2,14 @@ import { useIsAuthenticated } from '@azure/msal-react';
 import { Grid } from '@material-ui/core';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { useNetworkStatus } from 'hooks';
-import { AuthGroup, userIsInGroup } from 'services/auth';
+import { useAuthGroups, useNetworkStatus } from 'hooks';
+import { AuthGroup } from 'services/auth';
 // import storageService from 'services/storage';
 import AdminList from './components/AdminList';
 import InvolvementStatusList from './components/InvolvementsStatus';
 
 const Admin = () => {
-  const isAdmin = userIsInGroup(AuthGroup.SiteAdmin);
+  const isAdmin = useAuthGroups(AuthGroup.SiteAdmin);
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
 

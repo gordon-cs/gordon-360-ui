@@ -12,13 +12,13 @@ import {
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
 import GordonLoader from 'components/Loader';
-import { useNetworkStatus, useUser } from 'hooks';
+import { useAuthGroups, useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { useParams } from 'react-router';
 import involvementService from 'services/activity';
-import { AuthGroup, userIsInGroup } from 'services/auth';
+import { AuthGroup } from 'services/auth';
 import emailsService from 'services/emails';
 import membershipService from 'services/membership';
 import sessionService from 'services/session';
@@ -43,7 +43,7 @@ const InvolvementProfile = () => {
   const [tempJoinInfo, setTempJoinInfo] = useState('');
   const [tempURL, setTempURL] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-  const isSiteAdmin = userIsInGroup(AuthGroup.SiteAdmin);
+  const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isRemoveImageDialogOpen, setIsRemoveImageDialogOpen] = useState(false);
   const [emailList, setEmailList] = useState([]);

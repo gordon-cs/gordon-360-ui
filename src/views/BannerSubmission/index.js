@@ -10,9 +10,8 @@ import {
 } from '@material-ui/core';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { useNetworkStatus } from 'hooks';
-import { useEffect, useState } from 'react';
-import { AuthGroup, userIsInGroup } from 'services/auth';
+import { useAuthGroups, useNetworkStatus } from 'hooks';
+import { AuthGroup } from 'services/auth';
 import { gordonColors } from 'theme';
 import BannerAdmin from './components/BannerAdmin';
 
@@ -29,14 +28,7 @@ const style = {
 const BannerSubmission = () => {
   const authenticated = useIsAuthenticated();
   const isOnline = useNetworkStatus();
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    if (authenticated) {
-      // TODO: Extract groups-based authorization, and make admin group. Long term, work with Chris C. to break up superadmin role into smaller pieces.
-      setIsAdmin(userIsInGroup(AuthGroup.SiteAdmin));
-    }
-  }, [authenticated]);
+  const isAdmin = useAuthGroups(AuthGroup.SiteAdmin);
 
   if (!authenticated) {
     return <GordonUnauthorized feature={'the banner submission'} />;

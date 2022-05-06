@@ -1,8 +1,9 @@
 import { Grid } from '@material-ui/core';
 import GordonSnackbar from 'components/Snackbar';
+import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
-import { AuthGroup, userIsInGroup } from 'services/auth';
+import { AuthGroup } from 'services/auth';
 import scheduleService from 'services/schedule';
 import {
   EmergencyInfoList,
@@ -18,7 +19,7 @@ const Profile = ({ profile, myProf }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const isOnline = useNetworkStatus();
   const network = isOnline ? 'online' : 'offline';
-  const viewerIsPolice = userIsInGroup(AuthGroup.Police);
+  const viewerIsPolice = useAuthGroups(AuthGroup.Police);
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
   const profileIsStudent = profile.PersonType?.includes('stu');
 
