@@ -4,13 +4,12 @@ import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import { useUser } from 'hooks';
+import { useAuthGroups, useUser } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 // eslint-disable-next-line no-unused-vars
 import { useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
 import { Link } from 'react-router-dom';
-import { NotFoundError } from 'services/error';
-import housing from 'services/housing';
+import { AuthGroup } from 'services/auth';
 import styles from './ApartmentApp.module.css';
 import StaffMenu from './components/StaffMenu';
 
@@ -18,8 +17,7 @@ const ApartApp = () => {
   const [loading, setLoading] = useState(true);
   const { profile, loading: loadingProfile } = useUser();
   const [isUserStudent, setIsUserStudent] = useState(false);
-  const [canUseStaff, setCanUseStaff] = useState(false);
-
+  const isHousingAdmin = useAuthGroups(AuthGroup.HousingAdmin);
   const isOnline = useNetworkStatus();
 
   useEffect(() => {
@@ -27,16 +25,7 @@ const ApartApp = () => {
       setLoading(true);
       try {
         setIsUserStudent(profile.PersonType.includes('stu'));
-        try {
-          setCanUseStaff(await housing.checkHousingAdmin());
-        } catch (e) {
-          if (!(e instanceof NotFoundError)) {
-            console.debug(e);
-          }
-          setCanUseStaff(false);
-        }
       } catch {
-        setCanUseStaff(false);
         setIsUserStudent(false);
       } finally {
         setLoading(false);
@@ -48,7 +37,6 @@ const ApartApp = () => {
     } else {
       // Clear out component's person-specific state when authenticated becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
-      setCanUseStaff(false);
       setIsUserStudent(false);
       setLoading(false);
     }
@@ -60,7 +48,7 @@ const ApartApp = () => {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Apartment Application page'} />;
   } else if (isOnline) {
-    if (canUseStaff) {
+    if (isHousingAdmin) {
       return (
         <div className={styles.staff_apartment_application}>
           <StaffMenu userProfile={profile} />

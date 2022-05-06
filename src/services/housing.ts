@@ -55,14 +55,6 @@ type ApplicationDetails = UnformattedApplicationDetails & {
   FirstHall: string;
 };
 
-const checkHousingAdmin = (): Promise<boolean> => http.get(`housing/admin`);
-
-const addHousingAdmin = (username: string): Promise<boolean> =>
-  http.post(`housing/admin/${username}/`);
-
-const deleteHousingAdmin = (username: string): Promise<boolean> =>
-  http.del(`housing/admin/${username}/`);
-
 const getApartmentSelectionDate = async (): Promise<string> => {
   return 'Apr. 11';
   // return await http.get('housing/apartment/selection-date); // Not yet implemented in the API
@@ -173,9 +165,6 @@ const submitApplication = (applicationID: number): Promise<boolean> =>
   http.put(`housing/apartment/applications/${applicationID}/submit`);
 
 const housingService = {
-  checkHousingAdmin,
-  addHousingAdmin,
-  deleteHousingAdmin,
   getApartmentSelectionDate,
   getApartmentHalls,
   getCurrentApplicationID,
