@@ -18,10 +18,10 @@ import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { useParams } from 'react-router';
 import involvementService from 'services/activity';
+import { AuthGroup, userIsInGroup } from 'services/auth';
 import emailsService from 'services/emails';
 import membershipService from 'services/membership';
 import sessionService from 'services/session';
-import storageService from 'services/storage';
 import { gordonColors } from 'theme';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
@@ -43,7 +43,7 @@ const InvolvementProfile = () => {
   const [tempJoinInfo, setTempJoinInfo] = useState('');
   const [tempURL, setTempURL] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const isSiteAdmin = userIsInGroup(AuthGroup.SiteAdmin);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isRemoveImageDialogOpen, setIsRemoveImageDialogOpen] = useState(false);
   const [emailList, setEmailList] = useState([]);
@@ -56,7 +56,6 @@ const InvolvementProfile = () => {
   useEffect(() => {
     const loadPage = async () => {
       if (profile) {
-        const { college_role } = storageService.getLocalInfo();
         const [involvementInfo, advisors, groupAdmins, sessionInfo, isAdmin] = await Promise.all([
           involvementService.get(involvementCode),
           involvementService.getAdvisors(involvementCode, sessionCode),
@@ -65,19 +64,16 @@ const InvolvementProfile = () => {
           membershipService.checkAdmin(profile.ID, sessionCode, involvementCode),
         ]);
 
-        const isSuperAdmin = college_role === 'god';
-
         setInvolvementInfo(involvementInfo);
         setAdvisors(advisors);
         setGroupAdmins(groupAdmins);
         setSessionInfo(sessionInfo);
         setIsAdmin(isAdmin);
-        setIsSuperAdmin(isSuperAdmin);
         setTempBlurb(involvementInfo.ActivityBlurb);
         setTempJoinInfo(involvementInfo.ActivityJoinInfo);
         setTempURL(involvementInfo.ActivityURL);
 
-        if (isAdmin || isSuperAdmin) {
+        if (isAdmin || isSiteAdmin) {
           setEmailList(await emailsService.getPerActivity(involvementCode, sessionCode));
         }
 
@@ -93,7 +89,7 @@ const InvolvementProfile = () => {
       }
     };
     loadPage();
-  }, [involvementCode, sessionCode, profile]);
+  }, [involvementCode, isSiteAdmin, sessionCode, profile]);
 
   const onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];
@@ -231,7 +227,7 @@ const InvolvementProfile = () => {
 
     const editInvolvement = loadingProfile ? (
       <GordonLoader />
-    ) : isAdmin || isSuperAdmin ? (
+    ) : isAdmin || isSiteAdmin ? (
       <Grid item>
         <Grid container spacing={2} justifyContent="center">
           <Grid item>
@@ -448,7 +444,7 @@ const InvolvementProfile = () => {
                 <Membership
                   involvementDescription={ActivityDescription}
                   isAdmin={isAdmin}
-                  isSuperAdmin={isSuperAdmin}
+                  isSiteAdmin={isSiteAdmin}
                   toggleIsAdmin={() => setIsAdmin((a) => !a)}
                 />
               </>

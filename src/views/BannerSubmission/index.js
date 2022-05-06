@@ -12,7 +12,7 @@ import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
-import storageService from 'services/storage';
+import { AuthGroup, userIsInGroup } from 'services/auth';
 import { gordonColors } from 'theme';
 import BannerAdmin from './components/BannerAdmin';
 
@@ -34,9 +34,7 @@ const BannerSubmission = () => {
   useEffect(() => {
     if (authenticated) {
       // TODO: Extract groups-based authorization, and make admin group. Long term, work with Chris C. to break up superadmin role into smaller pieces.
-      const token = storageService.getLocalInfo();
-      console.log(token);
-      setIsAdmin(token.idTokenClaims.groups.find((g) => g === 'CTS-SG'));
+      setIsAdmin(userIsInGroup(AuthGroup.SiteAdmin));
     }
   }, [authenticated]);
 

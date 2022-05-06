@@ -112,4 +112,37 @@ const signOut = async () => {
   }
 };
 
-export { isAuthenticated, acquireAccessToken as getToken, authenticate, signOut };
+const getAuthGroups = () => {
+  const claims = msalInstance.getActiveAccount()?.idTokenClaims;
+
+  console.log(claims);
+
+  if (claims && claims.hasOwnProperty('groups')) {
+    return (claims as { groups: string[] }).groups;
+  } else {
+    return [];
+  }
+};
+
+const userIsInGroup = (group: AuthGroup) => getAuthGroups().some((g) => g === group);
+
+export enum AuthGroup {
+  Alumni = '360-Alumni-SG',
+  FacStaff = '360-FacStaff-SG',
+  Faculty = '360-Faculty-SG',
+  HousingAdmin = '360-HousingAdmin-SG',
+  NewsAdmin = '360-NewsAdmin-SG',
+  Police = '360-Police-SG',
+  SiteAdmin = '360-SiteAdmin-SG',
+  Staff = '360-Staff-SG',
+  Student = '360-Student-SG',
+}
+
+export {
+  isAuthenticated,
+  acquireAccessToken as getToken,
+  authenticate,
+  signOut,
+  getAuthGroups,
+  userIsInGroup,
+};

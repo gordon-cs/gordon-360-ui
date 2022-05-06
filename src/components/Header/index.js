@@ -8,7 +8,7 @@ import WellnessIcon from '@material-ui/icons/LocalHospital';
 import MenuIcon from '@material-ui/icons/Menu';
 import PeopleIcon from '@material-ui/icons/People';
 import GordonDialogBox from 'components/GordonDialogBox/index';
-import { useDocumentTitle, useNetworkStatus } from 'hooks';
+import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
 import { NavLink, Route, Switch } from 'react-router-dom';
@@ -25,6 +25,7 @@ const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...pr
 const GordonHeader = ({ onDrawerToggle }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const [dialog, setDialog] = useState('');
+  const [width] = useWindowSize();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorElement, setAnchorElement] = useState(null);
   const isOnline = useNetworkStatus();
@@ -60,16 +61,10 @@ const GordonHeader = ({ onDrawerToggle }) => {
   });
 
   useEffect(() => {
-    const resize = (event) => {
-      if (event.target.innerWidth < windowBreakWidths.breakMD) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    window.addEventListener('resize', resize);
-
-    return () => window.removeEventListener('resize', resize);
-  }, []);
+    if (width < windowBreakWidths.breakMD) {
+      setIsMenuOpen(false);
+    }
+  }, [width]);
 
   const createDialogBox = () => {
     if (dialog === 'offline') {

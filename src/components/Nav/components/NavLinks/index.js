@@ -11,8 +11,7 @@ import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import { useNetworkStatus } from 'hooks';
 import { useState } from 'react';
-import { signOut } from 'services/auth';
-import storageService from 'services/storage';
+import { AuthGroup, signOut, userIsInGroup } from 'services/auth';
 import styles from './NavLinks.module.css';
 
 const GordonNavLinks = ({ onLinkClick }) => {
@@ -163,7 +162,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
   );
 
   const adminButton =
-    isAuthenticated && storageService.getLocalInfo().college_role === 'god' ? (
+    isAuthenticated && userIsInGroup(AuthGroup.SiteAdmin) === 'god' ? (
       <GordonNavButton
         unavailable={!isOnline ? 'offline' : null}
         onLinkClick={onLinkClick}

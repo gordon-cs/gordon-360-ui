@@ -9,11 +9,11 @@ import {
   TextField,
 } from '@material-ui/core';
 import GordonDialogBox from 'components/GordonDialogBox';
+import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import involvementService from 'services/activity';
 import requestService from 'services/request';
-import storageService from 'services/storage';
 
 const NonMemberButtons = ({
   isGuest,
@@ -27,6 +27,7 @@ const NonMemberButtons = ({
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
   const { involvementCode, sessionCode } = useParams();
+  const { profile } = useUser();
 
   useEffect(() => {
     const load = async () => {
@@ -46,7 +47,7 @@ const NonMemberButtons = ({
     let data = {
       ACT_CDE: involvementCode,
       SESS_CDE: sessionCode,
-      ID_NUM: storageService.getLocalInfo().id,
+      ID_NUM: profile.ID,
       PART_CDE: participationCode,
       DATE_SENT: new Date().toLocaleString(),
       COMMENT_TXT: titleComment,

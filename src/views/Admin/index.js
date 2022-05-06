@@ -3,22 +3,15 @@ import { Grid } from '@material-ui/core';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useNetworkStatus } from 'hooks';
-import { useEffect, useState } from 'react';
+import { AuthGroup, userIsInGroup } from 'services/auth';
 // import storageService from 'services/storage';
 import AdminList from './components/AdminList';
 import InvolvementStatusList from './components/InvolvementsStatus';
 
 const Admin = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const isAdmin = userIsInGroup(AuthGroup.SiteAdmin);
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      // setIsAdmin(storageService.getLocalInfo().college_role === 'god');
-      setIsAdmin(true);
-    }
-  }, [isAuthenticated]);
 
   if (!isAuthenticated) {
     return <GordonUnauthorized feature={'the admin page'} />;

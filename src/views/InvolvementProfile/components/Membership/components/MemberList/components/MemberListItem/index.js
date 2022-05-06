@@ -18,9 +18,9 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import GordonDialogBox from 'components/GordonDialogBox';
+import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import membership from 'services/membership';
-import storageService from 'services/storage';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
 
@@ -46,7 +46,7 @@ const PARTICIPATION_LEVELS = {
 const MemberListItem = ({
   member,
   isAdmin,
-  isSuperAdmin,
+  isSiteAdmin,
   createSnackbar,
   isMobileView,
   onLeave,
@@ -65,6 +65,7 @@ const MemberListItem = ({
   const [participation, setParticipation] = useState(member.Participation);
   const [title, setTitle] = useState(member.Description);
   const [avatar, setAvatar] = useState();
+  const { profile } = useUser();
 
   const PlaceHolderAvatar = () => (
     <svg width="50" height="50" viewBox="0 0 50 50">
@@ -85,7 +86,7 @@ const MemberListItem = ({
   }, [member.AD_Username]);
 
   const handleToggleGroupAdmin = async () => {
-    if (isAdmin && !isSuperAdmin && member.IDNumber === Number(storageService.getLocalInfo().id)) {
+    if (isAdmin && !isSiteAdmin && member.IDNumber === profile.ID) {
       setIsUnadminSelfDialogOpen(true);
     } else {
       let data = {
@@ -143,7 +144,7 @@ const MemberListItem = ({
   };
 
   const handleRemove = () => {
-    if (member.IDNumber === Number(storageService.getLocalInfo().id)) {
+    if (member.IDNumber === profile.ID) {
       setIsLeaveAlertOpen(true);
     } else {
       setIsRemoveAlertOpen(true);
@@ -156,7 +157,7 @@ const MemberListItem = ({
     ? `Box #${member.Mail_Location}`
     : member.Mail_Location || null;
 
-  if (isAdmin || isSuperAdmin) {
+  if (isAdmin || isSiteAdmin) {
     const disabled = participationDescription === 'Guest' || participationDescription === 'Member';
     // Can't make guests or members a group admin
     const buttons = (
@@ -309,7 +310,7 @@ const MemberListItem = ({
       );
 
       content = (
-        <Accordion defaultExpanded={(isAdmin || isSuperAdmin) && !isMobileView}>
+        <Accordion defaultExpanded={(isAdmin || isSiteAdmin) && !isMobileView}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Grid container alignItems="center" spacing={2}>
               <Grid item xs={9} sm={10}>
@@ -349,7 +350,7 @@ const MemberListItem = ({
       );
     }
   } else {
-    if (member.IDNumber.toString() === storageService.getLocalInfo().id) {
+    if (member.IDNumber === profile.ID) {
       options = (
         <Button variant="contained" style={redButton} onClick={() => setIsLeaveAlertOpen(true)}>
           LEAVE
