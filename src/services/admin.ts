@@ -10,9 +10,9 @@ type Admin = {
 
 const getAdmins = (): Promise<Admin[]> => http.get(`admins`);
 
-const removeAdmin = (id: number): Promise<boolean> => http.del(`/admins/${id}`);
+const removeAdmin = (id: number): Promise<boolean> => http.del(`admins/${id}`);
 
-const addAdmin = (admin: Admin): Promise<Admin> => http.post(`/admins/`, admin);
+const addAdmin = (admin: Admin): Promise<Admin> => http.post(`admins/`, admin);
 
 const adminService = {
   getAdmins,
