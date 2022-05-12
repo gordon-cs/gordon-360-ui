@@ -9,13 +9,10 @@ type SearchResult = {
   ConcatonatedInfo: string;
 };
 
-type TimedResult = [time: number, results: SearchResult[]];
-
-const search = async (query: string): Promise<TimedResult> => {
+const search = async (query: string): Promise<SearchResult[]> => {
   // Replace period or space with a slash: 'first.last' or 'first last' become 'first/last'
-  const searchQuery = query.trim().replace(/\.|\s/g, '/');
-  const searchResults: SearchResult[] = await http.get(`accounts/search/${searchQuery}`);
-  return [Date.now(), searchResults];
+  const searchQuery = query.toLowerCase().trim().replace(/\.|\s/g, '/');
+  return await http.get(`accounts/search/${searchQuery}`);
 };
 
 const peopleSearchService = {

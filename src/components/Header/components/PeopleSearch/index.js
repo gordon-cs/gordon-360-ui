@@ -1,9 +1,9 @@
 import { InputAdornment, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import Downshift from 'downshift';
-import { useNetworkStatus, useWindowSize } from 'hooks';
+import { useDebounce, useNetworkStatus, useWindowSize } from 'hooks';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import peopleSearch from 'services/people-search';
 import styles from './PeopleSearch.module.css';
@@ -43,10 +43,9 @@ const renderInput = (inputProps) => {
 const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [suggestionIndex, setSuggestionIndex] = useState(-1);
-  const [query, setQuery] = useState(String);
+  const [query, setQuery] = useDebounce('');
   const [highlightQuery, setHighlightQuery] = useState(String);
   const [downshift, setDownshift] = useState();
-  const [time, setTime] = useState(0);
   const [width] = useWindowSize();
   const isOnline = useNetworkStatus();
   const placeholder = !isOnline
@@ -62,20 +61,16 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
     var highlightQuery = query.replace(/^[\s.]+|[\s.]+$/gm, '');
     setQuery(query);
     setHighlightQuery(highlightQuery);
+  }
 
+  useEffect(() => {
     // Only load suggestions if query is of minimum length
     if (query?.length >= MIN_QUERY_LENGTH) {
-      //so apparently everything breaks if the first letter is capital, which is what happens on mobile
-      //sometimes and then you spend four hours trying to figure out why downshift is not working
-      //but really it's just that its capitalized what the heck
-      peopleSearch.search(query.toLowerCase()).then(([searchTime, searchResults]) => {
-        if (time < searchTime) {
-          setTime(searchTime);
-          setSuggestions(searchResults);
-        }
+      peopleSearch.search(query).then((searchResults) => {
+        setSuggestions(searchResults);
       });
     }
-  }
+  }, [query]);
 
   function handleClick(theChosenOne) {
     if (theChosenOne && disableLink) {
