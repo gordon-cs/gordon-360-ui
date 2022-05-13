@@ -41,9 +41,12 @@ const renderInput = (inputProps) => {
 };
 
 const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit }) => {
-  const [suggestions, setSuggestions] = useState([]);
+  // Search time is never used via variable name, but it is used via index
+  // to ensure that earlier searches which took longer to run don't overwrite later searches
+  // eslint-disable-next-line no-unused-vars
+  const [[searchTime, suggestions], setSearchResults] = useState([0, []]);
   const [suggestionIndex, setSuggestionIndex] = useState(-1);
-  const [query, setQuery] = useDebounce('');
+  const [query, setQuery] = useDebounce('', 200);
   const [highlightQuery, setHighlightQuery] = useState(String);
   const [downshift, setDownshift] = useState();
   const [width] = useWindowSize();
@@ -66,9 +69,12 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
   useEffect(() => {
     // Only load suggestions if query is of minimum length
     if (query?.length >= MIN_QUERY_LENGTH) {
-      peopleSearch.search(query).then((searchResults) => {
-        setSuggestions(searchResults);
-      });
+      peopleSearch.search(query).then((newResults) =>
+        // Only update the search results if the new search time is greater than the previous search time
+        setSearchResults((prevResults) =>
+          newResults[0] > prevResults[0] ? newResults : prevResults,
+        ),
+      );
     }
   }, [query]);
 
@@ -158,12 +164,13 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
   }
 
   function renderSuggestion({ suggestion, itemProps }) {
-    let sIndex = suggestionIndex;
-    let suggestionList = suggestions;
     // Bail if any required properties are missing
     if (!suggestion.UserName || !suggestion.FirstName || !suggestion.LastName) {
       return null;
     }
+
+    const highlightQuerySplit = highlightQuery.match(/ |\./);
+
     return (
       // The props for component={Link} and to={`/profile/${suggestion.UserName}`}
       // have been moved to the declaration of itemProps in return().
@@ -171,15 +178,9 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
       <MenuItem
         {...itemProps}
         key={suggestion.UserName}
-        // onClick={this.handleClick.bind(this, suggestion.UserName)}
-        onClick={() => {
-          handleClick(suggestion.UserName);
-        }}
+        onClick={() => handleClick(suggestion.UserName)}
         className={
-          suggestionList &&
-          suggestionList[sIndex] !== undefined &&
-          suggestion.UserName === suggestionList[sIndex].UserName &&
-          sIndex !== -1
+          suggestionIndex !== -1 && suggestion.UserName === suggestions?.[suggestionIndex]?.UserName
             ? styles.people_search_suggestion_selected
             : styles.people_search_suggestion
         }
@@ -189,36 +190,39 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
               name part of the query in the first name, and only highlight occurrences of the last
               name part of the query in the last name. Otherwise, highlight occurrences of the
               query in the first and last name. */}
-          {highlightQuery.match(/ |\./)
-            ? [
-                getHighlightedText(suggestion.FirstName + ' ', highlightQuery.split(/ |\./)[0]),
-                getHighlightedText(suggestion.LastName, highlightQuery.split(/ |\./)[1]),
-              ].map((e, key) => <span key={key}>{e}</span>)
-            : getHighlightedText(
-                // Displays first name
-                suggestion.FirstName +
-                  // If having nickname that is unique, display that nickname
-                  (suggestion.Nickname &&
-                  suggestion.Nickname !== suggestion.FirstName &&
-                  suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
-                    ? ' (' + suggestion.Nickname + ') '
-                    : ' ') +
-                  // Displays last name
-                  suggestion.LastName +
-                  // If having maiden name that is unique, display that maiden name
-                  (suggestion.MaidenName &&
-                  suggestion.MaidenName !== suggestion.LastName &&
-                  suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
-                    ? ' (' + suggestion.MaidenName + ')'
-                    : ''),
-                highlightQuery,
-              )}
+          {highlightQuerySplit?.length > 1 ? (
+            <>
+              <span key={1}>
+                {getHighlightedText(suggestion.FirstName + ' ', highlightQuerySplit[0])}
+              </span>
+              <span key={2}>{getHighlightedText(suggestion.LastName, highlightQuerySplit[1])}</span>
+            </>
+          ) : (
+            getHighlightedText(
+              // Displays first name
+              suggestion.FirstName +
+                // If having nickname that is unique, display that nickname
+                (suggestion.Nickname &&
+                suggestion.Nickname !== suggestion.FirstName &&
+                suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
+                  ? ' (' + suggestion.Nickname + ') '
+                  : ' ') +
+                // Displays last name
+                suggestion.LastName +
+                // If having maiden name that is unique, display that maiden name
+                (suggestion.MaidenName &&
+                suggestion.MaidenName !== suggestion.LastName &&
+                suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
+                  ? ' (' + suggestion.MaidenName + ')'
+                  : ''),
+              highlightQuery,
+            )
+          )}
         </Typography>
         <Typography variant="caption" component="p">
           {/* If the first name matches either part (first or last name) of the query, don't
               highlight occurrences of the query in the first name part of the username.
               If the username contains a period, add it back in.
-              If the username contains a period,
               If the last name matches either part (first of last name) of the query, don't
               highlight occurrences of the query in the last name part of the username. */}
           {!suggestion.FirstName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
