@@ -99,7 +99,7 @@ const search = (
   }
 
   if (includeAlumni) {
-    params += '&accountTypes=facstaff';
+    params += '&accountTypes=alumni';
   }
 
   return http.get(`accounts/advanced-people-search?${params}`);
