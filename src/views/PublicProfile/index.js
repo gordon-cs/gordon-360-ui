@@ -18,6 +18,8 @@ const PublicProfile = () => {
   const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
+    setProfile({});
+    setLoading(true);
     if (isAuthenticated) {
       try {
         userService
