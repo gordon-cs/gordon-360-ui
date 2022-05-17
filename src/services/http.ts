@@ -37,7 +37,7 @@ const postImage = <TResponse>(
   const blob = dataURItoBlob(imageData);
   const fileType = blob.type.replace('image/', '');
   const imageDataForm = new FormData();
-  imageDataForm.append('canvasImage', blob, 'canvasImage.' + fileType);
+  imageDataForm.append('image', blob, `image.${fileType}`);
   return makeRequest(endpoint, 'post', imageDataForm, headers);
 };
 
