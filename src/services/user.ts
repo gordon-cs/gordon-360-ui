@@ -191,7 +191,7 @@ const formatSocialMediaLinks = (profile: UnformattedProfileInfo) => {
 const getImage = (username: string = ''): Promise<ProfileImages> =>
   http.get(`profiles/image/${username}`);
 
-const resetImage = (): Promise<void> => http.post('/profiles/image/reset');
+const resetImage = (): Promise<void> => http.post('profiles/image/reset');
 
 const postIDImage = (imageDataURI: string): Promise<void> =>
   http.postImage('profiles/IDimage', imageDataURI);
