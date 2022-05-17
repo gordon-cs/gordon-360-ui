@@ -43,18 +43,6 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
     }
 
     loadAvatar();
-
-    if (user.profile) {
-      // Used to re-render the page when the user's profile picture changes
-      // The origin of the message is checked to prevent cross-site scripting attacks
-      window.addEventListener('message', (event) => {
-        if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
-          loadAvatar();
-        }
-      });
-
-      return window.removeEventListener('message', () => {});
-    }
   }, [user]);
 
   const avatar = user.loading ? (

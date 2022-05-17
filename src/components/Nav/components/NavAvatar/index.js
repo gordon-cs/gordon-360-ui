@@ -3,7 +3,6 @@ import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import userService from 'services/user';
 import styles from './NavAvatar.module.css';
 
 const GordonNavAvatar = ({ onLinkClick }) => {
@@ -24,20 +23,6 @@ const GordonNavAvatar = ({ onLinkClick }) => {
     }
 
     loadAvatar();
-
-    if (profile) {
-      // Used to re-render the page when the user's profile picture changes
-      // The origin of the message is checked to prevent cross-site scripting attacks
-      window.addEventListener('message', async (event) => {
-        if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
-          const { def: defaultImage, pref: preferredImage } = await userService.getImage();
-          const image = preferredImage || defaultImage;
-          setImage(image);
-        }
-      });
-
-      return window.removeEventListener('message', () => {});
-    }
   }, [profile, images]);
 
   const avatar = loading ? (

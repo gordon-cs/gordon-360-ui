@@ -61,6 +61,7 @@ class IDUploader extends Component {
         preview: null,
         IdCardPlaceholder: croppedImage,
       });
+      // TODO: Once this is functional component, use updateImage from useUserActions
       window.postMessage('update-profile-picture', window.location.origin);
     }
   };
