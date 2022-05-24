@@ -15,7 +15,6 @@ import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
 const Home = () => {
   const [loading, setLoading] = useState(true);
-  const [personType, setPersonType] = useState(null);
 
   const [hasAnswered, setHasAnswered] = useState(null);
   const isOnline = useNetworkStatus();
@@ -25,12 +24,10 @@ const Home = () => {
     if (profile) {
       setLoading(true);
       wellness.getStatus().then(({ IsValid }) => setHasAnswered(IsValid));
-      setPersonType(profile.PersonType);
     } else {
       // Clear out component's person-specific state when authenticated becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
       setHasAnswered(null);
-      setPersonType(null);
     }
     setLoading(false);
   }, [profile]);
@@ -42,7 +39,7 @@ const Home = () => {
   } else if (isOnline && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else {
-    let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
+    const doughnut = profile?.PersonType?.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 
     return (
       <Grid container justifyContent="center" spacing={2}>
