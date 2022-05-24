@@ -87,10 +87,14 @@ const Update = (props) => {
   const [userMailingZip, setMailingZip] = useState(user.profile.HomePostalCode);
   const [userMailingCountry, setMailingCountry] = useState(user.profile.HomeCountry);
   const [userMaritalStatus, setMaritalStatus] = useState(profileMaritalStatus);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
   const [saving, setSaving] = useState(false);
-  const [snackbarText, setSnackbarText] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('');
+
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false});
+  const createSnackbar = ( message, severity ) => {
+    setSnackbar({message: message, severity: severity, open: true});
+  }
+
   const [isUserStudent, setIsUserStudent] = useState(true);
 
   // I considered using a HashMap to get the names, but I don't think it's necessary.
@@ -110,7 +114,7 @@ const Update = (props) => {
   userSalutation, userMailingStreet, profileMaritalStatus]
 
   const currentHeadings = ["Middle Name", "Preferred Name", "Alternate Email", "Home Phone", "Mobile Phone",
-  "City", "Sttate", "Zip", "Country", "Salutation", "Mailing Address", "Married"]
+  "City", "State", "Zip", "Country", "Salutation", "Mailing Address", "Married"]
 
   useEffect(() => {
     if (props.authentication) {
@@ -121,17 +125,13 @@ const Update = (props) => {
   if (props.authentication) {
     const handleSaveButtonClick = () => {
       if (userFirstName === "" || userLastName === "") {
-        setSnackbarSeverity('error');
-        setSnackbarText('Please fill in your first and last name.');
-        setSnackbarOpen(true);
+        createSnackbar('Please fill in your first and last name.','error');
       } else {
         setSaving(true);
         updateInfo(
           emailBody()
         ).then(() => {
-          setSnackbarSeverity('info');
-          setSnackbarText('A request to update your information has been sent. Please check back later.');
-          setSnackbarOpen(true);
+          createSnackbar('A request to update your information has been sent. Please check back later.','info');
           setSalutation('');
           setFirstName('');
           setLastName('');
@@ -171,7 +171,7 @@ const Update = (props) => {
         }
       }
       email_content = `<p> ${email_content} </p>`
-      
+
       return email_content;
     }
 
@@ -181,13 +181,6 @@ const Update = (props) => {
       updateAlumniInfo.requestInfoUpdate(
         email_content,
       );
-    };
-
-    const handleCloseSnackbar = (event, reason) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-      setSnackbarOpen(false);
     };
 
     const handleSalutation = (event) => {
@@ -260,7 +253,7 @@ const Update = (props) => {
     const handleMailingZip = (event) => {
       setMailingZip(event.target.value);
     };
-    
+
     const handleMailingCountry = (event) => {
       setMailingCountry(event.target.value);
     };
@@ -582,17 +575,17 @@ const Update = (props) => {
               <Typography variant="subtitle1">
                 Found a bug?
                 <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
-                  <Button 
+                  <Button
                     style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
                 </a>
               </Typography>
             </Grid>
           </Grid>
           <SimpleSnackbar
-            text={snackbarText}
-            severity={snackbarSeverity}
-            open={snackbarOpen}
-            onClose={handleCloseSnackbar}
+            text={snackbar.message}
+            severity={snackbar.severity}
+            open={snackbar.open}
+            onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
           />
         </>
       );
