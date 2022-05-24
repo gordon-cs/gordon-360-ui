@@ -256,6 +256,7 @@ const Events = (props) => {
                               />
                             ))
                           }
+                          value={filters}
                           renderInput={(param) => (
                             <TextField {...param} variant="filled" label="Filters" />
                           )}
