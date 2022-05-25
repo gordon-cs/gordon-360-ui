@@ -94,13 +94,7 @@ const Update = (props) => {
   const saveUser = userInfo;
 
   const handleChange = (event) => {
-    if ( typeof event.target.value === "string" ) {
-      console.log("value is a string");
       setUserInfo({ ...userInfo, [event.target.name]: event.target.value });
-    } else {
-      console.log("value is a boolean");
-    }
-
   }
 
   const [saving, setSaving] = useState(false);
@@ -128,31 +122,6 @@ const Update = (props) => {
           emailBody()
         ).then(() => {
           createSnackbar('A request to update your information has been sent. Please check back later.','info');
-          // setUserInfo(
-          //   {
-          //     salutation: "",
-          //     firstname: "",
-          //     lastname: "",
-          //     middlename: "",
-          //     preferredname: "",
-          //     personalemail: "",
-          //     workemail: "",
-          //     alt_email: "",
-          //     preferredemail: "",
-          //     doNotContact: userInfo.doNotContact,
-          //     doNotMail: userInfo.doNotMail,
-          //     homephone: "",
-          //     workphone: "",
-          //     mobilephone: "",
-          //     preferredphone: "",
-          //     address: "",
-          //     city: "",
-          //     state: "",
-          //     zip: "",
-          //     country: "",
-          //     maritalstatus: ""
-          //   }
-          // )
           setSaving(false);
         });
       }
@@ -169,7 +138,7 @@ const Update = (props) => {
           saveUser[key] = key === 'doNotContact' ? userDoNotContact : userDoNotMail;
         }
       }
-      console.log(saveUser);
+      // console.log(saveUser);
       return JSON.stringify(saveUser);
     }
 
