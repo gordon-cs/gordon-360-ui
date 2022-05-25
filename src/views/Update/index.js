@@ -27,30 +27,25 @@ import GordonOffline from 'components/GordonOffline';
 //import userInfo from 'components/Profile/components/PersonalInfoList';
 //import userService from 'services/user';
 
+
+
+function UpdateGrid(props) {
+  return (
+    <Grid item xs={9} md={3} lg={3}>
+      <TextField
+        className="disable_select"
+        style={{ width: 252, }}
+        label={props.label}
+        name={props.name}
+        value={props.value}
+        onChange={props.change}
+      />
+    </Grid>
+  )
+}
+
 /**
- * Sends an update form to the development office with the following queried parameters
- *
- * @param {string} userSaluation updated with the user's new salutation
- * @param {string} userFirstName updated with the user's new first name
- * @param {string} userLastName updated with the user's new last name
- * @param {string} userMiddleName updated with the user's new middle name
- * @param {string} userPreferredName updated with the user's new preferred name
- * @param {string} userPersonalEmail updated with the user's new personal email
- * @param {string} userWorkEmail updated with the user's new work email
- * @param {string} userAlternateEmail updated with the user's new alternate email
- * @param {string} userPreferredEmail updated with the user's new preferred email
- * @param {boolean} userDoNotContact updated with the user's new do not contact preference
- * @param {boolean} userDoNotMail updated with the user's new do not mail preference
- * @param {string} userHomePhone updated with the user's new home phone
- * @param {string} userWorkPhone updated with the user's new work phone
- * @param {string} userMobilePhone updated with the user's new mobile phone
- * @param {string} userPreferredPhone updated with the user's new preferred phone
- * @param {string} userMailingStreet updated with the user's new mailing street
- * @param {string} userMailingCity updated with the user's new mailing city
- * @param {string} userMailingState updated with the user's new mailing state
- * @param {string} userMailingZip updated with the user's new mailing zip
- * @param {string} userMailingCountry updated with the user's new mailing country
- * @param {string} userMaritalStatus updated with the user's new marital status
+ * Sends an update form to the development office
  */
 
 const Update = (props) => {
@@ -95,9 +90,17 @@ const Update = (props) => {
         maritalstatus: profileMaritalStatus
       }
     );
+  // done as a user autofill backup
+  const saveUser = userInfo;
 
   const handleChange = (event) => {
+    if ( typeof event.target.value === "string" ) {
+      console.log("value is a string");
       setUserInfo({ ...userInfo, [event.target.name]: event.target.value });
+    } else {
+      console.log("value is a boolean");
+    }
+
   }
 
   const [saving, setSaving] = useState(false);
@@ -109,25 +112,6 @@ const Update = (props) => {
 
   const [isUserStudent, setIsUserStudent] = useState(true);
 
-  // // I considered using a HashMap to get the names, but I don't think it's necessary.
-  // // Both arrays are constant. Many reasons why 2 arrays is better than one HashMap here.
-  // const formFields = [userPersonalEmail, userWorkEmail, userPreferredEmail, userDoNotContact,
-  // userDoNotMail, userWorkPhone, userPreferredPhone]
-
-  // const formHeadings = ["Personal Email", "Work Email", "Preferred Email", "Do Not Contact",
-  // "Do Not Mail", "Work Phone", "Preferred Phone"]
-
-  // const autoFill = [user.profile.MiddleName, user.profile.NickName, user.profile.Email,
-  // user.profile.HomePhone, user.profile.MobilePhone, user.profile.HomeCity, user.profile.HomeState,
-  // user.profile.HomePostalCode, user.profile.HomeCountry, profileSalutation, address, profileMaritalStatus]
-
-  // const currentFields = [userMiddleName, userPreferredName, userAlternateEmail,
-  // userHomePhone, userMobilePhone, userMailingCity, userMailingState, userMailingZip, userMailingCountry,
-  // userSalutation, userMailingStreet, profileMaritalStatus]
-
-  // const currentHeadings = ["Middle Name", "Preferred Name", "Alternate Email", "Home Phone", "Mobile Phone",
-  // "City", "State", "Zip", "Country", "Salutation", "Mailing Address", "Married"]
-
   useEffect(() => {
     if (props.authentication) {
       userService.getProfileInfo().then((profile) => setIsUserStudent(profile.PersonType.includes('stu')));
@@ -135,14 +119,6 @@ const Update = (props) => {
   }, [props.authentication]);
 
   if (props.authentication) {
-    /**
-     *
-     *
-     * SAVE BUTTON HERE
-     * SQL/BACKEND LINKING DONE YET
-     *
-     *
-     */
     const handleSaveButtonClick = () => {
       if (userInfo.firstname === "" || userInfo.lastname === "") {
         createSnackbar('Please fill in your first and last name.','error');
@@ -152,56 +128,49 @@ const Update = (props) => {
           emailBody()
         ).then(() => {
           createSnackbar('A request to update your information has been sent. Please check back later.','info');
-          setUserInfo(
-            {
-              salutation: "",
-              firstname: "",
-              lastname: "",
-              middlename: "",
-              preferredname: "",
-              personalemail: "",
-              workemail: "",
-              alt_email: "",
-              preferredemail: "",
-              doNotContact: userInfo.doNotContact,
-              doNotMail: userInfo.doNotMail,
-              homephone: "",
-              workphone: "",
-              mobilephone: "",
-              preferredphone: "",
-              address: "",
-              city: "",
-              state: "",
-              zip: "",
-              country: "",
-              maritalstatus: ""
-            }
-          )
-
+          // setUserInfo(
+          //   {
+          //     salutation: "",
+          //     firstname: "",
+          //     lastname: "",
+          //     middlename: "",
+          //     preferredname: "",
+          //     personalemail: "",
+          //     workemail: "",
+          //     alt_email: "",
+          //     preferredemail: "",
+          //     doNotContact: userInfo.doNotContact,
+          //     doNotMail: userInfo.doNotMail,
+          //     homephone: "",
+          //     workphone: "",
+          //     mobilephone: "",
+          //     preferredphone: "",
+          //     address: "",
+          //     city: "",
+          //     state: "",
+          //     zip: "",
+          //     country: "",
+          //     maritalstatus: ""
+          //   }
+          // )
           setSaving(false);
         });
       }
     };
     /**
-     * TODO
-     * REWORK EMAILBODY TO NOT REQUIRE USEEFFECT
-     * NEW OBJECT IMPLEMENTATION IN PROGRESS
+     * Database stringify'd object
+     *
+     * @returns {string} JSON object
      */
     function emailBody() {
-      var email_content = `<b>First name:</b> ${userInfo.firstname} <br /> <b>Last name:</b> ${userInfo.lastname} <br />`;
-      // for (let i = 0; i < autoFill.length; i++) {
-      //   if (autoFill[i] !== currentFields[i]) {
-      //     email_content = `${email_content} <b>${currentHeadings[i]}:</b> ${currentFields[i]} <br />`;
-      //   }
-      // }
-      // for (let i = 0; i < formFields.length; i++) {
-      //     if (formFields[i] !== ''){
-      //     email_content = `${email_content} <b>${formHeadings[i]}:</b> ${formFields[i]} <br />`;
-      //   }
-      // }
-      email_content = `<p> ${email_content} </p>`
-
-      return email_content;
+      for (const key in userInfo) {
+        saveUser[key] = userInfo[key] !== saveUser[key] ? userInfo[key] : saveUser[key];
+        if ( typeof saveUser[key] !== 'string' ) {
+          saveUser[key] = key === 'doNotContact' ? userDoNotContact : userDoNotMail;
+        }
+      }
+      console.log(saveUser);
+      return JSON.stringify(saveUser);
     }
 
     const updateInfo = async (
@@ -231,6 +200,45 @@ const Update = (props) => {
       </Button>
     );
 
+    const PersonalInfo = [
+      {label: "Salutation", name: "salutation", value: userInfo.salutation},
+      {label: "First Name", name: "firstname", value: userInfo.firstname},
+      {label: "Last Name", name: "lastname", value: userInfo.lastname},
+      {label: "Middle Name", name: "middlename", value: userInfo.middlename},
+      {label: "Preferred Name", name: "preferredname", value: userInfo.preferredname},
+      {label: "Married", name: "maritalstatus", value: userInfo.maritalstatus}
+    ];
+    const EmailInfo = [
+      {label: "Personal Email", name: "personalemail", value: userInfo.personalemail},
+      {label: "Work Email", name: "workemail", value: userInfo.workemail},
+      {label: "Alternate Email", name: "alt_email", value: userInfo.alt_email}
+    ];
+    const PhoneInfo = [
+      {label: "Home Phone", name: "homephone", value: userInfo.homephone},
+      {label: "Work Phone", name: "workphone", value: userInfo.workphone},
+      {label: "Mobile Phone", name: "mobilephone", value: userInfo.mobilephone}
+    ];
+    const MailingInfo = [
+      {label: "Street", name: "address", value: userInfo.address},
+      {label: "City", name: "city", value: userInfo.city},
+      {label: "State", name: "state", value: userInfo.state},
+      {label: "Zip", name: "zip", value: userInfo.zip},
+      {label: "Country", name: "country", value: userInfo.country}
+    ];
+
+    const infoMap = (data) => {
+      return(
+        data.map((info) => (
+          <UpdateGrid
+            label={info.label}
+            name={info.name}
+            value={info.value}
+            change={handleChange}
+          />
+        ))
+      )
+    }
+
     if (isOnline && isUserStudent) {
       return (
         <>
@@ -250,78 +258,7 @@ const Update = (props) => {
                     />
                     <CardContent>
                       <Grid container>
-                        <Grid item xs={9} md={3} lg={3} className={styles.update_text}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Salutation"
-                            name="salutation"
-                            value={userInfo.salutation}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                                width: 252,
-                            }}
-                            label="First Name"
-                            name="firstname"
-                            value={userInfo.firstname}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Last Name"
-                            name="lastname"
-                            value={userInfo.lastname}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Middle Name"
-                            name="middlename"
-                            value={userInfo.middlename}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Preferred Name"
-                            name="preferredname"
-                            value={userInfo.preferredname}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Married"
-                            name="maritalstatus"
-                            value={userInfo.maritalstatus}
-                            onChange={handleChange}
-                          />
-                        </Grid>
+                        {infoMap(PersonalInfo)}
                       </Grid>
                     </CardContent>
                   </Card>
@@ -333,42 +270,7 @@ const Update = (props) => {
                     />
                     <CardContent>
                       <Grid container>
-                        <Grid item xs={9} md={6} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Personal Email"
-                            name="personalemail"
-                            value={userInfo.personalemail}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Work Email"
-                            name="workemail"
-                            value={userInfo.workemail}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Alternate Email"
-                            name="alt_email"
-                            value={userInfo.alt_email}
-                            onChange={handleChange}
-                          />
-                        </Grid>
+                        {infoMap(EmailInfo)}
                         <Grid item xs={9} md={3} lg={3}>
                           <FormControl style={{ width: 252 }}>
                             <InputLabel>Preferred Email</InputLabel>
@@ -395,42 +297,7 @@ const Update = (props) => {
                     />
                     <CardContent>
                       <Grid container>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Home Phone"
-                            name="homephone"
-                            value={userInfo.homephone}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Work Phone"
-                            name="workphone"
-                            value={userInfo.workphone}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Mobile Phone"
-                            name="mobilephone"
-                            value={userInfo.mobilephone}
-                            onChange={handleChange}
-                          />
-                        </Grid>
+                        {infoMap(PhoneInfo)}
                         <Grid item xs={9} md={3} lg={3}>
                           <FormControl style={{ width: 252 }}>
                             <InputLabel>Preferred Phone</InputLabel>
@@ -457,66 +324,7 @@ const Update = (props) => {
                     />
                     <CardContent>
                       <Grid container>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Street"
-                            name="address"
-                            value={userInfo.address}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="City"
-                            name="city"
-                            value={userInfo.city}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="State"
-                            name="state"
-                            value={userInfo.state}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Zip"
-                            name="zip"
-                            value={userInfo.zip}
-                            onChange={handleChange}
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <TextField
-                            className="disable_select"
-                            style={{
-                              width: 252,
-                            }}
-                            label="Country"
-                            name="country"
-                            value={userInfo.country}
-                            onChange={handleChange}
-                          />
-                        </Grid>
+                        {infoMap(MailingInfo)}
                       </Grid>
                     </CardContent>
                   </Card>
