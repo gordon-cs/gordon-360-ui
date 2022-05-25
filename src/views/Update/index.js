@@ -50,16 +50,19 @@ const Update = (props) => {
   const user = useUser();
 
   const profileSalutation = user.profile?.Title
-  ? user.profile.Title.charAt(0).toUpperCase() + user.profile.Title.slice(1).toLowerCase(): '';
+    ? user.profile.Title.charAt(0).toUpperCase() + user.profile.Title.slice(1).toLowerCase()
+    : '';
 
   const profileMaritalStatus = user.profile.Married === 'N'
-  ? 'No' : user.profile.Married === 'Y' ? 'Yes' : '';
+    ? 'No'
+    : user.profile.Married === 'Y'
+      ? 'Yes'
+      : '';
 
   const address = (user.profile.HomeStreet1.length === 0)
-  ? user.profile.HomeStreet2 : user.profile.HomeStreet1;
+    ? user.profile.HomeStreet2
+    : user.profile.HomeStreet1;
 
-  const [userDoNotContact, setDoNotContact] = useState(false);
-  const [userDoNotMail, setDoNotMail] = useState(false);
 
   const [userInfo, setUserInfo] =
     useState(
@@ -91,14 +94,10 @@ const Update = (props) => {
   const saveUser = userInfo;
 
   const handleChange = (event) => {
-    if( event.target.value ) {
-      console.log("this is a textbox")
-      setUserInfo({ ...userInfo, [event.target.name]: event.target.value });
-    } else {
-      console.log("not a textbox");
-      setUserInfo({ ...userInfo, [event.target.name]: !userInfo[event.target.name] });
-    }
-
+    setUserInfo({ ...userInfo, [event.target.name]: event.target.value
+      ? event.target.value
+      : !userInfo[event.target.name]
+    });
   }
 
   const [saving, setSaving] = useState(false);
@@ -151,24 +150,15 @@ const Update = (props) => {
       );
     };
 
-    const handleDoNotContact = () => {
-      setDoNotContact(!userDoNotContact);
-    };
-    const handleDoNotMail = () => {
-      setDoNotMail(!userDoNotMail);
-    };
-
-    const saveButton = saving ? (
-      <GordonLoader size={32} />
-    ) : (
-      <Button
-        variant="contained"
-        className={styles.update_button}
-        onClick={handleSaveButtonClick}
-      >
-        Update
-      </Button>
-    );
+    const saveButton = saving
+      ? <GordonLoader size={32} />
+      : <Button
+          variant="contained"
+          className={styles.update_button}
+          onClick={handleSaveButtonClick}
+        >
+          Update
+        </Button>;
 
     const PersonalInfo = [
       {label: "Salutation", name: "salutation", value: userInfo.salutation},
