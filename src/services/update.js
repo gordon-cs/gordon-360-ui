@@ -18,10 +18,11 @@ const requestInfoUpdate = async (
     Content: email_content,
   };
   http.post('profiles/updateRequest/', alumniInfo);
+  console.log(alumniInfo.Content);
 };
- 
+
 const updateAlumniInfo = {
   requestInfoUpdate,
 };
- 
+
 export default updateAlumniInfo;

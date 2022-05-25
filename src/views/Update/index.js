@@ -57,7 +57,7 @@ const Update = (props) => {
   const isOnline = useNetworkStatus();
   const user = useUser();
 
-  const profileSalutaton = user.profile?.Title
+  const profileSalutation = user.profile?.Title
   ? user.profile.Title.charAt(0).toUpperCase() + user.profile.Title.slice(1).toLowerCase(): '';
 
   const profileMaritalStatus = user.profile.Married === 'N'
@@ -66,27 +66,39 @@ const Update = (props) => {
   const address = (user.profile.HomeStreet1.length === 0)
   ? user.profile.HomeStreet2 : user.profile.HomeStreet1;
 
-  const [userSalutation, setSalutation] = useState(profileSalutaton);
-  const [userFirstName, setFirstName] = useState(user.profile.FirstName);
-  const [userLastName, setLastName] = useState(user.profile.LastName);
-  const [userMiddleName, setMiddleName] = useState(user.profile.MiddleName);
-  const [userPreferredName, setPreferredName] = useState(user.profile.NickName);
-  const [userPersonalEmail, setPersonalEmail] = useState('');
-  const [userWorkEmail, setWorkEmail] = useState('');
-  const [userAlternateEmail, setAlternateEmail] = useState(user.profile.Email);
-  const [userPreferredEmail, setPreferredEmail] = useState('');
   const [userDoNotContact, setDoNotContact] = useState(false);
   const [userDoNotMail, setDoNotMail] = useState(false);
-  const [userHomePhone, setHomePhone] = useState(user.profile.HomePhone);
-  const [userWorkPhone, setWorkPhone] = useState('');
-  const [userMobilePhone, setMobilePhone] = useState(user.profile.MobilePhone);
-  const [userPreferredPhone, setPreferredPhone] = useState('');
-  const [userMailingStreet, setMailingStreet] = useState(address);
-  const [userMailingCity, setMailingCity] = useState(user.profile.HomeCity);
-  const [userMailingState, setMailingState] = useState(user.profile.HomeState);
-  const [userMailingZip, setMailingZip] = useState(user.profile.HomePostalCode);
-  const [userMailingCountry, setMailingCountry] = useState(user.profile.HomeCountry);
-  const [userMaritalStatus, setMaritalStatus] = useState(profileMaritalStatus);
+
+  const [userInfo, setUserInfo] =
+    useState(
+      {
+        salutation: profileSalutation,
+        firstname: user.profile.FirstName,
+        lastname: user.profile.LastName,
+        middlename: user.profile.MiddleName,
+        preferredname: user.profile.NickName,
+        personalemail: "",
+        workemail: "",
+        alt_email: user.profile.Email,
+        preferredemail: "",
+        doNotContact: false,
+        doNotMail: false,
+        homephone: user.profile.HomePhone,
+        workphone: "",
+        mobilephone: user.profile.MobilePhone,
+        preferredphone: "",
+        address: address,
+        city: user.profile.HomeCity,
+        state: user.profile.HomeState,
+        zip: user.profile.HomePostalCode,
+        country: user.profile.HomeCountry,
+        maritalstatus: profileMaritalStatus
+      }
+    );
+
+  const handleChange = (event) => {
+      setUserInfo({ ...userInfo, [event.target.name]: event.target.value });
+  }
 
   const [saving, setSaving] = useState(false);
 
@@ -97,24 +109,24 @@ const Update = (props) => {
 
   const [isUserStudent, setIsUserStudent] = useState(true);
 
-  // I considered using a HashMap to get the names, but I don't think it's necessary.
-  // Both arrays are constant. Many reasons why 2 arrays is better than one HashMap here.
-  const formFields = [userPersonalEmail, userWorkEmail, userPreferredEmail, userDoNotContact,
-  userDoNotMail, userWorkPhone, userPreferredPhone]
+  // // I considered using a HashMap to get the names, but I don't think it's necessary.
+  // // Both arrays are constant. Many reasons why 2 arrays is better than one HashMap here.
+  // const formFields = [userPersonalEmail, userWorkEmail, userPreferredEmail, userDoNotContact,
+  // userDoNotMail, userWorkPhone, userPreferredPhone]
 
-  const formHeadings = ["Personal Email", "Work Email", "Preferred Email", "Do Not Contact",
-  "Do Not Mail", "Work Phone", "Preferred Phone"]
+  // const formHeadings = ["Personal Email", "Work Email", "Preferred Email", "Do Not Contact",
+  // "Do Not Mail", "Work Phone", "Preferred Phone"]
 
-  const autoFill = [user.profile.MiddleName, user.profile.NickName, user.profile.Email,
-  user.profile.HomePhone, user.profile.MobilePhone, user.profile.HomeCity, user.profile.HomeState,
-  user.profile.HomePostalCode, user.profile.HomeCountry, profileSalutaton, address, profileMaritalStatus]
+  // const autoFill = [user.profile.MiddleName, user.profile.NickName, user.profile.Email,
+  // user.profile.HomePhone, user.profile.MobilePhone, user.profile.HomeCity, user.profile.HomeState,
+  // user.profile.HomePostalCode, user.profile.HomeCountry, profileSalutation, address, profileMaritalStatus]
 
-  const currentFields = [userMiddleName, userPreferredName, userAlternateEmail,
-  userHomePhone, userMobilePhone, userMailingCity, userMailingState, userMailingZip, userMailingCountry,
-  userSalutation, userMailingStreet, profileMaritalStatus]
+  // const currentFields = [userMiddleName, userPreferredName, userAlternateEmail,
+  // userHomePhone, userMobilePhone, userMailingCity, userMailingState, userMailingZip, userMailingCountry,
+  // userSalutation, userMailingStreet, profileMaritalStatus]
 
-  const currentHeadings = ["Middle Name", "Preferred Name", "Alternate Email", "Home Phone", "Mobile Phone",
-  "City", "State", "Zip", "Country", "Salutation", "Mailing Address", "Married"]
+  // const currentHeadings = ["Middle Name", "Preferred Name", "Alternate Email", "Home Phone", "Mobile Phone",
+  // "City", "State", "Zip", "Country", "Salutation", "Mailing Address", "Married"]
 
   useEffect(() => {
     if (props.authentication) {
@@ -123,8 +135,16 @@ const Update = (props) => {
   }, [props.authentication]);
 
   if (props.authentication) {
+    /**
+     *
+     *
+     * SAVE BUTTON HERE
+     * SQL/BACKEND LINKING DONE YET
+     *
+     *
+     */
     const handleSaveButtonClick = () => {
-      if (userFirstName === "" || userLastName === "") {
+      if (userInfo.firstname === "" || userInfo.lastname === "") {
         createSnackbar('Please fill in your first and last name.','error');
       } else {
         setSaving(true);
@@ -132,44 +152,53 @@ const Update = (props) => {
           emailBody()
         ).then(() => {
           createSnackbar('A request to update your information has been sent. Please check back later.','info');
-          setSalutation('');
-          setFirstName('');
-          setLastName('');
-          setMiddleName('');
-          setPreferredName('');
-          setPersonalEmail('');
-          setWorkEmail('');
-          setAlternateEmail('');
-          setPreferredEmail('');
-          setDoNotContact('');
-          setDoNotMail('');
-          setHomePhone('');
-          setWorkPhone('');
-          setMobilePhone('');
-          setPreferredPhone('');
-          setMailingStreet('');
-          setMailingCity('');
-          setMailingState('');
-          setMailingZip('');
-          setMailingCountry('');
-          setMaritalStatus('');
+          setUserInfo(
+            {
+              salutation: "",
+              firstname: "",
+              lastname: "",
+              middlename: "",
+              preferredname: "",
+              personalemail: "",
+              workemail: "",
+              alt_email: "",
+              preferredemail: "",
+              doNotContact: userInfo.doNotContact,
+              doNotMail: userInfo.doNotMail,
+              homephone: "",
+              workphone: "",
+              mobilephone: "",
+              preferredphone: "",
+              address: "",
+              city: "",
+              state: "",
+              zip: "",
+              country: "",
+              maritalstatus: ""
+            }
+          )
+
           setSaving(false);
         });
       }
     };
-
+    /**
+     * TODO
+     * REWORK EMAILBODY TO NOT REQUIRE USEEFFECT
+     * NEW OBJECT IMPLEMENTATION IN PROGRESS
+     */
     function emailBody() {
-      var email_content = `<b>First name:</b> ${userFirstName} <br /> <b>Last name:</b> ${userLastName} <br />`;
-      for (let i = 0; i < autoFill.length; i++) {
-        if (autoFill[i] !== currentFields[i]) {
-          email_content = `${email_content} <b>${currentHeadings[i]}:</b> ${currentFields[i]} <br />`;
-        }
-      }
-      for (let i = 0; i < formFields.length; i++) {
-          if (formFields[i] !== ''){
-          email_content = `${email_content} <b>${formHeadings[i]}:</b> ${formFields[i]} <br />`;
-        }
-      }
+      var email_content = `<b>First name:</b> ${userInfo.firstname} <br /> <b>Last name:</b> ${userInfo.lastname} <br />`;
+      // for (let i = 0; i < autoFill.length; i++) {
+      //   if (autoFill[i] !== currentFields[i]) {
+      //     email_content = `${email_content} <b>${currentHeadings[i]}:</b> ${currentFields[i]} <br />`;
+      //   }
+      // }
+      // for (let i = 0; i < formFields.length; i++) {
+      //     if (formFields[i] !== ''){
+      //     email_content = `${email_content} <b>${formHeadings[i]}:</b> ${formFields[i]} <br />`;
+      //   }
+      // }
       email_content = `<p> ${email_content} </p>`
 
       return email_content;
@@ -183,83 +212,11 @@ const Update = (props) => {
       );
     };
 
-    const handleSalutation = (event) => {
-      setSalutation(event.target.value);
-    };
-
-    const handleFirstName = (event) => {
-      setFirstName(event.target.value);
-    };
-
-    const handleLastName = (event) => {
-      setLastName(event.target.value);
-    };
-
-    const handleMiddleName = (event) => {
-      setMiddleName(event.target.value);
-    };
-    const handlePreferredName = (event) => {
-      setPreferredName(event.target.value);
-    };
-
-    const handlePersonalEmail = (event) => {
-      setPersonalEmail(event.target.value);
-    };
-    const handleWorkEmail = (event) => {
-      setWorkEmail(event.target.value);
-    };
-
-    const handleAlternateEmail = (event) => {
-      setAlternateEmail(event.target.value);
-    };
-
-    const handlePreferredEmail = (event) => {
-      setPreferredEmail(event.target.value);
-    };
-
     const handleDoNotContact = () => {
       setDoNotContact(!userDoNotContact);
     };
     const handleDoNotMail = () => {
       setDoNotMail(!userDoNotMail);
-    };
-
-    const handleHomePhone = (event) => {
-      setHomePhone(event.target.value);
-    };
-    const handleWorkPhone = (event) => {
-      setWorkPhone(event.target.value);
-    };
-
-    const handleMobilePhone = (event) => {
-      setMobilePhone(event.target.value);
-    };
-
-    const handlePreferredPhone = (event) => {
-      setPreferredPhone(event.target.value);
-    };
-
-    const handleMailingStreet = (event) => {
-      setMailingStreet(event.target.value);
-    };
-    const handleMailingCity = (event) => {
-      setMailingCity(event.target.value);
-    };
-
-    const handleMailingState = (event) => {
-      setMailingState(event.target.value);
-    };
-
-    const handleMailingZip = (event) => {
-      setMailingZip(event.target.value);
-    };
-
-    const handleMailingCountry = (event) => {
-      setMailingCountry(event.target.value);
-    };
-
-    const handleMaritalStatus = (event) => {
-      setMaritalStatus(event.target.value);
     };
 
     const saveButton = saving ? (
@@ -300,17 +257,21 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Salutation"
-                            value={userSalutation}
-                            onChange={handleSalutation}
+                            name="salutation"
+                            value={userInfo.salutation}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
                           <TextField
                             className="disable_select"
-                            style={{width: 252,}}
+                            style={{
+                                width: 252,
+                            }}
                             label="First Name"
-                            value={userFirstName}
-                            onChange={handleFirstName}
+                            name="firstname"
+                            value={userInfo.firstname}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -320,8 +281,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Last Name"
-                            value={userLastName}
-                            onChange={handleLastName}
+                            name="lastname"
+                            value={userInfo.lastname}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -331,8 +293,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Middle Name"
-                            value={userMiddleName}
-                            onChange={handleMiddleName}
+                            name="middlename"
+                            value={userInfo.middlename}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -342,8 +305,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Preferred Name"
-                            value={userPreferredName}
-                            onChange={handlePreferredName}
+                            name="preferredname"
+                            value={userInfo.preferredname}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -353,8 +317,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Married"
-                            value={userMaritalStatus}
-                            onChange={handleMaritalStatus}
+                            name="maritalstatus"
+                            value={userInfo.maritalstatus}
+                            onChange={handleChange}
                           />
                         </Grid>
                       </Grid>
@@ -375,8 +340,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Personal Email"
-                            value={userPersonalEmail}
-                            onChange={handlePersonalEmail}
+                            name="personalemail"
+                            value={userInfo.personalemail}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -386,8 +352,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Work Email"
-                            value={userWorkEmail}
-                            onChange={handleWorkEmail}
+                            name="workemail"
+                            value={userInfo.workemail}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -397,8 +364,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Alternate Email"
-                            value={userAlternateEmail}
-                            onChange={handleAlternateEmail}
+                            name="alt_email"
+                            value={userInfo.alt_email}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -406,8 +374,9 @@ const Update = (props) => {
                             <InputLabel>Preferred Email</InputLabel>
                             <Select
                               label="Preferred Email"
-                              value={userPreferredEmail}
-                              onChange={handlePreferredEmail}
+                              name="preferredemail"
+                              value={userInfo.preferredemail}
+                              onChange={handleChange}
                             >
                               <MenuItem value="Personal Email">Personal Email</MenuItem>
                               <MenuItem value="Work Email">Work Email</MenuItem>
@@ -433,8 +402,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Home Phone"
-                            value={userHomePhone}
-                            onChange={handleHomePhone}
+                            name="homephone"
+                            value={userInfo.homephone}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -444,8 +414,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Work Phone"
-                            value={userWorkPhone}
-                            onChange={handleWorkPhone}
+                            name="workphone"
+                            value={userInfo.workphone}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -455,8 +426,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Mobile Phone"
-                            value={userMobilePhone}
-                            onChange={handleMobilePhone}
+                            name="mobilephone"
+                            value={userInfo.mobilephone}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -464,8 +436,9 @@ const Update = (props) => {
                             <InputLabel>Preferred Phone</InputLabel>
                             <Select
                               label="Preferred Phone"
-                              value={userPreferredPhone}
-                              onChange={handlePreferredPhone}
+                              name="preferredphone"
+                              value={userInfo.preferredphone}
+                              onChange={handleChange}
                             >
                               <MenuItem value="Home Phone">Home Phone</MenuItem>
                               <MenuItem value="Work Phone">Work Phone</MenuItem>
@@ -491,8 +464,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Street"
-                            value={userMailingStreet}
-                            onChange={handleMailingStreet}
+                            name="address"
+                            value={userInfo.address}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -502,8 +476,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="City"
-                            value={userMailingCity}
-                            onChange={handleMailingCity}
+                            name="city"
+                            value={userInfo.city}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -513,8 +488,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="State"
-                            value={userMailingState}
-                            onChange={handleMailingState}
+                            name="state"
+                            value={userInfo.state}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -524,8 +500,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Zip"
-                            value={userMailingZip}
-                            onChange={handleMailingZip}
+                            name="zip"
+                            value={userInfo.zip}
+                            onChange={handleChange}
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
@@ -535,8 +512,9 @@ const Update = (props) => {
                               width: 252,
                             }}
                             label="Country"
-                            value={userMailingCountry}
-                            onChange={handleMailingCountry}
+                            name="country"
+                            value={userInfo.country}
+                            onChange={handleChange}
                           />
                         </Grid>
                       </Grid>
@@ -553,15 +531,19 @@ const Update = (props) => {
                         <Grid item xs={9} md={3} lg={3}>
                           <FormControlLabel
                             control={
-                              <Checkbox checked={userDoNotContact} onChange={handleDoNotContact} />
+                              <Checkbox checked={userDoNotContact}
+                              onChange={handleDoNotContact} />
                             }
                             label="Do Not Contact"
+                            name="doNotContact"
                           />
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
                           <FormControlLabel
-                            control={<Checkbox checked={userDoNotMail} onChange={handleDoNotMail} />}
+                            control={<Checkbox checked={userDoNotMail}
+                            onChange={handleDoNotMail} />}
                             label="Do Not Mail"
+                            name="doNotMail"
                           />
                         </Grid>
                       </Grid>
