@@ -228,8 +228,8 @@ const Timesheets = (props) => {
           timeIn2,
           timeOut2,
           roundedHourDifference2,
-          selectedHourType,
           userShiftNotes,
+          profile.AD_Username,
         )
           .then(() => {
             setSnackbarSeverity('info');
@@ -274,8 +274,8 @@ const Timesheets = (props) => {
       timeIn,
       timeOut,
       roundedHourDifference,
-      selectedHourType,
       userShiftNotes,
+      profile.AD_Username,
     )
       .then((result) => {
         shiftDisplayComponent.loadShifts();
@@ -309,15 +309,15 @@ const Timesheets = (props) => {
       });
   };
 
-  const saveShift = async (eml, shiftStart, shiftEnd, hoursWorked, hoursType, shiftNotes) => {
+  const saveShift = async (eml, shiftStart, shiftEnd, hoursWorked, shiftNotes, lastChangedBy) => {
     await jobsService.saveShiftForUser(
       canUseStaff,
       eml,
       shiftStart,
       shiftEnd,
       hoursWorked,
-      hoursType,
       shiftNotes,
+      lastChangedBy,
     );
   };
 

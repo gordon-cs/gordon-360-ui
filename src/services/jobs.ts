@@ -60,7 +60,6 @@ const getSavedShiftsForUser = (canUseStaff: boolean): Promise<string> => {
  * @param shiftStart The start time of the shift
  * @param shiftEnd The end time of the shift
  * @param hoursWorked The number of hours
- * @param hoursType Type of hour for staff
  * @param shiftNotes Shift notes
  * @returns {Promise.<string>} User's active jobs
  */
@@ -70,16 +69,16 @@ const saveShiftForUser = async (
   shiftStart: Date,
   shiftEnd: Date,
   hoursWorked: number,
-  hoursType: string,
   shiftNotes: string,
+  lastChangedBy: string,
 ): Promise<string> => {
   const shiftDetails = {
     EML: eml,
     SHIFT_START_DATETIME: dateFormatter.format(shiftStart),
     SHIFT_END_DATETIME: dateFormatter.format(shiftEnd),
     HOURS_WORKED: hoursWorked,
-    HOURS_TYPE: canUseStaff ? hoursType : null,
     SHIFT_NOTES: shiftNotes,
+    LAST_CHANGED_BY: lastChangedBy,
   };
   if (canUseStaff) {
     return await http.post(`jobs/saveShiftStaff/`, shiftDetails);
