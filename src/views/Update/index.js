@@ -24,9 +24,6 @@ import SimpleSnackbar from 'components/Snackbar';
 import userService from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
-//import userInfo from 'components/Profile/components/PersonalInfoList';
-//import userService from 'services/user';
-
 
 
 function UpdateGrid(props) {
@@ -94,7 +91,14 @@ const Update = (props) => {
   const saveUser = userInfo;
 
   const handleChange = (event) => {
+    if( event.target.value ) {
+      console.log("this is a textbox")
       setUserInfo({ ...userInfo, [event.target.name]: event.target.value });
+    } else {
+      console.log("not a textbox");
+      setUserInfo({ ...userInfo, [event.target.name]: !userInfo[event.target.name] });
+    }
+
   }
 
   const [saving, setSaving] = useState(false);
@@ -134,11 +138,8 @@ const Update = (props) => {
     function emailBody() {
       for (const key in userInfo) {
         saveUser[key] = userInfo[key] !== saveUser[key] ? userInfo[key] : saveUser[key];
-        if ( typeof saveUser[key] !== 'string' ) {
-          saveUser[key] = key === 'doNotContact' ? userDoNotContact : userDoNotMail;
-        }
       }
-      // console.log(saveUser);
+      console.log(saveUser);
       return JSON.stringify(saveUser);
     }
 
@@ -308,8 +309,8 @@ const Update = (props) => {
                         <Grid item xs={9} md={3} lg={3}>
                           <FormControlLabel
                             control={
-                              <Checkbox checked={userDoNotContact}
-                              onChange={handleDoNotContact} />
+                              <Checkbox checked={userInfo.doNotContact}
+                              onChange={handleChange} />
                             }
                             label="Do Not Contact"
                             name="doNotContact"
@@ -317,8 +318,8 @@ const Update = (props) => {
                         </Grid>
                         <Grid item xs={9} md={3} lg={3}>
                           <FormControlLabel
-                            control={<Checkbox checked={userDoNotMail}
-                            onChange={handleDoNotMail} />}
+                            control={<Checkbox checked={userInfo.doNotMail}
+                            onChange={handleChange} />}
                             label="Do Not Mail"
                             name="doNotMail"
                           />
