@@ -12,7 +12,6 @@ export default class ShiftDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      getStaffPageForUser: false,
       loading: false,
       tabValue: 0,
       shifts: [],
@@ -29,20 +28,6 @@ export default class ShiftDisplay extends Component {
     this.snackbarText = '';
   }
 
-  async getCanUseStaff() {
-    try {
-      let canUse = await jobs.getStaffPageForUser();
-
-      if (canUse.length === 1) {
-        this.setState({ getStaffPageForUser: true });
-      } else {
-        this.setState({ getStaffPageForUser: false });
-      }
-    } catch (error) {
-      //do nothing
-    }
-  }
-
   componentDidMount() {
     this.setState({ loading: true }, () => {
       this.loadShifts().then(() => {
@@ -54,7 +39,6 @@ export default class ShiftDisplay extends Component {
         this.setState({ loading: false });
       });
     });
-    this.getCanUseStaff();
   }
 
   handleCloseSnackbar = (event, reason) => {
@@ -66,8 +50,7 @@ export default class ShiftDisplay extends Component {
   };
 
   loadShifts() {
-    const { getSavedShiftsForUser } = this.props;
-    return getSavedShiftsForUser().then((data) => {
+    return jobs.getSavedShiftsForUser().then((data) => {
       for (let i = 0; i < data.length; i++) {
         this.jobNamesSet.add(data[i].EML_DESCRIPTION);
       }
@@ -93,14 +76,14 @@ export default class ShiftDisplay extends Component {
     });
   }
 
-  editShift = (rowID, startTime, endTime, hoursWorked) =>
+  editShift = (rowID, eml, startTime, endTime, hoursWorked, lastChangedBy) =>
     jobs
-      .editShift(this.state.getStaffPageForUser, rowID, startTime, endTime, hoursWorked)
+      .editShift(rowID, eml, startTime, endTime, hoursWorked, lastChangedBy)
       .then(this.loadShifts);
 
   deleteShiftForUser = (rowID, emlDesc) =>
     jobs
-      .deleteShiftForUser(this.state.getStaffPageForUser, rowID)
+      .deleteShiftForUser(rowID)
       .then(() => {
         this.jobNamesSet.delete(emlDesc);
         this.loadShifts();
@@ -216,7 +199,6 @@ export default class ShiftDisplay extends Component {
                 cardTitle="Saved Shifts"
                 directSupervisor={directSupervisor}
                 reportingSupervisor={reportingSupervisor}
-                canUse={this.props.canUse}
               />
             </Grid>
             <Grid item xs={12}>
@@ -242,7 +224,6 @@ export default class ShiftDisplay extends Component {
                 loadShifts={this.loadShifts.bind(this)}
                 deleteShift={this.deleteShiftForUser.bind(this)}
                 cardTitle="Approved Shifts"
-                selectedHourType={this.props.selectedHourType}
               />
             </Grid>
           </Grid>

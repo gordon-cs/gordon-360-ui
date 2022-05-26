@@ -61,10 +61,7 @@ const Timesheets = (props) => {
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [clockInOut, setClockInOut] = useState('Clock In');
-  const [canUseStaff, setCanUseStaff] = useState(null);
   const [isUserStudent, setIsUserStudent] = useState(true);
-  const [hourTypes, setHourTypes] = useState(null);
-  const [selectedHourType, setSelectedHourType] = useState('R');
   const [errorText, setErrorText] = useState(null);
   const isOnline = useNetworkStatus();
   const { profile, loading } = useUser();
@@ -76,22 +73,6 @@ const Timesheets = (props) => {
   }, [profile]);
 
   useEffect(() => {
-    async function getCanUseStaff() {
-      try {
-        const canUse = await jobsService.getStaffPageForUser();
-
-        if (canUse.length === 1) {
-          const hourTypes = await jobsService.getHourTypes();
-          setCanUseStaff(true);
-          setHourTypes(hourTypes);
-        } else {
-          setCanUseStaff(false);
-        }
-      } catch (error) {
-        //do nothing
-      }
-    }
-
     async function getClockInOutStatus() {
       try {
         let status = await jobsService.clockOut();
@@ -109,7 +90,6 @@ const Timesheets = (props) => {
     }
 
     if (profile) {
-      getCanUseStaff();
       getClockInOutStatus();
     }
   }, [profile]);
@@ -118,12 +98,12 @@ const Timesheets = (props) => {
     const loadJobs = async () => {
       const areShiftTimesValid = validateShiftTimes(selectedDateIn, selectedDateOut);
       if (areShiftTimesValid) {
-        const jobs = await jobsService.getJobs(canUseStaff, selectedDateIn, selectedDateOut);
+        const jobs = await jobsService.getJobs(selectedDateIn, selectedDateOut);
         setUserJobs(jobs);
       }
     };
     loadJobs();
-  }, [canUseStaff, selectedDateIn, selectedDateOut]);
+  }, [selectedDateIn, selectedDateOut]);
 
   const validateShiftTimes = (timeIn, timeOut) => {
     if (timeIn === null || timeOut === null) {
@@ -194,10 +174,6 @@ const Timesheets = (props) => {
   if (!isUserStudent) {
     return <GordonLimitedAvailability pageName="TimeSheets" />;
   }
-
-  const getSavedShiftsForUser = () => {
-    return jobsService.getSavedShiftsForUser(canUseStaff);
-  };
 
   const handleSaveButtonClick = () => {
     let timeIn = selectedDateIn;
@@ -311,7 +287,6 @@ const Timesheets = (props) => {
 
   const saveShift = async (eml, shiftStart, shiftEnd, hoursWorked, shiftNotes, lastChangedBy) => {
     await jobsService.saveShiftForUser(
-      canUseStaff,
       eml,
       shiftStart,
       shiftEnd,
@@ -325,15 +300,6 @@ const Timesheets = (props) => {
     userJobs.map((job) => (
       <MenuItem label={job.POSTITLE} value={job} key={job.EMLID}>
         {job.POSTITLE}
-      </MenuItem>
-    ))
-  ) : (
-    <></>
-  );
-  const hourTypeMenuItems = hourTypes ? (
-    hourTypes.map((type) => (
-      <MenuItem label={type.type_description} value={type.type_id} key={type.type_id}>
-        {type.type_description}
       </MenuItem>
     ))
   ) : (
@@ -396,26 +362,6 @@ const Timesheets = (props) => {
     </FormControl>
   );
 
-  const hourTypeDropdown = (
-    <FormControl
-      disabled={hourTypes === null || hourTypes.length === 0}
-      style={{
-        width: 252,
-      }}
-    >
-      <InputLabel className="disable_select">Hour Type</InputLabel>
-      <Select
-        value={selectedHourType}
-        onChange={(e) => {
-          setSelectedHourType(e.target.value);
-        }}
-        input={<Input id="hour type" />}
-      >
-        {hourTypeMenuItems}
-      </Select>
-    </FormControl>
-  );
-
   const handleShiftNotesChanged = (event) => {
     setUserShiftNotes(event.target.value);
   };
@@ -429,8 +375,7 @@ const Timesheets = (props) => {
         selectedDateIn === null ||
         selectedDateOut === null ||
         selectedJob === null ||
-        selectedJob === '' ||
-        selectedHourType === null
+        selectedJob === ''
       }
       variant="contained"
       color="primary"
@@ -463,10 +408,8 @@ const Timesheets = (props) => {
                         disableFocusListener
                         disableTouchListener
                         title={
-                          canUseStaff
-                            ? 'Staff Timesheets Info' // need to update for staff
-                            : // eslint-disable-next-line no-multi-str
-                              'Student employees are not permitted to work more than 20 total hours\
+                          // eslint-disable-next-line no-multi-str
+                          'Student employees are not permitted to work more than 20 total hours\
                         per work week, or more than 40 hours during winter, spring, and summer breaks.\
                         \
                         To request permission for a special circumstance, please email\
@@ -536,9 +479,6 @@ const Timesheets = (props) => {
                     {jobDropdown}
                   </Grid>
                   <Grid item xs={12} md={6} lg={3}>
-                    {hourTypeDropdown}
-                  </Grid>
-                  <Grid item xs={12} md={6} lg={3}>
                     <TextField
                       className="disable_select"
                       style={{
@@ -575,11 +515,7 @@ const Timesheets = (props) => {
                           textDecoration: 'none',
                           color: gordonColors.primary.blueShades.A700,
                         }}
-                        href={
-                          canUseStaff
-                            ? 'https://reports.gordon.edu/Reports/browse/Staff%20Timesheets'
-                            : 'https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period'
-                        }
+                        href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
                         underline="always"
                         target="_blank"
                         rel="noopener"
@@ -593,11 +529,7 @@ const Timesheets = (props) => {
             </Card>
           </MuiPickersUtilsProvider>
         </Grid>
-        <ShiftDisplay
-          ref={setShiftDisplayComponent}
-          getSavedShiftsForUser={getSavedShiftsForUser}
-          canUse={canUseStaff}
-        />
+        <ShiftDisplay ref={setShiftDisplayComponent} />
       </Grid>
       <SimpleSnackbar
         text={snackbarText}
