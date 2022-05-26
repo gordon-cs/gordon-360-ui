@@ -115,8 +115,6 @@ const signOut = async () => {
 const getAuthGroups = (): AuthGroup[] => {
   const claims = msalInstance.getActiveAccount()?.idTokenClaims;
 
-  console.log(claims);
-
   if (claims && claims.hasOwnProperty('groups')) {
     return (claims as { groups: AuthGroup[] }).groups;
   } else {
