@@ -17,7 +17,7 @@ import SimpleSnackbar from 'components/Snackbar';
 import userService from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
-import { NotAlumni, UpdateGrid, UpdateForm, UpdateSelect } from './components/index'
+import { NotAlumni, UpdateGrid, UpdateForm, UpdateSelect, contentCard } from './components/index'
 
 
 /**
@@ -196,22 +196,6 @@ const Update = (props) => {
       })
     }
 
-    const contentCard = (props) => {
-      return(
-        <Card>
-          <CardHeader
-            className={styles.update_header}
-            title={props.title}
-          />
-          <CardContent>
-            <Grid container>
-              {infoMap(props.info)}
-            </Grid>
-          </CardContent>
-        </Card>
-      )
-    }
-
     if (isOnline && isUserStudent) {
       return (
         <>
@@ -226,23 +210,23 @@ const Update = (props) => {
                 <CardContent>
                   {contentCard({
                     title: "Personal Information",
-                    info: personalInfo
+                    info: infoMap(personalInfo)
                   })}
                   {contentCard({
                     title: "Email Addresses",
-                    info: emailInfo
+                    info: infoMap(emailInfo)
                   })}
                   {contentCard({
                     title: "Phone Numbers",
-                    info: phoneInfo
+                    info: infoMap(phoneInfo)
                   })}
                   {contentCard({
                     title: "Mailing Address",
-                    info: mailingInfo
+                    info: infoMap(mailingInfo)
                   })}
                   {contentCard({
                     title: "Contact Preferences",
-                    info: shouldContactForm
+                    info: infoMap(shouldContactForm)
                   })}
                   <Grid item xs={12} justifyContent="center">
                     {saveButton}

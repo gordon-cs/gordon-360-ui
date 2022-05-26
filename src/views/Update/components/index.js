@@ -2,6 +2,7 @@ import {
   Grid,
   Card,
   CardContent,
+  CardHeader,
   Checkbox,
   Button,
   FormControl,
@@ -94,5 +95,20 @@ const UpdateSelect = (props) => {
   )
 }
 
+const contentCard = (props) => {
+  return(
+    <Card>
+      <CardHeader
+        className={styles.update_header}
+        title={props.title}
+      />
+      <CardContent>
+        <Grid container>
+          {props.info}
+        </Grid>
+      </CardContent>
+    </Card>
+  )
+}
 
-export { NotAlumni, UpdateGrid, UpdateForm, UpdateSelect }
+export { NotAlumni, UpdateGrid, UpdateForm, UpdateSelect, contentCard }
