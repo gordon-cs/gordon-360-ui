@@ -33,6 +33,7 @@ const getSavedShiftsForUser = (): Promise<string> => http.get(`jobs/getSavedShif
  * @param shiftEnd The end time of the shift
  * @param hoursWorked The number of hours
  * @param shiftNotes Shift notes
+ * @param lastChangedBy The AD_Username of the last person to change the shift (in this case, the authenticated user)
  * @returns {Promise.<string>} User's active jobs
  */
 const saveShiftForUser = async (
