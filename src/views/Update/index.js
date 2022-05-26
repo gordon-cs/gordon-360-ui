@@ -4,14 +4,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Checkbox,
   Button,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
 } from '@material-ui/core/';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
@@ -24,55 +17,8 @@ import SimpleSnackbar from 'components/Snackbar';
 import userService from 'services/user';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonOffline from 'components/GordonOffline';
+import { NotAlumni, UpdateGrid, UpdateForm, UpdateSelect } from './components/index'
 
-
-function UpdateGrid(props) {
-  return (
-    <Grid item xs={9} md={3} lg={3}>
-      <TextField
-        className="disable_select"
-        style={{ width: 252, }}
-        label={props.label}
-        name={props.name}
-        value={props.value}
-        onChange={props.change}
-      />
-    </Grid>
-  )
-}
-
-function UpdateForm(props) {
-  return(
-    <Grid item xs={9} md={3} lg={3}>
-      <FormControlLabel
-        control={<Checkbox checked={props.checked}
-        onChange={props.change} />}
-        label={props.label}
-        name={props.name}
-      />
-    </Grid>
-  )
-}
-
-function UpdateSelect(props) {
-  return(
-    <Grid item xs={9} md={3} lg={3}>
-      <FormControl style={{ width: 252 }}>
-        <InputLabel>{props.label}</InputLabel>
-        <Select
-          label={props.label}
-          name={props.name}
-          value={props.value}
-          onChange={props.change}
-        >
-          {props.menuItems.map((info) => (
-            <MenuItem value={info.value}>{info.value}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Grid>
-  )
-}
 
 /**
  * Sends an update form to the development office
@@ -204,12 +150,18 @@ const Update = (props) => {
     const emailInfo = [
       {label: "Personal Email", name: "personalemail", value: userInfo.personalemail},
       {label: "Work Email", name: "workemail", value: userInfo.workemail},
-      {label: "Alternate Email", name: "alt_email", value: userInfo.alt_email}
+      {label: "Alternate Email", name: "alt_email", value: userInfo.alt_email},
+      {label: "Preferred Email", name: "preferredemail", value: userInfo.preferredemail, menuItem:
+        [{value: "Personal Email"}, {value: "Work Email"}, {value: "Alternate Email"}]
+      }
     ];
     const phoneInfo = [
       {label: "Home Phone", name: "homephone", value: userInfo.homephone},
       {label: "Work Phone", name: "workphone", value: userInfo.workphone},
-      {label: "Mobile Phone", name: "mobilephone", value: userInfo.mobilephone}
+      {label: "Mobile Phone", name: "mobilephone", value: userInfo.mobilephone},
+      {label: "Preferred Phone", name: "preferredphone", value: userInfo.preferredphone, menuItem:
+        [{value: "Home Phone"}, {value: "Work Phone"}, {value: "Mobile Phone"}]
+      }
     ];
     const mailingInfo = [
       {label: "Street", name: "address", value: userInfo.address},
@@ -221,30 +173,44 @@ const Update = (props) => {
     const shouldContactForm = [
       {label: "Do Not Contact", name: "doNotContact", checked: userInfo.doNotContact},
       {label: "Do Not Mail", name: "doNotMail", checked: userInfo.doNotMail}
-    ]
+    ];
 
     const infoMap = (data) => {
-      return(
-        typeof data[0].checked === "boolean"
-        ? data.map((info) => (
-            <UpdateForm
-              label={info.label}
-              name={info.name}
-              checked={info.checked}
-              change={handleChange}
+      return data.map((info) => {
+        let content =
+          typeof info.checked === "boolean"
+          ? <UpdateForm
+              info={info}
+              onChange={handleChange}
             />
-          ))
-        : data.map((info) => (
-            <UpdateGrid
-              label={info.label}
-              name={info.name}
-              value={info.value}
-              change={handleChange}
-            />
-          ))
-      )
+          : typeof info.menuItem === "object"
+            ? <UpdateSelect
+                info={info}
+                onChange={handleChange}
+              />
+            : <UpdateGrid
+                info={info}
+                onChange={handleChange}
+              />
+        return content;
+      })
     }
 
+    const contentCard = (props) => {
+      return(
+        <Card>
+          <CardHeader
+            className={styles.update_header}
+            title={props.title}
+          />
+          <CardContent>
+            <Grid container>
+              {infoMap(props.info)}
+            </Grid>
+          </CardContent>
+        </Card>
+      )
+    }
 
     if (isOnline && isUserStudent) {
       return (
@@ -258,91 +224,26 @@ const Update = (props) => {
                   titleTypographyProps={{ variant: 'h4' }}
                 />
                 <CardContent>
-                  <Card>
-                    <CardHeader
-                      className={styles.update_header}
-                      title="Personal Information"
-                    />
-                    <CardContent>
-                      <Grid container>
-                        {infoMap(personalInfo)}
-                      </Grid>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader
-                      className={styles.update_header}
-                      title="Email Addresses"
-                    />
-                    <CardContent>
-                      <Grid container>
-                        {infoMap(emailInfo)}
-                        <Grid item xs={9} md={3} lg={3}>
-                          <FormControl style={{ width: 252 }}>
-                            <InputLabel>Preferred Email</InputLabel>
-                            <Select
-                              label="Preferred Email"
-                              name="preferredemail"
-                              value={userInfo.preferredemail}
-                              onChange={handleChange}
-                            >
-                              <MenuItem value="Personal Email">Personal Email</MenuItem>
-                              <MenuItem value="Work Email">Work Email</MenuItem>
-                              <MenuItem value="Alternate Email">Alternate Email</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader
-                      className={styles.update_header}
-                      title="Phone Numbers"
-                    />
-                    <CardContent>
-                      <Grid container>
-                        {infoMap(phoneInfo)}
-                        <UpdateSelect
-                          label="Preferred Phone"
-                          name="preferredphone"
-                          value={userInfo.preferredphone}
-                          change={handleChange}
-                          menuItems={[
-                            {value: "Home Phone"},
-                            {value: "Work Phone"},
-                            {value: "Mobile Phone"}
-                          ]}
-                        />
-                      </Grid>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader
-                      className={styles.update_header}
-                      title="Mailing Address"
-                    />
-                    <CardContent>
-                      <Grid container>
-                        {infoMap(mailingInfo)}
-                      </Grid>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader
-                      className={styles.update_header}
-                      title="Contact Preferences"
-                    />
-                    <CardContent>
-                      <Grid container>
-                        {infoMap(shouldContactForm)}
-                      </Grid>
-                    </CardContent>
-                  </Card>
+                  {contentCard({
+                    title: "Personal Information",
+                    info: personalInfo
+                  })}
+                  {contentCard({
+                    title: "Email Addresses",
+                    info: emailInfo
+                  })}
+                  {contentCard({
+                    title: "Phone Numbers",
+                    info: phoneInfo
+                  })}
+                  {contentCard({
+                    title: "Mailing Address",
+                    info: mailingInfo
+                  })}
+                  {contentCard({
+                    title: "Contact Preferences",
+                    info: shouldContactForm
+                  })}
                   <Grid item xs={12} justifyContent="center">
                     {saveButton}
                   </Grid>
@@ -370,33 +271,7 @@ const Update = (props) => {
         return <GordonOffline feature="Update" />;
       } else if (!isUserStudent) {
         return (
-          <Grid container justifyContent="center" spacing="16">
-            <Grid item xs={12} md={8}>
-              <Card>
-                <CardContent
-                  style={{
-                    margin: 'auto',
-                    textAlign: 'center',
-                  }}
-                >
-                  <br />
-                  <h1>{'Update Information Unavailable'}</h1>
-                  <h4>{'Updating alumni info is currently available for alumni only'}</h4>
-                  <br />
-                  <br />
-                </CardContent>
-                <Button
-                  className={styles.update_info_button}
-                  justifyContent="center"
-                  onClick={() => {
-                    window.location.pathname = '';
-                  }}
-                >
-                  Back To Home
-                </Button>
-              </Card>
-            </Grid>
-          </Grid>
+          <NotAlumni />
         );
       }
     }
