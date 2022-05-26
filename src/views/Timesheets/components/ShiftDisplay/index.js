@@ -79,7 +79,7 @@ export default class ShiftDisplay extends Component {
   editShift = (rowID, eml, startTime, endTime, hoursWorked, lastChangedBy) =>
     jobs
       .editShift(rowID, eml, startTime, endTime, hoursWorked, lastChangedBy)
-      .then(this.loadShifts);
+      .then(this.loadShifts.bind(this));
 
   deleteShiftForUser = (rowID, emlDesc) =>
     jobs
