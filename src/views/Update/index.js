@@ -41,6 +41,39 @@ function UpdateGrid(props) {
   )
 }
 
+function UpdateForm(props) {
+  return(
+    <Grid item xs={9} md={3} lg={3}>
+      <FormControlLabel
+        control={<Checkbox checked={props.checked}
+        onChange={props.change} />}
+        label={props.label}
+        name={props.name}
+      />
+    </Grid>
+  )
+}
+
+function UpdateSelect(props) {
+  return(
+    <Grid item xs={9} md={3} lg={3}>
+      <FormControl style={{ width: 252 }}>
+        <InputLabel>{props.label}</InputLabel>
+        <Select
+          label={props.label}
+          name={props.name}
+          value={props.value}
+          onChange={props.change}
+        >
+          {props.menuItems.map((info) => (
+            <MenuItem value={info.value}>{info.value}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Grid>
+  )
+}
+
 /**
  * Sends an update form to the development office
  */
@@ -160,7 +193,7 @@ const Update = (props) => {
           Update
         </Button>;
 
-    const PersonalInfo = [
+    const personalInfo = [
       {label: "Salutation", name: "salutation", value: userInfo.salutation},
       {label: "First Name", name: "firstname", value: userInfo.firstname},
       {label: "Last Name", name: "lastname", value: userInfo.lastname},
@@ -168,36 +201,50 @@ const Update = (props) => {
       {label: "Preferred Name", name: "preferredname", value: userInfo.preferredname},
       {label: "Married", name: "maritalstatus", value: userInfo.maritalstatus}
     ];
-    const EmailInfo = [
+    const emailInfo = [
       {label: "Personal Email", name: "personalemail", value: userInfo.personalemail},
       {label: "Work Email", name: "workemail", value: userInfo.workemail},
       {label: "Alternate Email", name: "alt_email", value: userInfo.alt_email}
     ];
-    const PhoneInfo = [
+    const phoneInfo = [
       {label: "Home Phone", name: "homephone", value: userInfo.homephone},
       {label: "Work Phone", name: "workphone", value: userInfo.workphone},
       {label: "Mobile Phone", name: "mobilephone", value: userInfo.mobilephone}
     ];
-    const MailingInfo = [
+    const mailingInfo = [
       {label: "Street", name: "address", value: userInfo.address},
       {label: "City", name: "city", value: userInfo.city},
       {label: "State", name: "state", value: userInfo.state},
       {label: "Zip", name: "zip", value: userInfo.zip},
       {label: "Country", name: "country", value: userInfo.country}
     ];
+    const shouldContactForm = [
+      {label: "Do Not Contact", name: "doNotContact", checked: userInfo.doNotContact},
+      {label: "Do Not Mail", name: "doNotMail", checked: userInfo.doNotMail}
+    ]
 
     const infoMap = (data) => {
       return(
-        data.map((info) => (
-          <UpdateGrid
-            label={info.label}
-            name={info.name}
-            value={info.value}
-            change={handleChange}
-          />
-        ))
+        typeof data[0].checked === "boolean"
+        ? data.map((info) => (
+            <UpdateForm
+              label={info.label}
+              name={info.name}
+              checked={info.checked}
+              change={handleChange}
+            />
+          ))
+        : data.map((info) => (
+            <UpdateGrid
+              label={info.label}
+              name={info.name}
+              value={info.value}
+              change={handleChange}
+            />
+          ))
       )
     }
+
 
     if (isOnline && isUserStudent) {
       return (
@@ -218,7 +265,7 @@ const Update = (props) => {
                     />
                     <CardContent>
                       <Grid container>
-                        {infoMap(PersonalInfo)}
+                        {infoMap(personalInfo)}
                       </Grid>
                     </CardContent>
                   </Card>
@@ -230,7 +277,7 @@ const Update = (props) => {
                     />
                     <CardContent>
                       <Grid container>
-                        {infoMap(EmailInfo)}
+                        {infoMap(emailInfo)}
                         <Grid item xs={9} md={3} lg={3}>
                           <FormControl style={{ width: 252 }}>
                             <InputLabel>Preferred Email</InputLabel>
@@ -257,22 +304,18 @@ const Update = (props) => {
                     />
                     <CardContent>
                       <Grid container>
-                        {infoMap(PhoneInfo)}
-                        <Grid item xs={9} md={3} lg={3}>
-                          <FormControl style={{ width: 252 }}>
-                            <InputLabel>Preferred Phone</InputLabel>
-                            <Select
-                              label="Preferred Phone"
-                              name="preferredphone"
-                              value={userInfo.preferredphone}
-                              onChange={handleChange}
-                            >
-                              <MenuItem value="Home Phone">Home Phone</MenuItem>
-                              <MenuItem value="Work Phone">Work Phone</MenuItem>
-                              <MenuItem value="Mobile Phone">Mobile Phone</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Grid>
+                        {infoMap(phoneInfo)}
+                        <UpdateSelect
+                          label="Preferred Phone"
+                          name="preferredphone"
+                          value={userInfo.preferredphone}
+                          change={handleChange}
+                          menuItems={[
+                            {value: "Home Phone"},
+                            {value: "Work Phone"},
+                            {value: "Mobile Phone"}
+                          ]}
+                        />
                       </Grid>
                     </CardContent>
                   </Card>
@@ -284,7 +327,7 @@ const Update = (props) => {
                     />
                     <CardContent>
                       <Grid container>
-                        {infoMap(MailingInfo)}
+                        {infoMap(mailingInfo)}
                       </Grid>
                     </CardContent>
                   </Card>
@@ -296,24 +339,7 @@ const Update = (props) => {
                     />
                     <CardContent>
                       <Grid container>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox checked={userInfo.doNotContact}
-                              onChange={handleChange} />
-                            }
-                            label="Do Not Contact"
-                            name="doNotContact"
-                          />
-                        </Grid>
-                        <Grid item xs={9} md={3} lg={3}>
-                          <FormControlLabel
-                            control={<Checkbox checked={userInfo.doNotMail}
-                            onChange={handleChange} />}
-                            label="Do Not Mail"
-                            name="doNotMail"
-                          />
-                        </Grid>
+                        {infoMap(shouldContactForm)}
                       </Grid>
                     </CardContent>
                   </Card>
@@ -374,9 +400,9 @@ const Update = (props) => {
         );
       }
     }
-  } else {
-    return <GordonUnauthorized feature={'update'} />;
   }
+  return <GordonUnauthorized feature={'update'} />;
+
 };
 
 export default Update;
