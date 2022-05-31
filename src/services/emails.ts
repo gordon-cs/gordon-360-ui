@@ -1,30 +1,32 @@
 import http from './http';
 
-const get = (activityCode: string): Promise<string[]> =>
-  http.get(`emails/activity/${activityCode}`);
+type Person = {
+  FirstName: string;
+  LastName: string;
+  Email: string;
+};
 
-const getForSession = (activityCode: string, SessionId: string): Promise<string[]> =>
-  http.get(`emails/activity/${activityCode}/session/${SessionId}`);
+type ParticipationType = 'advisor' | 'leader' | 'group-admin' | 'member' | 'guest';
 
-const getLeaders = (activityCode: string): Promise<string[]> =>
-  http.get(`emails/activity/${activityCode}/leaders`);
+const getPerActivity = (
+  activityCode: string,
+  sessionCode: string = '',
+  participation?: ParticipationType,
+): Promise<Person[]> => {
+  let url = `emails/activity/${activityCode}`;
+  if (sessionCode && participation) {
+    url += `?sessionCode=${sessionCode}&participationType=${participation}`;
+  } else if (sessionCode) {
+    url += `?sessionCode=${sessionCode}`;
+  } else if (participation) {
+    url += `?participationType=${participation}`;
+  }
 
-const getLeadersForSession = (activityCode: string, SessionId: string) =>
-  http.get(`emails/activity/${activityCode}/leaders/session/${SessionId}`);
-
-const getAdvisors = (activityCode: string): Promise<string[]> =>
-  http.get(`emails/activity/${activityCode}/advisors`);
-
-const getAdvisorsForSession = (activityCode: string, SessionId: string) =>
-  http.get(`emails/activity/${activityCode}/advisors/session/${SessionId}`);
+  return http.get(url);
+};
 
 const emailsService = {
-  get,
-  getForSession,
-  getLeaders,
-  getLeadersForSession,
-  getAdvisors,
-  getAdvisorsForSession,
+  getPerActivity,
 };
 
 export default emailsService;

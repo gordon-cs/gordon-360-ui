@@ -1,11 +1,10 @@
 import { Box, Button, Card, CardHeader, Grid } from '@material-ui/core';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import { useAuth } from 'hooks';
+import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import checkInService from 'services/checkIn';
-import user from 'services/user';
 import EmergencyContactUpdate from 'views/EnrollmentCheckIn/components/EmergencyContactUpdate';
 import EnrollmentCheckInWelcome from 'views/EnrollmentCheckIn/components/EnrollmentCheckInWelcome';
 import UpdatePhone from 'views/EnrollmentCheckIn/components/UpdatePhone';
@@ -27,7 +26,7 @@ const steps = [
 
 const EnrollmentCheckIn = (props) => {
   const [activeStep, setActiveStep] = useState(0);
-  const authenticated = useAuth();
+  const { profile, loading: loadingProfile } = useUser();
 
   const [loading, setLoading] = useState(true);
 
@@ -99,76 +98,63 @@ const EnrollmentCheckIn = (props) => {
     None: false,
   });
 
-  const [basicInfo, setBasicInfo] = useState({
-    studentFirstName: '',
-    studentLastName: '',
-  });
-
   useEffect(() => {
     const loadData = async () => {
-      let profile = await user.getProfileInfo();
-      setBasicInfo({
-        studentFirstName: profile.FirstName,
-        studentLastName: profile.LastName,
-      });
-      let hasCheckedIn = await checkInService.getStatus();
-      if (!hasCheckedIn && profile.PersonType.includes('stu')) {
-        let tempHolds = await checkInService.getHolds();
-        setHolds(tempHolds);
-        if (
-          tempHolds?.RegistrarHold ||
-          tempHolds?.HighSchoolTranscriptHold ||
-          tempHolds?.FinancialHold ||
-          tempHolds?.MedicalHold ||
-          tempHolds?.MajorHold
-        ) {
-          setMajorHold(true);
-        }
+      if (profile) {
+        let hasCheckedIn = await checkInService.getStatus();
+        if (!hasCheckedIn && profile.PersonType.includes('stu')) {
+          let tempHolds = await checkInService.getHolds();
+          setHolds(tempHolds);
+          setMajorHold(
+            tempHolds?.RegistrarHold ||
+              tempHolds?.HighSchoolTranscriptHold ||
+              tempHolds?.FinancialHold ||
+              tempHolds?.MedicalHold ||
+              tempHolds?.MajorHold,
+          );
 
-        let contacts = await checkInService.getEmergencyContacts(profile.AD_Username.toLowerCase());
+          let contacts = await checkInService.getEmergencyContacts(
+            profile.AD_Username.toLowerCase(),
+          );
 
-        if (contacts[0]) {
-          setEmergencyContact1(contacts[0]);
-          setEmergencyContactINTL1({
-            HomePhoneIN: contacts[0].HomePhone.startsWith('+'),
-            MobilePhoneIN: contacts[0].MobilePhone.startsWith('+'),
-          });
-        }
+          if (contacts[0]) {
+            setEmergencyContact1(contacts[0]);
+            setEmergencyContactINTL1({
+              HomePhoneIN: contacts[0].HomePhone.startsWith('+'),
+              MobilePhoneIN: contacts[0].MobilePhone.startsWith('+'),
+            });
+          }
 
-        if (contacts[1]) {
-          setEmergencyContact2(contacts[1]);
-          setEmergencyContactINTL2({
-            HomePhoneIN: contacts[1].HomePhone.startsWith('+'),
-            MobilePhoneIN: contacts[1].MobilePhone.startsWith('+'),
-          });
-        }
+          if (contacts[1]) {
+            setEmergencyContact2(contacts[1]);
+            setEmergencyContactINTL2({
+              HomePhoneIN: contacts[1].HomePhone.startsWith('+'),
+              MobilePhoneIN: contacts[1].MobilePhone.startsWith('+'),
+            });
+          }
 
-        if (contacts[2]) {
-          setEmergencyContact3(contacts[2]);
-          setEmergencyContactINTL3({
-            HomePhoneIN: contacts[2].HomePhone.startsWith('+'),
-            MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
-          });
+          if (contacts[2]) {
+            setEmergencyContact3(contacts[2]);
+            setEmergencyContactINTL3({
+              HomePhoneIN: contacts[2].HomePhone.startsWith('+'),
+              MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
+            });
+          }
+          if (profile.MobilePhone) {
+            setPhoneInfo({
+              PersonalPhone: profile.MobilePhone,
+              MakePrivate: Boolean(profile.IsMobilePhonePrivate),
+              NoPhone: false,
+            });
+          }
+        } else {
+          setActiveStep(6);
         }
-        if (profile.MobilePhone) {
-          setPhoneInfo({
-            PersonalPhone: profile.MobilePhone,
-            MakePrivate: Boolean(profile.IsMobilePhonePrivate),
-            NoPhone: false,
-          });
-        }
-      } else {
-        setActiveStep(6);
       }
       setLoading(false);
     };
-
-    if (authenticated) {
-      loadData();
-    } else {
-      setLoading(false);
-    }
-  }, [authenticated, loading]);
+    loadData();
+  }, [profile]);
 
   useEffect(() => {
     props.history.replace('/enrollmentcheckin', { step: activeStep });
@@ -267,13 +253,13 @@ const EnrollmentCheckIn = (props) => {
     checkInService.submitContact(emergencyContact3);
     checkInService.submitPhone(phoneInfo);
     checkInService.submitDemographic(formatDemographic(demographic));
-    checkInService.markCompleted(basicInfo.ID);
+    checkInService.markCompleted(profile.ID);
     setActiveStep(6);
   };
 
-  if (loading === true) {
+  if (loading || loadingProfile) {
     return <GordonLoader />;
-  } else if (!authenticated) {
+  } else if (!profile) {
     return <GordonUnauthorized feature={'Enrollment Check-in'} />;
   } else {
     return (
@@ -297,11 +283,7 @@ const EnrollmentCheckIn = (props) => {
                   <Grid container justifyContent="center" alignItems="center">
                     <Grid item>
                       {activeStep === 0 && (
-                        <EnrollmentCheckInWelcome
-                          basicInfo={basicInfo}
-                          hasMajorHold={hasMajorHold}
-                          holds={holds}
-                        />
+                        <EnrollmentCheckInWelcome hasMajorHold={hasMajorHold} holds={holds} />
                       )}
 
                       {activeStep === 1 && (
@@ -352,7 +334,7 @@ const EnrollmentCheckIn = (props) => {
                           demographic={demographic}
                         />
                       )}
-                      {activeStep === 6 && <CompletedCheckIn basicInfo={basicInfo} />}
+                      {activeStep === 6 && <CompletedCheckIn />}
                     </Grid>
                   </Grid>
                 </Grid>

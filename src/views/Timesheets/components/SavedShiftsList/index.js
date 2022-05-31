@@ -1,33 +1,32 @@
 //Displays shifts and sets up buttons for submitting shifts
-import { Component } from 'react';
 import {
-  Typography,
-  Grid,
+  Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
-  CardActions,
-  Button,
-  FormControl,
-  Input,
-  InputLabel,
-  Select,
-  MenuItem,
   Dialog,
   DialogContent,
   DialogTitle,
+  FormControl,
+  Grid,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
 } from '@material-ui/core';
-import ShiftItem from '../ShiftItem';
-import { gordonColors } from 'theme';
-import jobs from 'services/jobs';
 import GordonLoader from 'components/Loader';
+import { Component } from 'react';
+import jobs from 'services/jobs';
+import { gordonColors } from 'theme';
+import ShiftItem from '../ShiftItem';
 import styles from './SavedShiftsList.module.css';
 
 export default class SavedShiftsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      getStaffPageForUser: false,
       shifts: [],
       directSupervisor: null,
       reportingSupervisor: null,
@@ -38,20 +37,6 @@ export default class SavedShiftsList extends Component {
     this.prevJob = null;
   }
 
-  async getCanUseStaff() {
-    try {
-      let canUse = await jobs.getStaffPageForUser();
-
-      if (canUse.length === 1) {
-        this.setState({ getStaffPageForUser: true });
-      } else {
-        this.setState({ getStaffPageForUser: false });
-      }
-    } catch (error) {
-      //do nothing
-    }
-  }
-
   handleSubmitButtonClick = () => {
     this.setState({ showSubmissionConfirmation: true });
   };
@@ -60,17 +45,14 @@ export default class SavedShiftsList extends Component {
     this.setState({ showSubmissionConfirmation: false });
   };
 
-  submitShiftsToSupervisor = (shifts, supervisorID) => {
-    jobs
-      .submitShiftsForUser(this.state.getStaffPageForUser, shifts, supervisorID)
-      .then((response) => {
-        this.setState({
-          selectedSupervisor: null,
-          showSubmissionConfirmation: false,
-        });
-        this.props.loadShifts();
+  submitShiftsToSupervisor = (shifts, supervisorID) =>
+    jobs.submitShiftsForUser(shifts, supervisorID).then(() => {
+      this.setState({
+        selectedSupervisor: null,
+        showSubmissionConfirmation: false,
       });
-  };
+      this.props.loadShifts();
+    });
 
   getTotalHours = (total, currentShift) => {
     return total + currentShift.HOURS_WORKED;
@@ -81,30 +63,26 @@ export default class SavedShiftsList extends Component {
   };
 
   getSupervisors() {
-    jobs
-      .getSupervisorNameForJob(this.state.getStaffPageForUser, this.props.directSupervisor)
-      .then((response) => {
-        let directSupervisor =
-          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
-        let directSupervisorObject = {
-          name: directSupervisor,
-          id: this.props.directSupervisor,
-        };
+    jobs.getSupervisorNameForJob(this.props.directSupervisor).then((response) => {
+      let directSupervisor =
+        response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Direct Supervisor)';
+      let directSupervisorObject = {
+        name: directSupervisor,
+        id: this.props.directSupervisor,
+      };
 
-        jobs
-          .getSupervisorNameForJob(this.state.getStaffPageForUser, this.props.reportingSupervisor)
-          .then((response) => {
-            let supervisor =
-              response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
-            this.setState({
-              directSupervisor: directSupervisorObject,
-              reportingSupervisor: {
-                name: supervisor,
-                id: this.props.reportingSupervisor,
-              },
-            });
-          });
+      jobs.getSupervisorNameForJob(this.props.reportingSupervisor).then((response) => {
+        let supervisor =
+          response[0].FIRST_NAME + ' ' + response[0].LAST_NAME + ' (Reporting Supervisor)';
+        this.setState({
+          directSupervisor: directSupervisorObject,
+          reportingSupervisor: {
+            name: supervisor,
+            id: this.props.reportingSupervisor,
+          },
+        });
       });
+    });
   }
 
   componentDidMount() {
@@ -128,7 +106,6 @@ export default class SavedShiftsList extends Component {
     if (shouldGetSupervisors) {
       this.getSupervisors();
     }
-    this.getCanUseStaff();
   }
 
   componentDidUpdate() {
@@ -238,8 +215,6 @@ export default class SavedShiftsList extends Component {
         editShift={this.props.editShift}
         value={shift}
         key={index}
-        canUse={this.props.canUse}
-        selectedHourType={this.props.selectedHourType}
       />
     ));
 

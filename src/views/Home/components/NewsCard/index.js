@@ -4,11 +4,11 @@
 // But currently it is not being implemented (commented out)
 // May be a potential future feature, but not sure
 
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 import { Component } from 'react';
-import { CardContent } from '@material-ui/core';
-import { Button, Grid, CardHeader, Card, Typography } from '@material-ui/core';
-import { gordonColors } from 'theme';
+import { Link } from 'react-router-dom';
 import NewsService from 'services/news';
+import { gordonColors } from 'theme';
 import NewsItem from 'views/News/components/NewsItem';
 // import CategorizedNews from './components/CategorizedNews';
 
@@ -87,11 +87,7 @@ export default class DailyNews extends Component {
             </Grid>
             {/* view all news */}
             <Grid item xs={5} align="right">
-              <Button
-                variant="contained"
-                style={button}
-                onClick={() => (window.location.pathname = '/news')}
-              >
+              <Button variant="contained" style={button} component={Link} to="/news">
                 All News
               </Button>
             </Grid>

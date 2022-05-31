@@ -1,7 +1,7 @@
 import GordonLoader from 'components/Loader';
 import { useEffect, useRef, useState } from 'react';
 import ImageGallery from 'react-image-gallery';
-import cmsService from 'services/cms';
+import contentManagementService from 'services/contentManagement';
 import { compareByProperty, sort } from 'services/utils';
 
 const GordonCarousel = () => {
@@ -10,7 +10,7 @@ const GordonCarousel = () => {
   const imageGalleryRef = useRef();
 
   useEffect(() => {
-    cmsService
+    contentManagementService
       .getSlides()
       .then(sort(compareByProperty('SortOrder')))
       .then(setCarouselContent)

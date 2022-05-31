@@ -1,7 +1,7 @@
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import Login from 'components/LoginDialogue';
 import WellnessQuestion from 'components/WellnessQuestion';
-import { useAuth } from 'hooks';
+import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import wellness from 'services/wellness';
 import HealthStatus from './components/HealthStatus';
@@ -9,29 +9,28 @@ import HealthStatus from './components/HealthStatus';
 const WellnessCheck = () => {
   const [loading, setLoading] = useState(true);
   const [currentStatus, setCurrentStatus] = useState(null);
-  const authenticated = useAuth();
+  const { profile, loading: loadingProfile } = useUser();
 
   useEffect(() => {
     const loadPage = async () => {
-      if (authenticated) {
+      if (profile) {
         setLoading(true);
 
         const status = await wellness.getStatus();
         if (status && status.IsValid) {
           setCurrentStatus(status);
         }
-
-        setLoading(false);
       }
+      setLoading(false);
     };
 
     loadPage();
-  }, [authenticated]);
+  }, [profile]);
 
-  if (loading) {
+  if (loading || loadingProfile) {
     return <GordonLoader />;
-  } else if (!authenticated) {
-    return <Login />;
+  } else if (!profile) {
+    return <GordonUnauthorized feature="the wellness check in" />;
   } else if (currentStatus === null) {
     return <WellnessQuestion setStatus={setCurrentStatus} />;
   } else {
