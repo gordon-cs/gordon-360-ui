@@ -195,7 +195,7 @@ const InvolvementsAll = ({ location, history }) => {
         </Card>
       </Grid>
 
-      {isOnline ? loadingProfile ? <GordonLoader /> : profile && <Requests /> : null}
+      {!isOnline ? null : loadingProfile ? <GordonLoader /> : profile && <Requests />}
 
       {loadingProfile ? (
         <GordonLoader />
