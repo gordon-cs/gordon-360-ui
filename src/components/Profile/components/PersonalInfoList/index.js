@@ -18,6 +18,7 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import GordonTooltip from 'components/GordonTooltip';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useMemo, useState } from 'react';
+import storageService from 'services/storage';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
@@ -70,7 +71,10 @@ const PersonalInfoList = ({
   const isStudent = PersonType?.includes('stu');
   const isFacStaff = PersonType?.includes('fac');
   const isAlumni = PersonType?.includes('alu');
-  const isPolice = useMemo(() => userService.getLocalInfo().college_role === 'gordon police', []);
+  const isPolice = useMemo(
+    () => storageService.getLocalInfo().college_role === 'gordon police',
+    [],
+  );
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -226,12 +230,13 @@ const PersonalInfoList = ({
       />
     ) : null;
 
-  const majors = !isFacStaff ? (
-    <ProfileInfoListItem
-      title={Majors?.length > 1 ? 'Majors:' : 'Major:'}
-      contentText={Majors?.length < 1 ? 'Undecided' : Majors?.join(', ')}
-    />
-  ) : null;
+  const majors =
+    isFacStaff || (isAlumni && !Majors?.length) ? null : (
+      <ProfileInfoListItem
+        title={Majors?.length > 1 ? 'Majors:' : 'Major:'}
+        contentText={!Majors?.length ? 'Deciding' : Majors?.join(', ')}
+      />
+    );
 
   const graduationYear = isAlumni ? (
     <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />

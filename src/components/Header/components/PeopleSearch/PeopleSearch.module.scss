@@ -1,3 +1,4 @@
+@use 'sass:color';
 @import '../../../../vars';
 
 .gordon_people_search {
@@ -37,7 +38,7 @@
     text-decoration: none;
     padding-bottom: 1px;
     border-bottom: 2px solid $primary-cyan;
-    background-color: transparentize($color: $primary-cyan, $amount: 0.9);
+    background-color: color.adjust($color: $primary-cyan, $alpha: -0.9);
   }
 
   .people_search_suggestion_selected {

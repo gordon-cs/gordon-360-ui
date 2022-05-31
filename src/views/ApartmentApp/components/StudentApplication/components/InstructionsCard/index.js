@@ -35,7 +35,7 @@ const InstructionsCard = () => {
   }, []);
 
   const rows = [
-    { description: 'Current First Year', points: 1 },
+    { description: 'Current Freshman', points: 1 },
     { description: 'Current Sophomore', points: 2 },
     { description: 'Current Junior', points: 3 },
     { description: 'Current Senior', points: 4 },
@@ -57,16 +57,17 @@ const InstructionsCard = () => {
         <Typography variant="body1" paragraph>
           Apartments provide an alternative to the traditional residence hall setting and offer a
           unique community experience. To be eligible to live in an apartment, students must be at
-          least 20 years old as of Sept. 1, {thisYear} <strong>or</strong> a current junior or
-          senior. Students who were on disciplinary probation at any time during the {thisYear - 1}-
-          {thisYear} academic year must also receive approval from the Dean of Student Care to be
-          eligible to apply for an apartment. Each applicant must be registered as a full-time
-          student by apartment selection night ({apartmentSelectionDate}).
+          least 20 years old as of Sept. 1, {thisYear} <strong>or</strong> have junior or senior
+          academic standing. Students who were on disciplinary probation at any time during the{' '}
+          {thisYear - 1}-{thisYear} academic year must also receive approval from the Dean of
+          Student Life or the Assistant Dean of Student Life to be eligible to apply for an
+          apartment. Each applicant must be registered as a full-time student by{' '}
+          {apartmentSelectionDate}.
         </Typography>
         <Typography variant="body1" paragraph>
           Each group of students desiring to live in a Tavilla or Bromley apartment or in The
           Village must submit an application. Your application can include a student who is studying
-          aproad or not enrolled for the Spring {thisYear} semester &ndash; simply list their name
+          abroad or not enrolled for the Spring {thisYear} semester &ndash; simply list their name
           on the application.
         </Typography>
         <Typography variant="body1" paragraph>
@@ -86,7 +87,7 @@ const InstructionsCard = () => {
           <strong>An application is not a guarantee!</strong>
         </Typography>
         <Typography variant="body1" paragraph>
-          Due to the large number of applications typically recieved for apartments, not all
+          Due to the large number of applications typically received for apartments, not all
           applications will be awarded an apartment. If you do not receive an apartment, you will
           need to secure housing through the housing lottery.
         </Typography>
@@ -123,8 +124,8 @@ const InstructionsCard = () => {
           <strong>
             <em>building</em>
           </strong>{' '}
-          no later than {apartmentSelectionDate}. Further information about specific apartment/room
-          selection will be communicated in that email.
+          no later than Apr. 8. Further information about specific apartment/room selection will be
+          communicated in that email.
         </Typography>
       </CardContent>
     </Card>

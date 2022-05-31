@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import membershipService from 'services/membership';
 import userService from 'services/user';
+import storageService from 'services/storage';
 import AdminCard from './components/AdminCard';
 import MemberList from './components/MemberList';
 import NonMemberButtons from './components/NonMemberButtons';
@@ -24,7 +25,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
 
       try {
         const [participationDetail, followersNum, membersNum] = await Promise.all([
-          membershipService.search(userService.getLocalInfo().id, sessionCode, involvementCode),
+          membershipService.search(storageService.getLocalInfo().id, sessionCode, involvementCode),
           membershipService.getFollowersNum(involvementCode, sessionCode),
           membershipService.getMembersNum(involvementCode, sessionCode),
         ]);
@@ -53,14 +54,18 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
     let data = {
       ACT_CDE: involvementCode,
       SESS_CDE: sessionCode,
-      ID_NUM: userService.getLocalInfo().id,
+      ID_NUM: storageService.getLocalInfo().id,
       PART_CDE: 'GUEST',
       COMMENT_TXT: 'Subscriber',
       GRP_ADMIN: false,
     };
     await membershipService.addMembership(data);
     setParticipationDetail(
-      await membershipService.search(userService.getLocalInfo().id, sessionCode, involvementCode),
+      await membershipService.search(
+        storageService.getLocalInfo().id,
+        sessionCode,
+        involvementCode,
+      ),
     );
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
@@ -68,7 +73,11 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
   const handleUnsubscribe = async () => {
     await membershipService.remove(participationDetail[2]);
     setParticipationDetail(
-      await membershipService.search(userService.getLocalInfo().id, sessionCode, involvementCode),
+      await membershipService.search(
+        storageService.getLocalInfo().id,
+        sessionCode,
+        involvementCode,
+      ),
     );
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
@@ -79,7 +88,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
 
   const handleLeave = async () => {
     const newParticipationDetail = await membershipService.search(
-      userService.getLocalInfo().id,
+      storageService.getLocalInfo().id,
       sessionCode,
       involvementCode,
     );
@@ -105,6 +114,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
                 sessionCode={sessionCode}
                 isSuperAdmin={isSuperAdmin}
                 onAddMember={handleAddMember}
+                involvementDescription={involvementDescription}
               />
             </Grid>
           )}

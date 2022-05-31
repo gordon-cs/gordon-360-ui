@@ -1,6 +1,7 @@
 import MomentUtils from '@date-io/moment';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import UserContextProvider, { AuthContext } from 'contexts/UserContext';
 import { createBrowserHistory } from 'history';
@@ -67,6 +68,7 @@ const App = () => {
                           exact={route.exact}
                           render={(props) => (
                             <div className={styles.app_main_container}>
+                              <AppRedirect />
                               <OfflineBanner currentPath={route.path} authentication={props.auth} />
                               <route.component authentication={authenticated} {...props} />
                             </div>
