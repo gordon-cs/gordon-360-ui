@@ -23,13 +23,16 @@ const Home = () => {
   useEffect(() => {
     if (profile) {
       setLoading(true);
-      wellness.getStatus().then(({ IsValid }) => setHasAnswered(IsValid));
+      wellness.getStatus().then(({ IsValid }) => {
+        setLoading(false);
+        setHasAnswered(IsValid);
+      });
     } else {
       // Clear out component's person-specific state when authenticated becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
       setHasAnswered(null);
+      setLoading(false);
     }
-    setLoading(false);
   }, [profile]);
 
   if (loading || loadingProfile) {
