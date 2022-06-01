@@ -111,4 +111,4 @@ const contentCard = (props) => {
   )
 }
 
-export { NotAlumni, UpdateGrid, UpdateForm, UpdateSelect, contentCard }
+export { NotAlumni, UpdateGrid, UpdateForm, UpdateSelect, contentCard };

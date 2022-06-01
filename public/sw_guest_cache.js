@@ -40,7 +40,7 @@ const static360Cache = [
   '/admin',
   '/news',
   '/myprofile',
-  'update',
+  '/update',
   '/transcript',
   '/attended',
   '/manifest.json',
