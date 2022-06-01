@@ -1,10 +1,10 @@
+import { FormControl, IconButton, Input, InputLabel } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import GordonDialogBox from 'components/GordonDialogBox/index';
+import GordonSnackbar from 'components/Snackbar';
 import { useState } from 'react';
 import MaskedInput from 'react-text-mask';
-import EditIcon from '@material-ui/icons/Edit';
-import { IconButton, FormControl, Input, InputLabel } from '@material-ui/core';
 import userService from 'services/user';
-import GordonSnackbar from 'components/Snackbar';
-import GordonDialogBox from 'components/GordonDialogBox/index';
 
 const UpdatePhone = () => {
   const [open, setOpen] = useState(false);
@@ -12,22 +12,17 @@ const UpdatePhone = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   const handleSubmit = async () => {
-    await userService.setMobilePhoneNumber(mobilePhoneNumber);
-    setOpen(false);
-    handleChangeMobilePhoneNumber();
-  };
-
-  const createSnackbar = (message, severity) => {
-    setSnackbar({ message, severity, open: true });
-  };
-
-  const handleChangeMobilePhoneNumber = async (mobilePhoneNumber) => {
     try {
       await userService.setMobilePhoneNumber(mobilePhoneNumber);
       createSnackbar('Your phone number will update within a couple hours.', 'success');
     } catch {
       createSnackbar('Phone number failed to update. Please contact CTS.', 'error');
     }
+    setOpen(false);
+  };
+
+  const createSnackbar = (message, severity) => {
+    setSnackbar({ message, severity, open: true });
   };
 
   return (

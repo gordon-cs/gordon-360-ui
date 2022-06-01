@@ -1,10 +1,11 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import { Grid, Typography } from '@material-ui/core';
-import { useAuth, useNetworkStatus } from 'hooks';
+import { useNetworkStatus } from 'hooks';
 import { gordonColors } from 'theme';
 
 const OfflineBanner = ({ currentPath }) => {
   const isOnline = useNetworkStatus();
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
 
   /**
    * Creates the classes for the offline banner depending on the current page
@@ -46,7 +47,7 @@ const OfflineBanner = ({ currentPath }) => {
     return null;
   }
   // Network Status: Offline
-  if (!authenticated && currentPath === '/') {
+  if (!isAuthenticated && currentPath === '/') {
     return null;
   }
 

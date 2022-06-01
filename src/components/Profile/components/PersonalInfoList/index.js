@@ -16,8 +16,10 @@ import LockIcon from '@material-ui/icons/Lock';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import GordonTooltip from 'components/GordonTooltip';
+import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useMemo, useState } from 'react';
+import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
@@ -67,10 +69,11 @@ const PersonalInfoList = ({
   const [mailCombo, setMailCombo] = useState();
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
-  const isStudent = PersonType?.includes('stu');
-  const isFacStaff = PersonType?.includes('fac');
-  const isAlumni = PersonType?.includes('alu');
-  const isPolice = useMemo(() => userService.getLocalInfo().college_role === 'gordon police', []);
+  const groups = useAuthGroups();
+  const isStudent = useMemo(() => groups.some((g) => g === AuthGroup.Student), [groups]);
+  const isFacStaff = useMemo(() => groups.some((g) => g === AuthGroup.FacStaff), [groups]);
+  const isAlumni = useMemo(() => groups.some((g) => g === AuthGroup.Alumni), [groups]);
+  const isPolice = useMemo(() => groups.some((g) => g === AuthGroup.Police), [groups]);
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -258,40 +261,29 @@ const PersonalInfoList = ({
     <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />
   ) : null;
 
-  let strengthsText = CliftonStrengths?.Strengths.map((x) => (
-    <Link
-      href={CliftonStrengths.Links[CliftonStrengths.Strengths.indexOf(x)]}
-      target="_blank"
-      rel="noopener"
-      key={x}
-    >
-      <b style={{ color: CliftonStrengths.Colors[CliftonStrengths.Strengths.indexOf(x)] }}>{x}</b>
-    </Link>
-  )).reduce((prev, curr) => [prev, ', ', curr]);
-
-  let strengthsCaption = (
-    <GordonTooltip
-      title={
-        <span style={{ fontSize: '0.8rem' }}>
-          Categories:&nbsp;
-          <span style={{ color: '#60409f' }}>Executing</span>,{' '}
-          <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
-          <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
-          <span style={{ color: '#2c8b0f' }}>Thinking</span>
-        </span>
-      }
-      enterTouchDelay={50}
-      leaveTouchDelay={5000}
-    ></GordonTooltip>
-  );
-
-  const cliftonStrengths = CliftonStrengths ? (
+  const cliftonStrengths = CliftonStrengths.length ? (
     <ProfileInfoListItem
       title="Clifton Strengths:"
       contentText={
         <Typography>
-          {strengthsText}
-          {strengthsCaption}
+          {CliftonStrengths.map((strength) => (
+            <Link href={strength.link} target="_blank" rel="noopener" key={strength.name}>
+              <b style={{ color: strength.color }}>{strength.name}</b>
+            </Link>
+          )).reduce((prev, curr) => [prev, ', ', curr])}
+          <GordonTooltip
+            title={
+              <span style={{ fontSize: '0.8rem' }}>
+                Categories:&nbsp;
+                <span style={{ color: '#60409f' }}>Executing</span>,{' '}
+                <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
+                <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
+                <span style={{ color: '#2c8b0f' }}>Thinking</span>
+              </span>
+            }
+            enterTouchDelay={50}
+            leaveTouchDelay={5000}
+          />
         </Typography>
       }
     />

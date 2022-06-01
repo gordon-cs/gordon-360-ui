@@ -22,7 +22,6 @@
  * (sw_global_variables.js) | errorLog                | Console log styling for cache related logs
  * (sw_global_variables.js) | successfulEmoji         | The emoji symbol used to display in the console log for successful related logs
  * (sw_global_variables.js) | successfulLog           | Console log styling for successful related logs
- * (sw.js)                  | apiSource               | The API source where all fetch requests are directed to
  * (sw.js)                  | isFetchCanceled         | Determines if there's a cancelation of all fetches
  */
 
@@ -103,15 +102,15 @@ let canceledGuestFetches = [],
   successfulGuestFetches = [],
   badResponseGuestFetches = {},
   // Source needed to create guest links
-  guestRequiredSource = `${apiSource}/sessions/current`;
+  guestRequiredSource = `${API_URL}/sessions/current`;
 
 /**
  * Creates the list of remote links to be fetched and cached for offline mode for a guest
  */
 async function createRemoteGuestLinks() {
   guestRemoteLinks = [
-    `${apiSource}/events/25Live/Public`,
-    `${apiSource}/sessions`,
+    `${API_URL}/events/25Live/Public`,
+    `${API_URL}/sessions`,
     guestRequiredSource,
   ];
 
@@ -130,8 +129,8 @@ async function createRemoteGuestLinks() {
         // Uses the data of the current session to create the dynamic links for the Involvements page
         response.json().then((currentSession) => {
           guestRemoteLinks.push(
-            `${apiSource}/activities/session/${currentSession.SessionCode}`,
-            `${apiSource}/activities/session/${currentSession.SessionCode}/types`,
+            `${API_URL}/activities/session/${currentSession.SessionCode}`,
+            `${API_URL}/activities/session/${currentSession.SessionCode}/types`,
           );
         });
         saveSuccessfulGuestLink(guestRequiredSource);

@@ -1,18 +1,17 @@
 //Handles the fetching and preperation for displaying of shifts
-import { Component } from 'react';
-import { Grid, Card, CardContent, CardHeader, Tabs, Tab } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, Tab, Tabs } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
-import SavedShiftsList from '../SavedShiftsList';
-import jobs from 'services/jobs';
 import SimpleSnackbar from 'components/Snackbar';
+import { Component } from 'react';
 import Media from 'react-media';
+import jobs from 'services/jobs';
+import SavedShiftsList from '../SavedShiftsList';
 import styles from './ShiftDisplay.module.css';
 
 export default class ShiftDisplay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      getStaffPageForUser: false,
       loading: false,
       tabValue: 0,
       shifts: [],
@@ -29,20 +28,6 @@ export default class ShiftDisplay extends Component {
     this.snackbarText = '';
   }
 
-  async getCanUseStaff() {
-    try {
-      let canUse = await jobs.getStaffPageForUser();
-
-      if (canUse.length === 1) {
-        this.setState({ getStaffPageForUser: true });
-      } else {
-        this.setState({ getStaffPageForUser: false });
-      }
-    } catch (error) {
-      //do nothing
-    }
-  }
-
   componentDidMount() {
     this.setState({ loading: true }, () => {
       this.loadShifts().then(() => {
@@ -54,7 +39,6 @@ export default class ShiftDisplay extends Component {
         this.setState({ loading: false });
       });
     });
-    this.getCanUseStaff();
   }
 
   handleCloseSnackbar = (event, reason) => {
@@ -66,8 +50,7 @@ export default class ShiftDisplay extends Component {
   };
 
   loadShifts() {
-    const { getSavedShiftsForUser } = this.props;
-    return getSavedShiftsForUser().then((data) => {
+    return jobs.getSavedShiftsForUser().then((data) => {
       for (let i = 0; i < data.length; i++) {
         this.jobNamesSet.add(data[i].EML_DESCRIPTION);
       }
@@ -93,23 +76,14 @@ export default class ShiftDisplay extends Component {
     });
   }
 
-  editShift = (rowID, startTime, endTime, hoursWorked) => {
-    let promise = jobs.editShift(
-      this.state.getStaffPageForUser,
-      rowID,
-      startTime,
-      endTime,
-      hoursWorked,
-    );
-    promise.then((response) => {
-      this.loadShifts();
-    });
-    return promise;
-  };
+  editShift = (rowID, eml, startTime, endTime, hoursWorked, lastChangedBy) =>
+    jobs
+      .editShift(rowID, eml, startTime, endTime, hoursWorked, lastChangedBy)
+      .then(this.loadShifts.bind(this));
 
-  deleteShiftForUser(rowID, emlDesc) {
-    let result = jobs
-      .deleteShiftForUser(this.state.getStaffPageForUser, rowID)
+  deleteShiftForUser = (rowID, emlDesc) =>
+    jobs
+      .deleteShiftForUser(rowID)
       .then(() => {
         this.jobNamesSet.delete(emlDesc);
         this.loadShifts();
@@ -118,8 +92,6 @@ export default class ShiftDisplay extends Component {
         this.snackbarText = 'There was a problem deleting the shift.';
         this.setState({ snackbarOpen: true });
       });
-    return result;
-  }
 
   handleTabChange = (event, value) => {
     this.setState({ tabValue: value });
@@ -227,7 +199,6 @@ export default class ShiftDisplay extends Component {
                 cardTitle="Saved Shifts"
                 directSupervisor={directSupervisor}
                 reportingSupervisor={reportingSupervisor}
-                canUse={this.props.canUse}
               />
             </Grid>
             <Grid item xs={12}>
@@ -253,7 +224,6 @@ export default class ShiftDisplay extends Component {
                 loadShifts={this.loadShifts.bind(this)}
                 deleteShift={this.deleteShiftForUser.bind(this)}
                 cardTitle="Approved Shifts"
-                selectedHourType={this.props.selectedHourType}
               />
             </Grid>
           </Grid>

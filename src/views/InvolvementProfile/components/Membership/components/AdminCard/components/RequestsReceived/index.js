@@ -1,19 +1,18 @@
-import { Fragment, useState, useEffect } from 'react';
-
-import { gordonColors } from 'theme';
-import membershipService from 'services/membership';
-
 import {
   Button,
   Divider,
   List,
-  ListItemText,
   ListItem,
   ListItemSecondaryAction,
+  ListItemText,
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { formatDistanceToNow } from 'date-fns';
+import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import requestService from 'services/request';
+import { gordonColors } from 'theme';
 
 const redButton = {
   color: gordonColors.secondary.red,
@@ -34,23 +33,17 @@ const RequestsReceived = ({ onAddMember }) => {
   const { involvementCode, sessionCode } = useParams();
 
   useEffect(() => {
-    const loadRequests = async () => {
-      const requests = await membershipService.getRequests(involvementCode, sessionCode);
-
-      setRequests(requests);
-    };
-
-    loadRequests();
+    requestService.getRequests(involvementCode, sessionCode).then(setRequests);
   }, [involvementCode, sessionCode]);
 
   const onApprove = async (id) => {
-    await membershipService.approveRequest(id);
+    await requestService.approveRequest(id);
     setRequests((prevRequests) => prevRequests.filter((r) => r.RequestID !== id));
     onAddMember();
   };
 
   const onDeny = async (id) => {
-    await membershipService.denyRequest(id);
+    await requestService.denyRequest(id);
     setRequests((prevRequests) => prevRequests.filter((r) => r.RequestID !== id));
   };
 
@@ -67,7 +60,7 @@ const RequestsReceived = ({ onAddMember }) => {
             >
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
-                secondary={`${membershipService.getDiffDays(request.DateSent)} - ${
+                secondary={`${formatDistanceToNow(new Date(request.DateSent))} - ${
                   request.CommentText
                 }`}
               />

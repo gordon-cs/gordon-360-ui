@@ -13,10 +13,12 @@ import {
 import EmailIcon from '@material-ui/icons/Email';
 import GordonLoader from 'components/Loader/index';
 import 'cropperjs/dist/cropper.css';
+import { useUserActions } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
+import { Class } from 'services/goStalk';
 import user from 'services/user';
 import { gordonColors, windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
@@ -39,6 +41,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
   const [userProfile, setUserProfile] = useState();
   const [currentWidth, setCurrentWidth] = useState();
   const [cliftonColor, setCliftonColor] = useState();
+  const { updateImage } = useUserActions();
   const cropperRef = useRef();
   const isStudent = profile.PersonType?.includes('stu');
   let photoDialogErrorTimeout;
@@ -113,16 +116,19 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
         // then this, means that the currently signed-in user is not allowed to see the default picture.
         setDefaultUserImage(defaultImage);
 
-        const cliftonStrengthColors = await profile.CliftonStrengths.Colors;
-        // create a dictionary of color frequencies
-        let colorFrequencies = {};
-        cliftonStrengthColors.forEach((x) => {
-          colorFrequencies[x] = (colorFrequencies[x] || 0) + 1;
-        });
+        const colorFrequencies = profile.CliftonStrengths?.reduce(
+          (colorFrequencies, strength) => ({
+            ...colorFrequencies,
+            [strength.color]: (colorFrequencies[strength.color] || 0) + 1,
+          }),
+          {},
+        );
+
         // find max frequency by always recursively keeping a from every (a,b) where a >= b
         const cliftonColor = Object.keys(colorFrequencies).reduce((a, b) =>
           colorFrequencies[a] >= colorFrequencies[b] ? a : b,
         );
+
         setCliftonColor(cliftonColor);
       } catch (error) {
         // Do nothing
@@ -209,7 +215,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
           // Closes out the Photo Updater
           setOpenPhotoDialog(false);
           setShowCropper(null);
-          window.postMessage('update-profile-picture', window.location.origin);
+          updateImage();
         })
         .catch(() => {
           // Displays to the user that their photo failed to submit
@@ -261,7 +267,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
         setPreferredUserImage(null);
         setHasPreferredImage(false);
         setOpenPhotoDialog(false);
-        window.postMessage('update-profile-picture', window.location.origin);
+        updateImage();
       })
       // Promised Rejected - Display error to the user
       .catch(() => {
@@ -697,7 +703,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   xs={12}
                   className={styles.identification_card_content_card_container_info_class}
                 >
-                  {userProfile.Class && <Typography>{userProfile.Class}</Typography>}
+                  {userProfile.Class && <Typography>{Class[userProfile.Class]}</Typography>}
                 </Grid>
 
                 <Grid

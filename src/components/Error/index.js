@@ -1,5 +1,4 @@
 import { Grid, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import styles from './Error.module.css';
 
 const GordonError = ({ error }) => {
@@ -20,10 +19,6 @@ const GordonError = ({ error }) => {
       </Grid>
     </Grid>
   );
-};
-
-GordonError.propTypes = {
-  error: PropTypes.instanceOf(Error).isRequired,
 };
 
 export default GordonError;

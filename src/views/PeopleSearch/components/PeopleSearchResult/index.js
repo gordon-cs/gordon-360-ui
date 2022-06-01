@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import IMG from 'react-graceful-image';
 import { Link } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
+import { Class } from 'services/goStalk';
 import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
 
@@ -67,33 +68,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
     }
     // set classes up
     if (Person.Type === 'Student') {
-      switch (Person.Class) {
-        case '1':
-          setPersonClassJobTitle('First Year');
-          break;
-        case '2':
-          setPersonClassJobTitle('Sophomore');
-          break;
-        case '3':
-          setPersonClassJobTitle('Junior');
-          break;
-        case '4':
-          setPersonClassJobTitle('Senior');
-          break;
-        case '5':
-          setPersonClassJobTitle('Graduate Student');
-          break;
-        case '6':
-          setPersonClassJobTitle('Undergraduate Conferred');
-          break;
-        case '7':
-          setPersonClassJobTitle('Graduate Conferred');
-          break;
-        default:
-          setPersonClassJobTitle('-----');
-          break;
-      }
-      // set job titles up
+      setPersonClassJobTitle(Class[Person.Class]);
     } else if (Person.JobTitle && Person.Type !== 'Student') {
       setPersonClassJobTitle(Person.JobTitle);
     }

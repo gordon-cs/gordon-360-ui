@@ -1,3 +1,4 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Button,
   DialogActions,
@@ -17,13 +18,12 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import 'cropperjs/dist/cropper.css';
-import { useAuth, useNetworkStatus } from 'hooks';
+import { useNetworkStatus } from 'hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import newsService from 'services/news';
-import userService from 'services/user';
 import { gordonColors } from 'theme';
 import NewsList from './components/NewsList';
 
@@ -88,16 +88,15 @@ const StudentNews = (props) => {
   const [photoDialogError, setPhotoDialogError] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
-  const [currentUsername, setCurrentUsername] = useState('');
   const [currentlyEditing, setCurrentlyEditing] = useState(false); // false if not editing, newsID if editing
   const cropperRef = useRef();
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
 
   const loadNews = useCallback(async () => {
     setLoading(true);
-    if (authenticated) {
+    if (isAuthenticated) {
       const newsCategories = await newsService.getCategories();
-      const personalUnapprovedNews = await newsService.getPersonalUnapprovedFormatted();
+      const personalUnapprovedNews = await newsService.getPersonalUnapproved();
       const unexpiredNews = await newsService.getNotExpiredFormatted();
       setLoading(false);
       setCategories(newsCategories);
@@ -109,20 +108,11 @@ const StudentNews = (props) => {
       // TODO: test authentication handling and neaten code (ex. below)
       // alert("Please sign in to access student news");
     }
-  }, [authenticated]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     loadNews();
-  }, [authenticated, loadNews]);
-
-  useEffect(() => {
-    const loadUsername = async () => {
-      const user = await userService.getProfileInfo();
-      setCurrentUsername(user.AD_Username);
-    };
-
-    loadUsername();
-  }, []);
+  }, [isAuthenticated, loadNews]);
 
   useEffect(() => {
     if (search) {
@@ -325,15 +315,13 @@ const StudentNews = (props) => {
       newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
     }
 
-    let newsItem = {
-      categoryID: newPostCategory,
-      Subject: newPostSubject,
-      Body: newPostBody,
-      Image: newImage,
-    };
-
     // submit the news item and give feedback
-    let result = await newsService.submitStudentNews(newsItem);
+    let result = await newsService.submitStudentNews(
+      newPostSubject,
+      newPostCategory,
+      newPostBody,
+      newImage,
+    );
     if (result === undefined) {
       createSnackbar('News Posting Failed to Submit', 'error');
     } else {
@@ -382,7 +370,7 @@ const StudentNews = (props) => {
   //Image isn't here because an image is optional
   let content;
 
-  if (authenticated) {
+  if (isAuthenticated) {
     if (loading === true) {
       content = <GordonLoader />;
     } else {
@@ -390,7 +378,6 @@ const StudentNews = (props) => {
         <NewsList
           news={news}
           personalUnapprovedNews={personalUnapprovedNews}
-          currentUsername={currentUsername}
           handleNewsItemEdit={handleNewsItemEdit}
           handleNewsItemDelete={handleNewsItemDelete}
         />
