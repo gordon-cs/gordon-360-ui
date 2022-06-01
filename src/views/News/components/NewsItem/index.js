@@ -1,22 +1,17 @@
 import { Button, CardContent, Collapse, Grid, Typography } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import { useUser } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './NewsItem.module.css';
 
-const NewsItem = ({
-  posting,
-  unapproved,
-  size,
-  currentUsername,
-  handleNewsItemEdit,
-  handleNewsItemDelete,
-}) => {
+const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsItemDelete }) => {
   const [open, setOpen] = useState(false);
   const isOnline = useNetworkStatus();
+  const { profile } = useUser();
 
   if (unapproved) {
     // Shows 'pending approval' instead of the date posted
@@ -42,11 +37,7 @@ const NewsItem = ({
   // null check temporarily fixes issue on home card when user has not yet been authenticated
   // it is because the home card doesn't give these properties
   let editButton;
-  if (
-    currentUsername != null &&
-    currentUsername.toLowerCase() === posting.ADUN.toLowerCase() &&
-    unapproved
-  ) {
+  if (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase() && unapproved) {
     editButton = (
       <Button
         variant="outlined"
@@ -65,7 +56,7 @@ const NewsItem = ({
   // Only show the delete button if the current user is the author of the posting
   // null check temporarily fixes issue on home card when user has not yet been authenticated
   let deleteButton;
-  if (currentUsername != null && currentUsername.toLowerCase() === posting.ADUN.toLowerCase()) {
+  if (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase()) {
     deleteButton = (
       <Button
         variant="outlined"
@@ -184,7 +175,6 @@ NewsItem.propTypes = {
 
   unapproved: PropTypes.any,
   size: PropTypes.string.isRequired,
-  currentUsername: PropTypes.string.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,
 };

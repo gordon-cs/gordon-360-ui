@@ -1,6 +1,5 @@
-import { isAuthenticated } from './auth';
+import { getToken, isAuthenticated } from './auth';
 import { createError } from './error';
-import storage from './storage';
 
 const base = process.env.REACT_APP_API_URL;
 
@@ -38,7 +37,7 @@ const postImage = <TResponse>(
   const blob = dataURItoBlob(imageData);
   const fileType = blob.type.replace('image/', '');
   const imageDataForm = new FormData();
-  imageDataForm.append('canvasImage', blob, 'canvasImage.' + fileType);
+  imageDataForm.append('image', blob, `image.${fileType}`);
   return makeRequest(endpoint, 'post', imageDataForm, headers);
 };
 
@@ -69,7 +68,7 @@ const makeRequest = async <TResponse>(
   const request = new Request(`${base}api/${endpoint}`, {
     method,
     body,
-    headers: handleAuthHeader(headers ?? new Headers()),
+    headers: await handleAuthHeader(headers ?? new Headers()),
   });
   const response = await fetch(request);
   return parseResponse(response);
@@ -99,10 +98,10 @@ export const parseResponse = async <TResponse>(res: Response): Promise<TResponse
   }
 };
 
-const handleAuthHeader = (headers: Headers): Headers => {
+const handleAuthHeader = async (headers: Headers): Promise<Headers> => {
   if (isAuthenticated()) {
     try {
-      const token = storage.get('token');
+      const token = await getToken();
       headers.append('Authorization', `Bearer ${token}`);
     } catch (err) {
       throw new Error('Token is not available');

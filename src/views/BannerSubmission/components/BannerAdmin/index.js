@@ -4,7 +4,7 @@ import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import { useWindowSize } from 'hooks';
 import { useEffect, useState } from 'react';
-import cmsService from 'services/cms';
+import contentManagementService from 'services/contentManagement';
 import BannerList from '../BannerList';
 import NewBannerDialog from '../NewBannerDialog';
 import styles from './BannerAdmin.module.scss';
@@ -21,7 +21,7 @@ const BannerAdmin = () => {
   useEffect(() => {
     const loadPage = async () => {
       setLoading(true);
-      const existingBanners = await cmsService.getSlides();
+      const existingBanners = await contentManagementService.getSlides();
       setBanners(existingBanners);
       setLoading(false);
     };
@@ -34,7 +34,7 @@ const BannerAdmin = () => {
   };
 
   async function handleBannerDelete(ID) {
-    let result = await cmsService.deleteSlide(ID);
+    let result = await contentManagementService.deleteSlide(ID);
     if (result === undefined) {
       createSnackbar('Banner Failed to Delete', 'error');
     } else {

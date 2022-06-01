@@ -1,3 +1,4 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Button,
   Card,
@@ -9,9 +10,8 @@ import {
 } from '@material-ui/core';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { useAuth, useNetworkStatus } from 'hooks';
-import { useEffect, useState } from 'react';
-import storageService from 'services/storage';
+import { useAuthGroups, useNetworkStatus } from 'hooks';
+import { AuthGroup } from 'services/auth';
 import { gordonColors } from 'theme';
 import BannerAdmin from './components/BannerAdmin';
 
@@ -26,15 +26,9 @@ const style = {
 };
 
 const BannerSubmission = () => {
-  const authenticated = useAuth();
+  const authenticated = useIsAuthenticated();
   const isOnline = useNetworkStatus();
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    if (authenticated) {
-      setIsAdmin(storageService.getLocalInfo().college_role === 'god');
-    }
-  }, [authenticated]);
+  const isAdmin = useAuthGroups(AuthGroup.SiteAdmin);
 
   if (!authenticated) {
     return <GordonUnauthorized feature={'the banner submission'} />;

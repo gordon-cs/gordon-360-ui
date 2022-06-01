@@ -1,4 +1,4 @@
-class AuthError {
+class AuthError implements Error {
   name: string;
   message: string;
   constructor(message: string) {
@@ -7,7 +7,7 @@ class AuthError {
   }
 }
 
-class NotFoundError {
+class NotFoundError implements Error {
   name: string;
   message: string;
   constructor(message: string | undefined) {

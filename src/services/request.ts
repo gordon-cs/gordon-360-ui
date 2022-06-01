@@ -53,12 +53,15 @@ const getRequests = (activityCode: string, sessionCode: string) =>
 
 const requestMembership = (data: REQUEST): Promise<REQUEST> => http.post(`requests`, data);
 
+const getSentMembershipRequests = (): Promise<MembershipRequest[]> => http.get('requests/student/');
+
 const requestService = {
   approveRequest,
   cancelRequest,
   denyRequest,
   getRequests,
   requestMembership,
+  getSentMembershipRequests,
 };
 
 export default requestService;

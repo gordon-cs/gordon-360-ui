@@ -1,6 +1,7 @@
 import { Class } from './goStalk';
 import http from './http';
 import { StudentProfileInfo, UnformattedStudentProfileInfo } from './user';
+import { map } from './utils';
 
 type ApartmentHall = {
   /** Number of people per room/apartment   (not yet implemented in API) */
@@ -53,14 +54,6 @@ type ApplicationDetails = UnformattedApplicationDetails & {
   NumApplicants: number;
   FirstHall: string;
 };
-
-const checkHousingAdmin = (): Promise<boolean> => http.get(`housing/admin`);
-
-const addHousingAdmin = (username: string): Promise<boolean> =>
-  http.post(`housing/admin/${username}/`);
-
-const deleteHousingAdmin = (username: string): Promise<boolean> =>
-  http.del(`housing/admin/${username}/`);
 
 const getApartmentSelectionDate = async (): Promise<string> => {
   return 'Apr. 11';
@@ -158,33 +151,20 @@ function formatApplicationDetails(
   };
 }
 
-const getApartmentApplication = async (
-  applicationID: number,
-): Promise<UnformattedApplicationDetails> => {
-  const applicationResult: UnformattedApplicationDetails = await http.get(
-    `housing/apartment/applications/${applicationID}/`,
-  );
-  formatApplicationDetails(applicationResult);
-  return applicationResult;
-};
+const getApartmentApplication = async (applicationID: number): Promise<ApplicationDetails> =>
+  http
+    .get<UnformattedApplicationDetails>(`housing/apartment/applications/${applicationID}/`)
+    .then(formatApplicationDetails);
 
-const getSubmittedApartmentApplications = async (): Promise<UnformattedApplicationDetails[]> => {
-  const applicationDetailsArray: UnformattedApplicationDetails[] = await http.get(
-    `housing/admin/apartment/applications/`,
-  );
-  applicationDetailsArray.forEach((applicationDetails) =>
-    formatApplicationDetails(applicationDetails),
-  );
-  return applicationDetailsArray;
-};
+const getSubmittedApartmentApplications = async (): Promise<ApplicationDetails[]> =>
+  http
+    .get<UnformattedApplicationDetails[]>(`housing/admin/apartment/applications/`)
+    .then(map(formatApplicationDetails));
 
 const submitApplication = (applicationID: number): Promise<boolean> =>
   http.put(`housing/apartment/applications/${applicationID}/submit`);
 
 const housingService = {
-  checkHousingAdmin,
-  addHousingAdmin,
-  deleteHousingAdmin,
   getApartmentSelectionDate,
   getApartmentHalls,
   getCurrentApplicationID,

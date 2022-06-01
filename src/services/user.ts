@@ -1,12 +1,9 @@
 import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
-import { CliftonStrengths, getCliftonStrengths } from './cliftonStrengths';
+import { CliftonStrength, getCliftonStrengths } from './cliftonStrengths';
 import { Class } from './goStalk';
 import http from './http';
-import { Membership } from './membership';
-import { MembershipRequest } from './request';
-import session from './session';
-import { compareByProperty, filter, Override, sort } from './utils';
+import { Override } from './utils';
 
 type CLWCredits = {
   current: number;
@@ -70,7 +67,7 @@ type BaseProfileInfo = {
   LinkedIn: string;
   PersonType: string;
   fullName?: string;
-  CliftonStrengths?: CliftonStrengths;
+  CliftonStrengths?: CliftonStrength[];
 };
 
 export type UnformattedStaffProfileInfo = BaseProfileInfo & {
@@ -80,6 +77,7 @@ export type UnformattedStaffProfileInfo = BaseProfileInfo & {
   SpouseName: string;
   Type: string;
   office_hours: string;
+  Mail_Description: string;
 };
 
 export type UnformattedStudentProfileInfo = BaseProfileInfo & {
@@ -155,7 +153,7 @@ type MealPlanComponent = {
   CurrentBalance: string;
 };
 
-type ProfileImages = { def: string; pref?: string };
+export type ProfileImages = { def: string; pref?: string };
 
 const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo => {
   return (profile as UnformattedStudentProfileInfo).OnOffCampus !== undefined;
@@ -191,9 +189,9 @@ const formatSocialMediaLinks = (profile: UnformattedProfileInfo) => {
 };
 
 const getImage = (username: string = ''): Promise<ProfileImages> =>
-  http.get(username ? `profiles/Image/${username}/` : 'profiles/Image/');
+  http.get(`profiles/image/${username}`);
 
-const resetImage = (): Promise<void> => http.post('/profiles/image/reset');
+const resetImage = (): Promise<void> => http.post('profiles/image/reset');
 
 const postIDImage = (imageDataURI: string): Promise<void> =>
   http.postImage('profiles/IDimage', imageDataURI);
@@ -212,10 +210,10 @@ const getChapelCredits = async (): Promise<CLWCredits | null> => {
     : null;
 };
 
-const getDiningInfo = (): Promise<DiningInfo> => http.get('dining');
+const getDiningInfo = (): Promise<DiningInfo | string> => http.get('dining');
 
 const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
-  http.get(username ? `profiles/${username}/` : 'profiles/');
+  http.get(`profiles/${username}`);
 
 const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
   http.get(`profiles/Advisors/${username}/`);
@@ -233,37 +231,7 @@ const setHomePhonePrivacy = (makePrivate: boolean) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getMemberships = (userID: string): Promise<Membership[]> =>
-  http.get(`memberships/student/${userID}`);
-
-const getPublicMemberships = (username: string): Promise<Membership[]> =>
-  http
-    .get<Membership[]>(`memberships/student/username/${username}/`)
-    .then(sort(compareByProperty('ActivityDescription')));
-
-const getMembershipsAlphabetically = (userID: string) =>
-  getMemberships(userID).then(sort(compareByProperty('ActivityDescription')));
-
-const getMembershipsBySession = (userID: string, sessionCode: string) =>
-  getMembershipsAlphabetically(userID).then(filter((m) => m.SessionCode === sessionCode));
-
-const getCurrentMemberships = async (userID: string) =>
-  session.getCurrent().then(({ SessionCode }) => getMembershipsBySession(userID, SessionCode));
-
-const getMembershipsWithoutGuests = (id: string) =>
-  getMemberships(id).then(filter((i) => i.ParticipationDescription !== 'Guest'));
-
-const getSessionMembershipsWithoutGuests = (userID: string, sessionCode: string) =>
-  getMembershipsBySession(userID, sessionCode).then(
-    filter((m) => m.ParticipationDescription !== 'Guest'),
-  );
-
 const getEmployment = () => http.get('studentemployment/');
-
-const getSentMembershipRequests = (): Promise<MembershipRequest[]> => http.get('requests/student/');
-
-const getLeaderPositions = async (userID: string): Promise<Membership[]> =>
-  getCurrentMemberships(userID).then(filter((m) => m.GroupAdmin));
 
 const getBirthdate = async (): Promise<DateTime> =>
   DateTime.fromISO(await http.get('profiles/birthdate'));
@@ -272,9 +240,6 @@ const isBirthdayToday = async () => {
   const birthday = await getBirthdate();
   return birthday?.toISODate() === DateTime.now().toISODate();
 };
-
-const getTranscriptMembershipsInfo = (id: string) =>
-  getMembershipsWithoutGuests(id).then(sort(compareByProperty('ActivityCode')));
 
 // TODO: Add type info
 const getEmploymentInfo = () => getEmployment();
@@ -285,8 +250,7 @@ const getProfileInfo = async (username: string = ''): Promise<Profile> => {
     .then(formatCountry)
     .then(formatSocialMediaLinks)
     .then(async (profile) => {
-      const fullName = `${profile.FirstName}  ${profile.LastName}`;
-      const CliftonStrengths = await getCliftonStrengths(profile.AD_Username);
+      const fullName = `${profile.FirstName} ${profile.LastName}`;
       if (isStudent(profile)) {
         return {
           ...profile,
@@ -309,7 +273,6 @@ const getProfileInfo = async (username: string = ''): Promise<Profile> => {
         return {
           ...profile,
           fullName,
-          CliftonStrengths,
         };
       } else {
         throw new TypeError();
@@ -343,17 +306,11 @@ const userService = {
   getChapelCredits,
   getImage,
   getDiningInfo,
-  getPublicMemberships,
-  getMembershipsAlphabetically,
-  getSessionMembershipsWithoutGuests,
-  getLeaderPositions,
-  getSentMembershipRequests,
   getProfileInfo,
   getMailboxCombination,
   resetImage,
   postImage,
   postIDImage,
-  getTranscriptMembershipsInfo,
   getEmploymentInfo,
   getEmergencyInfo,
   updateSocialLink,

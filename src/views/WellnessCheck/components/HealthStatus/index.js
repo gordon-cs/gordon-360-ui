@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CardHeader, Grid } from '@material-ui/core';
 import { Check, Clear, Remove } from '@material-ui/icons';
 import SymptomsDialog from 'components/SymptomsDialog';
-import { useUser } from 'hooks';
+import { useUser, useWindowSize } from 'hooks';
 import { useEffect, useState } from 'react';
 import { StatusColor } from 'services/wellness';
 import styles from './HealthStatus.module.css';
@@ -12,18 +12,15 @@ const HealthStatus = ({
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [time, setTime] = useState(null);
-  const [iconSize, setIconSize] = useState(0);
-  const user = useUser();
+  const [width] = useWindowSize();
+  const iconSize = width * 0.03 + 69;
+  const { profile, images } = useUser();
 
   useEffect(() => {
     tick();
     const intervalID = setInterval(tick, 60 * 1000);
 
-    setIconSize(window.innerWidth * 0.03 + 69);
-    window.addEventListener('resize', resizeIcon);
-
     return () => {
-      window.removeEventListener('resize', resizeIcon);
       clearInterval(intervalID);
     };
   }, []);
@@ -38,10 +35,6 @@ const HealthStatus = ({
         minute: '2-digit',
       }),
     );
-  };
-
-  const resizeIcon = () => {
-    setIconSize(window.innerWidth * 0.03 + 69);
   };
 
   let animatedIcon;
@@ -66,12 +59,12 @@ const HealthStatus = ({
     <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={12} md={8}>
         <Card className={styles.wellness_check}>
-          <CardHeader title={user.profile.fullName} />
+          <CardHeader title={profile.fullName} />
           <CardContent>
             <img
               className={`rounded_corners ${styles.user_image}`}
-              src={`data:image/jpg;base64,${user.images?.pref || user.images.def}`}
-              alt={user.profile.fullName}
+              src={`data:image/jpg;base64,${images.pref || images.def}`}
+              alt={profile.fullName}
             />
             <Grid>
               <Card className={styles[currentStatus]}>

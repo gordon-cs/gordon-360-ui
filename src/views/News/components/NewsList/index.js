@@ -53,13 +53,7 @@ const fullHeader = (
   </Grid>
 );
 
-const NewsList = ({
-  news,
-  personalUnapprovedNews,
-  currentUsername,
-  handleNewsItemEdit,
-  handleNewsItemDelete,
-}) => {
+const NewsList = ({ news, personalUnapprovedNews, handleNewsItemEdit, handleNewsItemDelete }) => {
   const [width, setWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -83,7 +77,6 @@ const NewsList = ({
                 posting={posting}
                 unapproved
                 size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-                currentUsername={currentUsername}
                 handleNewsItemEdit={handleNewsItemEdit}
                 handleNewsItemDelete={handleNewsItemDelete}
                 key={posting.SNID}
@@ -96,7 +89,6 @@ const NewsList = ({
                 posting={posting}
                 //approved
                 size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-                currentUsername={currentUsername}
                 handleNewsItemEdit={handleNewsItemEdit}
                 handleNewsItemDelete={handleNewsItemDelete}
                 key={posting.SNID}
@@ -138,7 +130,6 @@ NewsList.propTypes = {
     }),
   ).isRequired,
 
-  currentUsername: PropTypes.string.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,
 };

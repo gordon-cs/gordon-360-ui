@@ -3,7 +3,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
-import cmsService from 'services/cms';
+import contentmanagementService from 'services/contentManagement';
 import styles from './NewBannerDialog.module.css';
 
 const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
@@ -28,7 +28,7 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
       ImageData: image,
     };
 
-    let result = await cmsService.submitSlide(bannerItem);
+    let result = await contentmanagementService.submitSlide(bannerItem);
     if (result === undefined) {
       createSnackbar('Sorry, banner submission failed', 'error');
     } else {

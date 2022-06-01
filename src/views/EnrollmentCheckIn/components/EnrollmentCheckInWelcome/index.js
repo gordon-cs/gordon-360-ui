@@ -1,12 +1,14 @@
 import { Grid, Typography } from '@material-ui/core';
+import { useUser } from 'hooks';
 import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory
 import styles from '../../EnrollmentCheckIn.module.css';
 import MajorHolds from './components/MajorHolds';
 import MinorHolds from './components/MinorHolds';
 
-const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
+const EnrollmentCheckInWelcome = ({ hasMajorHold, holds }) => {
   const hasMinorHold = holds?.LaVidaHold || holds?.DeclarationOfMajorHold;
+  const { profile } = useUser();
 
   return (
     <Grid container justifyContent="center" alignItems="center" direction="column">
@@ -15,9 +17,9 @@ const EnrollmentCheckInWelcome = ({ basicInfo, hasMajorHold, holds }) => {
           <b>Enrollment Check-In</b>
         </Typography>
         <Typography justify="center" className={styles.checkIn}>
-          Hello, {basicInfo.studentFirstName}! Welcome to a new semester at Gordon College! Please
-          take a few moments to complete the check-in process in order to confirm your academic
-          enrollment and help Gordon College plan to provide services to you.
+          Hello, {profile.FirstName}! Welcome to a new semester at Gordon College! Please take a few
+          moments to complete the check-in process in order to confirm your academic enrollment and
+          help Gordon College plan to provide services to you.
         </Typography>
         <br />
       </Grid>
