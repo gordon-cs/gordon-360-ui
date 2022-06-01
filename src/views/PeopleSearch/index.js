@@ -29,7 +29,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import { useAuth, useNetworkStatus, useUser } from 'hooks';
+import { useNetworkStatus, useUser } from 'hooks';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { IconContext } from 'react-icons';
 import {
@@ -157,7 +157,7 @@ const searchPageTitle = (
 const NUM_NONLAZY_IMAGES = 20; //The number of results for which images will be fetched immediately
 
 const PeopleSearch = ({ history, classes }) => {
-  const user = useUser();
+  const { profile, loading: loadingProfile } = useUser();
   // advancedSearchExpanded: false,
 
   // arrays of table data from backend
@@ -197,7 +197,6 @@ const PeopleSearch = ({ history, classes }) => {
 
   const printRef = useRef();
   const isOnline = useNetworkStatus();
-  const authenticated = useAuth();
   const location = useLocation();
 
   const searchValues = useMemo(
@@ -333,7 +332,7 @@ const PeopleSearch = ({ history, classes }) => {
 
   useEffect(() => {
     const loadPage = async () => {
-      if (authenticated) {
+      if (profile) {
         const [majors, minors, halls, states, countries, departments, buildings] =
           await Promise.all([
             goStalk.getMajors(),
@@ -352,7 +351,7 @@ const PeopleSearch = ({ history, classes }) => {
         setDepartments(departments);
         setBuildings(buildings);
 
-        if (user.profile?.personType?.includes?.('alum')) {
+        if (profile.PersonType?.includes?.('alum')) {
           setIncludeStudent(false);
           setIncludeAlumni(true);
         }
@@ -368,13 +367,7 @@ const PeopleSearch = ({ history, classes }) => {
     };
 
     loadPage();
-  }, [
-    authenticated,
-    loadSearchParamsFromURL,
-    location.search,
-    updateURL,
-    user.profile?.personType,
-  ]);
+  }, [profile, loadSearchParamsFromURL, location.search, updateURL]);
 
   const handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
@@ -398,12 +391,16 @@ const PeopleSearch = ({ history, classes }) => {
     </div>
   );
 
-  if (!authenticated) {
-    return <GordonUnauthorized feature={'People Search'} />;
-  }
-
   if (!isOnline) {
     return <GordonOffline feature="People Search" />;
+  }
+
+  if (loadingProfile) {
+    return <GordonLoader />;
+  }
+
+  if (!profile) {
+    return <GordonUnauthorized feature={'People Search'} />;
   }
 
   PeopleSearchCheckbox = (
@@ -418,7 +415,7 @@ const PeopleSearch = ({ history, classes }) => {
           </Grid>
         ) : (
           <Grid item>
-            {!user.profile?.personType?.includes?.('alum') ? (
+            {!profile.PersonType?.includes?.('alum') ? (
               <FormControlLabel
                 control={
                   <Checkbox
@@ -438,7 +435,7 @@ const PeopleSearch = ({ history, classes }) => {
               }
               label="Faculty/Staff"
             />
-            {!user.profile?.personType?.includes?.('stu') ? (
+            {!profile.PersonType?.includes?.('stu') ? (
               <FormControlLabel
                 control={
                   <Checkbox checked={includeAlumni} onChange={() => setIncludeAlumni((i) => !i)} />
@@ -661,7 +658,7 @@ const PeopleSearch = ({ history, classes }) => {
                                   : gordonColors.neutral.lightGray,
                             }}
                           >
-                            {user.profile?.personType === 'stu' ? 'Student' : 'Student/Alumni'}
+                            {profile.PersonType === 'stu' ? 'Student' : 'Student/Alumni'}
                           </InputLabel>
                         </Typography>
                       </Grid>
@@ -1022,13 +1019,9 @@ const PeopleSearch = ({ history, classes }) => {
                     setState(
                       {
                         searchValues: {
-                          includeStudent: user.profile?.personType?.includes?.('alum')
-                            ? false
-                            : true,
+                          includeStudent: profile.PersonType?.includes?.('alum') ? false : true,
                           includeFacStaff: true,
-                          includeAlumni: user.profile?.personType?.includes?.('alum')
-                            ? true
-                            : false,
+                          includeAlumni: profile.PersonType?.includes?.('alum') ? true : false,
                           firstName: '',
                           lastName: '',
                           major: '',
@@ -1077,7 +1070,7 @@ const PeopleSearch = ({ history, classes }) => {
           {header}
           {resultData}
         </Card>
-        {!user.profile?.personType?.includes?.('stu') && (
+        {!profile.PersonType?.includes?.('stu') && (
           <ReactToPrint
             trigger={() => {
               return printPeopleSearchButton;
