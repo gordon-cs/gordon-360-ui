@@ -7,7 +7,7 @@ import {
   Button,
 } from '@material-ui/core/';
 import { useState } from 'react';
-import updateAlumniInfo from 'services/update';
+import requestInfoUpdate from 'services/update';
 import styles from '../Update.module.css';
 import GordonLoader from 'components/Loader';
 import { gordonColors } from 'theme';
@@ -81,7 +81,7 @@ const UpdatePage = (props) => {
         createSnackbar('Please fill in your first and last name.','error');
       } else {
         setSaving(true);
-        updateAlumniInfo(JSON.stringify(userInfo)).then(() => {
+        requestInfoUpdate(JSON.stringify(userInfo)).then(() => {
           createSnackbar('A request to update your information has been sent. Please check back later.','info');
           setSaving(false);
         });
