@@ -6,7 +6,7 @@ import {
   CardHeader,
   Button,
 } from '@material-ui/core/';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import requestInfoUpdate from 'services/update';
 import styles from '../Update.module.css';
 import GordonLoader from 'components/Loader';
@@ -26,51 +26,79 @@ const UpdatePage = (props) => {
   const profile = props.profile;
   const isUserStudent = profile.PersonType.includes('stu');
 
-  const [userInfo, setUserInfo] =
-    useState(
-      {
-        salutation: profile.Title
-          ? profile.Title.charAt(0).toUpperCase() + profile.Title.slice(1).toLowerCase()
-          : '',
-        firstname: profile.FirstName,
-        lastname: profile.LastName,
-        middlename: profile.MiddleName,
-        preferredname: profile.NickName,
-        personalemail: "",
-        workemail: "",
-        alt_email: profile.Email,
-        preferredemail: "",
-        doNotContact: false,
-        doNotMail: false,
-        homephone: profile.HomePhone,
-        workphone: "",
-        mobilephone: profile.MobilePhone,
-        preferredphone: "",
-        address: profile.HomeStreet1.length === 0
-          ? profile.HomeStreet2
-          : profile.HomeStreet1,
-        city: profile.HomeCity,
-        state: profile.HomeState,
-        zip: profile.HomePostalCode,
-        country: profile.HomeCountry,
-        maritalstatus: profile.Married === 'N'
-          ? 'No'
-          : profile.Married === 'Y'
-            ? 'Yes'
-            : ''
-      }
-    );
+  const saveUser =
+  {
+    salutation: profile.Title
+      ? profile.Title.charAt(0).toUpperCase() + profile.Title.slice(1).toLowerCase()
+      : '',
+    firstname: profile.FirstName,
+    lastname: profile.LastName,
+    middlename: profile.MiddleName,
+    preferredname: profile.NickName,
+    personalemail: "",
+    workemail: "",
+    alt_email: profile.Email,
+    preferredemail: "",
+    doNotContact: false,
+    doNotMail: false,
+    homephone: profile.HomePhone,
+    workphone: "",
+    mobilephone: profile.MobilePhone,
+    preferredphone: "",
+    address: profile.HomeStreet1.length === 0
+      ? profile.HomeStreet2
+      : profile.HomeStreet1,
+    city: profile.HomeCity,
+    state: profile.HomeState,
+    zip: profile.HomePostalCode,
+    country: profile.HomeCountry,
+    maritalstatus: profile.Married === 'N'
+      ? 'No'
+      : profile.Married === 'Y'
+        ? 'Yes'
+        : ''
+  };
+  const [userInfo, setUserInfo] = useState(saveUser);
+  const [saving, setSaving] = useState(false);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
 
-  const handleChange = (event) => {
-    setUserInfo({ ...userInfo, [event.target.name]: event.target.value
-      ? event.target.value
-      : !userInfo[event.target.name]
-    });
+  /**
+   * @param userInfo user information object
+   * @returns {Array<Object>} Array of updated fields in a subobject
+   */
+  function emailContent(userInfo) {
+    var updatedFields = [];
+    for (const field in userInfo) {
+      if (saveUser[field] !== userInfo[field])
+        updatedFields.push(
+          {
+            "field":field,
+            "value":userInfo[field]
+          }
+        );
+    }
+    return updatedFields;
   }
 
-  const [saving, setSaving] = useState(false);
+  const determineChange = () => {
+    for (const field in userInfo) {
+      if (saveUser[field] !== userInfo[field]){
+        return false;
+      }
+    }
+    return true;
+  }
+  const hasNoChange = useMemo(() => determineChange(), [userInfo]);
 
-  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const handleChange = (event) => {
+    var info = { ...userInfo, [event.target.name]:
+      event.target.type === "checkbox"
+        ? event.target.checked
+        : event.target.value
+    }
+    setUserInfo(info);
+  }
+
   const createSnackbar = ( message, severity ) => {
     setSnackbar({ message: message, severity: severity, open: true });
   }
@@ -81,7 +109,7 @@ const UpdatePage = (props) => {
         createSnackbar('Please fill in your first and last name.','error');
       } else {
         setSaving(true);
-        requestInfoUpdate(JSON.stringify(userInfo)).then(() => {
+        requestInfoUpdate(emailContent(userInfo)).then(() => {
           createSnackbar('A request to update your information has been sent. Please check back later.','info');
           setSaving(false);
         });
@@ -92,8 +120,9 @@ const UpdatePage = (props) => {
       ? <GordonLoader size={32} />
       : <Button
           variant="contained"
-          className={styles.update_button}
+          color="secondary"
           onClick={handleSaveButtonClick}
+          disabled={hasNoChange}
         >
           Update
         </Button>;
