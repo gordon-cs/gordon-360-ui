@@ -26,3 +26,18 @@ export const compareByProperty =
       return 0;
     }
   };
+
+/**
+ * Transforms a string of any case into a title case string.
+ * The string is split into words on the separator, and each word is capitalized.
+ *
+ * @param string a string to convert to Title Case, e.g. 'person first name'
+ * @param separator the separator to split words on. defaults to a single space (`' '`)
+ * @returns the string in title case, e.g. `Person First Name`
+ */
+export const toTitleCase = (string: string, separator = ' ') =>
+  string
+    .toLowerCase()
+    .split(separator)
+    .map((word) => word.replace(word[0], word[0].toUpperCase()))
+    .join(' ');

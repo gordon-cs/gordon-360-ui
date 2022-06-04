@@ -82,7 +82,7 @@ const search = (
     classType,
     homeCity,
     state,
-    country,
+    country: country.toUpperCase(),
     department,
     building,
   })
