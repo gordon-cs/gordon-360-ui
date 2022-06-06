@@ -177,7 +177,7 @@ const UpdatePage = (props) => {
     };
     if (!isOnline) return <GordonOffline feature="Update Profile" />;
 
-    if (true) return <NotAlumni />;
+    if (!isUserStudent) return <NotAlumni />;
 
     return (
       <>
