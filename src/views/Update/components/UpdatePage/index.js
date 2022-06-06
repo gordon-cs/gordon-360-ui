@@ -177,7 +177,7 @@ const UpdatePage = (props) => {
     };
     if (!isOnline) return <GordonOffline feature="Update Profile" />;
 
-    if (!isUserStudent) return <NotAlumni />;
+    if (true) return <NotAlumni />;
 
     return (
       <>
@@ -206,9 +206,9 @@ const UpdatePage = (props) => {
             </Card>
             <Typography variant="subtitle1">
               Found a bug?
-              <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
-                <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
-              </a>
+              <Button href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug" color="primary">
+                Report to CTS
+              </Button>
             </Typography>
           </Grid>
         </Grid>
