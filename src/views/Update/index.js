@@ -1,7 +1,7 @@
 import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import { UpdatePage } from './UpdatePage';
+import { UpdatePage } from './components/UpdatePage';
 
 /**
  * Sends an update form to the development office

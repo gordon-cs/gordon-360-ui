@@ -1,13 +1,13 @@
 import http from './http';
 
-type UpdatedFields = {
+type ProfileFieldUpdate = {
   field: string;
   value: string;
 }
 
-const requestInfoUpdate = async ( email_content: Array<UpdatedFields> ) => {
-  console.log(email_content);
-  //await http.post('profiles/updateRequest/', email_content);
+const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => {
+  console.log(updatedFields);
+  //await http.post('profiles/updateRequest/', updatedFields);
 };
 
 export default requestInfoUpdate;

@@ -76,8 +76,8 @@ const routes = [
     component: EventsAttended,
   },
   {
-    name: 'Update',
-    path: '/update',
+    name: 'Update Profile',
+    path: '/myprofile/update',
     component: Update,
   },
   {

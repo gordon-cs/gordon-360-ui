@@ -250,7 +250,7 @@ const PersonalInfoList = ({
   */
   const updateInfoButton = myProf ? (
     <Grid container justifyContent="center">
-      <Link className="gc360_link" to="/update">
+      <Link className="gc360_link" to="/myprofile/update">
         <Button variant="contained" className={styles.update_info_button}>
           Update Information
         </Button>
