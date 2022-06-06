@@ -56,35 +56,39 @@ type SearchResult = SearchResultBase &
       }
   );
 
+type SearchFields = {
+  first_name: string;
+  last_name: string;
+  major: string;
+  minor: string;
+  residence_hall: string;
+  class_year: Class | '';
+  home_town: string;
+  state: string;
+  country: string;
+  department: string;
+  building: string;
+};
+
 // TODO: Document return type
 const search = (
   includeStudent: boolean,
   includeFacStaff: boolean,
   includeAlumni: boolean,
-  firstName: string,
-  lastName: string,
-  major: string,
-  minor: string,
-  hall: string,
-  classType: string, // The database has class types as integers
-  homeCity: string,
-  state: string,
-  country: string,
-  department: string,
-  building: string,
+  searchFields: SearchFields,
 ): Promise<SearchResult[]> => {
   let params = Object.entries({
-    firstName,
-    lastName,
-    major,
-    minor,
-    hall,
-    classType,
-    homeCity,
-    state,
-    country: country.toUpperCase(),
-    department,
-    building,
+    firstName: searchFields.first_name,
+    lastName: searchFields.last_name,
+    major: searchFields.major,
+    minor: searchFields.minor,
+    hall: searchFields.residence_hall,
+    classType: typeof searchFields.class_year == 'string' ? '' : Class[searchFields.class_year],
+    homeCity: searchFields.home_town,
+    state: searchFields.state,
+    country: searchFields.country.toUpperCase(),
+    department: searchFields.department,
+    building: searchFields.building,
   })
     .filter(([_key, value]) => Boolean(value))
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)

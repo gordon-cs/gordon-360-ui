@@ -116,7 +116,7 @@ const initialSearchValues = {
   major: '',
   minor: '',
   residence_hall: '',
-  classType: '',
+  class_year: '',
   home_town: '',
   state: '',
   country: '',
@@ -128,7 +128,7 @@ const isTodayAprilFools = () => {
   return todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
 };
 
-const SearchFields = ({ classes, search }) => {
+const SearchFields = ({ classes, onSearch }) => {
   const { profile, loading: loadingProfile } = useUser();
 
   const [majors, setMajors] = useState([]);
@@ -147,6 +147,7 @@ const SearchFields = ({ classes, search }) => {
 
   const [displayLargeImage, setDisplayLargeImage] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const isOnline = useNetworkStatus();
 
@@ -164,21 +165,25 @@ const SearchFields = ({ classes, search }) => {
       .some((x) => x);
   }, [searchValues]);
 
-  const performSearch = useCallback(() => {
+  const search = useCallback(async () => {
     if (canSearch()) {
-      search(
-        { includeStudent, includeFacStaff, includeAlumni, ...searchValues },
-        displayLargeImage,
+      setSaving(true);
+      const results = await goStalk.search(
+        includeStudent,
+        includeFacStaff,
+        includeAlumni,
+        searchValues,
       );
-      // TODO: Store new search values in URL
+      onSearch(results, displayLargeImage);
+      setSaving(false);
     }
   }, [
     canSearch,
-    search,
     includeStudent,
     includeFacStaff,
     includeAlumni,
     searchValues,
+    onSearch,
     displayLargeImage,
   ]);
 
@@ -224,7 +229,7 @@ const SearchFields = ({ classes, search }) => {
 
   const handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
-      performSearch();
+      search();
     }
   };
 
@@ -413,9 +418,9 @@ const SearchFields = ({ classes, search }) => {
                         <Select
                           labelId="class"
                           id="class"
-                          value={searchValues.classType}
+                          value={searchValues.class_year}
                           onChange={(e) =>
-                            setSearchValues((sv) => ({ ...sv, classType: e.target.value }))
+                            setSearchValues((sv) => ({ ...sv, class_year: e.target.value }))
                           }
                         >
                           <MenuItem label="All Classes" value="">
@@ -474,6 +479,7 @@ const SearchFields = ({ classes, search }) => {
                     updateValue={handleUpdate}
                     classes={classes}
                     Icon={Home}
+                    onKeyDown={handleEnterKeyPress}
                   />
                   <SelectSearchField
                     name="state"
@@ -502,15 +508,19 @@ const SearchFields = ({ classes, search }) => {
         <Button variant="contained" onClick={() => setSearchValues(initialSearchValues)}>
           RESET
         </Button>
-        <Button
-          color="primary"
-          onClick={performSearch}
-          fullWidth
-          variant="contained"
-          disabled={!canSearch()}
-        >
-          SEARCH
-        </Button>
+        {saving ? (
+          <GordonLoader />
+        ) : (
+          <Button
+            color="primary"
+            onClick={search}
+            fullWidth
+            variant="contained"
+            disabled={!canSearch()}
+          >
+            SEARCH
+          </Button>
+        )}
       </CardActions>
       <br />
     </Card>

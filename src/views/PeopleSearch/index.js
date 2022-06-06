@@ -7,7 +7,6 @@ import { useCallback, useRef, useState } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import Media from 'react-media';
 import ReactToPrint from 'react-to-print';
-import goStalk from 'services/goStalk';
 import { gordonColors } from 'theme';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import SearchFields from './components/SearchFields';
@@ -127,10 +126,7 @@ const PeopleSearch = () => {
   const printRef = useRef();
   const isOnline = useNetworkStatus();
 
-  const search = useCallback(async (searchValues, displayLargeImage) => {
-    setHeader(<GordonLoader />);
-    setSearchResults([]);
-    const results = await goStalk.search(...Object.values(searchValues));
+  const handleSearch = useCallback(async (results, displayLargeImage) => {
     if (results.length === 0) {
       setHeader(null);
       setSearchResults(noResultsCard);
@@ -189,7 +185,7 @@ const PeopleSearch = () => {
   return (
     <Grid container justifyContent="center" spacing={6}>
       <Grid item xs={12} lg={10} xl={8}>
-        <SearchFields search={search} />
+        <SearchFields onSearch={handleSearch} />
         <br />
         <Card ref={printRef}>
           {printPeopleSearchHeader}
