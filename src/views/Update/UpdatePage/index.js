@@ -59,7 +59,7 @@ const UpdatePage = (props) => {
         : ''
   };
   const [userInfo, setUserInfo] = useState(saveUser);
-  const [saving, setSaving] = useState(false);
+  const [isSaving, setSaving] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
 
   /**
@@ -80,6 +80,13 @@ const UpdatePage = (props) => {
     return updatedFields;
   }
 
+  /**
+   * Determines if there has been any "actual" change in each field.
+   * Search has to go through each field in the case that 2 fields have
+   * been updated, then one being "un-updated"
+   *
+   * @returns {bool} true if there has been an update, false otherwise
+   */
   const determineChange = () => {
     for (const field in userInfo) {
       if (saveUser[field] !== userInfo[field]){
@@ -116,7 +123,7 @@ const UpdatePage = (props) => {
       }
     };
 
-    const saveButton = saving
+    const saveButton = isSaving
       ? <GordonLoader size={32} />
       : <Button
           variant="contained"
