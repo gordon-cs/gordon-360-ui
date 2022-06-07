@@ -8,24 +8,16 @@ import {
   CardContent,
   CardHeader,
   Checkbox,
-  FormControl,
   FormControlLabel,
   FormLabel,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
   Switch,
   Typography,
-  withStyles,
 } from '@material-ui/core';
 import { ExpandMore, Home, LocationCity, Person } from '@material-ui/icons';
-import GordonOffline from 'components/GordonOffline';
-import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import { useNetworkStatus, useUser } from 'hooks';
+import { useUser } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
-import { IconContext } from 'react-icons';
 import {
   FaBook,
   FaBriefcase,
@@ -35,57 +27,11 @@ import {
   FaSchool,
 } from 'react-icons/fa';
 import Media from 'react-media';
-import goStalk from 'services/goStalk';
+import goStalk, { Class } from 'services/goStalk';
 import { toTitleCase } from 'services/utils';
 import { gordonColors } from 'theme';
 import SelectSearchField from './components/SelectSearchField';
 import TextSearchField from './components/TextSearchField';
-
-const styles2 = {
-  FontAwesome: {
-    fontSize: 20,
-    margin: 2,
-  },
-  actions: {
-    display: 'flex',
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
-  CardContent: {
-    marginLeft: 8,
-  },
-  headerStyle: {
-    backgroundColor: gordonColors.primary.blue,
-    color: '#FFF',
-    padding: '1.5rem 0.75rem',
-  },
-  colorSwitchBase: {
-    color: gordonColors.neutral.lightGray,
-    '&$colorChecked': {
-      color: gordonColors.primary.cyan,
-      '& + $colorBar': {
-        backgroundColor: gordonColors.primary.cyan,
-      },
-    },
-  },
-  colorBar: {},
-  colorChecked: {},
-  icon: {
-    color: gordonColors.neutral.grayShades[900],
-  },
-  printPeopleSearchButton: {
-    position: 'fixed',
-    margin: 0,
-    bottom: 'min(5vw, 4rem)',
-    right: 'max(2rem, 5vw)',
-    zIndex: 1,
-  },
-};
 
 const relationship_statuses = [
   'Single',
@@ -121,6 +67,7 @@ const initialSearchValues = {
   state: '',
   country: '',
   department: '',
+  building: '',
 };
 
 const isTodayAprilFools = () => {
@@ -128,8 +75,8 @@ const isTodayAprilFools = () => {
   return todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
 };
 
-const SearchFields = ({ classes, onSearch }) => {
-  const { profile, loading: loadingProfile } = useUser();
+const SearchFields = ({ onSearch }) => {
+  const { profile } = useUser();
 
   const [majors, setMajors] = useState([]);
   const [minors, setMinors] = useState([]);
@@ -147,15 +94,11 @@ const SearchFields = ({ classes, onSearch }) => {
 
   const [displayLargeImage, setDisplayLargeImage] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-
-  const isOnline = useNetworkStatus();
+  const [loadingSearch, setLoadingSearch] = useState(false);
 
   //This is to prevent search from blank
   const canSearch = useCallback(() => {
-    const { includeStudent, includeFacStaff, includeAlumni, ...necessarySearchValues } =
-      searchValues;
-    return Object.values(necessarySearchValues)
+    return Object.values(searchValues)
       .map((x) =>
         x
           .toString()
@@ -167,7 +110,8 @@ const SearchFields = ({ classes, onSearch }) => {
 
   const search = useCallback(async () => {
     if (canSearch()) {
-      setSaving(true);
+      setLoadingSearch(true);
+
       const results = await goStalk.search(
         includeStudent,
         includeFacStaff,
@@ -175,7 +119,7 @@ const SearchFields = ({ classes, onSearch }) => {
         searchValues,
       );
       onSearch(results, displayLargeImage);
-      setSaving(false);
+      setLoadingSearch(false);
     }
   }, [
     canSearch,
@@ -224,6 +168,10 @@ const SearchFields = ({ classes, onSearch }) => {
   // TODO: Load search params from URL on navigation / initial load
   // }, [profile, location.search, loadSearchParamsFromURL, updateURL]);
 
+  if (loading) {
+    return <GordonLoader />;
+  }
+
   const handleUpdate = (event) =>
     setSearchValues((sv) => ({ ...sv, [event.target.name]: event.target.value }));
 
@@ -232,18 +180,6 @@ const SearchFields = ({ classes, onSearch }) => {
       search();
     }
   };
-
-  if (!isOnline) {
-    return <GordonOffline feature="People Search" />;
-  }
-
-  if (loading || loadingProfile) {
-    return <GordonLoader />;
-  }
-
-  if (!profile) {
-    return <GordonUnauthorized feature={'People Search'} />;
-  }
 
   const PeopleSearchCheckbox = (
     <Grid item xs={12} lg={6} align="center">
@@ -291,7 +227,6 @@ const SearchFields = ({ classes, onSearch }) => {
               name="first_name"
               value={searchValues.first_name}
               updateValue={handleUpdate}
-              classes={classes}
               Icon={Person}
             />
           </Grid>
@@ -301,7 +236,6 @@ const SearchFields = ({ classes, onSearch }) => {
               name="last_name"
               value={searchValues.last_name}
               updateValue={handleUpdate}
-              classes={classes}
             />
           </Grid>
 
@@ -312,7 +246,6 @@ const SearchFields = ({ classes, onSearch }) => {
               updateValue={handleUpdate}
               options={halls}
               Icon={FaBuilding}
-              classes={classes}
             />
           </Grid>
 
@@ -324,7 +257,6 @@ const SearchFields = ({ classes, onSearch }) => {
                 updateValue={handleUpdate}
                 options={relationship_statuses}
                 Icon={FaHeart}
-                classes={classes}
               />
             </Grid>
           ) : null}
@@ -377,7 +309,6 @@ const SearchFields = ({ classes, onSearch }) => {
                     value={searchValues.major}
                     updateValue={handleUpdate}
                     options={majors}
-                    classes={classes}
                     Icon={FaBook}
                     disabled={!includeStudent && !includeAlumni}
                   />
@@ -386,58 +317,17 @@ const SearchFields = ({ classes, onSearch }) => {
                     value={searchValues.minor}
                     updateValue={handleUpdate}
                     options={minors}
-                    classes={classes}
                     Icon={FaBook}
                     disabled={!includeStudent}
                   />
-                  <Grid container spacing={2} alignItems="center">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item xs="1" style={{ marginBottom: '-4px' }}>
-                          <IconContext.Provider
-                            value={{
-                              color: includeStudent
-                                ? gordonColors.neutral.grayShades[900]
-                                : gordonColors.neutral.lightGray,
-                            }}
-                          >
-                            <FaSchool style={styles2.FontAwesome} className={classes.icon} />
-                          </IconContext.Provider>
-                        </Grid>
-                      )}
-                    />
-                    <Grid item xs={11}>
-                      <FormControl
-                        variant="filled"
-                        fullWidth
-                        className={includeStudent ? null : 'disabled'}
-                        disabled={!includeStudent}
-                      >
-                        <InputLabel id="class">Class</InputLabel>
-                        <Select
-                          labelId="class"
-                          id="class"
-                          value={searchValues.class_year}
-                          onChange={(e) =>
-                            setSearchValues((sv) => ({ ...sv, class_year: e.target.value }))
-                          }
-                        >
-                          <MenuItem label="All Classes" value="">
-                            <em>All</em>
-                          </MenuItem>
-                          <MenuItem value={1}>First Year</MenuItem>
-                          <MenuItem value={2}>Sophomore</MenuItem>
-                          <MenuItem value={3}>Junior</MenuItem>
-                          <MenuItem value={4}>Senior</MenuItem>
-                          <MenuItem value={5}>Graduate Student</MenuItem>
-                          <MenuItem value={6}>Undergraduate Conferred</MenuItem>
-                          <MenuItem value={7}>Graduate Conferred</MenuItem>
-                          <MenuItem value={0}>Unassigned</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
+                  <SelectSearchField
+                    name="class_year"
+                    value={searchValues.class_year}
+                    updateValue={handleUpdate}
+                    options={Object.values(Class).filter((value) => typeof value !== 'number')}
+                    Icon={FaSchool}
+                    disabled={!includeStudent}
+                  />
                 </Grid>
 
                 {/* Advanced Search Filters: Faculty/Staff */}
@@ -454,7 +344,6 @@ const SearchFields = ({ classes, onSearch }) => {
                     value={searchValues.department}
                     updateValue={handleUpdate}
                     options={departments}
-                    classes={classes}
                     Icon={FaBriefcase}
                     disabled={!includeFacStaff}
                   />
@@ -462,7 +351,6 @@ const SearchFields = ({ classes, onSearch }) => {
                     name="building"
                     value={searchValues.building}
                     options={buildings}
-                    classes={classes}
                     Icon={FaBuilding}
                     disabled={!includeFacStaff}
                   />
@@ -477,7 +365,6 @@ const SearchFields = ({ classes, onSearch }) => {
                     name="home_town"
                     value={searchValues.home_town}
                     updateValue={handleUpdate}
-                    classes={classes}
                     Icon={Home}
                     onKeyDown={handleEnterKeyPress}
                   />
@@ -487,7 +374,6 @@ const SearchFields = ({ classes, onSearch }) => {
                     updateValue={handleUpdate}
                     options={states}
                     Icon={LocationCity}
-                    classes={classes}
                   />
                   <SelectSearchField
                     name="country"
@@ -495,7 +381,6 @@ const SearchFields = ({ classes, onSearch }) => {
                     updateValue={handleUpdate}
                     options={countries}
                     Icon={FaGlobeAmericas}
-                    classes={classes}
                   />
                 </Grid>
               </Grid>
@@ -508,7 +393,7 @@ const SearchFields = ({ classes, onSearch }) => {
         <Button variant="contained" onClick={() => setSearchValues(initialSearchValues)}>
           RESET
         </Button>
-        {saving ? (
+        {loadingSearch ? (
           <GordonLoader />
         ) : (
           <Button
@@ -527,4 +412,4 @@ const SearchFields = ({ classes, onSearch }) => {
   );
 };
 
-export default withStyles(styles2)(SearchFields);
+export default SearchFields;

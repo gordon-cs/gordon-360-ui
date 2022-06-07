@@ -1,6 +1,13 @@
-import { Grid, TextField } from '@material-ui/core';
+import { Grid, TextField, withStyles } from '@material-ui/core';
 import Media from 'react-media';
 import { toTitleCase } from 'services/utils';
+import { gordonColors } from 'theme';
+
+const styles2 = {
+  icon: {
+    color: gordonColors.neutral.grayShades[900],
+  },
+};
 
 const TextSearchField = ({ name, value, updateValue, classes, Icon }) => (
   <Grid container spacing={2} alignItems="center">
@@ -30,4 +37,4 @@ const TextSearchField = ({ name, value, updateValue, classes, Icon }) => (
   </Grid>
 );
 
-export default TextSearchField;
+export default withStyles(styles2)(TextSearchField);

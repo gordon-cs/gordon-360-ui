@@ -12,41 +12,10 @@ import PeopleSearchResult from './components/PeopleSearchResult';
 import SearchFields from './components/SearchFields';
 
 const styles2 = {
-  FontAwesome: {
-    fontSize: 20,
-    margin: 2,
-  },
-  actions: {
-    display: 'flex',
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
-  CardContent: {
-    marginLeft: 8,
-  },
   headerStyle: {
     backgroundColor: gordonColors.primary.blue,
     color: '#FFF',
     padding: '1.5rem 0.75rem',
-  },
-  colorSwitchBase: {
-    color: gordonColors.neutral.lightGray,
-    '&$colorChecked': {
-      color: gordonColors.primary.cyan,
-      '& + $colorBar': {
-        backgroundColor: gordonColors.primary.cyan,
-      },
-    },
-  },
-  colorBar: {},
-  colorChecked: {},
-  icon: {
-    color: gordonColors.neutral.grayShades[900],
   },
   printPeopleSearchButton: {
     position: 'fixed',
@@ -101,7 +70,7 @@ const printPeopleSearchButton = (
   <Fab variant="extended" color="primary" style={styles2.printPeopleSearchButton}>
     <FaPrint />
     <Media query="(min-width: 960px)">
-      <span style={styles2.printPeopleSearchButton__text}>&nbsp;&nbsp;Print Results</span>
+      <span>&nbsp;&nbsp;Print Results</span>
     </Media>
   </Fab>
 );

@@ -62,7 +62,7 @@ type SearchFields = {
   major: string;
   minor: string;
   residence_hall: string;
-  class_year: Class | '';
+  class_year: keyof typeof Class | '';
   home_town: string;
   state: string;
   country: string;
@@ -83,7 +83,8 @@ const search = (
     major: searchFields.major,
     minor: searchFields.minor,
     hall: searchFields.residence_hall,
-    classType: typeof searchFields.class_year == 'string' ? '' : Class[searchFields.class_year],
+    classType: searchFields.class_year === '' ? '' : Class[searchFields.class_year],
+
     homeCity: searchFields.home_town,
     state: searchFields.state,
     country: searchFields.country.toUpperCase(),
