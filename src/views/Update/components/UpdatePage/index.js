@@ -163,7 +163,6 @@ const UpdatePage = (props) => {
     );
 
     const infoMap = (fields) => {
-      // console.log(fields);
       return fields.map((field) => (
         <ProfileUpdateField
           label={field.label}
