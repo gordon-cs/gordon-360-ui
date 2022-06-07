@@ -1,6 +1,6 @@
 import { Divider, Grid, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import IMG from 'react-graceful-image';
 import { Link } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
@@ -17,29 +17,17 @@ const GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/erVfwAJRwPA/3pinwAAAABJRU5ErkJggg==';
 const JPG_BASE64_HEADER = 'data:image/jpg;base64,';
 
+const SecondaryText = ({ children, otherProps }) => (
+  <Typography variant="body2" color="textSecondary" {...otherProps}>
+    {children}
+  </Typography>
+);
+
 const PeopleSearchResult = ({ Person, size, lazyImages }) => {
   const [avatar, setAvatar] = useState(GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1);
   const [hasBeenRun, setHasBeenRun] = useState(false);
-  const [fullName, setFullName] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [personClassJobTitle, setPersonClassJobTitle] = useState('');
-  const [personMailLocation, setPersonMailLocation] = useState('');
-  const [maidenName, setMaidenName] = useState();
-  const SecondaryText = ({ children, otherProps }) => (
-    <Typography variant="body2" color="textSecondary" {...otherProps}>
-      {children}
-    </Typography>
-  );
 
-  useEffect(() => {
-    if (lazyImages === false) {
-      loadAvatar();
-    }
-  });
-
-  useEffect(compileInfo);
-
-  async function loadAvatar() {
+  const loadAvatar = useCallback(async () => {
     //Rename def to defaultImage and pref to preferredImage for clarity
     const { def: defaultImage, pref: preferredImage } = await userService.getImage(
       Person.AD_Username,
@@ -49,38 +37,45 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
       setAvatar(JPG_BASE64_HEADER + (preferredImage || defaultImage));
     }
     setHasBeenRun(true);
-  }
+  }, [Person.AD_Username]);
 
-  function handleVisibilityChange(isVisible) {
+  useEffect(() => {
+    if (lazyImages === false) {
+      loadAvatar();
+    }
+  }, [Person.AD_Username, lazyImages, loadAvatar]);
+
+  const handleVisibilityChange = (isVisible) => {
     if (isVisible && !hasBeenRun) loadAvatar();
-  }
+  };
 
-  function compileInfo() {
-    setFullName(Person.FirstName + ' ' + Person.LastName);
+  const fullName = `${Person.FirstName} ${Person.LastName}`;
+  const nickname =
+    Person?.NickName && Person.NickName !== Person.FirstName ? `(${Person.NickName})` : null;
+  const maidenName =
+    Person?.MaidenName && Person.MaidenName !== Person.LastName ? `(${Person.MaidenName})` : null;
+  const personClassJobTitle =
+    Person.Type === 'Student' ? Class[Person.Class] : Person.JobTitle ?? '';
+  const mailLocation =
+    Person.Type === 'Student'
+      ? `Mailbox #${Person.Mail_Location}`
+      : `Mailstop: ${Person.Mail_Location}`;
 
-    // set nicknames up
-    if (Person.NickName && Person.FirstName !== Person.NickName) {
-      setNickname('(' + Person.NickName + ')');
-    }
-    // set maiden names up
-    if (Person.MaidenName && Person.LastName !== Person.MaidenName) {
-      setMaidenName('(' + Person.MaidenName + ')');
-    }
-    // set classes up
-    if (Person.Type === 'Student') {
-      setPersonClassJobTitle(Class[Person.Class]);
-    } else if (Person.JobTitle && Person.Type !== 'Student') {
-      setPersonClassJobTitle(Person.JobTitle);
-    }
-    // set mailbox up
-    if (Person.Mail_Location) {
-      setPersonMailLocation(
-        Person.Type === 'Student'
-          ? 'Mailbox #' + Person.Mail_Location
-          : 'Mailstop: ' + Person.Mail_Location,
-      );
-    }
-  }
+  const profileImage = (
+    <IMG
+      className={
+        size === 'single'
+          ? styles.people_search_avatar_mobile
+          : size === 'largeImages'
+          ? styles.people_search_avatar_large
+          : styles.people_search_avatar
+      }
+      src={avatar}
+      alt={'Profile picture for ' + fullName}
+      noLazyLoad="true"
+      noPlaceHolder="true"
+    />
+  );
 
   return (
     <VisibilitySensor onChange={handleVisibilityChange}>
@@ -97,15 +92,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
                 padding: '1rem',
               }}
             >
-              <Grid item>
-                <IMG
-                  className={styles.people_search_avatar_mobile}
-                  src={avatar}
-                  alt={'Profile picture for ' + fullName}
-                  noLazyLoad="true"
-                  noPlaceHolder="true"
-                />
-              </Grid>
+              <Grid item>{profileImage}</Grid>
               <Grid item xs={8}>
                 <Typography variant="h5">
                   {Person.FirstName} {nickname} {Person.LastName} {maidenName}
@@ -124,7 +111,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
                   {Person.Major3Description ? `, ${Person.Major3Description}` : null}
                 </SecondaryText>
                 <SecondaryText variant="body2">{Person.Email}</SecondaryText>
-                <SecondaryText variant="body2">{personMailLocation}</SecondaryText>
+                <SecondaryText variant="body2">{mailLocation}</SecondaryText>
               </Grid>
             </Grid>
           </Link>
@@ -140,13 +127,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
               }}
             >
               <Grid item xs={4} container justifyContent="flex-end">
-                <IMG
-                  className={styles.people_search_avatar_large}
-                  src={avatar}
-                  alt={'Profile picture for ' + fullName}
-                  noLazyLoad="true"
-                  noPlaceHolder="true"
-                />
+                {profileImage}
               </Grid>
               <Grid item xs={8}>
                 <Typography variant="h5">
@@ -165,8 +146,8 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
                     : null}
                   {Person.Major3Description ? `, ${Person.Major3Description}` : null}
                 </SecondaryText>
-                <SecondaryText variant="body2">{Person.Email}</SecondaryText>
-                <SecondaryText variant="body2">{personMailLocation}</SecondaryText>
+                <SecondaryText>{Person.Email}</SecondaryText>
+                <SecondaryText>{mailLocation}</SecondaryText>
               </Grid>
             </Grid>
           </Link> /*** Full Size - Multiple Columns (Desktop View) ***/
@@ -182,13 +163,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
               }}
             >
               <Grid item xs={5} container alignItems="center">
-                <IMG
-                  className={styles.people_search_avatar}
-                  src={avatar}
-                  alt={'Profile picture for ' + fullName}
-                  noLazyLoad="true"
-                  noPlaceHolder="true"
-                />
+                {profileImage}
                 <div>
                   <Typography>
                     {Person.FirstName} {nickname} {Person.LastName} {maidenName}
@@ -214,7 +189,7 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
                 </SecondaryText>
               </Grid>
               <Grid item xs={2}>
-                <Typography>{personMailLocation}</Typography>
+                <Typography>{mailLocation}</Typography>
               </Grid>
             </Grid>
           </Link>
@@ -225,7 +200,6 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
   );
 };
 
-// const PeopleSearchResult = handleViewport(PeopleSearchResultBlock);
 export default PeopleSearchResult;
 
 PeopleSearchResult.propTypes = {
