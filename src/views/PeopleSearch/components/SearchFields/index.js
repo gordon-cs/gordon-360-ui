@@ -27,6 +27,7 @@ import {
   FaSchool,
 } from 'react-icons/fa';
 import Media from 'react-media';
+import { useHistory } from 'react-router';
 import goStalk, { Class } from 'services/goStalk';
 import { toTitleCase } from 'services/utils';
 import { gordonColors } from 'theme';
@@ -57,6 +58,9 @@ const searchPageTitle = (
 );
 
 const initialSearchValues = {
+  includeStudent: true,
+  includeFacStaff: true,
+  includeAlumni: false,
   first_name: '',
   last_name: '',
   major: '',
@@ -75,8 +79,15 @@ const isTodayAprilFools = () => {
   return todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
 };
 
+const makeQueryString = (searchValues) =>
+  Object.entries(searchValues)
+    .filter(([key, value]) => value !== initialSearchValues[key])
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
+
 const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => {
   const { profile } = useUser();
+  const history = useHistory();
 
   const [majors, setMajors] = useState([]);
   const [minors, setMinors] = useState([]);
@@ -88,39 +99,43 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
 
   const [searchValues, setSearchValues] = useState(initialSearchValues);
 
-  const [includeStudent, setIncludeStudent] = useState(true);
-  const [includeFacStaff, setIncludeFacStaff] = useState(true);
-  const [includeAlumni, setIncludeAlumni] = useState(false);
-
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
   //This is to prevent search from blank
   const canSearch = useCallback(() => {
-    return Object.values(searchValues)
-      .map((x) =>
-        x
-          .toString()
-          .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
-          .trim(),
-      )
-      .some((x) => x);
+    const { includeStudent, includeFacStaff, includeAlumni, ...necessarySearchValues } =
+      searchValues;
+    return (
+      (includeStudent || includeFacStaff || includeAlumni) &&
+      Object.values(necessarySearchValues)
+        .map((x) =>
+          x
+            .toString()
+            .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
+            .trim(),
+        )
+        .some((x) => x)
+    );
   }, [searchValues]);
 
   const search = useCallback(async () => {
     if (canSearch()) {
       setLoadingSearch(true);
 
-      const results = await goStalk.search(
-        includeStudent,
-        includeFacStaff,
-        includeAlumni,
-        searchValues,
-      );
+      const results = await goStalk.search(searchValues);
       onSearch(results);
+
+      const newQueryString = makeQueryString({
+        ...searchValues,
+      });
+      if (history.location.search !== newQueryString) {
+        history.push(`?${newQueryString}`);
+      }
+
       setLoadingSearch(false);
     }
-  }, [canSearch, includeStudent, includeFacStaff, includeAlumni, searchValues, onSearch]);
+  }, [canSearch, searchValues, onSearch, history]);
 
   useEffect(() => {
     const loadPage = async () => {
@@ -143,9 +158,8 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
         setDepartments(departments);
         setBuildings(buildings);
 
-        if (profile.PersonType?.includes?.('alum')) {
-          setIncludeStudent(false);
-          setIncludeAlumni(true);
+        if (profile.PersonType?.includes?.('alu')) {
+          setSearchValues((sv) => ({ ...sv, includeStudent: false, includeAlumni: true }));
         }
       }
 
@@ -164,7 +178,11 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
   }
 
   const handleUpdate = (event) =>
-    setSearchValues((sv) => ({ ...sv, [event.target.name]: event.target.value }));
+    setSearchValues((sv) => ({
+      ...sv,
+      [event.target.name]:
+        event.target.type === 'checkbox' ? event.target.checked : event.target.value,
+    }));
 
   const handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
@@ -182,21 +200,33 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
           {!profile.PersonType?.includes?.('alum') ? (
             <FormControlLabel
               control={
-                <Checkbox checked={includeStudent} onChange={() => setIncludeStudent((i) => !i)} />
+                <Checkbox
+                  checked={searchValues.includeStudent}
+                  name="includeStudent"
+                  onChange={handleUpdate}
+                />
               }
               label="Student"
             />
           ) : null}
           <FormControlLabel
             control={
-              <Checkbox checked={includeFacStaff} onChange={() => setIncludeFacStaff((i) => !i)} />
+              <Checkbox
+                checked={searchValues.includeFacStaff}
+                name="includeFacStaff"
+                onChange={handleUpdate}
+              />
             }
             label="Faculty/Staff"
           />
           {!profile.PersonType?.includes?.('stu') ? (
             <FormControlLabel
               control={
-                <Checkbox checked={includeAlumni} onChange={() => setIncludeAlumni((i) => !i)} />
+                <Checkbox
+                  checked={searchValues.includeAlumni}
+                  name="includeAlumni"
+                  onChange={handleUpdate}
+                />
               }
               label="Alumni"
             />
@@ -291,7 +321,11 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
                   <Typography
                     align="center"
                     gutterBottom
-                    color={includeStudent || includeAlumni ? 'primary' : 'initial'}
+                    color={
+                      searchValues.includeStudent || searchValues.includeAlumni
+                        ? 'primary'
+                        : 'initial'
+                    }
                   >
                     {profile.PersonType === 'stu' ? 'Student' : 'Student/Alumni'}
                   </Typography>
@@ -301,7 +335,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
                     updateValue={handleUpdate}
                     options={majors}
                     Icon={FaBook}
-                    disabled={!includeStudent && !includeAlumni}
+                    disabled={!searchValues.includeStudent && !searchValues.includeAlumni}
                   />
                   <SelectSearchField
                     name="minor"
@@ -309,7 +343,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
                     updateValue={handleUpdate}
                     options={minors}
                     Icon={FaBook}
-                    disabled={!includeStudent}
+                    disabled={!searchValues.includeStudent}
                   />
                   <SelectSearchField
                     name="class_year"
@@ -317,7 +351,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
                     updateValue={handleUpdate}
                     options={Object.values(Class).filter((value) => typeof value !== 'number')}
                     Icon={FaSchool}
-                    disabled={!includeStudent}
+                    disabled={!searchValues.includeStudent}
                   />
                 </Grid>
 
@@ -326,7 +360,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
                   <Typography
                     align="center"
                     gutterBottom
-                    color={includeFacStaff ? 'primary' : 'initial'}
+                    color={searchValues.includeFacStaff ? 'primary' : 'initial'}
                   >
                     Faculty/Staff
                   </Typography>
@@ -336,14 +370,14 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
                     updateValue={handleUpdate}
                     options={departments}
                     Icon={FaBriefcase}
-                    disabled={!includeFacStaff}
+                    disabled={!searchValues.includeFacStaff}
                   />
                   <SelectSearchField
                     name="building"
                     value={searchValues.building}
                     options={buildings}
                     Icon={FaBuilding}
-                    disabled={!includeFacStaff}
+                    disabled={!searchValues.includeFacStaff}
                   />
                 </Grid>
 

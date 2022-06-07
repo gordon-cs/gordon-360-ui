@@ -71,7 +71,7 @@ const PeopleSearch = () => {
                   {(matches) =>
                     searchResults.map((person, index) => (
                       <PeopleSearchResult
-                        key={person.AD_Username}
+                        key={person.AD_Username || `${person.FirstName}${person.LastName}`}
                         Person={person}
                         size={!matches ? 'single' : displayLargeImage ? 'largeImages' : 'full'}
                         lazyImages={index > NUM_NONLAZY_IMAGES ? true : false}

@@ -57,6 +57,9 @@ type SearchResult = SearchResultBase &
   );
 
 type SearchFields = {
+  includeStudent: boolean;
+  includeFacStaff: boolean;
+  includeAlumni: boolean;
   first_name: string;
   last_name: string;
   major: string;
@@ -71,12 +74,7 @@ type SearchFields = {
 };
 
 // TODO: Document return type
-const search = (
-  includeStudent: boolean,
-  includeFacStaff: boolean,
-  includeAlumni: boolean,
-  searchFields: SearchFields,
-): Promise<SearchResult[]> => {
+const search = (searchFields: SearchFields): Promise<SearchResult[]> => {
   let params = Object.entries({
     firstName: searchFields.first_name,
     lastName: searchFields.last_name,
@@ -95,15 +93,15 @@ const search = (
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
     .join('&');
 
-  if (includeStudent) {
+  if (searchFields.includeStudent) {
     params += '&accountTypes=student';
   }
 
-  if (includeFacStaff) {
+  if (searchFields.includeFacStaff) {
     params += '&accountTypes=facstaff';
   }
 
-  if (includeAlumni) {
+  if (searchFields.includeAlumni) {
     params += '&accountTypes=alumni';
   }
 
