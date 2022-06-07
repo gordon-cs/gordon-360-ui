@@ -28,7 +28,6 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
   const [hasBeenRun, setHasBeenRun] = useState(false);
 
   const loadAvatar = useCallback(async () => {
-    //Rename def to defaultImage and pref to preferredImage for clarity
     const { def: defaultImage, pref: preferredImage } = await userService.getImage(
       Person.AD_Username,
     );
@@ -40,13 +39,13 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
   }, [Person.AD_Username]);
 
   useEffect(() => {
-    if (lazyImages === false) {
+    if (!lazyImages && !hasBeenRun) {
       loadAvatar();
     }
-  }, [Person.AD_Username, lazyImages, loadAvatar]);
+  }, [Person.AD_Username, hasBeenRun, lazyImages, loadAvatar]);
 
   const handleVisibilityChange = (isVisible) => {
-    if (isVisible && !hasBeenRun) loadAvatar();
+    if (lazyImages && isVisible && !hasBeenRun) loadAvatar();
   };
 
   const fullName = `${Person.FirstName} ${Person.LastName}`;
@@ -61,109 +60,45 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
       ? `Mailbox #${Person.Mail_Location}`
       : `Mailstop: ${Person.Mail_Location}`;
 
-  const profileImage = (
-    <IMG
-      className={
-        size === 'single'
-          ? styles.people_search_avatar_mobile
-          : size === 'largeImages'
-          ? styles.people_search_avatar_large
-          : styles.people_search_avatar
-      }
-      src={avatar}
-      alt={'Profile picture for ' + fullName}
-      noLazyLoad="true"
-      noPlaceHolder="true"
-    />
-  );
+  let className, gridProps;
+  switch (size) {
+    case 'single':
+      className = styles.people_search_avatar_mobile;
+      gridProps = {};
+      break;
+    case 'largeImages':
+      className = styles.people_search_avatar_large;
+      gridProps = { xs: 4, container: true, justifyContent: 'flex-end' };
+      break;
+    default:
+      className = styles.people_search_avatar;
+      gridProps = { xs: 5, container: true, alignItems: 'center' };
+      break;
+  }
 
   return (
     <VisibilitySensor onChange={handleVisibilityChange}>
       <>
         <Divider />
-        {size === 'single' /*** Single Size - One Column (Mobile View) ***/ ? (
-          <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
-            <Grid
-              container
-              alignItems="center"
-              justifyContent="center"
-              spacing={2}
-              style={{
-                padding: '1rem',
-              }}
-            >
-              <Grid item>{profileImage}</Grid>
-              <Grid item xs={8}>
-                <Typography variant="h5">
-                  {Person.FirstName} {nickname} {Person.LastName} {maidenName}
-                </Typography>
-                <SecondaryText>
-                  {personClassJobTitle ?? Person.Type}
-                  {Person.Type === 'Alum' && Person.PreferredClassYear
-                    ? ' ' + Person.PreferredClassYear
-                    : null}
-                </SecondaryText>
-                <SecondaryText>
-                  {Person.Major1Description}
-                  {Person.Major2Description
-                    ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
-                    : null}
-                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
-                </SecondaryText>
-                <SecondaryText variant="body2">{Person.Email}</SecondaryText>
-                <SecondaryText variant="body2">{mailLocation}</SecondaryText>
-              </Grid>
-            </Grid>
-          </Link>
-        ) : size === 'largeImages' /*** Enlarged Images ***/ ? (
-          <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
-            <Grid
-              container
-              alignItems="center"
-              justifyContent="center"
-              spacing={2}
-              style={{
-                padding: '1rem',
-              }}
-            >
-              <Grid item xs={4} container justifyContent="flex-end">
-                {profileImage}
-              </Grid>
-              <Grid item xs={8}>
-                <Typography variant="h5">
-                  {Person.FirstName} {nickname} {Person.LastName} {maidenName}
-                </Typography>
-                <SecondaryText>
-                  {personClassJobTitle ?? Person.Type}
-                  {Person.Type === 'Alum' && Person.PreferredClassYear
-                    ? ' ' + Person.PreferredClassYear
-                    : null}
-                </SecondaryText>
-                <SecondaryText>
-                  {Person.Major1Description}
-                  {Person.Major2Description
-                    ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
-                    : null}
-                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
-                </SecondaryText>
-                <SecondaryText>{Person.Email}</SecondaryText>
-                <SecondaryText>{mailLocation}</SecondaryText>
-              </Grid>
-            </Grid>
-          </Link> /*** Full Size - Multiple Columns (Desktop View) ***/
-        ) : (
-          <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              spacing={2}
-              style={{
-                padding: '1rem',
-              }}
-            >
-              <Grid item xs={5} container alignItems="center">
-                {profileImage}
+        <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
+          <Grid
+            container
+            alignItems="center"
+            justifyContent={size !== 'full' ? 'center' : null}
+            spacing={2}
+            style={{
+              padding: '1rem',
+            }}
+          >
+            <Grid item {...gridProps}>
+              <IMG
+                className={className}
+                src={avatar}
+                alt={'Profile picture for ' + fullName}
+                noLazyLoad="true"
+                noPlaceHolder="true"
+              />
+              {size === 'full' && (
                 <div>
                   <Typography>
                     {Person.FirstName} {nickname} {Person.LastName} {maidenName}
@@ -172,28 +107,41 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
                     {Person.Email?.includes('.') ? Person.Email : null}
                   </Typography>
                 </div>
-              </Grid>
-              <Grid item xs={5}>
-                <Typography>
-                  {personClassJobTitle ?? Person.Type}
-                  {Person.Type === 'Alum' && Person.PreferredClassYear
-                    ? ' ' + Person.PreferredClassYear
-                    : null}
+              )}
+            </Grid>
+            <Grid item xs={size === 'full' ? 5 : 8}>
+              {size !== 'full' && (
+                <Typography variant="h5">
+                  {Person.FirstName} {nickname} {Person.LastName} {maidenName}
                 </Typography>
-                <SecondaryText>
-                  {Person.Major1Description}
-                  {Person.Major2Description
-                    ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
-                    : null}
-                  {Person.Major3Description ? `, ${Person.Major3Description}` : null}
-                </SecondaryText>
-              </Grid>
+              )}
+              <Typography>
+                {personClassJobTitle ?? Person.Type}
+                {Person.Type === 'Alum' && Person.PreferredClassYear
+                  ? ' ' + Person.PreferredClassYear
+                  : null}
+              </Typography>
+              <SecondaryText>
+                {Person.Major1Description}
+                {Person.Major2Description
+                  ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
+                  : null}
+                {Person.Major3Description ? `, ${Person.Major3Description}` : null}
+              </SecondaryText>
+              {size !== 'full' && (
+                <>
+                  <SecondaryText>{Person.Email}</SecondaryText>
+                  <SecondaryText>{mailLocation}</SecondaryText>
+                </>
+              )}
+            </Grid>
+            {size === 'full' && (
               <Grid item xs={2}>
                 <Typography>{mailLocation}</Typography>
               </Grid>
-            </Grid>
-          </Link>
-        )}
+            )}
+          </Grid>
+        </Link>
         <Divider />
       </>
     </VisibilitySensor>
