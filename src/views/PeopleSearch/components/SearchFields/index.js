@@ -348,7 +348,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
                 </Grid>
 
                 {/* Advanced Search Filters: Everyone */}
-                <Grid item xs={12} sm={4} spacing={3}>
+                <Grid item xs={12} md={4}>
                   <Typography align="center" gutterBottom color="primary">
                     Everyone
                   </Typography>
