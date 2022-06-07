@@ -3,11 +3,13 @@ import { useState, useMemo } from 'react';
 import requestInfoUpdate from 'services/update';
 import styles from '../Update.module.css';
 import GordonLoader from 'components/Loader';
-import { gordonColors } from 'theme';
 import SimpleSnackbar from 'components/Snackbar';
 import GordonOffline from 'components/GordonOffline';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { ProfileUpdateField, NotAlumni, ContentCard } from '..';
+import GordonDialogBox from 'components/GordonDialogBox';
+import { gordonColors } from 'theme';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 
 const personalInfoFields = [
   { label: 'Salutation', name: 'salutation', type: 'textfield' },
@@ -52,23 +54,6 @@ const shouldContactFields = [
 ];
 
 /**
- * @param updatedInfo updated information fields object
- * @param currentInfo old/saved information fields object
- * @returns {Array<Object>} Array of updated fields in a subobject
- */
-function getUpdatedFields(updatedInfo, currentInfo) {
-  var updatedFields = [];
-  for (const field in currentInfo) {
-    if (updatedInfo[field] !== currentInfo[field])
-      updatedFields.push({
-        field: field,
-        value: currentInfo[field],
-      });
-  }
-  return updatedFields;
-}
-
-/**
  * Sends an update form to the development office
  */
 
@@ -106,6 +91,7 @@ const UpdatePage = (props) => {
     [profile],
   );
   const [updatedInfo, setUpdatedInfo] = useState(currentInfo);
+  const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
 
@@ -133,47 +119,74 @@ const UpdatePage = (props) => {
     setSnackbar({ message: message, severity: severity, open: true });
   };
 
-  if (profile) {
-    const handleSaveButtonClick = () => {
-      if (updatedInfo.firstname === '' || updatedInfo.lastname === '') {
-        createSnackbar('Please fill in your first and last name.', 'error');
-      } else {
-        setSaving(true);
-        requestInfoUpdate(getUpdatedFields(currentInfo, updatedInfo)).then(() => {
-          createSnackbar(
-            'A request to update your information has been sent. Please check back later.',
-            'info',
-          );
-          setSaving(false);
+  /**
+   * @param updatedInfo updated information fields object
+   * @param currentInfo old/saved information fields object
+   * @returns {Array<Object>} Array of updated fields in a subobject
+   */
+  function getUpdatedFields(updatedInfo, currentInfo) {
+    var updatedFields = [];
+    for (const field in currentInfo) {
+      if (updatedInfo[field] !== currentInfo[field])
+        updatedFields.push({
+          field: field,
+          value: currentInfo[field],
         });
-      }
-    };
+    }
+    return updatedFields;
+  }
 
-    const saveButton = isSaving ? (
-      <GordonLoader size={32} />
-    ) : (
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleSaveButtonClick}
-        disabled={hasNoChange}
-      >
-        Update
-      </Button>
-    );
+  const handleConfirm = () => {
+    setSaving(true);
+    requestInfoUpdate(getUpdatedFields(currentInfo, updatedInfo)).then(() => {
+      createSnackbar(
+        'A request to update your information has been sent. Please check back later.',
+        'info',
+      );
+      setSaving(false);
+      handleWindowClose();
+    });
+  };
 
-    const infoMap = (fields) => {
-      return fields.map((field) => (
-        <ProfileUpdateField
-          label={field.label}
-          name={field.name}
-          value={updatedInfo[field.name]}
-          type={field.type}
-          menuItems={field.menuItems}
-          onChange={handleChange}
-        />
-      ));
-    };
+  const handleWindowClose = () => {
+    setOpenConfirmWindow(false);
+  };
+
+  const handleSaveButtonClick = () => {
+    if (updatedInfo.firstname === '' || updatedInfo.lastname === '') {
+      createSnackbar('Please fill in your first and last name.', 'error');
+    } else {
+      setOpenConfirmWindow(true);
+    }
+  };
+
+  const saveButton = isSaving ? (
+    <GordonLoader size={32} />
+  ) : (
+    <Button
+      variant="contained"
+      color="secondary"
+      onClick={handleSaveButtonClick}
+      disabled={hasNoChange}
+    >
+      Update
+    </Button>
+  );
+
+  const infoMap = (fields) => {
+    return fields.map((field) => (
+      <ProfileUpdateField
+        label={field.label}
+        name={field.name}
+        value={updatedInfo[field.name]}
+        type={field.type}
+        menuItems={field.menuItems}
+        onChange={handleChange}
+      />
+    ));
+  };
+
+  if (profile) {
     if (!isOnline) return <GordonOffline feature="Update Profile" />;
 
     if (!isUserStudent) return <NotAlumni />;
@@ -211,6 +224,20 @@ const UpdatePage = (props) => {
             </Typography>
           </Grid>
         </Grid>
+
+        <GordonDialogBox
+          open={openConfirmWindow}
+          title="Confirm Changes"
+          buttonClicked={handleConfirm}
+          buttonName={'Confirm'}
+          isButtonDisabled={false}
+          cancelButtonClicked={handleWindowClose}
+          cancelButtonName="Cancel"
+        >
+          {JSON.stringify(getUpdatedFields(currentInfo, updatedInfo))}
+        </GordonDialogBox>
+
+        {/* will deprecate snackbar */}
         <SimpleSnackbar
           text={snackbar.message}
           severity={snackbar.severity}
@@ -220,6 +247,47 @@ const UpdatePage = (props) => {
       </>
     );
   }
+  return <GordonUnauthorized feature={'the Update Profile page'} />;
 };
 
+// const styles2 = {
+//   button: {
+//     background: gordonColors.primary.blue,
+//     color: 'white',
+
+//     changeImageButton: {
+//       background: gordonColors.primary.blue,
+//       color: 'white',
+//     },
+
+//     resetButton: {
+//       backgroundColor: '#f44336',
+//       color: 'white',
+//     },
+//     cancelButton: {
+//       backgroundColor: 'white',
+//       color: gordonColors.primary.blue,
+//       border: `1px solid ${gordonColors.primary.blue}`,
+//       width: '38%',
+//     },
+//     hidden: {
+//       display: 'none',
+//     },
+//   },
+//   searchBar: {
+//     margin: '0 auto',
+//   },
+//   newNewsForm: {
+//     backgroundColor: '#fff',
+//   },
+//   fab: {
+//     margin: 0,
+//     top: 'auto',
+//     right: 40,
+//     bottom: 40,
+//     left: 'auto',
+//     position: 'fixed',
+//     zIndex: 1,
+//   },
+// };
 export { UpdatePage };

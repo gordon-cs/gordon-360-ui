@@ -6,7 +6,7 @@ type ProfileFieldUpdate = {
 }
 
 const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => {
-  // console.log(updatedFields);
+  console.log(updatedFields);
   await http.post('profiles/updateRequest/', updatedFields);
 };
 
