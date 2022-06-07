@@ -75,7 +75,7 @@ const isTodayAprilFools = () => {
   return todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
 };
 
-const SearchFields = ({ onSearch }) => {
+const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => {
   const { profile } = useUser();
 
   const [majors, setMajors] = useState([]);
@@ -92,7 +92,6 @@ const SearchFields = ({ onSearch }) => {
   const [includeFacStaff, setIncludeFacStaff] = useState(true);
   const [includeAlumni, setIncludeAlumni] = useState(false);
 
-  const [displayLargeImage, setDisplayLargeImage] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
@@ -118,18 +117,10 @@ const SearchFields = ({ onSearch }) => {
         includeAlumni,
         searchValues,
       );
-      onSearch(results, displayLargeImage);
+      onSearch(results);
       setLoadingSearch(false);
     }
-  }, [
-    canSearch,
-    includeStudent,
-    includeFacStaff,
-    includeAlumni,
-    searchValues,
-    onSearch,
-    displayLargeImage,
-  ]);
+  }, [canSearch, includeStudent, includeFacStaff, includeAlumni, searchValues, onSearch]);
 
   useEffect(() => {
     const loadPage = async () => {
@@ -289,7 +280,7 @@ const SearchFields = ({ onSearch }) => {
               id="more-search-options-header"
               aria-controls="more-search-options-controls"
             >
-              <Typography variant="h6" align="">
+              <Typography variant="h6" align="center">
                 More Search Options
               </Typography>
             </AccordionSummary>
