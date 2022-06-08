@@ -3,6 +3,7 @@ import http from './http';
 type ProfileFieldUpdate = {
   field: string;
   value: string;
+  label: string;
 }
 
 const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => {

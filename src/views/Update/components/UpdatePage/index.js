@@ -1,4 +1,12 @@
-import { Typography, Grid, Card, CardContent, CardHeader, Button } from '@material-ui/core/';
+import {
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  CardHeader,
+  Button,
+  TextField,
+} from '@material-ui/core/';
 import { useState, useMemo } from 'react';
 import requestInfoUpdate from 'services/update';
 import styles from '../Update.module.css';
@@ -13,45 +21,54 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 
 const personalInfoFields = [
   { label: 'Salutation', name: 'salutation', type: 'textfield' },
-  { label: 'First Name', name: 'firstname', type: 'textfield' },
-  { label: 'Last Name', name: 'lastname', type: 'textfield' },
-  { label: 'Middle Name', name: 'middlename', type: 'textfield' },
-  { label: 'Preferred Name', name: 'preferredname', type: 'textfield' },
-  { label: 'Married', name: 'maritalstatus', type: 'textfield' },
+  { label: 'First Name', name: 'firstName', type: 'textfield' },
+  { label: 'Last Name', name: 'lastName', type: 'textfield' },
+  {},
+  { label: 'Middle Name', name: 'middleName', type: 'textfield' },
+  { label: 'Preferred Name', name: 'nickName', type: 'textfield' },
+  { label: 'Married', name: 'married', type: 'checkbox' },
 ];
 const emailInfoFields = [
-  { label: 'Personal Email', name: 'personalemail', type: 'textfield' },
-  { label: 'Work Email', name: 'workemail', type: 'textfield' },
-  { label: 'Alternate Email', name: 'alt_email', type: 'textfield' },
+  { label: 'Personal Email', name: 'personalEmail', type: 'textfield' },
+  { label: 'Work Email', name: 'workEmail', type: 'textfield' },
+  { label: 'Alternate Email', name: 'aEmail', type: 'textfield' },
   {
     label: 'Preferred Email',
-    name: 'preferredemail',
+    name: 'preferredEmail',
     type: 'select',
     menuItems: [{ value: 'Personal Email' }, { value: 'Work Email' }, { value: 'Alternate Email' }],
   },
 ];
 const phoneInfoFields = [
-  { label: 'Home Phone', name: 'homephone', type: 'textfield' },
-  { label: 'Work Phone', name: 'workphone', type: 'textfield' },
-  { label: 'Mobile Phone', name: 'mobilephone', type: 'textfield' },
+  { label: 'Home Phone', name: 'homePhone', type: 'textfield' },
+  { label: 'Work Phone', name: 'workPhone', type: 'textfield' },
+  { label: 'Mobile Phone', name: 'mobilePhone', type: 'textfield' },
   {
     label: 'Preferred Phone',
-    name: 'preferredphone',
+    name: 'preferredPhone',
     type: 'select',
     menuItems: [{ value: 'Home Phone' }, { value: 'Work Phone' }, { value: 'Mobile Phone' }],
   },
 ];
 const mailingInfoFields = [
-  { label: 'Street', name: 'address', type: 'textfield' },
+  { label: 'Address', name: 'address1', type: 'textfield' },
+  { label: 'Address Line 2 (optional)', name: 'address2', type: 'textfield' },
   { label: 'City', name: 'city', type: 'textfield' },
   { label: 'State', name: 'state', type: 'textfield' },
-  { label: 'Zip', name: 'zip', type: 'textfield' },
+  { label: 'Zip Code', name: 'zip', type: 'textfield' },
   { label: 'Country', name: 'country', type: 'textfield' },
 ];
 const shouldContactFields = [
   { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' },
   { label: 'Do Not Mail', name: 'doNotMail', type: 'checkbox' },
 ];
+const allFields = [
+  personalInfoFields,
+  emailInfoFields,
+  phoneInfoFields,
+  mailingInfoFields,
+  shouldContactFields,
+].flat();
 
 /**
  * Sends an update form to the development office
@@ -67,26 +84,28 @@ const UpdatePage = (props) => {
       salutation: profile.Title
         ? profile.Title.charAt(0).toUpperCase() + profile.Title.slice(1).toLowerCase()
         : '',
-      firstname: profile.FirstName,
-      lastname: profile.LastName,
-      middlename: profile.MiddleName,
-      preferredname: profile.NickName,
-      personalemail: '',
-      workemail: '',
-      alt_email: profile.Email,
-      preferredemail: '',
-      doNotContact: false,
-      doNotMail: false,
-      homephone: profile.HomePhone,
-      workphone: '',
-      mobilephone: profile.MobilePhone,
-      preferredphone: '',
-      address: profile.HomeStreet1.length === 0 ? profile.HomeStreet2 : profile.HomeStreet1,
+      firstName: profile.FirstName,
+      lastName: profile.LastName,
+      middleName: profile.MiddleName,
+      nickName: profile.NickName,
+      personalEmail: profile.PersonalEmail,
+      workEmail: profile.WorkEmail ?? '',
+      aEmail: profile.aEmail ?? '',
+      preferredEmail: profile.PreferredEmail ?? '',
+      doNotContact: profile.doNotContact ?? false,
+      doNotMail: profile.doNotMail ?? false,
+      homePhone: profile.HomePhone,
+      workPhone: profile.WorkPhone ?? '',
+      mobilePhone: profile.MobilePhone,
+      preferredPhone: profile.PreferredPhone ?? '',
+      //Homestreet lines are broken in SQL
+      address1: profile.HomeStreet2 ?? profile.HomeStreet1 ?? '',
+      address2: profile.HomeStreet2 && profile.HomeStreet1 ? profile.HomeStreet2 : '',
       city: profile.HomeCity,
       state: profile.HomeState,
       zip: profile.HomePostalCode,
       country: profile.HomeCountry,
-      maritalstatus: profile.Married === 'N' ? 'No' : profile.Married === 'Y' ? 'Yes' : '',
+      married: profile.Married === 'Y' ? true : false,
     }),
     [profile],
   );
@@ -119,6 +138,14 @@ const UpdatePage = (props) => {
     setSnackbar({ message: message, severity: severity, open: true });
   };
 
+  const getAssociatedLabel = (fieldName) => {
+    let label = '';
+    allFields.forEach((field) => {
+      if (fieldName === field.name) label = field.label;
+    });
+    return label;
+  };
+
   /**
    * @param updatedInfo updated information fields object
    * @param currentInfo old/saved information fields object
@@ -127,18 +154,29 @@ const UpdatePage = (props) => {
   function getUpdatedFields(updatedInfo, currentInfo) {
     var updatedFields = [];
     for (const field in currentInfo) {
-      if (updatedInfo[field] !== currentInfo[field])
+      if (updatedInfo[field] !== currentInfo[field]) {
         updatedFields.push({
           field: field,
           value: currentInfo[field],
+          label: getAssociatedLabel(field),
         });
+      }
+    }
+    if (changeReason !== '') {
+      updatedFields.push({
+        field: 'changeReason',
+        value: changeReason,
+        label: 'Reason for change',
+      });
     }
     return updatedFields;
   }
 
   const handleConfirm = () => {
     setSaving(true);
-    requestInfoUpdate(getUpdatedFields(currentInfo, updatedInfo)).then(() => {
+    //request to /services/update.ts with updated fields and reason for change
+    let updateRequest = getUpdatedFields(currentInfo, updatedInfo);
+    requestInfoUpdate(updateRequest).then(() => {
       createSnackbar(
         'A request to update your information has been sent. Please check back later.',
         'info',
@@ -150,12 +188,14 @@ const UpdatePage = (props) => {
 
   const handleWindowClose = () => {
     setOpenConfirmWindow(false);
+    setChangeReason('');
   };
 
   const handleSaveButtonClick = () => {
-    if (updatedInfo.firstname === '' || updatedInfo.lastname === '') {
+    if (updatedInfo.FirstName === '' || updatedInfo.lastname === '') {
       createSnackbar('Please fill in your first and last name.', 'error');
     } else {
+      getCurrentChanges(currentInfo, updatedInfo);
       setOpenConfirmWindow(true);
     }
   };
@@ -184,6 +224,25 @@ const UpdatePage = (props) => {
         onChange={handleChange}
       />
     ));
+  };
+
+  const [confirmText, setConfirmText] = useState('');
+  const [changeReason, setChangeReason] = useState('');
+
+  const getCurrentChanges = (currentInfo, updatedInfo) => {
+    setConfirmText(
+      getUpdatedFields(currentInfo, updatedInfo).map((field) => (
+        <Grid item xs={9} md={9} lg={9}>
+          <TextField
+            style={{ width: 504 }}
+            label={field.label}
+            name={field.field}
+            value={field.value}
+            disabled
+          />
+        </Grid>
+      )),
+    );
   };
 
   if (profile) {
@@ -227,14 +286,32 @@ const UpdatePage = (props) => {
 
         <GordonDialogBox
           open={openConfirmWindow}
-          title="Confirm Changes"
+          title="Confirm Updates"
           buttonClicked={handleConfirm}
           buttonName={'Confirm'}
-          isButtonDisabled={false}
+          isButtonDisabled={changeReason === ''}
           cancelButtonClicked={handleWindowClose}
           cancelButtonName="Cancel"
         >
-          {JSON.stringify(getUpdatedFields(currentInfo, updatedInfo))}
+          <Card>
+            <CardContent>
+              <Grid>{confirmText}</Grid>
+            </CardContent>
+          </Card>
+
+          <TextField
+            variant="filled"
+            label="Please give a reason for the change..."
+            margin="normal"
+            multiline
+            fullWidth
+            rows={4}
+            name="changeReason"
+            value={changeReason}
+            onChange={(event) => {
+              setChangeReason(event.target.value);
+            }}
+          />
         </GordonDialogBox>
 
         {/* will deprecate snackbar */}
@@ -250,44 +327,4 @@ const UpdatePage = (props) => {
   return <GordonUnauthorized feature={'the Update Profile page'} />;
 };
 
-// const styles2 = {
-//   button: {
-//     background: gordonColors.primary.blue,
-//     color: 'white',
-
-//     changeImageButton: {
-//       background: gordonColors.primary.blue,
-//       color: 'white',
-//     },
-
-//     resetButton: {
-//       backgroundColor: '#f44336',
-//       color: 'white',
-//     },
-//     cancelButton: {
-//       backgroundColor: 'white',
-//       color: gordonColors.primary.blue,
-//       border: `1px solid ${gordonColors.primary.blue}`,
-//       width: '38%',
-//     },
-//     hidden: {
-//       display: 'none',
-//     },
-//   },
-//   searchBar: {
-//     margin: '0 auto',
-//   },
-//   newNewsForm: {
-//     backgroundColor: '#fff',
-//   },
-//   fab: {
-//     margin: 0,
-//     top: 'auto',
-//     right: 40,
-//     bottom: 40,
-//     left: 'auto',
-//     position: 'fixed',
-//     zIndex: 1,
-//   },
-// };
 export { UpdatePage };

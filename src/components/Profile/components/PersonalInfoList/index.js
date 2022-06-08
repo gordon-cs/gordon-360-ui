@@ -257,6 +257,7 @@ const PersonalInfoList = ({
       </Link>
     </Grid>
   ) : null;
+
   const graduationYear = isAlumni ? (
     <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />
   ) : null;
