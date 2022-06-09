@@ -11,4 +11,9 @@ const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => 
   await http.post('profiles/updateRequest/', updatedFields);
 };
 
-export default requestInfoUpdate;
+const getAllStates = async() => {
+  let info = await http.get('profiles/getAllStates/');
+  console.log(JSON.stringify(info));
+}
+
+export { requestInfoUpdate, getAllStates };

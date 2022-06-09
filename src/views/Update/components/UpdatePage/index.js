@@ -12,7 +12,7 @@ import {
   Divider,
 } from '@material-ui/core/';
 import React, { useState, useMemo, Fragment } from 'react';
-import requestInfoUpdate from 'services/update';
+import { requestInfoUpdate, getAllStates } from 'services/update';
 import styles from '../Update.module.css';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
@@ -22,66 +22,61 @@ import { ProfileUpdateField, NotAlumni, ContentCard } from '..';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { gordonColors } from 'theme';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { GrantType } from '@azure/msal-common/dist/utils/Constants';
-
-const headerStyle = {
-  color: gordonColors.primary.blue,
-  padding: '10px',
-};
-const contentStyle = {
-  color: 'gray',
-  padding: '10px',
-};
-const personalInfoFields = [
-  { label: 'Salutation', name: 'salutation', type: 'textfield' },
-  { label: 'First Name', name: 'firstName', type: 'textfield' },
-  { label: 'Last Name', name: 'lastName', type: 'textfield' },
-  {},
-  { label: 'Middle Name', name: 'middleName', type: 'textfield' },
-  { label: 'Preferred Name', name: 'nickName', type: 'textfield' },
-  { label: 'Married', name: 'married', type: 'checkbox' },
-];
-const emailInfoFields = [
-  { label: 'Personal Email', name: 'personalEmail', type: 'textfield' },
-  { label: 'Work Email', name: 'workEmail', type: 'textfield' },
-  { label: 'Alternate Email', name: 'aEmail', type: 'textfield' },
-  {
-    label: 'Preferred Email',
-    name: 'preferredEmail',
-    type: 'select',
-    menuItems: [{ value: 'Personal Email' }, { value: 'Work Email' }, { value: 'Alternate Email' }],
-  },
-];
-const phoneInfoFields = [
-  { label: 'Home Phone', name: 'homePhone', type: 'textfield' },
-  { label: 'Work Phone', name: 'workPhone', type: 'textfield' },
-  { label: 'Mobile Phone', name: 'mobilePhone', type: 'textfield' },
-  {
-    label: 'Preferred Phone',
-    name: 'preferredPhone',
-    type: 'select',
-    menuItems: [{ value: 'Home Phone' }, { value: 'Work Phone' }, { value: 'Mobile Phone' }],
-  },
-];
-const mailingInfoFields = [
-  { label: 'Address', name: 'address1', type: 'textfield' },
-  { label: 'Address Line 2 (optional)', name: 'address2', type: 'textfield' },
-  { label: 'City', name: 'city', type: 'textfield' },
-  { label: 'State', name: 'state', type: 'textfield' },
-  { label: 'Zip Code', name: 'zip', type: 'textfield' },
-  { label: 'Country', name: 'country', type: 'textfield' },
-];
-const shouldContactFields = [
-  { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' },
-  { label: 'Do Not Mail', name: 'doNotMail', type: 'checkbox' },
-];
-const allFields = [
+import {
   personalInfoFields,
   emailInfoFields,
   phoneInfoFields,
   mailingInfoFields,
   shouldContactFields,
-].flat();
+  allFields,
+} from '../../constants/AvailableFields';
+
+const headerStyle = {
+  color: gordonColors.primary.blue,
+  paddingLeft: '10px',
+  paddingRight: '10px',
+};
+const contentStyle = {
+  color: `${gordonColors.neutral.darkGray}`,
+  padding: '10px',
+};
+
+const confirmationWindowHeader = (
+  <Grid
+    container
+    direction="row"
+    justifyContent="space-between"
+    alignItems="center"
+    style={headerStyle}
+  >
+    <Grid item>
+      <Typography variant="body1" style={headerStyle}>
+        FIELD
+      </Typography>
+    </Grid>
+    <Grid item>
+      <Grid container direction="column" justifyContent="flex-start" alignItems="flex-end">
+        <Grid item>
+          <Typography variant="body2" style={headerStyle}>
+            CURRENT
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Typography
+            variant="caption"
+            style={{
+              paddingLeft: '10px',
+              paddingRight: '10px',
+              color: `${gordonColors.neutral.grayShades[800]}`,
+            }}
+          >
+            PREVIOUS
+          </Typography>
+        </Grid>
+      </Grid>
+    </Grid>
+  </Grid>
+);
 
 /**
  * Sends an update form to the development office
@@ -97,27 +92,27 @@ const UpdatePage = (props) => {
       salutation: profile.Title
         ? profile.Title.charAt(0).toUpperCase() + profile.Title.slice(1).toLowerCase()
         : '',
-      firstName: profile.FirstName,
-      lastName: profile.LastName,
-      middleName: profile.MiddleName,
-      nickName: profile.NickName,
-      personalEmail: profile.PersonalEmail,
+      firstName: profile.FirstName ?? '',
+      lastName: profile.LastName ?? '',
+      middleName: profile.MiddleName ?? '',
+      nickName: profile.NickName ?? '',
+      personalEmail: profile.PersonalEmail ?? '',
       workEmail: profile.WorkEmail ?? '',
       aEmail: profile.aEmail ?? '',
       preferredEmail: profile.PreferredEmail ?? '',
       doNotContact: profile.doNotContact ?? false,
       doNotMail: profile.doNotMail ?? false,
-      homePhone: profile.HomePhone,
+      homePhone: profile.HomePhone ?? '',
       workPhone: profile.WorkPhone ?? '',
-      mobilePhone: profile.MobilePhone,
+      mobilePhone: profile.MobilePhone ?? '',
       preferredPhone: profile.PreferredPhone ?? '',
       //Homestreet lines are inverted in alumni SQL
       address1: profile.HomeStreet2 ?? profile.HomeStreet1 ?? '',
       address2: profile.HomeStreet2 && profile.HomeStreet1 ? profile.HomeStreet2 : '',
-      city: profile.HomeCity,
-      state: profile.HomeState,
-      zip: profile.HomePostalCode,
-      country: profile.HomeCountry,
+      city: profile.HomeCity ?? '',
+      state: profile.HomeState ?? '',
+      zip: profile.HomePostalCode ?? '',
+      country: profile.HomeCountry ?? '',
       married: profile.Married === 'Y' ? true : false,
     }),
     [profile],
@@ -201,6 +196,7 @@ const UpdatePage = (props) => {
   const handleWindowClose = () => {
     setOpenConfirmWindow(false);
     setChangeReason('');
+    setConfirmText('');
   };
 
   const handleSaveButtonClick = () => {
@@ -253,22 +249,43 @@ const UpdatePage = (props) => {
           direction="row"
           justifyContent="space-between"
           alignItems="center"
-          style={contentStyle}
+          style={{
+            paddingTop: '10px',
+            borderTop: `1px solid ${gordonColors.neutral.grayShades[800]}`,
+          }}
         >
           <Grid item>
-            <Typography varient="subtitle2" style={contentStyle}>
+            <Typography variant="body2" style={contentStyle}>
               {field.label}
             </Typography>
           </Grid>
           <Grid item>
-            <Typography varient="subtitle2" style={contentStyle}>
-              {currentInfo[field.field]}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Typography varient="subtitle2" style={contentStyle}>
-              {field.value}
-            </Typography>
+            <Grid container direction="column" justifyContent="flex-start" alignItems="flex-end">
+              <Grid item>
+                <Typography
+                  variant="subtitle2"
+                  style={{
+                    paddingLeft: '10px',
+                    paddingRight: '10px',
+                    color: `${gordonColors.neutral.darkGray}`,
+                  }}
+                >
+                  {field.value}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography
+                  variant="caption"
+                  style={{
+                    paddingLeft: '10px',
+                    paddingRight: '10px',
+                    color: `${gordonColors.neutral.grayShades[900]}`,
+                  }}
+                >
+                  {currentInfo[field.field] === '' ? 'No previous value' : currentInfo[field.field]}
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       )),
@@ -302,6 +319,12 @@ const UpdatePage = (props) => {
                 </ContentCard>
                 <Grid item xs={12} justifyContent="center">
                   {saveButton}
+
+                  {/* TEMPORARY */}
+                  <Button variant="contained" color="secondary" onClick={getAllStates()}>
+                    GET ALL STATES
+                  </Button>
+                  {/* TEMPORARY */}
                 </Grid>
               </CardContent>
             </Card>
@@ -324,42 +347,20 @@ const UpdatePage = (props) => {
           cancelButtonName="Cancel"
         >
           <Card>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              style={headerStyle}
-            >
-              <Grid item>
-                <Typography variant="body1" style={headerStyle}>
-                  FIELD
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="body1" style={headerStyle}>
-                  PREVIOUS
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="body1" style={headerStyle}>
-                  CURRENT
-                </Typography>
-              </Grid>
-            </Grid>
+            {confirmationWindowHeader}
             <Grid
               container
               direction="row"
               style={{
                 width: '100%',
                 minWidth: 504,
-                borderTop: `solid 1.5px ${gordonColors.primary.blue}`,
               }}
             >
               {confirmText}
             </Grid>
           </Card>
           <TextField
+            required
             variant="filled"
             label="Please give a reason for the change..."
             margin="normal"
