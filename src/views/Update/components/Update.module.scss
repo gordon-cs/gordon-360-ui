@@ -1,5 +1,12 @@
 @import '../../../vars';
 
+.update_item {
+  padding: 1rem;
+  align-items: center;
+  transition: background-color 150ms;
+  border-top: solid 1.5px $neutral-light-gray;
+}
+
 .update {
   margin: 1rem;
 

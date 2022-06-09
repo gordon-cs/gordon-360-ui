@@ -6,8 +6,12 @@ import {
   CardHeader,
   Button,
   TextField,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
 } from '@material-ui/core/';
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo, Fragment } from 'react';
 import requestInfoUpdate from 'services/update';
 import styles from '../Update.module.css';
 import GordonLoader from 'components/Loader';
@@ -18,7 +22,16 @@ import { ProfileUpdateField, NotAlumni, ContentCard } from '..';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { gordonColors } from 'theme';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import { GrantType } from '@azure/msal-common/dist/utils/Constants';
 
+const headerStyle = {
+  color: gordonColors.primary.blue,
+  padding: '10px',
+};
+const contentStyle = {
+  color: 'gray',
+  padding: '10px',
+};
 const personalInfoFields = [
   { label: 'Salutation', name: 'salutation', type: 'textfield' },
   { label: 'First Name', name: 'firstName', type: 'textfield' },
@@ -98,7 +111,7 @@ const UpdatePage = (props) => {
       workPhone: profile.WorkPhone ?? '',
       mobilePhone: profile.MobilePhone,
       preferredPhone: profile.PreferredPhone ?? '',
-      //Homestreet lines are broken in SQL
+      //Homestreet lines are inverted in alumni SQL
       address1: profile.HomeStreet2 ?? profile.HomeStreet1 ?? '',
       address2: profile.HomeStreet2 && profile.HomeStreet1 ? profile.HomeStreet2 : '',
       city: profile.HomeCity,
@@ -138,6 +151,7 @@ const UpdatePage = (props) => {
     setSnackbar({ message: message, severity: severity, open: true });
   };
 
+  // returns label given name of field
   const getAssociatedLabel = (fieldName) => {
     let label = '';
     allFields.forEach((field) => {
@@ -162,13 +176,6 @@ const UpdatePage = (props) => {
         });
       }
     }
-    if (changeReason !== '') {
-      updatedFields.push({
-        field: 'changeReason',
-        value: changeReason,
-        label: 'Reason for change',
-      });
-    }
     return updatedFields;
   }
 
@@ -176,6 +183,11 @@ const UpdatePage = (props) => {
     setSaving(true);
     //request to /services/update.ts with updated fields and reason for change
     let updateRequest = getUpdatedFields(currentInfo, updatedInfo);
+    updateRequest.push({
+      field: 'changeReason',
+      value: changeReason,
+      label: 'Reason for change',
+    });
     requestInfoUpdate(updateRequest).then(() => {
       createSnackbar(
         'A request to update your information has been sent. Please check back later.',
@@ -213,6 +225,10 @@ const UpdatePage = (props) => {
     </Button>
   );
 
+  /**
+   * @param {Array<Object>} fields static fields that define label, name, value, type
+   * @returns JSX elements of all elements in array with correct type
+   */
   const infoMap = (fields) => {
     return fields.map((field) => (
       <ProfileUpdateField
@@ -226,20 +242,34 @@ const UpdatePage = (props) => {
     ));
   };
 
+  // following 3 consts determine confirmation window and its contents
   const [confirmText, setConfirmText] = useState('');
   const [changeReason, setChangeReason] = useState('');
-
   const getCurrentChanges = (currentInfo, updatedInfo) => {
     setConfirmText(
       getUpdatedFields(currentInfo, updatedInfo).map((field) => (
-        <Grid item xs={9} md={9} lg={9}>
-          <TextField
-            style={{ width: 504 }}
-            label={field.label}
-            name={field.field}
-            value={field.value}
-            disabled
-          />
+        <Grid
+          container
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          style={contentStyle}
+        >
+          <Grid item>
+            <Typography varient="subtitle2" style={contentStyle}>
+              {field.label}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography varient="subtitle2" style={contentStyle}>
+              {currentInfo[field.field]}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography varient="subtitle2" style={contentStyle}>
+              {field.value}
+            </Typography>
+          </Grid>
         </Grid>
       )),
     );
@@ -294,11 +324,41 @@ const UpdatePage = (props) => {
           cancelButtonName="Cancel"
         >
           <Card>
-            <CardContent>
-              <Grid>{confirmText}</Grid>
-            </CardContent>
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              style={headerStyle}
+            >
+              <Grid item>
+                <Typography variant="body1" style={headerStyle}>
+                  FIELD
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body1" style={headerStyle}>
+                  PREVIOUS
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body1" style={headerStyle}>
+                  CURRENT
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              style={{
+                width: '100%',
+                minWidth: 504,
+                borderTop: `solid 1.5px ${gordonColors.primary.blue}`,
+              }}
+            >
+              {confirmText}
+            </Grid>
           </Card>
-
           <TextField
             variant="filled"
             label="Please give a reason for the change..."
