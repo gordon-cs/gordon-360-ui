@@ -6,12 +6,8 @@ import {
   CardHeader,
   Button,
   TextField,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
 } from '@material-ui/core/';
-import React, { useState, useMemo, Fragment } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { requestInfoUpdate, getAllStates } from 'services/update';
 import styles from '../Update.module.css';
 import GordonLoader from 'components/Loader';
@@ -22,14 +18,14 @@ import { ProfileUpdateField, NotAlumni, ContentCard } from '..';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { gordonColors } from 'theme';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import {
-  personalInfoFields,
-  emailInfoFields,
-  phoneInfoFields,
-  mailingInfoFields,
-  shouldContactFields,
-  allFields,
-} from '../../constants/AvailableFields';
+// import {
+//   personalInfoFields,
+//   emailInfoFields,
+//   phoneInfoFields,
+//   mailingInfoFields,
+//   shouldContactFields,
+//   allFields,
+// } from '../../constants/AvailableFields';
 
 const headerStyle = {
   color: gordonColors.primary.blue,
@@ -40,6 +36,61 @@ const contentStyle = {
   color: `${gordonColors.neutral.darkGray}`,
   padding: '10px',
 };
+
+// SQL DATABASE HOLDS NAME CHAR ARRAYS WITH MAX SIZE OF 20
+// VALUES ARE CHAR ARRAYS WITH MAX SIZE OF 128
+// [possible limitation if adding more fields]
+
+const personalInfoFields = [
+  { label: 'Salutation', name: 'salutation', type: 'textfield' },
+  { label: 'First Name', name: 'firstName', type: 'textfield' },
+  { label: 'Last Name', name: 'lastName', type: 'textfield' },
+  {},
+  { label: 'Middle Name', name: 'middleName', type: 'textfield' },
+  { label: 'Preferred Name', name: 'nickName', type: 'textfield' },
+  { label: 'Married', name: 'married', type: 'checkbox' },
+];
+const emailInfoFields = [
+  { label: 'Personal Email', name: 'personalEmail', type: 'textfield' },
+  { label: 'Work Email', name: 'workEmail', type: 'textfield' },
+  { label: 'Alternate Email', name: 'aEmail', type: 'textfield' },
+  {
+    label: 'Preferred Email',
+    name: 'preferredEmail',
+    type: 'select',
+    menuItems: [{ value: 'Personal Email' }, { value: 'Work Email' }, { value: 'Alternate Email' }],
+  },
+];
+const phoneInfoFields = [
+  { label: 'Home Phone', name: 'homePhone', type: 'textfield' },
+  { label: 'Work Phone', name: 'workPhone', type: 'textfield' },
+  { label: 'Mobile Phone', name: 'mobilePhone', type: 'textfield' },
+  {
+    label: 'Preferred Phone',
+    name: 'preferredPhone',
+    type: 'select',
+    menuItems: [{ value: 'Home Phone' }, { value: 'Work Phone' }, { value: 'Mobile Phone' }],
+  },
+];
+const templateMailingInfoFields = [
+  { label: 'Address', name: 'address1', type: 'textfield' },
+  { label: 'Address Line 2 (optional)', name: 'address2', type: 'textfield' },
+  { label: 'City', name: 'city', type: 'textfield' },
+  { label: 'State', name: 'state', type: 'select', menuItems: [] },
+  { label: 'Zip Code', name: 'zip', type: 'textfield' },
+  { label: 'Country', name: 'country', type: 'textfield' },
+];
+const shouldContactFields = [
+  { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' },
+  { label: 'Do Not Mail', name: 'doNotMail', type: 'checkbox' },
+];
+const allFields = [
+  personalInfoFields,
+  emailInfoFields,
+  phoneInfoFields,
+  templateMailingInfoFields,
+  shouldContactFields,
+].flat();
 
 const confirmationWindowHeader = (
   <Grid
@@ -86,6 +137,29 @@ const UpdatePage = (props) => {
   const isOnline = useNetworkStatus();
   const profile = props.profile;
   const isUserStudent = profile.PersonType.includes('stu');
+  const [loading, setLoading] = useState(true);
+  const [mailingInfoFields, setMailingInfoFields] = useState(templateMailingInfoFields);
+
+  useEffect(() => {
+    setLoading(true);
+    const stateFieldIndex = templateMailingInfoFields
+      .map((m) => {
+        return m.label;
+      })
+      .indexOf('State');
+
+    getAllStates().then((s) => {
+      s.map((state) => {
+        mailingInfoFields[stateFieldIndex].menuItems.push({ value: `${state.Name}` });
+      });
+    });
+
+    setMailingInfoFields(mailingInfoFields);
+
+    console.log(mailingInfoFields[stateFieldIndex]);
+    console.log(phoneInfoFields);
+    setLoading(false);
+  }, []);
 
   const currentInfo = useMemo(
     () => ({
@@ -297,6 +371,8 @@ const UpdatePage = (props) => {
 
     if (!isUserStudent) return <NotAlumni />;
 
+    if (loading) return <GordonLoader size={128} />;
+
     return (
       <>
         <Grid container justifyContent="center">
@@ -319,12 +395,6 @@ const UpdatePage = (props) => {
                 </ContentCard>
                 <Grid item xs={12} justifyContent="center">
                   {saveButton}
-
-                  {/* TEMPORARY */}
-                  <Button variant="contained" color="secondary" onClick={getAllStates()}>
-                    GET ALL STATES
-                  </Button>
-                  {/* TEMPORARY */}
                 </Grid>
               </CardContent>
             </Card>

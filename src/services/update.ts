@@ -6,14 +6,19 @@ type ProfileFieldUpdate = {
   label: string;
 }
 
+type State = {
+  Name: string;
+  Abbreviation: string;
+}
+
 const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => {
   console.log(updatedFields);
   await http.post('profiles/updateRequest/', updatedFields);
 };
 
-const getAllStates = async() => {
-  let info = await http.get('profiles/getAllStates/');
-  console.log(JSON.stringify(info));
-}
+const getAllStates = async(): Promise<State[]> =>
+  http.get('profiles/getAllStates/');
+
+
 
 export { requestInfoUpdate, getAllStates };
