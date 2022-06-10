@@ -138,8 +138,8 @@ const UpdatePage = (props) => {
   const profile = props.profile;
   const isUserStudent = profile.PersonType.includes('stu');
   const [loading, setLoading] = useState(true);
-  const [mailingInfoFields, setMailingInfoFields] = useState(templateMailingInfoFields);
 
+  const [mailingInfoFields, setMailingInfoFields] = useState(templateMailingInfoFields);
   useEffect(() => {
     setLoading(true);
     const stateFieldIndex = templateMailingInfoFields
@@ -157,7 +157,7 @@ const UpdatePage = (props) => {
     setMailingInfoFields(mailingInfoFields);
 
     console.log(mailingInfoFields[stateFieldIndex]);
-    console.log(phoneInfoFields);
+    console.log(mailingInfoFields);
     setLoading(false);
   }, []);
 
@@ -371,8 +371,6 @@ const UpdatePage = (props) => {
 
     if (!isUserStudent) return <NotAlumni />;
 
-    if (loading) return <GordonLoader size={128} />;
-
     return (
       <>
         <Grid container justifyContent="center">
@@ -389,7 +387,9 @@ const UpdatePage = (props) => {
                 </ContentCard>
                 <ContentCard title="Email Addresses">{infoMap(emailInfoFields)}</ContentCard>
                 <ContentCard title="Phone Numbers">{infoMap(phoneInfoFields)}</ContentCard>
-                <ContentCard title="Mailing Address">{infoMap(mailingInfoFields)}</ContentCard>
+                <ContentCard title="Mailing Address" dep={mailingInfoFields}>
+                  {infoMap(mailingInfoFields)}
+                </ContentCard>
                 <ContentCard title="Contact Preferences">
                   {infoMap(shouldContactFields)}
                 </ContentCard>

@@ -17,7 +17,7 @@ const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => 
 };
 
 const getAllStates = async(): Promise<State[]> =>
-  http.get('profiles/getAllStates/');
+  await http.get('profiles/getAllStates/');
 
 
 
