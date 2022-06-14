@@ -8,7 +8,7 @@ import {
   TextField,
 } from '@material-ui/core/';
 import React, { useState, useMemo, useEffect } from 'react';
-import { requestInfoUpdate, getAllStates } from 'services/update';
+import { requestInfoUpdate, getAllStates, informationChangeSQL } from 'services/update';
 import styles from '../Update.module.css';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
@@ -121,17 +121,16 @@ const UpdatePage = (props) => {
       menuItems: [{ value: 'Home Phone' }, { value: 'Work Phone' }, { value: 'Mobile Phone' }],
     },
   ];
-  const mailingInfoFields = useMemo(
-    () => [
-      { label: 'Address', name: 'address1', type: 'textfield' },
-      { label: 'Address Line 2 (optional)', name: 'address2', type: 'textfield' },
-      { label: 'City', name: 'city', type: 'textfield' },
-      { label: 'State', name: 'state', type: 'select', menuItems: [] },
-      { label: 'Zip Code', name: 'zip', type: 'textfield' },
-      { label: 'Country', name: 'country', type: 'textfield' },
-    ],
-    [],
-  );
+  const [statesAndProv, setStatesAndProv] = useState([{ value: 'Not Applicable' }]);
+
+  const mailingInfoFields = [
+    { label: 'Address', name: 'address1', type: 'textfield' },
+    { label: 'Address Line 2 (optional)', name: 'address2', type: 'textfield' },
+    { label: 'City', name: 'city', type: 'textfield' },
+    { label: 'State', name: 'state', type: 'select', menuItems: statesAndProv },
+    { label: 'Zip Code', name: 'zip', type: 'textfield' },
+    { label: 'Country', name: 'country', type: 'textfield' },
+  ];
   const shouldContactFields = [
     { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' },
     { label: 'Do Not Mail', name: 'doNotMail', type: 'checkbox' },
@@ -145,21 +144,12 @@ const UpdatePage = (props) => {
   ].flat();
 
   useEffect(() => {
-    const stateFieldIndex = mailingInfoFields
-      .map((m) => {
-        return m.label;
-      })
-      .indexOf('State');
-
     getAllStates().then((s) => {
-      s.map((state) => {
-        mailingInfoFields[stateFieldIndex].menuItems.push({ value: `${state.Name}` });
-      });
+      let allStates = s.map((state) => ({ value: `${state.Name}` }));
+      allStates.unshift({ value: 'Not Applicable' });
+      setStatesAndProv(allStates);
     });
-
-    console.log(mailingInfoFields[stateFieldIndex]);
-    console.log(mailingInfoFields);
-  }, [mailingInfoFields]);
+  }, []);
 
   const currentInfo = useMemo(
     () => ({
@@ -258,12 +248,14 @@ const UpdatePage = (props) => {
       label: 'Reason for change',
     });
     requestInfoUpdate(updateRequest).then(() => {
-      createSnackbar(
-        'A request to update your information has been sent. Please check back later.',
-        'info',
-      );
-      setSaving(false);
-      handleWindowClose();
+      informationChangeSQL(getUpdatedFields(currentInfo, updatedInfo)).then(() => {
+        createSnackbar(
+          'A request to update your information has been sent. Please check back later.',
+          'info',
+        );
+        setSaving(false);
+        handleWindowClose();
+      });
     });
   };
 
@@ -387,9 +379,7 @@ const UpdatePage = (props) => {
                 </ContentCard>
                 <ContentCard title="Email Addresses">{infoMap(emailInfoFields)}</ContentCard>
                 <ContentCard title="Phone Numbers">{infoMap(phoneInfoFields)}</ContentCard>
-                <ContentCard title="Mailing Address" dep={mailingInfoFields}>
-                  {infoMap(mailingInfoFields)}
-                </ContentCard>
+                <ContentCard title="Mailing Address">{infoMap(mailingInfoFields)}</ContentCard>
                 <ContentCard title="Contact Preferences">
                   {infoMap(shouldContactFields)}
                 </ContentCard>
@@ -406,7 +396,7 @@ const UpdatePage = (props) => {
             </Typography>
           </Grid>
         </Grid>
-
+        {/* confirmation window */}
         <GordonDialogBox
           open={openConfirmWindow}
           title="Confirm Updates"

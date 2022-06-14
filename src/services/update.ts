@@ -19,9 +19,8 @@ const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => 
 const getAllStates = async(): Promise<State[]> =>
   await http.get('profiles/getAllStates/');
 
-const informationChangeRequest_dbo = async ( updatedFields : Array<ProfileFieldUpdate> ) => {
-  for(const field of updatedFields)
-    await http.post('profiles/informationChangeRequest_dbo/', field);
+const informationChangeSQL = async ( updatedFields : Array<ProfileFieldUpdate> ) => {
+  await http.post('profiles/informationChange/', updatedFields);
 }
 
-export { requestInfoUpdate, getAllStates, informationChangeRequest_dbo };
+export { requestInfoUpdate, getAllStates, informationChangeSQL };
