@@ -14,13 +14,10 @@ type State = {
 const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => {
   console.log(updatedFields);
   await http.post('profiles/updateRequest/', updatedFields);
+  await http.post('profiles/informationChange/', updatedFields);
 };
 
 const getAllStates = async(): Promise<State[]> =>
   await http.get('profiles/getAllStates/');
 
-const informationChangeSQL = async ( updatedFields : Array<ProfileFieldUpdate> ) => {
-  await http.post('profiles/informationChange/', updatedFields);
-}
-
-export { requestInfoUpdate, getAllStates, informationChangeSQL };
+export { requestInfoUpdate, getAllStates };

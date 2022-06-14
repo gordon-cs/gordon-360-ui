@@ -8,7 +8,7 @@ import {
   TextField,
 } from '@material-ui/core/';
 import React, { useState, useMemo, useEffect } from 'react';
-import { requestInfoUpdate, getAllStates, informationChangeSQL } from 'services/update';
+import { requestInfoUpdate, getAllStates } from 'services/update';
 import styles from '../Update.module.css';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
@@ -16,67 +16,9 @@ import GordonOffline from 'components/GordonOffline';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { ProfileUpdateField, NotAlumni, ContentCard } from '..';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { gordonColors } from 'theme';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-// import {
-//   personalInfoFields,
-//   emailInfoFields,
-//   phoneInfoFields,
-//   mailingInfoFields,
-//   shouldContactFields,
-//   allFields,
-// } from '../../constants/AvailableFields';
-
-const headerStyle = {
-  color: gordonColors.primary.blue,
-  paddingLeft: '10px',
-  paddingRight: '10px',
-};
-const contentStyle = {
-  color: `${gordonColors.neutral.darkGray}`,
-  padding: '10px',
-};
-
-// SQL DATABASE HOLDS NAME CHAR ARRAYS WITH MAX SIZE OF 20
-// VALUES ARE CHAR ARRAYS WITH MAX SIZE OF 128
-// [possible limitation if adding more fields]
-
-const confirmationWindowHeader = (
-  <Grid
-    container
-    direction="row"
-    justifyContent="space-between"
-    alignItems="center"
-    style={headerStyle}
-  >
-    <Grid item>
-      <Typography variant="body1" style={headerStyle}>
-        FIELD
-      </Typography>
-    </Grid>
-    <Grid item>
-      <Grid container direction="column" justifyContent="flex-start" alignItems="flex-end">
-        <Grid item>
-          <Typography variant="body2" style={headerStyle}>
-            CURRENT
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography
-            variant="caption"
-            style={{
-              paddingLeft: '10px',
-              paddingRight: '10px',
-              color: `${gordonColors.neutral.grayShades[800]}`,
-            }}
-          >
-            PREVIOUS
-          </Typography>
-        </Grid>
-      </Grid>
-    </Grid>
-  </Grid>
-);
+import { ConfirmationRow } from '../ConfirmationRow';
+import { ConfirmationWindowHeader } from '../ConfirmationHeader';
 
 /**
  * Sends an update form to the development office
@@ -86,6 +28,9 @@ const UpdatePage = (props) => {
   const isOnline = useNetworkStatus();
   const profile = props.profile;
   const isUserStudent = profile.PersonType.includes('stu');
+  // SQL DATABASE HOLDS NAME CHAR ARRAYS WITH MAX SIZE OF 20
+  // VALUES ARE CHAR ARRAYS WITH MAX SIZE OF 128
+  // [possible limitation if adding more fields]
   const personalInfoFields = [
     { label: 'Salutation', name: 'salutation', type: 'textfield' },
     { label: 'First Name', name: 'firstName', type: 'textfield' },
@@ -121,8 +66,7 @@ const UpdatePage = (props) => {
       menuItems: [{ value: 'Home Phone' }, { value: 'Work Phone' }, { value: 'Mobile Phone' }],
     },
   ];
-  const [statesAndProv, setStatesAndProv] = useState([{ value: 'Not Applicable' }]);
-
+  const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
   const mailingInfoFields = [
     { label: 'Address', name: 'address1', type: 'textfield' },
     { label: 'Address Line 2 (optional)', name: 'address2', type: 'textfield' },
@@ -145,8 +89,8 @@ const UpdatePage = (props) => {
 
   useEffect(() => {
     getAllStates().then((s) => {
-      let allStates = s.map((state) => ({ value: `${state.Name}` }));
-      allStates.unshift({ value: 'Not Applicable' });
+      let allStates = s.map((state) => `${state.Name}`);
+      allStates.unshift('Not Applicable');
       setStatesAndProv(allStates);
     });
   }, []);
@@ -240,7 +184,6 @@ const UpdatePage = (props) => {
 
   const handleConfirm = () => {
     setSaving(true);
-    //request to /services/update.ts with updated fields and reason for change
     let updateRequest = getUpdatedFields(currentInfo, updatedInfo);
     updateRequest.push({
       field: 'changeReason',
@@ -248,25 +191,23 @@ const UpdatePage = (props) => {
       label: 'Reason for change',
     });
     requestInfoUpdate(updateRequest).then(() => {
-      informationChangeSQL(getUpdatedFields(currentInfo, updatedInfo)).then(() => {
-        createSnackbar(
-          'A request to update your information has been sent. Please check back later.',
-          'info',
-        );
-        setSaving(false);
-        handleWindowClose();
-      });
+      createSnackbar(
+        'A request to update your information has been sent. Please check back later.',
+        'info',
+      );
+      setSaving(false);
+      handleWindowClose();
     });
   };
 
   const handleWindowClose = () => {
     setOpenConfirmWindow(false);
     setChangeReason('');
-    setConfirmText('');
+    setConfirmRows('');
   };
 
   const handleSaveButtonClick = () => {
-    if (updatedInfo.FirstName === '' || updatedInfo.lastname === '') {
+    if (updatedInfo.firstName === '' || updatedInfo.lastName === '') {
       createSnackbar('Please fill in your first and last name.', 'error');
     } else {
       getCurrentChanges(currentInfo, updatedInfo);
@@ -305,56 +246,22 @@ const UpdatePage = (props) => {
   };
 
   // following 3 consts determine confirmation window and its contents
-  const [confirmText, setConfirmText] = useState('');
+  const [confirmRows, setConfirmRows] = useState('');
   const [changeReason, setChangeReason] = useState('');
   const getCurrentChanges = (currentInfo, updatedInfo) => {
-    setConfirmText(
-      getUpdatedFields(currentInfo, updatedInfo).map((field) => (
-        <Grid
-          container
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          style={{
-            paddingTop: '10px',
-            borderTop: `1px solid ${gordonColors.neutral.grayShades[800]}`,
-          }}
-        >
-          <Grid item>
-            <Typography variant="body2" style={contentStyle}>
-              {field.label}
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Grid container direction="column" justifyContent="flex-start" alignItems="flex-end">
-              <Grid item>
-                <Typography
-                  variant="subtitle2"
-                  style={{
-                    paddingLeft: '10px',
-                    paddingRight: '10px',
-                    color: `${gordonColors.neutral.darkGray}`,
-                  }}
-                >
-                  {field.value}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography
-                  variant="caption"
-                  style={{
-                    paddingLeft: '10px',
-                    paddingRight: '10px',
-                    color: `${gordonColors.neutral.grayShades[900]}`,
-                  }}
-                >
-                  {currentInfo[field.field] === '' ? 'No previous value' : currentInfo[field.field]}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      )),
+    setConfirmRows(
+      <Grid
+        container
+        direction="row"
+        style={{
+          width: '100%',
+          minWidth: 504,
+        }}
+      >
+        {getUpdatedFields(currentInfo, updatedInfo).map((field) => (
+          <ConfirmationRow field={field} prevValue={currentInfo[field.field]} />
+        ))}
+      </Grid>,
     );
   };
 
@@ -407,18 +314,10 @@ const UpdatePage = (props) => {
           cancelButtonName="Cancel"
         >
           <Card>
-            {confirmationWindowHeader}
-            <Grid
-              container
-              direction="row"
-              style={{
-                width: '100%',
-                minWidth: 504,
-              }}
-            >
-              {confirmText}
-            </Grid>
+            <ConfirmationWindowHeader />
+            {confirmRows}
           </Card>
+          {/* reason for change prompt */}
           <TextField
             required
             variant="filled"
@@ -434,7 +333,6 @@ const UpdatePage = (props) => {
             }}
           />
         </GordonDialogBox>
-
         {/* will deprecate snackbar */}
         <SimpleSnackbar
           text={snackbar.message}

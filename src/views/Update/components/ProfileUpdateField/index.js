@@ -39,8 +39,8 @@ const ProfileUpdateField = ({ label, name, type, value, menuItems, onChange }) =
         <FormControl style={{ width: 252 }}>
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={onChange}>
-            {menuItems.map((info) => (
-              <MenuItem value={info.value}>{info.value}</MenuItem>
+            {menuItems.map((item) => (
+              <MenuItem value={item}>{item}</MenuItem>
             ))}
           </Select>
         </FormControl>
