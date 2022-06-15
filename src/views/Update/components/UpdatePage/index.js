@@ -8,6 +8,7 @@ import {
   TextField,
 } from '@material-ui/core/';
 import React, { useState, useMemo, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { requestInfoUpdate, getAllStates } from 'services/update';
 import styles from '../Update.module.css';
 import GordonLoader from 'components/Loader';
@@ -32,7 +33,12 @@ const UpdatePage = (props) => {
   // VALUES ARE CHAR ARRAYS WITH MAX SIZE OF 128
   // [possible limitation if adding more fields]
   const personalInfoFields = [
-    { label: 'Salutation', name: 'salutation', type: 'textfield' },
+    {
+      label: 'Salutation',
+      name: 'salutation',
+      type: 'select',
+      menuItems: ['Mr.', 'Ms.', 'Mrs.', 'Miss', 'Dr.', 'Rev.'],
+    },
     { label: 'First Name', name: 'firstName', type: 'textfield' },
     { label: 'Last Name', name: 'lastName', type: 'textfield' },
     {},
@@ -48,11 +54,7 @@ const UpdatePage = (props) => {
       label: 'Preferred Email',
       name: 'preferredEmail',
       type: 'select',
-      menuItems: [
-        { value: 'Personal Email' },
-        { value: 'Work Email' },
-        { value: 'Alternate Email' },
-      ],
+      menuItems: ['Personal Email', 'Work Email', 'Alternate Email'],
     },
   ];
   const phoneInfoFields = [
@@ -63,7 +65,7 @@ const UpdatePage = (props) => {
       label: 'Preferred Phone',
       name: 'preferredPhone',
       type: 'select',
-      menuItems: [{ value: 'Home Phone' }, { value: 'Work Phone' }, { value: 'Mobile Phone' }],
+      menuItems: ['No Preference', 'Home Phone', 'Work Phone', 'Mobile Phone'],
     },
   ];
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
@@ -139,6 +141,7 @@ const UpdatePage = (props) => {
     return true;
   }, [updatedInfo, currentInfo]);
 
+  // handles all field changes
   const handleChange = (event) => {
     const getNewInfo = (currentValue) => {
       return {
@@ -182,15 +185,17 @@ const UpdatePage = (props) => {
     return updatedFields;
   }
 
+  //handles confirmation window's final submit
   const handleConfirm = () => {
     setSaving(true);
     let updateRequest = getUpdatedFields(currentInfo, updatedInfo);
-    updateRequest.push({
+    let updateRequestEmail = getUpdatedFields(currentInfo, updatedInfo);
+    updateRequestEmail.push({
       field: 'changeReason',
       value: changeReason,
       label: 'Reason for change',
     });
-    requestInfoUpdate(updateRequest).then(() => {
+    requestInfoUpdate(updateRequestEmail, updateRequest).then(() => {
       createSnackbar(
         'A request to update your information has been sent. Please check back later.',
         'info',
@@ -200,6 +205,7 @@ const UpdatePage = (props) => {
     });
   };
 
+  //executes on confirmation window cancel & submit
   const handleWindowClose = () => {
     setOpenConfirmWindow(false);
     setChangeReason('');

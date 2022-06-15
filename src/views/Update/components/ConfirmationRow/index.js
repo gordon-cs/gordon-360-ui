@@ -7,6 +7,14 @@ const contentStyle = {
 };
 
 const ConfirmationRow = ({ field, prevValue }) => {
+  //for formatting
+  let value =
+    typeof field.value === 'string'
+      ? field.value
+      : field.value
+      ? `Yes, ${field.label}`
+      : `No, ${field.label}`;
+
   return (
     <Grid
       container
@@ -15,7 +23,7 @@ const ConfirmationRow = ({ field, prevValue }) => {
       alignItems="center"
       style={{
         paddingTop: '10px',
-        borderTop: `1px solid ${gordonColors.neutral.grayShades[800]}`,
+        borderTop: `1px solid ${gordonColors.neutral.grayShades[700]}`,
       }}
     >
       <Grid item>
@@ -34,7 +42,7 @@ const ConfirmationRow = ({ field, prevValue }) => {
                 color: `${gordonColors.neutral.darkGray}`,
               }}
             >
-              {field.value}
+              {value}
             </Typography>
           </Grid>
           <Grid item>
@@ -46,7 +54,7 @@ const ConfirmationRow = ({ field, prevValue }) => {
                 color: `${gordonColors.neutral.grayShades[900]}`,
               }}
             >
-              {prevValue === '' ? 'No previous value' : prevValue}
+              {prevValue === '' || false ? 'No previous value' : prevValue}
             </Typography>
           </Grid>
         </Grid>
