@@ -96,15 +96,10 @@ const UpdatePage = (props) => {
       setStatesAndProv(allStates);
     });
     getAllCountries().then((c) => {
-      let allCountries = c.map((country) => `${country.COUNTRY}`);
-      //Jenzabar's table has weird string formatting (some all caps, some not)
-      allCountries = allCountries.map((country) => {
-        let stringArr = country.toLowerCase().split(' ');
-        stringArr = stringArr.map((word) => {
-          //this is a temporary fix for a single edge case
+      let allCountries = c.map((country) => {
+        let stringArr = country.COUNTRY.toLocaleLowerCase.split(' ');
+        stringArr.forEach((word) => {
           if (word === 'u.s.') return 'U.S.';
-          if (word[0] === '(') return word[0] + word[1].toUpperCase() + word.substring(2);
-          return word[0].toUpperCase() + word.substring(1);
         });
         return stringArr.join(' ');
       });

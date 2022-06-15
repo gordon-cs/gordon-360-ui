@@ -8,6 +8,7 @@ import {
   Select,
   TextField,
 } from '@material-ui/core/';
+import styles from '../Update.module.css';
 
 const ProfileUpdateField = ({ label, name, type, value, menuItems, onChange }) => {
   let field;
@@ -40,7 +41,9 @@ const ProfileUpdateField = ({ label, name, type, value, menuItems, onChange }) =
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={onChange}>
             {menuItems.map((item) => (
-              <MenuItem value={item}>{item}</MenuItem>
+              <MenuItem className={styles.select_text} value={item}>
+                {item}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
