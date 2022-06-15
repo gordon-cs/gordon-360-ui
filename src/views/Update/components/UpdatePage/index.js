@@ -8,8 +8,7 @@ import {
   TextField,
 } from '@material-ui/core/';
 import React, { useState, useMemo, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { requestInfoUpdate, getAllStates } from 'services/update';
+import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/update';
 import styles from '../Update.module.css';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
@@ -37,7 +36,7 @@ const UpdatePage = (props) => {
       label: 'Salutation',
       name: 'salutation',
       type: 'select',
-      menuItems: ['Mr.', 'Ms.', 'Mrs.', 'Miss', 'Dr.', 'Rev.'],
+      menuItems: ['Prefer Not to Answer', 'Mr.', 'Ms.', 'Mrs.', 'Miss', 'Dr.', 'Rev.'],
     },
     { label: 'First Name', name: 'firstName', type: 'textfield' },
     { label: 'Last Name', name: 'lastName', type: 'textfield' },
@@ -54,7 +53,7 @@ const UpdatePage = (props) => {
       label: 'Preferred Email',
       name: 'preferredEmail',
       type: 'select',
-      menuItems: ['Personal Email', 'Work Email', 'Alternate Email'],
+      menuItems: ['No Preference', 'Personal Email', 'Work Email', 'Alternate Email'],
     },
   ];
   const phoneInfoFields = [
@@ -69,13 +68,14 @@ const UpdatePage = (props) => {
     },
   ];
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
+  const [countries, setCountries] = useState(['Prefer Not to Say']);
   const mailingInfoFields = [
     { label: 'Address', name: 'address1', type: 'textfield' },
     { label: 'Address Line 2 (optional)', name: 'address2', type: 'textfield' },
     { label: 'City', name: 'city', type: 'textfield' },
     { label: 'State', name: 'state', type: 'select', menuItems: statesAndProv },
     { label: 'Zip Code', name: 'zip', type: 'textfield' },
-    { label: 'Country', name: 'country', type: 'textfield' },
+    { label: 'Country', name: 'country', type: 'select', menuItems: countries },
   ];
   const shouldContactFields = [
     { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' },
@@ -94,6 +94,21 @@ const UpdatePage = (props) => {
       let allStates = s.map((state) => `${state.Name}`);
       allStates.unshift('Not Applicable');
       setStatesAndProv(allStates);
+    });
+    getAllCountries().then((c) => {
+      let allCountries = c.map((country) => `${country.COUNTRY}`);
+      //Jenzabar's table has weird string formatting (some all caps, some not)
+      allCountries = allCountries.map((country) => {
+        let stringArr = country.toLowerCase().split(' ');
+        stringArr = stringArr.map((word) => {
+          //this is a temporary fix for a single edge case
+          if (word === 'u.s.') return 'U.S.';
+          if (word[0] === '(') return word[0] + word[1].toUpperCase() + word.substring(2);
+          return word[0].toUpperCase() + word.substring(1);
+        });
+        return stringArr.join(' ');
+      });
+      setCountries(allCountries);
     });
   }, []);
 

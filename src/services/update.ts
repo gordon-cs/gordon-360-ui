@@ -11,6 +11,11 @@ type State = {
   Abbreviation: string;
 }
 
+type Country = {
+  CTY: string;
+  COUNTRY: string;
+}
+
 const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => {
   console.log(updatedFields);
   await http.post('profiles/updateRequest/',updatedFields);
@@ -19,4 +24,7 @@ const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => 
 const getAllStates = async(): Promise<State[]> =>
   await http.get('profiles/getAllStates/');
 
-export { requestInfoUpdate, getAllStates };
+  const getAllCountries = async(): Promise<Country[]> =>
+  await http.get('profiles/getAllCountries/');
+
+export { requestInfoUpdate, getAllStates, getAllCountries };
