@@ -4,27 +4,25 @@ type ProfileFieldUpdate = {
   field: string;
   value: string;
   label: string;
-}
+};
 
 type State = {
   Name: string;
   Abbreviation: string;
-}
+};
 
 type Country = {
   CTY: string;
   COUNTRY: string;
-}
-
-const requestInfoUpdate = async ( updatedFields: Array<ProfileFieldUpdate> ) => {
-  console.log(updatedFields);
-  await http.post('profiles/updateRequest/',updatedFields);
 };
 
-const getAllStates = async(): Promise<State[]> =>
-  await http.get('profiles/getAllStates/');
+const requestInfoUpdate = async (updatedFields: Array<ProfileFieldUpdate>) => {
+  console.log(updatedFields);
+  await http.post('profiles/requestUpdate/', updatedFields);
+};
 
-  const getAllCountries = async(): Promise<Country[]> =>
-  await http.get('profiles/getAllCountries/');
+const getAllStates = async (): Promise<State[]> => await http.get('profiles/getAllStates/');
+
+const getAllCountries = async (): Promise<Country[]> => await http.get('profiles/getAllCountries/');
 
 export { requestInfoUpdate, getAllStates, getAllCountries };
