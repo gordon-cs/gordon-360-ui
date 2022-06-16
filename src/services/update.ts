@@ -18,11 +18,11 @@ type Country = {
 
 const requestInfoUpdate = async (updatedFields: Array<ProfileFieldUpdate>) => {
   console.log(updatedFields);
-  await http.post('profiles/requestUpdate/', updatedFields);
+  await http.post('profiles/update/', updatedFields);
 };
 
-const getAllStates = async (): Promise<State[]> => await http.get('profiles/getAllStates/');
+const getAllStates = async (): Promise<State[]> => await http.get('profiles/states/');
 
-const getAllCountries = async (): Promise<Country[]> => await http.get('profiles/getAllCountries/');
+const getAllCountries = async (): Promise<Country[]> => await http.get('profiles/countries/');
 
 export { requestInfoUpdate, getAllStates, getAllCountries };
