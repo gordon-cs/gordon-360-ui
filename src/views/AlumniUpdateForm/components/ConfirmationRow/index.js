@@ -1,13 +1,7 @@
 import { Typography, Grid } from '@material-ui/core/';
-import { gordonColors } from 'theme';
-
-const contentStyle = {
-  color: `${gordonColors.neutral.darkGray}`,
-  padding: '10px',
-};
+import styles from './ConfirmationRow.module.css';
 
 const ConfirmationRow = ({ field, prevValue }) => {
-  //for formatting
   let value =
     typeof field.value === 'string'
       ? field.value
@@ -21,39 +15,22 @@ const ConfirmationRow = ({ field, prevValue }) => {
       direction="row"
       justifyContent="space-between"
       alignItems="center"
-      style={{
-        paddingTop: '10px',
-        borderTop: `1px solid ${gordonColors.neutral.grayShades[700]}`,
-      }}
+      className={styles.container}
     >
       <Grid item>
-        <Typography variant="body2" style={contentStyle}>
+        <Typography variant="body2" className={styles.label}>
           {field.label}
         </Typography>
       </Grid>
       <Grid item>
         <Grid container direction="column" justifyContent="flex-start" alignItems="flex-end">
           <Grid item>
-            <Typography
-              variant="subtitle2"
-              style={{
-                paddingLeft: '10px',
-                paddingRight: '10px',
-                color: `${gordonColors.neutral.darkGray}`,
-              }}
-            >
+            <Typography variant="subtitle2" className={styles.text_current}>
               {value}
             </Typography>
           </Grid>
           <Grid item>
-            <Typography
-              variant="caption"
-              style={{
-                paddingLeft: '10px',
-                paddingRight: '10px',
-                color: `${gordonColors.neutral.grayShades[900]}`,
-              }}
-            >
+            <Typography variant="caption" className={styles.text_previous}>
               {prevValue === '' || false ? 'No previous value' : prevValue}
             </Typography>
           </Grid>

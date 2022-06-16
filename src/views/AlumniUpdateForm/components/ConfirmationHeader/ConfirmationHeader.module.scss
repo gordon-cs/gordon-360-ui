@@ -1,0 +1,13 @@
+@import '../../../../vars';
+
+.header_style {
+  color: $primary-blue;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  &_text {
+    color: #9f9f9d;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

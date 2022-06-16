@@ -1,11 +1,5 @@
 import { Typography, Grid } from '@material-ui/core/';
-import { gordonColors } from 'theme';
-
-const headerStyle = {
-  color: gordonColors.primary.blue,
-  paddingLeft: '10px',
-  paddingRight: '10px',
-};
+import styles from './ConfirmationHeader.module.css';
 
 const ConfirmationWindowHeader = () => {
   return (
@@ -14,29 +8,22 @@ const ConfirmationWindowHeader = () => {
       direction="row"
       justifyContent="space-between"
       alignItems="center"
-      style={headerStyle}
+      className={styles.header_style}
     >
       <Grid item>
-        <Typography variant="body1" style={headerStyle}>
+        <Typography variant="body1" className={styles.header_style}>
           FIELD
         </Typography>
       </Grid>
       <Grid item>
         <Grid container direction="column" justifyContent="flex-start" alignItems="flex-end">
           <Grid item>
-            <Typography variant="body2" style={headerStyle}>
+            <Typography variant="body2" className={styles.header_style}>
               CURRENT
             </Typography>
           </Grid>
           <Grid item>
-            <Typography
-              variant="caption"
-              style={{
-                paddingLeft: '10px',
-                paddingRight: '10px',
-                color: `${gordonColors.neutral.grayShades[800]}`,
-              }}
-            >
+            <Typography variant="caption" className={styles.header_style_text}>
               PREVIOUS
             </Typography>
           </Grid>

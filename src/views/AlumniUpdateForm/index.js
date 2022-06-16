@@ -9,28 +9,29 @@ import {
 } from '@material-ui/core/';
 import React, { useState, useMemo, useEffect } from 'react';
 import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/update';
-import styles from '../Update.module.css';
+import styles from './components/Update.module.css';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import GordonOffline from 'components/GordonOffline';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { ProfileUpdateField, NotAlumni, ContentCard } from '..';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { ConfirmationRow } from '../ConfirmationRow';
-import { ConfirmationWindowHeader } from '../ConfirmationHeader';
+import { useUser } from 'hooks';
+import { ConfirmationRow } from './components/ConfirmationRow';
+import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
+import { NotAlumni } from './components/NotAlumni';
+import { ContentCard } from './components/ContentCard';
+import { ProfileUpdateField } from './components/ProfileUpdateField';
 
 /**
- * Sends an update form to the development office
+ * A form for alumni to request an update to their profile information.
  */
 
-const UpdatePage = (props) => {
+const AlumniUpdateForm = (props) => {
+  const { profile, loading } = useUser();
   const isOnline = useNetworkStatus();
-  const profile = props.profile;
   const isUserStudent = profile.PersonType.includes('stu');
-  // SQL DATABASE HOLDS NAME CHAR ARRAYS WITH MAX SIZE OF 20
-  // VALUES ARE CHAR ARRAYS WITH MAX SIZE OF 128
-  // [possible limitation if adding more fields]
+
   const personalInfoFields = [
     {
       label: 'Salutation',
@@ -96,13 +97,7 @@ const UpdatePage = (props) => {
       setStatesAndProv(allStates);
     });
     getAllCountries().then((c) => {
-      let allCountries = c.map((country) => {
-        let stringArr = country.COUNTRY.toLocaleLowerCase().split(' ');
-        stringArr.forEach((word) => {
-          if (word === 'u.s.') return 'U.S.';
-        });
-        return stringArr.join(' ');
-      });
+      let allCountries = c.map((country) => country.COUNTRY.toLowerCase());
       setCountries(allCountries);
     });
   }, []);
@@ -141,6 +136,7 @@ const UpdatePage = (props) => {
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [changeReason, setChangeReason] = useState('');
 
   const hasNoChange = useMemo(() => {
     for (const field in currentInfo) {
@@ -167,45 +163,33 @@ const UpdatePage = (props) => {
     setSnackbar({ message: message, severity: severity, open: true });
   };
 
-  // returns label given name of field
-  const getAssociatedLabel = (fieldName) => {
-    let label = '';
-    allFields.forEach((field) => {
-      if (fieldName === field.name) label = field.label;
-    });
-    return label;
+  const getFieldLabel = (fieldName) => {
+    const matchingField = allFields.find((field) => field.name === fieldName);
+    return matchingField.label;
   };
 
-  /**
-   * @param updatedInfo updated information fields object
-   * @param currentInfo old/saved information fields object
-   * @returns {Array<Object>} Array of updated fields in a subobject
-   */
   function getUpdatedFields(updatedInfo, currentInfo) {
-    var updatedFields = [];
-    for (const field in currentInfo) {
-      if (updatedInfo[field] !== currentInfo[field]) {
+    const updatedFields = [];
+    Object.entries(currentInfo).forEach(([field, value]) => {
+      if (updatedInfo[field] !== value)
         updatedFields.push({
           field: field,
-          value: currentInfo[field],
-          label: getAssociatedLabel(field),
+          value: value,
+          label: getFieldLabel(field),
         });
-      }
-    }
+    });
     return updatedFields;
   }
 
-  //handles confirmation window's final submit
   const handleConfirm = () => {
     setSaving(true);
     let updateRequest = getUpdatedFields(currentInfo, updatedInfo);
-    let updateRequestEmail = getUpdatedFields(currentInfo, updatedInfo);
-    updateRequestEmail.push({
+    updateRequest.push({
       field: 'changeReason',
       value: changeReason,
       label: 'Reason for change',
     });
-    requestInfoUpdate(updateRequestEmail, updateRequest).then(() => {
+    requestInfoUpdate(updateRequest).then(() => {
       createSnackbar(
         'A request to update your information has been sent. Please check back later.',
         'info',
@@ -215,18 +199,15 @@ const UpdatePage = (props) => {
     });
   };
 
-  //executes on confirmation window cancel & submit
   const handleWindowClose = () => {
     setOpenConfirmWindow(false);
     setChangeReason('');
-    setConfirmRows('');
   };
 
   const handleSaveButtonClick = () => {
     if (updatedInfo.firstName === '' || updatedInfo.lastName === '') {
       createSnackbar('Please fill in your first and last name.', 'error');
     } else {
-      getCurrentChanges(currentInfo, updatedInfo);
       setOpenConfirmWindow(true);
     }
   };
@@ -245,10 +226,10 @@ const UpdatePage = (props) => {
   );
 
   /**
-   * @param {Array<Object>} fields static fields that define label, name, value, type
-   * @returns JSX elements of all elements in array with correct type
+   * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
+   * @returns JSX correct input for each field based on type
    */
-  const infoMap = (fields) => {
+  const inputField = (fields) => {
     return fields.map((field) => (
       <ProfileUpdateField
         label={field.label}
@@ -261,105 +242,98 @@ const UpdatePage = (props) => {
     ));
   };
 
-  // following 3 consts determine confirmation window and its contents
-  const [confirmRows, setConfirmRows] = useState('');
-  const [changeReason, setChangeReason] = useState('');
-  const getCurrentChanges = (currentInfo, updatedInfo) => {
-    setConfirmRows(
-      <Grid
-        container
-        direction="row"
-        style={{
-          width: '100%',
-          minWidth: 504,
-        }}
-      >
-        {getUpdatedFields(currentInfo, updatedInfo).map((field) => (
-          <ConfirmationRow field={field} prevValue={currentInfo[field.field]} />
-        ))}
-      </Grid>,
-    );
-  };
+  if (loading) return <GordonLoader />;
 
-  if (profile) {
-    if (!isOnline) return <GordonOffline feature="Update Profile" />;
+  if (!profile) return <GordonUnauthorized feature={'the Update Profile page'} />;
 
-    if (!isUserStudent) return <NotAlumni />;
+  if (!isOnline) return <GordonOffline feature="Update Profile" />;
 
-    return (
-      <>
-        <Grid container justifyContent="center">
-          <Grid item xs={12} lg={8}>
-            <Card className={styles.update}>
-              <CardHeader
-                className={styles.update_title}
-                title="Update Information"
-                titleTypographyProps={{ variant: 'h4' }}
-              />
-              <CardContent>
-                <ContentCard title="Personal Information">
-                  {infoMap(personalInfoFields)}
-                </ContentCard>
-                <ContentCard title="Email Addresses">{infoMap(emailInfoFields)}</ContentCard>
-                <ContentCard title="Phone Numbers">{infoMap(phoneInfoFields)}</ContentCard>
-                <ContentCard title="Mailing Address">{infoMap(mailingInfoFields)}</ContentCard>
-                <ContentCard title="Contact Preferences">
-                  {infoMap(shouldContactFields)}
-                </ContentCard>
-                <Grid item xs={12} justifyContent="center">
-                  {saveButton}
-                </Grid>
-              </CardContent>
-            </Card>
-            <Typography variant="subtitle1">
-              Found a bug?
-              <Button href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug" color="primary">
-                Report to CTS
-              </Button>
-            </Typography>
-          </Grid>
-        </Grid>
-        {/* confirmation window */}
-        <GordonDialogBox
-          open={openConfirmWindow}
-          title="Confirm Updates"
-          buttonClicked={handleConfirm}
-          buttonName={'Confirm'}
-          isButtonDisabled={changeReason === ''}
-          cancelButtonClicked={handleWindowClose}
-          cancelButtonName="Cancel"
-        >
-          <Card>
-            <ConfirmationWindowHeader />
-            {confirmRows}
+  if (!isUserStudent) return <NotAlumni />;
+
+  return (
+    <>
+      <Grid container justifyContent="center">
+        <Grid item xs={12} lg={8}>
+          <Card className={styles.update}>
+            <CardHeader
+              className={styles.update_title}
+              title="Update Information"
+              titleTypographyProps={{ variant: 'h4' }}
+            />
+            <CardContent>
+              <ContentCard title="Personal Information">
+                {inputField(personalInfoFields)}
+              </ContentCard>
+              <ContentCard title="Email Addresses">{inputField(emailInfoFields)}</ContentCard>
+              <ContentCard title="Phone Numbers">{inputField(phoneInfoFields)}</ContentCard>
+              <ContentCard title="Mailing Address">{inputField(mailingInfoFields)}</ContentCard>
+              <ContentCard title="Contact Preferences">
+                {inputField(shouldContactFields)}
+              </ContentCard>
+              <Grid item xs={12} justifyContent="center">
+                {saveButton}
+              </Grid>
+            </CardContent>
           </Card>
-          {/* reason for change prompt */}
-          <TextField
-            required
-            variant="filled"
-            label="Please give a reason for the change..."
-            margin="normal"
-            multiline
-            fullWidth
-            rows={4}
-            name="changeReason"
-            value={changeReason}
-            onChange={(event) => {
-              setChangeReason(event.target.value);
+          <Typography variant="subtitle1">
+            Found a bug?
+            <Button href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug" color="primary">
+              Report to CTS
+            </Button>
+          </Typography>
+        </Grid>
+      </Grid>
+      {/* confirmation window */}
+      <GordonDialogBox
+        open={openConfirmWindow}
+        title="Confirm Updates"
+        buttonClicked={handleConfirm}
+        buttonName={'Confirm'}
+        isButtonDisabled={changeReason === ''}
+        cancelButtonClicked={handleWindowClose}
+        cancelButtonName="Cancel"
+      >
+        <Card>
+          <ConfirmationWindowHeader />
+          <Grid
+            container
+            direction="row"
+            style={{
+              width: '100%',
+              minWidth: 504,
             }}
-          />
-        </GordonDialogBox>
-        {/* will deprecate snackbar */}
-        <SimpleSnackbar
-          text={snackbar.message}
-          severity={snackbar.severity}
-          open={snackbar.open}
-          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+          >
+            {getUpdatedFields(currentInfo, updatedInfo).map((field) => (
+              <ConfirmationRow field={field} prevValue={currentInfo[field.field]} />
+            ))}
+          </Grid>
+          ,
+        </Card>
+        {/* reason for change prompt */}
+        <TextField
+          required
+          variant="filled"
+          label="Please give a reason for the change..."
+          margin="normal"
+          multiline
+          fullWidth
+          rows={4}
+          name="changeReason"
+          value={changeReason}
+          onChange={(event) => {
+            setChangeReason(event.target.value);
+          }}
         />
-      </>
-    );
-  }
-  return <GordonUnauthorized feature={'the Update Profile page'} />;
+      </GordonDialogBox>
+      {/* will deprecate snackbar */}
+      <SimpleSnackbar
+        text={snackbar.message}
+        severity={snackbar.severity}
+        open={snackbar.open}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
+    </>
+  );
 };
 
-export { UpdatePage };
+export default AlumniUpdateForm;

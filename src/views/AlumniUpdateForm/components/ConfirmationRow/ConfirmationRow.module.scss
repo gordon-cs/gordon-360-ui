@@ -1,0 +1,25 @@
+@import '../../../../vars';
+
+.label {
+  color: $neutral-dark-gray;
+  padding: 10px;
+}
+
+.container {
+  padding-top: 10px;
+  border-top: 1px solid $neutral-gray3;
+}
+
+.text {
+  &_current {
+    color: $neutral-dark-gray;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  &_previous {
+    color: #8f8f8d;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

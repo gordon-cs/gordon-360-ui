@@ -14,17 +14,20 @@ const NotAlumni = () => {
             }}
           >
             <br />
-            <h1>{'Update Information Unavailable'}</h1>
-            <h4>{'Updating alumni info is currently available for alumni only'}</h4>
+            <h1>Update Information Unavailable</h1>
+            <h4>Updating alumni info is currently available for alumni only</h4>
             <br />
             <br />
           </CardContent>
           <Grid container justifyContent="center">
-            <Link className="gc360_link" to="">
-              <Button variant="contained" className={styles.update_info_button}>
-                Back To Home
-              </Button>
-            </Link>
+            <Button
+              component={Link}
+              to=""
+              variant="contained"
+              className={styles.update_info_button}
+            >
+              Back To Home
+            </Button>
           </Grid>
         </Card>
       </Grid>

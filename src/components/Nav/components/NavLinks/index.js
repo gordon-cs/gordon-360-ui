@@ -151,17 +151,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
-  /* TODO: COMMENTED OUT SO WE FIGURE OUT WHERE IS BEST PLACEMENT
-  const updateButton = (
-    <GordonNavButton
-      onLinkClick={onLinkClick}
-      linkName={'Update Alumni Info'}
-      linkPath={'/update'}
-      divider={false}
-    />
-  );
-*/
-
   const feedbackButton = (
     <GordonNavButton
       unavailable={isOnline ? null : 'offline'}
@@ -208,7 +197,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {aboutButton}
         {feedbackButton}
         {adminButton}
-        {/* TODO: Commented out until placement is determined {updateButton} */}
         {signOutButton}
       </List>
 
