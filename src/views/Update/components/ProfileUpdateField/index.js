@@ -14,7 +14,9 @@ const ProfileUpdateField = ({ label, name, type, value, menuItems, onChange }) =
   let field;
   // eslint-disable-next-line default-case
   switch (type) {
-    case 'textfield':
+    case 'text':
+    case 'number':
+    case 'email':
       field = (
         <TextField
           className="disable_select"
@@ -23,6 +25,7 @@ const ProfileUpdateField = ({ label, name, type, value, menuItems, onChange }) =
           name={name}
           value={value}
           onChange={onChange}
+          type={type}
         />
       );
       break;

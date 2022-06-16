@@ -38,17 +38,17 @@ const UpdatePage = (props) => {
       type: 'select',
       menuItems: ['Prefer Not to Answer', 'Mr.', 'Ms.', 'Mrs.', 'Miss', 'Dr.', 'Rev.'],
     },
-    { label: 'First Name', name: 'firstName', type: 'textfield' },
-    { label: 'Last Name', name: 'lastName', type: 'textfield' },
+    { label: 'First Name', name: 'firstName', type: 'text' },
+    { label: 'Last Name', name: 'lastName', type: 'text' },
     {},
-    { label: 'Middle Name', name: 'middleName', type: 'textfield' },
-    { label: 'Preferred Name', name: 'nickName', type: 'textfield' },
+    { label: 'Middle Name', name: 'middleName', type: 'text' },
+    { label: 'Preferred Name', name: 'nickName', type: 'text' },
     { label: 'Married', name: 'married', type: 'checkbox' },
   ];
   const emailInfoFields = [
-    { label: 'Personal Email', name: 'personalEmail', type: 'textfield' },
-    { label: 'Work Email', name: 'workEmail', type: 'textfield' },
-    { label: 'Alternate Email', name: 'aEmail', type: 'textfield' },
+    { label: 'Personal Email', name: 'personalEmail', type: 'email' },
+    { label: 'Work Email', name: 'workEmail', type: 'email' },
+    { label: 'Alternate Email', name: 'aEmail', type: 'email' },
     {
       label: 'Preferred Email',
       name: 'preferredEmail',
@@ -57,9 +57,9 @@ const UpdatePage = (props) => {
     },
   ];
   const phoneInfoFields = [
-    { label: 'Home Phone', name: 'homePhone', type: 'textfield' },
-    { label: 'Work Phone', name: 'workPhone', type: 'textfield' },
-    { label: 'Mobile Phone', name: 'mobilePhone', type: 'textfield' },
+    { label: 'Home Phone', name: 'homePhone', type: 'number' },
+    { label: 'Work Phone', name: 'workPhone', type: 'number' },
+    { label: 'Mobile Phone', name: 'mobilePhone', type: 'number' },
     {
       label: 'Preferred Phone',
       name: 'preferredPhone',
@@ -70,11 +70,11 @@ const UpdatePage = (props) => {
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
   const [countries, setCountries] = useState(['Prefer Not to Say']);
   const mailingInfoFields = [
-    { label: 'Address', name: 'address1', type: 'textfield' },
-    { label: 'Address Line 2 (optional)', name: 'address2', type: 'textfield' },
-    { label: 'City', name: 'city', type: 'textfield' },
+    { label: 'Address', name: 'address1', type: 'text' },
+    { label: 'Address Line 2 (optional)', name: 'address2', type: 'text' },
+    { label: 'City', name: 'city', type: 'text' },
     { label: 'State', name: 'state', type: 'select', menuItems: statesAndProv },
-    { label: 'Zip Code', name: 'zip', type: 'textfield' },
+    { label: 'Zip Code', name: 'zip', type: 'number' },
     { label: 'Country', name: 'country', type: 'select', menuItems: countries },
   ];
   const shouldContactFields = [
@@ -97,7 +97,7 @@ const UpdatePage = (props) => {
     });
     getAllCountries().then((c) => {
       let allCountries = c.map((country) => {
-        let stringArr = country.COUNTRY.toLocaleLowerCase.split(' ');
+        let stringArr = country.COUNTRY.toLocaleLowerCase().split(' ');
         stringArr.forEach((word) => {
           if (word === 'u.s.') return 'U.S.';
         });
