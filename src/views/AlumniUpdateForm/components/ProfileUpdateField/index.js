@@ -40,7 +40,7 @@ const ProfileUpdateField = ({ label, name, type, value, menuItems, onChange }) =
       break;
     case 'select':
       field = (
-        <FormControl style={{ width: 252 }}>
+        <FormControl className={styles.select_text} style={{ width: 252 }}>
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={onChange}>
             {menuItems.map((item) => (

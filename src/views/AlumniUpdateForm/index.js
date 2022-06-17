@@ -307,9 +307,7 @@ const AlumniUpdateForm = (props) => {
               <ConfirmationRow field={field} prevValue={currentInfo[field.field]} />
             ))}
           </Grid>
-          ,
         </Card>
-        {/* reason for change prompt */}
         <TextField
           required
           variant="filled"
@@ -325,7 +323,6 @@ const AlumniUpdateForm = (props) => {
           }}
         />
       </GordonDialogBox>
-      {/* will deprecate snackbar */}
       <SimpleSnackbar
         text={snackbar.message}
         severity={snackbar.severity}

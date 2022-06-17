@@ -1,5 +1,9 @@
 @import '../../../vars';
 
+.select_text {
+  text-transform: capitalize;
+}
+
 .update_item {
   padding: 1rem;
   align-items: center;
