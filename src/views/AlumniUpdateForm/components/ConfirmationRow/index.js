@@ -1,31 +1,31 @@
 import { Typography, Grid } from '@material-ui/core/';
 import styles from './ConfirmationRow.module.css';
-import { Check, Clear, Remove } from '@material-ui/icons';
+import { Check, Remove } from '@material-ui/icons';
 
 const ConfirmationRow = ({ field, prevValue }) => {
-  //CHECKBOX TRUTH VALUE NEEDS TO BE REFORMATTED
-  console.log(field);
-  console.log(prevValue);
-  if (typeof prevValue === 'boolean') {
-    console.log('hi');
-  }
-  const currentValue =
-    typeof prevValue === 'boolean' ? (
+  const isCheckbox = typeof prevValue === 'boolean';
+  const truthIcon = (value) => {
+    return value ? (
       <Check className={styles.icon_current} />
     ) : (
-      <Typography variant="subtitle2" className={styles.text_current}>
-        {`${field.value}`}
-      </Typography>
-    );
-
-  const previousValue =
-    typeof prevValue === 'boolean' ? (
       <Remove className={styles.icon_previous} />
-    ) : (
-      <Typography variant="caption" className={styles.text_previous}>
-        {prevValue === '' || false ? 'No previous value' : `${prevValue}`}
-      </Typography>
     );
+  };
+  const currentValue = isCheckbox ? (
+    truthIcon(field.value)
+  ) : (
+    <Typography variant="subtitle2" className={styles.text_current}>
+      {`${field.value}`}
+    </Typography>
+  );
+
+  const previousValue = isCheckbox ? (
+    truthIcon(prevValue)
+  ) : (
+    <Typography variant="caption" className={styles.text_previous}>
+      {prevValue === '' || false ? 'No previous value' : `${prevValue}`}
+    </Typography>
+  );
 
   return (
     <Grid

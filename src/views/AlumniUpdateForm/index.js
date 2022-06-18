@@ -115,7 +115,7 @@ const AlumniUpdateForm = (props) => {
       workEmail: profile.WorkEmail ?? '',
       aEmail: profile.aEmail ?? '',
       preferredEmail: profile.PreferredEmail ?? '',
-      doNotContact: profile.doNotContact ?? false,
+      doNotContact: profile.doNotContact ?? true,
       doNotMail: profile.doNotMail ?? false,
       homePhone: profile.HomePhone ?? '',
       workPhone: profile.WorkPhone ?? '',
@@ -323,6 +323,7 @@ const AlumniUpdateForm = (props) => {
           }}
         />
       </GordonDialogBox>
+      {/* will deprecate snackbar */}
       <SimpleSnackbar
         text={snackbar.message}
         severity={snackbar.severity}
