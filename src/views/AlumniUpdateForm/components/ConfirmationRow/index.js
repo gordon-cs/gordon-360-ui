@@ -12,10 +12,10 @@ const ConfirmationRow = ({ field, prevValue }) => {
     );
   };
   const currentValue = isCheckbox ? (
-    truthIcon(field.value)
+    truthIcon(field.Value)
   ) : (
     <Typography variant="subtitle2" className={styles.text_current}>
-      {`${field.value}`}
+      {`${field.Value}`}
     </Typography>
   );
 
@@ -37,7 +37,7 @@ const ConfirmationRow = ({ field, prevValue }) => {
     >
       <Grid item>
         <Typography variant="body2" className={styles.label}>
-          {field.label}
+          {field.Label}
         </Typography>
       </Grid>
       <Grid item>

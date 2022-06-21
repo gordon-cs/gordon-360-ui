@@ -173,9 +173,9 @@ const AlumniUpdateForm = (props) => {
     Object.entries(currentInfo).forEach(([field, value]) => {
       if (updatedInfo[field] !== value)
         updatedFields.push({
-          field: field,
-          value: value,
-          label: getFieldLabel(field),
+          Field: field,
+          Value: value,
+          Label: getFieldLabel(field),
         });
     });
     return updatedFields;
@@ -185,9 +185,9 @@ const AlumniUpdateForm = (props) => {
     setSaving(true);
     let updateRequest = getUpdatedFields(currentInfo, updatedInfo);
     updateRequest.push({
-      field: 'changeReason',
-      value: changeReason,
-      label: 'Reason for change',
+      Field: 'changeReason',
+      Value: changeReason,
+      Label: 'Reason for change',
     });
     requestInfoUpdate(updateRequest).then(() => {
       createSnackbar(
@@ -304,7 +304,7 @@ const AlumniUpdateForm = (props) => {
             }}
           >
             {getUpdatedFields(currentInfo, updatedInfo).map((field) => (
-              <ConfirmationRow field={field} prevValue={currentInfo[field.field]} />
+              <ConfirmationRow field={field} prevValue={currentInfo[field.Field]} />
             ))}
           </Grid>
         </Card>

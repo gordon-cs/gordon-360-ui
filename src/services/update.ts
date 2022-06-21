@@ -1,9 +1,9 @@
 import http from './http';
 
 type ProfileFieldUpdate = {
-  field: string;
-  value: string;
-  label: string;
+  Field: string;
+  Value: string;
+  Label: string;
 };
 
 type State = {
