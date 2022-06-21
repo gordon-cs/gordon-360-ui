@@ -7,7 +7,7 @@ import {
   Button,
   TextField,
 } from '@material-ui/core/';
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/update';
 import styles from './components/Update.module.css';
 import GordonLoader from 'components/Loader';
@@ -115,7 +115,7 @@ const AlumniUpdateForm = (props) => {
       workEmail: profile.WorkEmail ?? '',
       aEmail: profile.aEmail ?? '',
       preferredEmail: profile.PreferredEmail ?? '',
-      doNotContact: profile.doNotContact ?? true,
+      doNotContact: profile.doNotContact ?? false,
       doNotMail: profile.doNotMail ?? false,
       homePhone: profile.HomePhone ?? '',
       workPhone: profile.WorkPhone ?? '',
