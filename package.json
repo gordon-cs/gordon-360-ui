@@ -61,7 +61,7 @@
     "prettier": "^2.5.0",
     "react-scripts": "5.0.0",
     "sass": "^1.44.0",
-    "stylelint": "^14.1.0",
+    "stylelint": "^14.9.0",
     "stylelint-config-recommended-scss": "^5.0.2"
   },
   "scripts": {
