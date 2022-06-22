@@ -63,7 +63,6 @@ const PersonalInfoList = ({
   },
   createSnackbar,
 }) => {
-  MobilePhone = '5129449977';
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
   );
