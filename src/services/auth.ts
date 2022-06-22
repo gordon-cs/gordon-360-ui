@@ -51,9 +51,7 @@ export const configureMSAL = (msalInstance: PublicClientApplication) => {
 };
 
 const authenticate = async () => {
-  const tokenResponse = await msalInstance.loginPopup(apiRequest);
-  const accountResponse = tokenResponse.account;
-  msalInstance.setActiveAccount(accountResponse);
+  await msalInstance.loginRedirect(apiRequest);
 };
 
 const acquireAccessToken = async () => {
@@ -73,7 +71,7 @@ const acquireAccessToken = async () => {
 
   const authResult = await msalInstance.acquireTokenSilent(request).catch(async (error) => {
     if (error instanceof InteractionRequiredAuthError) {
-      return await msalInstance.acquireTokenPopup(apiRequest);
+      return await msalInstance.acquireTokenRedirect(apiRequest);
     }
   });
 
