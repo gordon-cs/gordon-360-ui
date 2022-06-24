@@ -8,7 +8,7 @@ import {
   TextField,
 } from '@material-ui/core/';
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/update';
 import styles from '../Update.module.css';
