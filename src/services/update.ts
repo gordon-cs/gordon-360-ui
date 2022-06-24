@@ -17,7 +17,6 @@ type Country = {
 };
 
 const requestInfoUpdate = async (updatedFields: Array<ProfileFieldUpdate>) => {
-  console.log(updatedFields);
   await http.post('profiles/update/', updatedFields);
 };
 
