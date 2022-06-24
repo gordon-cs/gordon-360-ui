@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core/';
 
 import { useState, useMemo, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/update';
 import styles from '../Update.module.css';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
@@ -68,14 +67,9 @@ const shouldContactFields = [
  * A form for alumni to request an update to their profile information.
  */
 
-const UpdateForm = ({ profile }) => {
-  const history = useHistory();
-  const returnToMyProfile = () => history.push('/myprofile');
-
+const UpdateForm = ({ profile, completion }) => {
   const isOnline = useNetworkStatus();
   const isUserAlumni = profile.PersonType === 'alu';
-
-  const [sentUpdateRequest, setSentUpdateRequest] = useState(false);
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
   const [countries, setCountries] = useState(['Prefer Not to Say']);
   const mailingInfoFields = [
@@ -194,12 +188,8 @@ const UpdateForm = ({ profile }) => {
       Label: 'Reason for change',
     });
     requestInfoUpdate(updateRequest).then(() => {
-      createSnackbar(
-        'Your update request has been sent. Please check back later. You will be automatically redirected to your Profile. ',
-        'success',
-      );
-      setSentUpdateRequest(true);
       setSaving(false);
+      completion('submitted info');
       handleWindowClose();
     });
   };
@@ -249,7 +239,7 @@ const UpdateForm = ({ profile }) => {
 
   if (!isOnline) return <GordonOffline feature="Update Profile" />;
 
-  if (!isUserAlumni)
+  if (isUserAlumni)
     return (
       <GordonLimitedAvailability
         pageName="Alumni Update Form"
@@ -338,7 +328,6 @@ const UpdateForm = ({ profile }) => {
         open={snackbar.open}
         onClose={() => {
           setSnackbar((s) => ({ ...s, open: false }));
-          if (sentUpdateRequest) returnToMyProfile();
         }}
       />
     </>

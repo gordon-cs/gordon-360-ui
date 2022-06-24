@@ -76,11 +76,6 @@ const routes = [
     component: EventsAttended,
   },
   {
-    name: 'Update Profile',
-    path: '/myprofile/update',
-    component: AlumniUpdateForm,
-  },
-  {
     name: 'Feedback',
     path: '/feedback',
     component: Feedback,

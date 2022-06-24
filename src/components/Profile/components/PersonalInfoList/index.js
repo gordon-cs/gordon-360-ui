@@ -25,6 +25,9 @@ import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
+import GordonDialogBox from 'components/GordonDialogBox';
+import UpdateForm from '../AlumniUpdateForm/UpdateForm';
+import { useUser } from 'hooks';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -66,6 +69,7 @@ const PersonalInfoList = ({
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
   );
+  const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
   const [mailCombo, setMailCombo] = useState();
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
@@ -237,15 +241,26 @@ const PersonalInfoList = ({
       />
     );
 
-  const updateInfoButton = isAlumni ? (
+  const { profile, loading } = useUser();
+  const updateInfoButton = true ? (
     <Grid container justifyContent="center">
-      <Link className="gc360_link" to="/myprofile/update">
-        <Button variant="contained" className={styles.update_info_button}>
-          Update Information
-        </Button>
-      </Link>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => {
+          setOpenAlumniUpdateForm(true);
+        }}
+        className={styles.update_info_button}
+      >
+        Update Information
+      </Button>
     </Grid>
   ) : null;
+
+  const handleCloseAlumniUpdateForm = (status) => {
+    setOpenAlumniUpdateForm(false);
+    if (status) createSnackbar(status, 'success');
+  };
 
   const graduationYear = isAlumni ? (
     <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />
@@ -485,6 +500,22 @@ const PersonalInfoList = ({
           </List>
         </CardContent>
       </Card>
+      {/* open alumni update form */}
+      <GordonDialogBox
+        open={openAlumniUpdateForm}
+        cancelButtonClicked={() => {
+          handleCloseAlumniUpdateForm();
+        }}
+        cancelButtonName="cancel"
+        className={styles.alumni_update_form}
+      >
+        <UpdateForm
+          profile={profile}
+          completion={(status) => {
+            handleCloseAlumniUpdateForm(status);
+          }}
+        />
+      </GordonDialogBox>
     </Grid>
   );
 };
