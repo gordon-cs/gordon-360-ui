@@ -237,16 +237,15 @@ const PersonalInfoList = ({
       />
     );
 
-  const updateInfoButton =
-    myProf || isAlumni ? (
-      <Grid container justifyContent="center">
-        <Link className="gc360_link" to="/myprofile/update">
-          <Button variant="contained" className={styles.update_info_button}>
-            Update Information
-          </Button>
-        </Link>
-      </Grid>
-    ) : null;
+  const updateInfoButton = isAlumni ? (
+    <Grid container justifyContent="center">
+      <Link className="gc360_link" to="/myprofile/update">
+        <Button variant="contained" className={styles.update_info_button}>
+          Update Information
+        </Button>
+      </Link>
+    </Grid>
+  ) : null;
 
   const graduationYear = isAlumni ? (
     <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />

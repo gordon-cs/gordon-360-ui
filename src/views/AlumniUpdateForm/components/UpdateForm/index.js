@@ -7,9 +7,12 @@ import {
   Button,
   TextField,
 } from '@material-ui/core/';
-import { useState, useMemo, useEffect } from 'react';
+
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/update';
 import styles from '../Update.module.css';
+import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import GordonOffline from 'components/GordonOffline';
@@ -17,7 +20,6 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ConfirmationRow } from '../ConfirmationRow';
 import { ConfirmationWindowHeader } from '../ConfirmationHeader';
-import { NotAlumni } from '../NotAlumni';
 import { ContentCard } from '../ContentCard';
 import { ProfileUpdateField } from '../ProfileUpdateField';
 
@@ -67,10 +69,14 @@ const shouldContactFields = [
  */
 
 const UpdateForm = (props) => {
+  const history = useHistory();
+  const returnToMyProfile = useCallback(() => history.push('/myprofile'), [history]);
+
   const isOnline = useNetworkStatus();
   const profile = props.profile;
-  const isUserStudent = profile.PersonType.includes('stu');
+  const isUserAlumni = profile.PersonType.includes('alu');
 
+  const [sentUpdateRequest, setSentUpdateRequest] = useState(false);
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
   const [countries, setCountries] = useState(['Prefer Not to Say']);
   const mailingInfoFields = [
@@ -190,9 +196,10 @@ const UpdateForm = (props) => {
     });
     requestInfoUpdate(updateRequest).then(() => {
       createSnackbar(
-        'A request to update your information has been sent. Please check back later.',
-        'info',
+        'Your update request has been sent. Please check back later. You will be automatically redirected to your Profile. ',
+        'success',
       );
+      setSentUpdateRequest(true);
       setSaving(false);
       handleWindowClose();
     });
@@ -243,7 +250,15 @@ const UpdateForm = (props) => {
 
   if (!isOnline) return <GordonOffline feature="Update Profile" />;
 
-  if (!isUserStudent) return <NotAlumni />;
+  if (!isUserAlumni)
+    return (
+      <GordonLimitedAvailability
+        pageName="Alumni Update Form"
+        backToLocation="Profile"
+        backtoLink="/myprofile"
+        availableTo="Gordon Alumni"
+      />
+    );
 
   return (
     <>
@@ -322,7 +337,10 @@ const UpdateForm = (props) => {
         text={snackbar.message}
         severity={snackbar.severity}
         open={snackbar.open}
-        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        onClose={() => {
+          setSnackbar((s) => ({ ...s, open: false }));
+          if (sentUpdateRequest) returnToMyProfile();
+        }}
       />
     </>
   );
