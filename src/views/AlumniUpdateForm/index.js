@@ -41,9 +41,9 @@ const AlumniUpdateForm = (props) => {
     },
     { label: 'First Name', name: 'firstName', type: 'text' },
     { label: 'Last Name', name: 'lastName', type: 'text' },
-    {},
     { label: 'Middle Name', name: 'middleName', type: 'text' },
     { label: 'Preferred Name', name: 'nickName', type: 'text' },
+    { label: 'Suffix', name: 'suffix', type: 'text' },
     { label: 'Married', name: 'married', type: 'checkbox' },
   ];
   const emailInfoFields = [
@@ -111,6 +111,7 @@ const AlumniUpdateForm = (props) => {
       lastName: profile.LastName ?? '',
       middleName: profile.MiddleName ?? '',
       nickName: profile.NickName ?? '',
+      suffix: profile.Suffix ?? '',
       personalEmail: profile.PersonalEmail ?? '',
       workEmail: profile.WorkEmail ?? '',
       aEmail: profile.aEmail ?? '',
@@ -323,7 +324,6 @@ const AlumniUpdateForm = (props) => {
           }}
         />
       </GordonDialogBox>
-      {/* will deprecate snackbar */}
       <SimpleSnackbar
         text={snackbar.message}
         severity={snackbar.severity}
