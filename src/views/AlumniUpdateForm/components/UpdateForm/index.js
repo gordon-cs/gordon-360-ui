@@ -68,13 +68,12 @@ const shouldContactFields = [
  * A form for alumni to request an update to their profile information.
  */
 
-const UpdateForm = (props) => {
+const UpdateForm = ({ profile }) => {
   const history = useHistory();
-  const returnToMyProfile = useCallback(() => history.push('/myprofile'), [history]);
+  const returnToMyProfile = () => history.push('/myprofile');
 
   const isOnline = useNetworkStatus();
-  const profile = props.profile;
-  const isUserAlumni = profile.PersonType.includes('alu');
+  const isUserAlumni = profile.PersonType === 'alu';
 
   const [sentUpdateRequest, setSentUpdateRequest] = useState(false);
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
@@ -250,7 +249,7 @@ const UpdateForm = (props) => {
 
   if (!isOnline) return <GordonOffline feature="Update Profile" />;
 
-  if (!isUserAlumni)
+  if (isUserAlumni)
     return (
       <GordonLimitedAvailability
         pageName="Alumni Update Form"

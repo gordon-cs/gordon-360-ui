@@ -7,15 +7,13 @@ import UpdateForm from './components/UpdateForm';
  * A form for alumni to request an update to their profile information.
  */
 
-const AlumniUpdateForm = (props) => {
+const AlumniUpdateForm = () => {
   const { profile, loading } = useUser();
-  return loading ? (
-    <GordonLoader />
-  ) : profile ? (
-    <UpdateForm profile={profile} authentication={props.authentication} />
-  ) : (
-    <GordonUnauthorized feature={'the Alumni Update Page'} />
-  );
+  if (loading) return <GordonLoader />;
+
+  if (!profile) return <GordonUnauthorized feature={'the Alumni Update Page'} />;
+
+  return <UpdateForm profile={profile} />;
 };
 
 export default AlumniUpdateForm;
