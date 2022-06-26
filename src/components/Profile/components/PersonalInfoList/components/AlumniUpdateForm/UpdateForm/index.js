@@ -25,8 +25,6 @@ import { ProfileUpdateField } from '../ProfileUpdateField';
 /** TODOS
  * - FORMAT SNACKBAR
  *
- * - FIX SCSS, CURRENT DIALOG BOX IS STUCK AT MAX-WIDHT: 600
- *
  * - CURRENT IMPLEMENTAION HAS CONFIRMATION WINDOW AS ANOTHER DIALOG BOX,
  *    TURN IT INTO A "SECOND PAGE" ON THE PROFILE DIALOG BOX
  *
@@ -203,7 +201,7 @@ const UpdateForm = ({ profile, completion }) => {
     });
     requestInfoUpdate(updateRequest).then(() => {
       setSaving(false);
-      completion('submitted info');
+      completion({ type: 'success', message: 'information submitted for review' });
       handleWindowClose();
     });
   };
@@ -215,7 +213,7 @@ const UpdateForm = ({ profile, completion }) => {
 
   const handleSaveButtonClick = () => {
     if (updatedInfo.firstName === '' || updatedInfo.lastName === '') {
-      createSnackbar('Please fill in your first and last name.', 'error');
+      completion({ type: 'error', message: 'Please fill in your first and last name' });
     } else {
       setOpenConfirmWindow(true);
     }
@@ -329,14 +327,6 @@ const UpdateForm = ({ profile, completion }) => {
         />
         {isSaving ? <GordonLoader size={32} /> : null}
       </GordonDialogBox>
-      <SimpleSnackbar
-        text={snackbar.message}
-        severity={snackbar.severity}
-        open={snackbar.open}
-        onClose={() => {
-          setSnackbar((s) => ({ ...s, open: false }));
-        }}
-      />
     </>
   );
 };

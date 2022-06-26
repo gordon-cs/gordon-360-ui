@@ -241,7 +241,7 @@ const PersonalInfoList = ({
       />
     );
 
-  const { profile, loading } = useUser();
+  const { profile } = useUser();
   const updateInfoButton = true ? (
     <Grid container justifyContent="center">
       <Button
@@ -257,9 +257,12 @@ const PersonalInfoList = ({
     </Grid>
   ) : null;
 
-  const handleCloseAlumniUpdateForm = (status) => {
-    setOpenAlumniUpdateForm(false);
-    if (status) createSnackbar(status, 'success');
+  const handleAlumniUpdateForm = (status) => {
+    if (!status) setOpenAlumniUpdateForm(false);
+    else {
+      if (status.type === 'success') setOpenAlumniUpdateForm(false);
+      createSnackbar(status.message, status.type);
+    }
   };
 
   const graduationYear = isAlumni ? (
@@ -503,10 +506,11 @@ const PersonalInfoList = ({
       {/* open alumni update form */}
       <GordonDialogBox
         open={openAlumniUpdateForm}
+        title="CTS Update Form"
         fullWidth
         maxWidth="lg"
         cancelButtonClicked={() => {
-          handleCloseAlumniUpdateForm();
+          handleAlumniUpdateForm();
         }}
         cancelButtonName="cancel"
         className={styles.alumni_update_form}
@@ -514,7 +518,7 @@ const PersonalInfoList = ({
         <UpdateForm
           profile={profile}
           completion={(status) => {
-            handleCloseAlumniUpdateForm(status);
+            handleAlumniUpdateForm(status);
           }}
         />
       </GordonDialogBox>
