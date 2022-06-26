@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core/';
 
 import { useState, useMemo, useEffect } from 'react';
-import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/update';
+import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/profileInfoUpdate';
 import styles from '../Update.module.css';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonLoader from 'components/Loader';
@@ -23,15 +23,17 @@ import { ContentCard } from '../ContentCard';
 import { ProfileUpdateField } from '../ProfileUpdateField';
 
 /** TODOS
- * 1) FORMAT SNACKBAR
- * 2) FIX SCSS, CURRENT DIALOG BOX IS STUCK AT MAX-WIDHT: 600
- * 3) CURRENT IMPLEMENTAION HAS CONFIRMATION WINDOW AS ANOTHER DIALOG BOX,
+ * - FORMAT SNACKBAR
+ *
+ * - FIX SCSS, CURRENT DIALOG BOX IS STUCK AT MAX-WIDHT: 600
+ *
+ * - CURRENT IMPLEMENTAION HAS CONFIRMATION WINDOW AS ANOTHER DIALOG BOX,
  *    TURN IT INTO A "SECOND PAGE" ON THE PROFILE DIALOG BOX
- * 4) USE PROFILE DIALOGBOX INSTEAD OF RE-WRITINE ON UPDATEFORM
- * 5) RENAME UPDATE.TS
- * 6) ADDING <GORDONLOADER> TO CONFIRMATION WINDOW
- * 7) MOVE ALUMNIUPDATEFORM COMPONENT INTO PERSONALINFOLIST COMPONENT SUBFOLDER
- * 8) MOVE UPDATE INFORMATION BUTTON SOMEWHERE LESS GLARING
+ *
+ * - USE PROFILE SNACKBAR INSTEAD OF RE-WRITINE ON UPDATEFORM
+ *
+ * // MINOR //
+ * - MOVE UPDATE INFORMATION BUTTON SOMEWHERE LESS GLARING
  */
 
 const personalInfoFields = [
@@ -298,10 +300,10 @@ const UpdateForm = ({ profile, completion }) => {
       <GordonDialogBox
         open={openConfirmWindow}
         title="Confirm Updates"
-        buttonClicked={handleConfirm}
-        buttonName={'Confirm'}
+        buttonClicked={!isSaving ? handleConfirm : null}
+        buttonName="Confirm"
         isButtonDisabled={changeReason === ''}
-        cancelButtonClicked={handleWindowClose}
+        cancelButtonClicked={!isSaving ? handleWindowClose : null}
         cancelButtonName="Cancel"
       >
         <Card>
@@ -333,6 +335,7 @@ const UpdateForm = ({ profile, completion }) => {
             setChangeReason(event.target.value);
           }}
         />
+        {isSaving ? <GordonLoader size={32} /> : null}
       </GordonDialogBox>
       <SimpleSnackbar
         text={snackbar.message}

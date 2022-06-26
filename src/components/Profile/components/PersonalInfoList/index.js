@@ -26,7 +26,7 @@ import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
 import GordonDialogBox from 'components/GordonDialogBox';
-import UpdateForm from '../AlumniUpdateForm/UpdateForm';
+import UpdateForm from './components/AlumniUpdateForm/UpdateForm';
 import { useUser } from 'hooks';
 
 const PRIVATE_INFO = 'Private as requested.';
