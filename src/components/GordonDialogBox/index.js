@@ -16,6 +16,8 @@ import styles from './GordonDialogBox.module.css';
  * @param {string} props.title The title of the dialog box
  * @param {(event: {}) => void} props.buttonClicked A function called when the confirming button is clicked
  * @param {string} [props.buttonName] The text of the button confirming the dialog is read/accepted
+ * @param {boolean} props.fullWidth If true, the dialog stretches to maxWidth
+ * @param {string} props.maxWidth Determine the max-width of the dialog. The dialog width grows with the size of the screen
  * @param {boolean} [props.isButtonDisabled] Whether the primary button is disabled
  * @param {(event: {}) => void} [props.cancelButtonClicked] A function called when the canceling button is clicked
  * @param {string} [props.cancelButtonName] The text of the button canceling the dialog is read/accepted
@@ -27,6 +29,8 @@ const GordonDialogBox = ({
   open,
   onClose,
   title,
+  fullWidth = false,
+  maxWidth = 'sm',
   buttonClicked,
   buttonName,
   isButtonDisabled = false,
@@ -40,6 +44,8 @@ const GordonDialogBox = ({
       className={styles.gc360_gordondialogbox}
       open={open}
       onClose={onClose}
+      fullWidth={fullWidth}
+      maxWidth={maxWidth}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >

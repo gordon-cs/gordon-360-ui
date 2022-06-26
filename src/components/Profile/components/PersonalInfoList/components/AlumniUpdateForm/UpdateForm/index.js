@@ -265,37 +265,33 @@ const UpdateForm = ({ profile, completion }) => {
 
   return (
     <>
-      <Grid container justifyContent="center">
-        <Grid item xs={12} lg={8}>
-          <Card className={styles.update}>
-            <CardHeader
-              className={styles.update_title}
-              title="Update Information"
-              titleTypographyProps={{ variant: 'h4' }}
-            />
-            <CardContent>
-              <ContentCard title="Personal Information">
-                {inputField(personalInfoFields)}
-              </ContentCard>
-              <ContentCard title="Email Addresses">{inputField(emailInfoFields)}</ContentCard>
-              <ContentCard title="Phone Numbers">{inputField(phoneInfoFields)}</ContentCard>
-              <ContentCard title="Mailing Address">{inputField(mailingInfoFields)}</ContentCard>
-              <ContentCard title="Contact Preferences">
-                {inputField(shouldContactFields)}
-              </ContentCard>
-              <Grid item xs={12} justifyContent="center">
-                {saveButton}
-              </Grid>
-            </CardContent>
-          </Card>
-          <Typography variant="subtitle1">
-            Found a bug?
-            <Button href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug" color="primary">
-              Report to CTS
-            </Button>
-          </Typography>
-        </Grid>
+      {/* <Grid container justifyContent="center"> */}
+      <Grid item>
+        <Card className={styles.update}>
+          <CardHeader
+            className={styles.update_title}
+            title="Update Information"
+            titleTypographyProps={{ variant: 'h4' }}
+          />
+          <CardContent>
+            <ContentCard title="Personal Information">{inputField(personalInfoFields)}</ContentCard>
+            <ContentCard title="Email Addresses">{inputField(emailInfoFields)}</ContentCard>
+            <ContentCard title="Phone Numbers">{inputField(phoneInfoFields)}</ContentCard>
+            <ContentCard title="Mailing Address">{inputField(mailingInfoFields)}</ContentCard>
+            <ContentCard title="Contact Preferences">{inputField(shouldContactFields)}</ContentCard>
+            <Grid item xs={12} justifyContent="center">
+              {saveButton}
+            </Grid>
+          </CardContent>
+        </Card>
+        <Typography variant="subtitle1">
+          Found a bug?
+          <Button href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug" color="primary">
+            Report to CTS
+          </Button>
+        </Typography>
       </Grid>
+      {/* </Grid> */}
       {/* confirmation window */}
       <GordonDialogBox
         open={openConfirmWindow}

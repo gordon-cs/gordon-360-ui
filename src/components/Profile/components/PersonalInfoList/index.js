@@ -503,6 +503,8 @@ const PersonalInfoList = ({
       {/* open alumni update form */}
       <GordonDialogBox
         open={openAlumniUpdateForm}
+        fullWidth
+        maxWidth="lg"
         cancelButtonClicked={() => {
           handleCloseAlumniUpdateForm();
         }}
