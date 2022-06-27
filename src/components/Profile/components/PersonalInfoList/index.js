@@ -216,7 +216,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
         contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
       />
     );
-  const updateInfoButton = isAlumni ? (
+  const updateAlumniInfoButton = isAlumni ? (
     <Grid container justifyContent="center">
       <Button
         variant="contained"
@@ -455,7 +455,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
           </Grid>
         </Grid>
         <CardContent>
-          {updateInfoButton}
+          {updateAlumniInfoButton}
           <List>
             {majors}
             {minors}
