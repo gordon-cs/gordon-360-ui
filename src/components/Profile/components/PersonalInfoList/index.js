@@ -241,8 +241,8 @@ const PersonalInfoList = ({
         contentText={!Majors?.length ? 'Deciding' : Majors?.join(', ')}
       />
     );
-
-  const updateInfoButton = isAlumni ? (
+  const updateInfoButton = true ? (
+    // const updateInfoButton = isAlumni ? (
     <Grid container justifyContent="center">
       <Button
         variant="contained"
@@ -258,11 +258,8 @@ const PersonalInfoList = ({
   ) : null;
 
   const handleAlumniUpdateForm = (status) => {
-    if (!status) setOpenAlumniUpdateForm(false);
-    else {
-      if (status.type === 'success') setOpenAlumniUpdateForm(false);
-      createSnackbar(status.message, status.type);
-    }
+    if (status.type === 'success') setOpenAlumniUpdateForm(false);
+    createSnackbar(status.message, status.type);
   };
 
   const graduationYear = isAlumni ? (
@@ -510,7 +507,7 @@ const PersonalInfoList = ({
         fullWidth
         maxWidth="lg"
         cancelButtonClicked={() => {
-          handleAlumniUpdateForm();
+          setOpenAlumniUpdateForm(false);
         }}
         cancelButtonName="cancel"
         className={styles.alumni_update_form}
