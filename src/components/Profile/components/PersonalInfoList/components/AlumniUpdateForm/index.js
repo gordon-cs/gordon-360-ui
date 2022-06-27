@@ -207,7 +207,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   };
 
   const isEmailValid = (email) => {
-    const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,3})+$/;
+    const regex = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
     return !email || email === '' || regex.test(email);
   };
 
@@ -218,31 +218,28 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     );
   };
 
-  const hasErrors = (validity) => {
-    for (const field in errorStatus) {
-      if (field.hasError) return true;
-    }
-    return validity;
-  };
-
   const shouldDisableUpdateButton = useMemo(() => {
-    let currentlyShouldDisable = true;
+    let hasError = false;
+    let hasChanges = false;
     for (const field in currentInfo) {
-      if (field === 'firstName' || field === 'lastName')
+      if (field === 'firstName' || field === 'lastName') {
         handleSetError(field, updatedInfo[field] === '');
-
-      if (field === 'homePhone' || field === 'workPhone' || field === 'mobilePhone')
+        hasError = updatedInfo[field] === '' || hasError;
+      }
+      if (field === 'homePhone' || field === 'workPhone' || field === 'mobilePhone') {
         handleSetError(field, !isPhoneValid(updatedInfo[field]));
-
-      if (field === 'personalEmail' || field === 'workEmail' || field === 'aEmail')
+        hasError = !isPhoneValid(updatedInfo[field]) || hasError;
+      }
+      if (field === 'personalEmail' || field === 'workEmail' || field === 'aEmail') {
         handleSetError(field, !isEmailValid(updatedInfo[field]));
-
+        hasError = !isEmailValid(updatedInfo[field]) || hasError;
+      }
       if (currentInfo[field] !== updatedInfo[field]) {
-        currentlyShouldDisable = false;
+        hasChanges = true;
       }
     }
-    currentlyShouldDisable = hasErrors(currentlyShouldDisable);
-    return currentlyShouldDisable;
+
+    return hasError || !hasChanges;
   }, [updatedInfo, currentInfo]);
 
   const handleChange = (event) => {
@@ -309,7 +306,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     }
   };
 
-  const saveButton = isSaving ? (
+  const updateButton = isSaving ? (
     <GordonLoader size={32} />
   ) : (
     <Button
@@ -368,7 +365,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
           <ContentCard title="Mailing Address">{inputField(mailingInfoFields)}</ContentCard>
           <ContentCard title="Contact Preferences">{inputField(shouldContactFields)}</ContentCard>
           <Grid item xs={12} justifyContent="center">
-            {saveButton}
+            {updateButton}
           </Grid>
         </CardContent>
       </Card>
