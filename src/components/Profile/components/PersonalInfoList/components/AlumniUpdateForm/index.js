@@ -39,9 +39,9 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     firstName: { hasError: false, helperText: '*Required' },
     lastName: { hasError: false, helperText: '*Required' },
 
-    homePhone: { hasError: true, helperText: '*Invalid Number' },
-    workPhone: { hasError: true, helperText: '*Invalid Number' },
-    mobilePhone: { hasError: true, helperText: '*Invalid Number' },
+    homePhone: { hasError: false, helperText: '*Invalid Number' },
+    workPhone: { hasError: false, helperText: '*Invalid Number' },
+    mobilePhone: { hasError: false, helperText: '*Invalid Number' },
 
     personalEmail: { hasError: false, helperText: '*Invalid Email' },
     workEmail: { hasError: false, helperText: '*Invalid Email' },
@@ -107,21 +107,21 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     {
       label: 'Home Phone',
       name: 'homePhone',
-      type: 'number',
+      type: 'text',
       error: errorStatus.homePhone.hasError,
       helperText: errorStatus.homePhone.helperText,
     },
     {
       label: 'Work Phone',
       name: 'workPhone',
-      type: 'number',
+      type: 'text',
       error: errorStatus.workPhone.hasError,
       helperText: errorStatus.workPhone.helperText,
     },
     {
       label: 'Mobile Phone',
       name: 'mobilePhone',
-      type: 'number',
+      type: 'text',
       error: errorStatus.mobilePhone.hasError,
       helperText: errorStatus.mobilePhone.helperText,
     },
@@ -211,37 +211,38 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     return !email || email === '' || regex.test(email);
   };
 
-  const hasErrors = (currentValue) => {
+  const isPhoneValid = (phoneNum) => {
+    let value = phoneNum.replace(/[-()\s\D]/g, '');
+    return (
+      (value.length > 6 && 16 > value.length && /^-?\d+$/.test(value)) || phoneNum.length === 0
+    );
+  };
+
+  const hasErrors = (validity) => {
     for (const field in errorStatus) {
       if (field.hasError) return true;
     }
-    return currentValue;
+    return validity;
   };
 
   const shouldDisableUpdateButton = useMemo(() => {
-    let shouldDisable = true;
+    let currentlyShouldDisable = true;
     for (const field in currentInfo) {
-      //require first & last name
       if (field === 'firstName' || field === 'lastName')
         handleSetError(field, updatedInfo[field] === '');
 
-      //check if phone number is a number
-      //check if email is valid email
-      if (field === 'personalEmail' || field === 'workEmail' || field === 'aEmail') {
+      if (field === 'homePhone' || field === 'workPhone' || field === 'mobilePhone')
+        handleSetError(field, !isPhoneValid(updatedInfo[field]));
+
+      if (field === 'personalEmail' || field === 'workEmail' || field === 'aEmail')
         handleSetError(field, !isEmailValid(updatedInfo[field]));
-        // if (isEmailValid(updatedInfo[field])) return true;
-        // console.log(field);
-        // console.log(updatedInfo[field]);
-        // console.log(isEmailValid(updatedInfo[field]));
-        // console.log(errorStatus[field]);
-      }
 
       if (currentInfo[field] !== updatedInfo[field]) {
-        shouldDisable = false;
+        currentlyShouldDisable = false;
       }
     }
-    shouldDisable = hasErrors(shouldDisable);
-    return shouldDisable;
+    currentlyShouldDisable = hasErrors(currentlyShouldDisable);
+    return currentlyShouldDisable;
   }, [updatedInfo, currentInfo]);
 
   const handleChange = (event) => {
@@ -263,10 +264,14 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   function getUpdatedFields(updatedInfo, currentInfo) {
     const updatedFields = [];
     Object.entries(currentInfo).forEach(([field, value]) => {
+      let updatedValue = value;
+      if (field === 'homePhone' || field === 'workPhone' || field === 'mobilePhone') {
+        updatedValue = value.replace(/[-()\s\D]/g, '');
+      }
       if (updatedInfo[field] !== value)
         updatedFields.push({
           Field: field,
-          Value: value,
+          Value: updatedValue,
           Label: getFieldLabel(field),
         });
     });
