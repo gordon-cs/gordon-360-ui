@@ -73,6 +73,7 @@ const PersonalInfoList = ({
   const [mailCombo, setMailCombo] = useState();
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
+  const { profile } = useUser();
   const groups = useAuthGroups();
   const isStudent = useMemo(() => groups.some((g) => g === AuthGroup.Student), [groups]);
   const isFacStaff = useMemo(() => groups.some((g) => g === AuthGroup.FacStaff), [groups]);
@@ -241,8 +242,7 @@ const PersonalInfoList = ({
       />
     );
 
-  const { profile } = useUser();
-  const updateInfoButton = true ? (
+  const updateInfoButton = isAlumni ? (
     <Grid container justifyContent="center">
       <Button
         variant="contained"
@@ -503,7 +503,7 @@ const PersonalInfoList = ({
           </List>
         </CardContent>
       </Card>
-      {/* open alumni update form */}
+      {/* alumni update form */}
       <GordonDialogBox
         open={openAlumniUpdateForm}
         title="Alumni Update Form"
