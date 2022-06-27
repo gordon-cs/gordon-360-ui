@@ -216,8 +216,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
         contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
       />
     );
-  const updateInfoButton = true ? (
-    // const updateInfoButton = isAlumni ? (
+  const updateInfoButton = isAlumni ? (
     <Grid container justifyContent="center">
       <Button
         variant="contained"
