@@ -21,42 +21,6 @@ import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { ProfileUpdateField } from './components/ProfileUpdateField';
 
-const personalInfoFields = [
-  {
-    label: 'Salutation',
-    name: 'salutation',
-    type: 'select',
-    menuItems: ['Prefer Not to Answer', 'Mr.', 'Ms.', 'Mrs.', 'Miss', 'Dr.', 'Rev.'],
-  },
-  { label: 'First Name', name: 'firstName', type: 'text' },
-  { label: 'Last Name', name: 'lastName', type: 'text' },
-  { label: 'Middle Name', name: 'middleName', type: 'text' },
-  { label: 'Preferred Name', name: 'nickName', type: 'text' },
-  { label: 'Suffix', name: 'suffix', type: 'text' },
-  { label: 'Married', name: 'married', type: 'checkbox' },
-];
-const emailInfoFields = [
-  { label: 'Personal Email', name: 'personalEmail', type: 'email' },
-  { label: 'Work Email', name: 'workEmail', type: 'email' },
-  { label: 'Alternate Email', name: 'aEmail', type: 'email' },
-  {
-    label: 'Preferred Email',
-    name: 'preferredEmail',
-    type: 'select',
-    menuItems: ['No Preference', 'Personal Email', 'Work Email', 'Alternate Email'],
-  },
-];
-const phoneInfoFields = [
-  { label: 'Home Phone', name: 'homePhone', type: 'number' },
-  { label: 'Work Phone', name: 'workPhone', type: 'number' },
-  { label: 'Mobile Phone', name: 'mobilePhone', type: 'number' },
-  {
-    label: 'Preferred Phone',
-    name: 'preferredPhone',
-    type: 'select',
-    menuItems: ['No Preference', 'Home Phone', 'Work Phone', 'Mobile Phone'],
-  },
-];
 const shouldContactFields = [
   { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' },
   { label: 'Do Not Mail', name: 'doNotMail', type: 'checkbox' },
@@ -71,6 +35,103 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   const isUserAlumni = profile.PersonType === 'alu';
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
   const [countries, setCountries] = useState(['Prefer Not to Say']);
+  const [errorStatus, setErrorStatus] = useState({
+    firstName: { hasError: false, helperText: '*Required' },
+    lastName: { hasError: false, helperText: '*Required' },
+
+    homePhone: { hasError: true, helperText: '*Invalid Number' },
+    workPhone: { hasError: true, helperText: '*Invalid Number' },
+    mobilePhone: { hasError: true, helperText: '*Invalid Number' },
+
+    personalEmail: { hasError: true, helperText: '*Invalid Email' },
+    workEmail: { hasError: true, helperText: '*Invalid Email' },
+    aEmail: { hasError: true, helperText: '*Invalid Email' },
+  });
+
+  const personalInfoFields = [
+    {
+      label: 'Salutation',
+      name: 'salutation',
+      type: 'select',
+      menuItems: ['Prefer Not to Answer', 'Mr.', 'Ms.', 'Mrs.', 'Miss', 'Dr.', 'Rev.'],
+    },
+    {
+      label: 'First Name',
+      name: 'firstName',
+      type: 'text',
+      error: errorStatus.firstName.hasError,
+      helperText: errorStatus.firstName.helperText,
+    },
+    {
+      label: 'Last Name',
+      name: 'lastName',
+      type: 'text',
+      error: errorStatus.firstName.hasError,
+      helperText: errorStatus.firstName.helperText,
+    },
+    { label: 'Middle Name', name: 'middleName', type: 'text' },
+    { label: 'Preferred Name', name: 'nickName', type: 'text' },
+    { label: 'Suffix', name: 'suffix', type: 'text' },
+    { label: 'Married', name: 'married', type: 'checkbox' },
+  ];
+  const emailInfoFields = [
+    {
+      label: 'Personal Email',
+      name: 'personalEmail',
+      type: 'email',
+      error: errorStatus.personalEmail.hasError,
+      helperText: errorStatus.personalEmail.helperText,
+    },
+    {
+      label: 'Work Email',
+      name: 'workEmail',
+      type: 'email',
+      error: errorStatus.workEmail.hasError,
+      helperText: errorStatus.workEmail.helperText,
+    },
+    {
+      label: 'Alternate Email',
+      name: 'aEmail',
+      type: 'email',
+      error: errorStatus.aEmail.hasError,
+      helperText: errorStatus.aEmail.helperText,
+    },
+    {
+      label: 'Preferred Email',
+      name: 'preferredEmail',
+      type: 'select',
+      menuItems: ['No Preference', 'Personal Email', 'Work Email', 'Alternate Email'],
+    },
+  ];
+  const phoneInfoFields = [
+    {
+      label: 'Home Phone',
+      name: 'homePhone',
+      type: 'number',
+      error: errorStatus.homePhone.hasError,
+      helperText: errorStatus.homePhone.helperText,
+    },
+    {
+      label: 'Work Phone',
+      name: 'workPhone',
+      type: 'number',
+      error: errorStatus.workPhone.hasError,
+      helperText: errorStatus.workPhone.helperText,
+    },
+    {
+      label: 'Mobile Phone',
+      name: 'mobilePhone',
+      type: 'number',
+      error: errorStatus.mobilePhone.hasError,
+      helperText: errorStatus.mobilePhone.helperText,
+    },
+    {
+      label: 'Preferred Phone',
+      name: 'preferredPhone',
+      type: 'select',
+      menuItems: ['No Preference', 'Home Phone', 'Work Phone', 'Mobile Phone'],
+    },
+  ];
   const mailingInfoFields = [
     { label: 'Address', name: 'address1', type: 'text' },
     { label: 'Address Line 2 (optional)', name: 'address2', type: 'text' },
@@ -135,14 +196,29 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   const [isSaving, setSaving] = useState(false);
   const [changeReason, setChangeReason] = useState('');
 
-  const hasNoChange = useMemo(() => {
+  const handleSetError = (field, condition) => {
+    setErrorStatus({
+      ...errorStatus,
+      [field]: { ...errorStatus[field], hasError: condition },
+    });
+  };
+
+  const shouldDisable = useMemo(() => {
     for (const field in currentInfo) {
+      //require first & last name
+      if (field === 'firstName' || field === 'lastName') {
+        handleSetError(field, updatedInfo[field] === '');
+        if (updatedInfo[field] === '') return true;
+      }
+      //check if phone number is a number
+      //check if email is valid email
+
       if (currentInfo[field] !== updatedInfo[field]) {
         return false;
       }
     }
     return true;
-  }, [updatedInfo, currentInfo]);
+  }, [updatedInfo, currentInfo, errorStatus]);
 
   const handleChange = (event) => {
     const getNewInfo = (currentValue) => {
@@ -211,7 +287,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
       variant="contained"
       color="secondary"
       onClick={handleSaveButtonClick}
-      disabled={hasNoChange}
+      disabled={shouldDisable}
     >
       Update
     </Button>
@@ -224,8 +300,10 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   const inputField = (fields) => {
     return fields.map((field) => (
       <ProfileUpdateField
+        error={field.error}
         label={field.label}
         name={field.name}
+        helperText={field.helperText}
         value={updatedInfo[field.name]}
         type={field.type}
         menuItems={field.menuItems}
