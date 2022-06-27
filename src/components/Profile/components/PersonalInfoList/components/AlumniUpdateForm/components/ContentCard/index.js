@@ -1,5 +1,5 @@
 import { Grid, Card, CardContent, CardHeader } from '@material-ui/core/';
-import styles from '../Update.module.css';
+import styles from '../../Update.module.css';
 
 const ContentCard = (props) => {
   return (

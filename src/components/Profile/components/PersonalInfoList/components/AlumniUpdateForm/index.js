@@ -10,29 +10,16 @@ import {
 
 import { useState, useMemo, useEffect } from 'react';
 import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/profileInfoUpdate';
-import styles from '../Update.module.css';
+import styles from './Update.module.css';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonLoader from 'components/Loader';
-import SimpleSnackbar from 'components/Snackbar';
 import GordonOffline from 'components/GordonOffline';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { ConfirmationRow } from '../ConfirmationRow';
-import { ConfirmationWindowHeader } from '../ConfirmationHeader';
-import { ContentCard } from '../ContentCard';
-import { ProfileUpdateField } from '../ProfileUpdateField';
-
-/** TODOS
- * - FORMAT SNACKBAR
- *
- * - CURRENT IMPLEMENTAION HAS CONFIRMATION WINDOW AS ANOTHER DIALOG BOX,
- *    TURN IT INTO A "SECOND PAGE" ON THE PROFILE DIALOG BOX
- *
- * - USE PROFILE SNACKBAR INSTEAD OF RE-WRITINE ON UPDATEFORM
- *
- * // MINOR //
- * - MOVE UPDATE INFORMATION BUTTON SOMEWHERE LESS GLARING
- */
+import { ConfirmationRow } from './components/ConfirmationRow';
+import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
+import { ContentCard } from './components/ContentCard';
+import { ProfileUpdateField } from './components/ProfileUpdateField';
 
 const personalInfoFields = [
   {
@@ -79,7 +66,7 @@ const shouldContactFields = [
  * A form for alumni to request an update to their profile information.
  */
 
-const UpdateForm = ({ profile, completion }) => {
+const AlumniUpdateForm = ({ profile, completion }) => {
   const isOnline = useNetworkStatus();
   const isUserAlumni = profile.PersonType === 'alu';
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
@@ -146,7 +133,6 @@ const UpdateForm = ({ profile, completion }) => {
   const [updatedInfo, setUpdatedInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
-  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const [changeReason, setChangeReason] = useState('');
 
   const hasNoChange = useMemo(() => {
@@ -167,10 +153,6 @@ const UpdateForm = ({ profile, completion }) => {
       };
     };
     setUpdatedInfo(getNewInfo);
-  };
-
-  const createSnackbar = (message, severity) => {
-    setSnackbar({ message: message, severity: severity, open: true });
   };
 
   const getFieldLabel = (fieldName) => {
@@ -201,7 +183,10 @@ const UpdateForm = ({ profile, completion }) => {
     });
     requestInfoUpdate(updateRequest).then(() => {
       setSaving(false);
-      completion({ type: 'success', message: 'information submitted for review' });
+      completion({
+        type: 'success',
+        message: 'Your update request has been sent. Please check back later.',
+      });
       handleWindowClose();
     });
   };
@@ -289,7 +274,7 @@ const UpdateForm = ({ profile, completion }) => {
       {/* confirmation window */}
       <GordonDialogBox
         open={openConfirmWindow}
-        title="Confirm Updates"
+        title="Confirm Your Updates"
         buttonClicked={!isSaving ? handleConfirm : null}
         buttonName="Confirm"
         isButtonDisabled={changeReason === ''}
@@ -331,4 +316,4 @@ const UpdateForm = ({ profile, completion }) => {
   );
 };
 
-export default UpdateForm;
+export default AlumniUpdateForm;

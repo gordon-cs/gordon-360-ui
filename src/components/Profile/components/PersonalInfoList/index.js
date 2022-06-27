@@ -26,7 +26,7 @@ import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
 import GordonDialogBox from 'components/GordonDialogBox';
-import UpdateForm from './components/AlumniUpdateForm/UpdateForm';
+import AlumniUpdateForm from './components/AlumniUpdateForm';
 import { useUser } from 'hooks';
 
 const PRIVATE_INFO = 'Private as requested.';
@@ -506,7 +506,7 @@ const PersonalInfoList = ({
       {/* open alumni update form */}
       <GordonDialogBox
         open={openAlumniUpdateForm}
-        title="CTS Update Form"
+        title="Alumni Update Form"
         fullWidth
         maxWidth="lg"
         cancelButtonClicked={() => {
@@ -515,7 +515,7 @@ const PersonalInfoList = ({
         cancelButtonName="cancel"
         className={styles.alumni_update_form}
       >
-        <UpdateForm
+        <AlumniUpdateForm
           profile={profile}
           completion={(status) => {
             handleAlumniUpdateForm(status);
