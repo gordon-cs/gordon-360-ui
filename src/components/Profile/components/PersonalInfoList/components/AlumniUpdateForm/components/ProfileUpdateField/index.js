@@ -26,7 +26,6 @@ const ProfileUpdateField = ({
     case 'text':
     case 'number':
     case 'email':
-      console.log(error);
       field = error ? (
         <TextField
           error={error}

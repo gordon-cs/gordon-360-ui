@@ -43,9 +43,9 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     workPhone: { hasError: true, helperText: '*Invalid Number' },
     mobilePhone: { hasError: true, helperText: '*Invalid Number' },
 
-    personalEmail: { hasError: true, helperText: '*Invalid Email' },
-    workEmail: { hasError: true, helperText: '*Invalid Email' },
-    aEmail: { hasError: true, helperText: '*Invalid Email' },
+    personalEmail: { hasError: false, helperText: '*Invalid Email' },
+    workEmail: { hasError: false, helperText: '*Invalid Email' },
+    aEmail: { hasError: false, helperText: '*Invalid Email' },
   });
 
   const personalInfoFields = [
@@ -66,8 +66,8 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
       label: 'Last Name',
       name: 'lastName',
       type: 'text',
-      error: errorStatus.firstName.hasError,
-      helperText: errorStatus.firstName.helperText,
+      error: errorStatus.lastName.hasError,
+      helperText: errorStatus.lastName.helperText,
     },
     { label: 'Middle Name', name: 'middleName', type: 'text' },
     { label: 'Preferred Name', name: 'nickName', type: 'text' },
@@ -196,15 +196,21 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   const [isSaving, setSaving] = useState(false);
   const [changeReason, setChangeReason] = useState('');
 
-  const handleSetError = useMemo(
-    (field, condition) => {
-      setErrorStatus({
-        ...errorStatus,
-        [field]: { ...errorStatus[field], hasError: condition },
-      });
-    },
-    [errorStatus],
-  );
+  const handleSetError = (field, condition) => {
+    const getCurrentErrorStatus = (currentValue) => {
+      return {
+        ...currentValue,
+        [field]: { ...currentValue[field], hasError: condition },
+      };
+    };
+    setErrorStatus(getCurrentErrorStatus);
+  };
+
+  const isEmailValid = (email) => {
+    const regex = /\S+@\S+\.\S+/;
+    console.log(regex.test(email));
+    return !email || email === '' || regex.test(email);
+  };
 
   const shouldDisable = useMemo(() => {
     for (const field in currentInfo) {
@@ -215,13 +221,17 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
       }
       //check if phone number is a number
       //check if email is valid email
+      if (field === 'personalEmail' || field === 'workEmail' || field === 'aEmail') {
+        handleSetError(field, isEmailValid(updatedInfo[field]));
+        if (isEmailValid(updatedInfo[field])) return true;
+      }
 
       if (currentInfo[field] !== updatedInfo[field]) {
         return false;
       }
     }
     return true;
-  }, [updatedInfo, currentInfo, handleSetError]);
+  }, [updatedInfo, currentInfo]);
 
   const handleChange = (event) => {
     const getNewInfo = (currentValue) => {
