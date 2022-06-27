@@ -489,7 +489,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
       >
         <AlumniUpdateForm
           profile={profile}
-          completion={(status) => {
+          closeWithSnackbar={(status) => {
             handleAlumniUpdateForm(status);
           }}
         />

@@ -66,7 +66,7 @@ const shouldContactFields = [
  * A form for alumni to request an update to their profile information.
  */
 
-const AlumniUpdateForm = ({ profile, completion }) => {
+const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   const isOnline = useNetworkStatus();
   const isUserAlumni = profile.PersonType === 'alu';
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
@@ -183,7 +183,7 @@ const AlumniUpdateForm = ({ profile, completion }) => {
     });
     requestInfoUpdate(updateRequest).then(() => {
       setSaving(false);
-      completion({
+      closeWithSnackbar({
         type: 'success',
         message: 'Your update request has been sent. Please check back later.',
       });
@@ -198,7 +198,7 @@ const AlumniUpdateForm = ({ profile, completion }) => {
 
   const handleSaveButtonClick = () => {
     if (updatedInfo.firstName === '' || updatedInfo.lastName === '') {
-      completion({ type: 'error', message: 'Please fill in your first and last name' });
+      closeWithSnackbar({ type: 'error', message: 'Please fill in your first and last name' });
     } else {
       setOpenConfirmWindow(true);
     }
