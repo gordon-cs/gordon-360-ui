@@ -196,12 +196,15 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   const [isSaving, setSaving] = useState(false);
   const [changeReason, setChangeReason] = useState('');
 
-  const handleSetError = (field, condition) => {
-    setErrorStatus({
-      ...errorStatus,
-      [field]: { ...errorStatus[field], hasError: condition },
-    });
-  };
+  const handleSetError = useMemo(
+    (field, condition) => {
+      setErrorStatus({
+        ...errorStatus,
+        [field]: { ...errorStatus[field], hasError: condition },
+      });
+    },
+    [errorStatus],
+  );
 
   const shouldDisable = useMemo(() => {
     for (const field in currentInfo) {
@@ -218,7 +221,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
       }
     }
     return true;
-  }, [updatedInfo, currentInfo, errorStatus]);
+  }, [updatedInfo, currentInfo, handleSetError]);
 
   const handleChange = (event) => {
     const getNewInfo = (currentValue) => {
