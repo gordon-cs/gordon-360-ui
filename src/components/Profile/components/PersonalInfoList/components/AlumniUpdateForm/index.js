@@ -207,30 +207,41 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   };
 
   const isEmailValid = (email) => {
-    const regex = /\S+@\S+\.\S+/;
-    console.log(regex.test(email));
+    const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,3})+$/;
     return !email || email === '' || regex.test(email);
   };
 
-  const shouldDisable = useMemo(() => {
+  const hasErrors = (currentValue) => {
+    for (const field in errorStatus) {
+      if (field.hasError) return true;
+    }
+    return currentValue;
+  };
+
+  const shouldDisableUpdateButton = useMemo(() => {
+    let shouldDisable = true;
     for (const field in currentInfo) {
       //require first & last name
-      if (field === 'firstName' || field === 'lastName') {
+      if (field === 'firstName' || field === 'lastName')
         handleSetError(field, updatedInfo[field] === '');
-        if (updatedInfo[field] === '') return true;
-      }
+
       //check if phone number is a number
       //check if email is valid email
       if (field === 'personalEmail' || field === 'workEmail' || field === 'aEmail') {
-        handleSetError(field, isEmailValid(updatedInfo[field]));
-        if (isEmailValid(updatedInfo[field])) return true;
+        handleSetError(field, !isEmailValid(updatedInfo[field]));
+        // if (isEmailValid(updatedInfo[field])) return true;
+        // console.log(field);
+        // console.log(updatedInfo[field]);
+        // console.log(isEmailValid(updatedInfo[field]));
+        // console.log(errorStatus[field]);
       }
 
       if (currentInfo[field] !== updatedInfo[field]) {
-        return false;
+        shouldDisable = false;
       }
     }
-    return true;
+    shouldDisable = hasErrors(shouldDisable);
+    return shouldDisable;
   }, [updatedInfo, currentInfo]);
 
   const handleChange = (event) => {
@@ -300,7 +311,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
       variant="contained"
       color="secondary"
       onClick={handleSaveButtonClick}
-      disabled={shouldDisable}
+      disabled={shouldDisableUpdateButton}
     >
       Update
     </Button>
