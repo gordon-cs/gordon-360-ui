@@ -216,20 +216,21 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
         contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
       />
     );
-  const updateAlumniInfoButton = isAlumni ? (
-    <Grid container justifyContent="center">
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={() => {
-          setOpenAlumniUpdateForm(true);
-        }}
-        className={styles.update_info_button}
-      >
-        Update Information
-      </Button>
-    </Grid>
-  ) : null;
+  const updateAlumniInfoButton =
+    isAlumni && isOnline ? (
+      <Grid container justifyContent="center">
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setOpenAlumniUpdateForm(true);
+          }}
+          className={styles.update_info_button}
+        >
+          Update Information
+        </Button>
+      </Grid>
+    ) : null;
 
   const handleAlumniUpdateForm = (status) => {
     setOpenAlumniUpdateForm(false);
