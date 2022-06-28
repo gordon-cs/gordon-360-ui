@@ -201,15 +201,22 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     setErrorStatus(getCurrentErrorStatus);
   };
 
+  //Regular Expression documentation: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
   const isEmailValid = (email) => {
+    //email regex from: https://stackoverflow.com/a/72476905
     const regex = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
     return !email || email === '' || regex.test(email);
   };
 
   const isPhoneValid = (phoneNum) => {
-    let value = phoneNum.replace(/[-()\s\D]/g, '');
+    /**
+     * 2 Regex's used here:
+     * /[-()\s]/g => /g is a global search for all characters in the array symbols -,(,),(space)
+     * /^[+]?\d+$/ => regex match value of (begin char)(0 or 1 instance of +)(any number of digits)(end char)
+     */
+    let value = phoneNum.replace(/[-()\s]/g, '');
     return (
-      (value.length > 6 && 16 > value.length && /^-?\d+$/.test(value)) || phoneNum.length === 0
+      (value.length > 6 && 16 > value.length && /^[+]?\d+$/.test(value)) || phoneNum.length === 0
     );
   };
 
@@ -258,7 +265,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     Object.entries(currentInfo).forEach(([field, value]) => {
       let updatedValue = value;
       if (field === 'homePhone' || field === 'workPhone' || field === 'mobilePhone') {
-        updatedValue = value.replace(/[-()\s\D]/g, '');
+        updatedValue = value.replace(/[-()\s]/g, '');
       }
       if (updatedInfo[field] !== value)
         updatedFields.push({
