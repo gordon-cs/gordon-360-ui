@@ -10,40 +10,22 @@ import {
 } from '@material-ui/core/';
 import styles from '../../Update.module.css';
 
-const ProfileUpdateField = ({
-  label,
-  name,
-  type,
-  value,
-  menuItems,
-  onChange,
-  error,
-  helperText,
-}) => {
+const ProfileUpdateField = ({ label, name, type, value, onChange, ...otherProps }) => {
   let field;
   // eslint-disable-next-line default-case
   switch (type) {
     case 'text':
     case 'number':
     case 'email':
-      field = error ? (
+      field = (
         <TextField
-          error={error}
+          variant="filled"
+          error={otherProps.error}
           className="disable_select"
-          style={{ width: 252 }}
+          style={{ width: 300 }}
           label={label}
           name={name}
-          helperText={helperText}
-          value={value}
-          onChange={onChange}
-          type={type}
-        />
-      ) : (
-        <TextField
-          className="disable_select"
-          style={{ width: 252 }}
-          label={label}
-          name={name}
+          helperText={otherProps.error ? otherProps.helperText : null}
           value={value}
           onChange={onChange}
           type={type}
@@ -61,10 +43,10 @@ const ProfileUpdateField = ({
       break;
     case 'select':
       field = (
-        <FormControl className={styles.select_text} style={{ width: 252 }}>
+        <FormControl variant="filled" className={styles.select_text} style={{ width: 300 }}>
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={onChange}>
-            {menuItems.map((item) => (
+            {otherProps.menuItems.map((item) => (
               <MenuItem className={styles.select_text} value={item}>
                 {item}
               </MenuItem>
@@ -75,7 +57,7 @@ const ProfileUpdateField = ({
       break;
   }
   return (
-    <Grid item xs={9} md={3} lg={3}>
+    <Grid item xs={9} md={4} lg={3}>
       {field}
     </Grid>
   );

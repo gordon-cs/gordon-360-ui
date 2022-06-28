@@ -18,9 +18,11 @@
     margin-bottom: 1em;
   }
 
-  & :global(.MuiGrid-root) {
-    margin-left: 2em;
-    margin-right: 2em;
+  & :global(.MuiGrid-item) {
+    margin-left: 3em;
+    margin-right: 2.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
   }
 
   &_title {
