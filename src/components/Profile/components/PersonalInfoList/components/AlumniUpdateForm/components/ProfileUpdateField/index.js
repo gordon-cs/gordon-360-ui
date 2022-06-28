@@ -8,7 +8,7 @@ import {
   Select,
   TextField,
 } from '@material-ui/core/';
-import styles from '../../Update.module.css';
+import styles from '../../AlumniUpdateForm.module.css';
 
 const ProfileUpdateField = ({ label, name, type, value, onChange, ...otherProps }) => {
   let field;

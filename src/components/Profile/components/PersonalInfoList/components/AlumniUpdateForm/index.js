@@ -1,15 +1,7 @@
-import {
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  CardHeader,
-  Button,
-  TextField,
-} from '@material-ui/core/';
+import { Typography, Grid, Card, CardContent, Button, TextField } from '@material-ui/core/';
 import { useState, useMemo, useEffect } from 'react';
 import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/profileInfoUpdate';
-import styles from './Update.module.css';
+import styles from './AlumniUpdateForm.module.css';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ConfirmationRow } from './components/ConfirmationRow';
@@ -26,7 +18,12 @@ const shouldContactFields = [
  * A form for alumni to request an update to their profile information.
  */
 
-const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
+const AlumniUpdateForm = ({
+  profile,
+  closeWithSnackbar,
+  openAlumniUpdateForm,
+  setOpenAlumniUpdateForm,
+}) => {
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
   const [countries, setCountries] = useState(['Prefer Not to Say']);
   const [errorStatus, setErrorStatus] = useState({
@@ -342,13 +339,19 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   };
 
   return (
-    <>
+    <GordonDialogBox
+      open={openAlumniUpdateForm}
+      title="Update Information"
+      fullWidth
+      maxWidth="lg"
+      cancelButtonClicked={() => {
+        setUpdatedInfo(currentInfo);
+        setOpenAlumniUpdateForm(false);
+      }}
+      cancelButtonName="cancel"
+      titleClass={styles.alumni_update_form_title}
+    >
       <Card className={styles.update}>
-        <CardHeader
-          className={styles.update_title}
-          title="Update Information"
-          titleTypographyProps={{ variant: 'h4' }}
-        />
         <CardContent>
           <ContentCard title="Personal Information">
             {mapFieldsToInputs(personalInfoFields)}
@@ -411,7 +414,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
         />
         {isSaving ? <GordonLoader size={32} /> : null}
       </GordonDialogBox>
-    </>
+    </GordonDialogBox>
   );
 };
 

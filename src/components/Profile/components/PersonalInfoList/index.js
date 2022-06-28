@@ -475,25 +475,14 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
           </List>
         </CardContent>
       </Card>
-      {/* alumni update form */}
-      <GordonDialogBox
-        open={openAlumniUpdateForm}
-        title="Alumni Update Form"
-        fullWidth
-        maxWidth="lg"
-        cancelButtonClicked={() => {
-          setOpenAlumniUpdateForm(false);
+      <AlumniUpdateForm
+        profile={profile}
+        closeWithSnackbar={(status) => {
+          handleAlumniUpdateForm(status);
         }}
-        cancelButtonName="cancel"
-        className={styles.alumni_update_form}
-      >
-        <AlumniUpdateForm
-          profile={profile}
-          closeWithSnackbar={(status) => {
-            handleAlumniUpdateForm(status);
-          }}
-        />
-      </GordonDialogBox>
+        openAlumniUpdateForm={openAlumniUpdateForm}
+        setOpenAlumniUpdateForm={(bool) => setOpenAlumniUpdateForm(bool)}
+      />
     </Grid>
   );
 };

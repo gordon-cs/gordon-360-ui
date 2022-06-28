@@ -1,12 +1,5 @@
 @import '../../../../vars';
 
-.alumni_update_form {
-  & :global(.MuiDialog-paperWidthSm) {
-    min-width: 350px;
-    max-width: 100%;
-  }
-}
-
 .personal_info_list {
   &_header {
     background-color: $primary-blue;
