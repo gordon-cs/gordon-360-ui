@@ -6,7 +6,6 @@ const ContentCard = (props) => {
     <Card>
       <CardHeader className={styles.update_header} title={props.title} />
       <CardContent>
-        hi
         <Grid container>{props.children}</Grid>
       </CardContent>
     </Card>
