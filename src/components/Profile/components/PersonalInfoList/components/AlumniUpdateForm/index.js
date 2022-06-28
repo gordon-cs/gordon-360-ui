@@ -30,16 +30,16 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
   const [countries, setCountries] = useState(['Prefer Not to Say']);
   const [errorStatus, setErrorStatus] = useState({
-    firstName: { hasError: false, helperText: '*Required' },
-    lastName: { hasError: false, helperText: '*Required' },
+    firstName: false,
+    lastName: false,
 
-    homePhone: { hasError: false, helperText: '*Invalid Number' },
-    workPhone: { hasError: false, helperText: '*Invalid Number' },
-    mobilePhone: { hasError: false, helperText: '*Invalid Number' },
+    homePhone: false,
+    workPhone: false,
+    mobilePhone: false,
 
-    personalEmail: { hasError: false, helperText: '*Invalid Email' },
-    workEmail: { hasError: false, helperText: '*Invalid Email' },
-    aEmail: { hasError: false, helperText: '*Invalid Email' },
+    personalEmail: false,
+    workEmail: false,
+    aEmail: false,
   });
 
   const personalInfoFields = [
@@ -53,15 +53,15 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
       label: 'First Name',
       name: 'firstName',
       type: 'text',
-      error: errorStatus.firstName.hasError,
-      helperText: errorStatus.firstName.helperText,
+      error: errorStatus.firstName,
+      helperText: '*Required',
     },
     {
       label: 'Last Name',
       name: 'lastName',
       type: 'text',
-      error: errorStatus.lastName.hasError,
-      helperText: errorStatus.lastName.helperText,
+      error: errorStatus.lastName,
+      helperText: '*Required',
     },
     { label: 'Middle Name', name: 'middleName', type: 'text' },
     { label: 'Preferred Name', name: 'nickName', type: 'text' },
@@ -73,22 +73,22 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
       label: 'Personal Email',
       name: 'personalEmail',
       type: 'email',
-      error: errorStatus.personalEmail.hasError,
-      helperText: errorStatus.personalEmail.helperText,
+      error: errorStatus.personalEmail,
+      helperText: '*Invalid Email',
     },
     {
       label: 'Work Email',
       name: 'workEmail',
       type: 'email',
-      error: errorStatus.workEmail.hasError,
-      helperText: errorStatus.workEmail.helperText,
+      error: errorStatus.workEmail,
+      helperText: '*Invalid Email',
     },
     {
       label: 'Alternate Email',
       name: 'aEmail',
       type: 'email',
-      error: errorStatus.aEmail.hasError,
-      helperText: errorStatus.aEmail.helperText,
+      error: errorStatus.aEmail,
+      helperText: '*Invalid Email',
     },
     {
       label: 'Preferred Email',
@@ -102,22 +102,22 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
       label: 'Home Phone',
       name: 'homePhone',
       type: 'text',
-      error: errorStatus.homePhone.hasError,
-      helperText: errorStatus.homePhone.helperText,
+      error: errorStatus.homePhone,
+      helperText: '*Invalid Number',
     },
     {
       label: 'Work Phone',
       name: 'workPhone',
       type: 'text',
-      error: errorStatus.workPhone.hasError,
-      helperText: errorStatus.workPhone.helperText,
+      error: errorStatus.workPhone,
+      helperText: '*Invalid Number',
     },
     {
       label: 'Mobile Phone',
       name: 'mobilePhone',
       type: 'text',
-      error: errorStatus.mobilePhone.hasError,
-      helperText: errorStatus.mobilePhone.helperText,
+      error: errorStatus.mobilePhone,
+      helperText: '*Invalid Number',
     },
     {
       label: 'Preferred Phone',
@@ -194,7 +194,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     const getCurrentErrorStatus = (currentValue) => {
       return {
         ...currentValue,
-        [field]: { ...currentValue[field], hasError: condition },
+        [field]: condition,
       };
     };
     setErrorStatus(getCurrentErrorStatus);
