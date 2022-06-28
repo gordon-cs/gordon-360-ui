@@ -212,12 +212,10 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     /**
      * 2 Regex's used here:
      * /[-()\s]/g => /g is a global search for all characters in the array symbols -,(,),(space)
-     * /^[+]?\d+$/ => regex match value of (begin char)(0 or 1 instance of +)(any number of digits)(end char)
+     * /^[+]?\d{7,15}+$/ => regex match value of (begin char)(0 or 1 instance of '+')(7-15 digits)(end char)
      */
     let value = phoneNum.replace(/[-()\s]/g, '');
-    return (
-      (value.length > 6 && 16 > value.length && /^[+]?\d+$/.test(value)) || phoneNum.length === 0
-    );
+    return /^[+]?\d{7,15}$/.test(value) || phoneNum.length === 0;
   };
 
   // Field Validation
@@ -225,20 +223,29 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     let hasError = false;
     let hasChanges = false;
     for (const field in currentInfo) {
-      if (field === 'firstName' || field === 'lastName') {
-        handleSetError(field, updatedInfo[field] === '');
-        hasError = updatedInfo[field] === '' || hasError;
-      }
-      if (field === 'homePhone' || field === 'workPhone' || field === 'mobilePhone') {
-        handleSetError(field, !isPhoneValid(updatedInfo[field]));
-        hasError = !isPhoneValid(updatedInfo[field]) || hasError;
-      }
-      if (field === 'personalEmail' || field === 'workEmail' || field === 'aEmail') {
-        handleSetError(field, !isEmailValid(updatedInfo[field]));
-        hasError = !isEmailValid(updatedInfo[field]) || hasError;
-      }
       if (currentInfo[field] !== updatedInfo[field]) {
         hasChanges = true;
+      }
+      switch (field) {
+        case 'firstName':
+        case 'lastName':
+          handleSetError(field, updatedInfo[field] === '');
+          hasError = updatedInfo[field] === '' || hasError;
+          break;
+        case 'homePhone':
+        case 'workPhone':
+        case 'mobilePhone':
+          handleSetError(field, !isPhoneValid(updatedInfo[field]));
+          hasError = !isPhoneValid(updatedInfo[field]) || hasError;
+          break;
+        case 'personalEmail':
+        case 'workEmail':
+        case 'aEmail':
+          handleSetError(field, !isEmailValid(updatedInfo[field]));
+          hasError = !isEmailValid(updatedInfo[field]) || hasError;
+          break;
+        default:
+          break;
       }
     }
     setDisableUpdateButton(hasError || !hasChanges);
@@ -319,7 +326,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
    * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
    * @returns JSX correct input for each field based on type
    */
-  const inputField = (fields) => {
+  const mapFieldsToInputs = (fields) => {
     return fields.map((field) => (
       <ProfileUpdateField
         error={field.error}
@@ -343,11 +350,15 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
           titleTypographyProps={{ variant: 'h4' }}
         />
         <CardContent>
-          <ContentCard title="Personal Information">{inputField(personalInfoFields)}</ContentCard>
-          <ContentCard title="Email Addresses">{inputField(emailInfoFields)}</ContentCard>
-          <ContentCard title="Phone Numbers">{inputField(phoneInfoFields)}</ContentCard>
-          <ContentCard title="Mailing Address">{inputField(mailingInfoFields)}</ContentCard>
-          <ContentCard title="Contact Preferences">{inputField(shouldContactFields)}</ContentCard>
+          <ContentCard title="Personal Information">
+            {mapFieldsToInputs(personalInfoFields)}
+          </ContentCard>
+          <ContentCard title="Email Addresses">{mapFieldsToInputs(emailInfoFields)}</ContentCard>
+          <ContentCard title="Phone Numbers">{mapFieldsToInputs(phoneInfoFields)}</ContentCard>
+          <ContentCard title="Mailing Address">{mapFieldsToInputs(mailingInfoFields)}</ContentCard>
+          <ContentCard title="Contact Preferences">
+            {mapFieldsToInputs(shouldContactFields)}
+          </ContentCard>
           <Grid item xs={12} justifyContent="center">
             {updateButton}
           </Grid>
