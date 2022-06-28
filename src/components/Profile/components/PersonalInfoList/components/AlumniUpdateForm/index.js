@@ -7,14 +7,10 @@ import {
   Button,
   TextField,
 } from '@material-ui/core/';
-
 import { useState, useMemo, useEffect } from 'react';
 import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/profileInfoUpdate';
 import styles from './Update.module.css';
-import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonLoader from 'components/Loader';
-import GordonOffline from 'components/GordonOffline';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
@@ -31,8 +27,6 @@ const shouldContactFields = [
  */
 
 const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
-  const isOnline = useNetworkStatus();
-  const isUserAlumni = profile.PersonType === 'alu';
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
   const [countries, setCountries] = useState(['Prefer Not to Say']);
   const [errorStatus, setErrorStatus] = useState({
