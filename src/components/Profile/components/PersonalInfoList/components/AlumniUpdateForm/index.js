@@ -189,6 +189,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
   const [changeReason, setChangeReason] = useState('');
+  const [disableUpdateButton, setDisableUpdateButton] = useState(true);
 
   const handleSetError = (field, condition) => {
     const getCurrentErrorStatus = (currentValue) => {
@@ -212,7 +213,8 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     );
   };
 
-  const shouldDisableUpdateButton = useMemo(() => {
+  // Field Validation
+  useEffect(() => {
     let hasError = false;
     let hasChanges = false;
     for (const field in currentInfo) {
@@ -232,7 +234,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
         hasChanges = true;
       }
     }
-    return hasError || !hasChanges;
+    setDisableUpdateButton(hasError || !hasChanges);
   }, [updatedInfo, currentInfo]);
 
   const handleChange = (event) => {
@@ -300,7 +302,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
       onClick={() => {
         setOpenConfirmWindow(true);
       }}
-      disabled={shouldDisableUpdateButton}
+      disabled={disableUpdateButton}
     >
       Update
     </Button>
