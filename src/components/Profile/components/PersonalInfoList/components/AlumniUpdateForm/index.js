@@ -297,21 +297,13 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     setChangeReason('');
   };
 
-  const handleSaveButtonClick = () => {
-    if (updatedInfo.firstName === '' || updatedInfo.lastName === '') {
-      closeWithSnackbar({ type: 'error', message: 'Please fill in your first and last name' });
-    } else {
-      setOpenConfirmWindow(true);
-    }
-  };
-
   const updateButton = isSaving ? (
     <GordonLoader size={32} />
   ) : (
     <Button
       variant="contained"
       color="secondary"
-      onClick={handleSaveButtonClick}
+      onClick={setOpenConfirmWindow(true)}
       disabled={shouldDisableUpdateButton}
     >
       Update

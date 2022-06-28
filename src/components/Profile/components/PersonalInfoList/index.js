@@ -232,7 +232,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
   ) : null;
 
   const handleAlumniUpdateForm = (status) => {
-    if (status.type === 'success') setOpenAlumniUpdateForm(false);
+    setOpenAlumniUpdateForm(false);
     createSnackbar(status.message, status.type);
   };
 
