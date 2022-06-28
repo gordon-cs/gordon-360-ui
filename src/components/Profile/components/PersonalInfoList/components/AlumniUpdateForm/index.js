@@ -297,7 +297,9 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
     <Button
       variant="contained"
       color="secondary"
-      onClick={setOpenConfirmWindow(true)}
+      onClick={() => {
+        setOpenConfirmWindow(true);
+      }}
       disabled={shouldDisableUpdateButton}
     >
       Update
