@@ -9,6 +9,9 @@
     color: $neutral-white;
     text-align: center;
     grid-row: 1;
+    // & :global(.MuiTypography-h6) {
+    //   font-size: 2em;
+    // }
   }
   &_content {
     display: grid;
