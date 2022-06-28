@@ -331,7 +331,7 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
 
   if (!isOnline) return <GordonOffline feature="Update Profile" />;
 
-  if (isUserAlumni)
+  if (!isUserAlumni)
     return (
       <GordonLimitedAvailability
         pageName="Alumni Update Form"
