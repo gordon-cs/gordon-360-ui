@@ -238,7 +238,6 @@ const AlumniUpdateForm = ({ profile, closeWithSnackbar }) => {
         hasChanges = true;
       }
     }
-
     return hasError || !hasChanges;
   }, [updatedInfo, currentInfo]);
 
