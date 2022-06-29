@@ -25,7 +25,6 @@ import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
-import GordonDialogBox from 'components/GordonDialogBox';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 
 const PRIVATE_INFO = 'Private as requested.';
