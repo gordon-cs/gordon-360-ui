@@ -46,10 +46,10 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
   const groups = useAuthGroups();
-  const isStudent = useMemo(() => groups.some((g) => g === AuthGroup.Student), [groups]);
-  const isFacStaff = useMemo(() => groups.some((g) => g === AuthGroup.FacStaff), [groups]);
-  const isAlumni = useMemo(() => groups.some((g) => g === AuthGroup.Alumni), [groups]);
-  const isPolice = useMemo(() => groups.some((g) => g === AuthGroup.Police), [groups]);
+  const isStudent = PersonType?.includes('stu');
+  const isFacStaff = PersonType?.includes('fac');
+  const isAlumni = PersonType?.includes('alu');
+  const isViewerPolice = useMemo(() => groups.some((g) => g === AuthGroup.Police), [groups]);
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -215,8 +215,9 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
         contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
       />
     );
+    
   const updateAlumniInfoButton =
-    isAlumni && isOnline && myProf ? (
+    PersonType === 'alu' && isOnline && myProf ? (
       <Grid container justifyContent="center">
         <Button
           variant="contained"
@@ -343,7 +344,8 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
             <span className={keepPrivate ? null : styles.not_private}>
               {profile.BuildingDescription ?? profile.Hall}
             </span>
-            {(myProf || isPolice) && profile.OnCampusRoom && `, Room ${profile.OnCampusRoom}`}
+
+            {(myProf || isViewerPolice) && profile.OnCampusRoom && `, Room ${profile.OnCampusRoom}`}
           </>
         }
         privateInfo
@@ -449,9 +451,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
                 labelPlacement="right"
                 disabled={!isOnline}
               />
-            ) : (
-              ''
-            )}
+            ) : null}
           </Grid>
         </Grid>
         <CardContent>
