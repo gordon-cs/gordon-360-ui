@@ -46,9 +46,9 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
   const groups = useAuthGroups();
-  const isStudent = PersonType?.includes('stu');
-  const isFacStaff = PersonType?.includes('fac');
-  const isAlumni = PersonType?.includes('alu');
+  const isStudent = profile.PersonType?.includes('stu');
+  const isFacStaff = profile.PersonType?.includes('fac');
+  const isAlumni = profile.PersonType?.includes('alu');
   const isViewerPolice = useMemo(() => groups.some((g) => g === AuthGroup.Police), [groups]);
 
   // KeepPrivate has different values for Students and FacStaff.
@@ -215,9 +215,9 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
         contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
       />
     );
-    
+
   const updateAlumniInfoButton =
-    PersonType === 'alu' && isOnline && myProf ? (
+    isAlumni && isOnline && myProf ? (
       <Grid container justifyContent="center">
         <Button
           variant="contained"
