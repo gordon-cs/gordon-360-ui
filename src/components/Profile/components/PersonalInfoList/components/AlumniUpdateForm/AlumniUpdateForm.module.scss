@@ -47,12 +47,6 @@
     margin: 0.5rem !important;
   }
 
-  &_contributors:global(.MuiTypography-root) {
-    white-space: pre-wrap;
-    margin-left: 1rem;
-    margin-right: 1rem;
-  }
-
   &_header {
     background-color: $primary-blue;
     color: $neutral-white;

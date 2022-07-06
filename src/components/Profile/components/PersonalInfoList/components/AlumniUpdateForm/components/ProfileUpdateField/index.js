@@ -8,7 +8,7 @@ import {
   Select,
   TextField,
 } from '@material-ui/core/';
-import styles from '../../AlumniUpdateForm.module.css';
+import styles from './ProfileUpdateField.module.css';
 
 const ProfileUpdateField = ({ label, name, type, value, onChange, ...otherProps }) => {
   let field;
@@ -21,8 +21,7 @@ const ProfileUpdateField = ({ label, name, type, value, onChange, ...otherProps 
         <TextField
           variant="filled"
           error={otherProps.error}
-          className="disable_select"
-          style={{ width: 300 }}
+          className={`disable_select ${styles.field}`}
           label={label}
           name={name}
           helperText={otherProps.error ? otherProps.helperText : null}
@@ -43,7 +42,11 @@ const ProfileUpdateField = ({ label, name, type, value, onChange, ...otherProps 
       break;
     case 'select':
       field = (
-        <FormControl variant="filled" className={styles.select_text} style={{ width: 300 }}>
+        <FormControl
+          variant="filled"
+          className={`${styles.select_text} ${styles.field}`}
+          style={{ width: '100%' }}
+        >
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={onChange}>
             {otherProps.menuItems.map((item) => (
@@ -57,7 +60,7 @@ const ProfileUpdateField = ({ label, name, type, value, onChange, ...otherProps 
       break;
   }
   return (
-    <Grid item xs={9} md={4} lg={3}>
+    <Grid item xs={12} sm={6} md={4} lg={3}>
       {field}
     </Grid>
   );

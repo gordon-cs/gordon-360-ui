@@ -1,4 +1,4 @@
-import { Typography, Grid, Card, CardContent, Button, TextField } from '@material-ui/core/';
+import { Typography, Grid, Button, TextField } from '@material-ui/core/';
 import { useState, useMemo, useEffect } from 'react';
 import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/profileInfoUpdate';
 import styles from './AlumniUpdateForm.module.css';
@@ -304,21 +304,6 @@ const AlumniUpdateForm = ({
     setChangeReason('');
   };
 
-  const updateButton = isSaving ? (
-    <GordonLoader size={32} />
-  ) : (
-    <Button
-      variant="contained"
-      color="secondary"
-      onClick={() => {
-        setOpenConfirmWindow(true);
-      }}
-      disabled={disableUpdateButton}
-    >
-      Update
-    </Button>
-  );
-
   /**
    * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
    * @returns JSX correct input for each field based on type
@@ -344,6 +329,9 @@ const AlumniUpdateForm = ({
       title="Update Information"
       fullWidth
       maxWidth="lg"
+      buttonClicked={() => setOpenConfirmWindow(true)}
+      isButtonDisabled={disableUpdateButton}
+      buttonName="Update"
       cancelButtonClicked={() => {
         setUpdatedInfo(currentInfo);
         setOpenAlumniUpdateForm(false);
@@ -351,22 +339,15 @@ const AlumniUpdateForm = ({
       cancelButtonName="cancel"
       titleClass={styles.alumni_update_form_title}
     >
-      <Card className={styles.update}>
-        <CardContent>
-          <ContentCard title="Personal Information">
-            {mapFieldsToInputs(personalInfoFields)}
-          </ContentCard>
-          <ContentCard title="Email Addresses">{mapFieldsToInputs(emailInfoFields)}</ContentCard>
-          <ContentCard title="Phone Numbers">{mapFieldsToInputs(phoneInfoFields)}</ContentCard>
-          <ContentCard title="Mailing Address">{mapFieldsToInputs(mailingInfoFields)}</ContentCard>
-          <ContentCard title="Contact Preferences">
-            {mapFieldsToInputs(shouldContactFields)}
-          </ContentCard>
-          <Grid item xs={12} justifyContent="center">
-            {updateButton}
-          </Grid>
-        </CardContent>
-      </Card>
+      <ContentCard title="Personal Information">
+        {mapFieldsToInputs(personalInfoFields)}
+      </ContentCard>
+      <ContentCard title="Email Addresses">{mapFieldsToInputs(emailInfoFields)}</ContentCard>
+      <ContentCard title="Phone Numbers">{mapFieldsToInputs(phoneInfoFields)}</ContentCard>
+      <ContentCard title="Mailing Address">{mapFieldsToInputs(mailingInfoFields)}</ContentCard>
+      <ContentCard title="Contact Preferences">
+        {mapFieldsToInputs(shouldContactFields)}
+      </ContentCard>
       <Typography variant="subtitle1">
         Found a bug?
         <Button href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug" color="primary">
@@ -383,21 +364,12 @@ const AlumniUpdateForm = ({
         cancelButtonClicked={!isSaving ? handleWindowClose : null}
         cancelButtonName="Cancel"
       >
-        <Card>
-          <ConfirmationWindowHeader />
-          <Grid
-            container
-            direction="row"
-            style={{
-              width: '100%',
-              minWidth: 504,
-            }}
-          >
-            {getUpdatedFields(currentInfo, updatedInfo).map((field) => (
-              <ConfirmationRow field={field} prevValue={currentInfo[field.Field]} />
-            ))}
-          </Grid>
-        </Card>
+        <ConfirmationWindowHeader />
+        <Grid container>
+          {getUpdatedFields(currentInfo, updatedInfo).map((field) => (
+            <ConfirmationRow field={field} prevValue={currentInfo[field.Field]} />
+          ))}
+        </Grid>
         <TextField
           required
           variant="filled"
@@ -405,7 +377,7 @@ const AlumniUpdateForm = ({
           margin="normal"
           multiline
           fullWidth
-          rows={4}
+          minRows={4}
           name="changeReason"
           value={changeReason}
           onChange={(event) => {
