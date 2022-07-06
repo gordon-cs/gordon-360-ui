@@ -70,10 +70,10 @@ const PersonalInfoList = ({
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
   const groups = useAuthGroups();
-  const isStudent = useMemo(() => groups.some((g) => g === AuthGroup.Student), [groups]);
-  const isFacStaff = useMemo(() => groups.some((g) => g === AuthGroup.FacStaff), [groups]);
-  const isAlumni = useMemo(() => groups.some((g) => g === AuthGroup.Alumni), [groups]);
-  const isPolice = useMemo(() => groups.some((g) => g === AuthGroup.Police), [groups]);
+  const isStudent = PersonType?.includes('stu');
+  const isFacStaff = PersonType?.includes('fac');
+  const isAlumni = PersonType?.includes('alu');
+  const isViewerPolice = useMemo(() => groups.some((g) => g === AuthGroup.Police), [groups]);
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -237,15 +237,16 @@ const PersonalInfoList = ({
       />
     );
 
-  const updateInfoButton = isAlumni ? (
-    <Grid container justifyContent="center">
-      <Link className="gc360_link" to="/myprofile/update">
-        <Button variant="contained" className={styles.update_info_button}>
-          Update Information
-        </Button>
-      </Link>
-    </Grid>
-  ) : null;
+  const updateInfoButton =
+    myProf && PersonType === 'alu' ? (
+      <Grid container justifyContent="center">
+        <Link className="gc360_link" to="/myprofile/update">
+          <Button variant="contained" className={styles.update_info_button}>
+            Update Information
+          </Button>
+        </Link>
+      </Grid>
+    ) : null;
 
   const graduationYear = isAlumni ? (
     <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />
@@ -354,7 +355,7 @@ const PersonalInfoList = ({
             <span className={keepPrivate ? null : styles.not_private}>
               {BuildingDescription ?? Hall}
             </span>
-            {(myProf || isPolice) && OnCampusRoom && `, Room ${OnCampusRoom}`}
+            {(myProf || isViewerPolice) && OnCampusRoom && `, Room ${OnCampusRoom}`}
           </>
         }
         privateInfo
@@ -460,9 +461,7 @@ const PersonalInfoList = ({
                 labelPlacement="right"
                 disabled={!isOnline}
               />
-            ) : (
-              ''
-            )}
+            ) : null}
           </Grid>
         </Grid>
         <CardContent>
