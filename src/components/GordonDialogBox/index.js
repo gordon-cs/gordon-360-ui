@@ -27,12 +27,8 @@ import styles from './GordonDialogBox.module.css';
  * @returns {JSX.Element} A dialog box with the passed in content
  */
 const GordonDialogBox = ({
-  open,
-  onClose,
   title,
   titleClass,
-  fullWidth = false,
-  maxWidth = 'sm',
   buttonClicked,
   buttonName,
   isButtonDisabled = false,
@@ -40,14 +36,15 @@ const GordonDialogBox = ({
   cancelButtonName,
   severity,
   children,
+  ...otherProps
 }) => {
   return (
     <Dialog
       className={styles.gc360_gordondialogbox}
-      open={open}
-      onClose={onClose}
-      fullWidth={fullWidth}
-      maxWidth={maxWidth}
+      open={otherProps.open}
+      onClose={otherProps.onClose}
+      fullWidth={otherProps.fullWidth}
+      maxWidth={otherProps.maxWidth}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
