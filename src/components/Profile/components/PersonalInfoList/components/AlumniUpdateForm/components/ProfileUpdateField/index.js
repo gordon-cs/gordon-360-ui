@@ -10,7 +10,17 @@ import {
 } from '@material-ui/core/';
 import styles from './ProfileUpdateField.module.css';
 
-const ProfileUpdateField = ({ label, name, type, value, onChange, ...otherProps }) => {
+const ProfileUpdateField = ({
+  label,
+  name,
+  type,
+  value,
+  onChange,
+  error,
+  helperText,
+  menuItems,
+  ...otherProps
+}) => {
   let field;
   // eslint-disable-next-line default-case
   switch (type) {
@@ -20,11 +30,11 @@ const ProfileUpdateField = ({ label, name, type, value, onChange, ...otherProps 
       field = (
         <TextField
           variant="filled"
-          error={otherProps.error}
+          error={error}
           className={`disable_select ${styles.field}`}
           label={label}
           name={name}
-          helperText={otherProps.error ? otherProps.helperText : null}
+          helperText={error ? helperText : null}
           value={value}
           onChange={onChange}
           type={type}
@@ -49,7 +59,7 @@ const ProfileUpdateField = ({ label, name, type, value, onChange, ...otherProps 
         >
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={onChange}>
-            {otherProps.menuItems.map((item) => (
+            {menuItems.map((item) => (
               <MenuItem className={styles.select_text} value={item}>
                 {item}
               </MenuItem>
