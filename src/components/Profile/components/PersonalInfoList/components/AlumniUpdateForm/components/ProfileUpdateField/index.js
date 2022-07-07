@@ -10,13 +10,11 @@ import {
 } from '@material-ui/core/';
 import styles from './ProfileUpdateField.module.css';
 
-const ProfileUpdateField = ({ error, helperText, menuItems, ...otherProps }) => {
+const ProfileUpdateField = ({ type, error, helperText, menuItems, ...otherProps }) => {
   let field;
   // eslint-disable-next-line default-case
-  switch (otherProps.type) {
+  switch (type) {
     case 'text':
-    case 'number':
-    case 'email':
       field = (
         <TextField
           variant="filled"
@@ -28,7 +26,13 @@ const ProfileUpdateField = ({ error, helperText, menuItems, ...otherProps }) => 
       );
       break;
     case 'checkbox':
-      field = <FormControlLabel control={<Checkbox {...otherProps} />} {...otherProps} />;
+      field = (
+        <FormControlLabel
+          control={<Checkbox {...otherProps} />}
+          label={otherProps.label}
+          name={otherProps.name}
+        />
+      );
       break;
     case 'select':
       field = (

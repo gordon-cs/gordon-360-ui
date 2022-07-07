@@ -69,21 +69,21 @@ const AlumniUpdateForm = ({
     {
       label: 'Personal Email',
       name: 'personalEmail',
-      type: 'email',
+      type: 'text',
       error: errorStatus.personalEmail,
       helperText: '*Invalid Email',
     },
     {
       label: 'Work Email',
       name: 'workEmail',
-      type: 'email',
+      type: 'text',
       error: errorStatus.workEmail,
       helperText: '*Invalid Email',
     },
     {
       label: 'Alternate Email',
       name: 'aEmail',
-      type: 'email',
+      type: 'text',
       error: errorStatus.aEmail,
       helperText: '*Invalid Email',
     },
@@ -128,7 +128,7 @@ const AlumniUpdateForm = ({
     { label: 'Address Line 2 (optional)', name: 'address2', type: 'text' },
     { label: 'City', name: 'city', type: 'text' },
     { label: 'State', name: 'state', type: 'select', menuItems: statesAndProv },
-    { label: 'Zip Code', name: 'zip', type: 'number' },
+    { label: 'Zip Code', name: 'zip', type: 'text' },
     { label: 'Country', name: 'country', type: 'select', menuItems: countries },
   ];
 
