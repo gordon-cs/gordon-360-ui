@@ -10,7 +10,16 @@ import {
 } from '@material-ui/core/';
 import styles from './ProfileUpdateField.module.css';
 
-const ProfileUpdateField = ({ type, error, helperText, menuItems, ...otherProps }) => {
+const ProfileUpdateField = ({
+  label,
+  name,
+  type,
+  value,
+  onChange,
+  error,
+  helperText,
+  menuItems,
+}) => {
   let field;
   // eslint-disable-next-line default-case
   switch (type) {
@@ -20,17 +29,21 @@ const ProfileUpdateField = ({ type, error, helperText, menuItems, ...otherProps 
           variant="filled"
           error={error}
           className={`disable_select ${styles.field}`}
+          label={label}
+          name={name}
           helperText={error ? helperText : null}
-          {...otherProps}
+          value={value}
+          onChange={onChange}
+          type={type}
         />
       );
       break;
     case 'checkbox':
       field = (
         <FormControlLabel
-          control={<Checkbox {...otherProps} />}
-          label={otherProps.label}
-          name={otherProps.name}
+          control={<Checkbox checked={value} onChange={onChange} />}
+          label={label}
+          name={name}
         />
       );
       break;
@@ -41,8 +54,8 @@ const ProfileUpdateField = ({ type, error, helperText, menuItems, ...otherProps 
           className={`${styles.select_text} ${styles.field}`}
           style={{ width: '100%' }}
         >
-          <InputLabel>{otherProps.label}</InputLabel>
-          <Select {...otherProps}>
+          <InputLabel>{label}</InputLabel>
+          <Select label={label} name={name} value={value} onChange={onChange}>
             {menuItems.map((item) => (
               <MenuItem className={styles.select_text} value={item}>
                 {item}
