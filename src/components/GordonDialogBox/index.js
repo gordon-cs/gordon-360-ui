@@ -41,10 +41,7 @@ const GordonDialogBox = ({
   return (
     <Dialog
       className={styles.gc360_gordondialogbox}
-      open={otherProps.open}
-      onClose={otherProps.onClose}
-      fullWidth={otherProps.fullWidth}
-      maxWidth={otherProps.maxWidth}
+      {...otherProps}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
