@@ -14,8 +14,11 @@ import styles from './GordonDialogBox.module.css';
  * @param {boolean} props.open boolean that determines if the dialog should be visible or not
  * @param {(event: {}) => void} props.onClose A callback function fired after the component requests to be closed
  * @param {string} props.title The title of the dialog box
+ * @param {string} props.titleClass name of title class
  * @param {(event: {}) => void} props.buttonClicked A function called when the confirming button is clicked
  * @param {string} [props.buttonName] The text of the button confirming the dialog is read/accepted
+ * @param {boolean} props.fullWidth If true, the dialog stretches to maxWidth
+ * @param {string} props.maxWidth Determine the max-width of the dialog. The dialog width grows with the size of the screen
  * @param {boolean} [props.isButtonDisabled] Whether the primary button is disabled
  * @param {(event: {}) => void} [props.cancelButtonClicked] A function called when the canceling button is clicked
  * @param {string} [props.cancelButtonName] The text of the button canceling the dialog is read/accepted
@@ -24,9 +27,8 @@ import styles from './GordonDialogBox.module.css';
  * @returns {JSX.Element} A dialog box with the passed in content
  */
 const GordonDialogBox = ({
-  open,
-  onClose,
   title,
+  titleClass,
   buttonClicked,
   buttonName,
   isButtonDisabled = false,
@@ -34,16 +36,19 @@ const GordonDialogBox = ({
   cancelButtonName,
   severity,
   children,
+  ...otherProps
 }) => {
   return (
     <Dialog
       className={styles.gc360_gordondialogbox}
-      open={open}
-      onClose={onClose}
+      {...otherProps}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle className={styles.gc360_gordondialogbox_title} id="alert-dialog-title">
+      <DialogTitle
+        className={titleClass ? titleClass : styles.gc360_gordondialogbox_title}
+        id="alert-dialog-title"
+      >
         {severity ? (
           <Alert variant="filled" severity={severity}>
             <AlertTitle>

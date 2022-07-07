@@ -25,6 +25,7 @@ import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
+import AlumniUpdateForm from './components/AlumniUpdateForm';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -36,50 +37,27 @@ const formatPhone = (phone) => {
   }
 };
 
-const PersonalInfoList = ({
-  myProf,
-  profile: {
-    Advisors,
-    CliftonStrengths,
-    BuildingDescription,
-    Country,
-    Hall,
-    HomeCity,
-    HomePhone,
-    HomeState,
-    HomeStreet2,
-    ID,
-    IsMobilePhonePrivate,
-    KeepPrivate,
-    Mail_Location,
-    Majors,
-    Minors,
-    MobilePhone,
-    OnCampusRoom,
-    OnOffCampus,
-    PersonType,
-    PreferredClassYear,
-    SpouseName,
-  },
-  createSnackbar,
-}) => {
+const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
-    Boolean(IsMobilePhonePrivate && MobilePhone !== PRIVATE_INFO),
+    Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
   );
+  const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
   const [mailCombo, setMailCombo] = useState();
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
   const groups = useAuthGroups();
-  const isStudent = PersonType?.includes('stu');
-  const isFacStaff = PersonType?.includes('fac');
-  const isAlumni = PersonType?.includes('alu');
+  const isStudent = profile.PersonType?.includes('stu');
+  const isFacStaff = profile.PersonType?.includes('fac');
+  const isAlumni = profile.PersonType?.includes('alu');
   const isViewerPolice = useMemo(() => groups.some((g) => g === AuthGroup.Police), [groups]);
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
   //    or 'P' for Private (not visible to other students)
   // FacStaff: '0' for public, '1' for private.
-  const keepPrivate = Boolean(KeepPrivate === '1' || KeepPrivate === 'S' || KeepPrivate === 'P');
+  const keepPrivate = Boolean(
+    profile.KeepPrivate === '1' || profile.KeepPrivate === 'S' || profile.KeepPrivate === 'P',
+  );
 
   /**
    * The following 'is[info]Private' variables represent whether info shown to the user is private
@@ -93,18 +71,19 @@ const PersonalInfoList = ({
    */
 
   // Students' on-campus location is public unless the student is marked as private
-  const isCampusLocationPrivate = isStudent && keepPrivate && OnOffCampus !== PRIVATE_INFO;
+  const isCampusLocationPrivate = isStudent && keepPrivate && profile.OnOffCampus !== PRIVATE_INFO;
 
   // Students' home phone is always private. FacStaffs' home phone is private for private users
   const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(
-    (isStudent || keepPrivate) && Boolean(HomePhone),
+    (isStudent || keepPrivate) && Boolean(profile.HomePhone),
   );
 
   // Street address info is always private, and City/State/Country info is private for private users
-  const isAddressPrivate = (keepPrivate && HomeCity !== PRIVATE_INFO) || HomeStreet2;
+  const isAddressPrivate =
+    (keepPrivate && profile.HomeCity !== PRIVATE_INFO) || profile.HomeStreet2;
 
   // FacStaff spouses are private for private users
-  const isSpousePrivate = isFacStaff && keepPrivate && SpouseName !== PRIVATE_INFO;
+  const isSpousePrivate = isFacStaff && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
 
   useEffect(() => {
     async function loadMailboxCombination() {
@@ -114,7 +93,7 @@ const PersonalInfoList = ({
       }
     }
     loadMailboxCombination();
-  }, [myProf, Mail_Location, isStudent]);
+  }, [myProf, profile.Mail_Location, isStudent]);
 
   const handleChangeMobilePhonePrivacy = async () => {
     try {
@@ -146,15 +125,15 @@ const PersonalInfoList = ({
     }
   };
 
-  const homePhoneListItem = HomePhone ? (
+  const homePhoneListItem = profile.HomePhone ? (
     <ProfileInfoListItem
       title="Home Phone:"
       contentText={
         myProf ? (
-          formatPhone(HomePhone)
+          formatPhone(profile.HomePhone)
         ) : (
-          <a href={`tel:${HomePhone}`} className="gc360_text_link">
-            {formatPhone(HomePhone)}
+          <a href={`tel:${profile.HomePhone}`} className="gc360_text_link">
+            {formatPhone(profile.HomePhone)}
           </a>
         )
       }
@@ -163,22 +142,22 @@ const PersonalInfoList = ({
     />
   ) : null;
 
-  const mobilePhoneListItem = MobilePhone ? (
+  const mobilePhoneListItem = profile.MobilePhone ? (
     <ProfileInfoListItem
       title="Mobile Phone:"
       contentText={
         myProf ? (
           <Grid container spacing={0} alignItems="center">
-            <Grid item>{formatPhone(MobilePhone)}</Grid>
+            <Grid item>{formatPhone(profile.MobilePhone)}</Grid>
             <Grid item>
               <UpdatePhone />
             </Grid>
           </Grid>
-        ) : MobilePhone === PRIVATE_INFO ? (
+        ) : profile.MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
-          <a href={`tel:${MobilePhone}`} className="gc360_text_link">
-            {formatPhone(MobilePhone)}
+          <a href={`tel:${profile.MobilePhone}`} className="gc360_text_link">
+            {formatPhone(profile.MobilePhone)}
           </a>
         )
       }
@@ -199,7 +178,7 @@ const PersonalInfoList = ({
     />
   ) : null;
 
-  let streetAddr = HomeStreet2 ? <span>{HomeStreet2},&nbsp;</span> : null;
+  let streetAddr = profile.HomeStreet2 ? <span>{profile.HomeStreet2},&nbsp;</span> : null;
 
   const home = (
     <ProfileInfoListItem
@@ -208,11 +187,11 @@ const PersonalInfoList = ({
         <>
           {streetAddr}
           <span className={keepPrivate ? null : styles.not_private}>
-            {HomeCity === PRIVATE_INFO
+            {profile.HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
-              : Country === 'United States of America' || !Country
-              ? `${HomeCity}, ${HomeState}`
-              : Country}
+              : profile.Country === 'United States of America' || !profile.Country
+              ? `${profile.HomeCity}, ${profile.HomeState}`
+              : profile.Country}
           </span>
         </>
       }
@@ -222,42 +201,52 @@ const PersonalInfoList = ({
   );
 
   const minors =
-    Minors?.length > 0 && !isFacStaff ? (
+    profile.Minors?.length > 0 && !isFacStaff ? (
       <ProfileInfoListItem
-        title={Minors?.length > 1 ? 'Minors:' : 'Minor:'}
-        contentText={Minors?.join(', ')}
+        title={profile.Minors?.length > 1 ? 'Minors:' : 'Minor:'}
+        contentText={profile.Minors?.join(', ')}
       />
     ) : null;
 
   const majors =
-    isFacStaff || (isAlumni && !Majors?.length) ? null : (
+    isFacStaff || (isAlumni && !profile.Majors?.length) ? null : (
       <ProfileInfoListItem
-        title={Majors?.length > 1 ? 'Majors:' : 'Major:'}
-        contentText={!Majors?.length ? 'Deciding' : Majors?.join(', ')}
+        title={profile.Majors?.length > 1 ? 'Majors:' : 'Major:'}
+        contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
       />
     );
 
-  const updateInfoButton =
-    myProf && PersonType === 'alu' ? (
+  const updateAlumniInfoButton =
+    profile.PersonType === 'alu' && isOnline && myProf ? (
       <Grid container justifyContent="center">
-        <Link className="gc360_link" to="/myprofile/update">
-          <Button variant="contained" className={styles.update_info_button}>
-            Update Information
-          </Button>
-        </Link>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setOpenAlumniUpdateForm(true);
+          }}
+          className={styles.update_info_button}
+        >
+          Update Information
+        </Button>
       </Grid>
     ) : null;
 
+  const handleAlumniUpdateForm = (status) => {
+    setOpenAlumniUpdateForm(false);
+    createSnackbar(status.message, status.type);
+  };
+
   const graduationYear = isAlumni ? (
-    <ProfileInfoListItem title={'Graduation Year:'} contentText={PreferredClassYear} />
+    <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
   ) : null;
 
-  const cliftonStrengths = CliftonStrengths.length ? (
+  const cliftonStrengths = profile.CliftonStrengths.length ? (
     <ProfileInfoListItem
       title="Clifton Strengths:"
       contentText={
         <Typography>
-          {CliftonStrengths.map((strength) => (
+          {profile.CliftonStrengths.map((strength) => (
             <Link href={strength.link} target="_blank" rel="noopener" key={strength.name}>
               <b style={{ color: strength.color }}>{strength.name}</b>
             </Link>
@@ -283,11 +272,11 @@ const PersonalInfoList = ({
   const advisors =
     myProf && isStudent ? (
       <ProfileInfoListItem
-        title={Advisors?.length > 1 ? 'Advisors:' : 'Advisor:'}
+        title={profile.Advisors?.length > 1 ? 'Advisors:' : 'Advisor:'}
         contentText={
-          Advisors?.length < 1
+          profile.Advisors?.length < 1
             ? 'None Assigned'
-            : Advisors?.map((a) => `${a.Firstname} ${a.Lastname}`)?.join(', ')
+            : profile.Advisors?.map((a) => `${a.Firstname} ${a.Lastname}`)?.join(', ')
         }
         privateInfo
         myProf={myProf}
@@ -295,7 +284,7 @@ const PersonalInfoList = ({
     ) : null;
 
   const mail =
-    isStudent && Mail_Location ? (
+    isStudent && profile.Mail_Location ? (
       <>
         <ListItem className={styles.profile_info_list_item}>
           <Grid container justify="center" alignItems="center">
@@ -303,7 +292,7 @@ const PersonalInfoList = ({
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
             <Grid container item xs={myProf && mailCombo ? 2 : 7} alignItems="center">
-              <Typography>{`#${Mail_Location}`}</Typography>
+              <Typography>{`#${profile.Mail_Location}`}</Typography>
             </Grid>
             {myProf && mailCombo && (
               <>
@@ -340,10 +329,10 @@ const PersonalInfoList = ({
     ) : null;
 
   const campusDormInfo =
-    isStudent && OnOffCampus && !(BuildingDescription || Hall) ? (
+    isStudent && profile.OnOffCampus && !(profile.BuildingDescription || profile.Hall) ? (
       <ProfileInfoListItem
         title="Dormitory:"
-        contentText={OnOffCampus}
+        contentText={profile.OnOffCampus}
         private={isCampusLocationPrivate}
         myProf={myProf}
       />
@@ -353,9 +342,10 @@ const PersonalInfoList = ({
         contentText={
           <>
             <span className={keepPrivate ? null : styles.not_private}>
-              {BuildingDescription ?? Hall}
+              {profile.BuildingDescription ?? profile.Hall}
             </span>
-            {(myProf || isViewerPolice) && OnCampusRoom && `, Room ${OnCampusRoom}`}
+
+            {(myProf || isViewerPolice) && profile.OnCampusRoom && `, Room ${profile.OnCampusRoom}`}
           </>
         }
         privateInfo
@@ -366,7 +356,7 @@ const PersonalInfoList = ({
   const gordonID = myProf ? (
     <ProfileInfoListItem
       title="Gordon ID:"
-      contentText={ID}
+      contentText={profile.ID}
       ContentIcon={
         <Grid container justifyContent="center">
           <Grid container direction="column" justifyContent="center" alignItems="center">
@@ -381,10 +371,10 @@ const PersonalInfoList = ({
   ) : null;
 
   const spouse =
-    isFacStaff && SpouseName ? (
+    isFacStaff && profile.SpouseName ? (
       <ProfileInfoListItem
         title="Spouse:"
-        contentText={SpouseName}
+        contentText={profile.SpouseName}
         privateInfo={(keepPrivate && myProf) || isSpousePrivate}
       />
     ) : null;
@@ -465,7 +455,7 @@ const PersonalInfoList = ({
           </Grid>
         </Grid>
         <CardContent>
-          {updateInfoButton}
+          {updateAlumniInfoButton}
           <List>
             {majors}
             {minors}
@@ -484,6 +474,14 @@ const PersonalInfoList = ({
           </List>
         </CardContent>
       </Card>
+      <AlumniUpdateForm
+        profile={profile}
+        closeWithSnackbar={(status) => {
+          handleAlumniUpdateForm(status);
+        }}
+        openAlumniUpdateForm={openAlumniUpdateForm}
+        setOpenAlumniUpdateForm={(bool) => setOpenAlumniUpdateForm(bool)}
+      />
     </Grid>
   );
 };

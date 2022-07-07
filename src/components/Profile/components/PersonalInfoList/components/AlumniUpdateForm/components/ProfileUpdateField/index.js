@@ -8,21 +8,30 @@ import {
   Select,
   TextField,
 } from '@material-ui/core/';
-import styles from '../Update.module.css';
+import styles from './ProfileUpdateField.module.css';
 
-const ProfileUpdateField = ({ label, name, type, value, menuItems, onChange }) => {
+const ProfileUpdateField = ({
+  label,
+  name,
+  type,
+  value,
+  onChange,
+  error,
+  helperText,
+  menuItems,
+}) => {
   let field;
   // eslint-disable-next-line default-case
   switch (type) {
     case 'text':
-    case 'number':
-    case 'email':
       field = (
         <TextField
-          className="disable_select"
-          style={{ width: 252 }}
+          variant="filled"
+          error={error}
+          className={`disable_select ${styles.field}`}
           label={label}
           name={name}
+          helperText={error ? helperText : null}
           value={value}
           onChange={onChange}
           type={type}
@@ -40,7 +49,11 @@ const ProfileUpdateField = ({ label, name, type, value, menuItems, onChange }) =
       break;
     case 'select':
       field = (
-        <FormControl className={styles.select_text} style={{ width: 252 }}>
+        <FormControl
+          variant="filled"
+          className={`${styles.select_text} ${styles.field}`}
+          style={{ width: '100%' }}
+        >
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={onChange}>
             {menuItems.map((item) => (
@@ -54,7 +67,7 @@ const ProfileUpdateField = ({ label, name, type, value, menuItems, onChange }) =
       break;
   }
   return (
-    <Grid item xs={9} md={3} lg={3}>
+    <Grid item xs={12} sm={6} md={4} lg={3}>
       {field}
     </Grid>
   );
