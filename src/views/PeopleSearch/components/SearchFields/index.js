@@ -16,8 +16,8 @@ import {
 } from '@material-ui/core';
 import { ExpandMore, Home, LocationCity, Person } from '@material-ui/icons';
 import GordonLoader from 'components/Loader';
-import { useUser } from 'hooks';
-import { useCallback, useEffect, useState } from 'react';
+import { useAuthGroups, useUser } from 'hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   FaBook,
   FaBriefcase,
@@ -27,9 +27,10 @@ import {
   FaSchool,
 } from 'react-icons/fa';
 import Media from 'react-media';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
+import { AuthGroup } from 'services/auth';
 import goStalk, { Class } from 'services/goStalk';
-import { toTitleCase } from 'services/utils';
+import { toTitleCase, searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
 import SelectSearchField from './components/SelectSearchField';
 import TextSearchField from './components/TextSearchField';
@@ -74,20 +75,20 @@ const initialSearchValues = {
   building: '',
 };
 
+const { serializeSearchParams, deserializeSearchParams } =
+  searchParamSerializerFactory(initialSearchValues);
+
 const isTodayAprilFools = () => {
   const todaysDate = new Date();
   return todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
 };
 
-const makeQueryString = (searchValues) =>
-  Object.entries(searchValues)
-    .filter(([key, value]) => value !== initialSearchValues[key])
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&');
-
 const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => {
   const { profile } = useUser();
   const history = useHistory();
+  const location = useLocation();
+  const isAlumni = useAuthGroups(AuthGroup.Alumni);
+  const isStudent = useAuthGroups(AuthGroup.Student);
 
   const [majors, setMajors] = useState([]);
   const [minors, setMinors] = useState([]);
@@ -97,81 +98,97 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
   const [buildings, setBuildings] = useState([]);
   const [halls, setHalls] = useState([]);
 
+  // Ref is used to only read search params from URL on first load (and on back/forward navigate via event listener)
+  const shouldReadSearchParamsFromURL = useRef(true);
   const [searchValues, setSearchValues] = useState(initialSearchValues);
 
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
-  //This is to prevent search from blank
-  const canSearch = useCallback(() => {
-    const { includeStudent, includeFacStaff, includeAlumni, ...necessarySearchValues } =
-      searchValues;
-    return (
-      (includeStudent || includeFacStaff || includeAlumni) &&
-      Object.values(necessarySearchValues)
-        .map((x) =>
-          x
-            .toString()
-            .replace(/[^a-zA-Z0-9\s,.'-]/g, '')
-            .trim(),
-        )
-        .some((x) => x)
-    );
+  // Prevent search from blank
+  const canSearch = useMemo(() => {
+    const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = searchValues;
+
+    // Must search some cohort of people
+    const includesSomeone = includeStudent || includeFacStaff || includeAlumni;
+
+    // Must search for some non-empty criteria
+    const anySearchCriteria = Object.values(criteria).some((c) => c.replace(/[^\w,.'-]/g, ''));
+
+    return includesSomeone && anySearchCriteria;
   }, [searchValues]);
 
   const search = useCallback(async () => {
-    if (canSearch()) {
+    if (canSearch) {
       setLoadingSearch(true);
 
-      const results = await goStalk.search(searchValues);
-      onSearch(results);
+      await goStalk.search(searchValues).then(onSearch);
 
-      const newQueryString = makeQueryString({
-        ...searchValues,
-      });
-      if (history.location.search !== newQueryString) {
+      const newQueryString = serializeSearchParams({ ...searchValues });
+      // If search params are new since last search, add search to history
+      if (location.search !== newQueryString) {
         history.push(`?${newQueryString}`);
       }
 
       setLoadingSearch(false);
     }
-  }, [canSearch, searchValues, onSearch, history]);
+  }, [canSearch, searchValues, onSearch, location.search, history]);
 
   useEffect(() => {
     const loadPage = async () => {
-      if (profile) {
-        const [majors, minors, halls, states, countries, departments, buildings] =
-          await Promise.all([
-            goStalk.getMajors(),
-            goStalk.getMinors(),
-            goStalk.getHalls(),
-            goStalk.getStates(),
-            goStalk.getCountries(),
-            goStalk.getDepartments(),
-            goStalk.getBuildings(),
-          ]);
-        setMajors(majors);
-        setMinors(minors);
-        setHalls(halls);
-        setStates(states);
-        setCountries(countries.map((country) => toTitleCase(country)));
-        setDepartments(departments);
-        setBuildings(buildings);
+      const [majors, minors, halls, states, countries, departments, buildings] = await Promise.all([
+        goStalk.getMajors(),
+        goStalk.getMinors(),
+        goStalk.getHalls(),
+        goStalk.getStates(),
+        goStalk.getCountries(),
+        goStalk.getDepartments(),
+        goStalk.getBuildings(),
+      ]);
+      setMajors(majors);
+      setMinors(minors);
+      setHalls(halls);
+      setStates(states);
+      setCountries(countries.map((country) => toTitleCase(country)));
+      setDepartments(departments);
+      setBuildings(buildings);
 
-        if (profile.PersonType?.includes?.('alu')) {
-          setSearchValues((sv) => ({ ...sv, includeStudent: false, includeAlumni: true }));
-        }
+      if (isAlumni) {
+        setSearchValues((sv) => ({ ...sv, includeStudent: false, includeAlumni: true }));
       }
 
       setLoading(false);
     };
 
     loadPage();
-  }, [profile]);
+  }, [isAlumni]);
 
-  // useEffect(() => {
-  // TODO: Load search params from URL on navigation / initial load
-  // }, [profile, location.search, loadSearchParamsFromURL, updateURL]);
+  useEffect(() => {
+    // Read search params from URL on navigate (including first load)
+    if (shouldReadSearchParamsFromURL.current) {
+      const stateFromQueryString = deserializeSearchParams(new URLSearchParams(location.search));
+
+      setSearchValues((oldSearchValues) => {
+        // if new URL has no search params, set search params to initial values
+        if (Object.entries(stateFromQueryString).length === 0) {
+          return initialSearchValues;
+        }
+
+        // Update search params with values from URL query string
+        return {
+          ...oldSearchValues,
+          ...stateFromQueryString,
+        };
+      });
+
+      shouldReadSearchParamsFromURL.current = false;
+    }
+
+    // Read search params from URL on 'popstate' (back/forward navigation) events
+    const onNavigate = () => (shouldReadSearchParamsFromURL.current = true);
+    window.addEventListener('popstate', onNavigate);
+    return () => window.removeEventListener('popstate', onNavigate);
+  }, [location.search]);
 
   if (loading) {
     return <GordonLoader />;
@@ -197,7 +214,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
         <GordonLoader size={20} />
       ) : (
         <>
-          {!profile.PersonType?.includes?.('alum') ? (
+          {!isAlumni ? (
             <FormControlLabel
               control={
                 <Checkbox
@@ -219,7 +236,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
             }
             label="Faculty/Staff"
           />
-          {!profile.PersonType?.includes?.('stu') ? (
+          {!isStudent ? (
             <FormControlLabel
               control={
                 <Checkbox
@@ -426,7 +443,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
             onClick={search}
             fullWidth
             variant="contained"
-            disabled={!canSearch()}
+            disabled={!canSearch}
           >
             SEARCH
           </Button>
