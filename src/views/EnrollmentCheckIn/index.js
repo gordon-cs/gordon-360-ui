@@ -3,7 +3,6 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { useAuth } from 'hooks';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import checkInService from 'services/checkIn';
 import user from 'services/user';
 import EmergencyContactUpdate from 'views/EnrollmentCheckIn/components/EmergencyContactUpdate';
@@ -423,13 +422,6 @@ const EnrollmentCheckIn = (props) => {
                         Submit
                       </Button>
                     </Grid>
-                    {activeStep === 0 && (
-                      <Grid item>
-                        <Button variant="contained" component={Link} to="/wellness">
-                          Wellness Check-in
-                        </Button>
-                      </Grid>
-                    )}
                   </Grid>
                 </Grid>
               </Grid>
