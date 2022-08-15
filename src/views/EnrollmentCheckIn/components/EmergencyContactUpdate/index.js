@@ -96,19 +96,18 @@ function createEmergencyContactFields(
   handleCheckEmergContact,
 ) {
   const contactNum = emergencyContact.SEQ_NUMBER;
-  let required;
-  if (
+  const isRequiredContact =
     contactNum === 1 ||
     emergencyContact.FirstName !== '' ||
     emergencyContact.LastName !== '' ||
     emergencyContact.Relationship !== '' ||
     emergencyContact.HomePhone !== '' ||
-    emergencyContact.MobilePhone !== ''
-  ) {
-    required = true;
-  } else {
-    required = false;
-  }
+    emergencyContact.MobilePhone !== '';
+
+  // At least one phone number is required for each emergency contact, but we don't care whether it's a home phone or a mobile phone.
+  const isPhoneRequired =
+    isRequiredContact && emergencyContact.HomePhone === '' && emergencyContact.MobilePhone === '';
+
   return (
     <Box padding={2} align="center">
       <Typography variant="body1" gutterBottom>
@@ -119,7 +118,7 @@ function createEmergencyContactFields(
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
           <FormControl className={styles.emergencyContactForm}>
-            <InputLabel required={required} htmlFor={'FirstNameInput' + contactNum}>
+            <InputLabel required={isRequiredContact} htmlFor={'FirstNameInput' + contactNum}>
               First Name
             </InputLabel>
             <FilledInput
@@ -132,7 +131,7 @@ function createEmergencyContactFields(
         </Grid>
         <Grid item>
           <FormControl className={styles.emergencyContactForm}>
-            <InputLabel required={required} htmlFor={'LastNameInput' + contactNum}>
+            <InputLabel required={isRequiredContact} htmlFor={'LastNameInput' + contactNum}>
               Last Name
             </InputLabel>
             <FilledInput
@@ -146,7 +145,7 @@ function createEmergencyContactFields(
         </Grid>
         <Grid item>
           <FormControl className={styles.emergencyContactForm}>
-            <InputLabel required={required} htmlFor="component-simple">
+            <InputLabel required={isRequiredContact} htmlFor="component-simple">
               Relationship
             </InputLabel>
             <FilledInput
@@ -160,7 +159,7 @@ function createEmergencyContactFields(
         </Grid>
         <Grid item>
           <FormControl className={styles.emergencyContactForm}>
-            <InputLabel required={required} htmlFor="component-simple">
+            <InputLabel required={isPhoneRequired} htmlFor="component-simple">
               Home Phone
             </InputLabel>
             <FilledInput
@@ -186,7 +185,7 @@ function createEmergencyContactFields(
         </Grid>
         <Grid item>
           <FormControl className={styles.emergencyContactForm}>
-            <InputLabel required={required} htmlFor="component-simple">
+            <InputLabel required={isPhoneRequired} htmlFor="component-simple">
               Mobile Phone
             </InputLabel>
             <FilledInput
