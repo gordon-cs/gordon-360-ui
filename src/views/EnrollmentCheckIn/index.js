@@ -389,8 +389,8 @@ const EnrollmentCheckIn = (props) => {
                             (emergencyContact1.FirstName === '' ||
                               emergencyContact1.LastName === '' ||
                               emergencyContact1.Relationship === '' ||
-                              emergencyContact1.HomePhone === '' ||
-                              emergencyContact1.MobilePhone === '')) ||
+                              (emergencyContact1.HomePhone === '' &&
+                                emergencyContact1.MobilePhone === ''))) ||
                           (activeStep === 2 &&
                             phoneInfo.PersonalPhone === '' &&
                             phoneInfo.NoPhone === false) ||
