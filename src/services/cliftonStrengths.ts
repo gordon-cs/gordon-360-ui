@@ -1,5 +1,4 @@
 import http from './http';
-import { map } from './utils';
 
 type CliftonStrengthName =
   | 'Achiever'
