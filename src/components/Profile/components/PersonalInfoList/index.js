@@ -26,7 +26,7 @@ import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
-import { togglePrivacy } from 'services/cliftonStrengths';
+import CliftonStrengthsService from 'services/cliftonStrengths';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -131,7 +131,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
 
   const handleChangeCliftonStrengthsPrivacy = async () => {
     try {
-      const newPrivacy = await togglePrivacy();
+      const newPrivacy = await CliftonStrengthsService.togglePrivacy();
       setIsCliftonStrengthsPrivate(newPrivacy);
 
       createSnackbar(

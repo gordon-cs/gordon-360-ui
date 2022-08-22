@@ -164,7 +164,7 @@ const strengthDetails = (name: CliftonStrengthName): CliftonStrength => {
   };
 };
 
-export const getCliftonStrengths = async (username: string): Promise<CliftonStrengths | null> =>
+const getCliftonStrengths = async (username: string): Promise<CliftonStrengths | null> =>
   http.get<CliftonStrengthsViewModel | null>(`profiles/${username}/clifton/`).then((cs) =>
     cs
       ? {
@@ -175,5 +175,11 @@ export const getCliftonStrengths = async (username: string): Promise<CliftonStre
       : null,
   );
 
-export const togglePrivacy = async (): Promise<boolean> =>
-  http.get<boolean>(`profiles/clifton/privacy`);
+const togglePrivacy = async (): Promise<boolean> => http.get<boolean>(`profiles/clifton/privacy`);
+
+const CliftonStrengthsService = {
+  getCliftonStrengths,
+  togglePrivacy,
+};
+
+export default CliftonStrengthsService;
