@@ -26,6 +26,7 @@ import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog/index.js';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
+import { togglePrivacy } from 'services/cliftonStrengths';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -40,6 +41,9 @@ const formatPhone = (phone) => {
 const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
+  );
+  const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
+    profile.CliftonStrengths.Private,
   );
   const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
   const [mailCombo, setMailCombo] = useState();
@@ -118,6 +122,20 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
         isHomePhonePrivate
           ? 'Personal Info Visible (This change may take several minutes)'
           : 'Personal Info Hidden (This change may take several minutes)',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
+
+  const handleChangeCliftonStrengthsPrivacy = async () => {
+    try {
+      const newPrivacy = await togglePrivacy();
+      setIsCliftonStrengthsPrivate(newPrivacy);
+
+      createSnackbar(
+        newPrivacy ? 'Clifton Strengths Hidden' : 'Clifton Strengths Public',
         'success',
       );
     } catch {
@@ -241,33 +259,51 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
     <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
   ) : null;
 
-  const cliftonStrengths = profile.CliftonStrengths.length ? (
-    <ProfileInfoListItem
-      title="Clifton Strengths:"
-      contentText={
-        <Typography>
-          {profile.CliftonStrengths.map((strength) => (
-            <Link href={strength.link} target="_blank" rel="noopener" key={strength.name}>
-              <b style={{ color: strength.color }}>{strength.name}</b>
-            </Link>
-          )).reduce((prev, curr) => [prev, ', ', curr])}
-          <GordonTooltip
-            title={
-              <span style={{ fontSize: '0.8rem' }}>
-                Categories:&nbsp;
-                <span style={{ color: '#60409f' }}>Executing</span>,{' '}
-                <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
-                <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
-                <span style={{ color: '#2c8b0f' }}>Thinking</span>
-              </span>
-            }
-            enterTouchDelay={50}
-            leaveTouchDelay={5000}
-          />
-        </Typography>
-      }
-    />
-  ) : null;
+  const cliftonStrengths =
+    profile.CliftonStrengths && (myProf || !profile.CliftonStrengths.Private) ? (
+      <ProfileInfoListItem
+        title="Clifton Strengths:"
+        contentText={
+          <Typography>
+            {profile.CliftonStrengths.Themes.map((strength) => (
+              <Link href={strength.link} target="_blank" rel="noopener" key={strength.name}>
+                <b style={{ color: strength.color }}>{strength.name}</b>
+              </Link>
+            )).reduce((prev, curr) => [prev, ', ', curr])}
+            <GordonTooltip
+              title={
+                <span style={{ fontSize: '0.8rem' }}>
+                  Categories:&nbsp;
+                  <span style={{ color: '#60409f' }}>Executing</span>,{' '}
+                  <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
+                  <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
+                  <span style={{ color: '#2c8b0f' }}>Thinking</span>
+                </span>
+              }
+              enterTouchDelay={50}
+              leaveTouchDelay={5000}
+            />
+          </Typography>
+        }
+        ContentIcon={
+          myProf && (
+            <FormControlLabel
+              control={
+                <Switch
+                  onChange={handleChangeCliftonStrengthsPrivacy}
+                  checked={!isCliftonStrengthsPrivate}
+                />
+              }
+              label={isCliftonStrengthsPrivate ? 'Private' : 'Public'}
+              labelPlacement="bottom"
+              disabled={!isOnline}
+            />
+          )
+        }
+        privateInfo={profile.CliftonStrengths.Private}
+        myProf={myProf}
+      />
+    ) : null;
 
   const advisors =
     myProf && isStudent ? (

@@ -132,11 +132,27 @@ enum CliftonStrengthLinks {
   Strategic = 'https://www.gallup.com/cliftonstrengths/en/252350/strategic-theme.aspx',
 }
 
-export type CliftonStrength = {
+type CliftonStrength = {
   name: CliftonStrengthName;
   category: CliftonStrengthsCategory;
   color: CliftonStrengthColors;
   link: string;
+};
+
+type CliftonStrengthsViewModel = {
+  AccessCode: string;
+  Email: string;
+  DateCompleted: string;
+  Themes: CliftonStrengthName[];
+  Private: boolean;
+};
+
+export type CliftonStrengths = {
+  AccessCode: string;
+  Email: string;
+  DateCompleted: Date;
+  Themes: CliftonStrength[];
+  Private: boolean;
 };
 
 const strengthDetails = (name: CliftonStrengthName): CliftonStrength => {
@@ -149,5 +165,16 @@ const strengthDetails = (name: CliftonStrengthName): CliftonStrength => {
   };
 };
 
-export const getCliftonStrengths = async (username: string): Promise<CliftonStrength[]> =>
-  http.get<CliftonStrengthName[]>(`profiles/clifton/${username}/`).then(map(strengthDetails));
+export const getCliftonStrengths = async (username: string): Promise<CliftonStrengths | null> =>
+  http.get<CliftonStrengthsViewModel | null>(`profiles/${username}/clifton/`).then((cs) =>
+    cs
+      ? {
+          ...cs,
+          Themes: cs.Themes.map(strengthDetails),
+          DateCompleted: new Date(cs.DateCompleted),
+        }
+      : null,
+  );
+
+export const togglePrivacy = async (): Promise<boolean> =>
+  http.get<boolean>(`profiles/clifton/privacy`);
