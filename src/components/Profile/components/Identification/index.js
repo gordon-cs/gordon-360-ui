@@ -116,7 +116,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
         // then this, means that the currently signed-in user is not allowed to see the default picture.
         setDefaultUserImage(defaultImage);
 
-        const colorFrequencies = profile.CliftonStrengths?.reduce(
+        const colorFrequencies = profile.CliftonStrengths?.Themes.reduce(
           (colorFrequencies, strength) => ({
             ...colorFrequencies,
             [strength.color]: (colorFrequencies[strength.color] || 0) + 1,
