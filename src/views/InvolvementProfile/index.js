@@ -154,11 +154,10 @@ const InvolvementProfile = () => {
   };
 
   const onEditInvolvement = async () => {
-    let data = {
-      ACT_CDE: involvementInfo.ActivityCode,
-      ACT_URL: tempURL,
-      ACT_BLURB: tempBlurb,
-      ACT_JOIN_INFO: tempJoinInfo,
+    const data = {
+      Description: tempBlurb,
+      JoinInfo: tempJoinInfo,
+      Url: tempURL,
     };
     await involvementService.editActivity(involvementInfo.ActivityCode, data);
     setInvolvementInfo((i) => ({
@@ -169,8 +168,11 @@ const InvolvementProfile = () => {
     }));
 
     if (photoUpdated === true) {
-      await involvementService.setActivityImage(involvementInfo.ActivityCode, image);
-      setInvolvementInfo((i) => ({ ...i, ActivityImagePath: image }));
+      const { ActivityImagePath: newImagePath } = await involvementService.setActivityImage(
+        involvementInfo.ActivityCode,
+        image,
+      );
+      setInvolvementInfo((i) => ({ ...i, ActivityImagePath: newImagePath }));
     }
     setIsEditDialogOpen(false);
   };
