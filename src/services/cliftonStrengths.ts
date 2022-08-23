@@ -165,15 +165,18 @@ const strengthDetails = (name: CliftonStrengthName): CliftonStrength => {
 };
 
 const getCliftonStrengths = async (username: string): Promise<CliftonStrengths | null> =>
-  http.get<CliftonStrengthsViewModel | null>(`profiles/${username}/clifton/`).then((cs) =>
-    cs
-      ? {
-          ...cs,
-          Themes: cs.Themes.map(strengthDetails),
-          DateCompleted: new Date(cs.DateCompleted),
-        }
-      : null,
-  );
+  http
+    .get<CliftonStrengthsViewModel | null>(`profiles/${username}/clifton/`)
+    .then((cs) =>
+      cs
+        ? {
+            ...cs,
+            Themes: cs.Themes.map(strengthDetails),
+            DateCompleted: new Date(cs.DateCompleted),
+          }
+        : null,
+    )
+    .catch(() => null);
 
 const togglePrivacy = async (): Promise<boolean> => http.get<boolean>(`profiles/clifton/privacy`);
 

@@ -43,7 +43,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
     Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
   );
   const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
-    profile.CliftonStrengths.Private,
+    profile.CliftonStrengths?.Private,
   );
   const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
   const [mailCombo, setMailCombo] = useState();
