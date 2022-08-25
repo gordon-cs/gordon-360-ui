@@ -537,7 +537,6 @@ const StudentApplication = ({ userProfile }) => {
    * @param {number} indexToRemove The index of the hall to be removed from the list of preferred halls
    */
   const handleHallRemove = (indexToRemove) => {
-    console.log('removing hall with index:', indexToRemove);
     if (indexToRemove >= 0) {
       setApplicationDetails((prevApplicationDetails) => ({
         ...prevApplicationDetails,

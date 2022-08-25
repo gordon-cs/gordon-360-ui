@@ -1,29 +1,29 @@
 //Representation of a shift
-import { Component } from 'react';
+import DateFnsUtils from '@date-io/date-fns';
 import {
-  Typography,
-  TextField,
-  Grid,
   Button,
-  IconButton,
   Dialog,
   DialogContent,
-  Tooltip,
   DialogTitle,
+  Grid,
+  IconButton,
+  TextField,
+  Tooltip,
+  Typography,
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
-import { gordonColors } from 'theme';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import MessageOutlinedIcon from '@material-ui/icons/MessageOutlined';
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import styles from './ShiftItem.module.css';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import MessageOutlinedIcon from '@material-ui/icons/MessageOutlined';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
+import { Component } from 'react';
+import { gordonColors } from 'theme';
+import styles from './ShiftItem.module.css';
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
@@ -279,9 +279,11 @@ export default class ShiftItem extends Component {
       this.props
         .editShift(
           this.props.value.ID,
+          this.props.value.EML,
           this.state.newDateTimeIn,
           this.state.newDateTimeOut,
           this.state.newHoursWorked,
+          this.props.value.LAST_CHANGED_BY,
         )
         .then(() => {
           this.setState({
@@ -298,6 +300,7 @@ export default class ShiftItem extends Component {
           });
         })
         .catch((error) => {
+          console.log(error);
           this.setState({ updating: false });
           if (typeof error === 'string' && error.toLowerCase().includes('overlap')) {
             this.snackbarSeverity = 'warning';
@@ -328,7 +331,6 @@ export default class ShiftItem extends Component {
     } = shift;
 
     const { errorText } = this.state;
-    const HOUR_TYPE = this.props.selectedHourType;
     const monthIn = SHIFT_START_DATETIME.substring(5, 7);
     const dateIn = SHIFT_START_DATETIME.substring(8, 10);
     const timeIn = SHIFT_START_DATETIME.substring(11, 16);
@@ -551,7 +553,7 @@ export default class ShiftItem extends Component {
                 </Grid>
                 <Grid item xs={2}>
                   <Typography className="disable_select" variant="body2">
-                    {this.props.canUse ? console.log('HERE', HOUR_TYPE) : HOURLY_RATE.toFixed(2)}
+                    {HOURLY_RATE.toFixed(2)}
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>

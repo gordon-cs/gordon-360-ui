@@ -1,12 +1,13 @@
-import { Component } from 'react';
 import { Button, Card, CardContent, Typography } from '@material-ui/core';
-import { gordonColors } from 'theme';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonLoader from 'components/Loader';
+import { Component } from 'react';
+import membershipService from 'services/membership';
+import user from 'services/user';
+import { gordonColors } from 'theme';
+import styles from './CoCurricularTranscript.module.css';
 import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
-import user from 'services/user';
-import GordonLoader from 'components/Loader';
-import styles from './CoCurricularTranscript.module.css';
 
 //This component creates the overall interface for the CoCurricularTranscript (card, heading,
 //download button), and contains a InvolvementsList object for displaying the content
@@ -43,7 +44,7 @@ export default class Transcript extends Component {
 
       this.setState({ profile });
 
-      const memberships = await user.getTranscriptMembershipsInfo(profile.ID);
+      const memberships = await membershipService.getTranscriptMembershipsInfo(profile.AD_Username);
       let categorizedMemberships = this.filterMemberships(memberships);
 
       let otherInvolvements = false;

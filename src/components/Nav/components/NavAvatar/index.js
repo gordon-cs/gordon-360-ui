@@ -1,51 +1,38 @@
 import { Avatar, Button, Typography } from '@material-ui/core';
-import { useAuth, useUser } from 'hooks';
+import GordonLoader from 'components/Loader';
+import { useUser } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import userService from 'services/user';
 import styles from './NavAvatar.module.css';
 
 const GordonNavAvatar = ({ onLinkClick }) => {
   const [email, setEmail] = useState();
   const [image, setImage] = useState();
   const [name, setName] = useState();
-  const user = useUser();
-  const authenticated = useAuth();
+  const { profile, images, loading } = useUser();
 
   useEffect(() => {
     async function loadAvatar() {
-      if (authenticated) {
-        setName(user.profile.fullName);
-        setEmail(user.profile.Email);
-        setImage(user.images?.pref || user.images?.def);
+      if (profile) {
+        setName(profile.fullName);
+        setEmail(profile.Email);
+        setImage(images.pref || images.def);
       } else {
         setName('Guest');
       }
     }
 
     loadAvatar();
+  }, [profile, images]);
 
-    if (authenticated) {
-      // Used to re-render the page when the user's profile picture changes
-      // The origin of the message is checked to prevent cross-site scripting attacks
-      window.addEventListener('message', async (event) => {
-        if (event.data === 'update-profile-picture' && event.origin === window.location.origin) {
-          const { def: defaultImage, pref: preferredImage } = await userService.getImage();
-          const image = preferredImage || defaultImage;
-          setImage(image);
-        }
-      });
-
-      return window.removeEventListener('message', () => {});
-    }
-  }, [user, authenticated]);
-
-  const avatar = authenticated ? (
+  const avatar = loading ? (
+    <GordonLoader />
+  ) : profile ? (
     image ? (
       <Avatar className={`${styles.avatar}`} src={`data:image/jpg;base64,${image}`} />
     ) : (
       <Avatar className={`${styles.avatar} ${styles.placeholder}`}>
-        {user.profile?.FirstName?.[0]} {user.profile?.LastName?.[0]}
+        {profile.FirstName?.[0]} {profile.LastName?.[0]}
       </Avatar>
     )
   ) : (
@@ -56,13 +43,17 @@ const GordonNavAvatar = ({ onLinkClick }) => {
     <Link
       {...props}
       innerRef={ref}
-      to={authenticated ? `/myprofile` : '/'}
+      to={profile ? `/myprofile` : '/'}
       onClick={onLinkClick}
       className="gc360_link"
     />
   ));
 
-  const label = authenticated ? (
+  const label = loading ? (
+    <Typography variant="body2" className={styles.avatar_text} align="left" gutterBottom>
+      loading profile
+    </Typography>
+  ) : profile ? (
     <>
       <Typography variant="body2" className={styles.avatar_text} align="left" gutterBottom>
         {name}

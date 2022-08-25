@@ -24,9 +24,7 @@ type WellnessQuestion = {
 
 const getStatus = (): Promise<WellnessStatus> => http.get('wellness');
 
-// TODO: Update WellnessService.PostStatus to return WellnessViewModel instead of raw DB Health_Status object
-// TODO: Then, this function will return Promise<WellnessStatus> | void
-const postAnswer = (status: StatusColor): Promise<unknown> | void => {
+const postAnswer = (status: StatusColor): Promise<WellnessStatus> | void => {
   try {
     return http.post('wellness', status);
   } catch (error) {

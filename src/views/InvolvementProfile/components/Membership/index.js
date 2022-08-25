@@ -1,15 +1,15 @@
 import { Grid, Typography } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
+import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import membershipService from 'services/membership';
-import storageService from 'services/storage';
 import AdminCard from './components/AdminCard';
 import MemberList from './components/MemberList';
 import NonMemberButtons from './components/NonMemberButtons';
 
-const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdmin }) => {
+const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmin }) => {
   const [members, setMembers] = useState([]);
   const [followersNum, setFollowersNum] = useState(0);
   const [membersNum, setMembersNum] = useState(0);
@@ -17,6 +17,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [loading, setLoading] = useState(true);
   const { involvementCode, sessionCode } = useParams();
+  const { profile } = useUser();
 
   useEffect(() => {
     const loadMembers = async () => {
@@ -24,7 +25,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
 
       try {
         const [participationDetail, followersNum, membersNum] = await Promise.all([
-          membershipService.search(storageService.getLocalInfo().id, sessionCode, involvementCode),
+          membershipService.search(profile.AD_Username, sessionCode, involvementCode),
           membershipService.getFollowersNum(involvementCode, sessionCode),
           membershipService.getMembersNum(involvementCode, sessionCode),
         ]);
@@ -32,7 +33,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
         setFollowersNum(followersNum);
         setMembersNum(membersNum);
 
-        if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSuperAdmin) {
+        if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSiteAdmin) {
           setMembers(await membershipService.get(involvementCode, sessionCode));
         }
 
@@ -43,7 +44,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
     };
 
     loadMembers();
-  }, [involvementCode, isAdmin, isSuperAdmin, sessionCode]);
+  }, [involvementCode, isAdmin, isSiteAdmin, sessionCode, profile.AD_Username]);
 
   const createSnackbar = (text, severity) => {
     setSnackbar({ open: true, text, severity });
@@ -53,18 +54,14 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
     let data = {
       ACT_CDE: involvementCode,
       SESS_CDE: sessionCode,
-      ID_NUM: storageService.getLocalInfo().id,
+      ID_NUM: profile.ID,
       PART_CDE: 'GUEST',
       COMMENT_TXT: 'Subscriber',
       GRP_ADMIN: false,
     };
     await membershipService.addMembership(data);
     setParticipationDetail(
-      await membershipService.search(
-        storageService.getLocalInfo().id,
-        sessionCode,
-        involvementCode,
-      ),
+      await membershipService.search(profile.AD_Username, sessionCode, involvementCode),
     );
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
@@ -72,11 +69,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
   const handleUnsubscribe = async () => {
     await membershipService.remove(participationDetail[2]);
     setParticipationDetail(
-      await membershipService.search(
-        storageService.getLocalInfo().id,
-        sessionCode,
-        involvementCode,
-      ),
+      await membershipService.search(profile.AD_Username, sessionCode, involvementCode),
     );
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
@@ -87,12 +80,12 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
 
   const handleLeave = async () => {
     const newParticipationDetail = await membershipService.search(
-      storageService.getLocalInfo().id,
+      profile.AD_Username,
       sessionCode,
       involvementCode,
     );
     setParticipationDetail(newParticipationDetail);
-    if (isSuperAdmin) {
+    if (isSiteAdmin) {
       setMembers(await membershipService.get(involvementCode, sessionCode));
     }
     setMembersNum(await membershipService.getMembersNum(involvementCode, sessionCode));
@@ -103,15 +96,15 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
   if (loading === true) {
     return <GordonLoader />;
   } else {
-    if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSuperAdmin) {
+    if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSiteAdmin) {
       content = (
         <>
-          {(isAdmin || isSuperAdmin) && (
+          {(isAdmin || isSiteAdmin) && (
             <Grid item>
               <AdminCard
                 createSnackbar={createSnackbar}
                 sessionCode={sessionCode}
-                isSuperAdmin={isSuperAdmin}
+                isSiteAdmin={isSiteAdmin}
                 onAddMember={handleAddMember}
                 involvementDescription={involvementDescription}
               />
@@ -121,7 +114,7 @@ const Membership = ({ isAdmin, isSuperAdmin, involvementDescription, toggleIsAdm
             <MemberList
               members={members}
               isAdmin={isAdmin}
-              isSuperAdmin={isSuperAdmin}
+              isSiteAdmin={isSiteAdmin}
               createSnackbar={createSnackbar}
               onLeave={handleLeave}
               onToggleIsAdmin={toggleIsAdmin}

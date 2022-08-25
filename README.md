@@ -69,6 +69,7 @@ By default, React will use the live 360ApiTrain backend to allow seamless front 
   - Clone the UI repository if you do not have it open on the virtual machine already.
   - Open the repo in Visual Studio Code (VS Code).
   - Open `.env.development`. You will see three sets of environment variables, marked `@PROD`, `@TRAIN`, and `@LOCALHOST`. Ensure that the `@PROD` and `@TRAIN` variables are commented out, and that `@LOCALHOST` is not commented out. Then set `REACT_APP_API_URL` equal to `http://localhost:NNNN/`, where `NNNN` is the port your backend is listening on (e.g. `9999`).
+  - Ensure that at least one `REACT_APP_FONT_URL` from either `@PROD` or `@TRAIN` is not commented out.
   - You do not need to change `.env.production`.
 
 - Now, you are ready to work on the frontend.
@@ -401,3 +402,5 @@ In the unusual case that Train or Production have not been automatically deploye
 - [Student Timesheets Final Presentation](https://docs.google.com/presentation/d/162V-DLuaEUyHDS2Diu09k5f4Tpo2iuoMtIDUyowa7eQ/edit?usp=sharing)
 
 - The apartment applications project was done as a senior project by Josh Rogers, Christian Kunis, Gahngnin Kim, and Nick Noormand. The design document for the UI can be found [here](https://docs.google.com/document/d/16gvjNApyNMJbqjnwv2DSP0EvY4JJdjVZZAiST3MAZEo/edit?usp=sharing)
+
+- The Alumni360 project was done as a senior project by Matt Ramos and Michael Xiao. This README acts as handoff documentation for this project, with a small revision and update made to the [Connect Local Backend to React](#connect-local-backend-to-react) section. The design document for can be found [here](https://docs.google.com/document/d/1RkuCMTEBg53MKo1uvn_4fjY7E4BeNGBRwsLo1TNAx5U/edit?usp=sharing)

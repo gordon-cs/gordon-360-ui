@@ -16,10 +16,6 @@ const getAll = (): Promise<Session[]> =>
 
 const getCurrent = (): Promise<Session> => http.get('sessions/current');
 
-const getFirstDay = (): Promise<string> => http.get('sessions/firstDay');
-
-const getLastDay = (): Promise<string> => http.get('sessions/lastDay');
-
 const getDaysLeft = (): Promise<DaysLeft> => http.get('sessions/daysLeft');
 
 const terms = {
@@ -92,8 +88,6 @@ const sessionService = {
   get,
   getAll,
   getCurrent,
-  getFirstDay,
-  getLastDay,
   getDaysLeft,
   getTermCode,
   decodeSessionCode,

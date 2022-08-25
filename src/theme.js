@@ -123,6 +123,14 @@ const theme = createTheme({
         backgroundColor: gordonColors.neutral.darkGray,
       },
     },
+    MuiButton: {
+      containedPrimary: {
+        color: gordonColors.neutral.grayShades.A100,
+      },
+      containedSecondary: {
+        color: gordonColors.neutral.grayShades.A100,
+      },
+    },
   },
 });
 

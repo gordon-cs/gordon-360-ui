@@ -1,3 +1,4 @@
+import emailsService from './emails';
 import http from './http';
 import { compareByProperty, sort } from './utils';
 
@@ -23,17 +24,16 @@ type Person = {
 const closeActivity = (activityCode: string, sessionCode: string): Promise<void> =>
   http.put(`activities/${activityCode}/session/${sessionCode}/close`);
 
-type ActivityEdit = {
-  ACT_CDE: string;
-  ACT_URL: string;
-  ACT_BLURB: string;
-  ACT_JOIN_INFO: string;
+type InvolvementUpdate = {
+  Description: string;
+  JoinInfo: string;
+  Url: string;
 };
 
-const editActivity = (activityCode: string, data: ActivityEdit): Promise<ActivityEdit> =>
+const editActivity = (activityCode: string, data: InvolvementUpdate): Promise<InvolvementUpdate> =>
   http.put(`activities/${activityCode}`, data);
 
-const setActivityImage = (activityCode: string, imageDataURI: string): Promise<any> =>
+const setActivityImage = (activityCode: string, imageDataURI: string): Promise<Activity> =>
   http.postImage(`activities/${activityCode}/image/`, imageDataURI);
 
 const get = (activityCode: string): Promise<Activity> => http.get(`activities/${activityCode}`);
@@ -44,10 +44,10 @@ const getAll = (sessionCode: string) =>
     .then(sort(compareByProperty('ActivityDescription')));
 
 const getAdvisors = (activityCode: string, sessionCode: string): Promise<Person[]> =>
-  http.get(`emails/activity/${activityCode}/advisors/session/${sessionCode}`);
+  emailsService.getPerActivity(activityCode, sessionCode, 'advisor');
 
 const getGroupAdmins = (activityCode: string, sessionCode: string): Promise<Person[]> =>
-  http.get(`emails/activity/${activityCode}/group-admin/session/${sessionCode}`);
+  emailsService.getPerActivity(activityCode, sessionCode, 'group-admin');
 
 const getStatus = (activityCode: string, sessionCode: string): Promise<'OPEN' | 'CLOSED'> =>
   http.get(`activities/${sessionCode}/${activityCode}/status`);
