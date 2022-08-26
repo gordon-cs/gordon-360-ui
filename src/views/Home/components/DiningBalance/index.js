@@ -1,6 +1,5 @@
 import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
-import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import session from 'services/session';
@@ -28,24 +27,15 @@ const DiningBalance = () => {
   const [loading, setLoading] = useState(true);
   const [diningInfo, setDiningInfo] = useState(null);
   const [[daysRemaining, daysCompleted], setDaysLeft] = useState([null, null]);
-  const { profile } = useUser();
 
   useEffect(() => {
-    const loadData = async () => {
-      const [diningInfo, daysLeft] = await Promise.all([
-        user.getDiningInfo(),
-        session.getDaysLeft(),
-      ]);
+    Promise.all([user.getDiningInfo(), session.getDaysLeft()]).then(([diningInfo, daysLeft]) => {
       setDiningInfo(diningInfo);
       setDaysLeft(daysLeft);
 
       setLoading(false);
-    };
-
-    if (profile) {
-      loadData();
-    }
-  }, [profile]);
+    });
+  }, []);
 
   let content;
   if (loading === true) {
