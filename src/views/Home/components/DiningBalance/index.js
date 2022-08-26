@@ -54,7 +54,7 @@ const DiningBalance = () => {
   let content;
   if (loading === true) {
     content = <GordonLoader />;
-  } else if (isFacStaff || typeof diningInfo !== 'object') {
+  } else if (typeof diningInfo !== 'object') {
     //Set color to use when displaying balance based on how low it is...
     const diningBalance = parseInt(diningInfo);
     let balanceColor = gordonColors.secondary.green;
