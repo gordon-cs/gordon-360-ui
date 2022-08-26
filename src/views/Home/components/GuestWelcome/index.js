@@ -1,9 +1,11 @@
 import {
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   CardMedia,
+  Container,
   Fab,
   Grid,
   Typography,
@@ -77,10 +79,14 @@ const GuestWelcome = () => {
                 <Typography>
                   As a guest, you have access to a limited view of the site. Login for full access.
                 </Typography>
-                <Button variant="contained" color="secondary" onClick={authenticate}>
-                  Login
-                </Button>
               </CardContent>
+              <CardActions>
+                <Container>
+                  <Button variant="contained" color="secondary" onClick={authenticate}>
+                    Login
+                  </Button>
+                </Container>
+              </CardActions>
             </Card>
           </Grid>
         </Grid>
