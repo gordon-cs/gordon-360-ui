@@ -28,7 +28,6 @@ const DiningBalance = () => {
   const [loading, setLoading] = useState(true);
   const [diningInfo, setDiningInfo] = useState(null);
   const [[daysRemaining, daysCompleted], setDaysLeft] = useState([null, null]);
-  const [isFacStaff, setIsFacStaff] = useState('');
   const { profile } = useUser();
 
   useEffect(() => {
@@ -40,9 +39,6 @@ const DiningBalance = () => {
       setDiningInfo(diningInfo);
       setDaysLeft(daysLeft);
 
-      if (profile.PersonType?.includes('fac')) {
-        setIsFacStaff(true);
-      }
       setLoading(false);
     };
 
