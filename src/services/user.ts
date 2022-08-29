@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
-import { CliftonStrength, getCliftonStrengths } from './cliftonStrengths';
+import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
 import { Class } from './goStalk';
 import http from './http';
 import { Override } from './utils';
@@ -67,7 +67,7 @@ type BaseProfileInfo = {
   LinkedIn: string;
   PersonType: string;
   fullName?: string;
-  CliftonStrengths?: CliftonStrength[];
+  CliftonStrengths?: CliftonStrengths | null;
 };
 
 export type UnformattedStaffProfileInfo = BaseProfileInfo & {
@@ -256,7 +256,7 @@ const getProfileInfo = async (username: string = ''): Promise<Profile> => {
           ...profile,
           fullName,
           Advisors: await getAdvisors(profile.AD_Username),
-          CliftonStrengths: await getCliftonStrengths(profile.AD_Username),
+          CliftonStrengths: await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username),
           Majors: [
             profile.Major1Description,
             profile.Major2Description,

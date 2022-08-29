@@ -1,9 +1,21 @@
-import { Card, CardContent, CardHeader, CardMedia, Fab, Grid, Typography } from '@material-ui/core';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Container,
+  Fab,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PWAInstructions from 'components/PWAInstructions/index';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
 import { ga } from 'react-ga';
+import { authenticate } from 'services/auth';
 import styles from './GuestWelcome.module.css';
 import GordonLogoVerticalWhite from './images/gordon-logo-vertical-white.svg';
 
@@ -68,6 +80,13 @@ const GuestWelcome = () => {
                   As a guest, you have access to a limited view of the site. Login for full access.
                 </Typography>
               </CardContent>
+              <CardActions>
+                <Container>
+                  <Button variant="contained" color="secondary" onClick={authenticate}>
+                    Login
+                  </Button>
+                </Container>
+              </CardActions>
             </Card>
           </Grid>
         </Grid>

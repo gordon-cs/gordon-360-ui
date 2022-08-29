@@ -7,7 +7,8 @@ import {
   InputLabel,
   Typography,
 } from '@material-ui/core';
-import MaskedInput from 'react-text-mask';
+import { forwardRef } from 'react';
+import { IMaskInput } from 'react-imask';
 import { gordonColors } from 'theme';
 
 const UpdatePhone = ({ phoneInfo, handleChangePhoneInfo, handleCheckPhoneInfo }) => {
@@ -73,52 +74,36 @@ const UpdatePhone = ({ phoneInfo, handleChangePhoneInfo, handleCheckPhoneInfo })
 
 // From material ui website
 // https://material-ui.com/components/text-fields/#integration-with-3rd-party-input-libraries
-export function phoneMaskUS(props) {
-  const { inputRef, ...other } = props;
+export const phoneMaskUS = forwardRef((props, ref) => {
+  const { onChange, ...other } = props;
 
   return (
-    <MaskedInput
+    <IMaskInput
       {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={[/[0-9]/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+      inputRef={ref}
+      mask="(000) 000-0000"
       placeholderChar={'\u2000'}
+      unmask={true}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
     />
   );
-}
+});
 
-export function phoneMaskINTL(props) {
-  const { inputRef, ...other } = props;
+export const phoneMaskINTL = forwardRef((props, ref) => {
+  const { onChange, ...other } = props;
 
   return (
-    <MaskedInput
+    <IMaskInput
       {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={[
-        '+',
-        /[0-9]/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-        /\d/,
-      ]}
+      inputRef={ref}
+      mask="+000000000000000"
       placeholderChar={'\u2000'}
+      unmask={true}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
     />
   );
-}
+});
 
 export default UpdatePhone;

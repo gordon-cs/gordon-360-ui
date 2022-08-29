@@ -151,10 +151,11 @@ const EnrollmentCheckIn = (props) => {
           setActiveStep(6);
         }
       }
-      setLoading(false);
+      // We only want to stop loading now if the profile has already been loaded.
+      setLoading(loadingProfile);
     };
     loadData();
-  }, [profile]);
+  }, [profile, loadingProfile]);
 
   useEffect(() => {
     props.history.replace('/enrollmentcheckin', { step: activeStep });

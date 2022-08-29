@@ -2,7 +2,6 @@
 // Cannot convert to CSS Module because this is using a third party library
 // These styles must not be converted by CSS Modules because the classes they are
 // selecting/overiding are not converted (added afterwards)
-
 @import '../../../../../../vars';
 
 // This is direct import from the API scss file. Needs to clean up some unnecessary design formats.

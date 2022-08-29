@@ -1,8 +1,6 @@
 import { getToken, isAuthenticated } from './auth';
 import { createError } from './error';
 
-const base = process.env.REACT_APP_API_URL;
-
 type HttpRequestBody =
   | string
   | FormData
@@ -51,6 +49,25 @@ const post = <TResponse>(
 const del = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'delete');
 
 /**
+ * The base URL to use for requests to our API, e.g. `https://360api.gordon.edu`.
+ *
+ * In the development (i.e. local) environment, the base URL is relative (`/`), because we send api
+ * requests through the development server proxy so that the `origin` HTTP header is set to URL of
+ * the API server, cirucumventing CORS.
+ *
+ * When not in development, there is no proxy to re-write headers and forward requests, so requests
+ * are sent directly to the API. This is fine because the API server allows CORS from the front-end
+ * server. For example, 360api allows cross-origin requests from `https://360.gordon.edu`.
+ *
+ * For more info, see:
+ *    - https://create-react-app.dev/docs/proxying-api-requests-in-development/
+ *    - `src/setupProxy.js`
+ *    - https://developer.mozilla.org/en-US/docs/Web/HTTP/
+ */
+const apiBaseURL =
+  process.env.NODE_ENV === 'development' ? '/' : (process.env.REACT_APP_API_URL as string);
+
+/**
  * Make a request to the API
  *
  * @param endpoint API endpoint to request, a URL relative to API base URL, ex: `activity/023487` (no leading slash)
@@ -65,12 +82,11 @@ const makeRequest = async <TResponse>(
   body?: HttpRequestBody,
   headers?: Headers,
 ): Promise<TResponse> => {
-  const request = new Request(`${base}api/${endpoint}`, {
+  const response = await fetch(`${apiBaseURL}api/${endpoint}`, {
     method,
     body,
     headers: await handleAuthHeader(headers ?? new Headers()),
   });
-  const response = await fetch(request);
   return parseResponse(response);
 };
 
