@@ -18,7 +18,7 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import GordonTooltip from 'components/GordonTooltip';
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
