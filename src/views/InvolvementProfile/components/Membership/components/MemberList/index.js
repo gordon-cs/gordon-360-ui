@@ -14,7 +14,7 @@ const headerStyle = {
 const MemberList = ({
   members,
   isAdmin,
-  isSuperAdmin,
+  isSiteAdmin,
   createSnackbar,
   onLeave,
   onToggleIsAdmin,
@@ -59,7 +59,7 @@ const MemberList = ({
 
   const header = isMobileView ? (
     <CardHeader title="Members" style={headerStyle} />
-  ) : isAdmin || isSuperAdmin ? (
+  ) : isAdmin || isSiteAdmin ? (
     <CardHeader
       title={
         <Grid container direction="row">
@@ -109,7 +109,7 @@ const MemberList = ({
             member={member}
             key={member.MembershipID}
             isAdmin={isAdmin}
-            isSuperAdmin={isSuperAdmin}
+            isSiteAdmin={isSiteAdmin}
             createSnackbar={createSnackbar}
             isMobileView={isMobileView}
             onLeave={onLeave}
