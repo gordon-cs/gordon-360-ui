@@ -18,7 +18,7 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import GordonTooltip from 'components/GordonTooltip';
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
@@ -49,11 +49,11 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
   const [mailCombo, setMailCombo] = useState();
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isOnline = useNetworkStatus();
-  const groups = useAuthGroups();
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
   const isAlumni = profile.PersonType?.includes('alu');
-  const isViewerPolice = useMemo(() => groups.some((g) => g === AuthGroup.Police), [groups]);
+  const isViewerPolice = useAuthGroups(AuthGroup.Police)
+  const canViewSensitiveInfo = useAuthGroups(AuthGroup.SensitiveInfoView)
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -389,7 +389,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
       />
     ) : null;
 
-  const gordonID = myProf ? (
+  const gordonID = myProf || ( isStudent && canViewSensitiveInfo) ? (
     <ProfileInfoListItem
       title="Gordon ID:"
       contentText={profile.ID}
