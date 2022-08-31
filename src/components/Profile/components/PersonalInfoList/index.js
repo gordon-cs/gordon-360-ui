@@ -381,7 +381,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
               {profile.BuildingDescription ?? profile.Hall}
             </span>
 
-            {(myProf || isViewerPolice) && profile.OnCampusRoom && `, Room ${profile.OnCampusRoom}`}
+            {(myProf || isViewerPolice || canViewSensitiveInfo) && profile.OnCampusRoom && `, Room ${profile.OnCampusRoom}`}
           </>
         }
         privateInfo
