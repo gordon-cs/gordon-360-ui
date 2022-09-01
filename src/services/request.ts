@@ -2,7 +2,7 @@ import http from './http';
 import { MEMBERSHIP, Participation, ParticipationDesc } from './membership';
 import { filter } from './utils';
 
-enum RequestStatus {
+export enum RequestStatus {
   Pending = 'Pending',
   Approved = 'Approved',
   Denied = 'Denied',
