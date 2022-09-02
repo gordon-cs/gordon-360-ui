@@ -27,7 +27,7 @@ const headerStyle = {
   padding: '10px',
 };
 
-const AdminCard = ({ createSnackbar, isSuperAdmin, involvementDescription, onAddMember }) => {
+const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddMember }) => {
   const [isRosterClosed, setIsRosterClosed] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [username, setUsername] = useState('');
@@ -149,7 +149,7 @@ const AdminCard = ({ createSnackbar, isSuperAdmin, involvementDescription, onAdd
               </Grid>
             </Grid>
             <Grid item>
-              {(!isRosterClosed || isSuperAdmin) && (
+              {(!isRosterClosed || isSiteAdmin) && (
                 <Button
                   variant="contained"
                   color="primary"
