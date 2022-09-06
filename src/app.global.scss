@@ -24,8 +24,9 @@ html,
 }
 
 body {
-  font-family: 'Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', sans-serif;
-  letter-spacing: 1px;
+  font-family: 'Gotham SSm 4r', 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  font-style: normal;
+  font-weight: 400;
   margin: 0;
   max-width: 100%;
   padding: 0;
@@ -70,7 +71,8 @@ a {
 
 strong {
   font-size: 15px;
-  font-weight: bold;
+  font-style: normal;
+  font-weight: 700;
   margin-top: 20px;
 }
 
