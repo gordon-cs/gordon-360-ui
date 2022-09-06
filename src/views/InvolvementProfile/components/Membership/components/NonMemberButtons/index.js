@@ -13,7 +13,7 @@ import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import involvementService from 'services/activity';
-import requestService from 'services/request';
+import requestService, { RequestStatus } from 'services/request';
 
 const NonMemberButtons = ({
   isGuest,
@@ -51,7 +51,7 @@ const NonMemberButtons = ({
       PART_CDE: participationCode,
       DATE_SENT: new Date().toLocaleString(),
       COMMENT_TXT: titleComment,
-      APPROVED: 'Pending',
+      STATUS: RequestStatus.Pending,
     };
 
     try {
