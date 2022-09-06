@@ -37,20 +37,14 @@ const EnrollmentCheckInWelcome = ({ hasMajorHold, holds }) => {
               <Typography>
                 You will meet with your advisor during Orientation and he/she can register you. The
                 name of your advisor can be found by logging onto{' '}
-                <a href="https://my.gordon.edu" className="gc360_text_link">
-                  my.gordon.edu
-                </a>{' '}
-                and clicking on the <b>Student</b> tab. You will see your advisor(s) listed under
-                "My Advisors and Majors".
+                <a href="https://my.gordon.edu">my.gordon.edu</a> and clicking on the <b>Student</b>{' '}
+                tab. You will see your advisor(s) listed under "My Advisors and Majors".
               </Typography>
             ) : (
               // Otherwise display a standard registration prompt
               <Typography gutterBottom>
-                Register online at{' '}
-                <a href="https://my.gordon.edu" className="gc360_text_link">
-                  my.gordon.edu
-                </a>{' '}
-                during the first five days of classes.
+                Register online at <a href="https://my.gordon.edu">my.gordon.edu</a> anytime between
+                8AM on January 11, 2022 and 11:59PM on January 19, 2022.
               </Typography>
             )}
           </Grid>
