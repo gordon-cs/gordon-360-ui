@@ -1,4 +1,4 @@
-import { Card, Typography } from '@material-ui/core';
+import { Button, Card, Typography } from '@material-ui/core';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { useEffect, useState } from 'react';
@@ -86,7 +86,7 @@ const SpreadsheetUploader = ({
           );
         }}
       </Dropzone>
-      <Typography style={{ textAlign: 'center', fontSize: 10 }} variant="p">
+      <Typography style={{ textAlign: 'center', fontSize: 10 }} variant="body2">
         Accepted file types: CSV, XLSX
       </Typography>
       {template ? (
@@ -110,47 +110,64 @@ const SpreadsheetUploader = ({
 
   return (
     <>
-      <GordonDialogBox
-        open={open}
-        title={title}
-        buttonName={buttonName}
-        buttonClicked={() => {
-          onSubmitData(data);
-          setOpen(false);
-          setData(null);
-        }}
-        isButtonDisabled={!data}
-        cancelButtonClicked={() => {
-          setOpen(false);
-          setData(null);
-        }}
-      >
+      <GordonDialogBox open={open} title={title}>
+        {data ? (
+          <>
+            <div style={{ height: '5px' }}></div>
+            <Button
+              variant="contained"
+              onClick={() => {
+                onSubmitData(data);
+                setOpen(false);
+                setData(null);
+              }}
+              color="primary"
+              disabled={!data}
+            >
+              {buttonName}
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setOpen(false);
+                setData(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <div style={{ height: '15px' }}></div>
+            <Typography
+              variant="body2"
+              width="60%"
+              style={{
+                marginTop: '100px',
+                width: '60%',
+                margin: 'auto',
+                textAlign: 'center',
+                fontWeight: 'bold',
+              }}
+            >
+              Check over the data below to confirm that it is accurate.
+            </Typography>
+            <div style={{ height: '10px' }}></div>
+          </>
+        ) : null}
         {data
-          ? //<div style={{ maxHeight: 300, overflowY: 'auto', overflowX: 'visible' }}>
-            data.map((row) => {
-              const title = row['Title/Comment'] ? (
-                <Typography variant="p">
-                  <b>Title:</b> {row['Title/Comment']}
-                  <br />
-                </Typography>
-              ) : null;
-              const part = row.Participation ? (
-                <Typography variant="p">
-                  <b>Participation:</b> {row.Participation}
-                </Typography>
-              ) : null;
-              return (
-                <Card style={{ padding: '5px', lineHeight: '1.6em' }}>
-                  <Typography color="primary" variant="h6">
-                    {row.Username}
+          ? data.map((row, index) => {
+              const fields = requiredColumns.map((c) => {
+                return row[c] ? (
+                  <Typography variant="body2">
+                    <b>{c}:</b> {row[c]}
                   </Typography>
-                  {title}
-                  {part}
+                ) : null;
+              });
+              return (
+                <Card key={index} style={{ padding: '5px', lineHeight: '1.6em' }}>
+                  {fields}
                 </Card>
               );
             })
-          : //</div>
-            dropZone}
+          : dropZone}
         <GordonSnackbar
           open={error}
           text={error}
