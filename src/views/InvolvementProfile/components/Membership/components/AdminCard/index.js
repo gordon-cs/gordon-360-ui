@@ -72,6 +72,7 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
       }),
     );
     let resp = await membershipService.addMemberships(formattedData);
+    console.log(resp);
     onAddMember();
   };
 

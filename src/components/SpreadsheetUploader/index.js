@@ -1,4 +1,4 @@
-import { Card, Typography } from '@material-ui/core';
+import { Button, Card, Grid, Typography } from '@material-ui/core';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { useEffect, useState } from 'react';
@@ -71,34 +71,78 @@ const SpreadsheetUploader = ({
     reader.readAsBinaryString(file);
   };
 
-  const dropZone = (
+  const instructionNumberStyle = { textAlign: 'center', color: gordonColors.primary.blue };
+  const instructionStyle = { textAlign: 'center', fontSize: '18px' };
+
+  const instructions = (
     <>
-      <Dropzone onDropAccepted={(files) => onDropAccepted(files)} multiple={false}>
-        {({ getRootProps, getInputProps }) => {
-          return (
-            <section>
-              <div className={styles.gc360_spreadsheet_dialog_content_dropzone} {...getRootProps()}>
-                <input {...getInputProps()} />
-                <img alt={'Spreadsheet Icon'} src={SpreadsheetSVG} style={{ width: 40 }} />
-                Upload a Spreadsheet
-              </div>
-            </section>
-          );
-        }}
-      </Dropzone>
-      <Typography style={{ textAlign: 'center', fontSize: 10 }} variant="p">
-        Accepted file types: CSV, XLSX
+      <Typography variant="h6" style={{ textAlign: 'center' }}>
+        Member List Upload Instructions
       </Typography>
-      {template ? (
-        <Link
-          to={template}
-          target="_blank"
-          download
-          style={{ color: gordonColors.primary.blue, textAlign: 'center' }}
-        >
-          Download Template
-        </Link>
-      ) : null}
+      <Grid container spacing={5}>
+        <Grid item xs={4}>
+          {template ? (
+            <>
+              <Typography variant="h2" style={instructionNumberStyle}>
+                1.
+              </Typography>
+              <Typography variant="h6" style={instructionStyle}>
+                Download the template import file.
+              </Typography>
+              <Link
+                to={template}
+                target="_blank"
+                download
+                style={{ color: gordonColors.primary.blue, textAlign: 'center', margin: 'auto' }}
+              >
+                <Button variant="contained" color="primary">
+                  Download Template
+                </Button>
+              </Link>
+            </>
+          ) : null}
+        </Grid>
+        <Grid item xs={4}>
+          <Typography variant="h2" style={instructionNumberStyle}>
+            2.
+          </Typography>
+          <Typography variant="h6" style={instructionStyle}>
+            Fill the template with new member usernames or emails, participation (Advisor, Leader,
+            Member, Guest), and title.{' '}
+          </Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography variant="h2" style={instructionNumberStyle}>
+            3.
+          </Typography>
+          <Typography variant="h6" style={instructionStyle}>
+            Upload the filled file below.
+          </Typography>
+          <Dropzone
+            style={{ height: '150px', width: '200px' }}
+            onDropAccepted={(files) => onDropAccepted(files)}
+            multiple={false}
+          >
+            {({ getRootProps, getInputProps }) => {
+              return (
+                <section>
+                  <div
+                    className={styles.gc360_spreadsheet_dialog_content_dropzone}
+                    {...getRootProps()}
+                  >
+                    <input {...getInputProps()} />
+                    <img alt={'Spreadsheet Icon'} src={SpreadsheetSVG} style={{ width: 40 }} />
+                    Upload
+                  </div>
+                </section>
+              );
+            }}
+          </Dropzone>
+          <Typography style={{ textAlign: 'center', fontSize: 10 }} variant="p">
+            Accepted file types: CSV, XLSX
+          </Typography>
+        </Grid>
+      </Grid>
     </>
   );
 
@@ -124,6 +168,7 @@ const SpreadsheetUploader = ({
           setOpen(false);
           setData(null);
         }}
+        maxWidth="Md"
       >
         {data
           ? //<div style={{ maxHeight: 300, overflowY: 'auto', overflowX: 'visible' }}>
@@ -150,7 +195,7 @@ const SpreadsheetUploader = ({
               );
             })
           : //</div>
-            dropZone}
+            instructions}
         <GordonSnackbar
           open={error}
           text={error}
