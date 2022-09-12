@@ -1,43 +1,19 @@
 @import '../../vars';
 
-.gc360_spreadsheet_dialog {
-  display: grid;
-  grid-template-rows: auto auto auto;
-  &_title {
-    grid-row: 1;
-  }
-  &_content {
-    display: grid;
-    grid-row: 2;
-    grid-template-rows: auto auto auto;
-    grid-row-gap: 10px;
-    justify-items: center;
-    &_text {
-      grid-row: 1;
-    }
-    &_dropzone {
-      transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
-      width: 18rem;
-      height: 8rem;
-      display: flex;
-      border-style: dashed;
-      border-width: 0.2rem;
-      border-radius: 1rem;
-      border-color: darkgray;
-      justify-content: center;
-      align-items: center;
-      &:hover {
-        background-color: $neutral-light-gray2;
-        box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
-      }
-    }
-    &_button {
-      grid-row: 3;
-    }
-  }
-  &_actions {
-    display: grid;
-    grid-row: 3;
-    grid-column-gap: 10px;
+.dropzone {
+  transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+  width: 18rem;
+  height: 8rem;
+  display: flex;
+  border-style: dashed;
+  border-width: 0.2rem;
+  border-radius: 1rem;
+  border-color: darkgray;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    background-color: $neutral-light-gray2;
+    box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
   }
 }

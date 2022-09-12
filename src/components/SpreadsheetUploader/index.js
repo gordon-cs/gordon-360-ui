@@ -77,7 +77,7 @@ const SpreadsheetUploader = ({
         {({ getRootProps, getInputProps }) => {
           return (
             <section>
-              <div className={styles.gc360_spreadsheet_dialog_content_dropzone} {...getRootProps()}>
+              <div className={styles.dropzone} {...getRootProps()}>
                 <input {...getInputProps()} />
                 <img alt={'Spreadsheet Icon'} src={SpreadsheetSVG} style={{ width: 40 }} />
                 Upload a Spreadsheet
@@ -110,7 +110,13 @@ const SpreadsheetUploader = ({
 
   return (
     <>
-      <GordonDialogBox open={open} title={title}>
+      <GordonDialogBox
+        open={open}
+        title={title}
+        cancelButtonClicked={() => {
+          setOpen(false);
+        }}
+      >
         {data ? (
           <>
             <div style={{ height: '5px' }}></div>
