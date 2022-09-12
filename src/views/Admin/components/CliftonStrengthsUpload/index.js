@@ -106,7 +106,9 @@ const CliftonStrengthsUpload = () => {
                   <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>
                     Access Code
                   </TableCell>
-                  <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>Row State</TableCell>
+                  <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>
+                    Upload Result
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>{uploadResults}</TableBody>
