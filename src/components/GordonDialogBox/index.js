@@ -36,7 +36,6 @@ const GordonDialogBox = ({
   cancelButtonName,
   severity,
   children,
-  hideButtons = true,
   ...otherProps
 }) => {
   return (
