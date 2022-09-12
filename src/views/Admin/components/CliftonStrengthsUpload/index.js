@@ -8,7 +8,6 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography,
 } from '@material-ui/core';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
@@ -53,25 +52,23 @@ const CliftonStrengthsUpload = () => {
     CliftonStrengthsService.postCliftonStrengths(formattedData)
       .then((data) => {
         setUploadResults(
-          data !== []
-            ? data.map((r, index) => (
-                <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell style={{ fontSize: '1rem' }}>{r.Email}</TableCell>
-                  <TableCell style={{ fontSize: '1rem' }}>{r.AccessCode}</TableCell>
-                  <TableCell
-                    style={{
-                      backgroundColor: successResults.some((s) => s === r.UploadResult)
-                        ? gordonColors.secondary.greenShades.secondary
-                        : gordonColors.secondary.red,
-                      color: 'white',
-                      fontSize: '1rem',
-                    }}
-                  >
-                    {r.UploadResult}
-                  </TableCell>
-                </TableRow>
-              ))
-            : null,
+          data.map((r, index) => (
+            <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell style={{ fontSize: '1rem' }}>{r.Email}</TableCell>
+              <TableCell style={{ fontSize: '1rem' }}>{r.AccessCode}</TableCell>
+              <TableCell
+                style={{
+                  backgroundColor: successResults.some((s) => s === r.UploadResult)
+                    ? gordonColors.secondary.greenShades.secondary
+                    : gordonColors.secondary.red,
+                  color: 'white',
+                  fontSize: '1rem',
+                }}
+              >
+                {r.UploadResult}
+              </TableCell>
+            </TableRow>
+          )),
         );
         setLoading(false);
       })
@@ -101,19 +98,20 @@ const CliftonStrengthsUpload = () => {
             <div style={{ height: '10px' }}></div>
           </>
         ) : (
-          <Table>
-            <TableHead>
-              <Typography variant="h6" style={{ textAlign: 'center', width: '100%' }}>
-                Results:
-              </Typography>
-              <TableRow>
-                <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>Email</TableCell>
-                <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>Access Code</TableCell>
-                <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>Row State</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{uploadResults}</TableBody>
-          </Table>
+          uploadResults && (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>Email</TableCell>
+                  <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>
+                    Access Code
+                  </TableCell>
+                  <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>Row State</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{uploadResults}</TableBody>
+            </Table>
+          )
         )}
       </Card>
       <SpreadsheetUploader
