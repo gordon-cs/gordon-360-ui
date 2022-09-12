@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import http from './http';
 
 type CliftonStrengthName =
@@ -155,21 +154,10 @@ export type CliftonStrengths = {
   Private: boolean;
 };
 
-type CliftonStrengthUpload = {
-  Email: string;
-  DateCompleted: DateTime;
-  Theme1: string;
-  Theme2: string;
-  Theme3: string;
-  Theme4: string;
-  Theme5: string;
-  AccessCode: string;
-};
-
-type CliftonStrengthUploadReturn = {
+type CliftonStrengthUploadResult = {
   Email: string;
   AccessCode: string;
-  RowState: string;
+  UploadResult: string;
 };
 
 const strengthDetails = (name: CliftonStrengthName): CliftonStrength => {
@@ -199,8 +187,8 @@ const getCliftonStrengths = async (username: string): Promise<CliftonStrengths |
 const togglePrivacy = async (): Promise<boolean> => http.get<boolean>(`profiles/clifton/privacy`);
 
 const postCliftonStrengths = async (
-  cs: CliftonStrengthUpload[],
-): Promise<CliftonStrengthUploadReturn> => http.post('cliftonstrengths', cs);
+  cs: CliftonStrengthsViewModel[],
+): Promise<CliftonStrengthUploadResult> => http.post('cliftonstrengths', cs);
 
 const CliftonStrengthsService = {
   getCliftonStrengths,
