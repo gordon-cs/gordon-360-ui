@@ -50,7 +50,6 @@ const CliftonStrengthsUpload = () => {
         setUploadResults(
           data.map((uploadResult, index) => {
             const uploadResultSuccess = successResults.some((s) => s === uploadResult.UploadResult);
-            console.log(uploadResultSuccess);
             return (
               <TableRow key={index}>
                 <TableCell className={styles.cell}>{uploadResult.Email}</TableCell>
