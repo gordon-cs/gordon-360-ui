@@ -45,6 +45,7 @@ export const gordonColors = {
     green: '#B2BB1C',
     greenShades: {
       main: '#B2BB1C',
+      secondary: '#009900',
     },
     yellow: '#FDB913',
     yellowShades: {

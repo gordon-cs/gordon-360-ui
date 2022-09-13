@@ -154,6 +154,12 @@ export type CliftonStrengths = {
   Private: boolean;
 };
 
+type CliftonStrengthUploadResult = {
+  Email: string;
+  AccessCode: string;
+  UploadResult: string;
+};
+
 const strengthDetails = (name: CliftonStrengthName): CliftonStrength => {
   const category = categoryPerStrengthName(name);
   return {
@@ -180,9 +186,14 @@ const getCliftonStrengths = async (username: string): Promise<CliftonStrengths |
 
 const togglePrivacy = async (): Promise<boolean> => http.get<boolean>(`profiles/clifton/privacy`);
 
+const postCliftonStrengths = async (
+  cs: CliftonStrengthsViewModel[],
+): Promise<CliftonStrengthUploadResult> => http.post('cliftonstrengths', cs);
+
 const CliftonStrengthsService = {
   getCliftonStrengths,
   togglePrivacy,
+  postCliftonStrengths,
 };
 
 export default CliftonStrengthsService;
