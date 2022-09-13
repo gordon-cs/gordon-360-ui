@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
+import { Cancel, CheckCircle } from '@material-ui/icons';
 import GordonLoader from 'components/Loader';
 import SpreadsheetUploader from 'components/SpreadsheetUploader';
 import { addDays, parseISO } from 'date-fns';
@@ -16,8 +17,6 @@ import { useState } from 'react';
 import CliftonStrengthsService from 'services/cliftonStrengths';
 import styles from './CliftonStrengthsUpload.module.scss';
 import CliftonStrengthsUploadTemplate from './cliftonStrengthsUploadTemplate.csv';
-import UploadFailedSVG from './uploadFailed.svg';
-import UploadSuccededSVG from './uploadSucceded.svg';
 
 const successResults = ['Success', 'Added', 'Modified'];
 
@@ -51,23 +50,21 @@ const CliftonStrengthsUpload = () => {
         setUploadResults(
           data.map((uploadResult, index) => {
             const uploadResultSuccess = successResults.some((s) => s === uploadResult.UploadResult);
-
+            console.log(uploadResultSuccess);
             return (
               <TableRow key={index}>
-                <TableCell className={styles.strengthstable_cell}>{uploadResult.Email}</TableCell>
-                <TableCell className={styles.strengthstable_cell}>
-                  {uploadResult.AccessCode}
-                </TableCell>
+                <TableCell className={styles.cell}>{uploadResult.Email}</TableCell>
+                <TableCell className={styles.cell}>{uploadResult.AccessCode}</TableCell>
                 <TableCell
                   className={
                     uploadResultSuccess ? styles.resultmessage_green : styles.resultmessage_red
                   }
                 >
-                  <img
-                    src={uploadResultSuccess ? UploadSuccededSVG : UploadFailedSVG}
-                    style={{ height: '1.5rem' }}
-                    alt={uploadResultSuccess ? 'Success Checkmark' : 'Failure X Icon'}
-                  />
+                  {uploadResultSuccess ? (
+                    <CheckCircle style={{ color: '#009900' }} />
+                  ) : (
+                    <Cancel style={{ color: '#B53228' }} />
+                  )}
                   &nbsp;
                   {uploadResult.UploadResult}
                 </TableCell>
@@ -106,9 +103,9 @@ const CliftonStrengthsUpload = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell className={styles.strengthstable_headercell}>Email</TableCell>
-                  <TableCell className={styles.strengthstable_headercell}>Access Code</TableCell>
-                  <TableCell className={styles.strengthstable_headercell}>Upload Result</TableCell>
+                  <TableCell className={styles.headercell}>Email</TableCell>
+                  <TableCell className={styles.headercell}>Access Code</TableCell>
+                  <TableCell className={styles.headercell}>Upload Result</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>{uploadResults}</TableBody>

@@ -16,17 +16,15 @@
   }
 }
 
-.strengthstable {
-  &_cell {
-    font-size: 1rem;
-  }
-  &_headercell {
-    font-size: 1rem;
-    font-weight: bold;
-  }
+.cell.cell {
+  font-size: 1rem;
+}
+.headercell.headercell {
+  font-size: 1rem;
+  font-weight: bold;
 }
 
-.uploadbutton {
+.uploadbutton.uploadbutton {
   margin: 50px auto;
 }
 
