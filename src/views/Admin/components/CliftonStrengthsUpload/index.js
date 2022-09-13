@@ -9,7 +9,7 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
-import { Cancel, CheckCircle } from '@material-ui/icons';
+import { Cancel as XCircle, CheckCircle } from '@material-ui/icons';
 import GordonLoader from 'components/Loader';
 import SpreadsheetUploader from 'components/SpreadsheetUploader';
 import { addDays, parseISO } from 'date-fns';
@@ -63,7 +63,7 @@ const CliftonStrengthsUpload = () => {
                   {uploadResultSuccess ? (
                     <CheckCircle style={{ color: '#009900' }} />
                   ) : (
-                    <Cancel style={{ color: '#B53228' }} />
+                    <XCircle style={{ color: '#B53228' }} />
                   )}
                   &nbsp;
                   {uploadResult.UploadResult}
