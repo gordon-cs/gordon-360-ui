@@ -1,11 +1,11 @@
 import { Button, Card, Typography } from '@material-ui/core';
+import { Description as SpreadsheetIcon } from '@material-ui/icons';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { useEffect, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { read, utils } from 'xlsx';
-import SpreadsheetSVG from './spreadsheet.svg';
 import styles from './SpreadsheetUploader.module.css';
 
 const acceptedTypes = ['application/vnd.ms-excel', 'text/csv'];
@@ -83,7 +83,7 @@ const SpreadsheetUploader = ({
           return (
             <section className={styles.dropzone} {...getRootProps()}>
               <input {...getInputProps()} />
-              <img alt={'Spreadsheet Icon'} src={SpreadsheetSVG} style={{ width: '50px' }} />
+              <SpreadsheetIcon fontSize="large" className={styles.spreadsheeticon} />
               &nbsp; Upload a Spreadsheet
             </section>
           );
