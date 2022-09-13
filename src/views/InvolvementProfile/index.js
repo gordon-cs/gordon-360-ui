@@ -439,8 +439,12 @@ const InvolvementProfile = () => {
                 </Grid>
                 <Grid item>
                   <Typography>
-                    <strong>To join: </strong>
-                    {ActivityJoinInfo}
+                    {ActivityJoinInfo && (
+                      <>
+                        <strong>To join: </strong>
+                        {ActivityJoinInfo}
+                      </>
+                    )}
                   </Typography>
                 </Grid>
                 <Membership
