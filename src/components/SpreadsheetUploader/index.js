@@ -107,6 +107,9 @@ const SpreadsheetUploader = ({
       cancelButtonClicked={() => {
         setOpen(false);
       }}
+      onClose={() => {
+        setOpen(false);
+      }}
     >
       {data ? (
         <>
