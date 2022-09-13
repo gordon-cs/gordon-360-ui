@@ -38,10 +38,16 @@ const GordonDialogBox = ({
   children,
   ...otherProps
 }) => {
+  const handleClose = (event, reason) => {
+    if (typeof cancelButtonClicked === 'function') {
+      cancelButtonClicked();
+    }
+  };
+
   return (
     <Dialog
       className={styles.gc360_gordondialogbox}
-      onBackdropClick={cancelButtonClicked}
+      onClose={handleClose}
       {...otherProps}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"

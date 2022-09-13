@@ -5,10 +5,8 @@
   min-width: 18rem;
   min-height: 8rem;
   display: flex;
-  border-style: dashed;
-  border-width: 0.2rem;
+  border: 0.2rem dashed darkgray;
   border-radius: 1rem;
-  border-color: darkgray;
   justify-content: center;
   align-items: center;
   cursor: pointer;
@@ -16,4 +14,24 @@
     background-color: $neutral-light-gray2;
     box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
   }
+  &_text {
+    text-align: center;
+    font-size: 10;
+  }
+  &_templatelink {
+    color: $primary-blue;
+    text-align: center;
+  }
+}
+
+.dataconfirmationmessage {
+  width: 60%;
+  margin: 15px auto 10px auto;
+  text-align: center;
+  font-weight: bold;
+}
+
+.dataconfirmationcard {
+  padding: 5px;
+  line-height: 1.6em;
 }

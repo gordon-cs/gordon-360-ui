@@ -9,20 +9,19 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
-import { DateTime } from 'luxon';
+import GordonLoader from 'components/Loader';
+import SpreadsheetUploader from 'components/SpreadsheetUploader';
+import { addDays, parseISO } from 'date-fns';
 import { useState } from 'react';
-import { gordonColors } from 'theme';
-import GordonLoader from '../../../../components/Loader';
-import SpreadsheetUploader from '../../../../components/SpreadsheetUploader';
-import CliftonStrengthsService from '../../../../services/cliftonStrengths';
+import CliftonStrengthsService from 'services/cliftonStrengths';
+import styles from './CliftonStrengthsUpload.module.scss';
 import CliftonStrengthsUploadTemplate from './cliftonStrengthsUploadTemplate.csv';
-
-const headerStyle = {
-  backgroundColor: gordonColors.primary.blue,
-  color: gordonColors.neutral.grayShades[100],
-};
+import UploadFailedSVG from './uploadFailed.svg';
+import UploadSuccededSVG from './uploadSucceded.svg';
 
 const successResults = ['Success', 'Added', 'Modified'];
+
+const initDate = parseISO('1900-01-01T00:00:00');
 
 const CliftonStrengthsUpload = () => {
   const [isSpreadsheetUploaderOpen, setIsSpreadsheetUploaderOpen] = useState(false);
@@ -33,12 +32,10 @@ const CliftonStrengthsUpload = () => {
     setLoading(true);
 
     let formattedData = uploadedData.map((cs) => {
-      // The date completed comes out of the
+      // The date completed value comes out of the
       // spreadsheet uploader as a number of days since 1/1/1900.
       let days = cs.DateCompleted;
-      cs.DateCompleted = DateTime.fromFormat('01-01-1900', 'MM-dd-yyyy')
-        .plus({ days: days })
-        .toISODate();
+      cs.DateCompleted = addDays(initDate, days).toISOString();
 
       return {
         AccessCode: cs.AccessCode,
@@ -52,20 +49,34 @@ const CliftonStrengthsUpload = () => {
     CliftonStrengthsService.postCliftonStrengths(formattedData)
       .then((data) => {
         setUploadResults(
-          data.map((r, index) => (
-            <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell style={{ fontSize: '1rem' }}>{r.Email}</TableCell>
-              <TableCell style={{ fontSize: '1rem' }}>{r.AccessCode}</TableCell>
+          data.map((uploadResult, index) => (
+            <TableRow key={index}>
+              <TableCell className={styles.strengthstable_cell}>{uploadResult.Email}</TableCell>
+              <TableCell className={styles.strengthstable_cell}>
+                {uploadResult.AccessCode}
+              </TableCell>
               <TableCell
-                style={{
-                  backgroundColor: successResults.some((s) => s === r.UploadResult)
-                    ? gordonColors.secondary.greenShades.secondary
-                    : gordonColors.secondary.red,
-                  color: 'white',
-                  fontSize: '1rem',
-                }}
+                className={
+                  successResults.some((s) => s === uploadResult.UploadResult)
+                    ? styles.resultmessage_green
+                    : styles.resultmessage_red
+                }
               >
-                {r.UploadResult}
+                <img
+                  src={
+                    successResults.some((s) => s === uploadResult.UploadResult)
+                      ? UploadSuccededSVG
+                      : UploadFailedSVG
+                  }
+                  style={{ height: '1.5rem' }}
+                  alt={
+                    successResults.some((s) => s === uploadResult.UploadResult)
+                      ? 'Success Checkmark'
+                      : 'Failure X Icon'
+                  }
+                />
+                &nbsp;
+                {uploadResult.UploadResult}
               </TableCell>
             </TableRow>
           )),
@@ -81,34 +92,29 @@ const CliftonStrengthsUpload = () => {
   return (
     <>
       <Card>
-        <CardHeader style={headerStyle} align="center" title={`Clifton Strengths`} />
+        <CardHeader className={styles.header} align="center" title="Clifton Strengths" />
         <Grid container justify="center">
           <Button
             variant="contained"
             color="primary"
             onClick={() => setIsSpreadsheetUploaderOpen(true)}
-            style={{ margin: '50px auto' }}
+            className={styles.uploadbutton}
           >
             Upload Clifton Strengths
           </Button>
         </Grid>
         {loading ? (
-          <>
+          <div className={styles.gordonloadercontainer}>
             <GordonLoader />
-            <div style={{ height: '10px' }}></div>
-          </>
+          </div>
         ) : (
           uploadResults && (
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>Email</TableCell>
-                  <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>
-                    Access Code
-                  </TableCell>
-                  <TableCell style={{ fontWeight: 'bold', fontSize: '1rem' }}>
-                    Upload Result
-                  </TableCell>
+                  <TableCell className={styles.strengthstable_headercell}>Email</TableCell>
+                  <TableCell className={styles.strengthstable_headercell}>Access Code</TableCell>
+                  <TableCell className={styles.strengthstable_headercell}>Upload Result</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>{uploadResults}</TableBody>
@@ -133,7 +139,7 @@ const CliftonStrengthsUpload = () => {
         ]}
         buttonName="Upload Strengths"
         template={CliftonStrengthsUploadTemplate}
-      ></SpreadsheetUploader>
+      />
     </>
   );
 };
