@@ -49,37 +49,31 @@ const CliftonStrengthsUpload = () => {
     CliftonStrengthsService.postCliftonStrengths(formattedData)
       .then((data) => {
         setUploadResults(
-          data.map((uploadResult, index) => (
-            <TableRow key={index}>
-              <TableCell className={styles.strengthstable_cell}>{uploadResult.Email}</TableCell>
-              <TableCell className={styles.strengthstable_cell}>
-                {uploadResult.AccessCode}
-              </TableCell>
-              <TableCell
-                className={
-                  successResults.some((s) => s === uploadResult.UploadResult)
-                    ? styles.resultmessage_green
-                    : styles.resultmessage_red
-                }
-              >
-                <img
-                  src={
-                    successResults.some((s) => s === uploadResult.UploadResult)
-                      ? UploadSuccededSVG
-                      : UploadFailedSVG
+          data.map((uploadResult, index) => {
+            const uploadResultSuccess = successResults.some((s) => s === uploadResult.UploadResult);
+
+            return (
+              <TableRow key={index}>
+                <TableCell className={styles.strengthstable_cell}>{uploadResult.Email}</TableCell>
+                <TableCell className={styles.strengthstable_cell}>
+                  {uploadResult.AccessCode}
+                </TableCell>
+                <TableCell
+                  className={
+                    uploadResultSuccess ? styles.resultmessage_green : styles.resultmessage_red
                   }
-                  style={{ height: '1.5rem' }}
-                  alt={
-                    successResults.some((s) => s === uploadResult.UploadResult)
-                      ? 'Success Checkmark'
-                      : 'Failure X Icon'
-                  }
-                />
-                &nbsp;
-                {uploadResult.UploadResult}
-              </TableCell>
-            </TableRow>
-          )),
+                >
+                  <img
+                    src={uploadResultSuccess ? UploadSuccededSVG : UploadFailedSVG}
+                    style={{ height: '1.5rem' }}
+                    alt={uploadResultSuccess ? 'Success Checkmark' : 'Failure X Icon'}
+                  />
+                  &nbsp;
+                  {uploadResult.UploadResult}
+                </TableCell>
+              </TableRow>
+            );
+          }),
         );
         setLoading(false);
       })
