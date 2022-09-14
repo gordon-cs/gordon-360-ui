@@ -33,6 +33,7 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   const [username, setUsername] = useState('');
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
+  const [bulkResults, setBulkResults] = useState();
   const [isSpreadsheetUploaderOpen, setIsSpreadsheetUploaderOpen] = useState(false);
   const { involvementCode, sessionCode } = useParams();
 
@@ -71,9 +72,7 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
         return data;
       }),
     );
-    let resp = await membershipService.addMemberships(formattedData);
-    console.log(resp);
-    onAddMember();
+    membershipService.addMemberships(formattedData).then(onAddMember);
   };
 
   const handleAddMember = async () => {

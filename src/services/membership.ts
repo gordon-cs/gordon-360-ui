@@ -49,8 +49,8 @@ export type MEMBERSHIP = {
 
 const addMembership = (data: MEMBERSHIP): Promise<MEMBERSHIP> => http.post('memberships', data);
 
-const addMemberships = async (dataArr: MEMBERSHIP[]) =>
-  await http.post('memberships/bulk', dataArr);
+const addMemberships = async (memberships: MEMBERSHIP[]) =>
+  await http.post('memberships/bulk', memberships);
 
 const checkAdmin = async (
   userID: string,
