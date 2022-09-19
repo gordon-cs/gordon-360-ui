@@ -66,7 +66,7 @@ const search = (
   major: string,
   minor: string,
   hall: string,
-  classType: Class | '',
+  classType: string, // The database has class types as integers
   homeCity: string,
   state: string,
   country: string,
@@ -79,7 +79,7 @@ const search = (
     major,
     minor,
     hall,
-    classType: typeof classType == 'string' ? '' : Class[classType],
+    classType,
     homeCity,
     state,
     country,
