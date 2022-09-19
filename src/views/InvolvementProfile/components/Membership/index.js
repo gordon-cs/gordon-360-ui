@@ -52,12 +52,12 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
 
   const handleSubscribe = async () => {
     let data = {
-      ACT_CDE: involvementCode,
-      SESS_CDE: sessionCode,
-      ID_NUM: profile.ID,
-      PART_CDE: 'GUEST',
-      COMMENT_TXT: 'Subscriber',
-      GRP_ADMIN: false,
+      ACTCode: involvementCode,
+      SessCode: sessionCode,
+      GordonID: profile.ID,
+      PartCode: 'GUEST',
+      CommentText: 'Subscriber',
+      GroupAdmin: false,
     };
     await membershipService.addMembership(data);
     setParticipationDetail(
