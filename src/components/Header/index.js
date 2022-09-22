@@ -47,6 +47,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
       /^\/events\/?$/,
       /^\/people$/,
       /^\/wellness$/,
+      /^\/RecIM$/,
     ];
     setTabIndex(false);
     for (let i = 0; i < urls.length; i++) {
@@ -205,6 +206,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
               {requiresAuthTab('People', <PeopleIcon />)}
               {/* {requiresAuthTab('Timesheets', WorkIcon)} */}
               {requiresAuthTab('Wellness', <WellnessIcon />)}
+              {requiresAuthTab('RecIM', <EventIcon />)}
             </Tabs>
           </div>
 
