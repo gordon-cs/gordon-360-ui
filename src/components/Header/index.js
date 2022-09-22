@@ -48,7 +48,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
       /^\/events\/?$/,
       /^\/people$/,
       /^\/wellness$/,
-      /^\/RecIM$/,
+      /^\/recim$/,
     ];
     setTabIndex(false);
     for (let i = 0; i < urls.length; i++) {
