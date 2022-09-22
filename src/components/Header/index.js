@@ -1,6 +1,7 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
+import SportsFootballIcon from '@material-ui/icons/SportsFootball';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalActivityIcon from '@material-ui/icons/LocalActivity';
 // import WorkIcon from '@material-ui/icons/Work';
@@ -206,7 +207,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
               {requiresAuthTab('People', <PeopleIcon />)}
               {/* {requiresAuthTab('Timesheets', WorkIcon)} */}
               {requiresAuthTab('Wellness', <WellnessIcon />)}
-              {requiresAuthTab('RecIM', <EventIcon />)}
+              {requiresAuthTab('RecIM', <SportsFootballIcon />)}
             </Tabs>
           </div>
 
