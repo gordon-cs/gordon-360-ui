@@ -64,7 +64,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
 
   const toggleMembershipPrivacy = async (membership) => {
     try {
-      await membershipService.toggleMembershipPrivacy(membership);
+      await membershipService.setMembershipPrivacy(membership.MembershipID, !membership.Privacy);
       createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
       setMemberships(
         memberships.map((m) => {

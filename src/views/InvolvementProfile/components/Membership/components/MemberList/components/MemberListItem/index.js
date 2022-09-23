@@ -75,28 +75,21 @@ const MemberListItem = ({
 
   useEffect(() => {
     const loadAvatar = async () => {
-      if (member.AD_Username) {
+      if (member.Username) {
         const { def: defaultImage, pref: preferredImage } = await userService.getImage(
-          member.AD_Username,
+          member.Username,
         );
         setAvatar(preferredImage || defaultImage);
       }
     };
     loadAvatar();
-  }, [member.AD_Username]);
+  }, [member.Username]);
 
   const handleToggleGroupAdmin = async () => {
     if (isAdmin && !isSiteAdmin && member.IDNumber === profile.ID) {
       setIsUnadminSelfDialogOpen(true);
     } else {
-      let data = {
-        MEMBERSHIP_ID: member.MembershipID,
-        ACT_CDE: member.ActivityCode,
-        SESS_CDE: member.SessionCode,
-        ID_NUM: member.IDNumber,
-        PART_CDE: member.Participation,
-      };
-      await membership.toggleGroupAdmin(member.MembershipID, data);
+      await membership.setGroupAdmin(member.MembershipID, !groupAdmin);
       setGroupAdmin((c) => !c);
     }
   };
@@ -114,12 +107,12 @@ const MemberListItem = ({
 
   const onEditMember = async () => {
     let data = {
-      MEMBERSHIP_ID: member.MembershipID,
-      ACT_CDE: member.ActivityCode,
-      SESS_CDE: member.SessionCode,
-      ID_NUM: member.IDNumber,
-      PART_CDE: participation,
-      COMMENT_TXT: titleDialog,
+      MembershipID: member.MembershipID,
+      ACTCode: member.ActivityCode,
+      SessCode: member.SessionCode,
+      Username: member.Username,
+      PartCode: participation,
+      CommentText: titleDialog,
     };
     await membership.editMembership(member.MembershipID, data);
     setTitle(titleDialog);
@@ -129,14 +122,22 @@ const MemberListItem = ({
   const confirmLeave = async () => {
     await membership.remove(member.MembershipID);
     let inInvolvement = await membership.search(
-      member.IDNumber,
+      member.Username,
       member.SessionCode,
       member.ActivityCode,
     )[0];
-    if (inInvolvement) {
-      createSnackbar('Leaving involvement failed', 'error');
+
+    let leaveText;
+    if (member.Username === profile.AD_Username) {
+      leaveText = `in leaving ${participationDescription}`;
     } else {
-      createSnackbar('Leaving involvement succeeded', 'success');
+      leaveText = `in removing ${member.Username}`;
+    }
+
+    if (inInvolvement) {
+      createSnackbar(`Failed ${leaveText}`, 'error');
+    } else {
+      createSnackbar(`Succeeded ${leaveText}`, 'success');
     }
     onLeave();
     setIsLeaveAlertOpen(false);
@@ -144,7 +145,7 @@ const MemberListItem = ({
   };
 
   const handleRemove = () => {
-    if (member.IDNumber === profile.ID) {
+    if (member.Username === profile.AD_Username) {
       setIsLeaveAlertOpen(true);
     } else {
       setIsRemoveAlertOpen(true);
@@ -231,7 +232,7 @@ const MemberListItem = ({
           cancelButtonClicked={() => setIsRemoveAlertOpen(false)}
         >
           Are you sure you want to remove {member.FirstName} {member.LastName} (
-          {member.ParticipationDescription}) from this involvement?
+          {member.ParticipationDescription.trim()}) from this involvement?
         </GordonDialogBox>
       </>
     );
@@ -269,7 +270,7 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3}>
-            <Link href={`/profile/${member.AD_Username}`}>
+            <Link href={`/profile/${member.Username}`}>
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
@@ -279,7 +280,7 @@ const MemberListItem = ({
             <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
           <Grid item xs={2} style={rowStyle}>
-            <Typography>{member.Mail_Location}</Typography>
+            <Typography>{profile.Mail_Location}</Typography>
           </Grid>
           <Grid item xs={2} style={rowStyle}>
             {options}
