@@ -1,12 +1,11 @@
-import { DateTime } from 'luxon';
 import http from './http';
 
 // all Gordon Rec-IM http requests
 type League = {
   ID: number;
   Name: string;
-  RegistrationStart: DateTime;
-  RegistrationEnd: DateTime;
+  RegistrationStart: string;
+  RegistrationEnd: string;
   TypeID: number;
   SportID: number;
   StatusID: number;
