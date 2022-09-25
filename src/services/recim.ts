@@ -22,9 +22,9 @@ const postSmashLeague = async () => {
 };
 
 const createNewLeague = async (newLeague: League) => {
-  await http.post('recim/league/add', newLeague);
+  await http.post('recim/league', newLeague);
 };
 
-const getAllLeagues = async (): Promise<League[]> => await http.get('recim/league');
+const getAllLeagues = async (): Promise<League[]> => await http.get('recim/league/all');
 
 export { postSmashLeague, getAllLeagues, createNewLeague };
