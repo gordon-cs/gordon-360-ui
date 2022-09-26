@@ -2,28 +2,6 @@ import http from './http';
 import sessionService from './session';
 import { compareByProperty, filter, sort } from './utils';
 
-export type Membership = {
-  // TODO: Currently never set by the API, always null
-  AccountPrivate: Privacy | null;
-  ActivityCode: string;
-  ActivityDescription: string;
-  ActivityImage: string;
-  ActivityImagePath: string;
-  Description: string;
-  EndDate: string;
-  FirstName: string;
-  GroupAdmin: boolean;
-  IDNumber: number;
-  LastName: string;
-  MembershipID: number;
-  Participation: Participation;
-  ParticipationDescription: ParticipationDesc;
-  Privacy: boolean | null;
-  SessionCode: string;
-  SessionDescription: string;
-  StartDate: string;
-};
-
 export type MembershipView = {
   AccountPrivate: Privacy | null;
   ActivityCode: string;
@@ -86,18 +64,18 @@ const checkAdmin = async (
   sessionCode: string,
   activityCode: string,
 ): Promise<boolean> => {
-  const admins = await getGroupAdminsForInvolvement(activityCode);
-  return admins.some((a) => a.SessionCode === sessionCode && a.Username === username);
+  const admins = await getGroupAdmins(activityCode, sessionCode);
+  return admins.some((a) => a.Username === username);
 };
 
 const editMembership = (membershipID: string, data: MembershipUpload): Promise<MembershipView> =>
   http.put(`memberships/${membershipID}`, data);
 
 const get = async (activityCode: string, sessionCode: string): Promise<MembershipView[]> =>
-  http.get(`memberships/activity/${activityCode}?sessionCode=${sessionCode}`);
+  http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}`);
 
 const setMembershipPrivacy = (membershipID: number, isPrivate: boolean): Promise<MembershipView> =>
-  http.put(`memberships/${membershipID}/privacy/${isPrivate}`);
+  http.put(`memberships/${membershipID}/privacy`, isPrivate);
 
 const setGroupAdmin = async (
   membershipID: number,
@@ -105,11 +83,11 @@ const setGroupAdmin = async (
 ): Promise<MembershipView> =>
   await http.put(`memberships/${membershipID}/group-admin/${isGroupAdmin}`);
 
-const getGroupAdminsForInvolvement = (activityCode: string): Promise<MembershipView[]> =>
-  http.get(`memberships/activity/${activityCode}/group-admin`);
+const getGroupAdmins = (activityCode: string, sessionCode: string): Promise<MembershipView[]> =>
+  http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/group-admins`);
 
 const getFollowersNum = (activityCode: string, sessionCode: string): Promise<number> =>
-  http.get(`memberships/activity/${activityCode}/followers/${sessionCode}`);
+  http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/subscriber-count`);
 
 const getMembershipsForUser = (username: string): Promise<MembershipView[]> =>
   http.get(`memberships/student/${username}`);
@@ -126,7 +104,7 @@ const getMembershipsBySession = (
 const getEmailAccount = (email: string): Promise<Object> => http.get(`accounts/email/${email}/`);
 
 const getMembersNum = (activityCode: string, sessionCode: string): Promise<number> =>
-  http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
+  http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/member-count`);
 
 const getCurrentMemberships = async (username: string): Promise<MembershipView[]> =>
   sessionService
@@ -174,7 +152,7 @@ const membershipService = {
   checkAdmin,
   editMembership,
   get,
-  getAllGroupAdmins: getGroupAdminsForInvolvement,
+  getGroupAdmins: getGroupAdmins,
   getEmailAccount,
   getFollowersNum,
   getMembersNum,
