@@ -23,12 +23,12 @@ type SearchResultBase = {
   AD_Username: string;
 };
 
-type SearchResult = SearchResultBase &
+export type SearchResult = SearchResultBase &
   (
     | {
         Type: 'Student';
         Hall: string;
-        Class: string; // TODO
+        Class: keyof typeof Class;
         Major1Description: string;
         Major2Description: string;
         Major3Description: string;
@@ -39,7 +39,7 @@ type SearchResult = SearchResultBase &
         Mail_Location: string;
       }
     | {
-        Type: 'Staff' | 'Faculty' | 'Student' | '';
+        Type: 'Staff' | 'Faculty' | '';
         OnCampusDepartment: string;
         BuildingDescription: string;
         KeepPrivate: string;
@@ -56,7 +56,7 @@ type SearchResult = SearchResultBase &
       }
   );
 
-type SearchFields = {
+export type SearchFields = {
   includeStudent: boolean;
   includeFacStaff: boolean;
   includeAlumni: boolean;
@@ -71,6 +71,7 @@ type SearchFields = {
   country: string;
   department: string;
   building: string;
+  relationship_status?: string;
 };
 
 // TODO: Document return type
