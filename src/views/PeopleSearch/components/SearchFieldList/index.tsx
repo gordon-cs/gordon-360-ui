@@ -48,7 +48,7 @@ import { gordonColors } from 'theme';
 import SearchField from './components/SearchField';
 
 /**
- * A Regular Expression that matches any string with any alphanumeric character [a-z][A-Z][0-9].
+ * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
  * See [RegExp Character Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes#types) for more info.
  */
 const containsLetterRegExp = /\w/;
@@ -235,7 +235,7 @@ const SearchFieldList = ({ onSearch, displayLargeImage, setDisplayLargeImage }: 
   }
 
   const PeopleSearchCheckbox = (
-    <Grid item xs={12} lg={6} alignItems="center">
+    <Grid item xs={12} md={6} alignItems="center">
       <FormLabel component="label">Include: &nbsp;</FormLabel>
       {loading ? (
         <GordonLoader size={20} />
@@ -283,10 +283,10 @@ const SearchFieldList = ({ onSearch, displayLargeImage, setDisplayLargeImage }: 
   return (
     <Card style={{ padding: '0 3vw' }}>
       <CardContent>
-        <CardHeader title={searchPageTitle} />
+        <CardHeader title={searchPageTitle} titleTypographyProps={{ align: 'center' }} />
 
         {/* Search Section 1: General Info */}
-        <Grid container spacing={2} direction="row">
+        <Grid container spacing={2} direction="row" alignItems="center">
           <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
             <SearchField
               name="first_name"
@@ -333,7 +333,7 @@ const SearchFieldList = ({ onSearch, displayLargeImage, setDisplayLargeImage }: 
           <Media
             query="(min-width: 960px)"
             render={() => (
-              <Grid item xs={12} lg={6} alignItems="center">
+              <Grid item xs={6}>
                 <FormControlLabel
                   control={
                     <Switch

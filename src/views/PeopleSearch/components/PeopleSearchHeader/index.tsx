@@ -1,11 +1,6 @@
 import { Grid, Typography, useMediaQuery } from '@material-ui/core';
-import { gordonColors } from 'theme';
+import styles from './PeopleSearchHeader.module.scss';
 
-const headerStyle = {
-  backgroundColor: gordonColors.primary.blue,
-  color: '#FFF',
-  padding: '1.5rem 0.75rem',
-};
 interface Props {
   displayLargeImage: boolean;
 }
@@ -41,7 +36,7 @@ const PeopleSearchHeader = ({ displayLargeImage }: Props) => {
       </Grid>
     );
 
-  return <div style={headerStyle}>{header}</div>;
+  return <div className={styles.header}>{header}</div>;
 };
 
 export default PeopleSearchHeader;

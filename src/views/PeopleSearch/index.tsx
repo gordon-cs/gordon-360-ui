@@ -10,7 +10,7 @@ import ReactToPrint from 'react-to-print';
 import { SearchResult } from 'services/peopleSearch';
 import PeopleSearchHeader from './components/PeopleSearchHeader';
 import PeopleSearchResult from './components/PeopleSearchResult';
-import SearchFieldList from './components/SearchFields';
+import SearchFieldList from './components/SearchFieldList';
 
 const printPeopleSearchButton = (
   <Fab
