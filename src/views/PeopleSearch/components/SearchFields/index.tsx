@@ -42,7 +42,7 @@ import {
 import Media from 'react-media';
 import { useHistory, useLocation } from 'react-router';
 import { AuthGroup } from 'services/auth';
-import goStalk, { Class, SearchFields, SearchResult } from 'services/goStalk';
+import peopleSearchService, { Class, SearchFields, SearchResult } from 'services/peopleSearch';
 import { toTitleCase, searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
 import SearchField from './components/SearchField';
@@ -149,7 +149,7 @@ const SearchFieldList = ({ onSearch, displayLargeImage, setDisplayLargeImage }: 
     if (canSearch) {
       setLoadingSearch(true);
 
-      await goStalk.search(searchValues).then(onSearch);
+      await peopleSearchService.search(searchValues).then(onSearch);
 
       const newQueryString = serializeSearchParams({ ...searchValues });
       // If search params are new since last search, add search to history
@@ -164,13 +164,13 @@ const SearchFieldList = ({ onSearch, displayLargeImage, setDisplayLargeImage }: 
   useEffect(() => {
     const loadPage = async () => {
       const [majors, minors, halls, states, countries, departments, buildings] = await Promise.all([
-        goStalk.getMajors(),
-        goStalk.getMinors(),
-        goStalk.getHalls(),
-        goStalk.getStates(),
-        goStalk.getCountries(),
-        goStalk.getDepartments(),
-        goStalk.getBuildings(),
+        peopleSearchService.getMajors(),
+        peopleSearchService.getMinors(),
+        peopleSearchService.getHalls(),
+        peopleSearchService.getStates(),
+        peopleSearchService.getCountries(),
+        peopleSearchService.getDepartments(),
+        peopleSearchService.getBuildings(),
       ]);
       setMajors(majors);
       setMinors(minors);

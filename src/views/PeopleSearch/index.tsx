@@ -7,7 +7,7 @@ import { useRef, useState } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import Media from 'react-media';
 import ReactToPrint from 'react-to-print';
-import { SearchResult } from 'services/goStalk';
+import { SearchResult } from 'services/peopleSearch';
 import PeopleSearchHeader from './components/PeopleSearchHeader';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import SearchFieldList from './components/SearchFields';

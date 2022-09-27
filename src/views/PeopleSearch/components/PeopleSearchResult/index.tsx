@@ -11,7 +11,7 @@ import { ReactNode, useCallback, useEffect, useState } from 'react';
 import IMG from 'react-graceful-image';
 import { Link } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
-import { Class, SearchResult } from 'services/goStalk';
+import { Class, SearchResult } from 'services/peopleSearch';
 import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
 

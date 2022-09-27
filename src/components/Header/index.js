@@ -17,7 +17,7 @@ import { authenticate } from 'services/auth';
 import { windowBreakWidths } from 'theme';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
-import GordonPeopleSearch from './components/PeopleSearch';
+import GordonQuickSearch from './components/PeopleSearch';
 import styles from './Header.module.css';
 
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
@@ -211,7 +211,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
           <div className={styles.people_search_container_container}>
             {/* Width is dynamic */}
             <div className={styles.people_search_container}>
-              {isAuthenticated ? <GordonPeopleSearch /> : loginButton}
+              {isAuthenticated ? <GordonQuickSearch /> : loginButton}
             </div>
           </div>
 

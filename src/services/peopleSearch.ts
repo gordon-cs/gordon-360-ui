@@ -74,7 +74,6 @@ export type SearchFields = {
   relationship_status?: string;
 };
 
-// TODO: Document return type
 const search = (searchFields: SearchFields): Promise<SearchResult[]> => {
   let params = Object.entries({
     firstName: searchFields.first_name,
@@ -123,7 +122,7 @@ const getDepartments = (): Promise<string[]> => http.get(`advancedsearch/departm
 
 const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
-const advancedSearchService = {
+const peopleSearchService = {
   search,
   getMajors,
   getMinors,
@@ -134,4 +133,4 @@ const advancedSearchService = {
   getBuildings,
 };
 
-export default advancedSearchService;
+export default peopleSearchService;
