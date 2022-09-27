@@ -66,18 +66,17 @@ const SearchField = ({
           select={select}
           disabled={disabled}
         >
-          {select && options && (
-            <>
-              <MenuItem value="">
+          {select &&
+            options && [
+              <MenuItem value="" key="default">
                 <em>All</em>
-              </MenuItem>
-              {options.map((option) => (
+              </MenuItem>,
+              ...options.map((option) => (
                 <MenuItem value={option} key={option}>
                   {option}
                 </MenuItem>
-              ))}
-            </>
-          )}
+              )),
+            ]}
         </TextField>
       </Grid>
     </Grid>

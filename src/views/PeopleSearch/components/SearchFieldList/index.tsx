@@ -235,7 +235,7 @@ const SearchFieldList = ({ onSearch, displayLargeImage, setDisplayLargeImage }: 
   }
 
   const PeopleSearchCheckbox = (
-    <Grid item xs={12} md={6} alignItems="center">
+    <Grid item xs={12} md={6}>
       <FormLabel component="label">Include: &nbsp;</FormLabel>
       {loading ? (
         <GordonLoader size={20} />
