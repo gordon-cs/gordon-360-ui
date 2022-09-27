@@ -1,10 +1,17 @@
-import { Divider, Grid, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import { useCallback, useEffect, useState } from 'react';
+import {
+  Divider,
+  Grid,
+  GridItemsAlignment,
+  GridJustification,
+  GridSize,
+  Typography,
+} from '@material-ui/core';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
+// @ts-ignore
 import IMG from 'react-graceful-image';
 import { Link } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
-import { Class } from 'services/goStalk';
+import { Class, SearchResult } from 'services/goStalk';
 import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
 
@@ -17,50 +24,74 @@ const GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/erVfwAJRwPA/3pinwAAAABJRU5ErkJggg==';
 const JPG_BASE64_HEADER = 'data:image/jpg;base64,';
 
-const SecondaryText = ({ children, otherProps }) => (
+const SecondaryText = ({ children, otherProps }: { children: ReactNode; otherProps?: any }) => (
   <Typography variant="body2" color="textSecondary" {...otherProps}>
     {children}
   </Typography>
 );
 
-const PeopleSearchResult = ({ Person, size, lazyImages }) => {
+interface Props {
+  person: SearchResult;
+  size: 'single' | 'largeImages' | 'full';
+  lazyImages: boolean;
+}
+
+const PeopleSearchResult = ({ person, size, lazyImages }: Props) => {
   const [avatar, setAvatar] = useState(GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1);
   const [hasBeenRun, setHasBeenRun] = useState(false);
 
   const loadAvatar = useCallback(async () => {
     const { def: defaultImage, pref: preferredImage } = await userService.getImage(
-      Person.AD_Username,
+      person.AD_Username,
     );
 
-    if (Person.AD_Username) {
+    if (person.AD_Username) {
       setAvatar(JPG_BASE64_HEADER + (preferredImage || defaultImage));
     }
     setHasBeenRun(true);
-  }, [Person.AD_Username]);
+  }, [person.AD_Username]);
 
   useEffect(() => {
     if (!lazyImages && !hasBeenRun) {
       loadAvatar();
     }
-  }, [Person.AD_Username, hasBeenRun, lazyImages, loadAvatar]);
+  }, [person.AD_Username, hasBeenRun, lazyImages, loadAvatar]);
 
-  const handleVisibilityChange = (isVisible) => {
+  const handleVisibilityChange = (isVisible: boolean) => {
     if (lazyImages && isVisible && !hasBeenRun) loadAvatar();
   };
 
-  const fullName = `${Person.FirstName} ${Person.LastName}`;
+  const fullName = `${person.FirstName} ${person.LastName}`;
   const nickname =
-    Person?.NickName && Person.NickName !== Person.FirstName ? `(${Person.NickName})` : null;
+    person?.NickName && person.NickName !== person.FirstName ? `(${person.NickName})` : null;
   const maidenName =
-    Person?.MaidenName && Person.MaidenName !== Person.LastName ? `(${Person.MaidenName})` : null;
-  const personClassJobTitle =
-    Person.Type === 'Student' ? Class[Person.Class] : Person.JobTitle ?? '';
-  const mailLocation =
-    Person.Type === 'Student'
-      ? `Mailbox #${Person.Mail_Location}`
-      : `Mailstop: ${Person.Mail_Location}`;
+    person?.MaidenName && person.MaidenName !== person.LastName ? `(${person.MaidenName})` : null;
 
-  let className, gridProps;
+  let classOrJobTitle,
+    mailLocation = '';
+  switch (person.Type) {
+    case 'Student':
+      classOrJobTitle = Class[person.Class];
+      mailLocation = `Mailbox #${person.Mail_Location}`;
+      break;
+
+    case 'Faculty':
+    case 'Staff':
+      classOrJobTitle = person.JobTitle;
+      mailLocation = `Mailstop: ${person.Mail_Location}`;
+      break;
+
+    default:
+      break;
+  }
+
+  let className: string;
+  let gridProps: {
+    xs?: GridSize;
+    container?: boolean;
+    alignItems?: GridItemsAlignment;
+    justifyContent?: GridJustification;
+  };
   switch (size) {
     case 'single':
       className = styles.people_search_avatar_mobile;
@@ -79,12 +110,11 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
   return (
     <VisibilitySensor onChange={handleVisibilityChange}>
       <>
-        <Divider />
-        <Link className="gc360_link" to={`profile/${Person.AD_Username}`}>
+        <Link className="gc360_link" to={`profile/${person.AD_Username}`}>
           <Grid
             container
             alignItems="center"
-            justifyContent={size !== 'full' ? 'center' : null}
+            justifyContent={size !== 'full' ? 'center' : undefined}
             spacing={2}
             style={{
               padding: '1rem',
@@ -101,10 +131,10 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
               {size === 'full' && (
                 <div>
                   <Typography>
-                    {Person.FirstName} {nickname} {Person.LastName} {maidenName}
+                    {person.FirstName} {nickname} {person.LastName} {maidenName}
                   </Typography>
                   <Typography variant="subtitle2">
-                    {Person.Email?.includes('.') ? Person.Email : null}
+                    {person.Email?.includes('.') ? person.Email : null}
                   </Typography>
                 </div>
               )}
@@ -112,25 +142,31 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
             <Grid item xs={size === 'full' ? 5 : 8}>
               {size !== 'full' && (
                 <Typography variant="h5">
-                  {Person.FirstName} {nickname} {Person.LastName} {maidenName}
+                  {person.FirstName} {nickname} {person.LastName} {maidenName}
                 </Typography>
               )}
               <Typography>
-                {personClassJobTitle ?? Person.Type}
-                {Person.Type === 'Alum' && Person.PreferredClassYear
-                  ? ' ' + Person.PreferredClassYear
+                {classOrJobTitle ?? person.Type}
+                {person.Type === 'Alumni' && person.PreferredClassYear
+                  ? ' ' + person.PreferredClassYear
                   : null}
               </Typography>
               <SecondaryText>
-                {Person.Major1Description}
-                {Person.Major2Description
-                  ? (Person.Major1Description ? ', ' : '') + `${Person.Major2Description}`
-                  : null}
-                {Person.Major3Description ? `, ${Person.Major3Description}` : null}
+                {(person.Type === 'Student' || person.Type === 'Alumni') && (
+                  <>
+                    {person.Major1Description}
+                    {person.Major2Description
+                      ? (person.Major1Description ? ', ' : '') + `${person.Major2Description}`
+                      : null}
+                    {person.Type === 'Student' && person.Major3Description
+                      ? `, ${person.Major3Description}`
+                      : null}
+                  </>
+                )}
               </SecondaryText>
               {size !== 'full' && (
                 <>
-                  <SecondaryText>{Person.Email}</SecondaryText>
+                  <SecondaryText>{person.Email}</SecondaryText>
                   <SecondaryText>{mailLocation}</SecondaryText>
                 </>
               )}
@@ -149,23 +185,3 @@ const PeopleSearchResult = ({ Person, size, lazyImages }) => {
 };
 
 export default PeopleSearchResult;
-
-PeopleSearchResult.propTypes = {
-  Person: PropTypes.shape({
-    FirstName: PropTypes.string.isRequired,
-    LastName: PropTypes.string.isRequired,
-    Email: PropTypes.string.isRequired,
-    AD_Username: PropTypes.string.isRequired,
-    Nickname: PropTypes.string,
-    Type: PropTypes.string.isRequired,
-    Class: PropTypes.string,
-    JobTitle: PropTypes.string,
-    Mail_Location: PropTypes.string,
-    PreferredClassYear: PropTypes.string,
-    Major1Description: PropTypes.string,
-    Major2Description: PropTypes.string,
-    Major3Description: PropTypes.string,
-  }).isRequired,
-  size: PropTypes.string.isRequired,
-  lazyImages: PropTypes.bool.isRequired,
-};

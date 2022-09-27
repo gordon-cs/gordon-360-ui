@@ -14,10 +14,20 @@ import {
   Switch,
   Typography,
 } from '@material-ui/core';
-import { ExpandMore, Home, LocationCity, Person } from '@material-ui/icons';
+import { ExpandMore } from '@material-ui/icons';
 import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  KeyboardEvent,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   FaBook,
   FaBriefcase,
@@ -25,15 +35,23 @@ import {
   FaGlobeAmericas,
   FaHeart,
   FaSchool,
+  FaHome as Home,
+  FaUser as Person,
+  FaMapMarkerAlt as LocationCity,
 } from 'react-icons/fa';
 import Media from 'react-media';
 import { useHistory, useLocation } from 'react-router';
 import { AuthGroup } from 'services/auth';
-import goStalk, { Class } from 'services/goStalk';
+import goStalk, { Class, SearchFields, SearchResult } from 'services/goStalk';
 import { toTitleCase, searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
-import SelectSearchField from './components/SelectSearchField';
-import TextSearchField from './components/TextSearchField';
+import SearchField from './components/SearchField';
+
+/**
+ * A Regular Expression that matches any string with any alphanumeric character [a-z][A-Z][0-9].
+ * See [RegExp Character Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes#types) for more info.
+ */
+const containsLetterRegExp = /\w/;
 
 const relationship_statuses = [
   'Single',
@@ -51,14 +69,14 @@ const relationship_statuses = [
 ];
 
 const searchPageTitle = (
-  <div align="center">
+  <>
     Search the
     <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
     Community
-  </div>
+  </>
 );
 
-const initialSearchValues = {
+const initialSearchValues: SearchFields = {
   includeStudent: true,
   includeFacStaff: true,
   includeAlumni: false,
@@ -83,20 +101,26 @@ const isTodayAprilFools = () => {
   return todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
 };
 
-const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => {
+type Props = {
+  onSearch: Dispatch<SetStateAction<SearchResult[] | null>>;
+  displayLargeImage: boolean;
+  setDisplayLargeImage: Dispatch<SetStateAction<boolean>>;
+};
+
+const SearchFieldList = ({ onSearch, displayLargeImage, setDisplayLargeImage }: Props) => {
   const { profile } = useUser();
   const history = useHistory();
   const location = useLocation();
   const isAlumni = useAuthGroups(AuthGroup.Alumni);
   const isStudent = useAuthGroups(AuthGroup.Student);
 
-  const [majors, setMajors] = useState([]);
-  const [minors, setMinors] = useState([]);
-  const [states, setStates] = useState([]);
-  const [countries, setCountries] = useState([]);
-  const [departments, setDepartments] = useState([]);
-  const [buildings, setBuildings] = useState([]);
-  const [halls, setHalls] = useState([]);
+  const [majors, setMajors] = useState<string[]>([]);
+  const [minors, setMinors] = useState<string[]>([]);
+  const [states, setStates] = useState<string[]>([]);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [departments, setDepartments] = useState<string[]>([]);
+  const [buildings, setBuildings] = useState<string[]>([]);
+  const [halls, setHalls] = useState<string[]>([]);
 
   // Ref is used to only read search params from URL on first load (and on back/forward navigate via event listener)
   const shouldReadSearchParamsFromURL = useRef(true);
@@ -105,7 +129,10 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
-  // Prevent search from blank
+  /**
+   * Whether the user can search for the current params.
+   * This prevents a search with empty params, which freezes the client by trying to render thousands of results
+   */
   const canSearch = useMemo(() => {
     const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = searchValues;
 
@@ -113,7 +140,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
     const includesSomeone = includeStudent || includeFacStaff || includeAlumni;
 
     // Must search for some non-empty criteria
-    const anySearchCriteria = Object.values(criteria).some((c) => c.replace(/[^\w,.'-]/g, ''));
+    const anySearchCriteria = Object.values(criteria).some((c) => containsLetterRegExp.test(c));
 
     return includesSomeone && anySearchCriteria;
   }, [searchValues]);
@@ -190,25 +217,25 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
     return () => window.removeEventListener('popstate', onNavigate);
   }, [location.search]);
 
-  if (loading) {
-    return <GordonLoader />;
-  }
-
-  const handleUpdate = (event) =>
+  const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
     setSearchValues((sv) => ({
       ...sv,
       [event.target.name]:
         event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     }));
 
-  const handleEnterKeyPress = (event) => {
+  const handleEnterKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       search();
     }
   };
 
+  if (loading) {
+    return <GordonLoader />;
+  }
+
   const PeopleSearchCheckbox = (
-    <Grid item xs={12} lg={6} align="center">
+    <Grid item xs={12} lg={6} alignItems="center">
       <FormLabel component="label">Include: &nbsp;</FormLabel>
       {loading ? (
         <GordonLoader size={20} />
@@ -261,7 +288,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
         {/* Search Section 1: General Info */}
         <Grid container spacing={2} direction="row">
           <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
-            <TextSearchField
+            <SearchField
               name="first_name"
               value={searchValues.first_name}
               updateValue={handleUpdate}
@@ -270,7 +297,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
           </Grid>
 
           <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
-            <TextSearchField
+            <SearchField
               name="last_name"
               value={searchValues.last_name}
               updateValue={handleUpdate}
@@ -278,23 +305,25 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
           </Grid>
 
           <Grid item xs={12}>
-            <SelectSearchField
+            <SearchField
               name="residence_hall"
               value={searchValues.residence_hall}
               updateValue={handleUpdate}
               options={halls}
               Icon={FaBuilding}
+              select
             />
           </Grid>
 
           {isTodayAprilFools() ? (
             <Grid item xs={12}>
-              <SelectSearchField
+              <SearchField
                 name="relationship_status"
-                value={searchValues.relationship_status}
+                value={searchValues.relationship_status ?? ''}
                 updateValue={handleUpdate}
                 options={relationship_statuses}
                 Icon={FaHeart}
+                select
               />
             </Grid>
           ) : null}
@@ -304,7 +333,7 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
           <Media
             query="(min-width: 960px)"
             render={() => (
-              <Grid item xs={12} lg={6} align="center">
+              <Grid item xs={12} lg={6} alignItems="center">
                 <FormControlLabel
                   control={
                     <Switch
@@ -320,8 +349,8 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
         </Grid>
 
         {/* Advanced Filtering */}
-        <Grid container align="center">
-          <Accordion style={{ flexGrow: 1 }}>
+        <Grid container alignItems="center">
+          <Accordion style={{ flexGrow: 1 }} elevation={3}>
             <AccordionSummary
               expandIcon={<ExpandMore />}
               id="more-search-options-header"
@@ -344,30 +373,35 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
                         : 'initial'
                     }
                   >
-                    {profile.PersonType === 'stu' ? 'Student' : 'Student/Alumni'}
+                    {profile?.PersonType === 'stu' ? 'Student' : 'Student/Alumni'}
                   </Typography>
-                  <SelectSearchField
+                  <SearchField
                     name="major"
                     value={searchValues.major}
                     updateValue={handleUpdate}
                     options={majors}
                     Icon={FaBook}
+                    select
                     disabled={!searchValues.includeStudent && !searchValues.includeAlumni}
                   />
-                  <SelectSearchField
+                  <SearchField
                     name="minor"
                     value={searchValues.minor}
                     updateValue={handleUpdate}
                     options={minors}
                     Icon={FaBook}
+                    select
                     disabled={!searchValues.includeStudent}
                   />
-                  <SelectSearchField
+                  <SearchField
                     name="class_year"
                     value={searchValues.class_year}
                     updateValue={handleUpdate}
-                    options={Object.values(Class).filter((value) => typeof value !== 'number')}
+                    options={
+                      Object.values(Class).filter((value) => typeof value !== 'number') as string[]
+                    }
                     Icon={FaSchool}
+                    select
                     disabled={!searchValues.includeStudent}
                   />
                 </Grid>
@@ -381,19 +415,22 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
                   >
                     Faculty/Staff
                   </Typography>
-                  <SelectSearchField
+                  <SearchField
                     name="department"
                     value={searchValues.department}
                     updateValue={handleUpdate}
                     options={departments}
                     Icon={FaBriefcase}
+                    select
                     disabled={!searchValues.includeFacStaff}
                   />
-                  <SelectSearchField
+                  <SearchField
                     name="building"
                     value={searchValues.building}
+                    updateValue={handleUpdate}
                     options={buildings}
                     Icon={FaBuilding}
+                    select
                     disabled={!searchValues.includeFacStaff}
                   />
                 </Grid>
@@ -403,26 +440,27 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
                   <Typography align="center" gutterBottom color="primary">
                     Everyone
                   </Typography>
-                  <TextSearchField
+                  <SearchField
                     name="home_town"
                     value={searchValues.home_town}
                     updateValue={handleUpdate}
                     Icon={Home}
-                    onKeyDown={handleEnterKeyPress}
                   />
-                  <SelectSearchField
+                  <SearchField
                     name="state"
                     value={searchValues.state}
                     updateValue={handleUpdate}
                     options={states}
                     Icon={LocationCity}
+                    select
                   />
-                  <SelectSearchField
+                  <SearchField
                     name="country"
                     value={searchValues.country}
                     updateValue={handleUpdate}
                     options={countries}
                     Icon={FaGlobeAmericas}
+                    select
                   />
                 </Grid>
               </Grid>
@@ -449,9 +487,8 @@ const SearchFields = ({ onSearch, displayLargeImage, setDisplayLargeImage }) => 
           </Button>
         )}
       </CardActions>
-      <br />
     </Card>
   );
 };
 
-export default SearchFields;
+export default SearchFieldList;
