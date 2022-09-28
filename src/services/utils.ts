@@ -110,25 +110,21 @@ export const searchParamSerializerFactory = <
    * Deserialize a string value to its type in `TSearchParams` for the given key.
    *
    * @param key The key of `TSearchParams` that the value corresponds to.
-   * @param value The value as a string to deserialize
+   * @param encodedValue The value as a string to deserialize
    * @returns value converted to its type in `TSearchParams`
    */
-  const deserializeSearchValue = (key: keyof TSearchParams, value: string) => {
-    let decodedValue: string | number | boolean = decodeURIComponent(value);
+  const deserializeSearchValue = (key: keyof TSearchParams, encodedValue: string) => {
+    let value: string = decodeURIComponent(encodedValue);
     switch (typeof initialSearchParams[key]) {
       case 'string':
-        decodedValue = value;
-        break;
+        return value;
       case 'boolean':
-        decodedValue = value === 'true';
-        break;
+        return value === 'true';
       case 'number':
-        decodedValue = parseInt(value);
-        break;
+        return parseInt(value);
       default:
-        break;
+        return value;
     }
-    return decodedValue;
   };
 
   /**
