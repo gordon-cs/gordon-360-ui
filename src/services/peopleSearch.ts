@@ -82,7 +82,6 @@ const search = (searchFields: SearchFields): Promise<SearchResult[]> => {
     minor: searchFields.minor,
     hall: searchFields.residence_hall,
     classType: searchFields.class_year === '' ? '' : Class[searchFields.class_year],
-
     homeCity: searchFields.home_town,
     state: searchFields.state,
     country: searchFields.country.toUpperCase(),
