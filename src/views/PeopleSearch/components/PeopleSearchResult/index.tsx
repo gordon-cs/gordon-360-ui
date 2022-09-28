@@ -8,8 +8,6 @@ import styles from './PeopleSearchResult.module.css';
 
 /*Const string was created with https://png-pixel.com/ .
  *It is a 1 x 1 pixel with the same color as gordonColors.neutral.lightGray (7/9/21)
- *Although this doesn't use the gordonColors themes directly,
- *the end result is much cleaner and faster than using the placeholderColor tag of react-graceful-image.
  */
 const GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/erVfwAJRwPA/3pinwAAAABJRU5ErkJggg==';
