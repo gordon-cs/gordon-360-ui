@@ -5,3 +5,11 @@
   color: $neutral-white;
   text-align: center;
 }
+
+.print_button {
+  position: fixed;
+  margin: 0;
+  bottom: min(5vw, 4rem);
+  right: max(2rem, 5vw);
+  z-index: 1;
+}

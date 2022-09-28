@@ -69,17 +69,7 @@ const PeopleSearch = () => {
           {!profile.PersonType?.includes?.('stu') && (
             <ReactToPrint
               trigger={() => (
-                <Fab
-                  variant="extended"
-                  color="primary"
-                  style={{
-                    position: 'fixed',
-                    margin: 0,
-                    bottom: 'min(5vw, 4rem)',
-                    right: 'max(2rem, 5vw)',
-                    zIndex: 1,
-                  }}
-                >
+                <Fab variant="extended" color="primary" className={styles.print_button}>
                   <FaPrint />
                   {isLargeScreen && <span>&nbsp;&nbsp;Print Results</span>}
                 </Fab>
