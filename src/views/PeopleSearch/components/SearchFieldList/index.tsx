@@ -40,7 +40,7 @@ import {
 } from 'react-icons/fa';
 import { useHistory, useLocation } from 'react-router';
 import { AuthGroup } from 'services/auth';
-import peopleSearchService, { Class, SearchFields, SearchResult } from 'services/peopleSearch';
+import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { toTitleCase, searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
 import SearchField from './components/SearchField';
@@ -74,7 +74,7 @@ const searchPageTitle = (
   </>
 );
 
-const defaultSearchParams: SearchFields = {
+const defaultSearchParams: PeopleSearchQuery = {
   includeStudent: true,
   includeFacStaff: true,
   includeAlumni: false,
@@ -125,7 +125,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   /**
    * Default search params adjusted for the user's identity.
    */
-  const initialSearchParams: SearchFields = useMemo(
+  const initialSearchParams: PeopleSearchQuery = useMemo(
     () => ({
       ...defaultSearchParams,
       // Only students and facstaff search students by default - alumni aren't allowed to search students

@@ -56,7 +56,7 @@ export type SearchResult = SearchResultBase &
       }
   );
 
-export type SearchFields = {
+export type PeopleSearchQuery = {
   includeStudent: boolean;
   includeFacStaff: boolean;
   includeAlumni: boolean;
@@ -74,7 +74,7 @@ export type SearchFields = {
   relationship_status?: string;
 };
 
-const search = (searchFields: SearchFields): Promise<SearchResult[]> => {
+const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
   let params = Object.entries({
     firstName: searchFields.first_name,
     lastName: searchFields.last_name,
