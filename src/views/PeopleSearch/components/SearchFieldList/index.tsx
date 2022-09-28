@@ -11,7 +11,6 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
-  Switch,
   Typography,
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
@@ -39,7 +38,6 @@ import {
   FaUser as Person,
   FaMapMarkerAlt as LocationCity,
 } from 'react-icons/fa';
-import Media from 'react-media';
 import { useHistory, useLocation } from 'react-router';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, SearchFields, SearchResult } from 'services/peopleSearch';
@@ -103,11 +101,9 @@ const isTodayAprilFools = () => {
 
 type Props = {
   onSearch: Dispatch<SetStateAction<SearchResult[] | null>>;
-  displayLargeImage: boolean;
-  setDisplayLargeImage: Dispatch<SetStateAction<boolean>>;
 };
 
-const SearchFieldList = ({ onSearch, displayLargeImage, setDisplayLargeImage }: Props) => {
+const SearchFieldList = ({ onSearch }: Props) => {
   const { profile } = useUser();
   const history = useHistory();
   const location = useLocation();
@@ -281,12 +277,12 @@ const SearchFieldList = ({ onSearch, displayLargeImage, setDisplayLargeImage }: 
   );
 
   return (
-    <Card style={{ padding: '0 3vw' }}>
+    <Card style={{ padding: '1rem' }}>
       <CardContent>
         <CardHeader title={searchPageTitle} titleTypographyProps={{ align: 'center' }} />
 
         {/* Search Section 1: General Info */}
-        <Grid container spacing={2} direction="row" alignItems="center">
+        <Grid container spacing={2} direction="row" alignItems="center" justifyContent="center">
           <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
             <SearchField
               name="first_name"
@@ -329,23 +325,6 @@ const SearchFieldList = ({ onSearch, displayLargeImage, setDisplayLargeImage }: 
           ) : null}
 
           {PeopleSearchCheckbox}
-
-          <Media
-            query="(min-width: 960px)"
-            render={() => (
-              <Grid item xs={6}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={displayLargeImage}
-                      onChange={() => setDisplayLargeImage((d) => !d)}
-                    />
-                  }
-                  label="Display Large Images"
-                />
-              </Grid>
-            )}
-          />
         </Grid>
 
         {/* Advanced Filtering */}

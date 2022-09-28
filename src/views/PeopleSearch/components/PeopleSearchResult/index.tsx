@@ -1,14 +1,5 @@
-import {
-  Divider,
-  Grid,
-  GridItemsAlignment,
-  GridJustification,
-  GridSize,
-  Typography,
-} from '@material-ui/core';
+import { Card, CardContent, CardMedia, Divider, Typography } from '@material-ui/core';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
-// @ts-ignore
-import IMG from 'react-graceful-image';
 import { Link } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Class, SearchResult } from 'services/peopleSearch';
@@ -24,7 +15,13 @@ const GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/erVfwAJRwPA/3pinwAAAABJRU5ErkJggg==';
 const JPG_BASE64_HEADER = 'data:image/jpg;base64,';
 
-const SecondaryText = ({ children, otherProps }: { children: ReactNode; otherProps?: any }) => (
+const SecondaryText = ({
+  children,
+  ...otherProps
+}: {
+  children: ReactNode;
+  [props: string]: any;
+}) => (
   <Typography variant="body2" color="textSecondary" {...otherProps}>
     {children}
   </Typography>
@@ -32,33 +29,34 @@ const SecondaryText = ({ children, otherProps }: { children: ReactNode; otherPro
 
 interface Props {
   person: SearchResult;
-  size: 'single' | 'largeImages' | 'full';
-  lazyImages: boolean;
+  lazyLoadAvatar: boolean;
 }
 
-const PeopleSearchResult = ({ person, size, lazyImages }: Props) => {
-  const [avatar, setAvatar] = useState(GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1);
+const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
+  const [avatar, setAvatar] = useState<string | null>(
+    person.AD_Username ? GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 : null,
+  );
   const [hasBeenRun, setHasBeenRun] = useState(false);
 
   const loadAvatar = useCallback(async () => {
-    const { def: defaultImage, pref: preferredImage } = await userService.getImage(
-      person.AD_Username,
-    );
-
     if (person.AD_Username) {
+      const { def: defaultImage, pref: preferredImage } = await userService.getImage(
+        person.AD_Username,
+      );
+
       setAvatar(JPG_BASE64_HEADER + (preferredImage || defaultImage));
     }
     setHasBeenRun(true);
   }, [person.AD_Username]);
 
   useEffect(() => {
-    if (!lazyImages && !hasBeenRun) {
+    if (!lazyLoadAvatar && !hasBeenRun) {
       loadAvatar();
     }
-  }, [person.AD_Username, hasBeenRun, lazyImages, loadAvatar]);
+  }, [hasBeenRun, lazyLoadAvatar, loadAvatar]);
 
   const handleVisibilityChange = (isVisible: boolean) => {
-    if (lazyImages && isVisible && !hasBeenRun) loadAvatar();
+    if (lazyLoadAvatar && isVisible && !hasBeenRun) loadAvatar();
   };
 
   const fullName = `${person.FirstName} ${person.LastName}`;
@@ -85,73 +83,25 @@ const PeopleSearchResult = ({ person, size, lazyImages }: Props) => {
       break;
   }
 
-  let className: string;
-  let gridProps: {
-    xs?: GridSize;
-    container?: boolean;
-    alignItems?: GridItemsAlignment;
-    justifyContent?: GridJustification;
-  };
-  switch (size) {
-    case 'single':
-      className = styles.people_search_avatar_mobile;
-      gridProps = {};
-      break;
-    case 'largeImages':
-      className = styles.people_search_avatar_large;
-      gridProps = { xs: 4, container: true, justifyContent: 'flex-end' };
-      break;
-    default:
-      className = styles.people_search_avatar;
-      gridProps = { xs: 5, container: true, alignItems: 'center' };
-      break;
-  }
-
   return (
-    <VisibilitySensor onChange={handleVisibilityChange}>
-      <>
+    <>
+      <VisibilitySensor onChange={handleVisibilityChange}>
         <Link className="gc360_link" to={`profile/${person.AD_Username}`}>
-          <Grid
-            container
-            alignItems="center"
-            justifyContent={size !== 'full' ? 'center' : undefined}
-            spacing={2}
-            style={{
-              padding: '1rem',
-            }}
-          >
-            <Grid item {...gridProps}>
-              <IMG
-                className={className}
-                src={avatar}
-                alt={'Profile picture for ' + fullName}
-                noLazyLoad="true"
-                noPlaceHolder="true"
-              />
-              {size === 'full' && (
-                <div>
-                  <Typography>
-                    {person.FirstName} {nickname} {person.LastName} {maidenName}
-                  </Typography>
-                  <Typography variant="subtitle2">
-                    {person.Email?.includes('.') ? person.Email : null}
-                  </Typography>
-                </div>
-              )}
-            </Grid>
-            <Grid item xs={size === 'full' ? 5 : 8}>
-              {size !== 'full' && (
-                <Typography variant="h5">
-                  {person.FirstName} {nickname} {person.LastName} {maidenName}
-                </Typography>
-              )}
-              <Typography>
+          <Card className={styles.result} elevation={0}>
+            {avatar && (
+              <CardMedia src={avatar} title={fullName} component="img" className={styles.avatar} />
+            )}
+            <CardContent>
+              <Typography variant="h5" className={styles.name}>
+                {person.FirstName} {nickname} {person.LastName} {maidenName}
+              </Typography>
+              <Typography className={styles.subtitle}>
                 {classOrJobTitle ?? person.Type}
                 {person.Type === 'Alumni' && person.PreferredClassYear
                   ? ' ' + person.PreferredClassYear
                   : null}
               </Typography>
-              <SecondaryText>
+              <SecondaryText className={styles.secondary_text}>
                 {(person.Type === 'Student' || person.Type === 'Alumni') && (
                   <>
                     {person.Major1Description}
@@ -164,23 +114,14 @@ const PeopleSearchResult = ({ person, size, lazyImages }: Props) => {
                   </>
                 )}
               </SecondaryText>
-              {size !== 'full' && (
-                <>
-                  <SecondaryText>{person.Email}</SecondaryText>
-                  <SecondaryText>{mailLocation}</SecondaryText>
-                </>
-              )}
-            </Grid>
-            {size === 'full' && (
-              <Grid item xs={2}>
-                <Typography>{mailLocation}</Typography>
-              </Grid>
-            )}
-          </Grid>
+              <SecondaryText className={styles.secondary_text}>{person.Email}</SecondaryText>
+              <SecondaryText className={styles.secondary_text}>{mailLocation}</SecondaryText>
+            </CardContent>
+          </Card>
         </Link>
-        <Divider />
-      </>
-    </VisibilitySensor>
+      </VisibilitySensor>
+      <Divider />
+    </>
   );
 };
 

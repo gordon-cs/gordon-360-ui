@@ -1,23 +1,31 @@
 @import '../../../../vars';
 
-.people_search_avatar_mobile {
-  border-radius: 0.5rem;
-  height: 6.5rem;
-  width: 6.5rem;
+.result {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: min(1rem, 1vw);
+
+  & :global(.MuiCardContent-root) {
+    padding: min(1rem, 2vw);
+  }
 }
 
-.people_search_avatar_large {
+.avatar {
   border-radius: 0.5rem;
-  height: 12rem;
-  width: 12rem;
+  height: clamp(8rem, 20vw, 20rem);
+  width: clamp(8rem, 20vw, 20rem);
+  margin: min(1rem, 2vw);
 }
 
-.people_search_avatar {
-  border-radius: 0.5rem;
-  height: 5rem;
-  width: 5rem;
-  margin-right: 1rem;
+.name {
+  font-size: clamp(1rem, 0.6429rem + 1.7857vw, 3rem);
 }
-.disabled {
-  opacity: 0.4;
+
+.subtitle {
+  font-size: clamp(0.8rem, 0.6286rem + 0.8571vw, 2rem);
+}
+
+.secondary_text {
+  font-size: clamp(0.75rem, 0.6429rem + 0.5357vw, 1.5rem);
 }
