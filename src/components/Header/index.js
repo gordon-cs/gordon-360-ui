@@ -17,7 +17,7 @@ import { authenticate } from 'services/auth';
 import { windowBreakWidths } from 'theme';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
-import GordonQuickSearch from './components/PeopleSearch';
+import GordonQuickSearch from './components/QuickSearch';
 import styles from './Header.module.css';
 
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);

@@ -16,7 +16,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import HelpIcon from '@material-ui/icons/Help';
 import StarBorder from '@material-ui/icons/StarBorder';
-import GordonQuickSearch from 'components/Header/components/PeopleSearch';
+import GordonQuickSearch from 'components/Header/components/QuickSearch';
 import { useState } from 'react';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
