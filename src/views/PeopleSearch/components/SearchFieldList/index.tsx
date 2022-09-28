@@ -74,7 +74,7 @@ const searchPageTitle = (
   </>
 );
 
-const initialSearchValues: SearchFields = {
+const defaultSearchParams: SearchFields = {
   includeStudent: true,
   includeFacStaff: true,
   includeAlumni: false,
@@ -92,7 +92,7 @@ const initialSearchValues: SearchFields = {
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
-  searchParamSerializerFactory(initialSearchValues);
+  searchParamSerializerFactory(defaultSearchParams);
 
 const isTodayAprilFools = () => {
   const todaysDate = new Date();
@@ -107,8 +107,12 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const { profile } = useUser();
   const history = useHistory();
   const location = useLocation();
-  const isAlumni = useAuthGroups(AuthGroup.Alumni);
-  const isStudent = useAuthGroups(AuthGroup.Student);
+
+  const [isStudent, isFacStaff, isAlumni] = useAuthGroups(
+    AuthGroup.Student,
+    AuthGroup.FacStaff,
+    AuthGroup.Alumni,
+  );
 
   const [majors, setMajors] = useState<string[]>([]);
   const [minors, setMinors] = useState<string[]>([]);
@@ -118,9 +122,23 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
 
-  // Ref is used to only read search params from URL on first load (and on back/forward navigate via event listener)
+  /**
+   * Default search params adjusted for the user's identity.
+   */
+  const initialSearchParams: SearchFields = useMemo(
+    () => ({
+      ...defaultSearchParams,
+      // Only students and facstaff search students by default - alumni aren't allowed to search students
+      includeStudent: isStudent || isFacStaff,
+      // Only alumni search alumni by default
+      includeAlumni: isAlumni,
+    }),
+    [isAlumni, isFacStaff, isStudent],
+  );
+  const [searchParams, setSearchParams] = useState(initialSearchParams);
+
+  // Used to only read search params from URL on first load (and on back/forward navigate via event listener)
   const shouldReadSearchParamsFromURL = useRef(true);
-  const [searchValues, setSearchValues] = useState(initialSearchValues);
 
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
@@ -130,7 +148,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
    * This prevents a search with empty params, which freezes the client by trying to render thousands of results
    */
   const canSearch = useMemo(() => {
-    const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = searchValues;
+    const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = searchParams;
 
     // Must search some cohort of people
     const includesSomeone = includeStudent || includeFacStaff || includeAlumni;
@@ -139,23 +157,23 @@ const SearchFieldList = ({ onSearch }: Props) => {
     const anySearchCriteria = Object.values(criteria).some((c) => containsLetterRegExp.test(c));
 
     return includesSomeone && anySearchCriteria;
-  }, [searchValues]);
+  }, [searchParams]);
 
   const search = useCallback(async () => {
     if (canSearch) {
       setLoadingSearch(true);
 
-      await peopleSearchService.search(searchValues).then(onSearch);
+      await peopleSearchService.search(searchParams).then(onSearch);
 
-      const newQueryString = serializeSearchParams({ ...searchValues });
+      const newQueryString = serializeSearchParams(searchParams);
       // If search params are new since last search, add search to history
       if (location.search !== newQueryString) {
-        history.push(`?${newQueryString}`);
+        history.push(newQueryString);
       }
 
       setLoadingSearch(false);
     }
-  }, [canSearch, searchValues, onSearch, location.search, history]);
+  }, [canSearch, searchParams, onSearch, location.search, history]);
 
   useEffect(() => {
     const loadPage = async () => {
@@ -176,10 +194,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setDepartments(departments);
       setBuildings(buildings);
 
-      if (isAlumni) {
-        setSearchValues((sv) => ({ ...sv, includeStudent: false, includeAlumni: true }));
-      }
-
       setLoading(false);
     };
 
@@ -189,18 +203,18 @@ const SearchFieldList = ({ onSearch }: Props) => {
   useEffect(() => {
     // Read search params from URL on navigate (including first load)
     if (shouldReadSearchParamsFromURL.current) {
-      const stateFromQueryString = deserializeSearchParams(new URLSearchParams(location.search));
+      const newSearchParams = deserializeSearchParams(new URLSearchParams(location.search));
 
-      setSearchValues((oldSearchValues) => {
-        // if new URL has no search params, set search params to initial values
-        if (Object.entries(stateFromQueryString).length === 0) {
-          return initialSearchValues;
+      setSearchParams((oldSearchParams) => {
+        // If there are no search params in the URL, reset to initialSearchParams
+        if (newSearchParams === null) {
+          return initialSearchParams;
         }
 
         // Update search params with values from URL query string
         return {
-          ...oldSearchValues,
-          ...stateFromQueryString,
+          ...oldSearchParams,
+          ...newSearchParams,
         };
       });
 
@@ -211,11 +225,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
     const onNavigate = () => (shouldReadSearchParamsFromURL.current = true);
     window.addEventListener('popstate', onNavigate);
     return () => window.removeEventListener('popstate', onNavigate);
-  }, [location.search]);
+  }, [location.search, initialSearchParams]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
-    setSearchValues((sv) => ({
-      ...sv,
+    setSearchParams((sp) => ({
+      ...sp,
       [event.target.name]:
         event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     }));
@@ -237,40 +251,46 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <GordonLoader size={20} />
       ) : (
         <>
-          {!isAlumni ? (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={searchValues.includeStudent}
-                  name="includeStudent"
-                  onChange={handleUpdate}
-                />
-              }
-              label="Student"
-            />
-          ) : null}
+          {
+            // Only students and FacStaff can search students
+            isStudent || isFacStaff ? (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={searchParams.includeStudent}
+                    name="includeStudent"
+                    onChange={handleUpdate}
+                  />
+                }
+                label="Student"
+              />
+            ) : null
+          }
           <FormControlLabel
             control={
               <Checkbox
-                checked={searchValues.includeFacStaff}
+                checked={searchParams.includeFacStaff}
                 name="includeFacStaff"
                 onChange={handleUpdate}
               />
             }
             label="Faculty/Staff"
           />
-          {!isStudent ? (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={searchValues.includeAlumni}
-                  name="includeAlumni"
-                  onChange={handleUpdate}
-                />
-              }
-              label="Alumni"
-            />
-          ) : null}
+          {
+            // Only Alumni and FacStaff can search students
+            isAlumni || isFacStaff ? (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={searchParams.includeAlumni}
+                    name="includeAlumni"
+                    onChange={handleUpdate}
+                  />
+                }
+                label="Alumni"
+              />
+            ) : null
+          }
         </>
       )}
     </Grid>
@@ -286,7 +306,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
           <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
             <SearchField
               name="first_name"
-              value={searchValues.first_name}
+              value={searchParams.first_name}
               updateValue={handleUpdate}
               Icon={Person}
             />
@@ -295,7 +315,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
           <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
             <SearchField
               name="last_name"
-              value={searchValues.last_name}
+              value={searchParams.last_name}
               updateValue={handleUpdate}
             />
           </Grid>
@@ -303,7 +323,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
           <Grid item xs={12}>
             <SearchField
               name="residence_hall"
-              value={searchValues.residence_hall}
+              value={searchParams.residence_hall}
               updateValue={handleUpdate}
               options={halls}
               Icon={FaBuilding}
@@ -315,7 +335,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
             <Grid item xs={12}>
               <SearchField
                 name="relationship_status"
-                value={searchValues.relationship_status ?? ''}
+                value={searchParams.relationship_status ?? ''}
                 updateValue={handleUpdate}
                 options={relationship_statuses}
                 Icon={FaHeart}
@@ -347,7 +367,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     align="center"
                     gutterBottom
                     color={
-                      searchValues.includeStudent || searchValues.includeAlumni
+                      searchParams.includeStudent || searchParams.includeAlumni
                         ? 'primary'
                         : 'initial'
                     }
@@ -356,32 +376,32 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   </Typography>
                   <SearchField
                     name="major"
-                    value={searchValues.major}
+                    value={searchParams.major}
                     updateValue={handleUpdate}
                     options={majors}
                     Icon={FaBook}
                     select
-                    disabled={!searchValues.includeStudent && !searchValues.includeAlumni}
+                    disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
                   />
                   <SearchField
                     name="minor"
-                    value={searchValues.minor}
+                    value={searchParams.minor}
                     updateValue={handleUpdate}
                     options={minors}
                     Icon={FaBook}
                     select
-                    disabled={!searchValues.includeStudent}
+                    disabled={!searchParams.includeStudent}
                   />
                   <SearchField
                     name="class_year"
-                    value={searchValues.class_year}
+                    value={searchParams.class_year}
                     updateValue={handleUpdate}
                     options={
                       Object.values(Class).filter((value) => typeof value !== 'number') as string[]
                     }
                     Icon={FaSchool}
                     select
-                    disabled={!searchValues.includeStudent}
+                    disabled={!searchParams.includeStudent}
                   />
                 </Grid>
 
@@ -390,27 +410,27 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   <Typography
                     align="center"
                     gutterBottom
-                    color={searchValues.includeFacStaff ? 'primary' : 'initial'}
+                    color={searchParams.includeFacStaff ? 'primary' : 'initial'}
                   >
                     Faculty/Staff
                   </Typography>
                   <SearchField
                     name="department"
-                    value={searchValues.department}
+                    value={searchParams.department}
                     updateValue={handleUpdate}
                     options={departments}
                     Icon={FaBriefcase}
                     select
-                    disabled={!searchValues.includeFacStaff}
+                    disabled={!searchParams.includeFacStaff}
                   />
                   <SearchField
                     name="building"
-                    value={searchValues.building}
+                    value={searchParams.building}
                     updateValue={handleUpdate}
                     options={buildings}
                     Icon={FaBuilding}
                     select
-                    disabled={!searchValues.includeFacStaff}
+                    disabled={!searchParams.includeFacStaff}
                   />
                 </Grid>
 
@@ -421,13 +441,13 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   </Typography>
                   <SearchField
                     name="home_town"
-                    value={searchValues.home_town}
+                    value={searchParams.home_town}
                     updateValue={handleUpdate}
                     Icon={Home}
                   />
                   <SearchField
                     name="state"
-                    value={searchValues.state}
+                    value={searchParams.state}
                     updateValue={handleUpdate}
                     options={states}
                     Icon={LocationCity}
@@ -435,7 +455,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   />
                   <SearchField
                     name="country"
-                    value={searchValues.country}
+                    value={searchParams.country}
                     updateValue={handleUpdate}
                     options={countries}
                     Icon={FaGlobeAmericas}
@@ -449,7 +469,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       </CardContent>
 
       <CardActions>
-        <Button variant="contained" onClick={() => setSearchValues(initialSearchValues)}>
+        <Button variant="contained" onClick={() => setSearchParams(initialSearchParams)}>
           RESET
         </Button>
         {loadingSearch ? (

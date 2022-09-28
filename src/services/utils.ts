@@ -67,28 +67,53 @@ export const toTitleCase = (string: string, separator = ' ') =>
     .join(' ');
 
 /**
- * Create closures to serialize and deserialize an object of the type `initialSearchParams` to/from a query string.
+ * Create functions to serialize and deserialize an object of the given type to/from a query string.
  * Properties that haven't changed from their initial value are excluded from the query string during serialization.
- * Properties are coerced to their type in `initialSearchParams` during deserialization.
+ * Properties are converted to their type in `initialSearchParams` during deserialization.
  *
  * @param initialSearchParams The shape and initial state of the search params.
  * @returns Functions to:
  *  1) serialize `searchParams` into a query string containing all the properties of `searchParams` that have changed from `initialSearchParams`
- *  2) deserialize a `URLSearchParams` into an object the same shape as `initialSearchParams`
+ *  2) deserialize a `URLSearchParams` into an object of the same type as `initialSearchParams`.
  */
-export const searchParamSerializerFactory = (
-  initialSearchParams: Record<string, string | number | boolean>,
+export const searchParamSerializerFactory = <
+  TSearchParams extends Record<string, string | number | boolean>,
+>(
+  initialSearchParams: TSearchParams,
 ) => {
-  const serializeSearchParams = (searchValues: Record<string, string | number | boolean>) =>
-    Object.entries(searchValues) // Convert {key: value} object into array of [key, value] pairs
-      .filter(([key, value]) => value !== initialSearchParams[key]) // Filter out unchanged items
-      .map(([key, value]) => `${key}=${encodeURIComponent(value)}`) // transform [key, value] pairs into `key=value` strings after encoding `value`
-      .join('&'); // Finally, join `key=value` strings with `&`
+  /**
+   * Convert an object of search params into a query string.
+   *
+   * @param searchParams object of search params
+   * @returns search params encoded into a query string
+   */
+  const serializeSearchParams = (searchParams: TSearchParams) => {
+    // Convert {key: value} object into array of [key, value] pairs
+    const paramsArray = Object.entries(searchParams);
 
-  // Closure to decode string value into it's original type (as found in initialSearchParams)
-  // It's possible there's some TypeScript magic way to know what type each search param should decode to
-  // But I couldn't figure it out.
-  const deserializeSearchValue = (key: string, value: string) => {
+    // Filter out unchanged items
+    const updatedParams = paramsArray.filter(([key, value]) => value !== initialSearchParams[key]);
+
+    // if no params have changed, return empty string
+    if (updatedParams.length === 0) return '';
+
+    // transform [key, value] pairs into `key=value` strings after encoding `value`
+    const stringifiedParams = updatedParams.map(
+      ([key, value]) => `${key}=${encodeURIComponent(value)}`,
+    );
+
+    // Finally, join `key=value` strings with `&` and prepend '?'
+    return `?${stringifiedParams.join('&')}`;
+  };
+
+  /**
+   * Deserialize a string value to its type in `TSearchParams` for the given key.
+   *
+   * @param key The key of `TSearchParams` that the value corresponds to.
+   * @param value The value as a string to deserialize
+   * @returns value converted to its type in `TSearchParams`
+   */
+  const deserializeSearchValue = (key: keyof TSearchParams, value: string) => {
     let decodedValue: string | number | boolean = decodeURIComponent(value);
     switch (typeof initialSearchParams[key]) {
       case 'string':
@@ -106,11 +131,30 @@ export const searchParamSerializerFactory = (
     return decodedValue;
   };
 
-  const deserializeSearchParams = (queryString: URLSearchParams): typeof initialSearchParams =>
-    Array.from(queryString).reduce(
-      (state, [key, value]) => ({ ...state, [key]: deserializeSearchValue(key, value) }),
-      {},
-    );
+  /**
+   * Deserialize a URLSearchParams object into a `TSearchParams` object.
+   *
+   * Any search params that aren't in `TSearchParams` are discarded.
+   * If any key of `TSearchParams` is unspecified, it default to the initial value.
+   *
+   * @param queryString query string to deserialize to search params
+   * @returns object of search params, or null if no search params were found
+   */
+  const deserializeSearchParams = (queryString: URLSearchParams): TSearchParams | null => {
+    const queryParams = Array.from(queryString);
+
+    if (queryParams.length === 0) {
+      return null;
+    }
+
+    return queryParams.reduce((state, [key, value]) => {
+      if (key in initialSearchParams) {
+        return { ...state, [key]: deserializeSearchValue(key, value) };
+      } else {
+        return state;
+      }
+    }, initialSearchParams);
+  };
 
   return { serializeSearchParams, deserializeSearchParams };
 };
