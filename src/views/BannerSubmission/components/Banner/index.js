@@ -6,8 +6,8 @@ import {
   CardMedia,
   Link,
   Typography,
-} from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import styles from './Banner.module.css';
 
 const Banner = ({ banner, handleNewsItemDelete }) => (

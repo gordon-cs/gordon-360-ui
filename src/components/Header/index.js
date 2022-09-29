@@ -1,12 +1,12 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
-import EventIcon from '@material-ui/icons/Event';
-import HomeIcon from '@material-ui/icons/Home';
-import LocalActivityIcon from '@material-ui/icons/LocalActivity';
-// import WorkIcon from '@material-ui/icons/Work';
-import WellnessIcon from '@material-ui/icons/LocalHospital';
-import MenuIcon from '@material-ui/icons/Menu';
-import PeopleIcon from '@material-ui/icons/People';
+import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@mui/material';
+import EventIcon from '@mui/icons-material/Event';
+import HomeIcon from '@mui/icons-material/Home';
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+// import WorkIcon from '@mui/icons-material/Work';
+import WellnessIcon from '@mui/icons-material/LocalHospital';
+import MenuIcon from '@mui/icons-material/Menu';
+import PeopleIcon from '@mui/icons-material/People';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
@@ -159,7 +159,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
             color="primary"
             aria-label="open drawer"
             onClick={onDrawerToggle}
-          >
+            size="large">
             <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
 

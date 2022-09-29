@@ -1,4 +1,4 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme, adaptV4Theme } from '@mui/material/styles';
 
 // Colors from http://www.gordon.edu/brandstandards
 // Shades from https://goo.gl/AF45tZ
@@ -105,7 +105,7 @@ export const windowBreakWidths = {
   breakXL: 1920,
 };
 
-const theme = createTheme({
+const theme = createTheme(adaptV4Theme({
   palette: {
     primary: gordonColors.primary.blueShades,
     secondary: gordonColors.primary.cyanShades,
@@ -133,6 +133,6 @@ const theme = createTheme({
       },
     },
   },
-});
+}));
 
 export default theme;

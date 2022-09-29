@@ -1,6 +1,6 @@
-import { Button, CardContent, Collapse, Grid, Typography } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import { Button, CardContent, Collapse, Grid, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { useUser } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import PropTypes from 'prop-types';
@@ -83,7 +83,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
           setOpen(!open);
         }}
         className={`${styles.news_item} ${unapproved ? styles.unapproved : styles.approved}`}
-        justify="center"
+        justifyContent="center"
       >
         <Grid item xs={12}>
           <Typography variant="h6" className={styles.news_heading} style={{ fontWeight: 'bold' }}>
@@ -99,7 +99,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
               <img src={`data:image/jpg;base64,${posting.Image}`} alt=" " />
             )}
           </CardContent>
-          <Grid container justify="space-evenly">
+          <Grid container justifyContent="space-evenly">
             {editButton}
             {deleteButton}
           </Grid>
@@ -136,7 +136,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
         {/* Collapsable details */}
         <Collapse in={open} timeout="auto" unmountOnExit style={{ width: '100%' }}>
           <CardContent>
-            <Grid container direction="row" alignItems="center" justify="space-around">
+            <Grid container direction="row" alignItems="center" justifyContent="space-around">
               <Grid item xs={8} style={{ textAlign: 'left' }}>
                 <Typography className={styles.descriptionText}>Description:</Typography>
                 <Typography type="caption" className={styles.descriptionText}>
@@ -148,7 +148,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
               </Grid>
               {/* Possible action buttons */}
               <Grid item xs={4}>
-                <Grid container justify="space-evenly">
+                <Grid container justifyContent="space-evenly">
                   {/* these conditionally render - see respective methods */}
                   {editButton}
                   {deleteButton}

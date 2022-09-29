@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import makeStyles from '@mui/styles/makeStyles';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { gordonColors } from 'theme';
 import styles from './PWAInstructions.module.css';
 
@@ -24,7 +24,7 @@ import AppleAddHomeScreenTwo from './images/Mobile/Apple/iPhone-AddToHomeScreen-
 import AppleOpenSafari from './images/Mobile/Apple/iPhone-Open-Safari.png';
 import AppleShareButton from './images/Mobile/Apple/iPhone-Share-Button.png';
 
-import { Button, Dialog, DialogContent, Typography, Grid } from '@material-ui/core';
+import { Button, Dialog, DialogContent, Typography, Grid } from '@mui/material';
 
 // Button styles
 const styles2 = {

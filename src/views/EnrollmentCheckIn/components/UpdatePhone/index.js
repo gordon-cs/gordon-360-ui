@@ -6,7 +6,7 @@ import {
   Input,
   InputLabel,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { forwardRef } from 'react';
 import { IMaskInput } from 'react-imask';
 import { gordonColors } from 'theme';

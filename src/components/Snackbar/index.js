@@ -1,11 +1,11 @@
-import { Snackbar } from '@material-ui/core/';
+import { Snackbar } from '@mui/material/';
 import {
   CheckCircleOutlineOutlined,
   ErrorOutline,
   InfoOutlined,
   ReportProblemOutlined,
-} from '@material-ui/icons/';
-import MuiAlert from '@material-ui/lab/Alert';
+} from '@mui/icons-material/';
+import MuiAlert from '@mui/material/Alert';
 
 const defaultAlertIconMapping = {
   success: <CheckCircleOutlineOutlined fontSize="inherit" />,

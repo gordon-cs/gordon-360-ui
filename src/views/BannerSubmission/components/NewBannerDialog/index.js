@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from '@material-ui/core';
+import { Button, TextField, Typography } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useState } from 'react';
 import { isMobile } from 'react-device-detect';

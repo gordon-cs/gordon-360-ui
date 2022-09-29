@@ -7,7 +7,7 @@ import {
   TableRow,
   Toolbar,
   Typography,
-} from '@material-ui/core/';
+} from '@mui/material/';
 import { useEffect, useState } from 'react';
 import { Class } from 'services/goStalk';
 // @TODO CSSMODULES - outside directory

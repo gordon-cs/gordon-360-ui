@@ -1,7 +1,7 @@
 import { Component, Fragment } from 'react';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { withStyles } from '@material-ui/core/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import withStyles from '@mui/styles/withStyles';
 import { gordonColors } from 'theme';
 import MyScheduleDialog from './components/myScheduleDialog';
 import RemoveScheduleDialog from './components/RemoveScheduleDialog';
@@ -23,7 +23,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 // Default values
 const STARTHOUR = '08:00';

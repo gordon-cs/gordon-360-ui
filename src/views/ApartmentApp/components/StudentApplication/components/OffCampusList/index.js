@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid, List } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, List } from '@mui/material';
 import { useEffect, useState } from 'react';
 import goStalk from 'services/goStalk';
 // @TODO CSSMODULES - outside directory

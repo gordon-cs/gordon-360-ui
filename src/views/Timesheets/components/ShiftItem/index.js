@@ -10,14 +10,14 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import CheckOutlinedIcon from '@material-ui/icons/CheckOutlined';
-import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import MessageOutlinedIcon from '@material-ui/icons/MessageOutlined';
+} from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
@@ -35,17 +35,15 @@ const CustomTooltip = withStyles((theme) => ({
 }))(Tooltip);
 
 const PickerInput = (props) => {
-  return (
-    <>
-      <TextField
-        className={styles.shift_edit_picker}
-        {...props}
-        variant={'outlined'}
-        multiline
-        rowsMax={2}
-      />
-    </>
-  );
+  return <>
+    <TextField
+      className={styles.shift_edit_picker}
+      {...props}
+      variant={'outlined'}
+      multiline
+      maxRows={2}
+    />
+  </>;
 };
 
 export default class ShiftItem extends Component {
@@ -415,12 +413,12 @@ export default class ShiftItem extends Component {
     );
 
     let loaderButton = (
-      <IconButton disabled>
+      <IconButton disabled size="large">
         <GordonLoader size={this.loaderSize} />
       </IconButton>
     );
     let deleteButton = (
-      <IconButton onClick={this.handleDeleteButtonClick}>
+      <IconButton onClick={this.handleDeleteButtonClick} size="large">
         <DeleteForeverOutlinedIcon style={{ color: gordonColors.secondary.red }} />
       </IconButton>
     );
@@ -429,7 +427,10 @@ export default class ShiftItem extends Component {
     }
 
     let checkButton = (
-      <IconButton disabled={errorText !== ''} onClick={this.onCheckButtonClick}>
+      <IconButton
+        disabled={errorText !== ''}
+        onClick={this.onCheckButtonClick}
+        size="large">
         <CheckOutlinedIcon style={{ color: 'green' }} />
       </IconButton>
     );
@@ -446,7 +447,7 @@ export default class ShiftItem extends Component {
               {checkButton}
             </Grid>
             <Grid item xs={12} md={6}>
-              <IconButton onClick={this.toggleEditing}>
+              <IconButton onClick={this.toggleEditing} size="large">
                 <ClearOutlinedIcon style={{ color: gordonColors.secondary.red }} />
               </IconButton>
             </Grid>
@@ -465,7 +466,7 @@ export default class ShiftItem extends Component {
                     newHoursWorked: HOURS_WORKED.toFixed(2),
                   });
                 }}
-              >
+                size="large">
                 <EditOutlinedIcon />
               </IconButton>
             </Grid>
@@ -477,7 +478,7 @@ export default class ShiftItem extends Component {
       }
     } else {
       shiftItemIcons = (
-        <IconButton style={{ visibility: 'hidden' }}>
+        <IconButton style={{ visibility: 'hidden' }} size="large">
           <DeleteForeverOutlinedIcon />
         </IconButton>
       );

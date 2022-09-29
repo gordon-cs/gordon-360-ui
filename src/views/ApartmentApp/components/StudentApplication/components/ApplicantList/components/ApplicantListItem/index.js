@@ -7,11 +7,11 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
-} from '@material-ui/core';
-import ClearIcon from '@material-ui/icons/Clear';
-import PersonIcon from '@material-ui/icons/Person';
-import StarIcon from '@material-ui/icons/Star';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
+} from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+import PersonIcon from '@mui/icons-material/Person';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Class } from 'services/goStalk';
@@ -106,7 +106,7 @@ const ApplicantListItem = ({
                 aria-label={isApplicationEditor ? 'current-editor' : 'set-new-editor'}
                 disabled={isApplicationEditor || disabled}
                 onClick={() => profile && onChangeEditor?.(profile)}
-              >
+                size="large">
                 {isApplicationEditor ? <StarIcon /> : <StarBorderIcon />}
               </IconButton>
             </Grid>
@@ -115,7 +115,7 @@ const ApplicantListItem = ({
                 aria-label="remove-applicant"
                 disabled={isApplicationEditor || disabled}
                 onClick={() => profile?.AD_Username && onApplicantRemove?.(profile.AD_Username)}
-              >
+                size="large">
                 <ClearIcon />
               </IconButton>
             </Grid>

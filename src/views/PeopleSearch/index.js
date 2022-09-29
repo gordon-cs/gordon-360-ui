@@ -18,12 +18,12 @@ import {
   Switch,
   TextField,
   Typography,
-  withStyles,
-} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import HomeIcon from '@material-ui/icons/Home';
-import CityIcon from '@material-ui/icons/LocationCity';
-import PersonIcon from '@material-ui/icons/Person';
+} from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
+import AddIcon from '@mui/icons-material/Add';
+import HomeIcon from '@mui/icons-material/Home';
+import CityIcon from '@mui/icons-material/LocationCity';
+import PersonIcon from '@mui/icons-material/Person';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';

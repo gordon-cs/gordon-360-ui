@@ -10,11 +10,11 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import EventIcon from '@material-ui/icons/Event';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import EventIcon from '@mui/icons-material/Event';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import Autocomplete from '@mui/material/Autocomplete';
 import EventList from 'components/EventList';
 import GordonLoader from 'components/Loader';
 import { useWindowSize } from 'hooks';

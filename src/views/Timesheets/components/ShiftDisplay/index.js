@@ -1,5 +1,5 @@
 //Handles the fetching and preperation for displaying of shifts
-import { Card, CardContent, CardHeader, Grid, Tab, Tabs } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, Tab, Tabs } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import { Component } from 'react';

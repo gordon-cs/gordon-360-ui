@@ -5,7 +5,7 @@ import {
   DialogTitle,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useState } from 'react';
 import { platforms, socialMediaInfo } from 'services/socialMedia';
 import user from 'services/user';

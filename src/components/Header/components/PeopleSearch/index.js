@@ -1,5 +1,5 @@
-import { InputAdornment, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
+import { InputAdornment, MenuItem, Paper, TextField, Typography } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import Downshift from 'downshift';
 import { useDebounce, useNetworkStatus, useWindowSize } from 'hooks';
 import PropTypes from 'prop-types';

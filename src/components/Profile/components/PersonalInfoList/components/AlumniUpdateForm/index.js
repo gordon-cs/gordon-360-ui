@@ -1,4 +1,4 @@
-import { Typography, Grid, Button, TextField } from '@material-ui/core/';
+import { Typography, Grid, Button, TextField } from '@mui/material/';
 import { useState, useMemo, useEffect } from 'react';
 import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/profileInfoUpdate';
 import styles from './AlumniUpdateForm.module.css';

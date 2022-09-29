@@ -8,7 +8,7 @@ import {
   List,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
 import GordonLoader from 'components/Loader';

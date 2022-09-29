@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Grid } from '@material-ui/core/';
+import { Button, Card, CardContent, Grid } from '@mui/material/';
 import { authenticate } from 'services/auth';
 
 /**

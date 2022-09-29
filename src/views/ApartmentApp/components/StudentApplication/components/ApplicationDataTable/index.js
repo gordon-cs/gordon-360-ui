@@ -8,8 +8,8 @@ import {
   TableContainer,
   TableRow,
   Typography,
-} from '@material-ui/core/';
-import EmailIcon from '@material-ui/icons/Email';
+} from '@mui/material/';
+import EmailIcon from '@mui/icons-material/Email';
 import { DateTime } from 'luxon';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';

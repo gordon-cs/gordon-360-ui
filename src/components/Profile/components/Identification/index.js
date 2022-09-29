@@ -9,8 +9,8 @@ import {
   Grid,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import EmailIcon from '@material-ui/icons/Email';
+} from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
 import GordonLoader from 'components/Loader/index';
 import 'cropperjs/dist/cropper.css';
 import { useUserActions } from 'hooks';

@@ -1,6 +1,6 @@
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core/';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material/';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import GordonLoader from 'components/Loader';
 import { sortBy } from 'lodash';
 import { DateTime } from 'luxon';

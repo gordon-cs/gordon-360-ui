@@ -15,7 +15,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-} from '@material-ui/core';
+} from '@mui/material';
 import { KeyboardTimePicker } from '@material-ui/pickers';
 
 // Default values

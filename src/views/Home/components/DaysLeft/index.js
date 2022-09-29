@@ -8,7 +8,7 @@ import GordonLoader from 'components/Loader';
 // @TODO CSSMODULES - outside directory
 import styles from '..//DiningBalance/DiningBalance.module.css';
 
-import { Card, CardHeader, CardContent, Typography, Grid } from '@material-ui/core';
+import { Card, CardHeader, CardContent, Typography, Grid } from '@mui/material';
 
 export default class DaysLeft extends Component {
   constructor(props) {

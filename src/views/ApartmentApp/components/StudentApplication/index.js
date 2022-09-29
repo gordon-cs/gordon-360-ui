@@ -1,5 +1,5 @@
 //Student apartment application page
-import { Backdrop, Collapse, Grid } from '@material-ui/core/';
+import { Backdrop, Collapse, Grid } from '@mui/material/';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';

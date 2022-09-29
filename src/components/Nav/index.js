@@ -1,4 +1,4 @@
-import { Divider, Drawer, Hidden } from '@material-ui/core';
+import { Divider, Drawer, Hidden } from '@mui/material';
 import GordonNavAvatar from './components/NavAvatar';
 import GordonNavLinks from './components/NavLinks';
 import styles from './Nav.module.css';
@@ -29,7 +29,7 @@ const GordonNav = ({ onDrawerToggle, drawerOpen }) => {
           {drawer}
         </Drawer>
       </Hidden>
-      <Hidden mdDown implementation="css">
+      <Hidden lgDown implementation="css">
         <Drawer
           variant="permanent"
           open

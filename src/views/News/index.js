@@ -10,8 +10,8 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import PostAddIcon from '@material-ui/icons/PostAdd';
+} from '@mui/material';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -396,13 +396,13 @@ const StudentNews = (props) => {
             Post Listing
           </Fab>
 
-          <Grid container justify="center">
+          <Grid container justifyContent="center">
             {/* Search */}
             <Grid item xs={12} md={12} lg={8}>
               <Grid
                 container
                 alignItems="baseline"
-                justify="center"
+                justifyContent="center"
                 style={styles2.searchBar}
                 spacing={5}
               >

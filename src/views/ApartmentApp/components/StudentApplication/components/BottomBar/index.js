@@ -1,7 +1,7 @@
-import { Card, CardContent, Grid, Typography } from '@material-ui/core/';
-import DeleteIcon from '@material-ui/icons/Delete';
-import PublishIcon from '@material-ui/icons/Publish';
-import SaveIcon from '@material-ui/icons/Save';
+import { Card, CardContent, Grid, Typography } from '@mui/material/';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PublishIcon from '@mui/icons-material/Publish';
+import SaveIcon from '@mui/icons-material/Save';
 import DynamicButton from 'components/DynamicButton';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';

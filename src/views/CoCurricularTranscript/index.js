@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, Typography } from '@mui/material';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { Component } from 'react';

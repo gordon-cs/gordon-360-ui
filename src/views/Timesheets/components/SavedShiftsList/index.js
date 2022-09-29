@@ -15,7 +15,7 @@ import {
   MenuItem,
   Select,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { Component } from 'react';
 import jobs from 'services/jobs';

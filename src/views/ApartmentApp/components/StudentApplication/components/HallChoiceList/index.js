@@ -1,5 +1,5 @@
-import { Button, Card, CardContent, CardHeader, Grid, List } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { Button, Card, CardContent, CardHeader, Grid, List } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 // eslint-disable-next-line no-unused-vars
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
 import housing from 'services/housing';

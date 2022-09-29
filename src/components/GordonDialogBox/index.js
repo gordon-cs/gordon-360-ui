@@ -5,8 +5,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from '@material-ui/core';
-import { Alert, AlertTitle } from '@material-ui/lab';
+} from '@mui/material';
+import { Alert, AlertTitle } from '@mui/material';
 import styles from './GordonDialogBox.module.css';
 
 /**

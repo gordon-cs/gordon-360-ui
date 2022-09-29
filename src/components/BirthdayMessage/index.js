@@ -1,5 +1,5 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Card } from '@material-ui/core';
+import { Card } from '@mui/material';
 import GordonConfetti from 'components/GordonConfetti';
 import useWindowSize from 'hooks/useWindowSize';
 import { useEffect, useState } from 'react';
