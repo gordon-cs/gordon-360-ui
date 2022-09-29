@@ -85,7 +85,6 @@ const Profile = ({ profile, myProf }) => {
         open={snackbar.open}
         text={snackbar.message}
         severity={snackbar.severity}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
     </Grid>

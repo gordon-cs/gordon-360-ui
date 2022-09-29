@@ -27,10 +27,7 @@ const UpdatePhone = () => {
 
   return (
     <div>
-      <IconButton
-        style={{ marginBottom: '0.5rem' }}
-        onClick={() => setOpen(true)}
-        size="large">
+      <IconButton style={{ marginBottom: '0.5rem' }} onClick={() => setOpen(true)} size="large">
         <EditIcon style={{ fontSize: 20 }} />
       </IconButton>
       <GordonDialogBox
@@ -61,7 +58,6 @@ const UpdatePhone = () => {
         open={snackbar.open}
         severity={snackbar.severity}
         text={snackbar.message}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
     </div>
