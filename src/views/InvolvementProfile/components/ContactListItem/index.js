@@ -42,7 +42,7 @@ const ContactListItem = ({ contact }) => {
           {!avatar && <PlaceHolderAvatar />}
         </Avatar>
       </ListItemAvatar>
-      <Link href={`/profile/${contact.Email.split('@')[0]}`}>
+      <Link href={`/profile/${contact.Email.split('@')[0]}`} underline="hover">
         <ListItemText primary={`${contact.FirstName} ${contact.LastName}`} />
       </Link>
       <ListItemSecondaryAction>

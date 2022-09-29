@@ -269,7 +269,7 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3}>
-            <Link href={`/profile/${member.AD_Username}`}>
+            <Link href={`/profile/${member.AD_Username}`} underline="hover">
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
@@ -326,7 +326,7 @@ const MemberListItem = ({
                     </Avatar>
                   </Grid>
                   <Grid>
-                    <Link href={`/profile/${member.AD_Username}`}>
+                    <Link href={`/profile/${member.AD_Username}`} underline="hover">
                       <Typography>
                         {member.FirstName} {member.LastName}
                       </Typography>
@@ -373,7 +373,7 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3} style={rowStyle}>
-            <Link href={`/profile/${member.AD_Username}`}>
+            <Link href={`/profile/${member.AD_Username}`} underline="hover">
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>

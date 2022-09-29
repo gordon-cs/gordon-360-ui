@@ -26,7 +26,7 @@ const Banner = ({ banner, handleNewsItemDelete }) => (
       <Typography variant="body2" color="textSecondary">
         Link:{' '}
         {banner.LinkURL ? (
-          <Link href={banner.LinkURL} target="_blank" rel="noreferrer">
+          <Link href={banner.LinkURL} target="_blank" rel="noreferrer" underline="hover">
             {banner.LinkURL}
           </Link>
         ) : (
