@@ -72,7 +72,7 @@ const phoneMaskUS = forwardRef((props, ref) => {
   return (
     <IMaskInput
       {...other}
-      inputRef={ref}
+      ref={ref}
       mask="(000) 000-0000"
       placeholderChar={'\u2000'}
       unmask={true}
