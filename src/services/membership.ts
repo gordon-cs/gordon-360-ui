@@ -37,15 +37,6 @@ export enum Participation {
 
 export type ParticipationDesc = keyof typeof Participation;
 
-export type MEMBERSHIP = {
-  ACT_CDE: string;
-  SESS_CDE: string;
-  ID_NUM: number;
-  PART_CDE: string;
-  COMMENT_TXT: string;
-  GRP_ADMIN?: boolean;
-};
-
 export type MembershipUpload = {
   ACTCode: string;
   SessCode: string;
@@ -90,7 +81,7 @@ const getFollowersNum = (activityCode: string, sessionCode: string): Promise<num
   http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/subscriber-count`);
 
 const getMembershipsForUser = (username: string): Promise<MembershipView[]> =>
-  http.get(`memberships/student/${username}`);
+  http.get(`memberships/${username}`);
 
 const getMembershipsAlphabetically = (username: string): Promise<MembershipView[]> =>
   getMembershipsForUser(username).then(sort(compareByProperty('ActivityDescription')));
