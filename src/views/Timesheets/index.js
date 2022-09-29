@@ -396,7 +396,6 @@ const Timesheets = (props) => {
                   <Grid item md={8}>
                     <div className={styles.header_tooltip_container}>
                       <CustomTooltip
-                        interactive
                         disableFocusListener
                         disableTouchListener
                         title={
