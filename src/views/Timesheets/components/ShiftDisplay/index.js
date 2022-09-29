@@ -152,6 +152,7 @@ export default class ShiftDisplay extends Component {
               onChange={this.handleTabChange}
               variant="fullWidth"
               className={styles.job_tabs}
+              textColor="inherit"
             >
               {jobTabs}
             </Tabs>

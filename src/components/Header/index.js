@@ -159,7 +159,8 @@ const GordonHeader = ({ onDrawerToggle }) => {
             color="primary"
             aria-label="open drawer"
             onClick={onDrawerToggle}
-            size="large">
+            size="large"
+          >
             <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
 
@@ -180,7 +181,13 @@ const GordonHeader = ({ onDrawerToggle }) => {
           </Typography>
 
           <div className={styles.center_container}>
-            <Tabs centered value={tabIndex} onChange={(event, value) => setTabIndex(value)}>
+            <Tabs
+              textColor="inherit"
+              indicatorColor="secondary"
+              centered
+              value={tabIndex}
+              onChange={(event, value) => setTabIndex(value)}
+            >
               <Tab
                 className={styles.tab}
                 icon={<HomeIcon />}
