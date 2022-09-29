@@ -66,14 +66,13 @@ const OfficeInfoList = ({
   const updateOfficeInfo =
     myProf && PersonType?.includes('fac') ? (
       <Typography align="left" className={styles.note}>
-        NOTE: Update your office info
+        NOTE: Update your office info{' '}
         <a
           href="https://go.gordon.edu/general/myaccount.cfm"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: gordonColors.primary.blue }}
         >
-          {' '}
           here
         </a>
       </Typography>

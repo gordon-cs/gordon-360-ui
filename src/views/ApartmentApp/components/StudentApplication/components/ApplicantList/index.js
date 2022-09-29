@@ -16,7 +16,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import HelpIcon from '@mui/icons-material/Help';
 import StarBorder from '@mui/icons-material/StarBorder';
-import GordonPeopleSearch from 'components/Header/components/PeopleSearch';
+import GordonQuickSearch from 'components/Header/components/QuickSearch';
 import { useState } from 'react';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
@@ -119,7 +119,7 @@ const ApplicantList = ({
           </Grid>
           <Grid container item justifyContent="center" xs={12}>
             <Grid item xs={9} sm={5} className={styles.people_search_parent}>
-              <GordonPeopleSearch
+              <GordonQuickSearch
                 disableLink
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={(selectedUsername) => disabled || onSearchSubmit(selectedUsername)}

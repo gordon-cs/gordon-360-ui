@@ -18,7 +18,7 @@ import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
-import { Class } from 'services/goStalk';
+import { Class } from 'services/peopleSearch';
 import user from 'services/user';
 import { gordonColors, windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';

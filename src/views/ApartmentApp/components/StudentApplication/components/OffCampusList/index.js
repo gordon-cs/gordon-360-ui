@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, Grid, List } from '@mui/material';
 import { useEffect, useState } from 'react';
-import goStalk from 'services/goStalk';
+import peopleSearchService from 'services/peopleSearch';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
 import OffCampusListItem from './components/OffCampusListItem';
@@ -25,7 +25,7 @@ const OffCampusList = ({ disabled, applicants, onOffCampusInputChange }) => {
   useEffect(() => {
     const loadDepartments = async () => {
       // Get the departments that the applicants may be completing off campus programs for
-      let unfilteredDepartments = await goStalk.getDepartments();
+      let unfilteredDepartments = await peopleSearchService.getDepartments();
       //Remove spaces from strings
       let availableDepartments = unfilteredDepartments.map((department) => department.trim());
       setDepartments(availableDepartments);

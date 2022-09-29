@@ -2,7 +2,8 @@ import { Button, Card, CardContent, Grid } from '@mui/material/';
 import { authenticate } from 'services/auth';
 
 /**
- * @param {string} feature - Text representing the content the user tried to access
+ * @param {Object} props props
+ * @param {string} props.feature - Text representing the content the user tried to access
  * @returns {JSX.Element} A card with a message that the user must log in to view content
  */
 const GordonUnauthorized = ({ feature }) => {
