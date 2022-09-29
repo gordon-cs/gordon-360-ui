@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@material-ui/core/';
 import { useEffect, useState } from 'react';
-import { Class } from 'services/goStalk';
+import { Class } from 'services/peopleSearch';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../../../../../ApartmentApp.module.css';
 
