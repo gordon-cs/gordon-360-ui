@@ -415,7 +415,6 @@ const StudentNews = (props) => {
                     onChange={(event) => {
                       setSearch(event.target.value);
                     }}
-                    margin="normal"
                     fullWidth
                   />
                 </Grid>
@@ -462,7 +461,7 @@ const StudentNews = (props) => {
                   <TextField
                     label="Subject"
                     variant="filled"
-                    margin="dense"
+                    size="small"
                     fullWidth
                     name="newPostSubject"
                     value={newPostSubject}
@@ -478,7 +477,6 @@ const StudentNews = (props) => {
                   <TextField
                     variant="filled"
                     label="Body"
-                    margin="normal"
                     multiline
                     fullWidth
                     rows={4}

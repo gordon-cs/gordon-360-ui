@@ -146,7 +146,6 @@ const InvolvementsAll = ({ location, history }) => {
                   type="search"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  margin="none"
                   fullWidth
                 />
               </Grid>

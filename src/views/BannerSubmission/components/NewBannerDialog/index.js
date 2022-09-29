@@ -51,7 +51,7 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
       <TextField
         label="Banner Title"
         variant="filled"
-        margin="dense"
+        size="small"
         fullWidth
         name="title"
         value={title}
@@ -63,7 +63,7 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
       <TextField
         variant="filled"
         label="Banner Link URL"
-        margin="dense"
+        size="small"
         fullWidth
         name="link"
         value={link}
@@ -115,7 +115,7 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
         variant="filled"
         label="Sort Order"
         type="number"
-        margin="dense"
+        size="small"
         fullWidth
         name="sortOrder"
         value={sortOrder}

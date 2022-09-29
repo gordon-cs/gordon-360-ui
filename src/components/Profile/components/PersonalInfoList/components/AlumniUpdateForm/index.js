@@ -374,7 +374,6 @@ const AlumniUpdateForm = ({
           required
           variant="filled"
           label="Please give a reason for the change..."
-          margin="normal"
           multiline
           fullWidth
           minRows={4}

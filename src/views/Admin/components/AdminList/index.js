@@ -85,7 +85,7 @@ const AdminList = () => {
       >
         <TextField
           autoFocus
-          margin="dense"
+          size="small"
           label="Email"
           type="email"
           variant="filled"

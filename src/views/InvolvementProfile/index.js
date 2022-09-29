@@ -356,7 +356,7 @@ const InvolvementProfile = () => {
               <Grid item xs={12}>
                 <TextField
                   label="Description"
-                  margin="dense"
+                  size="small"
                   multiline
                   fullWidth
                   defaultValue={ActivityBlurb}
@@ -367,7 +367,7 @@ const InvolvementProfile = () => {
               <Grid item xs={12}>
                 <TextField
                   label="Special Information for Joining"
-                  margin="dense"
+                  size="small"
                   multiline
                   fullWidth
                   defaultValue={ActivityJoinInfo}
@@ -378,7 +378,7 @@ const InvolvementProfile = () => {
               <Grid item xs={12}>
                 <TextField
                   label="Website"
-                  margin="dense"
+                  size="small"
                   multiline
                   fullWidth
                   defaultValue={ActivityURL}
