@@ -72,6 +72,9 @@ export const gordonColors = {
     },
   },
   neutral: {
+    main: '#EBEAEA',
+    dark: '#CCCCCB',
+    contrastText: 'rgba(0, 0, 0, 0.87)',
     lightGray: '#EBEAEA',
     gray: '#CCCCCB',
     grayShades: {
@@ -100,9 +103,9 @@ export const gordonColors = {
 export const windowBreakWidths = {
   breakXS: 0,
   breakSM: 600,
-  breakMD: 960,
-  breakLG: 1280,
-  breakXL: 1920,
+  breakMD: 900,
+  breakLG: 1200,
+  breakXL: 1536,
 };
 
 const theme = createTheme({
@@ -113,11 +116,7 @@ const theme = createTheme({
     success: gordonColors.secondary.greenShades,
     warning: gordonColors.secondary.yellowShades,
     info: gordonColors.primary.cyanShades,
-    neutral: {
-      main: '#EBEAEA',
-      dark: '#CCCCCB',
-      contrastText: 'rgba(0, 0, 0, 0.87)',
-    },
+    neutral: gordonColors.neutral,
   },
   typography: {
     fontFamily: ['Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', 'sans-serif'].join(','),

@@ -119,7 +119,7 @@ const InvolvementProfile = () => {
   };
 
   const maxCropPreviewWidth = () => {
-    const breakpointWidth = 960;
+    const breakpointWidth = 900;
     const smallScreenRatio = 0.75;
     const largeScreenRatio = 0.525;
     const maxHeightRatio = 0.5;

@@ -19,7 +19,7 @@ const PeopleSearch = () => {
   const { profile, loading: loadingProfile } = useUser();
   const isOnline = useNetworkStatus();
   const printRef = useRef(null);
-  const isLargeScreen = useMediaQuery('(min-width: 960px)');
+  const isLargeScreen = useMediaQuery('(min-width: 900px)');
 
   if (!isOnline) {
     return <GordonOffline feature="People Search" />;

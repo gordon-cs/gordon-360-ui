@@ -31,7 +31,7 @@ const BirthdayMessage = ({ open, setOpen, name }) => {
     }
   }, [isAuthenticated]);
 
-  const Banner = width >= 1280 ? BannerLarge : BannerSmall;
+  const Banner = width >= 1200 ? BannerLarge : BannerSmall;
 
   return isAuthenticated && isBirthday ? (
     <Card

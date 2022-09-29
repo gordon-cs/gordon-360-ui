@@ -125,17 +125,17 @@ class IDUploader extends Component {
     const w = this.props.width;
     switch (w) {
       default:
-        return 960 * largeScreenRatio;
+        return 900 * largeScreenRatio;
       case 'xs':
         return 360 * smallScreenRatio;
       case 'sm':
         return 600 * smallScreenRatio;
       case 'md':
-        return 960 * largeScreenRatio;
+        return 900 * largeScreenRatio;
       case 'lg':
-        return 1280 * largeScreenRatio;
+        return 1200 * largeScreenRatio;
       case 'xl':
-        return 1920 * largeScreenRatio;
+        return 1536 * largeScreenRatio;
     }
   }
 
