@@ -239,15 +239,11 @@ const MemberListItem = ({
     options = (
       <Grid container alignItems="center" justifyContent="space-evenly">
         <Grid item>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={groupAdmin}
-                color="primary"
-                disabled={disabled}
-                onChange={handleToggleGroupAdmin}
-              />
-            }
+          <Checkbox
+            checked={groupAdmin}
+            color="primary"
+            disabled={disabled}
+            onChange={handleToggleGroupAdmin}
           />
         </Grid>
 
