@@ -9,7 +9,9 @@ import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
 import schedulecontrol from 'services/schedulecontrol';
 import urlRegex from 'url-regex-safe';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Markup } from 'interweave';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 
 import myschedule from 'services/myschedule';
 
@@ -439,7 +441,9 @@ class GordonSchedulePanel extends Component {
       );
     }
 
-    return <Fragment>{schedulePanel}</Fragment>;
+    return (
+      <LocalizationProvider dateAdapter={AdapterDateFns}>{schedulePanel}</LocalizationProvider>
+    );
   }
 }
 

@@ -1,5 +1,4 @@
 //Main timesheets page
-import DateFnsUtils from '@date-io/date-fns';
 import {
   Button,
   Card,
@@ -18,13 +17,14 @@ import {
 } from '@mui/material/';
 import withStyles from '@mui/styles/withStyles';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
-import { addDays, isValid, isWithinInterval, set } from 'date-fns';
+import { isValid, set } from 'date-fns';
 import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
@@ -36,7 +36,6 @@ const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1
 const MILLISECONDS_PER_HOUR = 3600000;
 
 const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
-const withNoTime = (date) => set(date, { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 });
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
@@ -306,13 +305,6 @@ const Timesheets = (props) => {
     <></>
   );
 
-  const disableDisallowedDays = (date) => {
-    return !isWithinInterval(withNoTime(date), {
-      start: withNoTime(selectedDateIn),
-      end: withNoTime(addDays(selectedDateIn, 1)),
-    });
-  };
-
   const changeState = async () => {
     if (clockInOut === 'Clock In') {
       setClockInOut('Clock Out');
@@ -348,7 +340,7 @@ const Timesheets = (props) => {
     >
       <InputLabel className="disable_select">Jobs</InputLabel>
       <Select
-        value={selectedJob}
+        value={selectedJob ?? ''}
         onChange={(e) => {
           setSelectedJob(e.target.value);
         }}
@@ -385,158 +377,146 @@ const Timesheets = (props) => {
     </Button>
   );
 
-  return <>
-    <Grid container spacing={2} className={styles.timesheets}>
-      <Grid item xs={12}>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Card>
-            <CardContent
-              style={{
-                marginLeft: 8,
-                marginTop: 8,
-              }}
-            >
-              <Grid container spacing={2} alignItems="center" alignContent="center">
-                <Grid item md={2}>
-                  <Button onClick={changeState}> {clockInOut}</Button>
-                </Grid>
-                <Grid item md={8}>
-                  <div className={styles.header_tooltip_container}>
-                    <CustomTooltip
-                      interactive
-                      disableFocusListener
-                      disableTouchListener
-                      title={
-                        // eslint-disable-next-line no-multi-str
-                        'Student employees are not permitted to work more than 20 total hours\
+  return (
+    <>
+      <Grid container spacing={2} className={styles.timesheets}>
+        <Grid item xs={12}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <Card>
+              <CardContent
+                style={{
+                  marginLeft: 8,
+                  marginTop: 8,
+                }}
+              >
+                <Grid container spacing={2} alignItems="center" alignContent="center">
+                  <Grid item md={2}>
+                    <Button onClick={changeState}> {clockInOut}</Button>
+                  </Grid>
+                  <Grid item md={8}>
+                    <div className={styles.header_tooltip_container}>
+                      <CustomTooltip
+                        interactive
+                        disableFocusListener
+                        disableTouchListener
+                        title={
+                          // eslint-disable-next-line no-multi-str
+                          'Student employees are not permitted to work more than 20 total hours\
                       per work week, or more than 40 hours during winter, spring, and summer breaks.\
                       \
                       To request permission for a special circumstance, please email\
                       student-employment@gordon.edu before exceeding this limit.'
-                      }
-                      placement="bottom"
-                    >
-                      <div ref={tooltipRef}>
-                        <CardHeader className="disable_select" title="Enter a shift" />
-                        <InfoOutlinedIcon
-                          className={styles.tooltip_icon}
-                          style={{
-                            fontSize: 18,
-                          }}
-                        />
-                      </div>
-                    </CustomTooltip>
-                  </div>
-                </Grid>
-              </Grid>
-              <Grid
-                container
-                spacing={2}
-                justifyContent="space-between"
-                alignItems="center"
-                alignContent="center"
-              >
-                <Grid item xs={12} md={6} lg={3}>
-                  <KeyboardDateTimePicker
-                    className="disable_select"
-                    style={{
-                      width: 252,
-                    }}
-                    variant="inline"
-                    disableFuture
-                    margin="normal"
-                    id="date-picker-in-dialog"
-                    label="Start Time"
-                    helperText="MM-DD-YY HH-MM AM/PM"
-                    format="MM/dd/yy hh:mm a"
-                    value={selectedDateIn}
-                    onChange={setSelectedDateIn}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <KeyboardDateTimePicker
-                    className="disable_select"
-                    style={{
-                      width: 252,
-                    }}
-                    variant="inline"
-                    disabled={selectedDateIn === null}
-                    initialFocusedDate={selectedDateIn}
-                    shouldDisableDate={disableDisallowedDays}
-                    disableFuture
-                    margin="normal"
-                    id="date-picker-out-dialog"
-                    label="End Time"
-                    helperText="MM-DD-YY HH-MM AM/PM"
-                    format="MM/dd/yy hh:mm a"
-                    openTo="hours"
-                    value={selectedDateOut}
-                    onChange={setSelectedDateOut}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  {jobDropdown}
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <TextField
-                    className="disable_select"
-                    style={{
-                      width: 252,
-                    }}
-                    label="Shift Notes"
-                    multiline
-                    maxRows="3"
-                    value={userShiftNotes}
-                    onChange={handleShiftNotesChanged}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <Typography className="disable_select">
-                    Hours worked: {hoursWorkedInDecimal}
-                  </Typography>
-                </Grid>
-                {errorText && (
-                  <Grid item xs={12}>
-                    <Typography variant="overline" color="error">
-                      {errorText}
-                    </Typography>
+                        }
+                        placement="bottom"
+                      >
+                        <div ref={tooltipRef}>
+                          <CardHeader className="disable_select" title="Enter a shift" />
+                          <InfoOutlinedIcon
+                            className={styles.tooltip_icon}
+                            style={{
+                              fontSize: 18,
+                            }}
+                          />
+                        </div>
+                      </CustomTooltip>
+                    </div>
                   </Grid>
-                )}
-                <Grid item xs={12}>
-                  {saveButton}
                 </Grid>
-                <Grid item xs={12}>
-                  <Typography>
-                    <Link
+                <Grid
+                  container
+                  spacing={2}
+                  justifyContent="space-between"
+                  alignItems="center"
+                  alignContent="center"
+                >
+                  <Grid item xs={12} md={6} lg={3}>
+                    <DateTimePicker
+                      renderInput={(props) => <TextField {...props} />}
+                      label="Start Time"
+                      value={selectedDateIn}
+                      onChange={setSelectedDateIn}
+                      className="disable_select"
+                      disableFuture
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <DateTimePicker
+                      renderInput={(props) => <TextField {...props} />}
+                      label="End Time"
+                      value={selectedDateOut ?? selectedDateIn}
+                      onChange={setSelectedDateOut}
+                      className="disable_select"
+                      disableFuture
+                      showToolbar={true}
+                      disabled={selectedDateIn === null}
+                      minDateTime={selectedDateIn}
+                      openTo="hours"
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    {jobDropdown}
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <TextField
                       className="disable_select"
                       style={{
-                        borderBottom: '1px solid currentColor',
-                        textDecoration: 'none',
-                        color: gordonColors.primary.blueShades.A700,
+                        width: 252,
                       }}
-                      href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
-                      underline="always"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      View historical paid time
-                    </Link>
-                  </Typography>
+                      label="Shift Notes"
+                      multiline
+                      maxRows="3"
+                      value={userShiftNotes}
+                      onChange={handleShiftNotesChanged}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6} lg={3}>
+                    <Typography className="disable_select">
+                      Hours worked: {hoursWorkedInDecimal}
+                    </Typography>
+                  </Grid>
+                  {errorText && (
+                    <Grid item xs={12}>
+                      <Typography variant="overline" color="error">
+                        {errorText}
+                      </Typography>
+                    </Grid>
+                  )}
+                  <Grid item xs={12}>
+                    {saveButton}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography>
+                      <Link
+                        className="disable_select"
+                        style={{
+                          borderBottom: '1px solid currentColor',
+                          textDecoration: 'none',
+                          color: gordonColors.primary.blueShades.A700,
+                        }}
+                        href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
+                        underline="always"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        View historical paid time
+                      </Link>
+                    </Typography>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </MuiPickersUtilsProvider>
+              </CardContent>
+            </Card>
+          </LocalizationProvider>
+        </Grid>
+        <ShiftDisplay ref={setShiftDisplayComponent} />
       </Grid>
-      <ShiftDisplay ref={setShiftDisplayComponent} />
-    </Grid>
-    <SimpleSnackbar
-      text={snackbarText}
-      severity={snackbarSeverity}
-      open={snackbarOpen}
-      onClose={handleCloseSnackbar}
-    />
-  </>;
+      <SimpleSnackbar
+        text={snackbarText}
+        severity={snackbarSeverity}
+        open={snackbarOpen}
+        onClose={handleCloseSnackbar}
+      />
+    </>
+  );
 };
 
 export default Timesheets;

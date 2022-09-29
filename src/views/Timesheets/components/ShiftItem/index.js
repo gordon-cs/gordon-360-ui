@@ -1,5 +1,4 @@
 //Representation of a shift
-import DateFnsUtils from '@date-io/date-fns';
 import {
   Button,
   Dialog,
@@ -18,7 +17,7 @@ import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
-import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import { Component } from 'react';
@@ -35,15 +34,17 @@ const CustomTooltip = withStyles((theme) => ({
 }))(Tooltip);
 
 const PickerInput = (props) => {
-  return <>
-    <TextField
-      className={styles.shift_edit_picker}
-      {...props}
-      variant={'outlined'}
-      multiline
-      maxRows={2}
-    />
-  </>;
+  return (
+    <>
+      <TextField
+        className={styles.shift_edit_picker}
+        {...props}
+        variant={'outlined'}
+        multiline
+        maxRows={2}
+      />
+    </>
+  );
 };
 
 export default class ShiftItem extends Component {
@@ -346,24 +347,25 @@ export default class ShiftItem extends Component {
     if (this.state.editing) {
       timeInDisp = (
         <DateTimePicker
-          variant="inline"
-          disableFuture
+          renderInput={(props) => <PickerInput {...props} />}
           value={this.state.newDateTimeIn}
           onChange={this.handleDateInChange}
+          variant="inline"
+          disableFuture
           format="MM/dd HH:mm"
           TextFieldComponent={PickerInput}
         />
       );
       timeOutDisp = (
         <DateTimePicker
+          renderInput={(props) => <PickerInput {...props} />}
+          value={this.state.newDateTimeOut}
+          onChange={this.handleDateOutChange}
           variant="inline"
           disableFuture
-          value={this.state.newDateTimeOut}
           shouldDisableDate={this.disableDisallowedDays}
-          onChange={this.handleDateOutChange}
           onClose={this.checkForError}
           format="MM/dd HH:mm"
-          TextFieldComponent={PickerInput}
         />
       );
       hoursWorkedDisp = <Typography variant="body2">{this.state.newHoursWorked}</Typography>;
@@ -427,10 +429,7 @@ export default class ShiftItem extends Component {
     }
 
     let checkButton = (
-      <IconButton
-        disabled={errorText !== ''}
-        onClick={this.onCheckButtonClick}
-        size="large">
+      <IconButton disabled={errorText !== ''} onClick={this.onCheckButtonClick} size="large">
         <CheckOutlinedIcon style={{ color: 'green' }} />
       </IconButton>
     );
@@ -466,7 +465,8 @@ export default class ShiftItem extends Component {
                     newHoursWorked: HOURS_WORKED.toFixed(2),
                   });
                 }}
-                size="large">
+                size="large"
+              >
                 <EditOutlinedIcon />
               </IconButton>
             </Grid>
@@ -532,44 +532,42 @@ export default class ShiftItem extends Component {
         <Grid item xs={12} className={styles.shift_item}>
           {confirmationBox}
           <div>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Grid container direction="row" alignItems="center">
-                <Grid item xs={3}>
-                  <div className={styles.tooltip_container}>
-                    <Typography className="disable_select" variant="body2">
-                      {descColumn}
-                    </Typography>
-                    {shiftCommentTooltip}
-                  </div>
-                </Grid>
-                <Grid item xs={2}>
+            <Grid container direction="row" alignItems="center">
+              <Grid item xs={3}>
+                <div className={styles.tooltip_container}>
                   <Typography className="disable_select" variant="body2">
-                    {timeInDisp}
+                    {descColumn}
                   </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography className="disable_select" variant="body2">
-                    {timeOutDisp}
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <Typography className="disable_select" variant="body2">
-                    {HOURLY_RATE.toFixed(2)}
-                  </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                  <div className={styles.tooltip_container}>
-                    <Typography className="disable_select" variant="body2">
-                      {hoursWorkedDisp}
-                    </Typography>
-                    {shiftNotesTooltip}
-                  </div>
-                </Grid>
-                <Grid item xs={1}>
-                  <Typography variant="body2">{shiftItemIcons}</Typography>
-                </Grid>
+                  {shiftCommentTooltip}
+                </div>
               </Grid>
-            </MuiPickersUtilsProvider>
+              <Grid item xs={2}>
+                <Typography className="disable_select" variant="body2">
+                  {timeInDisp}
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography className="disable_select" variant="body2">
+                  {timeOutDisp}
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <Typography className="disable_select" variant="body2">
+                  {HOURLY_RATE.toFixed(2)}
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                <div className={styles.tooltip_container}>
+                  <Typography className="disable_select" variant="body2">
+                    {hoursWorkedDisp}
+                  </Typography>
+                  {shiftNotesTooltip}
+                </div>
+              </Grid>
+              <Grid item xs={1}>
+                <Typography variant="body2">{shiftItemIcons}</Typography>
+              </Grid>
+            </Grid>
           </div>
         </Grid>
         <SimpleSnackbar
