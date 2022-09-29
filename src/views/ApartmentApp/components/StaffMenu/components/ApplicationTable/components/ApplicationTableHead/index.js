@@ -26,7 +26,7 @@ const ApplicationTableHead = ({ iteratee, order, onRequestSort }) => {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={iteratee === headCell.id ? order : false}
           >
             <TableSortLabel
