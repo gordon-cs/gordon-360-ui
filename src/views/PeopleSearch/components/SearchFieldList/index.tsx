@@ -26,6 +26,7 @@ import {
   useMemo,
   useRef,
   useState,
+  ReactNode,
 } from 'react';
 import {
   FaBook,
@@ -102,6 +103,22 @@ const isTodayAprilFools = () => {
 type Props = {
   onSearch: Dispatch<SetStateAction<SearchResult[] | null>>;
 };
+
+const AdvancedOptionsColumn = ({ children, ...otherProps }: { children: ReactNode }) => (
+  <Grid
+    container
+    spacing={2}
+    direction="column"
+    justifyContent="flex-start"
+    alignItems="center"
+    item
+    xs={12}
+    md={4}
+    {...otherProps}
+  >
+    {children}
+  </Grid>
+);
 
 const SearchFieldList = ({ onSearch }: Props) => {
   const { profile } = useUser();
@@ -253,7 +270,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <>
           {
             // Only students and FacStaff can search students
-            isStudent || isFacStaff ? (
+            (isStudent || isFacStaff) && (
               <FormControlLabel
                 control={
                   <Checkbox
@@ -264,7 +281,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 }
                 label="Student"
               />
-            ) : null
+            )
           }
           <FormControlLabel
             control={
@@ -278,7 +295,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
           />
           {
             // Only Alumni and FacStaff can search students
-            isAlumni || isFacStaff ? (
+            (isAlumni || isFacStaff) && (
               <FormControlLabel
                 control={
                   <Checkbox
@@ -289,7 +306,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 }
                 label="Alumni"
               />
-            ) : null
+            )
           }
         </>
       )}
@@ -360,9 +377,9 @@ const SearchFieldList = ({ onSearch }: Props) => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Grid container spacing={2} direction="row">
+              <Grid container spacing={4} direction="row">
                 {/* Advanced Search Filters: Student/Alumni */}
-                <Grid item xs={12} md={4}>
+                <AdvancedOptionsColumn>
                   <Typography
                     align="center"
                     gutterBottom
@@ -403,10 +420,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     select
                     disabled={!searchParams.includeStudent}
                   />
-                </Grid>
+                </AdvancedOptionsColumn>
 
                 {/* Advanced Search Filters: Faculty/Staff */}
-                <Grid item xs={12} md={4}>
+                <AdvancedOptionsColumn>
                   <Typography
                     align="center"
                     gutterBottom
@@ -432,10 +449,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     select
                     disabled={!searchParams.includeFacStaff}
                   />
-                </Grid>
+                </AdvancedOptionsColumn>
 
                 {/* Advanced Search Filters: Everyone */}
-                <Grid item xs={12} md={4}>
+                <AdvancedOptionsColumn>
                   <Typography align="center" gutterBottom color="primary">
                     Everyone
                   </Typography>
@@ -461,7 +478,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     Icon={FaGlobeAmericas}
                     select
                   />
-                </Grid>
+                </AdvancedOptionsColumn>
               </Grid>
             </AccordionDetails>
           </Accordion>
@@ -469,7 +486,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
       </CardContent>
 
       <CardActions>
-        <Button variant="contained" onClick={() => setSearchParams(initialSearchParams)}>
+        <Button
+          variant="contained"
+          color="neutral"
+          onClick={() => setSearchParams(initialSearchParams)}
+        >
           RESET
         </Button>
         {loadingSearch ? (

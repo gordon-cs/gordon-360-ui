@@ -39,7 +39,7 @@ const SearchField = ({
   const isLargeScreen = useMediaQuery('(min-width: 600px)');
 
   return (
-    <Grid container spacing={2} alignItems="center">
+    <Grid item container spacing={2} alignItems="center">
       {isLargeScreen && Icon && (
         <Grid item>
           <IconContext.Provider
