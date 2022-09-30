@@ -70,18 +70,19 @@
   // .loading is shown first. After 350ms, .loading opacity and font-size go to 0. This is done
   // to give space for .no-results to increase in font size and change to normal opacity.
   .no_results {
-    font-size: 0;
-    opacity: 0;
     font-style: italic;
     color: gray;
-    animation: show-no-results 1ms infinite;
-    animation-delay: 350ms;
+  animation: show-no-results 1500ms;
   }
 
   @keyframes show-no-results {
     0% {
-      font-size: 90%;
-      opacity: 1;
+    font-size: 0;
+    opacity: 0;
+  }
+  99% {
+    font-size: 0;
+    opacity: 0;
     }
     100% {
       font-size: 90%;
@@ -90,16 +91,21 @@
   }
 
   .loading {
+  font-size: 0;
+  opacity: 0;
     font-style: italic;
     color: gray;
-    animation: show-loading 1ms infinite;
-    animation-delay: 350ms;
+  animation: show-loading 1500ms;
   }
 
   @keyframes show-loading {
     0% {
-      font-size: 0;
-      opacity: 0;
+    font-size: 90%;
+    opacity: 1;
+  }
+  99% {
+    font-size: 90%;
+    opacity: 1;
     }
     100% {
       font-size: 0;
