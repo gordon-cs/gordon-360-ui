@@ -34,7 +34,6 @@
     "react-dom-confetti": "^0.2.0",
     "react-dropzone": "^11.4.2",
     "react-ga": "^3.3.0",
-    "react-graceful-image": "^1.5.0",
     "react-icons": "^4.3.1",
     "react-image-gallery": "^1.2.7",
     "react-imask": "^6.4.2",
@@ -45,11 +44,13 @@
     "react-to-print": "^2.14.1",
     "react-visibility-sensor": "^5.1.1",
     "typescript": "^4.5.2",
-    "url-regex-safe": "^2.1.0"
+    "url-regex-safe": "^2.1.0",
+    "xlsx": "^0.17.3"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.176",
     "@types/luxon": "^2.0.4",
+    "@types/react-router-dom": "^5.3.3",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsdoc": "^37.1.0",

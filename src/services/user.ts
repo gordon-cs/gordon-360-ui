@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
-import { Class } from './goStalk';
+import { Class } from './peopleSearch';
 import http from './http';
 import { Override } from './utils';
 
