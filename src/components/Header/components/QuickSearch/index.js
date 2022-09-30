@@ -12,31 +12,26 @@ const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 450;
 const NO_SEARCH_RESULTS = [0, []];
 
-//  TextBox Input Field
-const renderInput = (inputProps) => {
-  const { autoFocus, value, ref, ...other } = inputProps;
-
-  return (
-    <TextField
-      type="search"
-      autoFocus={autoFocus}
-      value={value}
-      inputRef={ref}
-      InputProps={{
-        disableUnderline: true,
-        classes: {
-          root: styles.people_search_root,
-        },
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        ),
-        ...other,
-      }}
-    />
-  );
-};
+const renderInput = ({ autoFocus, value, ref, ...other }) => (
+  <TextField
+    type="search"
+    autoFocus={autoFocus}
+    value={value}
+    inputRef={ref}
+    InputProps={{
+      disableUnderline: true,
+      classes: {
+        root: styles.root,
+      },
+      startAdornment: (
+        <InputAdornment position="start">
+          <SearchIcon />
+        </InputAdornment>
+      ),
+      ...other,
+    }}
+  />
+);
 
 const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit }) => {
   // Search time is never used via variable name, but it is used via index
@@ -140,26 +135,13 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
         {parts.map((part, key) =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
             ? (hasMatched = true && (
-                <span className={styles.h} key={key}>
+                <span className={styles.matched_text} key={key}>
                   {part}
                 </span>
               ))
             : part,
         )}
       </span>
-    );
-  }
-
-  function renderNoResult() {
-    return (
-      <MenuItem className={styles.people_search_suggestion} style={{ paddingBottom: '5px' }}>
-        <Typography className={styles.no_results} variant="body2">
-          No results
-        </Typography>
-        <Typography className={styles.loading} variant="body2">
-          Loading...
-        </Typography>
-      </MenuItem>
     );
   }
 
@@ -183,8 +165,8 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
           className={
             suggestionIndex !== -1 &&
             suggestion.UserName === suggestions?.[suggestionIndex]?.UserName
-              ? styles.people_search_suggestion_selected
-              : styles.people_search_suggestion
+              ? styles.suggestion_selected
+              : styles.suggestion
           }
         >
           <Typography variant="body2">
@@ -253,53 +235,50 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
       }}
     >
       {({ getInputProps, getItemProps, isOpen }) => (
-        <span className={styles.gordon_people_search} key="suggestion-list-span">
+        <span className={styles.people_search} key="suggestion-list-span">
           {renderInput(
-            getInputProps(
-              isOnline
+            getInputProps({
+              placeholder: placeholder,
+              ...(isOnline
                 ? {
-                    placeholder: placeholder,
                     onChange: (event) => updateQuery(event.target.value),
                     onKeyDown: (event) => handleKeys(event.key),
                   }
                 : {
-                    placeholder: placeholder,
                     style: { color: 'white' },
                     disabled: { isOnline },
-                  },
-            ),
-          )}
-          {isOpen && suggestions.length > 0 && query.length >= MIN_QUERY_LENGTH ? (
-            disableLink ? (
-              <Paper square className={styles.people_search_dropdown}>
-                {suggestions.map((suggestion) =>
-                  renderSuggestion({
-                    suggestion,
-                    itemProps: getItemProps({ item: suggestion.UserName }),
                   }),
-                )}
-              </Paper>
-            ) : (
-              <Paper square className={styles.people_search_dropdown}>
-                {suggestions.map((suggestion) =>
+            }),
+          )}
+          {isOpen && query.length >= MIN_QUERY_LENGTH && (
+            <Paper square className={styles.dropdown}>
+              {suggestions.length > 0 ? (
+                suggestions.map((suggestion) =>
                   renderSuggestion({
                     suggestion,
                     itemProps: getItemProps({
                       item: suggestion.UserName,
-                      component: Link,
-                      to: `/profile/${suggestion.UserName}`,
+                      ...(!disableLink
+                        ? {
+                            component: Link,
+                            to: `/profile/${suggestion.UserName}`,
+                          }
+                        : {}),
                     }),
                   }),
-                )}
-              </Paper>
-            )
-          ) : isOpen && suggestions.length === 0 && query.length >= MIN_QUERY_LENGTH ? (
-            // Styling copied from how renderSuggestion is done with
-            // only bottom padding changed and 'no-results' class used
-            <Paper square className={styles.people_search_dropdown}>
-              {renderNoResult()}
+                )
+              ) : (
+                <MenuItem className={styles.suggestion} style={{ paddingBottom: '5px' }}>
+                  <Typography className={styles.no_results} variant="body2">
+                    No results
+                  </Typography>
+                  <Typography className={styles.loading} variant="body2">
+                    Loading...
+                  </Typography>
+                </MenuItem>
+              )}
             </Paper>
-          ) : null}
+          )}
         </span>
       )}
     </Downshift>
