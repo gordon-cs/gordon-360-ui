@@ -257,7 +257,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
     createSnackbar(status.message, status.type);
   };
 
-  const graduationYear = isAlumni && !profile.PreferredClassYear.trim().isEmpty()? (
+  const graduationYear = isAlumni && !profile.PreferredClassYear.trim().isEmpty() ? (
     <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
   ) : null;
 
