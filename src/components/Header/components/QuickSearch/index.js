@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import quickSearchService from 'services/quickSearch';
-import styles from './PeopleSearch.module.css';
+import styles from './QuickSearch.module.css';
 
 const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 450;
@@ -235,7 +235,7 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
       }}
     >
       {({ getInputProps, getItemProps, isOpen }) => (
-        <span className={styles.people_search} key="suggestion-list-span">
+        <span className={styles.quick_search} key="suggestion-list-span">
           {renderInput(
             getInputProps({
               placeholder: placeholder,
