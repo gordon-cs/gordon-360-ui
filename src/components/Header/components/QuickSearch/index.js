@@ -1,4 +1,4 @@
-import { InputAdornment, MenuItem, Paper, TextField, Typography } from '@mui/material';
+import { InputAdornment, MenuItem, Paper, TextField, Typography, Divider } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import Downshift from 'downshift';
 import { useDebounce, useNetworkStatus, useWindowSize } from 'hooks';
@@ -9,7 +9,7 @@ import quickSearchService from 'services/quickSearch';
 import styles from './PeopleSearch.module.css';
 
 const MIN_QUERY_LENGTH = 2;
-const BREAKPOINT_WIDTH = 400;
+const BREAKPOINT_WIDTH = 450;
 
 //  TextBox Input Field
 const renderInput = (inputProps) => {
@@ -21,13 +21,10 @@ const renderInput = (inputProps) => {
       autoFocus={autoFocus}
       value={value}
       inputRef={ref}
-      className={styles.text_field}
       InputProps={{
         disableUnderline: true,
         classes: {
           root: styles.people_search_root,
-          input: styles.people_search_input,
-          // inputDisabled: 'people-search-disabled', // `inputDisabled` is not a valid classes prop for this Material-UI component. See https://material-ui.com/api/autocomplete/#css
         },
         startAdornment: (
           <InputAdornment position="start">
@@ -175,66 +172,72 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
       // The props for component={Link} and to={`/profile/${suggestion.UserName}`}
       // have been moved to the declaration of itemProps in return().
       // This allows these link features to be omitted if disableLink is true
-      <MenuItem
-        {...itemProps}
-        key={suggestion.UserName}
-        onClick={() => handleClick(suggestion.UserName)}
-        className={
-          suggestionIndex !== -1 && suggestion.UserName === suggestions?.[suggestionIndex]?.UserName
-            ? styles.people_search_suggestion_selected
-            : styles.people_search_suggestion
-        }
-      >
-        <Typography variant="body2">
-          {/* If the query contains a space or a period, only highlight occurrences of the first
+      <>
+        <MenuItem
+          {...itemProps}
+          key={suggestion.UserName}
+          onClick={() => handleClick(suggestion.UserName)}
+          className={
+            suggestionIndex !== -1 &&
+            suggestion.UserName === suggestions?.[suggestionIndex]?.UserName
+              ? styles.people_search_suggestion_selected
+              : styles.people_search_suggestion
+          }
+        >
+          <Typography variant="body2">
+            {/* If the query contains a space or a period, only highlight occurrences of the first
               name part of the query in the first name, and only highlight occurrences of the last
               name part of the query in the last name. Otherwise, highlight occurrences of the
               query in the first and last name. */}
-          {highlightQuerySplit?.length > 1 ? (
-            <>
-              <span key={1}>
-                {getHighlightedText(suggestion.FirstName + ' ', highlightQuerySplit[0])}
-              </span>
-              <span key={2}>{getHighlightedText(suggestion.LastName, highlightQuerySplit[1])}</span>
-            </>
-          ) : (
-            getHighlightedText(
-              // Displays first name
-              suggestion.FirstName +
-                // If having nickname that is unique, display that nickname
-                (suggestion.Nickname &&
-                suggestion.Nickname !== suggestion.FirstName &&
-                suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
-                  ? ' (' + suggestion.Nickname + ') '
-                  : ' ') +
-                // Displays last name
-                suggestion.LastName +
-                // If having maiden name that is unique, display that maiden name
-                (suggestion.MaidenName &&
-                suggestion.MaidenName !== suggestion.LastName &&
-                suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
-                  ? ' (' + suggestion.MaidenName + ')'
-                  : ''),
-              highlightQuery,
-            )
-          )}
-        </Typography>
-        <Typography variant="caption" component="p">
-          {/* If the first name matches either part (first or last name) of the query, don't
+            {highlightQuerySplit?.length > 1 ? (
+              <>
+                <span key={1}>
+                  {getHighlightedText(suggestion.FirstName + ' ', highlightQuerySplit[0])}
+                </span>
+                <span key={2}>
+                  {getHighlightedText(suggestion.LastName, highlightQuerySplit[1])}
+                </span>
+              </>
+            ) : (
+              getHighlightedText(
+                // Displays first name
+                suggestion.FirstName +
+                  // If having nickname that is unique, display that nickname
+                  (suggestion.Nickname &&
+                  suggestion.Nickname !== suggestion.FirstName &&
+                  suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
+                    ? ' (' + suggestion.Nickname + ') '
+                    : ' ') +
+                  // Displays last name
+                  suggestion.LastName +
+                  // If having maiden name that is unique, display that maiden name
+                  (suggestion.MaidenName &&
+                  suggestion.MaidenName !== suggestion.LastName &&
+                  suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
+                    ? ' (' + suggestion.MaidenName + ')'
+                    : ''),
+                highlightQuery,
+              )
+            )}
+          </Typography>
+          <Typography variant="caption" component="p">
+            {/* If the first name matches either part (first or last name) of the query, don't
               highlight occurrences of the query in the first name part of the username.
               If the username contains a period, add it back in.
               If the last name matches either part (first of last name) of the query, don't
               highlight occurrences of the query in the last name part of the username. */}
-          {!suggestion.FirstName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
-            ? getHighlightedText(suggestion.UserName.split('.')[0], highlightQuery)
-            : suggestion.UserName.split('.')[0]}
-          {suggestion.UserName.includes('.') && '.'}
-          {suggestion.UserName.includes('.') &&
-            (!suggestion.LastName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
-              ? getHighlightedText(suggestion.UserName.split('.')[1], highlightQuery)
-              : suggestion.UserName.split('.')[1])}
-        </Typography>
-      </MenuItem>
+            {!suggestion.FirstName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
+              ? getHighlightedText(suggestion.UserName.split('.')[0], highlightQuery)
+              : suggestion.UserName.split('.')[0]}
+            {suggestion.UserName.includes('.') && '.'}
+            {suggestion.UserName.includes('.') &&
+              (!suggestion.LastName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
+                ? getHighlightedText(suggestion.UserName.split('.')[1], highlightQuery)
+                : suggestion.UserName.split('.')[1])}
+          </Typography>
+        </MenuItem>
+        <Divider className={styles.suggestion_divider} />
+      </>
     );
   }
 

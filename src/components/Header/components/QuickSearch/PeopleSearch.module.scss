@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 @import '../../../../vars';
 
 .gordon_people_search {
@@ -19,6 +19,13 @@
     }
     &:hover:not(:focus-within) {
       box-shadow: 0 3px 5px 0 $neutral-black-opacity20;
+    }
+
+    & :global(.MuiInputBase-input) {
+      padding: 7px 0px;
+    }
+    & :global(.MuiSvgIcon-root) {
+      color: $neutral-white;
     }
   }
 
@@ -48,8 +55,7 @@
   .people_search_suggestion,
   .people_search_suggestion_selected {
     display: block;
-    align-self: left;
-    padding-bottom: 25px;
+    text-align: start;
     white-space: normal; // wrap long names
   }
 
@@ -106,4 +112,8 @@
       align-self: flex-end;
     }
   }
+}
+
+:global(hr.MuiDivider-root).suggestion_divider {
+  margin: 0px;
 }
