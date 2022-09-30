@@ -10,6 +10,7 @@ import styles from './PeopleSearch.module.css';
 
 const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 450;
+const NO_SEARCH_RESULTS = [0, []];
 
 //  TextBox Input Field
 const renderInput = (inputProps) => {
@@ -41,7 +42,7 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
   // Search time is never used via variable name, but it is used via index
   // to ensure that earlier searches which took longer to run don't overwrite later searches
   // eslint-disable-next-line no-unused-vars
-  const [[searchTime, suggestions], setSearchResults] = useState([0, []]);
+  const [[searchTime, suggestions], setSearchResults] = useState(NO_SEARCH_RESULTS);
   const [suggestionIndex, setSuggestionIndex] = useState(-1);
   const [query, setQuery] = useDebounce('', 200);
   const [highlightQuery, setHighlightQuery] = useState(String);
@@ -72,6 +73,8 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
           newResults[0] > prevResults[0] ? newResults : prevResults,
         ),
       );
+    } else {
+      setSearchResults(NO_SEARCH_RESULTS);
     }
   }, [query]);
 
