@@ -108,6 +108,22 @@ export const windowBreakWidths = {
   breakXL: 1536,
 };
 
+declare module '@mui/material/styles' {
+  interface Palette {
+    neutral: Palette['primary'];
+  }
+  // allow configuration using `createTheme`
+  interface PaletteOptions {
+    neutral: PaletteOptions['primary'];
+  }
+}
+
+declare module '@mui/material' {
+  interface ButtonPropsColorOverrides {
+    neutral: any;
+  }
+}
+
 const theme = createTheme({
   palette: {
     primary: gordonColors.primary.blueShades,
