@@ -43,6 +43,12 @@ const PARTICIPATION_LEVELS = {
   Guest: 'GUEST',
 };
 
+const PlaceHolderAvatar = () => (
+  <svg width="50" height="50" viewBox="0 0 50 50">
+    <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+  </svg>
+);
+
 const MemberListItem = ({
   member,
   isAdmin,
@@ -66,12 +72,6 @@ const MemberListItem = ({
   const [title, setTitle] = useState(member.Description);
   const [avatar, setAvatar] = useState();
   const { profile } = useUser();
-
-  const PlaceHolderAvatar = () => (
-    <svg width="50" height="50" viewBox="0 0 50 50">
-      <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-    </svg>
-  );
 
   useEffect(() => {
     const loadAvatar = async () => {
@@ -256,7 +256,7 @@ const MemberListItem = ({
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={1} style={rowStyle}>
             <Avatar
-              src={`data:image/jpg;base64,${avatar}`}
+              src={avatar ? `data:image/jpg;base64,${avatar}` : undefined}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
               style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
@@ -313,7 +313,7 @@ const MemberListItem = ({
                 <Grid container spacing={3} wrap="nowrap" alignItems="center">
                   <Grid>
                     <Avatar
-                      src={`data:image/jpg;base64,${avatar}`}
+                      src={avatar ? `data:image/jpg;base64,${avatar}` : undefined}
                       alt={`${member.FirstName} ${member.LastName}`}
                       variant="rounded"
                       style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
@@ -360,7 +360,7 @@ const MemberListItem = ({
         <Grid container alignItems="center" spacing={2} wrap="nowrap">
           <Grid item md={1} style={rowStyle}>
             <Avatar
-              src={`data:image/jpg;base64,${avatar}`}
+              src={avatar ? `data:image/jpg;base64,${avatar}` : undefined}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
               style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
