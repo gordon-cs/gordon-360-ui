@@ -390,24 +390,20 @@ class IDUploader extends Component {
                 <Button
                   variant="contained"
                   onClick={() => this.setState({ preview: null })}
-                  style={style.button}
                   className={styles.gc360_id_dialog_content_button}
                 >
                   Choose Another Image
                 </Button>
               )}
             </DialogContent>
-            <DialogActions className={styles.gc360_id_dialog_actions}>
-              <Button variant="contained" onClick={this.handleCloseCancel} style={style.button}>
+            <DialogActions>
+              <Button variant="contained" color="neutral" onClick={this.handleCloseCancel}>
                 Cancel
               </Button>
               <Button
                 variant="contained"
                 onClick={this.handleCloseSubmit}
                 disabled={!this.state.preview}
-                style={
-                  this.state.preview ? style.button : { background: 'darkgray', color: 'white' }
-                }
               >
                 Submit
               </Button>

@@ -41,11 +41,6 @@
       grid-row: 3;
     }
   }
-  &_actions {
-    display: grid;
-    grid-row: 3;
-    grid-column-gap: 10px;
-  }
 }
 
 @media (max-width: $break-sm) {
