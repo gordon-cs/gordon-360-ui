@@ -131,7 +131,7 @@ const routes = [
     component: News,
   },
   {
-    name: 'RecIM',
+    name: 'Rec-IM',
     path: '/recim',
     component: RecIM,
   },
