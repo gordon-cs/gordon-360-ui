@@ -1,37 +1,30 @@
-import { useState } from 'react';
+import { Button, Dialog, Grid, IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import LinksDialog from './components/LinksDialog/index';
-import { socialMediaInfo } from 'socialMedia';
-import { Grid, Button, Dialog, IconButton } from '@material-ui/core';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-
+import { useState } from 'react';
+import { platforms, socialMediaInfo } from 'services/socialMedia';
 // @TODO CSSMODULES - outside directory
 import styles from '../../Identification.module.css';
+import LinksDialog from './components/LinksDialog/index';
 
 const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
   const [socialLinksOpen, setSocialLinksOpen] = useState(false);
   const [links, setLinks] = useState(
-    socialMediaInfo.platforms.reduce(
-      (links, platform) => ({ ...links, [platform]: profile[platform] || '' }),
-      {},
-    ),
+    platforms.reduce((links, platform) => ({ ...links, [platform]: profile[platform] || '' }), {}),
   );
   const isOnline = useNetworkStatus();
-  const numberOfLinks = socialMediaInfo.platforms.reduce(
-    (num, platform) => (links[platform] ? num + 1 : num),
-    0,
-  );
+  const numberOfLinks = platforms.reduce((num, platform) => (links[platform] ? num + 1 : num), 0);
 
   return (
     <>
-      {(myProf || socialMediaInfo.platforms.some((platform) => links[platform])) && (
+      {(myProf || platforms.some((platform) => links[platform])) && (
         <Grid item className={styles.identification_card_content_card_container_info_social_media}>
           <Grid
             container
             justifyContent={numberOfLinks < 3 ? 'space-evenly' : 'space-between'}
             alignItems="center"
           >
-            {socialMediaInfo.platforms.map((platform) => {
+            {platforms.map((platform) => {
               if (links[platform]) {
                 return (
                   <Grid item key={platform}>
@@ -41,7 +34,7 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {socialMediaInfo[platform].icon}
+                      {socialMediaInfo[platform].Icon}
                     </a>
                   </Grid>
                 );

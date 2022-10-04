@@ -1,13 +1,10 @@
-import { Component, Fragment } from 'react';
-import Moment from 'moment';
-
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-
 import GordonLoader from 'components/Loader';
-import schedule from 'services/schedule';
-import myschedule from 'services/myschedule';
+import Moment from 'moment';
+import { Component, Fragment } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import myscheduleService from 'services/myschedule';
+import scheduleService from 'services/schedule';
 import session from 'services/session';
-
 // @TODO CSSMODULES - Schedule Calendar needs work but left as normal for now
 import './ScheduleCalendar.css';
 
@@ -51,23 +48,16 @@ export default class GordonScheduleCalendar extends Component {
   loadData = async (searchedUser) => {
     this.setState({ loading: true });
     let courseInfo = null;
-    if (this.props.myProf) {
-      try {
-        const schedulePromise = schedule.getScheduleMyProf();
-        courseInfo = await schedule.makeScheduleCourses(schedulePromise);
-      } catch (e) {
-        this.setState({ loading: false });
-      }
-    } else {
-      try {
-        const schedulePromise = schedule.getSchedule(searchedUser.AD_Username);
-        courseInfo = await schedule.makeScheduleCourses(schedulePromise);
-      } catch (e) {
-        this.setState({ loading: false });
-      }
+    try {
+      const schedule = await scheduleService.getSchedule(
+        this.props.myProf ? '' : searchedUser.AD_Username,
+      );
+      courseInfo = scheduleService.makeScheduleCourses(schedule);
+    } catch (e) {
+      this.setState({ loading: false });
     }
-    const myschedulePromise = myschedule.getMySchedule(searchedUser.AD_Username);
-    let myscheduleInfo = await myschedule.makeMySchedule(myschedulePromise);
+    const myschedule = await myscheduleService.getMySchedule(searchedUser.AD_Username);
+    const myscheduleInfo = myscheduleService.makeMySchedule(myschedule);
 
     if (courseInfo) {
       this.eventInfo = courseInfo.concat(myscheduleInfo);

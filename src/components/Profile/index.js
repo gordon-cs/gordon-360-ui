@@ -1,9 +1,10 @@
 import { Grid } from '@material-ui/core';
 import GordonSnackbar from 'components/Snackbar';
+import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
+import { AuthGroup } from 'services/auth';
 import scheduleService from 'services/schedule';
-import user from 'services/user';
 import {
   EmergencyInfoList,
   Identification,
@@ -18,7 +19,7 @@ const Profile = ({ profile, myProf }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const isOnline = useNetworkStatus();
   const network = isOnline ? 'online' : 'offline';
-  const viewerIsPolice = user.getLocalInfo().college_role === 'gordon police';
+  const viewerIsPolice = useAuthGroups(AuthGroup.Police);
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
   const profileIsStudent = profile.PersonType?.includes('stu');
 
@@ -27,11 +28,8 @@ const Profile = ({ profile, myProf }) => {
   }, []);
 
   useEffect(() => {
-    const fetchReadStudentSchedulesPermission = async () => {
-      setCanReadStudentSchedules(await scheduleService.getCanReadStudentSchedules());
-    };
-    fetchReadStudentSchedulesPermission();
-  });
+    scheduleService.getCanReadStudentSchedules().then(setCanReadStudentSchedules);
+  }, []);
 
   return (
     <Grid container justifyContent="center" spacing={2}>
@@ -76,7 +74,7 @@ const Profile = ({ profile, myProf }) => {
 
       <Grid item xs={12} lg={5}>
         <MembershipsList
-          user={myProf ? profile.ID : profile.AD_Username}
+          username={profile.AD_Username}
           myProf={myProf}
           PersonType={profile.PersonType}
           createSnackbar={createSnackbar}

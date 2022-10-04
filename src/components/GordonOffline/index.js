@@ -1,9 +1,9 @@
 import { Button, Card, CardContent, Grid } from '@material-ui/core/';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
-import PropTypes from 'prop-types';
 
 /**
- * @param {string} feature - Text representing the content the user tried to access
+ * @param {Object} props props
+ * @param {string} props.feature - Text representing the content the user tried to access
  * @returns {JSX.Element} A card with a message that the user must connect to view content
  */
 const GordonOffline = ({ feature }) => {
@@ -49,10 +49,6 @@ const GordonOffline = ({ feature }) => {
       </Grid>
     </Grid>
   );
-};
-
-GordonOffline.propTypes = {
-  feature: PropTypes.string.isRequired,
 };
 
 export default GordonOffline;

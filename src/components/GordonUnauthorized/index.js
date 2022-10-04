@@ -1,7 +1,9 @@
 import { Button, Card, CardContent, Grid } from '@material-ui/core/';
+import { authenticate } from 'services/auth';
 
 /**
- * @param {string} feature - Text representing the content the user tried to access
+ * @param {Object} props props
+ * @param {string} props.feature - Text representing the content the user tried to access
  * @returns {JSX.Element} A card with a message that the user must log in to view content
  */
 const GordonUnauthorized = ({ feature }) => {
@@ -19,13 +21,7 @@ const GordonUnauthorized = ({ feature }) => {
             <br />
             <h4>You must be logged in to view {feature}.</h4>
             <br />
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={() => {
-                window.location.pathname = '';
-              }}
-            >
+            <Button color="primary" variant="contained" onClick={authenticate}>
               Login
             </Button>
           </CardContent>

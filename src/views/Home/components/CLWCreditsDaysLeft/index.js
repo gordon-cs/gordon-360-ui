@@ -1,14 +1,13 @@
-import { Fragment, useState, useEffect } from 'react';
-import { Doughnut, defaults } from 'react-chartjs-2';
-import { Link } from 'react-router-dom';
-import { gordonColors } from 'theme';
-import user from 'services/user';
-import session from 'services/session';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
-
+import { format, parseISO } from 'date-fns';
+import { Fragment, useEffect, useState } from 'react';
+import { defaults, Doughnut } from 'react-chartjs-2';
+import { Link } from 'react-router-dom';
+import session from 'services/session';
+import user from 'services/user';
+import { gordonColors } from 'theme';
 import styles from './CLWCreditsDaysLeft.module.css';
-
-import { Card, CardHeader, CardContent, Typography, Grid, Button } from '@material-ui/core';
 
 const style = {
   button: {
@@ -27,11 +26,11 @@ const CLWCreditsDaysLeft = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const firstDay = await session.getFirstDay();
-      const lastDay = await session.getLastDay();
       const daysLeft = await session.getDaysLeft();
       const chapelCredits = await user.getChapelCredits();
       const currSession = await session.getCurrent();
+      const firstDay = format(parseISO(currSession.SessionBeginDate), 'MM/dd/yyyy');
+      const lastDay = format(parseISO(currSession.SessionEndDate), 'MM/dd/yyyy');
       const currSessionDescription = currSession.SessionDescription.replace(
         /(Academic Year)|(Grad)/gm,
         '',

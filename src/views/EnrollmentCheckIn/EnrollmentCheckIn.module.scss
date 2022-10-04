@@ -1,0 +1,20 @@
+@import '../../vars';
+
+.enrollmentCheckIn {
+  .checkIn_header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+    padding: 30px;
+    font-size: 40px;
+  }
+
+  .button_container {
+    Button:disabled {
+      background-color: $neutral-gray3;
+    }
+    :global(.MuiButton-contained) {
+      background: $primary-cyan;
+      color: $neutral-white;
+    }
+  }
+}

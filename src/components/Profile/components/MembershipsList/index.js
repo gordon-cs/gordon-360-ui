@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import activity from 'services/activity';
 import membershipService from 'services/membership';
-import userService from 'services/user';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import styles from './MembershipsList.module.css';
 
@@ -12,12 +11,12 @@ import styles from './MembershipsList.module.css';
  * A List of memberships for display on the Profile and MyProfile views.
  *
  * @param {Object} props The component props
- * @param {string} props.user Either the user's ID number for MyProfile or the username for Profile
+ * @param {string} props.username Username of the profile being viewed
  * @param {boolean} props.myProf Whether this is shown in MyProfile or not
  * @param {Function} props.createSnackbar function to create a snackbar of whether an operation succeeded
  * @returns {JSX} A list of the user's memberships
  */
-const MembershipsList = ({ user, myProf, createSnackbar }) => {
+const MembershipsList = ({ username, myProf, createSnackbar }) => {
   const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +24,7 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
     async function loadMemberships() {
       setLoading(true);
       if (myProf) {
-        const myMemberships = await userService.getMembershipsAlphabetically(user);
+        const myMemberships = await membershipService.getMembershipsAlphabetically(username);
         await Promise.all(
           myMemberships.map(async (membership) => {
             const involvement = await activity.get(membership.ActivityCode);
@@ -34,13 +33,13 @@ const MembershipsList = ({ user, myProf, createSnackbar }) => {
         );
         setMemberships(myMemberships);
       } else {
-        const publicMemberships = await userService.getPublicMemberships(user);
+        const publicMemberships = await membershipService.getPublicMemberships(username);
         setMemberships(publicMemberships);
       }
       setLoading(false);
     }
     loadMemberships();
-  }, [myProf, user]);
+  }, [myProf, username]);
 
   const MembershipsList = () => {
     if (memberships.length === 0) {

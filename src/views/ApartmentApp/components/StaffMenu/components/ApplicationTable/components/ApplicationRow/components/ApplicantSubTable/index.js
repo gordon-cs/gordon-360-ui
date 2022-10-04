@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@material-ui/core/';
 import { useEffect, useState } from 'react';
+import { Class } from 'services/peopleSearch';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../../../../../ApartmentApp.module.css';
 
@@ -55,7 +56,7 @@ const ApplicantSubTable = ({ applicants }) => {
                 {applicantInfo.Username}
               </TableCell>
               <TableCell align="center">{applicantInfo.Age}</TableCell>
-              <TableCell>{applicantInfo.Class}</TableCell>
+              <TableCell>{Class[applicantInfo.Class]}</TableCell>
               <TableCell>{applicantInfo.OffCampusProgram}</TableCell>
               <TableCell>{applicantInfo.Probation}</TableCell>
               <TableCell align="right">{applicantInfo.Points}</TableCell>
