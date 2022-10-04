@@ -86,7 +86,7 @@ const MemberListItem = ({
   }, [member.AD_Username]);
 
   const handleToggleGroupAdmin = async () => {
-    if (isAdmin && !isSiteAdmin && member.IDNumber === profile.ID) {
+    if (isAdmin && !isSiteAdmin && member.IDNumber?.toString() === profile.ID) {
       setIsUnadminSelfDialogOpen(true);
     } else {
       let data = {
@@ -144,7 +144,7 @@ const MemberListItem = ({
   };
 
   const handleRemove = () => {
-    if (member.IDNumber === profile.ID) {
+    if (member.IDNumber?.toString() === profile.ID) {
       setIsLeaveAlertOpen(true);
     } else {
       setIsRemoveAlertOpen(true);
@@ -346,7 +346,7 @@ const MemberListItem = ({
       );
     }
   } else {
-    if (member.IDNumber === profile.ID) {
+    if (member.IDNumber?.toString() === profile.ID) {
       options = (
         <Button variant="contained" style={redButton} onClick={() => setIsLeaveAlertOpen(true)}>
           LEAVE
