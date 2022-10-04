@@ -1,4 +1,4 @@
-import { Typography, Grid, Button, TextField } from '@material-ui/core/';
+import { Typography, Grid, Button } from '@material-ui/core/';
 import { useState, useMemo, useEffect } from 'react';
 import styles from './CreateLeagueForm.module.css';
 import GordonLoader from 'components/Loader';
