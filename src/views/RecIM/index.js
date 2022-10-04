@@ -2,26 +2,46 @@ import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/co
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import LeagueListing from './components/LeagueListing';
+import TeamListing from './components/TeamListing';
 import styles from './RecIM.module.css';
 import recimLogo from './recim_logo.jpg';
 
+// CARD - upcoming events
 let upcomingEvents = (
   <Card>
-    <CardHeader title="Upcoming Events" className={styles.card} />
+    <CardHeader title="Upcoming Rec-IM Events" className={styles.card} />
     <CardContent>
       <Typography variant="body1" paragraph>
-        stuff goes here
+        {/* if there are upcoming events, map them here */}
+        <div className={styles.listing}>
+          <LeagueListing />
+        </div>
+        <div className={styles.listing}>
+          <LeagueListing />
+        </div>
+        {/* else "no upcoming events" */}
+        It looks like there aren't any Rec-IM events currently open for registration :(
       </Typography>
     </CardContent>
   </Card>
 );
 
+// CARD - my teams
 let myTeams = (
   <Card>
     <CardHeader title="My Teams" className={styles.card} />
     <CardContent>
       <Typography variant="body1" paragraph>
-        stuff goes here
+        {/* if I am apart of any active teams, map them here */}
+        <div className={styles.listing}>
+          <TeamListing />
+        </div>
+        <div className={styles.listing}>
+          <TeamListing />
+        </div>
+        {/* else "no teams" */}
+        You're not yet apart of any teams; join one to get started!
       </Typography>
     </CardContent>
   </Card>
@@ -47,7 +67,7 @@ const RecIM = () => {
           &nbsp;&nbsp;&nbsp;&nbsp;
           <Grid item>
             <Typography variant="h5">Rec-IM</Typography>
-            <Typography variant="h6">
+            <Typography variant="h6" className={styles.grayText}>
               <i>"Competition reveals character"</i>
             </Typography>
           </Grid>
