@@ -18,13 +18,13 @@ type League = {
 
 // temporary example (hard coded league object in API)
 const postSmashLeague = async () => {
-  await http.post('recim/league/add_smash');
+  await http.post('recim/leagues/add_smash');
 };
 
 const createNewLeague = async (newLeague: League) => {
-  await http.post('recim/league', newLeague);
+  await http.post('recim/leagues', newLeague);
 };
 
-const getAllLeagues = async (): Promise<League[]> => await http.get('recim/league/all');
+const getAllLeagues = async (): Promise<Object[]> => await http.get('recim/leagues');
 
 export { postSmashLeague, getAllLeagues, createNewLeague };
