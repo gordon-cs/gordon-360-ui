@@ -216,7 +216,7 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
         setOpenCreateLeagueForm(false);
       }}
       cancelButtonName="cancel"
-      titleClass={styles.alumni_update_form_title}
+      titleClass={styles.form_title}
     >
       <ContentCard title="League Information">{mapFieldsToInputs(createLeagueFields)}</ContentCard>
 

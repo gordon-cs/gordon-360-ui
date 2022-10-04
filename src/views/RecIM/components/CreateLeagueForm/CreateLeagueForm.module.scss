@@ -1,17 +1,6 @@
 @import '../../../../vars';
 
-.select_text {
-  text-transform: capitalize;
-}
-
-.update_item {
-  padding: 1rem;
-  align-items: center;
-  transition: background-color 150ms;
-  border-top: solid 1.5px $neutral-light-gray;
-}
-
-.alumni_update_form_title {
+.form_title {
   background-color: $primary-blue;
   color: $neutral-white;
   text-align: center;
@@ -19,36 +8,5 @@
 
   & :global(.MuiTypography-h6) {
     font-size: 2em;
-  }
-}
-
-.update {
-  margin: 1rem;
-
-  & :global(.MuiCard-root) {
-    margin-bottom: 1em;
-  }
-
-  & :global(.MuiGrid-item) {
-    margin-left: 3em;
-    margin-right: 2.5em;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-  }
-
-  &_title {
-    text-align: center;
-    margin-top: 1rem;
-  }
-
-  &_button {
-    background-color: #00aeef !important;
-    color: #ffffff !important;
-    margin: 0.5rem !important;
-  }
-
-  &_header {
-    background-color: $primary-blue;
-    color: $neutral-white;
   }
 }
