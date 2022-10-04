@@ -19,18 +19,16 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
   }
 
   const author = (
-    <Typography className={styles.news_column} style={{ textTransform: 'capitalize' }}>
-      {posting.author}
+    <Typography className={styles.news_column}>
+      {!isOnline || unapproved ? (
+        posting.author
+      ) : (
+        <Link className={styles.news_authorProfileLink} to={`/profile/${posting.ADUN}`}>
+          {posting.author}
+        </Link>
+      )}
     </Typography>
   );
-  const authorProfileLink =
-    !isOnline || unapproved ? (
-      author
-    ) : (
-      <Link className={styles.news_authorProfileLink} to={`/profile/${posting.ADUN}`}>
-        {author}
-      </Link>
-    );
 
   // Only show the edit button if the current user is the author of the posting
   // AND posting is unapproved
@@ -89,7 +87,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
           <Typography variant="h6" className={styles.news_heading} style={{ fontWeight: 'bold' }}>
             {posting.Subject}
           </Typography>
-          {authorProfileLink}
+          {author}
         </Grid>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <CardContent>
@@ -127,7 +125,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
           </Typography>
         </Grid>
         <Grid item xs={3}>
-          {authorProfileLink}
+          {author}
         </Grid>
         <Grid item xs={2}>
           <Typography className={styles.news_column}>{posting.dayPosted}</Typography>
