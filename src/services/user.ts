@@ -70,7 +70,7 @@ type BaseProfileInfo = {
   CliftonStrengths?: CliftonStrengths | null;
 };
 
-export type UnformattedStaffProfileInfo = BaseProfileInfo & {
+export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
   Dept: string;
   JobTitle: string;
   OnCampusDepartment: string;
@@ -118,9 +118,28 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   ChapelAttended: number;
 };
 
-export type UnformattedProfileInfo = UnformattedStaffProfileInfo | UnformattedStudentProfileInfo;
+type UnformattedAlumniProfileInfo = BaseProfileInfo & {
+  WebUpdate?: string;
+  HomeEmail: string;
+  MaritalStatus: string;
+  College: string;
+  ClassYear: string;
+  PreferredClassYear?: string;
+  ShareName: string;
+  ShareAddress?: string;
+};
 
-export type StaffProfileInfo = UnformattedStaffProfileInfo & {
+export type UnformattedProfileInfo =
+  | UnformattedFacStaffProfileInfo
+  | UnformattedStudentProfileInfo
+  | UnformattedAlumniProfileInfo
+  | null;
+
+export type FacStaffProfileInfo = UnformattedFacStaffProfileInfo & {
+  fullName: string;
+};
+
+export type AlumniProfileInfo = UnformattedAlumniProfileInfo & {
   fullName: string;
 };
 
@@ -131,7 +150,7 @@ export type StudentProfileInfo = {
   Advisors: StudentAdvisorInfo[];
 } & Override<UnformattedStudentProfileInfo, { OnOffCampus: OnOffCampusDescription }>;
 
-export type Profile = StaffProfileInfo | StudentProfileInfo;
+export type Profile = FacStaffProfileInfo | StudentProfileInfo | AlumniProfileInfo;
 
 type StudentAdvisorInfo = {
   Firstname: string;
@@ -155,16 +174,17 @@ type MealPlanComponent = {
 
 export type ProfileImages = { def: string; pref?: string };
 
-const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo => {
-  return (profile as UnformattedStudentProfileInfo).OnOffCampus !== undefined;
-};
+const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo =>
+  Boolean((profile as UnformattedStudentProfileInfo)?.Commuter);
 
-const isStaff = (profile: UnformattedProfileInfo): profile is UnformattedStaffProfileInfo => {
-  return (profile as UnformattedStaffProfileInfo).Dept !== undefined;
-};
+const isFacStaff = (profile: UnformattedProfileInfo): profile is UnformattedFacStaffProfileInfo =>
+  Boolean((profile as UnformattedFacStaffProfileInfo)?.Dept);
+
+const isAlumni = (profile: UnformattedProfileInfo): profile is UnformattedAlumniProfileInfo =>
+  Boolean((profile as UnformattedAlumniProfileInfo)?.ClassYear);
 
 function formatCountry(profile: UnformattedProfileInfo) {
-  if (profile.Country) {
+  if (profile?.Country) {
     profile.Country = profile.Country.replace(/\w\S*/g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
@@ -179,12 +199,14 @@ function formatCountry(profile: UnformattedProfileInfo) {
 }
 
 const formatSocialMediaLinks = (profile: UnformattedProfileInfo) => {
-  platforms.forEach(
-    (platform) =>
-      (profile[platform] = profile[platform]
-        ? socialMediaInfo[platform].prefix + decodeURIComponent(profile[platform])
-        : ''),
-  );
+  if (profile) {
+    platforms.forEach(
+      (platform) =>
+        (profile[platform] = profile[platform]
+          ? socialMediaInfo[platform].prefix + decodeURIComponent(profile[platform])
+          : ''),
+    );
+  }
   return profile;
 };
 
@@ -245,39 +267,41 @@ const isBirthdayToday = async () => {
 const getEmploymentInfo = () => getEmployment();
 //.then(sort(compareBySession))
 
-const getProfileInfo = async (username: string = ''): Promise<Profile> => {
-  return getProfile(username)
-    .then(formatCountry)
-    .then(formatSocialMediaLinks)
-    .then(async (profile) => {
-      const fullName = `${profile.FirstName} ${profile.LastName}`;
-      if (isStudent(profile)) {
-        return {
-          ...profile,
-          fullName,
-          Advisors: await getAdvisors(profile.AD_Username),
-          CliftonStrengths: await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username),
-          Majors: [
-            profile.Major1Description,
-            profile.Major2Description,
-            profile.Major3Description,
-          ].filter(Boolean),
-          Minors: [
-            profile.Minor1Description,
-            profile.Minor2Description,
-            profile.Minor3Description,
-          ].filter(Boolean),
-          OnOffCampus: onOffCampusDescriptions[profile.OnOffCampus],
-        };
-      } else if (isStaff(profile)) {
-        return {
-          ...profile,
-          fullName,
-        };
-      } else {
-        throw new TypeError();
-      }
-    });
+const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
+  const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
+
+  const fullName = `${profile?.FirstName} ${profile?.LastName}`;
+  if (isStudent(profile)) {
+    return {
+      ...profile,
+      fullName,
+      Advisors: await getAdvisors(profile.AD_Username),
+      CliftonStrengths: await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username),
+      Majors: [
+        profile.Major1Description,
+        profile.Major2Description,
+        profile.Major3Description,
+      ].filter(Boolean),
+      Minors: [
+        profile.Minor1Description,
+        profile.Minor2Description,
+        profile.Minor3Description,
+      ].filter(Boolean),
+      OnOffCampus: onOffCampusDescriptions[profile.OnOffCampus],
+    };
+  } else if (isFacStaff(profile)) {
+    return {
+      ...profile,
+      fullName,
+    };
+  } else if (isAlumni(profile)) {
+    return {
+      ...profile,
+      fullName,
+    };
+  } else {
+    return undefined;
+  }
 };
 
 const getEmergencyInfo = async (username: string) => {
