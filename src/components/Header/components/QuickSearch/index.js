@@ -21,7 +21,8 @@ const renderInput = ({ autoFocus, value, ref, ...other }) => (
     InputProps={{
       disableUnderline: true,
       classes: {
-        root: styles.root,
+        // Use static class as target of global styles
+        root: `${styles.root} gc360_quick_search_root`,
       },
       startAdornment: (
         <InputAdornment position="start">
@@ -154,9 +155,6 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
     const highlightQuerySplit = highlightQuery.match(/ |\./);
 
     return (
-      // The props for component={Link} and to={`/profile/${suggestion.UserName}`}
-      // have been moved to the declaration of itemProps in return().
-      // This allows these link features to be omitted if disableLink is true
       <>
         <MenuItem
           {...itemProps}
@@ -185,7 +183,6 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
               </>
             ) : (
               getHighlightedText(
-                // Displays first name
                 suggestion.FirstName +
                   // If having nickname that is unique, display that nickname
                   (suggestion.Nickname &&
@@ -193,7 +190,6 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
                   suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
                     ? ' (' + suggestion.Nickname + ') '
                     : ' ') +
-                  // Displays last name
                   suggestion.LastName +
                   // If having maiden name that is unique, display that maiden name
                   (suggestion.MaidenName &&
@@ -226,7 +222,6 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
     );
   }
 
-  // Creates the People Search Bar
   return (
     <Downshift
       // Assign reference to Downshift to state property for usage elsewhere in the component
@@ -243,6 +238,7 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
                 ? {
                     onChange: (event) => updateQuery(event.target.value),
                     onKeyDown: (event) => handleKeys(event.key),
+                    onBlur: () => setQuery(''),
                   }
                 : {
                     style: { color: 'white' },
@@ -251,7 +247,7 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
             }),
           )}
           {isOpen && query.length >= MIN_QUERY_LENGTH && (
-            <Paper square className={styles.dropdown}>
+            <Paper square className={`${styles.dropdown} gc360_quick_search_dropdown`}>
               {suggestions.length > 0 ? (
                 suggestions.map((suggestion) =>
                   renderSuggestion({
