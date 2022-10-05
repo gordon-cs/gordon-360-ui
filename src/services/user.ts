@@ -184,16 +184,10 @@ const isAlumni = (profile: UnformattedProfileInfo): profile is UnformattedAlumni
   Boolean((profile as UnformattedAlumniProfileInfo)?.ClassYear);
 
 function formatCountry(profile: UnformattedProfileInfo) {
-  if (profile?.Country) {
-    profile.Country = profile.Country.replace(/\w\S*/g, function (txt) {
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-    if (profile.Country.includes(',')) {
-      profile.Country =
-        profile.Country.slice(profile.Country.indexOf(',') + 2) +
-        ' ' +
-        profile.Country.slice(0, profile.Country.indexOf(','));
-    }
+  if (profile?.Country?.includes(',')) {
+    const country = profile.Country;
+    const commaIndex = country.indexOf(',');
+    profile.Country = `${country.slice(commaIndex + 2)} ${country.slice(0, commaIndex)}`;
   }
   return profile;
 }
