@@ -84,7 +84,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     classType: searchFields.class_year === '' ? '' : Class[searchFields.class_year],
     homeCity: searchFields.home_town,
     state: searchFields.state,
-    country: searchFields.country.toUpperCase(),
+    country: searchFields.country,
     department: searchFields.department,
     building: searchFields.building,
   })

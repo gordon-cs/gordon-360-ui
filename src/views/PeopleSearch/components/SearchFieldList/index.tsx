@@ -42,7 +42,7 @@ import {
 import { useHistory, useLocation } from 'react-router';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
-import { toTitleCase, searchParamSerializerFactory } from 'services/utils';
+import { searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
 import SearchField from './components/SearchField';
 
@@ -207,7 +207,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setMinors(minors);
       setHalls(halls);
       setStates(states);
-      setCountries(countries.map((country) => toTitleCase(country)));
+      setCountries(countries);
       setDepartments(departments);
       setBuildings(buildings);
 
