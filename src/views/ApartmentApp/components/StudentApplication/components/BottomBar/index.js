@@ -125,8 +125,7 @@ const BottomBar = ({
             )}
             <Grid item xs>
               <DynamicButton
-                className={styles.delete_button}
-                disabled={!canEditApplication || !applicationID}
+                color="error"
                 buttonText={'Delete'}
                 startIcon={<DeleteIcon />}
                 status={deleting}
