@@ -175,7 +175,7 @@ type MealPlanComponent = {
 export type ProfileImages = { def: string; pref?: string };
 
 const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo =>
-  Boolean((profile as UnformattedStudentProfileInfo)?.Commuter);
+  Boolean((profile as UnformattedStudentProfileInfo)?.Class);
 
 const isFacStaff = (profile: UnformattedProfileInfo): profile is UnformattedFacStaffProfileInfo =>
   Boolean((profile as UnformattedFacStaffProfileInfo)?.Dept);
