@@ -4,13 +4,27 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import GordonLoader from 'components/Loader';
 import { sortBy } from 'lodash';
 import { DateTime } from 'luxon';
-import { useCallback, useEffect, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { NotFoundError } from 'services/error';
 import housing from 'services/housing';
 // @TODO CSSMODULES - outside directory
 import styles from '../../ApartmentApp.module.css';
 import ApplicationsTable from './components/ApplicationTable';
+
+/**
+ * A wrapper around react-csv `CSVLink` component. Needed because CSVLink
+ * does not forward ref, but MUI requires it to (starting with MUIv5)
+ * More details: https://github.com/react-csv/react-csv/issues/323
+ */
+const LinkWithRef = forwardRef((props, ref) => (
+  <CSVLink
+    ref={(c) => {
+      ref(c?.link);
+    }}
+    {...props}
+  />
+));
 
 /**
  * @typedef { import('services/housing').ApartmentApplicant } ApartmentApplicant
@@ -138,7 +152,7 @@ const StaffMenu = ({ userProfile }) => {
                     color="primary"
                     startIcon={<GetAppIcon />}
                     disabled={applicationsForCSV?.length < 1}
-                    component={CSVLink}
+                    component={LinkWithRef}
                     data={applicationsForCSV}
                     filename={`${filePrefix}-summary-${dateStr}.csv`}
                     target="_blank"
@@ -152,7 +166,7 @@ const StaffMenu = ({ userProfile }) => {
                     color="primary"
                     startIcon={<GetAppIcon />}
                     disabled={applicantsForCSV?.length < 1}
-                    component={CSVLink}
+                    component={LinkWithRef}
                     data={applicantsForCSV}
                     filename={`${filePrefix}-applicants-${dateStr}.csv`}
                     target="_blank"
@@ -166,7 +180,7 @@ const StaffMenu = ({ userProfile }) => {
                     color="primary"
                     startIcon={<GetAppIcon />}
                     disabled={apartmentChoicesForCSV?.length < 1}
-                    component={CSVLink}
+                    component={LinkWithRef}
                     data={apartmentChoicesForCSV}
                     filename={`${filePrefix}-halls-${dateStr}.csv`}
                     target="_blank"
