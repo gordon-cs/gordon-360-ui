@@ -105,7 +105,10 @@ const getCurrentMemberships = async (username: string): Promise<MembershipView[]
 const getMembershipsWithoutGuests = (username: string) =>
   getMembershipsForUser(username).then(filter((i) => i.ParticipationDescription !== 'Guest'));
 
-const getSessionMembershipsWithoutGuests = (username: string, sessionCode: string) =>
+const getSessionMembershipsWithoutGuests = (
+  username: string,
+  sessionCode: string,
+): Promise<MembershipView[]> =>
   getMembershipsBySession(username, sessionCode).then(
     filter((m) => m.ParticipationDescription !== 'Guest'),
   );

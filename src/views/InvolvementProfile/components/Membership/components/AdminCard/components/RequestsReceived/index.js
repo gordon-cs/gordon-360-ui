@@ -61,7 +61,7 @@ const RequestsReceived = ({ onAddMember }) => {
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
                 secondary={`${formatDistanceToNow(new Date(request.DateSent))} - ${
-                  request.CommentText
+                  request.Description
                 }`}
               />
 
