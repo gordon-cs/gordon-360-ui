@@ -63,16 +63,8 @@ const ApplicationDataTable = ({ applicationDetails }) => {
                 <TableRow>
                   <TableCell colSpan={2}>
                     <a href={`mailto:${editorEmail}`}>
-                      <div
-                        className={
-                          styles.identification_card_content_card_container_info_email_container
-                        }
-                      >
-                        <EmailIcon
-                          className={
-                            styles.identification_card_content_card_container_info_email_container_icon
-                          }
-                        />
+                      <div className={styles.email}>
+                        <EmailIcon className={styles.email_icon} />
                         <Typography variant="body1">{editorEmail}</Typography>
                       </div>
                     </a>

@@ -93,3 +93,14 @@ strong.over_emphasized {
     margin-bottom: 0.5em;
   }
 }
+
+.email {
+  color: $primary-blue;
+  display: flex;
+  &:hover {
+    color: $primary-cyan;
+  }
+  &_icon {
+    margin-right: 0.75rem;
+  }
+}
