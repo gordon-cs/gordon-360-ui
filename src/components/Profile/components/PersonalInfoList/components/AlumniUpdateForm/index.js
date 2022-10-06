@@ -1,6 +1,5 @@
 import { Typography, Grid, Button, TextField } from '@mui/material/';
 import { useState, useMemo, useEffect } from 'react';
-import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/profileInfoUpdate';
 import styles from './AlumniUpdateForm.module.css';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -8,6 +7,9 @@ import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { ProfileUpdateField } from './components/ProfileUpdateField';
+import addressService from 'services/address';
+import { map } from 'services/utils';
+import userService from 'services/user';
 
 const shouldContactFields = [
   { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' },
@@ -141,15 +143,15 @@ const AlumniUpdateForm = ({
   ].flat();
 
   useEffect(() => {
-    getAllStates().then((s) => {
-      let allStates = s.map((state) => `${state.Name}`);
-      allStates.unshift('Not Applicable');
-      setStatesAndProv(allStates);
-    });
-    getAllCountries().then((c) => {
-      let allCountries = c.map((country) => country.COUNTRY.toLowerCase());
-      setCountries(allCountries);
-    });
+    addressService
+      .getStates()
+      .then(map((state) => state.Name))
+      .then((states) => ['Not Applicable', ...states])
+      .then(setStatesAndProv);
+    addressService
+      .getCountries()
+      .then(map((country) => country.Name))
+      .then(setCountries);
   }, []);
 
   const currentInfo = useMemo(() => {
@@ -289,7 +291,7 @@ const AlumniUpdateForm = ({
       Value: changeReason,
       Label: 'Reason for change',
     });
-    requestInfoUpdate(updateRequest).then(() => {
+    userService.requestInfoUpdate(updateRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',

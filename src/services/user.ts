@@ -316,6 +316,16 @@ function updateSocialLink(platform: Platform, link: string) {
   return http.put('profiles/' + platform.toLowerCase(), body);
 }
 
+type ProfileFieldUpdate = {
+  Field: string;
+  Value: string;
+  Label: string;
+};
+
+const requestInfoUpdate = async (updatedFields: ProfileFieldUpdate[]) => {
+  await http.post('profiles/update/', updatedFields);
+};
+
 const userService = {
   setMobilePhonePrivacy,
   setHomePhonePrivacy,
@@ -329,6 +339,7 @@ const userService = {
   resetImage,
   postImage,
   postIDImage,
+  requestInfoUpdate,
   getEmploymentInfo,
   getEmergencyInfo,
   updateSocialLink,

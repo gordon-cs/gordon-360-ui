@@ -5,6 +5,11 @@ import { toTitleCase } from 'services/utils';
 import { gordonColors } from 'theme';
 import styles from './SearchField.module.scss';
 
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+
 interface CommonProps {
   name: string;
   value: string;
@@ -12,12 +17,12 @@ interface CommonProps {
   Icon?: IconType;
   disabled?: boolean;
   select?: boolean;
-  options?: string[];
+  options?: string[] | SelectOption[];
 }
 
 interface SelectProps extends CommonProps {
   select: true;
-  options: string[];
+  options: string[] | SelectOption[];
 }
 
 interface TextProps extends CommonProps {
@@ -25,7 +30,26 @@ interface TextProps extends CommonProps {
   options?: undefined;
 }
 
-type Props = SelectProps | TextProps;
+type SearchFieldProps = SelectProps | TextProps;
+
+const defaultMenuItem = (
+  <MenuItem value="" key="default">
+    <em>All</em>
+  </MenuItem>
+);
+
+const mapOptionsToMenuItems = (options: string[] | SelectOption[]) =>
+  options.map((option) =>
+    typeof option === 'string' ? (
+      <MenuItem value={option} key={option}>
+        {option}
+      </MenuItem>
+    ) : (
+      <MenuItem value={option.value} key={option.value}>
+        {option.label}
+      </MenuItem>
+    ),
+  );
 
 const SearchField = ({
   name,
@@ -35,7 +59,7 @@ const SearchField = ({
   disabled = false,
   select = false,
   options = undefined,
-}: Props) => {
+}: SearchFieldProps) => {
   const isLargeScreen = useMediaQuery('(min-width: 600px)');
 
   return (
@@ -66,17 +90,7 @@ const SearchField = ({
           select={select}
           disabled={disabled}
         >
-          {select &&
-            options && [
-              <MenuItem value="" key="default">
-                <em>All</em>
-              </MenuItem>,
-              ...options.map((option) => (
-                <MenuItem value={option} key={option}>
-                  {option}
-                </MenuItem>
-              )),
-            ]}
+          {select && options && [defaultMenuItem, mapOptionsToMenuItems(options)]}
         </TextField>
       </Grid>
     </Grid>

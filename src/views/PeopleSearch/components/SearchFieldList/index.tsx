@@ -42,9 +42,10 @@ import {
 import { useHistory, useLocation } from 'react-router';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
-import { searchParamSerializerFactory } from 'services/utils';
+import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
-import SearchField from './components/SearchField';
+import SearchField, { SelectOption } from './components/SearchField';
+import addressService from 'services/address';
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
@@ -133,7 +134,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   const [majors, setMajors] = useState<string[]>([]);
   const [minors, setMinors] = useState<string[]>([]);
-  const [states, setStates] = useState<string[]>([]);
+  const [states, setStates] = useState<SelectOption[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
   const [departments, setDepartments] = useState<string[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
@@ -198,16 +199,16 @@ const SearchFieldList = ({ onSearch }: Props) => {
         peopleSearchService.getMajors(),
         peopleSearchService.getMinors(),
         peopleSearchService.getHalls(),
-        peopleSearchService.getStates(),
-        peopleSearchService.getCountries(),
+        addressService.getStates(),
+        addressService.getCountries(),
         peopleSearchService.getDepartments(),
         peopleSearchService.getBuildings(),
       ]);
       setMajors(majors);
       setMinors(minors);
       setHalls(halls);
-      setStates(states);
-      setCountries(countries);
+      setStates(states.map((s) => ({ label: s.Name, value: s.Abbreviation })));
+      setCountries(countries.map((c) => c.Name));
       setDepartments(departments);
       setBuildings(buildings);
 
@@ -342,7 +343,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
               name="residence_hall"
               value={searchParams.residence_hall}
               updateValue={handleUpdate}
-              options={halls}
+              options={halls.sort()}
               Icon={FaBuilding}
               select
             />
@@ -354,7 +355,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 name="relationship_status"
                 value={searchParams.relationship_status ?? ''}
                 updateValue={handleUpdate}
-                options={relationship_statuses}
+                options={relationship_statuses.sort()}
                 Icon={FaHeart}
                 select
               />
@@ -395,7 +396,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="major"
                     value={searchParams.major}
                     updateValue={handleUpdate}
-                    options={majors}
+                    options={majors.sort()}
                     Icon={FaBook}
                     select
                     disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
@@ -404,7 +405,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="minor"
                     value={searchParams.minor}
                     updateValue={handleUpdate}
-                    options={minors}
+                    options={minors.sort()}
                     Icon={FaBook}
                     select
                     disabled={!searchParams.includeStudent}
@@ -435,7 +436,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="department"
                     value={searchParams.department}
                     updateValue={handleUpdate}
-                    options={departments}
+                    options={departments.sort()}
                     Icon={FaBriefcase}
                     select
                     disabled={!searchParams.includeFacStaff}
@@ -444,7 +445,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="building"
                     value={searchParams.building}
                     updateValue={handleUpdate}
-                    options={buildings}
+                    options={buildings.sort()}
                     Icon={FaBuilding}
                     select
                     disabled={!searchParams.includeFacStaff}
@@ -466,7 +467,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="state"
                     value={searchParams.state}
                     updateValue={handleUpdate}
-                    options={states}
+                    options={states.sort(compareByProperty('label'))}
                     Icon={LocationCity}
                     select
                   />
@@ -474,7 +475,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="country"
                     value={searchParams.country}
                     updateValue={handleUpdate}
-                    options={countries}
+                    options={countries.sort()}
                     Icon={FaGlobeAmericas}
                     select
                   />
