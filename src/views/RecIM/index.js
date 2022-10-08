@@ -5,12 +5,12 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import LeagueListing from './components/LeagueListing';
 import TeamListing from './components/TeamListing';
 import styles from './RecIM.module.css';
-import recimLogo from './recim_logo.jpg';
+import recimLogo from './recim_logo.png';
 
 // CARD - upcoming events
 let upcomingEvents = (
   <Card>
-    <CardHeader title="Upcoming Rec-IM Events" className={styles.card} />
+    <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
     <CardContent>
       <Typography variant="body1" paragraph>
         {/* if there are upcoming events, map them here */}
@@ -30,7 +30,7 @@ let upcomingEvents = (
 // CARD - my teams
 let myTeams = (
   <Card>
-    <CardHeader title="My Teams" className={styles.card} />
+    <CardHeader title="My Teams" className={styles.cardHeader} />
     <CardContent>
       <Typography variant="body1" paragraph>
         {/* if I am apart of any active teams, map them here */}
@@ -60,7 +60,7 @@ const RecIM = () => {
   } else {
     return (
       <>
-        <Grid container alignItems="center">
+        <Grid container alignItems="center" className={styles.homeHeader}>
           <Grid item>
             <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
           </Grid>

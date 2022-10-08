@@ -1,6 +1,10 @@
 @import '../../vars';
 
-.card {
+.homeHeader {
+  padding-bottom: 0.5em;
+}
+
+.cardHeader {
   background-color: $primary-blue;
   color: $neutral-white;
 }
@@ -11,4 +15,12 @@
 
 .listing {
   margin: 0.3em 0;
+}
+
+:global(.MuiCardHeader-root) {
+  padding: 0.7em 16px;
+}
+
+:global(.MuiCardHeader-title) {
+  font-size: 1em;
 }
