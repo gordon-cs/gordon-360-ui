@@ -1,5 +1,19 @@
 @import '../../vars';
 
+.people_search_parent {
+  @extend %list_item;
+
+  :global {
+    .gc360_quick_search_root {
+      border-color: $neutral-dark-gray; // override to black instead of white
+    }
+
+    .gc360_quick_search_dropdown {
+      position: inherit;
+    }
+  }
+}
+
 strong.over_emphasized {
   text-transform: uppercase;
   text-decoration: underline;
@@ -47,20 +61,6 @@ strong.over_emphasized {
 .bordered_list_item {
   @extend %list_item;
   border: 1px solid $primary-blue;
-}
-
-.people_search_parent {
-  @extend %list_item;
-
-  :global {
-    .gc360_quick_search_root {
-      border-color: $neutral-dark-gray; // override to black instead of white
-    }
-
-    .gc360_quick_search_dropdown {
-      position: inherit;
-    }
-  }
 }
 
 .error {
