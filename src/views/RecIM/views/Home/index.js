@@ -1,6 +1,5 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@material-ui/core/';
-// import { postSmashLeague, getAllLeagues } from 'services/recim';
 import CreateLeagueForm from '../../components/CreateLeagueForm';
 import { useUser } from 'hooks';
 import { useState } from 'react';

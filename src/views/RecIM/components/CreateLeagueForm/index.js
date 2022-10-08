@@ -7,10 +7,7 @@ import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
-
-/**
- * A form for alumni to request an update to their profile information.
- */
+import { createNewLeague } from 'services/recim';
 
 const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCreateLeagueForm }) => {
   const [errorStatus, setErrorStatus] = useState({
@@ -166,15 +163,29 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
 
   const handleConfirm = () => {
     setSaving(true);
-    // POST Request below
-    // let updateRequest = getNewFields(currentInfo, newInfo);
-    // requestInfoUpdate(updateRequest).then(() => {
-    setSaving(false);
-    closeWithSnackbar({
-      type: 'success',
-      message: 'Your new league has been created or whatever message you want here',
+    //hard coded for league, sportId & typeID are hard coded to 0
+    //until we pull API data
+    var requestData = {
+      ID: null,
+      Name: newInfo.name,
+      RegistrationStart: newInfo.regStart,
+      RegistrationEnd: newInfo.regEnd,
+      TypeID: 0,
+      SportID: 0,
+      MinCapcity: null,
+      MaxCapacity: newInfo.MaxCapacity,
+      SoloRegistration: newInfo.individual,
+      Logo: null,
+      Completed: false,
+    };
+    createNewLeague(requestData).then(() => {
+      setSaving(false);
+      closeWithSnackbar({
+        type: 'success',
+        message: 'Your new league has been created or whatever message you want here',
+      });
+      handleWindowClose();
     });
-    handleWindowClose();
     // });
   };
 
@@ -216,7 +227,7 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
         setOpenCreateLeagueForm(false);
       }}
       cancelButtonName="cancel"
-      titleClass={styles.form_title}
+      titleClass={styles.formTitle}
     >
       <ContentCard title="League Information">{mapFieldsToInputs(createLeagueFields)}</ContentCard>
 
