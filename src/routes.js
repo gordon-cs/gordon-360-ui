@@ -21,8 +21,6 @@ import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import WellnessCheck from './views/WellnessCheck';
 import RecIM from './views/RecIM';
-import League from 'views/RecIM/views/league';
-import Team from 'views/RecIM/views/team.js';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
@@ -131,16 +129,6 @@ const routes = [
     name: 'News',
     path: '/news',
     component: News,
-  },
-  {
-    name: 'Rec-IM Team',
-    path: '/recim/league/:leagueId/team/:teamId',
-    component: Team
-  },
-  {
-    name: 'Rec-IM League',
-    path: '/recim/league/:leagueId',
-    component: League
   },
   {
     name: 'Rec-IM',
