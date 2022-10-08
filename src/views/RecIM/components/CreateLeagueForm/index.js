@@ -220,13 +220,6 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
     >
       <ContentCard title="League Information">{mapFieldsToInputs(createLeagueFields)}</ContentCard>
 
-      <Typography variant="subtitle1">
-        Found a bug?
-        <Button href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug" color="primary">
-          Report to CTS
-        </Button>
-      </Typography>
-
       <GordonDialogBox
         open={openConfirmWindow}
         title="Confirm Your League"
