@@ -354,7 +354,8 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
                       setShowMailCombo(!showMailCombo);
                     }}
                     aria-label={showMailCombo ? 'Hide Mail Combo' : 'Show Mail Combo'}
-                    size="large">
+                    size="large"
+                  >
                     {showMailCombo ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </IconButton>
                 </Grid>
@@ -486,7 +487,11 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
             {isFacStaff && myProf ? (
               <FormControlLabel
                 control={
-                  <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+                  <Switch
+                    onChange={handleChangeHomePhonePrivacy}
+                    color="secondary"
+                    checked={!isHomePhonePrivate}
+                  />
                 }
                 label={isHomePhonePrivate ? 'Private' : 'Public'}
                 labelPlacement="right"
@@ -517,9 +522,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
       </Card>
       <AlumniUpdateForm
         profile={profile}
-        closeWithSnackbar={(status) => {
-          handleAlumniUpdateForm(status);
-        }}
+        closeWithSnackbar={handleAlumniUpdateForm}
         openAlumniUpdateForm={openAlumniUpdateForm}
         setOpenAlumniUpdateForm={(bool) => setOpenAlumniUpdateForm(bool)}
       />
