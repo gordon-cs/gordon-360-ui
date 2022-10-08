@@ -10,7 +10,7 @@ import recimLogo from './../../recim_logo.png';
 // CARD - upcoming events
 let upcomingEvents = (
   <Card>
-    <CardHeader title="Upcoming Rec-IM Events" className="cardHeader" />
+    <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
     <CardContent>
       <Typography variant="body1" paragraph>
         {/* if there are upcoming events, map them here */}
