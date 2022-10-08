@@ -2,11 +2,9 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core/';
 import { postSmashLeague, getAllLeagues } from 'services/recim';
 import CreateLeagueForm from './components/CreateLeagueForm';
-
 import { useUser } from 'hooks';
 import { useState } from 'react';
 import GordonLoader from 'components/Loader';
-import GordonUnauthorized from 'components/GordonUnauthorized';
 import LeagueListing from './components/LeagueListing';
 import TeamListing from './components/TeamListing';
 import styles from './RecIM.module.css';
