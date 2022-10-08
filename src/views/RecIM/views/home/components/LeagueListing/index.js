@@ -7,12 +7,12 @@ const LeagueListing = ({ leagueId }) => {
 
   return (
     <>
-    <Link to={`/recim/league/${leagueId}`} className="gc360_link">
-      <Grid container className={styles.leagueListing}>
-        <Grid item>League Listing</Grid>
-      </Grid>
-    </Link>
-  </>
+      <Link to={`/recim/league/${leagueId}`} className="gc360_link">
+        <Grid container className={styles.leagueListing}>
+          <Grid item>League Listing</Grid>
+        </Grid>
+      </Link>
+    </>
   );
 };
 

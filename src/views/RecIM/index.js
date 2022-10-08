@@ -6,17 +6,17 @@ import League from './views/league';
 const RecIM = () => {
   return (
     <Switch>
-      <Route exact path='/recim'>
+      <Route exact path="/recim">
         <Home />
       </Route>
-      <Route path='/recim/league/:leagueId/team/:teamId'>
+      <Route path="/recim/league/:leagueId/team/:teamId">
         <Team />
       </Route>
-      <Route path='/recim/league/:leagueId'>
+      <Route path="/recim/league/:leagueId">
         <League />
       </Route>
     </Switch>
-  )
+  );
 };
 
 export default RecIM;

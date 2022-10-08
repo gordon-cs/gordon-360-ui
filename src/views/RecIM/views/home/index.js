@@ -4,21 +4,21 @@ import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import LeagueListing from './components/LeagueListing';
 import TeamListing from './components/TeamListing';
-import styles from '../../RecIM.module.css';
-import recimLogo from './recim_logo.jpg';
+import styles from './Home.module.css';
+import recimLogo from './../../recim_logo.png';
 
 // CARD - upcoming events
 let upcomingEvents = (
   <Card>
-    <CardHeader title="Upcoming Rec-IM Events" className={styles.card} />
+    <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
     <CardContent>
       <Typography variant="body1" paragraph>
         {/* if there are upcoming events, map them here */}
         <div className={styles.listing}>
-          <LeagueListing leagueId={123456}/>
+          <LeagueListing leagueId={123456} />
         </div>
         <div className={styles.listing}>
-          <LeagueListing leagueId={12345}/>
+          <LeagueListing leagueId={12345} />
         </div>
         {/* else "no upcoming events" */}
         It looks like there aren't any Rec-IM events currently open for registration :(
@@ -30,15 +30,15 @@ let upcomingEvents = (
 // CARD - my teams
 let myTeams = (
   <Card>
-    <CardHeader title="My Teams" className={styles.card} />
+    <CardHeader title="My Teams" className={styles.cardHeader} />
     <CardContent>
       <Typography variant="body1" paragraph>
         {/* if I am apart of any active teams, map them here */}
         <div className={styles.listing}>
-          <TeamListing leagueId={123456} teamId={789}/>
+          <TeamListing leagueId={123456} teamId={789} />
         </div>
         <div className={styles.listing}>
-          <TeamListing leagueId={12345} teamId={987}/>
+          <TeamListing leagueId={12345} teamId={987} />
         </div>
         {/* else "no teams" */}
         You're not yet apart of any teams; join one to get started!
@@ -60,7 +60,7 @@ const Home = () => {
   } else {
     return (
       <>
-        <Grid container alignItems="center">
+        <Grid container alignItems="center" className={styles.homeHeader}>
           <Grid item>
             <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
           </Grid>
