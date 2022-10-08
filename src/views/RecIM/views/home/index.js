@@ -7,7 +7,7 @@ import GordonLoader from 'components/Loader';
 import LeagueListing from './components/LeagueListing';
 import TeamListing from './components/TeamListing';
 import styles from './Home.module.css';
-import recimLogo from './recim_logo.jpg';
+import recimLogo from './../../recim_logo.png';
 
 const Home = () => {
   const { profile, loading } = useUser();
@@ -105,7 +105,7 @@ const Home = () => {
   } else {
     return (
       <>
-        <Grid container alignItems="center">
+        <Grid container alignItems="center" className={styles.homeHeader}>
           <Grid item>
             <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
           </Grid>
