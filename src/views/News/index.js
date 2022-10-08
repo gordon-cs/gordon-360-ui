@@ -498,7 +498,11 @@ const StudentNews = () => {
               Student News is intended for announcing Gordon sponsored events, lost and found,
               rides, etc. All submissions must follow the Student News guidelines and will be
               reviewed at the discretion of The Office of Student Life...
-              <a href="https://gordonedu.sharepoint.com/:b:/g/StudentLife/admin/EY22_o3g6vFEsfT2nYY-8JwB34OlYmA1oaE1f4FTGD2gew">
+              <a
+                href="https://gordonedu.sharepoint.com/:b:/g/StudentLife/admin/EY22_o3g6vFEsfT2nYY-8JwB34OlYmA1oaE1f4FTGD2gew"
+                target="_blank"
+                rel="noreferrer"
+              >
                 More Details
               </a>
             </Typography>
