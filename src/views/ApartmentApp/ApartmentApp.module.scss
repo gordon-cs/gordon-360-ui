@@ -31,7 +31,7 @@
     }
   }
 
-  & .list_item {
+  & .list_item, %list_item{
     color: $neutral-dark-gray;
   }
 
@@ -41,12 +41,12 @@
   }
 
   & .bordered_list_item {
-    @extend .list_item;
+    @extend %list_item;
     border: 1px solid $primary-blue;
   }
 
   & .people_search_parent {
-    @extend .list_item;
+    @extend %list_item;
 
     // overrides some styles of .gordon_people_search,
     // others are inherited from src/components/Header/components/PeopleSearch/people-search.scss

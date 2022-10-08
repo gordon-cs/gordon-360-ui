@@ -20,6 +20,10 @@
  * @author Jake Moon and Jahnuel Dorelus.
  */
 
+const urls = new URLSearchParams(location.search);
+const API_URL = urls.get('API');
+const FONT_URL = urls.get('FONT');
+
 /**
  * Imports scripts into this file. Every file that's imported becomes apart of this file. In other
  * words, variables found in one script can and will be found in other scripts since they are all
@@ -32,7 +36,6 @@ importScripts('./sw_global_variables.js', './sw_guest_cache.js', './sw_user_cach
  *
  * (sw_global_variables.js) | cacheVersion            | The name of the cache that's used to cache all files
  * (sw_global_variables.js) | showDeveloperConsoleLog | Determines if any console logs should be made
- * (sw_global_variables.js) | fontKeySource           | The URL of the font CSS file used by Gordon 360
  * (sw_global_variables.js) | cacheEmoji              | The emoji symbol used to display in the console log for cache related logs
  * (sw_global_variables.js) | cacheLog                | Console log styling for cache related logs
  * (sw_global_variables.js) | warningEmoji            | The emoji symbol used to display in the console log for warning related logs
@@ -62,9 +65,9 @@ let token, // Holds the token of the user
  * will also be deleted when a new service worker installs and may cause a bug
  */
 async function removeAllCache() {
-  await caches.keys().then(keys => {
+  await caches.keys().then((keys) => {
     // Goes through each cache present and deletes it
-    keys.forEach(async key => {
+    keys.forEach(async (key) => {
       await caches.delete(key).then(() => {
         if (showDeveloperConsoleLog) {
           key === cacheVersion
@@ -85,22 +88,22 @@ async function removeAllCache() {
  * Otherwise, it returns a response from the cache.
  *
  * @param {Request} request The request to be fetched from the network or cache
- * @return {Response} A response served from the network or cache
+ * @returns {Response} A response served from the network or cache
  */
 async function fetchThenCache(request) {
   // Attempts to do a fetch with the request if fetches have not been canceled
   if (!isFetchCanceled) {
     try {
-      return await fetch(request).then(async fetchResponse => {
+      return await fetch(request).then(async (fetchResponse) => {
         // If the request is specifically Gordon 360's Font CSS or a file that's needed for offline
         // mode, it's cached before being returned
         if (
-          request.url === fontKeySource ||
+          request.url === FONT_URL ||
           static360Cache.includes(request.url) ||
           guestRemoteLinks.includes(request.url) ||
           userRemoteLinks.includes(request.url)
         ) {
-          await caches.open(cacheVersion).then(cache => {
+          await caches.open(cacheVersion).then((cache) => {
             cache.put(request.url, fetchResponse.clone());
           });
           return fetchResponse.clone();
@@ -121,13 +124,13 @@ async function fetchThenCache(request) {
        */
 
       if (request.url.includes('/events?') || request.url.includes('/attended?')) {
-        response = await caches.open(cacheVersion).then(async cache => {
+        response = await caches.open(cacheVersion).then(async (cache) => {
           const response = await cache.match(location.origin + '/events');
           return response;
         });
       } else {
-        response = await caches.open(cacheVersion).then(cache => {
-          return cache.match(request.url).then(response => {
+        response = await caches.open(cacheVersion).then((cache) => {
+          return cache.match(request.url).then((response) => {
             return response;
           });
         });
@@ -167,7 +170,7 @@ self.addEventListener('install', () => {
   if (showDeveloperConsoleLog) console.log('%cInstalling Service Worker', statusLog);
 });
 
-self.addEventListener('activate', async event => {
+self.addEventListener('activate', async (event) => {
   if (showDeveloperConsoleLog) console.log('%cActivating Service Worker', statusLog);
   self.clients.claim();
   // Removes outdated cache and starts timer to update the cache every hour
@@ -175,7 +178,7 @@ self.addEventListener('activate', async event => {
   timerFunction();
 });
 
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', (event) => {
   /* FOR DEVELOPING PURPOSES: THIS CONSOLE LOGS EACH FETCH REQUEST MADE */
   // If request is from Local, console log the URL
   // if (event.request.url.match(location.origin) && showDeveloperConsoleLog) {
@@ -190,7 +193,7 @@ self.addEventListener('fetch', event => {
   event.respondWith(fetchThenCache(event.request));
 });
 
-self.addEventListener('message', async event => {
+self.addEventListener('message', async (event) => {
   // Gets the token and current semester term code
   token = event.data.token ? event.data.token : null;
   termCode = event.data.termCode ? event.data.termCode : null;

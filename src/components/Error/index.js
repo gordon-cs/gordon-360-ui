@@ -1,10 +1,7 @@
-import PropTypes from 'prop-types';
-
+import { Grid, Typography } from '@material-ui/core';
 import styles from './Error.module.css';
 
-import { Grid, Typography } from '@material-ui/core';
-
-const GordonError = ({ error, errorInfo }) => {
+const GordonError = ({ error }) => {
   return (
     <Grid className={styles.gordon_error} container justifyContent="center" alignItems="center">
       <Grid item xs={11} md={7} lg={5}>
@@ -19,21 +16,9 @@ const GordonError = ({ error, errorInfo }) => {
         <Typography color="error" variant="h6">
           {error.toString()}
         </Typography>
-        <pre>
-          <Typography color="error" variant="subtitle1">
-            {errorInfo.componentStack}
-          </Typography>
-        </pre>
       </Grid>
     </Grid>
   );
-};
-
-GordonError.propTypes = {
-  error: PropTypes.instanceOf(Error).isRequired,
-  errorInfo: PropTypes.shape({
-    componentStack: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 export default GordonError;

@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import GordonUnauthorized from 'components/GordonUnauthorized';
-import event from 'services/event';
-import GordonLoader from 'components/Loader';
+import { useIsAuthenticated } from '@azure/msal-react';
+import { Button, Grid, List, Typography } from '@material-ui/core';
 import EventList from 'components/EventList';
+import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonLoader from 'components/Loader';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import event from 'services/event';
 import { gordonColors } from 'theme';
-
-import { List, Grid, Button, Typography } from '@material-ui/core';
 
 const style = {
   button: {
@@ -15,26 +15,23 @@ const style = {
   },
 };
 
-const EventsAttended = (authentication) => {
+const EventsAttended = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    const loadEvents = async () => {
-      if (authentication) {
-        const attendedEvents = await event.getAttendedChapelEvents();
-        setEvents(attendedEvents);
-      }
-      setLoading(false);
-    };
-    loadEvents();
-  }, [authentication]);
+    if (isAuthenticated) {
+      event.getAttendedChapelEvents().then(setEvents);
+    }
+    setLoading(false);
+  }, [isAuthenticated]);
 
   let content;
 
   if (loading === true) {
     content = <GordonLoader />;
-  } else if (!authentication) {
+  } else if (!isAuthenticated) {
     content = <GordonUnauthorized feature={'your attended events'} />;
   } else if (events.length > 0) {
     content = (
@@ -75,13 +72,11 @@ const EventsAttended = (authentication) => {
   }
 
   return (
-    <section>
-      <Grid container justifyContent="center">
-        <Grid item xs={12} md={12} lg={8}>
-          <List>{content}</List>
-        </Grid>
+    <Grid container justifyContent="center">
+      <Grid item xs={12} md={12} lg={8}>
+        <List>{content}</List>
       </Grid>
-    </section>
+    </Grid>
   );
 };
 

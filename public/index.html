@@ -89,28 +89,11 @@
 
     <meta name="description" content="Gordon 360 is the student app for Gordon College." />
 
-    <!-- Different font key for development and production -->
-    <!-- Font will not work in development and will cause a 403, because the only domains allowed are *.gordon.edu -->
-    <!-- Prod font key @PROD -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://cloud.typography.com/7763712/7294392/css/fonts.css"
-    />
-
-    <!-- Dev font key @TRAIN -->
-    <!-- Does not currently work, returns 403 -->
-    <!-- <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://cloud.typography.com/7763712/6754392/css/fonts.css"
-    /> -->
+    <!-- Prod and Train have different font urls, so load them from env variables -->
+    <link rel="stylesheet" type="text/css" href="%REACT_APP_FONT_URL%" />
   </head>
   <body>
-    <script src="./pwa.js"></script>
-    <noscript>
-      You need to enable JavaScript to use Gordon 360.
-    </noscript>
+    <noscript> You need to enable JavaScript to use Gordon 360. </noscript>
     <div id="root"></div>
     <!--
       This HTML file is a template.

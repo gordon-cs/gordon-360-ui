@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
 import {
   Card,
-  CardHeader,
   CardContent,
+  CardHeader,
   FormControl,
   Grid,
   InputLabel,
@@ -10,16 +9,17 @@ import {
   Select,
   TextField,
 } from '@material-ui/core';
-import InvolvementsGrid from './components/InvolvementsGrid';
 import GordonLoader from 'components/Loader';
-import Requests from './components/Requests';
-import userService from 'services/user';
+import { useNetworkStatus, useUser } from 'hooks';
+import { useEffect, useState } from 'react';
 import involvementService from 'services/activity';
+import membershipService from 'services/membership';
 import sessionService from 'services/session';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 import { gordonColors } from 'theme';
+import InvolvementsGrid from './components/InvolvementsGrid';
+import Requests from './components/Requests';
 
-const InvolvementsAll = ({ location, authentication, history }) => {
+const InvolvementsAll = ({ location, history }) => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [involvements, setInvolvements] = useState([]);
   const [allInvolvements, setAllInvolvements] = useState([]);
@@ -30,6 +30,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
   const [sessions, setSessions] = useState([]);
   const [type, setType] = useState('');
   const [types, setTypes] = useState([]);
+  const { profile, loading: loadingProfile } = useUser();
   const isOnline = useNetworkStatus();
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
@@ -68,7 +69,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
       }
     };
     loadPage();
-  }, [authentication, sessionFromURL]);
+  }, [sessionFromURL]);
 
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
@@ -81,10 +82,12 @@ const InvolvementsAll = ({ location, authentication, history }) => {
       setLoading(true);
       setAllInvolvements(await involvementService.getAll(selectedSession));
       setTypes(await involvementService.getTypes(selectedSession));
-      if (authentication) {
-        const { id } = await userService.getLocalInfo();
+      if (profile) {
         setMyInvolvements(
-          await userService.getSessionMembershipsWithoutGuests(id, selectedSession),
+          await membershipService.getSessionMembershipsWithoutGuests(
+            profile.AD_Username,
+            selectedSession,
+          ),
         );
       }
       setLoading(false);
@@ -93,7 +96,7 @@ const InvolvementsAll = ({ location, authentication, history }) => {
     if (selectedSession) {
       updateInvolvements();
     }
-  }, [selectedSession, authentication]);
+  }, [selectedSession, profile]);
 
   useEffect(() => {
     setInvolvements(involvementService.filter(allInvolvements, type, search));
@@ -101,9 +104,8 @@ const InvolvementsAll = ({ location, authentication, history }) => {
 
   let myInvolvementsHeadingText;
   let myInvolvementsNoneText;
-  let involvementSessionText = selectedSession
-    ? sessions.find((s) => s.SessionCode === selectedSession)?.SessionDescription
-    : '';
+  let involvementSessionText =
+    sessions.find((s) => s.SessionCode === selectedSession)?.SessionDescription ?? '';
   if (involvementSessionText.includes('Academic Year')) {
     involvementSessionText = involvementSessionText.substring(
       0,
@@ -193,32 +195,35 @@ const InvolvementsAll = ({ location, authentication, history }) => {
         </Card>
       </Grid>
 
-      {isOnline && authentication && <Requests />}
+      {!isOnline ? null : loadingProfile ? <GordonLoader /> : profile && <Requests />}
 
-      {/* My Involvements (private) */}
-      {authentication && (
-        <Grid item xs={12} lg={8}>
-          <Card>
-            <CardHeader
-              title={`My ${myInvolvementsHeadingText} Involvements`}
-              style={{
-                backgroundColor: gordonColors.primary.blue,
-                color: gordonColors.neutral.grayShades[50],
-              }}
-            />
-            <CardContent>
-              {loading ? (
-                <GordonLoader />
-              ) : (
-                <InvolvementsGrid
-                  involvements={myInvolvements}
-                  sessionCode={selectedSession}
-                  noInvolvementsText={myInvolvementsNoneText}
-                />
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
+      {loadingProfile ? (
+        <GordonLoader />
+      ) : (
+        profile && (
+          <Grid item xs={12} lg={8}>
+            <Card>
+              <CardHeader
+                title={`My ${myInvolvementsHeadingText} Involvements`}
+                style={{
+                  backgroundColor: gordonColors.primary.blue,
+                  color: gordonColors.neutral.grayShades[50],
+                }}
+              />
+              <CardContent>
+                {loading ? (
+                  <GordonLoader />
+                ) : (
+                  <InvolvementsGrid
+                    involvements={myInvolvements}
+                    sessionCode={selectedSession}
+                    noInvolvementsText={myInvolvementsNoneText}
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        )
       )}
 
       {/* All Involvements (public) */}

@@ -53,11 +53,11 @@ const Agreements = ({ deleting, onChange }) => {
         checked: false,
         label: `Any individual on this application who has been on disciplinary probation at any point during the ${
           currentYear - 1
-        }-${currentYear} academic year has been approved to apply by the Dean of Student Care or the Director of Residence Life`,
+        }-${currentYear} academic year has been approved to apply by the Dean of Student Life or Assistant Dean of Student Life`,
       },
       {
         checked: false,
-        label: `Each individual on this application intends to register as a full-time student by apartment selection night (${selectionDate})`,
+        label: `Each individual on this application intends to register as a full-time student by (${selectionDate})`,
       },
       {
         checked: false,

@@ -3,11 +3,9 @@
 import { Grid } from '@material-ui/core';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
+import { useUser } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
-import user from 'services/user';
-// @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
-// import { Redirect } from 'react-router-dom';
 import wellness from 'services/wellness';
 import Carousel from './components/Carousel';
 import CLWCreditsDaysLeft from './components/CLWCreditsDaysLeft';
@@ -15,56 +13,36 @@ import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
-// @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
-// import checkInService from 'services/checkIn';
-const Home = ({ authentication }) => {
+const Home = () => {
   const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(authentication);
-  const [personType, setPersonType] = useState(null);
-  // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
-  // const [checkedIn, setCheckedIn] = useState(null);
 
   const [hasAnswered, setHasAnswered] = useState(null);
   const isOnline = useNetworkStatus();
+  const { profile, loading: loadingProfile } = useUser();
 
   useEffect(() => {
-    if (authentication) {
-      loadPage();
-      setIsAuthenticated(true);
+    if (profile) {
+      setLoading(true);
+      wellness.getStatus().then(({ IsValid }) => {
+        setLoading(false);
+        setHasAnswered(IsValid);
+      });
     } else {
-      // Clear out component's person-specific state when authentication becomes false
+      // Clear out component's person-specific state when authenticated becomes false
       // (i.e. user logs out) so that it isn't preserved falsely for the next user
       setHasAnswered(null);
-      setPersonType(null);
-      setIsAuthenticated(false);
       setLoading(false);
     }
-  }, [authentication]);
-  const loadPage = async () => {
-    setLoading(true);
-    const [{ PersonType }, { IsValid }] = await Promise.all([
-      user.getProfileInfo(),
-      wellness.getStatus(),
-    ]);
-    // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
-    // setCheckedIn(await checkInService.getStatus());
-    setPersonType(PersonType);
-    setHasAnswered(IsValid);
-    setLoading(false);
-  };
+  }, [profile]);
 
-  if (loading) {
+  if (loading || loadingProfile) {
     return <GordonLoader />;
-  } else if (!isAuthenticated) {
+  } else if (!profile) {
     return <GuestWelcome />;
   } else if (isOnline && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
-  }
-  // @ACADEMIC-CHECKIN disabled line below until getting the correct dates can be done
-  // else if (!checkedIn && personType.includes('stu')) {
-  //   return (<Redirect to='/AcademicCheckIn' />);
-  else {
-    let doughnut = personType.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
+  } else {
+    const doughnut = profile?.PersonType?.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 
     return (
       <Grid container justifyContent="center" spacing={2}>

@@ -1,102 +1,68 @@
-import MomentUtils from '@date-io/moment';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import UserContextProvider, { AuthContext } from 'contexts/UserContext';
+import { useIsAuthenticated } from '@azure/msal-react';
+import AppRedirect from 'components/AppRedirect';
+import BirthdayMessage from 'components/BirthdayMessage';
 import { createBrowserHistory } from 'history';
-import { Component } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Route, Router, Switch } from 'react-router-dom';
-// Global styling that applies to entire site
 import './app.global.css';
-// local module for app.js
 import styles from './app.module.css';
+import ErrorBoundary from './components/ErrorBoundary';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import OfflineBanner from './components/OfflineBanner';
-import NetworkContextProvider from './contexts/NetworkContext';
 import routes from './routes';
 import analytics from './services/analytics';
-import theme from './theme';
 
-const ContextProviders = ({ children }) => {
-  return (
-    <ThemeProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <NetworkContextProvider>
-          <UserContextProvider>{children}</UserContextProvider>
-        </NetworkContextProvider>
-      </MuiPickersUtilsProvider>
-    </ThemeProvider>
-  );
-};
+const App = () => {
+  const [drawerOpen, setDrawerOpen] = useState();
+  const isAuthenticated = useIsAuthenticated();
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+  const historyRef = useRef(createBrowserHistory());
 
+  const onDrawerToggle = () => {
+    setDrawerOpen((o) => !o);
+  };
+
+  useEffect(() => {
     // Only use analytics in production
     if (process.env.NODE_ENV === 'production') {
       analytics.initialize();
     }
 
-    this.history = createBrowserHistory();
-    this.history.listen(() => analytics.onPageView());
+    historyRef.current.listen(() => analytics.onPageView());
+  }, []);
 
-    this.onDrawerToggle = this.onDrawerToggle.bind(this);
-
-    this.state = {
-      error: null,
-      errorInfo: null,
-      drawerOpen: false,
-    };
-  }
-  onDrawerToggle() {
-    this.setState({ drawerOpen: !this.state.drawerOpen });
-  }
-
-  componentDidCatch(error, errorInfo) {
-    if (process.env.NODE_ENV === 'production') {
-      analytics.onError(`${error.toString()} ${errorInfo.componentStack}`);
-    }
-
-    this.setState({ error, errorInfo });
-  }
-
-  render() {
-    return (
-      <ContextProviders>
-        <Router history={this.history}>
-          <section className={styles.app_wrapper}>
-            <GordonHeader onDrawerToggle={this.onDrawerToggle} />
-            <GordonNav onDrawerToggle={this.onDrawerToggle} drawerOpen={this.state.drawerOpen} />
-            <main className={styles.app_main}>
-              <AuthContext.Consumer>
-                {(authenticated) => (
-                  <Switch>
-                    {routes.map((route) => (
-                      <Route
-                        key={route.path}
-                        path={route.path}
-                        exact={route.exact}
-                        render={(props) => (
-                          <div className={styles.app_main_container}>
-                            <OfflineBanner
-                              currentPath={route.path}
-                              authentication={this.props.auth}
-                            />
-                            <route.component authentication={authenticated} {...props} />
-                          </div>
-                        )}
-                      />
-                    ))}
-                  </Switch>
-                )}
-              </AuthContext.Consumer>
-            </main>
-          </section>
-        </Router>
-      </ContextProviders>
-    );
-  }
-}
+  return (
+    <ErrorBoundary>
+      <Router history={historyRef.current}>
+        <section className={styles.app_wrapper}>
+          <GordonHeader onDrawerToggle={onDrawerToggle} />
+          <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
+          <main className={styles.app_main}>
+            <>
+              <BirthdayMessage />
+              <Switch>
+                {routes.map((route) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    exact={route.exact}
+                    render={(props) => (
+                      <div className={styles.app_main_container}>
+                        <AppRedirect />
+                        <OfflineBanner currentPath={route.path} />
+                        <route.component authentication={isAuthenticated} {...props} />
+                      </div>
+                    )}
+                  />
+                ))}
+              </Switch>
+            </>
+          </main>
+        </section>
+      </Router>
+    </ErrorBoundary>
+  );
+};
 
 export default App;

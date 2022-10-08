@@ -1,12 +1,23 @@
-import { Card, CardContent, CardHeader, Fab, Grid, Typography } from '@material-ui/core';
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  Container,
+  Fab,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import LoginDialogue from 'components/LoginDialogue';
 import PWAInstructions from 'components/PWAInstructions/index';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { projectName } from 'project-name';
 import { useEffect, useState } from 'react';
 import { ga } from 'react-ga';
+import { authenticate } from 'services/auth';
 import styles from './GuestWelcome.module.css';
+import GordonLogoVerticalWhite from './images/gordon-logo-vertical-white.svg';
 
 const GuestWelcome = () => {
   const isOnline = useNetworkStatus();
@@ -15,8 +26,6 @@ const GuestWelcome = () => {
   const [deferredPWAPrompt, setDeferredPWAPrompt] = useState();
 
   useEffect(() => {
-    document.title = `Login | ${projectName}`;
-
     // Check if the browser has the PWA quick installation prompt available
     window.addEventListener('beforeinstallprompt', (e) => {
       // Prevent the mini-infobar from appearing on mobile
@@ -65,17 +74,21 @@ const GuestWelcome = () => {
           <Grid container style={{ textAlign: 'center' }}>
             <Card raised className={styles.gw_card}>
               <CardHeader title="Welcome to Gordon360!" />
+              <CardMedia image={GordonLogoVerticalWhite} component="img" />
               <CardContent>
                 <Typography>
                   As a guest, you have access to a limited view of the site. Login for full access.
                 </Typography>
               </CardContent>
+              <CardActions>
+                <Container>
+                  <Button variant="contained" color="secondary" onClick={authenticate}>
+                    Login
+                  </Button>
+                </Container>
+              </CardActions>
             </Card>
           </Grid>
-        </Grid>
-
-        <Grid item>
-          <LoginDialogue />
         </Grid>
 
         {isOnline && showPWALink && (

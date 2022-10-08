@@ -1,55 +1,49 @@
-import { useEffect, useState } from 'react';
+import { useIsAuthenticated } from '@azure/msal-react';
 import { Grid } from '@material-ui/core';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import GordonUnauthorized from 'components/GordonUnauthorized';
-import InvolvementStatusList from './components/InvolvementsStatus';
-import AdminList from './components/AdminList';
-import user from 'services/user';
-import { AuthError } from 'services/error';
 import GordonOffline from 'components/GordonOffline';
+import GordonUnauthorized from 'components/GordonUnauthorized';
+import { useAuthGroups, useNetworkStatus } from 'hooks';
+import { AuthGroup } from 'services/auth';
+// import storageService from 'services/storage';
+import AdminList from './components/AdminList';
+import CliftonStrengthsUpload from './components/CliftonStrengthsUpload';
+import InvolvementStatusList from './components/InvolvementsStatus';
 
-const Admin = ({ authentication }) => {
-  const [isAdmin, setIsAdmin] = useState(false);
+const Admin = () => {
+  const isAdmin = useAuthGroups(AuthGroup.SiteAdmin);
   const isOnline = useNetworkStatus();
+  const isAuthenticated = useIsAuthenticated();
 
-  useEffect(() => {
-    try {
-      setIsAdmin(user.getLocalInfo().college_role === 'god');
-    } catch (error) {
-      if (error instanceof AuthError) {
-        // Unauthorized exception expected when user not authenticated
-      } else {
-        throw error;
-      }
-    }
-  }, [authentication]);
-
-  if (authentication) {
-    if (isOnline) {
-      if (isAdmin) {
-        return (
-          <Grid container justifyContent="center" spacing={2}>
-            <Grid item xs={12} lg={8}>
-              <InvolvementStatusList status={'Open'} />
-            </Grid>
-
-            <Grid item xs={12} lg={8}>
-              <InvolvementStatusList status={'Closed'} />
-            </Grid>
-
-            <Grid item xs={12} lg={8}>
-              <AdminList />
-            </Grid>
-          </Grid>
-        );
-      } else {
-        return null;
-      }
-    } else {
-      return <GordonOffline feature="Editing Administrators" />;
-    }
-  } else {
+  if (!isAuthenticated) {
     return <GordonUnauthorized feature={'the admin page'} />;
+  }
+
+  if (!isOnline) {
+    return <GordonOffline feature="Editing Administrators" />;
+  }
+
+  if (isAdmin) {
+    return (
+      <Grid container justifyContent="center" spacing={2}>
+        <Grid item xs={12} lg={8}>
+          <InvolvementStatusList status={'Open'} />
+        </Grid>
+
+        <Grid item xs={12} lg={8}>
+          <InvolvementStatusList status={'Closed'} />
+        </Grid>
+
+        <Grid item xs={12} lg={8}>
+          <CliftonStrengthsUpload />
+        </Grid>
+
+        <Grid item xs={12} lg={8}>
+          <AdminList />
+        </Grid>
+      </Grid>
+    );
+  } else {
+    return null;
   }
 };
 

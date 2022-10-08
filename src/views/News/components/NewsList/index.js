@@ -31,35 +31,29 @@ const singleHeader = (
 const fullHeader = (
   <Grid container direction="row" style={headerStyle}>
     <Grid item xs={2}>
-      <Typography variant="body1" style={headerStyle}>
+      <Typography variant="body2" style={headerStyle}>
         CATEGORY
       </Typography>
     </Grid>
     <Grid item xs={5}>
-      <Typography variant="body1" style={headerStyle}>
+      <Typography variant="body2" style={headerStyle}>
         SUBJECT
       </Typography>
     </Grid>
     <Grid item xs={3}>
-      <Typography variant="body1" style={headerStyle}>
+      <Typography variant="body2" style={headerStyle}>
         POSTED BY
       </Typography>
     </Grid>
     <Grid item xs={2}>
-      <Typography variant="body1" style={headerStyle}>
+      <Typography variant="body2" style={headerStyle}>
         POSTED
       </Typography>
     </Grid>
   </Grid>
 );
 
-const NewsList = ({
-  news,
-  personalUnapprovedNews,
-  currentUsername,
-  handleNewsItemEdit,
-  handleNewsItemDelete,
-}) => {
+const NewsList = ({ news, personalUnapprovedNews, handleNewsItemEdit, handleNewsItemDelete }) => {
   const [width, setWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -83,7 +77,6 @@ const NewsList = ({
                 posting={posting}
                 unapproved
                 size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-                currentUsername={currentUsername}
                 handleNewsItemEdit={handleNewsItemEdit}
                 handleNewsItemDelete={handleNewsItemDelete}
                 key={posting.SNID}
@@ -96,7 +89,6 @@ const NewsList = ({
                 posting={posting}
                 //approved
                 size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-                currentUsername={currentUsername}
                 handleNewsItemEdit={handleNewsItemEdit}
                 handleNewsItemDelete={handleNewsItemDelete}
                 key={posting.SNID}
@@ -138,7 +130,6 @@ NewsList.propTypes = {
     }),
   ).isRequired,
 
-  currentUsername: PropTypes.string.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,
 };

@@ -1,0 +1,33 @@
+@import '../../../../vars';
+
+.header {
+  background-color: $primary-blue;
+  color: white;
+}
+
+.resultmessage {
+  &_green {
+    font-size: 1.5rem;
+    color: #009900;
+  }
+  &_red {
+    font-size: 1.5rem;
+    color: #b53228;
+  }
+}
+
+.cell.cell {
+  font-size: 1rem;
+}
+.headercell.headercell {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.uploadbutton.uploadbutton {
+  margin: 50px auto;
+}
+
+.gordonloadercontainer {
+  padding-bottom: 30px;
+}

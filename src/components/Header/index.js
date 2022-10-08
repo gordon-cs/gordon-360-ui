@@ -1,3 +1,4 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
 import HomeIcon from '@material-ui/icons/Home';
@@ -7,28 +8,29 @@ import WellnessIcon from '@material-ui/icons/LocalHospital';
 import MenuIcon from '@material-ui/icons/Menu';
 import PeopleIcon from '@material-ui/icons/People';
 import GordonDialogBox from 'components/GordonDialogBox/index';
-import { useAuth, useDocumentTitle, useNetworkStatus } from 'hooks';
+import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
-import { Link, NavLink, Route, Switch } from 'react-router-dom';
+import { NavLink, Route, Switch } from 'react-router-dom';
 import routes from 'routes';
+import { authenticate } from 'services/auth';
 import { windowBreakWidths } from 'theme';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
-import GordonPeopleSearch from './components/PeopleSearch';
+import GordonQuickSearch from './components/QuickSearch';
 import styles from './Header.module.css';
 
-const ForwardLink = forwardRef((props, ref) => <Link ref={ref} {...props} />);
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
 const GordonHeader = ({ onDrawerToggle }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const [dialog, setDialog] = useState('');
+  const [width] = useWindowSize();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorElement, setAnchorElement] = useState(null);
   const isOnline = useNetworkStatus();
   const setDocumentTitle = useDocumentTitle();
-  const authenticated = useAuth();
+  const isAuthenticated = useIsAuthenticated();
 
   /**
    * Update the tab highlight indicator based on the url
@@ -59,16 +61,10 @@ const GordonHeader = ({ onDrawerToggle }) => {
   });
 
   useEffect(() => {
-    const resize = (event) => {
-      if (event.target.innerWidth < windowBreakWidths.breakMD) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    window.addEventListener('resize', resize);
-
-    return () => window.removeEventListener('resize', resize);
-  }, []);
+    if (width < windowBreakWidths.breakMD) {
+      setIsMenuOpen(false);
+    }
+  }, [width]);
 
   const createDialogBox = () => {
     if (dialog === 'offline') {
@@ -110,7 +106,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
           onClick={() => setDialog('offline')}
         />
       );
-    } else if (!authenticated) {
+    } else if (!isAuthenticated) {
       return (
         <Tab
           className={`${styles.tab} ${styles.disabled_tab}`}
@@ -148,8 +144,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
       className={styles.login_button}
       variant="contained"
       color="secondary"
-      component={ForwardLink}
-      to="/"
+      onClick={authenticate}
     >
       Login
     </Button>
@@ -216,7 +211,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
           <div className={styles.people_search_container_container}>
             {/* Width is dynamic */}
             <div className={styles.people_search_container}>
-              {authenticated ? <GordonPeopleSearch /> : loginButton}
+              {isAuthenticated ? <GordonQuickSearch /> : loginButton}
             </div>
           </div>
 

@@ -1,55 +1,54 @@
-import { useEffect, useState } from 'react';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import { useIsAuthenticated } from '@azure/msal-react';
 import GordonOffline from 'components/GordonOffline';
-import user from 'services/user';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
+import Profile from 'components/Profile';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useEffect, useState } from 'react';
 import { Redirect } from 'react-router';
 import { useParams } from 'react-router-dom';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import Profile from 'components/Profile';
+import userService from 'services/user';
 
-const PublicProfile = ({ authentication }) => {
+const PublicProfile = () => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState({});
   const [error, setError] = useState(null);
   const isOnline = useNetworkStatus();
-  const network = isOnline ? 'online' : 'offline';
   const { username } = useParams();
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    const loadProfile = async () => {
-      setLoading(true);
+    setProfile({});
+    setLoading(true);
+    if (isAuthenticated) {
       try {
-        setProfile(await user.getProfileInfo(username));
-        setLoading(false);
+        userService
+          .getProfileInfo(username)
+          .then(setProfile)
+          .then(() => setLoading(false));
       } catch (error) {
         setError(error);
       }
-    };
+    }
+  }, [isAuthenticated, username]);
 
-    if (authentication) {
-      loadProfile();
-    } else {
-      setProfile(null);
-    }
-  }, [authentication, username]);
-
-  if (authentication) {
-    if (error && error.name === 'NotFoundError') {
-      return <Redirect to="/profilenotfound" />;
-    }
-    if (network === 'online') {
-      if (loading) {
-        return <GordonLoader />;
-      } else {
-        return <Profile profile={profile} myProf={false} />;
-      }
-    } else {
-      return <GordonOffline feature="Viewing a public profile" />;
-    }
-  } else {
+  if (!isAuthenticated) {
     return <GordonUnauthorized feature={'this profile'} />;
   }
+
+  if (!isOnline) {
+    return <GordonOffline feature="Viewing a public profile" />;
+  }
+
+  if (error && error.name === 'NotFoundError') {
+    return <Redirect to="/profilenotfound" />;
+  }
+
+  if (loading) {
+    return <GordonLoader />;
+  }
+
+  return <Profile profile={profile} myProf={false} />;
 };
 
 export default PublicProfile;

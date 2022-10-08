@@ -1,10 +1,7 @@
 @import '../../vars';
 
 .event_item {
-  padding-left: 10px;
-  padding-top: 10px;
-  padding-right: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
 }
 
 .event_column {
@@ -24,6 +21,7 @@
 /* stylelint-disable */
 .event_list > section:nth-child(even) {
   background: $neutral-light-gray;
+  transition: background-color 200ms ease;
   &:hover {
     background-color: $primary-cyan;
     cursor: pointer;
@@ -32,6 +30,7 @@
 
 .event_list > section:nth-child(odd) {
   background: $neutral-white;
+  transition: background-color 200ms ease;
   &:hover {
     background-color: $primary-cyan;
     cursor: pointer;

@@ -14,6 +14,7 @@ import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Class } from 'services/peopleSearch';
 import user from 'services/user';
 import styles from '../../../../../../ApartmentApp.module.css';
 
@@ -93,7 +94,7 @@ const ApplicantListItem = ({
           <Grid item xs={8} sm>
             <ListItemText
               primary={displayName}
-              secondary={profile.Class ?? ''}
+              secondary={Class[profile.Class] ?? ''}
               className={styles.list_item}
             />
           </Grid>

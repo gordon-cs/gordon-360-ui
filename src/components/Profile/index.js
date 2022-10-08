@@ -1,8 +1,10 @@
 import { Grid } from '@material-ui/core';
 import GordonSnackbar from 'components/Snackbar';
+import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useCallback, useState } from 'react';
-import user from 'services/user';
+import { useCallback, useEffect, useState } from 'react';
+import { AuthGroup } from 'services/auth';
+import scheduleService from 'services/schedule';
 import {
   EmergencyInfoList,
   Identification,
@@ -17,10 +19,16 @@ const Profile = ({ profile, myProf }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const isOnline = useNetworkStatus();
   const network = isOnline ? 'online' : 'offline';
-  const isPolice = user.getLocalInfo().college_role === 'gordon police';
+  const viewerIsPolice = useAuthGroups(AuthGroup.Police);
+  const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
+  const profileIsStudent = profile.PersonType?.includes('stu');
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
+  }, []);
+
+  useEffect(() => {
+    scheduleService.getCanReadStudentSchedules().then(setCanReadStudentSchedules);
   }, []);
 
   return (
@@ -28,8 +36,8 @@ const Profile = ({ profile, myProf }) => {
       <Grid
         item
         xs={12}
-        md={myProf && profile.PersonType?.includes('stu') ? 8 : 12}
-        lg={myProf && profile.PersonType?.includes('stu') ? 6 : 10}
+        md={myProf && profileIsStudent ? 8 : 12}
+        lg={myProf && profileIsStudent ? 6 : 10}
       >
         <Identification
           profile={profile}
@@ -39,13 +47,13 @@ const Profile = ({ profile, myProf }) => {
         />
       </Grid>
 
-      {myProf && profile.PersonType?.includes('stu') && (
+      {myProf && profileIsStudent && (
         <Grid item xs={12} md={4}>
           <VictoryPromiseDisplay network={network} />
         </Grid>
       )}
 
-      {(myProf || !profile.PersonType?.includes('stu')) && (
+      {(myProf || !profileIsStudent || canReadStudentSchedules) && (
         <Grid item xs={12} lg={10} align="center">
           <SchedulePanel profile={profile} myProf={myProf} network={network} />
         </Grid>
@@ -60,13 +68,13 @@ const Profile = ({ profile, myProf }) => {
             network={network}
             createSnackbar={createSnackbar}
           />
-          {isPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
+          {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
         </Grid>
       </Grid>
 
       <Grid item xs={12} lg={5}>
         <MembershipsList
-          user={myProf ? profile.ID : profile.AD_Username}
+          username={profile.AD_Username}
           myProf={myProf}
           PersonType={profile.PersonType}
           createSnackbar={createSnackbar}

@@ -45,6 +45,7 @@ export const gordonColors = {
     green: '#B2BB1C',
     greenShades: {
       main: '#B2BB1C',
+      secondary: '#009900',
     },
     yellow: '#FDB913',
     yellowShades: {
@@ -121,6 +122,14 @@ const theme = createTheme({
     MuiTooltip: {
       tooltip: {
         backgroundColor: gordonColors.neutral.darkGray,
+      },
+    },
+    MuiButton: {
+      containedPrimary: {
+        color: gordonColors.neutral.grayShades.A100,
+      },
+      containedSecondary: {
+        color: gordonColors.neutral.grayShades.A100,
       },
     },
   },

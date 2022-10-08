@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import MaskedInput from 'react-text-mask';
+import { FormControl, IconButton, Input, InputLabel } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import { IconButton, FormControl, Input, InputLabel } from '@material-ui/core';
-import userService from 'services/user';
-import GordonSnackbar from 'components/Snackbar';
 import GordonDialogBox from 'components/GordonDialogBox/index';
+import GordonSnackbar from 'components/Snackbar';
+import { forwardRef, useState } from 'react';
+import { IMaskInput } from 'react-imask';
+import userService from 'services/user';
 
 const UpdatePhone = () => {
   const [open, setOpen] = useState(false);
@@ -12,22 +12,17 @@ const UpdatePhone = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   const handleSubmit = async () => {
-    await userService.setMobilePhoneNumber(mobilePhoneNumber);
-    setOpen(false);
-    handleChangeMobilePhoneNumber();
-  };
-
-  const createSnackbar = (message, severity) => {
-    setSnackbar({ message, severity, open: true });
-  };
-
-  const handleChangeMobilePhoneNumber = async (mobilePhoneNumber) => {
     try {
       await userService.setMobilePhoneNumber(mobilePhoneNumber);
       createSnackbar('Your phone number will update within a couple hours.', 'success');
     } catch {
       createSnackbar('Phone number failed to update. Please contact CTS.', 'error');
     }
+    setOpen(false);
+  };
+
+  const createSnackbar = (message, severity) => {
+    setSnackbar({ message, severity, open: true });
   };
 
   return (
@@ -50,7 +45,7 @@ const UpdatePhone = () => {
           <Input
             type="tel"
             id="mobile-phone-number-input"
-            name="mobile-phone-number"
+            name="mobilePhoneNumber"
             value={mobilePhoneNumber}
             onChange={(event) => setMobilePhoneNumber(event.target.value)}
             inputComponent={phoneMaskUS}
@@ -72,19 +67,20 @@ const UpdatePhone = () => {
 
 // From material ui website
 // https://material-ui.com/components/text-fields/#integration-with-3rd-party-input-libraries
-export function phoneMaskUS(props) {
-  const { inputRef, ...other } = props;
+const phoneMaskUS = forwardRef((props, ref) => {
+  const { onChange, ...other } = props;
 
   return (
-    <MaskedInput
+    <IMaskInput
       {...other}
-      ref={(ref) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={['(', /[0-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+      inputRef={ref}
+      mask="(000) 000-0000"
       placeholderChar={'\u2000'}
+      unmask={true}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
     />
   );
-}
+});
 
 export default UpdatePhone;

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, Grid } from '@material-ui/core';
-import { useEffect, useState } from 'react';
+import { useWindowSize } from 'hooks';
 import { gordonColors } from 'theme';
 import MemberListItem from './components/MemberListItem';
 
@@ -14,22 +14,13 @@ const headerStyle = {
 const MemberList = ({
   members,
   isAdmin,
-  isSuperAdmin,
+  isSiteAdmin,
   createSnackbar,
   onLeave,
   onToggleIsAdmin,
 }) => {
-  const [isMobileView, setIsMobileView] = useState(window.innerWidth < breakpointWidth);
-
-  useEffect(() => {
-    const resize = () => {
-      setIsMobileView(window.innerWidth < breakpointWidth);
-    };
-
-    window.addEventListener('resize', resize);
-
-    return () => window.removeEventListener('resize', resize);
-  });
+  const [width] = useWindowSize();
+  const isMobileView = width < breakpointWidth;
 
   /**
    * Compares two members by their role and then their names - last then first
@@ -68,7 +59,7 @@ const MemberList = ({
 
   const header = isMobileView ? (
     <CardHeader title="Members" style={headerStyle} />
-  ) : isAdmin || isSuperAdmin ? (
+  ) : isAdmin || isSiteAdmin ? (
     <CardHeader
       title={
         <Grid container direction="row">
@@ -118,7 +109,7 @@ const MemberList = ({
             member={member}
             key={member.MembershipID}
             isAdmin={isAdmin}
-            isSuperAdmin={isSuperAdmin}
+            isSiteAdmin={isSiteAdmin}
             createSnackbar={createSnackbar}
             isMobileView={isMobileView}
             onLeave={onLeave}
