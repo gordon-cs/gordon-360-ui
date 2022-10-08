@@ -4,13 +4,13 @@ import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import LeagueListing from './components/LeagueListing';
 import TeamListing from './components/TeamListing';
-import styles from './../../RecIM.module.css';
+import styles from './Home.module.css';
 import recimLogo from './../../recim_logo.png';
 
 // CARD - upcoming events
 let upcomingEvents = (
   <Card>
-    <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
+    <CardHeader title="Upcoming Rec-IM Events" className="cardHeader" />
     <CardContent>
       <Typography variant="body1" paragraph>
         {/* if there are upcoming events, map them here */}
