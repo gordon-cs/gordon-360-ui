@@ -1,6 +1,6 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core/';
-import { postSmashLeague, getAllLeagues } from 'services/recim';
+import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@material-ui/core/';
+// import { postSmashLeague, getAllLeagues } from 'services/recim';
 import CreateLeagueForm from './components/CreateLeagueForm';
 import { useUser } from 'hooks';
 import { useState } from 'react';
@@ -10,49 +10,9 @@ import TeamListing from './components/TeamListing';
 import styles from './RecIM.module.css';
 import recimLogo from './recim_logo.jpg';
 
-// CARD - upcoming events
-let upcomingEvents = (
-  <Card>
-    <CardHeader title="Upcoming Rec-IM Events" className={styles.card} />
-    <CardContent>
-      <Typography variant="body1" paragraph>
-        {/* if there are upcoming events, map them here */}
-        <div className={styles.listing}>
-          <LeagueListing />
-        </div>
-        <div className={styles.listing}>
-          <LeagueListing />
-        </div>
-        {/* else "no upcoming events" */}
-        It looks like there aren't any Rec-IM events currently open for registration :(
-      </Typography>
-    </CardContent>
-  </Card>
-);
-
-// CARD - my teams
-let myTeams = (
-  <Card>
-    <CardHeader title="My Teams" className={styles.card} />
-    <CardContent>
-      <Typography variant="body1" paragraph>
-        {/* if I am apart of any active teams, map them here */}
-        <div className={styles.listing}>
-          <TeamListing />
-        </div>
-        <div className={styles.listing}>
-          <TeamListing />
-        </div>
-        {/* else "no teams" */}
-        You're not yet apart of any teams; join one to get started!
-      </Typography>
-    </CardContent>
-  </Card>
-);
-
 const RecIM = () => {
   const { profile, loading } = useUser();
-  const [allLeagues, setAllLeagues] = useState('');
+  //const [allLeagues, setAllLeagues] = useState('');
   const [openCreateLeagueForm, setOpenCreateLeagueForm] = useState(false);
 
   // profile hook used for future authentication
@@ -73,30 +33,70 @@ const RecIM = () => {
     </Grid>
   );
 
+  // CARD - upcoming events
+  let upcomingEvents = (
+    <Card>
+      <CardHeader title="Upcoming Rec-IM Events" className={styles.card} />
+      <CardContent>
+        <Typography variant="body1" paragraph>
+          {/* if there are upcoming events, map them here */}
+          <div className={styles.listing}>
+            <LeagueListing />
+          </div>
+          <div className={styles.listing}>
+            <LeagueListing />
+          </div>
+          {createLeagueButton}
+          {/* else "no upcoming events" */}
+          It looks like there aren't any Rec-IM events currently open for registration :(
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+
+  // CARD - my teams
+  let myTeams = (
+    <Card>
+      <CardHeader title="My Teams" className={styles.card} />
+      <CardContent>
+        <Typography variant="body1" paragraph>
+          {/* if I am apart of any active teams, map them here */}
+          <div className={styles.listing}>
+            <TeamListing />
+          </div>
+          <div className={styles.listing}>
+            <TeamListing />
+          </div>
+          {/* else "no teams" */}
+          You're not yet apart of any teams; join one to get started!
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+
   const handleCreateLeagueForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenCreateLeagueForm(false);
   };
 
-  const handleGet = () => {
-    console.log('get leagues');
-    getAllLeagues()
-      .then((e) => {
-        let allLeagues = e.map((league) => `${league.Name}`);
+  // const handleGet = () => {
+  //   console.log('get leagues');
+  //   getAllLeagues()
+  //     .then((e) => {
+  //       let allLeagues = e.map((league) => `${league.Name}`);
+  //       setAllLeagues(allLeagues);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
-        setAllLeagues(allLeagues);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const handleMake = () => {
-    console.log('post league');
-    postSmashLeague()
-      .then()
-      .catch((error) => console.log(error));
-  };
+  // const handleMake = () => {
+  //   console.log('post league');
+  //   postSmashLeague()
+  //     .then()
+  //     .catch((error) => console.log(error));
+  // };
 
   if (loading) {
     return <GordonLoader />;
@@ -106,37 +106,6 @@ const RecIM = () => {
   } else {
     return (
       <>
-        // testing code
-        {/*<Grid justifyContent="center">
-          {createLeagueButton}
-          <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
-          <Button
-            color="primary"
-            onClick={() => {
-              handleMake();
-            }}
-          >
-            Make Smash League
-          </Button>
-          <Button
-            color="primary"
-            onClick={() => {
-              handleGet();
-            }}
-          >
-            Get All Leagues
-          </Button>
-          <Typography variant="subtitle1">All Current Leagues: {allLeagues}</Typography>
-
-          <CreateLeagueForm
-            closeWithSnackbar={(status) => {
-              handleCreateLeagueForm(status);
-            }}
-            openCreateLeagueForm={openCreateLeagueForm}
-            setOpenCreateLeagueForm={(bool) => setOpenCreateLeagueForm(bool)}
-          />
-        </Grid>*/}
-        
         <Grid container alignItems="center">
           <Grid item>
             <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
@@ -158,9 +127,15 @@ const RecIM = () => {
           </Grid>
         </Grid>
         <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
+        <CreateLeagueForm
+          closeWithSnackbar={(status) => {
+            handleCreateLeagueForm(status);
+          }}
+          openCreateLeagueForm={openCreateLeagueForm}
+          setOpenCreateLeagueForm={(bool) => setOpenCreateLeagueForm(bool)}
+        />
       </>
     );
   }
-  return <GordonUnauthorized feature={'your profile'} />;
 };
 export default RecIM;
