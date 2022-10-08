@@ -15,10 +15,10 @@ let upcomingEvents = (
       <Typography variant="body1" paragraph>
         {/* if there are upcoming events, map them here */}
         <div className={styles.listing}>
-          <LeagueListing />
+          <LeagueListing leagueId={123456} />
         </div>
         <div className={styles.listing}>
-          <LeagueListing />
+          <LeagueListing leagueId={12345} />
         </div>
         {/* else "no upcoming events" */}
         It looks like there aren't any Rec-IM events currently open for registration :(
@@ -35,10 +35,10 @@ let myTeams = (
       <Typography variant="body1" paragraph>
         {/* if I am apart of any active teams, map them here */}
         <div className={styles.listing}>
-          <TeamListing />
+          <TeamListing leagueId={123456} teamId={789} />
         </div>
         <div className={styles.listing}>
-          <TeamListing />
+          <TeamListing leagueId={12345} teamId={987} />
         </div>
         {/* else "no teams" */}
         You're not yet apart of any teams; join one to get started!
