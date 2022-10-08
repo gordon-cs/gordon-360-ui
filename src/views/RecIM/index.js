@@ -105,36 +105,38 @@ const RecIM = () => {
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     return (
-      {/*<Grid justifyContent="center">
-        {createLeagueButton}
-        <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
-        <Button
-          color="primary"
-          onClick={() => {
-            handleMake();
-          }}
-        >
-          Make Smash League
-        </Button>
-        <Button
-          color="primary"
-          onClick={() => {
-            handleGet();
-          }}
-        >
-          Get All Leagues
-        </Button>
-        <Typography variant="subtitle1">All Current Leagues: {allLeagues}</Typography>
-
-        <CreateLeagueForm
-          closeWithSnackbar={(status) => {
-            handleCreateLeagueForm(status);
-          }}
-          openCreateLeagueForm={openCreateLeagueForm}
-          setOpenCreateLeagueForm={(bool) => setOpenCreateLeagueForm(bool)}
-        />
-      </Grid>*/}
       <>
+        // testing code
+        {/*<Grid justifyContent="center">
+          {createLeagueButton}
+          <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
+          <Button
+            color="primary"
+            onClick={() => {
+              handleMake();
+            }}
+          >
+            Make Smash League
+          </Button>
+          <Button
+            color="primary"
+            onClick={() => {
+              handleGet();
+            }}
+          >
+            Get All Leagues
+          </Button>
+          <Typography variant="subtitle1">All Current Leagues: {allLeagues}</Typography>
+
+          <CreateLeagueForm
+            closeWithSnackbar={(status) => {
+              handleCreateLeagueForm(status);
+            }}
+            openCreateLeagueForm={openCreateLeagueForm}
+            setOpenCreateLeagueForm={(bool) => setOpenCreateLeagueForm(bool)}
+          />
+        </Grid>*/}
+        
         <Grid container alignItems="center">
           <Grid item>
             <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
