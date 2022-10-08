@@ -1,1 +1,14 @@
 @import '../../vars';
+
+.card {
+  background-color: $primary-blue;
+  color: $neutral-white;
+}
+
+.grayText {
+  color: $neutral-gray;
+}
+
+.listing {
+  margin: 0.3em 0;
+}
