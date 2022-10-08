@@ -47,7 +47,7 @@ let myTeams = (
   </Card>
 );
 
-const RecIM = () => {
+const Home = () => {
   const { profile, loading } = useUser();
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -86,4 +86,4 @@ const RecIM = () => {
   }
 };
 
-export default RecIM;
+export default Home;
