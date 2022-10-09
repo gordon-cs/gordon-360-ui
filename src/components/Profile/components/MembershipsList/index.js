@@ -16,7 +16,7 @@ import styles from './MembershipsList.module.css';
  * @returns {JSX} A list of the user's memberships
  */
 const MembershipsList = ({ username, myProf, createSnackbar }) => {
-  const [memberships, setMemberships] = useState([]);
+  const [membershipHistories, setMembershipHistories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,10 +24,10 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
       setLoading(true);
       if (myProf) {
         const myMemberships = await membershipService.groupByActivityCode(username);
-        setMemberships(myMemberships);
+        setMembershipHistories(myMemberships);
       } else {
         const publicMemberships = await membershipService.getPublicMemberships(username);
-        setMemberships(publicMemberships);
+        setMembershipHistories(publicMemberships);
       }
       setLoading(false);
     }
@@ -35,7 +35,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
   }, [myProf, username]);
 
   const MembershipsList = () => {
-    if (memberships.length === 0) {
+    if (membershipHistories.length === 0) {
       return (
         <Link to={`/involvements`}>
           <Typography variant="body2" className={styles.noMemberships}>
@@ -44,11 +44,11 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
         </Link>
       );
     } else {
-      return memberships.map((membership) => (
+      return membershipHistories.map((membershipHistory) => (
         <MembershipInfoCard
           myProf={myProf}
-          membership={membership}
-          key={membership.MembershipID}
+          membershipHistory={membershipHistory}
+          key={membershipHistory.ActivityCode}
           //   onTogglePrivacy={toggleMembershipPrivacy}
           createSnackbar={createSnackbar}
         />
