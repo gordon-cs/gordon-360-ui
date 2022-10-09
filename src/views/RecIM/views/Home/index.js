@@ -35,7 +35,7 @@ const Home = () => {
   // CARD - upcoming events
   let upcomingEvents = (
     <Card>
-      <CardHeader title="Upcoming Rec-IM Events" className={styles.card} />
+      <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
       <CardContent>
         <Typography variant="body1" paragraph>
           {/* if there are upcoming events, map them here */}
@@ -56,7 +56,7 @@ const Home = () => {
   // CARD - my teams
   let myTeams = (
     <Card>
-      <CardHeader title="My Teams" className={styles.card} />
+      <CardHeader title="My Teams" className={styles.cardHeader} />
       <CardContent>
         <Typography variant="body1" paragraph>
           {/* if I am apart of any active teams, map them here */}
@@ -105,7 +105,7 @@ const Home = () => {
   } else {
     return (
       <>
-        <Grid container alignItems="center">
+        <Grid container alignItems="center" className={styles.homeHeader}>
           <Grid item>
             <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
           </Grid>
