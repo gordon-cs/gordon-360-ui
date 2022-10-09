@@ -7,7 +7,7 @@ import GordonLoader from 'components/Loader';
 import LeagueListing from './components/LeagueListing';
 import TeamListing from './components/TeamListing';
 import styles from './Home.module.css';
-import recimLogo from './recim_logo.jpg';
+import recimLogo from './../../recim_logo.png';
 
 const Home = () => {
   const { profile, loading } = useUser();
