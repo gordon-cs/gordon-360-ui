@@ -11,8 +11,8 @@ let scheduleCard = (
     <CardHeader title="Schedule" className={styles.cardHeader} />
     <CardContent>
       {/* if there are games scheduled, map them here */}
-      <div className={styles.listing}>{/* <LeagueListing leagueId={123456} /> */}</div>
-      <div className={styles.listing}>{/* <LeagueListing leagueId={12345} /> */}</div>
+      <div className={styles.listing}>{/* <LeagueListing leagueID={123456} /> */}</div>
+      <div className={styles.listing}>{/* <LeagueListing leagueID={12345} /> */}</div>
       {/* else "no schedule yet set" */}
       <Typography variant="body1" paragraph>
         Games have not yet been scheduled.
@@ -27,8 +27,8 @@ let teamsCard = (
     <CardHeader title="Teams" className={styles.cardHeader} />
     <CardContent>
       {/* if I am apart of any active teams, map them here */}
-      <div className={styles.listing}>{/* <TeamListing leagueId={123456} teamId={789} /> */}</div>
-      <div className={styles.listing}>{/* <TeamListing leagueId={12345} teamId={987} /> */}</div>
+      <div className={styles.listing}>{/* <TeamListing leagueID={123456} teamID={789} /> */}</div>
+      <div className={styles.listing}>{/* <TeamListing leagueID={12345} teamID={987} /> */}</div>
       {/* else "no teams" */}
       <Typography variant="body1" paragraph>
         Be the first to create a team!
@@ -38,7 +38,7 @@ let teamsCard = (
 );
 
 const League = () => {
-  const { leagueId } = useParams();
+  const { leagueID } = useParams();
   const { profile, loading } = useUser();
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -71,6 +71,7 @@ const League = () => {
             {teamsCard}
           </Grid>
         </Grid>
+        <Typography>League ID: {leagueID} (testing purposes only)</Typography>
       </>
     );
   }

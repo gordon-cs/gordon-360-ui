@@ -9,10 +9,10 @@ const RecIM = () => {
       <Route exact path="/recim">
         <Home />
       </Route>
-      <Route path="/recim/league/:leagueId/team/:teamId">
+      <Route path="/recim/league/:leagueID/team/:teamID">
         <Team />
       </Route>
-      <Route path="/recim/league/:leagueId">
+      <Route path="/recim/league/:leagueID">
         <League />
       </Route>
     </Switch>

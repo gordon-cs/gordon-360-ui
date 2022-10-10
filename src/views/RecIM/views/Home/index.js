@@ -39,10 +39,10 @@ const Home = () => {
       <CardContent>
         {/* if there are upcoming events, map them here */}
         <div className={styles.listing}>
-          <LeagueListing leagueId={123456} />
+          <LeagueListing leagueID={123456} />
         </div>
         <div className={styles.listing}>
-          <LeagueListing leagueId={12345} />
+          <LeagueListing leagueID={12345} />
         </div>
         {createLeagueButton}
         <Typography variant="body1" paragraph>
@@ -60,10 +60,10 @@ const Home = () => {
       <CardContent>
         {/* if I am apart of any active teams, map them here */}
         <div className={styles.listing}>
-          <TeamListing leagueId={123456} teamId={789} />
+          <TeamListing leagueID={123456} teamID={789} />
         </div>
         <div className={styles.listing}>
-          <TeamListing leagueId={12345} teamId={987} />
+          <TeamListing leagueID={12345} teamID={987} />
         </div>
         {/* else "no teams" */}
         <Typography variant="body1" paragraph>
