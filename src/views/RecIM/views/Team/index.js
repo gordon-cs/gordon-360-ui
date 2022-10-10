@@ -1,10 +1,10 @@
 import { useParams } from 'react-router';
 
 const Team = () => {
-  let { leagueId, teamId } = useParams();
+  const { leagueID, teamID } = useParams();
   return (
     <p>
-      Here with league id {leagueId} team id {teamId}
+      Here with league id {leagueID} team id {teamID}
     </p>
   );
 };
