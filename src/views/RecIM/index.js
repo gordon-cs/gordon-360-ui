@@ -1,7 +1,7 @@
 import { Switch, Route } from 'react-router-dom';
-import Home from './views/home';
-import Team from './views/team';
-import League from './views/league';
+import Home from './views/Home';
+import Team from './views/Team';
+import League from './views/League';
 
 const RecIM = () => {
   return (
