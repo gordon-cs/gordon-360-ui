@@ -43,7 +43,11 @@ const ContactListItem = ({ contact }) => {
         </Avatar>
       </ListItemAvatar>
       <Link href={`/profile/${contact.Email.split('@')[0]}`}>
-        <ListItemText primary={`${contact.FirstName} ${contact.LastName} - ${contact.Description}`} />
+        <ListItemText
+          primary={`${contact.FirstName} ${contact.LastName} ${
+            contact.Description?.trim() ? '- ' + contact.Description : ''
+          }`}
+        />
       </Link>
       <ListItemSecondaryAction>
         <IconButton color="primary" href={`mailto:${contact.Email}`}>
