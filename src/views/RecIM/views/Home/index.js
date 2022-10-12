@@ -4,8 +4,8 @@ import CreateLeagueForm from '../../components/CreateLeagueForm';
 import { useUser } from 'hooks';
 import { useState } from 'react';
 import GordonLoader from 'components/Loader';
-import LeagueListing from './components/LeagueListing';
-import TeamListing from './components/TeamListing';
+import { LeagueListing } from '../../components/Listing';
+import { TeamListing } from '../../components/Listing';
 import styles from './Home.module.css';
 import recimLogo from './../../recim_logo.png';
 
