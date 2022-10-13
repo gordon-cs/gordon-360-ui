@@ -7,7 +7,7 @@ import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
-import { createNewLeague, postSmashLeague } from 'services/recim';
+import { postSmashLeague } from 'services/recim';
 
 const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCreateLeagueForm }) => {
   const [errorStatus, setErrorStatus] = useState({
@@ -165,19 +165,6 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
     setSaving(true);
     //hard coded for league, sportId & typeID are hard coded to 0
     //until we pull API data
-    var requestData = {
-      ID: null,
-      Name: newInfo.name,
-      RegistrationStart: newInfo.regStart,
-      RegistrationEnd: newInfo.regEnd,
-      TypeID: 0,
-      SportID: 0,
-      MinCapcity: null,
-      MaxCapacity: newInfo.MaxCapacity,
-      SoloRegistration: newInfo.individual,
-      Logo: null,
-      Completed: false,
-    };
     postSmashLeague().then(() => {
       setSaving(false);
       closeWithSnackbar({
