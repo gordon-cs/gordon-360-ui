@@ -92,8 +92,6 @@ const getMembershipsBySession = (
 ): Promise<MembershipView[]> =>
   getMembershipsAlphabetically(username).then(filter((m) => m.SessionCode === sessionCode));
 
-const getEmailAccount = (email: string): Promise<Object> => http.get(`accounts/email/${email}/`);
-
 const getMembersNum = (activityCode: string, sessionCode: string): Promise<number> =>
   http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/member-count`);
 
@@ -147,7 +145,6 @@ const membershipService = {
   editMembership,
   get,
   getGroupAdmins,
-  getEmailAccount,
   getFollowersNum,
   getMembersNum,
   remove,
