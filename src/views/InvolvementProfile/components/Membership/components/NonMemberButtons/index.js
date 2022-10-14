@@ -45,7 +45,7 @@ const NonMemberButtons = ({
 
   const onRequest = async () => {
     let data = {
-      Acticity: involvementCode,
+      Activity: involvementCode,
       Session: sessionCode,
       Username: profile.AD_Username,
       Participation: participationCode,
