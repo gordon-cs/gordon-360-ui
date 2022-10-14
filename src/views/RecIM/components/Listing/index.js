@@ -2,14 +2,14 @@ import { Grid } from '@material-ui/core/';
 import styles from './Listing.module.css';
 import { Link } from 'react-router-dom';
 
-const LeagueListing = ({ leagueID }) => {
+const ActivityListing = ({ activityID }) => {
   return (
     <>
-      <Link to={`/recim/league/${leagueID}`} className="gc360_link">
+      <Link to={`/recim/activity/${activityID}`} className="gc360_link">
         <Grid container className={styles.listing}>
-          <Grid item>League Listing</Grid>
+          <Grid item>Activity Listing</Grid>
           {/* include: 
-          - activity type (league, tournament, one-off)
+          - activity type (activity, tournament, one-off)
           - registration deadline IF there is one (start date as well for admin only)
           - date(s) of activity (ex. season date range or tournament date)
           */}
@@ -19,10 +19,10 @@ const LeagueListing = ({ leagueID }) => {
   );
 };
 
-const TeamListing = ({ leagueID, teamID }) => {
+const TeamListing = ({ activityID, teamID }) => {
   return (
     <>
-      <Link to={`/recim/league/${leagueID}/team/${teamID}`} className="gc360_link">
+      <Link to={`/recim/activity/${activityID}/team/${teamID}`} className="gc360_link">
         <Grid container className={styles.listing}>
           <Grid item>Team Listing</Grid>
         </Grid>
@@ -44,4 +44,4 @@ const ParticipantListing = ({ username }) => {
   );
 };
 
-export { LeagueListing, TeamListing, ParticipantListing };
+export { ActivityListing, TeamListing, ParticipantListing };
