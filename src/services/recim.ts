@@ -1,7 +1,7 @@
 import http from './http';
 
 // all Gordon Rec-IM http requests
-type League = {
+type Activity = {
   ID: number;
   Name: string;
   RegistrationStart: string;
@@ -18,13 +18,13 @@ type League = {
 
 // temporary example (hard coded league object in API)
 const postSmashLeague = async () => {
-  await http.post('recim/leagues/add_smash');
+  await http.post('recim/activities/add_smash');
 };
 
-const createNewLeague = async (newLeague: League) => {
-  await http.post('recim/leagues', newLeague);
+const createNewLeague = async (newActivity: Activity) => {
+  await http.post('recim/activities', newActivity);
 };
 
-const getAllLeagues = async (): Promise<Object[]> => await http.get('recim/leagues');
+const getAllLeagues = async (): Promise<Object[]> => await http.get('recim/activities');
 
 export { postSmashLeague, getAllLeagues, createNewLeague };

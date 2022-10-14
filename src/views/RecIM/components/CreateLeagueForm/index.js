@@ -7,7 +7,7 @@ import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
-import { createNewLeague } from 'services/recim';
+import { postSmashLeague } from 'services/recim';
 
 const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCreateLeagueForm }) => {
   const [errorStatus, setErrorStatus] = useState({
@@ -165,20 +165,7 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
     setSaving(true);
     //hard coded for league, sportId & typeID are hard coded to 0
     //until we pull API data
-    var requestData = {
-      ID: null,
-      Name: newInfo.name,
-      RegistrationStart: newInfo.regStart,
-      RegistrationEnd: newInfo.regEnd,
-      TypeID: 0,
-      SportID: 0,
-      MinCapcity: null,
-      MaxCapacity: newInfo.MaxCapacity,
-      SoloRegistration: newInfo.individual,
-      Logo: null,
-      Completed: false,
-    };
-    createNewLeague(requestData).then(() => {
+    postSmashLeague().then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
@@ -186,6 +173,13 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
       });
       handleWindowClose();
     });
+    // createNewLeague(requestData).then(() => {
+    //   setSaving(false);
+    //   closeWithSnackbar({
+    //     type: 'success',
+    //     message: 'Your new league has been created or whatever message you want here',
+    //   });
+    //   handleWindowClose();
     // });
   };
 
