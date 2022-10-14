@@ -4,12 +4,24 @@ import { AuthGroup, getAuthGroups } from 'services/auth';
 
 function useAuthGroups(): AuthGroup[];
 function useAuthGroups(group: AuthGroup): boolean;
+function useAuthGroups(...groups: AuthGroup[]): boolean[];
 
-function useAuthGroups(group?: AuthGroup): AuthGroup[] | boolean {
+function useAuthGroups(
+  group?: AuthGroup,
+  ...otherGroups: AuthGroup[]
+): AuthGroup[] | boolean | boolean[] {
   const isAuthenticated = useIsAuthenticated();
   const groups = useMemo(getAuthGroups, [isAuthenticated]);
 
-  return group ? groups.some((g) => g === group) : groups;
+  const groupsIncludes = (g: AuthGroup) => groups.some((authGroup) => g === authGroup);
+
+  if (group && otherGroups) {
+    return [group, ...otherGroups].map(groupsIncludes);
+  } else if (group) {
+    return groupsIncludes(group);
+  } else {
+    return groups;
+  }
 }
 
 export default useAuthGroups;

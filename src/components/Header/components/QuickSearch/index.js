@@ -5,7 +5,7 @@ import { useDebounce, useNetworkStatus, useWindowSize } from 'hooks';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import peopleSearch from 'services/people-search';
+import quickSearchService from 'services/quickSearch';
 import styles from './PeopleSearch.module.css';
 
 const MIN_QUERY_LENGTH = 2;
@@ -40,7 +40,7 @@ const renderInput = (inputProps) => {
   );
 };
 
-const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit }) => {
+const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit }) => {
   // Search time is never used via variable name, but it is used via index
   // to ensure that earlier searches which took longer to run don't overwrite later searches
   // eslint-disable-next-line no-unused-vars
@@ -69,7 +69,7 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
   useEffect(() => {
     // Only load suggestions if query is of minimum length
     if (query?.length >= MIN_QUERY_LENGTH) {
-      peopleSearch.search(query).then((newResults) =>
+      quickSearchService.search(query).then((newResults) =>
         // Only update the search results if the new search time is greater than the previous search time
         setSearchResults((prevResults) =>
           newResults[0] > prevResults[0] ? newResults : prevResults,
@@ -300,10 +300,10 @@ const GordonPeopleSearch = ({ customPlaceholderText, disableLink, onSearchSubmit
   );
 };
 
-GordonPeopleSearch.propTypes = {
+GordonQuickSearch.propTypes = {
   customPlaceholderText: PropTypes.string,
   disableLink: PropTypes.any,
   onSearchSubmit: PropTypes.func,
 };
 
-export default GordonPeopleSearch;
+export default GordonQuickSearch;
