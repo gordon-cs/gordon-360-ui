@@ -81,7 +81,7 @@ const getFollowersNum = (activityCode: string, sessionCode: string): Promise<num
   http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/subscriber-count`);
 
 const getMembershipsForUser = (username: string): Promise<MembershipView[]> =>
-  http.get(`${username}/memberships`);
+  http.get(`profiles/${username}/memberships`);
 
 const getMembershipsAlphabetically = (username: string): Promise<MembershipView[]> =>
   getMembershipsForUser(username).then(sort(compareByProperty('ActivityDescription')));
@@ -146,7 +146,7 @@ const membershipService = {
   checkAdmin,
   editMembership,
   get,
-  getGroupAdmins: getGroupAdmins,
+  getGroupAdmins,
   getEmailAccount,
   getFollowersNum,
   getMembersNum,

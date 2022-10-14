@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
-import AdminListItem from './components/AdminListItem';
 import GordonLoader from 'components/Loader';
+import { useEffect, useState } from 'react';
 import admin from 'services/admin';
 import { gordonColors } from 'theme';
-import membership from 'services/membership';
+import AdminListItem from './components/AdminListItem';
 
-import { Card, Button, TextField, CardHeader, List } from '@material-ui/core';
+import { Button, Card, CardHeader, List, TextField } from '@material-ui/core';
 import GordonDialogBox from 'components/GordonDialogBox';
 
 const AdminList = () => {
@@ -24,18 +23,20 @@ const AdminList = () => {
   }, []);
 
   const handleSubmit = async () => {
-    let email = newAdminEmail;
+    let email;
+    let username;
     if (!newAdminEmail.toLowerCase().includes('@gordon.edu')) {
       email = newAdminEmail + '@gordon.edu';
+      username = newAdminEmail;
+    } else {
+      email = newAdminEmail;
+      username = newAdminEmail.replace('@gordon.edu', '');
     }
-    // TODO: Refactor API to not require ID?
-    const { GordonID: addID } = await membership.getEmailAccount(email);
+
     let data = {
-      ID_NUM: addID,
-      EMAIL: email,
-      USER_NAME: email.split('@')[0],
-      SUPER_ADMIN: true, //Used to be distinction between superadmin (godmode), admin, and groupadmin
-      //now just superadmin and groupadmin
+      Email: email,
+      Username: username,
+      IsSuperAdmin: true,
     };
     // TODO: Add snackbar feedback, especially for errors like 404
     await admin.addAdmin(data);
@@ -43,8 +44,8 @@ const AdminList = () => {
     setAdmins(await admin.getAdmins());
   };
 
-  const handleRemove = async (adminID) => {
-    setAdmins((prevAdmins) => prevAdmins.filter((a) => a.ADMIN_ID !== adminID));
+  const handleRemove = async (Username) => {
+    setAdmins((prevAdmins) => prevAdmins.filter((a) => a.Username !== Username));
   };
 
   const buttonStyle = {
@@ -63,7 +64,7 @@ const AdminList = () => {
       ) : (
         <List>
           {admins.map((superadmin) => (
-            <AdminListItem key={superadmin.ADMIN_ID} Admin={superadmin} onRemove={handleRemove} />
+            <AdminListItem key={superadmin.Username} Admin={superadmin} onRemove={handleRemove} />
           ))}
         </List>
       )}
