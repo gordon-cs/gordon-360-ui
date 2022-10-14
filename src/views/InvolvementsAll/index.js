@@ -85,7 +85,7 @@ const InvolvementsAll = ({ location, history }) => {
       if (profile) {
         membershipService
           .getSessionMembershipsWithoutGuests(profile.AD_Username, selectedSession)
-          .then((data) => setMyInvolvements(data));
+          .then(setMyInvolvements);
       }
       setLoading(false);
     };
