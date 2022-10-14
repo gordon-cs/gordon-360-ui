@@ -108,10 +108,10 @@ const MemberListItem = ({
   const onEditMember = async () => {
     let data = {
       MembershipID: member.MembershipID,
-      ACTCode: member.ActivityCode,
-      SessCode: member.SessionCode,
+      Activity: member.ActivityCode,
+      Session: member.SessionCode,
       Username: member.Username,
-      PartCode: participation,
+      Participation: participation,
       CommentText: titleDialog,
     };
     await membership.editMembership(member.MembershipID, data);

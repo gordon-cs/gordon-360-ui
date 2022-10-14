@@ -52,10 +52,10 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
 
   const handleSubscribe = async () => {
     let data = {
-      ACTCode: involvementCode,
-      SessCode: sessionCode,
+      Activity: involvementCode,
+      Session: sessionCode,
       Username: profile.AD_Username,
-      PartCode: Participation.Guest,
+      Participation: Participation.Guest,
       CommentText: 'Subscriber',
       GroupAdmin: false,
     };

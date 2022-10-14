@@ -58,10 +58,10 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
 
     try {
       let data = {
-        ACTCode: involvementCode,
-        SessCode: sessionCode,
+        Activity: involvementCode,
+        Session: sessionCode,
         Username: username,
-        PartCode: participationCode,
+        Participation: participationCode,
         CommentText: titleComment,
         GroupAdmin: false,
         Privacy: false,

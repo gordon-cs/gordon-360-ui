@@ -38,10 +38,10 @@ export enum Participation {
 export type ParticipationDesc = keyof typeof Participation;
 
 export type MembershipUpload = {
-  ACTCode: string;
-  SessCode: string;
+  Activity: string;
+  Session: string;
   Username: string;
-  PartCode: string;
+  Participation: string;
   CommentText: string;
   GroupAdmin: boolean;
   Privacy: boolean;
@@ -72,7 +72,7 @@ const setGroupAdmin = async (
   membershipID: number,
   isGroupAdmin: boolean,
 ): Promise<MembershipView> =>
-  await http.put(`memberships/${membershipID}/group-admin/${isGroupAdmin}`);
+  await http.put(`memberships/${membershipID}/group-admin`, isGroupAdmin);
 
 const getGroupAdmins = (activityCode: string, sessionCode: string): Promise<MembershipView[]> =>
   http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/group-admins`);
@@ -81,7 +81,7 @@ const getFollowersNum = (activityCode: string, sessionCode: string): Promise<num
   http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/subscriber-count`);
 
 const getMembershipsForUser = (username: string): Promise<MembershipView[]> =>
-  http.get(`memberships/${username}`);
+  http.get(`${username}/memberships`);
 
 const getMembershipsAlphabetically = (username: string): Promise<MembershipView[]> =>
   getMembershipsForUser(username).then(sort(compareByProperty('ActivityDescription')));

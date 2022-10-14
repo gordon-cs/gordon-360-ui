@@ -45,10 +45,10 @@ const NonMemberButtons = ({
 
   const onRequest = async () => {
     let data = {
-      ACTCode: involvementCode,
-      SessCode: sessionCode,
+      Acticity: involvementCode,
+      Session: sessionCode,
       Username: profile.AD_Username,
-      PartCode: participationCode,
+      Participation: participationCode,
       DateSent: new Date().toLocaleString(),
       CommentText: titleComment,
       Status: RequestStatus.Pending,

@@ -9,10 +9,10 @@ export enum RequestStatus {
 }
 
 export type RequestUpload = {
-  ACTCode: string;
-  SessCode: string;
+  Activity: string;
+  Session: string;
   Username: number;
-  PartCode: Participation;
+  Participation: Participation;
   DateSent: string;
   CommentText: string;
   Status: RequestStatus;
@@ -52,7 +52,7 @@ const getRequests = (activityCode: string, sessionCode: string) =>
 const requestMembership = (data: RequestUpload): Promise<RequestView> =>
   http.post(`requests`, data);
 
-const getSentMembershipRequests = (): Promise<RequestView[]> => http.get('requests/current-user');
+const getSentMembershipRequests = (): Promise<RequestView[]> => http.get('requests/users/current');
 
 const requestService = {
   approveRequest,
