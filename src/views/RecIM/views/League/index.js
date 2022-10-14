@@ -4,6 +4,7 @@ import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import styles from './League.module.css';
+import { MatchListing } from 'views/RecIM/components/Listing';
 
 // CARD - schedule
 let scheduleCard = (
@@ -11,8 +12,12 @@ let scheduleCard = (
     <CardHeader title="Schedule" className={styles.cardHeader} />
     <CardContent>
       {/* if there are games scheduled, map them here */}
-      <div className={styles.listing}>{/* <LeagueListing leagueID={123456} /> */}</div>
-      <div className={styles.listing}>{/* <LeagueListing leagueID={12345} /> */}</div>
+      <div className={styles.listing}>
+        <MatchListing leagueID={123456} matchID={321} />
+      </div>
+      <div className={styles.listing}>
+        <MatchListing leagueID={123456} matchID={654} />
+      </div>
       {/* else "no schedule yet set" */}
       <Typography variant="body1" paragraph>
         Games have not yet been scheduled.
