@@ -28,7 +28,7 @@ const MainCard = () => {
           <Grid item xs={1}>
             <img src={''} alt="Team Icon" width="85em"></img>
           </Grid>
-          <Grid item xs={1}>
+          <Grid item container xs={3} sm={2} alignItems="center" direction="column">
             <Typography variant="body" className={styles.grayText}>
               <i>Match status</i>
             </Typography>
