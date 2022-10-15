@@ -35,7 +35,7 @@ const TeamListing = ({ activityID, teamID }) => {
 const ParticipantListing = ({ username }) => {
   return (
     <>
-      <Link to={`/recim/profile/${username}`} className="gc360_link">
+      <Link to={`/profile/${username}`} className="gc360_link">
         <Grid container className={styles.listing}>
           <Grid item>Participant Listing</Grid>
         </Grid>
@@ -44,4 +44,16 @@ const ParticipantListing = ({ username }) => {
   );
 };
 
-export { ActivityListing, TeamListing, ParticipantListing };
+const MatchListing = ({ activityID, matchID }) => {
+  return (
+    <>
+      <Link to={`/recim/activity/${activityID}/match/${matchID}`} className="gc360_link">
+        <Grid container className={styles.listing}>
+          <Grid item>Team A vs Team B</Grid>
+        </Grid>
+      </Link>
+    </>
+  );
+};
+
+export { ActivityListing, TeamListing, ParticipantListing, MatchListing };
