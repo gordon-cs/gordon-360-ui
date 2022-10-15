@@ -69,6 +69,9 @@ const Team = () => {
             {rosterCard}
           </Grid>
         </Grid>
+        <p>
+          Activity ID: {activityID} Team ID: {teamID} (for testing purposes only)
+        </p>
       </>
     );
   }

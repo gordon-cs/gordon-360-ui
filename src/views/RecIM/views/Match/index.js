@@ -5,7 +5,6 @@ import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { ParticipantListing } from 'views/RecIM/components/Listing';
 import styles from './Match.module.css';
-import { first } from 'lodash';
 
 // CARD - main
 const MainCard = () => {

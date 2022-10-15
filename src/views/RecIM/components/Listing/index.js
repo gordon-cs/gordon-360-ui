@@ -37,10 +37,10 @@ const TeamListing = ({ activityID, teamID }) => {
 const ParticipantListing = ({ username }) => {
   const [avatar, setAvatar] = useState('');
 
-  const [name, setName] = useState({
-    firstname: '',
-    lastname: '',
-  });
+  // const [name, setName] = useState({
+  //   firstname: '',
+  //   lastname: '',
+  // });
 
   useEffect(() => {
     const loadAvatar = async () => {
