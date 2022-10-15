@@ -1,4 +1,4 @@
-import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core/';
+import { Grid, Typography, Card, CardHeader, CardContent, List } from '@material-ui/core/';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
@@ -55,12 +55,10 @@ const RosterCard = (teamID) => {
       <CardHeader title="Team Name" className={styles.cardHeader} />
       <CardContent>
         {/* if I am apart of any active teams, map them here */}
-        <div className={styles.listing}>
-          <ParticipantListing username={first.last} />
-        </div>
-        <div className={styles.listing}>
-          <ParticipantListing username={first.last} />
-        </div>
+        <List>
+          <ParticipantListing username={'silas.white'} />
+          <ParticipantListing username={'amos.cha'} />
+        </List>
       </CardContent>
     </Card>
   );
