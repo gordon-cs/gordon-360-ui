@@ -3,8 +3,8 @@ import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import styles from './League.module.css';
 import { MatchListing } from 'views/RecIM/components/Listing';
+import styles from './Activity.module.css';
 
 // CARD - schedule
 let scheduleCard = (
@@ -13,10 +13,10 @@ let scheduleCard = (
     <CardContent>
       {/* if there are games scheduled, map them here */}
       <div className={styles.listing}>
-        <MatchListing leagueID={123456} matchID={321} />
+        <MatchListing activityID={123456} matchID={321} />
       </div>
       <div className={styles.listing}>
-        <MatchListing leagueID={123456} matchID={654} />
+        <MatchListing activityID={123456} matchID={654} />
       </div>
       {/* else "no schedule yet set" */}
       <Typography variant="body1" paragraph>
@@ -32,8 +32,8 @@ let teamsCard = (
     <CardHeader title="Teams" className={styles.cardHeader} />
     <CardContent>
       {/* if I am apart of any active teams, map them here */}
-      <div className={styles.listing}>{/* <TeamListing leagueID={123456} teamID={789} /> */}</div>
-      <div className={styles.listing}>{/* <TeamListing leagueID={12345} teamID={987} /> */}</div>
+      <div className={styles.listing}>{/* <TeamListing activityID={123456} teamID={789} /> */}</div>
+      <div className={styles.listing}>{/* <TeamListing activityID={12345} teamID={987} /> */}</div>
       {/* else "no teams" */}
       <Typography variant="body1" paragraph>
         Be the first to create a team!
@@ -42,8 +42,8 @@ let teamsCard = (
   </Card>
 );
 
-const League = () => {
-  const { leagueID } = useParams();
+const Activity = () => {
+  const { activityID } = useParams();
   const { profile, loading } = useUser();
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -56,15 +56,15 @@ const League = () => {
   } else {
     return (
       <>
-        <Grid container alignItems="center" className={styles.leagueHeader}>
+        <Grid container alignItems="center" className={styles.activityHeader}>
           <Grid item>
-            <img src={''} alt="League Icon" width="85em"></img>
+            <img src={''} alt="Activity Icon" width="85em"></img>
           </Grid>
           &nbsp;&nbsp;&nbsp;&nbsp;
           <Grid item>
-            <Typography variant="h5">League Name</Typography>
+            <Typography variant="h5">Activity Name</Typography>
             <Typography variant="body" className={styles.grayText}>
-              <i>Description of league</i>
+              <i>Description of activity</i>
             </Typography>
           </Grid>
         </Grid>
@@ -76,10 +76,10 @@ const League = () => {
             {teamsCard}
           </Grid>
         </Grid>
-        <Typography>League ID: {leagueID} (testing purposes only)</Typography>
+        <Typography>Activity ID: {activityID} (testing purposes only)</Typography>
       </>
     );
   }
 };
 
-export default League;
+export default Activity;

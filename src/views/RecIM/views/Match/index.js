@@ -14,7 +14,7 @@ const MainCard = () => {
       <CardContent>
         <Grid container justifyContent="space-between">
           <Grid item className={styles.grayText}>
-            League Name
+            Activity Name
           </Grid>
           <Grid item className={styles.grayText}>
             Date/Time
@@ -67,7 +67,7 @@ const RosterCard = (teamID) => {
 };
 
 const Match = () => {
-  const { leagueID, matchID } = useParams();
+  const { activityID, matchID } = useParams();
   const { profile, loading } = useUser();
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -92,7 +92,7 @@ const Match = () => {
           </Grid>
         </Grid>
         <Typography>
-          League ID: {leagueID}, Match ID: {matchID} (testing purposes only)
+          Activity ID: {activityID}, Match ID: {matchID} (testing purposes only)
         </Typography>
       </>
     );

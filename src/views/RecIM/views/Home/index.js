@@ -1,33 +1,33 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@material-ui/core/';
-import CreateLeagueForm from '../../components/CreateLeagueForm';
+import CreateActivityForm from '../../components/CreateActivityForm';
 import { useUser } from 'hooks';
 import { useState } from 'react';
 import GordonLoader from 'components/Loader';
-import { LeagueListing } from '../../components/Listing';
+import { ActivityListing } from '../../components/Listing';
 import { TeamListing } from '../../components/Listing';
 import styles from './Home.module.css';
 import recimLogo from './../../recim_logo.png';
 
 const Home = () => {
   const { profile, loading } = useUser();
-  //const [allLeagues, setAllLeagues] = useState('');
-  const [openCreateLeagueForm, setOpenCreateLeagueForm] = useState(false);
+  //const [allActivities, setAllActivities] = useState('');
+  const [openCreateActivityForm, setOpenCreateActivityForm] = useState(false);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
 
-  const createLeagueButton = (
+  const createActivityButton = (
     <Grid container justifyContent="center">
       <Button
         variant="contained"
         color="secondary"
         onClick={() => {
-          setOpenCreateLeagueForm(true);
+          setOpenCreateActivityForm(true);
         }}
       >
-        + League
+        + Activity
       </Button>
     </Grid>
   );
@@ -39,12 +39,12 @@ const Home = () => {
       <CardContent>
         {/* if there are upcoming events, map them here */}
         <div className={styles.listing}>
-          <LeagueListing leagueID={123456} />
+          <ActivityListing activityID={123456} />
         </div>
         <div className={styles.listing}>
-          <LeagueListing leagueID={12345} />
+          <ActivityListing activityID={12345} />
         </div>
-        {createLeagueButton}
+        {createActivityButton}
         <Typography variant="body1" paragraph>
           {/* else "no upcoming events" */}
           It looks like there aren't any Rec-IM events currently open for registration :(
@@ -60,10 +60,10 @@ const Home = () => {
       <CardContent>
         {/* if I am apart of any active teams, map them here */}
         <div className={styles.listing}>
-          <TeamListing leagueID={123456} teamID={789} />
+          <TeamListing activityID={123456} teamID={789} />
         </div>
         <div className={styles.listing}>
-          <TeamListing leagueID={12345} teamID={987} />
+          <TeamListing activityID={12345} teamID={987} />
         </div>
         {/* else "no teams" */}
         <Typography variant="body1" paragraph>
@@ -73,17 +73,17 @@ const Home = () => {
     </Card>
   );
 
-  const handleCreateLeagueForm = (status) => {
+  const handleCreateActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
-    setOpenCreateLeagueForm(false);
+    setOpenCreateActivityForm(false);
   };
 
   // const handleGet = () => {
-  //   console.log('get leagues');
-  //   getAllLeagues()
+  //   console.log('get activities');
+  //   getAllActivities()
   //     .then((e) => {
-  //       let allLeagues = e.map((league) => `${league.Name}`);
-  //       setAllLeagues(allLeagues);
+  //       let allActivities = e.map((activity) => `${activity.Name}`);
+  //       setAllActivities(allActivities);
   //     })
   //     .catch((error) => {
   //       console.log(error);
@@ -91,8 +91,8 @@ const Home = () => {
   // };
 
   // const handleMake = () => {
-  //   console.log('post league');
-  //   postSmashLeague()
+  //   console.log('post activity');
+  //   postSmashActivity()
   //     .then()
   //     .catch((error) => console.log(error));
   // };
@@ -126,12 +126,12 @@ const Home = () => {
           </Grid>
         </Grid>
         <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
-        <CreateLeagueForm
+        <CreateActivityForm
           closeWithSnackbar={(status) => {
-            handleCreateLeagueForm(status);
+            handleCreateActivityForm(status);
           }}
-          openCreateLeagueForm={openCreateLeagueForm}
-          setOpenCreateLeagueForm={(bool) => setOpenCreateLeagueForm(bool)}
+          openCreateActivityForm={openCreateActivityForm}
+          setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
         />
       </>
     );

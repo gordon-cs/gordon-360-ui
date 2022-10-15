@@ -1,15 +1,19 @@
 import { Grid } from '@material-ui/core/';
 import { useState, useMemo, useEffect } from 'react';
-import styles from './CreateLeagueForm.module.css';
+import styles from './CreateActivityForm.module.css';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
-import { postSmashLeague } from 'services/recim';
+import { postSmashActivity } from 'services/recim';
 
-const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCreateLeagueForm }) => {
+const CreateActivityForm = ({
+  closeWithSnackbar,
+  openCreateActivityForm,
+  setOpenCreateActivityForm,
+}) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
     regStart: false,
@@ -20,7 +24,7 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
     individual: false,
   });
 
-  const createLeagueFields = [
+  const createActivityFields = [
     {
       label: 'Name',
       name: 'name',
@@ -75,7 +79,7 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
   ];
 
   const allFields = [
-    createLeagueFields,
+    createActivityFields,
     // if you need more fields put them here, or if you make a "second paage"
   ].flat();
 
@@ -163,21 +167,21 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
 
   const handleConfirm = () => {
     setSaving(true);
-    //hard coded for league, sportId & typeID are hard coded to 0
+    //hard coded for activity, sportId & typeID are hard coded to 0
     //until we pull API data
-    postSmashLeague().then(() => {
+    postSmashActivity().then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
-        message: 'Your new league has been created or whatever message you want here',
+        message: 'Your new activity has been created or whatever message you want here',
       });
       handleWindowClose();
     });
-    // createNewLeague(requestData).then(() => {
+    // createNewActivity(requestData).then(() => {
     //   setSaving(false);
     //   closeWithSnackbar({
     //     type: 'success',
-    //     message: 'Your new league has been created or whatever message you want here',
+    //     message: 'Your new activity has been created or whatever message you want here',
     //   });
     //   handleWindowClose();
     // });
@@ -209,8 +213,8 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
 
   return (
     <GordonDialogBox
-      open={openCreateLeagueForm}
-      title="Create League"
+      open={openCreateActivityForm}
+      title="Create Activity"
       fullWidth
       maxWidth="lg"
       buttonClicked={() => setOpenConfirmWindow(true)}
@@ -218,16 +222,18 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
       buttonName="Submit"
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
-        setOpenCreateLeagueForm(false);
+        setOpenCreateActivityForm(false);
       }}
       cancelButtonName="cancel"
       titleClass={styles.formTitle}
     >
-      <ContentCard title="League Information">{mapFieldsToInputs(createLeagueFields)}</ContentCard>
+      <ContentCard title="Activity Information">
+        {mapFieldsToInputs(createActivityFields)}
+      </ContentCard>
 
       <GordonDialogBox
         open={openConfirmWindow}
-        title="Confirm Your League"
+        title="Confirm Your Activity"
         buttonClicked={!isSaving ? handleConfirm : null}
         buttonName="Confirm"
         // in case you want to authenticate something change isButtonDisabled
@@ -247,4 +253,4 @@ const CreateLeagueForm = ({ closeWithSnackbar, openCreateLeagueForm, setOpenCrea
   );
 };
 
-export default CreateLeagueForm;
+export default CreateActivityForm;

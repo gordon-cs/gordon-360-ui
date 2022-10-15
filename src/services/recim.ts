@@ -16,15 +16,15 @@ type Activity = {
   Completed: boolean;
 };
 
-// temporary example (hard coded league object in API)
-const postSmashLeague = async () => {
+// temporary example (hard coded activity object in API)
+const postSmashActivity = async () => {
   await http.post('recim/activities/add_smash');
 };
 
-const createNewLeague = async (newActivity: Activity) => {
+const createNewActivity = async (newActivity: Activity) => {
   await http.post('recim/activities', newActivity);
 };
 
-const getAllLeagues = async (): Promise<Object[]> => await http.get('recim/activities');
+const getAllActivities = async (): Promise<Object[]> => await http.get('recim/activities');
 
-export { postSmashLeague, getAllLeagues, createNewLeague };
+export { postSmashActivity, getAllActivities, createNewActivity };
