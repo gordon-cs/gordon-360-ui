@@ -110,8 +110,8 @@ const getLeaderPositions = async (username: string): Promise<Membership[]> =>
 const getTranscriptMembershipsInfo = (username: string) =>
   getMembershipsWithoutGuests(username).then(sort(compareByProperty('ActivityCode')));
 
-const getPublicMemberships = (username: string): Promise<Membership[]> =>
-  getMembershipsForUser(username).then(sort(compareByProperty('ActivityDescription')));
+const getPublicMemberships = (username: string): Promise<MembershipHistory[]> =>
+  groupByActivityCode(username).then(sort(compareByProperty('ActivityDescription')));
 
 const remove = (membershipID: string): Promise<MEMBERSHIP> =>
   http.del(`memberships/${membershipID}`);
@@ -137,6 +137,50 @@ const toggleGroupAdmin = async (membershipID: number, data: MEMBERSHIP): Promise
   return await http.put(`memberships/${membershipID}/group-admin`, data);
 };
 
+interface MembershipHistory {
+  ActivityCode: string;
+  ActivityDescription: string;
+  ActivityImage: string;
+  ActivityImagePath: string;
+  Memberships: Membership[];
+  // Description: string;
+  // EndDate: string;
+  // FirstName: string;
+  // GroupAdmin: boolean;
+  // IDNumber: number;
+  // LastName: string;
+  // MembershipID: number;
+  // Participation: Participation;
+  // ParticipationDescription: ParticipationDesc;
+  // Privacy: boolean | null;
+  // SessionCode: string;
+  // SessionDescription: string;
+  // StartDate: string;
+}
+
+const groupByActivityCode = async (username: string) => {
+  const memberships = await getMembershipsForUser(username);
+  const grouped: MembershipHistory[] = [];
+  memberships.forEach((curMembership) => {
+    const existingMembership = grouped.find(
+      (item) => item.ActivityCode === curMembership.ActivityCode,
+    );
+    if (existingMembership) {
+      existingMembership.Memberships.push(curMembership);
+    } else {
+      const newMembershipHistory: MembershipHistory = {
+        ActivityCode: curMembership.ActivityCode,
+        ActivityDescription: curMembership.ActivityDescription,
+        ActivityImage: curMembership.ActivityImage,
+        ActivityImagePath: curMembership.ActivityImagePath,
+        Memberships: [curMembership],
+      };
+      grouped.push(newMembershipHistory);
+    }
+  });
+  return grouped;
+};
+
 const membershipService = {
   addMembership,
   checkAdmin,
@@ -156,6 +200,7 @@ const membershipService = {
   getMembershipsAlphabetically,
   getSessionMembershipsWithoutGuests,
   getLeaderPositions,
+  groupByActivityCode,
 };
 
 export default membershipService;
