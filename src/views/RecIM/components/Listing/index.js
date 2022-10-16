@@ -1,6 +1,8 @@
-import { Grid } from '@material-ui/core/';
+import { Grid, Avatar, ListItemAvatar, ListItem, ListItemText } from '@material-ui/core/';
 import styles from './Listing.module.css';
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import user from 'services/user';
 
 const ActivityListing = ({ activityID }) => {
   return (
@@ -33,14 +35,37 @@ const TeamListing = ({ activityID, teamID }) => {
 
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
 const ParticipantListing = ({ username }) => {
+  const [avatar, setAvatar] = useState('');
+
+  // const [name, setName] = useState({
+  //   firstname: '',
+  //   lastname: '',
+  // });
+
+  useEffect(() => {
+    const loadAvatar = async () => {
+      if (username) {
+        const { def: defaultImage, pref: preferredImage } = await user.getImage(username);
+        setAvatar(preferredImage || defaultImage);
+      }
+    };
+    loadAvatar();
+  }, [username]);
   return (
-    <>
-      <Link to={`/profile/${username}`} className="gc360_link">
-        <Grid container className={styles.listing}>
-          <Grid item>Participant Listing</Grid>
-        </Grid>
-      </Link>
-    </>
+    <ListItem key={username} disableGutters={true}>
+      <Grid container alignItems="center" className={styles.listing}>
+        <ListItemAvatar>
+          <Avatar
+            src={`data:image/jpg;base64,${avatar}`}
+            className={styles.avatar}
+            variant="rounded"
+          ></Avatar>
+        </ListItemAvatar>
+        <Link to={`/profile/${username}`} className="gc360_link">
+          <ListItemText primary={username} />
+        </Link>
+      </Grid>
+    </ListItem>
   );
 };
 
