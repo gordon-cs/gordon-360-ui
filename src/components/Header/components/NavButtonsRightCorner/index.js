@@ -76,6 +76,10 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     />
   );
 
+  const settingsButton = (
+    <GordonNavButton onLinkClick={onClose} linkName={'Settings'} linkPath={'/settings'} />
+  );
+
   const adminButton =
     isAuthenticated && isSiteAdmin ? (
       <GordonNavButton
@@ -117,6 +121,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             {aboutButton}
             {feedbackButton}
             {adminButton}
+            {settingsButton}
             {signOutButton}
           </List>
         </Popover>

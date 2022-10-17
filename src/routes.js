@@ -18,6 +18,7 @@ import Page404 from './views/Page404';
 import PeopleSearch from './views/PeopleSearch';
 import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
+import MySettings from './views/MySettings';
 import Timesheets from './views/Timesheets';
 import WellnessCheck from './views/WellnessCheck';
 
@@ -128,6 +129,11 @@ const routes = [
     name: 'News',
     path: '/news',
     component: News,
+  },
+  {
+    name: 'Settings',
+    path: '/settings',
+    component: MySettings,
   },
   {
     name: 'Page Not Found',
