@@ -35,14 +35,14 @@ const CreateActivityForm = ({
     {
       label: 'Registration Start',
       name: 'regStart',
-      type: 'text',
+      type: 'datetime',
       error: errorStatus.regStart,
       helperText: '*Required',
     },
     {
       label: 'Registration End',
       name: 'regEnd',
-      type: 'text',
+      type: 'datetime',
       error: errorStatus.regEnd,
       helperText: '*Required',
     },
@@ -138,6 +138,7 @@ const CreateActivityForm = ({
 
   const handleChange = (event) => {
     const getNewInfo = (currentValue) => {
+      console.log('event', event);
       return {
         ...currentValue,
         [event.target.name]:
@@ -199,6 +200,7 @@ const CreateActivityForm = ({
   const mapFieldsToInputs = (fields) => {
     return fields.map((field) => (
       <InformationField
+        key={field.name}
         error={field.error}
         label={field.label}
         name={field.name}

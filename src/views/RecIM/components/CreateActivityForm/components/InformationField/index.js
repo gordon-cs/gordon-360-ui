@@ -8,6 +8,8 @@ import {
   Select,
   TextField,
 } from '@material-ui/core/';
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import styles from './InformationField.module.css';
 
 const InformationField = ({ label, name, type, value, onChange, error, helperText, menuItems }) => {
@@ -54,6 +56,38 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
             ))}
           </Select>
         </FormControl>
+      );
+      break;
+    case 'datetime':
+      field = (
+        // <form className={styles.container} noValidate>
+        //   <TextField
+        //     variant="filled"
+        //     value={value}
+        //     label={label}
+        //     name={name}
+        //     error={error}
+        //     type="datetime-local"
+        //     // defaultValue="2017-05-24T10:30"
+        //     helperText={error ? helperText : null}
+        //     onChange={onChange}
+        //     className={`disable_select ${styles.field}`}
+        //     InputLabelProps={{
+        //       shrink: true,
+        //     }}
+        //   />
+        // </form>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDateTimePicker
+            className={`disable_select ${styles.field}`}
+            variant="filled"
+            label={label}
+            helperText="MM-DD-YY HH-MM AM/PM"
+            format="MM/dd/yy hh:mm a"
+            value={value}
+            onChange={onChange}
+          />
+        </MuiPickersUtilsProvider>
       );
       break;
   }
