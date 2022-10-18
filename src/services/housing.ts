@@ -1,4 +1,4 @@
-import { Class } from './goStalk';
+import { Class } from './peopleSearch';
 import http from './http';
 import { StudentProfileInfo, UnformattedStudentProfileInfo } from './user';
 import { map } from './utils';

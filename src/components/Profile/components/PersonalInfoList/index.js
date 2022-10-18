@@ -52,8 +52,10 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
   const isAlumni = profile.PersonType?.includes('alu');
-  const isViewerPolice = useAuthGroups(AuthGroup.Police)
-  const canViewSensitiveInfo = useAuthGroups(AuthGroup.SensitiveInfoView)
+  const [isViewerPolice, canViewSensitiveInfo] = useAuthGroups(
+    AuthGroup.Police,
+    AuthGroup.SensitiveInfoView,
+  );
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -255,9 +257,10 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
     createSnackbar(status.message, status.type);
   };
 
-  const graduationYear = isAlumni ? (
-    <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
-  ) : null;
+  const graduationYear =
+    isAlumni && profile.PreferredClassYear?.trim() ? (
+      <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
+    ) : null;
 
   const cliftonStrengths =
     profile.CliftonStrengths && (myProf || !profile.CliftonStrengths.Private) ? (
@@ -381,7 +384,9 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
               {profile.BuildingDescription ?? profile.Hall}
             </span>
 
-            {(myProf || isViewerPolice || canViewSensitiveInfo) && profile.OnCampusRoom && `, Room ${profile.OnCampusRoom}`}
+            {(myProf || isViewerPolice || canViewSensitiveInfo) &&
+              profile.OnCampusRoom &&
+              `, Room ${profile.OnCampusRoom}`}
           </>
         }
         privateInfo
@@ -389,22 +394,23 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
       />
     ) : null;
 
-  const gordonID = myProf || ( isStudent && canViewSensitiveInfo) ? (
-    <ProfileInfoListItem
-      title="Gordon ID:"
-      contentText={profile.ID}
-      ContentIcon={
-        <Grid container justifyContent="center">
-          <Grid container direction="column" justifyContent="center" alignItems="center">
-            <LockIcon />
-            Private
+  const gordonID =
+    myProf || (isStudent && canViewSensitiveInfo) ? (
+      <ProfileInfoListItem
+        title="Gordon ID:"
+        contentText={profile.ID}
+        ContentIcon={
+          <Grid container justifyContent="center">
+            <Grid container direction="column" justifyContent="center" alignItems="center">
+              <LockIcon />
+              Private
+            </Grid>
           </Grid>
-        </Grid>
-      }
-      privateInfo
-      myProf={myProf}
-    />
-  ) : null;
+        }
+        privateInfo
+        myProf={myProf}
+      />
+    ) : null;
 
   const spouse =
     isFacStaff && profile.SpouseName ? (
