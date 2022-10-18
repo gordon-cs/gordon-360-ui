@@ -65,7 +65,7 @@ const Profile = ({ profile, myProf }) => {
           <PersonalInfoList
             profile={profile}
             myProf={myProf}
-            network={network}
+            isOnline={network}
             createSnackbar={createSnackbar}
           />
           {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}

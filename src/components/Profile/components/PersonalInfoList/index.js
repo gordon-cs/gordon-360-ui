@@ -37,7 +37,7 @@ const formatPhone = (phone) => {
   }
 };
 
-const PersonalInfoList = ({ myProf, profile, network, createSnackbar }) => {
+const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
   );
@@ -47,7 +47,6 @@ const PersonalInfoList = ({ myProf, profile, network, createSnackbar }) => {
   const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
   const [mailCombo, setMailCombo] = useState();
   const [showMailCombo, setShowMailCombo] = useState(false);
-  const isOnline = network;
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
   const isAlumni = profile.PersonType?.includes('alu');
