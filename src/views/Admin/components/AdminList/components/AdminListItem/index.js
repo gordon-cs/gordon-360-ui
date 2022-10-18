@@ -22,7 +22,7 @@ const AdminListItem = ({ Admin, onRemove }) => {
   return (
     <>
       <ListItem divider>
-        <ListItemText primary={Admin.USER_NAME} />
+        <ListItemText primary={Admin.Username} />
         <ListItemSecondaryAction>
           <Button variant="contained" style={buttonStyle} onClick={() => setIsDialogOpen(true)}>
             Remove

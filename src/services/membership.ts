@@ -75,7 +75,7 @@ const setGroupAdmin = async (
   await http.put(`memberships/${membershipID}/group-admin`, isGroupAdmin);
 
 const getGroupAdmins = (activityCode: string, sessionCode: string): Promise<MembershipView[]> =>
-  http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/group-admins`);
+  http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/admins`);
 
 const getFollowersNum = (activityCode: string, sessionCode: string): Promise<number> =>
   http.get(`memberships/activities/${activityCode}/sessions/${sessionCode}/subscriber-count`);

@@ -45,7 +45,7 @@ const cancelRequest = (requestID: string): Promise<RequestView> =>
 
 const getPendingRequests = (activityCode: string, sessionCode: string) =>
   http.get<RequestView[]>(
-    `requests/activity/${activityCode}/session/${sessionCode}?status=${RequestStatus.Pending}`,
+    `requests/activity/${activityCode}/session/${sessionCode}?requestStatus=${RequestStatus.Pending}`,
   );
 
 const requestMembership = (data: RequestUpload): Promise<RequestView> =>
