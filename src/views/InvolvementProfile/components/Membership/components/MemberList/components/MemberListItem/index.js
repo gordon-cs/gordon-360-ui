@@ -79,7 +79,8 @@ const MemberListItem = ({
         const { def: defaultImage, pref: preferredImage } = await userService.getImage(
           member.AD_Username,
         );
-        setAvatar(preferredImage || defaultImage);
+        const avatarImage = preferredImage || defaultImage;
+        setAvatar(avatarImage ? `data:image/jpg;base64,${avatarImage}` : undefined);
       }
     };
     loadAvatar();
@@ -256,7 +257,7 @@ const MemberListItem = ({
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={1} style={rowStyle}>
             <Avatar
-              src={avatar ? `data:image/jpg;base64,${avatar}` : undefined}
+              src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
               style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
@@ -313,7 +314,7 @@ const MemberListItem = ({
                 <Grid container spacing={3} wrap="nowrap" alignItems="center">
                   <Grid>
                     <Avatar
-                      src={avatar ? `data:image/jpg;base64,${avatar}` : undefined}
+                      src={avatar}
                       alt={`${member.FirstName} ${member.LastName}`}
                       variant="rounded"
                       style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
@@ -360,7 +361,7 @@ const MemberListItem = ({
         <Grid container alignItems="center" spacing={2} wrap="nowrap">
           <Grid item md={1} style={rowStyle}>
             <Avatar
-              src={avatar ? `data:image/jpg;base64,${avatar}` : undefined}
+              src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
               style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
