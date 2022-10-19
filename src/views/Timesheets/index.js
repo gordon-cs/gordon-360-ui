@@ -14,7 +14,7 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from '@mui/material/';
+} from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
