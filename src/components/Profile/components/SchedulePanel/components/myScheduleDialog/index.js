@@ -445,7 +445,6 @@ export default class MyScheduleDialog extends Component {
 
             <div>
               <TimePicker
-                // style={{ width: '20%' }}
                 label="Start time"
                 value={this.state.startHourInput}
                 onChange={this.handlePickerChange('startHourInput')}
@@ -453,11 +452,8 @@ export default class MyScheduleDialog extends Component {
                 ampm={false}
                 disabled={this.state.checkedC}
                 minutesStep={5}
-                // error={!this.state.startHourValid}
-                // helperText={this.state.startHourValid ? '' : this.state.formErrors.startHourInput}
               />
               <TimePicker
-                // style={{ width: '20%' }}
                 label="End time"
                 value={this.state.endHourInput}
                 onChange={this.handlePickerChange('endHourInput')}
@@ -465,8 +461,6 @@ export default class MyScheduleDialog extends Component {
                 ampm={false}
                 disabled={this.state.checkedC}
                 minutesStep={5}
-                // error={!this.state.endHourValid}
-                // helperText={this.state.endHourValid ? '' : this.state.formErrors.endHourInput}
               />
               <FormControlLabel
                 control={
