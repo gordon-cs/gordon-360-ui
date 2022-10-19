@@ -322,9 +322,8 @@ type ProfileFieldUpdate = {
   Label: string;
 };
 
-const requestInfoUpdate = async (updatedFields: ProfileFieldUpdate[]) => {
-  await http.post('profiles/update/', updatedFields);
-};
+const requestInfoUpdate = (updatedFields: ProfileFieldUpdate[]) => 
+  http.post('profiles/update/', updatedFields);
 
 const userService = {
   setMobilePhonePrivacy,
