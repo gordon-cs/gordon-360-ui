@@ -1,6 +1,5 @@
-import { Typography, Grid, Button, TextField } from '@material-ui/core/';
+import { Typography, Grid, Button, TextField, Box } from '@mui/material/';
 import { useState, useMemo, useEffect } from 'react';
-import { requestInfoUpdate, getAllStates, getAllCountries } from 'services/profileInfoUpdate';
 import styles from './AlumniUpdateForm.module.css';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -8,11 +7,17 @@ import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { ProfileUpdateField } from './components/ProfileUpdateField';
+import addressService from 'services/address';
+import { map } from 'services/utils';
+import userService from 'services/user';
 
 const shouldContactFields = [
   { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' },
   { label: 'Do Not Mail', name: 'doNotMail', type: 'checkbox' },
 ];
+
+const UPDATE_STEP = 'update';
+const CONFIRM_STEP = 'confirm';
 
 /**
  * A form for alumni to request an update to their profile information.
@@ -141,15 +146,15 @@ const AlumniUpdateForm = ({
   ].flat();
 
   useEffect(() => {
-    getAllStates().then((s) => {
-      let allStates = s.map((state) => `${state.Name}`);
-      allStates.unshift('Not Applicable');
-      setStatesAndProv(allStates);
-    });
-    getAllCountries().then((c) => {
-      let allCountries = c.map((country) => country.COUNTRY.toLowerCase());
-      setCountries(allCountries);
-    });
+    addressService
+      .getStates()
+      .then(map((state) => state.Name))
+      .then((states) => ['Not Applicable', ...states])
+      .then(setStatesAndProv);
+    addressService
+      .getCountries()
+      .then(map((country) => country.Name))
+      .then(setCountries);
   }, []);
 
   const currentInfo = useMemo(() => {
@@ -183,7 +188,7 @@ const AlumniUpdateForm = ({
     };
   }, [profile]);
   const [updatedInfo, setUpdatedInfo] = useState(currentInfo);
-  const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
+  const [step, setStep] = useState(UPDATE_STEP);
   const [isSaving, setSaving] = useState(false);
   const [changeReason, setChangeReason] = useState('');
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
@@ -198,7 +203,6 @@ const AlumniUpdateForm = ({
     setErrorStatus(getCurrentErrorStatus);
   };
 
-  //Regular Expression documentation: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
   const isEmailValid = (email) => {
     //email regex from: https://stackoverflow.com/a/72476905
     const regex = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
@@ -289,7 +293,7 @@ const AlumniUpdateForm = ({
       Value: changeReason,
       Label: 'Reason for change',
     });
-    requestInfoUpdate(updateRequest).then(() => {
+    userService.requestInfoUpdate(updateRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
@@ -300,7 +304,7 @@ const AlumniUpdateForm = ({
   };
 
   const handleWindowClose = () => {
-    setOpenConfirmWindow(false);
+    setStep(UPDATE_STEP);
     setChangeReason('');
   };
 
@@ -323,69 +327,79 @@ const AlumniUpdateForm = ({
     ));
   };
 
+  const dialogProps =
+    step === CONFIRM_STEP
+      ? {
+          title: 'Confirm Your Updates',
+          buttonClicked: !isSaving ? handleConfirm : null,
+          buttonName: 'Confirm',
+          isButtonDisabled: changeReason === '',
+          cancelButtonClicked: !isSaving ? handleWindowClose : null,
+        }
+      : {
+          title: 'Update Information',
+          buttonClicked: () => setStep(CONFIRM_STEP),
+          isButtonDisabled: disableUpdateButton,
+          buttonName: 'Update',
+          cancelButtonClicked: () => {
+            setUpdatedInfo(currentInfo);
+            setOpenAlumniUpdateForm(false);
+          },
+        };
+
   return (
     <GordonDialogBox
       open={openAlumniUpdateForm}
-      title="Update Information"
       fullWidth
       maxWidth="lg"
-      buttonClicked={() => setOpenConfirmWindow(true)}
       isButtonDisabled={disableUpdateButton}
-      buttonName="Update"
-      cancelButtonClicked={() => {
-        setUpdatedInfo(currentInfo);
-        setOpenAlumniUpdateForm(false);
-      }}
-      cancelButtonName="cancel"
+      cancelButtonName="Cancel"
       titleClass={styles.alumni_update_form_title}
+      {...dialogProps}
     >
-      <ContentCard title="Personal Information">
-        {mapFieldsToInputs(personalInfoFields)}
-      </ContentCard>
-      <ContentCard title="Email Addresses">{mapFieldsToInputs(emailInfoFields)}</ContentCard>
-      <ContentCard title="Phone Numbers">{mapFieldsToInputs(phoneInfoFields)}</ContentCard>
-      <ContentCard title="Mailing Address">{mapFieldsToInputs(mailingInfoFields)}</ContentCard>
-      <ContentCard title="Contact Preferences">
-        {mapFieldsToInputs(shouldContactFields)}
-      </ContentCard>
-      <Typography variant="subtitle1">
-        Found a bug?
-        <Button href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug" color="primary">
-          Report to CTS
-        </Button>
-      </Typography>
-      {/* confirmation window */}
-      <GordonDialogBox
-        open={openConfirmWindow}
-        title="Confirm Your Updates"
-        buttonClicked={!isSaving ? handleConfirm : null}
-        buttonName="Confirm"
-        isButtonDisabled={changeReason === ''}
-        cancelButtonClicked={!isSaving ? handleWindowClose : null}
-        cancelButtonName="Cancel"
-      >
-        <ConfirmationWindowHeader />
-        <Grid container>
-          {getUpdatedFields(currentInfo, updatedInfo).map((field) => (
-            <ConfirmationRow field={field} prevValue={currentInfo[field.Field]} />
-          ))}
-        </Grid>
-        <TextField
-          required
-          variant="filled"
-          label="Please give a reason for the change..."
-          margin="normal"
-          multiline
-          fullWidth
-          minRows={4}
-          name="changeReason"
-          value={changeReason}
-          onChange={(event) => {
-            setChangeReason(event.target.value);
-          }}
-        />
-        {isSaving ? <GordonLoader size={32} /> : null}
-      </GordonDialogBox>
+      {step === UPDATE_STEP && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+          <ContentCard title="Personal Information">
+            {mapFieldsToInputs(personalInfoFields)}
+          </ContentCard>
+          <ContentCard title="Email Addresses">{mapFieldsToInputs(emailInfoFields)}</ContentCard>
+          <ContentCard title="Phone Numbers">{mapFieldsToInputs(phoneInfoFields)}</ContentCard>
+          <ContentCard title="Mailing Address">{mapFieldsToInputs(mailingInfoFields)}</ContentCard>
+          <ContentCard title="Contact Preferences">
+            {mapFieldsToInputs(shouldContactFields)}
+          </ContentCard>
+          <Typography variant="subtitle1">
+            Found a bug?
+            <Button href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug" color="primary">
+              Report to CTS
+            </Button>
+          </Typography>
+        </Box>
+      )}
+      {step === CONFIRM_STEP && (
+        <>
+          <ConfirmationWindowHeader />
+          <Grid container>
+            {getUpdatedFields(currentInfo, updatedInfo).map((field) => (
+              <ConfirmationRow field={field} prevValue={currentInfo[field.Field]} />
+            ))}
+          </Grid>
+          <TextField
+            required
+            variant="filled"
+            label="Please give a reason for the change..."
+            multiline
+            fullWidth
+            minRows={4}
+            name="changeReason"
+            value={changeReason}
+            onChange={(event) => {
+              setChangeReason(event.target.value);
+            }}
+          />
+          {isSaving && <GordonLoader size={32} />}
+        </>
+      )}
     </GordonDialogBox>
   );
 };

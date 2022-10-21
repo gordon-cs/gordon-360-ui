@@ -1,50 +1,44 @@
-import { InputAdornment, MenuItem, Paper, TextField, Typography } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
+import { InputAdornment, MenuItem, Paper, TextField, Typography, Divider } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import Downshift from 'downshift';
 import { useDebounce, useNetworkStatus, useWindowSize } from 'hooks';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import quickSearchService from 'services/quickSearch';
-import styles from './PeopleSearch.module.css';
+import styles from './QuickSearch.module.css';
 
 const MIN_QUERY_LENGTH = 2;
-const BREAKPOINT_WIDTH = 400;
+const BREAKPOINT_WIDTH = 450;
+const NO_SEARCH_RESULTS = [0, []];
 
-//  TextBox Input Field
-const renderInput = (inputProps) => {
-  const { autoFocus, value, ref, ...other } = inputProps;
-
-  return (
-    <TextField
-      type="search"
-      autoFocus={autoFocus}
-      value={value}
-      inputRef={ref}
-      className={styles.text_field}
-      InputProps={{
-        disableUnderline: true,
-        classes: {
-          root: styles.people_search_root,
-          input: styles.people_search_input,
-          // inputDisabled: 'people-search-disabled', // `inputDisabled` is not a valid classes prop for this Material-UI component. See https://material-ui.com/api/autocomplete/#css
-        },
-        startAdornment: (
-          <InputAdornment position="start">
-            <SearchIcon />
-          </InputAdornment>
-        ),
-        ...other,
-      }}
-    />
-  );
-};
+const renderInput = ({ autoFocus, value, ref, ...other }) => (
+  <TextField
+    type="search"
+    autoFocus={autoFocus}
+    value={value}
+    inputRef={ref}
+    InputProps={{
+      disableUnderline: true,
+      classes: {
+        // Use static class as target of global styles
+        root: `${styles.root} gc360_quick_search_root`,
+      },
+      startAdornment: (
+        <InputAdornment position="start">
+          <SearchIcon />
+        </InputAdornment>
+      ),
+      ...other,
+    }}
+  />
+);
 
 const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit }) => {
   // Search time is never used via variable name, but it is used via index
   // to ensure that earlier searches which took longer to run don't overwrite later searches
   // eslint-disable-next-line no-unused-vars
-  const [[searchTime, suggestions], setSearchResults] = useState([0, []]);
+  const [[searchTime, suggestions], setSearchResults] = useState(NO_SEARCH_RESULTS);
   const [suggestionIndex, setSuggestionIndex] = useState(-1);
   const [query, setQuery] = useDebounce('', 200);
   const [highlightQuery, setHighlightQuery] = useState(String);
@@ -75,6 +69,8 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
           newResults[0] > prevResults[0] ? newResults : prevResults,
         ),
       );
+    } else {
+      setSearchResults(NO_SEARCH_RESULTS);
     }
   }, [query]);
 
@@ -140,26 +136,13 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
         {parts.map((part, key) =>
           !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
             ? (hasMatched = true && (
-                <span className={styles.h} key={key}>
+                <span className={styles.matched_text} key={key}>
                   {part}
                 </span>
               ))
             : part,
         )}
       </span>
-    );
-  }
-
-  function renderNoResult() {
-    return (
-      <MenuItem className={styles.people_search_suggestion} style={{ paddingBottom: '5px' }}>
-        <Typography className={styles.no_results} variant="body2">
-          No results
-        </Typography>
-        <Typography className={styles.loading} variant="body2">
-          Loading...
-        </Typography>
-      </MenuItem>
     );
   }
 
@@ -172,73 +155,73 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
     const highlightQuerySplit = highlightQuery.match(/ |\./);
 
     return (
-      // The props for component={Link} and to={`/profile/${suggestion.UserName}`}
-      // have been moved to the declaration of itemProps in return().
-      // This allows these link features to be omitted if disableLink is true
-      <MenuItem
-        {...itemProps}
-        key={suggestion.UserName}
-        onClick={() => handleClick(suggestion.UserName)}
-        className={
-          suggestionIndex !== -1 && suggestion.UserName === suggestions?.[suggestionIndex]?.UserName
-            ? styles.people_search_suggestion_selected
-            : styles.people_search_suggestion
-        }
-      >
-        <Typography variant="body2">
-          {/* If the query contains a space or a period, only highlight occurrences of the first
+      <>
+        <MenuItem
+          {...itemProps}
+          key={suggestion.UserName}
+          onClick={() => handleClick(suggestion.UserName)}
+          className={
+            suggestionIndex !== -1 &&
+            suggestion.UserName === suggestions?.[suggestionIndex]?.UserName
+              ? styles.suggestion_selected
+              : styles.suggestion
+          }
+        >
+          <Typography variant="body2">
+            {/* If the query contains a space or a period, only highlight occurrences of the first
               name part of the query in the first name, and only highlight occurrences of the last
               name part of the query in the last name. Otherwise, highlight occurrences of the
               query in the first and last name. */}
-          {highlightQuerySplit?.length > 1 ? (
-            <>
-              <span key={1}>
-                {getHighlightedText(suggestion.FirstName + ' ', highlightQuerySplit[0])}
-              </span>
-              <span key={2}>{getHighlightedText(suggestion.LastName, highlightQuerySplit[1])}</span>
-            </>
-          ) : (
-            getHighlightedText(
-              // Displays first name
-              suggestion.FirstName +
-                // If having nickname that is unique, display that nickname
-                (suggestion.Nickname &&
-                suggestion.Nickname !== suggestion.FirstName &&
-                suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
-                  ? ' (' + suggestion.Nickname + ') '
-                  : ' ') +
-                // Displays last name
-                suggestion.LastName +
-                // If having maiden name that is unique, display that maiden name
-                (suggestion.MaidenName &&
-                suggestion.MaidenName !== suggestion.LastName &&
-                suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
-                  ? ' (' + suggestion.MaidenName + ')'
-                  : ''),
-              highlightQuery,
-            )
-          )}
-        </Typography>
-        <Typography variant="caption" component="p">
-          {/* If the first name matches either part (first or last name) of the query, don't
+            {highlightQuerySplit?.length > 1 ? (
+              <>
+                <span key={1}>
+                  {getHighlightedText(suggestion.FirstName + ' ', highlightQuerySplit[0])}
+                </span>
+                <span key={2}>
+                  {getHighlightedText(suggestion.LastName, highlightQuerySplit[1])}
+                </span>
+              </>
+            ) : (
+              getHighlightedText(
+                suggestion.FirstName +
+                  // If having nickname that is unique, display that nickname
+                  (suggestion.Nickname &&
+                  suggestion.Nickname !== suggestion.FirstName &&
+                  suggestion.Nickname !== suggestion.UserName.split(/ |\./)[0]
+                    ? ' (' + suggestion.Nickname + ') '
+                    : ' ') +
+                  suggestion.LastName +
+                  // If having maiden name that is unique, display that maiden name
+                  (suggestion.MaidenName &&
+                  suggestion.MaidenName !== suggestion.LastName &&
+                  suggestion.MaidenName !== suggestion.UserName.split(/ |\./)[1]
+                    ? ' (' + suggestion.MaidenName + ')'
+                    : ''),
+                highlightQuery,
+              )
+            )}
+          </Typography>
+          <Typography variant="caption" component="p">
+            {/* If the first name matches either part (first or last name) of the query, don't
               highlight occurrences of the query in the first name part of the username.
               If the username contains a period, add it back in.
               If the last name matches either part (first of last name) of the query, don't
               highlight occurrences of the query in the last name part of the username. */}
-          {!suggestion.FirstName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
-            ? getHighlightedText(suggestion.UserName.split('.')[0], highlightQuery)
-            : suggestion.UserName.split('.')[0]}
-          {suggestion.UserName.includes('.') && '.'}
-          {suggestion.UserName.includes('.') &&
-            (!suggestion.LastName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
-              ? getHighlightedText(suggestion.UserName.split('.')[1], highlightQuery)
-              : suggestion.UserName.split('.')[1])}
-        </Typography>
-      </MenuItem>
+            {!suggestion.FirstName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
+              ? getHighlightedText(suggestion.UserName.split('.')[0], highlightQuery)
+              : suggestion.UserName.split('.')[0]}
+            {suggestion.UserName.includes('.') && '.'}
+            {suggestion.UserName.includes('.') &&
+              (!suggestion.LastName.match(new RegExp(`(${highlightParse(highlightQuery)})`, 'i'))
+                ? getHighlightedText(suggestion.UserName.split('.')[1], highlightQuery)
+                : suggestion.UserName.split('.')[1])}
+          </Typography>
+        </MenuItem>
+        <Divider className={styles.suggestion_divider} />
+      </>
     );
   }
 
-  // Creates the People Search Bar
   return (
     <Downshift
       // Assign reference to Downshift to state property for usage elsewhere in the component
@@ -247,53 +230,51 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
       }}
     >
       {({ getInputProps, getItemProps, isOpen }) => (
-        <span className={styles.gordon_people_search} key="suggestion-list-span">
+        <span className={styles.quick_search} key="suggestion-list-span">
           {renderInput(
-            getInputProps(
-              isOnline
+            getInputProps({
+              placeholder: placeholder,
+              ...(isOnline
                 ? {
-                    placeholder: placeholder,
                     onChange: (event) => updateQuery(event.target.value),
                     onKeyDown: (event) => handleKeys(event.key),
+                    onBlur: () => setQuery(''),
                   }
                 : {
-                    placeholder: placeholder,
                     style: { color: 'white' },
                     disabled: { isOnline },
-                  },
-            ),
-          )}
-          {isOpen && suggestions.length > 0 && query.length >= MIN_QUERY_LENGTH ? (
-            disableLink ? (
-              <Paper square className={styles.people_search_dropdown}>
-                {suggestions.map((suggestion) =>
-                  renderSuggestion({
-                    suggestion,
-                    itemProps: getItemProps({ item: suggestion.UserName }),
                   }),
-                )}
-              </Paper>
-            ) : (
-              <Paper square className={styles.people_search_dropdown}>
-                {suggestions.map((suggestion) =>
+            }),
+          )}
+          {isOpen && query.length >= MIN_QUERY_LENGTH && (
+            <Paper square className={`${styles.dropdown} gc360_quick_search_dropdown`}>
+              {suggestions.length > 0 ? (
+                suggestions.map((suggestion) =>
                   renderSuggestion({
                     suggestion,
                     itemProps: getItemProps({
                       item: suggestion.UserName,
-                      component: Link,
-                      to: `/profile/${suggestion.UserName}`,
+                      ...(!disableLink
+                        ? {
+                            component: Link,
+                            to: `/profile/${suggestion.UserName}`,
+                          }
+                        : {}),
                     }),
                   }),
-                )}
-              </Paper>
-            )
-          ) : isOpen && suggestions.length === 0 && query.length >= MIN_QUERY_LENGTH ? (
-            // Styling copied from how renderSuggestion is done with
-            // only bottom padding changed and 'no-results' class used
-            <Paper square className={styles.people_search_dropdown}>
-              {renderNoResult()}
+                )
+              ) : (
+                <MenuItem className={styles.suggestion} style={{ paddingBottom: '5px' }}>
+                  <Typography className={styles.no_results} variant="body2">
+                    No results
+                  </Typography>
+                  <Typography className={styles.loading} variant="body2">
+                    Loading...
+                  </Typography>
+                </MenuItem>
+              )}
             </Paper>
-          ) : null}
+          )}
         </span>
       )}
     </Downshift>

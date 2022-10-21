@@ -1,7 +1,7 @@
 import { Component, Fragment } from 'react';
 import { gordonColors } from 'theme';
 
-import { Dialog, DialogTitle, DialogActions, Button } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogActions, Button } from '@mui/material';
 
 export default class RemoveScheduleDialog extends Component {
   constructor(props) {

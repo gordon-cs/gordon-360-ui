@@ -1,5 +1,5 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import { useNetworkStatus } from 'hooks';
 import { gordonColors } from 'theme';
 

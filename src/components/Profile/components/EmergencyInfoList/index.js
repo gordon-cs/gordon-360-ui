@@ -3,7 +3,7 @@ import styles from './EmergencyInfoList.module.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import user from 'services/user';
 
-import { Typography, Grid, Card, CardHeader, CardContent, List } from '@material-ui/core';
+import { Typography, Grid, Card, CardHeader, CardContent, List } from '@mui/material';
 
 const formatPhone = (phone) => {
   if (phone?.length === 10) {

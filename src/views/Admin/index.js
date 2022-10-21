@@ -1,5 +1,5 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useAuthGroups, useNetworkStatus } from 'hooks';

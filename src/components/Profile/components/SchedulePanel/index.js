@@ -1,7 +1,7 @@
 import { Component, Fragment } from 'react';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { withStyles } from '@material-ui/core/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import withStyles from '@mui/styles/withStyles';
 import { gordonColors } from 'theme';
 import MyScheduleDialog from './components/myScheduleDialog';
 import RemoveScheduleDialog from './components/RemoveScheduleDialog';
@@ -9,7 +9,9 @@ import EditDescriptionDialog from './components/EditDescriptionDialog';
 import TimeAgo from 'react-timeago';
 import schedulecontrol from 'services/schedulecontrol';
 import urlRegex from 'url-regex-safe';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Markup } from 'interweave';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 
 import myschedule from 'services/myschedule';
 
@@ -23,7 +25,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 // Default values
 const STARTHOUR = '08:00';
@@ -439,7 +441,9 @@ class GordonSchedulePanel extends Component {
       );
     }
 
-    return <Fragment>{schedulePanel}</Fragment>;
+    return (
+      <LocalizationProvider dateAdapter={AdapterDateFns}>{schedulePanel}</LocalizationProvider>
+    );
   }
 }
 

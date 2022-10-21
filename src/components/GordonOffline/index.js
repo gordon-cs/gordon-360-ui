@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Grid } from '@material-ui/core/';
+import { Button, Card, CardContent, Grid } from '@mui/material/';
 import { ReactComponent as NoConnectionImage } from 'NoConnection.svg';
 
 /**

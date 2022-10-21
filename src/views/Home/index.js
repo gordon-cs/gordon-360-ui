@@ -1,6 +1,6 @@
 // @TODO CSSMODULES - moved to global styles until a better solution is found
 // import styles from './Home.module.css';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
 import { useUser } from 'hooks';

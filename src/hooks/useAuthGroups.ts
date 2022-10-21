@@ -15,7 +15,7 @@ function useAuthGroups(
 
   const groupsIncludes = (g: AuthGroup) => groups.some((authGroup) => g === authGroup);
 
-  if (group && otherGroups) {
+  if (group && otherGroups.length > 0) {
     return [group, ...otherGroups].map(groupsIncludes);
   } else if (group) {
     return groupsIncludes(group);

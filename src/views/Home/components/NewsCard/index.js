@@ -4,7 +4,7 @@
 // But currently it is not being implemented (commented out)
 // May be a potential future feature, but not sure
 
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import NewsService from 'services/news';

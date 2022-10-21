@@ -84,7 +84,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     classType: searchFields.class_year === '' ? '' : Class[searchFields.class_year],
     homeCity: searchFields.home_town,
     state: searchFields.state,
-    country: searchFields.country.toUpperCase(),
+    country: searchFields.country,
     department: searchFields.department,
     building: searchFields.building,
   })
@@ -113,10 +113,6 @@ const getMinors = (): Promise<string[]> => http.get(`advancedsearch/minors`);
 
 const getHalls = (): Promise<string[]> => http.get(`advancedsearch/halls`);
 
-const getStates = (): Promise<string[]> => http.get(`advancedsearch/states`);
-
-const getCountries = (): Promise<string[]> => http.get(`advancedsearch/countries`);
-
 const getDepartments = (): Promise<string[]> => http.get(`advancedsearch/departments`);
 
 const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
@@ -126,8 +122,6 @@ const peopleSearchService = {
   getMajors,
   getMinors,
   getHalls,
-  getStates,
-  getCountries,
   getDepartments,
   getBuildings,
 };

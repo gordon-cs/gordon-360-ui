@@ -1,4 +1,4 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme } from '@mui/material/styles';
 
 // Colors from http://www.gordon.edu/brandstandards
 // Shades from https://goo.gl/AF45tZ
@@ -72,6 +72,9 @@ export const gordonColors = {
     },
   },
   neutral: {
+    main: '#EBEAEA',
+    dark: '#CCCCCB',
+    contrastText: 'rgba(0, 0, 0, 0.87)',
     lightGray: '#EBEAEA',
     gray: '#CCCCCB',
     grayShades: {
@@ -100,10 +103,26 @@ export const gordonColors = {
 export const windowBreakWidths = {
   breakXS: 0,
   breakSM: 600,
-  breakMD: 960,
-  breakLG: 1280,
-  breakXL: 1920,
+  breakMD: 900,
+  breakLG: 1200,
+  breakXL: 1536,
 };
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    neutral: Palette['primary'];
+  }
+  // allow configuration using `createTheme`
+  interface PaletteOptions {
+    neutral: PaletteOptions['primary'];
+  }
+}
+
+declare module '@mui/material' {
+  interface ButtonPropsColorOverrides {
+    neutral: any;
+  }
+}
 
 const theme = createTheme({
   palette: {
@@ -113,23 +132,27 @@ const theme = createTheme({
     success: gordonColors.secondary.greenShades,
     warning: gordonColors.secondary.yellowShades,
     info: gordonColors.primary.cyanShades,
-    grey: gordonColors.neutral.grayShades,
+    neutral: gordonColors.neutral,
   },
   typography: {
     fontFamily: ['Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', 'sans-serif'].join(','),
   },
-  overrides: {
+  components: {
     MuiTooltip: {
-      tooltip: {
-        backgroundColor: gordonColors.neutral.darkGray,
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: gordonColors.neutral.darkGray,
+        },
       },
     },
     MuiButton: {
-      containedPrimary: {
-        color: gordonColors.neutral.grayShades.A100,
-      },
-      containedSecondary: {
-        color: gordonColors.neutral.grayShades.A100,
+      styleOverrides: {
+        containedPrimary: {
+          color: gordonColors.neutral.grayShades.A100,
+        },
+        containedSecondary: {
+          color: gordonColors.neutral.grayShades.A100,
+        },
       },
     },
   },
