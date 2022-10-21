@@ -1,7 +1,7 @@
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import PropTypes from 'prop-types';
 import GordonLinksList from './components/LinksList';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 
 const GordonQuickLinksDialog = (props) => {
   return (

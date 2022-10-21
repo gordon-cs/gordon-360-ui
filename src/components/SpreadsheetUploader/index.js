@@ -1,5 +1,5 @@
-import { Button, Card, Typography } from '@material-ui/core';
-import { Description as SpreadsheetIcon } from '@material-ui/icons';
+import { Button, Card, Typography } from '@mui/material';
+import { Description as SpreadsheetIcon } from '@mui/icons-material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { useEffect, useState } from 'react';

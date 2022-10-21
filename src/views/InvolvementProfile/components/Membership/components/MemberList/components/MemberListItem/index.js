@@ -15,8 +15,8 @@ import {
   Select,
   TextField,
   Typography,
-} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -43,6 +43,12 @@ const PARTICIPATION_LEVELS = {
   Guest: 'GUEST',
 };
 
+const PlaceHolderAvatar = () => (
+  <svg width="50" height="50" viewBox="0 0 50 50">
+    <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+  </svg>
+);
+
 const MemberListItem = ({
   member,
   isAdmin,
@@ -67,26 +73,21 @@ const MemberListItem = ({
   const [avatar, setAvatar] = useState();
   const { profile } = useUser();
 
-  const PlaceHolderAvatar = () => (
-    <svg width="50" height="50" viewBox="0 0 50 50">
-      <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-    </svg>
-  );
-
   useEffect(() => {
     const loadAvatar = async () => {
       if (member.AD_Username) {
         const { def: defaultImage, pref: preferredImage } = await userService.getImage(
           member.AD_Username,
         );
-        setAvatar(preferredImage || defaultImage);
+        const avatarImage = preferredImage || defaultImage;
+        setAvatar(avatarImage ? `data:image/jpg;base64,${avatarImage}` : undefined);
       }
     };
     loadAvatar();
   }, [member.AD_Username]);
 
   const handleToggleGroupAdmin = async () => {
-    if (isAdmin && !isSiteAdmin && member.IDNumber === profile.ID) {
+    if (isAdmin && !isSiteAdmin && member.IDNumber?.toString() === profile.ID) {
       setIsUnadminSelfDialogOpen(true);
     } else {
       let data = {
@@ -144,7 +145,7 @@ const MemberListItem = ({
   };
 
   const handleRemove = () => {
-    if (member.IDNumber === profile.ID) {
+    if (member.IDNumber?.toString() === profile.ID) {
       setIsLeaveAlertOpen(true);
     } else {
       setIsRemoveAlertOpen(true);
@@ -239,15 +240,11 @@ const MemberListItem = ({
     options = (
       <Grid container alignItems="center" justifyContent="space-evenly">
         <Grid item>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={groupAdmin}
-                color="primary"
-                disabled={disabled}
-                onChange={handleToggleGroupAdmin}
-              />
-            }
+          <Checkbox
+            checked={groupAdmin}
+            color="primary"
+            disabled={disabled}
+            onChange={handleToggleGroupAdmin}
           />
         </Grid>
 
@@ -260,7 +257,7 @@ const MemberListItem = ({
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={1} style={rowStyle}>
             <Avatar
-              src={`data:image/jpg;base64,${avatar}`}
+              src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
               style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
@@ -269,7 +266,7 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3}>
-            <Link href={`/profile/${member.AD_Username}`}>
+            <Link href={`/profile/${member.AD_Username}`} underline="hover">
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
@@ -317,7 +314,7 @@ const MemberListItem = ({
                 <Grid container spacing={3} wrap="nowrap" alignItems="center">
                   <Grid>
                     <Avatar
-                      src={`data:image/jpg;base64,${avatar}`}
+                      src={avatar}
                       alt={`${member.FirstName} ${member.LastName}`}
                       variant="rounded"
                       style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
@@ -326,7 +323,7 @@ const MemberListItem = ({
                     </Avatar>
                   </Grid>
                   <Grid>
-                    <Link href={`/profile/${member.AD_Username}`}>
+                    <Link href={`/profile/${member.AD_Username}`} underline="hover">
                       <Typography>
                         {member.FirstName} {member.LastName}
                       </Typography>
@@ -350,7 +347,7 @@ const MemberListItem = ({
       );
     }
   } else {
-    if (member.IDNumber === profile.ID) {
+    if (member.IDNumber?.toString() === profile.ID) {
       options = (
         <Button variant="contained" style={redButton} onClick={() => setIsLeaveAlertOpen(true)}>
           LEAVE
@@ -364,7 +361,7 @@ const MemberListItem = ({
         <Grid container alignItems="center" spacing={2} wrap="nowrap">
           <Grid item md={1} style={rowStyle}>
             <Avatar
-              src={`data:image/jpg;base64,${avatar}`}
+              src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
               style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
@@ -373,7 +370,7 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3} style={rowStyle}>
-            <Link href={`/profile/${member.AD_Username}`}>
+            <Link href={`/profile/${member.AD_Username}`} underline="hover">
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>

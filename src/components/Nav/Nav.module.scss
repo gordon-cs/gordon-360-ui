@@ -1,21 +1,7 @@
 @import '../../vars';
 
-.gordon_nav {
-  @media (min-width: $break-md) {
-    .drawer {
-      position: fixed;
-      width: $drawer-width-md;
-      display: none;
-    }
-  }
-}
-
-// Requires different class name because temporary drawer is rendered at document top level
 .gordon_nav_drawer {
-  width: $drawer-width-xs;
-}
-
-.gordon_nav .drawer,
-.gordon_nav_drawer {
-  background-color: $neutral-white !important; // Must be `important` to override on mobile
+  max-width: 250px;
+  width: 65%;
+  background-color: $neutral-white;
 }

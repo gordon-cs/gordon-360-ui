@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Divider, Typography } from '@material-ui/core';
+import { Card, CardContent, CardMedia, Divider, Typography } from '@mui/material';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid } from '@mui/material';
 import { useWindowSize } from 'hooks';
 import { gordonColors } from 'theme';
 import MemberListItem from './components/MemberListItem';

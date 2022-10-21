@@ -9,7 +9,7 @@ import {
   FormGroup,
   FormHelperText,
   FormLabel,
-} from '@material-ui/core/';
+} from '@mui/material/';
 import { Fragment, useEffect, useState } from 'react';
 import housing from 'services/housing';
 // @TODO CSSMODULES - outside directory

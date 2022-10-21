@@ -1,12 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Fab,
-  Grid,
-  Typography,
-  useMediaQuery,
-} from '@material-ui/core';
+import { Card, CardContent, CardHeader, Fab, Grid, Typography, useMediaQuery } from '@mui/material';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
@@ -27,7 +19,7 @@ const PeopleSearch = () => {
   const { profile, loading: loadingProfile } = useUser();
   const isOnline = useNetworkStatus();
   const printRef = useRef(null);
-  const isLargeScreen = useMediaQuery('(min-width: 960px)');
+  const isLargeScreen = useMediaQuery('(min-width: 900px)');
 
   if (!isOnline) {
     return <GordonOffline feature="People Search" />;

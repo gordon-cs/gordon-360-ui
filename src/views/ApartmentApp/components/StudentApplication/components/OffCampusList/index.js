@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid, List } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, List } from '@mui/material';
 import { useEffect, useState } from 'react';
 import peopleSearchService from 'services/peopleSearch';
 // @TODO CSSMODULES - outside directory

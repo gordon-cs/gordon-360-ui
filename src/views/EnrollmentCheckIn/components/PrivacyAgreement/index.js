@@ -1,5 +1,5 @@
 import { gordonColors } from 'theme';
-import { FormControl, FormControlLabel, Checkbox, Grid, Typography } from '@material-ui/core';
+import { FormControl, FormControlLabel, Checkbox, Grid, Typography } from '@mui/material';
 import privacy from './privacy.json';
 
 const PrivacyAgreement = ({ privacyAgreements, handleCheckPrivacyAgreements }) => {

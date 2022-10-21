@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import GordonSnackbar from 'components/Snackbar';
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -85,7 +85,6 @@ const Profile = ({ profile, myProf }) => {
         open={snackbar.open}
         text={snackbar.message}
         severity={snackbar.severity}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
     </Grid>
