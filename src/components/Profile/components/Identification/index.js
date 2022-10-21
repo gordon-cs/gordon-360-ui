@@ -753,7 +753,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                   </a>
                 </Grid>
 
-                {isOnline === 'online' && createPhotoDialogBox()}
+                {isOnline && createPhotoDialogBox()}
               </Grid>
             </Grid>
           </Grid>
