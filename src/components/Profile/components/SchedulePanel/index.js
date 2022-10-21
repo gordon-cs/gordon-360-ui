@@ -370,7 +370,7 @@ class GordonSchedulePanel extends Component {
           </AccordionSummary>
           <AccordionDetails>
             <Grid container direction="row" justifyContent="center">
-              {this.props.network === 'online' && (
+              {this.props.isOnline && (
                 <Grid container direction="row" item xs={12} lg={10}>
                   <Grid
                     container
@@ -428,7 +428,7 @@ class GordonSchedulePanel extends Component {
                   schedulePrivacy={this.state.isSchedulePrivate}
                   reloadHandler={this.reloadHandler}
                   reloadCall={this.state.reloadCall}
-                  network={this.props.network}
+                  isOnline={this.props.isOnline}
                 />
               </Grid>
             </Grid>

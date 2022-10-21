@@ -341,7 +341,7 @@ export default class VictoryPromiseDisplay extends Component {
               >
                 {content}
               </Grid>
-              {this.props.network === 'online' && (
+              {this.props.isOnline && (
                 <Grid
                   container
                   justifyContent="center"

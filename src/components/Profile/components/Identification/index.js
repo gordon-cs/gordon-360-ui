@@ -25,7 +25,7 @@ import SocialMediaLinks from './components/SocialMediaLinks';
 import defaultGordonImage from './defaultGordonImage';
 import styles from './Identification.module.css';
 
-const Identification = ({ profile, myProf, network, createSnackbar }) => {
+const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState();
   const [defaultUserImage, setDefaultUserImage] = useState();
@@ -648,7 +648,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                       alt="Profile"
                     />
 
-                    {network === 'online' && myProf && (
+                    {isOnline && myProf && (
                       <Typography
                         variant="body1"
                         className={
@@ -659,7 +659,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                       </Typography>
                     )}
                   </div>
-                  {network === 'online' && myProf && (
+                  {isOnline && myProf && (
                     <div
                       onClick={handlePhotoOpen}
                       className={
@@ -753,7 +753,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   </a>
                 </Grid>
 
-                {network === 'online' && createPhotoDialogBox()}
+                {isOnline && createPhotoDialogBox()}
               </Grid>
             </Grid>
           </Grid>
@@ -761,7 +761,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
           <GordonLoader />
         )}
 
-        {userProfile && network === 'online' && myProf && (
+        {userProfile && isOnline && myProf && (
           <Link
             to={`/profile/${userProfile.AD_Username}`}
             className={styles.identification_card_content_public_profile_link}

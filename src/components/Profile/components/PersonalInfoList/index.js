@@ -17,7 +17,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import GordonTooltip from 'components/GordonTooltip';
 import { useAuthGroups } from 'hooks';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
@@ -38,7 +37,7 @@ const formatPhone = (phone) => {
   }
 };
 
-const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
+const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
   );
@@ -48,7 +47,6 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
   const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
   const [mailCombo, setMailCombo] = useState();
   const [showMailCombo, setShowMailCombo] = useState(false);
-  const isOnline = useNetworkStatus();
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
   const isAlumni = profile.PersonType?.includes('alu');
