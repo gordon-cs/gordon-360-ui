@@ -648,7 +648,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                       alt="Profile"
                     />
 
-                    {isOnline === 'online' && myProf && (
+                    {isOnline && myProf && (
                       <Typography
                         variant="body1"
                         className={
