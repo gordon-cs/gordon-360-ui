@@ -16,7 +16,7 @@ import {
   FormControl,
   FormControlLabel,
 } from '@mui/material';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { TimePicker } from '@mui/x-date-pickers';
 
 // Default values
 const STARTHOUR = '08:00';
