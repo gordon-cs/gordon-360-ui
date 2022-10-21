@@ -659,7 +659,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                       </Typography>
                     )}
                   </div>
-                  {isOnline === 'online' && myProf && (
+                  {isOnline && myProf && (
                     <div
                       onClick={handlePhotoOpen}
                       className={
