@@ -761,7 +761,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
           <GordonLoader />
         )}
 
-        {userProfile && isOnline === 'online' && myProf && (
+        {userProfile && isOnline && myProf && (
           <Link
             to={`/profile/${userProfile.AD_Username}`}
             className={styles.identification_card_content_public_profile_link}
