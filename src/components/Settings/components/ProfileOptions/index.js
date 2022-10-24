@@ -8,28 +8,42 @@ import {
   FormControlLabel,
   Switch,
 } from '@material-ui/core';
+import { useEffect, useState } from 'react';
+import userService from 'services/user';
 import styles from './ProfileOptions.module.css';
 import SettingsListItem from '../SettingsListItem';
 
-const ProfileOptions = () => {
-  const cliftonStrengths = (
-    <SettingsListItem // now showing anything
-      title="Clifton Strengths"
+const ProfileOptions = ({ isOnline, settings, createSnackbar }) => {
+  const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(settings);
+
+  const handleChangeMobilePhonePrivacy = async () => {
+    try {
+      await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
+      setIsMobilePhonePrivate(!isMobilePhonePrivate);
+
+      createSnackbar(
+        isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
+
+  const MobilePhone = (
+    <SettingsListItem
+      title="Mobile Phone"
       ContentIcon={
         <FormControlLabel
           control={
-            <Switch
-            // onChange={handleChangeCliftonStrengthsPrivacy}
-            // checked={!isCliftonStrengthsPrivate}
-            />
+            <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
           }
-          // label={isCliftonStrengthsPrivate ? 'Private' : 'Public'}
+          label={isMobilePhonePrivate ? 'Private' : 'Public'}
           labelPlacement="bottom"
-          // disabled={!isOnline}
+          disabled={!isOnline}
         />
       }
       // privateInfo={profile.CliftonStrengths.Private}
-      // myProf={myProf}
     />
   );
 
@@ -46,15 +60,9 @@ const ProfileOptions = () => {
             <Card className={styles.settings_section}>
               <CardHeader className={styles.settings_header} title="Profile Options" />
               <CardContent>
-                <Typography variant="body1" component="ul">
-                  <li>Username: 'firstname.lastname' or your Gordon email address</li>
-                  <li>Password: Your Gordon College account password</li>
-                </Typography>
+                <List>{MobilePhone}</List>
               </CardContent>
             </Card>
-          </CardContent>
-          <CardContent>
-            <List>{cliftonStrengths}</List>
           </CardContent>
         </Card>
       </Grid>
