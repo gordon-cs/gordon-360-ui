@@ -11,7 +11,7 @@ import GordonDialogBox from 'components/GordonDialogBox/index';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
-import { NavLink, Route, Switch } from 'react-router-dom';
+import { NavLink, Route, Routes } from 'react-router-dom';
 import routes from 'routes';
 import { authenticate } from 'services/auth';
 import { windowBreakWidths } from 'theme';
@@ -165,7 +165,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
           </IconButton>
 
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
-            <Switch>
+            <Routes>
               {routes.map((route) => (
                 <Route
                   key={route.path}
@@ -177,7 +177,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
                   }}
                 />
               ))}
-            </Switch>
+            </Routes>
           </Typography>
 
           <div className={styles.center_container}>

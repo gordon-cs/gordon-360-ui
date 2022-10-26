@@ -3,7 +3,7 @@ import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
-import { Route, Router, Switch } from 'react-router-dom';
+import { Route, Router, Routes } from 'react-router-dom';
 import './app.global.css';
 import styles from './app.module.css';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -41,7 +41,7 @@ const App = () => {
           <main className={styles.app_main}>
             <>
               <BirthdayMessage />
-              <Switch>
+              <Routes>
                 {routes.map((route) => (
                   <Route
                     key={route.path}
@@ -56,7 +56,7 @@ const App = () => {
                     )}
                   />
                 ))}
-              </Switch>
+              </Routes>
             </>
           </main>
         </section>
