@@ -39,8 +39,7 @@ import {
   FaUser as Person,
   FaMapMarkerAlt as LocationCity,
 } from 'react-icons/fa';
-import { useLocation } from 'react-router';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
@@ -124,7 +123,7 @@ const AdvancedOptionsColumn = ({ children, ...otherProps }: { children: ReactNod
 
 const SearchFieldList = ({ onSearch }: Props) => {
   const { profile } = useUser();
-  const navigate = useNavigate();
+  const history = useHistory();
   const location = useLocation();
 
   const [isStudent, isFacStaff, isAlumni] = useAuthGroups(
@@ -187,12 +186,12 @@ const SearchFieldList = ({ onSearch }: Props) => {
       const newQueryString = serializeSearchParams(searchParams);
       // If search params are new since last search, add search to navigate
       if (location.search !== newQueryString) {
-        navigate(newQueryString);
+        history.push(newQueryString);
       }
 
       setLoadingSearch(false);
     }
-  }, [canSearch, searchParams, onSearch, location.search, navigate]);
+  }, [canSearch, searchParams, onSearch, location.search, history]);
 
   useEffect(() => {
     const loadPage = async () => {

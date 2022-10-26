@@ -16,7 +16,7 @@ const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => 
               <CardActionArea
                 onClick={() => {
                   if (isOnline) {
-                    navigate.push(`/activity/${sessionCode}/${activity.ActivityCode}`);
+                    navigate(`/activity/${sessionCode}/${activity.ActivityCode}`);
                   }
                 }}
               >
