@@ -23,15 +23,9 @@ const AdminList = () => {
   }, []);
 
   const handleSubmit = async () => {
-    let email;
-    let username;
-    if (!newAdminEmail.toLowerCase().includes('@gordon.edu')) {
-      email = newAdminEmail + '@gordon.edu';
-      username = newAdminEmail;
-    } else {
-      email = newAdminEmail;
-      username = newAdminEmail.replace('@gordon.edu', '');
-    }
+    const [email, username] = newAdminEmail.toLowerCase().includes('@gordon.edu')
+      ? [newAdminEmail, newAdminEmail.replace('@gordon.edu', '')]
+      : [newAdminEmail + '@gordon.edu', newAdminEmail]
 
     let data = {
       Email: email,
