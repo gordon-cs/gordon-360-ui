@@ -34,7 +34,7 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <Router history={historyRef.current}>
+      <Router navigator={historyRef.current}>
         <section className={styles.app_wrapper}>
           <GordonHeader onDrawerToggle={onDrawerToggle} />
           <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
