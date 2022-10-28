@@ -54,7 +54,9 @@ const RosterCard = (teamID) => {
       <CardHeader title="Team Name" className={styles.cardHeader} />
       <CardContent>
         {/* if I am apart of any active teams, map them here */}
-        <ParticipantList participants={[{ username:"silas.white"}, { username:"cameron.abbot" }]} />
+        <ParticipantList
+          participants={[{ username: 'silas.white' }, { username: 'cameron.abbot' }]}
+        />
       </CardContent>
     </Card>
   );

@@ -37,7 +37,7 @@ const Home = () => {
       <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
       <CardContent>
         {/* if there are upcoming events, map them here */}
-        <ActivityList activities={[{ ID: "123456" }, { ID:"12345" }]}/>
+        <ActivityList activities={[{ ID: '123456' }, { ID: '12345' }]} />
         {createActivityButton}
         <Typography variant="body1" paragraph>
           {/* else "no upcoming events" */}
@@ -53,7 +53,12 @@ const Home = () => {
       <CardHeader title="My Teams" className={styles.cardHeader} />
       <CardContent>
         {/* if I am apart of any active teams, map them here */}
-        <TeamList teams={[{ activityID:"123456", ID: "789" }, { activityID:"12345", ID: "987" }]} />
+        <TeamList
+          teams={[
+            { activityID: '123456', ID: '789' },
+            { activityID: '12345', ID: '987' },
+          ]}
+        />
         {/* else "no teams" */}
         <Typography variant="body1" paragraph>
           You're not yet apart of any teams; join one to get started!

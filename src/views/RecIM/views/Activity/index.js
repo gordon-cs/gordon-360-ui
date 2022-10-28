@@ -12,7 +12,7 @@ let scheduleCard = (
     <CardHeader title="Schedule" className={styles.cardHeader} />
     <CardContent>
       {/* if there are games scheduled, map them here */}
-      <MatchList matches={[{ activityID: "123456", ID: "789"}]} />
+      <MatchList matches={[{ activityID: '123456', ID: '789' }]} />
       {/* else "no schedule yet set" */}
       <Typography variant="body1" paragraph>
         Games have not yet been scheduled.
@@ -27,7 +27,12 @@ let teamsCard = (
     <CardHeader title="Teams" className={styles.cardHeader} />
     <CardContent>
       {/* if I am apart of any active teams, map them here */}
-      <TeamList teams={[{ activityID:"123456", ID: "789" }, { activityID:"12345", ID: "987" }]} />
+      <TeamList
+        teams={[
+          { activityID: '123456', ID: '789' },
+          { activityID: '12345', ID: '987' },
+        ]}
+      />
       {/* else "no teams" */}
       <Typography variant="body1" paragraph>
         Be the first to create a team!
