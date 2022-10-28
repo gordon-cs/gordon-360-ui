@@ -4,10 +4,9 @@ import CreateActivityForm from '../../components/CreateActivityForm';
 import { useUser } from 'hooks';
 import { useState } from 'react';
 import GordonLoader from 'components/Loader';
-import { ActivityListing } from '../../components/Listing';
-import { TeamListing } from '../../components/Listing';
 import styles from './Home.module.css';
 import recimLogo from './../../recim_logo.png';
+import { ActivityList, TeamList } from './../../components/List';
 
 const Home = () => {
   const { profile, loading } = useUser();
@@ -38,12 +37,7 @@ const Home = () => {
       <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
       <CardContent>
         {/* if there are upcoming events, map them here */}
-        <div className={styles.listing}>
-          <ActivityListing activityID={123456} />
-        </div>
-        <div className={styles.listing}>
-          <ActivityListing activityID={12345} />
-        </div>
+        <ActivityList activities={[{ ID: "123456" }, { ID:"12345" }]}/>
         {createActivityButton}
         <Typography variant="body1" paragraph>
           {/* else "no upcoming events" */}
@@ -59,12 +53,7 @@ const Home = () => {
       <CardHeader title="My Teams" className={styles.cardHeader} />
       <CardContent>
         {/* if I am apart of any active teams, map them here */}
-        <div className={styles.listing}>
-          <TeamListing activityID={123456} teamID={789} />
-        </div>
-        <div className={styles.listing}>
-          <TeamListing activityID={12345} teamID={987} />
-        </div>
+        <TeamList teams={[{ activityID:"123456", ID: "789" }, { activityID:"12345", ID: "987" }]} />
         {/* else "no teams" */}
         <Typography variant="body1" paragraph>
           You're not yet apart of any teams; join one to get started!

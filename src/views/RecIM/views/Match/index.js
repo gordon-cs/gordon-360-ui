@@ -1,10 +1,10 @@
-import { Grid, Typography, Card, CardHeader, CardContent, List } from '@material-ui/core/';
+import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core/';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { ParticipantListing } from 'views/RecIM/components/Listing';
 import styles from './Match.module.css';
+import { ParticipantList } from './../../components/List';
 
 // CARD - main
 const MainCard = () => {
@@ -54,10 +54,7 @@ const RosterCard = (teamID) => {
       <CardHeader title="Team Name" className={styles.cardHeader} />
       <CardContent>
         {/* if I am apart of any active teams, map them here */}
-        <List>
-          <ParticipantListing username={'silas.white'} />
-          <ParticipantListing username={'amos.cha'} />
-        </List>
+        <ParticipantList participants={[{ username:"silas.white"}, { username:"cameron.abbot" }]} />
       </CardContent>
     </Card>
   );
