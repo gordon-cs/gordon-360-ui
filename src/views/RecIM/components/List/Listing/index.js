@@ -4,37 +4,38 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 
-const ActivityListing = ({ activityID }) => {
+const ActivityListing = ({ activity }) => {
   return (
-    <>
-      <Link to={`/recim/activity/${activityID}`} className="gc360_link">
-        <Grid container className={styles.listing}>
-          <Grid item>Activity Listing</Grid>
-          {/* include: 
+    <ListItem button component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
+      <Grid container className={styles.listing}>
+        <Grid item>Activity Listing</Grid>
+        {/* include:
           - activity type (activity, tournament, one-off)
           - registration deadline IF there is one (start date as well for admin only)
           - date(s) of activity (ex. season date range or tournament date)
           */}
-        </Grid>
-      </Link>
-    </>
+      </Grid>
+    </ListItem>
   );
 };
 
-const TeamListing = ({ activityID, teamID }) => {
+const TeamListing = ({ team }) => {
   return (
-    <>
-      <Link to={`/recim/activity/${activityID}/team/${teamID}`} className="gc360_link">
-        <Grid container className={styles.listing}>
-          <Grid item>Team Listing</Grid>
-        </Grid>
-      </Link>
-    </>
+    <ListItem
+      button
+      component={Link}
+      to={`/recim/activity/${team.activityID}/team/${team.ID}`}
+      className="gc360_link"
+    >
+      <Grid container className={styles.listing}>
+        <Grid item>Team Listing</Grid>
+      </Grid>
+    </ListItem>
   );
 };
 
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
-const ParticipantListing = ({ username }) => {
+const ParticipantListing = ({ participant }) => {
   const [avatar, setAvatar] = useState('');
 
   // const [name, setName] = useState({
@@ -44,15 +45,17 @@ const ParticipantListing = ({ username }) => {
 
   useEffect(() => {
     const loadAvatar = async () => {
-      if (username) {
-        const { def: defaultImage, pref: preferredImage } = await user.getImage(username);
+      if (participant.username) {
+        const { def: defaultImage, pref: preferredImage } = await user.getImage(
+          participant.username,
+        );
         setAvatar(preferredImage || defaultImage);
       }
     };
     loadAvatar();
-  }, [username]);
+  }, [participant.username]);
   return (
-    <ListItem key={username} disableGutters={true}>
+    <ListItem key={participant.username} disableGutters={true}>
       <Grid container alignItems="center" className={styles.listing}>
         <ListItemAvatar>
           <Avatar
@@ -61,23 +64,26 @@ const ParticipantListing = ({ username }) => {
             variant="rounded"
           ></Avatar>
         </ListItemAvatar>
-        <Link to={`/profile/${username}`} className="gc360_link">
-          <ListItemText primary={username} />
+        <Link to={`/profile/${participant.username}`} className="gc360_link">
+          <ListItemText primary={participant.username} />
         </Link>
       </Grid>
     </ListItem>
   );
 };
 
-const MatchListing = ({ activityID, matchID }) => {
+const MatchListing = ({ match }) => {
   return (
-    <>
-      <Link to={`/recim/activity/${activityID}/match/${matchID}`} className="gc360_link">
-        <Grid container className={styles.listing}>
-          <Grid item>Team A vs Team B</Grid>
-        </Grid>
-      </Link>
-    </>
+    <ListItem
+      button
+      component={Link}
+      to={`/recim/activity/${match.activityID}/match/${match.ID}`}
+      className="gc360_link"
+    >
+      <Grid container className={styles.listing}>
+        <Grid item>Team A vs Team B</Grid>
+      </Grid>
+    </ListItem>
   );
 };
 
