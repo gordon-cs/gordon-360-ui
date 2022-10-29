@@ -3,7 +3,8 @@ import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
-import { Route, Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { authenticate } from 'services/auth';
 import './app.global.css';
 import styles from './app.module.css';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -34,7 +35,7 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <Router navigator={historyRef.current}>
+      <Router historyRef={historyRef.current}>
         <section className={styles.app_wrapper}>
           <GordonHeader onDrawerToggle={onDrawerToggle} />
           <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
@@ -46,14 +47,15 @@ const App = () => {
                   <Route
                     key={route.path}
                     path={route.path}
-                    exact={route.exact}
-                    render={(props) => (
-                      <div className={styles.app_main_container}>
-                        <AppRedirect />
-                        <OfflineBanner currentPath={route.path} />
-                        <route.component authentication={isAuthenticated} {...props} />
-                      </div>
-                    )}
+                    element={route.element}
+                    //   element={(props) => {
+                    //     return <div className={styles.app_main_container}>
+                    //       <AppRedirect />
+                    //       <OfflineBanner currentPath={route.path} />
+                    //       <route.element authentication={isAuthenticated} {...props} />
+                    //     </div>
+                    //   }
+                    // }
                   />
                 ))}
               </Routes>

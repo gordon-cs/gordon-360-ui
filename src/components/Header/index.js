@@ -170,8 +170,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
                 <Route
                   key={route.path}
                   path={route.path}
-                  exact={route.exact}
-                  component={() => {
+                  element={() => {
                     setDocumentTitle(route.name || projectName);
                     return <span>{route.name || projectName}</span>;
                   }}
