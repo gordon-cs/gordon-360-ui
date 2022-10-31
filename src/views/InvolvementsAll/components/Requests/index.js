@@ -7,8 +7,8 @@ import {
   CardHeader,
   Grid,
   Typography,
-} from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
+} from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import parseISO from 'date-fns/parseISO';
 import { useUser } from 'hooks';

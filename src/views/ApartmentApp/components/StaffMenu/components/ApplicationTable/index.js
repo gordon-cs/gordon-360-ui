@@ -8,7 +8,7 @@ import {
   TableBody,
   TableContainer,
   Typography,
-} from '@material-ui/core/';
+} from '@mui/material/';
 import ApplicationTableHead from './components/ApplicationTableHead';
 import ApplicationRow from './components/ApplicationRow';
 import styles from './ApplicationTable.module.css';

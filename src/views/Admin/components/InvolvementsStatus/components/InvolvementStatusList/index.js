@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ListItem, ListItemAvatar, Avatar, ListItemText } from '@material-ui/core';
+import { ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
 
 const ListItemLink = (props) => <ListItem button component={Link} {...props} />;
 

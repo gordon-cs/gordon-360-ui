@@ -8,7 +8,7 @@ import {
   RadioGroup,
   Grid,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemographic }) => {
   const cyan = gordonColors.primary.cyan;

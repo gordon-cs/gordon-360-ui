@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { gordonColors } from 'theme';
 import styles from './EditDescriptionDialog.module.css';
 
-import { Dialog, DialogTitle, DialogActions, Button, TextField } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogActions, Button, TextField } from '@mui/material';
 
 export default class EditDescriptionDialog extends Component {
   constructor(props) {

@@ -5,7 +5,7 @@ import { gordonColors } from 'theme';
 import styles from './EventList.module.css';
 import useWindowSize from 'hooks/useWindowSize';
 
-import { List, Grid, Typography, Card } from '@material-ui/core';
+import { List, Grid, Typography, Card } from '@mui/material';
 
 const headerStyle = {
   backgroundColor: gordonColors.primary.blue,

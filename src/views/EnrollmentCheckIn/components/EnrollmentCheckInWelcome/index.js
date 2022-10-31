@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import { useUser } from 'hooks';
 import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory

@@ -1,11 +1,11 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Divider, List } from '@material-ui/core';
-import EventIcon from '@material-ui/icons/Event';
-import HomeIcon from '@material-ui/icons/Home';
-import LocalActivityIcon from '@material-ui/icons/LocalActivity';
-import WellnessIcon from '@material-ui/icons/LocalHospital';
-import PeopleIcon from '@material-ui/icons/People';
-import WorkIcon from '@material-ui/icons/Work';
+import { Divider, List } from '@mui/material';
+import EventIcon from '@mui/icons-material/Event';
+import HomeIcon from '@mui/icons-material/Home';
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+import WellnessIcon from '@mui/icons-material/LocalHospital';
+import PeopleIcon from '@mui/icons-material/People';
+import WorkIcon from '@mui/icons-material/Work';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';

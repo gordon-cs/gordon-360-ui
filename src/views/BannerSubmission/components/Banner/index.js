@@ -1,13 +1,5 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Link,
-  Typography,
-} from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { Button, Card, CardActions, CardContent, CardMedia, Link, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import styles from './Banner.module.css';
 
 const Banner = ({ banner, handleNewsItemDelete }) => (
@@ -26,7 +18,7 @@ const Banner = ({ banner, handleNewsItemDelete }) => (
       <Typography variant="body2" color="textSecondary">
         Link:{' '}
         {banner.LinkURL ? (
-          <Link href={banner.LinkURL} target="_blank" rel="noreferrer">
+          <Link href={banner.LinkURL} target="_blank" rel="noreferrer" underline="hover">
             {banner.LinkURL}
           </Link>
         ) : (

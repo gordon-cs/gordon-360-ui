@@ -1,4 +1,4 @@
-import { Grid, Card, CardContent, Button } from '@material-ui/core';
+import { Grid, Card, CardContent, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const GordonLimitedAvailability = ({
