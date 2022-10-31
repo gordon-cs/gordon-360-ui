@@ -1,22 +1,22 @@
-import { useIsAuthenticated } from '@azure/msal-react';
-import AppRedirect from 'components/AppRedirect';
+//import { useIsAuthenticated } from '@azure/msal-react';
+//import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { authenticate } from 'services/auth';
+//import { authenticate } from 'services/auth';
 import './app.global.css';
 import styles from './app.module.css';
 import ErrorBoundary from './components/ErrorBoundary';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
-import OfflineBanner from './components/OfflineBanner';
+//import OfflineBanner from './components/OfflineBanner';
 import routes from './routes';
 import analytics from './services/analytics';
 
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState();
-  const isAuthenticated = useIsAuthenticated();
+  //const isAuthenticated = useIsAuthenticated();
 
   const historyRef = useRef(createBrowserHistory());
 
