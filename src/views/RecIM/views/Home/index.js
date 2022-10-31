@@ -1,5 +1,5 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@material-ui/core/';
+import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
 import CreateActivityForm from '../../components/CreateActivityForm';
 import { useUser } from 'hooks';
 import { useState } from 'react';

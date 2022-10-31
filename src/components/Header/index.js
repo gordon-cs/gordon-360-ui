@@ -1,7 +1,7 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
-import SportsFootballIcon from '@mui/icons/SportsFootball';
+import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 // import WorkIcon from '@mui/icons-material/Work';

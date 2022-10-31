@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core/';
+import { Grid } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
 import styles from './CreateActivityForm.module.css';
 import GordonLoader from 'components/Loader';
