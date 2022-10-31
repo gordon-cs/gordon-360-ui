@@ -2,20 +2,36 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@material-ui/core/';
 import CreateActivityForm from '../../components/CreateActivityForm';
 import { useUser } from 'hooks';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import styles from './Home.module.css';
 import recimLogo from './../../recim_logo.png';
 import { ActivityList, TeamList } from './../../components/List';
+import { getAllActivities } from 'services/recim';
+import { DateTime } from 'luxon';
 
 const Home = () => {
-  const { profile, loading } = useUser();
-  //const [allActivities, setAllActivities] = useState('');
+  const { profile } = useUser();
+  const [loading, setLoading] = useState(true);
   const [openCreateActivityForm, setOpenCreateActivityForm] = useState(false);
+  const [activities, setActivities] = useState([]);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
+
+  useEffect(() => {
+    const loadActivities = async () => {
+      setLoading(true);
+      console.log(DateTime.now().toISO());
+
+      // Get all active activities where registration has not closed
+      let allActivities = await getAllActivities(false, DateTime.now().toISO());
+      setActivities(allActivities);
+      setLoading(false);
+    };
+    loadActivities();
+  }, [profile]);
 
   const createActivityButton = (
     <Grid container justifyContent="center">
@@ -37,7 +53,7 @@ const Home = () => {
       <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
       <CardContent>
         {/* if there are upcoming events, map them here */}
-        <ActivityList activities={[{ ID: '123456' }, { ID: '12345' }]} />
+        <ActivityList activities={activities} />
         {createActivityButton}
         <Typography variant="body1" paragraph>
           {/* else "no upcoming events" */}

@@ -25,6 +25,12 @@ const createNewActivity = async (newActivity: Activity) => {
   await http.post('recim/activities', newActivity);
 };
 
-const getAllActivities = async (): Promise<Object[]> => await http.get('recim/activities');
+const getAllActivities = async (active: boolean, time: String): Promise<Object[]> => {
+  if (time) {
+    return await http.get(`recim/activities?${active}&${time}`);
+  } else {
+    return await http.get(`recim/activities?${active}`);
+  }
+};
 
 export { postSmashActivity, getAllActivities, createNewActivity };

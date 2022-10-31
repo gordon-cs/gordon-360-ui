@@ -3,12 +3,23 @@ import styles from './Listing.module.css';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
+import { DateTime } from 'luxon';
 
 const ActivityListing = ({ activity }) => {
+  console.log(activity);
   return (
     <ListItem button component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
       <Grid container className={styles.listing}>
-        <Grid item>Activity Listing</Grid>
+        <Grid item xs={8}>
+          {activity.Name}
+        </Grid>
+        <Grid item xs={2}>
+          Registration
+        </Grid>
+        <Grid container xs={2} direction="row">
+          <Grid item>{DateTime.fromISO(activity.RegistrationStart).toLocaleString()}</Grid>
+          <Grid item>{activity.RegistrationEnd}</Grid>
+        </Grid>
         {/* include:
           - activity type (activity, tournament, one-off)
           - registration deadline IF there is one (start date as well for admin only)
