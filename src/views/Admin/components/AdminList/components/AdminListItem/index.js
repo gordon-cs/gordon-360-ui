@@ -2,7 +2,7 @@ import { useState } from 'react';
 import admin from 'services/admin';
 import { gordonColors } from 'theme';
 
-import { Button, ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
+import { Button, ListItem, ListItemText, ListItemSecondaryAction } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 
 const AdminListItem = ({ Admin, onRemove }) => {

@@ -1,6 +1,6 @@
-import { Typography, Grid } from '@material-ui/core/';
+import { Typography, Grid } from '@mui/material/';
 import styles from './ConfirmationRow.module.css';
-import { Check, Remove } from '@material-ui/icons';
+import { Check, Remove } from '@mui/icons-material';
 
 const ConfirmationRow = ({ field, prevValue }) => {
   const isCheckbox = typeof prevValue === 'boolean';

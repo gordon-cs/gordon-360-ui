@@ -1,8 +1,6 @@
 import { PublicClientApplication } from '@azure/msal-browser';
 import { MsalProvider } from '@azure/msal-react';
-import MomentUtils from '@date-io/moment';
-import { StylesProvider, ThemeProvider } from '@material-ui/core/styles';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import UserContextProvider from 'contexts/UserContext';
 import { register } from 'pwa';
 import ReactDOM from 'react-dom';
@@ -16,19 +14,17 @@ export const msalInstance = new PublicClientApplication(msalConfig);
 configureMSAL(msalInstance);
 
 const AppWithProviders = () => (
-  <StylesProvider injectFirst>
-    <MsalProvider instance={msalInstance}>
+  <MsalProvider instance={msalInstance}>
+    <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <MuiPickersUtilsProvider utils={MomentUtils}>
-          <NetworkContextProvider>
-            <UserContextProvider>
-              <App />
-            </UserContextProvider>
-          </NetworkContextProvider>
-        </MuiPickersUtilsProvider>
+        <NetworkContextProvider>
+          <UserContextProvider>
+            <App />
+          </UserContextProvider>
+        </NetworkContextProvider>
       </ThemeProvider>
-    </MsalProvider>
-  </StylesProvider>
+    </StyledEngineProvider>
+  </MsalProvider>
 );
 
 ReactDOM.render(<AppWithProviders />, document.getElementById('root'));

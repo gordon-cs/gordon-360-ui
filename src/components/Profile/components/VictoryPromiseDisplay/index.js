@@ -6,8 +6,8 @@ import {
   Grid,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+} from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
 import { Component, Fragment } from 'react';
 import { Polar } from 'react-chartjs-2';
 import victoryPromiseService from 'services/victoryPromise';
@@ -341,7 +341,7 @@ export default class VictoryPromiseDisplay extends Component {
               >
                 {content}
               </Grid>
-              {this.props.network === 'online' && (
+              {this.props.isOnline && (
                 <Grid
                   container
                   justifyContent="center"

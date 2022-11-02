@@ -1,5 +1,5 @@
 //Student apartment application page
-import { Backdrop, Collapse, Grid } from '@material-ui/core/';
+import { Backdrop, Collapse, Grid } from '@mui/material/';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
@@ -111,32 +111,6 @@ const StudentApplication = ({ userProfile }) => {
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
   const [submitButtonAlertTimeout, setSubmitButtonAlertTimeout] = useState(null);
 
-  function debugPrintApplicationDetails(applicationDetails) {
-    //! DEBUG
-    console.debug('Application state variable. Printing contents:');
-    //! DEBUG
-    console.debug('ApplicationID:');
-    console.debug(applicationDetails?.ApplicationID);
-    //! DEBUG
-    console.debug('EditorUsername:');
-    console.debug(applicationDetails?.EditorProfile?.AD_Username);
-    //! DEBUG
-    console.debug('Applicants: [');
-    applicationDetails?.Applicants?.forEach((element) => {
-      console.debug(
-        `${element?.Profile?.AD_Username}, OffCampus: ${element.OffCampusProgram}, Class: ${element?.Profile?.Class}, Gender: ${element?.Profile?.Gender}`,
-      );
-    });
-    console.debug(']');
-    //! DEBUG
-    console.debug('Preferred Halls: [');
-    applicationDetails?.ApartmentChoices?.forEach((element) => {
-      console.debug(`Rank: ${element?.HallRank}, Name: ${element?.HallName}`);
-    });
-    console.debug(']');
-    //! DEBUG
-  }
-
   /**
    * Load the user's saved apartment application, if one exists
    *
@@ -165,7 +139,6 @@ const StudentApplication = ({ userProfile }) => {
       if (newApplicationID > 0) {
         const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
         setApplicationDetails(newApplicationDetails);
-        debugPrintApplicationDetails(newApplicationDetails);
         setUnsavedChanges(false);
         result = true;
       } else {
@@ -220,7 +193,7 @@ const StudentApplication = ({ userProfile }) => {
    */
   const isApplicantValid = async (applicant) => {
     // Check that the applicant contains the required fields
-    if (applicant?.Profile === null) {
+    if (!applicant?.Profile) {
       createSnackbar(
         'Something went wrong while trying to add this person. Please try again.',
         'error',
@@ -234,8 +207,7 @@ const StudentApplication = ({ userProfile }) => {
       return false;
     }
 
-    applicant.Profile.fullName ??
-      (applicant.Profile.fullName = `${applicant.Profile.FirstName}  ${applicant.Profile.LastName}`);
+    applicant.Profile.fullName ??= `${applicant.Profile.FirstName} ${applicant.Profile.LastName}`;
 
     if (!String(applicant.Profile.PersonType).includes('stu')) {
       // Display an error if the selected user is not a student

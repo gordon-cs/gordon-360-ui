@@ -10,7 +10,7 @@ import {
   TableContainer,
   TableRow,
   Typography,
-} from '@material-ui/core/';
+} from '@mui/material/';
 import { useEffect, useState } from 'react';
 import housing from 'services/housing';
 // @TODO CSSMODULES - outside directory

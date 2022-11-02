@@ -8,7 +8,7 @@ import {
   MenuItem,
   Select,
   TextField,
-} from '@material-ui/core';
+} from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -146,7 +146,6 @@ const InvolvementsAll = ({ location, history }) => {
                   type="search"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  margin="none"
                   fullWidth
                 />
               </Grid>

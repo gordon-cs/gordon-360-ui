@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';

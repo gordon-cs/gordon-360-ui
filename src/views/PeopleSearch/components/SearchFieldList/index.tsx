@@ -12,8 +12,8 @@ import {
   FormLabel,
   Grid,
   Typography,
-} from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
+} from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
 import {
@@ -26,6 +26,7 @@ import {
   useMemo,
   useRef,
   useState,
+  ReactNode,
 } from 'react';
 import {
   FaBook,
@@ -41,9 +42,10 @@ import {
 import { useHistory, useLocation } from 'react-router';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
-import { toTitleCase, searchParamSerializerFactory } from 'services/utils';
+import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
-import SearchField from './components/SearchField';
+import SearchField, { SelectOption } from './components/SearchField';
+import addressService from 'services/address';
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
@@ -103,6 +105,22 @@ type Props = {
   onSearch: Dispatch<SetStateAction<SearchResult[] | null>>;
 };
 
+const AdvancedOptionsColumn = ({ children, ...otherProps }: { children: ReactNode }) => (
+  <Grid
+    container
+    spacing={2}
+    direction="column"
+    justifyContent="flex-start"
+    alignItems="center"
+    item
+    xs={12}
+    md={4}
+    {...otherProps}
+  >
+    {children}
+  </Grid>
+);
+
 const SearchFieldList = ({ onSearch }: Props) => {
   const { profile } = useUser();
   const history = useHistory();
@@ -116,7 +134,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   const [majors, setMajors] = useState<string[]>([]);
   const [minors, setMinors] = useState<string[]>([]);
-  const [states, setStates] = useState<string[]>([]);
+  const [states, setStates] = useState<SelectOption[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
   const [departments, setDepartments] = useState<string[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
@@ -181,16 +199,16 @@ const SearchFieldList = ({ onSearch }: Props) => {
         peopleSearchService.getMajors(),
         peopleSearchService.getMinors(),
         peopleSearchService.getHalls(),
-        peopleSearchService.getStates(),
-        peopleSearchService.getCountries(),
+        addressService.getStates(),
+        addressService.getCountries(),
         peopleSearchService.getDepartments(),
         peopleSearchService.getBuildings(),
       ]);
       setMajors(majors);
       setMinors(minors);
       setHalls(halls);
-      setStates(states);
-      setCountries(countries.map((country) => toTitleCase(country)));
+      setStates(states.map((s) => ({ label: s.Name, value: s.Abbreviation })));
+      setCountries(countries.map((c) => c.Name));
       setDepartments(departments);
       setBuildings(buildings);
 
@@ -253,7 +271,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <>
           {
             // Only students and FacStaff can search students
-            isStudent || isFacStaff ? (
+            (isStudent || isFacStaff) && (
               <FormControlLabel
                 control={
                   <Checkbox
@@ -264,7 +282,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 }
                 label="Student"
               />
-            ) : null
+            )
           }
           <FormControlLabel
             control={
@@ -278,7 +296,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
           />
           {
             // Only Alumni and FacStaff can search students
-            isAlumni || isFacStaff ? (
+            (isAlumni || isFacStaff) && (
               <FormControlLabel
                 control={
                   <Checkbox
@@ -289,7 +307,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 }
                 label="Alumni"
               />
-            ) : null
+            )
           }
         </>
       )}
@@ -325,7 +343,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
               name="residence_hall"
               value={searchParams.residence_hall}
               updateValue={handleUpdate}
-              options={halls}
+              options={halls.sort()}
               Icon={FaBuilding}
               select
             />
@@ -337,7 +355,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 name="relationship_status"
                 value={searchParams.relationship_status ?? ''}
                 updateValue={handleUpdate}
-                options={relationship_statuses}
+                options={relationship_statuses.sort()}
                 Icon={FaHeart}
                 select
               />
@@ -360,9 +378,9 @@ const SearchFieldList = ({ onSearch }: Props) => {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Grid container spacing={2} direction="row">
+              <Grid container spacing={4} direction="row">
                 {/* Advanced Search Filters: Student/Alumni */}
-                <Grid item xs={12} md={4}>
+                <AdvancedOptionsColumn>
                   <Typography
                     align="center"
                     gutterBottom
@@ -378,7 +396,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="major"
                     value={searchParams.major}
                     updateValue={handleUpdate}
-                    options={majors}
+                    options={majors.sort()}
                     Icon={FaBook}
                     select
                     disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
@@ -387,7 +405,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="minor"
                     value={searchParams.minor}
                     updateValue={handleUpdate}
-                    options={minors}
+                    options={minors.sort()}
                     Icon={FaBook}
                     select
                     disabled={!searchParams.includeStudent}
@@ -403,10 +421,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     select
                     disabled={!searchParams.includeStudent}
                   />
-                </Grid>
+                </AdvancedOptionsColumn>
 
                 {/* Advanced Search Filters: Faculty/Staff */}
-                <Grid item xs={12} md={4}>
+                <AdvancedOptionsColumn>
                   <Typography
                     align="center"
                     gutterBottom
@@ -418,7 +436,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="department"
                     value={searchParams.department}
                     updateValue={handleUpdate}
-                    options={departments}
+                    options={departments.sort()}
                     Icon={FaBriefcase}
                     select
                     disabled={!searchParams.includeFacStaff}
@@ -427,15 +445,15 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="building"
                     value={searchParams.building}
                     updateValue={handleUpdate}
-                    options={buildings}
+                    options={buildings.sort()}
                     Icon={FaBuilding}
                     select
                     disabled={!searchParams.includeFacStaff}
                   />
-                </Grid>
+                </AdvancedOptionsColumn>
 
                 {/* Advanced Search Filters: Everyone */}
-                <Grid item xs={12} md={4}>
+                <AdvancedOptionsColumn>
                   <Typography align="center" gutterBottom color="primary">
                     Everyone
                   </Typography>
@@ -449,7 +467,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="state"
                     value={searchParams.state}
                     updateValue={handleUpdate}
-                    options={states}
+                    options={states.sort(compareByProperty('label'))}
                     Icon={LocationCity}
                     select
                   />
@@ -457,11 +475,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="country"
                     value={searchParams.country}
                     updateValue={handleUpdate}
-                    options={countries}
+                    options={countries.sort()}
                     Icon={FaGlobeAmericas}
                     select
                   />
-                </Grid>
+                </AdvancedOptionsColumn>
               </Grid>
             </AccordionDetails>
           </Accordion>
@@ -469,7 +487,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
       </CardContent>
 
       <CardActions>
-        <Button variant="contained" onClick={() => setSearchParams(initialSearchParams)}>
+        <Button
+          variant="contained"
+          color="neutral"
+          onClick={() => setSearchParams(initialSearchParams)}
+        >
           RESET
         </Button>
         {loadingSearch ? (

@@ -1,5 +1,5 @@
-import LinkIcon from '@material-ui/icons/InsertLink';
-import { ListItemIcon, ListItemText, ListSubheader, List, ListItem } from '@material-ui/core';
+import LinkIcon from '@mui/icons-material/InsertLink';
+import { ListItemIcon, ListItemText, ListSubheader, List, ListItem } from '@mui/material';
 import CanvasIcon from './images/Canvas.ico';
 import GordonIcon from './images/GordonFavicon.ico';
 import GOIcon from './images/GoGordonFavicon.ico';

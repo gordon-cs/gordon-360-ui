@@ -1,5 +1,5 @@
 // import StudentApplication from './components/StudentApplication';
-import { Button, Card, CardContent, Grid } from '@material-ui/core';
+import { Button, Card, CardContent, Grid } from '@mui/material';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';

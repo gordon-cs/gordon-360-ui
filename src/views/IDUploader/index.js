@@ -11,8 +11,7 @@ import {
   DialogTitle,
   Grid,
   Typography,
-  withWidth,
-} from '@material-ui/core';
+} from '@mui/material';
 import 'cropperjs/dist/cropper.css';
 import { Component, createRef } from 'react';
 import Cropper from 'react-cropper';
@@ -25,6 +24,9 @@ import styles from './IDUploader.module.css';
 import IdCardDefault from './image-default.png';
 import IdCardGreen from './image-green.png';
 import IdCardTop from './image-top.png';
+
+// FIXME checkout https://mui.com/components/use-media-query/#migrating-from-withwidth
+const withWidth = () => (WrappedComponent) => (props) => <WrappedComponent {...props} width="xs" />;
 
 const CROP_DIM = 1200; // pixels
 class IDUploader extends Component {
@@ -123,17 +125,17 @@ class IDUploader extends Component {
     const w = this.props.width;
     switch (w) {
       default:
-        return 960 * largeScreenRatio;
+        return 900 * largeScreenRatio;
       case 'xs':
         return 360 * smallScreenRatio;
       case 'sm':
         return 600 * smallScreenRatio;
       case 'md':
-        return 960 * largeScreenRatio;
+        return 900 * largeScreenRatio;
       case 'lg':
-        return 1280 * largeScreenRatio;
+        return 1200 * largeScreenRatio;
       case 'xl':
-        return 1920 * largeScreenRatio;
+        return 1536 * largeScreenRatio;
     }
   }
 
@@ -388,24 +390,20 @@ class IDUploader extends Component {
                 <Button
                   variant="contained"
                   onClick={() => this.setState({ preview: null })}
-                  style={style.button}
                   className={styles.gc360_id_dialog_content_button}
                 >
                   Choose Another Image
                 </Button>
               )}
             </DialogContent>
-            <DialogActions className={styles.gc360_id_dialog_actions}>
-              <Button variant="contained" onClick={this.handleCloseCancel} style={style.button}>
+            <DialogActions>
+              <Button variant="contained" color="neutral" onClick={this.handleCloseCancel}>
                 Cancel
               </Button>
               <Button
                 variant="contained"
                 onClick={this.handleCloseSubmit}
                 disabled={!this.state.preview}
-                style={
-                  this.state.preview ? style.button : { background: 'darkgray', color: 'white' }
-                }
               >
                 Submit
               </Button>

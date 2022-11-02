@@ -1,5 +1,5 @@
-import { Button, Divider, Grid, Typography } from '@material-ui/core';
-import ClearIcon from '@material-ui/icons/Clear';
+import { Button, Divider, Grid, Typography } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
 import { formatDistanceToNow } from 'date-fns';
 import requestService from 'services/request';
 import { gordonColors } from 'theme';

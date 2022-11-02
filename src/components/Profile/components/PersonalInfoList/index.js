@@ -9,15 +9,14 @@ import {
   ListItem,
   Switch,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { Link } from 'react-router-dom';
-import { IconButton, Button } from '@material-ui/core';
-import LockIcon from '@material-ui/icons/Lock';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import { IconButton, Button } from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import GordonTooltip from 'components/GordonTooltip';
 import { useAuthGroups } from 'hooks';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
@@ -38,7 +37,7 @@ const formatPhone = (phone) => {
   }
 };
 
-const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
+const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
   );
@@ -48,7 +47,6 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
   const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
   const [mailCombo, setMailCombo] = useState();
   const [showMailCombo, setShowMailCombo] = useState(false);
-  const isOnline = useNetworkStatus();
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
   const isAlumni = profile.PersonType?.includes('alu');
@@ -326,7 +324,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
     isStudent && profile.Mail_Location ? (
       <>
         <ListItem className={styles.profile_info_list_item}>
-          <Grid container justify="center" alignItems="center">
+          <Grid container justifyContent="center" alignItems="center">
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
@@ -347,7 +345,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
                   xs={3}
                   md={3}
                   lg={3}
-                  justify="center"
+                  justifyContent="center"
                   alignItems="center"
                 >
                   <IconButton
@@ -355,6 +353,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
                       setShowMailCombo(!showMailCombo);
                     }}
                     aria-label={showMailCombo ? 'Hide Mail Combo' : 'Show Mail Combo'}
+                    size="large"
                   >
                     {showMailCombo ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </IconButton>
@@ -487,7 +486,11 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
             {isFacStaff && myProf ? (
               <FormControlLabel
                 control={
-                  <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+                  <Switch
+                    onChange={handleChangeHomePhonePrivacy}
+                    color="secondary"
+                    checked={!isHomePhonePrivate}
+                  />
                 }
                 label={isHomePhonePrivate ? 'Private' : 'Public'}
                 labelPlacement="right"
@@ -518,9 +521,7 @@ const PersonalInfoList = ({ myProf, profile, createSnackbar }) => {
       </Card>
       <AlumniUpdateForm
         profile={profile}
-        closeWithSnackbar={(status) => {
-          handleAlumniUpdateForm(status);
-        }}
+        closeWithSnackbar={handleAlumniUpdateForm}
         openAlumniUpdateForm={openAlumniUpdateForm}
         setOpenAlumniUpdateForm={(bool) => setOpenAlumniUpdateForm(bool)}
       />

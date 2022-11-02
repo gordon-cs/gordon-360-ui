@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardHeader, Grid } from '@material-ui/core';
+import { Box, Button, Card, CardHeader, Grid } from '@mui/material';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';

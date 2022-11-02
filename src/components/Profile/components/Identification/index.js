@@ -9,8 +9,8 @@ import {
   Grid,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import EmailIcon from '@material-ui/icons/Email';
+} from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
 import GordonLoader from 'components/Loader/index';
 import 'cropperjs/dist/cropper.css';
 import { useUserActions } from 'hooks';
@@ -25,7 +25,7 @@ import SocialMediaLinks from './components/SocialMediaLinks';
 import defaultGordonImage from './defaultGordonImage';
 import styles from './Identification.module.css';
 
-const Identification = ({ profile, myProf, network, createSnackbar }) => {
+const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState();
   const [defaultUserImage, setDefaultUserImage] = useState();
@@ -359,17 +359,17 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
     const w = currentWidth;
     switch (w) {
       default:
-        return 960 * largeScreenRatio;
+        return 900 * largeScreenRatio;
       case 'xs':
         return 360 * smallScreenRatio;
       case 'sm':
         return 600 * smallScreenRatio;
       case 'md':
-        return 960 * largeScreenRatio;
+        return 900 * largeScreenRatio;
       case 'lg':
-        return 1280 * largeScreenRatio;
+        return 1200 * largeScreenRatio;
       case 'xl':
-        return 1920 * largeScreenRatio;
+        return 1536 * largeScreenRatio;
     }
   }
 
@@ -648,7 +648,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                       alt="Profile"
                     />
 
-                    {network === 'online' && myProf && (
+                    {isOnline && myProf && (
                       <Typography
                         variant="body1"
                         className={
@@ -659,7 +659,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                       </Typography>
                     )}
                   </div>
-                  {network === 'online' && myProf && (
+                  {isOnline && myProf && (
                     <div
                       onClick={handlePhotoOpen}
                       className={
@@ -753,7 +753,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
                   </a>
                 </Grid>
 
-                {network === 'online' && createPhotoDialogBox()}
+                {isOnline && createPhotoDialogBox()}
               </Grid>
             </Grid>
           </Grid>
@@ -761,7 +761,7 @@ const Identification = ({ profile, myProf, network, createSnackbar }) => {
           <GordonLoader />
         )}
 
-        {userProfile && network === 'online' && myProf && (
+        {userProfile && isOnline && myProf && (
           <Link
             to={`/profile/${userProfile.AD_Username}`}
             className={styles.identification_card_content_public_profile_link}

@@ -8,8 +8,8 @@ import {
   TableContainer,
   TableRow,
   Typography,
-} from '@material-ui/core/';
-import EmailIcon from '@material-ui/icons/Email';
+} from '@mui/material/';
+import EmailIcon from '@mui/icons-material/Email';
 import { DateTime } from 'luxon';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
@@ -63,16 +63,8 @@ const ApplicationDataTable = ({ applicationDetails }) => {
                 <TableRow>
                   <TableCell colSpan={2}>
                     <a href={`mailto:${editorEmail}`}>
-                      <div
-                        className={
-                          styles.identification_card_content_card_container_info_email_container
-                        }
-                      >
-                        <EmailIcon
-                          className={
-                            styles.identification_card_content_card_container_info_email_container_icon
-                          }
-                        />
+                      <div className={styles.email}>
+                        <EmailIcon className={styles.email_icon} />
                         <Typography variant="body1">{editorEmail}</Typography>
                       </div>
                     </a>

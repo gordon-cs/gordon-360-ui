@@ -10,9 +10,9 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField,
-} from '@material-ui/core';
-import { PersonAdd as AddPersonIcon } from '@material-ui/icons';
+  TextField
+} from '@mui/material';
+import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
 
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useParams } from 'react-router';

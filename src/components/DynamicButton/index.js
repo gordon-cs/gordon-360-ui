@@ -1,6 +1,6 @@
-import { Button } from '@material-ui/core/';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import ErrorIcon from '@material-ui/icons/Error';
+import { Button } from '@mui/material/';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
 import GordonLoader from 'components/Loader';
 
 const LOADER_SIZE = 20;

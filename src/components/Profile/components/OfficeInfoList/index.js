@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid, List, Typography } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
 import { gordonColors } from 'theme';

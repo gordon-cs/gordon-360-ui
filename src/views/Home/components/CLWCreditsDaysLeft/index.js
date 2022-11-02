@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { format, parseISO } from 'date-fns';
 import { Fragment, useEffect, useState } from 'react';
