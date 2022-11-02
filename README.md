@@ -10,6 +10,7 @@ This project is the frontend of Gordon 360 in React. [The retired frontend](http
 
   - [Starting the Front End](#starting-the-front-end)
   - [Connect to Local Backend](#connect-local-backend-to-react)
+  - [Connect to Backend via SSH](#connect-to-backend-via-ssh)
   - [Server Notes](#server-notes)
   - [Editor Recommendations](#editor-recommendations)
   - [Libraries](#libraries)
@@ -75,6 +76,47 @@ By default, React will use the live 360ApiTrain backend to allow seamless front 
 - Now, you are ready to work on the frontend.
 
 - In some scenarios, (for example, when someone has made custom changes to the backend which you also want to use) it is preferable to skip setting up your own backend and connect to someone else's. To do this, make sure you are on the virtual machine. Then, just follow the above directions, replacing the port number you chose with the port number on which their backend is listening.
+
+### Connect to Backend via SSH
+
+There are some cases where you may want to  develop the front end on your local machine but using a specific API that is neither in develop nor production (these are always available live via train and prod). There are generally two use cases for doing this:
+- To test something developed on backend without having to run the front end on the virtual machine
+- To develop the front end against a backend that is in development (ex. a project not yet complete)
+
+#### How it works
+
+*explanation*
+
+#### Steps:
+
+1. Your local machine must be configured as an SSH host
+
+    *Windows:*
+    
+    Full explanation [here](https://theitbros.com/ssh-into-windows/).
+
+    Add the optional feature called "OpenSSH Server" or install via PowerShell
+    ```
+    Add-WindowsCapability -Online -Name OpenSSH.Server*
+    ```
+    Check status of ssh services
+    ```
+    Get-Service -Name *ssh*
+    ```
+    Commands for starting sshd and ssh-agent (respectively) and optionally configuring autostarts for them
+    ```
+    Start-Service sshd
+    
+    Set-Service -Name sshd -StartupType 'Automatic'
+
+    Start-Service ‘ssh-agent’
+
+    Set-Service -Name ‘ssh-agent’ -StartupType 'Automatic'
+    ```
+
+2. Create the SSH tunnel
+
+    *explanation*
 
 ### Server Notes
 
