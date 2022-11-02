@@ -11,7 +11,7 @@ const AdminList = () => {
   const [loading, setLoading] = useState(true);
   const [admins, setAdmins] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newAdminEmail, setNewAdminEmail] = useState('');
+  const [newAdmin, setNewAdmin] = useState('');
 
   useEffect(() => {
     const loadAdmins = async () => {
@@ -23,22 +23,15 @@ const AdminList = () => {
   }, []);
 
   const handleSubmit = async () => {
-    let email;
-    let username;
-    if (!newAdminEmail.toLowerCase().includes('@gordon.edu')) {
-      email = newAdminEmail + '@gordon.edu';
-      username = newAdminEmail;
-    } else {
-      email = newAdminEmail;
-      username = newAdminEmail.replace('@gordon.edu', '');
-    }
+    const [email, username] = newAdmin.toLowerCase().includes('@gordon.edu')
+      ? [newAdmin, newAdmin.replace('@gordon.edu', '')]
+      : [newAdmin + '@gordon.edu', newAdmin];
 
     let data = {
       Email: email,
       Username: username,
       IsSuperAdmin: true,
     };
-    // TODO: Add snackbar feedback, especially for errors like 404
     await admin.addAdmin(data);
     setIsDialogOpen(false);
     setAdmins(await admin.getAdmins());
@@ -90,7 +83,7 @@ const AdminList = () => {
           label="Email"
           type="email"
           variant="filled"
-          onChange={(e) => setNewAdminEmail(e.target.value)}
+          onChange={(e) => setNewAdmin(e.target.value)}
           fullWidth
         />
       </GordonDialogBox>

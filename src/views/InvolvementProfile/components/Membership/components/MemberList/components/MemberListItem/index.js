@@ -120,25 +120,22 @@ const MemberListItem = ({
   };
 
   const confirmLeave = async () => {
-    await membership.remove(member.MembershipID);
-    let inInvolvement = await membership.search(
-      member.Username,
-      member.SessionCode,
-      member.ActivityCode,
-    )[0];
+    let deleted = await membership.remove(member.MembershipID);
 
-    let leaveText;
-    if (member.Username === profile.AD_Username) {
-      leaveText = `in leaving ${participationDescription}`;
+    const isRemovingSelf = member.Username === profile.AD_Username;
+
+    if (deleted.MembershipID !== member.MembershipID) {
+      const removeMessage = isRemovingSelf
+        ? 'Failed to leave'
+        : `Failed to remove ${member.Username}`;
+      createSnackbar(removeMessage, 'error');
     } else {
-      leaveText = `in removing ${member.Username}`;
+      const removeMessage = isRemovingSelf
+        ? 'Successfully left'
+        : `Successfully removed ${member.Username}`;
+      createSnackbar(removeMessage, 'success');
     }
 
-    if (inInvolvement) {
-      createSnackbar(`Failed ${leaveText}`, 'error');
-    } else {
-      createSnackbar(`Succeeded ${leaveText}`, 'success');
-    }
     onLeave();
     setIsLeaveAlertOpen(false);
     setIsRemoveAlertOpen(false);

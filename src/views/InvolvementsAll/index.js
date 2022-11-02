@@ -83,9 +83,12 @@ const InvolvementsAll = ({ location, history }) => {
       setAllInvolvements(await involvementService.getAll(selectedSession));
       setTypes(await involvementService.getTypes(selectedSession));
       if (profile) {
-        membershipService
-          .getSessionMembershipsWithoutGuests(profile.AD_Username, selectedSession)
-          .then(setMyInvolvements);
+        setMyInvolvements(
+          await membershipService.getSessionMembershipsWithoutGuests(
+            profile.AD_Username,
+            selectedSession,
+          ),
+        );
       }
       setLoading(false);
     };
