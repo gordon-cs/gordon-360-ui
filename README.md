@@ -116,7 +116,12 @@ There are some cases where you may want to  develop the front end on your local 
 
 2. Create the SSH tunnel
 
-    *explanation*
+    After setting up the ssh server on your host machine, find your host IP or DNS address. Log into the VM and open a command prompt/powershell window.
+    In command prompt/powershell window enter the following command, 
+    ```
+    ssh -R localhost:[API_LOCAL_PORT_NUMBER]:localhost:[API_REMOTE_PORT_NUMBER] [USER]@[IP/DNS ADDRESS]
+    ```
+    Some notes about this just to be clear about what the parameters are. The first port number is the port that the api is running on the VM. The second       port number is the port that you want the API to be sent to on your host machine (not the VM).
 
 ### Server Notes
 
