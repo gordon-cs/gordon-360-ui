@@ -40,11 +40,6 @@ a {
     // Disable link underline
     text-decoration: none;
   }
-
-  &:visited {
-    // Keep link color the same after visiting it
-    color: initial;
-  }
 }
 // style for links that are menu items or buttons (not just text)
 .gc360_link {

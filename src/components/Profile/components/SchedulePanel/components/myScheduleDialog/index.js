@@ -15,8 +15,8 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-} from '@material-ui/core';
-import { KeyboardTimePicker } from '@material-ui/pickers';
+} from '@mui/material';
+import { TimePicker } from '@mui/x-date-pickers';
 
 // Default values
 const STARTHOUR = '08:00';
@@ -444,29 +444,23 @@ export default class MyScheduleDialog extends Component {
             </FormControl>
 
             <div>
-              <KeyboardTimePicker
-                style={{ width: '20%' }}
+              <TimePicker
                 label="Start time"
-                ampm={false}
-                variant="inline"
-                disabled={this.state.checkedC}
-                minutesStep={5}
-                inputValue={this.state.startHourInput}
+                value={this.state.startHourInput}
                 onChange={this.handlePickerChange('startHourInput')}
-                error={!this.state.startHourValid}
-                helperText={this.state.startHourValid ? '' : this.state.formErrors.startHourInput}
-              />
-              <KeyboardTimePicker
-                style={{ width: '20%' }}
-                label="End time"
+                renderInput={(params) => <TextField {...params} />}
                 ampm={false}
-                variant="inline"
                 disabled={this.state.checkedC}
                 minutesStep={5}
-                inputValue={this.state.endHourInput}
+              />
+              <TimePicker
+                label="End time"
+                value={this.state.endHourInput}
                 onChange={this.handlePickerChange('endHourInput')}
-                error={!this.state.endHourValid}
-                helperText={this.state.endHourValid ? '' : this.state.formErrors.endHourInput}
+                renderInput={(params) => <TextField {...params} />}
+                ampm={false}
+                disabled={this.state.checkedC}
+                minutesStep={5}
               />
               <FormControlLabel
                 control={

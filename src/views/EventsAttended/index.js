@@ -1,5 +1,5 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Button, Grid, List, Typography } from '@material-ui/core';
+import { Button, Grid, List, Typography } from '@mui/material';
 import EventList from 'components/EventList';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';

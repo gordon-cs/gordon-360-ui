@@ -10,8 +10,8 @@ import {
   ListItemSecondaryAction,
   MenuItem,
   Select,
-} from '@material-ui/core';
-import ClearIcon from '@material-ui/icons/Clear';
+} from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from 'react';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../../../ApartmentApp.module.css';
@@ -106,6 +106,7 @@ const HallChoiceListItem = ({
             aria-label="delete"
             disabled={disabled}
             onClick={() => onHallRemove(index)}
+            size="large"
           >
             <ClearIcon />
           </IconButton>

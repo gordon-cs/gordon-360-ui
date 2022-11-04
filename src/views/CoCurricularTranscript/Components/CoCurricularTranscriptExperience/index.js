@@ -1,8 +1,8 @@
-//import Grid from '@material-ui/core/Grid';
-//import Divider from '@material-ui/core/Divider';
+//import Grid from '@mui/material/Grid';
+//import Divider from '@mui/material/Divider';
 import { Component } from 'react';
-//import List from '@material-ui/core/List';
-//import Typography from '@material-ui/core/Typography';
+//import List from '@mui/material/List';
+//import Typography from '@mui/material/Typography';
 import styles from './CoCurricularTranscriptExperience.module.css';
 
 //This component is a child of the CoCurricularTranscript component.

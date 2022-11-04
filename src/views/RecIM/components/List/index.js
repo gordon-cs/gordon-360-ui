@@ -1,4 +1,4 @@
-import { List } from '@material-ui/core';
+import { List } from '@mui/material';
 import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
 
 const ActivityList = ({ activities }) => {
@@ -12,12 +12,12 @@ const ParticipantList = ({ participants }) => {
 };
 
 const MatchList = ({ matches }) => {
-  let content = matches.map((match) => <MatchListing match={match} />);
+  let content = matches.map((match) => <MatchListing key={match} match={match} />);
   return <List>{content}</List>;
 };
 
 const TeamList = ({ teams }) => {
-  let content = teams.map((team) => <TeamListing team={team} />);
+  let content = teams.map((team) => <TeamListing key={team} team={team} />);
   return <List>{content}</List>;
 };
 

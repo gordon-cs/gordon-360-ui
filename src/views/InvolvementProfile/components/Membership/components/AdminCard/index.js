@@ -11,8 +11,8 @@ import {
   MenuItem,
   TextField,
   Select,
-} from '@material-ui/core';
-import { PersonAdd as AddPersonIcon } from '@material-ui/icons';
+} from '@mui/material';
+import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
 
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';

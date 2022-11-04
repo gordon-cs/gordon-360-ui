@@ -1,4 +1,4 @@
-import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core/';
+import { Grid, Typography, Card, CardHeader, CardContent } from '@mui/material';
 import { useParams } from 'react-router';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';

@@ -1,4 +1,4 @@
-import { Grid, Card, CardContent, CardHeader } from '@material-ui/core/';
+import { Grid, Card, CardContent, CardHeader } from '@mui/material';
 import styles from './ContentCard.module.css';
 
 const ContentCard = (props) => {

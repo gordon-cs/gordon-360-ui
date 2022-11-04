@@ -7,9 +7,10 @@ import {
   MenuItem,
   Select,
   TextField,
-} from '@material-ui/core/';
-import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+} from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import styles from './InformationField.module.css';
 
 const InformationField = ({ label, name, type, value, onChange, error, helperText, menuItems }) => {
@@ -50,7 +51,7 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={onChange}>
             {menuItems.map((item) => (
-              <MenuItem className={styles.select_text} value={item}>
+              <MenuItem key={item} className={styles.select_text} value={item}>
                 {item}
               </MenuItem>
             ))}
@@ -60,34 +61,14 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
       break;
     case 'datetime':
       field = (
-        // <form className={styles.container} noValidate>
-        //   <TextField
-        //     variant="filled"
-        //     value={value}
-        //     label={label}
-        //     name={name}
-        //     error={error}
-        //     type="datetime-local"
-        //     // defaultValue="2017-05-24T10:30"
-        //     helperText={error ? helperText : null}
-        //     onChange={onChange}
-        //     className={`disable_select ${styles.field}`}
-        //     InputLabelProps={{
-        //       shrink: true,
-        //     }}
-        //   />
-        // </form>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardDateTimePicker
-            className={`disable_select ${styles.field}`}
-            variant="filled"
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} variant="filled" />}
             label={label}
-            helperText="MM-DD-YY HH-MM AM/PM"
-            format="MM/dd/yy hh:mm a"
             value={value}
-            onChange={onChange}
+            onChange={(value) => onChange(value, name)}
           />
-        </MuiPickersUtilsProvider>
+        </LocalizationProvider>
       );
       break;
   }

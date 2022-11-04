@@ -10,8 +10,8 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Typography,
-} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatDistanceToNow } from 'date-fns';
 import parseISO from 'date-fns/parseISO';
 import { Fragment, useEffect, useState } from 'react';

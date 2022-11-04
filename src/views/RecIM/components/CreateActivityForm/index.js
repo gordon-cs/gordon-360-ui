@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core/';
+import { Grid } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
 import styles from './CreateActivityForm.module.css';
 import GordonLoader from 'components/Loader';
@@ -136,9 +136,20 @@ const CreateActivityForm = ({
     setDisableUpdateButton(hasError || !hasChanges);
   }, [newInfo, currentInfo]);
 
-  const handleChange = (event) => {
+  const handleChange = (event, src) => {
     const getNewInfo = (currentValue) => {
       console.log('event', event);
+      console.log('currentValue', currentValue);
+      console.log('src', src);
+      // datetime pickers return value rather than event,
+      // so we can also manually specify target source and value
+      if (src) {
+        let newValue = event;
+        return {
+          ...currentValue,
+          [src]: newValue,
+        };
+      }
       return {
         ...currentValue,
         [event.target.name]:
@@ -246,7 +257,7 @@ const CreateActivityForm = ({
         <ConfirmationWindowHeader />
         <Grid container>
           {getNewFields(currentInfo, newInfo).map((field) => (
-            <ConfirmationRow field={field} prevValue={currentInfo[field.Field]} />
+            <ConfirmationRow key={field} field={field} prevValue={currentInfo[field.Field]} />
           ))}
         </Grid>
         {isSaving ? <GordonLoader size={32} /> : null}

@@ -4,6 +4,7 @@ type Person = {
   FirstName: string;
   LastName: string;
   Email: string;
+  Description: string;
 };
 
 type ParticipationType = 'advisor' | 'leader' | 'group-admin' | 'member' | 'guest';

@@ -5,7 +5,7 @@ import {
   DialogTitle,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useState } from 'react';
 import { platforms, socialMediaInfo } from 'services/socialMedia';
 import user from 'services/user';
@@ -92,7 +92,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
               onChange={(event) => handleLinkUpdated(platform, event.target.value)}
               error={formErrors.includes(platform)}
               helperText={formErrors.includes(platform) ? `Invalid ${platform} link` : null}
-              margin="dense"
+              size="small"
               fullWidth
               multiline
               className={styles.gc360_links_dialog_content_field}

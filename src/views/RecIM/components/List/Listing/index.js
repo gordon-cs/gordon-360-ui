@@ -1,4 +1,4 @@
-import { Grid, Avatar, ListItemAvatar, ListItem, ListItemText } from '@material-ui/core/';
+import { Grid, Avatar, ListItemAvatar, ListItem, ListItemText } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';

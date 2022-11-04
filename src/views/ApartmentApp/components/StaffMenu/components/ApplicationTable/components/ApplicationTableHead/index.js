@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core/';
+import { TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material/';
 
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../../../ApartmentApp.module.css';
@@ -26,7 +26,7 @@ const ApplicationTableHead = ({ iteratee, order, onRequestSort }) => {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={iteratee === headCell.id ? order : false}
           >
             <TableSortLabel
