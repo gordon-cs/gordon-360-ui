@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
@@ -26,7 +26,7 @@ const style = {
 const DiningBalance = () => {
   const [loading, setLoading] = useState(true);
   const [diningInfo, setDiningInfo] = useState(null);
-  const [[daysRemaining, daysCompleted], setDaysLeft] = useState([null, null]);
+  const [[daysRemaining, daysInSession], setDaysLeft] = useState([null, null]);
 
   useEffect(() => {
     Promise.all([user.getDiningInfo(), session.getDaysLeft()]).then(([diningInfo, daysLeft]) => {
@@ -83,8 +83,8 @@ const DiningBalance = () => {
     const guestCurr = diningInfo.GuestSwipes.CurrentBalance;
     const guestUsed = guestInit - guestCurr;
 
-    const daysLeftRounded = Math.min(daysRemaining, 0);
-    const daysFinished = daysCompleted - daysLeftRounded;
+    const daysLeftRounded = Math.max(daysRemaining, 0);
+    const daysFinished = daysInSession - daysLeftRounded;
 
     const options = {
       cutoutPercentage: 0,

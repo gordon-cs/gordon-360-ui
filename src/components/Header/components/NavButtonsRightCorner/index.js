@@ -1,6 +1,6 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import List from '@material-ui/core/List';
-import Popover from '@material-ui/core/Popover';
+import List from '@mui/material/List';
+import Popover from '@mui/material/Popover';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import { useAuthGroups, useNetworkStatus } from 'hooks';

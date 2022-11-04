@@ -1,7 +1,7 @@
 import { useState, Fragment } from 'react';
-import { Collapse, IconButton, TableCell, TableRow } from '@material-ui/core/';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { Collapse, IconButton, TableCell, TableRow } from '@mui/material/';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ApplicantSubTable from './components/ApplicantSubTable';
 import HallSubTable from './components/HallSubTable';
 

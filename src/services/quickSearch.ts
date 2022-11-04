@@ -19,8 +19,8 @@ const search = async (
   return [searchStartTime, searchResults];
 };
 
-const peopleSearchService = {
+const quickSearchService = {
   search,
 };
 
-export default peopleSearchService;
+export default quickSearchService;

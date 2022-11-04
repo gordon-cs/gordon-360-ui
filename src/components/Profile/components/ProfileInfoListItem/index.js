@@ -1,4 +1,4 @@
-import { Divider, ListItem, Grid, Typography } from '@material-ui/core';
+import { Divider, ListItem, Grid, Typography } from '@mui/material';
 import styles from './ProfileInfoListItem.module.css';
 
 const ProfileInfoListItem = ({

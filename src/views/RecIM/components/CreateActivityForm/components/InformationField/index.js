@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
-} from '@material-ui/core/';
+} from '@mui/material';
 import styles from './InformationField.module.css';
 
 const InformationField = ({ label, name, type, value, onChange, error, helperText, menuItems }) => {

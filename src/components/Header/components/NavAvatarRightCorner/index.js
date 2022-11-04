@@ -1,5 +1,5 @@
-import { Avatar, IconButton, Tooltip } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Avatar, IconButton, Tooltip } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -68,6 +68,7 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
           aria-owns={'global-menu'}
           aria-haspopup="true"
           onClick={onClick}
+          size="large"
         >
           {avatar}
         </IconButton>

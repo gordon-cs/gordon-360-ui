@@ -1,4 +1,4 @@
-import { Typography, Grid } from '@material-ui/core/';
+import { Typography, Grid } from '@mui/material';
 import styles from './ConfirmationHeader.module.css';
 
 const ConfirmationWindowHeader = () => {

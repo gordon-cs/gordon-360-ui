@@ -1,5 +1,5 @@
-import { Button, Dialog, Grid, IconButton } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import { Button, Dialog, Grid, IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useState } from 'react';
 import { platforms, socialMediaInfo } from 'services/socialMedia';
@@ -49,6 +49,7 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
                   <IconButton
                     className={styles.gc360_my_profile_edit_icon}
                     onClick={() => setSocialLinksOpen(true)}
+                    size="large"
                   >
                     <EditIcon />
                   </IconButton>

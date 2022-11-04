@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import GordonSnackbar from 'components/Snackbar';
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -18,7 +18,6 @@ import {
 const Profile = ({ profile, myProf }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const isOnline = useNetworkStatus();
-  const network = isOnline ? 'online' : 'offline';
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
   const profileIsStudent = profile.PersonType?.includes('stu');
@@ -41,7 +40,7 @@ const Profile = ({ profile, myProf }) => {
       >
         <Identification
           profile={profile}
-          network={network}
+          isOnline={isOnline}
           myProf={myProf}
           createSnackbar={createSnackbar}
         />
@@ -49,13 +48,13 @@ const Profile = ({ profile, myProf }) => {
 
       {myProf && profileIsStudent && (
         <Grid item xs={12} md={4}>
-          <VictoryPromiseDisplay network={network} />
+          <VictoryPromiseDisplay isOnline={isOnline} />
         </Grid>
       )}
 
       {(myProf || !profileIsStudent || canReadStudentSchedules) && (
         <Grid item xs={12} lg={10} align="center">
-          <SchedulePanel profile={profile} myProf={myProf} network={network} />
+          <SchedulePanel profile={profile} myProf={myProf} isOnline={isOnline} />
         </Grid>
       )}
 
@@ -65,7 +64,7 @@ const Profile = ({ profile, myProf }) => {
           <PersonalInfoList
             profile={profile}
             myProf={myProf}
-            network={network}
+            isOnline={isOnline}
             createSnackbar={createSnackbar}
           />
           {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
@@ -85,7 +84,6 @@ const Profile = ({ profile, myProf }) => {
         open={snackbar.open}
         text={snackbar.message}
         severity={snackbar.severity}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
     </Grid>

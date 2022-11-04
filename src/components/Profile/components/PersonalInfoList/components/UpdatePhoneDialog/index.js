@@ -1,5 +1,5 @@
-import { FormControl, IconButton, Input, InputLabel } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import { FormControl, IconButton, Input, InputLabel } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonSnackbar from 'components/Snackbar';
 import { forwardRef, useState } from 'react';
@@ -27,7 +27,7 @@ const UpdatePhone = () => {
 
   return (
     <div>
-      <IconButton style={{ marginBottom: '0.5rem' }} onClick={() => setOpen(true)}>
+      <IconButton style={{ marginBottom: '0.5rem' }} onClick={() => setOpen(true)} size="large">
         <EditIcon style={{ fontSize: 20 }} />
       </IconButton>
       <GordonDialogBox
@@ -58,7 +58,6 @@ const UpdatePhone = () => {
         open={snackbar.open}
         severity={snackbar.severity}
         text={snackbar.message}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
     </div>
@@ -73,7 +72,7 @@ const phoneMaskUS = forwardRef((props, ref) => {
   return (
     <IMaskInput
       {...other}
-      inputRef={ref}
+      ref={ref}
       mask="(000) 000-0000"
       placeholderChar={'\u2000'}
       unmask={true}

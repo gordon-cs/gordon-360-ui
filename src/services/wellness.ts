@@ -38,7 +38,7 @@ const getQuestion = async (): Promise<WellnessQuestion> => {
 };
 
 const formatQuestion = async (question: WellnessQuestion): Promise<WellnessQuestion> => {
-  const { FirstName, LastName } = await user.getProfileInfo();
+  const { FirstName, LastName } = (await user.getProfileInfo()) ?? {};
 
   /* eslint-disable no-template-curly-in-string */
   question.question = question.question
