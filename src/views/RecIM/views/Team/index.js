@@ -1,10 +1,10 @@
-import { Grid, Typography, Card, CardHeader, CardContent, List } from '@material-ui/core/';
+import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core/';
 import { useParams } from 'react-router';
 import styles from './Team.module.css';
-import { ParticipantListing, MatchListing } from '../../components/Listing';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useUser } from 'hooks';
+import { ParticipantList, MatchList } from './../../components/List';
 
 let rosterCard = (
   <Card>
@@ -12,10 +12,9 @@ let rosterCard = (
     <CardContent>
       {/*This is hardcoded data for now, in the future, roster card should
         be a react component that takes a set of users and maps them here*/}
-      <List>
-        <ParticipantListing username={'silas.white'} />
-        <ParticipantListing username={'amos.cha'} />
-      </List>
+      <ParticipantList
+        participants={[{ username: 'silas.white' }, { username: 'cameron.abbot' }]}
+      />
     </CardContent>
   </Card>
 );
@@ -26,12 +25,7 @@ let scheduleCard = (
     <CardHeader title="Schedule" className={styles.cardHeader} />
     <CardContent>
       {/* if there are games scheduled, map them here */}
-      <div className={styles.listing}>
-        <MatchListing activityID={123456} matchID={321} />
-      </div>
-      <div className={styles.listing}>
-        <MatchListing activityID={123456} matchID={654} />
-      </div>
+      <MatchList matches={[{ activityID: '123456', ID: '789' }]} />
       {/* else "no schedule yet set" */}
       <Typography variant="body1" paragraph>
         Games have not yet been scheduled.

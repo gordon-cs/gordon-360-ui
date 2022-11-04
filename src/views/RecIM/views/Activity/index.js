@@ -3,8 +3,8 @@ import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { MatchListing } from 'views/RecIM/components/Listing';
 import styles from './Activity.module.css';
+import { MatchList, TeamList } from './../../components/List';
 
 // CARD - schedule
 let scheduleCard = (
@@ -12,12 +12,7 @@ let scheduleCard = (
     <CardHeader title="Schedule" className={styles.cardHeader} />
     <CardContent>
       {/* if there are games scheduled, map them here */}
-      <div className={styles.listing}>
-        <MatchListing activityID={123456} matchID={321} />
-      </div>
-      <div className={styles.listing}>
-        <MatchListing activityID={123456} matchID={654} />
-      </div>
+      <MatchList matches={[{ activityID: '123456', ID: '789' }]} />
       {/* else "no schedule yet set" */}
       <Typography variant="body1" paragraph>
         Games have not yet been scheduled.
@@ -32,8 +27,12 @@ let teamsCard = (
     <CardHeader title="Teams" className={styles.cardHeader} />
     <CardContent>
       {/* if I am apart of any active teams, map them here */}
-      <div className={styles.listing}>{/* <TeamListing activityID={123456} teamID={789} /> */}</div>
-      <div className={styles.listing}>{/* <TeamListing activityID={12345} teamID={987} /> */}</div>
+      <TeamList
+        teams={[
+          { activityID: '123456', ID: '789' },
+          { activityID: '12345', ID: '987' },
+        ]}
+      />
       {/* else "no teams" */}
       <Typography variant="body1" paragraph>
         Be the first to create a team!
