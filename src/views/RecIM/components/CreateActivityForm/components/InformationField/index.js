@@ -8,6 +8,9 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import { DateTimePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import styles from './InformationField.module.css';
 
 const InformationField = ({ label, name, type, value, onChange, error, helperText, menuItems }) => {
@@ -24,7 +27,7 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
           name={name}
           helperText={error ? helperText : null}
           value={value}
-          onChange={onChange}
+          onChange={(event) => onChange(event)}
           type={type}
         />
       );
@@ -32,7 +35,7 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
     case 'checkbox':
       field = (
         <FormControlLabel
-          control={<Checkbox checked={value} onChange={onChange} />}
+          control={<Checkbox checked={value} onChange={(event) => onChange(event)} />}
           label={label}
           name={name}
         />
@@ -46,14 +49,27 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
           style={{ width: '100%' }}
         >
           <InputLabel>{label}</InputLabel>
-          <Select label={label} name={name} value={value} onChange={onChange}>
+          <Select label={label} name={name} value={value} onChange={(event) => onChange(event)}>
             {menuItems.map((item) => (
-              <MenuItem className={styles.select_text} value={item}>
+              // @TODO key needs to be updated to item id once exists
+              <MenuItem key={item} className={styles.select_text} value={item}>
                 {item}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
+      );
+      break;
+    case 'datetime':
+      field = (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} variant="filled" />}
+            label={label}
+            value={value}
+            onChange={(value) => onChange(value, name)}
+          />
+        </LocalizationProvider>
       );
       break;
   }

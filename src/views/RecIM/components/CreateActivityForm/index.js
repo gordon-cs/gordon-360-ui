@@ -35,14 +35,14 @@ const CreateActivityForm = ({
     {
       label: 'Registration Start',
       name: 'regStart',
-      type: 'text',
+      type: 'datetime',
       error: errorStatus.regStart,
       helperText: '*Required',
     },
     {
       label: 'Registration End',
       name: 'regEnd',
-      type: 'text',
+      type: 'datetime',
       error: errorStatus.regEnd,
       helperText: '*Required',
     },
@@ -136,8 +136,17 @@ const CreateActivityForm = ({
     setDisableUpdateButton(hasError || !hasChanges);
   }, [newInfo, currentInfo]);
 
-  const handleChange = (event) => {
+  const handleChange = (event, src) => {
     const getNewInfo = (currentValue) => {
+      // datetime pickers return value rather than event,
+      // so we can also manually specify target source and value
+      if (src) {
+        let newValue = event;
+        return {
+          ...currentValue,
+          [src]: newValue,
+        };
+      }
       return {
         ...currentValue,
         [event.target.name]:
@@ -199,6 +208,7 @@ const CreateActivityForm = ({
   const mapFieldsToInputs = (fields) => {
     return fields.map((field) => (
       <InformationField
+        key={field.name}
         error={field.error}
         label={field.label}
         name={field.name}
@@ -244,7 +254,7 @@ const CreateActivityForm = ({
         <ConfirmationWindowHeader />
         <Grid container>
           {getNewFields(currentInfo, newInfo).map((field) => (
-            <ConfirmationRow field={field} prevValue={currentInfo[field.Field]} />
+            <ConfirmationRow key={field} field={field} prevValue={currentInfo[field.Field]} />
           ))}
         </Grid>
         {isSaving ? <GordonLoader size={32} /> : null}
