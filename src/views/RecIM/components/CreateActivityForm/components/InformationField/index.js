@@ -51,6 +51,7 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={(event) => onChange(event)}>
             {menuItems.map((item) => (
+              // @TODO key needs to be updated to item id once exists
               <MenuItem key={item} className={styles.select_text} value={item}>
                 {item}
               </MenuItem>
