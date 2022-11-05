@@ -138,9 +138,6 @@ const CreateActivityForm = ({
 
   const handleChange = (event, src) => {
     const getNewInfo = (currentValue) => {
-      console.log('event', event);
-      console.log('currentValue', currentValue);
-      console.log('src', src);
       // datetime pickers return value rather than event,
       // so we can also manually specify target source and value
       if (src) {

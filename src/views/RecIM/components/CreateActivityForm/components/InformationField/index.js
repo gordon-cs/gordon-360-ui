@@ -27,7 +27,7 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
           name={name}
           helperText={error ? helperText : null}
           value={value}
-          onChange={onChange}
+          onChange={(event) => onChange(event)}
           type={type}
         />
       );
@@ -35,7 +35,7 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
     case 'checkbox':
       field = (
         <FormControlLabel
-          control={<Checkbox checked={value} onChange={onChange} />}
+          control={<Checkbox checked={value} onChange={(event) => onChange(event)} />}
           label={label}
           name={name}
         />
@@ -49,7 +49,7 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
           style={{ width: '100%' }}
         >
           <InputLabel>{label}</InputLabel>
-          <Select label={label} name={name} value={value} onChange={onChange}>
+          <Select label={label} name={name} value={value} onChange={(event) => onChange(event)}>
             {menuItems.map((item) => (
               <MenuItem key={item} className={styles.select_text} value={item}>
                 {item}
