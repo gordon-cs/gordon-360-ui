@@ -23,7 +23,6 @@ const Home = () => {
   useEffect(() => {
     const loadActivities = async () => {
       setLoading(true);
-      console.log(DateTime.now().toISO());
 
       // Get all active activities where registration has not closed
       let allActivities = await getAllActivities(false, DateTime.now().toISO());

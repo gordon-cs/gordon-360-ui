@@ -1,4 +1,5 @@
 import { Grid, Typography, Card, CardHeader, CardContent } from '@material-ui/core/';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
@@ -43,12 +44,24 @@ let teamsCard = (
 
 const Activity = () => {
   const { activityID } = useParams();
-  const { profile, loading } = useUser();
+  const { profile } = useUser();
+  const [loading, setLoading] = useState(true)
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
 
-  
+  useEffect(() => {
+    const loadActivities = async () => {
+      setLoading(true);
+
+      // Get all active activities where registration has not closed
+      let allActivities = await getAllActivities(false, DateTime.now().toISO());
+      setActivities(allActivities);
+      setLoading(false);
+    };
+    loadActivities();
+  }, [profile]);
+
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {

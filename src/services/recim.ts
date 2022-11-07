@@ -16,14 +16,13 @@ type Activity = {
   Completed: boolean;
 };
 
-// temporary example (hard coded activity object in API)
-const postSmashActivity = async () => {
-  await http.post('recim/activities/add_smash');
-};
-
 const createNewActivity = async (newActivity: Activity) => {
   await http.post('recim/activities', newActivity);
 };
+
+const getActivityByID = async (ID: number): Promise<Object[]> => {
+  return await http.get(`recim/activities/${ID}`)
+}
 
 const getAllActivities = async (active: boolean, time: String): Promise<Object[]> => {
   if (time) {
@@ -33,4 +32,4 @@ const getAllActivities = async (active: boolean, time: String): Promise<Object[]
   }
 };
 
-export { postSmashActivity, getAllActivities, createNewActivity };
+export { getAllActivities, createNewActivity, getActivityByID };
