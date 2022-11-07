@@ -1,24 +1,63 @@
-import { Grid, Avatar, ListItemAvatar, ListItem, ListItemText } from '@material-ui/core/';
+import {
+  Grid,
+  Avatar,
+  ListItemAvatar,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@material-ui/core/';
 import styles from './Listing.module.css';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { DateTime } from 'luxon';
 
+const standardDate = (date, includeTime) => {
+  let formattedDate = date.monthShort + ' ' + date.day;
+  if (includeTime) {
+    formattedDate += ' ' + date.toLocaleString(DateTime.TIME_SIMPLE);
+  }
+  return formattedDate;
+};
+
 const ActivityListing = ({ activity }) => {
   console.log(activity);
+  let registrationStart = DateTime.fromISO(activity.RegistrationStart);
+  let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
   return (
     <ListItem button component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
       <Grid container className={styles.listing}>
-        <Grid item xs={8}>
+        <Grid item xs={3}>
           {activity.Name}
         </Grid>
-        <Grid item xs={2}>
-          Registration
+        <Grid container xs={4} direction="row" alignItems="center" justifyContent="center">
+          <Grid item xs={10}>
+            <Typography gutterBottom align="center">
+              Registration
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            <Typography align="center">
+              {standardDate(registrationStart, true)} - {standardDate(registrationEnd, true)}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid container xs={2} direction="row">
-          <Grid item>{DateTime.fromISO(activity.RegistrationStart).toLocaleString()}</Grid>
-          <Grid item>{activity.RegistrationEnd}</Grid>
+        <Grid container xs={5} direction="row" alignItems="center" justifyContent="center">
+          <Grid item xs={10}>
+            <Typography gutterBottom align="center">
+              Season
+            </Typography>
+          </Grid>
+          <Grid item xs={10}>
+            {activity.Series.map((series) => {
+              return (
+                <Typography align="center">
+                  {series.Name} {standardDate(DateTime.fromISO(series.StartDate), false)} -{' '}
+                  {standardDate(DateTime.fromISO(series.EndDate), false)}
+                </Typography>
+              );
+            })}
+          </Grid>
         </Grid>
         {/* include:
           - activity type (activity, tournament, one-off)
