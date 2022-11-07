@@ -47,6 +47,8 @@ const Activity = () => {
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
+
+  
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {

@@ -21,7 +21,6 @@ const standardDate = (date, includeTime) => {
 };
 
 const ActivityListing = ({ activity }) => {
-  console.log(activity);
   let registrationStart = DateTime.fromISO(activity.RegistrationStart);
   let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
   return (
