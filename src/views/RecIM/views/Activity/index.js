@@ -102,8 +102,8 @@ const Activity = () => {
           closeWithSnackbar={(status) => {
             handleCreateTeamForm(status);
           }}
-          openCreateActivityForm={openCreateTeamForm}
-          setOpenCreateActivityForm={(bool) => setOpenCreateTeamForm(bool)}
+          openCreateTeamForm={openCreateTeamForm}
+          setOpenCreateTeamForm={(bool) => setOpenCreateTeamForm(bool)}
         />
         <Typography>Activity ID: {activityID} (testing purposes only)</Typography>
       </>

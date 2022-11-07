@@ -1,6 +1,7 @@
 import http from './http';
 
 // all Gordon Rec-IM http requests
+
 type Activity = {
   ID: number;
   Name: string;
@@ -16,6 +17,14 @@ type Activity = {
   Completed: boolean;
 };
 
+type Team = {
+  ID: number;
+  Name: string;
+  Logo: string;
+  StatusID: number;
+  ActivityID: number;
+};
+
 // temporary example (hard coded activity object in API)
 const postSmashActivity = async () => {
   await http.post('recim/activities/add_smash');
@@ -27,4 +36,8 @@ const createNewActivity = async (newActivity: Activity) => {
 
 const getAllActivities = async (): Promise<Object[]> => await http.get('recim/activities');
 
-export { postSmashActivity, getAllActivities, createNewActivity };
+const createNewTeam = async (newTeam: Team) => {
+  await http.post('recim/teams', newTeam);
+};
+
+export { postSmashActivity, getAllActivities, createNewActivity, createNewTeam };
