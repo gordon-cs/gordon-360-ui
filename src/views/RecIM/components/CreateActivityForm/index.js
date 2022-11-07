@@ -1,6 +1,5 @@
 import { Grid } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
-import styles from './CreateActivityForm.module.css';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ConfirmationRow } from './components/ConfirmationRow';
@@ -239,7 +238,6 @@ const CreateActivityForm = ({
         setOpenCreateActivityForm(false);
       }}
       cancelButtonName="cancel"
-      titleClass={styles.formTitle}
     >
       <ContentCard title="Activity Information">
         {mapFieldsToInputs(createActivityFields)}

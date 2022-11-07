@@ -1,7 +1,5 @@
 import { Grid } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
-import styles from './CreateTeamForm.module.css';
-// import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { InformationField } from '../../../../components/CreateActivityForm/components/InformationField';
 import { createNewTeam } from 'services/recim';
@@ -20,15 +18,15 @@ const CreateTeamForm = ({ closeWithSnackbar, openCreateTeamForm, setOpenCreateTe
   // const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
 
-  const handleSetError = (field, condition) => {
-    const getCurrentErrorStatus = (currentValue) => {
-      return {
-        ...currentValue,
-        [field]: condition,
-      };
-    };
-    setErrorStatus(getCurrentErrorStatus);
-  };
+  // const handleSetError = (field, condition) => {
+  //   const getCurrentErrorStatus = (currentValue) => {
+  //     return {
+  //       ...currentValue,
+  //       [field]: condition,
+  //     };
+  //   };
+  //   setErrorStatus(getCurrentErrorStatus);
+  // };
 
   // Field Validation
   useEffect(() => {
@@ -104,7 +102,6 @@ const CreateTeamForm = ({ closeWithSnackbar, openCreateTeamForm, setOpenCreateTe
         setOpenCreateTeamForm(false);
       }}
       cancelButtonName="cancel"
-      titleClass={styles.formTitle}
     >
       <Grid container spacing={2} justifyContent="center">
         <InformationField
