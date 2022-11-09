@@ -1,5 +1,5 @@
 import { Grid } from '@material-ui/core/';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import styles from './CreateActivityForm.module.css';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -111,6 +111,7 @@ const CreateActivityForm = ({
       soloRegistration: false,
     };
   }, []);
+
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
@@ -134,21 +135,8 @@ const CreateActivityForm = ({
       if (currentInfo[field] !== newInfo[field]) {
         hasChanges = true;
       }
-      switch (field) {
-        case 'name':
-        case 'registrationStart':
-        case 'registrationEnd':
-        case 'type':
-        case 'sportID':
-        case 'maxCapacity':
-        case 'soloRegistration':
-          handleSetError(field, newInfo[field] === '');
-          hasError = newInfo[field] === '' || hasError;
-          break;
-
-        default:
-          break;
-      }
+      handleSetError(field, newInfo[field] === '');
+      hasError = newInfo[field] === '' || hasError;
     }
     setDisableUpdateButton(hasError || !hasChanges);
   }, [newInfo, currentInfo]);
@@ -169,14 +157,14 @@ const CreateActivityForm = ({
     return matchingField.label;
   };
 
-  function getNewFields(newInfo, currentInfo) {
+  function getNewFields(currentInfo, newInfo) {
     const updatedFields = [];
-    Object.entries(currentInfo).forEach(([field, value]) => {
-      if (newInfo[field] !== value)
+    Object.entries(newInfo).forEach(([key, value]) => {
+      if (currentInfo[key] !== value)
         updatedFields.push({
-          Field: field,
+          Field: key,
           Value: value,
-          Label: getFieldLabel(field),
+          Label: getFieldLabel(key),
         });
     });
     return updatedFields;
@@ -184,10 +172,15 @@ const CreateActivityForm = ({
 
   const handleConfirm = () => {
     setSaving(true);
-    let infoRequest = newInfo
-    infoRequest.sportID = sports.filter(sport => sport.Name === infoRequest.sportID)[0].ID
 
-    createNewActivity(infoRequest).then(() => {
+    let activityCreationRequest = { ...currentInfo, ...newInfo };
+    console.log(activityCreationRequest);
+
+    activityCreationRequest.sportID = sports.filter(
+      (sport) => sport.Name === activityCreationRequest.sportID,
+    )[0].ID;
+
+    createNewActivity(activityCreationRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
@@ -195,14 +188,6 @@ const CreateActivityForm = ({
       });
       handleWindowClose();
     });
-    // createNewActivity(requestData).then(() => {
-    //   setSaving(false);
-    //   closeWithSnackbar({
-    //     type: 'success',
-    //     message: 'Your new activity has been created or whatever message you want here',
-    //   });
-    //   handleWindowClose();
-    // });
   };
 
   const handleWindowClose = () => {
@@ -211,7 +196,7 @@ const CreateActivityForm = ({
   };
 
   /**
-   * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
+   * @param {Array<{name: string, label: string, type: string, menuItems: String[]}>} fields array of objects defining the properties of the input field
    * @returns JSX correct input for each field based on type
    */
   const mapFieldsToInputs = (fields) => {
@@ -252,7 +237,7 @@ const CreateActivityForm = ({
           <ConfirmationWindowHeader />
           <Grid container>
             {getNewFields(currentInfo, newInfo).map((field) => (
-              <ConfirmationRow field={field} prevValue={currentInfo[field.Field]} />
+              <ConfirmationRow field={field} />
             ))}
           </Grid>
           {isSaving ? <GordonLoader size={32} /> : null}
