@@ -32,4 +32,8 @@ const getAllActivities = async (active: boolean, time: String): Promise<Object[]
   }
 };
 
-export { getAllActivities, createNewActivity, getActivityByID };
+const getAllSports = async (): Promise<Object[]> => {
+  return await http.get(`recim/sports`)
+}
+
+export { getAllActivities, createNewActivity, getActivityByID, getAllSports };
