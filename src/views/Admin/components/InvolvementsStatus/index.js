@@ -4,7 +4,7 @@ import GordonLoader from 'components/Loader';
 import activity from 'services/activity';
 import session from 'services/session';
 import InvolvementStatusListItem from './components/InvolvementStatusList/index';
-import { Typography, Card, CardHeader } from '@material-ui/core';
+import { Typography, Card, CardHeader } from '@mui/material';
 import { NotFoundError } from 'services/error';
 
 const InvolvementStatusList = ({ status }) => {

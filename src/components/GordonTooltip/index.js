@@ -1,7 +1,7 @@
 import { gordonColors } from 'theme';
-import { Tooltip } from '@material-ui/core';
-import HelpIcon from '@material-ui/icons/Help';
-import { withStyles } from '@material-ui/core/styles';
+import { Tooltip } from '@mui/material';
+import HelpIcon from '@mui/icons-material/Help';
+import withStyles from '@mui/styles/withStyles';
 
 const StyledTooltip = withStyles({
   tooltip: {

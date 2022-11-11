@@ -7,7 +7,7 @@ import {
   CardHeader,
   Grid,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useAuthGroups, useNetworkStatus } from 'hooks';

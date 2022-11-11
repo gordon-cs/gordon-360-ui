@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid, List, Typography } from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
 import { gordonColors } from 'theme';
@@ -66,14 +66,13 @@ const OfficeInfoList = ({
   const updateOfficeInfo =
     myProf && PersonType?.includes('fac') ? (
       <Typography align="left" className={styles.note}>
-        NOTE: Update your office info
+        NOTE: Update your office info{' '}
         <a
           href="https://go.gordon.edu/general/myaccount.cfm"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: gordonColors.primary.blue }}
         >
-          {' '}
           here
         </a>
       </Typography>

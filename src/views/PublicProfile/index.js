@@ -40,7 +40,7 @@ const PublicProfile = () => {
     return <GordonOffline feature="Viewing a public profile" />;
   }
 
-  if (error && error.name === 'NotFoundError') {
+  if ((error && error.name === 'NotFoundError') || !profile) {
     return <Redirect to="/profilenotfound" />;
   }
 

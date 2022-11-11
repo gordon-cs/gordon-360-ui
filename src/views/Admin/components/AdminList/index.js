@@ -5,7 +5,7 @@ import admin from 'services/admin';
 import { gordonColors } from 'theme';
 import membership from 'services/membership';
 
-import { Card, Button, TextField, CardHeader, List } from '@material-ui/core';
+import { Card, Button, TextField, CardHeader, List } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 
 const AdminList = () => {
@@ -85,7 +85,7 @@ const AdminList = () => {
       >
         <TextField
           autoFocus
-          margin="dense"
+          size="small"
           label="Email"
           type="email"
           variant="filled"

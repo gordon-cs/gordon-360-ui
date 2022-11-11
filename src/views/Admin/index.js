@@ -1,11 +1,12 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 // import storageService from 'services/storage';
 import AdminList from './components/AdminList';
+import CliftonStrengthsUpload from './components/CliftonStrengthsUpload';
 import InvolvementStatusList from './components/InvolvementsStatus';
 
 const Admin = () => {
@@ -30,6 +31,10 @@ const Admin = () => {
 
         <Grid item xs={12} lg={8}>
           <InvolvementStatusList status={'Closed'} />
+        </Grid>
+
+        <Grid item xs={12} lg={8}>
+          <CliftonStrengthsUpload />
         </Grid>
 
         <Grid item xs={12} lg={8}>

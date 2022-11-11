@@ -1,5 +1,5 @@
-import { Divider, Grid, List, ListItem, Switch, Typography } from '@material-ui/core/';
-import LockIcon from '@material-ui/icons/Lock';
+import { Divider, Grid, List, ListItem, Switch, Typography } from '@mui/material/';
+import LockIcon from '@mui/icons-material/Lock';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { Link } from 'react-router-dom';
 import styles from './MembershipInfoCard.module.css';

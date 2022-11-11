@@ -1,7 +1,5 @@
 @import '../../vars';
 
-$drawer-width: 240px;
-
 .gordon_header {
   position: absolute;
   width: 100%;
@@ -19,7 +17,6 @@ $drawer-width: 240px;
     transition: min-width 0.2s;
     color: $neutral-white;
     text-transform: capitalize;
-    min-width: 90px;
 
     &.disabled_tab {
       color: $neutral-white-opacity30;

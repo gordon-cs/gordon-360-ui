@@ -11,7 +11,7 @@ import {
   Radio,
   RadioGroup,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import GordonLoader from 'components/Loader';
 import SymptomsDialog from 'components/SymptomsDialog';
 import { useEffect, useState } from 'react';
