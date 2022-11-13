@@ -329,7 +329,7 @@ const MemberListItem = ({
                     </Avatar>
                   </Grid>
                   <Grid>
-                    {profile.PersonType?.includes?.('stu') & member.IsAlumni ? (
+                    {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
                       <Typography>
                         {member.FirstName} {member.LastName}
                       </Typography>
