@@ -266,7 +266,7 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3}>
-            {profile.PersonType?.includes?.('stu') & member.IsAlumni ? (
+            {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
