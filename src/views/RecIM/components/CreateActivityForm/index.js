@@ -174,7 +174,6 @@ const CreateActivityForm = ({
     setSaving(true);
 
     let activityCreationRequest = { ...currentInfo, ...newInfo };
-    console.log(activityCreationRequest);
 
     activityCreationRequest.sportID = sports.filter(
       (sport) => sport.Name === activityCreationRequest.sportID,
