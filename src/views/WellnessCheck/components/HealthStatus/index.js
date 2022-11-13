@@ -1,5 +1,5 @@
-import { Button, Card, CardContent, CardHeader, Grid } from '@material-ui/core';
-import { Check, Clear, Remove } from '@material-ui/icons';
+import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
+import { Check, Clear, Remove } from '@mui/icons-material';
 import SymptomsDialog from 'components/SymptomsDialog';
 import { useUser, useWindowSize } from 'hooks';
 import { useEffect, useState } from 'react';

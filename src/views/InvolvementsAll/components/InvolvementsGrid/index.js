@@ -1,4 +1,4 @@
-import { Grid, Typography, Card, CardActionArea, CardMedia, CardContent } from '@material-ui/core';
+import { Grid, Typography, Card, CardActionArea, CardMedia, CardContent } from '@mui/material';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useHistory } from 'react-router-dom';
 import styles from './InvolvementsGrid.module.css';

@@ -10,8 +10,8 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from '@material-ui/core';
-import PostAddIcon from '@material-ui/icons/PostAdd';
+} from '@mui/material';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -24,53 +24,11 @@ import Cropper from 'react-cropper';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import newsService from 'services/news';
-import { gordonColors } from 'theme';
 import NewsList from './components/NewsList';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
-const styles2 = {
-  button: {
-    background: gordonColors.primary.blue,
-    color: 'white',
-
-    changeImageButton: {
-      background: gordonColors.primary.blue,
-      color: 'white',
-    },
-
-    resetButton: {
-      backgroundColor: '#f44336',
-      color: 'white',
-    },
-    cancelButton: {
-      backgroundColor: 'white',
-      color: gordonColors.primary.blue,
-      border: `1px solid ${gordonColors.primary.blue}`,
-      width: '38%',
-    },
-    hidden: {
-      display: 'none',
-    },
-  },
-  searchBar: {
-    margin: '0 auto',
-  },
-  newNewsForm: {
-    backgroundColor: '#fff',
-  },
-  fab: {
-    margin: 0,
-    top: 'auto',
-    right: 40,
-    bottom: 40,
-    left: 'auto',
-    position: 'fixed',
-    zIndex: 1,
-  },
-};
-
-const StudentNews = (props) => {
+const StudentNews = () => {
   const [search, setSearch] = useState('');
   const [openPostActivity, setOpenPostActivity] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -391,196 +349,171 @@ const StudentNews = (props) => {
       newsJSX = (
         <>
           {/* Button to Create Posting */}
-          <Fab variant="extended" color="primary" onClick={handlePostClick} style={styles2.fab}>
+          <Fab
+            variant="extended"
+            color="primary"
+            onClick={handlePostClick}
+            sx={{
+              position: 'fixed',
+              bottom: (theme) => theme.spacing(2),
+              right: (theme) => theme.spacing(2),
+            }}
+          >
             <PostAddIcon />
             Post Listing
           </Fab>
 
-          <Grid container justify="center">
+          <Grid container justifyContent="center" spacing={2}>
             {/* Search */}
-            <Grid item xs={12} md={12} lg={8}>
-              <Grid
-                container
-                alignItems="baseline"
-                justify="center"
-                style={styles2.searchBar}
-                spacing={5}
-              >
-                <Grid item xs={10} sm={8} md={8} lg={6}>
-                  <TextField
-                    id="search"
-                    label="Search news"
-                    variant="filled"
-                    value={search}
-                    onChange={(event) => {
-                      setSearch(event.target.value);
-                    }}
-                    margin="normal"
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
+            <Grid item xs={12} lg={8}>
+              <TextField
+                id="search"
+                label="Search news"
+                variant="filled"
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                }}
+                fullWidth
+              />
             </Grid>
-
-            {/* NOTE: leaving helper text for now in case
-            that is better than disabling submit button */}
-            {/* Create Posting */}
-            <GordonDialogBox
-              open={openPostActivity}
-              title="Post on Student News"
-              buttonClicked={currentlyEditing ? handleUpdate : handleSubmit}
-              buttonName={currentlyEditing ? 'Update' : 'Submit'}
-              isButtonDisabled={submitButtonDisabled}
-              cancelButtonClicked={handleWindowClose}
-              cancelButtonName="Cancel"
-            >
-              <Grid container>
-                {/* CATEGORY ENTRY */}
-                <Grid item>
-                  <TextField
-                    select
-                    label="Category"
-                    name="newPostCategory"
-                    variant="filled"
-                    value={newPostCategory}
-                    onChange={(event) => {
-                      setNewPostCategory(event.target.value);
-                    }}
-                    // helperText="Please choose a category."
-                    style={{ minWidth: '8rem' }}
-                  >
-                    {categories.map((category) => (
-                      <MenuItem key={category.categoryID} value={category.categoryID}>
-                        {category.categoryName}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-
-                {/* SUBJECT ENTRY */}
-                <Grid item xs={12}>
-                  <TextField
-                    label="Subject"
-                    variant="filled"
-                    margin="dense"
-                    fullWidth
-                    name="newPostSubject"
-                    value={newPostSubject}
-                    onChange={(event) => {
-                      setNewPostSubject(event.target.value);
-                    }}
-                    // helperText="Please enter a subject."
-                  />
-                </Grid>
-
-                {/* BODY ENTRY */}
-                <Grid item xs={12}>
-                  <TextField
-                    variant="filled"
-                    label="Body"
-                    margin="normal"
-                    multiline
-                    fullWidth
-                    rows={4}
-                    name="newPostBody"
-                    value={newPostBody}
-                    onChange={(event) => {
-                      setNewPostBody(event.target.value);
-                    }}
-                    // helperText="Please enter a body."
-                  />
-                </Grid>
-
-                {/* IMAGE ENTRY */}
-                <Grid item xs={12}>
-                  <div className="gc360_photo_dialog_box">
-                    <DialogContent className="gc360_photo_dialog_box_content">
-                      <DialogContentText className="gc360_photo_dialog_box_content_text">
-                        {createPhotoDialogBoxMessage()}
-                      </DialogContentText>
-                      {!cropperImageData && (
-                        <Dropzone
-                          onDropAccepted={onDropAccepted}
-                          onDropRejected={onDropRejected}
-                          accept="image/jpeg, image/jpg, image/png"
-                        >
-                          {({ getRootProps, getInputProps }) => (
-                            <section>
-                              <div
-                                className="gc360_photo_dialog_box_content_dropzone"
-                                {...getRootProps()}
-                              >
-                                <input {...getInputProps()} />
-                              </div>
-                            </section>
-                          )}
-                        </Dropzone>
-                      )}
-                      {cropperImageData && (
-                        <div className="gc360_photo_dialog_box_content_cropper">
-                          <Cropper
-                            ref={cropperRef}
-                            src={cropperImageData}
-                            autoCropArea={1}
-                            viewMode={3}
-                            aspectRatio={aspectRatio}
-                            highlight={false}
-                            background={false}
-                            zoom={onCropperZoom}
-                            zoomable={false}
-                            dragMode={'none'}
-                          />
-                        </div>
-                      )}
-                    </DialogContent>
-                    <DialogActions className="gc360_photo_dialog_box_actions_top">
-                      {cropperImageData && (
-                        <Tooltip
-                          classes={{ tooltip: 'tooltip' }}
-                          id="tooltip-hide"
-                          title="Remove this image from the post"
-                        >
-                          <Button
-                            variant="contained"
-                            onClick={() => {
-                              setCropperImageData(null);
-                            }}
-                            style={styles2.button.cancelButton}
-                            className="gc360_photo_dialog_box_content_button"
-                          >
-                            Remove picture
-                          </Button>
-                        </Tooltip>
-                      )}
-                    </DialogActions>
-                  </div>
-                </Grid>
-                <Grid item>
-                  {/* SUBMISSION GUIDELINES */}
-                  <Typography variant="caption" color="textSecondary" display="block">
-                    Student News is intended for announcing Gordon sponsored events, lost and found,
-                    rides, etc. All submissions must follow the Student News guidelines and will be
-                    reviewed at the discretion of The Office of Student Life...
-                    <a href="https://gordonedu.sharepoint.com/:b:/g/StudentLife/admin/EY22_o3g6vFEsfT2nYY-8JwB34OlYmA1oaE1f4FTGD2gew">
-                      More Details
-                    </a>
-                  </Typography>
-                </Grid>
-              </Grid>
-            </GordonDialogBox>
-
-            {/* USER FEEDBACK */}
-            <GordonSnackbar
-              {...snackbar}
-              onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-              anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-            />
 
             <Grid item xs={12} lg={8} style={{ marginBottom: '7rem' }}>
               {/* list of news */}
               {content}
             </Grid>
           </Grid>
+
+          {/* Create Posting */}
+          <GordonDialogBox
+            open={openPostActivity}
+            title="Post on Student News"
+            buttonClicked={currentlyEditing ? handleUpdate : handleSubmit}
+            buttonName={currentlyEditing ? 'Update' : 'Submit'}
+            isButtonDisabled={submitButtonDisabled}
+            cancelButtonClicked={handleWindowClose}
+            cancelButtonName="Cancel"
+          >
+            <Grid container direction="column" spacing={2} sx={{ mt: 0 }}>
+              <Grid item>
+                <TextField
+                  select
+                  fullWidth
+                  label="Category"
+                  name="newPostCategory"
+                  variant="filled"
+                  value={newPostCategory}
+                  onChange={(event) => setNewPostCategory(event.target.value)}
+                >
+                  {categories.map((category) => (
+                    <MenuItem key={category.categoryID} value={category.categoryID}>
+                      {category.categoryName}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item>
+                <TextField
+                  label="Subject"
+                  variant="filled"
+                  fullWidth
+                  name="newPostSubject"
+                  value={newPostSubject}
+                  onChange={(event) => setNewPostSubject(event.target.value)}
+                />
+              </Grid>
+              <Grid item>
+                <TextField
+                  variant="filled"
+                  label="Body"
+                  multiline
+                  fullWidth
+                  rows={4}
+                  name="newPostBody"
+                  value={newPostBody}
+                  onChange={(event) => setNewPostBody(event.target.value)}
+                />
+              </Grid>
+            </Grid>
+            <div className="gc360_photo_dialog_box">
+              <DialogContent className="gc360_photo_dialog_box_content">
+                <DialogContentText className="gc360_photo_dialog_box_content_text">
+                  {createPhotoDialogBoxMessage()}
+                </DialogContentText>
+                {!cropperImageData && (
+                  <Dropzone
+                    onDropAccepted={onDropAccepted}
+                    onDropRejected={onDropRejected}
+                    accept="image/jpeg, image/jpg, image/png"
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <section>
+                        <div
+                          className="gc360_photo_dialog_box_content_dropzone"
+                          {...getRootProps()}
+                        >
+                          <input {...getInputProps()} />
+                        </div>
+                      </section>
+                    )}
+                  </Dropzone>
+                )}
+                {cropperImageData && (
+                  <div className="gc360_photo_dialog_box_content_cropper">
+                    <Cropper
+                      ref={cropperRef}
+                      src={cropperImageData}
+                      autoCropArea={1}
+                      viewMode={3}
+                      aspectRatio={aspectRatio}
+                      highlight={false}
+                      background={false}
+                      zoom={onCropperZoom}
+                      zoomable={false}
+                      dragMode={'none'}
+                    />
+                  </div>
+                )}
+              </DialogContent>
+              <DialogActions className="gc360_photo_dialog_box_actions_top">
+                {cropperImageData && (
+                  <Tooltip
+                    classes={{ tooltip: 'tooltip' }}
+                    id="tooltip-hide"
+                    title="Remove this image from the post"
+                  >
+                    <Button
+                      variant="outlined"
+                      onClick={() => setCropperImageData(null)}
+                      className="gc360_photo_dialog_box_content_button"
+                    >
+                      Remove picture
+                    </Button>
+                  </Tooltip>
+                )}
+              </DialogActions>
+            </div>
+            {/* SUBMISSION GUIDELINES */}
+            <Typography variant="caption" color="textSecondary" display="block">
+              Student News is intended for announcing Gordon sponsored events, lost and found,
+              rides, etc. All submissions must follow the Student News guidelines and will be
+              reviewed at the discretion of The Office of Student Life...
+              <a
+                href="https://gordonedu.sharepoint.com/:b:/g/StudentLife/admin/EY22_o3g6vFEsfT2nYY-8JwB34OlYmA1oaE1f4FTGD2gew"
+                target="_blank"
+                rel="noreferrer"
+              >
+                More Details
+              </a>
+            </Typography>
+          </GordonDialogBox>
+
+          {/* USER FEEDBACK */}
+          <GordonSnackbar
+            {...snackbar}
+            onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          />
         </>
       );
       return newsJSX;

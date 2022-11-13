@@ -23,12 +23,12 @@ type SearchResultBase = {
   AD_Username: string;
 };
 
-type SearchResult = SearchResultBase &
+export type SearchResult = SearchResultBase &
   (
     | {
         Type: 'Student';
         Hall: string;
-        Class: string; // TODO
+        Class: keyof typeof Class;
         Major1Description: string;
         Major2Description: string;
         Major3Description: string;
@@ -39,7 +39,7 @@ type SearchResult = SearchResultBase &
         Mail_Location: string;
       }
     | {
-        Type: 'Staff' | 'Faculty' | 'Student' | '';
+        Type: 'Staff' | 'Faculty' | '';
         OnCampusDepartment: string;
         BuildingDescription: string;
         KeepPrivate: string;
@@ -56,49 +56,51 @@ type SearchResult = SearchResultBase &
       }
   );
 
-// TODO: Document return type
-const search = (
-  includeStudent: boolean,
-  includeFacStaff: boolean,
-  includeAlumni: boolean,
-  firstName: string,
-  lastName: string,
-  major: string,
-  minor: string,
-  hall: string,
-  classType: string, // The database has class types as integers
-  homeCity: string,
-  state: string,
-  country: string,
-  department: string,
-  building: string,
-): Promise<SearchResult[]> => {
+export type PeopleSearchQuery = {
+  includeStudent: boolean;
+  includeFacStaff: boolean;
+  includeAlumni: boolean;
+  first_name: string;
+  last_name: string;
+  major: string;
+  minor: string;
+  residence_hall: string;
+  class_year: keyof typeof Class | '';
+  home_town: string;
+  state: string;
+  country: string;
+  department: string;
+  building: string;
+  relationship_status?: string;
+};
+
+const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
   let params = Object.entries({
-    firstName,
-    lastName,
-    major,
-    minor,
-    hall,
-    classType,
-    homeCity,
-    state,
-    country,
-    department,
-    building,
+    firstName: searchFields.first_name,
+    lastName: searchFields.last_name,
+    major: searchFields.major,
+    minor: searchFields.minor,
+    hall: searchFields.residence_hall,
+    classType: searchFields.class_year === '' ? '' : Class[searchFields.class_year],
+    homeCity: searchFields.home_town,
+    state: searchFields.state,
+    country: searchFields.country,
+    department: searchFields.department,
+    building: searchFields.building,
   })
     .filter(([_key, value]) => Boolean(value))
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
     .join('&');
 
-  if (includeStudent) {
+  if (searchFields.includeStudent) {
     params += '&accountTypes=student';
   }
 
-  if (includeFacStaff) {
+  if (searchFields.includeFacStaff) {
     params += '&accountTypes=facstaff';
   }
 
-  if (includeAlumni) {
+  if (searchFields.includeAlumni) {
     params += '&accountTypes=alumni';
   }
 
@@ -111,23 +113,17 @@ const getMinors = (): Promise<string[]> => http.get(`advancedsearch/minors`);
 
 const getHalls = (): Promise<string[]> => http.get(`advancedsearch/halls`);
 
-const getStates = (): Promise<string[]> => http.get(`advancedsearch/states`);
-
-const getCountries = (): Promise<string[]> => http.get(`advancedsearch/countries`);
-
 const getDepartments = (): Promise<string[]> => http.get(`advancedsearch/departments`);
 
 const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
-const advancedSearchService = {
+const peopleSearchService = {
   search,
   getMajors,
   getMinors,
   getHalls,
-  getStates,
-  getCountries,
   getDepartments,
   getBuildings,
 };
 
-export default advancedSearchService;
+export default peopleSearchService;

@@ -9,8 +9,8 @@ import {
   Fab,
   Grid,
   Typography,
-} from '@material-ui/core';
-import GetAppIcon from '@material-ui/icons/GetApp';
+} from '@mui/material';
+import GetAppIcon from '@mui/icons-material/GetApp';
 import PWAInstructions from 'components/PWAInstructions/index';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';

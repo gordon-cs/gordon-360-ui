@@ -8,8 +8,8 @@ import {
   TableCell,
   TableHead,
   TableRow,
-} from '@material-ui/core';
-import { Cancel as XCircle, CheckCircle } from '@material-ui/icons';
+} from '@mui/material';
+import { Cancel as XCircle, CheckCircle } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import SpreadsheetUploader from 'components/SpreadsheetUploader';
 import { addDays, parseISO } from 'date-fns';
@@ -83,7 +83,7 @@ const CliftonStrengthsUpload = () => {
     <>
       <Card>
         <CardHeader className={styles.header} align="center" title="Clifton Strengths" />
-        <Grid container justify="center">
+        <Grid container justifyContent="center">
           <Button
             variant="contained"
             color="primary"

@@ -9,7 +9,7 @@ import {
   ListItemText,
   MenuItem,
   Select,
-} from '@material-ui/core';
+} from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../../../ApartmentApp.module.css';

@@ -1,4 +1,4 @@
-import { List } from '@material-ui/core';
+import { List } from '@mui/material';
 import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
 
 const ActivityList = ({ activities }) => {

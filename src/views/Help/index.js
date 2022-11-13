@@ -1,7 +1,7 @@
 import { gordonColors } from 'theme';
 import styles from './Help.module.css';
 
-import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@material-ui/core';
+import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
 
 const Help = () => {
   return (

@@ -141,8 +141,17 @@ const CreateActivityForm = ({
     setDisableUpdateButton(hasError || !hasChanges);
   }, [newInfo, currentInfo]);
 
-  const handleChange = (event) => {
+  const handleChange = (event, src) => {
     const getNewInfo = (currentValue) => {
+      // datetime pickers return value rather than event,
+      // so we can also manually specify target source and value
+      if (src) {
+        let newValue = event;
+        return {
+          ...currentValue,
+          [src]: newValue,
+        };
+      }
       return {
         ...currentValue,
         [event.target.name]:
@@ -201,6 +210,7 @@ const CreateActivityForm = ({
   const mapFieldsToInputs = (fields) => {
     return fields.map((field) => (
       <InformationField
+        key={field.name}
         error={field.error}
         label={field.label}
         name={field.name}

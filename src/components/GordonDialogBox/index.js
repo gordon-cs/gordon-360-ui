@@ -1,12 +1,5 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@material-ui/core';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Alert, AlertTitle } from '@mui/material';
 import styles from './GordonDialogBox.module.css';
 
 /**
@@ -60,17 +53,11 @@ const GordonDialogBox = ({
         )}
       </DialogTitle>
       <DialogContent className={styles.gc360_gordondialogbox_content} id="alert-dialog-description">
-        {typeof children === String ? (
-          <DialogContentText className={styles.gc360_gordondialogbox_text}>
-            {children}
-          </DialogContentText>
-        ) : (
-          children
-        )}
+        {children}
       </DialogContent>
       <DialogActions className={styles.gc360_gordondialogbox_actions}>
         {cancelButtonClicked && (
-          <Button variant="contained" onClick={cancelButtonClicked}>
+          <Button variant="contained" color="neutral" onClick={cancelButtonClicked}>
             {cancelButtonName ?? 'Cancel'}
           </Button>
         )}

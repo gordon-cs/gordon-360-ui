@@ -1,19 +1,6 @@
 @import '../../../../../../../../vars';
 
-.update {
-  margin: 1rem;
-
-  & :global(.MuiCard-root) {
-    margin-bottom: 1em;
-  }
-
-  & :global(.MuiGrid-root) {
-    margin-left: 2em;
-    margin-right: 2em;
-  }
-
-  &_header {
-    background-color: $primary-blue;
-    color: $neutral-white;
-  }
+.update_header {
+  background-color: $primary-blue;
+  color: $neutral-white;
 }

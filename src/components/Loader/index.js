@@ -1,4 +1,4 @@
-import { CircularProgress, Grid } from '@material-ui/core';
+import { CircularProgress, Grid } from '@mui/material';
 import styles from './Loader.module.css';
 
 const GordonLoader = ({ size = 100, color = 'primary' }) => {

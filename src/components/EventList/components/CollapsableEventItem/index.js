@@ -1,4 +1,4 @@
-import { CardContent, Collapse, Grid, Typography } from '@material-ui/core';
+import { CardContent, Collapse, Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { Component } from 'react';
 import styles from './CollapsableEventItem.module.css';
