@@ -196,7 +196,7 @@ const CreateActivityForm = ({
   };
 
   /**
-   * @param {Array<{name: string, label: string, type: string, menuItems: String[]}>} fields array of objects defining the properties of the input field
+   * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
    * @returns JSX correct input for each field based on type
    */
   const mapFieldsToInputs = (fields) => {
