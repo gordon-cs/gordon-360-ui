@@ -5,7 +5,7 @@ import {
   ListItem,
   ListItemText,
   Typography,
-} from '@material-ui/core/';
+} from '@mui/material';
 import styles from './Listing.module.css';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
