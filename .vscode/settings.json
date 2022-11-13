@@ -17,7 +17,7 @@
     // "editor.formatOnSave": true
   },
   "extensions.ignoreRecommendations": true,
-  "files.autoSave": "afterDelay",
+  "files.autoSave": "off",
   "debug.allowBreakpointsEverywhere": true,
   "gitdoc.enabled": false
 }
