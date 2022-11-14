@@ -33,7 +33,6 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   const [username, setUsername] = useState('');
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
-  const [bulkResults, setBulkResults] = useState();
   const [isSpreadsheetUploaderOpen, setIsSpreadsheetUploaderOpen] = useState(false);
   const { involvementCode, sessionCode } = useParams();
 
