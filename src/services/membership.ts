@@ -50,7 +50,7 @@ export type MembershipUpload = {
 const addMembership = (data: MembershipUpload): Promise<MembershipView> =>
   http.post('memberships', data);
 
-const addMemberships = async (memberships: MembershipView[]) =>
+const addMemberships = async (memberships: MembershipUpload[]) =>
   await http.post('memberships/bulk', memberships);
 
 const checkAdmin = async (
