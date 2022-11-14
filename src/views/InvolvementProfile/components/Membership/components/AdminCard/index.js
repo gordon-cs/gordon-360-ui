@@ -10,7 +10,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField
+  TextField,
 } from '@mui/material';
 import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
 
@@ -52,15 +52,16 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   };
 
   const handleAddMember = async () => {
-    if (!username.toLowerCase().includes('@gordon.edu')) {
-      setUsername(username.replace('@gordon.edu', ''));
+    let usernameNoEmail = username.toLowerCase();
+    if (!usernameNoEmail.includes('@gordon.edu')) {
+      usernameNoEmail = usernameNoEmail.replace('@gordon.edu', '');
     }
 
     try {
       let data = {
         Activity: involvementCode,
         Session: sessionCode,
-        Username: username,
+        Username: usernameNoEmail,
         Participation: participationCode,
         CommentText: titleComment,
         GroupAdmin: false,
