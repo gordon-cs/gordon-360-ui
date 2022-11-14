@@ -52,16 +52,16 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   };
 
   const handleAddMember = async () => {
-    let usernameNoEmail = username.toLowerCase();
-    if (!usernameNoEmail.includes('@gordon.edu')) {
-      usernameNoEmail = usernameNoEmail.replace('@gordon.edu', '');
+    let formattedUsername = username.toLowerCase();
+    if (!formattedUsername.includes('@gordon.edu')) {
+      formattedUsername = formattedUsername.replace('@gordon.edu', '');
     }
 
     try {
       let data = {
         Activity: involvementCode,
         Session: sessionCode,
-        Username: usernameNoEmail,
+        Username: formattedUsername,
         Participation: participationCode,
         CommentText: titleComment,
         GroupAdmin: false,
