@@ -1,12 +1,12 @@
 import { Grid } from '@mui/material';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
-import { postSmashActivity } from 'services/recim';
+import { createNewActivity, getAllSports } from 'services/recim';
 
 const CreateActivityForm = ({
   closeWithSnackbar,
@@ -15,13 +15,28 @@ const CreateActivityForm = ({
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
-    regStart: false,
-    regEnd: false,
+    registrationStart: false,
+    registrationEnd: false,
     type: false,
-    sport: false,
-    cap: false,
-    individual: false,
+    sportID: false,
+    maxCapacity: false,
+    soloRegistration: false,
   });
+
+  // Fetch data required for form creation
+  const [loading, setLoading] = useState(true);
+  const [sports, setSports] = useState([]);
+  useEffect(() => {
+    const loadSports = async () => {
+      setLoading(true);
+
+      // Get all active activities where registration has not closed
+      let tempSports = await getAllSports();
+      setSports(tempSports);
+      setLoading(false);
+    };
+    loadSports();
+  }, []);
 
   const createActivityFields = [
     {
@@ -33,16 +48,16 @@ const CreateActivityForm = ({
     },
     {
       label: 'Registration Start',
-      name: 'regStart',
-      type: 'datetime',
-      error: errorStatus.regStart,
+      name: 'registrationStart',
+      type: 'text',
+      error: errorStatus.registrationStart,
       helperText: '*Required',
     },
     {
       label: 'Registration End',
-      name: 'regEnd',
-      type: 'datetime',
-      error: errorStatus.regEnd,
+      name: 'registrationEnd',
+      type: 'text',
+      error: errorStatus.registrationEnd,
       helperText: '*Required',
     },
     {
@@ -55,24 +70,26 @@ const CreateActivityForm = ({
     },
     {
       label: 'Sport',
-      name: 'sport',
+      name: 'sportID',
       type: 'select',
-      menuItems: ['Existing Sport 0', 'Existing Sprot 1', 'Existing Sport 2'],
-      error: errorStatus.sport,
+      menuItems: sports.map((sport) => {
+        return sport.Name;
+      }),
+      error: errorStatus.sportID,
       helperText: '*Required',
     },
     {
       label: 'Maximum Capacity',
-      name: 'cap',
+      name: 'maxCapacity',
       type: 'text',
-      error: errorStatus.cap,
+      error: errorStatus.maxCapactity,
       helperText: '*Required',
     },
     {
       label: 'Individual Sport',
-      name: 'individual',
+      name: 'soloRegistration',
       type: 'checkbox',
-      error: errorStatus.individual,
+      error: errorStatus.soloRegistration,
       helperText: '*Required',
     },
   ];
@@ -85,14 +102,15 @@ const CreateActivityForm = ({
   const currentInfo = useMemo(() => {
     return {
       name: '',
-      regStart: '',
-      regEnd: '',
+      registrationStart: '',
+      registrationEnd: '',
       type: '',
-      sport: '',
-      cap: '',
-      individual: false,
+      sportID: '',
+      maxCapacity: '',
+      soloRegistration: false,
     };
   }, []);
+
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
@@ -116,21 +134,8 @@ const CreateActivityForm = ({
       if (currentInfo[field] !== newInfo[field]) {
         hasChanges = true;
       }
-      switch (field) {
-        case 'name':
-        case 'regStart':
-        case 'regEnd':
-        case 'type':
-        case 'sport':
-        case 'cap':
-        case 'individual':
-          handleSetError(field, newInfo[field] === '');
-          hasError = newInfo[field] === '' || hasError;
-          break;
-
-        default:
-          break;
-      }
+      handleSetError(field, newInfo[field] === '');
+      hasError = newInfo[field] === '' || hasError;
     }
     setDisableUpdateButton(hasError || !hasChanges);
   }, [newInfo, currentInfo]);
@@ -160,14 +165,14 @@ const CreateActivityForm = ({
     return matchingField.label;
   };
 
-  function getNewFields(newInfo, currentInfo) {
+  function getNewFields(currentInfo, newInfo) {
     const updatedFields = [];
-    Object.entries(currentInfo).forEach(([field, value]) => {
-      if (newInfo[field] !== value)
+    Object.entries(newInfo).forEach(([key, value]) => {
+      if (currentInfo[key] !== value)
         updatedFields.push({
-          Field: field,
+          Field: key,
           Value: value,
-          Label: getFieldLabel(field),
+          Label: getFieldLabel(key),
         });
     });
     return updatedFields;
@@ -175,9 +180,14 @@ const CreateActivityForm = ({
 
   const handleConfirm = () => {
     setSaving(true);
-    //hard coded for activity, sportId & typeID are hard coded to 0
-    //until we pull API data
-    postSmashActivity().then(() => {
+
+    let activityCreationRequest = { ...currentInfo, ...newInfo };
+
+    activityCreationRequest.sportID = sports.filter(
+      (sport) => sport.Name === activityCreationRequest.sportID,
+    )[0].ID;
+
+    createNewActivity(activityCreationRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
@@ -185,14 +195,6 @@ const CreateActivityForm = ({
       });
       handleWindowClose();
     });
-    // createNewActivity(requestData).then(() => {
-    //   setSaving(false);
-    //   closeWithSnackbar({
-    //     type: 'success',
-    //     message: 'Your new activity has been created or whatever message you want here',
-    //   });
-    //   handleWindowClose();
-    // });
   };
 
   const handleWindowClose = () => {
@@ -224,6 +226,37 @@ const CreateActivityForm = ({
     ));
   };
 
+  let content;
+  if (loading) {
+    content = <GordonLoader />;
+  } else {
+    content = (
+      <>
+        <ContentCard title="Activity Information">
+          {mapFieldsToInputs(createActivityFields)}
+        </ContentCard>
+
+        <GordonDialogBox
+          open={openConfirmWindow}
+          title="Confirm Your Activity"
+          buttonClicked={!isSaving ? handleConfirm : null}
+          buttonName="Confirm"
+          // in case you want to authenticate something change isButtonDisabled
+          isButtonDisabled={false}
+          cancelButtonClicked={!isSaving ? handleWindowClose : null}
+          cancelButtonName="Cancel"
+        >
+          <ConfirmationWindowHeader />
+          <Grid container>
+            {getNewFields(currentInfo, newInfo).map((field) => (
+              <ConfirmationRow field={field} />
+            ))}
+          </Grid>
+          {isSaving ? <GordonLoader size={32} /> : null}
+        </GordonDialogBox>
+      </>
+    );
+  }
   return (
     <GordonDialogBox
       open={openCreateActivityForm}
@@ -239,28 +272,7 @@ const CreateActivityForm = ({
       }}
       cancelButtonName="cancel"
     >
-      <ContentCard title="Activity Information">
-        {mapFieldsToInputs(createActivityFields)}
-      </ContentCard>
-
-      <GordonDialogBox
-        open={openConfirmWindow}
-        title="Confirm Your Activity"
-        buttonClicked={!isSaving ? handleConfirm : null}
-        buttonName="Confirm"
-        // in case you want to authenticate something change isButtonDisabled
-        isButtonDisabled={false}
-        cancelButtonClicked={!isSaving ? handleWindowClose : null}
-        cancelButtonName="Cancel"
-      >
-        <ConfirmationWindowHeader />
-        <Grid container>
-          {getNewFields(currentInfo, newInfo).map((field) => (
-            <ConfirmationRow key={field} field={field} prevValue={currentInfo[field.Field]} />
-          ))}
-        </Grid>
-        {isSaving ? <GordonLoader size={32} /> : null}
-      </GordonDialogBox>
+      {content}
     </GordonDialogBox>
   );
 };
