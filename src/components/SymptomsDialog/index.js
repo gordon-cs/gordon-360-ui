@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from '@material-ui/core';
+} from '@mui/material';
 import wellness, { StatusColor } from 'services/wellness';
 import styles from './SymptomsDialog.module.css';
 

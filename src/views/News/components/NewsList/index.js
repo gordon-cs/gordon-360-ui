@@ -1,4 +1,4 @@
-import { Card, Grid, List, Typography } from '@material-ui/core';
+import { Card, Grid, List, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';

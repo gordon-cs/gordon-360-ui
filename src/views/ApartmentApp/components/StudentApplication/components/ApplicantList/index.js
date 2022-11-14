@@ -9,14 +9,14 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import ClearIcon from '@material-ui/icons/Clear';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import HelpIcon from '@material-ui/icons/Help';
-import StarBorder from '@material-ui/icons/StarBorder';
-import GordonPeopleSearch from 'components/Header/components/PeopleSearch';
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import HelpIcon from '@mui/icons-material/Help';
+import StarBorder from '@mui/icons-material/StarBorder';
+import GordonQuickSearch from 'components/Header/components/QuickSearch';
 import { useState } from 'react';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
@@ -119,7 +119,7 @@ const ApplicantList = ({
           </Grid>
           <Grid container item justifyContent="center" xs={12}>
             <Grid item xs={9} sm={5} className={styles.people_search_parent}>
-              <GordonPeopleSearch
+              <GordonQuickSearch
                 disableLink
                 customPlaceholderText={'Add Applicant'}
                 onSearchSubmit={(selectedUsername) => disabled || onSearchSubmit(selectedUsername)}

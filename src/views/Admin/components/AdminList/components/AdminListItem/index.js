@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { gordonColors } from 'theme';
 import admin from 'services/admin';
+import { gordonColors } from 'theme';
 
-import { Button, ListItem, ListItemText, ListItemSecondaryAction } from '@material-ui/core';
+import { Button, ListItem, ListItemText, ListItemSecondaryAction } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 
 const AdminListItem = ({ Admin, onRemove }) => {
@@ -10,8 +10,8 @@ const AdminListItem = ({ Admin, onRemove }) => {
 
   const handleConfirmedRemove = () => {
     // TODO: Detect removing self and display confirmation dialog
-    admin.removeAdmin(Admin.ADMIN_ID);
-    onRemove(Admin.ADMIN_ID);
+    admin.removeAdmin(Admin.Username);
+    onRemove(Admin.Username);
   };
 
   const buttonStyle = {
@@ -22,7 +22,7 @@ const AdminListItem = ({ Admin, onRemove }) => {
   return (
     <>
       <ListItem divider>
-        <ListItemText primary={Admin.USER_NAME} />
+        <ListItemText primary={Admin.Username} />
         <ListItemSecondaryAction>
           <Button variant="contained" style={buttonStyle} onClick={() => setIsDialogOpen(true)}>
             Remove
@@ -37,7 +37,7 @@ const AdminListItem = ({ Admin, onRemove }) => {
         buttonClicked={handleConfirmedRemove}
         cancelButtonClicked={() => setIsDialogOpen(false)}
       >
-        Are you sure you want to remove {Admin.USER_NAME} from being a site admin?
+        Are you sure you want to remove {Admin.Username} from being a site admin?
       </GordonDialogBox>
     </>
   );

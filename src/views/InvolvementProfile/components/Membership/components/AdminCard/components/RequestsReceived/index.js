@@ -5,9 +5,9 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
-  makeStyles,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { formatDistanceToNow } from 'date-fns';
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -33,7 +33,7 @@ const RequestsReceived = ({ onAddMember }) => {
   const { involvementCode, sessionCode } = useParams();
 
   useEffect(() => {
-    requestService.getRequests(involvementCode, sessionCode).then(setRequests);
+    requestService.getPendingRequests(involvementCode, sessionCode).then(setRequests);
   }, [involvementCode, sessionCode]);
 
   const onApprove = async (id) => {
@@ -61,7 +61,7 @@ const RequestsReceived = ({ onAddMember }) => {
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
                 secondary={`${formatDistanceToNow(new Date(request.DateSent))} - ${
-                  request.CommentText
+                  request.Description
                 }`}
               />
 

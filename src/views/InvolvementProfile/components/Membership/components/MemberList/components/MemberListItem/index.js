@@ -15,8 +15,8 @@ import {
   Select,
   TextField,
   Typography,
-} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -43,6 +43,12 @@ const PARTICIPATION_LEVELS = {
   Guest: 'GUEST',
 };
 
+const PlaceHolderAvatar = () => (
+  <svg width="50" height="50" viewBox="0 0 50 50">
+    <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
+  </svg>
+);
+
 const MemberListItem = ({
   member,
   isAdmin,
@@ -67,36 +73,24 @@ const MemberListItem = ({
   const [avatar, setAvatar] = useState();
   const { profile } = useUser();
 
-  const PlaceHolderAvatar = () => (
-    <svg width="50" height="50" viewBox="0 0 50 50">
-      <rect width="50" height="50" rx="10" ry="10" fill="#CCC" />
-    </svg>
-  );
-
   useEffect(() => {
     const loadAvatar = async () => {
-      if (member.AD_Username) {
+      if (member.Username) {
         const { def: defaultImage, pref: preferredImage } = await userService.getImage(
-          member.AD_Username,
+          member.Username,
         );
-        setAvatar(preferredImage || defaultImage);
+        const avatarImage = preferredImage || defaultImage;
+        setAvatar(avatarImage ? `data:image/jpg;base64,${avatarImage}` : undefined);
       }
     };
     loadAvatar();
-  }, [member.AD_Username]);
+  }, [member.Username]);
 
   const handleToggleGroupAdmin = async () => {
-    if (isAdmin && !isSiteAdmin && member.IDNumber === profile.ID) {
+    if (isAdmin && !isSiteAdmin && member.IDNumber?.toString() === profile.ID) {
       setIsUnadminSelfDialogOpen(true);
     } else {
-      let data = {
-        MEMBERSHIP_ID: member.MembershipID,
-        ACT_CDE: member.ActivityCode,
-        SESS_CDE: member.SessionCode,
-        ID_NUM: member.IDNumber,
-        PART_CDE: member.Participation,
-      };
-      await membership.toggleGroupAdmin(member.MembershipID, data);
+      await membership.setGroupAdmin(member.MembershipID, !groupAdmin);
       setGroupAdmin((c) => !c);
     }
   };
@@ -114,12 +108,12 @@ const MemberListItem = ({
 
   const onEditMember = async () => {
     let data = {
-      MEMBERSHIP_ID: member.MembershipID,
-      ACT_CDE: member.ActivityCode,
-      SESS_CDE: member.SessionCode,
-      ID_NUM: member.IDNumber,
-      PART_CDE: participation,
-      COMMENT_TXT: titleDialog,
+      MembershipID: member.MembershipID,
+      Activity: member.ActivityCode,
+      Session: member.SessionCode,
+      Username: member.Username,
+      Participation: participation,
+      CommentText: titleDialog,
     };
     await membership.editMembership(member.MembershipID, data);
     setTitle(titleDialog);
@@ -127,24 +121,29 @@ const MemberListItem = ({
   };
 
   const confirmLeave = async () => {
-    await membership.remove(member.MembershipID);
-    let inInvolvement = await membership.search(
-      member.IDNumber,
-      member.SessionCode,
-      member.ActivityCode,
-    )[0];
-    if (inInvolvement) {
-      createSnackbar('Leaving involvement failed', 'error');
+    let deleted = await membership.remove(member.MembershipID);
+
+    const isRemovingSelf = member.Username === profile.AD_Username;
+
+    if (deleted.MembershipID !== member.MembershipID) {
+      const removeMessage = isRemovingSelf
+        ? 'Failed to leave'
+        : `Failed to remove ${member.Username}`;
+      createSnackbar(removeMessage, 'error');
     } else {
-      createSnackbar('Leaving involvement succeeded', 'success');
+      const removeMessage = isRemovingSelf
+        ? 'Successfully left'
+        : `Successfully removed ${member.Username}`;
+      createSnackbar(removeMessage, 'success');
     }
+
     onLeave();
     setIsLeaveAlertOpen(false);
     setIsRemoveAlertOpen(false);
   };
 
   const handleRemove = () => {
-    if (member.IDNumber === profile.ID) {
+    if (member.Username === profile.AD_Username) {
       setIsLeaveAlertOpen(true);
     } else {
       setIsRemoveAlertOpen(true);
@@ -231,7 +230,7 @@ const MemberListItem = ({
           cancelButtonClicked={() => setIsRemoveAlertOpen(false)}
         >
           Are you sure you want to remove {member.FirstName} {member.LastName} (
-          {member.ParticipationDescription}) from this involvement?
+          {member.ParticipationDescription.trim()}) from this involvement?
         </GordonDialogBox>
       </>
     );
@@ -239,15 +238,11 @@ const MemberListItem = ({
     options = (
       <Grid container alignItems="center" justifyContent="space-evenly">
         <Grid item>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={groupAdmin}
-                color="primary"
-                disabled={disabled}
-                onChange={handleToggleGroupAdmin}
-              />
-            }
+          <Checkbox
+            checked={groupAdmin}
+            color="primary"
+            disabled={disabled}
+            onChange={handleToggleGroupAdmin}
           />
         </Grid>
 
@@ -260,7 +255,7 @@ const MemberListItem = ({
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={1} style={rowStyle}>
             <Avatar
-              src={`data:image/jpg;base64,${avatar}`}
+              src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
               style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
@@ -269,7 +264,7 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3}>
-            <Link href={`/profile/${member.AD_Username}`}>
+            <Link href={`/profile/${member.Username}`} underline="hover">
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
@@ -279,7 +274,7 @@ const MemberListItem = ({
             <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
           <Grid item xs={2} style={rowStyle}>
-            <Typography>{member.Mail_Location}</Typography>
+            <Typography>{profile.Mail_Location}</Typography>
           </Grid>
           <Grid item xs={2} style={rowStyle}>
             {options}
@@ -317,7 +312,7 @@ const MemberListItem = ({
                 <Grid container spacing={3} wrap="nowrap" alignItems="center">
                   <Grid>
                     <Avatar
-                      src={`data:image/jpg;base64,${avatar}`}
+                      src={avatar}
                       alt={`${member.FirstName} ${member.LastName}`}
                       variant="rounded"
                       style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
@@ -326,7 +321,7 @@ const MemberListItem = ({
                     </Avatar>
                   </Grid>
                   <Grid>
-                    <Link href={`/profile/${member.AD_Username}`}>
+                    <Link href={`/profile/${member.AD_Username}`} underline="hover">
                       <Typography>
                         {member.FirstName} {member.LastName}
                       </Typography>
@@ -350,7 +345,7 @@ const MemberListItem = ({
       );
     }
   } else {
-    if (member.IDNumber === profile.ID) {
+    if (member.IDNumber?.toString() === profile.ID) {
       options = (
         <Button variant="contained" style={redButton} onClick={() => setIsLeaveAlertOpen(true)}>
           LEAVE
@@ -364,7 +359,7 @@ const MemberListItem = ({
         <Grid container alignItems="center" spacing={2} wrap="nowrap">
           <Grid item md={1} style={rowStyle}>
             <Avatar
-              src={`data:image/jpg;base64,${avatar}`}
+              src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
               style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
@@ -373,7 +368,7 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3} style={rowStyle}>
-            <Link href={`/profile/${member.AD_Username}`}>
+            <Link href={`/profile/${member.AD_Username}`} underline="hover">
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>

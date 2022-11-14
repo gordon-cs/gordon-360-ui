@@ -1,4 +1,4 @@
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid } from '@mui/material';
 import mascot from './mascot.svg';
 import ScottieDog from './components/ScottieDog';
 

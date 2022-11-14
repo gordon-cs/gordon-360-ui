@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@material-ui/core';
+import { Button, Grid, Typography } from '@mui/material';
 import { useUser } from 'hooks';
 import { Link } from 'react-router-dom';
 import { gordonColors } from 'theme';

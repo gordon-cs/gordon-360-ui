@@ -7,7 +7,7 @@ import {
   TableRow,
   Toolbar,
   Typography,
-} from '@material-ui/core/';
+} from '@mui/material/';
 
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../../../../../ApartmentApp.module.css';

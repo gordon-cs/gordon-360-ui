@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
-} from '@material-ui/core';
+} from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -45,13 +45,13 @@ const NonMemberButtons = ({
 
   const onRequest = async () => {
     let data = {
-      ACT_CDE: involvementCode,
-      SESS_CDE: sessionCode,
-      ID_NUM: profile.ID,
-      PART_CDE: participationCode,
-      DATE_SENT: new Date().toLocaleString(),
-      COMMENT_TXT: titleComment,
-      STATUS: RequestStatus.Pending,
+      Activity: involvementCode,
+      Session: sessionCode,
+      Username: profile.AD_Username,
+      Participation: participationCode,
+      DateSent: new Date().toLocaleString(),
+      CommentText: titleComment,
+      Status: RequestStatus.Pending,
     };
 
     try {

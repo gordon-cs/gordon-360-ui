@@ -33,7 +33,8 @@ const UserContextProvider = ({ children }: { children?: JSX.Element | JSX.Elemen
   const isAuthenticated = useIsAuthenticated();
   const [user, setUser] = useState<User>(initialUserState);
 
-  const updateProfile = () => getUserProfile().then((p) => setUser((u) => ({ ...u, profile: p })));
+  const updateProfile = () =>
+    getUserProfile().then((p) => setUser((u) => ({ ...u, profile: p ?? null })));
 
   const updateImage = async () =>
     getUserImages().then((i) => setUser((u) => ({ ...u, images: i })));
@@ -43,7 +44,7 @@ const UserContextProvider = ({ children }: { children?: JSX.Element | JSX.Elemen
       if (isAuthenticated) {
         setUser((u) => ({ ...u, loading: true }));
         const [profile, images] = await getAllUserData();
-        setUser({ profile, images, loading: false });
+        setUser({ profile: profile ?? null, images, loading: false });
         // setUser({ profile, images, loading: true });
       } else {
         setUser(initialUserState);

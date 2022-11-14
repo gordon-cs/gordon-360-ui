@@ -8,7 +8,7 @@ import {
   List,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
 import GordonLoader from 'components/Loader';
@@ -61,7 +61,7 @@ const InvolvementProfile = () => {
           involvementService.getAdvisors(involvementCode, sessionCode),
           involvementService.getGroupAdmins(involvementCode, sessionCode),
           sessionService.get(sessionCode),
-          membershipService.checkAdmin(profile.ID, sessionCode, involvementCode),
+          membershipService.checkAdmin(profile.AD_Username, sessionCode, involvementCode),
         ]);
 
         setInvolvementInfo(involvementInfo);
@@ -119,7 +119,7 @@ const InvolvementProfile = () => {
   };
 
   const maxCropPreviewWidth = () => {
-    const breakpointWidth = 960;
+    const breakpointWidth = 900;
     const smallScreenRatio = 0.75;
     const largeScreenRatio = 0.525;
     const maxHeightRatio = 0.5;
@@ -356,7 +356,7 @@ const InvolvementProfile = () => {
               <Grid item xs={12}>
                 <TextField
                   label="Description"
-                  margin="dense"
+                  size="small"
                   multiline
                   fullWidth
                   defaultValue={ActivityBlurb}
@@ -367,7 +367,7 @@ const InvolvementProfile = () => {
               <Grid item xs={12}>
                 <TextField
                   label="Special Information for Joining"
-                  margin="dense"
+                  size="small"
                   multiline
                   fullWidth
                   defaultValue={ActivityJoinInfo}
@@ -378,7 +378,7 @@ const InvolvementProfile = () => {
               <Grid item xs={12}>
                 <TextField
                   label="Website"
-                  margin="dense"
+                  size="small"
                   multiline
                   fullWidth
                   defaultValue={ActivityURL}

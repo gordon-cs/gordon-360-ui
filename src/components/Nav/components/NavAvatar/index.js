@@ -1,4 +1,4 @@
-import { Avatar, Button, Typography } from '@material-ui/core';
+import { Avatar, Button, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';

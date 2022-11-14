@@ -1,10 +1,10 @@
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import membershipService from 'services/membership';
+import membershipService, { Participation } from 'services/membership';
 import AdminCard from './components/AdminCard';
 import MemberList from './components/MemberList';
 import NonMemberButtons from './components/NonMemberButtons';
@@ -52,12 +52,12 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
 
   const handleSubscribe = async () => {
     let data = {
-      ACT_CDE: involvementCode,
-      SESS_CDE: sessionCode,
-      ID_NUM: profile.ID,
-      PART_CDE: 'GUEST',
-      COMMENT_TXT: 'Subscriber',
-      GRP_ADMIN: false,
+      Activity: involvementCode,
+      Session: sessionCode,
+      Username: profile.AD_Username,
+      Participation: Participation.Guest,
+      CommentText: 'Subscriber',
+      GroupAdmin: false,
     };
     await membershipService.addMembership(data);
     setParticipationDetail(

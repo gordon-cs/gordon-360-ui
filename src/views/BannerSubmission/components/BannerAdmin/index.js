@@ -1,5 +1,5 @@
-import { Fab } from '@material-ui/core';
-import PostAddIcon from '@material-ui/icons/PostAdd';
+import { Fab } from '@mui/material';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import { useWindowSize } from 'hooks';

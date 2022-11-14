@@ -8,7 +8,7 @@ import {
   Grid,
   InputLabel,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory
 import styles from '../../EnrollmentCheckIn.module.css';
