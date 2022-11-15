@@ -15,6 +15,7 @@ export type Membership = {
   GroupAdmin: boolean;
   IDNumber: number;
   LastName: string;
+  IsAlumni: boolean;
   MembershipID: number;
   Participation: Participation;
   ParticipationDescription: ParticipationDesc;
