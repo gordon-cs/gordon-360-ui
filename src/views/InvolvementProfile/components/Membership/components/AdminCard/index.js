@@ -1,3 +1,4 @@
+import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
 import {
   Button,
   Card,
@@ -10,10 +11,9 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import GordonDialogBox from 'components/GordonDialogBox';
 import SpreadsheetUploader from 'components/SpreadsheetUploader';
 import { useEffect, useState } from 'react';
-import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
-import GordonDialogBox from 'components/GordonDialogBox';
 import { useParams } from 'react-router';
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
@@ -52,25 +52,23 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
     setIsRosterClosed(false);
   };
 
-  const handleBulkImport = async (data) => {
+  const handleBulkImport = (data) => {
     let partMap = { Leader: 'LEAD', Member: 'MEMBR', Advisor: 'ADV', Guest: 'GUEST' };
-    let formattedData = await Promise.all(
-      data.map(async (row) => {
-        if (!row.Username.toLowerCase().includes('@gordon.edu')) {
-          row.Username = row.Username + '@gordon.edu';
-        }
-        let data = {
-          ACT_CDE: involvementCode,
-          SESS_CDE: sessionCode,
-          // TODO: Fix API to accept username instead of ID and then remove Group Admin privilege to access ID.
-          ID_NUM: (await membershipService.getEmailAccount(row.Username)).GordonID,
-          PART_CDE: partMap[row.Participation],
-          COMMENT_TXT: row['Title/Comment'],
-          GRP_ADMIN: false,
-        };
-        return data;
-      }),
-    );
+    let formattedData = data.map((row) => {
+      if (row.Username.toLowerCase().includes('@gordon.edu')) {
+        row.Username = row.Username.replace('@gordon.edu', '');
+      }
+      return {
+        Activity: involvementCode,
+        Session: sessionCode,
+        Username: row.Username,
+        Participation: partMap[row.Participation],
+        CommentText: row['Title/Comment'],
+        GroupAdmin: false,
+        Privacy: false,
+      };
+    });
+    console.log(formattedData);
     membershipService.addMemberships(formattedData).then(onAddMember);
   };
 
