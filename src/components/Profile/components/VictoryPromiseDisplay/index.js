@@ -1,12 +1,4 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Grid, Tooltip, Typography } from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import { Component, Fragment } from 'react';
 import { Polar } from 'react-chartjs-2';

@@ -1,18 +1,16 @@
 import http from './http';
 
-type Admin = {
-  ID_NUM: number;
-  ADMIN_ID: number;
-  USER_NAME: string;
-  EMAIL: string;
-  SUPER_ADMIN: boolean;
+type AdminView = {
+  Username: string;
+  Email: string;
+  IsSuperAdmin: boolean;
 };
 
-const getAdmins = (): Promise<Admin[]> => http.get(`admins`);
+const getAdmins = (): Promise<AdminView[]> => http.get(`admins`);
 
-const removeAdmin = (id: number): Promise<boolean> => http.del(`admins/${id}`);
+const removeAdmin = (username: string): Promise<boolean> => http.del(`admins/${username}`);
 
-const addAdmin = (admin: Admin): Promise<Admin> => http.post(`admins/`, admin);
+const addAdmin = (admin: AdminView): Promise<AdminView> => http.post(`admins`, admin);
 
 const adminService = {
   getAdmins,

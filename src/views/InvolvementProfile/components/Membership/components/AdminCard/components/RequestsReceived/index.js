@@ -33,7 +33,7 @@ const RequestsReceived = ({ onAddMember }) => {
   const { involvementCode, sessionCode } = useParams();
 
   useEffect(() => {
-    requestService.getRequests(involvementCode, sessionCode).then(setRequests);
+    requestService.getPendingRequests(involvementCode, sessionCode).then(setRequests);
   }, [involvementCode, sessionCode]);
 
   const onApprove = async (id) => {
@@ -61,7 +61,7 @@ const RequestsReceived = ({ onAddMember }) => {
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
                 secondary={`${formatDistanceToNow(new Date(request.DateSent))} - ${
-                  request.CommentText
+                  request.Description
                 }`}
               />
 

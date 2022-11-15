@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-
+import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
 import {
   Button,
   Card,
@@ -9,17 +8,18 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  TextField,
   Select,
+  TextField,
 } from '@mui/material';
-import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
-
+import GordonDialogBox from 'components/GordonDialogBox';
+import SpreadsheetUploader from 'components/SpreadsheetUploader';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
-import RequestsReceived from './components/RequestsReceived';
 import { gordonColors } from 'theme';
-import { useParams } from 'react-router';
-import GordonDialogBox from 'components/GordonDialogBox';
+import RequestsReceived from './components/RequestsReceived';
+import MemberUploadTemplate from './memberUploadTemplate.csv';
 
 const headerStyle = {
   backgroundColor: gordonColors.primary.blue,
@@ -33,6 +33,7 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   const [username, setUsername] = useState('');
   const [participationCode, setParticipationCode] = useState('');
   const [titleComment, setTitleComment] = useState('');
+  const [isSpreadsheetUploaderOpen, setIsSpreadsheetUploaderOpen] = useState(false);
   const { involvementCode, sessionCode } = useParams();
 
   useEffect(() => {
@@ -51,21 +52,41 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
     setIsRosterClosed(false);
   };
 
+  const handleBulkImport = (data) => {
+    let partMap = { Leader: 'LEAD', Member: 'MEMBR', Advisor: 'ADV', Guest: 'GUEST' };
+    let formattedData = data.map((row) => {
+      if (row.Username.toLowerCase().includes('@gordon.edu')) {
+        row.Username = row.Username.replace('@gordon.edu', '');
+      }
+      return {
+        Activity: involvementCode,
+        Session: sessionCode,
+        Username: row.Username,
+        Participation: partMap[row.Participation],
+        CommentText: row['Title/Comment'],
+        GroupAdmin: false,
+        Privacy: false,
+      };
+    });
+    console.log(formattedData);
+    membershipService.addMemberships(formattedData).then(onAddMember);
+  };
+
   const handleAddMember = async () => {
-    let memberEmail = username;
-    if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
-      memberEmail = memberEmail + '@gordon.edu';
+    let formattedUsername = username.toLowerCase();
+    if (!formattedUsername.includes('@gordon.edu')) {
+      formattedUsername = formattedUsername.replace('@gordon.edu', '');
     }
 
     try {
       let data = {
-        ACT_CDE: involvementCode,
-        SESS_CDE: sessionCode,
-        // TODO: Fix API to accept username instead of ID and then remove Group Admin privilege to access ID.
-        ID_NUM: (await membershipService.getEmailAccount(memberEmail)).GordonID,
-        PART_CDE: participationCode,
-        COMMENT_TXT: titleComment,
-        GRP_ADMIN: false,
+        Activity: involvementCode,
+        Session: sessionCode,
+        Username: formattedUsername,
+        Participation: participationCode,
+        CommentText: titleComment,
+        GroupAdmin: false,
+        Privacy: false,
       };
 
       await membershipService.addMembership(data);
@@ -99,15 +120,30 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
               <RequestsReceived onAddMember={onAddMember} />
             </Grid>
             <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={isRosterClosed}
-                onClick={() => setIsDialogOpen(true)}
-                startIcon={<AddPersonIcon />}
-              >
-                Add member
-              </Button>
+              <Grid container spacing={2} direction="row">
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={isRosterClosed}
+                    onClick={() => setIsDialogOpen(true)}
+                    startIcon={<AddPersonIcon />}
+                  >
+                    Add member
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={isRosterClosed}
+                    onClick={() => setIsSpreadsheetUploaderOpen(true)}
+                    startIcon={<AddPersonIcon />}
+                  >
+                    Add multiple members
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item>
               {(!isRosterClosed || isSiteAdmin) && (
@@ -123,6 +159,18 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
           </Grid>
         </CardContent>
       </Card>
+
+      <SpreadsheetUploader
+        onSubmitData={(data) => handleBulkImport(data)}
+        open={isSpreadsheetUploaderOpen}
+        title={`Add members to ${involvementDescription}`}
+        buttonName={'Add Members'}
+        setOpen={setIsSpreadsheetUploaderOpen}
+        requiredColumns={['Username', 'Participation']}
+        otherColumns={['Title/Comment']}
+        maxColumns={3}
+        template={MemberUploadTemplate}
+      />
 
       <GordonDialogBox
         open={isDialogOpen}

@@ -11,7 +11,7 @@ export enum Platform {
 export const platforms = Object.values(Platform);
 
 export type SocialMediaInfo = {
-    Icon: JSX.Element;
+  Icon: JSX.Element;
   prefix: string;
   prefix2?: string;
 };

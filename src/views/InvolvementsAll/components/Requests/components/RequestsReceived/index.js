@@ -22,7 +22,9 @@ const RequestReceived = ({ involvement }) => {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    requestService.getRequests(involvement.ActivityCode, involvement.SessionCode).then(setRequests);
+    requestService
+      .getPendingRequests(involvement.ActivityCode, involvement.SessionCode)
+      .then(setRequests);
   }, [involvement]);
 
   const onApprove = async (id) => {

@@ -64,8 +64,18 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
 
   const toggleMembershipPrivacy = async (membership) => {
     try {
-      await membershipService.toggleMembershipPrivacy(membership);
-      createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
+      let updated = await membershipService.setMembershipPrivacy(
+        membership.MembershipID,
+        !membership.Privacy,
+      );
+      if (updated.Privacy !== membership.Privacy) {
+        createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
+      } else {
+        createSnackbar(
+          membership.Privacy ? 'Failed to Show Membership' : 'Failed to Hide Membership',
+          'error',
+        );
+      }
       setMemberships(
         memberships.map((m) => {
           if (m.MembershipID === membership.MembershipID) {

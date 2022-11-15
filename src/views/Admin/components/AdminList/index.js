@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
-import AdminListItem from './components/AdminListItem';
 import GordonLoader from 'components/Loader';
+import { useEffect, useState } from 'react';
 import admin from 'services/admin';
 import { gordonColors } from 'theme';
-import membership from 'services/membership';
+import AdminListItem from './components/AdminListItem';
 
 import { Card, Button, TextField, CardHeader, List } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -12,7 +11,7 @@ const AdminList = () => {
   const [loading, setLoading] = useState(true);
   const [admins, setAdmins] = useState([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newAdminEmail, setNewAdminEmail] = useState('');
+  const [newAdmin, setNewAdmin] = useState('');
 
   useEffect(() => {
     const loadAdmins = async () => {
@@ -24,27 +23,22 @@ const AdminList = () => {
   }, []);
 
   const handleSubmit = async () => {
-    let email = newAdminEmail;
-    if (!newAdminEmail.toLowerCase().includes('@gordon.edu')) {
-      email = newAdminEmail + '@gordon.edu';
-    }
-    // TODO: Refactor API to not require ID?
-    const { GordonID: addID } = await membership.getEmailAccount(email);
+    const [email, username] = newAdmin.toLowerCase().includes('@gordon.edu')
+      ? [newAdmin, newAdmin.replace('@gordon.edu', '')]
+      : [newAdmin + '@gordon.edu', newAdmin];
+
     let data = {
-      ID_NUM: addID,
-      EMAIL: email,
-      USER_NAME: email.split('@')[0],
-      SUPER_ADMIN: true, //Used to be distinction between superadmin (godmode), admin, and groupadmin
-      //now just superadmin and groupadmin
+      Email: email,
+      Username: username,
+      IsSuperAdmin: true,
     };
-    // TODO: Add snackbar feedback, especially for errors like 404
     await admin.addAdmin(data);
     setIsDialogOpen(false);
     setAdmins(await admin.getAdmins());
   };
 
-  const handleRemove = async (adminID) => {
-    setAdmins((prevAdmins) => prevAdmins.filter((a) => a.ADMIN_ID !== adminID));
+  const handleRemove = async (Username) => {
+    setAdmins((prevAdmins) => prevAdmins.filter((a) => a.Username !== Username));
   };
 
   const buttonStyle = {
@@ -63,7 +57,7 @@ const AdminList = () => {
       ) : (
         <List>
           {admins.map((superadmin) => (
-            <AdminListItem key={superadmin.ADMIN_ID} Admin={superadmin} onRemove={handleRemove} />
+            <AdminListItem key={superadmin.Username} Admin={superadmin} onRemove={handleRemove} />
           ))}
         </List>
       )}
@@ -89,7 +83,7 @@ const AdminList = () => {
           label="Email"
           type="email"
           variant="filled"
-          onChange={(e) => setNewAdminEmail(e.target.value)}
+          onChange={(e) => setNewAdmin(e.target.value)}
           fullWidth
         />
       </GordonDialogBox>

@@ -1,12 +1,4 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Link,
-  Typography,
-} from '@mui/material';
+import { Button, Card, CardActions, CardContent, CardMedia, Link, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import styles from './Banner.module.css';
 

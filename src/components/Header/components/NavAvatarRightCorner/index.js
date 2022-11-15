@@ -68,7 +68,8 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
           aria-owns={'global-menu'}
           aria-haspopup="true"
           onClick={onClick}
-          size="large">
+          size="large"
+        >
           {avatar}
         </IconButton>
       </Tooltip>

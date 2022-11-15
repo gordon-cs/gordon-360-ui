@@ -322,7 +322,7 @@ type ProfileFieldUpdate = {
   Label: string;
 };
 
-const requestInfoUpdate = (updatedFields: ProfileFieldUpdate[]) => 
+const requestInfoUpdate = (updatedFields: ProfileFieldUpdate[]) =>
   http.post('profiles/update/', updatedFields);
 
 const userService = {

@@ -61,7 +61,7 @@ const InvolvementProfile = () => {
           involvementService.getAdvisors(involvementCode, sessionCode),
           involvementService.getGroupAdmins(involvementCode, sessionCode),
           sessionService.get(sessionCode),
-          membershipService.checkAdmin(profile.ID, sessionCode, involvementCode),
+          membershipService.checkAdmin(profile.AD_Username, sessionCode, involvementCode),
         ]);
 
         setInvolvementInfo(involvementInfo);
@@ -439,8 +439,12 @@ const InvolvementProfile = () => {
                 </Grid>
                 <Grid item>
                   <Typography>
-                    <strong>To join: </strong>
-                    {ActivityJoinInfo}
+                    {ActivityJoinInfo && (
+                      <>
+                        <strong>To join: </strong>
+                        {ActivityJoinInfo}
+                      </>
+                    )}
                   </Typography>
                 </Grid>
                 <Membership

@@ -1,5 +1,5 @@
-import { Button, Card, Typography } from '@mui/material';
 import { Description as SpreadsheetIcon } from '@mui/icons-material';
+import { Button, Card, Typography } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { useEffect, useState } from 'react';
@@ -93,9 +93,11 @@ const SpreadsheetUploader = ({
         Accepted file types: CSV, XLSX
       </Typography>
       {template ? (
-        <Link to={template} target="_blank" download className={styles.dropzone_templatelink}>
-          Download Template
-        </Link>
+        <Typography className={styles.dropzone_text} variant="body2">
+          <Link to={template} target="_blank" download className={styles.dropzone_templatelink}>
+            Download Template
+          </Link>
+        </Typography>
       ) : null}
     </>
   );

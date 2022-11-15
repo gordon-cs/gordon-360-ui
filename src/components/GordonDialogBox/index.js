@@ -34,6 +34,7 @@ const GordonDialogBox = ({
   return (
     <Dialog
       className={styles.gc360_gordondialogbox}
+      onBackdropClick={cancelButtonClicked}
       {...otherProps}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
