@@ -17,12 +17,14 @@ type Activity = {
   Completed: boolean;
 };
 
+// Currently just for posting a team,
+// need to figure out whether to use StatusID or Status (for get)
 type Team = {
-  ID: number;
   Name: string;
-  Logo: string;
   StatusID: number;
   ActivityID: number;
+  Private: boolean;
+  Logo: string;
 };
 
 const createNewActivity = async (newActivity: Activity) => {
@@ -46,7 +48,7 @@ const getAllSports = async (): Promise<Object[]> => {
 };
 
 const createNewTeam = async (newTeam: Team) => {
-  await http.post('recim/teams', newTeam);
+  return await http.post('recim/teams', newTeam);
 };
 
 export { getAllActivities, createNewActivity, getActivityByID, getAllSports, createNewTeam };
