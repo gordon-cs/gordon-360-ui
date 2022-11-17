@@ -35,7 +35,7 @@ const decodeSessionCode = (sessionCode: string): string => {
   let sessionCodeSeason = sessionCode.substr(4);
   switch (sessionCodeSeason) {
     case '01':
-      return sessionCodeYear + 'winter';
+      return sessionCodeYear + 'spring';
     case '05':
       return sessionCodeYear + 'summer';
     case '09':
@@ -57,7 +57,7 @@ const encodeSessionCode = (readableSessionCode: string): string => {
   let sessionCodeYear = readableSessionCode.substr(0, 4);
   let sessionCodeSeason = readableSessionCode.substr(4);
   switch (sessionCodeSeason) {
-    case 'winter':
+    case 'spring':
       return sessionCodeYear + '01';
     case 'summer':
       return sessionCodeYear + '05';
