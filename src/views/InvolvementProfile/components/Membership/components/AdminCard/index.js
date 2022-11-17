@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
 import {
   Button,
   Card,
@@ -12,7 +13,6 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
 
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useParams } from 'react-router';
@@ -25,6 +25,16 @@ const headerStyle = {
   backgroundColor: gordonColors.primary.blue,
   color: '#FFF',
   padding: '10px',
+};
+
+const stripDomain = (input, domain = '@gordon.edu') => {
+  const domainIndex = input.toLowerCase().lastIndexOf(domain);
+
+  // if domain was not found, return entire input
+  if (domainIndex === -1) return input;
+
+  // return input until domain
+  return input.substring(0, domainIndex);
 };
 
 const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddMember }) => {
@@ -52,10 +62,7 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   };
 
   const handleAddMember = async () => {
-    let formattedUsername = username.toLowerCase();
-    if (!formattedUsername.includes('@gordon.edu')) {
-      formattedUsername = formattedUsername.replace('@gordon.edu', '');
-    }
+    let formattedUsername = stripDomain(username.toLowerCase());
 
     try {
       let data = {
