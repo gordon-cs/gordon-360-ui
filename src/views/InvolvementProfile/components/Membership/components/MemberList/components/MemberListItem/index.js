@@ -264,11 +264,17 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3}>
-            <Link href={`/profile/${member.Username}`} underline="hover">
+            {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
-            </Link>
+            ) : (
+              <Link href={`/profile/${member.Username}`} underline="hover">
+                <Typography>
+                  {member.FirstName} {member.LastName}
+                </Typography>
+              </Link>
+            )}
           </Grid>
           <Grid item xs={4} style={rowStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
@@ -321,11 +327,17 @@ const MemberListItem = ({
                     </Avatar>
                   </Grid>
                   <Grid>
-                    <Link href={`/profile/${member.AD_Username}`} underline="hover">
+                    {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
                       <Typography>
                         {member.FirstName} {member.LastName}
                       </Typography>
-                    </Link>
+                    ) : (
+                      <Link href={`/profile/${member.AD_Username}`} underline="hover">
+                        <Typography>
+                          {member.FirstName} {member.LastName}
+                        </Typography>
+                      </Link>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
@@ -368,11 +380,17 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3} style={rowStyle}>
-            <Link href={`/profile/${member.AD_Username}`} underline="hover">
+            {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
-            </Link>
+            ) : (
+              <Link href={`/profile/${member.AD_Username}`} underline="hover">
+                <Typography>
+                  {member.FirstName} {member.LastName}
+                </Typography>
+              </Link>
+            )}
           </Grid>
           <Grid item xs={4} style={rowStyle}>
             <Typography>{title ? title : participationDescription}</Typography>

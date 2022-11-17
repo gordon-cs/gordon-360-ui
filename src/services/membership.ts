@@ -14,6 +14,7 @@ export type MembershipView = {
   GroupAdmin: boolean;
   Username: string;
   LastName: string;
+  IsAlumni: boolean;
   MembershipID: number;
   Participation: Participation;
   ParticipationDescription: ParticipationDesc;
