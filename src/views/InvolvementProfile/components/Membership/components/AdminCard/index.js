@@ -18,6 +18,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { useParams } from 'react-router';
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
+import utils from 'services/utils';
 import { gordonColors } from 'theme';
 import RequestsReceived from './components/RequestsReceived';
 
@@ -25,16 +26,6 @@ const headerStyle = {
   backgroundColor: gordonColors.primary.blue,
   color: '#FFF',
   padding: '10px',
-};
-
-const stripDomain = (input, domain = '@gordon.edu') => {
-  const domainIndex = input.toLowerCase().lastIndexOf(domain);
-
-  // if domain was not found, return entire input
-  if (domainIndex === -1) return input;
-
-  // return input until domain
-  return input.substring(0, domainIndex);
 };
 
 const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddMember }) => {
@@ -62,7 +53,7 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   };
 
   const handleAddMember = async () => {
-    let formattedUsername = stripDomain(username.toLowerCase());
+    let formattedUsername = utils.stripDomain(username.toLowerCase());
 
     try {
       let data = {
