@@ -18,7 +18,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { useParams } from 'react-router';
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
-import utils from 'services/utils';
+import { stripDomain } from 'services/utils';
 import { gordonColors } from 'theme';
 import RequestsReceived from './components/RequestsReceived';
 
@@ -53,7 +53,7 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   };
 
   const handleAddMember = async () => {
-    let formattedUsername = utils.stripDomain(username.toLowerCase());
+    let formattedUsername = stripDomain(username.toLowerCase());
 
     try {
       let data = {
