@@ -1,3 +1,4 @@
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   Accordion,
   AccordionDetails,
@@ -16,7 +17,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -24,9 +24,12 @@ import membership from 'services/membership';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
 
-const rowStyle = {
+const rowComponentStyle = {
   margin: '10px 0px',
   padding: '10px 0px',
+};
+const rowStyle = {
+  marginLeft: '0px',
 };
 const redButton = {
   background: gordonColors.secondary.red,
@@ -254,8 +257,8 @@ const MemberListItem = ({
 
     content = (
       <>
-        <Grid container alignItems="center" spacing={2}>
-          <Grid item xs={1} style={rowStyle}>
+        <Grid container alignItems="center" spacing={2} style={rowStyle}>
+          <Grid item xs={1} style={rowComponentStyle}>
             <Avatar
               src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
@@ -265,20 +268,20 @@ const MemberListItem = ({
               {!avatar && <PlaceHolderAvatar />}
             </Avatar>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} style={rowComponentStyle}>
             <Link href={`/profile/${member.AD_Username}`} underline="hover">
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
             </Link>
           </Grid>
-          <Grid item xs={4} style={rowStyle}>
+          <Grid item xs={4} style={rowComponentStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
-          <Grid item xs={2} style={rowStyle}>
+          <Grid item xs={2} style={rowComponentStyle}>
             <Typography>{member.Mail_Location}</Typography>
           </Grid>
-          <Grid item xs={2} style={rowStyle}>
+          <Grid item xs={2} style={rowComponentStyle}>
             {options}
           </Grid>
         </Grid>
