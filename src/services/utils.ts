@@ -152,24 +152,24 @@ export const searchParamSerializerFactory = <
     }, initialSearchParams);
   };
 
-  /**
-   * Removes the specified domain name from an email.
-   *
-   * If the domain is not specified, it defaults to '@gordon.edu'
-   *
-   * @param input the string from which to remove the domain
-   * @param domain the domain to remove, default '@gordon.edu'
-   * @returns the value of input with the domain stripped off the end
-   */
-  const stripDomain = (input: string, domain: string = '@gordon.edu') => {
-    const domainIndex = input.toLowerCase().lastIndexOf(domain);
-
-    // if domain was not found, return entire input
-    if (domainIndex === -1) return input;
-
-    // return input until domain
-    return input.substring(0, domainIndex);
-  };
-
   return { serializeSearchParams, deserializeSearchParams, stripDomain };
+};
+
+/**
+ * Removes the specified domain name from an email.
+ *
+ * If the domain is not specified, it defaults to '@gordon.edu'
+ *
+ * @param input the string from which to remove the domain
+ * @param domain the domain to remove, default '@gordon.edu'
+ * @returns the value of input with the domain stripped off the end
+ */
+export const stripDomain = (input: string, domain: string = '@gordon.edu') => {
+  const domainIndex = input.toLowerCase().lastIndexOf(domain);
+
+  // if domain was not found, return entire input
+  if (domainIndex === -1) return input;
+
+  // return input until domain
+  return input.substring(0, domainIndex);
 };
