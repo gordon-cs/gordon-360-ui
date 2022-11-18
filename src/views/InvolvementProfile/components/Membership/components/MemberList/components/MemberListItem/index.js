@@ -78,29 +78,22 @@ const MemberListItem = ({
 
   useEffect(() => {
     const loadAvatar = async () => {
-      if (member.AD_Username) {
+      if (member.Username) {
         const { def: defaultImage, pref: preferredImage } = await userService.getImage(
-          member.AD_Username,
+          member.Username,
         );
         const avatarImage = preferredImage || defaultImage;
         setAvatar(avatarImage ? `data:image/jpg;base64,${avatarImage}` : undefined);
       }
     };
     loadAvatar();
-  }, [member.AD_Username]);
+  }, [member.Username]);
 
   const handleToggleGroupAdmin = async () => {
     if (isAdmin && !isSiteAdmin && member.IDNumber?.toString() === profile.ID) {
       setIsUnadminSelfDialogOpen(true);
     } else {
-      let data = {
-        MEMBERSHIP_ID: member.MembershipID,
-        ACT_CDE: member.ActivityCode,
-        SESS_CDE: member.SessionCode,
-        ID_NUM: member.IDNumber,
-        PART_CDE: member.Participation,
-      };
-      await membership.toggleGroupAdmin(member.MembershipID, data);
+      await membership.setGroupAdmin(member.MembershipID, !groupAdmin);
       setGroupAdmin((c) => !c);
     }
   };
@@ -118,12 +111,12 @@ const MemberListItem = ({
 
   const onEditMember = async () => {
     let data = {
-      MEMBERSHIP_ID: member.MembershipID,
-      ACT_CDE: member.ActivityCode,
-      SESS_CDE: member.SessionCode,
-      ID_NUM: member.IDNumber,
-      PART_CDE: participation,
-      COMMENT_TXT: titleDialog,
+      MembershipID: member.MembershipID,
+      Activity: member.ActivityCode,
+      Session: member.SessionCode,
+      Username: member.Username,
+      Participation: participation,
+      CommentText: titleDialog,
     };
     await membership.editMembership(member.MembershipID, data);
     setTitle(titleDialog);
@@ -131,24 +124,29 @@ const MemberListItem = ({
   };
 
   const confirmLeave = async () => {
-    await membership.remove(member.MembershipID);
-    let inInvolvement = await membership.search(
-      member.IDNumber,
-      member.SessionCode,
-      member.ActivityCode,
-    )[0];
-    if (inInvolvement) {
-      createSnackbar('Leaving involvement failed', 'error');
+    let deleted = await membership.remove(member.MembershipID);
+
+    const isRemovingSelf = member.Username === profile.AD_Username;
+
+    if (deleted.MembershipID !== member.MembershipID) {
+      const removeMessage = isRemovingSelf
+        ? 'Failed to leave'
+        : `Failed to remove ${member.Username}`;
+      createSnackbar(removeMessage, 'error');
     } else {
-      createSnackbar('Leaving involvement succeeded', 'success');
+      const removeMessage = isRemovingSelf
+        ? 'Successfully left'
+        : `Successfully removed ${member.Username}`;
+      createSnackbar(removeMessage, 'success');
     }
+
     onLeave();
     setIsLeaveAlertOpen(false);
     setIsRemoveAlertOpen(false);
   };
 
   const handleRemove = () => {
-    if (member.IDNumber?.toString() === profile.ID) {
+    if (member.Username === profile.AD_Username) {
       setIsLeaveAlertOpen(true);
     } else {
       setIsRemoveAlertOpen(true);
@@ -235,7 +233,7 @@ const MemberListItem = ({
           cancelButtonClicked={() => setIsRemoveAlertOpen(false)}
         >
           Are you sure you want to remove {member.FirstName} {member.LastName} (
-          {member.ParticipationDescription}) from this involvement?
+          {member.ParticipationDescription.trim()}) from this involvement?
         </GordonDialogBox>
       </>
     );
@@ -269,17 +267,23 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3} style={rowComponentStyle}>
-            <Link href={`/profile/${member.AD_Username}`} underline="hover">
+            {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
-            </Link>
+            ) : (
+              <Link href={`/profile/${member.Username}`} underline="hover">
+                <Typography>
+                  {member.FirstName} {member.LastName}
+                </Typography>
+              </Link>
+            )}
           </Grid>
           <Grid item xs={4} style={rowComponentStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
           <Grid item xs={2} style={rowComponentStyle}>
-            <Typography>{member.Mail_Location}</Typography>
+            <Typography>{profile.Mail_Location}</Typography>
           </Grid>
           <Grid item xs={2} style={rowComponentStyle}>
             {options}
@@ -326,11 +330,17 @@ const MemberListItem = ({
                     </Avatar>
                   </Grid>
                   <Grid>
-                    <Link href={`/profile/${member.AD_Username}`} underline="hover">
+                    {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
                       <Typography>
                         {member.FirstName} {member.LastName}
                       </Typography>
-                    </Link>
+                    ) : (
+                      <Link href={`/profile/${member.AD_Username}`} underline="hover">
+                        <Typography>
+                          {member.FirstName} {member.LastName}
+                        </Typography>
+                      </Link>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>
@@ -373,11 +383,17 @@ const MemberListItem = ({
             </Avatar>
           </Grid>
           <Grid item xs={3} style={rowStyle}>
-            <Link href={`/profile/${member.AD_Username}`} underline="hover">
+            {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
               <Typography>
                 {member.FirstName} {member.LastName}
               </Typography>
-            </Link>
+            ) : (
+              <Link href={`/profile/${member.AD_Username}`} underline="hover">
+                <Typography>
+                  {member.FirstName} {member.LastName}
+                </Typography>
+              </Link>
+            )}
           </Grid>
           <Grid item xs={4} style={rowStyle}>
             <Typography>{title ? title : participationDescription}</Typography>

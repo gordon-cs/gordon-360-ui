@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
 import {
   Button,
   Card,
@@ -9,17 +10,17 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  TextField,
   Select,
+  TextField,
 } from '@mui/material';
-import { PersonAdd as AddPersonIcon } from '@mui/icons-material';
 
+import GordonDialogBox from 'components/GordonDialogBox';
+import { useParams } from 'react-router';
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
-import RequestsReceived from './components/RequestsReceived';
+import { stripDomain } from 'services/utils';
 import { gordonColors } from 'theme';
-import { useParams } from 'react-router';
-import GordonDialogBox from 'components/GordonDialogBox';
+import RequestsReceived from './components/RequestsReceived';
 
 const headerStyle = {
   backgroundColor: gordonColors.primary.blue,
@@ -52,20 +53,17 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   };
 
   const handleAddMember = async () => {
-    let memberEmail = username;
-    if (!memberEmail.toLowerCase().includes('@gordon.edu')) {
-      memberEmail = memberEmail + '@gordon.edu';
-    }
+    let formattedUsername = stripDomain(username.toLowerCase());
 
     try {
       let data = {
-        ACT_CDE: involvementCode,
-        SESS_CDE: sessionCode,
-        // TODO: Fix API to accept username instead of ID and then remove Group Admin privilege to access ID.
-        ID_NUM: (await membershipService.getEmailAccount(memberEmail)).GordonID,
-        PART_CDE: participationCode,
-        COMMENT_TXT: titleComment,
-        GRP_ADMIN: false,
+        Activity: involvementCode,
+        Session: sessionCode,
+        Username: formattedUsername,
+        Participation: participationCode,
+        CommentText: titleComment,
+        GroupAdmin: false,
+        Privacy: false,
       };
 
       await membershipService.addMembership(data);
