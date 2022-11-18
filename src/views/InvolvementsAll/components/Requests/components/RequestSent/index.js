@@ -17,7 +17,7 @@ const RequestSent = ({ member, onCancel }) => {
   };
 
   let cancel;
-  if (member.RequestApproved === 'Pending') {
+  if (member.Status === 'Pending') {
     cancel = (
       <Button variant="outlined" size="small" style={button} onClick={handleCancel}>
         Cancel
@@ -49,7 +49,7 @@ const RequestSent = ({ member, onCancel }) => {
           <Grid item xs={12} sm={4}>
             <Grid container direction="row" alignItems="center">
               <Grid item xs={6} align="center">
-                <Typography>{member.RequestApproved}</Typography>
+                <Typography>{member.Status}</Typography>
               </Grid>
               <Grid item xs={6} align="center">
                 {cancel}
