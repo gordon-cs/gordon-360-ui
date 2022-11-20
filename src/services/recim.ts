@@ -48,6 +48,7 @@ type uploadParticipantNotification = {
   EndDate: Date;
 };
 
+//Activity Routes
 const createNewActivity = async (newActivity: uploadActivity) => {
   await http.post('recim/activities', newActivity);
 };
@@ -56,14 +57,31 @@ const getActivityByID = async (ID: number): Promise<Object[]> => {
   return await http.get(`recim/activities/${ID}`);
 };
 
-const getAllActivities = async (active: boolean, time: String): Promise<Object[]> => {
-  if (time) {
-    return await http.get(`recim/activities?${active}&${time}`);
+const getAllActivities = async (
+  active: boolean,
+  time: String,
+  registrationOpen: boolean,
+): Promise<Object[]> => {
+  if (registrationOpen) {
+    return await http.get(`recim/activities?registrationOpen=${registrationOpen}`);
   } else {
-    return await http.get(`recim/activities?${active}`);
+    if (time) {
+      return await http.get(`recim/activities?active=${active}&time=${time}`);
+    } else {
+      return await http.get(`recim/activities?active=${active}`);
+    }
   }
 };
 
+const editActivity = async (
+  activityID: number,
+  patchActivity: uploadActivity,
+): Promise<Object[]> => {
+  //return await http.patch(`recim/activities`, patchActivity);
+  //http does not have patch?
+};
+
+//Sport Routes
 const getAllSports = async (): Promise<Object[]> => {
   return await http.get(`recim/sports`);
 };
