@@ -7,7 +7,7 @@ import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import styles from './Activity.module.css';
 import { MatchList, TeamList } from './../../components/List';
-import CreateTeamForm from './components/CreateTeamForm';
+import CreateTeamForm from '../../components/Forms/CreateTeamForm';
 
 const Activity = () => {
   const { activityID } = useParams();
@@ -104,6 +104,7 @@ const Activity = () => {
           }}
           openCreateTeamForm={openCreateTeamForm}
           setOpenCreateTeamForm={(bool) => setOpenCreateTeamForm(bool)}
+          activityID={activityID}
         />
         <Typography>Activity ID: {activityID} (testing purposes only)</Typography>
       </>
