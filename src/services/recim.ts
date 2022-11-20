@@ -79,6 +79,7 @@ const editActivity = async (
 ): Promise<Object[]> => {
   //return await http.patch(`recim/activities`, patchActivity);
   //http does not have patch?
+  return [];
 };
 
 //Sport Routes
