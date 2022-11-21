@@ -3,7 +3,6 @@ import http from './http';
 // all Gordon Rec-IM http requests
 
 type Activity = {
-  ID: number;
   Name: string;
   RegistrationStart: string;
   RegistrationEnd: string;
@@ -19,7 +18,7 @@ type Activity = {
 
 // Currently just for posting a team,
 // need to figure out whether to use StatusID or Status (for get)
-type Team = {
+type PostTeam = {
   Name: string;
   ActivityID: number;
   Logo: string;
@@ -35,9 +34,9 @@ const getActivityByID = async (ID: number): Promise<Object[]> => {
 
 const getAllActivities = async (active: boolean, time: String): Promise<Object[]> => {
   if (time) {
-    return await http.get(`recim/activities?${active}&${time}`);
+    return await http.get(`recim/activities?$active={active}&time=${time}`);
   } else {
-    return await http.get(`recim/activities?${active}`);
+    return await http.get(`recim/activities?active=${active}`);
   }
 };
 
@@ -45,8 +44,19 @@ const getAllSports = async (): Promise<Object[]> => {
   return await http.get(`recim/sports`);
 };
 
-const createNewTeam = async (newTeam: Team, captainUsername: string) => {
+const createNewTeam = async (newTeam: PostTeam, captainUsername: string) => {
   return await http.post(`recim/teams?captain=${captainUsername}`, newTeam);
 };
 
-export { getAllActivities, createNewActivity, getActivityByID, getAllSports, createNewTeam };
+const getMyTeams = async (username: string): Promise<Object[]> => {
+  return await http.get(`recim/participants/${username}/teams`);
+};
+
+export {
+  getAllActivities,
+  createNewActivity,
+  getActivityByID,
+  getAllSports,
+  createNewTeam,
+  getMyTeams,
+};

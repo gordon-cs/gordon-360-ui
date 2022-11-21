@@ -74,7 +74,7 @@ const TeamListing = ({ team }) => {
       className="gc360_link"
     >
       <Grid container className={styles.listing}>
-        <Grid item>Team Listing</Grid>
+        <Grid item>{team.Name}</Grid>
       </Grid>
     </ListItem>
   );

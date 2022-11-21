@@ -7,7 +7,7 @@ import GordonLoader from 'components/Loader';
 import styles from './Home.module.css';
 import recimLogo from './../../recim_logo.png';
 import { ActivityList, TeamList } from './../../components/List';
-import { getAllActivities } from 'services/recim';
+import { getAllActivities, getMyTeams } from 'services/recim';
 import { DateTime } from 'luxon';
 
 const Home = () => {
@@ -15,6 +15,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [openCreateActivityForm, setOpenCreateActivityForm] = useState(false);
   const [activities, setActivities] = useState([]);
+  const [myTeams, setMyTeams] = useState([]);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -26,10 +27,13 @@ const Home = () => {
 
       // Get all active activities where registration has not closed
       setActivities(await getAllActivities(false, DateTime.now().toISO()));
+      if (profile) {
+        setMyTeams(await getMyTeams(profile.AD_Username));
+      }
       setLoading(false);
     };
     loadActivities();
-  }, [profile]);
+  }, [profile, openCreateActivityForm]);
 
   const createActivityButton = (
     <Grid container justifyContent="center">
@@ -67,12 +71,7 @@ const Home = () => {
       <CardHeader title="My Teams" className={styles.cardHeader} />
       <CardContent>
         {/* if I am apart of any active teams, map them here */}
-        <TeamList
-          teams={[
-            { activityID: '123456', ID: '789' },
-            { activityID: '12345', ID: '987' },
-          ]}
-        />
+        <TeamList teams={myTeams} />
         {/* else "no teams" */}
         <Typography variant="body1" paragraph>
           You're not yet apart of any teams; join one to get started!
@@ -134,13 +133,15 @@ const Home = () => {
           </Grid>
         </Grid>
         <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
-        {openCreateActivityForm ? <CreateActivityForm
-          closeWithSnackbar={(status) => {
-            handleCreateActivityForm(status);
-          }}
-          openCreateActivityForm={openCreateActivityForm}
-          setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
-        /> : null}
+        {openCreateActivityForm ? (
+          <CreateActivityForm
+            closeWithSnackbar={(status) => {
+              handleCreateActivityForm(status);
+            }}
+            openCreateActivityForm={openCreateActivityForm}
+            setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
+          />
+        ) : null}
       </>
     );
   }
