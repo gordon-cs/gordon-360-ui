@@ -13,7 +13,6 @@ type uploadActivity = {
 };
 
 type patchActivity = {
-  ID: number;
   Name: string;
   RegistrationStart: string;
   RegistrationEnd: string;
@@ -39,7 +38,6 @@ type patchTeam = {
 };
 
 type patchParticipant = {
-  Username: string;
   ActivityID: number;
   ActivityPrivType: string;
   IsFreeAgent: boolean;
@@ -48,7 +46,6 @@ type patchParticipant = {
 };
 
 type patchParticipantStatus = {
-  Username: string;
   StatusDescription: string;
   EndDate: string;
 };
@@ -106,6 +103,7 @@ type patchMatchStats = {
 type patchMatch = {
   Time: string;
   SurfaceID: number;
+  StatusID: number;
 };
 
 //Activity Routes
