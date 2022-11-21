@@ -1,6 +1,5 @@
 import http from './http';
-import { MEMBERSHIP, Participation, ParticipationDesc } from './membership';
-import { filter } from './utils';
+import { MembershipView, Participation, ParticipationDesc } from './membership';
 
 export enum RequestStatus {
   Pending = 'Pending',
@@ -8,58 +7,57 @@ export enum RequestStatus {
   Denied = 'Denied',
 }
 
-export type MembershipRequest = {
+export type RequestUpload = {
+  Activity: string;
+  Session: string;
+  Username: number;
+  Participation: Participation;
+  DateSent: string;
+  CommentText: string;
+  Status: RequestStatus;
+};
+
+type RequestView = {
+  RequestID: number;
+  DateSent: string;
   ActivityCode: string;
   ActivityDescription: string;
-  /** Comment or text */
-  CommentText: string;
-  DateSent: string;
+  ActivityImagePath: string;
+  SessionCode: string;
+  SessionDescription: string;
+  Username: number;
   FirstName: string;
-  IDNumber: number;
   LastName: string;
   Participation: Participation;
   ParticipationDescription: ParticipationDesc;
-  RequestApproved: RequestStatus;
-  RequestID: number;
-  SessionCode: string;
-  SessionDescription: string;
+  Description: string;
+  Status: RequestStatus;
 };
 
-type REQUEST = {
-  REQUEST_ID: number;
-  SESS_CDE: string;
-  ACT_CDE: string;
-  ID_NUM: number;
-  PART_CDE: Participation;
-  DATE_SENT: Date;
-  COMMENT_TXT: string;
-  STATUS: RequestStatus;
-};
+const approveRequest = (requestID: string): Promise<MembershipView> =>
+  http.post(`requests/${requestID}/status`, RequestStatus.Approved);
 
-const approveRequest = (requestID: string): Promise<MEMBERSHIP> =>
-  http.post(`requests/${requestID}/approve`);
+const denyRequest = (requestID: string): Promise<RequestView> =>
+  http.post(`requests/${requestID}/status`, RequestStatus.Denied);
 
-const cancelRequest = (requestID: string): Promise<REQUEST> => http.del(`requests/${requestID}`);
+const cancelRequest = (requestID: string): Promise<RequestView> =>
+  http.del(`requests/${requestID}`);
 
-const denyRequest = (requestID: string): Promise<REQUEST> =>
-  http.post(`requests/${requestID}/deny`);
+const getPendingRequests = (activityCode: string, sessionCode: string) =>
+  http.get<RequestView[]>(
+    `requests/activity/${activityCode}/session/${sessionCode}?requestStatus=${RequestStatus.Pending}`,
+  );
 
-const getRequests = (activityCode: string, sessionCode: string) =>
-  http
-    .get<MembershipRequest[]>(`requests/activity/${activityCode}`)
-    .then(
-      filter((r) => r.SessionCode === sessionCode && r.RequestApproved === RequestStatus.Pending),
-    );
+const requestMembership = (data: RequestUpload): Promise<RequestView> =>
+  http.post(`requests`, data);
 
-const requestMembership = (data: REQUEST): Promise<REQUEST> => http.post(`requests`, data);
-
-const getSentMembershipRequests = (): Promise<MembershipRequest[]> => http.get('requests/student/');
+const getSentMembershipRequests = (): Promise<RequestView[]> => http.get('requests/users/current');
 
 const requestService = {
   approveRequest,
   cancelRequest,
   denyRequest,
-  getRequests,
+  getPendingRequests,
   requestMembership,
   getSentMembershipRequests,
 };
