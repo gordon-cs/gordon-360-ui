@@ -12,6 +12,47 @@ type uploadActivity = {
   Logo: string;
 };
 
+type patchActivity = {
+  ID: number;
+  Name: string;
+  RegistrationStart: string;
+  RegistrationEnd: string;
+  SportID: number;
+  StatusID: number;
+  MinCapacity: number;
+  MaxCapacity: number;
+  SoloRegistration: boolean;
+  Logo: string;
+  Completed: boolean;
+};
+
+type uploadTeam = {
+  Name: string;
+  ActivityID: number;
+  Logo: string;
+};
+
+type patchTeam = {
+  Name: string;
+  StatusID: number;
+  Logo: string;
+};
+
+type patchParticipant = {
+  Username: string;
+  ActivityID: number;
+  ActivityPrivType: string;
+  IsFreeAgent: boolean;
+  TeamID: number;
+  TeamRole: string;
+};
+
+type patchParticipantStatus = {
+  Username: string;
+  StatusDescription: string;
+  EndDate: string;
+};
+
 type uploadSeries = {
   Name: string;
   StartDate: string;
@@ -21,13 +62,22 @@ type uploadSeries = {
   NumberOfTeamsAdmitted: number; //used for subsequent series creation post initial setup
 };
 
-type uploadTeam = {
+type patchSeries = {
   Name: string;
-  ActivityID: number;
-  Logo: string;
+  StartDate: string;
+  EndDate: string;
+  Description: string;
+  StatusID: number;
 };
 
 type uploadSport = {
+  Name: string;
+  Description: string;
+  Rules: string;
+  Logo: string;
+};
+
+type patchSport = {
   Name: string;
   Description: string;
   Rules: string;
@@ -44,6 +94,18 @@ type uploadMatch = {
 type uploadParticipantNotification = {
   Message: string;
   EndDate: string;
+};
+
+type patchMatchStats = {
+  TeamID: number;
+  Status: string;
+  Score: number;
+  Sportsmanship: number;
+};
+
+type patchMatch = {
+  Time: string;
+  SurfaceID: number;
 };
 
 //Activity Routes
@@ -71,7 +133,7 @@ const getAllActivities = async (
   }
 };
 
-const editActivity = async (ID: number, updatedActivity: uploadActivity): Promise<Object[]> => {
+const editActivity = async (ID: number, updatedActivity: patchActivity): Promise<Object[]> => {
   return await http.patch(`recim/activities/${ID}`, updatedActivity);
 };
 
@@ -182,7 +244,10 @@ const getMatchByID = async (ID: number): Promise<Object[]> => {
   return await http.get(`recim/matches/${ID}`);
 };
 
-const updateMatchStats = async (matchID: number, updatedTeamStats: stats): Promise<Object[]> => {
+const updateMatchStats = async (
+  matchID: number,
+  updatedTeamStats: patchMatchStats,
+): Promise<Object[]> => {
   return await http.patch(`recim/matches/${matchID}/stats`, updatedTeamStats);
 };
 
