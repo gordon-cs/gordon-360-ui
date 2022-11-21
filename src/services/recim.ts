@@ -176,10 +176,10 @@ const getParticipantStatusHistory = async (username: string): Promise<Object[]> 
 };
 
 const sendNotification = async (
-  participantUsername: string,
+  username: string,
   notification: uploadParticipantNotification,
 ): Promise<Object[]> => {
-  return await http.post(`participants/{username}/notifications`, notification);
+  return await http.post(`participants/${username}/notifications`, notification);
 };
 
 const editParticipant = async (
