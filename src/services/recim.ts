@@ -23,9 +23,7 @@ type uploadSeries = {
 
 type uploadTeam = {
   Name: string;
-  StatusID: number;
   ActivityID: number;
-  PRivate: boolean;
   Logo: string;
 };
 
@@ -77,8 +75,7 @@ const editActivity = async (
   activityID: number,
   updatedActivity: uploadActivity,
 ): Promise<Object[]> => {
-  //return await http.patch(`recim/activities`, updatedActivity);
-  return [];
+  return await http.patch(`recim/activities/${activityID}`, updatedActivity);
 };
 
 //Team Routes
@@ -90,18 +87,77 @@ const getTeamByID = async (ID: number): Promise<Object[]> => {
   return await http.get(`recim/teams/${ID}`);
 };
 
-const addParticipantToTeam = async (
-  participantUsername: string,
-  teamID: number,
-): Promise<Object[]> => {
+const addParticipantToTeam = async (username: string, teamID: number): Promise<Object[]> => {
   return await http.post(
-    `recim/teams/users?participantUsername=${participantUsername}&teamID=${teamID}`,
+    `recim/teams/participants?participantUsername=${username}&teamID=${teamID}`,
   );
 };
 
-const editTeam = async (teamID: number, updatedTeam: uploadActivity): Promise<Object[]> => {
-  //return await http.patch(`recim/activities`, updatedTeam);
-  return [];
+const editTeam = async (teamID: number, updatedTeam: patchTeam): Promise<Object[]> => {
+  return await http.patch(`recim/teams/${teamID}`, updatedTeam);
+};
+
+//Participant Routes
+const createParticipant = async (participantID: number): Promise<Object[]> => {
+  return await http.post(`recim/participants/${participantID}`);
+};
+
+const getParticipants = async (): Promise<Object[]> => {
+  return await http.get(`recim/participants`);
+};
+
+const getParticipantByUsername = async (username: string): Promise<Object[]> => {
+  return await http.get(`recim/participants/${username}`);
+};
+
+const getParticipantTeams = async (username: string): Promise<Object[]> => {
+  return await http.get(`recim/participants/${username}/teams`);
+};
+
+const getParticipantStatusHistory = async (username: string): Promise<Object[]> => {
+  return await http.get(`recim/participants/${username}/StatusHistory`);
+};
+
+const sendNotification = async (
+  participantUsername: string,
+  notification: uploadParticipantNotification,
+): Promise<Object[]> => {
+  return await http.post(`participants/{username}/notifications`, notification);
+};
+
+const editParticipant = async (
+  username: string,
+  updatedParticipant: patchParticipant,
+): Promise<Object[]> => {
+  return await http.patch(`recim/participants/${username}`, updatedParticipant);
+};
+
+const editParticipantStatus = async (
+  username: string,
+  status: patchParticipantStatus,
+): Promise<Object[]> => {
+  return await http.patch(`recim/participants/${username}`, status);
+};
+
+//Series Routes
+const createSeries = async (
+  referenceSeriesID: number,
+  newSeries: uploadSeries,
+): Promise<Object[]> => {
+  var subQuery = referenceSeriesID === null ? '' : `?referenceSeriesID=${referenceSeriesID}`;
+  return await http.post(`recim/series${subQuery}`, newSeries);
+};
+
+const getSeriesByID = async (ID: number): Promise<Object[]> => {
+  return await http.get(`recim/series/${ID}`);
+};
+
+const getAllSeries = async (): Promise<Object[]> => {
+  return await http.get(`recim/series`);
+};
+
+const editSeries = async (seriesID: number, updatedSeries: patchSeries): Promise<Object[]> => {
+  return await http.patch(`recim/series/${seriesID}`, updatedSeries);
 };
 
 //Sport Routes
