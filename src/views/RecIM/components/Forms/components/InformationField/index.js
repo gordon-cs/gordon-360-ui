@@ -13,7 +13,20 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import styles from './InformationField.module.css';
 
-const InformationField = ({ label, name, type, value, onChange, error, helperText, menuItems }) => {
+const InformationField = ({
+  label,
+  name,
+  type,
+  value,
+  onChange,
+  error,
+  helperText,
+  menuItems,
+  xs,
+  sm,
+  md,
+  lg,
+}) => {
   let field;
   // eslint-disable-next-line default-case
   switch (type) {
@@ -74,7 +87,7 @@ const InformationField = ({ label, name, type, value, onChange, error, helperTex
       break;
   }
   return (
-    <Grid item xs={12} sm={6} md={4} lg={3}>
+    <Grid item xs={xs} sm={sm} md={md} lg={lg}>
       {field}
     </Grid>
   );
