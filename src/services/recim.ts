@@ -21,9 +21,7 @@ type Activity = {
 // need to figure out whether to use StatusID or Status (for get)
 type Team = {
   Name: string;
-  StatusID: number;
   ActivityID: number;
-  Private: boolean;
   Logo: string;
 };
 
@@ -47,8 +45,8 @@ const getAllSports = async (): Promise<Object[]> => {
   return await http.get(`recim/sports`);
 };
 
-const createNewTeam = async (newTeam: Team) => {
-  return await http.post('recim/teams', newTeam);
+const createNewTeam = async (newTeam: Team, captainUsername: string) => {
+  return await http.post(`recim/teams?captain=${captainUsername}`, newTeam);
 };
 
 export { getAllActivities, createNewActivity, getActivityByID, getAllSports, createNewTeam };

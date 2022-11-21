@@ -7,6 +7,7 @@ import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ContentCard } from '../components/ContentCard';
 import GordonLoader from 'components/Loader';
+import { useUser } from 'hooks';
 
 const CreateTeamForm = ({
   closeWithSnackbar,
@@ -16,11 +17,11 @@ const CreateTeamForm = ({
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     Name: false,
-    StatusID: false,
     ActivityID: false,
-    Private: false,
     Logo: false,
   });
+
+  const { profile } = useUser();
 
   const createTeamFields = [
     {
@@ -37,10 +38,8 @@ const CreateTeamForm = ({
   const currentInfo = useMemo(() => {
     return {
       Name: '',
-      StatusID: 1,
       ActivityID: Number(activityID),
-      Private: false,
-      Logo: 'EMPTY FOR NOW', // Placeholder (for error checking0)
+      Logo: 'NULL', // Placeholder (for error checking0)
     };
   }, [activityID]);
 
@@ -125,7 +124,7 @@ const CreateTeamForm = ({
 
     console.log(teamCreationRequest)
 
-    createNewTeam(teamCreationRequest).then(() => {
+    createNewTeam(teamCreationRequest, profile.AD_Username).then(() => {
       closeWithSnackbar({
         type: 'success',
         message: 'Team created successfully',

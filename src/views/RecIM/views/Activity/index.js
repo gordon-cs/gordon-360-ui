@@ -98,14 +98,16 @@ const Activity = () => {
             {teamsCard}
           </Grid>
         </Grid>
-        <CreateTeamForm
-          closeWithSnackbar={(status) => {
-            handleCreateTeamForm(status);
-          }}
-          openCreateTeamForm={openCreateTeamForm}
-          setOpenCreateTeamForm={(bool) => setOpenCreateTeamForm(bool)}
-          activityID={activityID}
-        />
+        {openCreateTeamForm ? (
+          <CreateTeamForm
+            closeWithSnackbar={(status) => {
+              handleCreateTeamForm(status);
+            }}
+            openCreateTeamForm={openCreateTeamForm}
+            setOpenCreateTeamForm={(bool) => setOpenCreateTeamForm(bool)}
+            activityID={activityID}
+          />
+        ) : null}
         <Typography>Activity ID: {activityID} (testing purposes only)</Typography>
       </>
     );
