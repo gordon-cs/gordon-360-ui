@@ -49,8 +49,8 @@ type uploadParticipantNotification = {
 };
 
 //Activity Routes
-const createNewActivity = async (newActivity: uploadActivity) => {
-  await http.post('recim/activities', newActivity);
+const createNewActivity = async (newActivity: uploadActivity): Promise<Object[]> => {
+  return await http.post('recim/activities', newActivity);
 };
 
 const getActivityByID = async (ID: number): Promise<Object[]> => {
@@ -75,10 +75,32 @@ const getAllActivities = async (
 
 const editActivity = async (
   activityID: number,
-  patchActivity: uploadActivity,
+  updatedActivity: uploadActivity,
 ): Promise<Object[]> => {
-  //return await http.patch(`recim/activities`, patchActivity);
-  //http does not have patch?
+  //return await http.patch(`recim/activities`, updatedActivity);
+  return [];
+};
+
+//Team Routes
+const createTeam = async (newTeam: uploadTeam): Promise<Object[]> => {
+  return await http.post('recim/teams', newTeam);
+};
+
+const getTeamByID = async (ID: number): Promise<Object[]> => {
+  return await http.get(`recim/teams/${ID}`);
+};
+
+const addParticipantToTeam = async (
+  participantUsername: string,
+  teamID: number,
+): Promise<Object[]> => {
+  return await http.post(
+    `recim/teams/users?participantUsername=${participantUsername}&teamID=${teamID}`,
+  );
+};
+
+const editTeam = async (teamID: number, updatedTeam: uploadActivity): Promise<Object[]> => {
+  //return await http.patch(`recim/activities`, updatedTeam);
   return [];
 };
 
