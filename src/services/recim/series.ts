@@ -19,6 +19,7 @@ type CreatedSeries = {
   Name: string;
   StartDate: string;
   EndDate: string;
+  ActivityID: number;
   TypeID: number;
   StatusID: number;
 };

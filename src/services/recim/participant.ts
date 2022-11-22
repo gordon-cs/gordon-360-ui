@@ -33,6 +33,14 @@ type ParticipantStatus = {
   EndDate: string;
 };
 
+type CreatedParticipantStatus = {
+  ID: number;
+  ParticipantID: number;
+  StatusID: number;
+  StartDate: string;
+  EndDate?: string;
+};
+
 type UploadParticipantNotification = {
   Message: string;
   EndDate: string;
@@ -89,7 +97,7 @@ const editParticipantActivity = (
 const editParticipantStatus = (
   username: string,
   status: PatchParticipantStatus,
-): Promise<ParticipantStatus> => http.patch(`recim/participants/${username}`, status);
+): Promise<CreatedParticipantStatus> => http.patch(`recim/participants/${username}`, status);
 
 export {
   createParticipant,
