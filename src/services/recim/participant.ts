@@ -9,10 +9,6 @@ export type Participant = {
   Notification: ParticipantNotification[];
 };
 
-type CreatedParticipant = {
-  ID: number;
-};
-
 type PatchParticipantActivity = {
   ActivityID: number;
   ActivityPrivType: string;
@@ -69,7 +65,7 @@ type CreatedParticipantActivity = {
 };
 
 //Participant Routes
-const createParticipant = (ID: number): Promise<CreatedParticipant> =>
+const createParticipant = (ID: number): Promise<Participant> =>
   http.post(`recim/participants/${ID}`);
 
 const getParticipants = (): Promise<Participant[]> => http.get(`recim/participants`);
