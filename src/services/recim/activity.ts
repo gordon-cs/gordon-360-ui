@@ -57,7 +57,7 @@ type PatchActivity = {
 };
 
 //Activity Routes
-const createNewActivity = (newActivity: UploadActivity): Promise<Object[]> =>
+const createNewActivity = (newActivity: UploadActivity): Promise<CreatedActivity> =>
   http.post('recim/activities', newActivity);
 
 const getActivityByID = (ID: number): Promise<Activity> => http.get(`recim/activities/${ID}`);
@@ -66,7 +66,7 @@ const getAllActivities = (
   active: boolean,
   time: String,
   registrationOpen: boolean,
-): Promise<Object[]> => {
+): Promise<Activity[]> => {
   if (registrationOpen) {
     return http.get(`recim/activities?registrationOpen=${registrationOpen}`);
   } else {
@@ -78,7 +78,7 @@ const getAllActivities = (
   }
 };
 
-const editActivity = (ID: number, updatedActivity: PatchActivity): Promise<Object[]> =>
+const editActivity = (ID: number, updatedActivity: PatchActivity): Promise<CreatedActivity[]> =>
   http.patch(`recim/activities/${ID}`, updatedActivity);
 
 export { createNewActivity, getActivityByID, getAllActivities, editActivity };

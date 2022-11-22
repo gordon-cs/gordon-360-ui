@@ -21,6 +21,14 @@ type CreatedTeam = {
   Logo: string;
 };
 
+type CreatedTeamParticipant = {
+  ID: number;
+  TeamID: number;
+  ParticipantID: number;
+  SignDate: string;
+  RoleTypeID: number;
+};
+
 type TeamMatchHistory = {
   MatchID: number;
   Opponent: Team;
@@ -52,15 +60,15 @@ type PatchTeam = {
 };
 
 //Team Routes
-const createTeam = (username: string, newTeam: UploadTeam): Promise<Object[]> =>
+const createTeam = (username: string, newTeam: UploadTeam): Promise<CreatedTeam> =>
   http.post(`recim/Teams?captain=${username}`, newTeam);
 
-const getTeamByID = (ID: number): Promise<Object[]> => http.get(`recim/Teams/${ID}`);
+const getTeamByID = (ID: number): Promise<Team> => http.get(`recim/Teams/${ID}`);
 
-const addParticipantToTeam = (username: string, TeamID: number): Promise<Object[]> =>
+const addParticipantToTeam = (username: string, TeamID: number): Promise<CreatedTeamParticipant> =>
   http.post(`recim/Teams/Participants?ParticipantUsername=${username}&TeamID=${TeamID}`);
 
-const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<Object[]> =>
+const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>
   http.patch(`recim/Teams/${ID}`, updatedTeam);
 
 export { createTeam, getTeamByID, addParticipantToTeam, editTeam };

@@ -27,6 +27,15 @@ type UploadMatch = {
   TeamIDs: Array<number>;
 };
 
+type CreatedMatchStats = {
+  ID: number;
+  TeamID: number;
+  MatchID: number;
+  StatusID: number;
+  Score: number;
+  Sportsmanship: number;
+};
+
 type PatchMatchStats = {
   TeamID: number;
   Status: string;
@@ -41,15 +50,17 @@ type PatchMatch = {
 };
 
 //Match Routes
-const createMatch = (newMatch: UploadMatch): Promise<Object[]> =>
+const createMatch = (newMatch: UploadMatch): Promise<CreatedMatch> =>
   http.post('recim/matches', newMatch);
 
-const getMatchByID = (ID: number): Promise<Object[]> => http.get(`recim/matches/${ID}`);
+const getMatchByID = (ID: number): Promise<Match> => http.get(`recim/matches/${ID}`);
 
-const updateMatchStats = (matchID: number, updatedTeamStats: PatchMatchStats): Promise<Object[]> =>
-  http.patch(`recim/matches/${matchID}/stats`, updatedTeamStats);
+const updateMatchStats = (
+  matchID: number,
+  updatedTeamStats: PatchMatchStats,
+): Promise<CreatedMatchStats> => http.patch(`recim/matches/${matchID}/stats`, updatedTeamStats);
 
-const updateMatch = (ID: number, updatedMatch: PatchMatch): Promise<Object[]> =>
+const updateMatch = (ID: number, updatedMatch: PatchMatch): Promise<CreatedMatch> =>
   http.patch(`recim/matches/${ID}`, updatedMatch);
 
 export { createMatch, getMatchByID, updateMatchStats, updateMatch };

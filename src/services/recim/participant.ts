@@ -1,4 +1,5 @@
 import http from '../http';
+import { Team } from './team';
 
 export type Participant = {
   Username: string;
@@ -12,7 +13,7 @@ type CreatedParticipant = {
   ID: number;
 };
 
-type PatchParticipant = {
+type PatchParticipantActivity = {
   ActivityID: number;
   ActivityPrivType: string;
   IsFreeAgent: boolean;
@@ -43,34 +44,52 @@ type ParticipantNotification = {
   DispatchDate: string;
 };
 
+type CreatedParticipantNotification = {
+  ID: number;
+  ParticipantID: number;
+  Message: string;
+  EndDate: string;
+  DispatchDate: string;
+};
+
+type CreatedParticipantActivity = {
+  ID: number;
+  ActivityID: number;
+  ParticipantID: number;
+  PrivTypeID: number;
+  isFreeAgent: boolean;
+};
+
 //Participant Routes
-const createParticipant = (ID: number): Promise<Object[]> => http.post(`recim/participants/${ID}`);
+const createParticipant = (ID: number): Promise<CreatedParticipant> =>
+  http.post(`recim/participants/${ID}`);
 
-const getParticipants = (): Promise<Object[]> => http.get(`recim/participants`);
+const getParticipants = (): Promise<Participant[]> => http.get(`recim/participants`);
 
-const getParticipantByUsername = (username: string): Promise<Object[]> =>
+const getParticipantByUsername = (username: string): Promise<Participant> =>
   http.get(`recim/participants/${username}`);
 
-const getParticipantTeams = (username: string): Promise<Object[]> =>
+const getParticipantTeams = (username: string): Promise<Team[]> =>
   http.get(`recim/participants/${username}/teams`);
 
-const getParticipantStatusHistory = (username: string): Promise<Object[]> =>
+const getParticipantStatusHistory = (username: string): Promise<ParticipantStatus[]> =>
   http.get(`recim/participants/${username}/StatusHistory`);
 
 const sendNotification = (
   username: string,
   notification: UploadParticipantNotification,
-): Promise<Object[]> => http.post(`participants/${username}/notifications`, notification);
+): Promise<CreatedParticipantNotification> =>
+  http.post(`participants/${username}/notifications`, notification);
 
-const editParticipant = (
+const editParticipantActivity = (
   username: string,
-  updatedParticipant: PatchParticipant,
-): Promise<Object[]> => http.patch(`recim/participants/${username}`, updatedParticipant);
+  updatedParticipant: PatchParticipantActivity,
+): Promise<Participant> => http.patch(`recim/participants/${username}`, updatedParticipant);
 
 const editParticipantStatus = (
   username: string,
   status: PatchParticipantStatus,
-): Promise<Object[]> => http.patch(`recim/participants/${username}`, status);
+): Promise<ParticipantStatus> => http.patch(`recim/participants/${username}`, status);
 
 export {
   createParticipant,
@@ -79,6 +98,6 @@ export {
   getParticipantTeams,
   getParticipantStatusHistory,
   sendNotification,
-  editParticipant,
+  editParticipantActivity,
   editParticipantStatus,
 };
