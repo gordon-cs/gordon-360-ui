@@ -71,12 +71,19 @@ const addParticipantToTeam = async (
   RoleID: number,
 ): Promise<CreatedTeamParticipant> => {
   var query = RoleID === null ? '' : `?RoleID=${RoleID}`;
-  return await http.post(
-    `recim/Teams/Participants?ParticipantUsername=${username}&TeamID=${TeamID}${query}`,
-  );
+  return await http.post(`recim/Teams/Participants?username=${username}&TeamID=${TeamID}${query}`);
+};
+
+const editTeamParticipant = async (
+  username: string,
+  TeamID: number,
+  RoleID: number,
+): Promise<CreatedTeamParticipant> => {
+  var query = RoleID === null ? '' : `?RoleID=${RoleID}`;
+  return await http.patch(`recim/Teams/Participants?username=${username}&TeamID=${TeamID}${query}`);
 };
 
 const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>
   http.patch(`recim/Teams/${ID}`, updatedTeam);
 
-export { createTeam, getTeamByID, addParticipantToTeam, editTeam };
+export { createTeam, getTeamByID, addParticipantToTeam, editTeamParticipant, editTeam };

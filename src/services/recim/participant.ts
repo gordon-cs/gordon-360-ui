@@ -13,8 +13,6 @@ type PatchParticipantActivity = {
   ActivityID: number;
   ActivityPrivType: string;
   IsFreeAgent: boolean;
-  TeamID: number;
-  TeamRole: string;
 };
 
 type PatchParticipantStatus = {
@@ -56,6 +54,14 @@ type CreatedParticipantNotification = {
   DispatchDate: string;
 };
 
+type CreatedParticipantActivity = {
+  ID: number;
+  ActivityID: number;
+  ParticipantID: number;
+  PrivTypeID: number;
+  isFreeAgent: boolean;
+};
+
 //Participant Routes
 const createParticipant = (ID: number): Promise<Participant> =>
   http.post(`recim/participants/${ID}`);
@@ -80,7 +86,8 @@ const sendNotification = (
 const editParticipantActivity = (
   username: string,
   updatedParticipant: PatchParticipantActivity,
-): Promise<Participant> => http.patch(`recim/participants/${username}`, updatedParticipant);
+): Promise<CreatedParticipantActivity> =>
+  http.patch(`recim/participants/${username}`, updatedParticipant);
 
 const editParticipantStatus = (
   username: string,
