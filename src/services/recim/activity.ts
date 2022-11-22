@@ -1,4 +1,22 @@
 import http from '../http';
+import { sport } from './sport';
+import { team } from './team';
+import { series } from './series';
+
+export type activity = {
+  ID: number;
+  Name: string;
+  RegistrationStart: string;
+  RegistrationEnd: string;
+  RegistrationOpen: boolean;
+  SportID: sport;
+  MinCapacity: number;
+  MaxCapacity: number;
+  SoloRegistration: boolean;
+  Logo: string;
+  Series: series[];
+  Team: team[];
+};
 
 type uploadActivity = {
   Name: string;

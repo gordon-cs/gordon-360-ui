@@ -1,5 +1,13 @@
 import http from '../http';
 
+export type participant = {
+  Username: string;
+  Email: string;
+  Role: string;
+  Status: string;
+  Notification: participantNotification[];
+};
+
 type patchParticipant = {
   ActivityID: number;
   ActivityPrivType: string;
@@ -13,9 +21,22 @@ type patchParticipantStatus = {
   EndDate: string;
 };
 
+type participantStatus = {
+  Username: string;
+  Status: string;
+  StartDate: string;
+  EndDate: string;
+};
+
 type uploadParticipantNotification = {
   Message: string;
   EndDate: string;
+};
+
+type participantNotification = {
+  ID: number;
+  Message: string;
+  DispatchDate: string;
 };
 
 //Participant Routes

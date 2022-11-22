@@ -1,4 +1,19 @@
 import http from '../http';
+import { match } from './match';
+import { teamRecord } from './team';
+
+export type series = {
+  ID: number;
+  Name: string;
+  StartDate: string;
+  EndDate: string;
+  Description: string;
+  ActivityID: number;
+  Type: string;
+  Status: string;
+  Match: match[];
+  TeamStanding: teamRecord[];
+};
 
 type uploadSeries = {
   Name: string;

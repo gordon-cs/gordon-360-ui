@@ -1,4 +1,16 @@
 import http from '../http';
+import { participant } from './participant';
+import { team } from './team';
+
+export type match = {
+  ID: number;
+  Time: string;
+  Surface: string;
+  Status: string;
+  SeriesID: number;
+  Attendance: participant[];
+  Team: team[];
+};
 
 type uploadMatch = {
   StartTime: string;

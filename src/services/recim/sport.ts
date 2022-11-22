@@ -1,5 +1,13 @@
 import http from '../http';
 
+export type sport = {
+  ID: number;
+  Name: string;
+  Description: string;
+  Rules: string;
+  Logo: string;
+};
+
 type uploadSport = {
   Name: string;
   Description: string;

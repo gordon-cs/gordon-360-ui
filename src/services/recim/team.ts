@@ -1,4 +1,35 @@
 import http from '../http';
+import { match } from './match';
+import { participant } from './participant';
+
+export type team = {
+  ID: number;
+  Name: string;
+  Status: string;
+  Logo: string;
+  Match: match[];
+  Participant: participant[];
+  MatchHistory: teamMatchHistory[];
+  TeamRecord: teamRecord[];
+};
+
+type teamMatchHistory = {
+  MatchID: number;
+  Opponent: team;
+  OwnScore: number;
+  OpposingScore: number;
+  Status: string;
+  MatchStatusID: number;
+  Time: string;
+};
+
+export type teamRecord = {
+  ID: number;
+  Name: string;
+  Win: number;
+  Loss: number;
+  Tie: number;
+};
 
 type uploadTeam = {
   Name: string;
