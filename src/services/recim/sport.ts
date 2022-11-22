@@ -24,19 +24,14 @@ type patchSport = {
 };
 
 //Sport Routes
-const createSport = async (newSport: uploadSport): Promise<Object[]> => {
-  return await http.post(`recim/sports`, newSport);
-};
-const getAllSports = async (): Promise<Object[]> => {
-  return await http.get(`recim/sports`);
-};
+const createSport = async (newSport: uploadSport): Promise<Object[]> =>
+  http.post(`recim/sports`, newSport);
 
-const getSportByID = async (ID: number): Promise<Object[]> => {
-  return await http.get(`recim/sports/${ID}`);
-};
+const getAllSports = async (): Promise<Object[]> => http.get(`recim/sports`);
 
-const editSport = async (ID: number, updatedSport: patchSport): Promise<Object[]> => {
-  return await http.patch(`recim/series/${ID}`, updatedSport);
-};
+const getSportByID = async (ID: number): Promise<Object[]> => http.get(`recim/sports/${ID}`);
+
+const editSport = async (ID: number, updatedSport: patchSport): Promise<Object[]> =>
+  http.patch(`recim/series/${ID}`, updatedSport);
 
 export { createSport, getSportByID, editSport, getAllSports };

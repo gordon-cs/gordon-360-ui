@@ -44,46 +44,33 @@ type participantNotification = {
 };
 
 //Participant Routes
-const createParticipant = async (ID: number): Promise<Object[]> => {
-  return await http.post(`recim/participants/${ID}`);
-};
+const createParticipant = (ID: number): Promise<Object[]> => http.post(`recim/participants/${ID}`);
 
-const getParticipants = async (): Promise<Object[]> => {
-  return await http.get(`recim/participants`);
-};
+const getParticipants = (): Promise<Object[]> => http.get(`recim/participants`);
 
-const getParticipantByUsername = async (username: string): Promise<Object[]> => {
-  return await http.get(`recim/participants/${username}`);
-};
+const getParticipantByUsername = (username: string): Promise<Object[]> =>
+  http.get(`recim/participants/${username}`);
 
-const getParticipantTeams = async (username: string): Promise<Object[]> => {
-  return await http.get(`recim/participants/${username}/teams`);
-};
+const getParticipantTeams = (username: string): Promise<Object[]> =>
+  http.get(`recim/participants/${username}/teams`);
 
-const getParticipantStatusHistory = async (username: string): Promise<Object[]> => {
-  return await http.get(`recim/participants/${username}/StatusHistory`);
-};
+const getParticipantStatusHistory = (username: string): Promise<Object[]> =>
+  http.get(`recim/participants/${username}/StatusHistory`);
 
-const sendNotification = async (
+const sendNotification = (
   username: string,
   notification: uploadParticipantNotification,
-): Promise<Object[]> => {
-  return await http.post(`participants/${username}/notifications`, notification);
-};
+): Promise<Object[]> => http.post(`participants/${username}/notifications`, notification);
 
-const editParticipant = async (
+const editParticipant = (
   username: string,
   updatedParticipant: patchParticipant,
-): Promise<Object[]> => {
-  return await http.patch(`recim/participants/${username}`, updatedParticipant);
-};
+): Promise<Object[]> => http.patch(`recim/participants/${username}`, updatedParticipant);
 
-const editParticipantStatus = async (
+const editParticipantStatus = (
   username: string,
   status: patchParticipantStatus,
-): Promise<Object[]> => {
-  return await http.patch(`recim/participants/${username}`, status);
-};
+): Promise<Object[]> => http.patch(`recim/participants/${username}`, status);
 
 export {
   createParticipant,

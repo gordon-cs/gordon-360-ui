@@ -41,23 +41,15 @@ type patchMatch = {
 };
 
 //Match Routes
-const createMatch = async (newMatch: uploadMatch): Promise<Object[]> => {
-  return await http.post('recim/matches', newMatch);
-};
+const createMatch = (newMatch: uploadMatch): Promise<Object[]> =>
+  http.post('recim/matches', newMatch);
 
-const getMatchByID = async (ID: number): Promise<Object[]> => {
-  return await http.get(`recim/matches/${ID}`);
-};
+const getMatchByID = (ID: number): Promise<Object[]> => http.get(`recim/matches/${ID}`);
 
-const updateMatchStats = async (
-  matchID: number,
-  updatedTeamStats: patchMatchStats,
-): Promise<Object[]> => {
-  return await http.patch(`recim/matches/${matchID}/stats`, updatedTeamStats);
-};
+const updateMatchStats = (matchID: number, updatedTeamStats: patchMatchStats): Promise<Object[]> =>
+  http.patch(`recim/matches/${matchID}/stats`, updatedTeamStats);
 
-const updateMatch = async (ID: number, updatedMatch: patchMatch): Promise<Object[]> => {
-  return await http.patch(`recim/matches/${ID}`, updatedMatch);
-};
+const updateMatch = (ID: number, updatedMatch: patchMatch): Promise<Object[]> =>
+  http.patch(`recim/matches/${ID}`, updatedMatch);
 
 export { createMatch, getMatchByID, updateMatchStats, updateMatch };

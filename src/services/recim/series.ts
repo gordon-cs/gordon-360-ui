@@ -48,16 +48,11 @@ const createSeries = async (
   return await http.post(`recim/series${subQuery}`, newSeries);
 };
 
-const getSeriesByID = async (ID: number): Promise<Object[]> => {
-  return await http.get(`recim/series/${ID}`);
-};
+const getSeriesByID = (ID: number): Promise<Object[]> => http.get(`recim/series/${ID}`);
 
-const getAllSeries = async (): Promise<Object[]> => {
-  return await http.get(`recim/series`);
-};
+const getAllSeries = (): Promise<Object[]> => http.get(`recim/series`);
 
-const editSeries = async (seriesID: number, updatedSeries: patchSeries): Promise<Object[]> => {
-  return await http.patch(`recim/series/${seriesID}`, updatedSeries);
-};
+const editSeries = (seriesID: number, updatedSeries: patchSeries): Promise<Object[]> =>
+  http.patch(`recim/series/${seriesID}`, updatedSeries);
 
 export { createSeries, getSeriesByID, getAllSeries, editSeries };

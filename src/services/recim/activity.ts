@@ -57,32 +57,28 @@ type patchActivity = {
 };
 
 //Activity Routes
-const createNewActivity = async (newActivity: uploadActivity): Promise<Object[]> => {
-  return await http.post('recim/activities', newActivity);
-};
+const createNewActivity = (newActivity: uploadActivity): Promise<Object[]> =>
+  http.post('recim/activities', newActivity);
 
-const getActivityByID = async (ID: number): Promise<activity> => {
-  return await http.get(`recim/activities/${ID}`);
-};
+const getActivityByID = (ID: number): Promise<activity> => http.get(`recim/activities/${ID}`);
 
-const getAllActivities = async (
+const getAllActivities = (
   active: boolean,
   time: String,
   registrationOpen: boolean,
 ): Promise<Object[]> => {
   if (registrationOpen) {
-    return await http.get(`recim/activities?registrationOpen=${registrationOpen}`);
+    return http.get(`recim/activities?registrationOpen=${registrationOpen}`);
   } else {
     if (time) {
-      return await http.get(`recim/activities?active=${active}&time=${time}`);
+      return http.get(`recim/activities?active=${active}&time=${time}`);
     } else {
-      return await http.get(`recim/activities?active=${active}`);
+      return http.get(`recim/activities?active=${active}`);
     }
   }
 };
 
-const editActivity = async (ID: number, updatedActivity: patchActivity): Promise<Object[]> => {
-  return await http.patch(`recim/activities/${ID}`, updatedActivity);
-};
+const editActivity = (ID: number, updatedActivity: patchActivity): Promise<Object[]> =>
+  http.patch(`recim/activities/${ID}`, updatedActivity);
 
 export { createNewActivity, getActivityByID, getAllActivities, editActivity };
