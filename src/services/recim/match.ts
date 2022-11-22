@@ -12,6 +12,14 @@ export type match = {
   Team: team[];
 };
 
+type createdMatch = {
+  ID: number;
+  Time: string;
+  SurfaceID: number;
+  StatusID: number;
+  SeriesID: number;
+};
+
 type uploadMatch = {
   StartTime: string;
   SeriesID: number;

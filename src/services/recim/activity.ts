@@ -18,6 +18,20 @@ export type activity = {
   Team: team[];
 };
 
+type createdActivity = {
+  ID: number;
+  Name: string;
+  RegistrationStart: string;
+  RegistrationEnd: string;
+  RegistrationOpen: boolean;
+  SportID: sport;
+  StatusID: number;
+  MinCapacity: number;
+  MaxCapacity: number;
+  SoloRegistration: boolean;
+  Completed: boolean;
+};
+
 type uploadActivity = {
   Name: string;
   RegistrationStart: string;
@@ -47,7 +61,7 @@ const createNewActivity = async (newActivity: uploadActivity): Promise<Object[]>
   return await http.post('recim/activities', newActivity);
 };
 
-const getActivityByID = async (ID: number): Promise<Object[]> => {
+const getActivityByID = async (ID: number): Promise<activity> => {
   return await http.get(`recim/activities/${ID}`);
 };
 

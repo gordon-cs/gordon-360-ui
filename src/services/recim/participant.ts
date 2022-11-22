@@ -8,6 +8,10 @@ export type participant = {
   Notification: participantNotification[];
 };
 
+type createdParticipant = {
+  ID: number;
+};
+
 type patchParticipant = {
   ActivityID: number;
   ActivityPrivType: string;

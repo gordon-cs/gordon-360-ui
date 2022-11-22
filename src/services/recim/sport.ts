@@ -1,5 +1,6 @@
 import http from '../http';
 
+//created sport and sport are the same
 export type sport = {
   ID: number;
   Name: string;

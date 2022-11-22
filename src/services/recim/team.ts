@@ -13,6 +13,14 @@ export type team = {
   TeamRecord: teamRecord[];
 };
 
+type createdTeam = {
+  ID: number;
+  Name: string;
+  StatusID: number;
+  ActivityID: number;
+  Logo: string;
+};
+
 type teamMatchHistory = {
   MatchID: number;
   Opponent: team;

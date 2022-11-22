@@ -7,12 +7,20 @@ export type series = {
   Name: string;
   StartDate: string;
   EndDate: string;
-  Description: string;
   ActivityID: number;
   Type: string;
   Status: string;
   Match: match[];
   TeamStanding: teamRecord[];
+};
+
+type createdSeries = {
+  ID: number;
+  Name: string;
+  StartDate: string;
+  EndDate: string;
+  TypeID: number;
+  StatusID: number;
 };
 
 type uploadSeries = {
