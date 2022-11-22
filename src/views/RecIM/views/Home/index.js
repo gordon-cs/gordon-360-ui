@@ -7,7 +7,7 @@ import GordonLoader from 'components/Loader';
 import styles from './Home.module.css';
 import recimLogo from './../../recim_logo.png';
 import { ActivityList, TeamList } from './../../components/List';
-import { getAllActivities } from 'services/recim';
+import { getAllActivities } from 'services/recim/activity';
 import { DateTime } from 'luxon';
 
 const Home = () => {
