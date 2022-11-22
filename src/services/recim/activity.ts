@@ -57,7 +57,7 @@ type PatchActivity = {
 };
 
 //Activity Routes
-const createNewActivity = (newActivity: UploadActivity): Promise<CreatedActivity> =>
+const createActivity = (newActivity: UploadActivity): Promise<CreatedActivity> =>
   http.post('recim/activities', newActivity);
 
 const getActivityByID = (ID: number): Promise<Activity> => http.get(`recim/activities/${ID}`);
@@ -81,4 +81,4 @@ const getAllActivities = (
 const editActivity = (ID: number, updatedActivity: PatchActivity): Promise<CreatedActivity[]> =>
   http.patch(`recim/activities/${ID}`, updatedActivity);
 
-export { createNewActivity, getActivityByID, getAllActivities, editActivity };
+export { createActivity, getActivityByID, getAllActivities, editActivity };
