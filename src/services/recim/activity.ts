@@ -23,7 +23,6 @@ type CreatedActivity = {
   Name: string;
   RegistrationStart: string;
   RegistrationEnd: string;
-  RegistrationOpen: boolean;
   SportID: Sport;
   StatusID: number;
   MinCapacity: number;
