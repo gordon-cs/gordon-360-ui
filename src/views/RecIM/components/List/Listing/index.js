@@ -1,11 +1,4 @@
-import {
-  Grid,
-  Avatar,
-  ListItemAvatar,
-  ListItem,
-  ListItemText,
-  Typography,
-} from '@mui/material';
+import { Grid, Avatar, ListItemAvatar, ListItem, ListItemText, Typography } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -29,33 +22,37 @@ const ActivityListing = ({ activity }) => {
         <Grid item xs={3}>
           {activity.Name}
         </Grid>
-        <Grid container xs={4} direction="row" alignItems="center" justifyContent="center">
-          <Grid item xs={10}>
-            <Typography gutterBottom align="center">
-              Registration
-            </Typography>
-          </Grid>
-          <Grid item xs={10}>
-            <Typography align="center">
-              {standardDate(registrationStart, true)} - {standardDate(registrationEnd, true)}
-            </Typography>
+        <Grid item xs={4}>
+          <Grid container direction="row" alignItems="center" justifyContent="center">
+            <Grid item xs={10}>
+              <Typography gutterBottom align="center">
+                Registration
+              </Typography>
+            </Grid>
+            <Grid item xs={10}>
+              <Typography align="center">
+                {standardDate(registrationStart, true)} - {standardDate(registrationEnd, true)}
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid container xs={5} direction="row" alignItems="center" justifyContent="center">
-          <Grid item xs={10}>
-            <Typography gutterBottom align="center">
-              Season
-            </Typography>
-          </Grid>
-          <Grid item xs={10}>
-            {activity.Series.map((series) => {
-              return (
-                <Typography align="center">
-                  {series.Name} {standardDate(DateTime.fromISO(series.StartDate), false)} -{' '}
-                  {standardDate(DateTime.fromISO(series.EndDate), false)}
-                </Typography>
-              );
-            })}
+        <Grid item xs={5}>
+          <Grid container direction="row" alignItems="center" justifyContent="center">
+            <Grid item xs={10}>
+              <Typography gutterBottom align="center">
+                Season
+              </Typography>
+            </Grid>
+            <Grid item xs={10}>
+              {activity.Series.map((series) => {
+                return (
+                  <Typography align="center">
+                    {series.Name} {standardDate(DateTime.fromISO(series.StartDate), false)} -{' '}
+                    {standardDate(DateTime.fromISO(series.EndDate), false)}
+                  </Typography>
+                );
+              })}
+            </Grid>
           </Grid>
         </Grid>
         {/* include:

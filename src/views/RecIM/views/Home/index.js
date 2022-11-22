@@ -1,6 +1,6 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
-import CreateActivityForm from '../../components/CreateActivityForm';
+import CreateActivityForm from '../../components/Forms/CreateActivityForm';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
@@ -25,8 +25,7 @@ const Home = () => {
       setLoading(true);
 
       // Get all active activities where registration has not closed
-      let allActivities = await getAllActivities(false, DateTime.now().toISO());
-      setActivities(allActivities);
+      setActivities(await getAllActivities(false, DateTime.now().toISO()));
       setLoading(false);
     };
     loadActivities();
@@ -135,13 +134,15 @@ const Home = () => {
           </Grid>
         </Grid>
         <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
-        <CreateActivityForm
-          closeWithSnackbar={(status) => {
-            handleCreateActivityForm(status);
-          }}
-          openCreateActivityForm={openCreateActivityForm}
-          setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
-        />
+        {openCreateActivityForm ? (
+          <CreateActivityForm
+            closeWithSnackbar={(status) => {
+              handleCreateActivityForm(status);
+            }}
+            openCreateActivityForm={openCreateActivityForm}
+            setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
+          />
+        ) : null}
       </>
     );
   }

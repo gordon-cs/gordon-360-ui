@@ -1,49 +1,72 @@
-import { Grid, Typography, Card, CardHeader, CardContent } from '@mui/material';
+import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import { useState } from 'react';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import styles from './Activity.module.css';
 import { MatchList, TeamList } from './../../components/List';
-
-// CARD - schedule
-let scheduleCard = (
-  <Card>
-    <CardHeader title="Schedule" className={styles.cardHeader} />
-    <CardContent>
-      {/* if there are games scheduled, map them here */}
-      <MatchList matches={[{ activityID: '123456', ID: '789' }]} />
-      {/* else "no schedule yet set" */}
-      <Typography variant="body1" paragraph>
-        Games have not yet been scheduled.
-      </Typography>
-    </CardContent>
-  </Card>
-);
-
-// CARD - teams
-let teamsCard = (
-  <Card>
-    <CardHeader title="Teams" className={styles.cardHeader} />
-    <CardContent>
-      {/* if I am apart of any active teams, map them here */}
-      <TeamList
-        teams={[
-          { activityID: '123456', ID: '789' },
-          { activityID: '12345', ID: '987' },
-        ]}
-      />
-      {/* else "no teams" */}
-      <Typography variant="body1" paragraph>
-        Be the first to create a team!
-      </Typography>
-    </CardContent>
-  </Card>
-);
+import CreateTeamForm from '../../components/Forms/CreateTeamForm';
 
 const Activity = () => {
   const { activityID } = useParams();
   const { profile, loading } = useUser();
+  const [openCreateTeamForm, setOpenCreateTeamForm] = useState(false);
+
+  // CARD - schedule
+  let scheduleCard = (
+    <Card>
+      <CardHeader title="Schedule" className={styles.cardHeader} />
+      <CardContent>
+        {/* if there are games scheduled, map them here */}
+        <MatchList matches={[{ activityID: '123456', ID: '789' }]} />
+        {/* else "no schedule yet set" */}
+        <Typography variant="body1" paragraph>
+          Games have not yet been scheduled.
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+
+  // CARD - teams
+  let teamsCard = (
+    <Card>
+      <CardHeader title="Teams" className={styles.cardHeader} />
+      <CardContent>
+        {/* if I am apart of any active teams, map them here */}
+        <TeamList
+          teams={[
+            { activityID: '123456', ID: '789' },
+            { activityID: '12345', ID: '987' },
+          ]}
+        />
+        {/* else "no teams" */}
+        <Typography variant="body1" paragraph>
+          Be the first to create a team!
+        </Typography>
+        <Grid container justifyContent="center">
+          <Button
+            variant="contained"
+            color="warning"
+            startIcon={<AddCircleRoundedIcon />}
+            className={styles.actionButton}
+            onClick={() => {
+              setOpenCreateTeamForm(true);
+            }}
+          >
+            Create a New Team
+          </Button>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+
+  const handleCreateTeamForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenCreateTeamForm(false);
+  };
+
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -75,6 +98,16 @@ const Activity = () => {
             {teamsCard}
           </Grid>
         </Grid>
+        {openCreateTeamForm ? (
+          <CreateTeamForm
+            closeWithSnackbar={(status) => {
+              handleCreateTeamForm(status);
+            }}
+            openCreateTeamForm={openCreateTeamForm}
+            setOpenCreateTeamForm={(bool) => setOpenCreateTeamForm(bool)}
+            activityID={activityID}
+          />
+        ) : null}
         <Typography>Activity ID: {activityID} (testing purposes only)</Typography>
       </>
     );

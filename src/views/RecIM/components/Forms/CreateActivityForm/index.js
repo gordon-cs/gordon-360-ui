@@ -1,13 +1,13 @@
 import { Grid } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
-import styles from './CreateActivityForm.module.css';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { ConfirmationRow } from './components/ConfirmationRow';
-import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
-import { ContentCard } from './components/ContentCard';
-import { InformationField } from './components/InformationField';
-import { createNewActivity, getAllSports } from 'services/recim';
+import { ConfirmationRow } from '../components/ConfirmationRow';
+import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
+import { ContentCard } from '../components/ContentCard';
+import { InformationField } from '../components/InformationField';
+import { uploadActivity } from 'services/recim/activity';
+import { getAllSports } from 'services/recim/sport';
 
 const CreateActivityForm = ({
   closeWithSnackbar,
@@ -32,8 +32,8 @@ const CreateActivityForm = ({
       setLoading(true);
 
       // Get all active activities where registration has not closed
-      let tempSports = await getAllSports();
-      setSports(tempSports);
+      setSports(await getAllSports());
+
       setLoading(false);
     };
     loadSports();
@@ -188,7 +188,7 @@ const CreateActivityForm = ({
       (sport) => sport.Name === activityCreationRequest.sportID,
     )[0].ID;
 
-    createNewActivity(activityCreationRequest).then(() => {
+    uploadActivity(activityCreationRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
@@ -219,6 +219,10 @@ const CreateActivityForm = ({
         type={field.type}
         menuItems={field.menuItems}
         onChange={handleChange}
+        xs={12}
+        sm={6}
+        md={4}
+        lg={3}
       />
     ));
   };
@@ -268,7 +272,6 @@ const CreateActivityForm = ({
         setOpenCreateActivityForm(false);
       }}
       cancelButtonName="cancel"
-      titleClass={styles.formTitle}
     >
       {content}
     </GordonDialogBox>
