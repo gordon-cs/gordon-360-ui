@@ -56,14 +56,6 @@ type CreatedParticipantNotification = {
   DispatchDate: string;
 };
 
-type CreatedParticipantActivity = {
-  ID: number;
-  ActivityID: number;
-  ParticipantID: number;
-  PrivTypeID: number;
-  isFreeAgent: boolean;
-};
-
 //Participant Routes
 const createParticipant = (ID: number): Promise<Participant> =>
   http.post(`recim/participants/${ID}`);
