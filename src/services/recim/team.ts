@@ -61,7 +61,7 @@ type PatchTeam = {
 
 //Team Routes
 const createTeam = (username: string, newTeam: UploadTeam): Promise<CreatedTeam> =>
-  http.post(`recim/Teams?captain=${username}`, newTeam);
+  http.post(`recim/Teams?username=${username}`, newTeam);
 
 const getTeamByID = (ID: number): Promise<Team> => http.get(`recim/Teams/${ID}`);
 
