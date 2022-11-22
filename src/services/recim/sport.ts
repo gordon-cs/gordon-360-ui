@@ -1,7 +1,7 @@
 import http from '../http';
 
 //created sport and sport are the same
-export type sport = {
+export type Sport = {
   ID: number;
   Name: string;
   Description: string;
@@ -9,14 +9,14 @@ export type sport = {
   Logo: string;
 };
 
-type uploadSport = {
+type UploadSport = {
   Name: string;
   Description: string;
   Rules: string;
   Logo: string;
 };
 
-type patchSport = {
+type PatchSport = {
   Name: string;
   Description: string;
   Rules: string;
@@ -24,14 +24,14 @@ type patchSport = {
 };
 
 //Sport Routes
-const createSport = async (newSport: uploadSport): Promise<Object[]> =>
+const createSport = async (newSport: UploadSport): Promise<Object[]> =>
   http.post(`recim/sports`, newSport);
 
 const getAllSports = async (): Promise<Object[]> => http.get(`recim/sports`);
 
 const getSportByID = async (ID: number): Promise<Object[]> => http.get(`recim/sports/${ID}`);
 
-const editSport = async (ID: number, updatedSport: patchSport): Promise<Object[]> =>
+const editSport = async (ID: number, updatedSport: PatchSport): Promise<Object[]> =>
   http.patch(`recim/series/${ID}`, updatedSport);
 
 export { createSport, getSportByID, editSport, getAllSports };

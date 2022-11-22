@@ -1,8 +1,8 @@
 import http from '../http';
-import { match } from './match';
-import { teamRecord } from './team';
+import { Match } from './match';
+import { TeamRecord } from './team';
 
-export type series = {
+export type Series = {
   ID: number;
   Name: string;
   StartDate: string;
@@ -10,11 +10,11 @@ export type series = {
   ActivityID: number;
   Type: string;
   Status: string;
-  Match: match[];
-  TeamStanding: teamRecord[];
+  Match: Match[];
+  TeamStanding: TeamRecord[];
 };
 
-type createdSeries = {
+type CreatedSeries = {
   ID: number;
   Name: string;
   StartDate: string;
@@ -23,7 +23,7 @@ type createdSeries = {
   StatusID: number;
 };
 
-type uploadSeries = {
+type UploadSeries = {
   Name: string;
   StartDate: string;
   EndDate: string;
@@ -32,7 +32,7 @@ type uploadSeries = {
   NumberOfTeamsAdmitted: number; //used for subsequent series creation post initial setup
 };
 
-type patchSeries = {
+type PatchSeries = {
   Name: string;
   StartDate: string;
   EndDate: string;
@@ -42,17 +42,17 @@ type patchSeries = {
 //Series Routes
 const createSeries = async (
   referenceSeriesID: number,
-  newSeries: uploadSeries,
-): Promise<Object[]> => {
+  newSeries: UploadSeries,
+): Promise<CreatedSeries> => {
   var subQuery = referenceSeriesID === null ? '' : `?referenceSeriesID=${referenceSeriesID}`;
   return await http.post(`recim/series${subQuery}`, newSeries);
 };
 
-const getSeriesByID = (ID: number): Promise<Object[]> => http.get(`recim/series/${ID}`);
+const getSeriesByID = (ID: number): Promise<Series> => http.get(`recim/series/${ID}`);
 
-const getAllSeries = (): Promise<Object[]> => http.get(`recim/series`);
+const getAllSeries = (): Promise<Series[]> => http.get(`recim/series`);
 
-const editSeries = (seriesID: number, updatedSeries: patchSeries): Promise<Object[]> =>
+const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<CreatedSeries> =>
   http.patch(`recim/series/${seriesID}`, updatedSeries);
 
 export { createSeries, getSeriesByID, getAllSeries, editSeries };

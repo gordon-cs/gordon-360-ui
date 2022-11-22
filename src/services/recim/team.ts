@@ -1,19 +1,19 @@
 import http from '../http';
-import { match } from './match';
-import { participant } from './participant';
+import { Match } from './match';
+import { Participant } from './participant';
 
-export type team = {
+export type Team = {
   ID: number;
   Name: string;
   Status: string;
   Logo: string;
-  Match: match[];
-  Participant: participant[];
-  MatchHistory: teamMatchHistory[];
-  TeamRecord: teamRecord[];
+  Match: Match[];
+  Participant: Participant[];
+  MatchHistory: TeamMatchHistory[];
+  TeamRecord: TeamRecord[];
 };
 
-type createdTeam = {
+type CreatedTeam = {
   ID: number;
   Name: string;
   StatusID: number;
@@ -21,9 +21,9 @@ type createdTeam = {
   Logo: string;
 };
 
-type teamMatchHistory = {
+type TeamMatchHistory = {
   MatchID: number;
-  Opponent: team;
+  Opponent: Team;
   OwnScore: number;
   OpposingScore: number;
   Status: string;
@@ -31,7 +31,7 @@ type teamMatchHistory = {
   Time: string;
 };
 
-export type teamRecord = {
+export type TeamRecord = {
   ID: number;
   Name: string;
   Win: number;
@@ -39,28 +39,28 @@ export type teamRecord = {
   Tie: number;
 };
 
-type uploadTeam = {
+type UploadTeam = {
   Name: string;
   ActivityID: number;
   Logo: string;
 };
 
-type patchTeam = {
+type PatchTeam = {
   Name: string;
   StatusID: number;
   Logo: string;
 };
 
 //Team Routes
-const createTeam = (username: string, newTeam: uploadTeam): Promise<Object[]> =>
-  http.post(`recim/teams?captain=${username}`, newTeam);
+const createTeam = (username: string, newTeam: UploadTeam): Promise<Object[]> =>
+  http.post(`recim/Teams?captain=${username}`, newTeam);
 
-const getTeamByID = (ID: number): Promise<Object[]> => http.get(`recim/teams/${ID}`);
+const getTeamByID = (ID: number): Promise<Object[]> => http.get(`recim/Teams/${ID}`);
 
-const addParticipantToTeam = (username: string, teamID: number): Promise<Object[]> =>
-  http.post(`recim/teams/participants?participantUsername=${username}&teamID=${teamID}`);
+const addParticipantToTeam = (username: string, TeamID: number): Promise<Object[]> =>
+  http.post(`recim/Teams/Participants?ParticipantUsername=${username}&TeamID=${TeamID}`);
 
-const editTeam = (ID: number, updatedTeam: patchTeam): Promise<Object[]> =>
-  http.patch(`recim/teams/${ID}`, updatedTeam);
+const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<Object[]> =>
+  http.patch(`recim/Teams/${ID}`, updatedTeam);
 
 export { createTeam, getTeamByID, addParticipantToTeam, editTeam };

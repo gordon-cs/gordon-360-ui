@@ -1,30 +1,30 @@
 import http from '../http';
-import { sport } from './sport';
-import { team } from './team';
-import { series } from './series';
+import { Sport } from './sport';
+import { Team } from './team';
+import { Series } from './series';
 
-export type activity = {
+export type Activity = {
   ID: number;
   Name: string;
   RegistrationStart: string;
   RegistrationEnd: string;
   RegistrationOpen: boolean;
-  SportID: sport;
+  SportID: Sport;
   MinCapacity: number;
   MaxCapacity: number;
   SoloRegistration: boolean;
   Logo: string;
-  Series: series[];
-  Team: team[];
+  Series: Series[];
+  Team: Team[];
 };
 
-type createdActivity = {
+type CreatedActivity = {
   ID: number;
   Name: string;
   RegistrationStart: string;
   RegistrationEnd: string;
   RegistrationOpen: boolean;
-  SportID: sport;
+  SportID: Sport;
   StatusID: number;
   MinCapacity: number;
   MaxCapacity: number;
@@ -32,7 +32,7 @@ type createdActivity = {
   Completed: boolean;
 };
 
-type uploadActivity = {
+type UploadActivity = {
   Name: string;
   RegistrationStart: string;
   RegistrationEnd: string;
@@ -43,7 +43,7 @@ type uploadActivity = {
   Logo: string;
 };
 
-type patchActivity = {
+type PatchActivity = {
   Name: string;
   RegistrationStart: string;
   RegistrationEnd: string;
@@ -57,10 +57,10 @@ type patchActivity = {
 };
 
 //Activity Routes
-const createNewActivity = (newActivity: uploadActivity): Promise<Object[]> =>
+const createNewActivity = (newActivity: UploadActivity): Promise<Object[]> =>
   http.post('recim/activities', newActivity);
 
-const getActivityByID = (ID: number): Promise<activity> => http.get(`recim/activities/${ID}`);
+const getActivityByID = (ID: number): Promise<Activity> => http.get(`recim/activities/${ID}`);
 
 const getAllActivities = (
   active: boolean,
@@ -78,7 +78,7 @@ const getAllActivities = (
   }
 };
 
-const editActivity = (ID: number, updatedActivity: patchActivity): Promise<Object[]> =>
+const editActivity = (ID: number, updatedActivity: PatchActivity): Promise<Object[]> =>
   http.patch(`recim/activities/${ID}`, updatedActivity);
 
 export { createNewActivity, getActivityByID, getAllActivities, editActivity };

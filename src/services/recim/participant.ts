@@ -1,18 +1,18 @@
 import http from '../http';
 
-export type participant = {
+export type Participant = {
   Username: string;
   Email: string;
   Role: string;
   Status: string;
-  Notification: participantNotification[];
+  Notification: ParticipantNotification[];
 };
 
-type createdParticipant = {
+type CreatedParticipant = {
   ID: number;
 };
 
-type patchParticipant = {
+type PatchParticipant = {
   ActivityID: number;
   ActivityPrivType: string;
   IsFreeAgent: boolean;
@@ -20,24 +20,24 @@ type patchParticipant = {
   TeamRole: string;
 };
 
-type patchParticipantStatus = {
+type PatchParticipantStatus = {
   StatusDescription: string;
   EndDate: string;
 };
 
-type participantStatus = {
+type ParticipantStatus = {
   Username: string;
   Status: string;
   StartDate: string;
   EndDate: string;
 };
 
-type uploadParticipantNotification = {
+type UploadParticipantNotification = {
   Message: string;
   EndDate: string;
 };
 
-type participantNotification = {
+type ParticipantNotification = {
   ID: number;
   Message: string;
   DispatchDate: string;
@@ -59,17 +59,17 @@ const getParticipantStatusHistory = (username: string): Promise<Object[]> =>
 
 const sendNotification = (
   username: string,
-  notification: uploadParticipantNotification,
+  notification: UploadParticipantNotification,
 ): Promise<Object[]> => http.post(`participants/${username}/notifications`, notification);
 
 const editParticipant = (
   username: string,
-  updatedParticipant: patchParticipant,
+  updatedParticipant: PatchParticipant,
 ): Promise<Object[]> => http.patch(`recim/participants/${username}`, updatedParticipant);
 
 const editParticipantStatus = (
   username: string,
-  status: patchParticipantStatus,
+  status: PatchParticipantStatus,
 ): Promise<Object[]> => http.patch(`recim/participants/${username}`, status);
 
 export {
