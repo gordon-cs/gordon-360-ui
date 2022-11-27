@@ -64,7 +64,7 @@ type CreatedParticipantActivity = {
 
 //Participant Routes
 const createParticipant = (ID: number): Promise<Participant> =>
-  http.post(`recim/participants/${ID}`);
+  http.put(`recim/participants/${ID}`);
 
 const getParticipants = (): Promise<Participant[]> => http.get(`recim/participants`);
 

@@ -60,7 +60,7 @@ const createMatch = (newMatch: UploadMatch): Promise<CreatedMatch> =>
   http.post('recim/matches', newMatch);
 
 const createMatchAttendance = (username: string, matchID: number): Promise<CreatedAttendance> =>
-  http.post(`recim/matches/attendance?matchID=${matchID}&username=${username}`);
+  http.post(`recim/matches/${matchID}/attendance`, username);
 
 const getMatchByID = (ID: number): Promise<Match> => http.get(`recim/matches/${ID}`);
 

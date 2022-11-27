@@ -66,15 +66,9 @@ const getAllActivities = (
   time: String,
   registrationOpen: boolean,
 ): Promise<Activity[]> => {
-  if (registrationOpen) {
-    return http.get(`recim/activities?registrationOpen=${registrationOpen}`);
-  } else {
-    if (time) {
-      return http.get(`recim/activities?active=${active}&time=${time}`);
-    } else {
-      return http.get(`recim/activities?active=${active}`);
-    }
-  }
+  return http.get(
+    `recim/activities?active=${active}&time=${time}&registrationOpen=${registrationOpen}`,
+  );
 };
 
 const editActivity = (ID: number, updatedActivity: PatchActivity): Promise<CreatedActivity[]> =>
