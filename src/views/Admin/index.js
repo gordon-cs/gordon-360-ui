@@ -6,6 +6,7 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 // import storageService from 'services/storage';
 import { gordonColors } from 'theme';
+import styles from './Admin.module.css';
 import CliftonStrengthsUpload from './components/CliftonStrengthsUpload';
 import InvolvementStatusList from './components/InvolvementsStatus';
 
@@ -44,7 +45,7 @@ const Admin = () => {
 
         <Grid item xs={12} lg={8}>
           <Card>
-            <CardHeader title="Site Admins" style={headerStyle} align="center" />
+            <CardHeader title="Site Admins" align="center" class={styles.cardheader} />
             <Grid container justifyContent="center">
               <Typography variant="p">
                 Visit{' '}
