@@ -1,11 +1,11 @@
 import { Grid, Typography, Card, CardActionArea, CardMedia, CardContent } from '@mui/material';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './InvolvementsGrid.module.css';
 
 const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => {
   const isOnline = useNetworkStatus();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <Grid container direction="row" spacing={4} className={styles.involvements_grid}>
@@ -16,7 +16,7 @@ const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => 
               <CardActionArea
                 onClick={() => {
                   if (isOnline) {
-                    history.push(`/activity/${sessionCode}/${activity.ActivityCode}`);
+                    navigate(`/activity/${sessionCode}/${activity.ActivityCode}`);
                   }
                 }}
               >
