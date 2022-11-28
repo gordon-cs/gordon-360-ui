@@ -1,11 +1,11 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Grid } from '@mui/material';
+import { Card, CardHeader, Grid, Link, Typography } from '@mui/material';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 // import storageService from 'services/storage';
-import AdminList from './components/AdminList';
+import { gordonColors } from 'theme';
 import CliftonStrengthsUpload from './components/CliftonStrengthsUpload';
 import InvolvementStatusList from './components/InvolvementsStatus';
 
@@ -21,6 +21,11 @@ const Admin = () => {
   if (!isOnline) {
     return <GordonOffline feature="Editing Administrators" />;
   }
+
+  const headerStyle = {
+    backgroundColor: gordonColors.primary.blue,
+    color: '#FFF',
+  };
 
   if (isAdmin) {
     return (
@@ -38,7 +43,18 @@ const Admin = () => {
         </Grid>
 
         <Grid item xs={12} lg={8}>
-          <AdminList />
+          <Card>
+            <CardHeader title="Site Admins" style={headerStyle} align="center" />
+            <Grid container justifyContent="center">
+              <Typography variant="p">
+                Visit{' '}
+                <Link href="https://groups.gordon.edu/group/360-SiteAdmin-SG" target="_blank">
+                  groups.gordon.edu
+                </Link>{' '}
+                to view and make changes.
+              </Typography>
+            </Grid>
+          </Card>
         </Grid>
       </Grid>
     );
