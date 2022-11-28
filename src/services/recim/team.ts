@@ -21,6 +21,11 @@ type CreatedTeam = {
   Logo: string;
 };
 
+type UploadTeamParticipant = {
+  Username: string;
+  RoleTypeID: number;
+};
+
 type CreatedTeamParticipant = {
   ID: number;
   TeamID: number;
@@ -66,22 +71,19 @@ const createTeam = (username: string, newTeam: UploadTeam): Promise<CreatedTeam>
 const getTeamByID = (ID: number): Promise<Team> => http.get(`recim/Teams/${ID}`);
 
 const addParticipantToTeam = async (
-  username: string,
-  TeamID: number,
-  RoleID: number,
+  teamID: number,
+  teamParticipant: UploadTeamParticipant,
 ): Promise<CreatedTeamParticipant> => {
-  return await http.post(
-    `recim/Teams/${TeamID}/participants?username=${username}&roleID=${RoleID}`,
-  );
+  return await http.post(`recim/Teams/${teamID}/participants`, teamParticipant);
 };
 
 const editTeamParticipant = async (
   username: string,
-  TeamID: number,
-  RoleID: number,
+  teamID: number,
+  roleID: number,
 ): Promise<CreatedTeamParticipant> => {
   return await http.patch(
-    `recim/Teams/${TeamID}/participants?username=${username}&roleID=${RoleID}`,
+    `recim/Teams/${teamID}/participants?username=${username}&roleID=${roleID}`,
   );
 };
 
