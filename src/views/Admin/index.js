@@ -5,7 +5,6 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 // import storageService from 'services/storage';
-import { gordonColors } from 'theme';
 import styles from './Admin.module.css';
 import CliftonStrengthsUpload from './components/CliftonStrengthsUpload';
 import InvolvementStatusList from './components/InvolvementsStatus';
@@ -22,11 +21,6 @@ const Admin = () => {
   if (!isOnline) {
     return <GordonOffline feature="Editing Administrators" />;
   }
-
-  const headerStyle = {
-    backgroundColor: gordonColors.primary.blue,
-    color: '#FFF',
-  };
 
   if (isAdmin) {
     return (
