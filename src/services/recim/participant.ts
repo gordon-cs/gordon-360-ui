@@ -12,7 +12,7 @@ export type Participant = {
 
 type PatchParticipantActivity = {
   ActivityID: number;
-  ActivityPrivType: string;
+  ActivityPrivID: number;
   IsFreeAgent: boolean;
 };
 
