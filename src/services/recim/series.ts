@@ -1,6 +1,7 @@
 import http from '../http';
 import { Match } from './match';
 import { TeamRecord } from './team';
+import { Lookup } from './recim';
 
 export type Series = {
   ID: number;
@@ -51,9 +52,20 @@ const createSeries = async (
 
 const getSeriesByID = (ID: number): Promise<Series> => http.get(`recim/series/${ID}`);
 
+const getSeriesStatusTypes = (): Promise<Lookup[]> => http.get(`recim/series/lookup?type=status`);
+
+const getSeriesTypes = (): Promise<Lookup[]> => http.get(`recim/series/lookup?type=series`);
+
 const getAllSeries = (): Promise<Series[]> => http.get(`recim/series`);
 
 const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<CreatedSeries> =>
   http.patch(`recim/series/${seriesID}`, updatedSeries);
 
-export { createSeries, getSeriesByID, getAllSeries, editSeries };
+export {
+  createSeries,
+  getSeriesByID,
+  getSeriesStatusTypes,
+  getSeriesTypes,
+  getAllSeries,
+  editSeries,
+};

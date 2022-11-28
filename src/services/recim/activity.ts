@@ -2,6 +2,7 @@ import http from '../http';
 import { Sport } from './sport';
 import { Team } from './team';
 import { Series } from './series';
+import { Lookup } from './recim';
 
 export type Activity = {
   ID: number;
@@ -65,13 +66,13 @@ const getAllActivities = (
   active: boolean,
   time: String,
   registrationOpen: boolean,
-): Promise<Activity[]> => {
-  return http.get(
-    `recim/activities?active=${active}&time=${time}&registrationOpen=${registrationOpen}`,
-  );
-};
+): Promise<Activity[]> =>
+  http.get(`recim/activities?active=${active}&time=${time}&registrationOpen=${registrationOpen}`);
+
+const getActivityStatusTypes = (): Promise<Lookup[]> =>
+  http.get(`recim/activities/lookup?type=status`);
 
 const editActivity = (ID: number, updatedActivity: PatchActivity): Promise<CreatedActivity[]> =>
   http.patch(`recim/activities/${ID}`, updatedActivity);
 
-export { createActivity, getActivityByID, getAllActivities, editActivity };
+export { createActivity, getActivityByID, getActivityStatusTypes, getAllActivities, editActivity };

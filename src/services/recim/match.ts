@@ -1,6 +1,7 @@
 import http from '../http';
 import { Participant } from './participant';
 import { Team } from './team';
+import { Lookup } from './recim';
 
 export type Match = {
   ID: number;
@@ -64,6 +65,13 @@ const createMatchAttendance = (username: string, matchID: number): Promise<Creat
 
 const getMatchByID = (ID: number): Promise<Match> => http.get(`recim/matches/${ID}`);
 
+const getMatchStatusTypes = (): Promise<Lookup[]> => http.get(`recim/matches/lookup?type=status`);
+
+const getMatchTeamStatusTypes = (): Promise<Lookup[]> =>
+  http.get(`recim/matches/lookup?type=teamstatus`);
+
+const getMatchSurfaces = (): Promise<Lookup[]> => http.get(`recim/matches/lookup?type=surface`);
+
 const updateMatchStats = (
   matchID: number,
   updatedTeamStats: PatchMatchStats,
@@ -72,4 +80,13 @@ const updateMatchStats = (
 const updateMatch = (ID: number, updatedMatch: PatchMatch): Promise<CreatedMatch> =>
   http.patch(`recim/matches/${ID}`, updatedMatch);
 
-export { createMatch, getMatchByID, updateMatchStats, updateMatch, createMatchAttendance };
+export {
+  createMatch,
+  getMatchByID,
+  getMatchStatusTypes,
+  getMatchTeamStatusTypes,
+  getMatchSurfaces,
+  updateMatchStats,
+  updateMatch,
+  createMatchAttendance,
+};

@@ -1,5 +1,6 @@
 import http from '../http';
 import { Team } from './team';
+import { Lookup } from './recim';
 
 export type Participant = {
   Username: string;
@@ -77,6 +78,12 @@ const getParticipantTeams = (username: string): Promise<Team[]> =>
 const getParticipantStatusHistory = (username: string): Promise<ParticipantStatus[]> =>
   http.get(`recim/participants/${username}/StatusHistory`);
 
+const getParticipantStatusTypes = (): Promise<Lookup[]> =>
+  http.get(`recim/participants/lookup?type=status`);
+
+const getParticipantActivityPrivTypes = (): Promise<Lookup[]> =>
+  http.get(`recim/participants/lookup?type=activitypriv`);
+
 const sendNotification = (
   username: string,
   notification: UploadParticipantNotification,
@@ -100,6 +107,8 @@ export {
   getParticipantByUsername,
   getParticipantTeams,
   getParticipantStatusHistory,
+  getParticipantStatusTypes,
+  getParticipantActivityPrivTypes,
   sendNotification,
   editParticipantActivity,
   editParticipantStatus,

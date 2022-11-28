@@ -1,6 +1,7 @@
 import http from '../http';
 import { Match } from './match';
 import { Participant } from './participant';
+import { Lookup } from './recim';
 
 export type Team = {
   ID: number;
@@ -70,6 +71,12 @@ const createTeam = (username: string, newTeam: UploadTeam): Promise<CreatedTeam>
 
 const getTeamByID = (ID: number): Promise<Team> => http.get(`recim/Teams/${ID}`);
 
+const getTeamStatusTypes = (ID: number): Promise<Lookup[]> =>
+  http.get(`recim/Teams/lookup?type=status`);
+
+const getTeamParticipantRoleTypes = (ID: number): Promise<Lookup[]> =>
+  http.get(`recim/Teams/lookup?type=role`);
+
 const addParticipantToTeam = async (
   teamID: number,
   teamParticipant: UploadTeamParticipant,
@@ -90,4 +97,12 @@ const editTeamParticipant = async (
 const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>
   http.patch(`recim/Teams/${ID}`, updatedTeam);
 
-export { createTeam, getTeamByID, addParticipantToTeam, editTeamParticipant, editTeam };
+export {
+  createTeam,
+  getTeamByID,
+  getTeamStatusTypes,
+  getTeamParticipantRoleTypes,
+  addParticipantToTeam,
+  editTeamParticipant,
+  editTeam,
+};
