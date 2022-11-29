@@ -1,3 +1,4 @@
+import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
@@ -37,6 +38,7 @@ const App = () => {
           <main className={styles.app_main}>
             <>
               <BirthdayMessage />
+              <AppRedirect />
               <Routes>
                 {routes.map((route) => (
                   <Route key={route.path} path={route.path} element={route.element} />
