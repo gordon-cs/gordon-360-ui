@@ -1,11 +1,11 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Grid } from '@mui/material';
+import { Card, CardHeader, Grid, Link, Typography } from '@mui/material';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 // import storageService from 'services/storage';
-import AdminList from './components/AdminList';
+import styles from './Admin.module.css';
 import CliftonStrengthsUpload from './components/CliftonStrengthsUpload';
 import InvolvementStatusList from './components/InvolvementsStatus';
 
@@ -38,7 +38,18 @@ const Admin = () => {
         </Grid>
 
         <Grid item xs={12} lg={8}>
-          <AdminList />
+          <Card>
+            <CardHeader title="Site Admins" align="center" class={styles.cardheader} />
+            <Grid container justifyContent="center">
+              <Typography variant="p">
+                Visit{' '}
+                <Link href="https://groups.gordon.edu/group/360-SiteAdmin-SG" target="_blank">
+                  groups.gordon.edu
+                </Link>{' '}
+                to view and make changes.
+              </Typography>
+            </Grid>
+          </Card>
         </Grid>
       </Grid>
     );
