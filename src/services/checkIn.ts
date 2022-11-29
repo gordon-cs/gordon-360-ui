@@ -61,7 +61,7 @@ type EnrollmentCheckin = {
   MinorHolds &
   Demographic;
 
-const getStatus = (): Promise<boolean> => http.get(`checkIn/status`);
+const getStatus = (): Promise<boolean> => http.get<boolean>(`checkIn/status`).catch(() => true);
 
 const markCompleted = (): Promise<void> => http.put(`checkIn/status`);
 
