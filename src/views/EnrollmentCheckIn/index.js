@@ -3,6 +3,7 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import checkInService from 'services/checkIn';
 import EmergencyContactUpdate from 'views/EnrollmentCheckIn/components/EmergencyContactUpdate';
 import EnrollmentCheckInWelcome from 'views/EnrollmentCheckIn/components/EnrollmentCheckInWelcome';
@@ -24,6 +25,7 @@ const steps = [
 ];
 
 const EnrollmentCheckIn = (props) => {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const { profile, loading: loadingProfile } = useUser();
 
@@ -157,16 +159,16 @@ const EnrollmentCheckIn = (props) => {
   }, [profile, loadingProfile]);
 
   useEffect(() => {
-    props.history.replace('/enrollmentcheckin', { step: activeStep });
-  }, [activeStep, props.history]);
+    navigate('/enrollmentcheckin', { replace: true, state: { step: activeStep } });
+  }, [activeStep, navigate]);
 
   const handleNext = () => {
-    props.history.push('/enrollmentcheckin', { step: activeStep });
+    navigate('/enrollmentcheckin', { state: { step: activeStep } });
     setActiveStep((nextStep) => nextStep + 1);
   };
 
   const handlePrev = () => {
-    props.history.push('/enrollmentcheckin', { step: activeStep });
+    navigate('/enrollmentcheckin', { state: { step: activeStep } });
     setActiveStep((previousStep) => previousStep - 1);
   };
 
