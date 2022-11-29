@@ -10,7 +10,7 @@ import UpdatePhone from 'views/EnrollmentCheckIn/components/UpdatePhone';
 import CompletedCheckIn from './components/CompletedCheckIn';
 import ConfirmCheckIn from './components/ConfirmCheckIn';
 import PrivacyAgreement from './components/PrivacyAgreement';
-import RaceEthnicity from './components/RaceEthnicity';
+// import RaceEthnicity from './components/RaceEthnicity';
 import styles from './EnrollmentCheckIn.module.css';
 
 const steps = [
@@ -18,7 +18,7 @@ const steps = [
   'Emergency Contact',
   'Update Phone',
   'Privacy Terms',
-  'Race Question',
+  // 'Race Question',
   'Confirm',
   'Completed Check In',
 ];
@@ -87,15 +87,15 @@ const EnrollmentCheckIn = (props) => {
     photoConsent: false,
   });
 
-  const [demographic, setDemographic] = useState({
-    Ethnicity: -3,
-    NativeAmerican: false,
-    Asian: false,
-    Black: false,
-    Hawaiian: false,
-    White: false,
-    None: false,
-  });
+  // const [demographic, setDemographic] = useState({
+  //   Ethnicity: -3,
+  //   NativeAmerican: false,
+  //   Asian: false,
+  //   Black: false,
+  //   Hawaiian: false,
+  //   White: false,
+  //   None: false,
+  // });
 
   useEffect(() => {
     const loadData = async () => {
@@ -147,7 +147,7 @@ const EnrollmentCheckIn = (props) => {
             });
           }
         } else {
-          setActiveStep(6);
+          setActiveStep(5);
         }
       }
       // We only want to stop loading now if the profile has already been loaded.
@@ -192,9 +192,9 @@ const EnrollmentCheckIn = (props) => {
     setPhoneInfo({ ...phoneInfo, [evt.target.name]: evt.target.value });
   };
 
-  const handleChangeDemographic = (evt) => {
-    setDemographic({ ...demographic, [evt.target.name]: evt.target.value });
-  };
+  // const handleChangeDemographic = (evt) => {
+  //   setDemographic({ ...demographic, [evt.target.name]: evt.target.value });
+  // };
 
   const handleCheckPrivacyAgreements = (evt) => {
     setPrivacyAgreements({ ...privacyAgreements, [evt.target.name]: evt.target.checked });
@@ -216,45 +216,45 @@ const EnrollmentCheckIn = (props) => {
     setPhoneInfo({ ...phoneInfo, [evt.target.name]: evt.target.checked });
   };
 
-  const handleCheckDemographic = (evt) => {
-    setDemographic({ ...demographic, [evt.target.name]: evt.target.checked });
-  };
+  // const handleCheckDemographic = (evt) => {
+  //   setDemographic({ ...demographic, [evt.target.name]: evt.target.checked });
+  // };
 
-  function formatDemographic(data) {
-    let formattedData = {
-      Ethnicity: data.Ethnicity,
-      Race: '',
-    };
-    if (data.None) {
-      formattedData.Race = '3';
-    } else {
-      if (data.NativeAmerican) {
-        formattedData.Race += '4,';
-      }
-      if (data.Asian) {
-        formattedData.Race += '5,';
-      }
-      if (data.Black) {
-        formattedData.Race += '6,';
-      }
-      if (data.Hawaiian) {
-        formattedData.Race += '7,';
-      }
-      if (data.White) {
-        formattedData.Race += '8,';
-      }
-    }
-    return formattedData;
-  }
+  // function formatDemographic(data) {
+  //   let formattedData = {
+  //     Ethnicity: data.Ethnicity,
+  //     Race: '',
+  //   };
+  //   if (data.None) {
+  //     formattedData.Race = '3';
+  //   } else {
+  //     if (data.NativeAmerican) {
+  //       formattedData.Race += '4,';
+  //     }
+  //     if (data.Asian) {
+  //       formattedData.Race += '5,';
+  //     }
+  //     if (data.Black) {
+  //       formattedData.Race += '6,';
+  //     }
+  //     if (data.Hawaiian) {
+  //       formattedData.Race += '7,';
+  //     }
+  //     if (data.White) {
+  //       formattedData.Race += '8,';
+  //     }
+  //   }
+  //   return formattedData;
+  // }
 
   const handleSubmit = () => {
     checkInService.submitContact(emergencyContact1);
     checkInService.submitContact(emergencyContact2);
     checkInService.submitContact(emergencyContact3);
     checkInService.submitPhone(phoneInfo);
-    checkInService.submitDemographic(formatDemographic(demographic));
+    // checkInService.submitDemographic(formatDemographic(demographic));
     checkInService.markCompleted(profile.ID);
-    setActiveStep(6);
+    setActiveStep(5);
   };
 
   if (loading || loadingProfile) {
@@ -318,23 +318,23 @@ const EnrollmentCheckIn = (props) => {
                         />
                       )}
 
-                      {activeStep === 4 && (
+                      {/* {activeStep === 4 && (
                         <RaceEthnicity
                           demographic={demographic}
                           handleChangeDemographic={handleChangeDemographic}
                           handleCheckDemographic={handleCheckDemographic}
                         />
-                      )}
-                      {activeStep === 5 && (
+                      )} */}
+                      {activeStep === 4 && (
                         <ConfirmCheckIn
                           emergencyContact1={emergencyContact1}
                           emergencyContact2={emergencyContact2}
                           emergencyContact3={emergencyContact3}
                           phoneInfo={phoneInfo}
-                          demographic={demographic}
+                          // demographic={demographic}
                         />
                       )}
-                      {activeStep === 6 && <CompletedCheckIn />}
+                      {activeStep === 5 && <CompletedCheckIn />}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -380,17 +380,17 @@ const EnrollmentCheckIn = (props) => {
                           (activeStep === 3 &&
                             (privacyAgreements.FERPA === false ||
                               privacyAgreements.dataUsage === false ||
-                              privacyAgreements.photoConsent === false)) ||
-                          (activeStep === 4 && demographic.Ethnicity === '') ||
-                          (activeStep === 4 &&
-                            !(
-                              demographic.NativeAmerican ||
-                              demographic.Asian ||
-                              demographic.Black ||
-                              demographic.Hawaiian ||
-                              demographic.White ||
-                              demographic.None
-                            ))
+                              privacyAgreements.photoConsent === false))
+                          // (activeStep === 4 && demographic.Ethnicity === '') ||
+                          // (activeStep === 4 &&
+                          //   !(
+                          //     demographic.NativeAmerican ||
+                          //     demographic.Asian ||
+                          //     demographic.Black ||
+                          //     demographic.Hawaiian ||
+                          //     demographic.White ||
+                          //     demographic.None
+                          //   ))
                         }
                       >
                         {activeStep === 0 ? 'Begin Check-In' : 'Next'}
