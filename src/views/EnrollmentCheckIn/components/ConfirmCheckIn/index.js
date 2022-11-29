@@ -6,24 +6,24 @@ const ConfirmCheckIn = ({
   emergencyContact2,
   emergencyContact3,
   phoneInfo,
-  demographic,
+  // demographic,
 }) => {
   const cyan = gordonColors.primary.cyan;
 
-  const { ethnicity, ...raceValues } = demographic;
+  // const { ethnicity, ...raceValues } = demographic;
 
-  const races = {
-    NativeAmerican: 'Native American or Alaskan Native',
-    Asian: 'Asian',
-    Black: 'Black or African American',
-    Hawaiian: 'Native Hawaiian or Other Pacific Islander',
-    White: 'White',
-  };
+  // const races = {
+  //   NativeAmerican: 'Native American or Alaskan Native',
+  //   Asian: 'Asian',
+  //   Black: 'Black or African American',
+  //   Hawaiian: 'Native Hawaiian or Other Pacific Islander',
+  //   White: 'White',
+  // };
 
-  const displayRace = Object.keys(races)
-    .filter((race) => raceValues[race])
-    .map((race) => races[race])
-    .join(', ');
+  // const displayRace = Object.keys(races)
+  //   .filter((race) => raceValues[race])
+  //   .map((race) => races[race])
+  //   .join(', ');
 
   return (
     <Grid container alignItems="center" justifyContent="center" direction="column">
@@ -98,7 +98,7 @@ const ConfirmCheckIn = ({
               {phoneInfo.NoPhone ? 'None' : phoneInfo.PersonalPhone}
             </Typography>
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Typography variant="body1" gutterBottom>
               <b>Ethnicity:</b>{' '}
               {demographic.Ethnicity === '-1'
@@ -112,7 +112,7 @@ const ConfirmCheckIn = ({
             <Typography variant="body1" gutterBottom>
               <b>Race:</b> {raceValues.None ? 'Prefer not to say' : displayRace}
             </Typography>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     </Grid>
