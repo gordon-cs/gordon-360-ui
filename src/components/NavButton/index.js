@@ -34,7 +34,7 @@ const GordonNavButton = ({
         <ListItemText primary={linkName} />
       </ListItem>
     ) : (
-      <NavLink exact to={linkPath} onClick={onLinkClick} className="gc360_link">
+      <NavLink end to={linkPath} onClick={onLinkClick} className="gc360_link">
         <ListItem divider={divider} button>
           {LinkIcon && (
             <ListItemIcon>
