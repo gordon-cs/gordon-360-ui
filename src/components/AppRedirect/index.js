@@ -1,6 +1,6 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import { useEffect, useState } from 'react';
-import { Route, useLocation } from 'react-router';
+import { Navigate, useLocation } from 'react-router';
 import checkInService from 'services/checkIn';
 
 const AppRedirect = () => {
@@ -20,7 +20,7 @@ const AppRedirect = () => {
     location.pathname !== '/enrollmentcheckin' &&
     location.pathname !== '/wellness'
   ) {
-    return <Route to="/enrollmentcheckin" />;
+    return <Navigate to="/enrollmentcheckin" />;
   }
 
   return null;
