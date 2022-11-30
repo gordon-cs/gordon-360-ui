@@ -101,20 +101,21 @@ const getNewsByCategory = async (category: number): Promise<NewsItem[]> =>
 
 /******************* POST **********************/
 
-async function submitStudentNews(
+const submitStudentNews = async (
   subject: string,
   categoryID: number,
   body: string,
   image?: string,
-): Promise<NewsItem | undefined> {
+): Promise<NewsItem | undefined> => {
   try {
     return await http.post(
-      `news?subject=${subject}&categoryID=${categoryID}&body=${body}&image=${image ?? ''}`,
+      `news?subject=${subject}&categoryID=${categoryID}&body=${body}`,
+      image ?? '',
     );
   } catch (reason) {
     console.log('Caught news submission error: ' + reason);
   }
-}
+};
 
 /******************* DELETE **********************/
 
