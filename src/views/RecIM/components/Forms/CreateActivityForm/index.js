@@ -6,7 +6,8 @@ import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ContentCard } from '../components/ContentCard';
 import { InformationField } from '../components/InformationField';
-import { createNewActivity, getAllSports } from 'services/recim';
+import { createActivity } from 'services/recim/activity';
+import { getAllSports } from 'services/recim/sport';
 
 const CreateActivityForm = ({
   closeWithSnackbar,
@@ -187,7 +188,7 @@ const CreateActivityForm = ({
       (sport) => sport.Name === activityCreationRequest.sportID,
     )[0].ID;
 
-    createNewActivity(activityCreationRequest).then(() => {
+    createActivity(activityCreationRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
