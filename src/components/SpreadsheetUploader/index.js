@@ -8,7 +8,11 @@ import { Link } from 'react-router-dom';
 import { read, utils } from 'xlsx';
 import styles from './SpreadsheetUploader.module.css';
 
-const acceptedTypes = ['application/vnd.ms-excel', 'text/csv'];
+const acceptedTypes = [
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'text/csv'
+];
 
 const SpreadsheetUploader = ({
   open,
