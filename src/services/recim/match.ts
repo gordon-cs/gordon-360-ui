@@ -53,7 +53,7 @@ type PatchMatch = {
 type CreatedAttendance = {
   ID: number;
   MatchID: number;
-  ParticipantID: number;
+  ParticipantUsername: string;
 };
 
 //Match Routes

@@ -8,6 +8,7 @@ export type Participant = {
   Role: string;
   Status: string;
   Notification: ParticipantNotification[];
+  IsAdmin: boolean;
 };
 
 type PatchParticipantActivity = {
@@ -17,7 +18,7 @@ type PatchParticipantActivity = {
 };
 
 type PatchParticipantStatus = {
-  StatusDescription: string;
+  StatusID: number;
   EndDate: string;
 };
 
@@ -30,7 +31,7 @@ type ParticipantStatus = {
 
 type CreatedParticipantStatus = {
   ID: number;
-  ParticipantID: number;
+  ParticipantUsername: string;
   StatusID: number;
   StartDate: string;
   EndDate?: string;
@@ -49,7 +50,7 @@ type ParticipantNotification = {
 
 type CreatedParticipantNotification = {
   ID: number;
-  ParticipantID: number;
+  ParticipantUsername: string;
   Message: string;
   EndDate: string;
   DispatchDate: string;
@@ -58,14 +59,14 @@ type CreatedParticipantNotification = {
 type CreatedParticipantActivity = {
   ID: number;
   ActivityID: number;
-  ParticipantID: number;
+  ParticipantUsername: string;
   PrivTypeID: number;
-  isFreeAgent: boolean;
+  IsFreeAgent: boolean;
 };
 
 //Participant Routes
-const createParticipant = (ID: number): Promise<Participant> =>
-  http.put(`recim/participants/${ID}`);
+const createParticipant = (username: string): Promise<Participant> =>
+  http.put(`recim/participants/${username}`);
 
 const getParticipants = (): Promise<Participant[]> => http.get(`recim/participants`);
 
@@ -90,16 +91,19 @@ const sendNotification = (
 ): Promise<CreatedParticipantNotification> =>
   http.post(`participants/${username}/notifications`, notification);
 
+const editParticipantAdmin = (username: string, isAdmin: boolean): Promise<Participant> =>
+  http.patch(`recim/participants/${username}`, isAdmin);
+
 const editParticipantActivity = (
   username: string,
   updatedParticipant: PatchParticipantActivity,
 ): Promise<CreatedParticipantActivity> =>
-  http.patch(`recim/participants/${username}`, updatedParticipant);
+  http.patch(`recim/participants/${username}/activities`, updatedParticipant);
 
 const editParticipantStatus = (
   username: string,
   status: PatchParticipantStatus,
-): Promise<CreatedParticipantStatus> => http.patch(`recim/participants/${username}`, status);
+): Promise<CreatedParticipantStatus> => http.patch(`recim/participants/${username}/status`, status);
 
 export {
   createParticipant,
@@ -110,6 +114,7 @@ export {
   getParticipantStatusTypes,
   getParticipantActivityPrivTypes,
   sendNotification,
+  editParticipantAdmin,
   editParticipantActivity,
   editParticipantStatus,
 };
