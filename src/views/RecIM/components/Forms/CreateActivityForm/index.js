@@ -38,7 +38,6 @@ const CreateActivityForm = ({
     };
     loadSports();
   }, []);
-
   const createActivityFields = [
     {
       label: 'Name',

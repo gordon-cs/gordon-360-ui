@@ -9,12 +9,14 @@ import recimLogo from './../../recim_logo.png';
 import { ActivityList, TeamList } from './../../components/List';
 import { getAllActivities } from 'services/recim/activity';
 import { DateTime } from 'luxon';
+import { getParticipantTeams } from 'services/recim/participant';
 
 const Home = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
   const [openCreateActivityForm, setOpenCreateActivityForm] = useState(false);
   const [activities, setActivities] = useState([]);
+  const [myTeams, setMyTeams] = useState([]);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -26,10 +28,13 @@ const Home = () => {
 
       // Get all active activities where registration has not closed
       setActivities(await getAllActivities(false, DateTime.now().toISO()));
+      if (profile) {
+        setMyTeams(await getParticipantTeams(profile.AD_Username));
+      }
       setLoading(false);
     };
     loadActivities();
-  }, [profile]);
+  }, [profile, openCreateActivityForm]);
 
   const createActivityButton = (
     <Grid container justifyContent="center">
@@ -66,17 +71,13 @@ const Home = () => {
     <Card>
       <CardHeader title="My Teams" className={styles.cardHeader} />
       <CardContent>
-        {/* if I am apart of any active teams, map them here */}
-        <TeamList
-          teams={[
-            { activityID: '123456', ID: '789' },
-            { activityID: '12345', ID: '987' },
-          ]}
-        />
-        {/* else "no teams" */}
-        <Typography variant="body1" paragraph>
-          You're not yet apart of any teams; join one to get started!
-        </Typography>
+        {myTeams ? (
+          <TeamList teams={myTeams} />
+        ) : (
+          <Typography variant="body1" paragraph>
+            You're not yet apart of any teams; join one to get started!
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );

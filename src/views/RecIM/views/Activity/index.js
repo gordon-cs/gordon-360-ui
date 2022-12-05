@@ -1,6 +1,6 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
@@ -8,64 +8,31 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import styles from './Activity.module.css';
 import { MatchList, TeamList } from './../../components/List';
 import CreateTeamForm from '../../components/Forms/CreateTeamForm';
+import { getActivityByID } from 'services/recim/activity';
 
 const Activity = () => {
   const { activityID } = useParams();
-  const { profile, loading } = useUser();
+  const { profile, /* profileLoading */ } = useUser();
+  const [loading, setLoading] = useState(true);
+  const [activity, setActivity] = useState({});
   const [openCreateTeamForm, setOpenCreateTeamForm] = useState(false);
 
-  // CARD - schedule
-  let scheduleCard = (
-    <Card>
-      <CardHeader title="Schedule" className={styles.cardHeader} />
-      <CardContent>
-        {/* if there are games scheduled, map them here */}
-        <MatchList matches={[{ activityID: '123456', ID: '789' }]} />
-        {/* else "no schedule yet set" */}
-        <Typography variant="body1" paragraph>
-          Games have not yet been scheduled.
-        </Typography>
-      </CardContent>
-    </Card>
-  );
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
 
-  // CARD - teams
-  let teamsCard = (
-    <Card>
-      <CardHeader title="Teams" className={styles.cardHeader} />
-      <CardContent>
-        {/* if I am apart of any active teams, map them here */}
-        <TeamList
-          teams={[
-            { activityID: '123456', ID: '789' },
-            { activityID: '12345', ID: '987' },
-          ]}
-        />
-        {/* else "no teams" */}
-        <Typography variant="body1" paragraph>
-          Be the first to create a team!
-        </Typography>
-        <Grid container justifyContent="center">
-          <Button
-            variant="contained"
-            color="warning"
-            startIcon={<AddCircleRoundedIcon />}
-            className={styles.actionButton}
-            onClick={() => {
-              setOpenCreateTeamForm(true);
-            }}
-          >
-            Create a New Team
-          </Button>
-        </Grid>
-      </CardContent>
-    </Card>
-  );
+      setActivity(await getActivityByID(activityID));
+      setLoading(false);
+    };
+    loadData();
+  }, [activityID]);
 
   const handleCreateTeamForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenCreateTeamForm(false);
   };
+
+  console.log(activity)
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -76,6 +43,49 @@ const Activity = () => {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
+    // CARD - schedule
+    let scheduleCard = (
+      <Card>
+        <CardHeader title="Schedule" className={styles.cardHeader} />
+        <CardContent>
+          {/* if there are games scheduled, map them here */}
+          <MatchList matches={[{ activityID: '123456', ID: '789' }]} />
+          {/* else "no schedule yet set" */}
+          <Typography variant="body1" paragraph>
+            Games have not yet been scheduled.
+          </Typography>
+        </CardContent>
+      </Card>
+    );
+
+    // CARD - teams
+    let teamsCard = (
+      <Card>
+        <CardHeader title="Teams" className={styles.cardHeader} />
+        <CardContent>
+          {/* if I am apart of any active teams, map them here */}
+          <TeamList teams={activity.Team} activityID={activityID} />
+          {/* else "no teams" */}
+          <Typography variant="body1" paragraph>
+            Be the first to create a team!
+          </Typography>
+          <Grid container justifyContent="center">
+            <Button
+              variant="contained"
+              color="warning"
+              startIcon={<AddCircleRoundedIcon />}
+              className={styles.actionButton}
+              onClick={() => {
+                setOpenCreateTeamForm(true);
+              }}
+            >
+              Create a New Team
+            </Button>
+          </Grid>
+        </CardContent>
+      </Card>
+    );
+
     return (
       <>
         <Grid container alignItems="center" className={styles.activityHeader}>

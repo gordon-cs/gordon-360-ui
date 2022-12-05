@@ -65,16 +65,16 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const TeamListing = ({ team }) => {
+const TeamListing = ({ team, activityID }) => {
   return (
     <ListItem
       button
       component={Link}
-      to={`/recim/activity/${team.activityID}/team/${team.ID}`}
+      to={`/recim/activity/${activityID}/team/${team.ID}`}
       className="gc360_link"
     >
       <Grid container className={styles.listing}>
-        <Grid item>Team Listing</Grid>
+        <Grid item>{team.Name}</Grid>
       </Grid>
     </ListItem>
   );
