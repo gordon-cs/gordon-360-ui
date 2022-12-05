@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { createNewTeam } from 'services/recim';
+import { createTeam } from 'services/recim/team';
 import { InformationField } from '../components/InformationField';
 import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ConfirmationRow } from '../components/ConfirmationRow';
@@ -122,9 +122,9 @@ const CreateTeamForm = ({
 
     let teamCreationRequest = { ...currentInfo, ...newInfo };
 
-    console.log(teamCreationRequest)
+    console.log(teamCreationRequest);
 
-    createNewTeam(teamCreationRequest, profile.AD_Username).then(() => {
+    createTeam(profile.AD_Username, teamCreationRequest).then(() => {
       closeWithSnackbar({
         type: 'success',
         message: 'Team created successfully',

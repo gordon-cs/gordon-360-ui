@@ -46,6 +46,13 @@ const post = <TResponse>(
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'post', JSON.stringify(body), setContentTypeJSON(headers));
 
+const patch = <TResponse>(
+  endpoint: string,
+  body: Object = '',
+  headers = new Headers(),
+): Promise<TResponse> =>
+  makeRequest(endpoint, 'patch', JSON.stringify(body), setContentTypeJSON(headers));
+
 const del = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'delete');
 
 /**
@@ -153,6 +160,7 @@ const httpUtils = {
   del,
   get,
   post,
+  patch,
   postImage,
   put,
 };
