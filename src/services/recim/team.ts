@@ -5,6 +5,7 @@ import { Lookup } from './recim';
 
 export type Team = {
   ID: number;
+  ActivityID: number;
   Name: string;
   Status: string;
   Logo: string;
