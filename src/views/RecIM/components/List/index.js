@@ -16,8 +16,8 @@ const MatchList = ({ matches }) => {
   return <List dense>{content}</List>;
 };
 
-const TeamList = ({ teams }) => {
-  let content = teams.map((team) => <TeamListing team={team} />);
+const TeamList = ({ teams, activityID }) => {
+  let content = teams.map((team) => <TeamListing team={team} activityID={activityID} />);
   return <List dense>{content}</List>;
 };
 

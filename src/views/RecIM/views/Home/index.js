@@ -9,6 +9,7 @@ import recimLogo from './../../recim_logo.png';
 import { ActivityList, TeamList } from './../../components/List';
 import { getAllActivities } from 'services/recim/activity';
 import { DateTime } from 'luxon';
+import { getParticipantTeams } from 'services/recim/participant';
 
 const Home = () => {
   const { profile } = useUser();
@@ -28,7 +29,7 @@ const Home = () => {
       // Get all active activities where registration has not closed
       setActivities(await getAllActivities(false, DateTime.now().toISO()));
       if (profile) {
-        setMyTeams(await getMyTeams(profile.AD_Username));
+        setMyTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
     };
@@ -70,12 +71,13 @@ const Home = () => {
     <Card>
       <CardHeader title="My Teams" className={styles.cardHeader} />
       <CardContent>
-        {/* if I am apart of any active teams, map them here */}
-        <TeamList teams={myTeams} />
-        {/* else "no teams" */}
-        <Typography variant="body1" paragraph>
-          You're not yet apart of any teams; join one to get started!
-        </Typography>
+        {myTeams ? (
+          <TeamList teams={myTeams} />
+        ) : (
+          <Typography variant="body1" paragraph>
+            You're not yet apart of any teams; join one to get started!
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );
