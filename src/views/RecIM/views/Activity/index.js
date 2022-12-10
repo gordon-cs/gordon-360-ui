@@ -12,7 +12,7 @@ import { getActivityByID } from 'services/recim/activity';
 
 const Activity = () => {
   const { activityID } = useParams();
-  const { profile, /* profileLoading */ } = useUser();
+  const { profile } = useUser();
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState({});
   const [openCreateTeamForm, setOpenCreateTeamForm] = useState(false);
@@ -25,14 +25,13 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [activityID]);
+  }, [activityID, openCreateTeamForm]);
+  // ^ May be bad practice, but will refresh page on dialog close
 
   const handleCreateTeamForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenCreateTeamForm(false);
   };
-
-  console.log(activity)
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -63,12 +62,14 @@ const Activity = () => {
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-          {/* if I am apart of any active teams, map them here */}
-          <TeamList teams={activity.Team} activityID={activityID} />
-          {/* else "no teams" */}
-          <Typography variant="body1" paragraph>
-            Be the first to create a team!
-          </Typography>
+          {activity.Team.length !== 0 ? (
+            <TeamList teams={activity.Team} />
+          ) : (
+            <Typography variant="body1" paragraph>
+              Be the first to create a team!
+            </Typography>
+          )}
+
           <Grid container justifyContent="center">
             <Button
               variant="contained"

@@ -7,7 +7,9 @@ const ActivityList = ({ activities }) => {
 };
 
 const ParticipantList = ({ participants }) => {
-  let content = participants.map((participant) => <ParticipantListing participant={participant} />);
+  let content = participants.map((participant) => (
+    <ParticipantListing participant={participant}/>
+  ));
   return <List dense>{content}</List>;
 };
 
@@ -16,8 +18,8 @@ const MatchList = ({ matches }) => {
   return <List dense>{content}</List>;
 };
 
-const TeamList = ({ teams, activityID }) => {
-  let content = teams.map((team) => <TeamListing team={team} activityID={activityID} />);
+const TeamList = ({ teams }) => {
+  let content = teams.map((team) => <TeamListing team={team} />);
   return <List dense>{content}</List>;
 };
 
