@@ -5,10 +5,10 @@ import { Lookup } from './recim';
 
 export type Team = {
   ID: number;
+  ActivityID: number;
   Name: string;
   Status: string;
   Logo: string;
-  ActivityID: string;
   Match: Match[];
   Participant: Participant[];
   MatchHistory: TeamMatchHistory[];
@@ -36,8 +36,9 @@ type CreatedTeamParticipant = {
   RoleTypeID: number;
 };
 
-type TeamMatchHistory = {
+export type TeamMatchHistory = {
   MatchID: number;
+  OwnID: number;
   Opponent: Team;
   OwnScore: number;
   OpposingScore: number;
