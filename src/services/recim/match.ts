@@ -12,7 +12,6 @@ export type Match = {
   Surface: string;
   Status: string;
   SeriesID: number;
-  Activity: Activity;
   Attendance: Participant[];
   Team: Team[];
 };
