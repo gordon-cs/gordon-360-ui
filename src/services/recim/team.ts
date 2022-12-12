@@ -36,8 +36,9 @@ type CreatedTeamParticipant = {
   RoleTypeID: number;
 };
 
-type TeamMatchHistory = {
+export type TeamMatchHistory = {
   MatchID: number;
+  OwnID: number;
   Opponent: Team;
   OwnScore: number;
   OpposingScore: number;

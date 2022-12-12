@@ -1,14 +1,17 @@
 import http from '../http';
 import { Participant } from './participant';
-import { Team } from './team';
+import { Team, TeamMatchHistory } from './team';
 import { Lookup } from './recim';
+import { Activity } from './activity';
 
 export type Match = {
   ID: number;
+  Scores: TeamMatchHistory[];
   Time: string;
   Surface: string;
   Status: string;
   SeriesID: number;
+  Activity: Activity;
   Attendance: Participant[];
   Team: Team[];
 };
