@@ -9,6 +9,7 @@ export type Team = {
   Name: string;
   Status: string;
   Logo: string;
+  ActivityID: string;
   Match: Match[];
   Participant: Participant[];
   MatchHistory: TeamMatchHistory[];

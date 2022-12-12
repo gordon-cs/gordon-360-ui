@@ -7,6 +7,7 @@ import { Activity } from './activity';
 export type Match = {
   ID: number;
   Scores: TeamMatchHistory[];
+  Activity: Activity; // This will only be used for activity ID
   Time: string;
   Surface: string;
   Status: string;
