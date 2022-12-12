@@ -117,16 +117,16 @@ const ParticipantListing = ({ participant }) => {
   );
 };
 
-const MatchListing = ({ match }) => {
+const MatchListing = ({ match, activityID }) => {
   return (
     <ListItem
       button
       component={Link}
-      to={`/recim/activity/${match.activityID}/match/${match.ID}`}
+      to={`/recim/activity/${activityID}/match/${match.ID}`}
       className="gc360_link"
     >
       <Grid container className={styles.listing}>
-        <Grid item>Team A vs Team B</Grid>
+        <Grid item>{match.Team[0].Name} vs. {match.Team[1].Name}</Grid>
       </Grid>
     </ListItem>
   );

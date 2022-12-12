@@ -47,12 +47,13 @@ const Activity = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
-          {/* if there are games scheduled, map them here */}
-          <MatchList matches={[{ activityID: '123456', ID: '789' }]} />
-          {/* else "no schedule yet set" */}
-          <Typography variant="body1" paragraph>
-            Games have not yet been scheduled.
-          </Typography>
+          {activity.Series[0].Match ? (
+            <MatchList matches={activity.Series[0].Match} />
+          ) : (
+            <Typography variant="body1" paragraph>
+              Games have not yet been scheduled.
+            </Typography>
+          )}
         </CardContent>
       </Card>
     );

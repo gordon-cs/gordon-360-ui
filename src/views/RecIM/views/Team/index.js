@@ -17,7 +17,7 @@ const Team = () => {
   useEffect(() => {
     const loadTeamData = async () => {
       setLoading(true);
-      setTeam(await getTeamByID(teamID))
+      setTeam(await getTeamByID(teamID));
       setLoading(false);
     };
     loadTeamData();
@@ -35,9 +35,7 @@ const Team = () => {
         <CardContent>
           {/*This is hardcoded data for now, in the future, roster card should
           be a react component that takes a set of users and maps them here*/}
-          <ParticipantList
-            participants={team.Participant}
-          />
+          <ParticipantList participants={team.Participant} />
         </CardContent>
       </Card>
     );
@@ -47,12 +45,13 @@ const Team = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
-          {/* if there are games scheduled, map them here */}
-          <MatchList matches={[{ activityID: '123456', ID: '789' }]} />
-          {/* else "no schedule yet set" */}
-          <Typography variant="body1" paragraph>
-            Games have not yet been scheduled.
-          </Typography>
+          {team.Match ? (
+            <MatchList matches={team.Match} activityID={team.ActivityID} />
+          ) : (
+            <Typography variant="body1" paragraph>
+              No matches scheduled at this time!
+            </Typography>
+          )}
         </CardContent>
       </Card>
     );
