@@ -162,6 +162,15 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
+  const settingButton = (
+    <GordonNavButton
+      unavailable={isOnline ? null : 'offline'}
+      linkName={'Settings'}
+      linkPath={'/settings'}
+      divider={false}
+    />
+  );
+
   const adminButton =
     isAuthenticated && isSiteAdmin ? (
       <GordonNavButton
@@ -197,6 +206,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {aboutButton}
         {feedbackButton}
         {adminButton}
+        {settingButton}
         {signOutButton}
       </List>
 
