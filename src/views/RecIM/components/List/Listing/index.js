@@ -63,7 +63,7 @@ const ActivityListing = ({ activity }) => {
             <Grid item xs={10}>
               {activity.Series.map((series) => {
                 return (
-                  <Typography align="center">
+                  <Typography key={series.ID} align="center">
                     {series.Name} {standardDate(DateTime.fromISO(series.StartDate), false)} -{' '}
                     {standardDate(DateTime.fromISO(series.EndDate), false)}
                   </Typography>
