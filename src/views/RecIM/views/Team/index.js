@@ -45,7 +45,7 @@ const Team = () => {
             <Grid item>
               <img src={''} alt="Team Icon" width="85em"></img>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={8} md={5}>
               <Typography variant="h5" className={styles.teamTitle}>
                 Team Name
               </Typography>

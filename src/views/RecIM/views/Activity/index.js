@@ -78,7 +78,7 @@ const Activity = () => {
               <Grid item>
                 <img src={''} alt="Activity Icon" width="85em"></img>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={8} md={5}>
                 <Typography variant="h5" className={styles.activityTitle}>
                   {activity.Name}
                 </Typography>

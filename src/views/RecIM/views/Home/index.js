@@ -60,7 +60,7 @@ const Home = () => {
           <Grid item>
             <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={8} md={5} lg={3}>
             <hr className={styles.homeHeaderLine} />
             <Typography variant="h5" className={styles.homeHeaderTitle}>
               <b className="accentText">Gordon</b> Rec-IM
@@ -77,9 +77,8 @@ const Home = () => {
   // CARD - upcoming events
   let upcomingEventsCard = (
     <Card>
-      <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
+      <CardHeader title="Upcoming Rec-IM Activities" className={styles.cardHeader} />
       <CardContent>
-        {/* if there are upcoming events, map them here */}
         {activities ? (
           <ActivityList activities={activities} />
         ) : (

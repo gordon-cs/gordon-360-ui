@@ -28,12 +28,12 @@ const ActivityListing = ({ activity }) => {
   let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
   return (
     <ListItemButton component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
-      <Grid container className={styles.listing}>
-        <Grid item xs={3} container alignContent="center">
+      <Grid container className={styles.listing} columnSpacing={2}>
+        <Grid item xs={12} sm={4} container alignContent="center">
           <Typography className={styles.listingTitle}>{activity.Name}</Typography>
         </Grid>
-        <Grid item xs={4}>
-          <Grid container direction="row" alignItems="center" justifyContent="center">
+        <Grid item xs={12} sm={4}>
+          <Grid container direction="row">
             <Grid item xs={10}>
               <Chip
                 icon={<EventAvailableIcon />}
@@ -53,17 +53,15 @@ const ActivityListing = ({ activity }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={5}>
-          <Grid container direction="row" alignItems="center" justifyContent="center">
+        <Grid item xs={12} sm={4}>
+          <Grid container direction="row">
             <Grid item xs={10}>
-              <Typography gutterBottom align="center">
-                Season
-              </Typography>
+              <Typography gutterBottom>Season</Typography>
             </Grid>
             <Grid item xs={10}>
               {activity.Series.map((series) => {
                 return (
-                  <Typography key={series.ID} align="center">
+                  <Typography key={series.ID}>
                     {series.Name} {standardDate(DateTime.fromISO(series.StartDate), false)} -{' '}
                     {standardDate(DateTime.fromISO(series.EndDate), false)}
                   </Typography>
