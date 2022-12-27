@@ -11,8 +11,17 @@
   color: $neutral-white;
 }
 
-.grayText {
+.homeHeaderTitle {
+  font-weight: bold;
+  color: $neutral-dark-gray2;
+}
+
+.homeHeaderSubtitle {
   color: $neutral-gray;
+}
+
+.homeHeaderLine {
+  border-top: 3px solid $neutral-gray2;
 }
 
 .listing {

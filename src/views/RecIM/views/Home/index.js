@@ -53,6 +53,27 @@ const Home = () => {
     </Grid>
   );
 
+  let homeHeader = (
+    <Card>
+      <CardContent>
+        <Grid container direction="row" alignItems="center" spacing={4}>
+          <Grid item>
+            <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+          </Grid>
+          <Grid item xs={3}>
+            <hr className={styles.homeHeaderLine} />
+            <Typography variant="h5" className={styles.homeHeaderTitle}>
+              <b className="accentText">Gordon</b> Rec-IM
+            </Typography>
+            <Typography variant="h6" className={styles.homeHeaderSubtitle}>
+              <i>"Competition reveals character"</i>
+            </Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+
   // CARD - upcoming events
   let upcomingEventsCard = (
     <Card>
@@ -93,25 +114,6 @@ const Home = () => {
     setOpenCreateActivityForm(false);
   };
 
-  // const handleGet = () => {
-  //   console.log('get activities');
-  //   getAllActivities()
-  //     .then((e) => {
-  //       let allActivities = e.map((activity) => `${activity.Name}`);
-  //       setAllActivities(allActivities);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  // const handleMake = () => {
-  //   console.log('post activity');
-  //   postSmashActivity()
-  //     .then()
-  //     .catch((error) => console.log(error));
-  // };
-
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {
@@ -119,20 +121,13 @@ const Home = () => {
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     return (
-      <>
-        <Grid container alignItems="center" className={styles.homeHeader}>
-          <Grid item>
-            <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
-          </Grid>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <Grid item>
-            <Typography variant="h5">Rec-IM</Typography>
-            <Typography variant="h6" className={styles.grayText}>
-              <i>"Competition reveals character"</i>
-            </Typography>
+      <Grid container spacing={2}>
+        <Grid item container alignItems="center">
+          <Grid item xs={12}>
+            {homeHeader}
           </Grid>
         </Grid>
-        <Grid container justifyContent="center" spacing={2}>
+        <Grid item container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={8}>
             {upcomingEventsCard}
           </Grid>
@@ -150,7 +145,7 @@ const Home = () => {
             setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
           />
         ) : null}
-      </>
+      </Grid>
     );
   }
 };
