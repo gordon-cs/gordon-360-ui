@@ -72,7 +72,7 @@ const Activity = () => {
                   <Typography color="text.primary">{activity.Name}</Typography>
                 </Breadcrumbs>
               </Grid>
-              <hr className={styles.activityHeaderLine} />
+              <hr className={styles.recimNavHeaderLine} />
             </Grid>
             <Grid item container direction="row" alignItems="center" columnSpacing={4}>
               <Grid item>
@@ -98,7 +98,7 @@ const Activity = () => {
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
           {/* if there are games scheduled, map them here */}
-          <MatchList matches={[{ activityID: '123456', ID: '789' }]} />
+          <MatchList matches={[{ activityID: '1', ID: '789' }]} />
           {/* else "no schedule yet set" */}
           <Typography variant="body1" paragraph>
             Games have not yet been scheduled.
