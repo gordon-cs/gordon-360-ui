@@ -49,14 +49,14 @@ const CreateActivityForm = ({
     {
       label: 'Registration Start',
       name: 'registrationStart',
-      type: 'text',
+      type: 'datetime',
       error: errorStatus.registrationStart,
       helperText: '*Required',
     },
     {
       label: 'Registration End',
       name: 'registrationEnd',
-      type: 'text',
+      type: 'datetime',
       error: errorStatus.registrationEnd,
       helperText: '*Required',
     },
