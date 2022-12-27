@@ -1,8 +1,9 @@
 import {
   Grid,
   Avatar,
-  ListItemAvatar,
   ListItem,
+  ListItemAvatar,
+  ListItemButton,
   ListItemText,
   Typography,
   Chip,
@@ -26,7 +27,7 @@ const ActivityListing = ({ activity }) => {
   let registrationStart = DateTime.fromISO(activity.RegistrationStart);
   let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
   return (
-    <ListItem button component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
+    <ListItemButton component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
       <Grid container className={styles.listing}>
         <Grid item xs={3} container alignContent="center">
           <Typography className={styles.listingTitle}>{activity.Name}</Typography>
@@ -77,14 +78,13 @@ const ActivityListing = ({ activity }) => {
           - date(s) of activity (ex. season date range or tournament date)
           */}
       </Grid>
-    </ListItem>
+    </ListItemButton>
   );
 };
 
 const TeamListing = ({ team, activityID }) => {
   return (
-    <ListItem
-      button
+    <ListItemButton
       component={Link}
       to={`/recim/activity/${activityID}/team/${team.ID}`}
       className="gc360_link"
@@ -92,7 +92,7 @@ const TeamListing = ({ team, activityID }) => {
       <Grid container className={styles.listing}>
         <Grid item>{team.Name}</Grid>
       </Grid>
-    </ListItem>
+    </ListItemButton>
   );
 };
 
@@ -136,8 +136,7 @@ const ParticipantListing = ({ participant }) => {
 
 const MatchListing = ({ match }) => {
   return (
-    <ListItem
-      button
+    <ListItemButton
       component={Link}
       to={`/recim/activity/${match.activityID}/match/${match.ID}`}
       className="gc360_link"
@@ -145,7 +144,7 @@ const MatchListing = ({ match }) => {
       <Grid container className={styles.listing}>
         <Grid item>Team A vs Team B</Grid>
       </Grid>
-    </ListItem>
+    </ListItemButton>
   );
 };
 
