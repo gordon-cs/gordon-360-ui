@@ -1,9 +1,18 @@
-import { Grid, Avatar, ListItemAvatar, ListItem, ListItemText, Typography } from '@mui/material';
+import {
+  Grid,
+  Avatar,
+  ListItemAvatar,
+  ListItem,
+  ListItemText,
+  Typography,
+  Chip,
+} from '@mui/material';
 import styles from './Listing.module.css';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { DateTime } from 'luxon';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 
 const standardDate = (date, includeTime) => {
   let formattedDate = date.monthShort + ' ' + date.day;
@@ -19,19 +28,26 @@ const ActivityListing = ({ activity }) => {
   return (
     <ListItem button component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
       <Grid container className={styles.listing}>
-        <Grid item xs={3}>
-          {activity.Name}
+        <Grid item xs={3} container alignContent="center">
+          <Typography className={styles.listingTitle}>{activity.Name}</Typography>
         </Grid>
         <Grid item xs={4}>
           <Grid container direction="row" alignItems="center" justifyContent="center">
             <Grid item xs={10}>
-              <Typography gutterBottom align="center">
-                Registration
-              </Typography>
+              <Chip
+                icon={<EventAvailableIcon />}
+                label="registration open"
+                color="success"
+                size="small"
+              ></Chip>
             </Grid>
             <Grid item xs={10}>
-              <Typography align="center">
-                {standardDate(registrationStart, true)} - {standardDate(registrationEnd, true)}
+              <Typography>Registration closes {standardDate(registrationEnd, false)}</Typography>
+              <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
+                <i>
+                  testing purposes: {standardDate(registrationStart, true)} -{' '}
+                  {standardDate(registrationEnd, true)}
+                </i>
               </Typography>
             </Grid>
           </Grid>

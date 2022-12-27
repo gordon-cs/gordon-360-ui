@@ -1,5 +1,6 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import CreateActivityForm from '../../components/Forms/CreateActivityForm';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
@@ -40,12 +41,14 @@ const Home = () => {
     <Grid container justifyContent="center">
       <Button
         variant="contained"
-        color="secondary"
+        color="warning"
+        startIcon={<AddCircleRoundedIcon />}
+        className={styles.actionButton}
         onClick={() => {
           setOpenCreateActivityForm(true);
         }}
       >
-        + Activity
+        Create a New Activity
       </Button>
     </Grid>
   );
@@ -56,12 +59,15 @@ const Home = () => {
       <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
       <CardContent>
         {/* if there are upcoming events, map them here */}
-        <ActivityList activities={activities} />
+        {activities ? (
+          <ActivityList activities={activities} />
+        ) : (
+          <Typography variant="body1" paragraph>
+            It looks like there aren't any Rec-IM events currently open for registration :(
+          </Typography>
+        )}
+
         {createActivityButton}
-        <Typography variant="body1" paragraph>
-          {/* else "no upcoming events" */}
-          It looks like there aren't any Rec-IM events currently open for registration :(
-        </Typography>
       </CardContent>
     </Card>
   );

@@ -19,6 +19,10 @@
   margin: 0.3em 0;
 }
 
+.actionButton {
+  text-transform: none;
+}
+
 :global(.MuiCardHeader-root).cardHeader {
   padding: 0.7em 16px;
 }
