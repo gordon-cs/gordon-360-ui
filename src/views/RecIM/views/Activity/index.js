@@ -42,7 +42,7 @@ const Activity = () => {
     setOpenCreateTeamForm(false);
   };
 
-  console.log(activity);
+  console.log('activity', activity);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -69,7 +69,7 @@ const Activity = () => {
                     <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
                     Rec-IM Home
                   </LinkRouter>
-                  <Typography color="text.primary">Activity Name</Typography>
+                  <Typography color="text.primary">{activity.Name}</Typography>
                 </Breadcrumbs>
               </Grid>
               <hr className={styles.activityHeaderLine} />
@@ -80,7 +80,7 @@ const Activity = () => {
               </Grid>
               <Grid item xs={3}>
                 <Typography variant="h5" className={styles.activityTitle}>
-                  Activity Name
+                  {activity.Name}
                 </Typography>
                 <Typography variant="h6" className={styles.activitySubtitle}>
                   <i>Description of activity</i>
@@ -112,12 +112,13 @@ const Activity = () => {
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-          {/* if I am apart of any active teams, map them here */}
-          <TeamList teams={activity.Team} activityID={activityID} />
-          {/* else "no teams" */}
-          <Typography variant="body1" paragraph>
-            Be the first to create a team!
-          </Typography>
+          {activity.Team ? (
+            <TeamList teams={activity.Team} activityID={activityID} />
+          ) : (
+            <Typography variant="body1" paragraph>
+              Be the first to create a team!
+            </Typography>
+          )}
           <Grid container justifyContent="center">
             <Button
               variant="contained"
