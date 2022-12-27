@@ -1,7 +1,17 @@
 @import '../../../../vars';
 
-.activityHeader {
-  padding-bottom: 0.5em;
+.activityTitle {
+  font-weight: bold;
+  color: $neutral-dark-gray2;
+}
+
+.activitySubtitle {
+  color: $neutral-gray;
+}
+
+.activityHeaderLine {
+  border-top: 3px solid $neutral-gray2;
+  width: 20em;
 }
 
 .listing {

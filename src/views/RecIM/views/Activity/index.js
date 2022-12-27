@@ -1,5 +1,14 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  Breadcrumbs,
+} from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import HomeIcon from '@mui/icons-material/Home';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
@@ -9,10 +18,11 @@ import styles from './Activity.module.css';
 import { MatchList, TeamList } from './../../components/List';
 import CreateTeamForm from '../../components/Forms/CreateTeamForm';
 import { getActivityByID } from 'services/recim/activity';
+import { Link as LinkRouter } from 'react-router-dom';
 
 const Activity = () => {
   const { activityID } = useParams();
-  const { profile, /* profileLoading */ } = useUser();
+  const { profile /* profileLoading */ } = useUser();
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState({});
   const [openCreateTeamForm, setOpenCreateTeamForm] = useState(false);
@@ -32,7 +42,7 @@ const Activity = () => {
     setOpenCreateTeamForm(false);
   };
 
-  console.log(activity)
+  console.log(activity);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -43,6 +53,45 @@ const Activity = () => {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
+    let activityHeader = (
+      <Card>
+        <CardContent>
+          <Grid container direction="column">
+            <Grid item container direction="column" alignItems="center">
+              <Grid item>
+                <Breadcrumbs aria-label="breadcrumb">
+                  <LinkRouter
+                    className="gc360_text_link"
+                    underline="hover"
+                    color="inherit"
+                    to={'/recim'}
+                  >
+                    <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                    Rec-IM Home
+                  </LinkRouter>
+                  <Typography color="text.primary">Activity Name</Typography>
+                </Breadcrumbs>
+              </Grid>
+              <hr className={styles.activityHeaderLine} />
+            </Grid>
+            <Grid item container direction="row" alignItems="center" columnSpacing={4}>
+              <Grid item>
+                <img src={''} alt="Activity Icon" width="85em"></img>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="h5" className={styles.activityTitle}>
+                  Activity Name
+                </Typography>
+                <Typography variant="h6" className={styles.activitySubtitle}>
+                  <i>Description of activity</i>
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    );
+
     // CARD - schedule
     let scheduleCard = (
       <Card>
@@ -87,20 +136,11 @@ const Activity = () => {
     );
 
     return (
-      <>
-        <Grid container alignItems="center" className={styles.activityHeader}>
-          <Grid item>
-            <img src={''} alt="Activity Icon" width="85em"></img>
-          </Grid>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <Grid item>
-            <Typography variant="h5">Activity Name</Typography>
-            <Typography variant="body" className={styles.grayText}>
-              <i>Description of activity</i>
-            </Typography>
-          </Grid>
+      <Grid container spacing={2}>
+        <Grid item alignItems="center" xs={12}>
+          {activityHeader}
         </Grid>
-        <Grid container justifyContent="center" spacing={2}>
+        <Grid item container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={6}>
             {scheduleCard}
           </Grid>
@@ -119,7 +159,7 @@ const Activity = () => {
           />
         ) : null}
         <Typography>Activity ID: {activityID} (testing purposes only)</Typography>
-      </>
+      </Grid>
     );
   }
 };

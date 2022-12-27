@@ -122,10 +122,8 @@ const Home = () => {
   } else {
     return (
       <Grid container spacing={2}>
-        <Grid item container alignItems="center">
-          <Grid item xs={12}>
-            {homeHeader}
-          </Grid>
+        <Grid item alignItems="center" xs={12}>
+          {homeHeader}
         </Grid>
         <Grid item container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={8}>
