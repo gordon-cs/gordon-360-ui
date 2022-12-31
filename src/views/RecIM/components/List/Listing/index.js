@@ -7,6 +7,9 @@ import {
   ListItemText,
   Typography,
   Chip,
+  IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link } from 'react-router-dom';
@@ -14,6 +17,7 @@ import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { DateTime } from 'luxon';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 const standardDate = (date, includeTime) => {
   let formattedDate = date.monthShort + ' ' + date.day;
@@ -98,6 +102,15 @@ const TeamListing = ({ team }) => {
 const ParticipantListing = ({ participant }) => {
   const [avatar, setAvatar] = useState('');
 
+  const [anchorEl, setAnchorEl] = useState(null);
+  const moreOptionsOpen = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleParticipantOptions = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   // const [name, setName] = useState({
   //   firstname: '',
   //   lastname: '',
@@ -115,19 +128,36 @@ const ParticipantListing = ({ participant }) => {
     loadAvatar();
   }, [participant.username]);
   return (
-    <ListItem key={participant.username} disableGutters={true}>
-      <Grid container alignItems="center" className={styles.listing}>
-        <ListItemAvatar>
-          <Avatar
-            src={`data:image/jpg;base64,${avatar}`}
-            className={styles.avatar}
-            variant="rounded"
-          ></Avatar>
-        </ListItemAvatar>
-        <Link to={`/profile/${participant.username}`} className="gc360_link">
+    // first ListItem is used only for paddings/margins
+    // second ListItem (nested inside) is used to layout avatar and secondaryAction
+    <ListItem key={participant.username}>
+      <ListItem
+        secondaryAction={
+          <IconButton edge="end" onClick={handleParticipantOptions}>
+            <MoreHorizIcon />
+          </IconButton>
+        }
+        disablePadding
+      >
+        <ListItemButton to={`/profile/${participant.username}`} className={styles.listing}>
+          <ListItemAvatar>
+            <Avatar
+              src={`data:image/jpg;base64,${avatar}`}
+              className={styles.avatar}
+              variant="rounded"
+            ></Avatar>
+          </ListItemAvatar>
           <ListItemText primary={participant.username} />
-        </Link>
-      </Grid>
+        </ListItemButton>
+        <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
+          <MenuItem dense onClick={handleClose} divider>
+            Make co-captain
+          </MenuItem>
+          <MenuItem dense onClick={handleClose} className={styles.redButton}>
+            Remove from team
+          </MenuItem>
+        </Menu>
+      </ListItem>
     </ListItem>
   );
 };

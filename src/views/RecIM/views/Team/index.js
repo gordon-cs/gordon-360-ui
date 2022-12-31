@@ -1,16 +1,34 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Breadcrumbs } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Breadcrumbs,
+  Button,
+} from '@mui/material';
 import { useParams } from 'react-router';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonQuickSearch from 'components/Header/components/QuickSearch';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from './../../components/List';
 import { Link as LinkRouter } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
+import { useState } from 'react';
 
 const Team = () => {
   const { activityID, teamID } = useParams();
   const { profile, loading } = useUser();
+
+  const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
+  const handleInviteParticipantForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenInviteParticipantForm(false);
+  };
 
   let teamHeader = (
     <Card>
@@ -65,7 +83,34 @@ const Team = () => {
         <ParticipantList
           participants={[{ username: 'silas.white' }, { username: 'cameron.abbot' }]}
         />
+        <Grid container justifyContent="center">
+          <Button
+            variant="contained"
+            color="warning"
+            startIcon={<AddCircleRoundedIcon />}
+            className={styles.actionButton}
+            onClick={() => {
+              setOpenInviteParticipantForm(true);
+            }}
+          >
+            Invite Participant
+          </Button>
+        </Grid>
+        <GordonQuickSearch
+          customPlaceholderText={'Search for people'}
+          disableLink
+          // onSearchSubmit={(selectedUsername) => disabled || onSearchSubmit(selectedUsername)}
+          onSearchSubmit={(selectedUsername) => console.log(selectedUsername)}
+        />
       </CardContent>
+      <InviteParticipantForm
+        closeWithSnackbar={(status) => {
+          handleInviteParticipantForm(status);
+        }}
+        openInviteParticipantForm={openInviteParticipantForm}
+        setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
+        activityID={activityID}
+      />
     </Card>
   );
 

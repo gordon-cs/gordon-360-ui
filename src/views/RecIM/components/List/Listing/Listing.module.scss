@@ -6,6 +6,23 @@
   border-radius: 0.5em;
 }
 
+.listing:hover {
+  background-color: $neutral-light-gray2;
+}
+
+:global(.MuiList-padding) {
+  padding: 0;
+}
+
+.redButton {
+  background-color: $secondary-red;
+  color: $neutral-white;
+}
+
+.redButton:hover {
+  background-color: $alternative-red;
+}
+
 .avatar {
   width: 4rem;
   height: 4rem;
