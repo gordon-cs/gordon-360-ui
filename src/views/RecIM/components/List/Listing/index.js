@@ -18,6 +18,7 @@ import user from 'services/user';
 import { DateTime } from 'luxon';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const standardDate = (date, includeTime) => {
   let formattedDate = date.monthShort + ' ' + date.day;
@@ -99,7 +100,7 @@ const TeamListing = ({ team }) => {
 };
 
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
-const ParticipantListing = ({ participant }) => {
+const ParticipantListing = ({ participant, minimal, callbackFunction }) => {
   const [avatar, setAvatar] = useState('');
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -133,9 +134,15 @@ const ParticipantListing = ({ participant }) => {
     <ListItem key={participant.username}>
       <ListItem
         secondaryAction={
-          <IconButton edge="end" onClick={handleParticipantOptions}>
-            <MoreHorizIcon />
-          </IconButton>
+          minimal ? (
+            <IconButton edge="end" onClick={() => callbackFunction(participant.username)}>
+              <ClearIcon />
+            </IconButton>
+          ) : (
+            <IconButton edge="end" onClick={handleParticipantOptions}>
+              <MoreHorizIcon />
+            </IconButton>
+          )
         }
         disablePadding
       >
@@ -143,7 +150,7 @@ const ParticipantListing = ({ participant }) => {
           <ListItemAvatar>
             <Avatar
               src={`data:image/jpg;base64,${avatar}`}
-              className={styles.avatar}
+              className={minimal ? styles.avatarSmall : styles.avatar}
               variant="rounded"
             ></Avatar>
           </ListItemAvatar>

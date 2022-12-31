@@ -96,12 +96,6 @@ const Team = () => {
             Invite Participant
           </Button>
         </Grid>
-        <GordonQuickSearch
-          customPlaceholderText={'Search for people'}
-          disableLink
-          // onSearchSubmit={(selectedUsername) => disabled || onSearchSubmit(selectedUsername)}
-          onSearchSubmit={(selectedUsername) => console.log(selectedUsername)}
-        />
       </CardContent>
       <InviteParticipantForm
         closeWithSnackbar={(status) => {
