@@ -25,7 +25,7 @@ const renderInput = ({ autoFocus, value, ref, ...other }) => (
         root: `${styles.root} gc360_quick_search_root`,
       },
       startAdornment: (
-        <InputAdornment position="start">
+        <InputAdornment position="start" sx={{ color: 'inherit' }}>
           <SearchIcon />
         </InputAdornment>
       ),
@@ -47,9 +47,7 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
   const isOnline = useNetworkStatus();
   const placeholder = !isOnline
     ? 'Offline'
-    : customPlaceholderText ?? width < BREAKPOINT_WIDTH
-    ? 'People'
-    : 'People Search';
+    : customPlaceholderText ?? (width < BREAKPOINT_WIDTH ? 'People' : 'People Search');
 
   async function updateQuery(query) {
     query = query.replace(/[^a-zA-Z0-9'\-.\s]/gm, '');
