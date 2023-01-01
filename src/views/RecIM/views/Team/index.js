@@ -11,7 +11,6 @@ import { useParams } from 'react-router';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import GordonQuickSearch from 'components/Header/components/QuickSearch';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from './../../components/List';
 import { Link as LinkRouter } from 'react-router-dom';
