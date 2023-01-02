@@ -52,8 +52,6 @@ const Match = () => {
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
 
-    console.log(match)
-
     let mainCard = (
       <Card>
         <CardContent>

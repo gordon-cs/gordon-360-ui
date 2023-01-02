@@ -87,25 +87,6 @@ const Home = () => {
     setOpenCreateActivityForm(false);
   };
 
-  // const handleGet = () => {
-  //   console.log('get activities');
-  //   getAllActivities()
-  //     .then((e) => {
-  //       let allActivities = e.map((activity) => `${activity.Name}`);
-  //       setAllActivities(allActivities);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  // const handleMake = () => {
-  //   console.log('post activity');
-  //   postSmashActivity()
-  //     .then()
-  //     .catch((error) => console.log(error));
-  // };
-
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {
