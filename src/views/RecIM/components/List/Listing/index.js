@@ -1,9 +1,19 @@
-import { Grid, Avatar, ListItemAvatar, ListItem, ListItemText, Typography } from '@mui/material';
+import {
+  Grid,
+  Avatar,
+  ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Typography,
+  Chip,
+} from '@mui/material';
 import styles from './Listing.module.css';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { DateTime } from 'luxon';
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 
 const standardDate = (date, includeTime) => {
   let formattedDate = date.monthShort + ' ' + date.day;
@@ -17,36 +27,41 @@ const ActivityListing = ({ activity }) => {
   let registrationStart = DateTime.fromISO(activity.RegistrationStart);
   let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
   return (
-    <ListItem button component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
-      <Grid container className={styles.listing}>
-        <Grid item xs={3}>
-          {activity.Name}
+    <ListItemButton component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
+      <Grid container className={styles.listing} columnSpacing={2}>
+        <Grid item xs={12} sm={4} container alignContent="center">
+          <Typography className={styles.listingTitle}>{activity.Name}</Typography>
         </Grid>
-        <Grid item xs={4}>
-          <Grid container direction="row" alignItems="center" justifyContent="center">
+        <Grid item xs={12} sm={4}>
+          <Grid container direction="row">
             <Grid item xs={10}>
-              <Typography gutterBottom align="center">
-                Registration
-              </Typography>
+              <Chip
+                icon={<EventAvailableIcon />}
+                label="registration open"
+                color="success"
+                size="small"
+              ></Chip>
             </Grid>
             <Grid item xs={10}>
-              <Typography align="center">
-                {standardDate(registrationStart, true)} - {standardDate(registrationEnd, true)}
+              <Typography>Registration closes {standardDate(registrationEnd, false)}</Typography>
+              <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
+                <i>
+                  testing purposes: {standardDate(registrationStart, true)} -{' '}
+                  {standardDate(registrationEnd, true)}
+                </i>
               </Typography>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={5}>
-          <Grid container direction="row" alignItems="center" justifyContent="center">
+        <Grid item xs={12} sm={4}>
+          <Grid container direction="row">
             <Grid item xs={10}>
-              <Typography gutterBottom align="center">
-                Season
-              </Typography>
+              <Typography gutterBottom>Season</Typography>
             </Grid>
             <Grid item xs={10}>
               {activity.Series.map((series) => {
                 return (
-                  <Typography align="center">
+                  <Typography key={series.ID}>
                     {series.Name} {standardDate(DateTime.fromISO(series.StartDate), false)} -{' '}
                     {standardDate(DateTime.fromISO(series.EndDate), false)}
                   </Typography>
@@ -61,22 +76,21 @@ const ActivityListing = ({ activity }) => {
           - date(s) of activity (ex. season date range or tournament date)
           */}
       </Grid>
-    </ListItem>
+    </ListItemButton>
   );
 };
 
-const TeamListing = ({ team, activityID }) => {
+const TeamListing = ({ team }) => {
   return (
-    <ListItem
-      button
+    <ListItemButton
       component={Link}
-      to={`/recim/activity/${activityID}/team/${team.ID}`}
+      to={`/recim/activity/${team.ActivityID}/team/${team.ID}`}
       className="gc360_link"
     >
       <Grid container className={styles.listing}>
         <Grid item>{team.Name}</Grid>
       </Grid>
-    </ListItem>
+    </ListItemButton>
   );
 };
 
@@ -120,8 +134,7 @@ const ParticipantListing = ({ participant }) => {
 
 const MatchListing = ({ match }) => {
   return (
-    <ListItem
-      button
+    <ListItemButton
       component={Link}
       to={`/recim/activity/${match.activityID}/match/${match.ID}`}
       className="gc360_link"
@@ -129,7 +142,7 @@ const MatchListing = ({ match }) => {
       <Grid container className={styles.listing}>
         <Grid item>Team A vs Team B</Grid>
       </Grid>
-    </ListItem>
+    </ListItemButton>
   );
 };
 

@@ -1,5 +1,6 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import CreateActivityForm from '../../components/Forms/CreateActivityForm';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
@@ -40,28 +41,53 @@ const Home = () => {
     <Grid container justifyContent="center">
       <Button
         variant="contained"
-        color="secondary"
+        color="warning"
+        startIcon={<AddCircleRoundedIcon />}
+        className={styles.actionButton}
         onClick={() => {
           setOpenCreateActivityForm(true);
         }}
       >
-        + Activity
+        Create a New Activity
       </Button>
     </Grid>
+  );
+
+  let homeHeader = (
+    <Card>
+      <CardContent>
+        <Grid container direction="row" alignItems="center" spacing={4}>
+          <Grid item>
+            <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+          </Grid>
+          <Grid item xs={8} md={5} lg={3}>
+            <hr className={styles.homeHeaderLine} />
+            <Typography variant="h5" className={styles.homeHeaderTitle}>
+              <b className="accentText">Gordon</b> Rec-IM
+            </Typography>
+            <Typography variant="h6" className={styles.homeHeaderSubtitle}>
+              <i>"Competition reveals character"</i>
+            </Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
   );
 
   // CARD - upcoming events
   let upcomingEventsCard = (
     <Card>
-      <CardHeader title="Upcoming Rec-IM Events" className={styles.cardHeader} />
+      <CardHeader title="Upcoming Rec-IM Activities" className={styles.cardHeader} />
       <CardContent>
-        {/* if there are upcoming events, map them here */}
-        <ActivityList activities={activities} />
+        {activities ? (
+          <ActivityList activities={activities} />
+        ) : (
+          <Typography variant="body1" paragraph>
+            It looks like there aren't any Rec-IM events currently open for registration :(
+          </Typography>
+        )}
+
         {createActivityButton}
-        <Typography variant="body1" paragraph>
-          {/* else "no upcoming events" */}
-          It looks like there aren't any Rec-IM events currently open for registration :(
-        </Typography>
       </CardContent>
     </Card>
   );
@@ -87,25 +113,6 @@ const Home = () => {
     setOpenCreateActivityForm(false);
   };
 
-  // const handleGet = () => {
-  //   console.log('get activities');
-  //   getAllActivities()
-  //     .then((e) => {
-  //       let allActivities = e.map((activity) => `${activity.Name}`);
-  //       setAllActivities(allActivities);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  // const handleMake = () => {
-  //   console.log('post activity');
-  //   postSmashActivity()
-  //     .then()
-  //     .catch((error) => console.log(error));
-  // };
-
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {
@@ -113,20 +120,11 @@ const Home = () => {
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     return (
-      <>
-        <Grid container alignItems="center" className={styles.homeHeader}>
-          <Grid item>
-            <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
-          </Grid>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <Grid item>
-            <Typography variant="h5">Rec-IM</Typography>
-            <Typography variant="h6" className={styles.grayText}>
-              <i>"Competition reveals character"</i>
-            </Typography>
-          </Grid>
+      <Grid container spacing={2}>
+        <Grid item alignItems="center" xs={12}>
+          {homeHeader}
         </Grid>
-        <Grid container justifyContent="center" spacing={2}>
+        <Grid item container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={8}>
             {upcomingEventsCard}
           </Grid>
@@ -144,7 +142,7 @@ const Home = () => {
             setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
           />
         ) : null}
-      </>
+      </Grid>
     );
   }
 };
