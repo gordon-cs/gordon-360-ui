@@ -109,7 +109,7 @@ const ParticipantListing = ({ participant }) => {
             variant="rounded"
           ></Avatar>
         </ListItemAvatar>
-        <Link to={`/profile/${participant.Username.toLowerCase()}`} className="gc360_link">
+        <Link to={`/profile/${participant.Username}`} className="gc360_link">
           <ListItemText primary={name} />
         </Link>
       </Grid>
