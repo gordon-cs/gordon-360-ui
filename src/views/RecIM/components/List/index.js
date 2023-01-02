@@ -13,8 +13,8 @@ const ParticipantList = ({ participants }) => {
   return <List dense>{content}</List>;
 };
 
-const MatchList = ({ matches }) => {
-  let content = matches.map((match) => <MatchListing match={match} />);
+const MatchList = ({ matches, activityID }) => {
+  let content = matches.map((match) => <MatchListing match={match} activityID={activityID} />);
   return <List dense>{content}</List>;
 };
 

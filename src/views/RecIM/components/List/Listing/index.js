@@ -118,6 +118,10 @@ const ParticipantListing = ({ participant }) => {
 };
 
 const MatchListing = ({ match, activityID }) => {
+  if (match.Team.length === 0) {
+    return null;
+  }
+
   return (
     <ListItem
       button
@@ -126,7 +130,9 @@ const MatchListing = ({ match, activityID }) => {
       className="gc360_link"
     >
       <Grid container className={styles.listing}>
-        <Grid item>{match.Team[0].Name} vs. {match.Team[1].Name}</Grid>
+        <Grid item>
+          {match.Team[0].Name} vs. {match.Team[1].Name}
+        </Grid>
       </Grid>
     </ListItem>
   );

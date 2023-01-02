@@ -16,12 +16,12 @@ const dayMonthDate = (date) => {
     date.monthLong +
     ' ' +
     date.day +
-    ' ' +
+    ', ' +
     date.toLocaleString(DateTime.TIME_SIMPLE)
   );
 };
 
-const RosterCard = (participants, teamName) => {
+const RosterCard = ({ participants, teamName }) => {
   return (
     <Card>
       <CardHeader title={teamName} className={styles.cardHeader} />
@@ -47,51 +47,54 @@ const Match = () => {
     loadMatch();
   }, [matchID]);
 
-  console.log(match);
-
-  let mainCard = (
-    <Card>
-      <CardContent>
-        <Grid container justifyContent="space-between">
-          <Grid item className={styles.grayText}>
-            {match.Activity.Name}
-          </Grid>
-          <Grid item className={styles.grayText}>
-            {dayMonthDate(DateTime.fromISO(match.Time))}
-          </Grid>
-        </Grid>
-        <Grid container alignItems="center" justifyContent="space-around">
-          <Grid item xs={1}>
-            <Typography variant="h5">{match.Team[0].Name}</Typography>
-            <i className={styles.grayText}>Sportsmanship</i>
-          </Grid>
-          <Grid item xs={1}>
-            <img src={''} alt="Team Icon" width="85em"></img>
-          </Grid>
-          <Grid item container xs={3} sm={2} alignItems="center" direction="column">
-            <Typography variant="body" className={styles.grayText}>
-              <i>Match status</i>
-            </Typography>
-            <Typography variant="h5">17 - 38</Typography>
-          </Grid>
-          <Grid item xs={1}>
-            <img src={''} alt="Team Icon" width="85em"></img>
-          </Grid>
-          <Grid item xs={1}>
-            <Typography variant="h5">{match.Team[1].Name}</Typography>
-            <i className={styles.grayText}>Sportsmanship</i>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
-  );
-
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
+
+    console.log(match)
+
+    let mainCard = (
+      <Card>
+        <CardContent>
+          <Grid container justifyContent="space-between">
+            <Grid item className={styles.grayText}>
+              {match.Activity.Name}
+            </Grid>
+            <Grid item className={styles.grayText}>
+              {dayMonthDate(DateTime.fromISO(match.Time))}
+            </Grid>
+          </Grid>
+          <Grid container alignItems="center" justifyContent="space-around">
+            <Grid item xs={1}>
+              <Typography variant="h5">{match.Team[0].Name}</Typography>
+              <i className={styles.grayText}>Sportsmanship</i>
+            </Grid>
+            <Grid item xs={1}>
+              <img src={''} alt="Team Icon" width="85em"></img>
+            </Grid>
+            <Grid item container xs={3} sm={2} alignItems="center" direction="column">
+              <Typography variant="body" className={styles.grayText}>
+                <i>Match status</i>
+              </Typography>
+              <Typography variant="h5">17 - 38</Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <img src={''} alt="Team Icon" width="85em"></img>
+            </Grid>
+            <Grid item xs={1}>
+              <Typography variant="h5">{match.Team[1].Name}</Typography>
+              <i className={styles.grayText}>Sportsmanship</i>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    );
+
+
+
     return (
       <>
         <Grid container justifyContent="center" spacing={2}>
@@ -99,10 +102,10 @@ const Match = () => {
             {mainCard}
           </Grid>
           <Grid item xs={12} md={6}>
-            <RosterCard participants={match.Team[0].Participant} />
+            <RosterCard participants={match.Team[0].Participant} teamName={match.Team[0].Name} />
           </Grid>
           <Grid item xs={12} md={6}>
-            <RosterCard participants={match.Team[1].Participant} />
+            <RosterCard participants={match.Team[1].Participant} teamName={match.Team[1].Name}/>
           </Grid>
         </Grid>
         <Typography>

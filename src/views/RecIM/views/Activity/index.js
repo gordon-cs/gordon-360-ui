@@ -20,7 +20,6 @@ const Activity = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-
       setActivity(await getActivityByID(activityID));
       setLoading(false);
     };
@@ -42,13 +41,14 @@ const Activity = () => {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
+
     // CARD - schedule
     let scheduleCard = (
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
-          {activity.Series[0].Match ? (
-            <MatchList matches={activity.Series[0].Match} />
+          {activity.Series.length !== 0 ? (
+            <MatchList matches={activity.Series[0].Match} activityID={activity.ID} />
           ) : (
             <Typography variant="body1" paragraph>
               Games have not yet been scheduled.
@@ -57,7 +57,6 @@ const Activity = () => {
         </CardContent>
       </Card>
     );
-
     // CARD - teams
     let teamsCard = (
       <Card>
@@ -96,7 +95,7 @@ const Activity = () => {
           </Grid>
           &nbsp;&nbsp;&nbsp;&nbsp;
           <Grid item>
-            <Typography variant="h5">Activity Name</Typography>
+            <Typography variant="h5">{activity.Name}</Typography>
             <Typography variant="body" className={styles.grayText}>
               <i>Description of activity</i>
             </Typography>
