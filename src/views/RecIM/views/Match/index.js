@@ -22,14 +22,12 @@ const dayMonthDate = (date) => {
 };
 
 const RosterCard = ({ participants, teamName }) => {
-  return (
     <Card>
       <CardHeader title={teamName} className={styles.cardHeader} />
       <CardContent>
         <ParticipantList participants={participants} />
       </CardContent>
     </Card>
-  );
 };
 
 const Match = () => {
