@@ -175,13 +175,7 @@ type MealPlanComponent = {
 export type ProfileImages = { def: string; pref?: string };
 
 const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo =>
-  Boolean((profile as UnformattedStudentProfileInfo)?.Class);
-
-const isFacStaff = (profile: UnformattedProfileInfo): profile is UnformattedFacStaffProfileInfo =>
-  Boolean((profile as UnformattedFacStaffProfileInfo)?.Dept);
-
-const isAlumni = (profile: UnformattedProfileInfo): profile is UnformattedAlumniProfileInfo =>
-  Boolean((profile as UnformattedAlumniProfileInfo)?.ClassYear);
+  profile?.PersonType.includes('stu') || false;
 
 function formatCountry(profile: UnformattedProfileInfo) {
   if (profile?.Country?.includes(',')) {
@@ -215,6 +209,7 @@ const postIDImage = (imageDataURI: string): Promise<void> =>
 const postImage = (imageDataURI: string): Promise<void> =>
   http.postImage('profiles/image', imageDataURI);
 
+// TODO: get chapel credits from useUser, making this obsolete.
 const getChapelCredits = async (): Promise<CLWCredits | null> => {
   const profile = await getProfile();
 
@@ -264,7 +259,10 @@ const getEmploymentInfo = () => getEmployment();
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
   const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
 
+  if (!profile) return undefined;
+
   const fullName = `${profile?.FirstName} ${profile?.LastName}`;
+
   if (isStudent(profile)) {
     return {
       ...profile,
@@ -283,18 +281,11 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
       ].filter(Boolean),
       OnOffCampus: onOffCampusDescriptions[profile.OnOffCampus],
     };
-  } else if (isFacStaff(profile)) {
-    return {
-      ...profile,
-      fullName,
-    };
-  } else if (isAlumni(profile)) {
-    return {
-      ...profile,
-      fullName,
-    };
   } else {
-    return undefined;
+    return {
+      ...profile,
+      fullName,
+    };
   }
 };
 
@@ -322,7 +313,7 @@ type ProfileFieldUpdate = {
   Label: string;
 };
 
-const requestInfoUpdate = (updatedFields: ProfileFieldUpdate[]) => 
+const requestInfoUpdate = (updatedFields: ProfileFieldUpdate[]) =>
   http.post('profiles/update/', updatedFields);
 
 const userService = {
