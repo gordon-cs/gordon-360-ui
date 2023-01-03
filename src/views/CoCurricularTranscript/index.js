@@ -201,7 +201,7 @@ export default class Transcript extends Component {
   // Returns: the graduation date of the current user, or nothing if they have no declared grad date
   getGradCohort() {
     let gradDate = this.state.profile.GradDate;
-    if (gradDate === undefined || gradDate === '') {
+    if (!gradDate) {
       return null;
     } else {
       return 'Class of ' + gradDate.split(' ')[3];
