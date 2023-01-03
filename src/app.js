@@ -1,21 +1,18 @@
-import { useIsAuthenticated } from '@azure/msal-react';
 import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
-import { Route, Router, Switch } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './app.global.css';
 import styles from './app.module.css';
 import ErrorBoundary from './components/ErrorBoundary';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
-import OfflineBanner from './components/OfflineBanner';
 import routes from './routes';
 import analytics from './services/analytics';
 
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState();
-  const isAuthenticated = useIsAuthenticated();
 
   const historyRef = useRef(createBrowserHistory());
 
@@ -34,29 +31,19 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <Router history={historyRef.current}>
+      <Router historyRef={historyRef.current}>
         <section className={styles.app_wrapper}>
           <GordonHeader onDrawerToggle={onDrawerToggle} />
           <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
           <main className={styles.app_main}>
             <>
               <BirthdayMessage />
-              <Switch>
+              <AppRedirect />
+              <Routes>
                 {routes.map((route) => (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    exact={route.exact}
-                    render={(props) => (
-                      <div className={styles.app_main_container}>
-                        <AppRedirect />
-                        <OfflineBanner currentPath={route.path} />
-                        <route.component authentication={isAuthenticated} {...props} />
-                      </div>
-                    )}
-                  />
+                  <Route key={route.path} path={route.path} element={route.element} />
                 ))}
-              </Switch>
+              </Routes>
             </>
           </main>
         </section>

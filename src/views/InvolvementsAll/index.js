@@ -12,6 +12,7 @@ import {
 import GordonLoader from 'components/Loader';
 import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
 import sessionService from 'services/session';
@@ -19,7 +20,7 @@ import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
 
-const InvolvementsAll = ({ location, history }) => {
+const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [involvements, setInvolvements] = useState([]);
   const [allInvolvements, setAllInvolvements] = useState([]);
@@ -32,6 +33,8 @@ const InvolvementsAll = ({ location, history }) => {
   const [types, setTypes] = useState([]);
   const { profile, loading: loadingProfile } = useUser();
   const isOnline = useNetworkStatus();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
@@ -74,7 +77,7 @@ const InvolvementsAll = ({ location, history }) => {
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
     value = sessionService.decodeSessionCode(value);
-    history.push(`?session=${value}`);
+    navigate(`?session=${value}`);
   };
 
   useEffect(() => {

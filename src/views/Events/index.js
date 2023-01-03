@@ -22,8 +22,9 @@ import { useEffect, useMemo, useState } from 'react';
 import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
 import { gordonColors } from 'theme';
+import { useLocation, useNavigate } from 'react-router';
 
-const Events = (props) => {
+const Events = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [allEvents, setAllEvents] = useState([]);
@@ -36,6 +37,8 @@ const Events = (props) => {
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
   const isAuthenticated = useIsAuthenticated();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -50,8 +53,8 @@ const Events = (props) => {
       setHasInitializedEvents(true);
 
       // Load filters from UrlParams if they exist
-      if (props.location.search) {
-        const urlParams = new URLSearchParams(props.location.search);
+      if (location.search) {
+        const urlParams = new URLSearchParams(location.search);
         let willIncludePast = false;
         const filtersFromURL = [];
 
@@ -72,7 +75,7 @@ const Events = (props) => {
     };
 
     loadEvents();
-  }, [isAuthenticated, props.location.search]);
+  }, [isAuthenticated, location.search]);
 
   useEffect(() => {
     setLoading(true);
@@ -111,10 +114,10 @@ const Events = (props) => {
       let url = '?';
       if (includePast) url += '&Past';
       url = filters.reduce((url, filter) => (url += `&${encodeURIComponent(filter)}`), url);
-      props.history.push(url);
-    } else if (props.location.search) {
+      navigate(url);
+    } else if (location.search) {
       // If no params but current url has params, then push url with no params
-      props.history.push();
+      navigate();
     }
   };
 
@@ -154,7 +157,7 @@ const Events = (props) => {
                         color: gordonColors.neutral.grayShades[50],
                       }}
                       variant="contained"
-                      onClick={() => props.history.push('/attended')}
+                      onClick={() => navigate('/attended')}
                     >
                       ATTENDED CL&amp;W
                     </Button>
@@ -342,7 +345,7 @@ const Events = (props) => {
                           color: gordonColors.neutral.grayShades[50],
                         }}
                         variant="contained"
-                        onClick={() => props.history.push('/attended')}
+                        onClick={() => navigate('/attended')}
                       >
                         ATTENDED CL&amp;W
                       </Button>

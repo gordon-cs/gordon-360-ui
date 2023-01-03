@@ -5,7 +5,7 @@ import GordonLoader from 'components/Loader';
 import Profile from 'components/Profile';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
-import { Redirect } from 'react-router';
+import { Navigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import userService from 'services/user';
 
@@ -41,7 +41,7 @@ const PublicProfile = () => {
   }
 
   if ((error && error.name === 'NotFoundError') || !profile) {
-    return <Redirect to="/profilenotfound" />;
+    return <Navigate to="/profilenotfound" />;
   }
 
   if (loading) {
