@@ -132,7 +132,8 @@ const ParticipantListing = ({ participant }) => {
 };
 
 const MatchListing = ({ match, activityID }) => {
-  if (match.Team.length === 0) {
+  if (!match?.Team?.length) {
+    console.log('Error: MatchListing missing required info; this should be handled elsewhere');
     return null;
   }
 

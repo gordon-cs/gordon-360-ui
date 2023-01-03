@@ -110,7 +110,7 @@ const Activity = () => {
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-          {activity.Team?.length !== 0 ? (
+          {activity.Team?.length ? (
             <TeamList teams={activity.Team} />
           ) : (
             <Typography variant="body1" paragraph>
