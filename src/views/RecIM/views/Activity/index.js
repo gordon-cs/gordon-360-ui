@@ -22,11 +22,7 @@ import { Link as LinkRouter } from 'react-router-dom';
 
 const Activity = () => {
   const { activityID } = useParams();
-<<<<<<< HEAD
   const { profile } = useUser();
-=======
-  const { profile /* profileLoading */ } = useUser();
->>>>>>> recim
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState({});
   const [openCreateTeamForm, setOpenCreateTeamForm] = useState(false);
@@ -46,11 +42,6 @@ const Activity = () => {
     setOpenCreateTeamForm(false);
   };
 
-<<<<<<< HEAD
-=======
-  console.log('activity', activity);
-
->>>>>>> recim
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -60,8 +51,6 @@ const Activity = () => {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
-<<<<<<< HEAD
-=======
     let activityHeader = (
       <Card>
         <CardContent>
@@ -100,14 +89,12 @@ const Activity = () => {
         </CardContent>
       </Card>
     );
->>>>>>> recim
 
     // CARD - schedule
     let scheduleCard = (
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
-<<<<<<< HEAD
           {activity.Series.length !== 0 ? (
             <MatchList matches={activity.Series[0].Match} activityID={activity.ID} />
           ) : (
@@ -115,14 +102,6 @@ const Activity = () => {
               Games have not yet been scheduled.
             </Typography>
           )}
-=======
-          {/* if there are games scheduled, map them here */}
-          <MatchList matches={[{ activityID: '1', ID: '789' }]} />
-          {/* else "no schedule yet set" */}
-          <Typography variant="body1" paragraph>
-            Games have not yet been scheduled.
-          </Typography>
->>>>>>> recim
         </CardContent>
       </Card>
     );
@@ -131,22 +110,13 @@ const Activity = () => {
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-<<<<<<< HEAD
-          {activity.Team.length !== 0 ? (
+          {activity.Team?.length !== 0 ? (
             <TeamList teams={activity.Team} />
-=======
-          {activity.Team ? (
-            <TeamList teams={activity.Team} activityID={activityID} />
->>>>>>> recim
           ) : (
             <Typography variant="body1" paragraph>
               Be the first to create a team!
             </Typography>
           )}
-<<<<<<< HEAD
-
-=======
->>>>>>> recim
           <Grid container justifyContent="center">
             <Button
               variant="contained"
@@ -165,24 +135,9 @@ const Activity = () => {
     );
 
     return (
-<<<<<<< HEAD
-      <>
-        <Grid container alignItems="center" className={styles.activityHeader}>
-          <Grid item>
-            <img src={''} alt="Activity Icon" width="85em"></img>
-          </Grid>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <Grid item>
-            <Typography variant="h5">{activity.Name}</Typography>
-            <Typography variant="body" className={styles.grayText}>
-              <i>Description of activity</i>
-            </Typography>
-          </Grid>
-=======
       <Grid container spacing={2}>
         <Grid item alignItems="center" xs={12}>
           {activityHeader}
->>>>>>> recim
         </Grid>
         <Grid item container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={6}>
