@@ -49,22 +49,22 @@ const CreateActivityForm = ({
     {
       label: 'Registration Start',
       name: 'registrationStart',
-      type: 'text',
+      type: 'datetime',
       error: errorStatus.registrationStart,
       helperText: '*Required',
     },
     {
       label: 'Registration End',
       name: 'registrationEnd',
-      type: 'text',
+      type: 'datetime',
       error: errorStatus.registrationEnd,
       helperText: '*Required',
     },
     {
-      label: 'Competition Type',
+      label: 'Activity Type',
       name: 'type',
       type: 'select',
-      menuItems: ['Round Robin', 'Bracket', 'One Off'],
+      menuItems: ['League', 'Tournament', 'One-off'],
       error: errorStatus.type,
       helperText: '*Required',
     },
@@ -249,7 +249,7 @@ const CreateActivityForm = ({
           <ConfirmationWindowHeader />
           <Grid container>
             {getNewFields(currentInfo, newInfo).map((field) => (
-              <ConfirmationRow field={field} />
+              <ConfirmationRow key={field} field={field} />
             ))}
           </Grid>
           {isSaving ? <GordonLoader size={32} /> : null}

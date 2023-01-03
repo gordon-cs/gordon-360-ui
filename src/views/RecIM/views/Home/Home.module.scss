@@ -1,9 +1,5 @@
 @import '../../../../vars';
 
-.homeHeader {
-  padding-bottom: 0.5em;
-}
-
 // if desired, this should just be a global change and
 // universally applied to all 360 cards
 .cardHeader {
@@ -11,12 +7,25 @@
   color: $neutral-white;
 }
 
-.grayText {
+.homeHeaderTitle {
+  font-weight: bold;
+  color: $neutral-dark-gray2;
+}
+
+.homeHeaderSubtitle {
   color: $neutral-gray;
+}
+
+.homeHeaderLine {
+  border-top: 3px solid $neutral-gray2;
 }
 
 .listing {
   margin: 0.3em 0;
+}
+
+.actionButton {
+  text-transform: none;
 }
 
 :global(.MuiCardHeader-root).cardHeader {
