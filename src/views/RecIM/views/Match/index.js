@@ -21,14 +21,14 @@ const dayMonthDate = (date) => {
   );
 };
 
-const RosterCard = ({ participants, teamName }) => {
+const RosterCard = ({ participants, teamName }) => (
     <Card>
       <CardHeader title={teamName} className={styles.cardHeader} />
       <CardContent>
         <ParticipantList participants={participants} />
       </CardContent>
     </Card>
-};
+);
 
 const Match = () => {
   const { activityID, matchID } = useParams();
@@ -55,7 +55,7 @@ const Match = () => {
     let mainCard = (
       <Card>
         <CardContent>
-          <Grid container justifyContent="space-between">
+          <Grid container justifyContent="space-between" marginBottom="10px">
             <Grid item className={styles.grayText}>
               {match.Activity.Name}
             </Grid>
@@ -64,23 +64,23 @@ const Match = () => {
             </Grid>
           </Grid>
           <Grid container alignItems="center" justifyContent="space-around">
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <Typography variant="h5">{match.Team[0].Name}</Typography>
               <i className={styles.grayText}>Sportsmanship</i>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <img src={''} alt="Team Icon" width="85em"></img>
             </Grid>
-            <Grid item container xs={3} sm={2} alignItems="center" direction="column">
+            <Grid item container xs={4} sm={2} alignItems="center" direction="column">
               <Typography variant="body" className={styles.grayText}>
                 <i>Match status</i>
               </Typography>
               <Typography variant="h5">17 - 38</Typography>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <img src={''} alt="Team Icon" width="85em"></img>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={2}>
               <Typography variant="h5">{match.Team[1].Name}</Typography>
               <i className={styles.grayText}>Sportsmanship</i>
             </Grid>
