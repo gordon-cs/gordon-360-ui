@@ -31,7 +31,6 @@ const Team = () => {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
-
     let teamHeader = (
       <Card>
         <CardContent>
@@ -91,7 +90,7 @@ const Team = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
-          {team.Match ? (
+          {team.Match?.length ? (
             <MatchList matches={team.Match} activityID={team.ActivityID} />
           ) : (
             <Typography variant="body1" paragraph>

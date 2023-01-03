@@ -95,7 +95,7 @@ const Activity = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
-          {activity.Series.length !== 0 ? (
+          {activity.Series?.length ? (
             <MatchList matches={activity.Series[0].Match} activityID={activity.ID} />
           ) : (
             <Typography variant="body1" paragraph>
