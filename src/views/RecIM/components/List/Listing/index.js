@@ -106,10 +106,15 @@ const ParticipantListing = ({ participant }) => {
           participant.Username,
         );
         setAvatar(preferredImage || defaultImage);
-        const splitName = participant.Username.split('.');
-        setName(splitName[0] + ' ' + splitName[1]);
       }
     };
+    const loadUserInfo = async () => {
+      if (participant.Username) {
+        const profileInfo = await user.getProfileInfo(participant.Username);
+        setName(profileInfo.fullName);
+      }
+    };
+    loadUserInfo();
     loadAvatar();
   }, [participant.Username]);
 
