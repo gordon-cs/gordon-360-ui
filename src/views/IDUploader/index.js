@@ -1,3 +1,4 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Button,
   Card,
@@ -27,6 +28,11 @@ import IdCardTop from './image-top.png';
 
 // FIXME checkout https://mui.com/components/use-media-query/#migrating-from-withwidth
 const withWidth = () => (WrappedComponent) => (props) => <WrappedComponent {...props} width="xs" />;
+// TODO: Temporary fix until IDUploader is a function component and can use hooks.
+const withAuth = () => (WrappedComponent) => (props) => {
+  const isAuthenticated = useIsAuthenticated();
+  return <WrappedComponent {...props} authentication={isAuthenticated} />;
+};
 
 const CROP_DIM = 1200; // pixels
 class IDUploader extends Component {
@@ -468,4 +474,4 @@ class IDUploader extends Component {
   }
 }
 
-export default withWidth()(IDUploader);
+export default withAuth()(withWidth()(IDUploader));
