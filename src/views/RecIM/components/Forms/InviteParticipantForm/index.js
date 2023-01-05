@@ -1,4 +1,4 @@
-import { Grid, List } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ParticipantList } from './../../List';
@@ -57,12 +57,7 @@ const InviteParticipantForm = ({
     >
       <Grid container alignItems="center" direction="column" spacing={2} p={2}>
         <Grid item sx={{ width: '100%' }}>
-          <List>
-            <ParticipantList minimal participants={inviteList} callbackFunction={removeInvite} />
-            {/* {inviteList?.map((username) => (
-              <ListItem>{username}</ListItem>
-            ))} */}
-          </List>
+          <ParticipantList minimal participants={inviteList} callbackFunction={removeInvite} />
         </Grid>
         <Grid item>
           <GordonQuickSearch
