@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-//import NewsObject from 'views/News/components/NewsObject';
 import http from './http';
 import { filter, map } from './utils';
 
