@@ -41,6 +41,13 @@ type FormattedNewsItem = NewsItem & {
   author: string;
 };
 
+type StudentNewsUpload = {
+  subject: string;
+  categoryID: number;
+  body: string;
+  image: string;
+};
+
 function formatPosting(posting: NewsItem): FormattedNewsItem {
   const timestamp = DateTime.fromISO(posting.Entered);
   const dayPosted = timestamp.weekdayShort + ', ' + timestamp.monthLong + ' ' + timestamp.day;
@@ -103,16 +110,10 @@ const getNewsByCategory = async (category: number): Promise<NewsItem[]> =>
 /******************* POST **********************/
 
 const submitStudentNews = async (
-  subject: string,
-  categoryID: number,
-  body: string,
-  image?: string,
+  uploadingNews: StudentNewsUpload[],
 ): Promise<NewsItem | undefined> => {
   try {
-    return await http.post(
-      `news?subject=${subject}&categoryID=${categoryID}&body=${body}`,
-      image ?? '',
-    );
+    return await http.post(`news`, uploadingNews);
   } catch (reason) {
     console.log('Caught news submission error: ' + reason);
   }
