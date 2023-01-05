@@ -97,25 +97,29 @@ const TeamListing = ({ team }) => {
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
 const ParticipantListing = ({ participant }) => {
   const [avatar, setAvatar] = useState('');
-
-  // const [name, setName] = useState({
-  //   firstname: '',
-  //   lastname: '',
-  // });
+  const [name, setName] = useState('');
 
   useEffect(() => {
     const loadAvatar = async () => {
-      if (participant.username) {
+      if (participant.Username) {
         const { def: defaultImage, pref: preferredImage } = await user.getImage(
-          participant.username,
+          participant.Username,
         );
         setAvatar(preferredImage || defaultImage);
       }
     };
+    const loadUserInfo = async () => {
+      if (participant.Username) {
+        const profileInfo = await user.getProfileInfo(participant.Username);
+        setName(profileInfo.fullName);
+      }
+    };
+    loadUserInfo();
     loadAvatar();
-  }, [participant.username]);
+  }, [participant.Username]);
+
   return (
-    <ListItem key={participant.username} disableGutters={true}>
+    <ListItem key={participant.Username} disableGutters={true}>
       <Grid container alignItems="center" className={styles.listing}>
         <ListItemAvatar>
           <Avatar
@@ -124,23 +128,30 @@ const ParticipantListing = ({ participant }) => {
             variant="rounded"
           ></Avatar>
         </ListItemAvatar>
-        <Link to={`/profile/${participant.username}`} className="gc360_link">
-          <ListItemText primary={participant.username} />
+        <Link to={`/profile/${participant.Username}`} className="gc360_link">
+          <ListItemText primary={name} />
         </Link>
       </Grid>
     </ListItem>
   );
 };
 
-const MatchListing = ({ match }) => {
+const MatchListing = ({ match, activityID }) => {
+  if (!match?.Team?.length) {
+    console.log('Error: MatchListing missing required info; this should be handled elsewhere');
+    return null;
+  }
+
   return (
     <ListItemButton
       component={Link}
-      to={`/recim/activity/${match.activityID}/match/${match.ID}`}
+      to={`/recim/activity/${activityID}/match/${match.ID}`}
       className="gc360_link"
     >
       <Grid container className={styles.listing}>
-        <Grid item>Team A vs Team B</Grid>
+        <Grid item>
+          {match.Team[0].Name} vs. {match.Team[1].Name}
+        </Grid>
       </Grid>
     </ListItemButton>
   );

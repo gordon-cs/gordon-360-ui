@@ -122,8 +122,6 @@ const CreateTeamForm = ({
 
     let teamCreationRequest = { ...currentInfo, ...newInfo };
 
-    console.log(teamCreationRequest);
-
     createTeam(profile.AD_Username, teamCreationRequest).then(() => {
       closeWithSnackbar({
         type: 'success',
