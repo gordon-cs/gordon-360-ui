@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import NewsItem from 'views/News/components/NewsItem';
+//import NewsObject from 'views/News/components/NewsObject';
 import http from './http';
 import { filter, map } from './utils';
 
@@ -9,7 +9,7 @@ type NewsCategory = {
   SortOrder: number;
 };
 
-type NewsItem = {
+type NewsObject = {
   SNID: number;
   ADUN: string;
   categoryID: number;
@@ -25,16 +25,16 @@ type NewsItem = {
   ManualExpirationDate: Date;
 };
 
-const getNotExpired = (): Promise<NewsItem[]> => http.get(`news/not-expired`);
+const getNotExpired = (): Promise<NewsObject[]> => http.get(`news/not-expired`);
 
 // news since 10am (today's news)
-const getNewNews = (): Promise<NewsItem[]> => http.get(`news/new`);
+const getNewNews = (): Promise<NewsObject[]> => http.get(`news/new`);
 
 const getCategories = (): Promise<NewsCategory[]> => http.get(`news/categories`);
 
-const getPostingByID = (id: number): Promise<NewsItem> => http.get(`news/${id}`);
+const getPostingByID = (id: number): Promise<NewsObject> => http.get(`news/${id}`);
 
-type FormattedNewsItem = NewsItem & {
+type FormattedNewsObject = NewsObject & {
   dayPosted: string;
   yearPosted: number;
   datePosted: string;
@@ -48,7 +48,7 @@ type StudentNewsUpload = {
   image: string;
 };
 
-function formatPosting(posting: NewsItem): FormattedNewsItem {
+function formatPosting(posting: NewsObject): FormattedNewsObject {
   const timestamp = DateTime.fromISO(posting.Entered);
   const dayPosted = timestamp.weekdayShort + ', ' + timestamp.monthLong + ' ' + timestamp.day;
   const yearPosted = timestamp.year;
@@ -65,21 +65,21 @@ function formatPosting(posting: NewsItem): FormattedNewsItem {
 
 /******************* GET **********************/
 
-const getNotExpiredFormatted = (): Promise<FormattedNewsItem[]> =>
+const getNotExpiredFormatted = (): Promise<FormattedNewsObject[]> =>
   getNotExpired().then(map(formatPosting));
 
-const getFilteredNews = (unexpiredNews: NewsItem[], query: string): NewsItem[] => {
+const getFilteredNews = (unexpiredNews: NewsObject[], query: string): NewsObject[] => {
   const lowerquery = query.toLowerCase();
   return unexpiredNews.filter(
-    (newsitem) =>
-      newsitem.Body.toLowerCase().includes(lowerquery) ||
-      newsitem.ADUN.toLowerCase().includes(lowerquery) ||
-      newsitem.categoryName.toLowerCase().includes(lowerquery) ||
-      newsitem.Subject.toLowerCase().includes(lowerquery),
+    (NewsObject) =>
+      NewsObject.Body.toLowerCase().includes(lowerquery) ||
+      NewsObject.ADUN.toLowerCase().includes(lowerquery) ||
+      NewsObject.categoryName.toLowerCase().includes(lowerquery) ||
+      NewsObject.Subject.toLowerCase().includes(lowerquery),
   );
 };
 
-const getTodaysNews = (): Promise<FormattedNewsItem[]> => getNewNews().then(map(formatPosting));
+const getTodaysNews = (): Promise<FormattedNewsObject[]> => getNewNews().then(map(formatPosting));
 
 /*
  * NOTE: not currently used, might be used in future filter features
@@ -100,18 +100,18 @@ const getTodaysNews = (): Promise<FormattedNewsItem[]> => getNewNews().then(map(
 //   return categoryNews;
 // }
 
-const getPersonalUnapproved = (): Promise<FormattedNewsItem[]> =>
-  http.get<FormattedNewsItem[]>('news/personal-unapproved').then(map(formatPosting));
+const getPersonalUnapproved = (): Promise<FormattedNewsObject[]> =>
+  http.get<FormattedNewsObject[]>('news/personal-unapproved').then(map(formatPosting));
 
 // TODO: Not currently used
-const getNewsByCategory = async (category: number): Promise<NewsItem[]> =>
+const getNewsByCategory = async (category: number): Promise<NewsObject[]> =>
   getNotExpired().then(filter((posting) => posting.categoryID === category));
 
 /******************* POST **********************/
 
 const submitStudentNews = async (
   uploadingNews: StudentNewsUpload[],
-): Promise<NewsItem | undefined> => {
+): Promise<NewsObject | undefined> => {
   try {
     return await http.post(`news`, uploadingNews);
   } catch (reason) {
@@ -140,7 +140,7 @@ async function deleteStudentNews(newsID: number): Promise<any> {
  * Posting must be authored by user and unapproved to edit
  * @returns The edited news item
  */
-async function editStudentNews(newsID: number, newData: any): Promise<NewsItem | undefined> {
+async function editStudentNews(newsID: number, newData: any): Promise<NewsObject | undefined> {
   try {
     return await http.put(`news/${newsID}`, newData);
   } catch (reason) {
