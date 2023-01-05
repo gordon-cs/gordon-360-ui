@@ -13,6 +13,7 @@ import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
+
 const Home = () => {
   const [loading, setLoading] = useState(true);
 

@@ -73,6 +73,11 @@ const Agreements = ({ deleting, onChange }) => {
         label:
           'We certify that all information provided on this application is accurate, to the best of our knowledge',
       },
+      {
+        checked: false,
+        label:
+          'We agree to host other students in our apartment during the winter break recess, in accordance with the policy outlined in the student handbook',
+      },
     ];
 
     setCheckboxes(newCheckboxes);
