@@ -70,7 +70,7 @@ const getNotExpiredFormatted = (): Promise<FormattedNewsObject[]> =>
 const getFilteredNews = (unexpiredNews: NewsObject[], query: string): NewsObject[] => {
   const lowerquery = query.toLowerCase();
   return unexpiredNews.filter(
-    (NewsObject) =>
+    (NewsObject newsObject) =>
       newsObject.Body.toLowerCase().includes(lowerquery) ||
       newsObject.ADUN.toLowerCase().includes(lowerquery) ||
       newsObject.categoryName.toLowerCase().includes(lowerquery) ||
