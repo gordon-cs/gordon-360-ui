@@ -71,10 +71,10 @@ const getFilteredNews = (unexpiredNews: NewsObject[], query: string): NewsObject
   const lowerquery = query.toLowerCase();
   return unexpiredNews.filter(
     (NewsObject) =>
-      NewsObject.Body.toLowerCase().includes(lowerquery) ||
-      NewsObject.ADUN.toLowerCase().includes(lowerquery) ||
-      NewsObject.categoryName.toLowerCase().includes(lowerquery) ||
-      NewsObject.Subject.toLowerCase().includes(lowerquery),
+      newsObject.Body.toLowerCase().includes(lowerquery) ||
+      newsObject.ADUN.toLowerCase().includes(lowerquery) ||
+      newsObject.categoryName.toLowerCase().includes(lowerquery) ||
+      newsObject.Subject.toLowerCase().includes(lowerquery),
   );
 };
 
