@@ -109,7 +109,7 @@ const getNewsByCategory = async (category: number): Promise<NewsObject[]> =>
 /******************* POST **********************/
 
 const submitStudentNews = async (
-  uploadingNews: StudentNewsUpload[],
+  uploadingNews: StudentNewsUpload,
 ): Promise<NewsObject | undefined> => {
   try {
     return await http.post(`news`, uploadingNews);
