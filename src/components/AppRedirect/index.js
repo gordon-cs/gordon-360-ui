@@ -12,7 +12,7 @@ const AppRedirect = () => {
     if (isAuthenticated) {
       checkInService.getStatus().then((status) => setEnrollmentCheckinComplete(status ?? true));
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, location]);
 
   if (
     isAuthenticated &&
