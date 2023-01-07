@@ -102,7 +102,7 @@ const Team = () => {
         }}
         openInviteParticipantForm={openInviteParticipantForm}
         setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
-        activityID={activityID}
+        teamID={teamID}
       />
     </Card>
   );

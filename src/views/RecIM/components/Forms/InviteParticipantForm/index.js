@@ -4,12 +4,14 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { ParticipantList } from './../../List';
 import GordonQuickSearch from 'components/Header/components/QuickSearch';
 import GordonSnackbar from 'components/Snackbar';
+import { addParticipantToTeam } from 'services/recim/team';
 import { useCallback } from 'react';
 
 const InviteParticipantForm = ({
   closeWithSnackbar,
   openInviteParticipantForm,
   setOpenInviteParticipantForm,
+  teamID,
 }) => {
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
   const [inviteList, setInviteList] = useState([]);
@@ -43,14 +45,15 @@ const InviteParticipantForm = ({
 
   const handleSubmit = () => {
     console.log('Submitted', inviteList);
-
-    // call service here
-    // console.log('call service here').then(() => {
-    //   closeWithSnackbar({
-    //     type: 'success',
-    //     message: 'Teammates invited successfully',
-    //   });
-    // });
+    inviteList.forEach((value) => {
+      let participantData = {
+        Username: value.username,
+        RoleTypeID: 2,
+      };
+      addParticipantToTeam(teamID, participantData).catch((reason) => {
+        console.log(reason);
+      });
+    });
 
     handleWindowClose();
   };
