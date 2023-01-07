@@ -112,22 +112,18 @@ const ParticipantListing = ({ participant, minimal, callbackFunction }) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // const [name, setName] = useState({
-  //   firstname: '',
-  //   lastname: '',
-  // });
-
   useEffect(() => {
     const loadAvatar = async () => {
-      if (participant.username) {
+      if (participant.Username) {
         const { def: defaultImage, pref: preferredImage } = await user.getImage(
-          participant.username,
+          participant.Username,
         );
         setAvatar(preferredImage || defaultImage);
       }
     };
     loadAvatar();
-  }, [participant.username]);
+  }, [participant.Username]);
+
   return (
     // first ListItem is used only for paddings/margins
     // second ListItem (nested inside) is used to layout avatar and secondaryAction
@@ -169,15 +165,22 @@ const ParticipantListing = ({ participant, minimal, callbackFunction }) => {
   );
 };
 
-const MatchListing = ({ match }) => {
+const MatchListing = ({ match, activityID }) => {
+  if (!match?.Team?.length) {
+    console.log('Error: MatchListing missing required info; this should be handled elsewhere');
+    return null;
+  }
+
   return (
     <ListItemButton
       component={Link}
-      to={`/recim/activity/${match.activityID}/match/${match.ID}`}
+      to={`/recim/activity/${activityID}/match/${match.ID}`}
       className="gc360_link"
     >
       <Grid container className={styles.listing}>
-        <Grid item>Team A vs Team B</Grid>
+        <Grid item>
+          {match.Team[0].Name} vs. {match.Team[1].Name}
+        </Grid>
       </Grid>
     </ListItemButton>
   );

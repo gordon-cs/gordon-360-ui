@@ -22,7 +22,7 @@ import { Link as LinkRouter } from 'react-router-dom';
 
 const Activity = () => {
   const { activityID } = useParams();
-  const { profile /* profileLoading */ } = useUser();
+  const { profile } = useUser();
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState({});
   const [openCreateTeamForm, setOpenCreateTeamForm] = useState(false);
@@ -30,19 +30,17 @@ const Activity = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-
       setActivity(await getActivityByID(activityID));
       setLoading(false);
     };
     loadData();
-  }, [activityID]);
+  }, [activityID, openCreateTeamForm]);
+  // ^ May be bad practice, but will refresh page on dialog close
 
   const handleCreateTeamForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenCreateTeamForm(false);
   };
-
-  console.log('activity', activity);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -97,23 +95,23 @@ const Activity = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
-          {/* if there are games scheduled, map them here */}
-          <MatchList matches={[{ activityID: '1', ID: '789' }]} />
-          {/* else "no schedule yet set" */}
-          <Typography variant="body1" paragraph>
-            Games have not yet been scheduled.
-          </Typography>
+          {activity.Series?.length ? (
+            <MatchList matches={activity.Series[0].Match} activityID={activity.ID} />
+          ) : (
+            <Typography variant="body1" paragraph>
+              Games have not yet been scheduled.
+            </Typography>
+          )}
         </CardContent>
       </Card>
     );
-
     // CARD - teams
     let teamsCard = (
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-          {activity.Team ? (
-            <TeamList teams={activity.Team} activityID={activityID} />
+          {activity.Team?.length ? (
+            <TeamList teams={activity.Team} />
           ) : (
             <Typography variant="body1" paragraph>
               Be the first to create a team!
