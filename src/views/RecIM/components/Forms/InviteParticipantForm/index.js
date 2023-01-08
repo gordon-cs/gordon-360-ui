@@ -25,10 +25,10 @@ const InviteParticipantForm = ({
     setDisableUpdateButton(!inviteList || !inviteList.length);
   }, [inviteList]);
 
-  const onSearchSubmit = (username) => {
+  const onSearchSubmit = (Username) => {
     let containsUsername = false;
     inviteList.forEach((value) => {
-      if (value.username === username) containsUsername = true;
+      if (value.Username === Username) containsUsername = true;
     });
 
     if (containsUsername) {
@@ -36,18 +36,17 @@ const InviteParticipantForm = ({
       return;
     }
 
-    setInviteList([...inviteList, { username: username }]);
+    setInviteList([...inviteList, { Username: Username }]);
   };
 
-  const removeInvite = (username) => {
-    setInviteList(inviteList.filter((participant) => participant.username !== username));
+  const removeInvite = (Username) => {
+    setInviteList(inviteList.filter((participant) => participant.Username !== Username));
   };
 
   const handleSubmit = () => {
-    console.log('Submitted', inviteList);
     inviteList.forEach((value) => {
       let participantData = {
-        Username: value.username,
+        Username: value.Username,
         RoleTypeID: 2,
       };
       addParticipantToTeam(teamID, participantData).catch((reason) => {

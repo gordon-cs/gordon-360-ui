@@ -127,11 +127,11 @@ const ParticipantListing = ({ participant, minimal, callbackFunction }) => {
   return (
     // first ListItem is used only for paddings/margins
     // second ListItem (nested inside) is used to layout avatar and secondaryAction
-    <ListItem key={participant.username}>
+    <ListItem key={participant.Username}>
       <ListItem
         secondaryAction={
           minimal ? (
-            <IconButton edge="end" onClick={() => callbackFunction(participant.username)}>
+            <IconButton edge="end" onClick={() => callbackFunction(participant.Username)}>
               <ClearIcon />
             </IconButton>
           ) : (
@@ -142,7 +142,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction }) => {
         }
         disablePadding
       >
-        <ListItemButton to={`/profile/${participant.username}`} className={styles.listing}>
+        <ListItemButton to={`/profile/${participant.Username}`} className={styles.listing}>
           <ListItemAvatar>
             <Avatar
               src={`data:image/jpg;base64,${avatar}`}
@@ -150,7 +150,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction }) => {
               variant="rounded"
             ></Avatar>
           </ListItemAvatar>
-          <ListItemText primary={participant.username} />
+          <ListItemText primary={participant.Username} />
         </ListItemButton>
         <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
           <MenuItem dense onClick={handleClose} divider>
