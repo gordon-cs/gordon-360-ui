@@ -48,7 +48,7 @@ const post = <TResponse>(
 
 const del = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'delete');
 
-const apiBaseURL = process.env.REACT_APP_API_URL as string;
+const apiBaseURL = '/'; // process.env.REACT_APP_API_URL as string;
 
 /**
  * Make a request to the API

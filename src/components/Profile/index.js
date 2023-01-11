@@ -46,11 +46,11 @@ const Profile = ({ profile, myProf }) => {
         />
       </Grid>
 
-      {myProf && profileIsStudent && (
-        <Grid item xs={12} md={4}>
-          <VictoryPromiseDisplay isOnline={isOnline} />
-        </Grid>
-      )}
+      {/* {myProf && profileIsStudent && ( */}
+      <Grid item xs={12} md={4}>
+        <VictoryPromiseDisplay isOnline={isOnline} />
+      </Grid>
+      {/* )} */}
 
       {(myProf || !profileIsStudent || canReadStudentSchedules) && (
         <Grid item xs={12} lg={10} align="center">
