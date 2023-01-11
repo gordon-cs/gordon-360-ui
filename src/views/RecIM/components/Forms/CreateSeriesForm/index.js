@@ -13,6 +13,7 @@ const CreateSeriesForm = ({
   openCreateSeriesForm,
   setOpenCreateSeriesForm,
   activityID,
+  existingActivitySeries,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
@@ -25,16 +26,12 @@ const CreateSeriesForm = ({
   // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
   const [seriesType, setSeriesType] = useState([]);
-  const [referenceSeries, setReferenceSeries] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-
       // Get all active activities where registration has not closed
       setSeriesType(await getSeriesTypes());
-      //GET REFERENCE SERIES (ALL SERIES IN ACTIVITY NEED ROUTE)
-
       setLoading(false);
     };
     loadData();
@@ -75,7 +72,9 @@ const CreateSeriesForm = ({
       label: 'Reference Series',
       name: 'referenceSeriesID',
       type: 'select',
-      menuItems: ['None atm'],
+      menuItems: existingActivitySeries.map((ref) => {
+        return existingActivitySeries.Name;
+      }),
       helperText: '*Optional',
     },
     {
@@ -194,7 +193,9 @@ const CreateSeriesForm = ({
     let referenceSeriesID =
       seriesCreationRequest.referenceSeries.length === 0
         ? null
-        : referenceSeries.filter((ref) => ref.ID === seriesCreationRequest.referenceSeriesID)[0].ID;
+        : existingActivitySeries.filter(
+            (ref) => ref.ID === seriesCreationRequest.referenceSeriesID,
+          )[0].ID;
     createSeries(referenceSeriesID, seriesCreationRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
