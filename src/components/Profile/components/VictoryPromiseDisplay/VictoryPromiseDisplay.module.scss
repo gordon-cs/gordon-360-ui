@@ -73,7 +73,29 @@
   }
 }
 
-.victory_promise_icon:hover {
-  transition: box-shadow 0.2s;
-  box-shadow: 0px 3px 10px 0px $neutral-black-opacity20;
+.icon {
+  --icon-secondary: #{$neutral-gray3};
+  --icon-primary: #{$primary-blue};
+
+  &:hover {
+    transition: box-shadow 0.2s;
+    box-shadow: 0px 3px 10px 0px $neutral-black-opacity20;
+  }
+
+  & .active {
+    --icon-secondary: #{$neutral-white};
+
+    &.christian_character {
+      --icon-primary: #{$secondary-red};
+    }
+    &.intellectual_maturity {
+      --icon-primary: #{$secondary-green};
+    }
+    &.lives_of_service {
+      --icon-primary: #{$secondary-yellow};
+    }
+    &.leadership_worldwide {
+      --icon-primary: #{$primary-cyan};
+    }
+  }
 }

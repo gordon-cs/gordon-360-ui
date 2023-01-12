@@ -1,15 +1,16 @@
 import { Link } from '@mui/material';
-import { Button, Card, CardContent, CardHeader, Grid, Tooltip, Typography } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
+import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Polar } from 'react-chartjs-2';
 import victoryPromiseService from 'services/victoryPromise';
 import { gordonColors } from 'theme';
-import { ReactComponent as OffLS } from './images/Off-LS.svg';
-import { ReactComponent as OffLW } from './images/Off-LW.svg';
-import { ReactComponent as OnLS } from './images/On-LS.svg';
 import styles from './VictoryPromiseDisplay.module.css';
-import { ChristianCharacterIcon, IntellectualMaturityIcon } from './VictroyPromiseIcons';
+import {
+  ChristianCharacterIcon,
+  IntellectualMaturityIcon,
+  LeadershipWorldwideIcon,
+  LivesOfServiceIcon,
+} from './VictroyPromiseIcons';
 
 const labels = [
   'Christian Character',
@@ -70,24 +71,15 @@ const VictoryPromiseDisplay = (props) => {
     IMColor: gordonColors.neutral.lightGray,
     LSColor: gordonColors.neutral.lightGray,
     LWColor: gordonColors.neutral.lightGray,
-    CC_ON: false,
-    IM_ON: false,
-    LS_ON: false,
-    LW_ON: false,
   };
 
-  // componentDidMount() {
-  // getVPScores();
-  // }
-
   const getVPScores = async () => {
-    const scores = await victoryPromiseService.getVPScore();
-    const CC = scores[0].TOTAL_VP_CC_SCORE;
-    const IM = scores[0].TOTAL_VP_IM_SCORE;
-    const LS = scores[0].TOTAL_VP_LS_SCORE;
-    const LW = scores[0].TOTAL_VP_LW_SCORE;
-    setState({ CC, IM, LS, LW });
-
+    const {
+      christianCharacter: CC,
+      intellectualMaturity: IM,
+      livesOfService: LS,
+      leadershipWorldwide: LW,
+    } = victoryPromisePoints;
     var arr = [CC, IM, LS, LW];
     const min = arr.filter((x) => x > 0)[0] ? arr.filter((x) => x > 0).sort()[0] : 1;
     var emptySlice = min - 0.3;
@@ -195,9 +187,6 @@ const VictoryPromiseDisplay = (props) => {
     });
   };
 
-  const LSImage = victoryPromisePoints.livesOfService > 0 ? OnLS : OffLS;
-  const LWImage = victoryPromisePoints.leadershipWorldwide > 0 ? OffLW : OffLW;
-
   let content;
 
   if (defaultVPMode) {
@@ -211,54 +200,28 @@ const VictoryPromiseDisplay = (props) => {
         className={styles.victory_promise_container_card_container_content_box_layout}
       >
         <Grid>
-          <HoverText
-            title={
-              <>
-                <Typography color="inherit">Christian Character</Typography>
-                Opportunities encouraging faith formation and its connection to living, learning and
-                leading with others
-              </>
-            }
-          >
-            <ChristianCharacterIcon
-              className={styles.victory_promise_icon}
-              active={victoryPromisePoints.christianCharacter > 0}
-            />
-          </HoverText>
-          <HoverText
-            title={
-              <>
-                <Typography color="inherit">Intellectual Maturity</Typography>
-                Opportunities to extend critical reasoning, deepen understanding, and ignite
-                imagination
-              </>
-            }
-          >
-            <IntellectualMaturityIcon className={styles.victory_promise_icon} />
-          </HoverText>
+          <ChristianCharacterIcon
+            title="Christian Character"
+            description="Opportunities encouraging faith formation and its connection to living, learning and leading with others"
+            active={victoryPromisePoints.christianCharacter > 0}
+          />
+          <IntellectualMaturityIcon
+            title="Intellectual Maturity"
+            description="Opportunities to extend critical reasoning, deepen understanding, and ignite imagination"
+            active={victoryPromisePoints.livesOfService > 0}
+          />
         </Grid>
         <Grid>
-          <HoverText
-            title={
-              <>
-                <Typography color="inherit">Lives of Service</Typography>
-                Opportunities to lend one's strengths and talents with our partners to our neighbors
-              </>
-            }
-          >
-            <LSImage className={styles.victory_promise_icon} />
-          </HoverText>
-          <HoverText
-            title={
-              <>
-                <Typography color="inherit">Leadership Worldwide</Typography>
-                Opportunities to develop one's understanding and influence in God's amazing, dynamic
-                and challenging world
-              </>
-            }
-          >
-            <LWImage className={styles.victory_promise_icon} />
-          </HoverText>
+          <LivesOfServiceIcon
+            title="Lives of Service"
+            description="Opportunities to lend one's strengths and talents with our partners to our neighbors"
+            active={victoryPromisePoints.livesOfService > 0}
+          />
+          <LeadershipWorldwideIcon
+            title="Leadership Worldwide"
+            description="Opportunities to develop one's understanding and influence in God's amazing, dynamic and challenging world"
+            active={victoryPromisePoints.leadershipWorldwide > 0}
+          />
         </Grid>
       </Grid>
     );
@@ -320,15 +283,5 @@ const VictoryPromiseDisplay = (props) => {
     </div>
   );
 };
-
-const HoverText = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
-    maxWidth: 220,
-    fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-  },
-}))(Tooltip);
 
 export default VictoryPromiseDisplay;
