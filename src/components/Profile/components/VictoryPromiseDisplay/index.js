@@ -1,5 +1,6 @@
 import { Link } from '@mui/material';
 import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
+import { Box, Stack } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { Polar } from 'react-chartjs-2';
 import victoryPromiseService from 'services/victoryPromise';
@@ -40,7 +41,6 @@ const getDatasets = (scores) => {
     {
       data,
       backgroundColor,
-      borderAlign: 'center',
       borderWidth: 3,
     },
   ];
@@ -49,10 +49,10 @@ const getDatasets = (scores) => {
 const VictoryPromiseDisplay = (props) => {
   const [defaultVPMode, setDefaultVPMode] = useState(true);
   const [scores, setScores] = useState({
-    christianCharacter: 1,
-    intellectualMaturity: 4,
-    livesOfService: 3,
-    leadershipWorldwide: 2,
+    christianCharacter: 0,
+    intellectualMaturity: 0,
+    livesOfService: 0,
+    leadershipWorldwide: 0,
   });
 
   useEffect(() => {
@@ -70,14 +70,7 @@ const VictoryPromiseDisplay = (props) => {
 
   if (defaultVPMode) {
     content = (
-      <Grid
-        xs={12}
-        item
-        container
-        justifyContent="center"
-        direction="column"
-        className={styles.victory_promise_container_card_container_content_box_layout}
-      >
+      <Grid container direction="column" alignItems="center">
         <Grid>
           <ChristianCharacterIcon
             title="Christian Character"
@@ -107,83 +100,53 @@ const VictoryPromiseDisplay = (props) => {
   } else {
     const datasets = getDatasets(scores);
     content = (
-      <Grid container justifyContent="center">
-        <Polar
-          className={styles.victory_promise}
-          data={{ labels, datasets }}
-          options={{
-            legend: {
+      <Polar
+        data={{ labels, datasets }}
+        options={{
+          legend: {
+            display: false,
+          },
+          scale: {
+            display: false,
+            ticks: {
               display: false,
+              max: (Math.max(...datasets[0].data) ?? 0.8) + 0.2,
+              min: 0,
+              maxTicksLimit: 1,
             },
-            scale: {
-              display: false,
-              ticks: {
-                display: false,
-                max: (Math.max(...datasets[0].data) ?? 0.8) + 0.2,
-                min: 0,
-                maxTicksLimit: 1,
+          },
+          tooltips: {
+            callbacks: {
+              label: (tooltipItem, data) => {
+                const score = tooltipItem.yLabel;
+                const value = score < 1 && score > 0 ? 0 : score;
+                var label = data.labels[tooltipItem.index];
+                return `${label}: ${value}`;
               },
             },
-            tooltips: {
-              callbacks: {
-                label: (tooltipItem, data) => {
-                  const score = tooltipItem.yLabel;
-                  const value = score < 1 && score > 0 ? 0 : score;
-                  var label = data.labels[tooltipItem.index];
-                  return `${label}: ${value}`;
-                },
-              },
-            },
-          }}
-        />
-      </Grid>
+          },
+        }}
+      />
     );
   }
 
   return (
-    <div className={styles.victory_promise}>
-      <Grid container item xs className={styles.victory_promise_header}>
-        <CardHeader title="Victory Promise" />
-      </Grid>
-      <Grid
-        container
-        className={styles.victory_promise_container}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Card className={styles.victory_promise_container_card}>
-          <CardContent className={styles.victory_promise_container_card_container}>
-            <Grid item align="center">
-              <Button
-                variant="contained"
-                className={styles.victory_promise_container_card_container_button_style}
-                onClick={() => setDefaultVPMode((m) => !m)}
-              >
-                Change Style
-              </Button>
-            </Grid>
-            <Grid
-              container
-              align="center"
-              className={styles.victory_promise_container_card_container_content}
-            >
-              {content}
-            </Grid>
-            {props.isOnline && (
-              <Grid
-                container
-                justifyContent="center"
-                className={styles.victory_promise_container_card_container_link}
-              >
-                <Link href="https://www.gordon.edu/victorypromise" className="gc360_text_link">
-                  Click here for more information!
-                </Link>
-              </Grid>
-            )}
-          </CardContent>
-        </Card>
-      </Grid>
-    </div>
+    <Card>
+      <CardHeader title="Victory Promise" className={styles.header} />
+      <CardContent>
+        <Stack alignItems="center" spacing={2}>
+          <Button variant="contained" onClick={() => setDefaultVPMode((m) => !m)}>
+            Change Style
+          </Button>
+          <Box className={styles.content}>{content}</Box>
+          {props.isOnline && (
+            <Link href="https://www.gordon.edu/victorypromise" className="gc360_text_link">
+              Click here for more information!
+            </Link>
+          )}
+        </Stack>
+      </CardContent>
+    </Card>
   );
 };
 
