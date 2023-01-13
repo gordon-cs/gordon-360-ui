@@ -21,22 +21,30 @@ const colorsMap = {
   leadership_worldwide: gordonColors.primary.cyan,
 };
 
-const getDatasets = (scores) => {
-  const minimumScore = Object.values(scores).sort().at(0) || 1;
-  const emptySliceValue = minimumScore - 0.3;
+const graphOrder = {
+  christian_character: 3,
+  intellectual_maturity: 0,
+  lives_of_service: 2,
+  leadership_worldwide: 1,
+};
 
-  const colors = [];
-  const data = [];
-  const labels = [];
+const getDatasets = (scores) => {
+  const minimumScore = Math.min(...Object.values(scores));
+  const emptySliceValue = (minimumScore || 1) - 0.3;
+
+  const colors = new Array(4);
+  const data = new Array(4);
+  const labels = new Array(4);
 
   Object.entries(scores).forEach(([key, value]) => {
-    labels.push(toTitleCase(key, '_'));
+    const index = graphOrder[key];
+    labels[index] = toTitleCase(key, '_');
     if (value > 0) {
-      colors.push(colorsMap[key]);
-      data.push(value);
+      colors[index] = colorsMap[key];
+      data[index] = value;
     } else {
-      colors.push(gordonColors.neutral.lightGray);
-      data.push(emptySliceValue);
+      colors[index] = gordonColors.neutral.lightGray;
+      data[index] = emptySliceValue;
     }
   });
 
@@ -56,8 +64,8 @@ const VictoryPromiseDisplay = (props) => {
   const [scores, setScores] = useState({
     christian_character: 0,
     intellectual_maturity: 0,
-    lives_of_service: 0,
     leadership_worldwide: 0,
+    lives_of_service: 0,
   });
 
   useEffect(() => {
