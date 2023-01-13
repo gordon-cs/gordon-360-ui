@@ -11,13 +11,16 @@ import { ActivityList, TeamList } from './../../components/List';
 import { getAllActivities } from 'services/recim/activity';
 import { DateTime } from 'luxon';
 import { getParticipantTeams } from 'services/recim/participant';
+import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 
 const Home = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
   const [openCreateActivityForm, setOpenCreateActivityForm] = useState(false);
+  const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [activities, setActivities] = useState([]);
   const [myTeams, setMyTeams] = useState([]);
+  const [createdActivity, setCreatedActivity] = useState('');
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -110,7 +113,13 @@ const Home = () => {
 
   const handleCreateActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
+    //setOpenCreateSeriesForm(true);
     setOpenCreateActivityForm(false);
+  };
+
+  const handleCreateSeriesForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenCreateSeriesForm(false);
   };
 
   if (loading) {
@@ -140,6 +149,17 @@ const Home = () => {
             }}
             openCreateActivityForm={openCreateActivityForm}
             setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
+          />
+        ) : null}
+        {openCreateSeriesForm ? (
+          <CreateSeriesForm
+            closeWithSnackbar={(status) => {
+              handleCreateActivityForm(status);
+            }}
+            openCreateSeriesForm={openCreateSeriesForm}
+            setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+            activityID={activities[0].ID}
+            existingActivitySeries={[]}
           />
         ) : null}
       </Grid>

@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -87,7 +87,7 @@ const CreateSeriesForm = ({
   ];
 
   const allFields = [
-    createActivityFields,
+    createSeriesFields,
     // if you need more fields put them here, or if you make a "second page"
   ].flat();
 
@@ -133,13 +133,13 @@ const CreateSeriesForm = ({
       switch (field) {
         case 'numberOfTeamsAdmitted':
           handleSetError(field, !isNumeric(newInfo[field]));
-          hasError = !isNumeric(newInfo[field]) || hasError;
+          hasError = !(isNumeric(newInfo[field]) || newInfo[field].length === 0) || hasError;
           break;
         default:
+          handleSetError(field, newInfo[field] === '');
+          hasError = newInfo[field] === '' || hasError;
           break;
       }
-      handleSetError(field, newInfo[field] === '');
-      hasError = newInfo[field] === '' || hasError;
     }
     setDisableSubmitButton(hasError || !hasChanges);
   }, [newInfo, currentInfo]);
@@ -241,8 +241,8 @@ const CreateSeriesForm = ({
   } else {
     content = (
       <>
-        <ContentCard title="Activity Information">
-          {mapFieldsToInputs(createActivityFields)}
+        <ContentCard title="Series Information">
+          {mapFieldsToInputs(createSeriesFields)}
         </ContentCard>
 
         <GordonDialogBox
@@ -269,7 +269,7 @@ const CreateSeriesForm = ({
   return (
     <GordonDialogBox
       open={openCreateSeriesForm}
-      title="Create Activity"
+      title="Create Series"
       fullWidth
       maxWidth="lg"
       buttonClicked={() => setOpenConfirmWindow(true)}
@@ -282,6 +282,7 @@ const CreateSeriesForm = ({
       cancelButtonName="cancel"
     >
       {content}
+      <Typography>*Reference Series is used for selecting teams from an existing series</Typography>
     </GordonDialogBox>
   );
 };

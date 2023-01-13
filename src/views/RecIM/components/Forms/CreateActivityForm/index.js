@@ -13,6 +13,7 @@ const CreateActivityForm = ({
   closeWithSnackbar,
   openCreateActivityForm,
   setOpenCreateActivityForm,
+  createdInstance,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
@@ -110,7 +111,7 @@ const CreateActivityForm = ({
       soloRegistration: false,
     };
   }, []);
-
+  const [createdActivity, setCreatedActivity] = useState('');
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
