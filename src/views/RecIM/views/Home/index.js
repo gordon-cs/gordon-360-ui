@@ -20,7 +20,7 @@ const Home = () => {
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [activities, setActivities] = useState([]);
   const [myTeams, setMyTeams] = useState([]);
-  const [createdActivity, setCreatedActivity] = useState('');
+  const [createdActivity, setCreatedActivity] = useState({ ID: null });
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -113,7 +113,7 @@ const Home = () => {
 
   const handleCreateActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
-    //setOpenCreateSeriesForm(true);
+    setOpenCreateSeriesForm(true);
     setOpenCreateActivityForm(false);
   };
 
@@ -149,6 +149,7 @@ const Home = () => {
             }}
             openCreateActivityForm={openCreateActivityForm}
             setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
+            setCreatedInstance={(activity) => setCreatedActivity(activity)}
           />
         ) : null}
         {openCreateSeriesForm ? (
@@ -158,7 +159,7 @@ const Home = () => {
             }}
             openCreateSeriesForm={openCreateSeriesForm}
             setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-            activityID={activities[0].ID}
+            activityID={createdActivity.ID}
             existingActivitySeries={[]}
           />
         ) : null}

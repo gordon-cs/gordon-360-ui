@@ -13,7 +13,7 @@ const CreateActivityForm = ({
   closeWithSnackbar,
   openCreateActivityForm,
   setOpenCreateActivityForm,
-  createdInstance,
+  setCreatedInstance,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
@@ -111,7 +111,6 @@ const CreateActivityForm = ({
       soloRegistration: false,
     };
   }, []);
-  const [createdActivity, setCreatedActivity] = useState('');
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
@@ -187,8 +186,7 @@ const CreateActivityForm = ({
     activityCreationRequest.sportID = sports.filter(
       (sport) => sport.Name === activityCreationRequest.sportID,
     )[0].ID;
-
-    createActivity(activityCreationRequest).then(() => {
+    var createdInstance = createActivity(activityCreationRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
@@ -196,6 +194,7 @@ const CreateActivityForm = ({
       });
       handleWindowClose();
     });
+    setCreatedInstance(createdInstance);
   };
 
   const handleWindowClose = () => {
