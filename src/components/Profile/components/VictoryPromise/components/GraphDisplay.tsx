@@ -1,22 +1,24 @@
 import { Polar } from 'react-chartjs-2';
 import { toTitleCase } from 'services/utils';
+import { VictoryPromiseCategory } from 'services/victoryPromise';
 import { gordonColors } from 'theme';
+import { VictoryPromiseScores } from '..';
 
 const colorsMap = {
   christian_character: gordonColors.secondary.red,
   intellectual_maturity: gordonColors.secondary.green,
   lives_of_service: gordonColors.secondary.yellow,
   leadership_worldwide: gordonColors.primary.cyan,
-};
+} as const;
 
 const graphOrder = {
   christian_character: 3,
   intellectual_maturity: 0,
   lives_of_service: 2,
   leadership_worldwide: 1,
-};
+} as const;
 
-const getDatasets = (scores) => {
+const getDatasets = (scores: VictoryPromiseScores) => {
   const minimumScore = Math.min(...Object.values(scores));
   const emptySliceValue = (minimumScore || 1) - 0.3;
 
@@ -24,7 +26,8 @@ const getDatasets = (scores) => {
   const data = new Array(4);
   const labels = new Array(4);
 
-  Object.entries(scores).forEach(([key, value]) => {
+  Object.entries(scores).forEach((score) => {
+    const [key, value] = score as [VictoryPromiseCategory, number];
     const index = graphOrder[key];
     labels[index] = toTitleCase(key, '_');
     if (value > 0) {
@@ -47,7 +50,9 @@ const getDatasets = (scores) => {
   return { labels, datasets };
 };
 
-const GraphDisplay = ({ scores }) => {
+type Props = { scores: VictoryPromiseScores };
+
+const GraphDisplay = ({ scores }: Props) => {
   const { labels, datasets } = getDatasets(scores);
   return (
     <Polar
@@ -67,6 +72,7 @@ const GraphDisplay = ({ scores }) => {
         },
         tooltips: {
           callbacks: {
+            // @ts-ignore
             label: (tooltipItem, data) => {
               const score = tooltipItem.yLabel;
               const value = score < 1 && score > 0 ? 0 : score;

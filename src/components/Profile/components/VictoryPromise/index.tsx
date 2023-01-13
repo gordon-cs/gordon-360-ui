@@ -3,14 +3,16 @@ import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import { useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
-import victoryPromiseService from 'services/victoryPromise';
+import victoryPromiseService, { VictoryPromiseCategory } from 'services/victoryPromise';
 import GraphDisplay from './components/GraphDisplay';
 import IconDisplay from './components/IconDisplay';
 import styles from './VictoryPromiseDisplay.module.css';
 
+export type VictoryPromiseScores = Record<VictoryPromiseCategory, number>;
+
 const VictoryPromise = () => {
   const [displayMode, setDisplayMode] = useState('icon');
-  const [scores, setScores] = useState({
+  const [scores, setScores] = useState<VictoryPromiseScores>({
     christian_character: 0,
     intellectual_maturity: 0,
     leadership_worldwide: 0,

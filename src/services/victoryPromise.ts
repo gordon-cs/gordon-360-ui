@@ -1,5 +1,11 @@
 import http from './http';
 
+export type VictoryPromiseCategory =
+  | 'christian_character'
+  | 'intellectual_maturity'
+  | 'lives_of_service'
+  | 'leadership_worldwide';
+
 type VPScores = {
   /** Intellectual Maturity score */
   TOTAL_VP_IM_SCORE: number;
