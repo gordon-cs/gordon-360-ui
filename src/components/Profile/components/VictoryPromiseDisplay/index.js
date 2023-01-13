@@ -3,6 +3,7 @@ import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { Polar } from 'react-chartjs-2';
+import { toTitleCase } from 'services/utils';
 import victoryPromiseService from 'services/victoryPromise';
 import { gordonColors } from 'theme';
 import styles from './VictoryPromiseDisplay.module.css';
@@ -13,55 +14,59 @@ import {
   LivesOfServiceIcon,
 } from './VictroyPromiseIcons';
 
-const labels = [
-  'Christian Character',
-  'Intellectual Maturity',
-  'Lives of Service',
-  'Leadership Worldwide',
-];
-
-const colors = {
-  christianCharacter: gordonColors.secondary.red,
-  intellectualMaturity: gordonColors.secondary.green,
-  livesOfService: gordonColors.secondary.yellow,
-  leadershipWorldwide: gordonColors.primary.cyan,
+const colorsMap = {
+  christian_character: gordonColors.secondary.red,
+  intellectual_maturity: gordonColors.secondary.green,
+  lives_of_service: gordonColors.secondary.yellow,
+  leadership_worldwide: gordonColors.primary.cyan,
 };
 
 const getDatasets = (scores) => {
-  const scoreValues = Object.values(scores);
-  const minimumScore = [...scoreValues].sort().at(0) || 1;
+  const minimumScore = Object.values(scores).sort().at(0) || 1;
   const emptySliceValue = minimumScore - 0.3;
-  const data = scoreValues.map((s) => (s > 0 ? s : emptySliceValue));
 
-  const backgroundColor = Object.entries(scores).map(([key, value]) =>
-    value > 0 ? colors[key] : gordonColors.neutral.lightGray,
-  );
+  const colors = [];
+  const data = [];
+  const labels = [];
 
-  return [
+  Object.entries(scores).forEach(([key, value]) => {
+    labels.push(toTitleCase(key, '_'));
+    if (value > 0) {
+      colors.push(colorsMap[key]);
+      data.push(value);
+    } else {
+      colors.push(gordonColors.neutral.lightGray);
+      data.push(emptySliceValue);
+    }
+  });
+
+  const datasets = [
     {
       data,
-      backgroundColor,
+      backgroundColor: colors,
       borderWidth: 3,
     },
   ];
+
+  return { labels, datasets };
 };
 
 const VictoryPromiseDisplay = (props) => {
   const [defaultVPMode, setDefaultVPMode] = useState(true);
   const [scores, setScores] = useState({
-    christianCharacter: 0,
-    intellectualMaturity: 0,
-    livesOfService: 0,
-    leadershipWorldwide: 0,
+    christian_character: 0,
+    intellectual_maturity: 0,
+    lives_of_service: 0,
+    leadership_worldwide: 0,
   });
 
   useEffect(() => {
     victoryPromiseService.getVPScore().then(([scores]) =>
       setScores({
-        christianCharacter: scores.TOTAL_VP_CC_SCORE,
-        intellectualMaturity: scores.TOTAL_VP_IM_SCORE,
-        livesOfService: scores.TOTAL_VP_LS_SCORE,
-        leadershipWorldwide: scores.TOTAL_VP_LW_SCORE,
+        christian_character: scores.TOTAL_VP_CC_SCORE,
+        intellectual_maturity: scores.TOTAL_VP_IM_SCORE,
+        lives_of_service: scores.TOTAL_VP_LS_SCORE,
+        leadership_worldwide: scores.TOTAL_VP_LW_SCORE,
       }),
     );
   }, []);
@@ -75,30 +80,30 @@ const VictoryPromiseDisplay = (props) => {
           <ChristianCharacterIcon
             title="Christian Character"
             description="Opportunities encouraging faith formation and its connection to living, learning and leading with others"
-            active={scores.christianCharacter > 0}
+            active={scores.christian_character > 0}
           />
           <IntellectualMaturityIcon
             title="Intellectual Maturity"
             description="Opportunities to extend critical reasoning, deepen understanding, and ignite imagination"
-            active={scores.livesOfService > 0}
+            active={scores.lives_of_service > 0}
           />
         </Grid>
         <Grid>
           <LivesOfServiceIcon
             title="Lives of Service"
             description="Opportunities to lend one's strengths and talents with our partners to our neighbors"
-            active={scores.livesOfService > 0}
+            active={scores.lives_of_service > 0}
           />
           <LeadershipWorldwideIcon
             title="Leadership Worldwide"
             description="Opportunities to develop one's understanding and influence in God's amazing, dynamic and challenging world"
-            active={scores.leadershipWorldwide > 0}
+            active={scores.leadership_worldwide > 0}
           />
         </Grid>
       </Grid>
     );
   } else {
-    const datasets = getDatasets(scores);
+    const { labels, datasets } = getDatasets(scores);
     content = (
       <Polar
         data={{ labels, datasets }}
