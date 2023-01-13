@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { Tooltip } from '@mui/material';
-import styles from './VictoryPromiseDisplay.module.css';
+import styles from '../VictoryPromiseDisplay.module.css';
 
 const SVGIconWithTooltip = ({ title, description, children }) => {
   return (

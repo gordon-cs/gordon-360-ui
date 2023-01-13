@@ -12,7 +12,7 @@ import {
   OfficeInfoList,
   PersonalInfoList,
   SchedulePanel,
-  VictoryPromiseDisplay,
+  VictoryPromise,
 } from './components';
 
 const Profile = ({ profile, myProf }) => {
@@ -48,7 +48,7 @@ const Profile = ({ profile, myProf }) => {
 
       {/* {myProf && profileIsStudent && ( */}
       <Grid item xs={12} md={4}>
-        <VictoryPromiseDisplay isOnline={isOnline} />
+        <VictoryPromise isOnline={isOnline} />
       </Grid>
       {/* )} */}
 
