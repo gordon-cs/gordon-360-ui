@@ -19,13 +19,40 @@ const labels = [
   'Leadership Worldwide',
 ];
 
+const colors = {
+  christianCharacter: gordonColors.secondary.red,
+  intellectualMaturity: gordonColors.secondary.green,
+  livesOfService: gordonColors.secondary.yellow,
+  leadershipWorldwide: gordonColors.primary.cyan,
+};
+
+const getDatasets = (scores) => {
+  const scoreValues = Object.values(scores);
+  const minimumScore = [...scoreValues].sort().at(0) || 1;
+  const emptySliceValue = minimumScore - 0.3;
+  const data = scoreValues.map((s) => (s > 0 ? s : emptySliceValue));
+
+  const backgroundColor = Object.entries(scores).map(([key, value]) =>
+    value > 0 ? colors[key] : gordonColors.neutral.lightGray,
+  );
+
+  return [
+    {
+      data,
+      backgroundColor,
+      borderAlign: 'center',
+      borderWidth: 3,
+    },
+  ];
+};
+
 const VictoryPromiseDisplay = (props) => {
   const [defaultVPMode, setDefaultVPMode] = useState(true);
-  const [victoryPromisePoints, setVictoryPromisePoints] = useState({
-    christianCharacter: 0,
-    intellectualMaturity: 0,
-    livesOfService: 0,
-    leadershipWorldwide: 0,
+  const [scores, setScores] = useState({
+    christianCharacter: 1,
+    intellectualMaturity: 4,
+    livesOfService: 3,
+    leadershipWorldwide: 2,
   });
 
   useEffect(() => {
@@ -40,7 +67,7 @@ const VictoryPromiseDisplay = (props) => {
             TOTAL_VP_LW_SCORE: leadershipWorldwide,
           },
         ]) =>
-          setVictoryPromisePoints({
+          setScores({
             christianCharacter,
             intellectualMaturity,
             livesOfService,
@@ -48,144 +75,6 @@ const VictoryPromiseDisplay = (props) => {
           }),
       );
   }, []);
-
-  const setState = () => {};
-  const state = {
-    datasets: [
-      {
-        data: [0, 0, 0, 0],
-        backgroundColor: [
-          gordonColors.neutral.lightGray,
-          gordonColors.neutral.lightGray,
-          gordonColors.neutral.lightGray,
-          gordonColors.neutral.lightGray,
-        ],
-      },
-    ],
-    options: '',
-    CC: 0,
-    IM: 0,
-    LS: 0,
-    LW: 0,
-    CCColor: gordonColors.neutral.lightGray,
-    IMColor: gordonColors.neutral.lightGray,
-    LSColor: gordonColors.neutral.lightGray,
-    LWColor: gordonColors.neutral.lightGray,
-  };
-
-  const getVPScores = async () => {
-    const {
-      christianCharacter: CC,
-      intellectualMaturity: IM,
-      livesOfService: LS,
-      leadershipWorldwide: LW,
-    } = victoryPromisePoints;
-    var arr = [CC, IM, LS, LW];
-    const min = arr.filter((x) => x > 0)[0] ? arr.filter((x) => x > 0).sort()[0] : 1;
-    var emptySlice = min - 0.3;
-
-    if (CC > 0) {
-      setState({ CCColor: gordonColors.secondary.red, CC_ON: true });
-    } else {
-      setState({ CC: emptySlice });
-    }
-    if (IM > 0) {
-      setState({ IMColor: gordonColors.secondary.green, IM_ON: true });
-    } else {
-      setState({ IM: emptySlice });
-    }
-    if (LS > 0) {
-      setState({ LSColor: gordonColors.secondary.yellow, LS_ON: true });
-    } else {
-      setState({ LS: emptySlice });
-    }
-    if (LW > 0) {
-      setState({ LWColor: gordonColors.primary.cyan, LW_ON: true });
-    } else {
-      setState({ LW: emptySlice });
-    }
-
-    if (CC === 0 && IM === 0 && LS === 0 && LW === 0) {
-      setState({
-        CC: 0.97,
-        IM: 0.97,
-        LS: 0.97,
-        LW: 0.97,
-        options: {
-          legend: {
-            display: false,
-          },
-          scale: {
-            display: false,
-            gridLines: {
-              display: true,
-            },
-            ticks: {
-              display: false,
-              max: 1,
-              min: 0,
-              maxTicksLimit: 1,
-            },
-          },
-          tooltips: {
-            callbacks: {
-              label: function (tooltipItem, data) {
-                var label = data.labels[tooltipItem.index];
-                return label + ': 0';
-              },
-            },
-          },
-        },
-      });
-    } else {
-      setState({
-        options: {
-          legend: {
-            display: false,
-          },
-          scale: {
-            display: false,
-            gridLines: {
-              display: true,
-            },
-            ticks: {
-              display: false,
-              max: Math.max(state.CC, state.IM, state.LS, state.LW) + 0.2,
-              min: 0,
-              maxTicksLimit: 1,
-            },
-          },
-          tooltips: {
-            callbacks: {
-              label: function (tooltipItem, data) {
-                var label = data.labels[tooltipItem.index];
-                if (tooltipItem.yLabel < min) {
-                  return label + ': 0';
-                } else {
-                  return label + ': ' + tooltipItem.yLabel;
-                }
-              },
-            },
-          },
-        },
-      });
-    }
-
-    setColor();
-  };
-
-  const setColor = () => {
-    setState({
-      datasets: [
-        {
-          data: [state.CC, state.IM, state.LS, state.LW],
-          backgroundColor: [state.CCColor, state.IMColor, state.LSColor, state.LWColor],
-          borderAlign: 'center',
-          borderWidth: 3,
-        },
-      ],
-    });
-  };
 
   let content;
 
@@ -203,35 +92,63 @@ const VictoryPromiseDisplay = (props) => {
           <ChristianCharacterIcon
             title="Christian Character"
             description="Opportunities encouraging faith formation and its connection to living, learning and leading with others"
-            active={victoryPromisePoints.christianCharacter > 0}
+            active={scores.christianCharacter > 0}
           />
           <IntellectualMaturityIcon
             title="Intellectual Maturity"
             description="Opportunities to extend critical reasoning, deepen understanding, and ignite imagination"
-            active={victoryPromisePoints.livesOfService > 0}
+            active={scores.livesOfService > 0}
           />
         </Grid>
         <Grid>
           <LivesOfServiceIcon
             title="Lives of Service"
             description="Opportunities to lend one's strengths and talents with our partners to our neighbors"
-            active={victoryPromisePoints.livesOfService > 0}
+            active={scores.livesOfService > 0}
           />
           <LeadershipWorldwideIcon
             title="Leadership Worldwide"
             description="Opportunities to develop one's understanding and influence in God's amazing, dynamic and challenging world"
-            active={victoryPromisePoints.leadershipWorldwide > 0}
+            active={scores.leadershipWorldwide > 0}
           />
         </Grid>
       </Grid>
     );
   } else {
+    const datasets = getDatasets(scores);
     content = (
       <Grid container justifyContent="center">
         <Polar
           className={styles.victory_promise}
-          data={{ labels, datasets: state.datasets }}
-          options={state.options}
+          data={{ labels, datasets }}
+          options={{
+            legend: {
+              display: false,
+            },
+            scale: {
+              display: false,
+              gridLines: {
+                display: true,
+              },
+              ticks: {
+                display: false,
+                max: (Math.max(...datasets[0].data) ?? 0.8) + 0.2,
+                min: 0,
+                maxTicksLimit: 1,
+              },
+            },
+            tooltips: {
+              callbacks: {
+                label: function (tooltipItem, data) {
+                  const value =
+                    tooltipItem.yLabel < 1 && tooltipItem.yLabel > 0 ? 0 : tooltipItem.yLabel;
+                  var label = data.labels[tooltipItem.index];
+                  console.log(tooltipItem, data, value, label);
+                  return `${label}: ${value}`;
+                },
+              },
+            },
+          }}
         />
       </Grid>
     );
