@@ -48,7 +48,7 @@ const Profile = ({ profile, myProf }) => {
 
       {/* {myProf && profileIsStudent && ( */}
       <Grid item xs={12} md={4}>
-        <VictoryPromise isOnline={isOnline} />
+        <VictoryPromise />
       </Grid>
       {/* )} */}
 

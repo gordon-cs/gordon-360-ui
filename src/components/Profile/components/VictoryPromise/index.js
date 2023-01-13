@@ -1,13 +1,14 @@
 import { Link } from '@mui/material';
 import { Button, Card, CardContent, CardHeader } from '@mui/material';
 import { Box, Stack } from '@mui/system';
+import { useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
 import victoryPromiseService from 'services/victoryPromise';
 import GraphDisplay from './components/GraphDisplay';
 import IconDisplay from './components/IconDisplay';
 import styles from './VictoryPromiseDisplay.module.css';
 
-const VictoryPromise = (props) => {
+const VictoryPromise = () => {
   const [displayMode, setDisplayMode] = useState('icon');
   const [scores, setScores] = useState({
     christian_character: 0,
@@ -15,6 +16,7 @@ const VictoryPromise = (props) => {
     leadership_worldwide: 0,
     lives_of_service: 0,
   });
+  const isOnline = useNetworkStatus();
 
   useEffect(() => {
     victoryPromiseService.getVPScore().then(([scores]) =>
@@ -27,13 +29,8 @@ const VictoryPromise = (props) => {
     );
   }, []);
 
-  let content;
-
-  if (displayMode === 'icon') {
-    content = <IconDisplay scores={scores} />;
-  } else {
-    content = <GraphDisplay scores={scores} />;
-  }
+  const content =
+    displayMode === 'icon' ? <IconDisplay scores={scores} /> : <GraphDisplay scores={scores} />;
 
   return (
     <Card>
@@ -47,7 +44,7 @@ const VictoryPromise = (props) => {
             Change Style
           </Button>
           <Box className={styles.content}>{content}</Box>
-          {props.isOnline && (
+          {isOnline && (
             <Link href="https://www.gordon.edu/victorypromise" className="gc360_text_link">
               Click here for more information!
             </Link>
