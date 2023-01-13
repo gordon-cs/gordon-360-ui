@@ -56,24 +56,14 @@ const VictoryPromiseDisplay = (props) => {
   });
 
   useEffect(() => {
-    victoryPromiseService
-      .getVPScore()
-      .then(
-        ([
-          {
-            TOTAL_VP_CC_SCORE: christianCharacter,
-            TOTAL_VP_IM_SCORE: intellectualMaturity,
-            TOTAL_VP_LS_SCORE: livesOfService,
-            TOTAL_VP_LW_SCORE: leadershipWorldwide,
-          },
-        ]) =>
-          setScores({
-            christianCharacter,
-            intellectualMaturity,
-            livesOfService,
-            leadershipWorldwide,
-          }),
-      );
+    victoryPromiseService.getVPScore().then(([scores]) =>
+      setScores({
+        christianCharacter: scores.TOTAL_VP_CC_SCORE,
+        intellectualMaturity: scores.TOTAL_VP_IM_SCORE,
+        livesOfService: scores.TOTAL_VP_LS_SCORE,
+        leadershipWorldwide: scores.TOTAL_VP_LW_SCORE,
+      }),
+    );
   }, []);
 
   let content;
@@ -127,9 +117,6 @@ const VictoryPromiseDisplay = (props) => {
             },
             scale: {
               display: false,
-              gridLines: {
-                display: true,
-              },
               ticks: {
                 display: false,
                 max: (Math.max(...datasets[0].data) ?? 0.8) + 0.2,
@@ -139,11 +126,10 @@ const VictoryPromiseDisplay = (props) => {
             },
             tooltips: {
               callbacks: {
-                label: function (tooltipItem, data) {
-                  const value =
-                    tooltipItem.yLabel < 1 && tooltipItem.yLabel > 0 ? 0 : tooltipItem.yLabel;
+                label: (tooltipItem, data) => {
+                  const score = tooltipItem.yLabel;
+                  const value = score < 1 && score > 0 ? 0 : score;
                   var label = data.labels[tooltipItem.index];
-                  console.log(tooltipItem, data, value, label);
                   return `${label}: ${value}`;
                 },
               },
