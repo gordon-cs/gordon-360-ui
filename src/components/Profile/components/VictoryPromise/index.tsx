@@ -8,11 +8,9 @@ import GraphDisplay from './components/GraphDisplay';
 import IconDisplay from './components/IconDisplay';
 import styles from './VictoryPromiseDisplay.module.css';
 
-export type VictoryPromiseScores = Record<VictoryPromiseCategory, number>;
-
 const VictoryPromise = () => {
   const [displayMode, setDisplayMode] = useState('icon');
-  const [scores, setScores] = useState<VictoryPromiseScores>({
+  const [scores, setScores] = useState<Record<VictoryPromiseCategory, number>>({
     christian_character: 0,
     intellectual_maturity: 0,
     leadership_worldwide: 0,
