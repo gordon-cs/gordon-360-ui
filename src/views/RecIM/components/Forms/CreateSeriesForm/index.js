@@ -101,7 +101,7 @@ const CreateSeriesForm = ({
       numberOfTeamsAdmitted: '',
       referenceSeriesID: '',
     };
-  }, []);
+  }, [activityID]);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
