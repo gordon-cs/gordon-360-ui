@@ -186,17 +186,17 @@ const CreateSeriesForm = ({
 
   const handleConfirm = () => {
     setSaving(true);
-
     let seriesCreationRequest = { ...currentInfo, ...newInfo };
 
     seriesCreationRequest.typeID = seriesType.filter(
       (type) => type.Description === seriesCreationRequest.typeID,
     )[0].ID;
+
     let referenceSeriesID =
       seriesCreationRequest.referenceSeriesID === currentInfo.referenceSeriesID
         ? null
         : existingActivitySeries.filter(
-            (ref) => ref.ID === seriesCreationRequest.referenceSeriesID,
+            (ref) => ref.Name === seriesCreationRequest.referenceSeriesID,
           )[0].ID;
     createSeries(referenceSeriesID, seriesCreationRequest).then(() => {
       setSaving(false);

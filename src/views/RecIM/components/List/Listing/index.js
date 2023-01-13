@@ -43,8 +43,8 @@ const SeriesListing = ({ series }) => {
   };
 
   return (
-    <Grid container className={styles.listing} columnSpacing={2}>
-      <Grid item xs={12} sm={4} container alignContent="center">
+    <Grid container className={styles.listing} columnSpacing={2} alignContent="center">
+      <Grid container direction="column" item xs={12} sm={4} alignContent="center">
         <Typography className={styles.listingTitle}>{series.Name}</Typography>
         <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
           Schedule Type: {series.Type}
