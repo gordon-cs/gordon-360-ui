@@ -96,8 +96,6 @@ const Team = () => {
       <Card>
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
-          {/*This is hardcoded data for now, in the future, roster card should
-            be a react component that takes a set of users and maps them here*/}
           <CardContent>
             <ParticipantList participants={team.Participant} />
           </CardContent>

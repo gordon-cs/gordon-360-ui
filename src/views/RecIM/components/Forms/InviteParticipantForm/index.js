@@ -25,22 +25,18 @@ const InviteParticipantForm = ({
     setDisableUpdateButton(!inviteList || !inviteList.length);
   }, [inviteList]);
 
-  const onSearchSubmit = (Username) => {
-    let containsUsername = false;
-    inviteList.forEach((value) => {
-      if (value.Username === Username) containsUsername = true;
-    });
-
-    if (containsUsername) {
+  const onSearchSubmit = (username) => {
+    // Check if participant exists in invite list
+    if (inviteList.includes({ Username: username })) {
       createSnackbar('Participant already in list', 'error');
       return;
     }
 
-    setInviteList([...inviteList, { Username: Username }]);
+    setInviteList([...inviteList, { Username: username }]);
   };
 
-  const removeInvite = (Username) => {
-    setInviteList(inviteList.filter((participant) => participant.Username !== Username));
+  const removeInvite = (username) => {
+    setInviteList(inviteList.filter((participant) => participant.Username !== username));
   };
 
   const handleSubmit = () => {

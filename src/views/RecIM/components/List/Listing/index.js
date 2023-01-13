@@ -12,13 +12,14 @@ import {
   MenuItem,
 } from '@mui/material';
 import styles from './Listing.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { DateTime } from 'luxon';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
+import { editTeamParticipant } from 'services/recim/team';
 
 const standardDate = (date, includeTime) => {
   let formattedDate = date.monthShort + ' ' + date.day;
@@ -100,7 +101,8 @@ const TeamListing = ({ team }) => {
 };
 
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
-const ParticipantListing = ({ participant, minimal, callbackFunction }) => {
+const ParticipantListing = ({ participant, minimal, callbackFunction, showParticipantOptions }) => {
+  const { teamID } = useParams();
   const [avatar, setAvatar] = useState('');
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -108,9 +110,19 @@ const ParticipantListing = ({ participant, minimal, callbackFunction }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleParticipantOptions = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const handleMakeCoCaptain = () => {
+    editTeamParticipant(participant.Username, teamID, 4); // Role 4 is co-captain
+    handleClose();
+  };
+
+  const handleRemoveFromTeam = () => {
+    editTeamParticipant(participant.Username, teamID, 6) // Role 6 is inactive
+  }
 
   useEffect(() => {
     const loadAvatar = async () => {
@@ -152,14 +164,16 @@ const ParticipantListing = ({ participant, minimal, callbackFunction }) => {
           </ListItemAvatar>
           <ListItemText primary={participant.Username} />
         </ListItemButton>
-        <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
-          <MenuItem dense onClick={handleClose} divider>
-            Make co-captain
-          </MenuItem>
-          <MenuItem dense onClick={handleClose} className={styles.redButton}>
-            Remove from team
-          </MenuItem>
-        </Menu>
+        {showParticipantOptions ? (
+          <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
+            <MenuItem dense onClick={handleMakeCoCaptain} divider>
+              Make co-captain
+            </MenuItem>
+            <MenuItem dense onClick={handleRemoveFromTeam} className={styles.redButton}>
+              Remove from team
+            </MenuItem>
+          </Menu>
+        ) : null}
       </ListItem>
     </ListItem>
   );
