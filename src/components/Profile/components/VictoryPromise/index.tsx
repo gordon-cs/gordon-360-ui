@@ -8,13 +8,18 @@ import GraphDisplay from './components/GraphDisplay';
 import IconDisplay from './components/IconDisplay';
 import styles from './VictoryPromiseDisplay.module.css';
 
+const enum DisplayMode {
+  Icon,
+  Graph,
+}
+
 const VictoryPromise = () => {
-  const [displayMode, setDisplayMode] = useState('icon');
+  const [displayMode, setDisplayMode] = useState(DisplayMode.Icon);
   const [scores, setScores] = useState<Record<VictoryPromiseCategory, number>>({
     christian_character: 0,
     intellectual_maturity: 0,
-    leadership_worldwide: 0,
     lives_of_service: 0,
+    leadership_worldwide: 0,
   });
   const isOnline = useNetworkStatus();
 
@@ -29,9 +34,6 @@ const VictoryPromise = () => {
     );
   }, []);
 
-  const content =
-    displayMode === 'icon' ? <IconDisplay scores={scores} /> : <GraphDisplay scores={scores} />;
-
   return (
     <Card>
       <CardHeader title="Victory Promise" className={styles.header} />
@@ -39,11 +41,19 @@ const VictoryPromise = () => {
         <Stack alignItems="center" spacing={2}>
           <Button
             variant="contained"
-            onClick={() => setDisplayMode((m) => (m === 'icon' ? 'graph' : 'icon'))}
+            onClick={() =>
+              setDisplayMode((m) => (m === DisplayMode.Icon ? DisplayMode.Graph : DisplayMode.Icon))
+            }
           >
-            Change Style
+            Show {displayMode === DisplayMode.Icon ? 'Graph' : 'Icons'}
           </Button>
-          <Box className={styles.content}>{content}</Box>
+          <Box className={styles.content}>
+            {displayMode === DisplayMode.Icon ? (
+              <IconDisplay scores={scores} />
+            ) : (
+              <GraphDisplay scores={scores} />
+            )}
+          </Box>
           {isOnline && (
             <Link href="https://www.gordon.edu/victorypromise" className="gc360_text_link">
               Click here for more information!

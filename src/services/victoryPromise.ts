@@ -14,6 +14,8 @@ export const Colors = {
   leadership_worldwide: gordonColors.primary.cyan,
 } as const;
 
+export type VictoryPromiseColor = typeof Colors[VictoryPromiseCategory];
+
 type VPScores = {
   /** Intellectual Maturity score */
   TOTAL_VP_IM_SCORE: number;

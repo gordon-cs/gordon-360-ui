@@ -1,9 +1,9 @@
 import { Polar } from 'react-chartjs-2';
 import { toTitleCase } from 'services/utils';
-import { Colors, VictoryPromiseCategory } from 'services/victoryPromise';
+import { Colors, VictoryPromiseCategory, VictoryPromiseColor } from 'services/victoryPromise';
 import { gordonColors } from 'theme';
 
-const colors = new Array<VictoryPromiseColor>(4);
+const colors = new Array<VictoryPromiseColor | typeof gordonColors.neutral.lightGray>(4);
 const data = new Array<number>(4);
 const labels = new Array<string>(4);
 
@@ -71,10 +71,6 @@ const GraphDisplay = ({ scores }: Props) => {
     />
   );
 };
-
-type VictoryPromiseColor =
-  | typeof Colors[VictoryPromiseCategory]
-  | typeof gordonColors.neutral.lightGray;
 
 /**
  * The ChartJS graph should be in order so that each Victory Promise category
