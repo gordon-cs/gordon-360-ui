@@ -133,7 +133,9 @@ const CreateSeriesForm = ({
       switch (field) {
         case 'numberOfTeamsAdmitted':
           handleSetError(field, !isNumeric(newInfo[field]));
-          hasError = !(isNumeric(newInfo[field]) || newInfo[field].length === 0) || hasError;
+          hasError = !isNumeric(newInfo[field]) || hasError;
+          break;
+        case 'referenceSeriesID':
           break;
         default:
           handleSetError(field, newInfo[field] === '');
@@ -188,10 +190,10 @@ const CreateSeriesForm = ({
     let seriesCreationRequest = { ...currentInfo, ...newInfo };
 
     seriesCreationRequest.typeID = seriesType.filter(
-      (type) => type.ID === seriesCreationRequest.typeID,
+      (type) => type.Description === seriesCreationRequest.typeID,
     )[0].ID;
     let referenceSeriesID =
-      seriesCreationRequest.referenceSeries.length === 0
+      seriesCreationRequest.referenceSeriesID === currentInfo.referenceSeriesID
         ? null
         : existingActivitySeries.filter(
             (ref) => ref.ID === seriesCreationRequest.referenceSeriesID,

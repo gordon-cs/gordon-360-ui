@@ -155,7 +155,7 @@ const Home = () => {
         {openCreateSeriesForm ? (
           <CreateSeriesForm
             closeWithSnackbar={(status) => {
-              handleCreateActivityForm(status);
+              handleCreateSeriesForm(status);
             }}
             openCreateSeriesForm={openCreateSeriesForm}
             setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}

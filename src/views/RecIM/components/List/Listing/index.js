@@ -23,6 +23,51 @@ const standardDate = (date, includeTime) => {
   return formattedDate;
 };
 
+const SeriesListing = ({ series }) => {
+  let startDate = DateTime.fromISO(series.StartDate);
+  let endDate = DateTime.fromISO(series.EndDate);
+
+  const status = () => {
+    let now = DateTime.fromMillis(Date.now());
+    if (now < startDate) {
+      return (
+        <Chip icon={<EventAvailableIcon />} label="not started" color="default" size="small"></Chip>
+      );
+    }
+    if (now > endDate) {
+      return (
+        <Chip icon={<EventAvailableIcon />} label="completed" color="info" size="small"></Chip>
+      );
+    }
+    return <Chip icon={<EventAvailableIcon />} label="ongoing" color="success" size="small"></Chip>;
+  };
+
+  return (
+    <Grid container className={styles.listing} columnSpacing={2}>
+      <Grid item xs={12} sm={4} container alignContent="center">
+        <Typography className={styles.listingTitle}>{series.Name}</Typography>
+        <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
+          Schedule Type: {series.Type}
+        </Typography>
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        <Grid container direction="row">
+          <Grid item xs={10}>
+            <Typography>
+              <i>
+                {standardDate(startDate, false)} - {standardDate(endDate, false)}
+              </i>
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item xs={12} sm={4}>
+        {status()}
+      </Grid>
+    </Grid>
+  );
+};
+
 const ActivityListing = ({ activity }) => {
   let registrationStart = DateTime.fromISO(activity.RegistrationStart);
   let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
@@ -157,4 +202,4 @@ const MatchListing = ({ match, activityID }) => {
   );
 };
 
-export { ActivityListing, TeamListing, ParticipantListing, MatchListing };
+export { ActivityListing, TeamListing, ParticipantListing, MatchListing, SeriesListing };

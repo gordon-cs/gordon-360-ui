@@ -15,10 +15,11 @@ import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import styles from './Activity.module.css';
-import { MatchList, TeamList } from './../../components/List';
+import { MatchList, SeriesList, TeamList } from './../../components/List';
 import CreateTeamForm from '../../components/Forms/CreateTeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import { Link as LinkRouter } from 'react-router-dom';
+import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 
 const Activity = () => {
   const { activityID } = useParams();
@@ -26,6 +27,7 @@ const Activity = () => {
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState({});
   const [openCreateTeamForm, setOpenCreateTeamForm] = useState(false);
+  const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -41,7 +43,10 @@ const Activity = () => {
     //if you want to do something with the message make a snackbar function here
     setOpenCreateTeamForm(false);
   };
-
+  const handleCreateSeriesForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenCreateSeriesForm(false);
+  };
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -133,6 +138,34 @@ const Activity = () => {
         </CardContent>
       </Card>
     );
+    // CARD - series
+    let seriesCard = (
+      <Card>
+        <CardHeader title="Series" className={styles.cardHeader} />
+        <CardContent>
+          {activity.Series?.length ? (
+            <SeriesList series={activity.Series} />
+          ) : (
+            <Typography variant="body1" paragraph>
+              No series scheduled yet!
+            </Typography>
+          )}
+          <Grid container justifyContent="center">
+            <Button
+              variant="contained"
+              color="warning"
+              startIcon={<AddCircleRoundedIcon />}
+              className={styles.actionButton}
+              onClick={() => {
+                setOpenCreateSeriesForm(true);
+              }}
+            >
+              Create a New Series
+            </Button>
+          </Grid>
+        </CardContent>
+      </Card>
+    );
 
     return (
       <Grid container spacing={2}>
@@ -143,8 +176,9 @@ const Activity = () => {
           <Grid item xs={12} md={6}>
             {scheduleCard}
           </Grid>
-          <Grid item xs={12} md={6}>
-            {teamsCard}
+          <Grid item container direction={'column'} spacing={2} xs={12} md={6}>
+            <Grid item>{seriesCard}</Grid>
+            <Grid item>{teamsCard}</Grid>
           </Grid>
         </Grid>
         {openCreateTeamForm ? (
@@ -155,6 +189,17 @@ const Activity = () => {
             openCreateTeamForm={openCreateTeamForm}
             setOpenCreateTeamForm={(bool) => setOpenCreateTeamForm(bool)}
             activityID={activityID}
+          />
+        ) : null}
+        {openCreateSeriesForm ? (
+          <CreateSeriesForm
+            closeWithSnackbar={(status) => {
+              handleCreateSeriesForm(status);
+            }}
+            openCreateSeriesForm={openCreateSeriesForm}
+            setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+            activityID={activity.ID}
+            existingActivitySeries={activity.Series}
           />
         ) : null}
         <Typography>Activity ID: {activityID} (testing purposes only)</Typography>
