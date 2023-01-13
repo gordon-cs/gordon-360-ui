@@ -11,6 +11,7 @@ export type Activity = {
   RegistrationEnd: string;
   RegistrationOpen: boolean;
   SportID: Sport;
+  TypeID: number;
   MinCapacity: number;
   MaxCapacity: number;
   SoloRegistration: boolean;
@@ -26,6 +27,7 @@ type CreatedActivity = {
   RegistrationEnd: string;
   SportID: Sport;
   StatusID: number;
+  TypeID: number;
   MinCapacity: number;
   MaxCapacity: number;
   SoloRegistration: boolean;
@@ -37,6 +39,7 @@ type UploadActivity = {
   RegistrationStart: string;
   RegistrationEnd: string;
   SportID: number;
+  TypeID: number;
   MinCapacity: number;
   MaxCapacity: number;
   SoloRegistration: boolean;
@@ -48,6 +51,7 @@ type PatchActivity = {
   RegistrationStart: string;
   RegistrationEnd: string;
   SportID: number;
+  TypeID: number;
   StatusID: number;
   MinCapacity: number;
   MaxCapacity: number;
@@ -72,7 +76,16 @@ const getAllActivities = (
 const getActivityStatusTypes = (): Promise<Lookup[]> =>
   http.get(`recim/activities/lookup?type=status`);
 
+const getActivityTypes = (): Promise<Lookup[]> => http.get(`recim/activities/lookup?type=activity`);
+
 const editActivity = (ID: number, updatedActivity: PatchActivity): Promise<CreatedActivity[]> =>
   http.patch(`recim/activities/${ID}`, updatedActivity);
 
-export { createActivity, getActivityByID, getActivityStatusTypes, getAllActivities, editActivity };
+export {
+  createActivity,
+  getActivityByID,
+  getActivityStatusTypes,
+  getAllActivities,
+  editActivity,
+  getActivityTypes,
+};

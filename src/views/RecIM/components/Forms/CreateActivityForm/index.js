@@ -6,7 +6,7 @@ import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ContentCard } from '../components/ContentCard';
 import { InformationField } from '../components/InformationField';
-import { createActivity } from 'services/recim/activity';
+import { createActivity, getActivityTypes } from 'services/recim/activity';
 import { getAllSports } from 'services/recim/sport';
 
 const CreateActivityForm = ({
@@ -19,7 +19,7 @@ const CreateActivityForm = ({
     name: false,
     registrationStart: false,
     registrationEnd: false,
-    type: false,
+    typeID: false,
     sportID: false,
     maxCapacity: false,
     soloRegistration: false,
@@ -28,13 +28,14 @@ const CreateActivityForm = ({
   // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
   const [sports, setSports] = useState([]);
+  const [activityTypes, setActivityTypes] = useState([]);
   useEffect(() => {
     const loadSports = async () => {
       setLoading(true);
 
       // Get all active activities where registration has not closed
       setSports(await getAllSports());
-
+      setActivityTypes(await getActivityTypes());
       setLoading(false);
     };
     loadSports();
@@ -63,10 +64,12 @@ const CreateActivityForm = ({
     },
     {
       label: 'Activity Type',
-      name: 'type',
+      name: 'typeID',
       type: 'select',
-      menuItems: ['League', 'Tournament', 'One-off'],
-      error: errorStatus.type,
+      menuItems: activityTypes.map((type) => {
+        return type.Description;
+      }),
+      error: errorStatus.typeID,
       helperText: '*Required',
     },
     {
@@ -105,7 +108,7 @@ const CreateActivityForm = ({
       name: '',
       registrationStart: '',
       registrationEnd: '',
-      type: '',
+      typeID: '',
       sportID: '',
       maxCapacity: '',
       soloRegistration: false,
@@ -186,15 +189,20 @@ const CreateActivityForm = ({
     activityCreationRequest.sportID = sports.filter(
       (sport) => sport.Name === activityCreationRequest.sportID,
     )[0].ID;
-    var createdInstance = createActivity(activityCreationRequest).then(() => {
+
+    activityCreationRequest.typeID = activityTypes.filter(
+      (type) => type.Description === activityCreationRequest.typeID,
+    )[0].ID;
+
+    createActivity(activityCreationRequest).then((res) => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
         message: 'Your new activity has been created or whatever message you want here',
       });
       handleWindowClose();
+      setCreatedInstance(res);
     });
-    setCreatedInstance(createdInstance);
   };
 
   const handleWindowClose = () => {

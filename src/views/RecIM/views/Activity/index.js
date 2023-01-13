@@ -36,7 +36,7 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [activityID, openCreateTeamForm]);
+  }, [activityID, openCreateTeamForm, openCreateSeriesForm]);
   // ^ May be bad practice, but will refresh page on dialog close
 
   const handleCreateTeamForm = (status) => {

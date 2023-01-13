@@ -72,8 +72,8 @@ const CreateSeriesForm = ({
       label: 'Reference Series',
       name: 'referenceSeriesID',
       type: 'select',
-      menuItems: existingActivitySeries.map((ref) => {
-        return existingActivitySeries.Name;
+      menuItems: existingActivitySeries.map((series) => {
+        return series.Name;
       }),
       helperText: '*Optional',
     },
