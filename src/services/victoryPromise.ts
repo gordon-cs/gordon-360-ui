@@ -2,13 +2,13 @@ import http from './http';
 
 type VPScores = {
   /** Intellectual Maturity score */
-  im: number;
+  TOTAL_VP_IM_SCORE: number;
   /** Christian Character score */
-  cc: number;
+  TOTAL_VP_CC_SCORE: number;
   /** Lives of Service score */
-  ls: number;
+  TOTAL_VP_LS_SCORE: number;
   /** Leadership Worldwide score */
-  lw: number;
+  TOTAL_VP_LW_SCORE: number;
 };
 
 const getVPScore = (): Promise<VPScores[]> => http.get(`victorypromise`);
