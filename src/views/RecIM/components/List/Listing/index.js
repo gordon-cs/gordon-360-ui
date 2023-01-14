@@ -7,13 +7,19 @@ import {
   ListItemText,
   Typography,
   Chip,
+  IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import styles from './Listing.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { DateTime } from 'luxon';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import ClearIcon from '@mui/icons-material/Clear';
+import { editTeamParticipant } from 'services/recim/team';
 
 const standardDate = (date, includeTime) => {
   let formattedDate = date.monthShort + ' ' + date.day;
@@ -95,9 +101,28 @@ const TeamListing = ({ team }) => {
 };
 
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
-const ParticipantListing = ({ participant }) => {
+const ParticipantListing = ({ participant, minimal, callbackFunction, showParticipantOptions }) => {
+  const { teamID } = useParams();
   const [avatar, setAvatar] = useState('');
-  const [name, setName] = useState('');
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const moreOptionsOpen = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleParticipantOptions = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMakeCoCaptain = () => {
+    editTeamParticipant(participant.Username, teamID, 4); // Role 4 is co-captain
+    handleClose();
+  };
+
+  const handleRemoveFromTeam = () => {
+    editTeamParticipant(participant.Username, teamID, 6) // Role 6 is inactive
+  }
 
   useEffect(() => {
     const loadAvatar = async () => {
@@ -108,30 +133,48 @@ const ParticipantListing = ({ participant }) => {
         setAvatar(preferredImage || defaultImage);
       }
     };
-    const loadUserInfo = async () => {
-      if (participant.Username) {
-        const profileInfo = await user.getProfileInfo(participant.Username);
-        setName(profileInfo.fullName);
-      }
-    };
-    loadUserInfo();
     loadAvatar();
   }, [participant.Username]);
 
   return (
-    <ListItem key={participant.Username} disableGutters={true}>
-      <Grid container alignItems="center" className={styles.listing}>
-        <ListItemAvatar>
-          <Avatar
-            src={`data:image/jpg;base64,${avatar}`}
-            className={styles.avatar}
-            variant="rounded"
-          ></Avatar>
-        </ListItemAvatar>
-        <Link to={`/profile/${participant.Username}`} className="gc360_link">
-          <ListItemText primary={name} />
-        </Link>
-      </Grid>
+    // first ListItem is used only for paddings/margins
+    // second ListItem (nested inside) is used to layout avatar and secondaryAction
+    <ListItem key={participant.Username}>
+      <ListItem
+        secondaryAction={
+          minimal ? (
+            <IconButton edge="end" onClick={() => callbackFunction(participant.Username)}>
+              <ClearIcon />
+            </IconButton>
+          ) : (
+            <IconButton edge="end" onClick={handleParticipantOptions}>
+              <MoreHorizIcon />
+            </IconButton>
+          )
+        }
+        disablePadding
+      >
+        <ListItemButton to={`/profile/${participant.Username}`} className={styles.listing}>
+          <ListItemAvatar>
+            <Avatar
+              src={`data:image/jpg;base64,${avatar}`}
+              className={minimal ? styles.avatarSmall : styles.avatar}
+              variant="rounded"
+            ></Avatar>
+          </ListItemAvatar>
+          <ListItemText primary={participant.Username} />
+        </ListItemButton>
+        {showParticipantOptions ? (
+          <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
+            <MenuItem dense onClick={handleMakeCoCaptain} divider>
+              Make co-captain
+            </MenuItem>
+            <MenuItem dense onClick={handleRemoveFromTeam} className={styles.redButton}>
+              Remove from team
+            </MenuItem>
+          </Menu>
+        ) : null}
+      </ListItem>
     </ListItem>
   );
 };
