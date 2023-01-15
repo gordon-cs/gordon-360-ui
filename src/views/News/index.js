@@ -234,13 +234,10 @@ const StudentNews = () => {
 
     let imageData = null;
 
-    if (cropperRef.current !== null) {
-      imageData = cropperRef.current.cropper
-        .getCroppedCanvas({ width: CROP_DIM })
-        .toDataURL()
-        .replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
-    } else if (cropperImageData !== null) {
-      imageData = cropperImageData.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+    console.log(cropperImageData);
+
+    if (cropperImageData !== null) {
+      imageData = cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
     }
 
     // create the JSON newData object to update with
@@ -260,6 +257,7 @@ const StudentNews = () => {
     }
 
     setOpenPostActivity(false);
+    handleWindowClose();
     loadNews(); //reload news
   }
 
@@ -270,7 +268,7 @@ const StudentNews = () => {
       let croppedImage = cropperRef.current.cropper
         .getCroppedCanvas({ width: CROP_DIM })
         .toDataURL();
-      newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
+      newImage = croppedImage;
     }
 
     // create the JSON newData object to update with
