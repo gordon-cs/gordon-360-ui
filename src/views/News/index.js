@@ -234,8 +234,6 @@ const StudentNews = () => {
 
     let imageData = null;
 
-    console.log(cropperImageData);
-
     if (cropperImageData !== null) {
       imageData = cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
     }
