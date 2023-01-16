@@ -122,6 +122,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
 
   const handleRemoveFromTeam = () => {
     editTeamParticipant(participant.Username, teamID, 6) // Role 6 is inactive
+    handleClose();
   }
 
   useEffect(() => {
@@ -146,11 +147,11 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
             <IconButton edge="end" onClick={() => callbackFunction(participant.Username)}>
               <ClearIcon />
             </IconButton>
-          ) : (
+          ) : showParticipantOptions ? (
             <IconButton edge="end" onClick={handleParticipantOptions}>
               <MoreHorizIcon />
             </IconButton>
-          )
+          ) : null
         }
         disablePadding
       >

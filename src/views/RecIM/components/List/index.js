@@ -8,13 +8,14 @@ const ActivityList = ({ activities }) => {
   return <List dense>{content}</List>;
 };
 
-const ParticipantList = ({ participants, minimal, callbackFunction }) => {
+const ParticipantList = ({ participants, minimal, showParticipantOptions, callbackFunction }) => {
   let content = participants.map((participant) => (
     <ParticipantListing
       key={participant.username}
       participant={participant}
       minimal={minimal}
       callbackFunction={callbackFunction}
+      showParticipantOptions={showParticipantOptions}
     />
   ));
   return <List dense>{content}</List>;

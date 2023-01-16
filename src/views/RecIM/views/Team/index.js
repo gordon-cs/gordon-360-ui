@@ -97,7 +97,7 @@ const Team = () => {
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
           <CardContent>
-            <ParticipantList participants={team.Participant} />
+            <ParticipantList participants={team.Participant} showParticipantOptions />
           </CardContent>
           <Grid container justifyContent="center">
             <Button
