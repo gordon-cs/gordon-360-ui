@@ -13,6 +13,7 @@ import {
   editActivity,
 } from 'services/recim/activity';
 import { getAllSports } from 'services/recim/sport';
+import { isUndefined } from 'lodash';
 
 const ActivityForm = ({
   activity,
@@ -40,17 +41,14 @@ const ActivityForm = ({
   const [activityStatusTypes, setActivityStatusTypes] = useState([]);
 
   useEffect(() => {
-    const loadSports = async () => {
+    const fetchData = async () => {
       setLoading(true);
-
-      // Get all active activities where registration has not closed
       setSports(await getAllSports());
       setActivityTypes(await getActivityTypes());
       setActivityStatusTypes(await getActivityStatusTypes());
       setLoading(false);
-      console.log(activityTypes[activity.TypeID]);
     };
-    loadSports();
+    fetchData();
   }, []);
   const createActivityFields = [
     {
@@ -138,16 +136,22 @@ const ActivityForm = ({
 
   const currentInfo = useMemo(() => {
     if (activity) {
-      console.log(activity);
-      console.log(activityTypes);
-      console.log(activityTypes.filter((type) => type.Description === activity.typeID)[0]);
       return {
         name: activity.Name,
         registrationStart: activity.RegistrationStart,
         registrationEnd: activity.RegistrationEnd,
-        typeID: activityTypes.filter((type) => type.Description === activity.typeID)[0],
-        sportID: sports[activity.SportID],
-        statusID: activityStatusTypes[activity.StatusID],
+        typeID:
+          activityTypes.find((type) => type.ID === activity.TypeID) == null
+            ? ''
+            : activityTypes.find((type) => type.ID === activity.TypeID).Description,
+        sportID:
+          sports.find((type) => type.ID === activity.Sport.ID) == null
+            ? ''
+            : sports.find((type) => type.ID === activity.Sport.ID).Name,
+        statusID:
+          activityStatusTypes.find((type) => type.Description === activity.Status) == null
+            ? ''
+            : activityStatusTypes.find((type) => type.Description === activity.Status).Description,
         maxCapacity: activity.MaxCapacity,
         soloRegistration: activity.SoloRegistration,
         completed: activity.Completed,
@@ -162,7 +166,8 @@ const ActivityForm = ({
       maxCapacity: '',
       soloRegistration: false,
     };
-  }, []);
+  }, [activityTypes, activityStatusTypes, sports]);
+
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
@@ -177,6 +182,11 @@ const ActivityForm = ({
     };
     setErrorStatus(getCurrentErrorStatus);
   };
+
+  //re spreads fetched data to map to drop-down's once data has been loaded
+  useEffect(() => {
+    setNewInfo({ ...newInfo, ...currentInfo });
+  }, [currentInfo]);
 
   // Field Validation
   useEffect(() => {
@@ -223,7 +233,7 @@ const ActivityForm = ({
       if (currentInfo[key] !== value)
         updatedFields.push({
           Field: key,
-          Value: value ?? null, //ensures undefined => null
+          Value: value,
           Label: getFieldLabel(key),
         });
     });
@@ -234,31 +244,16 @@ const ActivityForm = ({
     setSaving(true);
 
     let activityRequest = { ...currentInfo, ...newInfo };
-    console.log(activityRequest);
-    console.log(activityRequest.sportID);
-    console.log(activityRequest.sportID == null);
-    activityRequest.sportID =
-      activityRequest.sportID == null
-        ? null
-        : sports.filter((sport) => sport.Name === activityRequest.sportID)[0].ID;
-    console.log(activityRequest.typeID);
-    console.log(activityRequest.typeID == null);
-
-    activityRequest.typeID =
-      activityRequest.typeID == null
-        ? null
-        : activityTypes.filter((type) => type.Description === activityRequest.typeID)[0].ID;
-
+    activityRequest.sportID = sports.filter(
+      (sport) => sport.Name === activityRequest.sportID,
+    )[0].ID;
+    activityRequest.typeID = activityTypes.filter(
+      (type) => type.Description === activityRequest.typeID,
+    )[0].ID;
     if (activity) {
-      console.log(activityRequest.statusID);
-      console.log(activityRequest.statusID == null);
-      activityRequest.statusID =
-        activityRequest.statusID == null
-          ? null
-          : activityStatusTypes.filter(
-              (type) => type.Description === activityStatusTypes.statusID,
-            )[0].ID;
-      console.log(activityRequest);
+      activityRequest.statusID = activityStatusTypes.filter(
+        (type) => type.Description === activityStatusTypes.statusID,
+      )[0].ID;
       editActivity(activity.ID, activityRequest).then((res) => {
         setSaving(false);
         closeWithSnackbar({
@@ -327,7 +322,9 @@ const ActivityForm = ({
           buttonName="Confirm"
           // in case you want to authenticate something change isButtonDisabled
           isButtonDisabled={false}
-          cancelButtonClicked={!isSaving ? handleWindowClose : null}
+          cancelButtonClicked={() => {
+            if (!isSaving) setOpenConfirmWindow(false);
+          }}
           cancelButtonName="Cancel"
         >
           <ConfirmationWindowHeader />
@@ -350,8 +347,6 @@ const ActivityForm = ({
       fullWidth
       maxWidth="lg"
       buttonClicked={() => {
-        console.log(newInfo);
-        console.log(activityTypes);
         setOpenConfirmWindow(true);
       }}
       isButtonDisabled={disableUpdateButton}

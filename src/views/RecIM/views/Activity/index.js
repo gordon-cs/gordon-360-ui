@@ -98,7 +98,6 @@ const Activity = () => {
                   <IconButton>
                     <EditIcon
                       onClick={() => {
-                        console.log(openActivityForm);
                         setOpenActivityForm(true);
                       }}
                     />
