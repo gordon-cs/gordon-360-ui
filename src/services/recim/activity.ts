@@ -79,8 +79,7 @@ const getActivityStatusTypes = (): Promise<Lookup[]> =>
 const getActivityTypes = (): Promise<Lookup[]> => http.get(`recim/activities/lookup?type=activity`);
 
 const editActivity = (ID: number, updatedActivity: PatchActivity): Promise<CreatedActivity[]> => {
-  console.log(updatedActivity);
-  return http.patch(`recim/activities/${ID}`, { name: 'Flag Football' });
+  return http.patch(`recim/activities/${ID}`, updatedActivity);
 };
 
 export {
