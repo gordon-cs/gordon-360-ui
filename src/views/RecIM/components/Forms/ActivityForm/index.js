@@ -13,7 +13,6 @@ import {
   editActivity,
 } from 'services/recim/activity';
 import { getAllSports } from 'services/recim/sport';
-import { isUndefined } from 'lodash';
 
 const ActivityForm = ({
   activity,
