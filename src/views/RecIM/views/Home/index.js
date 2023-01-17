@@ -1,7 +1,7 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import CreateActivityForm from '../../components/Forms/CreateActivityForm';
+import ActivityForm from '../../components/Forms/ActivityForm';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
@@ -16,7 +16,7 @@ import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 const Home = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
-  const [openCreateActivityForm, setOpenCreateActivityForm] = useState(false);
+  const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [activities, setActivities] = useState([]);
   const [myTeams, setMyTeams] = useState([]);
@@ -38,7 +38,7 @@ const Home = () => {
       setLoading(false);
     };
     loadActivities();
-  }, [profile, openCreateActivityForm]);
+  }, [profile, openActivityForm]);
 
   const createActivityButton = (
     <Grid container justifyContent="center">
@@ -48,7 +48,7 @@ const Home = () => {
         startIcon={<AddCircleRoundedIcon />}
         className={styles.actionButton}
         onClick={() => {
-          setOpenCreateActivityForm(true);
+          setOpenActivityForm(true);
         }}
       >
         Create a New Activity
@@ -114,7 +114,7 @@ const Home = () => {
   const handleCreateActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenCreateSeriesForm(true);
-    setOpenCreateActivityForm(false);
+    setOpenActivityForm(false);
   };
 
   const handleCreateSeriesForm = (status) => {
@@ -142,13 +142,13 @@ const Home = () => {
           </Grid>
         </Grid>
         <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
-        {openCreateActivityForm ? (
-          <CreateActivityForm
+        {openActivityForm ? (
+          <ActivityForm
             closeWithSnackbar={(status) => {
               handleCreateActivityForm(status);
             }}
-            openCreateActivityForm={openCreateActivityForm}
-            setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
+            openActivityForm={openActivityForm}
+            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
             setCreatedInstance={(activity) => setCreatedActivity(activity)}
           />
         ) : null}

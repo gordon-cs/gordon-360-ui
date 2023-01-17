@@ -79,7 +79,7 @@ const Team = () => {
       <Card>
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
-          <ParticipantList participants={team.Participant} />
+          <ParticipantList participants={team.Participant} showParticipantOptions />
         </CardContent>
       </Card>
     );
