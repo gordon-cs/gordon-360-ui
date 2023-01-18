@@ -4,107 +4,31 @@
 
 This project is the frontend of Gordon 360 in React. [The retired frontend](https://github.com/gordon-cs/Project-Bernard/) was built in EmberJS, but was deemed too slow and difficult to maintain. To see the specifics of the rebuild, see [`ROADMAP.md`](https://github.com/gordon-cs/gordon-360-ui/blob/develop/old_documentation/ROADMAP.md).
 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Read the user guide [here](https://github.com/facebook/create-react-app/blob/master/packages/cra-template/template/README.md).
+
 ## Contents
 
-- [Getting Started](#getting-started)
-
-  - [Starting the Front End](#starting-the-front-end)
-  - [Connect to Local Backend](#connect-local-backend-to-react)
-  - [Server Notes](#server-notes)
-  - [Editor Recommendations](#editor-recommendations)
-  - [Libraries](#libraries)
-
+- [Server Notes](#server-notes)
+- [Libraries](#libraries)
 - [Code Style](#code-style)
-- [Dependencies](#dependencies)
 - [Project File Organization](#file-organization)
-- [Environment Variables](#environment-variables)
 - [Testing](#testing)
 - [Continuous Integration and Deployment](#continuous-integration-and-deployment)
 - [Contributing](#contributing)
 - [Known Issues](#known-issues)
 - [History](#history)
 
-## Getting Started
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Read the user guide [here](https://github.com/facebook/create-react-app/blob/master/packages/cra-template/template/README.md).
-
-Make sure Node.js is set up on your machine. If you are on the CS-RDSH-02 virtual machine, it should be setup already. To check if it is on a machine, open a terminal and run the command `nvm`. If the output says `'nvm' is not recognized...`, then Node.js has not been setup. In that case, follow the below procedures to install nvm (Node Version Manager) onto the machine. An npm installation may also work, but nvm will allow easier installation and use of this particular version.
-
-#### Windows:
-
-- Download the latest release of nvm from [here](https://github.com/coreybutler/nvm-windows/releases). `Select nvm-setup.zip`.
-  - Extract the file and run it.
-  - The installer will ask you where to install nvm. It will display the path where it is currently set to install. Ensure that the path reflects the account you are logged into (example: if you're logged in as anthony.aardvark, make sure the path looks like `C:\Users\aanthony.aardvard\Program Files\etc`). If it says Node is already installed, proceed anyway.
-  - After this, go to https://nodejs.org/en/ and look for the version labeled "LTS" (which indicates the latest stable version).
-  - Finally, run `nvm install <version>` where <version> is the version you found.
-
-#### Linux and Mac:
-
-- Follow [the nvm installation instructions](https://github.com/nvm-sh/nvm#install--update-script) to install nvm. It may take a few minutes to run, and appear for a while to be hung. (After it finishes, you might need to close your terminal window and open another before nvm will work.)
-- Once it is successfully installed, use it to install a version of Node.js: `nvm install node`. Or, better yet, `nvm install --lts`, to use the current "long term support" version which is generally the most stable.
-- Then, tell nvm that you want to use that verion: `nvm use node`, or better yet, `nvm use --lts`.
-  (More generally, "node" and "--lts" in the above commands can be replaced by any specific version.)
-
-#### Troubleshooting NVM
-
-- If a developer accidentally follows the above Windows instructions on CS-RDSH-02, the environment variable for NVM will be set by their installation to a path within their user directory. Thus, many if not all other users on the machine will lose access to NVM. To fix this, any user can open Powershell as administrator and run `choco install -y nvm`. (The `-y` option answers `yes` to any prompts that occur during the installation.) Then, in a Powershell terminal not running as admin, run `nvm install --lts`. Users should log out and back in to see the fix take effect. As usual, you can check if this worked by opening a terminal and running the command `nvm`. If the output says `Running version...`, then it is all set.
-
-- Sometimes, the .json package management files in develop are missing a dependency and `npm install` throws an error. The error says something like "This is most likely not a problem with npm itself...and is related to npm not being able to find a file". The best solution we have found is to delete the whole `node_modules` directory, delete the file `package-lock.json`, and then run `npm install`. Warning, the deletions can take several minutes because they are large files.
-
-### Starting the Front End
-
-After cloning this repo, and after any major changes to local code (like changing branches) run:
-
-- `npm install` (This gets the right packages installed in the directory)
-- `npm start` (This starts a local server, and prints the local URL)
-
-When running the app, it will open in a browser at http://localhost:3000.
-
-### Connect Local Backend To React
-
-By default, React will use the live 360ApiTrain backend to allow seamless front end development. If you would like to run the backend locally and connect to the UI, use the following steps:
-
-- After connecting to the virtual machine and setting up the backend, as documented in [gordon-360-api](https://github.com/gordon-cs/gordon-360-api/blob/develop/README.md#running-the-api-locally),
-
-  - Clone the UI repository if you do not have it open on the virtual machine already.
-  - Open the repo in Visual Studio Code (VS Code).
-  - Open `.env.development`. You will see three sets of environment variables, marked `@PROD`, `@TRAIN`, and `@LOCALHOST`. Ensure that the `@PROD` and `@TRAIN` variables are commented out, and that `@LOCALHOST` is not commented out. Then set `REACT_APP_API_URL` equal to `http://localhost:NNNN/`, where `NNNN` is the port your backend is listening on (e.g. `9999`).
-  - Ensure that at least one `REACT_APP_FONT_URL` from either `@PROD` or `@TRAIN` is not commented out.
-  - You do not need to change `.env.production`.
-
-- Now, you are ready to work on the frontend.
-
-- In some scenarios, (for example, when someone has made custom changes to the backend which you also want to use) it is preferable to skip setting up your own backend and connect to someone else's. To do this, make sure you are on the virtual machine. Then, just follow the above directions, replacing the port number you chose with the port number on which their backend is listening.
-
 ### Server Notes
 
-The staging and production servers are both hosted on `360-frontend.gordon.edu` (which runs Windows). This machine is also known as `360React.gordon.edu`, `360train.gordon.edu`, and `360.gordon.edu`.
+The staging and production servers are both hosted on `DMZ-360-frontend.gordon.edu`. This machine is also known as `360.gordon.edu` and `360Train.gordon.edu`.
 
-The backend server is hosted on `cts-360.gordon.edu`. This machine is also known as `360Api.gordon.edu` and `360ApiTrain.gordon.edu` (it also runs the frontend server for the old Ember site, and is thus also known as `360old.gordon.edu`).
+The backend server is hosted on `360Api1.gordon.edu`. This machine is also known as `360Api.gordon.edu` and `360ApiTrain.gordon.edu`.
 
 #### Making Refresh, URL Entry, and Forward/Back Buttons Work
 
 As noted earlier, gordon-360-ui uses React Router for routing URLs to different views. This works as expected when running the front-end locally with `npm start`. However, when the production build is running on the IIS Server, React Router only handles link clicks; manual URL entry and use of browser navigation buttons results in a 404 error. This is because URLs are sent to the IIS Server (as HTTP requests) before they are handled by React Router. Because none of the URLs correspond to actual directories on the server root, a 404 error results.
 
 To remedy this, a `web.config` file with [these contents](https://gist.githubusercontent.com/lcostea/f17663ebf041b103d98989b6b52d8353/raw/6744846d241c9b785df9054fecbcfc4f2e5dda80/web.config) can be placed in the server's root directory (`D:\wwwroot\360train.gordon.edu`). This file is read by the IIS Server. It provides commands to the URL Rewrite extension (which must be installed in the "Internet Information Services (IIS) Manager" program and can be downloaded from [The Official Microsoft IIS Site](https://www.iis.net/downloads/microsoft/url-rewrite)) which tells the server to reroute all invalid URLs to the server's root directory, eliminating the 404 errors and allowing React Router to handle URLs as expected.
-
-### Editor Recommendations
-
-[Visual Studio Code](https://code.visualstudio.com/) is the recommended editor for this project. This editor is a lightweight IDE that has excellent support for JavaScript and other web languages. It also has a built-in terminal, Git integration, a debugger, and a rich extension ecosystem.
-
-The following extensions are recommended for any code editor used to develop this project, but the links provided are for the VS Code extensions. Many of the extensions listed below are linters, which check code syntax and style to ensure that everyone on the team writies code the same way.
-
-- [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) ensures that indentation style, line endings, and file endings are consistent across editors and operating systems
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) checks syntax correctness for JavaScript (`.js` files)
-- [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) checks syntax correctness for Sass (`.scss` files)
-- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) automatically formats JavaScript, Sass, JSON, and Markdown files on save
-
-If you are using VS Code, you can use the following keyboard shortcuts to run the app:
-
-- macOS: <kbd>⌘</kbd><kbd>⇧</kbd><kbd>B</kbd>
-- Windows: <kbd>Ctrl</kbd>+<kbd>⇧</kbd>+<kbd>B</kbd>
-
-VS Code users will also see a ruler at the 100 character mark, helping the developer to avoid linter warnings by keeping lines under 100 characters long.
 
 ### Libraries
 
@@ -166,39 +90,14 @@ Prettier is used as a pre commit hook in this repository. This means that it wil
 
 ESLint and Stylelint are used in conjunction with Prettier to catch syntax errors, but not to check code style - that is taken care of solely by Prettier.
 
-## Dependencies
-
-### Installing Dependencies
-
-If you are adding a dependency to the project, you must use either `--save` or `--save-dev` with `npm install`. This will save the dependency and its current version to `package.json`, which means it will be installed automatically when `npm install` is run.
-
-- If you are installing a dependency that will be used in development, such as a build tool, linter, or documentation tool, use `npm install --save-dev nameOfPackage`. This will save the dependency to the `devDependencies` property of `package.json`.
-- If you are installing a production dependency, such as a charting library, a date formatting library, or a utility like Lodash, use `npm install --save nameOfPackage`. This will save the dependency to the `dependencies` property of `package.json`.
-
-To remove a dependency, use `npm rm nameOfPackage`.
-
-### Updating Dependencies
-
-To see which depencies are out of date, run `npm outdated`.
-
-To update all depedencies to their latest allowed versions (as specified by the semver range in `package.json`), run `npm update --save --dev`. This command will save the latest versions of all production and development dependencies to `package.json` as the new minimum version. Read more about `npm update` [here](https://docs.npmjs.com/cli/update).
-
-### When Dependency Updates Break 360
-
-All dependency versions in package.json are currently prefixed with `>=` so that npm install will always download the latest versions. This keeps them from getting behind but may cause problems when there are major releases.
-
-If a dependency's major release causes problems, a quick fix is to change the `>=` to a `^` and do `npm install`. If this did not rollback, which you can check by looking for the dependency's version in package-lock.json, it may work to delete package-lock.json, delete node_modules and its contents, and `npm install` again.
-
-The long yet wise fix is to go to the folder for this dependency in node_modules and look for a CHANGELOG.md. Of course, make sure you have the latest version of this package, or notes about that version will not be there. The CHANGELOG.md should point out the "breaking changes" that came with major releases. If they are not called this, you should be able to find these changes in the notes for each major release's entry- any entry entitle X.0.0, where X would actually be a version number. Read about these changes and change your code accordingly. Then, you should be able to use the latest version!
-
 ### Semantic Versioning
 
 [Semantic versioning](https://semver.org/) is a method of versioning software. From their website:
 
 > Given a version number MAJOR.MINOR.PATCH, increment the:
 >
-> - MAJOR version when you make incompatible API changes,
-> - MINOR version when you add functionality in a backwards-compatible manner, and
+> - MAJOR version when you make incompatible API changes
+> - MINOR version when you add functionality in a backwards-compatible manner
 > - PATCH version when you make backwards-compatible bug fixes.
 >
 > Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
@@ -314,16 +213,6 @@ views
 This folder contains components that make up the discrete views of the application, for example "home," "login," and "edit activity." Each view uses the same folder structure as components in `./components`. Each view represents a route defined in `./app.js`. The route's path should be similar to the name of the component, such as `ActivityEdit` having a path of `/activity/:activityId/edit`.
 
 Similar to component folders, a view folder can have its own `components` folder containing components that only apply to that view. If a component in one of these folders ends up being useful to another view, it should move all the way up to `src/components` to be shared by both views.
-
-## Environment Variables
-
-Environment-specific variables are located in the root directory of the project in the files `.env`, `.env.development` and `.env.production`. `.env` contains variables generic environment variables that are the same in train and production. `.env.development` contains variables for local development and testing. `.env.production` contains overrides of those variables specific to the production environments (360 and 360Train).
-
-To declare variables that should not be checked in to version control, create a file in the root directory called `.env.local`. This file will be ignored by git.
-
-These files are loaded by the scripts that run the development server and build the application. Variables in these files are available globally in the app as `process.env.REACT_APP_VARIABLE_NAME` (assuming one of the `.env` files contains the line `REACT_APP_VARIABLE_NAME=some-value`).
-
-Environment variables must be declared in all caps, must use snake case, and must begin with `REACT_APP_` (ex: `REACT_APP_API_URL` or `REACT_APP_PASSWORD`). Any environment variables that do not begin with `REACT_APP_` will be ignored.
 
 ## Testing
 
