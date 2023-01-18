@@ -184,7 +184,7 @@ const ActivityForm = ({
 
   //re spreads fetched data to map to drop-down's once data has been loaded
   useEffect(() => {
-    setNewInfo({ ...newInfo, ...currentInfo });
+    setNewInfo(currentInfo);
   }, [currentInfo]);
 
   // Field Validation
@@ -277,6 +277,7 @@ const ActivityForm = ({
 
   const handleWindowClose = () => {
     setOpenConfirmWindow(false);
+    setOpenActivityForm(false);
     setNewInfo(currentInfo);
   };
 

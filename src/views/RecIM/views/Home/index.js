@@ -38,7 +38,7 @@ const Home = () => {
       setLoading(false);
     };
     loadActivities();
-  }, [profile, openActivityForm]);
+  }, [profile, openActivityForm, openCreateSeriesForm]);
 
   const createActivityButton = (
     <Grid container justifyContent="center">
