@@ -10,15 +10,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 - [Getting Started](#getting-started)
 - [Connecting to the Backend](#connecting-to-the-backend)
-- [Connecting to a Remote Backend via SSH](#connecting-to-a-remote-backend-via-ssh)
-- [Server Notes](#server-notes)
-- [Libraries](#libraries)
 - [Code Style](#code-style)
 - [Project File Organization](#file-organization)
-- [Testing](#testing)
+  - [Components](#components)
+  - [Contexts and Hooks](#contexts-and-hooks)
+  - [Services](#services)
+  - [Views](#views)
 - [Continuous Integration and Deployment](#continuous-integration-and-deployment)
 - [Contributing](#contributing)
-- [Known Issues](#known-issues)
 - [History](#history)
 
 ## Getting Started
@@ -81,68 +80,6 @@ You do **not** need to change `.env.production`.
 
 If you need to connect to a backend that is only available on `localhost` of a different machine, follow the guide on [Connecting to Remote Backend via SSH](docs/Connecting%20to%20Remote%20Backend%20via%20SSH.md)
 
-### Server Notes
-
-The staging and production servers are both hosted on `DMZ-360-frontend.gordon.edu`. This machine is also known as `360.gordon.edu` and `360Train.gordon.edu`.
-
-The backend server is hosted on `360Api1.gordon.edu`. This machine is also known as `360Api.gordon.edu` and `360ApiTrain.gordon.edu`.
-
-#### Making Refresh, URL Entry, and Forward/Back Buttons Work
-
-As noted earlier, gordon-360-ui uses React Router for routing URLs to different views. This works as expected when running the front-end locally with `npm start`. However, when the production build is running on the IIS Server, React Router only handles link clicks; manual URL entry and use of browser navigation buttons results in a 404 error. This is because URLs are sent to the IIS Server (as HTTP requests) before they are handled by React Router. Because none of the URLs correspond to actual directories on the server root, a 404 error results.
-
-To remedy this, a `web.config` file with [these contents](https://gist.githubusercontent.com/lcostea/f17663ebf041b103d98989b6b52d8353/raw/6744846d241c9b785df9054fecbcfc4f2e5dda80/web.config) can be placed in the server's root directory (`D:\wwwroot\360train.gordon.edu`). This file is read by the IIS Server. It provides commands to the URL Rewrite extension (which must be installed in the "Internet Information Services (IIS) Manager" program and can be downloaded from [The Official Microsoft IIS Site](https://www.iis.net/downloads/microsoft/url-rewrite)) which tells the server to reroute all invalid URLs to the server's root directory, eliminating the 404 errors and allowing React Router to handle URLs as expected.
-
-### Libraries
-
-Links to the homepages of libraries used in this project, listed here for easy reference.
-
-- [MUI](https://mui.com/)
-
-  MUI is a widely-used React component library originally based on Google's Material Design standards. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
-
-- [Chart-JS](http://www.chartjs.org/)
-
-  Chart-JS is a Library that provides GUI charts
-  An example can be found on the homepage. The React Component that is used can be found [here](https://github.com/jerairrest/react-chartjs-2)
-
-- [Cropper-JS](https://github.com/fengyuanchen/cropperjs/blob/master/README.md)
-
-  Cropper JS is a robust image cropper that is used on My Profile. While this Library is not used directly, a [React component](https://www.npmjs.com/package/react-cropper) that wraps this library is used.
-
-- [Downshift](https://github.com/paypal/downshift)
-
-  Downshift is a component that can be used for building autocomplete components. We use it because it is used in one of the Material-UI autocomplete examples, showing that it integrates well with Material-UI components.
-
-- [history](https://github.com/ReactTraining/history#readme)
-
-  history is a JavaScript library that lets you easily manage session history anywhere JavaScript runs. history abstracts away the differences in various environments and provides a minimal API that lets you manage the history stack, navigate, confirm navigation, and persist state between sessions.
-
-- [lodash](https://lodash.com/)
-
-  A modern JavaScript utility library delivering modularity, performance & extras.
-  Extends functionality of Arrays and adds sorting methods of elements in arrays.
-
-- [React-DropZone](https://github.com/react-dropzone/react-dropzone)
-
-  A library that provides file drag+drop or a file browser submitting files
-
-- [luxon](https://github.com/moment/luxon#readme)
-
-  A library that wraps the native Javascript DateTime class with and allows for easier use of dates
-
-- [react-image-gallery](https://github.com/xiaolin/react-image-gallery)
-
-  A React image carousel.
-
-- [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
-
-  Provides easy routing, allowing transitions between views with back button support and URL management.
-
-- [react-csv](https://github.com/react-csv/react-csv)
-
-  Provides components that allow React to easily generate a CSV file from given data. This data can be an array of arrays, an array of literal objects, or strings.
-
 ## Code Style
 
 This project uses [Prettier](https://prettier.io/), an "opinionated code formatter," to automatically format JavaScript, JSON, Sass, and Markdown files according to a common style.
@@ -153,25 +90,14 @@ Prettier is used as a pre commit hook in this repository. This means that it wil
 
 ESLint and Stylelint are used in conjunction with Prettier to catch syntax errors, but not to check code style - that is taken care of solely by Prettier.
 
-### Semantic Versioning
-
-[Semantic versioning](https://semver.org/) is a method of versioning software. From their website:
-
-> Given a version number MAJOR.MINOR.PATCH, increment the:
->
-> - MAJOR version when you make incompatible API changes
-> - MINOR version when you add functionality in a backwards-compatible manner
-> - PATCH version when you make backwards-compatible bug fixes.
->
-> Additional labels for pre-release and build metadata are available as extensions to the MAJOR.MINOR.PATCH format.
-
-npm uses semantic versioning ranges to specify a range of acceptable versions. For example, `^2.1.3` means "any minor or patch release with the major version `2`". In other words, where `x` represents a version number that can change, this range means `2.x.x`.
-
 ## File Organization
 
 The source files for the app are in `./src`. The other top-level folders are as follows:
 
+- `.github` contains configuration for GitHub Actions, which is used for maintenance, security, and CI/CD tasks.
+- `.husky` contains pre-commit hooks to enforce consistent formatting.
 - `.vscode` contains configuration for Visual Studio Code
+- `docs` contains supplemental documentation.
 - `build` contains the built application; not tracked by Git
 - `node_modules` contains dependencies installed by `npm`; not tracked by Git
 - `public` contains assets that should not be processed by Webpack. Only files inside `public` can be used from `public/index.html`.
@@ -181,41 +107,37 @@ The structure of the `src` directory is as follows:
 ```plain
 ├── components
 │   └── ...
+├── contexts
+│   └── ...
+├── hooks
+│   └── ...
 ├── services
 │   └── ...
 ├── views
 │   └── ...
 ├── app.js
-├── app.test.js
-├── index.css
 ├── index.js
-└── register-service-worker.js
+└── pwa.js
 ```
 
 ### Components
 
 ```plain
 components
-├── Error
-│   └── index.js
+├── ...
 ├── EventList
-|   ├── components
-│   │   └── ...
-|   └── index.js
-├── Header
 │   ├── components
 │   │   └── ...
-│   ├── gordon-logo-horiz-black.svg
-│   ├── header.css
+│   ├── EventList.module.scss
 │   └── index.js
 └── ...
 ```
 
 This folder contains components that, when used together, make up the views of the application. Each component should be small and focus on doing One Thing Well. Read about the [Atomic Design Methodology](http://atomicdesign.bradfrost.com/chapter-2/) for a useful perspective on writing small, reusable components and composing them into larger areas of functionality.
 
-Each component must have a folder named in PascalCase (also known as upper camel case) containing a file called `index.js`. Using that filename allows the component to be imported by folder, instead of by file: `import MyComponent from './components/MyComponent` instead of `import MyComponent from './components/MyComponent/my-component`.
+Each component must have a folder named in PascalCase (also known as upper camel case) containing a file called `index.js`. Using that filename allows the component to be imported by folder, instead of by file: `import MyComponent from 'components/MyComponent` instead of `import MyComponent from 'components/MyComponent/my-component`.
 
-A component folder can contain any resources needed by the component, such as images and CSS files. If there is more than one image or CSS file, a subdirectory named `images` or `styles` can be created inside the component folder.
+A component folder can contain any resources needed by the component, such as images and CSS files.
 
 A component folder can contain its own `components` folder containing components that only apply to that component. This is a useful way to avoid polluting the top-level `./components` folder with single-use components. If a component in a nested component folder becomes useful to another component that is higher in the hierarchy than it is, that component should be moved up to the same level as that component. For example, if for some strange reason you wanted to make a footer which also had the people search, you would start with this:
 
@@ -240,15 +162,13 @@ components
 └── PeopleSearch
 ```
 
-**Components should never have one-word names.** This is to avoid naming collisions with external libraries and with future HTML elements. This application is using the convention of prefixing component names with `Gordon`, as in `GordonError` or `GordonHeader`. Note that folder and file names do not have to follow this convention (respectively, the two examples would be `./components/Error` and `./components/Header`); only the class names of the components and their imports have to follow it:
+### Contexts and Hooks
 
-```JavaScript
-// In ./components/Loader/index.js
-export default class GordonLoader extends Component {}
+These folders contain units of re-usable code that are specific to React but are not components.
 
-// In ./views/Home/components/DiningBalance/index.js
-import GordonLoader from '../../../../components/Loader';
-```
+Contexts are used in React to manage state across components without passing it as props through many layers.
+
+Hooks are used to encapsulate state-management functions. React provides basic hooks, like `useState` and `useEffect`, but it is useful to build custom hooks on top of these basic hooks to encapsulate more complicated actions.
 
 ### Services
 
@@ -273,28 +193,9 @@ views
     └── ...
 ```
 
-This folder contains components that make up the discrete views of the application, for example "home," "login," and "edit activity." Each view uses the same folder structure as components in `./components`. Each view represents a route defined in `./app.js`. The route's path should be similar to the name of the component, such as `ActivityEdit` having a path of `/activity/:activityId/edit`.
+This folder contains components that make up the discrete views of the application, for example "home," "login," and "edit activity." Each view uses the same folder structure as components in `src/components`. Each view represents a route defined in `src/app.js`. The route's path should be similar to the name of the component, such as `ActivityEdit` having a path of `/activity/:activityId/edit`.
 
 Similar to component folders, a view folder can have its own `components` folder containing components that only apply to that view. If a component in one of these folders ends up being useful to another view, it should move all the way up to `src/components` to be shared by both views.
-
-## Testing
-
-The first forays into testing were made when we were still using Travis CI as our CI/CD solution. The below advice is probably still useful but will need updating.
-
-> The foundations for a testing suite made up of Jasmine, Karma, and Travis CI have been laid. For one, package.json has the following dependencies listed:
->
-> - `"jasmine-core": ">=3.4.0"`
-> - `"karma": ">=4.1.0",`
-> - `"karma-chrome-launcher": ">=2.2.0"`
-> - `"karma-firefox-launcher": ">=1.1.0"`
-> - `"karma-jasmine": ">=2.0.1"`
-> - `"karma-safari-launcher": ">=1.0.0"`
->
-> Secondly, there is a github account, `gordon-360-ci`, made solely for Travis CI and continuous integration services like it. Specifically, it was from this account that Travis' environment variable `GITHUB_TOKEN` was generated. The login credentials for this account can be found in a file called `ci-credentials` on the CS-RDSH-02 virtual machine, specifically in `C:\Users\Public\Public Documents\` (or `/c/users/public/documents\` when in git-bash).
->
-> The process for setting up this testing environment can be continued by following the directions [here](https://www.sitepoint.com/testing-javascript-jasmine-travis-karma/) and the advice [here](https://www.arroyolabs.com/2016/08/unit-testing-your-javascipt-with-jasmine-karmajs-travis-ci/) about using Chromium instead of Chrome. Note that some steps from the first link have been completed, from the step about running `karma init my.conf.js` to the beginning, exclusively. Also, there is already a `.travis.yml` file in the project folder, but it may need some lines of code that the .yml in the directions has.
-
-Timesheets page testing [here](https://docs.google.com/document/d/1fi7_iwTQa7JFVRR3LtSDU3-MGpupOfbqhH-kEU5eMew/edit?usp=sharing)
 
 ## Continuous Integration and Deployment
 
@@ -337,16 +238,6 @@ In the unusual case that Train or Production have not been automatically deploye
 3. Commit to this branch, with changes focused solely on the branch's nominal purpose.
 4. Follow similar steps under "Deploying to Production" to create a pull request; however set the "base" branch to develop and the "compare" branch to the new branch.
 5. Once the pull request has been created and approved, the branch changes will be staged onto the develop branch for production.
-
-## Known Issues
-
-- The 'edit involvement' and 'change image' dialog boxes, accessible through the admin view of an involvement profile, are messy. Refer to the CSS styling and replacement of Material UI Grid in views/IDUploader/IDUploader.scss and ''/index.js for a proven fix.
-
-- ID and photo uploader dialog boxes are rather compressed for screens as small as iPhone 5's.
-
-- An admin is able to remove themselves (on admin view), which causes major issues.
-
-- Staff-timesheets is almost working, with the exception of the edit shift and remove shift function. the API endpoints are all set up and seem to be working to send and get data. The add and save shift functions work like expected but the submit function has yet to be tested with a supervisor. In order to address these issues we have to make sure that we re work the ui in order to make sure that we are sending all the necessary info to edit and delete a saved shift. Previously it was thought that we would not have to change the way that the front end worked and we would simply have to integrate the backend for staff time sheets into the jobs controller. This proved to be wrong. It seems that there are more things that we have not accounted for that a staff's shift has and a student does not. Due to lack of testing and time we were not able to find the necessary changes that need to be made, however, we do know that it revolved around the fact that staff has an extra variable called HOURS_TYPE. We accounted for the variable in our submit and save shift functions in our back end and front end, as we expected that to be the case.
 
 ## History
 
