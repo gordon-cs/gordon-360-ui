@@ -38,7 +38,6 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
   }, []);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
-  const [isSaving, setSaving] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
 
   const handleSetError = (field, condition) => {
@@ -92,10 +91,7 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
   };
 
   const handleConfirm = () => {
-    setSaving(true);
-
     createParticipant(username).then(() => {
-      setSaving(false);
       closeWithSnackbar({
         type: 'success',
         message: 'Your new activity has been created or whatever message you want here',
@@ -105,7 +101,6 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
   };
 
   const handleWindowClose = () => {
-    setOpenConfirmWindow(false);
     setNewInfo(currentInfo);
   };
 
