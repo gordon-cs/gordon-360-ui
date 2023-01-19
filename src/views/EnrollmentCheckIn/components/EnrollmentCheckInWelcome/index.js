@@ -46,11 +46,12 @@ const EnrollmentCheckInWelcome = ({ hasMajorHold, holds }) => {
             ) : (
               // Otherwise display a standard registration prompt
               <Typography gutterBottom>
-                Register online at{' '}
-                <a href="https://my.gordon.edu" className="gc360_text_link">
-                  my.gordon.edu
+                Please view the{' '}
+                <a href="https://www.gordon.edu/course_schedules" className="gc360_text_link">
+                  Course Schedule
                 </a>{' '}
-                during the first five days of classes.
+                and send an email to <a href="mailto:registrar@gordon.edu">registrar@gordon.edu</a>{' '}
+                with a list of courses you would like to register for.
               </Typography>
             )}
           </Grid>

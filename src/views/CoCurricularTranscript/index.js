@@ -1,3 +1,4 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import { Button, Card, CardContent, Typography } from '@mui/material';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
@@ -12,7 +13,12 @@ import Experience from './Components/CoCurricularTranscriptExperience';
 //This component creates the overall interface for the CoCurricularTranscript (card, heading,
 //download button), and contains a InvolvementsList object for displaying the content
 
-export default class Transcript extends Component {
+// TODO: Temporary fix until IDUploader is a function component and can use hooks.
+const withAuth = () => (WrappedComponent) => (props) => {
+  const isAuthenticated = useIsAuthenticated();
+  return <WrappedComponent {...props} authentication={isAuthenticated} />;
+};
+class Transcript extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -201,7 +207,7 @@ export default class Transcript extends Component {
   // Returns: the graduation date of the current user, or nothing if they have no declared grad date
   getGradCohort() {
     let gradDate = this.state.profile.GradDate;
-    if (gradDate === undefined || gradDate === '') {
+    if (!gradDate) {
       return null;
     } else {
       return 'Class of ' + gradDate.split(' ')[3];
@@ -358,3 +364,5 @@ export default class Transcript extends Component {
     }
   }
 }
+
+export default withAuth()(Transcript);

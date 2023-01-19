@@ -84,7 +84,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
   return (
     <>
       <VisibilitySensor onChange={handleVisibilityChange}>
-        <Link className="gc360_link" to={`profile/${person.AD_Username}`}>
+        <Link className="gc360_link" to={`/profile/${person.AD_Username}`}>
           <Card className={styles.result} elevation={0}>
             {avatar && (
               <CardMedia src={avatar} title={fullName} component="img" className={styles.avatar} />
