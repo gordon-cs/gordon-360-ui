@@ -97,7 +97,7 @@ const SpreadsheetUploader = ({
         Accepted file types: CSV, XLSX
       </Typography>
       {template ? (
-        <a href={template} target="_blank" download className={styles.dropzone_templatelink}>
+        <a href={template} rel="noopener noreferrer" target="_blank" download className={styles.dropzone_templatelink}>
           Download Template
         </a>
       ) : null}
