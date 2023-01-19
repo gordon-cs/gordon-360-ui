@@ -55,7 +55,12 @@ const VictoryPromise = () => {
             )}
           </Box>
           {isOnline && (
-            <Link href="https://www.gordon.edu/victorypromise" className="gc360_text_link">
+            <Link
+              href="https://www.gordon.edu/victorypromise"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="gc360_text_link"
+            >
               Click here for more information!
             </Link>
           )}
