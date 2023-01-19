@@ -1,11 +1,13 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import EventIcon from '@mui/icons-material/Event';
-import HomeIcon from '@mui/icons-material/Home';
-import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+import {
+  Event as EventIcon,
+  Home as HomeIcon,
+  LocalActivity as LocalActivityIcon,
+  Menu as MenuIcon,
+  People as PeopleIcon,
+  Work as WorkIcon,
+} from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@mui/material';
-// import WorkIcon from '@mui/icons-material/Work';
-import MenuIcon from '@mui/icons-material/Menu';
-import PeopleIcon from '@mui/icons-material/People';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
@@ -40,7 +42,13 @@ const GordonHeader = ({ onDrawerToggle }) => {
     let currentPath = window.location.pathname;
     // Tab url regular expressions must be listed in the same order as the tabs, since the
     // indices of the elements in the array on the next line are mapped to the indices of the tabs
-    let urls = [/^\/$/, /^\/involvements\/?$|^\/activity/, /^\/events\/?$/, /^\/people$/];
+    let urls = [
+      /^\/$/,
+      /^\/involvements\/?$|^\/activity/,
+      /^\/events\/?$/,
+      /^\/people$/,
+      /^\/timesheets$/,
+    ];
     setTabIndex(false);
     for (let i = 0; i < urls.length; i++) {
       if (urls[i].test(currentPath)) {
@@ -202,7 +210,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
                 to="/events"
               />
               {requiresAuthTab('People', <PeopleIcon />)}
-              {requiresAuthTab('Timesheets', WorkIcon)}
+              {requiresAuthTab('Timesheets', <WorkIcon />)}
             </Tabs>
           </div>
 
