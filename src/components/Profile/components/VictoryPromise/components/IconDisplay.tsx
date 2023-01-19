@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import { VictoryPromiseCategory } from 'services/victoryPromise';
-import VictoryPromiseIcon from './VictroyPromiseIcons';
+import VictoryPromiseIcon from './VictoryPromiseIcons';
 
 type Props = { scores: Record<VictoryPromiseCategory, number> };
 
