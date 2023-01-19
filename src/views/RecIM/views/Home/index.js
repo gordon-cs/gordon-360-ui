@@ -32,7 +32,7 @@ const Home = () => {
       // Get all active activities where registration has not closed
       setActivities(await getAllActivities(false, DateTime.now().toISO()));
       if (profile) {
-        setParticipant(await getParticipantByUsername(profile.AD_Username));
+        setParticipant(await getParticipantByUsername('Alexis.Brandon'));
         setMyTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
