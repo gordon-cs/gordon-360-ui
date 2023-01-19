@@ -165,7 +165,7 @@ const ActivityForm = ({
       maxCapacity: '',
       soloRegistration: false,
     };
-  }, [activityTypes, activityStatusTypes, sports]);
+  }, [activity, activityTypes, activityStatusTypes, sports]);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
@@ -241,18 +241,15 @@ const ActivityForm = ({
 
   const handleConfirm = () => {
     setSaving(true);
-
     let activityRequest = { ...currentInfo, ...newInfo };
-    activityRequest.sportID = sports.filter(
-      (sport) => sport.Name === activityRequest.sportID,
-    )[0].ID;
-    activityRequest.typeID = activityTypes.filter(
+    activityRequest.sportID = sports.find((sport) => sport.Name === activityRequest.sportID).ID;
+    activityRequest.typeID = activityTypes.find(
       (type) => type.Description === activityRequest.typeID,
-    )[0].ID;
+    ).ID;
     if (activity) {
-      activityRequest.statusID = activityStatusTypes.filter(
-        (type) => type.Description === activityStatusTypes.statusID,
-      )[0].ID;
+      activityRequest.statusID = activityStatusTypes.find(
+        (type) => type.Description === activityRequest.statusID,
+      ).ID;
       editActivity(activity.ID, activityRequest).then((res) => {
         setSaving(false);
         closeWithSnackbar({
