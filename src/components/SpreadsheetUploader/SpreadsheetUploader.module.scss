@@ -20,8 +20,11 @@
   }
   &_templatelink {
     color: $primary-blue;
+    display: block;
     text-align: center;
+    font-size: 0.8rem;
   }
+  margin: 15px auto;
 }
 
 .dataconfirmationmessage.dataconfirmationmessage {
