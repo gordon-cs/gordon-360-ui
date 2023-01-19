@@ -18,7 +18,7 @@ export function register() {
       // service worker as its new current. Otherwise, it will automatically activate the service worker
       navigator.serviceWorker
         .register(
-          `${import.meta.env.PUBLIC_URL}/sw.js?API=${encodeURIComponent(
+          `/sw.js?API=${encodeURIComponent(
             import.meta.env.VITE_API_URL,
           )}api&FONT=${encodeURIComponent(import.meta.env.VITE_FONT_URL)}`,
         )
