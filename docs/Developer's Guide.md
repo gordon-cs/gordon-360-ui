@@ -13,6 +13,7 @@ This guide walks you through the basics of developing the Gordon 360 frontend, a
   - [Contexts and Hooks](#contexts-and-hooks)
   - [Services](#services)
   - [Views](#views)
+- [Libraries](#libraries)
 - [Continuous Integration and Deployment](#continuous-integration-and-deployment)
 
 # Getting Started
@@ -233,6 +234,58 @@ views
 This folder contains components that make up the discrete views of the application, for example "home," "login," and "edit activity." Each view uses the same folder structure as components in `src/components`. Each view represents a route defined in `src/app.js`. The route's path should be similar to the name of the component, such as `ActivityEdit` having a path of `/activity/:activityId/edit`.
 
 Similar to component folders, a view folder can have its own `components` folder containing components that only apply to that view. If a component in one of these folders ends up being useful to another view, it should move all the way up to `src/components` to be shared by both views.
+
+# Libraries
+
+The libraries used in this project, listed here for easy reference with short descriptions and links to each library's homepage.
+
+**NOTE**: this list is out-of-date. Please update it when you read this.
+
+- [MUI](https://mui.com/)
+
+  MUI is a widely-used React component library originally based on Google's Material Design standards. It provides a comprehensive toolkit of interface components, along with a set of usability guidelines and best practices for using them.
+
+- [Chart-JS](http://www.chartjs.org/)
+
+  Chart-JS is a Library that provides GUI charts
+  An example can be found on the homepage. The React Component that is used can be found [here](https://github.com/jerairrest/react-chartjs-2)
+
+- [Cropper-JS](https://github.com/fengyuanchen/cropperjs/blob/master/README.md)
+
+  Cropper JS is a robust image cropper that is used on My Profile. While this Library is not used directly, a [React component](https://www.npmjs.com/package/react-cropper) that wraps this library is used.
+
+- [Downshift](https://github.com/paypal/downshift)
+
+  Downshift is a component that can be used for building autocomplete components. We use it because it is used in one of the Material-UI autocomplete examples, showing that it integrates well with Material-UI components.
+
+- [history](https://github.com/ReactTraining/history#readme)
+
+  history is a JavaScript library that lets you easily manage session history anywhere JavaScript runs. history abstracts away the differences in various environments and provides a minimal API that lets you manage the history stack, navigate, confirm navigation, and persist state between sessions.
+
+- [lodash](https://lodash.com/)
+
+  A modern JavaScript utility library delivering modularity, performance & extras.
+  Extends functionality of Arrays and adds sorting methods of elements in arrays.
+
+- [React-DropZone](https://github.com/react-dropzone/react-dropzone)
+
+  A library that provides file drag+drop or a file browser submitting files
+
+- [luxon](https://github.com/moment/luxon#readme)
+
+  A library that wraps the native Javascript DateTime class with and allows for easier use of dates
+
+- [react-image-gallery](https://github.com/xiaolin/react-image-gallery)
+
+  A React image carousel.
+
+- [React Router](https://reacttraining.com/react-router/web/guides/philosophy)
+
+  Provides easy routing, allowing transitions between views with back button support and URL management.
+
+- [react-csv](https://github.com/react-csv/react-csv)
+
+  Provides components that allow React to easily generate a CSV file from given data. This data can be an array of arrays, an array of literal objects, or strings.
 
 # Continuous Integration and Deployment
 
