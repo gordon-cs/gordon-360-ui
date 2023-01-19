@@ -169,7 +169,7 @@ components
 └── ...
 ```
 
-This folder contains components that, when used together, make up the views of the application. Each component should be small and focus on doing One Thing Well. Read about the [Atomic Design Methodology](http://atomicdesign.bradfrost.com/chapter-2/) for a useful perspective on writing small, reusable components and composing them into larger areas of functionality.
+This folder contains components that, when used together, make up the views of the application. Each component should be small and focus on doing **one thing well**. Read about the [Atomic Design Methodology](http://atomicdesign.bradfrost.com/chapter-2/) for a useful perspective on writing small, reusable components and composing them into larger areas of functionality.
 
 Each component must have a folder named in PascalCase (also known as upper camel case) containing a file called `index.js`. Using that filename allows the component to be imported by folder, instead of by file: `import MyComponent from 'components/MyComponent` instead of `import MyComponent from 'components/MyComponent/my-component`.
 
