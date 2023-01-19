@@ -74,8 +74,6 @@ You do **not** need to change `.env.production`.
 
 **NOTE**: If you change `.env.development` while the frontend is running, it will **not** update automatically. You will need to stop and restart it before the changes take affect.
 
-If you need to connect to a backend that is only available on `localhost` of a different machine, follow the guide on [Connecting to Remote Backend via SSH](Connecting%20to%20Remote%20Backend%20via%20SSH.md)
-
 ## Connecting to Remote Backend via SSH
 
 Sometimes, you would like to connect the frontend on your local computer to the backend on a remote server. For example, if you are running the backend on a CPS Server virtual machine but you want to run the frontend from your own machine. In these cases, you can use a Secure Shell (SSH) Tunnel.
