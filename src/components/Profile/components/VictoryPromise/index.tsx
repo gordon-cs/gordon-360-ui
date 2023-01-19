@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import victoryPromiseService, { VictoryPromiseCategory } from 'services/victoryPromise';
 import GraphDisplay from './components/GraphDisplay';
 import IconDisplay from './components/IconDisplay';
-import styles from './VictoryPromiseDisplay.module.css';
+import styles from './VictoryPromise.module.css';
 
 const enum DisplayMode {
   Icon,
