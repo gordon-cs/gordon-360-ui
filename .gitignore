@@ -15,9 +15,6 @@ src/**/*.css.map
 # production
 /build
 
-# documentation
-/docs
-
 # misc
 .DS_Store
 .env.local
