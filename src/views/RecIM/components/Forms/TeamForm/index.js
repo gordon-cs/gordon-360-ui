@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { createTeam } from 'services/recim/team';
+import { createTeam, editTeam, getTeamStatusTypes } from 'services/recim/team';
 import { InformationField } from '../components/InformationField';
 import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ConfirmationRow } from '../components/ConfirmationRow';
@@ -9,19 +9,26 @@ import { ContentCard } from '../components/ContentCard';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 
-const CreateTeamForm = ({
-  closeWithSnackbar,
-  openCreateTeamForm,
-  setOpenCreateTeamForm,
-  activityID,
-}) => {
+const TeamForm = ({ team, closeWithSnackbar, openTeamForm, setOpenTeamForm, activityID }) => {
   const [errorStatus, setErrorStatus] = useState({
     Name: false,
     ActivityID: false,
     Logo: false,
+    statusID: false,
   });
 
   const { profile } = useUser();
+  const [teamStatus, setTeamStatus] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      setTeamStatus(await getTeamStatusTypes());
+      setLoading(false);
+    };
+    loadData();
+  }, []);
 
   const createTeamFields = [
     {
@@ -32,16 +39,41 @@ const CreateTeamForm = ({
       helperText: '*Required',
     },
   ];
+  if (team) {
+    createTeamFields.push({
+      label: 'Team Status',
+      name: 'StatusID',
+      type: 'select',
+      menuItems: teamStatus.map((type) => {
+        return type.Description;
+      }),
+      error: errorStatus.statusID,
+      helperText: '*Required',
+    });
+  }
 
   const allFields = [createTeamFields].flat();
 
   const currentInfo = useMemo(() => {
+    if (team) {
+      console.log(teamStatus);
+      console.log(teamStatus.find((type) => type.Description === team.Status));
+      return {
+        Name: team.Name,
+        ActivityID: Number(activityID),
+        StatusID:
+          teamStatus.find((type) => type.Description === team.Status) == null
+            ? ''
+            : teamStatus.find((type) => type.Description === team.Status).Description,
+        Logo: 'NONE',
+      };
+    }
     return {
       Name: '',
       ActivityID: Number(activityID),
-      Logo: 'NULL', // Placeholder (for error checking0)
+      Logo: 'NONE', // Placeholder (for error checking0)
     };
-  }, [activityID]);
+  }, [activityID, teamStatus]);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [isSaving, setSaving] = useState(false);
@@ -57,6 +89,11 @@ const CreateTeamForm = ({
     };
     setErrorStatus(getCurrentErrorStatus);
   };
+
+  // refresh dropdown select once fetch is complete
+  useEffect(() => {
+    setNewInfo(currentInfo);
+  }, [currentInfo]);
 
   // Field Validation
   useEffect(() => {
@@ -112,21 +149,37 @@ const CreateTeamForm = ({
 
   const handleConfirm = () => {
     setSaving(true);
+    let teamRequest = { ...currentInfo, ...newInfo };
 
-    let teamCreationRequest = { ...currentInfo, ...newInfo };
+    if (team) {
+      teamRequest.StatusID = teamStatus.find(
+        (type) => type.Description === teamRequest.StatusID,
+      ).ID;
 
-    createTeam(profile.AD_Username, teamCreationRequest).then(() => {
-      closeWithSnackbar({
-        type: 'success',
-        message: 'Team created successfully',
+      editTeam(team.ID, teamRequest).then(() => {
+        setSaving(false);
+        closeWithSnackbar({
+          type: 'success',
+          message: 'Team created successfully',
+        });
+
+        handleWindowClose();
       });
+    } else {
+      createTeam(profile.AD_Username, teamRequest).then(() => {
+        setSaving(false);
+        closeWithSnackbar({
+          type: 'success',
+          message: 'Team created successfully',
+        });
 
-      handleWindowClose();
-    });
+        handleWindowClose();
+      });
+    }
   };
 
   const handleWindowClose = () => {
-    setOpenCreateTeamForm(false);
+    setOpenTeamForm(false);
     setOpenConfirmWindow(false);
     setNewInfo(currentInfo);
   };
@@ -154,10 +207,10 @@ const CreateTeamForm = ({
       />
     ));
   };
-
+  if (loading) return <GordonLoader />;
   return (
     <GordonDialogBox
-      open={openCreateTeamForm}
+      open={openTeamForm}
       title="Create a Team"
       fullWidth
       maxWidth="sm"
@@ -166,7 +219,7 @@ const CreateTeamForm = ({
       buttonName="Submit"
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
-        setOpenCreateTeamForm(false);
+        setOpenTeamForm(false);
       }}
       cancelButtonName="cancel"
     >
@@ -195,4 +248,4 @@ const CreateTeamForm = ({
   );
 };
 
-export default CreateTeamForm;
+export default TeamForm;

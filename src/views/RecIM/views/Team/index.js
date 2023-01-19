@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Grid, Typography, Card, CardHeader, CardContent, Breadcrumbs } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Breadcrumbs,
+  IconButton,
+} from '@mui/material';
 import { useParams } from 'react-router';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
@@ -9,12 +17,15 @@ import { ParticipantList, MatchList } from './../../components/List';
 import { getTeamByID } from 'services/recim/team';
 import { Link as LinkRouter } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
+import EditIcon from '@mui/icons-material/Edit';
+import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 
 const Team = () => {
   const { activityID, teamID } = useParams();
   const { profile } = useUser();
   const [team, setTeam] = useState({});
   const [loading, setLoading] = useState(true);
+  const [openTeamForm, setOpenTeamForm] = useState(false);
 
   useEffect(() => {
     const loadTeamData = async () => {
@@ -23,8 +34,20 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [teamID]);
-
+  }, [teamID, openTeamForm]);
+  const handleTeamForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenTeamForm(false);
+  };
+  const teamRecord = () => {
+    if (team)
+      return (
+        <Typography>
+          {team.TeamRecord[0].Win} W : {team.TeamRecord[0].Loss} L : {team.TeamRecord[0].Tie} T
+        </Typography>
+      );
+    return null;
+  };
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {
@@ -66,8 +89,16 @@ const Team = () => {
               </Grid>
               <Grid item xs={8} md={5}>
                 <Typography variant="h5" className={styles.teamTitle}>
-                  Team Name
+                  {team == null ? <GordonLoader /> : team.Name}
+                  <IconButton>
+                    <EditIcon
+                      onClick={() => {
+                        setOpenTeamForm(true);
+                      }}
+                    />
+                  </IconButton>
                 </Typography>
+                {teamRecord()}
               </Grid>
             </Grid>
           </Grid>
@@ -115,6 +146,17 @@ const Team = () => {
         <p>
           Activity ID: {activityID} Team ID: {teamID} (for testing purposes only)
         </p>
+        {openTeamForm ? (
+          <TeamForm
+            closeWithSnackbar={(status) => {
+              handleTeamForm(status);
+            }}
+            openTeamForm={openTeamForm}
+            setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+            activityID={activityID}
+            team={team}
+          />
+        ) : null}
       </Grid>
     );
   }
