@@ -202,7 +202,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
                 to="/events"
               />
               {requiresAuthTab('People', <PeopleIcon />)}
-              {/* {requiresAuthTab('Timesheets', WorkIcon)} */}
+              {requiresAuthTab('Timesheets', WorkIcon)}
             </Tabs>
           </div>
 
