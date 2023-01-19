@@ -16,7 +16,6 @@ import { addDays, parseISO } from 'date-fns';
 import { useState } from 'react';
 import CliftonStrengthsService from 'services/cliftonStrengths';
 import styles from './CliftonStrengthsUpload.module.scss';
-import CliftonStrengthsUploadTemplate from './cliftonStrengthsUploadTemplate.csv';
 
 const successResults = ['Success', 'Added', 'Modified'];
 
@@ -119,17 +118,16 @@ const CliftonStrengthsUpload = () => {
         title="Clifton Strengths Upload"
         requiredColumns={[
           'Email',
-          'Date Completed',
-          'Theme_1',
-          'Theme_2',
-          'Theme_3',
-          'Theme_4',
-          'Theme_5',
-          'Access Code',
+          'DateCompleted',
+          'Theme1',
+          'Theme2',
+          'Theme3',
+          'Theme4',
+          'Theme5',
+          'AccessCode',
         ]}
-        otherColumns={['Last Name', 'First Name', 'Status']}
         buttonName="Upload Strengths"
-        template={CliftonStrengthsUploadTemplate}
+        template="./cliftonStrengthsUploadTemplate.csv"
       />
     </>
   );

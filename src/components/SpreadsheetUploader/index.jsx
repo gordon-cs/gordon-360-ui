@@ -41,7 +41,7 @@ const SpreadsheetUploader = ({
       return;
     }
     const reader = new FileReader();
-    reader.onload = function (event) {
+    reader.onload = function(event) {
       const data = event.target.result;
       const workbook = read(data, {
         type: 'binary',
@@ -73,7 +73,7 @@ const SpreadsheetUploader = ({
       setData(uploadedData);
     };
 
-    reader.onerror = function (event) {
+    reader.onerror = function(event) {
       console.error('File could not be read! Code ' + event.target.error.code);
     };
 
@@ -97,9 +97,9 @@ const SpreadsheetUploader = ({
         Accepted file types: CSV, XLSX
       </Typography>
       {template ? (
-        <Link to={template} target="_blank" download className={styles.dropzone_templatelink}>
+        <a href={template} target="_blank" download className={styles.dropzone_templatelink}>
           Download Template
-        </Link>
+        </a>
       ) : null}
     </>
   );
@@ -146,18 +146,18 @@ const SpreadsheetUploader = ({
       ) : null}
       {data
         ? data.map((row, index) => {
-            return (
-              <Card key={index} className={styles.dataconfirmationcard}>
-                {requiredColumns.map((columnName) =>
-                  row[columnName] ? (
-                    <Typography variant="body2">
-                      <b>{columnName}:</b> {row[columnName]}
-                    </Typography>
-                  ) : null,
-                )}
-              </Card>
-            );
-          })
+          return (
+            <Card key={index} className={styles.dataconfirmationcard}>
+              {requiredColumns.map((columnName) =>
+                row[columnName] ? (
+                  <Typography variant="body2">
+                    <b>{columnName}:</b> {row[columnName]}
+                  </Typography>
+                ) : null,
+              )}
+            </Card>
+          );
+        })
         : dropZone}
       <GordonSnackbar
         open={error}

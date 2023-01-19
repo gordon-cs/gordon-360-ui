@@ -19,7 +19,7 @@ export default class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    if (process.env.NODE_ENV === 'production' && this.state.hasError) {
+    if (import.meta.env.NODE_ENV === 'production' && this.state.hasError) {
       analytics.onError(`${error.toString()} ${errorInfo.componentStack}`);
     }
   }

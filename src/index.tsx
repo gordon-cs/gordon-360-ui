@@ -3,6 +3,7 @@ import { MsalProvider } from '@azure/msal-react';
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import UserContextProvider from 'contexts/UserContext';
 import { register } from 'pwa';
+import React from "react";
 import ReactDOM from 'react-dom';
 import { configureMSAL, msalConfig } from 'services/auth';
 import App from './app';
