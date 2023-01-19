@@ -2,7 +2,7 @@
 
 ![Lint and Build](https://github.com/gordon-cs/gordon-360-ui/workflows/Lint%20and%20Build/badge.svg)
 
-The frontend of [Gordon 360](https://360.gordon.edu). This project is the User interface for Gordon College's student portal. It is a website written in React that connects to the [Gordon 360 backend](https://github.com/gordon-cs/gordon-360-api).
+The frontend of [Gordon 360](https://360.gordon.edu). This project is the user interface for Gordon College's student portal. It is a website written in React that connects to the [Gordon 360 backend](https://github.com/gordon-cs/gordon-360-api).
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
