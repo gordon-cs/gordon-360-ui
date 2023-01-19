@@ -1,12 +1,13 @@
 import { useIsAuthenticated } from '@azure/msal-react';
+import {
+  Event as EventIcon,
+  Home as HomeIcon,
+  LocalActivity as LocalActivityIcon,
+  Menu as MenuIcon,
+  People as PeopleIcon,
+  Work as WorkIcon,
+} from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@mui/material';
-import EventIcon from '@mui/icons-material/Event';
-import HomeIcon from '@mui/icons-material/Home';
-import LocalActivityIcon from '@mui/icons-material/LocalActivity';
-// import WorkIcon from '@mui/icons-material/Work';
-import WellnessIcon from '@mui/icons-material/LocalHospital';
-import MenuIcon from '@mui/icons-material/Menu';
-import PeopleIcon from '@mui/icons-material/People';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
@@ -46,7 +47,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
       /^\/involvements\/?$|^\/activity/,
       /^\/events\/?$/,
       /^\/people$/,
-      /^\/wellness$/,
+      /^\/timesheets$/,
     ];
     setTabIndex(false);
     for (let i = 0; i < urls.length; i++) {
@@ -209,8 +210,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
                 to="/events"
               />
               {requiresAuthTab('People', <PeopleIcon />)}
-              {/* {requiresAuthTab('Timesheets', WorkIcon)} */}
-              {requiresAuthTab('Wellness', <WellnessIcon />)}
+              {requiresAuthTab('Timesheets', <WorkIcon />)}
             </Tabs>
           </div>
 

@@ -1,11 +1,10 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Divider, List } from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
-import WellnessIcon from '@mui/icons-material/LocalHospital';
 import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
+import { Divider, List } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
@@ -108,18 +107,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
-  const wellnessButton = (
-    <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
-      openUnavailableDialog={setDialog}
-      onLinkClick={onLinkClick}
-      linkName={'Wellness'}
-      linkPath={'/wellness'}
-      LinkIcon={WellnessIcon}
-      divider={false}
-    />
-  );
-
   const linksButton = (
     <GordonNavButton
       unavailable={isOnline ? null : 'offline'}
@@ -186,7 +173,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {eventsButton}
         {peopleButton}
         {timesheetsButton}
-        {wellnessButton}
       </List>
 
       <Divider />
