@@ -51,7 +51,9 @@
   "devDependencies": {
     "@types/lodash": "^4.14.176",
     "@types/luxon": "^2.0.4",
+    "@types/react-dom": "^18.0.10",
     "@types/react-router-dom": "^5.3.3",
+    "@vitejs/plugin-react": "^3.0.1",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsdoc": "^37.1.0",
@@ -61,27 +63,25 @@
     "jsdoc": "^3.6.7",
     "lint-staged": "12.1.2",
     "prettier": "^2.5.0",
-    "react-scripts": "5.0.0",
     "sass": "^1.44.0",
     "stylelint": "^14.9.0",
-    "stylelint-config-recommended-scss": "^5.0.2"
+    "stylelint-config-recommended-scss": "^5.0.2",
+    "vite": "^4.0.4",
+    "vite-tsconfig-paths": "^4.0.3"
   },
   "scripts": {
     "build-css": "sass src --no-source-map",
     "watch-css": "sass --watch src",
-    "start-js": "react-scripts start",
-    "dev": "(start npm run watch-css && npm run start-js) || (npm run watch-css & npm run start-js)",
-    "start": "npm run dev",
-    "build": "npm run build-css && react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "docs": "jsdoc --configure .jsdoc.json --recurse",
+    "dev": "(start npm run watch-css && vite) || (npm run watch-css & vite)",
+    "start": "vite",
+    "build": "npm run build-css && tsc && vite build",
     "format": "prettier --write '{**/*.md,src/**/*.{js,scss,ts,tsx}}'",
     "lint": "npm run --silent lint-js && npm run --silent lint-scss",
     "lint-js": "eslint --ext .js,.ts,.tsx src",
     "lint-scss": "stylelint 'src/**/*.scss'",
     "prepare": "husky install",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "serve": "vite preview"
   },
   "lint-staged": {
     "{**/*.md,src/**/*.{js,scss,ts,tsx}}": "prettier --write",

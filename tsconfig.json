@@ -1,7 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "ESNext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "types": [
+      "vite/client",
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -17,5 +24,8 @@
     "jsx": "react-jsx",
     "baseUrl": "src"
   },
-  "include": ["src", "public"]
+  "include": [
+    "src",
+    "public"
+  ]
 }
