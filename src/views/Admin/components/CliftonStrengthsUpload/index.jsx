@@ -128,7 +128,6 @@ const CliftonStrengthsUpload = () => {
           'AccessCode',
         ]}
         buttonName="Upload Strengths"
-        // TODO: make csv available as a static asset
         template={templateUrl}
       />
     </>
