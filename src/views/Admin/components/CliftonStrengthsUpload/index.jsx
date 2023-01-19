@@ -16,6 +16,7 @@ import { addDays, parseISO } from 'date-fns';
 import { useState } from 'react';
 import CliftonStrengthsService from 'services/cliftonStrengths';
 import styles from './CliftonStrengthsUpload.module.scss';
+import templateUrl from './cliftonStrengthsUploadTemplate.csv?url';
 
 const successResults = ['Success', 'Added', 'Modified'];
 
@@ -127,7 +128,8 @@ const CliftonStrengthsUpload = () => {
           'AccessCode',
         ]}
         buttonName="Upload Strengths"
-        template="./cliftonStrengthsUploadTemplate.csv"
+        // TODO: make csv available as a static asset
+        template={templateUrl}
       />
     </>
   );
