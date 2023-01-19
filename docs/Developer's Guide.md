@@ -18,7 +18,7 @@ This guide walks you through the basics of developing the Gordon 360 frontend, a
 
 # Getting Started
 
-Here are the steps to setupthe frontend for development:
+Here are the steps to setup the frontend for development:
 
 1. Clone this repository to the machine that you will develop on.
 
