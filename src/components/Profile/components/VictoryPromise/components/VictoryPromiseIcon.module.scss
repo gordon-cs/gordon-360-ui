@@ -1,0 +1,6 @@
+@import '../../../../../vars';
+
+.icon:hover {
+  transition: box-shadow 0.2s;
+  box-shadow: 0px 3px 10px 0px $neutral-black-opacity20;
+}
