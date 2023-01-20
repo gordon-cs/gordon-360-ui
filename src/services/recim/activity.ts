@@ -66,12 +66,10 @@ const createActivity = (newActivity: UploadActivity): Promise<CreatedActivity> =
 
 const getActivityByID = (ID: number): Promise<Activity> => http.get(`recim/activities/${ID}`);
 
-const getAllActivities = (
-  active: boolean,
-  time: String,
-  registrationOpen: boolean,
-): Promise<Activity[]> =>
-  http.get(`recim/activities?active=${active}&time=${time}&registrationOpen=${registrationOpen}`);
+const getAllActivities = (active: boolean, time: String): Promise<Activity[]> => {
+  if (time) return http.get(`recim/activities?active=${active}&time=${time}`);
+  return http.get(`recim/activities?active=${active}`);
+};
 
 const getActivityStatusTypes = (): Promise<Lookup[]> =>
   http.get(`recim/activities/lookup?type=status`);

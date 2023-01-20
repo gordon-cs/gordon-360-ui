@@ -9,7 +9,6 @@ import styles from './Home.module.css';
 import recimLogo from './../../recim_logo.png';
 import { ActivityList, TeamList } from './../../components/List';
 import { getAllActivities } from 'services/recim/activity';
-import { DateTime } from 'luxon';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
@@ -20,11 +19,17 @@ const Home = () => {
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [activities, setActivities] = useState([]);
+  const [ongoingActivities, setOngoingActivities] = useState([]);
+  const [registrableActivities, setRegistrableActivities] = useState([]);
   const [myTeams, setMyTeams] = useState([]);
   const [participant, setParticipant] = useState([]);
   const [openWaiver, setOpenWaiver] = useState(false);
   const [createdActivity, setCreatedActivity] = useState({ ID: null });
   const [hasPermissions, setHasPermissions] = useState(false);
+  const subElementStyle = {
+    marginBottom: '1em',
+  };
+
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -33,7 +38,7 @@ const Home = () => {
     const loadData = async () => {
       setLoading(true);
       // Get all active activities where registration has not closed
-      setActivities(await getAllActivities(false, DateTime.now().toISO()));
+      setActivities(await getAllActivities(true));
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
         setMyTeams(await getParticipantTeams(profile.AD_Username));
@@ -49,6 +54,20 @@ const Home = () => {
       setHasPermissions(participant.IsAdmin);
     }
   }, [participant]);
+
+  useEffect(() => {
+    let open = [];
+    let ongoing = [];
+    activities.forEach((activity) => {
+      if (activity.RegistrationOpen) {
+        open.push(activity);
+      } else {
+        ongoing.push(activity);
+      }
+    });
+    setOngoingActivities(ongoing);
+    setRegistrableActivities(open);
+  }, [activities]);
 
   const createActivityButton = (
     <Grid container justifyContent="center">
@@ -87,16 +106,16 @@ const Home = () => {
     </Card>
   );
 
-  // CARD - upcoming events
-  let upcomingEventsCard = (
+  // CARD - upcoming activities
+  let upcomingActivitiesCard = (
     <Card>
       <CardHeader title="Upcoming Rec-IM Activities" className={styles.cardHeader} />
       <CardContent>
-        {activities ? (
-          <ActivityList activities={activities} />
+        {registrableActivities.length > 0 ? (
+          <ActivityList activities={registrableActivities} />
         ) : (
           <Typography variant="body1" paragraph>
-            It looks like there aren't any Rec-IM events currently open for registration T_T
+            It looks like there aren't any Rec-IM activities currently open for registration
           </Typography>
         )}
 
@@ -104,7 +123,21 @@ const Home = () => {
       </CardContent>
     </Card>
   );
-  // I changed the face because the linting was giving me an "error" since :( counted as an open paran
+
+  let ongoingActivitiesCard = (
+    <Card>
+      <CardHeader title="On-going Rec-IM Activities" className={styles.cardHeader} />
+      <CardContent>
+        {registrableActivities.length > 0 ? (
+          <ActivityList activities={ongoingActivities} />
+        ) : (
+          <Typography variant="body1" paragraph>
+            It looks like there aren't any Rec-IM activities currently on-going
+          </Typography>
+        )}
+      </CardContent>
+    </Card>
+  );
 
   // CARD - my teams
   let myTeamsCard = (
@@ -151,8 +184,14 @@ const Home = () => {
         </Grid>
         <Grid item container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={8}>
-            {upcomingEventsCard}
+            <Grid item style={subElementStyle}>
+              {upcomingActivitiesCard}
+            </Grid>
+            <Grid item style={subElementStyle}>
+              {ongoingActivitiesCard}
+            </Grid>
           </Grid>
+
           <Grid item xs={12} md={4}>
             {myTeamsCard}
           </Grid>

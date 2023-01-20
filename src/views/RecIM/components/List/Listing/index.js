@@ -149,7 +149,6 @@ const TeamListing = ({ team }) => {
 const ParticipantListing = ({ participant, minimal, callbackFunction, showParticipantOptions }) => {
   const { teamID } = useParams();
   const [avatar, setAvatar] = useState('');
-
   const [anchorEl, setAnchorEl] = useState(null);
   const moreOptionsOpen = Boolean(anchorEl);
   const handleClose = () => {
@@ -166,8 +165,8 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
   };
 
   const handleRemoveFromTeam = () => {
-    editTeamParticipant(participant.Username, teamID, 6) // Role 6 is inactive
-  }
+    editTeamParticipant(participant.Username, teamID, 6); // Role 6 is inactive
+  };
 
   useEffect(() => {
     const loadAvatar = async () => {
@@ -207,7 +206,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
               variant="rounded"
             ></Avatar>
           </ListItemAvatar>
-          <ListItemText primary={participant.Username} />
+          <ListItemText primary={participant.Username} secondary={participant.Role} />
         </ListItemButton>
         {showParticipantOptions ? (
           <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
