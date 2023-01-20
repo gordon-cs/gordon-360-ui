@@ -73,7 +73,7 @@ const TeamForm = ({ team, closeWithSnackbar, openTeamForm, setOpenTeamForm, acti
       ActivityID: Number(activityID),
       Logo: 'NONE', // Placeholder (for error checking0)
     };
-  }, [activityID, teamStatus]);
+  }, [activityID, team, teamStatus]);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [isSaving, setSaving] = useState(false);

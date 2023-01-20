@@ -43,7 +43,6 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-    console.log(activity.Series);
   }, [activityID, openTeamForm, openCreateSeriesForm, openActivityForm]);
   // ^ May be bad practice, but will refresh page on dialog close
 
