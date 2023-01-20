@@ -1,7 +1,7 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import CreateActivityForm from '../../components/Forms/CreateActivityForm';
+import ActivityForm from '../../components/Forms/ActivityForm';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
@@ -12,15 +12,19 @@ import { getAllActivities } from 'services/recim/activity';
 import { DateTime } from 'luxon';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
+import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+
 
 const Home = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
-  const [openCreateActivityForm, setOpenCreateActivityForm] = useState(false);
+  const [openActivityForm, setOpenActivityForm] = useState(false);
+  const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [activities, setActivities] = useState([]);
   const [myTeams, setMyTeams] = useState([]);
   const [participant, setParticipant] = useState([]);
   const [openWaiver, setOpenWaiver] = useState(false);
+  const [createdActivity, setCreatedActivity] = useState({ ID: null });
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -38,11 +42,12 @@ const Home = () => {
       setLoading(false);
     };
     loadData();
-  }, [profile, openCreateActivityForm, openWaiver]);
+  }, [profile, openActivityForm, openWaiver, openCreateSeriesForm]);
 
   useEffect(() => {
     setOpenWaiver(participant == null);
   }, [participant]);
+
 
   const createActivityButton = (
     <Grid container justifyContent="center">
@@ -52,7 +57,7 @@ const Home = () => {
         startIcon={<AddCircleRoundedIcon />}
         className={styles.actionButton}
         onClick={() => {
-          setOpenCreateActivityForm(true);
+          setOpenActivityForm(true);
         }}
       >
         Create a New Activity
@@ -117,7 +122,13 @@ const Home = () => {
 
   const handleCreateActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
-    setOpenCreateActivityForm(false);
+    setOpenCreateSeriesForm(true);
+    setOpenActivityForm(false);
+  };
+
+  const handleCreateSeriesForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenCreateSeriesForm(false);
   };
 
   const handleOpenWaiverForm = (status) => {
@@ -145,13 +156,25 @@ const Home = () => {
           </Grid>
         </Grid>
         <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
-        {openCreateActivityForm ? (
-          <CreateActivityForm
+        {openActivityForm ? (
+          <ActivityForm
             closeWithSnackbar={(status) => {
               handleCreateActivityForm(status);
             }}
-            openCreateActivityForm={openCreateActivityForm}
-            setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
+            openActivityForm={openActivityForm}
+            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
+            setCreatedInstance={(activity) => setCreatedActivity(activity)}
+          />
+        ) : null}
+        {openCreateSeriesForm ? (
+          <CreateSeriesForm
+            closeWithSnackbar={(status) => {
+              handleCreateSeriesForm(status);
+            }}
+            openCreateSeriesForm={openCreateSeriesForm}
+            setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+            activityID={createdActivity.ID}
+            existingActivitySeries={[]}
           />
         ) : null}
         {openWaiver ? (
