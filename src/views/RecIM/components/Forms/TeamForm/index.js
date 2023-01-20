@@ -9,7 +9,14 @@ import { ContentCard } from '../components/ContentCard';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 
-const TeamForm = ({ team, closeWithSnackbar, openTeamForm, setOpenTeamForm, activityID }) => {
+const TeamForm = ({
+  isAdmin,
+  team,
+  closeWithSnackbar,
+  openTeamForm,
+  setOpenTeamForm,
+  activityID,
+}) => {
   const [errorStatus, setErrorStatus] = useState({
     Name: false,
     ActivityID: false,
@@ -28,7 +35,7 @@ const TeamForm = ({ team, closeWithSnackbar, openTeamForm, setOpenTeamForm, acti
       setLoading(false);
     };
     loadData();
-  }, []);
+  }, [profile]);
 
   const createTeamFields = [
     {
@@ -39,7 +46,8 @@ const TeamForm = ({ team, closeWithSnackbar, openTeamForm, setOpenTeamForm, acti
       helperText: '*Required',
     },
   ];
-  if (team) {
+  console.log(isAdmin);
+  if (team && isAdmin) {
     createTeamFields.push({
       label: 'Team Status',
       name: 'StatusID',

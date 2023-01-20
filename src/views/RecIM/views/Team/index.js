@@ -227,6 +227,7 @@ const Team = () => {
             setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
             activityID={activityID}
             team={team}
+            isAdmin={participant.IsAdmin}
           />
         ) : null}
       </Grid>
