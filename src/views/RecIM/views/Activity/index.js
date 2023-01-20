@@ -100,7 +100,7 @@ const Activity = () => {
               <Grid item xs={8} md={5}>
                 <Typography variant="h5" className={styles.activityTitle}>
                   {activity.Name}
-                  {participant.IsAdmin == true ? (
+                  {participant.IsAdmin === true ? (
                     <IconButton>
                       <EditIcon
                         onClick={() => {
@@ -176,7 +176,7 @@ const Activity = () => {
             </Typography>
           )}
           <Grid container justifyContent="center">
-            {participant.IsAdmin == true ? (
+            {participant.IsAdmin === true ? (
               <Button
                 variant="contained"
                 color="warning"

@@ -25,7 +25,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 //expensive, comment on line 36
 import { getActivityByID } from 'services/recim/activity';
-import { DateTime } from 'luxon';
 
 const Team = () => {
   const { activityID, teamID } = useParams();
