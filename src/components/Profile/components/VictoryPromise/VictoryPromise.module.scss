@@ -1,0 +1,21 @@
+@import '../../../../vars';
+
+.header {
+  background: $primary-blue;
+  color: $neutral-white;
+  padding-left: 2rem;
+}
+
+.content {
+  background-color: $primary-blue;
+  border-radius: 0.5rem;
+  padding: 2rem 1rem;
+  position: relative;
+  max-width: 100%;
+}
+
+@media (max-width: $break-sm) {
+  .header {
+    text-align: center;
+  }
+}
