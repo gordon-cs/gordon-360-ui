@@ -75,6 +75,7 @@ const SeriesListing = ({ series }) => {
 };
 
 const ActivityListing = ({ activity }) => {
+  console.log(activity);
   let registrationStart = DateTime.fromISO(activity.RegistrationStart);
   let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
   return (
@@ -88,13 +89,16 @@ const ActivityListing = ({ activity }) => {
             <Grid item xs={10}>
               <Chip
                 icon={<EventAvailableIcon />}
-                label="registration open"
-                color="success"
+                label={activity.RegistrationOpen ? 'registration open' : 'registration closed'}
+                color={activity.RegistrationOpen ? 'success' : 'info'}
                 size="small"
               ></Chip>
             </Grid>
             <Grid item xs={10}>
-              <Typography>Registration closes {standardDate(registrationEnd, false)}</Typography>
+              <Typography>
+                Registration close{activity.RegistrationOpen ? 's' : 'd'}{' '}
+                {standardDate(registrationEnd, false)}
+              </Typography>
               <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
                 <i>
                   testing purposes: {standardDate(registrationStart, true)} -{' '}
