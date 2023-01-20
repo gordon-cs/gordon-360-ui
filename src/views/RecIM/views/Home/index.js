@@ -14,7 +14,6 @@ import { getParticipantTeams, getParticipantByUsername } from 'services/recim/pa
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 
-
 const Home = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
@@ -25,7 +24,7 @@ const Home = () => {
   const [participant, setParticipant] = useState([]);
   const [openWaiver, setOpenWaiver] = useState(false);
   const [createdActivity, setCreatedActivity] = useState({ ID: null });
-
+  const [hasPermissions, setHasPermissions] = useState(false);
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -46,8 +45,10 @@ const Home = () => {
 
   useEffect(() => {
     setOpenWaiver(participant == null);
+    if (participant) {
+      setHasPermissions(participant.IsAdmin);
+    }
   }, [participant]);
-
 
   const createActivityButton = (
     <Grid container justifyContent="center">
@@ -95,14 +96,15 @@ const Home = () => {
           <ActivityList activities={activities} />
         ) : (
           <Typography variant="body1" paragraph>
-            It looks like there aren't any Rec-IM events currently open for registration :(
+            It looks like there aren't any Rec-IM events currently open for registration T_T
           </Typography>
         )}
 
-        {createActivityButton}
+        {hasPermissions ? createActivityButton : null}
       </CardContent>
     </Card>
   );
+  // I changed the face because the linting was giving me an "error" since :( counted as an open paran
 
   // CARD - my teams
   let myTeamsCard = (
