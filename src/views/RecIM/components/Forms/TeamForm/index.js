@@ -56,8 +56,6 @@ const TeamForm = ({ team, closeWithSnackbar, openTeamForm, setOpenTeamForm, acti
 
   const currentInfo = useMemo(() => {
     if (team) {
-      console.log(teamStatus);
-      console.log(teamStatus.find((type) => type.Description === team.Status));
       return {
         Name: team.Name,
         ActivityID: Number(activityID),
