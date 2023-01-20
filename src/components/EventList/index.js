@@ -1,90 +1,73 @@
-import CollapsableEventItem from './components/CollapsableEventItem';
 import EventItem from './components/EventItem';
-import { gordonColors } from 'theme';
+import { windowBreakWidths } from 'theme';
 
 import useWindowSize from 'hooks/useWindowSize';
 
-import { List, Grid, Typography, Card } from '@mui/material';
-
-const headerStyle = {
-  backgroundColor: gordonColors.primary.blue,
-  color: '#FFF',
-  padding: '10px',
-};
+import { List, Grid, Typography, Card, CardHeader } from '@mui/material';
+import styles from './EventList.module.css';
 
 const smallHeader = (
-  <div style={headerStyle}>
-    <Grid container direction="row">
-      <Grid item xs={12}>
-        <Typography variant="body2" style={headerStyle}>
-          EVENTS
-        </Typography>
-      </Grid>
-    </Grid>
-  </div>
+  <Typography variant="h5" className={styles.header_text}>
+    Events
+  </Typography>
 );
 
+const headings = [
+  {
+    name: 'Event',
+    size: '4',
+  },
+  {
+    name: 'Date',
+    size: '2',
+  },
+  {
+    name: 'Time',
+    size: '2',
+  },
+  {
+    name: 'Location',
+    size: '4',
+  },
+];
+
 const fullHeader = (
-  <div style={headerStyle}>
-    <Grid container direction="row">
-      <Grid item xs={4}>
-        <Typography variant="body2" style={headerStyle}>
-          EVENT
+  <Grid container direction="row">
+    {headings.map(({ name, size }) => (
+      <Grid item xs={size}>
+        <Typography variant="h5" className={styles.header_text}>
+          {name}
         </Typography>
       </Grid>
-      <Grid item xs={4}>
-        <Typography variant="body2" style={headerStyle}>
-          LOCATION
-        </Typography>
-      </Grid>
-      <Grid item xs={2}>
-        <Typography variant="body2" style={headerStyle}>
-          DATE
-        </Typography>
-      </Grid>
-      <Grid item xs={2}>
-        <Typography variant="body2" style={headerStyle}>
-          TIME
-        </Typography>
-      </Grid>
-    </Grid>
-  </div>
+    ))}
+  </Grid>
 );
 
 const noEvents = (
   <Grid item align="center">
     <br />
-    <Typography variant="h5" align="center">
+    <Typography variant="h4" align="center">
       No Events To Show
     </Typography>
     <br />
   </Grid>
 );
 
+const breakpointWidth = windowBreakWidths.breakSM;
+
 const EventList = ({ events }) => {
-  const breakpointWidth = 540;
   const [width] = useWindowSize();
 
-  let content;
   const header = width < breakpointWidth ? smallHeader : fullHeader;
-
-  if (!events || events.length === 0) {
-    content = noEvents;
-  } else if (width < breakpointWidth) {
-    content = events.map((currEvent) => (
-      <CollapsableEventItem event={currEvent} key={currEvent.Event_ID} />
-    ));
-  } else if (events.length > 0) {
-    content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
-  }
-
 
   return (
     <Card>
-      {header}
+      <CardHeader title={header} className={styles.header} />
       <Grid>
         <List className="gc360_event_list" disablePadding>
-          {content}
+          {events?.length < 0
+            ? noEvents
+            : events.map((event) => <EventItem event={event} key={event.Event_ID} />)}
         </List>
       </Grid>
     </Card>

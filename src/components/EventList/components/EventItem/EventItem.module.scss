@@ -14,17 +14,20 @@
   }
 }
 
-// Make even-numbered rows gray
-:global(.gc360_event_list) > section:nth-child(even) {
-  background-color: $neutral-light-gray;
-}
-
 :global(.gc360_event_list) > section {
   background-color: $neutral-white;
   transition: background-color 200ms ease;
   &:hover {
     background-color: $primary-cyan;
     cursor: pointer;
+  }
+}
+
+// Make even-numbered rows gray
+:global(.gc360_event_list) > section:nth-child(even) {
+  background-color: $neutral-light-gray;
+  &:hover {
+    background-color: $primary-cyan;
   }
 }
 
