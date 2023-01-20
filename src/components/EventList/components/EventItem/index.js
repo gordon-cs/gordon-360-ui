@@ -1,64 +1,43 @@
 import { CardContent, Collapse, Grid, Typography } from '@mui/material';
-import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useState } from 'react';
 import styles from './EventItem.module.css';
 
 //Switched to table rows
-export default class GordonEventItem extends Component {
-  constructor(props) {
-    super(props);
+const EventItem = ({ event }) => {
+  const [expanded, setExpanded] = useState(false)
 
-    this.handleExpandClick = this.handleExpandClick.bind(this);
+  const eventDescription = event.Description || 'No description available';
 
-    this.state = { open: false };
-  }
-  handleExpandClick() {
-    this.setState({ open: !this.state.open });
-  }
-  render() {
-    const { event } = this.props;
-    let eventDescription = event.Description;
-    eventDescription = eventDescription === '' ? 'No description available' : eventDescription;
-    return (
-      <section>
-        <Grid
-          container
-          direction="row"
-          onClick={this.handleExpandClick}
-          className={styles.event_item}
-        >
-          <Grid item xs={4}>
-            <Typography className={styles.event_column}>{event.title}</Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <Typography className={styles.event_column}>{event.location}</Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography className={styles.event_column}>{event.date}</Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography className={styles.event_column}>{event.timeRange}</Typography>
-          </Grid>
-          <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography className={styles.descriptionText}>Description:</Typography>
-              <Typography type="caption" className={styles.descriptionText}>
-                {eventDescription}
-              </Typography>
-            </CardContent>
-          </Collapse>
-        </Grid>
-      </section>
-    );
-  }
+  return (
+    <Grid
+      component="section"
+      container
+      direction="row"
+      onClick={() => setExpanded(e => !e)}
+      className={styles.event_item}
+    >
+      <Grid item xs={4}>
+        <Typography className={styles.event_column}>{event.title}</Typography>
+      </Grid>
+      <Grid item xs={4}>
+        <Typography className={styles.event_column}>{event.location}</Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography className={styles.event_column}>{event.date}</Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography className={styles.event_column}>{event.timeRange}</Typography>
+      </Grid>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          <Typography className={styles.descriptionText}>Description:</Typography>
+          <Typography type="caption" className={styles.descriptionText}>
+            {eventDescription}
+          </Typography>
+        </CardContent>
+      </Collapse>
+    </Grid>
+  );
 }
 
-GordonEventItem.propTypes = {
-  event: PropTypes.shape({
-    Event_ID: PropTypes.string.isRequired,
-    Event_Name: PropTypes.string.isRequired,
-    Event_Title: PropTypes.string.isRequired,
-    Description: PropTypes.string,
-    Occurrences: PropTypes.array,
-  }).isRequired,
-};
+export default EventItem

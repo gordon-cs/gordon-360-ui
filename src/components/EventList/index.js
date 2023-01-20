@@ -2,7 +2,6 @@ import CollapsableEventItem from './components/CollapsableEventItem';
 import EventItem from './components/EventItem';
 import { gordonColors } from 'theme';
 
-import styles from './EventList.module.css';
 import useWindowSize from 'hooks/useWindowSize';
 
 import { List, Grid, Typography, Card } from '@mui/material';
@@ -67,7 +66,7 @@ const EventList = ({ events }) => {
   const [width] = useWindowSize();
 
   let content;
-  let header;
+  const header = width < breakpointWidth ? smallHeader : fullHeader;
 
   if (!events || events.length === 0) {
     content = noEvents;
@@ -79,13 +78,12 @@ const EventList = ({ events }) => {
     content = events.map((currEvent) => <EventItem event={currEvent} key={currEvent.Event_ID} />);
   }
 
-  header = width < breakpointWidth ? smallHeader : fullHeader;
 
   return (
     <Card>
       {header}
       <Grid>
-        <List className={styles.event_list} disablePadding>
+        <List className="gc360_event_list" disablePadding>
           {content}
         </List>
       </Grid>
