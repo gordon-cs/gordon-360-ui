@@ -60,7 +60,7 @@ const Activity = () => {
     setCanCreateTeam(activity.RegistrationOpen);
     if (participantTeams && participant) {
       participantTeams.forEach((team) => {
-        if (team.ActivityID == activityID) setCanCreateTeam(false || participant.IsAdmin);
+        if (team.ActivityID === activity.ID) setCanCreateTeam(false || participant.IsAdmin);
       });
     }
   }, [activity, participant, participantTeams]);
