@@ -24,7 +24,7 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
     },
     {
       label:
-        'By checking this box, I have certified that I have read the Gordon Waiver. I also agree to sign this waiver electronically.',
+        'By checking this box, I have certified that I have read the Gordon Waiver.',
       name: 'readCheckbox',
       type: 'checkbox',
       error: errorStatus.readCheckbox,
