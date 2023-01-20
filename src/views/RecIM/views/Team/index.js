@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   Grid,
   Typography,
@@ -6,8 +5,10 @@ import {
   CardHeader,
   CardContent,
   Breadcrumbs,
-  IconButton,
+  Button,
+  IconButton
 } from '@mui/material';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
@@ -17,6 +18,8 @@ import { ParticipantList, MatchList } from './../../components/List';
 import { getTeamByID } from 'services/recim/team';
 import { Link as LinkRouter } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
 import EditIcon from '@mui/icons-material/Edit';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 
@@ -26,6 +29,13 @@ const Team = () => {
   const [team, setTeam] = useState({});
   const [loading, setLoading] = useState(true);
   const [openTeamForm, setOpenTeamForm] = useState(false);
+
+  const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
+  const handleInviteParticipantForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenInviteParticipantForm(false);
+  };
+
 
   useEffect(() => {
     const loadTeamData = async () => {
@@ -114,8 +124,31 @@ const Team = () => {
       <Card>
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
+          <CardContent>
           <ParticipantList participants={team.Participant} showParticipantOptions />
+          </CardContent>
+          <Grid container justifyContent="center">
+            <Button
+              variant="contained"
+              color="warning"
+              startIcon={<AddCircleRoundedIcon />}
+              className={styles.actionButton}
+              onClick={() => {
+                setOpenInviteParticipantForm(true);
+              }}
+            >
+              Invite Participant
+            </Button>
+          </Grid>
         </CardContent>
+        <InviteParticipantForm
+          closeWithSnackbar={(status) => {
+            handleInviteParticipantForm(status);
+          }}
+          openInviteParticipantForm={openInviteParticipantForm}
+          setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
+          teamID={teamID}
+        />
       </Card>
     );
 
