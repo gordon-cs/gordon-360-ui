@@ -1,6 +1,6 @@
 import http from '../http';
-import { Team } from './team';
 import { Lookup } from './recim';
+import { Team } from './team';
 
 export type Participant = {
   Username: string;
@@ -64,6 +64,12 @@ type CreatedParticipantActivity = {
   IsFreeAgent: boolean;
 };
 
+type WaiverSignature = {
+  signedUsername: string;
+  timestamp: Date;
+  ipAddress: string | null;
+};
+
 //Participant Routes
 const createParticipant = (username: string): Promise<Participant> =>
   http.put(`recim/participants/${username}`);
@@ -105,6 +111,10 @@ const editParticipantStatus = (
   status: PatchParticipantStatus,
 ): Promise<CreatedParticipantStatus> => http.patch(`recim/participants/${username}/status`, status);
 
+const logWaiverSigned = async (signatureObject: WaiverSignature) => {
+  console.log(signatureObject);
+};
+
 export {
   createParticipant,
   getParticipants,
@@ -117,4 +127,5 @@ export {
   editParticipantAdmin,
   editParticipantActivity,
   editParticipantStatus,
+  logWaiverSigned,
 };

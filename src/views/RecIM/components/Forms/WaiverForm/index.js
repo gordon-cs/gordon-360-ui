@@ -1,21 +1,30 @@
-import { Typography } from '@mui/material';
-import { useState, useEffect, useMemo } from 'react';
+import { Link, Typography } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { ContentCard } from '../components/ContentCard';
-import { InformationField } from '../components/InformationField';
-import { createParticipant } from 'services/recim/participant';
+import { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { createParticipant, logWaiverSigned } from 'services/recim/participant';
+import { InformationField } from '../components/InformationField';
 
 const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiverForm }) => {
   const navigate = useHistory();
   const [errorStatus, setErrorStatus] = useState({
     readCheckbox: false,
+    esignCheckbox: false,
     name: false,
+    emailConfirmation: false,
   });
 
   const waiverFields = [
     {
-      label: 'By Clicking this, I have certified that I have read the Gordon Waiver',
+      label: 'By checking this box, I agree to sign this waiver electronically.',
+      name: 'esignCheckbox',
+      type: 'checkbox',
+      error: errorStatus.esignCheckbox,
+      helperText: '*Required',
+    },
+    {
+      label:
+        'By checking this box, I have certified that I have read the Gordon Waiver. I also agree to sign this waiver electronically.',
       name: 'readCheckbox',
       type: 'checkbox',
       error: errorStatus.readCheckbox,
@@ -28,12 +37,21 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
       error: errorStatus.name,
       helperText: '*Required',
     },
+    {
+      label: 'Confirm Email Address',
+      name: 'emailConfirmation',
+      type: 'text',
+      error: errorStatus.emailConfirmation,
+      helperText: '*Required',
+    },
   ];
 
   const currentInfo = useMemo(() => {
     return {
+      esignCheckbox: false,
       readCheckbox: false,
       name: '',
+      emailConfirmation: '',
     };
   }, []);
 
@@ -91,13 +109,37 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
   };
 
   const handleConfirm = () => {
-    createParticipant(username).then(() => {
+    if (!newInfo['readCheckbox'] || !newInfo['name']) {
       closeWithSnackbar({
-        type: 'success',
-        message: 'Your new activity has been created or whatever message you want here',
+        type: 'warning',
+        message: 'The waiver must be signed before participating in RecIM',
       });
-      handleWindowClose();
-    });
+      return;
+    }
+
+    let signatureObject = {
+      signedName: newInfo['name'],
+      timestamp: new Date(),
+      ipAddress: null,
+    };
+
+    logWaiverSigned(signatureObject)
+      .then(() => {
+        createParticipant(username).then(() => {
+          closeWithSnackbar({
+            type: 'success',
+            message: 'Thank you for signing the waiver.',
+          });
+
+          handleWindowClose();
+        });
+      })
+      .catch((e) => {
+        closeWithSnackbar({
+          type: 'error',
+          message: 'Failed to sign waiver. Please try again.',
+        });
+      });
   };
 
   const handleWindowClose = () => {
@@ -129,7 +171,7 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
   };
 
   let content = (
-    <ContentCard>
+    <>
       <Typography margin={4}>
         <Typography variant="h5">PHYSICAL ACTIVITY READINESS CONFIRMATION</Typography>
 
@@ -184,8 +226,13 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
           {''}
         </Typography>
       </Typography>
-      {mapFieldsToInputs(waiverFields)}
-    </ContentCard>
+      <>{mapFieldsToInputs(waiverFields)}</>
+
+      <Typography variant="body1" paragraph>
+        Prefer to sign a paper copy? Please contact{' '}
+        <Link to="mailto:rec.im@gordon.edu">Rec.IM@gordon.edu</Link>
+      </Typography>
+    </>
   );
 
   return (

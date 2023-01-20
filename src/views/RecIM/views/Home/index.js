@@ -1,19 +1,18 @@
-import GordonUnauthorized from 'components/GordonUnauthorized';
-import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import ActivityForm from '../../components/Forms/ActivityForm';
-import { useUser } from 'hooks';
-import { useState, useEffect } from 'react';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
-import styles from './Home.module.css';
-import recimLogo from './../../recim_logo.png';
-import { ActivityList, TeamList } from './../../components/List';
-import { getAllActivities } from 'services/recim/activity';
+import { useUser } from 'hooks';
 import { DateTime } from 'luxon';
-import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
-import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
+import { useEffect, useState } from 'react';
+import { getAllActivities } from 'services/recim/activity';
+import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
-
+import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
+import ActivityForm from '../../components/Forms/ActivityForm';
+import { ActivityList, TeamList } from './../../components/List';
+import recimLogo from './../../recim_logo.png';
+import styles from './Home.module.css';
 
 const Home = () => {
   const { profile } = useUser();
@@ -47,7 +46,6 @@ const Home = () => {
   useEffect(() => {
     setOpenWaiver(participant == null);
   }, [participant]);
-
 
   const createActivityButton = (
     <Grid container justifyContent="center">
@@ -113,7 +111,7 @@ const Home = () => {
           <TeamList teams={myTeams} />
         ) : (
           <Typography variant="body1" paragraph>
-            You're not yet apart of any teams; join one to get started!
+            You're not yet a part of any teams; join one to get started!
           </Typography>
         )}
       </CardContent>
@@ -184,7 +182,7 @@ const Home = () => {
               handleOpenWaiverForm(status);
             }}
             openWaiverForm={openWaiver}
-            setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
+            setOpenWaiverForm={(waiverOpen) => setOpenWaiver(waiverOpen)}
           />
         ) : null}
       </Grid>
