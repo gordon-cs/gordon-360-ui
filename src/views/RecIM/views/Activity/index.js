@@ -23,6 +23,7 @@ import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import { Link as LinkRouter } from 'react-router-dom';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+import { getParticipantByUsername } from 'services/recim/participant';
 
 const Activity = () => {
   const { activityID } = useParams();
@@ -32,6 +33,7 @@ const Activity = () => {
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
+  const [participant, setParticipant] = useState({});
   const subElementStyle = {
     marginBottom: '1em',
   };
@@ -40,10 +42,13 @@ const Activity = () => {
     const loadData = async () => {
       setLoading(true);
       setActivity(await getActivityByID(activityID));
+      if (profile) {
+        setParticipant(await getParticipantByUsername(profile.AD_Username));
+      }
       setLoading(false);
     };
     loadData();
-  }, [activityID, openTeamForm, openCreateSeriesForm, openActivityForm]);
+  }, [profile, activityID, openTeamForm, openCreateSeriesForm, openActivityForm]);
   // ^ May be bad practice, but will refresh page on dialog close
 
   const handleTeamForm = (status) => {
@@ -95,13 +100,15 @@ const Activity = () => {
               <Grid item xs={8} md={5}>
                 <Typography variant="h5" className={styles.activityTitle}>
                   {activity.Name}
-                  <IconButton>
-                    <EditIcon
-                      onClick={() => {
-                        setOpenActivityForm(true);
-                      }}
-                    />
-                  </IconButton>
+                  {participant.IsAdmin == true ? (
+                    <IconButton>
+                      <EditIcon
+                        onClick={() => {
+                          setOpenActivityForm(true);
+                        }}
+                      />
+                    </IconButton>
+                  ) : null}
                 </Typography>
                 <Typography variant="h6" className={styles.activitySubtitle}>
                   <i>Description of activity</i>
@@ -169,22 +176,23 @@ const Activity = () => {
             </Typography>
           )}
           <Grid container justifyContent="center">
-            <Button
-              variant="contained"
-              color="warning"
-              startIcon={<AddCircleRoundedIcon />}
-              className={styles.actionButton}
-              onClick={() => {
-                setOpenCreateSeriesForm(true);
-              }}
-            >
-              Create a New Series
-            </Button>
+            {participant.IsAdmin == true ? (
+              <Button
+                variant="contained"
+                color="warning"
+                startIcon={<AddCircleRoundedIcon />}
+                className={styles.actionButton}
+                onClick={() => {
+                  setOpenCreateSeriesForm(true);
+                }}
+              >
+                Create a New Series
+              </Button>
+            ) : null}
           </Grid>
         </CardContent>
       </Card>
     );
-
     return (
       <Grid container spacing={2}>
         <Grid item alignItems="center" xs={12}>
