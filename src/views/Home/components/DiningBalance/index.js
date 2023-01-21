@@ -1,11 +1,11 @@
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Grid, Link, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
-import styles from './DiningBalance.module.css';
+import styles from '../Doughnut.module.css';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
@@ -15,13 +15,6 @@ let swipesColor = gordonColors.secondary.green;
 let dollarsColor = gordonColors.secondary.yellow;
 let guestColor = gordonColors.secondary.orange;
 let emptyColor = gordonColors.neutral.lightGray;
-
-const style = {
-  button: {
-    background: gordonColors.primary.cyan,
-    color: 'white',
-  },
-};
 
 const DiningBalance = () => {
   const [loading, setLoading] = useState(true);
@@ -61,7 +54,7 @@ const DiningBalance = () => {
           justifyContent: 'space-around',
         }}
       >
-        <div className={styles.label_text} style={{ color: balanceColor }}>
+        <div className={styles.value} style={{ color: balanceColor }}>
           ${diningInfo}
         </div>
       </div>
@@ -165,10 +158,10 @@ const DiningBalance = () => {
               alignItems: 'center',
             }}
           >
-            <div className={styles.label_text} style={{ color: swipesColor }}>
+            <div className={styles.value} style={{ color: swipesColor }}>
               {swipeInit === 0 ? '\u221E' : swipeCurr}
             </div>
-            <div className={styles.entry_text}>Swipes</div>
+            <div className={styles.label}>Swipes</div>
           </div>
           <div
             style={{
@@ -178,10 +171,10 @@ const DiningBalance = () => {
               alignItems: 'center',
             }}
           >
-            <div className={styles.label_text} style={{ color: dollarsColor }}>
+            <div className={styles.value} style={{ color: dollarsColor }}>
               ${dollarCurr}
             </div>
-            <div className={styles.entry_text}>Dining Dollars</div>
+            <div className={styles.label}>Dining Dollars</div>
           </div>
           <div
             style={{
@@ -191,10 +184,10 @@ const DiningBalance = () => {
               alignItems: 'center',
             }}
           >
-            <div className={styles.label_text} style={{ color: guestColor }}>
+            <div className={styles.value} style={{ color: guestColor }}>
               {guestCurr}
             </div>
-            <div className={styles.entry_text}>Guest Swipes</div>
+            <div className={styles.label}>Guest Swipes</div>
           </div>
         </div>
       </div>
@@ -202,7 +195,7 @@ const DiningBalance = () => {
   }
 
   return (
-    <Card className={styles.dining_balance}>
+    <Card>
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
@@ -211,8 +204,11 @@ const DiningBalance = () => {
           <Grid item xs={5} align="right">
             <Button
               variant="contained"
-              style={style.button}
-              onClick={() => window.open('https://gordon.cafebonappetit.com/', '_blank')}
+              color="secondary"
+              component={Link}
+              href="https://gordon.cafebonappetit.com/"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               TODAY'S MENU
             </Button>
