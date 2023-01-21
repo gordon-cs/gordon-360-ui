@@ -162,19 +162,21 @@ const Team = () => {
               <ParticipantList participants={team.Participant} />
             )}
           </CardContent>
-          <Grid container justifyContent="center">
-            <Button
-              variant="contained"
-              color="warning"
-              startIcon={<AddCircleRoundedIcon />}
-              className={styles.actionButton}
-              onClick={() => {
-                setOpenInviteParticipantForm(true);
-              }}
-            >
-              Invite Participant
-            </Button>
-          </Grid>
+          {hasPermissions ? (
+            <Grid container justifyContent="center">
+              <Button
+                variant="contained"
+                color="warning"
+                startIcon={<AddCircleRoundedIcon />}
+                className={styles.actionButton}
+                onClick={() => {
+                  setOpenInviteParticipantForm(true);
+                }}
+              >
+                Invite Participant
+              </Button>
+            </Grid>
+          ) : null}
         </CardContent>
         <InviteParticipantForm
           closeWithSnackbar={(status) => {
