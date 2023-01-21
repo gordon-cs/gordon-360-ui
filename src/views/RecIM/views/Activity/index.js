@@ -29,12 +29,12 @@ const Activity = () => {
   const { activityID } = useParams();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
-  const [activity, setActivity] = useState({});
+  const [activity, setActivity] = useState(null);
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
-  const [participant, setParticipant] = useState({});
-  const [participantTeams, setParticipantTeams] = useState([]);
+  const [participant, setParticipant] = useState(null);
+  const [participantTeams, setParticipantTeams] = useState(null);
   const [canCreateTeam, setCanCreateTeam] = useState(true);
   const subElementStyle = {
     marginBottom: '1em',
@@ -57,11 +57,13 @@ const Activity = () => {
   // disable create team if participant already is participating in this activity,
   // unless they're an admin
   useEffect(() => {
-    setCanCreateTeam(activity.RegistrationOpen);
     if (participantTeams && participant) {
+      let participating = false;
+      setCanCreateTeam(activity.RegistrationOpen);
       participantTeams.forEach((team) => {
-        if (team.ActivityID === activity.ID) setCanCreateTeam(false || participant.IsAdmin);
+        if (team.ActivityID === activity.ID) participating = true;
       });
+      setCanCreateTeam(participating || participant.IsAdmin);
     }
   }, [activity, participant, participantTeams]);
   const handleTeamForm = (status) => {
