@@ -219,10 +219,10 @@ const Activity = () => {
             {scheduleCard}
           </Grid>
           <Grid item direction={'column'} xs={12} md={6}>
-            <Grid item style={subElementStyle}>
+            <Grid item style={styles.gridItemStack}>
               {seriesCard}
             </Grid>
-            <Grid item style={subElementStyle}>
+            <Grid item style={styles.gridItemStack}>
               {teamsCard}
             </Grid>
           </Grid>

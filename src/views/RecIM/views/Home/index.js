@@ -26,9 +26,6 @@ const Home = () => {
   const [openWaiver, setOpenWaiver] = useState(false);
   const [createdActivity, setCreatedActivity] = useState({ ID: null });
   const [hasPermissions, setHasPermissions] = useState(false);
-  const subElementStyle = {
-    marginBottom: '1em',
-  };
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -184,10 +181,10 @@ const Home = () => {
         </Grid>
         <Grid item container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={8}>
-            <Grid item style={subElementStyle}>
+            <Grid item style={styles.gridItemStack}>
               {upcomingActivitiesCard}
             </Grid>
-            <Grid item style={subElementStyle}>
+            <Grid item style={styles.gridItemStack}>
               {ongoingActivitiesCard}
             </Grid>
           </Grid>
