@@ -26,7 +26,6 @@ import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 //expensive, comment on line 36
 import { getActivityByID } from 'services/recim/activity';
 
-
 const Team = () => {
   const { activityID, teamID } = useParams();
   const { profile } = useUser();
@@ -37,18 +36,12 @@ const Team = () => {
   //this is expensive, so optimally we would want another way to check that registration is open
   const [activity, setActivity] = useState(null);
   const [hasPermissions, setHasPermissions] = useState(false);
-  const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
-  const handleInviteParticipantForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenInviteParticipantForm(false);
-  };
 
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
   const handleInviteParticipantForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenInviteParticipantForm(false);
   };
-
 
   useEffect(() => {
     const loadTeamData = async () => {
