@@ -6,7 +6,9 @@ import {
   CardContent,
   Button,
   Breadcrumbs,
+  IconButton,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import HomeIcon from '@mui/icons-material/Home';
 import { useEffect, useState } from 'react';
@@ -16,6 +18,7 @@ import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import styles from './Activity.module.css';
 import { MatchList, SeriesList, TeamList } from './../../components/List';
+import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import CreateTeamForm from '../../components/Forms/CreateTeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import { Link as LinkRouter } from 'react-router-dom';
@@ -26,8 +29,12 @@ const Activity = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState({});
+  const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openCreateTeamForm, setOpenCreateTeamForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
+  const subElementStyle = {
+    marginBottom: '1em',
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -36,7 +43,7 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [activityID, openCreateTeamForm, openCreateSeriesForm]);
+  }, [activityID, openCreateTeamForm, openCreateSeriesForm, openActivityForm]);
   // ^ May be bad practice, but will refresh page on dialog close
 
   const handleCreateTeamForm = (status) => {
@@ -46,6 +53,10 @@ const Activity = () => {
   const handleCreateSeriesForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenCreateSeriesForm(false);
+  };
+  const handleActivityForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenActivityForm(false);
   };
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -84,6 +95,13 @@ const Activity = () => {
               <Grid item xs={8} md={5}>
                 <Typography variant="h5" className={styles.activityTitle}>
                   {activity.Name}
+                  <IconButton>
+                    <EditIcon
+                      onClick={() => {
+                        setOpenActivityForm(true);
+                      }}
+                    />
+                  </IconButton>
                 </Typography>
                 <Typography variant="h6" className={styles.activitySubtitle}>
                   <i>Description of activity</i>
@@ -176,9 +194,13 @@ const Activity = () => {
           <Grid item xs={12} md={6}>
             {scheduleCard}
           </Grid>
-          <Grid item container direction={'column'} spacing={2} xs={12} md={6}>
-            <Grid item>{seriesCard}</Grid>
-            <Grid item>{teamsCard}</Grid>
+          <Grid item direction={'column'} xs={12} md={6}>
+            <Grid item style={subElementStyle}>
+              {seriesCard}
+            </Grid>
+            <Grid item style={subElementStyle}>
+              {teamsCard}
+            </Grid>
           </Grid>
         </Grid>
         {openCreateTeamForm ? (
@@ -200,6 +222,16 @@ const Activity = () => {
             setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
             activityID={activity.ID}
             existingActivitySeries={activity.Series}
+          />
+        ) : null}
+        {openActivityForm ? (
+          <ActivityForm
+            activity={activity}
+            closeWithSnackbar={(status) => {
+              handleActivityForm(status);
+            }}
+            openActivityForm={openActivityForm}
+            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
           />
         ) : null}
         <Typography>Activity ID: {activityID} (testing purposes only)</Typography>

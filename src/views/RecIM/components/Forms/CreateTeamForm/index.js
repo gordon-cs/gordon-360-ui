@@ -68,13 +68,6 @@ const CreateTeamForm = ({
       }
       handleSetError(field, newInfo[field] === '');
       hasError = newInfo[field] === '' || hasError;
-      // switch (field) {
-      //   case 'name':
-      //     break;
-
-      //   default:
-      //     break;
-      // }
     }
     setDisableUpdateButton(hasError || !hasChanges);
   }, [newInfo, currentInfo]);
