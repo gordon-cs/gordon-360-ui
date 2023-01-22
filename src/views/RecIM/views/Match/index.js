@@ -10,6 +10,7 @@ import { getMatchByID } from 'services/recim/match';
 import { DateTime } from 'luxon';
 import { Link as LinkRouter } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
+// import EditIcon from '@mui/icons-material/Edit'
 
 const dayMonthDate = (date) => {
   return (
@@ -37,6 +38,7 @@ const Match = () => {
   const { profile } = useUser();
   const [match, setMatch] = useState({});
   const [loading, setLoading] = useState(true);
+  // const [openMatchForm, setOpenMatchForm] = useState(false);
 
   useEffect(() => {
     const loadMatch = async () => {

@@ -1,114 +1,87 @@
 import { Grid } from '@mui/material';
-import { useState, useEffect, useMemo } from 'react';
-import GordonLoader from 'components/Loader';
+import { useState, useMemo, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { ConfirmationRow } from '../components/ConfirmationRow';
-import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
-import { ContentCard } from '../components/ContentCard';
 import { InformationField } from '../components/InformationField';
-import { createActivity } from 'services/recim/activity';
-import { getAllSports } from 'services/recim/sport';
+import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
+import { ConfirmationRow } from '../components/ConfirmationRow';
+import { ContentCard } from '../components/ContentCard';
+import GordonLoader from 'components/Loader';
+import { createMatch, getMatchSurfaces } from 'services/recim/match';
 
-const CreateActivityForm = ({
+const CreateMatchForm = ({
   closeWithSnackbar,
-  openCreateActivityForm,
-  setOpenCreateActivityForm,
+  openCreateMatchForm,
+  setOpenCreateMatchForm,
+  activity,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
-    name: false,
-    registrationStart: false,
-    registrationEnd: false,
-    type: false,
-    sportID: false,
-    maxCapacity: false,
-    soloRegistration: false,
+    StartTime: false,
+    SeriesID: false,
+    SurfaceID: false,
+    TeamIDs: false,
   });
 
-  // Fetch data required for form creation
-  const [loading, setLoading] = useState(true);
-  const [sports, setSports] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [surfaces, setSurfaces] = useState([]);
+
   useEffect(() => {
-    const loadSports = async () => {
+    const loadData = async () => {
       setLoading(true);
-
-      // Get all active activities where registration has not closed
-      setSports(await getAllSports());
-
+      setSurfaces(await getMatchSurfaces());
       setLoading(false);
     };
-    loadSports();
+    loadData();
   }, []);
 
-  const createActivityFields = [
+
+  const createMatchFields = [
     {
-      label: 'Name',
-      name: 'name',
-      type: 'text',
-      error: errorStatus.name,
-      helperText: '*Required',
-    },
-    {
-      label: 'Registration Start',
-      name: 'registrationStart',
+      label: 'Start Time',
+      name: 'StartTime',
       type: 'datetime',
-      error: errorStatus.registrationStart,
+      error: errorStatus.StartTime,
       helperText: '*Required',
     },
     {
-      label: 'Registration End',
-      name: 'registrationEnd',
-      type: 'datetime',
-      error: errorStatus.registrationEnd,
-      helperText: '*Required',
-    },
-    {
-      label: 'Activity Type',
-      name: 'type',
+      label: 'Series',
+      name: 'SeriesID',
       type: 'select',
-      menuItems: ['League', 'Tournament', 'One-off'],
-      error: errorStatus.type,
-      helperText: '*Required',
-    },
-    {
-      label: 'Sport',
-      name: 'sportID',
-      type: 'select',
-      menuItems: sports.map((sport) => {
-        return sport.Name;
+      menuItems: activity.Series.map((series) => {
+        return series.Name;
       }),
-      error: errorStatus.sportID,
+      error: errorStatus.SeriesID,
       helperText: '*Required',
     },
     {
-      label: 'Maximum Capacity',
-      name: 'maxCapacity',
-      type: 'text',
-      error: errorStatus.maxCapactity,
+      label: 'Surface ID',
+      name: 'SurfaceID',
+      type: 'select',
+      menuItems: surfaces.map((surface) => {
+        return surface.Description;
+      }),
+      error: errorStatus.SurfaceID,
       helperText: '*Required',
     },
     {
-      label: 'Individual Sport',
-      name: 'soloRegistration',
-      type: 'checkbox',
-      error: errorStatus.soloRegistration,
+      label: 'Teams',
+      name: 'TeamIDs',
+      type: 'multiselect',
+      menuItems: activity.Team.map((team) => {
+        return team.Name;
+      }),
+      error: errorStatus.StartTime,
       helperText: '*Required',
     },
   ];
 
-  const allFields = [
-    createActivityFields,
-    // if you need more fields put them here, or if you make a "second paage"
-  ].flat();
+  const allFields = [createMatchFields].flat();
 
   const currentInfo = useMemo(() => {
     return {
-      name: '',
-      registrationStart: '',
-      registrationEnd: '',
-      type: '',
-      sportID: '',
-      maxCapacity: '',
-      soloRegistration: false,
+      StartTime: '',
+      SeriesID: '',
+      SurfaceID: '',
+      TeamIDs: [],
     };
   }, []);
 
@@ -182,23 +155,36 @@ const CreateActivityForm = ({
   const handleConfirm = () => {
     setSaving(true);
 
-    let activityCreationRequest = { ...currentInfo, ...newInfo };
+    let matchCreationRequest = { ...currentInfo, ...newInfo };
 
-    activityCreationRequest.sportID = sports.filter(
-      (sport) => sport.Name === activityCreationRequest.sportID,
-    )[0].ID;
+    matchCreationRequest.SeriesID = activity.Series.find(
+      (series) => series.Name === matchCreationRequest.SeriesID,
+    ).ID;
 
-    createActivity(activityCreationRequest).then(() => {
-      setSaving(false);
+    matchCreationRequest.SurfaceID = surfaces.find(
+      (surface) => surface.Description === matchCreationRequest.SurfaceID,
+    ).ID;
+
+    let idArray = [];
+    matchCreationRequest.TeamIDs.forEach((value) => {
+      idArray.push(activity.Team.find((team) => team.Name === value).ID);
+    });
+    matchCreationRequest.TeamIDs = idArray;
+
+
+    createMatch(matchCreationRequest).then((result) => {
+      console.log(result)
       closeWithSnackbar({
         type: 'success',
-        message: 'Your new activity has been created or whatever message you want here',
+        message: 'Match created successfully',
       });
+
       handleWindowClose();
     });
   };
 
   const handleWindowClose = () => {
+    setOpenCreateMatchForm(false);
     setOpenConfirmWindow(false);
     setNewInfo(currentInfo);
   };
@@ -220,9 +206,9 @@ const CreateActivityForm = ({
         menuItems={field.menuItems}
         onChange={handleChange}
         xs={12}
-        sm={6}
-        md={4}
-        lg={3}
+        sm={12}
+        md={12}
+        lg={12}
       />
     ));
   };
@@ -233,24 +219,23 @@ const CreateActivityForm = ({
   } else {
     content = (
       <>
-        <ContentCard title="Activity Information">
-          {mapFieldsToInputs(createActivityFields)}
-        </ContentCard>
+        <ContentCard title="Match Information">{mapFieldsToInputs(createMatchFields)}</ContentCard>
 
+        {/* Confirmation Dialog */}
         <GordonDialogBox
           open={openConfirmWindow}
-          title="Confirm Your Activity"
+          title="Confirm Your Match"
           buttonClicked={!isSaving ? handleConfirm : null}
           buttonName="Confirm"
           // in case you want to authenticate something change isButtonDisabled
-          isButtonDisabled={false}
+          isButtonDisabled={disableUpdateButton}
           cancelButtonClicked={!isSaving ? handleWindowClose : null}
           cancelButtonName="Cancel"
         >
           <ConfirmationWindowHeader />
           <Grid container>
             {getNewFields(currentInfo, newInfo).map((field) => (
-              <ConfirmationRow key={field} field={field} />
+              <ConfirmationRow key={field} field={field} prevValue={currentInfo[field.Field]} />
             ))}
           </Grid>
           {isSaving ? <GordonLoader size={32} /> : null}
@@ -258,18 +243,19 @@ const CreateActivityForm = ({
       </>
     );
   }
+
   return (
     <GordonDialogBox
-      open={openCreateActivityForm}
-      title="Create Activity"
+      open={openCreateMatchForm}
+      title="Create a Team"
       fullWidth
-      maxWidth="lg"
+      maxWidth="sm"
       buttonClicked={() => setOpenConfirmWindow(true)}
       isButtonDisabled={disableUpdateButton}
       buttonName="Submit"
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
-        setOpenCreateActivityForm(false);
+        setOpenCreateMatchForm(false);
       }}
       cancelButtonName="cancel"
     >
@@ -278,4 +264,4 @@ const CreateActivityForm = ({
   );
 };
 
-export default CreateActivityForm;
+export default CreateMatchForm;

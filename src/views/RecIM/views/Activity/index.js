@@ -19,6 +19,7 @@ import { MatchList, TeamList } from './../../components/List';
 import CreateTeamForm from '../../components/Forms/CreateTeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import { Link as LinkRouter } from 'react-router-dom';
+import CreateMatchForm from 'views/RecIM/components/Forms/CreateMatchForm';
 
 const Activity = () => {
   const { activityID } = useParams();
@@ -26,6 +27,7 @@ const Activity = () => {
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState({});
   const [openCreateTeamForm, setOpenCreateTeamForm] = useState(false);
+  const [openCreateMatchForm, setOpenCreateMatchForm] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -34,12 +36,12 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [activityID, openCreateTeamForm]);
+  }, [activityID, openCreateTeamForm, openCreateMatchForm]);
   // ^ May be bad practice, but will refresh page on dialog close
 
-  const handleCreateTeamForm = (status) => {
+  const handleFormSubmit = (status, setOpenForm) => {
     //if you want to do something with the message make a snackbar function here
-    setOpenCreateTeamForm(false);
+    setOpenForm(false);
   };
 
   // profile hook used for future authentication
@@ -102,6 +104,19 @@ const Activity = () => {
               Games have not yet been scheduled.
             </Typography>
           )}
+          <Grid container justifyContent="center">
+            <Button
+              variant="contained"
+              color="warning"
+              startIcon={<AddCircleRoundedIcon />}
+              className={styles.actionButton}
+              onClick={() => {
+                setOpenCreateMatchForm(true);
+              }}
+            >
+              Create a New Match
+            </Button>
+          </Grid>
         </CardContent>
       </Card>
     );
@@ -150,11 +165,20 @@ const Activity = () => {
         {openCreateTeamForm ? (
           <CreateTeamForm
             closeWithSnackbar={(status) => {
-              handleCreateTeamForm(status);
+              handleFormSubmit(status, setOpenCreateTeamForm);
             }}
             openCreateTeamForm={openCreateTeamForm}
             setOpenCreateTeamForm={(bool) => setOpenCreateTeamForm(bool)}
             activityID={activityID}
+          />
+        ) : openCreateMatchForm ? (
+          <CreateMatchForm
+            closeWithSnackbar={(status) => {
+              handleFormSubmit(status, setOpenCreateMatchForm);
+            }}
+            openCreateMatchForm={openCreateMatchForm}
+            setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+            activity={activity}
           />
         ) : null}
         <Typography>Activity ID: {activityID} (testing purposes only)</Typography>
