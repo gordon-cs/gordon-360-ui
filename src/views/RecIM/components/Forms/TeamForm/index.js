@@ -46,7 +46,6 @@ const TeamForm = ({
       helperText: '*Required',
     },
   ];
-  console.log(isAdmin);
   if (team && isAdmin) {
     createTeamFields.push({
       label: 'Team Status',
