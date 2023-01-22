@@ -115,15 +115,25 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMakeCoCaptain = () => {
-    editTeamParticipant(participant.Username, teamID, 4); // Role 4 is co-captain
+  const handleMakeCoCaptain = async () => {
+    let editedParticipant = {
+      Username: participant.Username,
+      RoleTypeID: 4,
+    }; // Role 4 is co-captain\
+
+    await editTeamParticipant(parseInt(teamID), editedParticipant); // Role 4 is co-captain
     handleClose();
   };
 
-  const handleRemoveFromTeam = () => {
-    editTeamParticipant(participant.Username, teamID, 6) // Role 6 is inactive
+  const handleRemoveFromTeam = async () => {
+    let editedParticipant = {
+      Username: participant.Username,
+      RoleTypeID: 6,
+    }; // Role 6 is inactive
+
+    await editTeamParticipant(parseInt(teamID), editedParticipant);
     handleClose();
-  }
+  };
 
   useEffect(() => {
     const loadAvatar = async () => {
