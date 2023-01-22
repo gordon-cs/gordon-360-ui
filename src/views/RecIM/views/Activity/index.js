@@ -36,9 +36,6 @@ const Activity = () => {
   const [participant, setParticipant] = useState(null);
   const [participantTeams, setParticipantTeams] = useState(null);
   const [canCreateTeam, setCanCreateTeam] = useState(true);
-  const subElementStyle = {
-    marginBottom: '1em',
-  };
 
   useEffect(() => {
     const loadData = async () => {
