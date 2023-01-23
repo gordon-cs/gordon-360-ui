@@ -18,6 +18,9 @@ import user from 'services/user';
 import { DateTime } from 'luxon';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import UpdateIcon from '@mui/icons-material/Update';
+import RestoreIcon from '@mui/icons-material/Restore';
+import ScheduleIcon from '@mui/icons-material/Schedule';
 import ClearIcon from '@mui/icons-material/Clear';
 import { editTeamParticipant } from 'services/recim/team';
 
@@ -35,42 +38,41 @@ const SeriesListing = ({ series }) => {
 
   const status = () => {
     let now = DateTime.fromMillis(Date.now());
-    if (now < startDate) {
-      return (
-        <Chip icon={<EventAvailableIcon />} label="not started" color="default" size="small"></Chip>
-      );
-    }
-    if (now > endDate) {
-      return (
-        <Chip icon={<EventAvailableIcon />} label="completed" color="info" size="small"></Chip>
-      );
-    }
-    return <Chip icon={<EventAvailableIcon />} label="ongoing" color="success" size="small"></Chip>;
+    // future series
+    if (now < startDate)
+      return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
+    // past series
+    else if (now > endDate)
+      return <Chip icon={<RestoreIcon />} label="completed" color="default" size="small"></Chip>;
+    // current series
+    return <Chip icon={<ScheduleIcon />} label="ongoing" color="success" size="small"></Chip>;
   };
 
   return (
-    <Grid container className={styles.listing} columnSpacing={2} alignContent="center">
-      <Grid container direction="column" item xs={12} sm={4} alignContent="center">
-        <Typography className={styles.listingTitle}>{series.Name}</Typography>
-        <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
-          Schedule Type: {series.Type}
-        </Typography>
-      </Grid>
-      <Grid item xs={12} sm={4}>
-        <Grid container direction="row">
-          <Grid item xs={10}>
-            <Typography>
-              <i>
-                {standardDate(startDate, false)} - {standardDate(endDate, false)}
-              </i>
-            </Typography>
+    <ListItem>
+      <Grid container className={styles.listing} columnSpacing={2} alignItems="center">
+        <Grid container direction="column" item xs={12} sm={4}>
+          <Typography className={styles.listingTitle}>{series.Name}</Typography>
+          <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
+            Schedule Type: {series.Type}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Grid container direction="row">
+            <Grid item xs={10}>
+              <Typography>
+                <i>
+                  {standardDate(startDate, false)} - {standardDate(endDate, false)}
+                </i>
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
+        <Grid item xs={12} sm={4}>
+          {status()}
+        </Grid>
       </Grid>
-      <Grid item xs={12} sm={4}>
-        {status()}
-      </Grid>
-    </Grid>
+    </ListItem>
   );
 };
 
@@ -166,8 +168,8 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
   };
 
   const handleRemoveFromTeam = () => {
-    editTeamParticipant(participant.Username, teamID, 6) // Role 6 is inactive
-  }
+    editTeamParticipant(participant.Username, teamID, 6); // Role 6 is inactive
+  };
 
   useEffect(() => {
     const loadAvatar = async () => {
