@@ -216,10 +216,10 @@ const Activity = () => {
             {scheduleCard}
           </Grid>
           <Grid item direction={'column'} xs={12} md={6}>
-            <Grid item style={styles.gridItemStack}>
+            <Grid item className={styles.gridItemStack}>
               {seriesCard}
             </Grid>
-            <Grid item style={styles.gridItemStack}>
+            <Grid item className={styles.gridItemStack}>
               {teamsCard}
             </Grid>
           </Grid>
