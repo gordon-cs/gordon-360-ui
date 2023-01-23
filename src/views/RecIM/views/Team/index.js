@@ -6,7 +6,7 @@ import {
   CardContent,
   Breadcrumbs,
   Button,
-  IconButton
+  IconButton,
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
@@ -35,7 +35,6 @@ const Team = () => {
     //if you want to do something with the message make a snackbar function here
     setOpenInviteParticipantForm(false);
   };
-
 
   useEffect(() => {
     const loadTeamData = async () => {
@@ -124,9 +123,7 @@ const Team = () => {
       <Card>
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
-          <CardContent>
           <ParticipantList participants={team.Participant} showParticipantOptions />
-          </CardContent>
           <Grid container justifyContent="center">
             <Button
               variant="contained"
