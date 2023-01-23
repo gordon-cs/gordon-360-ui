@@ -2,10 +2,11 @@ import http from '../http';
 import { Match } from './match';
 import { Participant } from './participant';
 import { Lookup } from './recim';
+import { Activity } from './activity';
 
 export type Team = {
   ID: number;
-  ActivityID: number;
+  Activity: Activity;
   Name: string;
   Status: string;
   Logo: string;

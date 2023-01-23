@@ -58,7 +58,7 @@ const Activity = () => {
       let participating = false;
       setCanCreateTeam(activity.RegistrationOpen);
       participantTeams.forEach((team) => {
-        if (team.ActivityID === activity.ID) participating = true;
+        if (team.Activity.ID === activity.ID) participating = true;
       });
       setCanCreateTeam(participating || participant.IsAdmin);
     }

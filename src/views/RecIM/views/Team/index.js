@@ -23,18 +23,14 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
 import EditIcon from '@mui/icons-material/Edit';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
-//expensive, comment on line 36
-import { getActivityByID } from 'services/recim/activity';
 
 const Team = () => {
-  const { activityID, teamID } = useParams();
+  const { teamID } = useParams();
   const { profile } = useUser();
   const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(true);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [participant, setParticipant] = useState(null);
-  //this is expensive, so optimally we would want another way to check that registration is open
-  const [activity, setActivity] = useState(null);
   const [hasPermissions, setHasPermissions] = useState(false);
 
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
@@ -47,14 +43,13 @@ const Team = () => {
     const loadTeamData = async () => {
       setLoading(true);
       setTeam(await getTeamByID(teamID));
-      setActivity(await getActivityByID(activityID));
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
       }
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, activityID, teamID, openTeamForm]);
+  }, [profile, teamID, openTeamForm]);
 
   //checks if the team is modifiable by the current user
   useEffect(() => {
@@ -62,17 +57,18 @@ const Team = () => {
     let isAdmin = false;
     if (participant) {
       isAdmin = participant.IsAdmin;
-      if (activity && team) {
+      if (team) {
         let role =
           team.Participant.find((person) => person.Username === participant.Username) == null
             ? 'Invalid'
             : team.Participant.find((person) => person.Username === participant.Username).Role;
         hasCaptainPermissions =
-          activity.RegistrationOpen && (role === 'Co-Captain' || role === 'Team-captain/Creator');
+          team.Activity.RegistrationOpen &&
+          (role === 'Co-Captain' || role === 'Team-captain/Creator');
       }
     }
     setHasPermissions(hasCaptainPermissions || isAdmin);
-  }, [activity, team, participant]);
+  }, [team, participant]);
 
   const handleTeamForm = (status) => {
     //if you want to do something with the message make a snackbar function here
@@ -118,9 +114,9 @@ const Team = () => {
                     className="gc360_text_link"
                     underline="hover"
                     color="inherit"
-                    to={`/recim/activity/${activityID}`}
+                    to={`/recim/activity/${team.Activity?.ID}`}
                   >
-                    {activity.Name}
+                    {team.Activity?.Name}
                   </LinkRouter>
                   <Typography color="text.primary">{team.Name}</Typography>
                 </Breadcrumbs>
@@ -193,7 +189,7 @@ const Team = () => {
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
           {team.Match?.length ? (
-            <MatchList matches={team.Match} activityID={team.ActivityID} />
+            <MatchList matches={team.Match} activityID={team.Activity?.ID} />
           ) : (
             <Typography variant="body1" paragraph>
               No matches scheduled at this time!
@@ -217,7 +213,7 @@ const Team = () => {
           </Grid>
         </Grid>
         <p>
-          Activity ID: {activityID} Team ID: {teamID} (for testing purposes only)
+          Activity ID: {team.Activity?.ID} Team ID: {teamID} (for testing purposes only)
         </p>
         {openTeamForm ? (
           <TeamForm
@@ -226,7 +222,7 @@ const Team = () => {
             }}
             openTeamForm={openTeamForm}
             setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-            activityID={activityID}
+            activityID={team.Activity?.ID}
             team={team}
             isAdmin={participant.IsAdmin}
           />
