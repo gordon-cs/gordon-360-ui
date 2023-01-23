@@ -23,29 +23,46 @@ import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import { Link as LinkRouter } from 'react-router-dom';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 
 const Activity = () => {
   const { activityID } = useParams();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
-  const [activity, setActivity] = useState({});
+  const [activity, setActivity] = useState(null);
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
-  const subElementStyle = {
-    marginBottom: '1em',
-  };
+  const [participant, setParticipant] = useState(null);
+  const [participantTeams, setParticipantTeams] = useState(null);
+  const [canCreateTeam, setCanCreateTeam] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       setActivity(await getActivityByID(activityID));
+      if (profile) {
+        setParticipant(await getParticipantByUsername(profile.AD_Username));
+        setParticipantTeams(await getParticipantTeams(profile.AD_Username));
+      }
       setLoading(false);
     };
     loadData();
-  }, [activityID, openTeamForm, openCreateSeriesForm, openActivityForm]);
+  }, [profile, activityID, openTeamForm, openCreateSeriesForm, openActivityForm]);
   // ^ May be bad practice, but will refresh page on dialog close
 
+  // disable create team if participant already is participating in this activity,
+  // unless they're an admin
+  useEffect(() => {
+    if (participantTeams && participant) {
+      let participating = false;
+      setCanCreateTeam(activity.RegistrationOpen);
+      participantTeams.forEach((team) => {
+        if (team.ActivityID === activity.ID) participating = true;
+      });
+      setCanCreateTeam(participating || participant.IsAdmin);
+    }
+  }, [activity, participant, participantTeams]);
   const handleTeamForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenTeamForm(false);
@@ -95,13 +112,15 @@ const Activity = () => {
               <Grid item xs={8} md={5}>
                 <Typography variant="h5" className={styles.activityTitle}>
                   {activity.Name}
-                  <IconButton>
-                    <EditIcon
-                      onClick={() => {
-                        setOpenActivityForm(true);
-                      }}
-                    />
-                  </IconButton>
+                  {participant.IsAdmin === true ? (
+                    <IconButton>
+                      <EditIcon
+                        onClick={() => {
+                          setOpenActivityForm(true);
+                        }}
+                      />
+                    </IconButton>
+                  ) : null}
                 </Typography>
                 <Typography variant="h6" className={styles.activitySubtitle}>
                   <i>Description of activity</i>
@@ -112,7 +131,6 @@ const Activity = () => {
         </CardContent>
       </Card>
     );
-
     // CARD - schedule
     let scheduleCard = (
       <Card>
@@ -141,17 +159,19 @@ const Activity = () => {
             </Typography>
           )}
           <Grid container justifyContent="center">
-            <Button
-              variant="contained"
-              color="warning"
-              startIcon={<AddCircleRoundedIcon />}
-              className={styles.actionButton}
-              onClick={() => {
-                setOpenTeamForm(true);
-              }}
-            >
-              Create a New Team
-            </Button>
+            {canCreateTeam ? (
+              <Button
+                variant="contained"
+                color="warning"
+                startIcon={<AddCircleRoundedIcon />}
+                className={styles.actionButton}
+                onClick={() => {
+                  setOpenTeamForm(true);
+                }}
+              >
+                Create a New Team
+              </Button>
+            ) : null}
           </Grid>
         </CardContent>
       </Card>
@@ -169,22 +189,23 @@ const Activity = () => {
             </Typography>
           )}
           <Grid container justifyContent="center">
-            <Button
-              variant="contained"
-              color="warning"
-              startIcon={<AddCircleRoundedIcon />}
-              className={styles.actionButton}
-              onClick={() => {
-                setOpenCreateSeriesForm(true);
-              }}
-            >
-              Create a New Series
-            </Button>
+            {participant.IsAdmin === true ? (
+              <Button
+                variant="contained"
+                color="warning"
+                startIcon={<AddCircleRoundedIcon />}
+                className={styles.actionButton}
+                onClick={() => {
+                  setOpenCreateSeriesForm(true);
+                }}
+              >
+                Create a New Series
+              </Button>
+            ) : null}
           </Grid>
         </CardContent>
       </Card>
     );
-
     return (
       <Grid container spacing={2}>
         <Grid item alignItems="center" xs={12}>
@@ -195,10 +216,10 @@ const Activity = () => {
             {scheduleCard}
           </Grid>
           <Grid item direction={'column'} xs={12} md={6}>
-            <Grid item style={subElementStyle}>
+            <Grid item className={styles.gridItemStack}>
               {seriesCard}
             </Grid>
-            <Grid item style={subElementStyle}>
+            <Grid item className={styles.gridItemStack}>
               {teamsCard}
             </Grid>
           </Grid>
