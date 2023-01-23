@@ -19,7 +19,7 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import styles from './Activity.module.css';
 import { MatchList, SeriesList, TeamList } from './../../components/List';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
-import CreateTeamForm from '../../components/Forms/CreateTeamForm';
+import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import { Link as LinkRouter } from 'react-router-dom';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
@@ -30,7 +30,7 @@ const Activity = () => {
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState({});
   const [openActivityForm, setOpenActivityForm] = useState(false);
-  const [openCreateTeamForm, setOpenCreateTeamForm] = useState(false);
+  const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const subElementStyle = {
     marginBottom: '1em',
@@ -43,12 +43,12 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [activityID, openCreateTeamForm, openCreateSeriesForm, openActivityForm]);
+  }, [activityID, openTeamForm, openCreateSeriesForm, openActivityForm]);
   // ^ May be bad practice, but will refresh page on dialog close
 
-  const handleCreateTeamForm = (status) => {
+  const handleTeamForm = (status) => {
     //if you want to do something with the message make a snackbar function here
-    setOpenCreateTeamForm(false);
+    setOpenTeamForm(false);
   };
   const handleCreateSeriesForm = (status) => {
     //if you want to do something with the message make a snackbar function here
@@ -147,7 +147,7 @@ const Activity = () => {
               startIcon={<AddCircleRoundedIcon />}
               className={styles.actionButton}
               onClick={() => {
-                setOpenCreateTeamForm(true);
+                setOpenTeamForm(true);
               }}
             >
               Create a New Team
@@ -203,13 +203,13 @@ const Activity = () => {
             </Grid>
           </Grid>
         </Grid>
-        {openCreateTeamForm ? (
-          <CreateTeamForm
+        {openTeamForm ? (
+          <TeamForm
             closeWithSnackbar={(status) => {
-              handleCreateTeamForm(status);
+              handleTeamForm(status);
             }}
-            openCreateTeamForm={openCreateTeamForm}
-            setOpenCreateTeamForm={(bool) => setOpenCreateTeamForm(bool)}
+            openTeamForm={openTeamForm}
+            setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
             activityID={activityID}
           />
         ) : null}
