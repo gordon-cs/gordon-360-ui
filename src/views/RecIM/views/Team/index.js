@@ -156,13 +156,11 @@ const Team = () => {
       <Card>
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
-          <CardContent>
-            {hasPermissions ? (
-              <ParticipantList participants={team.Participant} showParticipantOptions />
-            ) : (
-              <ParticipantList participants={team.Participant} />
-            )}
-          </CardContent>
+          {hasPermissions ? (
+            <ParticipantList participants={team.Participant} showParticipantOptions />
+          ) : (
+            <ParticipantList participants={team.Participant} />
+          )}
           {hasPermissions ? (
             <Grid container justifyContent="center">
               <Button
