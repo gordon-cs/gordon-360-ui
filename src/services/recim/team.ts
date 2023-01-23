@@ -88,13 +88,10 @@ const addParticipantToTeam = async (
 };
 
 const editTeamParticipant = async (
-  username: string,
   teamID: number,
-  roleID: number,
+  editedParticipant: UploadTeamParticipant,
 ): Promise<CreatedTeamParticipant> => {
-  return await http.patch(
-    `recim/Teams/${teamID}/participants?username=${username}&roleID=${roleID}`,
-  );
+  return await http.patch(`recim/Teams/${teamID}/participants`, editedParticipant);
 };
 
 const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>

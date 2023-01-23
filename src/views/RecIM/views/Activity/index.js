@@ -22,6 +22,7 @@ import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import { Link as LinkRouter } from 'react-router-dom';
+import CreateMatchForm from 'views/RecIM/components/Forms/CreateMatchForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 
@@ -32,6 +33,7 @@ const Activity = () => {
   const [activity, setActivity] = useState(null);
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [openCreateMatchForm, setOpenCreateMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [participant, setParticipant] = useState(null);
   const [participantTeams, setParticipantTeams] = useState(null);
@@ -48,7 +50,14 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [profile, activityID, openTeamForm, openCreateSeriesForm, openActivityForm]);
+  }, [
+    profile,
+    activityID,
+    openTeamForm,
+    openCreateSeriesForm,
+    openActivityForm,
+    openCreateMatchForm,
+  ]);
   // ^ May be bad practice, but will refresh page on dialog close
 
   // disable create team if participant already is participating in this activity,
@@ -63,7 +72,7 @@ const Activity = () => {
       setCanCreateTeam(participating || participant.IsAdmin);
     }
   }, [activity, participant, participantTeams]);
-  const handleTeamForm = (status) => {
+  const handleTeamFormSubmit = (status, setOpenTeamForm) => {
     //if you want to do something with the message make a snackbar function here
     setOpenTeamForm(false);
   };
@@ -143,6 +152,19 @@ const Activity = () => {
               Games have not yet been scheduled.
             </Typography>
           )}
+          <Grid container justifyContent="center">
+            <Button
+              variant="contained"
+              color="warning"
+              startIcon={<AddCircleRoundedIcon />}
+              className={styles.actionButton}
+              onClick={() => {
+                setOpenCreateMatchForm(true);
+              }}
+            >
+              Create a New Match
+            </Button>
+          </Grid>
         </CardContent>
       </Card>
     );
@@ -227,11 +249,20 @@ const Activity = () => {
         {openTeamForm ? (
           <TeamForm
             closeWithSnackbar={(status) => {
-              handleTeamForm(status);
+              handleTeamFormSubmit(status, setOpenTeamForm);
             }}
             openTeamForm={openTeamForm}
             setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
             activityID={activityID}
+          />
+        ) : openCreateMatchForm ? (
+          <CreateMatchForm
+            closeWithSnackbar={(status) => {
+              handleTeamFormSubmit(status, setOpenCreateMatchForm);
+            }}
+            openCreateMatchForm={openCreateMatchForm}
+            setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+            activity={activity}
           />
         ) : null}
         {openCreateSeriesForm ? (
