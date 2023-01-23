@@ -58,7 +58,7 @@ const Activity = () => {
       let participating = false;
       setCanCreateTeam(activity.RegistrationOpen);
       participantTeams.forEach((team) => {
-        if (team.ActivityID === activity.ID) participating = true;
+        if (team.Activity.ID === activity.ID) participating = true;
       });
       setCanCreateTeam(participating || participant.IsAdmin);
     }
@@ -216,10 +216,10 @@ const Activity = () => {
             {scheduleCard}
           </Grid>
           <Grid item direction={'column'} xs={12} md={6}>
-            <Grid item style={styles.gridItemStack}>
+            <Grid item className={styles.gridItemStack}>
               {seriesCard}
             </Grid>
-            <Grid item style={styles.gridItemStack}>
+            <Grid item className={styles.gridItemStack}>
               {teamsCard}
             </Grid>
           </Grid>

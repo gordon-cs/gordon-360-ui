@@ -181,10 +181,10 @@ const Home = () => {
         </Grid>
         <Grid item container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={8}>
-            <Grid item style={styles.gridItemStack}>
+            <Grid item className={styles.gridItemStack}>
               {upcomingActivitiesCard}
             </Grid>
-            <Grid item style={styles.gridItemStack}>
+            <Grid item className={styles.gridItemStack}>
               {ongoingActivitiesCard}
             </Grid>
           </Grid>
