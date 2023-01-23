@@ -6,39 +6,49 @@ import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ContentCard } from '../components/ContentCard';
 import { InformationField } from '../components/InformationField';
-import { createActivity } from 'services/recim/activity';
+import {
+  createActivity,
+  getActivityTypes,
+  getActivityStatusTypes,
+  editActivity,
+} from 'services/recim/activity';
 import { getAllSports } from 'services/recim/sport';
 
-const CreateActivityForm = ({
+const ActivityForm = ({
+  activity,
   closeWithSnackbar,
-  openCreateActivityForm,
-  setOpenCreateActivityForm,
+  openActivityForm,
+  setOpenActivityForm,
+  setCreatedInstance,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
     registrationStart: false,
     registrationEnd: false,
-    type: false,
+    typeID: false,
     sportID: false,
     maxCapacity: false,
     soloRegistration: false,
+    statusID: false,
+    completed: false,
   });
 
   // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
   const [sports, setSports] = useState([]);
+  const [activityTypes, setActivityTypes] = useState([]);
+  const [activityStatusTypes, setActivityStatusTypes] = useState([]);
+
   useEffect(() => {
-    const loadSports = async () => {
+    const fetchData = async () => {
       setLoading(true);
-
-      // Get all active activities where registration has not closed
       setSports(await getAllSports());
-
+      setActivityTypes(await getActivityTypes());
+      setActivityStatusTypes(await getActivityStatusTypes());
       setLoading(false);
     };
-    loadSports();
+    fetchData();
   }, []);
-
   const createActivityFields = [
     {
       label: 'Name',
@@ -63,10 +73,12 @@ const CreateActivityForm = ({
     },
     {
       label: 'Activity Type',
-      name: 'type',
+      name: 'typeID',
       type: 'select',
-      menuItems: ['League', 'Tournament', 'One-off'],
-      error: errorStatus.type,
+      menuItems: activityTypes.map((type) => {
+        return type.Description;
+      }),
+      error: errorStatus.typeID,
       helperText: '*Required',
     },
     {
@@ -94,6 +106,27 @@ const CreateActivityForm = ({
       helperText: '*Required',
     },
   ];
+  if (activity) {
+    createActivityFields.push(
+      {
+        label: 'Activity Status',
+        name: 'statusID',
+        type: 'select',
+        menuItems: activityStatusTypes.map((type) => {
+          return type.Description;
+        }),
+        error: errorStatus.statusID,
+        helperText: '*Required',
+      },
+      {
+        label: 'Completed',
+        name: 'completed',
+        type: 'checkbox',
+        error: errorStatus.completed,
+        helperText: '*Required',
+      },
+    );
+  }
 
   const allFields = [
     createActivityFields,
@@ -101,16 +134,38 @@ const CreateActivityForm = ({
   ].flat();
 
   const currentInfo = useMemo(() => {
+    if (activity) {
+      return {
+        name: activity.Name,
+        registrationStart: activity.RegistrationStart,
+        registrationEnd: activity.RegistrationEnd,
+        typeID:
+          activityTypes.find((type) => type.ID === activity.TypeID) == null
+            ? ''
+            : activityTypes.find((type) => type.ID === activity.TypeID).Description,
+        sportID:
+          sports.find((type) => type.ID === activity.Sport.ID) == null
+            ? ''
+            : sports.find((type) => type.ID === activity.Sport.ID).Name,
+        statusID:
+          activityStatusTypes.find((type) => type.Description === activity.Status) == null
+            ? ''
+            : activityStatusTypes.find((type) => type.Description === activity.Status).Description,
+        maxCapacity: activity.MaxCapacity,
+        soloRegistration: activity.SoloRegistration,
+        completed: activity.Completed,
+      };
+    }
     return {
       name: '',
       registrationStart: '',
       registrationEnd: '',
-      type: '',
+      typeID: '',
       sportID: '',
       maxCapacity: '',
       soloRegistration: false,
     };
-  }, []);
+  }, [activity, activityTypes, activityStatusTypes, sports]);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
@@ -126,6 +181,11 @@ const CreateActivityForm = ({
     };
     setErrorStatus(getCurrentErrorStatus);
   };
+
+  //re spreads fetched data to map to drop-down's once data has been loaded
+  useEffect(() => {
+    setNewInfo(currentInfo);
+  }, [currentInfo]);
 
   // Field Validation
   useEffect(() => {
@@ -181,25 +241,40 @@ const CreateActivityForm = ({
 
   const handleConfirm = () => {
     setSaving(true);
-
-    let activityCreationRequest = { ...currentInfo, ...newInfo };
-
-    activityCreationRequest.sportID = sports.filter(
-      (sport) => sport.Name === activityCreationRequest.sportID,
-    )[0].ID;
-
-    createActivity(activityCreationRequest).then(() => {
-      setSaving(false);
-      closeWithSnackbar({
-        type: 'success',
-        message: 'Your new activity has been created or whatever message you want here',
+    let activityRequest = { ...currentInfo, ...newInfo };
+    activityRequest.sportID = sports.find((sport) => sport.Name === activityRequest.sportID).ID;
+    activityRequest.typeID = activityTypes.find(
+      (type) => type.Description === activityRequest.typeID,
+    ).ID;
+    if (activity) {
+      activityRequest.statusID = activityStatusTypes.find(
+        (type) => type.Description === activityRequest.statusID,
+      ).ID;
+      editActivity(activity.ID, activityRequest).then((res) => {
+        setSaving(false);
+        closeWithSnackbar({
+          type: 'success',
+          message: 'Your new activity has been created or whatever message you want here',
+        });
+        handleWindowClose();
+        setCreatedInstance(res);
       });
-      handleWindowClose();
-    });
+    } else {
+      createActivity(activityRequest).then((res) => {
+        setSaving(false);
+        closeWithSnackbar({
+          type: 'success',
+          message: 'Your new activity has been created or whatever message you want here',
+        });
+        handleWindowClose();
+        setCreatedInstance(res);
+      });
+    }
   };
 
   const handleWindowClose = () => {
     setOpenConfirmWindow(false);
+    setOpenActivityForm(false);
     setNewInfo(currentInfo);
   };
 
@@ -244,7 +319,9 @@ const CreateActivityForm = ({
           buttonName="Confirm"
           // in case you want to authenticate something change isButtonDisabled
           isButtonDisabled={false}
-          cancelButtonClicked={!isSaving ? handleWindowClose : null}
+          cancelButtonClicked={() => {
+            if (!isSaving) setOpenConfirmWindow(false);
+          }}
           cancelButtonName="Cancel"
         >
           <ConfirmationWindowHeader />
@@ -258,18 +335,22 @@ const CreateActivityForm = ({
       </>
     );
   }
+
+  const dialogTitle = activity ? 'Edit Activity' : 'Create Activity';
   return (
     <GordonDialogBox
-      open={openCreateActivityForm}
-      title="Create Activity"
+      open={openActivityForm}
+      title={dialogTitle}
       fullWidth
       maxWidth="lg"
-      buttonClicked={() => setOpenConfirmWindow(true)}
+      buttonClicked={() => {
+        setOpenConfirmWindow(true);
+      }}
       isButtonDisabled={disableUpdateButton}
       buttonName="Submit"
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
-        setOpenCreateActivityForm(false);
+        setOpenActivityForm(false);
       }}
       cancelButtonName="cancel"
     >
@@ -278,4 +359,4 @@ const CreateActivityForm = ({
   );
 };
 
-export default CreateActivityForm;
+export default ActivityForm;

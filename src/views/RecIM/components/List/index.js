@@ -1,5 +1,11 @@
 import { List } from '@mui/material';
-import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
+import {
+  ActivityListing,
+  MatchListing,
+  ParticipantListing,
+  TeamListing,
+  SeriesListing,
+} from './Listing';
 
 const ActivityList = ({ activities }) => {
   let content = activities.map((activity) => (
@@ -31,4 +37,9 @@ const TeamList = ({ teams }) => {
   return <List dense>{content}</List>;
 };
 
-export { ActivityList, ParticipantList, MatchList, TeamList };
+const SeriesList = ({ series }) => {
+  let content = series.map((series) => <SeriesListing key={series.ID} series={series} />);
+  return <List dense>{content}</List>;
+};
+
+export { ActivityList, ParticipantList, MatchList, TeamList, SeriesList };

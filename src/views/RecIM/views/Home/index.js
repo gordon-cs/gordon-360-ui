@@ -1,7 +1,7 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import CreateActivityForm from '../../components/Forms/CreateActivityForm';
+import ActivityForm from '../../components/Forms/ActivityForm';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
@@ -9,33 +9,62 @@ import styles from './Home.module.css';
 import recimLogo from './../../recim_logo.png';
 import { ActivityList, TeamList } from './../../components/List';
 import { getAllActivities } from 'services/recim/activity';
-import { DateTime } from 'luxon';
-import { getParticipantTeams } from 'services/recim/participant';
+import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
+import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
+import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 
 const Home = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
-  const [openCreateActivityForm, setOpenCreateActivityForm] = useState(false);
+  const [openActivityForm, setOpenActivityForm] = useState(false);
+  const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [activities, setActivities] = useState([]);
+  const [ongoingActivities, setOngoingActivities] = useState([]);
+  const [registrableActivities, setRegistrableActivities] = useState([]);
   const [myTeams, setMyTeams] = useState([]);
+  const [participant, setParticipant] = useState([]);
+  const [openWaiver, setOpenWaiver] = useState(false);
+  const [createdActivity, setCreatedActivity] = useState({ ID: null });
+  const [hasPermissions, setHasPermissions] = useState(false);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
 
   useEffect(() => {
-    const loadActivities = async () => {
+    const loadData = async () => {
       setLoading(true);
-
       // Get all active activities where registration has not closed
-      setActivities(await getAllActivities(false, DateTime.now().toISO()));
+      setActivities(await getAllActivities(true));
       if (profile) {
+        setParticipant(await getParticipantByUsername(profile.AD_Username));
         setMyTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
     };
-    loadActivities();
-  }, [profile, openCreateActivityForm]);
+    loadData();
+  }, [profile, openActivityForm, openWaiver, openCreateSeriesForm]);
+
+  useEffect(() => {
+    setOpenWaiver(participant == null);
+    if (participant) {
+      setHasPermissions(participant.IsAdmin);
+    }
+  }, [participant]);
+
+  useEffect(() => {
+    let open = [];
+    let ongoing = [];
+    activities.forEach((activity) => {
+      if (activity.RegistrationOpen) {
+        open.push(activity);
+      } else {
+        ongoing.push(activity);
+      }
+    });
+    setOngoingActivities(ongoing);
+    setRegistrableActivities(open);
+  }, [activities]);
 
   const createActivityButton = (
     <Grid container justifyContent="center">
@@ -45,7 +74,7 @@ const Home = () => {
         startIcon={<AddCircleRoundedIcon />}
         className={styles.actionButton}
         onClick={() => {
-          setOpenCreateActivityForm(true);
+          setOpenActivityForm(true);
         }}
       >
         Create a New Activity
@@ -74,20 +103,35 @@ const Home = () => {
     </Card>
   );
 
-  // CARD - upcoming events
-  let upcomingEventsCard = (
+  // CARD - upcoming activities
+  let upcomingActivitiesCard = (
     <Card>
       <CardHeader title="Upcoming Rec-IM Activities" className={styles.cardHeader} />
       <CardContent>
-        {activities ? (
-          <ActivityList activities={activities} />
+        {registrableActivities.length > 0 ? (
+          <ActivityList activities={registrableActivities} />
         ) : (
           <Typography variant="body1" paragraph>
-            It looks like there aren't any Rec-IM events currently open for registration :(
+            It looks like there aren't any Rec-IM activities currently open for registration
           </Typography>
         )}
 
-        {createActivityButton}
+        {hasPermissions ? createActivityButton : null}
+      </CardContent>
+    </Card>
+  );
+
+  let ongoingActivitiesCard = (
+    <Card>
+      <CardHeader title="On-going Rec-IM Activities" className={styles.cardHeader} />
+      <CardContent>
+        {registrableActivities.length > 0 ? (
+          <ActivityList activities={ongoingActivities} />
+        ) : (
+          <Typography variant="body1" paragraph>
+            It looks like there aren't any Rec-IM activities currently on-going
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );
@@ -110,7 +154,18 @@ const Home = () => {
 
   const handleCreateActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
-    setOpenCreateActivityForm(false);
+    setOpenCreateSeriesForm(true);
+    setOpenActivityForm(false);
+  };
+
+  const handleCreateSeriesForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenCreateSeriesForm(false);
+  };
+
+  const handleOpenWaiverForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenWaiver(false);
   };
 
   if (loading) {
@@ -126,20 +181,48 @@ const Home = () => {
         </Grid>
         <Grid item container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={8}>
-            {upcomingEventsCard}
+            <Grid item className={styles.gridItemStack}>
+              {upcomingActivitiesCard}
+            </Grid>
+            <Grid item className={styles.gridItemStack}>
+              {ongoingActivitiesCard}
+            </Grid>
           </Grid>
+
           <Grid item xs={12} md={4}>
             {myTeamsCard}
           </Grid>
         </Grid>
         <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
-        {openCreateActivityForm ? (
-          <CreateActivityForm
+        {openActivityForm ? (
+          <ActivityForm
             closeWithSnackbar={(status) => {
               handleCreateActivityForm(status);
             }}
-            openCreateActivityForm={openCreateActivityForm}
-            setOpenCreateActivityForm={(bool) => setOpenCreateActivityForm(bool)}
+            openActivityForm={openActivityForm}
+            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
+            setCreatedInstance={(activity) => setCreatedActivity(activity)}
+          />
+        ) : null}
+        {openCreateSeriesForm ? (
+          <CreateSeriesForm
+            closeWithSnackbar={(status) => {
+              handleCreateSeriesForm(status);
+            }}
+            openCreateSeriesForm={openCreateSeriesForm}
+            setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+            activityID={createdActivity.ID}
+            existingActivitySeries={[]}
+          />
+        ) : null}
+        {openWaiver ? (
+          <WaiverForm
+            username={profile.AD_Username}
+            closeWithSnackbar={(status) => {
+              handleOpenWaiverForm(status);
+            }}
+            openWaiverForm={openWaiver}
+            setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
           />
         ) : null}
       </Grid>

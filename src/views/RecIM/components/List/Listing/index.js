@@ -18,6 +18,9 @@ import user from 'services/user';
 import { DateTime } from 'luxon';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import UpdateIcon from '@mui/icons-material/Update';
+import RestoreIcon from '@mui/icons-material/Restore';
+import ScheduleIcon from '@mui/icons-material/Schedule';
 import ClearIcon from '@mui/icons-material/Clear';
 import { editTeamParticipant } from 'services/recim/team';
 
@@ -27,6 +30,50 @@ const standardDate = (date, includeTime) => {
     formattedDate += ' ' + date.toLocaleString(DateTime.TIME_SIMPLE);
   }
   return formattedDate;
+};
+
+const SeriesListing = ({ series }) => {
+  let startDate = DateTime.fromISO(series.StartDate);
+  let endDate = DateTime.fromISO(series.EndDate);
+
+  const status = () => {
+    let now = DateTime.fromMillis(Date.now());
+    // future series
+    if (now < startDate)
+      return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
+    // past series
+    else if (now > endDate)
+      return <Chip icon={<RestoreIcon />} label="completed" color="default" size="small"></Chip>;
+    // current series
+    return <Chip icon={<ScheduleIcon />} label="ongoing" color="success" size="small"></Chip>;
+  };
+
+  return (
+    <ListItem>
+      <Grid container className={styles.listing} columnSpacing={2} alignItems="center">
+        <Grid container direction="column" item xs={12} sm={4}>
+          <Typography className={styles.listingTitle}>{series.Name}</Typography>
+          <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
+            Schedule Type: {series.Type}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <Grid container direction="row">
+            <Grid item xs={10}>
+              <Typography>
+                <i>
+                  {standardDate(startDate, false)} - {standardDate(endDate, false)}
+                </i>
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          {status()}
+        </Grid>
+      </Grid>
+    </ListItem>
+  );
 };
 
 const ActivityListing = ({ activity }) => {
@@ -43,13 +90,16 @@ const ActivityListing = ({ activity }) => {
             <Grid item xs={10}>
               <Chip
                 icon={<EventAvailableIcon />}
-                label="registration open"
-                color="success"
+                label={activity.RegistrationOpen ? 'registration open' : 'registration closed'}
+                color={activity.RegistrationOpen ? 'success' : 'info'}
                 size="small"
               ></Chip>
             </Grid>
             <Grid item xs={10}>
-              <Typography>Registration closes {standardDate(registrationEnd, false)}</Typography>
+              <Typography>
+                Registration close{activity.RegistrationOpen ? 's' : 'd'}{' '}
+                {standardDate(registrationEnd, false)}
+              </Typography>
               <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
                 <i>
                   testing purposes: {standardDate(registrationStart, true)} -{' '}
@@ -90,7 +140,7 @@ const TeamListing = ({ team }) => {
   return (
     <ListItemButton
       component={Link}
-      to={`/recim/activity/${team.ActivityID}/team/${team.ID}`}
+      to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
       className="gc360_link"
     >
       <Grid container className={styles.listing}>
@@ -104,7 +154,6 @@ const TeamListing = ({ team }) => {
 const ParticipantListing = ({ participant, minimal, callbackFunction, showParticipantOptions }) => {
   const { teamID } = useParams();
   const [avatar, setAvatar] = useState('');
-
   const [anchorEl, setAnchorEl] = useState(null);
   const moreOptionsOpen = Boolean(anchorEl);
   const handleClose = () => {
@@ -119,7 +168,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     let editedParticipant = {
       Username: participant.Username,
       RoleTypeID: 4,
-    }; // Role 4 is co-captain\
+    }; // Role 4 is co-captain
 
     await editTeamParticipant(parseInt(teamID), editedParticipant); // Role 4 is co-captain
     handleClose();
@@ -173,7 +222,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
               variant="rounded"
             ></Avatar>
           </ListItemAvatar>
-          <ListItemText primary={participant.Username} />
+          <ListItemText primary={participant.Username} secondary={participant.Role} />
         </ListItemButton>
         {showParticipantOptions ? (
           <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
@@ -211,4 +260,4 @@ const MatchListing = ({ match, activityID }) => {
   );
 };
 
-export { ActivityListing, TeamListing, ParticipantListing, MatchListing };
+export { ActivityListing, TeamListing, ParticipantListing, MatchListing, SeriesListing };
