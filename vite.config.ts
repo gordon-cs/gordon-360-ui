@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
-export default ({ mode }) => {
+const config = ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
   return defineConfig({
@@ -14,7 +14,9 @@ export default ({ mode }) => {
           target: process.env.VITE_API_URL,
           changeOrigin: true,
         },
-      }
-    }
-  })
+      },
+    },
+  });
 };
+
+export default config;
