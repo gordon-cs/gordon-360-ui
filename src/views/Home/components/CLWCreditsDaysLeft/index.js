@@ -1,20 +1,13 @@
 import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { format, parseISO } from 'date-fns';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { defaults, Doughnut } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
-import styles from './CLWCreditsDaysLeft.module.css';
-
-const style = {
-  button: {
-    background: gordonColors.primary.cyan,
-    color: 'white',
-  },
-};
+import styles from '../Doughnut.module.css';
 
 const CLWCreditsDaysLeft = () => {
   const [firstDay, setFirstDay] = useState('');
@@ -66,7 +59,7 @@ const CLWCreditsDaysLeft = () => {
         // Allow different tooltips for different datasets within the same pie;
         callbacks: {
           // Code taken from https://github.com/chartjs/Chart.js/issues/1417
-          label: function (item, data) {
+          label: function(item, data) {
             return (
               data.datasets[item.datasetIndex].label[item.index] +
               ': ' +
@@ -98,7 +91,7 @@ const CLWCreditsDaysLeft = () => {
     };
 
     content = (
-      <Fragment>
+      <>
         <Grid
           container
           justifyContent="space-around"
@@ -120,55 +113,48 @@ const CLWCreditsDaysLeft = () => {
         </Grid>
 
         <Doughnut data={data} height={175} options={options} />
-        <div
-          style={{
-            marginTop: '1rem',
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+        <Grid container alignItems="start">
+          <Grid
+            item
+            xs={required ? 6 : 12}
+            container
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
           >
-            <div className={styles.label_text} style={{ color: daysColor }}>
+            <div className={styles.value} style={{ color: daysColor }}>
               {daysFinished}
             </div>
-            <div className={styles.entry_text}>
+            <div className={styles.label}>
               {'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}
             </div>
             <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
               {`Current Term: ${firstDay} - ${lastDay}`}
             </Typography>
-          </div>
+          </Grid>
 
           {required ? (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+            <Grid
+              item
+              xs={6}
+              container
+              direction="column"
+              justifyContent="center"
+              alignItems="center"
             >
-              <div className={styles.label_text} style={{ color: chapelColor }}>
+              <div className={styles.value} style={{ color: chapelColor }}>
                 {current}
               </div>
-              <div className={styles.entry_text}>{`CL&W Credit ${current === 1 ? '' : 's'}`}</div>
-            </div>
+              <div className={styles.label}>{`CL&W Credit${current === 1 ? '' : 's'}`}</div>
+            </Grid>
           ) : null}
-        </div>
-      </Fragment>
+        </Grid>
+      </>
     );
   }
 
   return (
-    <Card className={styles.clw_credits_days_left}>
+    <Card>
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
@@ -177,7 +163,7 @@ const CLWCreditsDaysLeft = () => {
           <Grid item xs={5} align="right">
             <Button
               variant="contained"
-              style={style.button}
+              color="secondary"
               component={Link}
               to="/events?CLW%20Credits"
             >

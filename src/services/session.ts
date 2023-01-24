@@ -7,7 +7,7 @@ type Session = {
   SessionEndDate: string;
 };
 
-type DaysLeft = [daysRemaining: number, daysCompleted: number];
+type DaysLeft = [daysRemaining: number, daysInSemester: number];
 
 const get = (sessionCode: string): Promise<Session> => http.get(`sessions/${sessionCode}`);
 
