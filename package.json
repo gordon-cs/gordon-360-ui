@@ -83,8 +83,8 @@
     "serve": "vite preview"
   },
   "lint-staged": {
-    "{**/*.md,src/**/*.{js,scss,ts,tsx}}": "prettier --write",
-    "src/**/*.{js,ts,tsx}": "eslint",
+    "{**/*.md,src/**/*.{js,jsx,scss,ts,tsx}}": "prettier --write",
+    "src/**/*.{js,jsx,ts,tsx}": "eslint",
     "src/**/*.scss": "stylelint"
   },
   "browserslist": {
