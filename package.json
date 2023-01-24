@@ -72,8 +72,7 @@
   "scripts": {
     "build-css": "sass src --no-source-map",
     "watch-css": "sass --watch src",
-    "dev": "(start npm run watch-css && vite) || (npm run watch-css & vite)",
-    "start": "vite",
+    "start": "(start npm run watch-css && vite) || (npm run watch-css & vite)",
     "build": "npm run build-css && tsc && vite build",
     "format": "prettier --write '{**/*.md,src/**/*.{js,scss,ts,tsx}}'",
     "lint": "npm run --silent lint-js && npm run --silent lint-scss",
