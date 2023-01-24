@@ -1,4 +1,4 @@
-import { NetworkContext } from 'contexts/NetworkContext.js';
+import { NetworkContext } from 'contexts/NetworkContext';
 import createUseContext from 'hooks/createUseContext';
 
 /**

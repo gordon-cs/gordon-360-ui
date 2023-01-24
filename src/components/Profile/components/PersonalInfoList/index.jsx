@@ -22,7 +22,7 @@ import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
-import UpdatePhone from './components/UpdatePhoneDialog/index.js';
+import UpdatePhone from './components/UpdatePhoneDialog';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
@@ -208,8 +208,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             {profile.HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
-              ? `${profile.HomeCity}, ${profile.HomeState}`
-              : profile.Country}
+                ? `${profile.HomeCity}, ${profile.HomeState}`
+                : profile.Country}
           </span>
         </>
       }
@@ -455,11 +455,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   const disclaimer =
     !myProf &&
-    (isHomePhonePrivate ||
-      isAddressPrivate ||
-      isMobilePhonePrivate ||
-      isCampusLocationPrivate ||
-      isSpousePrivate) ? (
+      (isHomePhonePrivate ||
+        isAddressPrivate ||
+        isMobilePhonePrivate ||
+        isCampusLocationPrivate ||
+        isSpousePrivate) ? (
       <Typography align="left" className={styles.disclaimer}>
         Private by request, visible only to faculty and staff
       </Typography>
@@ -468,9 +468,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   return (
     <Grid item xs={12}>
       <Card
-        className={`${styles.personal_info_list}  ${
-          myProf ? styles.my_personal_info : styles.public_personal_info
-        }`}
+        className={`${styles.personal_info_list}  ${myProf ? styles.my_personal_info : styles.public_personal_info
+          }`}
       >
         <Grid
           container

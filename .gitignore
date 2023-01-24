@@ -12,8 +12,8 @@ src/**/*.css.map
 # testing
 /coverage
 
-# production
-/build
+# build output
+/dist
 
 # misc
 .DS_Store

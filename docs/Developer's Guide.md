@@ -68,11 +68,9 @@ After following [the instructions to start the backend](https://github.com/gordo
 
 1. Open `.env.development`. You will see three sets of environment variables, marked `@PROD`, `@TRAIN`, and `@LOCALHOST`.
 1. Ensure that the `@PROD` and `@TRAIN` variables are commented out, and that `@LOCALHOST` is not commented out.
-1. Set `REACT_APP_API_URL` equal to `http://localhost:NNNN/`, where `NNNN` is the port your backend is listening on (e.g. `51626`).
+1. Set `VITE_APP_API_URL` equal to `http://localhost:NNNN/`, where `NNNN` is the port your backend is listening on (e.g. `51626`).
 
 You do **not** need to change `.env.production`.
-
-**NOTE**: If you change `.env.development` while the frontend is running, it will **not** update automatically. You will need to stop and restart it before the changes take affect.
 
 ## Connecting to Remote Backend via SSH
 
@@ -114,7 +112,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
    - `USER` is your account on the host machine.
    - `IP or HOSTNAME` is the IP or HOSTNAME of your host machine.
 
-You are now able to point your local frontend to the remote backend by setting `REACT_APP_API_URL` to `localhost:[API_PC_PORT_NUMBER]`.
+You are now able to point your local frontend to the remote backend by setting `VITE_APP_API_URL` to `localhost:[API_PC_PORT_NUMBER]`.
 
 # Code Style
 
