@@ -160,6 +160,18 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     setAnchorEl(null);
   };
 
+  useEffect(() => {
+    const loadAvatar = async () => {
+      if (participant.Username) {
+        const { def: defaultImage, pref: preferredImage } = await user.getImage(
+          participant.Username,
+        );
+        setAvatar(preferredImage || defaultImage);
+      }
+    };
+    loadAvatar();
+  }, [participant.Username]);
+
   if (participant === null) {
     return null;
   }
@@ -187,18 +199,6 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     await editTeamParticipant(parseInt(teamID), editedParticipant);
     handleClose();
   };
-
-  useEffect(() => {
-    const loadAvatar = async () => {
-      if (participant.Username) {
-        const { def: defaultImage, pref: preferredImage } = await user.getImage(
-          participant.Username,
-        );
-        setAvatar(preferredImage || defaultImage);
-      }
-    };
-    loadAvatar();
-  }, [participant.Username]);
 
   return (
     // first ListItem is used only for paddings/margins
