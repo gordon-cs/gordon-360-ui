@@ -69,13 +69,7 @@ const Match = () => {
       assignMatchScores();
     }
   }, [match]);
-  const style = {
-    myTextStyle: {
-      '&:hover': {
-        color: 'white',
-      },
-    },
-  };
+
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {
