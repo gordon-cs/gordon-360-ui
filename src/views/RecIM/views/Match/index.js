@@ -1,5 +1,5 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Breadcrumbs } from '@mui/material';
-import { useParams } from 'react-router';
+import { useParams, useHistory } from 'react-router';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
@@ -40,8 +40,14 @@ const Match = () => {
   const [loading, setLoading] = useState(true);
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
-
   // const [openMatchForm, setOpenMatchForm] = useState(false);
+
+  const nav = useHistory();
+  const teamPageNav = (teamID) => {
+    if (teamID) {
+      nav.push(`/recim/activity/${match.Activity.ID}/team/${teamID}`);
+    }
+  };
 
   useEffect(() => {
     const loadMatch = async () => {
@@ -56,14 +62,20 @@ const Match = () => {
     if (match) {
       const assignMatchScores = async () => {
         setLoading(true);
-        setTeam0Score(match.Scores.find((team) => team.OwnID == match.Team[0]?.ID)?.OwnScore ?? 0);
-        setTeam1Score(match.Scores.find((team) => team.OwnID == match.Team[1]?.ID)?.OwnScore ?? 0);
+        setTeam0Score(match.Scores.find((team) => team.OwnID === match.Team[0]?.ID)?.OwnScore ?? 0);
+        setTeam1Score(match.Scores.find((team) => team.OwnID === match.Team[1]?.ID)?.OwnScore ?? 0);
         setLoading(false);
       };
       assignMatchScores();
     }
   }, [match]);
-
+  const style = {
+    myTextStyle: {
+      '&:hover': {
+        color: 'white',
+      },
+    },
+  };
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {
@@ -110,7 +122,9 @@ const Match = () => {
           </Grid>
           <Grid container alignItems="center" justifyContent="space-around">
             <Grid item xs={2}>
-              <Typography variant="h5">{match.Team[0]?.Name ?? 'No team yet...'}</Typography>
+              <Typography variant="h5" onClick={() => teamPageNav(match.Team[0]?.ID)}>
+                {match.Team[0]?.Name ?? 'No team yet...'}
+              </Typography>
               <i className={styles.grayText}>Sportsmanship</i>
             </Grid>
             <Grid item xs={2}>
@@ -128,7 +142,9 @@ const Match = () => {
               <img src={''} alt="Team Icon" width="85em"></img>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="h5">{match.Team[1]?.Name ?? 'No team yet...'}</Typography>
+              <Typography variant="h5" onClick={() => teamPageNav(match.Team[1]?.ID)}>
+                {match.Team[1]?.Name ?? 'No team yet...'}
+              </Typography>
               <i className={styles.grayText}>Sportsmanship</i>
             </Grid>
           </Grid>

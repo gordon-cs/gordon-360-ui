@@ -1,5 +1,13 @@
 @import '../../../../vars';
 
+.headerTeamName {
+  //C an't figure out how to handle a hover on the Team Name elements that are now links
+  &:hover {
+    color: $primary-blue;
+    cursor: pointer;
+  }
+}
+
 .listing {
   margin: 0.3em 0;
 }
