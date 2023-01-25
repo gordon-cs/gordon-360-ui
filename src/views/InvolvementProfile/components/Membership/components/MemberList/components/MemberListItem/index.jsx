@@ -335,7 +335,7 @@ const MemberListItem = ({
                         {member.FirstName} {member.LastName}
                       </Typography>
                     ) : (
-                      <Link href={`/profile/${member.AD_Username}`} underline="hover">
+                      <Link href={`/profile/${member.Username}`} underline="hover">
                         <Typography>
                           {member.FirstName} {member.LastName}
                         </Typography>
@@ -388,7 +388,7 @@ const MemberListItem = ({
                 {member.FirstName} {member.LastName}
               </Typography>
             ) : (
-              <Link href={`/profile/${member.AD_Username}`} underline="hover">
+              <Link href={`/profile/${member.Username}`} underline="hover">
                 <Typography>
                   {member.FirstName} {member.LastName}
                 </Typography>
