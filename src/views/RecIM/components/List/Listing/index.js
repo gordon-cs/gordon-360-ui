@@ -160,6 +160,10 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     setAnchorEl(null);
   };
 
+  if (participant === null) {
+    return null;
+  }
+
   const handleParticipantOptions = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -253,7 +257,7 @@ const MatchListing = ({ match, activityID }) => {
     >
       <Grid container className={styles.listing}>
         <Grid item>
-          {match.Team[0].Name} vs. {match.Team[1].Name}
+          {match.Team[0]?.Name} vs. {match.Team[1]?.Name}
         </Grid>
       </Grid>
     </ListItemButton>
