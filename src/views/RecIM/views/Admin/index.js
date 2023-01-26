@@ -105,7 +105,7 @@ const Admin = () => {
             <CardContent>
               <Tabs
                 value={tab}
-                onChange={(newTab) => setTab(newTab)}
+                onChange={(event, newTab) => setTab(newTab)}
                 aria-label="admin control center tabs"
               >
                 <Tab label="Activities" />
