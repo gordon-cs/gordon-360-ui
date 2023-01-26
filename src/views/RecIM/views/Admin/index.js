@@ -5,8 +5,9 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import styles from './Admin.module.css';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { ActivityList, ParticipantList } from '../../components/List';
+import { ActivityList, TeamList, ParticipantList } from '../../components/List';
 import { getActivities } from '../../../../services/recim/activity';
+import { getTeams } from '../../../../services/recim/team';
 import { getParticipants } from '../../../../services/recim/participant';
 import recimLogo from './../../recim_logo.png';
 
@@ -21,8 +22,12 @@ const TabPanel = ({ children, value, index }) => {
 const Admin = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
+  const [activitiesLoading, setActivitiesLoading] = useState(true);
+  const [teamsLoading, setTeamsLoading] = useState(true);
+  const [participantsLoading, setParticipantsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState();
   const [activities, setActivities] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [tab, setTab] = useState(0);
 
@@ -42,16 +47,22 @@ const Admin = () => {
   // initialize all data
   useEffect(() => {
     const loadActivities = async () => {
-      setLoading(true);
+      setActivitiesLoading(true);
       setActivities(await getActivities());
-      setLoading(false);
+      setActivitiesLoading(false);
+    };
+    const loadTeams = async () => {
+      setTeamsLoading(true);
+      setTeams(await getTeams());
+      setTeamsLoading(false);
     };
     const loadParticipants = async () => {
-      setLoading(true);
+      setParticipantsLoading(true);
       setParticipants(await getParticipants());
-      setLoading(false);
+      setParticipantsLoading(false);
     };
     loadActivities();
+    loadTeams();
     loadParticipants();
   }, []);
 
@@ -102,11 +113,17 @@ const Admin = () => {
                 <Tab label="Participants" />
               </Tabs>
               <TabPanel value={tab} index={0}>
-                <ActivityList activities={activities} />
+                {activitiesLoading ? <GordonLoader /> : <ActivityList activities={activities} />}
               </TabPanel>
-              <TabPanel value={tab} index={1}></TabPanel>
+              <TabPanel value={tab} index={1}>
+                {activitiesLoading ? <GordonLoader /> : <TeamList teams={teams} />}
+              </TabPanel>
               <TabPanel value={tab} index={2}>
-                <ParticipantList participants={participants} />
+                {activitiesLoading ? (
+                  <GordonLoader />
+                ) : (
+                  <ParticipantList participants={participants} />
+                )}
               </TabPanel>
             </CardContent>
           </Card>
