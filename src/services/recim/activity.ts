@@ -62,7 +62,9 @@ const createActivity = (newActivity: UploadActivity): Promise<CreatedActivity> =
 
 const getActivityByID = (ID: number): Promise<Activity> => http.get(`recim/activities/${ID}`);
 
-const getAllActivities = (
+const getAllActivities = (): Promise<Activity[]> => http.get(`recim/activities`);
+
+const getActivities = (
   active: boolean,
   time: String,
   registrationOpen: boolean,
@@ -75,4 +77,11 @@ const getActivityStatusTypes = (): Promise<Lookup[]> =>
 const editActivity = (ID: number, updatedActivity: PatchActivity): Promise<CreatedActivity[]> =>
   http.patch(`recim/activities/${ID}`, updatedActivity);
 
-export { createActivity, getActivityByID, getActivityStatusTypes, getAllActivities, editActivity };
+export {
+  createActivity,
+  getActivityByID,
+  getActivityStatusTypes,
+  getAllActivities as getActivities,
+  getActivities as getAllActivities,
+  editActivity,
+};

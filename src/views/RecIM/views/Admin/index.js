@@ -4,11 +4,20 @@ import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import styles from './Admin.module.css';
-import { ActivityList, TeamList } from './../../components/List';
-import { getAllActivities } from 'services/recim/activity';
 import { DateTime } from 'luxon';
 import { getParticipantTeams } from 'services/recim/participant';
+import { ActivityList, ParticipantList } from '../../components/List';
+import { getActivities } from '../../../../services/recim/activity';
+import { getParticipants } from '../../../../services/recim/participant';
 import recimLogo from './../../recim_logo.png';
+
+const TabPanel = ({ children, value, index }) => {
+  return (
+    <div hidden={value !== index} role="tabpanel">
+      {children}
+    </div>
+  );
+};
 
 const Admin = () => {
   const { profile } = useUser();
@@ -16,30 +25,29 @@ const Admin = () => {
   const [openCreateActivityForm, setOpenCreateActivityForm] = useState(false);
   const [activities, setActivities] = useState([]);
   const [myTeams, setMyTeams] = useState([]);
+  const [participants, setParticipants] = useState([]);
   const [tab, setTab] = useState(0);
 
-  // profile hook used for future authentication
-  // Administration privs will use AuthGroups -> example can be found in
-  //           src/components/Header/components/NavButtonsRightCorner
-
+  // initialize all data
   useEffect(() => {
     const loadActivities = async () => {
       setLoading(true);
-
-      // Get all active activities where registration has not closed
-      setActivities(await getAllActivities(false, DateTime.now().toISO()));
-      if (profile) {
-        setMyTeams(await getParticipantTeams(profile.AD_Username));
-      }
+      setActivities(await getActivities());
+      setLoading(false);
+    };
+    const loadParticipants = async () => {
+      setLoading(true);
+      setParticipants(await getParticipants());
       setLoading(false);
     };
     loadActivities();
-  }, [profile, openCreateActivityForm]);
+    loadParticipants();
+  }, []);
 
   let homeHeader = (
     <Card>
       <CardContent>
-        <Grid container direction="row" alignItems="center" spacing={4}>
+        <Grid container alignItems="center" columnSpacing={2}>
           <Grid item>
             <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
           </Grid>
@@ -69,35 +77,31 @@ const Admin = () => {
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     return (
-      <Grid container spacing={2}>
+      <Grid container direction="column" rowSpacing={2} wrap="nowrap">
         <Grid item alignItems="center" xs={12}>
           {homeHeader}
         </Grid>
-        <Grid item container justifyContent="center" spacing={2}>
-          <Grid item>
-            <Card>
-              <CardContent>
-                <Tabs
-                  value={tab}
-                  onChange={(event, newTab) => setTab(newTab)}
-                  aria-label="basic tabs example"
-                >
-                  <Tab label="Item One" />
-                  <Tab label="Item Two" />
-                  <Tab label="Item Three" />
-                </Tabs>
-                <div value={tab} index={0}>
-                  Item One
-                </div>
-                <div value={tab} index={1}>
-                  Item Two
-                </div>
-                <div value={tab} index={2}>
-                  Item Three
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
+        <Grid item>
+          <Card>
+            <CardContent>
+              <Tabs
+                value={tab}
+                onChange={(event, newTab) => setTab(newTab)}
+                aria-label="basic tabs example"
+              >
+                <Tab label="Activities" />
+                <Tab label="Teams" />
+                <Tab label="Participants" />
+              </Tabs>
+              <TabPanel value={tab} index={0}>
+                <ActivityList activities={activities} />
+              </TabPanel>
+              <TabPanel value={tab} index={1}></TabPanel>
+              <TabPanel value={tab} index={2}>
+                <ParticipantList participants={participants} />
+              </TabPanel>
+            </CardContent>
+          </Card>
         </Grid>
         {/* for development purposes only */}
         <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
