@@ -1,11 +1,9 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Tabs, Tab } from '@mui/material';
+import { Grid, Typography, Card, CardContent, Tabs, Tab } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import styles from './Admin.module.css';
-import { DateTime } from 'luxon';
-import { getParticipantTeams } from 'services/recim/participant';
 import { ActivityList, ParticipantList } from '../../components/List';
 import { getActivities } from '../../../../services/recim/activity';
 import { getParticipants } from '../../../../services/recim/participant';
@@ -22,9 +20,7 @@ const TabPanel = ({ children, value, index }) => {
 const Admin = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
-  const [openCreateActivityForm, setOpenCreateActivityForm] = useState(false);
   const [activities, setActivities] = useState([]);
-  const [myTeams, setMyTeams] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [tab, setTab] = useState(0);
 
@@ -64,11 +60,6 @@ const Admin = () => {
       </CardContent>
     </Card>
   );
-
-  const handleCreateActivityForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenCreateActivityForm(false);
-  };
 
   if (loading) {
     return <GordonLoader />;
