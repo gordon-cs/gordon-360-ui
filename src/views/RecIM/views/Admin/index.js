@@ -105,8 +105,8 @@ const Admin = () => {
             <CardContent>
               <Tabs
                 value={tab}
-                onChange={(event, newTab) => setTab(newTab)}
-                aria-label="basic tabs example"
+                onChange={(newTab) => setTab(newTab)}
+                aria-label="admin control center tabs"
               >
                 <Tab label="Activities" />
                 <Tab label="Teams" />
@@ -116,10 +116,10 @@ const Admin = () => {
                 {activitiesLoading ? <GordonLoader /> : <ActivityList activities={activities} />}
               </TabPanel>
               <TabPanel value={tab} index={1}>
-                {activitiesLoading ? <GordonLoader /> : <TeamList teams={teams} />}
+                {teamsLoading ? <GordonLoader /> : <TeamList teams={teams} />}
               </TabPanel>
               <TabPanel value={tab} index={2}>
-                {activitiesLoading ? (
+                {participantsLoading ? (
                   <GordonLoader />
                 ) : (
                   <ParticipantList participants={participants} />
