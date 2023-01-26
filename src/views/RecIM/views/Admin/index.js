@@ -4,6 +4,7 @@ import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import styles from './Admin.module.css';
+import { getParticipantByUsername } from 'services/recim/participant';
 import { ActivityList, ParticipantList } from '../../components/List';
 import { getActivities } from '../../../../services/recim/activity';
 import { getParticipants } from '../../../../services/recim/participant';
@@ -20,9 +21,23 @@ const TabPanel = ({ children, value, index }) => {
 const Admin = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState();
   const [activities, setActivities] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [tab, setTab] = useState(0);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      setLoading(true);
+      let participant;
+      if (profile) {
+        participant = await getParticipantByUsername(profile.AD_Username);
+        setIsAdmin(participant?.IsAdmin ?? false);
+      }
+      setLoading(false);
+    };
+    loadProfile();
+  }, [profile]);
 
   // initialize all data
   useEffect(() => {
@@ -66,6 +81,8 @@ const Admin = () => {
   } else if (!profile) {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
+  } else if (!isAdmin) {
+    return 'You are not a Rec-IM admin.';
   } else {
     return (
       <Grid container direction="column" rowSpacing={2} wrap="nowrap">
