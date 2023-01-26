@@ -87,7 +87,7 @@ const categoryPerStrengthName = (strength: CliftonStrengthName): CliftonStrength
   }
 };
 
-export enum CliftonStrengthColors {
+enum CliftonStrengthColors {
   Executing = '#9070bf',
   Influencing = '#c88a2e',
   Relationship = '#2486af',
