@@ -31,7 +31,7 @@ type UploadSeries = {
   EndDate: string;
   ActivityID: number;
   TypeID: number;
-  NumberOfTeamsAdmitted: number; //used for subsequent series creation post initial setup
+  NumberOfTeamsAdmitted: number; //used for subsequent series creation post initial setup, nullable
 };
 
 type PatchSeries = {
