@@ -1,5 +1,40 @@
 import { parse } from 'date-fns';
-import { MembershipView } from './membership';
+import http from './http';
+import membershipService, {
+  MembershipView,
+  NonGuestParticipations,
+  Participation,
+} from './membership';
+import { compareByProperty } from './utils';
+
+type MembershipHistory = {
+  activityCode: string;
+  // TODO: Get ActivityType from DB for categorization
+  // activityType: string;
+  activityDescription: string;
+  activityImage: string;
+  activityImagePath: string;
+  sessions: string[];
+  leaderSessions: string[];
+};
+
+// const MembershipTypeMap = {
+//   LEA: 'honors',
+//   SCH: 'honors',
+//   SGV: 'honors',
+//   SLP: 'service',
+//   MIN: 'service',
+//   RES: 'experiences',
+// } as const;
+
+const getMemberships = (username: string) =>
+  membershipService
+    .get({ username, participationTypes: NonGuestParticipations, sessionCode: '*' })
+    .then(groupByCode)
+    .then(categorizeMemberships);
+
+// TODO: Add type info
+const getEmployment = () => http.get('studentemployment/');
 
 /**
  * Filters general memberships from the 360 Database into one of four categories
@@ -13,15 +48,12 @@ import { MembershipView } from './membership';
  * @param memberships An array of membership objects retrieved from the database.
  * @returns An array of four arrays-one per category-into which the  memberships have been filtered
  */
-const filterMemberships = (memberships: MembershipView[]) => {
-  const filtered = {
-    honors: [] as MembershipView[],
-    experience: {
-      experiences: [] as MembershipView[],
-      employments: [] as MembershipView[],
-    },
-    service: [] as MembershipView[],
-    activities: [] as MembershipView[],
+const categorizeMemberships = async (memberships: MembershipHistory[]) => {
+  const groupedMembershipHistory = {
+    honors: [] as MembershipHistory[],
+    experiences: [] as MembershipHistory[],
+    service: [] as MembershipHistory[],
+    activities: [] as MembershipHistory[],
   };
 
   /**
@@ -30,23 +62,16 @@ const filterMemberships = (memberships: MembershipView[]) => {
    * const serviceTypes = ['SLP', 'MIN'];
    * const experienceTypes = ['RES'];
    *
+   * // Filter memberships into either Honors, Experience, Service, or Activities
    * memberships.forEach((membership) => {
-   *   // Filter memberships into either Honors, Experience, Service, or Activities
-   *   if (honorsTypes.includes(membership.ActivityType)) {
-   *     filtered.honors.push(membership);
-   *   } else if (experienceTypes.includes(membership.ActivityType)) {
-   *     filtered.experience.experiences.push(membership);
-   *   } else if (serviceTypes.includes(membership.ActivityType)) {
-   *     filtered.service.push(membership);
-   *   } else {
-   *     filtered.activities.push(membership);
-   *   }
+   *   const membershipType = MembershipTypeMap[membership.activityType] ?? 'activities';
+   *   groupedMembershipHistory[membershipType].push(membership);
    * });
    */
 
-  filtered.activities = memberships;
+  groupedMembershipHistory.activities = memberships;
 
-  return filtered;
+  return groupedMembershipHistory;
 };
 
 /**
@@ -55,67 +80,64 @@ const filterMemberships = (memberships: MembershipView[]) => {
  * One Activity component is created with that ActivityDescription and the array of sessions.
  * Once all Activity components have been made, they are sorted from most to least recent.
  *
- * @param activities - a list of activity objects ("Memberships" as defined in gordon-360-api)
+ * @param memberships - a list of activity objects ("Memberships" as defined in gordon-360-api)
  * @returns array of Activity components with props Activity and Sessions.
  * TODO: Move this data transformation into the API
  */
-const groupActivityByCode = (activities: MembershipView[]) => {
-  let condensedActs = [];
+const groupByCode = (memberships: MembershipView[]) => {
+  const membershipHistories = [];
 
-  // sort activities by ActivityCode
-  while (activities.length > 0) {
-    let curAct = activities.shift() as MembershipView;
-    let sessions = [];
-    let leaderSessions = [];
+  // Sort by ActivityCode so that all memberships of same activity are consecutive
+  memberships.sort(compareByProperty('ActivityCode'));
 
-    // keep track of the activity code which will be used to identify all activities of the same
-    // code so they can be grouped into one activity component
-    let curActCode = curAct.ActivityCode;
+  while (memberships.length > 0) {
+    const membership = memberships.shift();
+    if (membership === undefined) break;
 
-    // For each other activity matching curActCode, if it is consecutive to the current end date,
-    // save its end date as the new end date, otherwise, add the current start and end dates to
-    // the string 'duration' (because the streak is broken) and prepare to start a new streak.
-    // Loop assumes activities will be sorted by session and Activity Code.
-    sessions.push(curAct.SessionCode);
-    if (curAct.Participation === 'LEAD') {
-      leaderSessions.push(curAct.SessionCode);
-    }
-    while (activities.length > 0 && activities[0].ActivityCode === curActCode) {
-      sessions.push(activities[0].SessionCode);
-      if (activities[0].Participation === 'LEAD') {
-        leaderSessions.push(activities[0].SessionCode);
+    const sessions: string[] = [];
+    const leaderSessions: string[] = [];
+
+    const appendSessions = (membership: MembershipView) => {
+      sessions.push(membership.SessionCode);
+
+      if (membership.Participation === Participation.Leader) {
+        leaderSessions.push(membership.SessionCode);
       }
-      activities.shift();
+    };
+
+    appendSessions(membership);
+
+    // Record the sessions of each membership for the same activity
+    // Since memberships is sorted by `ActivityCode`, all memberships of the same activity are consecutive
+    while (memberships[0]?.ActivityCode === membership.ActivityCode) {
+      appendSessions(memberships[0]);
+      memberships.shift();
     }
 
-    let sessionsOrdered = sessions.sort();
+    sessions.sort();
+    leaderSessions.sort();
 
-    let leaderSessionsOrdered = leaderSessions.sort();
-
-    // add the new TranscriptItem component to the array
-    condensedActs.push({
-      key: curAct.ActivityCode,
-      Activity: curAct,
-      Sessions: sessionsOrdered,
-      LeaderSessions: leaderSessionsOrdered,
+    membershipHistories.push({
+      activityCode: membership.ActivityCode,
+      activityDescription: membership.ActivityDescription,
+      activityImage: membership.ActivityImage,
+      activityImagePath: membership.ActivityImagePath,
+      sessions,
+      leaderSessions,
     });
   }
 
-  condensedActs.sort(function (a, b) {
-    let lastSessA = a.Sessions[a.Sessions.length - 1];
-    let lastSessB = b.Sessions[b.Sessions.length - 1];
-    return Number(lastSessB) - Number(lastSessA);
-  });
+  membershipHistories.sort((a, b) => Number(b.sessions.at(-1)) - Number(a.sessions.at(-1)));
 
-  return condensedActs;
+  return membershipHistories;
 };
 
 const getGradCohort = (gradDate: string) =>
   parse(gradDate, 'MMM dd yyyy hh:mmaa', new Date()).getFullYear();
 
 const transcriptService = {
-  filterMemberships,
-  groupActivityByCode,
+  getMemberships,
+  getEmployment,
   getGradCohort,
 };
 

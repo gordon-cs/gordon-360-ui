@@ -4,33 +4,34 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
-import membershipService, { NonGuestParticipations } from 'services/membership';
 import transcriptService from 'services/transcript';
-import user from 'services/user';
 import styles from './CoCurricularTranscript.module.css';
 import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
 
 const CoCurricularTranscript = () => {
   const [loading, setLoading] = useState(true);
-  const [categorizedMemberships, setCategorizedMemberships] = useState();
+  const [honors, setHonors] = useState([]);
+  const [experiences, setExperience] = useState([]);
+  const [employments, setEmployments] = useState([]);
+  const [service, setService] = useState([]);
+  const [activities, setActivities] = useState([]);
   const { profile, loading: loadingProfile } = useUser();
 
   useEffect(() => {
     const loadTranscript = async () => {
       setLoading(true);
-      try {
-        const memberships = await membershipService.get({
-          username: profile.AD_Username,
-          participationTypes: NonGuestParticipations,
-        });
-        const categorizedMemberships = transcriptService.filterMemberships(memberships);
-        categorizedMemberships.experience.employments = await user.getEmploymentInfo();
+      const { honors, experiences, service, activities } = transcriptService.getMemberships(
+        profile.AD_Username,
+      );
 
-        setCategorizedMemberships(categorizedMemberships);
-      } catch (error) {
-        this.setState({ error });
-      }
+      const jobs = await transcriptService.getEmployment();
+
+      setHonors(honors);
+      setExperience(experiences);
+      setService(service);
+      setActivities(activities);
+      setEmployments(jobs);
 
       setLoading(false);
     };
@@ -46,13 +47,6 @@ const CoCurricularTranscript = () => {
   if (!profile) {
     return <GordonUnauthorized feature={'your experience transcript'} />;
   }
-
-  const otherInvolvements = categorizedMemberships.activities.length > 0;
-  const honorsLeadership = categorizedMemberships.honors.length > 0;
-  const serviceLearning = categorizedMemberships.service.length > 0;
-  const experiences =
-    categorizedMemberships.experience.experiences.length > 0 ||
-    categorizedMemberships.experience.employments.length > 0;
 
   return (
     <Grid container justifyContent="center">
@@ -89,56 +83,71 @@ const CoCurricularTranscript = () => {
             disableTypography
           />
           <CardContent>
-            {honorsLeadership && (
+            {honors.length > 0 && (
               <>
                 <Typography variant="h6" component="h2">
                   <b>Honors, Leadership, and Research</b>
                 </Typography>
-                {transcriptService
-                  .groupActivityByCode(categorizedMemberships.honors)
-                  .map((activity) => (
-                    <Activity {...activity} />
-                  ))}
+                {honors.map((activity) => (
+                  <Activity
+                    key={activity.activityCode}
+                    sessions={activity.session}
+                    leaderSessions={activity.leaderSessions}
+                    description={activity.activityDescription}
+                  />
+                ))}
               </>
             )}
-            {experiences && (
+            {(experiences.length > 0 || employments.length > 0) && (
               <>
                 <Typography variant="h6" component="h2">
                   <b>Experience</b>
                 </Typography>
-                {transcriptService
-                  .groupActivityByCode(categorizedMemberships.experience.experiences)
-                  .map((activity) => <Activity {...activity} />)
+                {experiences
+                  .map((activity) => (
+                    <Activity
+                      key={activity.activityCode}
+                      sessions={activity.sessions}
+                      leaderSessions={activity.leaderSessions}
+                      description={activity.activityDescription}
+                    />
+                  ))
                   .concat(
-                    categorizedMemberships.experience.employments
+                    employments
                       .map((employment) => <Experience Experience={employment} />)
                       .reverse(),
                   )}
               </>
             )}
-            {serviceLearning && (
+            {service.length > 0 && (
               <>
                 <Typography variant="h6" component="h2">
                   <b>Service Learning</b>
                 </Typography>
-                {transcriptService
-                  .groupActivityByCode(categorizedMemberships.service)
-                  .map((activity) => (
-                    <Activity {...activity} />
-                  ))}
+                {service.map((activity) => (
+                  <Activity
+                    key={activity.activityCode}
+                    sessions={activity.sessions}
+                    leaderSessions={activity.leaderSessions}
+                    description={activity.activityDescription}
+                  />
+                ))}
               </>
             )}
-            {otherInvolvements && (
+            {activities.length > 0 && (
               <>
                 <Typography variant="h6" component="h2">
                   <b>Activities</b>
                 </Typography>
 
-                {transcriptService
-                  .groupActivityByCode(categorizedMemberships?.activities)
-                  .map((activity) => (
-                    <Activity {...activity} />
-                  ))}
+                {activities.map((activity) => (
+                  <Activity
+                    key={activity.activityCode}
+                    sessions={activity.sessions}
+                    leaderSessions={activity.leaderSessions}
+                    description={activity.activityDescription}
+                  />
+                ))}
               </>
             )}
           </CardContent>

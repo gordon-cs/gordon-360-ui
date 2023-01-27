@@ -242,8 +242,6 @@ const setHomePhonePrivacy = (makePrivate: boolean) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getEmployment = () => http.get('studentemployment/');
-
 const getBirthdate = async (): Promise<DateTime> =>
   DateTime.fromISO(await http.get('profiles/birthdate'));
 
@@ -251,10 +249,6 @@ const isBirthdayToday = async () => {
   const birthday = await getBirthdate();
   return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
 };
-
-// TODO: Add type info
-const getEmploymentInfo = () => getEmployment();
-//.then(sort(compareBySession))
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
   const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
@@ -332,7 +326,6 @@ const userService = {
   postImage,
   postIDImage,
   requestInfoUpdate,
-  getEmploymentInfo,
   getEmergencyInfo,
   updateSocialLink,
   isBirthdayToday,
