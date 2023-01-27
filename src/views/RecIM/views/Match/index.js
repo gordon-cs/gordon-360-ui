@@ -1,5 +1,5 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Breadcrumbs } from '@mui/material';
-import { useParams, useHistory } from 'react-router';
+import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
@@ -28,7 +28,7 @@ const RosterCard = ({ participants, teamName }) => (
   <Card>
     <CardHeader title={teamName ?? 'No team yet...'} className={styles.cardHeader} />
     <CardContent>
-      <ParticipantList participants={participants ?? []} />
+      <ParticipantList participants={participants} />
     </CardContent>
   </Card>
 );
@@ -36,18 +36,11 @@ const RosterCard = ({ participants, teamName }) => (
 const Match = () => {
   const { activityID, matchID } = useParams();
   const { profile } = useUser();
-  const [match, setMatch] = useState(null);
+  const [match, setMatch] = useState();
   const [loading, setLoading] = useState(true);
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
   // const [openMatchForm, setOpenMatchForm] = useState(false);
-
-  const nav = useHistory();
-  const teamPageNav = (teamID) => {
-    if (teamID) {
-      nav.push(`/recim/activity/${match.Activity.ID}/team/${teamID}`);
-    }
-  };
 
   useEffect(() => {
     const loadMatch = async () => {
@@ -116,9 +109,11 @@ const Match = () => {
           </Grid>
           <Grid container alignItems="center" justifyContent="space-around">
             <Grid item xs={2}>
-              <Typography variant="h5" onClick={() => teamPageNav(match.Team[0]?.ID)}>
-                {match.Team[0]?.Name ?? 'No team yet...'}
-              </Typography>
+              <LinkRouter to={`/recim/activity/${match.Activity.ID}/team/${match.Team[0]?.ID}`}>
+                <Typography variant="h5" className="gc360_text_link">
+                  {match.Team[0]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
               <i className={styles.grayText}>Sportsmanship</i>
             </Grid>
             <Grid item xs={2}>
@@ -136,9 +131,11 @@ const Match = () => {
               <img src={''} alt="Team Icon" width="85em"></img>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="h5" onClick={() => teamPageNav(match.Team[1]?.ID)}>
-                {match.Team[1]?.Name ?? 'No team yet...'}
-              </Typography>
+              <LinkRouter to={`/recim/activity/${match.Activity.ID}/team/${match.Team[1]?.ID}`}>
+                <Typography variant="h5" className="gc360_text_link">
+                  {match.Team[1]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
               <i className={styles.grayText}>Sportsmanship</i>
             </Grid>
           </Grid>
