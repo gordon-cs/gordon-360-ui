@@ -1,10 +1,5 @@
 import { parse } from 'date-fns';
-import Activity from 'views/CoCurricularTranscript/Components/CoCurricularTranscriptActivity';
 import { MembershipView } from './membership';
-
-type HonorsType = 'LEA' | 'SCH' | 'SGV';
-type ServiceType = 'SLP' | 'MIN';
-type ExperienceType = 'RES';
 
 /**
  * Filters general memberships from the 360 Database into one of four categories
@@ -29,25 +24,25 @@ const filterMemberships = (memberships: MembershipView[]) => {
     activities: [] as MembershipView[],
   };
 
-  const honorsTypes = ['LEA', 'SCH', 'SGV'];
-  const serviceTypes = ['SLP', 'MIN'];
-  const experienceTypes = ['RES'];
-
   /**
-  * TODO: Categorizing is broken because `MembershipView` does not include ActivityType
-  memberships.forEach((membership) => {
-    // Filter memberships into either Honors, Experience, Service, or Activities
-    if (honorsTypes.includes(membership.ActivityType)) {
-      filtered.honors.push(membership);
-    } else if (experienceTypes.includes(membership.ActivityType)) {
-      filtered.experience.experiences.push(membership);
-    } else if (serviceTypes.includes(membership.ActivityType)) {
-      filtered.service.push(membership);
-    } else {
-      filtered.activities.push(membership);
-    }
-  });
-  */
+   * TODO: Categorizing is broken because `MembershipView` does not include ActivityType
+   * const honorsTypes = ['LEA', 'SCH', 'SGV'];
+   * const serviceTypes = ['SLP', 'MIN'];
+   * const experienceTypes = ['RES'];
+   *
+   * memberships.forEach((membership) => {
+   *   // Filter memberships into either Honors, Experience, Service, or Activities
+   *   if (honorsTypes.includes(membership.ActivityType)) {
+   *     filtered.honors.push(membership);
+   *   } else if (experienceTypes.includes(membership.ActivityType)) {
+   *     filtered.experience.experiences.push(membership);
+   *   } else if (serviceTypes.includes(membership.ActivityType)) {
+   *     filtered.service.push(membership);
+   *   } else {
+   *     filtered.activities.push(membership);
+   *   }
+   * });
+   */
 
   filtered.activities = memberships;
 
@@ -55,15 +50,15 @@ const filterMemberships = (memberships: MembershipView[]) => {
 };
 
 /**
-   *For each activity in an array of activities, this finds all other activities of the same Code
-  * and keeps an array of all the sessions during which the student was involved in this activity.
-  * One Activity component is created with that ActivityDescription and the array of sessions.
-  * Once all Activity components have been made, they are sorted from most to least recent.
-
-  * @param activities - a list of activity objects ("Memberships" as defined in gordon-360-api)
-  * @returns array of Activity components with props Activity and Sessions.
-  * TODO: Move this data transformation into the API
-  */
+ * For each activity in an array of activities, this finds all other activities of the same Code
+ * and keeps an array of all the sessions during which the student was involved in this activity.
+ * One Activity component is created with that ActivityDescription and the array of sessions.
+ * Once all Activity components have been made, they are sorted from most to least recent.
+ *
+ * @param activities - a list of activity objects ("Memberships" as defined in gordon-360-api)
+ * @returns array of Activity components with props Activity and Sessions.
+ * TODO: Move this data transformation into the API
+ */
 const groupActivityByCode = (activities: MembershipView[]) => {
   let condensedActs = [];
 
