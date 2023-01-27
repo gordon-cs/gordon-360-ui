@@ -161,6 +161,29 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     setAnchorEl(null);
   };
 
+  useEffect(() => {
+    const loadAvatar = async () => {
+      if (participant.Username) {
+        const { def: defaultImage, pref: preferredImage } = await user.getImage(
+          participant.Username,
+        );
+        setAvatar(preferredImage || defaultImage);
+      }
+    };
+    const loadUserInfo = async () => {
+      if (participant.Username) {
+        const profileInfo = await user.getProfileInfo(participant.Username);
+        setName(profileInfo.fullName);
+      }
+    };
+    loadUserInfo();
+    loadAvatar();
+  }, [participant.Username]);
+
+  if (participant === null) {
+    return null;
+  }
+
   const handleParticipantOptions = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -184,26 +207,6 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     await editTeamParticipant(parseInt(teamID), editedParticipant);
     handleClose();
   };
-
-  useEffect(() => {
-    const loadAvatar = async () => {
-      if (participant.Username) {
-        const { def: defaultImage, pref: preferredImage } = await user.getImage(
-          participant.Username,
-        );
-        setAvatar(preferredImage || defaultImage);
-      }
-    };
-    const loadUserInfo = async () => {
-      if (participant.Username) {
-        const profileInfo = await user.getProfileInfo(participant.Username);
-        setName(profileInfo.fullName);
-      }
-    };
-    loadUserInfo();
-    loadAvatar();
-  }, [participant.Username]);
-
   return (
     // first ListItem is used only for paddings/margins
     // second ListItem (nested inside) is used to layout avatar and secondaryAction
@@ -261,7 +264,7 @@ const MatchListing = ({ match, activityID }) => {
     >
       <Grid container className={styles.listing}>
         <Grid item>
-          {match.Team[0].Name} vs. {match.Team[1].Name}
+          {match.Team[0]?.Name} vs. {match.Team[1]?.Name}
         </Grid>
       </Grid>
     </ListItemButton>
