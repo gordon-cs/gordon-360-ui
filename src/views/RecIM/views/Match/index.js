@@ -26,7 +26,7 @@ const dayMonthDate = (date) => {
 
 const RosterCard = ({ participants, teamName }) => (
   <Card>
-    <CardHeader title={teamName} className={styles.cardHeader} />
+    <CardHeader title={teamName ?? 'No team yet...'} className={styles.cardHeader} />
     <CardContent>
       <ParticipantList participants={participants} />
     </CardContent>
@@ -36,8 +36,10 @@ const RosterCard = ({ participants, teamName }) => (
 const Match = () => {
   const { activityID, matchID } = useParams();
   const { profile } = useUser();
-  const [match, setMatch] = useState({});
+  const [match, setMatch] = useState();
   const [loading, setLoading] = useState(true);
+  const [team0Score, setTeam0Score] = useState(0);
+  const [team1Score, setTeam1Score] = useState(0);
   // const [openMatchForm, setOpenMatchForm] = useState(false);
 
   useEffect(() => {
@@ -48,6 +50,18 @@ const Match = () => {
     };
     loadMatch();
   }, [matchID]);
+
+  useEffect(() => {
+    if (match) {
+      const assignMatchScores = async () => {
+        setLoading(true);
+        setTeam0Score(match.Scores.find((team) => team.OwnID === match.Team[0]?.ID)?.OwnScore ?? 0);
+        setTeam1Score(match.Scores.find((team) => team.OwnID === match.Team[1]?.ID)?.OwnScore ?? 0);
+        setLoading(false);
+      };
+      assignMatchScores();
+    }
+  }, [match]);
 
   if (loading) {
     return <GordonLoader />;
@@ -74,11 +88,13 @@ const Match = () => {
                   className="gc360_text_link"
                   underline="hover"
                   color="inherit"
-                  to={`/recim/activity/${activityID}`}
+                  to={`/recim/activity/${match.Activity.ID}`}
                 >
-                  Activity Name
+                  {match.Activity.Name}
                 </LinkRouter>
-                <Typography color="text.primary">Match: Team A vs Team B</Typography>
+                <Typography color="text.primary">
+                  Match: {match.Team[0]?.Name ?? '____'} vs {match.Team[1]?.Name ?? '____'}{' '}
+                </Typography>
               </Breadcrumbs>
             </Grid>
             <hr className={styles.recimNavHeaderLine} />
@@ -93,7 +109,11 @@ const Match = () => {
           </Grid>
           <Grid container alignItems="center" justifyContent="space-around">
             <Grid item xs={2}>
-              <Typography variant="h5">{match.Team[0].Name}</Typography>
+              <LinkRouter to={`/recim/activity/${match.Activity.ID}/team/${match.Team[0]?.ID}`}>
+                <Typography variant="h5" className="gc360_text_link">
+                  {match.Team[0]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
               <i className={styles.grayText}>Sportsmanship</i>
             </Grid>
             <Grid item xs={2}>
@@ -101,15 +121,21 @@ const Match = () => {
             </Grid>
             <Grid item container xs={4} sm={2} alignItems="center" direction="column">
               <Typography variant="body" className={styles.grayText}>
-                <i>Match status</i>
+                <i>Match Score</i>
               </Typography>
-              <Typography variant="h5">17 - 38</Typography>
+              <Typography variant="h5">
+                {team0Score} : {team1Score}
+              </Typography>
             </Grid>
             <Grid item xs={2}>
               <img src={''} alt="Team Icon" width="85em"></img>
             </Grid>
             <Grid item xs={2}>
-              <Typography variant="h5">{match.Team[1].Name}</Typography>
+              <LinkRouter to={`/recim/activity/${match.Activity.ID}/team/${match.Team[1]?.ID}`}>
+                <Typography variant="h5" className="gc360_text_link">
+                  {match.Team[1]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
               <i className={styles.grayText}>Sportsmanship</i>
             </Grid>
           </Grid>
@@ -124,10 +150,10 @@ const Match = () => {
             {mainCard}
           </Grid>
           <Grid item xs={12} md={6}>
-            <RosterCard participants={match.Team[0].Participant} teamName={match.Team[0].Name} />
+            <RosterCard participants={match.Team[0]?.Participant} teamName={match.Team[0]?.Name} />
           </Grid>
           <Grid item xs={12} md={6}>
-            <RosterCard participants={match.Team[1].Participant} teamName={match.Team[1].Name} />
+            <RosterCard participants={match.Team[1]?.Participant} teamName={match.Team[1]?.Name} />
           </Grid>
         </Grid>
         <Typography>

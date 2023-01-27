@@ -29,9 +29,10 @@ const ParticipantList = ({ participants, minimal, showParticipantOptions, callba
   return <List dense>{content}</List>;
 };
 
-const MatchList = ({ matches }) => {
+const MatchList = ({ matches, activityID }) => {
   if (!matches?.length) return <Typography>No matches to show.</Typography>;
-  let content = matches.map((match) => <MatchListing key={match.ID} match={match} />);
+  let content = matches.map((match) => <MatchListing key={match.ID} match={match} activityID={activityID}  />);
+
   return <List dense>{content}</List>;
 };
 
