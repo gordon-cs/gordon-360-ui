@@ -1,6 +1,16 @@
 /* Style sheet for CoCurricular Transcript view */
 @import '../../vars';
 
+.fab {
+  margin: 0px;
+  top: auto;
+  right: 20px;
+  bottom: 20px;
+  left: auto;
+  position: fixed;
+  z-index: 1;
+}
+
 .co_curricular_transcript {
   display: grid;
   grid-template-columns: 15% 70% 15%;
@@ -56,8 +66,9 @@
 /* @media print takes effect when in a print view (eg after hitting Print Co-Curricular Transcript).
    Allows logo to only show when printing. */
 @media print {
-  body header {
-    // hides the header (with people search etc.)
+  body header,
+  .fab {
+    // hides the header and print button
     visibility: hidden;
   }
 

@@ -1,11 +1,12 @@
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Button, Card, CardContent, Typography } from '@mui/material';
+import { Print } from '@mui/icons-material';
+import { Button, Card, CardContent, Fab, Typography } from '@mui/material';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { Component } from 'react';
 import membershipService, { NonGuestParticipations } from 'services/membership';
+import transcriptService from 'services/transcript';
 import user from 'services/user';
-import { gordonColors } from 'theme';
 import styles from './CoCurricularTranscript.module.css';
 import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
@@ -32,10 +33,6 @@ class Transcript extends Component {
     };
   }
 
-  handleDownload() {
-    window.print();
-  }
-
   componentDidMount() {
     if (this.props.authentication) {
       this.loadTranscript();
@@ -54,34 +51,17 @@ class Transcript extends Component {
         username: profile.AD_Username,
         participationTypes: NonGuestParticipations,
       });
-      let categorizedMemberships = this.filterMemberships(memberships);
+      const categorizedMemberships = transcriptService.filterMemberships(memberships);
 
-      let otherInvolvements = false;
-      if (!(categorizedMemberships.activities.length === 0)) {
-        otherInvolvements = true;
-      }
-
-      let honorsLeadership = false;
-      if (!(categorizedMemberships.honors.length === 0)) {
-        honorsLeadership = true;
-      }
-
-      let serviceLearning = false;
-      if (!(categorizedMemberships.service.length === 0)) {
-        serviceLearning = true;
-      }
+      const otherInvolvements = categorizedMemberships.activities.length > 0;
+      const honorsLeadership = categorizedMemberships.honors.length > 0;
+      const serviceLearning = categorizedMemberships.service.length > 0;
 
       categorizedMemberships.experience.employments = await user.getEmploymentInfo();
 
-      let experiences = false;
-      if (
-        !(
-          categorizedMemberships.experience.experiences.length === 0 &&
-          categorizedMemberships.experience.employments.length === 0
-        )
-      ) {
-        experiences = true;
-      }
+      const experiences =
+        categorizedMemberships.experience.experiences.length > 0 ||
+        categorizedMemberships.experience.employments.length > 0;
 
       this.setState({
         loading: false,
@@ -97,116 +77,6 @@ class Transcript extends Component {
     }
   }
 
-  // Sorts a list of activity components in order of most recent end date to least recent end date.
-  // Param: activities - an array of Activity components with props Activity and Sessions
-  // Returns: the same array, sorted in order of most recent (newest) to least recent
-  sortNewestFirst = (activities) => {
-    let sorted = activities.sort(function (a, b) {
-      let lastSessA = a.props.Sessions[a.props.Sessions.length - 1];
-      let lastSessB = b.props.Sessions[b.props.Sessions.length - 1];
-      return lastSessB - lastSessA;
-    });
-    return sorted;
-  };
-
-  // For each activity in an array of activities, this finds all other activities of the same Code
-  // and keeps an array of all the sessions during which the student was involved in this activity.
-  // One Activity component is created with that ActivityDescription and the array of sessions.
-  // Once all Activity components have been made, they are sorted from most to least recent.
-
-  // Param: activities - a list of activity objects ("Memberships" as defined in gordon-360-api)
-  // Returns: array of Activity components with props Activity and Sessions.
-  groupActivityByCode = (activities) => {
-    let condensedActs = [];
-
-    // sort activities by ActivityCode
-    while (activities.length > 0) {
-      let curAct = activities.shift();
-      let sessions = [];
-      let leaderSessions = [];
-
-      // keep track of the activity code which will be used to identify all activities of the same
-      // code so they can be grouped into one activity component
-      let curActCode = curAct.ActivityCode;
-
-      // For each other activity matching curActCode, if it is consecutive to the current end date,
-      // save its end date as the new end date, otherwise, add the current start and end dates to
-      // the string 'duration' (because the streak is broken) and prepare to start a new streak.
-      // Loop assumes activities will be sorted by session and Activity Code.
-      sessions.push(curAct.SessionCode);
-      if (curAct.Participation === 'LEAD') {
-        leaderSessions.push(curAct.SessionCode);
-      }
-      while (activities.length > 0 && activities[0].ActivityCode === curActCode) {
-        sessions.push(activities[0].SessionCode);
-        if (activities[0].Participation === 'LEAD') {
-          leaderSessions.push(activities[0].SessionCode);
-        }
-        activities.shift();
-      }
-
-      let sessionsOrdered = sessions.sort();
-
-      let leaderSessionsOrdered = leaderSessions.sort();
-
-      // add the new TranscriptItem component to the array
-      condensedActs.push(
-        <Activity
-          key={curAct.ActivityCode}
-          Activity={curAct}
-          Sessions={sessionsOrdered}
-          LeaderSessions={leaderSessionsOrdered}
-        />,
-      );
-    }
-
-    let sorted = this.sortNewestFirst(condensedActs);
-
-    return sorted;
-  };
-
-  // Filters general memberships from the 360 Database into one of four categories
-  //        1. Honors, Leadership, and Research
-  //        2. Experience
-  //        3. Service and Service Learning
-  //        4. Activities (the catch-all)
-  // Memberships ars sorted based on their Activity Code, although this is not a perfect indicator
-  // of which category a membership should belong to.
-  // Params: memberships - An array of membership objects retrieved from the database.
-  // Returns: An array of four arrays-one per category-into which the  memberships have been filtered
-  filterMemberships = (memberships) => {
-    let filtered = {
-      honors: [],
-      experience: {
-        experiences: [],
-        employments: [],
-      },
-      service: [],
-      activities: [],
-    };
-
-    let honorsTypes = ['LEA', 'SCH', 'SGV'];
-    let serviceTypes = ['SLP', 'MIN'];
-    let experienceTypes = ['RES'];
-
-    while (memberships.length > 0) {
-      let membership = memberships.shift();
-
-      // Filter memberships into either Honors, Experience, Service, or Activities
-      if (honorsTypes.includes(membership.ActivityType)) {
-        filtered.honors.push(membership);
-      } else if (experienceTypes.includes(membership.ActivityType)) {
-        filtered.experience.experiences.push(membership);
-      } else if (serviceTypes.includes(membership.ActivityType)) {
-        filtered.service.push(membership);
-      } else {
-        filtered.activities.push(membership);
-      }
-    }
-
-    return filtered;
-  };
-
   // Returns: the graduation date of the current user, or nothing if they have no declared grad date
   getGradCohort() {
     let gradDate = this.state.profile.GradDate;
@@ -217,154 +87,123 @@ class Transcript extends Component {
     }
   }
 
-  // Formats an array of major objects into a string for display on the transcript
-  // Params: majors - An array of major objects
-  // Returns: A string of all the current user's majors.
-  getMajors = (majors) => {
-    let majorsString = 'Majors: ';
-
-    //If majors is empty or not loaded, return null majors without iterating to avoid crashing
-    if (majors === undefined || majors.length === 0) {
-      return null;
-    } else {
-      for (let major of majors) {
-        majorsString += major + ', ';
-      }
-    }
-
-    return majorsString.substr(0, majorsString.length - 2);
-  };
-
-  // Formats an array of minor objects into a string for display on the transcript
-  // Params: minors - An array of minor objects
-  // Returns: A string of all the current user's minors.
-  getMinors = (minors) => {
-    let minorsString = 'Minors: ';
-
-    //If minors is empty or not loaded, return null minors without iterating to avoid crashing
-    if (minors === undefined || minors.length === 0) {
-      return null;
-    } else {
-      for (let minor of minors) {
-        minorsString += minor + ', ';
-      }
-    }
-
-    return minorsString.substr(0, minorsString.length - 2);
-  };
-
   render() {
-    if (this.props.authentication) {
-      let activityList;
-      if (!this.state.categorizedMemberships.activities) {
-        activityList = <GordonLoader />;
-      } else {
-        activityList = this.groupActivityByCode(this.state.categorizedMemberships.activities);
-      }
+    if (!this.props.authentication) {
+      return <GordonUnauthorized feature={'your experience transcript'} />;
+    }
 
-      let honorsList;
-      if (!this.state.categorizedMemberships.honors) {
-        honorsList = <GordonLoader />;
-      } else {
-        honorsList = this.groupActivityByCode(this.state.categorizedMemberships.honors);
-      }
+    const activityList = !this.state.categorizedMemberships.activities ? (
+      <GordonLoader />
+    ) : (
+      transcriptService
+        .groupActivityByCode(this.state.categorizedMemberships.activities)
+        .map((activity) => <Activity {...activity} />)
+    );
 
-      let serviceList;
-      if (!this.state.categorizedMemberships.service) {
-        serviceList = <GordonLoader />;
-      } else {
-        serviceList = this.groupActivityByCode(this.state.categorizedMemberships.service);
-      }
+    const honorsList = !this.state.categorizedMemberships.honors ? (
+      <GordonLoader />
+    ) : (
+      transcriptService
+        .groupActivityByCode(this.state.categorizedMemberships.honors)
+        .map((activity) => <Activity {...activity} />)
+    );
 
-      let experienceList;
-      if (!this.state.categorizedMemberships.experience) {
-        experienceList = <GordonLoader />;
-      } else {
-        experienceList = this.groupActivityByCode(
-          this.state.categorizedMemberships.experience.experiences,
-        );
-        experienceList = experienceList.concat(
+    const serviceList = !this.state.categorizedMemberships.service ? (
+      <GordonLoader />
+    ) : (
+      transcriptService
+        .groupActivityByCode(this.state.categorizedMemberships.service)
+        .map((activity) => <Activity {...activity} />)
+    );
+
+    const experienceList = !this.state.categorizedMemberships.experience ? (
+      <GordonLoader />
+    ) : (
+      transcriptService
+        .groupActivityByCode(this.state.categorizedMemberships.experience.experiences)
+        .map((activity) => <Activity {...activity} />)
+        .concat(
           this.state.categorizedMemberships.experience.employments
             .map((employment) => <Experience Experience={employment} />)
             .reverse(),
-        );
-      }
+        )
+    );
 
-      const buttonColors = {
-        /* not in style sheet so that gordonColors is accessible */
-        background: gordonColors.primary.cyan,
-        color: 'white',
-      };
+    const honorsLeadership = this.state.honorsLeadership;
+    const experiences = this.state.experiences;
+    const serviceLearning = this.state.serviceLearning;
+    const otherInvolvements = this.state.otherInvolvements;
 
-      const honorsLeadership = this.state.honorsLeadership;
-      const experiences = this.state.experiences;
-      const serviceLearning = this.state.serviceLearning;
-      const otherInvolvements = this.state.otherInvolvements;
-
-      return (
-        <div className={styles.co_curricular_transcript}>
-          <Card className={styles.card} elevation={10}>
-            <CardContent className={styles.card_content}>
-              <div className={styles.print_only}>
-                {/* <img src={require('./logo.png')} alt="" /> */}
-              </div>
-              <div>
-                <Button
-                  className={styles.button}
-                  onClick={this.handleDownload}
-                  style={buttonColors}
-                  variant="contained"
-                >
-                  Print Experience Transcript
-                </Button>
-              </div>
-              <div>Gordon College Experience Transcript</div>
+    return (
+      <div className={styles.co_curricular_transcript}>
+        <Card className={styles.card} elevation={10}>
+          <CardContent className={styles.card_content}>
+            <div>Gordon College Experience Transcript</div>
+            <div className={styles.subtitle}>
+              <b>{this.state.profile.fullName}</b>
+            </div>
+            {this.state.profile.GradDate && (
               <div className={styles.subtitle}>
-                {' '}
-                <b>{this.state.profile.fullName}</b>{' '}
+                Class of {transcriptService.getGradCohort(this.state.profile.GradDate)}
               </div>
-              <div className={styles.subtitle}>{this.getGradCohort()}</div>
-              <div className={styles.subtitle}>{this.getMajors(this.state.profile.Majors)}</div>
-              <div className={styles.subtitle}>{this.getMinors(this.state.profile.Minors)}</div>
-              {honorsLeadership && (
-                <div className={styles.subtitle}>
-                  <Typography variant="h5">
-                    <b>Honors, Leadership, and Research</b>
-                  </Typography>
-                </div>
-              )}
-              <div className={styles.activity_list}>{honorsList}</div>
-              {experiences && (
-                <div className={styles.subtitle}>
-                  <Typography variant="h5">
-                    <b>Experience</b>
-                  </Typography>
-                </div>
-              )}
-              <div className={styles.activity_list}>{experienceList}</div>
-              {serviceLearning && (
-                <div className={styles.subtitle}>
-                  <Typography variant="h5">
-                    <b>Service Learning</b>
-                  </Typography>
-                </div>
-              )}
-              <div className={styles.activity_list}>{serviceList}</div>
-              {otherInvolvements && (
-                <div className={styles.subtitle}>
-                  <Typography variant="h5">
-                    <b>Activities</b>
-                  </Typography>
-                </div>
-              )}
-              <div className={styles.activity_list}>{activityList}</div>
-            </CardContent>
-          </Card>
-        </div>
-      );
-    } else {
-      return <GordonUnauthorized feature={'your experience transcript'} />;
-    }
+            )}
+            {this.state.profile.Majors && (
+              <div className={styles.subtitle}>
+                Major{this.state.profile.Majors.length > 1 ? 's' : ''}:{' '}
+                {this.state.profile.Majors.join(', ')}
+              </div>
+            )}
+            {this.state.profile.Majors && (
+              <div className={styles.subtitle}>
+                Minor{this.state.profile.Minors.length > 1 ? 's' : ''}:{' '}
+                {this.state.profile.Minors.join(', ')}
+              </div>
+            )}
+            {honorsLeadership && (
+              <div className={styles.subtitle}>
+                <Typography variant="h5">
+                  <b>Honors, Leadership, and Research</b>
+                </Typography>
+              </div>
+            )}
+            <div className={styles.activity_list}>{honorsList}</div>
+            {experiences && (
+              <div className={styles.subtitle}>
+                <Typography variant="h5">
+                  <b>Experience</b>
+                </Typography>
+              </div>
+            )}
+            <div className={styles.activity_list}>{experienceList}</div>
+            {serviceLearning && (
+              <div className={styles.subtitle}>
+                <Typography variant="h5">
+                  <b>Service Learning</b>
+                </Typography>
+              </div>
+            )}
+            <div className={styles.activity_list}>{serviceList}</div>
+            {otherInvolvements && (
+              <div className={styles.subtitle}>
+                <Typography variant="h5">
+                  <b>Activities</b>
+                </Typography>
+              </div>
+            )}
+            <div className={styles.activity_list}>{activityList}</div>
+          </CardContent>
+        </Card>
+        <Fab
+          color="primary"
+          variant="extended"
+          className={styles.fab}
+          onClick={() => window.print()}
+        >
+          <Print />
+          Print
+        </Fab>
+      </div>
+    );
   }
 }
 
