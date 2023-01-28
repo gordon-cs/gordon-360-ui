@@ -96,6 +96,10 @@ const editTeamParticipant = async (
   return await http.patch(`recim/Teams/${teamID}/participants`, editedParticipant);
 };
 
+const deleteTeamParticipant = async (teamID: number, username: string) => {
+  await http.del(`recim/Teams/${teamID}/participants?username=${username}`);
+};
+
 const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>
   http.patch(`recim/Teams/${ID}`, updatedTeam);
 
@@ -107,5 +111,6 @@ export {
   getTeamParticipantRoleTypes,
   addParticipantToTeam,
   editTeamParticipant,
+  deleteTeamParticipant,
   editTeam,
 };
