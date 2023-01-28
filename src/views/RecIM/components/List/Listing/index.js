@@ -153,8 +153,9 @@ const TeamListing = ({ team }) => {
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
 const ParticipantListing = ({ participant, minimal, callbackFunction, showParticipantOptions }) => {
   const { teamID } = useParams();
-  const [avatar, setAvatar] = useState('');
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [avatar, setAvatar] = useState();
+  const [name, setName] = useState();
+  const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
   const handleClose = () => {
     setAnchorEl(null);
@@ -169,6 +170,13 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
         setAvatar(preferredImage || defaultImage);
       }
     };
+    const loadUserInfo = async () => {
+      if (participant.Username) {
+        const profileInfo = await user.getProfileInfo(participant.Username);
+        setName(profileInfo.fullName);
+      }
+    };
+    loadUserInfo();
     loadAvatar();
   }, [participant.Username]);
 
@@ -199,7 +207,6 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     await editTeamParticipant(parseInt(teamID), editedParticipant);
     handleClose();
   };
-
   return (
     // first ListItem is used only for paddings/margins
     // second ListItem (nested inside) is used to layout avatar and secondaryAction
@@ -226,7 +233,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
               variant="rounded"
             ></Avatar>
           </ListItemAvatar>
-          <ListItemText primary={participant.Username} secondary={participant.Role} />
+          <ListItemText primary={name} secondary={participant.Role} />
         </ListItemButton>
         {showParticipantOptions ? (
           <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
