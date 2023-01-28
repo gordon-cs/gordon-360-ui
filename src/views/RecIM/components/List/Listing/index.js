@@ -18,63 +18,9 @@ import user from 'services/user';
 import { DateTime } from 'luxon';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import UpdateIcon from '@mui/icons-material/Update';
-import RestoreIcon from '@mui/icons-material/Restore';
-import ScheduleIcon from '@mui/icons-material/Schedule';
 import ClearIcon from '@mui/icons-material/Clear';
 import { editTeamParticipant } from 'services/recim/team';
-
-const standardDate = (date, includeTime) => {
-  let formattedDate = date.monthShort + ' ' + date.day;
-  if (includeTime) {
-    formattedDate += ' ' + date.toLocaleString(DateTime.TIME_SIMPLE);
-  }
-  return formattedDate;
-};
-
-const SeriesListing = ({ series }) => {
-  let startDate = DateTime.fromISO(series.StartDate);
-  let endDate = DateTime.fromISO(series.EndDate);
-
-  const status = () => {
-    let now = DateTime.fromMillis(Date.now());
-    // future series
-    if (now < startDate)
-      return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
-    // past series
-    else if (now > endDate)
-      return <Chip icon={<RestoreIcon />} label="completed" color="default" size="small"></Chip>;
-    // current series
-    return <Chip icon={<ScheduleIcon />} label="ongoing" color="success" size="small"></Chip>;
-  };
-
-  return (
-    <ListItem>
-      <Grid container className={styles.listing} columnSpacing={2} alignItems="center">
-        <Grid container direction="column" item xs={12} sm={4}>
-          <Typography className={styles.listingTitle}>{series.Name}</Typography>
-          <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
-            Schedule Type: {series.Type}
-          </Typography>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <Grid container direction="row">
-            <Grid item xs={10}>
-              <Typography>
-                <i>
-                  {standardDate(startDate, false)} - {standardDate(endDate, false)}
-                </i>
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          {status()}
-        </Grid>
-      </Grid>
-    </ListItem>
-  );
-};
+import { standardDate } from '../../Helpers';
 
 const ActivityListing = ({ activity }) => {
   let registrationStart = DateTime.fromISO(activity.RegistrationStart);
@@ -271,4 +217,4 @@ const MatchListing = ({ match, activityID }) => {
   );
 };
 
-export { ActivityListing, TeamListing, ParticipantListing, MatchListing, SeriesListing };
+export { ActivityListing, TeamListing, ParticipantListing, MatchListing };

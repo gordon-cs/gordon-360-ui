@@ -4,7 +4,6 @@ import {
   MatchListing,
   ParticipantListing,
   TeamListing,
-  SeriesListing,
 } from './Listing';
 
 const ActivityList = ({ activities }) => {
@@ -39,9 +38,4 @@ const TeamList = ({ teams }) => {
   return <List dense>{content}</List>;
 };
 
-const SeriesList = ({ series }) => {
-  let content = series.map((series) => <SeriesListing key={series.ID} series={series} />);
-  return <List dense>{content}</List>;
-};
-
-export { ActivityList, ParticipantList, MatchList, TeamList, SeriesList };
+export { ActivityList, ParticipantList, MatchList, TeamList };

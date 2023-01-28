@@ -14,6 +14,14 @@
   width: 20em;
 }
 
+.buttonArea {
+  background-color: $neutral-gray2;
+  padding: 16px;
+  margin-bottom: 0.2em;
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+}
+
 .actionButton {
   text-transform: none;
 }
@@ -33,10 +41,30 @@
   padding: 0.7em 16px;
 }
 
+:global(.MuiCardContent-root) {
+  padding: 16px;
+  padding-top: 0px;
+}
+
 .cardHeader :global(.MuiCardHeader-title) {
   font-size: 1em;
 }
 
 .grayText {
   color: $neutral-gray;
+}
+
+.seriesContainer {
+  background-color: $primary-blue;
+  border-radius: 0.5em;
+  margin-top: 1em;
+}
+
+.seriesMainText {
+  color: $neutral-white;
+}
+
+.seriesSecondaryText {
+  color: $neutral-gray;
+  font-size: 0.7em;
 }
