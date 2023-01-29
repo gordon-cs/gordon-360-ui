@@ -1,3 +1,4 @@
+import { parse } from 'date-fns';
 import http from './http';
 
 type Session = {
@@ -84,6 +85,9 @@ const getTermCode = (): string => {
   return `${year.toString().substr(-2)}${term}`;
 };
 
+// TODO: Use Enum for session representation?
+const parseSessionCode = (sessionCode: string) => parse(sessionCode, 'yyyyMM', new Date());
+
 const sessionService = {
   get,
   getAll,
@@ -92,6 +96,7 @@ const sessionService = {
   getTermCode,
   decodeSessionCode,
   encodeSessionCode,
+  parseSessionCode,
 };
 
 export default sessionService;

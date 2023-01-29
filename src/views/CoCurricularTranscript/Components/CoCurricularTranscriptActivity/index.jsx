@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+import sessionService from 'services/session';
 import styles from './CoCurricularTranscriptActivity.module.css';
 
 const Activity = ({ description, sessions, leaderSessions }) => (
@@ -18,26 +20,6 @@ export default Activity;
 // Helper functions for parsing and translating sessionCode which is of the format "YYYYSE"
 // where SE is 09 for fall, 01 for spring, 05 for summer
 
-// Returns: string of year in format YYYY
-const sliceYear = (sesCode) => {
-  return sesCode.slice(0, 4);
-};
-
-// Returns: string of month (Mon), month being the first month of the given semester
-const sliceStart = (sesCode) => {
-  switch (sesCode.slice(4, 6)) {
-    case '09':
-      return 'Sep';
-    case '01':
-      return 'Jan';
-    case '05':
-      return 'May';
-    default:
-      console.log('An unrecognized semester code was provided');
-      return '';
-  }
-};
-
 // Returns: string of month (Mon), month being last month of the given semester
 const sliceEnd = (sesCode) => {
   switch (sesCode.slice(4, 6)) {
@@ -53,18 +35,27 @@ const sliceEnd = (sesCode) => {
   }
 };
 
-// Param: expects an array of [month in which the earlier session ended,
-//                             year in which the ealier session ended,
-//                             month in which the later session started (format: Mon),
-//                             year in which the later session started (YYYY)]
-// Returns: true if given month-year pairs are consecutive, false otherwise. Summers are not
-//        considered a break consecutiveness because there are no summer activities. */
-const checkConsecutiveness = (dates) => {
+/**
+ * Check whether two sessions are consecutive.
+ *
+ * Sessions are consecutive if they occur in the same calendar year, or if the earlier session was
+ * a fall session and the later session is the following spring session.
+ *
+ * TODO: This logic assumes that sessions will be either fall or spring.
+ * It might not handle winter, summer, graduate sessions correctly.
+ *
+ * @param {Date} earlierSession the chronologically earlier of the two sessions
+ * @param {Date} laterSession the chronologically later of the two sessions
+ * @returns Whether the later session is immediately after the earlier session
+ */
+const areConsecutive = (earlierSession, laterSession) => {
+  const earlierYear = earlierSession.getFullYear();
+  const laterYear = laterSession.getFullYear();
   return (
-    dates[1] === dates[3] ||
-    (parseInt(dates[1], 10) + 1 === parseInt(dates[3], 10) &&
-      dates[0] === 'Dec' &&
-      dates[2] === 'Jan')
+    earlierYear === laterYear ||
+    (earlierYear + 1 === laterYear &&
+      earlierSession.getMonth() > 4 &&
+      laterSession.getMonth() === 0)
   );
 };
 
@@ -79,15 +70,16 @@ const formatDuration = (sessionsList) => {
     return sessA - sessB;
   });
 
-  // format sessions into a string representing the timespan(s) of the membership
-  //while (sessionsList.length > 0) {
-  let curSess = sessionsList.shift();
-
   // Pop first session code from array and split into months and years, which are saved as
   // the initial start and end dates
-  let startMon = sliceStart(curSess);
+  let curSess = sessionsList.shift();
+
+  let endDate = sessionService.parseSessionCode(curSess);
+
+  // format sessions into a string representing the timespan(s) of the membership
+  let startMon = format(endDate, 'MMM');
   let endMon = sliceEnd(curSess);
-  let startYear = sliceYear(curSess),
+  let startYear = format(endDate, 'yyyy'),
     endYear = startYear;
 
   // For each other session, if it is consecutive to the current end date,
@@ -95,13 +87,12 @@ const formatDuration = (sessionsList) => {
   // the string 'duration' (because the streak is broken) and prepare to start a new streak.
   // Loop assumes sessions will be sorted from earliest to latest
   while (sessionsList.length > 0) {
-    let curSess = sessionsList.shift();
-    let nextStartMon = sliceStart(curSess);
-    let nextYear = sliceYear(curSess);
-    if (checkConsecutiveness([endMon, endYear, nextStartMon, nextYear])) {
+    curSess = sessionsList.shift();
+    let nextStartDate = sessionService.parseSessionCode(curSess);
+    if (areConsecutive(endDate, nextStartDate)) {
       // a streak of consecutive involvement continues
       endMon = sliceEnd(curSess);
-      endYear = sliceYear(curSess);
+      endYear = format(nextStartDate, 'yyyy');
     } else {
       // a streak has been broken; add its start and end to the string and start new streak
 
@@ -112,10 +103,12 @@ const formatDuration = (sessionsList) => {
         duration += startMon + ' ' + startYear;
       }
       duration += '-' + endMon + ' ' + endYear + ', ';
-      startMon = sliceStart(curSess);
+      startMon = format(nextStartDate, 'MMM');
       endMon = sliceEnd(curSess);
-      startYear = endYear = sliceYear(curSess);
+      startYear = endYear = format(nextStartDate, 'yyyy');
     }
+
+    endDate = nextStartDate;
   }
 
   // Flush the remaining start and end info to duration.
