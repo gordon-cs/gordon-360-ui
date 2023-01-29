@@ -23,6 +23,11 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import ClearIcon from '@mui/icons-material/Clear';
 import { editTeamParticipant } from 'services/recim/team';
+import { getActivityTypes } from 'services/recim/activity';
+import SportsFootballIcon from '@mui/icons-material/SportsFootball';
+import SportsCricketIcon from '@mui/icons-material/SportsCricket';
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+// import { gordonColors } from 'theme';
 
 const standardDate = (date, includeTime) => {
   let formattedDate = date.monthShort + ' ' + date.day;
@@ -77,6 +82,17 @@ const SeriesListing = ({ series }) => {
 };
 
 const ActivityListing = ({ activity }) => {
+  const [activityType, setActivityType] = useState();
+  useEffect(() => {
+    const loadActivityType = async () => {
+      let activityTypes = await getActivityTypes();
+      setActivityType(
+        activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
+      );
+    };
+    loadActivityType();
+  }, [activity]);
+
   let registrationStart = DateTime.fromISO(activity.RegistrationStart);
   let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
   return (
@@ -92,6 +108,25 @@ const ActivityListing = ({ activity }) => {
                 icon={<EventAvailableIcon />}
                 label={activity.RegistrationOpen ? 'registration open' : 'registration closed'}
                 color={activity.RegistrationOpen ? 'success' : 'info'}
+                size="small"
+              ></Chip>
+              <Chip
+                icon={
+                  (activityType === 'League' && <SportsFootballIcon />) ||
+                  (activityType === 'Tournament' && <SportsCricketIcon />) ||
+                  (activityType === 'One Off' && <LocalActivityIcon />)
+                }
+                label={activityType}
+                color={'success'}
+                className={
+                  styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]
+                }
+                // sx={{
+                //   backgroundColor:
+                //     (activityType === ('League' && gordonColors.secondary.redShades[100])) |
+                //       (activityType === 'Tournament' && gordonColors.secondary.yellow) |
+                //       (activityType === 'One Off') && gordonColors.primary.cyanShades[100],
+                // }}
                 size="small"
               ></Chip>
             </Grid>
