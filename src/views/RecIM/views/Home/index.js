@@ -8,10 +8,31 @@ import GordonLoader from 'components/Loader';
 import styles from './Home.module.css';
 import recimLogo from './../../recim_logo.png';
 import { ActivityList, TeamList } from './../../components/List';
-import { getAllActivities } from 'services/recim/activity';
+import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+
+export const homeHeader = (
+  <Card>
+    <CardContent>
+      <Grid container direction="row" alignItems="center" spacing={4}>
+        <Grid item>
+          <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+        </Grid>
+        <Grid item xs={8} md={5} lg={3}>
+          <hr className={styles.homeHeaderLine} />
+          <Typography variant="h5" className={styles.homeHeaderTitle}>
+            <b className="accentText">Gordon</b> Rec-IM
+          </Typography>
+          <Typography variant="h6" className={styles.homeHeaderSubtitle}>
+            <i>"Competition reveals character"</i>
+          </Typography>
+        </Grid>
+      </Grid>
+    </CardContent>
+  </Card>
+);
 
 const Home = () => {
   const { profile } = useUser();
@@ -35,7 +56,7 @@ const Home = () => {
     const loadData = async () => {
       setLoading(true);
       // Get all active activities where registration has not closed
-      setActivities(await getAllActivities(true));
+      setActivities(await getActivities(true));
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
         setMyTeams(await getParticipantTeams(profile.AD_Username));
@@ -80,27 +101,6 @@ const Home = () => {
         Create a New Activity
       </Button>
     </Grid>
-  );
-
-  let homeHeader = (
-    <Card>
-      <CardContent>
-        <Grid container direction="row" alignItems="center" spacing={4}>
-          <Grid item>
-            <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
-          </Grid>
-          <Grid item xs={8} md={5} lg={3}>
-            <hr className={styles.homeHeaderLine} />
-            <Typography variant="h5" className={styles.homeHeaderTitle}>
-              <b className="accentText">Gordon</b> Rec-IM
-            </Typography>
-            <Typography variant="h6" className={styles.homeHeaderSubtitle}>
-              <i>"Competition reveals character"</i>
-            </Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
   );
 
   // CARD - upcoming activities
