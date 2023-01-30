@@ -93,79 +93,62 @@ const ActivityListing = ({ activity }) => {
     loadActivityType();
   }, [activity]);
 
-  let registrationStart = DateTime.fromISO(activity.RegistrationStart);
   let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
+  let activeSeries = activity.Series.find(
+    (series) => DateTime.fromISO(series.StartDate) < DateTime.now(),
+  );
+  let activeSeriesMessage = activeSeries
+    ? activeSeries.Name + ' until ' + standardDate(DateTime.fromISO(activeSeries.EndDate))
+    : null;
+
   return (
     <ListItemButton component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
       <Grid container className={styles.listing} columnSpacing={2}>
-        <Grid item xs={12} sm={4} container alignContent="center">
-          <Typography className={styles.listingTitle}>{activity.Name}</Typography>
+        <Grid item container xs={12} sm={4} alignContent="center" spacing={1}>
+          <Grid item>
+            <Typography className={styles.listingTitle}>{activity.Name}</Typography>
+          </Grid>
+          <Grid item>
+            <Chip
+              icon={
+                (activityType === 'League' && <SportsFootballIcon />) ||
+                (activityType === 'Tournament' && <SportsCricketIcon />) ||
+                (activityType === 'One Off' && <LocalActivityIcon />)
+              }
+              label={activityType}
+              color={'success'}
+              className={styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]}
+              size="small"
+            ></Chip>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <Grid container direction="row">
-            <Grid item xs={10}>
+        <Grid item container xs={12} sm={7} direction="column" spacing={1}>
+          <Grid item>
+            <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
+              ActivityStart - ActivityEnd
+            </Typography>
+          </Grid>
+          <Grid item container spacing={2}>
+            <Grid item>
               <Chip
                 icon={<EventAvailableIcon />}
-                label={activity.RegistrationOpen ? 'registration open' : 'registration closed'}
+                label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
                 color={activity.RegistrationOpen ? 'success' : 'info'}
                 size="small"
               ></Chip>
-              <Chip
-                icon={
-                  (activityType === 'League' && <SportsFootballIcon />) ||
-                  (activityType === 'Tournament' && <SportsCricketIcon />) ||
-                  (activityType === 'One Off' && <LocalActivityIcon />)
-                }
-                label={activityType}
-                color={'success'}
-                className={
-                  styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]
-                }
-                // sx={{
-                //   backgroundColor:
-                //     (activityType === ('League' && gordonColors.secondary.redShades[100])) |
-                //       (activityType === 'Tournament' && gordonColors.secondary.yellow) |
-                //       (activityType === 'One Off') && gordonColors.primary.cyanShades[100],
-                // }}
-                size="small"
-              ></Chip>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item>
               <Typography>
-                Registration close{activity.RegistrationOpen ? 's' : 'd'}{' '}
-                {standardDate(registrationEnd, false)}
-              </Typography>
-              <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
-                <i>
-                  testing purposes: {standardDate(registrationStart, true)} -{' '}
-                  {standardDate(registrationEnd, true)}
-                </i>
+                {activity.RegistrationOpen
+                  ? 'Registration closes ' + standardDate(registrationEnd)
+                  : activeSeriesMessage}
               </Typography>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <Grid container direction="row">
-            <Grid item xs={10}>
-              <Typography gutterBottom>Season</Typography>
-            </Grid>
-            <Grid item xs={10}>
-              {activity.Series.map((series) => {
-                return (
-                  <Typography key={series.ID}>
-                    {series.Name} {standardDate(DateTime.fromISO(series.StartDate), false)} -{' '}
-                    {standardDate(DateTime.fromISO(series.EndDate), false)}
-                  </Typography>
-                );
-              })}
-            </Grid>
-          </Grid>
+        <Grid item sm={1}>
+          <Typography variant="h6">n / {activity.MaxCapacity}</Typography>
         </Grid>
-        {/* include:
-          - activity type (activity, tournament, one-off)
-          - registration deadline IF there is one (start date as well for admin only)
-          - date(s) of activity (ex. season date range or tournament date)
-          */}
       </Grid>
     </ListItemButton>
   );
