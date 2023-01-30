@@ -39,10 +39,10 @@ type CreatedTeamParticipant = {
 
 export type TeamMatchHistory = {
   MatchID: number;
-  OwnID: number;
+  TeamID: number;
   Opponent: Team;
-  OwnScore: number;
-  OpposingScore: number;
+  TeamScore: number;
+  OpposingTeamScore: number;
   Status: string;
   MatchStatusID: number;
   Time: string;
@@ -69,7 +69,10 @@ type PatchTeam = {
 };
 
 //Team Routes
-const getTeams = (): Promise<Team[]> => http.get(`recim/Teams`);
+const getTeams = (active: boolean): Promise<Team[]> => {
+  if (active) return http.get(`recim/Teams?active=${active}`);
+  return http.get(`recim/Teams`);
+};
 
 const createTeam = (username: string, newTeam: UploadTeam): Promise<CreatedTeam> =>
   http.post(`recim/Teams?username=${username}`, newTeam);
@@ -96,6 +99,10 @@ const editTeamParticipant = async (
   return await http.patch(`recim/Teams/${teamID}/participants`, editedParticipant);
 };
 
+const deleteTeamParticipant = async (teamID: number, username: string) => {
+  await http.del(`recim/Teams/${teamID}/participants?username=${username}`);
+};
+
 const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>
   http.patch(`recim/Teams/${ID}`, updatedTeam);
 
@@ -107,5 +114,6 @@ export {
   getTeamParticipantRoleTypes,
   addParticipantToTeam,
   editTeamParticipant,
+  deleteTeamParticipant,
   editTeam,
 };
