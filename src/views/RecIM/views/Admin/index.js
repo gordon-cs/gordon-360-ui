@@ -24,9 +24,9 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   //using term User to not get confused with the liberal usage of participant on this page
   const [user, setUser] = useState();
-  const [activities, setActivities] = useState(null);
-  const [teams, setTeams] = useState(null);
-  const [participants, setParticipants] = useState(null);
+  const [activities, setActivities] = useState();
+  const [teams, setTeams] = useState();
+  const [participants, setParticipants] = useState();
   const [tab, setTab] = useState(0);
   //const [shouldRefresh, setShouldRefresh] = useState(false);
   // I suggest a refresh button as an option to prevent ONLY refreshing via window reload
