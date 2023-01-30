@@ -53,7 +53,12 @@ const Admin = () => {
     };
     loadActivities();
     loadTeams();
-    loadParticipants();
+    // if you don't do this, you can see every participant via looking at the network tab
+    // on console, feel free to add the loadActivities/Teams to this 'if' statement if you desire
+    // but at the very least, participants need to be hidden
+    if (user?.IsAdmin) {
+      loadParticipants();
+    }
   }, [user]); //add shouldReload in the dependency array when refresh button implemented
 
   if (loading) return <GordonLoader />;
