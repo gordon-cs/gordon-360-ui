@@ -46,12 +46,12 @@ const SeriesListing = ({ series }) => {
     let now = DateTime.fromMillis(Date.now());
     // future series
     if (now < startDate)
-      return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
+      return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small" />;
     // past series
-    else if (now > endDate)
-      return <Chip icon={<RestoreIcon />} label="completed" color="default" size="small"></Chip>;
+    if (now > endDate)
+      return <Chip icon={<RestoreIcon />} label="completed" color="default" size="small" />;
     // current series
-    return <Chip icon={<ScheduleIcon />} label="ongoing" color="success" size="small"></Chip>;
+    return <Chip icon={<ScheduleIcon />} label="ongoing" color="success" size="small" />;
   };
 
   return (
@@ -89,7 +89,6 @@ const ActivityListing = ({ activity }) => {
       <GordonLoader size={15} />
     </span>,
   );
-
   useEffect(() => {
     const loadActivityType = async () => {
       let activityTypes = await getActivityTypes();
@@ -99,7 +98,7 @@ const ActivityListing = ({ activity }) => {
     };
     const calculateCurrentCapacity = async () => {
       let fullActivity = await getActivityByID(activity.ID);
-      setCurrentCapacity(fullActivity?.Team?.length);
+      setCurrentCapacity(fullActivity.Team?.length);
     };
     loadActivityType();
     calculateCurrentCapacity();
@@ -113,6 +112,21 @@ const ActivityListing = ({ activity }) => {
     ? activeSeries.Name + ' until ' + standardDate(DateTime.fromISO(activeSeries.EndDate))
     : null;
 
+  const activityTypeIconPair = [
+    {
+      type: 'League',
+      icon: <SportsFootballIcon />,
+    },
+    {
+      type: 'Tournament',
+      icon: <SportsCricketIcon />,
+    },
+    {
+      type: 'One Off',
+      icon: <LocalActivityIcon />,
+    },
+  ];
+
   return (
     <ListItemButton component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
       <Grid container className={styles.listing} columnSpacing={2} alignItems="center">
@@ -122,11 +136,7 @@ const ActivityListing = ({ activity }) => {
           </Grid>
           <Grid item>
             <Chip
-              icon={
-                (activityType === 'League' && <SportsFootballIcon />) ||
-                (activityType === 'Tournament' && <SportsCricketIcon />) ||
-                (activityType === 'One Off' && <LocalActivityIcon />)
-              }
+              icon={activityTypeIconPair.find((type) => type.type === activityType).icon}
               label={activityType}
               color={'success'}
               className={styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]}
