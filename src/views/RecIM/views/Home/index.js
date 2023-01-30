@@ -13,6 +13,27 @@ import { getParticipantTeams, getParticipantByUsername } from 'services/recim/pa
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 
+export const homeHeader = (
+  <Card>
+    <CardContent>
+      <Grid container direction="row" alignItems="center" spacing={4}>
+        <Grid item>
+          <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+        </Grid>
+        <Grid item xs={8} md={5} lg={3}>
+          <hr className={styles.homeHeaderLine} />
+          <Typography variant="h5" className={styles.homeHeaderTitle}>
+            <b className="accentText">Gordon</b> Rec-IM
+          </Typography>
+          <Typography variant="h6" className={styles.homeHeaderSubtitle}>
+            <i>"Competition reveals character"</i>
+          </Typography>
+        </Grid>
+      </Grid>
+    </CardContent>
+  </Card>
+);
+
 const Home = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
@@ -80,27 +101,6 @@ const Home = () => {
         Create a New Activity
       </Button>
     </Grid>
-  );
-
-  let homeHeader = (
-    <Card>
-      <CardContent>
-        <Grid container direction="row" alignItems="center" spacing={4}>
-          <Grid item>
-            <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
-          </Grid>
-          <Grid item xs={8} md={5} lg={3}>
-            <hr className={styles.homeHeaderLine} />
-            <Typography variant="h5" className={styles.homeHeaderTitle}>
-              <b className="accentText">Gordon</b> Rec-IM
-            </Typography>
-            <Typography variant="h6" className={styles.homeHeaderSubtitle}>
-              <i>"Competition reveals character"</i>
-            </Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
   );
 
   // CARD - upcoming activities
