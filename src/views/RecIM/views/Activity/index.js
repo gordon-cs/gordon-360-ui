@@ -69,7 +69,7 @@ const Activity = () => {
       participantTeams.forEach((team) => {
         if (team.Activity.ID === activity.ID) participating = true;
       });
-      setCanCreateTeam(participating || participant.IsAdmin);
+      setCanCreateTeam(!participating || participant.IsAdmin);
     }
   }, [activity, participant, participantTeams]);
   const handleTeamFormSubmit = (status, setOpenTeamForm) => {
@@ -121,7 +121,7 @@ const Activity = () => {
               <Grid item xs={8} md={5}>
                 <Typography variant="h5" className={styles.activityTitle}>
                   {activity.Name}
-                  {participant.IsAdmin === true ? (
+                  {participant?.IsAdmin ? (
                     <IconButton>
                       <EditIcon
                         onClick={() => {
@@ -152,19 +152,21 @@ const Activity = () => {
               Games have not yet been scheduled.
             </Typography>
           )}
-          <Grid container justifyContent="center">
-            <Button
-              variant="contained"
-              color="warning"
-              startIcon={<AddCircleRoundedIcon />}
-              className={styles.actionButton}
-              onClick={() => {
-                setOpenCreateMatchForm(true);
-              }}
-            >
-              Create a New Match
-            </Button>
-          </Grid>
+          {participant?.IsAdmin ? (
+            <Grid container justifyContent="center">
+              <Button
+                variant="contained"
+                color="warning"
+                startIcon={<AddCircleRoundedIcon />}
+                className={styles.actionButton}
+                onClick={() => {
+                  setOpenCreateMatchForm(true);
+                }}
+              >
+                Create a New Match
+              </Button>
+            </Grid>
+          ) : null}
         </CardContent>
       </Card>
     );
@@ -211,7 +213,7 @@ const Activity = () => {
             </Typography>
           )}
           <Grid container justifyContent="center">
-            {participant.IsAdmin === true ? (
+            {participant?.IsAdmin ? (
               <Button
                 variant="contained"
                 color="warning"

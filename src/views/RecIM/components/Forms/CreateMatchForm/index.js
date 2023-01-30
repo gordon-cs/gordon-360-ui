@@ -33,7 +33,6 @@ const CreateMatchForm = ({
     loadData();
   }, []);
 
-
   const createMatchFields = [
     {
       label: 'Start Time',
@@ -171,9 +170,8 @@ const CreateMatchForm = ({
     });
     matchCreationRequest.TeamIDs = idArray;
 
-
     createMatch(matchCreationRequest).then((result) => {
-      console.log(result)
+      console.log(result);
       closeWithSnackbar({
         type: 'success',
         message: 'Match created successfully',
