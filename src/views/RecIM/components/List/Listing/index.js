@@ -16,6 +16,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { DateTime } from 'luxon';
+import GordonLoader from '../../../../../components/Loader';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import UpdateIcon from '@mui/icons-material/Update';
@@ -23,7 +24,7 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import ClearIcon from '@mui/icons-material/Clear';
 import { editTeamParticipant } from 'services/recim/team';
-import { getActivityTypes } from 'services/recim/activity';
+import { getActivityTypes, getActivityByID } from 'services/recim/activity';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
@@ -83,6 +84,12 @@ const SeriesListing = ({ series }) => {
 
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
+  const [currentCapacity, setCurrentCapacity] = useState(
+    <span style={{ display: 'inline-block' }}>
+      <GordonLoader size={15} />
+    </span>,
+  );
+
   useEffect(() => {
     const loadActivityType = async () => {
       let activityTypes = await getActivityTypes();
@@ -90,7 +97,12 @@ const ActivityListing = ({ activity }) => {
         activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
       );
     };
+    const calculateCurrentCapacity = async () => {
+      let fullActivity = await getActivityByID(activity.ID);
+      setCurrentCapacity(fullActivity?.Team?.length);
+    };
     loadActivityType();
+    calculateCurrentCapacity();
   }, [activity]);
 
   let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
@@ -103,7 +115,7 @@ const ActivityListing = ({ activity }) => {
 
   return (
     <ListItemButton component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
-      <Grid container className={styles.listing} columnSpacing={2}>
+      <Grid container className={styles.listing} columnSpacing={2} alignItems="center">
         <Grid item container xs={12} sm={4} alignContent="center" spacing={1}>
           <Grid item>
             <Typography className={styles.listingTitle}>{activity.Name}</Typography>
@@ -147,7 +159,9 @@ const ActivityListing = ({ activity }) => {
           </Grid>
         </Grid>
         <Grid item sm={1}>
-          <Typography variant="h6">n / {activity.MaxCapacity}</Typography>
+          <Typography variant="h6">
+            {currentCapacity} / {activity.MaxCapacity}
+          </Typography>
         </Grid>
       </Grid>
     </ListItemButton>
