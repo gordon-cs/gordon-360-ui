@@ -136,7 +136,7 @@ const ActivityListing = ({ activity }) => {
           </Grid>
           <Grid item>
             <Chip
-              icon={activityTypeIconPair.find((type) => type.type === activityType).icon}
+              icon={activityTypeIconPair.find((type) => type.type === activityType)?.icon}
               label={activityType}
               color={'success'}
               className={styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]}
