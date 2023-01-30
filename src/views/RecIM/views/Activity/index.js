@@ -229,7 +229,7 @@ const Activity = () => {
       </Card>
     );
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={2} direction="column" wrap="nowrap">
         <Grid item alignItems="center" xs={12}>
           {activityHeader}
         </Grid>
@@ -237,13 +237,9 @@ const Activity = () => {
           <Grid item xs={12} md={6}>
             {scheduleCard}
           </Grid>
-          <Grid item direction={'column'} xs={12} md={6}>
-            <Grid item className={styles.gridItemStack}>
-              {seriesCard}
-            </Grid>
-            <Grid item className={styles.gridItemStack}>
-              {teamsCard}
-            </Grid>
+          <Grid item container direction="column" xs={12} md={6} spacing={2} wrap="nowrap">
+            <Grid item>{seriesCard}</Grid>
+            <Grid item>{teamsCard}</Grid>
           </Grid>
         </Grid>
         {openTeamForm ? (

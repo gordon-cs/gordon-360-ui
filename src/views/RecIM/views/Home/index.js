@@ -1,5 +1,5 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
+import { Grid, Typography, Card, CardHeader, CardContent, Button, Tabs, Tab } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ActivityForm from '../../components/Forms/ActivityForm';
 import { useUser } from 'hooks';
@@ -12,6 +12,14 @@ import { getAllActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+
+const TabPanel = ({ children, value, index }) => {
+  return (
+    <div hidden={value !== index} role="tabpanel">
+      {children}
+    </div>
+  );
+};
 
 const Home = () => {
   const { profile } = useUser();
@@ -26,6 +34,7 @@ const Home = () => {
   const [openWaiver, setOpenWaiver] = useState(false);
   const [createdActivity, setCreatedActivity] = useState({ ID: null });
   const [hasPermissions, setHasPermissions] = useState(false);
+  const [tab, setTab] = useState(0);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -89,7 +98,7 @@ const Home = () => {
           <Grid item>
             <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
           </Grid>
-          <Grid item xs={8} md={5} lg={3}>
+          <Grid item xs={8} md={5} lg={4}>
             <hr className={styles.homeHeaderLine} />
             <Typography variant="h5" className={styles.homeHeaderTitle}>
               <b className="accentText">Gordon</b> Rec-IM
@@ -103,40 +112,53 @@ const Home = () => {
     </Card>
   );
 
-  // CARD - upcoming activities
-  let upcomingActivitiesCard = (
-    <Card>
-      <CardHeader title="Upcoming Rec-IM Activities" className={styles.cardHeader} />
-      <CardContent>
-        {registrableActivities.length > 0 ? (
-          <ActivityList activities={registrableActivities} />
-        ) : (
-          <Typography variant="body1" paragraph>
-            It looks like there aren't any Rec-IM activities currently open for registration
-          </Typography>
-        )}
+  let ongoingActivitiesContent = (
+    <CardContent>
+      {registrableActivities.length > 0 ? (
+        <ActivityList activities={ongoingActivities} />
+      ) : (
+        <Typography variant="body1" paragraph>
+          It looks like there aren't any Rec-IM activities currently ongoing
+        </Typography>
+      )}
+    </CardContent>
+  );
 
-        {hasPermissions ? createActivityButton : null}
-      </CardContent>
+  let upcomingActivitiesContent = (
+    <CardContent>
+      {registrableActivities.length > 0 ? (
+        <ActivityList activities={registrableActivities} />
+      ) : (
+        <Typography variant="body1" paragraph>
+          It looks like there aren't any Rec-IM activities currently open for registration
+        </Typography>
+      )}
+
+      {hasPermissions ? createActivityButton : null}
+    </CardContent>
+  );
+
+  let activitiesCard = (
+    <Card>
+      <CardHeader title="Rec-IM Activities" className={styles.cardHeader} />
+      <Tabs
+        value={tab}
+        onChange={(event, newTab) => setTab(newTab)}
+        aria-label="admin control center tabs"
+        centered
+      >
+        <Tab label="Upcoming Activities" />
+        <Tab label="Ongoing Activities" />
+      </Tabs>
+      <TabPanel value={tab} index={0}>
+        {upcomingActivitiesContent}
+      </TabPanel>
+      <TabPanel value={tab} index={1}>
+        {ongoingActivitiesContent}
+      </TabPanel>
     </Card>
   );
 
-  let ongoingActivitiesCard = (
-    <Card>
-      <CardHeader title="On-going Rec-IM Activities" className={styles.cardHeader} />
-      <CardContent>
-        {registrableActivities.length > 0 ? (
-          <ActivityList activities={ongoingActivities} />
-        ) : (
-          <Typography variant="body1" paragraph>
-            It looks like there aren't any Rec-IM activities currently on-going
-          </Typography>
-        )}
-      </CardContent>
-    </Card>
-  );
-
-  // CARD - my teams
   let myTeamsCard = (
     <Card>
       <CardHeader title="My Teams" className={styles.cardHeader} />
@@ -175,20 +197,14 @@ const Home = () => {
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     return (
-      <Grid container spacing={2}>
+      <Grid container direction="column" spacing={2} wrap="nowrap">
         <Grid item alignItems="center" xs={12}>
           {homeHeader}
         </Grid>
         <Grid item container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={8}>
-            <Grid item className={styles.gridItemStack}>
-              {upcomingActivitiesCard}
-            </Grid>
-            <Grid item className={styles.gridItemStack}>
-              {ongoingActivitiesCard}
-            </Grid>
+            {activitiesCard}
           </Grid>
-
           <Grid item xs={12} md={4}>
             {myTeamsCard}
           </Grid>
