@@ -140,7 +140,7 @@ const ActivityListing = ({ activity }) => {
               ActivityStart - ActivityEnd
             </Typography>
           </Grid>
-          <Grid item container spacing={2}>
+          <Grid item container columnSpacing={2}>
             <Grid item>
               <Chip
                 icon={<EventAvailableIcon />}
@@ -159,8 +159,12 @@ const ActivityListing = ({ activity }) => {
           </Grid>
         </Grid>
         <Grid item sm={1}>
-          <Typography variant="h6">
-            {currentCapacity} / {activity.MaxCapacity}
+          <Typography variant="subtitle">
+            {currentCapacity}
+            <Typography variant="span" sx={{ p: 0.2 }}>
+              /
+            </Typography>
+            {activity.MaxCapacity}
           </Typography>
         </Grid>
       </Grid>
