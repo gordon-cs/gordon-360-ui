@@ -22,7 +22,7 @@ import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
-import UpdatePhone from './components/UpdatePhoneDialog/index.js';
+import UpdatePhone from './components/UpdatePhoneDialog';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
@@ -267,9 +267,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         contentText={
           <Typography>
             {profile.CliftonStrengths.Themes.map((strength) => (
-              <Link href={strength.link} target="_blank" rel="noopener" key={strength.name}>
+              <a href={strength.link} target="_blank" rel="noopener noreferrer" key={strength.name}>
                 <b style={{ color: strength.color }}>{strength.name}</b>
-              </Link>
+              </a>
             )).reduce((prev, curr) => [prev, ', ', curr])}
             <GordonTooltip
               title={
