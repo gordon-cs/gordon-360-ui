@@ -4,8 +4,6 @@
 
 The frontend of [Gordon 360](https://360.gordon.edu). This project is the user interface for Gordon College's student portal. It is a website written in React that connects to the [Gordon 360 backend](https://github.com/gordon-cs/gordon-360-api).
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ## Contents
 
 - [Contributing](#contributing)
