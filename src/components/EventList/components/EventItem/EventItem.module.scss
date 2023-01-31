@@ -5,14 +5,29 @@
 }
 
 .event_column {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-inline: 10px;
 }
 
-.event_item:hover .event_column {
+.event_item:hover {
+  .event_column, .descriptionText {
   color: $neutral-white;
+  }
 }
 
-.event_item:hover .descriptionText {
-  color: $neutral-white;
+:global(.gc360_event_list) > section {
+  background-color: $neutral-white;
+  transition: background-color 200ms ease;
+  &:hover {
+    background-color: $primary-cyan;
+    cursor: pointer;
+  }
 }
+
+// Make even-numbered rows gray
+:global(.gc360_event_list) > section:nth-child(even) {
+  background-color: $neutral-light-gray;
+  &:hover {
+    background-color: $primary-cyan;
+  }
+}
+

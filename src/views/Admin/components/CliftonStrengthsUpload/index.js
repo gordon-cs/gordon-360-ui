@@ -1,3 +1,4 @@
+import { Cancel as XCircle, CheckCircle } from '@mui/icons-material';
 import {
   Button,
   Card,
@@ -9,7 +10,6 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
-import { Cancel as XCircle, CheckCircle } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import SpreadsheetUploader from 'components/SpreadsheetUploader';
 import { addDays, parseISO } from 'date-fns';
@@ -33,14 +33,14 @@ const CliftonStrengthsUpload = () => {
     let formattedData = uploadedData.map((cs) => {
       // The date completed value comes out of the
       // spreadsheet uploader as a number of days since 1/1/1900.
-      let days = cs.DateCompleted;
-      cs.DateCompleted = addDays(initDate, days).toISOString();
+      let days = cs['Date Completed'];
+      cs['Date Completed'] = addDays(initDate, days).toISOString();
 
       return {
-        AccessCode: cs.AccessCode,
+        AccessCode: cs['Access Code'],
         Email: cs.Email,
-        DateCompleted: cs.DateCompleted,
-        Themes: [cs.Theme1, cs.Theme2, cs.Theme3, cs.Theme4, cs.Theme5],
+        DateCompleted: cs['Date Completed'],
+        Themes: [cs.Theme_1, cs.Theme_2, cs.Theme_3, cs.Theme_4, cs.Theme_5],
         Private: false,
       };
     });
@@ -79,57 +79,60 @@ const CliftonStrengthsUpload = () => {
       });
   };
 
-  return <>
-    <Card>
-      <CardHeader className={styles.header} align="center" title="Clifton Strengths" />
-      <Grid container justifyContent="center">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setIsSpreadsheetUploaderOpen(true)}
-          className={styles.uploadbutton}
-        >
-          Upload Clifton Strengths
-        </Button>
-      </Grid>
-      {loading ? (
-        <div className={styles.gordonloadercontainer}>
-          <GordonLoader />
-        </div>
-      ) : (
-        uploadResults && (
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell className={styles.headercell}>Email</TableCell>
-                <TableCell className={styles.headercell}>Access Code</TableCell>
-                <TableCell className={styles.headercell}>Upload Result</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{uploadResults}</TableBody>
-          </Table>
-        )
-      )}
-    </Card>
-    <SpreadsheetUploader
-      open={isSpreadsheetUploaderOpen}
-      setOpen={setIsSpreadsheetUploaderOpen}
-      onSubmitData={handleSubmitStrengths}
-      title="Clifton Strengths Upload"
-      requiredColumns={[
-        'Email',
-        'DateCompleted',
-        'Theme1',
-        'Theme2',
-        'Theme3',
-        'Theme4',
-        'Theme5',
-        'AccessCode',
-      ]}
-      buttonName="Upload Strengths"
-      template={CliftonStrengthsUploadTemplate}
-    />
-  </>;
+  return (
+    <>
+      <Card>
+        <CardHeader className={styles.header} align="center" title="Clifton Strengths" />
+        <Grid container justifyContent="center">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setIsSpreadsheetUploaderOpen(true)}
+            className={styles.uploadbutton}
+          >
+            Upload Clifton Strengths
+          </Button>
+        </Grid>
+        {loading ? (
+          <div className={styles.gordonloadercontainer}>
+            <GordonLoader />
+          </div>
+        ) : (
+          uploadResults && (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell className={styles.headercell}>Email</TableCell>
+                  <TableCell className={styles.headercell}>Access Code</TableCell>
+                  <TableCell className={styles.headercell}>Upload Result</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{uploadResults}</TableBody>
+            </Table>
+          )
+        )}
+      </Card>
+      <SpreadsheetUploader
+        open={isSpreadsheetUploaderOpen}
+        setOpen={setIsSpreadsheetUploaderOpen}
+        onSubmitData={handleSubmitStrengths}
+        title="Clifton Strengths Upload"
+        requiredColumns={[
+          'Email',
+          'Date Completed',
+          'Theme_1',
+          'Theme_2',
+          'Theme_3',
+          'Theme_4',
+          'Theme_5',
+          'Access Code',
+        ]}
+        otherColumns={['Last Name', 'First Name', 'Status']}
+        buttonName="Upload Strengths"
+        template={CliftonStrengthsUploadTemplate}
+      />
+    </>
+  );
 };
 
 export default CliftonStrengthsUpload;
