@@ -177,11 +177,10 @@ const StudentNews = () => {
     but it also is a potential security concern; it sends data back to the
     client that shouldn't be sent anywhere.
     */
-    let base64Test = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
+    // let base64Test = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
 
-    if (base64Test.test(newsItem.Image) && newsItem.Image !== null) {
-      let newImageData = 'data:image/jpg;base64,' + newsItem.Image;
-      setCropperImageData(newImageData);
+    if (newsItem.Image !== null) {
+      setCropperImageData(newsItem.Image);
     } else {
       setCropperImageData(null);
     }
