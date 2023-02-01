@@ -239,9 +239,8 @@ const StudentNews = () => {
       createSnackbar('News Posting Failed to Update', 'error');
     } else {
       createSnackbar('News Posting Updated Successfully', 'success');
+      handleWindowClose();
     }
-
-    handleWindowClose();
     loadNews(); //reload news
   }
 
