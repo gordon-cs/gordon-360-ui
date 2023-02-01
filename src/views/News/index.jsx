@@ -167,18 +167,6 @@ const StudentNews = () => {
     setNewPostBody(newsItem.Body);
     setCurrentlyEditing(newsID);
 
-    /*
-    Error checking. Theoretically, this code is designed so that
-    When the get method in the API service is called from the frontend,
-    it will return the image data, even though that's not the value
-    of the image column in news entries. But in the impossible event that
-    it somhow DID return the path of the image instead of the image data,
-    not only would that produce garbage and make the cropper have trouble,
-    but it also is a potential security concern; it sends data back to the
-    client that shouldn't be sent anywhere.
-    */
-    // let base64Test = /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$/;
-
     if (newsItem.Image !== null) {
       setCropperImageData(newsItem.Image);
     } else {
@@ -251,10 +239,10 @@ const StudentNews = () => {
       createSnackbar('News Posting Failed to Update', 'error');
     } else {
       createSnackbar('News Posting Updated Successfully', 'success');
+      handleWindowClose();
     }
 
     setOpenPostActivity(false);
-    handleWindowClose();
     loadNews(); //reload news
   }
 
