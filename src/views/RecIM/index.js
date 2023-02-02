@@ -10,26 +10,28 @@ import Header from './components/Header';
 
 const RecIM = () => {
   return (
-    <>
-      <Header />
-      <Switch>
-        <Route exact path="/recim">
-          <Home />
-        </Route>
-        <Route exact path="/recim/admin">
-          <Admin />
-        </Route>
-        <Route path="/recim/activity/:activityID/team/:teamID">
-          <Team />
-        </Route>
-        <Route path="/recim/activity/:activityID/match/:matchID">
-          <Match />
-        </Route>
-        <Route path="/recim/activity/:activityID">
-          <Activity />
-        </Route>
-      </Switch>
-    </>
+    <Switch>
+      <Route exact path="/recim">
+        <Header />
+        <Home />
+      </Route>
+      <Route exact path="/recim/admin">
+        <Header />
+        <Admin />
+      </Route>
+      <Route path="/recim/activity/:activityID/team/:teamID">
+        <Header />
+        <Team />
+      </Route>
+      <Route path="/recim/activity/:activityID/match/:matchID">
+        <Header />
+        <Match />
+      </Route>
+      <Route path="/recim/activity/:activityID">
+        <Header />
+        <Activity />
+      </Route>
+    </Switch>
   );
 };
 

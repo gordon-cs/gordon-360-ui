@@ -1,26 +1,28 @@
 @import '../../../../vars';
 
-%removeMargins {
+%fixSpacing {
   margin-left: -0.5rem;
   width: calc(100% + 1rem);
+  padding: 0.5rem 0.5rem;
 }
 
 @media (min-width: $break-md) {
-  %removeMargins {
+  %fixSpacing {
     margin-left: -1rem;
     width: calc(100% + 2rem);
+    padding: 0.5rem 1rem;
   }
 }
 
 .mainHeader {
-  @extend %removeMargins;
+  @extend %fixSpacing;
   background-color: $neutral-white;
   height: 100px;
   margin-top: -1rem;
 }
 
 .stickyNav {
-  @extend %removeMargins;
+  @extend %fixSpacing;
   background-color: $neutral-white;
   position: sticky;
   top: -1rem;
