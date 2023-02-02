@@ -86,6 +86,12 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 1. Your local machine must be configured as an SSH host
 
    [Windows Installation](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui).
+   
+   - If you are on Windows 11+, you may need to update the firewall to allow inbound connections on a public network.
+      - Search for `Check Firewall Status` in the start menu
+      - Click `Turn Windos Defender Firewall On or Off`
+      - Uncheck `Block all incoming connections, including...` under the `Public network settings` header
+      - Click Ok
 
    [Ubuntu Installation](ubuntu.com/server/docs/service-openssh)
 
@@ -107,12 +113,12 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 
    where:
 
-   - `API_VM_PORT_NUMBER` is the port on which the 360 API is running on the VM.
-   - `API_PC_PORT_NUMBER` is the port that you want the API to be sent to on your personal computer (not the VM).
+   - `API_VM_PORT_NUMBER` is the port that you selected for the API on the virtual machine.
+   - `API_PC_PORT_NUMBER` is the port that you want the API to be sent to on your personal computer. Feel free to use the same port as above for this one.
    - `USER` is your account on the host machine.
-   - `IP or HOSTNAME` is the IP or HOSTNAME of your host machine.
+   - `IP or HOSTNAME` is the IP or HOSTNAME of your host machine. You can find this on Windows by typing `ipconfig`, on Linux or Mac with `ifconfig`
 
-You are now able to point your local frontend to the remote backend by setting `VITE_APP_API_URL` to `localhost:[API_PC_PORT_NUMBER]`.
+You are now able to point your local frontend to the remote backend by setting `VITE_APP_API_URL` to `http[s]://localhost:[API_PC_PORT_NUMBER]` in the `.env.development` file. Make sure that you also update `http/s` to use HTTPS if you are running the API over TLS.
 
 # Code Style
 
