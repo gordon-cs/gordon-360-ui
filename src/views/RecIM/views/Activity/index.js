@@ -1,13 +1,4 @@
-import {
-  Grid,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  Button,
-  Breadcrumbs,
-  IconButton,
-} from '@mui/material';
+import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import HomeIcon from '@mui/icons-material/Home';
@@ -96,45 +87,26 @@ const Activity = () => {
     let activityHeader = (
       <Card>
         <CardContent>
-          <Grid container direction="column">
-            <Grid item container direction="column" alignItems="center">
-              <Grid item>
-                <Breadcrumbs aria-label="breadcrumb">
-                  <LinkRouter
-                    className="gc360_text_link"
-                    underline="hover"
-                    color="inherit"
-                    to={'/recim'}
-                  >
-                    <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                    Rec-IM Home
-                  </LinkRouter>
-                  <Typography color="text.primary">{activity.Name}</Typography>
-                </Breadcrumbs>
-              </Grid>
-              <hr className={styles.recimNavHeaderLine} />
+          <Grid container direction="row" alignItems="center" columnSpacing={4}>
+            <Grid item>
+              <img src={''} alt="Activity Icon" width="85em"></img>
             </Grid>
-            <Grid item container direction="row" alignItems="center" columnSpacing={4}>
-              <Grid item>
-                <img src={''} alt="Activity Icon" width="85em"></img>
-              </Grid>
-              <Grid item xs={8} md={5}>
-                <Typography variant="h5" className={styles.activityTitle}>
-                  {activity.Name}
-                  {participant?.IsAdmin ? (
-                    <IconButton>
-                      <EditIcon
-                        onClick={() => {
-                          setOpenActivityForm(true);
-                        }}
-                      />
-                    </IconButton>
-                  ) : null}
-                </Typography>
-                <Typography variant="h6" className={styles.activitySubtitle}>
-                  <i>Description of activity</i>
-                </Typography>
-              </Grid>
+            <Grid item xs={8} md={5}>
+              <Typography variant="h5" className={styles.activityTitle}>
+                {activity.Name}
+                {participant?.IsAdmin ? (
+                  <IconButton>
+                    <EditIcon
+                      onClick={() => {
+                        setOpenActivityForm(true);
+                      }}
+                    />
+                  </IconButton>
+                ) : null}
+              </Typography>
+              <Typography variant="h6" className={styles.activitySubtitle}>
+                <i>Description of activity</i>
+              </Typography>
             </Grid>
           </Grid>
         </CardContent>

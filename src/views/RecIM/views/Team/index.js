@@ -1,13 +1,4 @@
-import {
-  Grid,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  Breadcrumbs,
-  Button,
-  IconButton,
-} from '@mui/material';
+import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import styles from './Team.module.css';
@@ -97,51 +88,24 @@ const Team = () => {
     let teamHeader = (
       <Card>
         <CardContent>
-          <Grid container direction="column">
-            <Grid item container direction="column" alignItems="center">
-              <Grid item>
-                <Breadcrumbs aria-label="breadcrumb">
-                  <LinkRouter
-                    className="gc360_text_link"
-                    underline="hover"
-                    color="inherit"
-                    to={'/recim'}
-                  >
-                    <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                    Rec-IM Home
-                  </LinkRouter>
-                  <LinkRouter
-                    className="gc360_text_link"
-                    underline="hover"
-                    color="inherit"
-                    to={`/recim/activity/${team.Activity?.ID}`}
-                  >
-                    {team.Activity?.Name}
-                  </LinkRouter>
-                  <Typography color="text.primary">{team.Name}</Typography>
-                </Breadcrumbs>
-              </Grid>
-              <hr className={styles.recimNavHeaderLine} />
+          <Grid container direction="row" alignItems="center" columnSpacing={4}>
+            <Grid item>
+              <img src={''} alt="Team Icon" width="85em"></img>
             </Grid>
-            <Grid item container direction="row" alignItems="center" columnSpacing={4}>
-              <Grid item>
-                <img src={''} alt="Team Icon" width="85em"></img>
-              </Grid>
-              <Grid item xs={8} md={5}>
-                <Typography variant="h5" className={styles.teamTitle}>
-                  {team == null ? <GordonLoader /> : team.Name}
-                  {hasPermissions ? (
-                    <IconButton>
-                      <EditIcon
-                        onClick={() => {
-                          setOpenTeamForm(true);
-                        }}
-                      />
-                    </IconButton>
-                  ) : null}
-                </Typography>
-                {teamRecord()}
-              </Grid>
+            <Grid item xs={8} md={5}>
+              <Typography variant="h5" className={styles.teamTitle}>
+                {team == null ? <GordonLoader /> : team.Name}
+                {hasPermissions ? (
+                  <IconButton>
+                    <EditIcon
+                      onClick={() => {
+                        setOpenTeamForm(true);
+                      }}
+                    />
+                  </IconButton>
+                ) : null}
+              </Typography>
+              {teamRecord()}
             </Grid>
           </Grid>
         </CardContent>

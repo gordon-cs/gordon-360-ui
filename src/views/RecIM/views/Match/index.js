@@ -1,4 +1,4 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Breadcrumbs } from '@mui/material';
+import { Grid, Typography, Card, CardHeader, CardContent } from '@mui/material';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
@@ -76,33 +76,6 @@ const Match = () => {
     let mainCard = (
       <Card>
         <CardContent>
-          <Grid item container direction="column" alignItems="center">
-            <Grid item>
-              <Breadcrumbs aria-label="breadcrumb">
-                <LinkRouter
-                  className="gc360_text_link"
-                  underline="hover"
-                  color="inherit"
-                  to={'/recim'}
-                >
-                  <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                  Rec-IM Home
-                </LinkRouter>
-                <LinkRouter
-                  className="gc360_text_link"
-                  underline="hover"
-                  color="inherit"
-                  to={`/recim/activity/${match.Activity.ID}`}
-                >
-                  {match.Activity.Name}
-                </LinkRouter>
-                <Typography color="text.primary">
-                  Match: {match.Team[0]?.Name ?? '____'} vs {match.Team[1]?.Name ?? '____'}{' '}
-                </Typography>
-              </Breadcrumbs>
-            </Grid>
-            <hr className={styles.recimNavHeaderLine} />
-          </Grid>
           <Grid container justifyContent="space-between" marginBottom="10px">
             <Grid item className={styles.grayText}>
               {match.Activity.Name}
