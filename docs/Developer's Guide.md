@@ -89,7 +89,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
    
    - If you are on Windows 11+, you may need to update the firewall to allow inbound connections on a public network.
       - Search for `Check Firewall Status` in the start menu
-      - Click `Turn Windos Defender Firewall On or Off`
+      - Click `Turn Windows Defender Firewall on or off`
       - Uncheck `Block all incoming connections, including...` under the `Public network settings` header
       - Click Ok
 
