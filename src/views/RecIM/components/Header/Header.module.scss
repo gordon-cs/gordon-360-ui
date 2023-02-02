@@ -19,6 +19,8 @@
   background-color: $neutral-white;
   height: 100px;
   margin-top: -1rem;
+  //   clip-path removes box shadow above this nav bar
+  clip-path: inset(0px -10px -10px -10px);
 }
 
 .stickyNav {
@@ -29,4 +31,13 @@
   margin-bottom: 1rem;
   //   clip-path removes box shadow above this nav bar
   clip-path: inset(0px -10px -10px -10px);
+}
+
+.title {
+  font-weight: bold;
+  color: $neutral-dark-gray2;
+}
+
+.subtitle {
+  color: $neutral-gray;
 }

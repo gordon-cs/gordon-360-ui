@@ -9,7 +9,6 @@ import { ParticipantList } from './../../components/List';
 import { getMatchByID } from 'services/recim/match';
 import { DateTime } from 'luxon';
 import { Link as LinkRouter } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
 // import EditIcon from '@mui/icons-material/Edit'
 
 const dayMonthDate = (date) => {

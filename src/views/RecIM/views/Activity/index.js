@@ -1,7 +1,6 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import HomeIcon from '@mui/icons-material/Home';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
@@ -12,7 +11,6 @@ import { MatchList, SeriesList, TeamList } from './../../components/List';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
-import { Link as LinkRouter } from 'react-router-dom';
 import CreateMatchForm from 'views/RecIM/components/Forms/CreateMatchForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';

@@ -8,8 +8,6 @@ import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from './../../components/List';
 import { getTeamByID } from 'services/recim/team';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { Link as LinkRouter } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
 import EditIcon from '@mui/icons-material/Edit';
