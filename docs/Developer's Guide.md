@@ -92,6 +92,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
       - Click `Turn Windows Defender Firewall on or off`
       - Uncheck `Block all incoming connections, including...` under the `Public network settings` header
       - Click Ok
+   - Also on Windows, if you are a local administrator, you will not be able to use SSH key authentication unless you add the public SSH key to `C:\Program Data\ssh\administrators_authorized_keys` rather than to `C:\Users\[your username]\.ssh\authorized_keys`. Create the file if it does not exist.
 
    [Ubuntu Installation](ubuntu.com/server/docs/service-openssh)
 
