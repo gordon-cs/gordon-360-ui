@@ -2,7 +2,13 @@ import { format } from 'date-fns';
 import sessionService from 'services/session';
 import styles from './CoCurricularTranscriptActivity.module.css';
 
-const Activity = ({ description, sessions, leaderSessions }) => (
+type Props = {
+  description: string;
+  sessions: string[];
+  leaderSessions: string[];
+};
+
+const Activity = ({ description, sessions, leaderSessions }: Props) => (
   <div className={styles.experience_transcript_activities}>
     <div className={styles.organization_role}>{description}</div>
     <div className={styles.date}> {formatDuration(sessions)} </div>
@@ -21,7 +27,7 @@ export default Activity;
 // where SE is 09 for fall, 01 for spring, 05 for summer
 
 // Returns: string of month (Mon), month being last month of the given semester
-const sliceEnd = (sesCode) => {
+const sliceEnd = (sesCode: string) => {
   switch (sesCode.slice(4, 6)) {
     case '09':
       return 'Dec';
@@ -48,7 +54,7 @@ const sliceEnd = (sesCode) => {
  * @param {Date} laterSession the chronologically later of the two sessions
  * @returns Whether the later session is immediately after the earlier session
  */
-const areConsecutive = (earlierSession, laterSession) => {
+const areConsecutive = (earlierSession: Date, laterSession: Date) => {
   const earlierYear = earlierSession.getFullYear();
   const laterYear = laterSession.getFullYear();
   return (
@@ -64,15 +70,15 @@ const areConsecutive = (earlierSession, laterSession) => {
 
 // Param: sessionsList - a list of sessionCodes
 // Returns: A string representing the duration of the user's membership based on the sessionsList
-const formatDuration = (sessionsList) => {
+const formatDuration = (sessions: string[]) => {
   let duration = '';
-  sessionsList.sort(function (sessA, sessB) {
-    return sessA - sessB;
-  });
+  sessions.sort();
 
   // Pop first session code from array and split into months and years, which are saved as
   // the initial start and end dates
-  let curSess = sessionsList.shift();
+  let curSess = sessions.shift();
+  
+  if (!curSess) return 'Unknown';
 
   let endDate = sessionService.parseSessionCode(curSess);
 
@@ -86,8 +92,8 @@ const formatDuration = (sessionsList) => {
   // save its end date as the new end date, otherwise, add the current start and end dates to
   // the string 'duration' (because the streak is broken) and prepare to start a new streak.
   // Loop assumes sessions will be sorted from earliest to latest
-  while (sessionsList.length > 0) {
-    curSess = sessionsList.shift();
+  while (sessions.length > 0) {
+    curSess = sessions.shift() as string;
     let nextStartDate = sessionService.parseSessionCode(curSess);
     if (areConsecutive(endDate, nextStartDate)) {
       // a streak of consecutive involvement continues
