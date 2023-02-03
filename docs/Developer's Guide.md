@@ -114,7 +114,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 
    where:
 
-   - `API_VM_PORT_NUMBER` is the port that you selected for the API on the virtual machine.
+   - `API_VM_PORT_NUMBER` is the port that you selected for the API on the virtual machine like `http://localhost:[API_VM_PORT_NUMBER]`. Please make sure to use the non-HTTPS version as HTTPS does not work over the SSH tunnel.
    - `API_PC_PORT_NUMBER` is the port that you want the API to be sent to on your personal computer. Feel free to use the same port as above for this one.
    - `USER` is your account on the host machine.
    - `IP or HOSTNAME` is the IP or HOSTNAME of your host machine. You can find this on Windows by typing `ipconfig`, on Linux or Mac with `ifconfig`
