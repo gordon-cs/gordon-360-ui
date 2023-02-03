@@ -119,7 +119,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
    - `USER` is your account on the host machine.
    - `IP or HOSTNAME` is the IP or HOSTNAME of your host machine. You can find this on Windows by typing `ipconfig`, on Linux or Mac with `ifconfig`
 
-You are now able to point your local frontend to the remote backend by setting `VITE_APP_API_URL` to `http://localhost:[API_PC_PORT_NUMBER]` in the `.env.development` file. Make sure that you also update http to https if you are running the API over TLS.
+You are now able to point your local frontend to the remote backend by setting `VITE_APP_API_URL` to `http://localhost:[API_PC_PORT_NUMBER]` in the `.env.development` file.
 
 # Code Style
 
