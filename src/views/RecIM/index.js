@@ -28,7 +28,7 @@ const RecIM = () => {
         <Match />
       </Route>
       <Route path="/recim/activity/:activityID">
-        <Header />
+        <Header expandable="activity" />
         <Activity />
       </Route>
     </Switch>
