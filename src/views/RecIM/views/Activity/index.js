@@ -164,7 +164,7 @@ const Activity = () => {
         <Grid item xs={12} md={6}>
           {scheduleCard}
         </Grid>
-        <Grid item direction="column" xs={12} md={6} wrap="nowrap">
+        <Grid item container direction="column" xs={12} md={6} spacing={2} wrap="nowrap">
           <Grid item>{seriesCard}</Grid>
           <Grid item>{teamsCard}</Grid>
         </Grid>
@@ -198,7 +198,6 @@ const Activity = () => {
             existingActivitySeries={activity.Series}
           />
         ) : null}
-        <Typography>Activity ID: {activityID} (testing purposes only)</Typography>
       </Grid>
     );
   }

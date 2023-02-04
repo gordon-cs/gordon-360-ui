@@ -118,9 +118,6 @@ const Team = () => {
         <Grid item xs={12} md={6}>
           {rosterCard}
         </Grid>
-        <p>
-          Activity ID: {team.Activity?.ID} Team ID: {teamID} (for testing purposes only)
-        </p>
       </Grid>
     );
   }

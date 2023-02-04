@@ -50,9 +50,6 @@ const Match = () => {
             <RosterCard participants={match.Team[1]?.Participant} teamName={match.Team[1]?.Name} />
           </Grid>
         </Grid>
-        <Typography>
-          Activity ID: {activityID}, Match ID: {matchID} (testing purposes only)
-        </Typography>
       </>
     );
   }

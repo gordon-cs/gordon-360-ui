@@ -204,7 +204,6 @@ const Home = () => {
         <Grid item xs={12} md={4}>
           {myTeamsCard}
         </Grid>
-        <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
         {openActivityForm ? (
           <ActivityForm
             closeWithSnackbar={(status) => {
