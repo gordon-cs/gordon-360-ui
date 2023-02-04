@@ -17,7 +17,6 @@
 .mainHeader {
   @extend %fixSpacing;
   background-color: $neutral-white;
-  height: 100px;
   margin-top: -1rem;
   //   clip-path removes box shadow above this nav bar
   clip-path: inset(0px -10px -10px -10px);
