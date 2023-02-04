@@ -164,13 +164,9 @@ const Activity = () => {
         <Grid item xs={12} md={6}>
           {scheduleCard}
         </Grid>
-        <Grid item direction={'column'} xs={12} md={6}>
-          <Grid item className={styles.gridItemStack}>
-            {seriesCard}
-          </Grid>
-          <Grid item className={styles.gridItemStack}>
-            {teamsCard}
-          </Grid>
+        <Grid item direction="column" xs={12} md={6} wrap="nowrap">
+          <Grid item>{seriesCard}</Grid>
+          <Grid item>{teamsCard}</Grid>
         </Grid>
         {openTeamForm ? (
           <TeamForm
