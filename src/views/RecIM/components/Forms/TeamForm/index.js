@@ -165,15 +165,15 @@ const TeamForm = ({
         setSaving(false);
         closeWithSnackbar({
           type: 'success',
-          message: 'Team created successfully',
+          message: 'Team edited successfully',
         });
 
         handleWindowClose();
       });
     } else {
-      createTeam(profile.AD_Username, teamRequest).then(() => {
+      createTeam(profile.AD_Username, teamRequest).then((createdTeam) => {
         setSaving(false);
-        closeWithSnackbar({
+        closeWithSnackbar(createdTeam.ID, {
           type: 'success',
           message: 'Team created successfully',
         });
