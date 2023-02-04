@@ -7,12 +7,15 @@ import { getActivityByID } from 'services/recim/activity';
 import { getTeamByID } from 'services/recim/team';
 import { getMatchByID } from 'services/recim/match';
 import HomeIcon from '@mui/icons-material/Home';
+import recimLogo from './../../recim_logo.png';
 
 const Header = ({ expandable = false }) => {
   const { activityID, teamID, matchID } = useParams();
   const [activity, setActivity] = useState();
   const [team, setTeam] = useState();
   const [match, setMatch] = useState();
+
+  console.log(expandable);
 
   useEffect(() => {
     const loadData = async () => {
@@ -35,9 +38,30 @@ const Header = ({ expandable = false }) => {
     loadData();
   }, [matchID]);
 
+  const mainHeader = () => {
+    if (expandable === 'home') {
+      return (
+        <Grid container direction="row" alignItems="center" spacing={4}>
+          <Grid item>
+            <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+          </Grid>
+          <Grid item xs={8} md={5} lg={3}>
+            <Typography variant="h5" className={styles.title}>
+              <b className="accentText">Gordon</b> Rec-IM
+            </Typography>
+            <Typography variant="h6" className={styles.subtitle}>
+              <i>"Competition reveals character"</i>
+            </Typography>
+          </Grid>
+        </Grid>
+      );
+    }
+    return null;
+  };
+
   return (
     <>
-      {expandable && <Grid className={styles.mainHeader}></Grid>}
+      {expandable && <Grid className={styles.mainHeader}>{mainHeader()}</Grid>}
       <AppBar className={styles.stickyNav} sx={!expandable && { mt: '-1rem' }}>
         <Breadcrumbs aria-label="breadcrumb">
           {activity ? (

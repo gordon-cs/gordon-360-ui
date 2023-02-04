@@ -21,6 +21,7 @@
   margin-top: -1rem;
   //   clip-path removes box shadow above this nav bar
   clip-path: inset(0px -10px -10px -10px);
+  border-bottom: 1px solid $neutral-light-gray;
 }
 
 .stickyNav {

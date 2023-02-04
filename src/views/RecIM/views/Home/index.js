@@ -175,23 +175,18 @@ const Home = () => {
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     return (
-      <Grid container spacing={2}>
-        <Grid item alignItems="center" xs={12}>
-          {homeHeader}
+      <Grid container justifyContent="center" spacing={2}>
+        <Grid item xs={12} md={8}>
+          <Grid item className={styles.gridItemStack}>
+            {upcomingActivitiesCard}
+          </Grid>
+          <Grid item className={styles.gridItemStack}>
+            {ongoingActivitiesCard}
+          </Grid>
         </Grid>
-        <Grid item container justifyContent="center" spacing={2}>
-          <Grid item xs={12} md={8}>
-            <Grid item className={styles.gridItemStack}>
-              {upcomingActivitiesCard}
-            </Grid>
-            <Grid item className={styles.gridItemStack}>
-              {ongoingActivitiesCard}
-            </Grid>
-          </Grid>
 
-          <Grid item xs={12} md={4}>
-            {myTeamsCard}
-          </Grid>
+        <Grid item xs={12} md={4}>
+          {myTeamsCard}
         </Grid>
         <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
         {openActivityForm ? (

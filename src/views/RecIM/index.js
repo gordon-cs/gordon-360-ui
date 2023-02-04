@@ -12,7 +12,7 @@ const RecIM = () => {
   return (
     <Switch>
       <Route exact path="/recim">
-        <Header />
+        <Header expandable="home" />
         <Home />
       </Route>
       <Route exact path="/recim/admin">
