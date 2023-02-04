@@ -18,6 +18,7 @@ const EditMatchStatsForm = ({
   const [errorStatus, setErrorStatus] = useState({
     Score: false,
     StatusID: false,
+    Sportsmanship: false,
   });
 
   const [loading, setLoading] = useState(true);
@@ -36,15 +37,15 @@ const EditMatchStatsForm = ({
     {
       label: 'Score',
       name: 'Score',
-      type: 'text',
-      error: errorStatus.Name,
+      type: 'number',
+      error: errorStatus.Score,
       helperText: '*Required',
     },
     {
       label: 'Sportsmanship',
       name: 'Sportsmanship',
-      type: 'text',
-      error: errorStatus.Name,
+      type: 'number',
+      error: errorStatus.Sportsmanship,
       helperText: '*Required',
     },
     {
@@ -54,7 +55,7 @@ const EditMatchStatsForm = ({
       menuItems: matchStatus.map((type) => {
         return type.Description;
       }),
-      error: errorStatus.Name,
+      error: errorStatus.StatusID,
       helperText: '*Required',
     },
   ];
@@ -97,14 +98,33 @@ const EditMatchStatsForm = ({
 
   // Field Validation
   useEffect(() => {
-    let hasError = false;
     let hasChanges = false;
+    let hasError = false;
     for (const field in currentInfo) {
       if (currentInfo[field] !== newInfo[field]) {
         hasChanges = true;
       }
-      handleSetError(field, newInfo[field] === '');
+      switch (field) {
+        case 'Score' || 'Sportsmanship':
+          if (!/^[0-9]+$/.test(newInfo[field])) {
+            hasError = true;
+            handleSetError(field, true);
+          } else {
+            handleSetError(field, false);
+          }
+          break;
+        case 'StatusID':
+          if (newInfo[field] === '') {
+            handleSetError(field, true);
+            hasError = true;
+          } else {
+            handleSetError(field, false);
+          }
+          break;
+        default:
+      }
     }
+
     setDisableUpdateButton(hasError || !hasChanges);
   }, [newInfo, currentInfo]);
 
