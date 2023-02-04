@@ -14,6 +14,7 @@ const CreateSeriesForm = ({
   setOpenCreateSeriesForm,
   activityID,
   existingActivitySeries,
+  scheduleID,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
@@ -100,6 +101,7 @@ const CreateSeriesForm = ({
       activityID: activityID,
       numberOfTeamsAdmitted: '',
       referenceSeriesID: '',
+      scheduleID: scheduleID, //nullable, if scheduleID is passed, it will be assigned to the series
     };
   }, [activityID]);
 
