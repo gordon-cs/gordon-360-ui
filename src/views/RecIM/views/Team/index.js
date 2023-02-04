@@ -10,15 +10,12 @@ import { getTeamByID } from 'services/recim/team';
 import { getParticipantByUsername } from 'services/recim/participant';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
-import EditIcon from '@mui/icons-material/Edit';
-import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 
 const Team = () => {
   const { teamID } = useParams();
   const { profile } = useUser();
   const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [openTeamForm, setOpenTeamForm] = useState(false);
   const [participant, setParticipant] = useState(null);
   const [hasPermissions, setHasPermissions] = useState(false);
 
@@ -38,7 +35,7 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID, openTeamForm]);
+  }, [profile, teamID]);
 
   //checks if the team is modifiable by the current user
   useEffect(() => {
@@ -59,57 +56,12 @@ const Team = () => {
     setHasPermissions(hasCaptainPermissions || isAdmin);
   }, [team, participant]);
 
-  const handleTeamForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenTeamForm(false);
-  };
-
-  const teamRecord = () => {
-    if (team) {
-      if (team.TeamRecord[0]) {
-        return (
-          <Typography variant="subtitle2">
-            {team.TeamRecord[0].Win} W : {team.TeamRecord[0].Loss} L : {team.TeamRecord[0].Tie} T
-          </Typography>
-        );
-      }
-      return <Typography variant="subtitle2">Activity has not started</Typography>;
-    }
-    return null;
-  };
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
-    let teamHeader = (
-      <Card>
-        <CardContent>
-          <Grid container direction="row" alignItems="center" columnSpacing={4}>
-            <Grid item>
-              <img src={''} alt="Team Icon" width="85em"></img>
-            </Grid>
-            <Grid item xs={8} md={5}>
-              <Typography variant="h5" className={styles.teamTitle}>
-                {team == null ? <GordonLoader /> : team.Name}
-                {hasPermissions ? (
-                  <IconButton>
-                    <EditIcon
-                      onClick={() => {
-                        setOpenTeamForm(true);
-                      }}
-                    />
-                  </IconButton>
-                ) : null}
-              </Typography>
-              {teamRecord()}
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    );
-
     let rosterCard = (
       <Card>
         <CardHeader title="Roster" className={styles.cardHeader} />
@@ -162,33 +114,16 @@ const Team = () => {
     );
 
     return (
-      <Grid container spacing={2}>
-        <Grid item alignItems="center" xs={12}>
-          {teamHeader}
+      <Grid container justifyContent="center" spacing={2}>
+        <Grid item xs={12} md={6}>
+          {scheduleCard}
         </Grid>
-        <Grid item container justifyContent="center" spacing={2}>
-          <Grid item xs={12} md={6}>
-            {scheduleCard}
-          </Grid>
-          <Grid item xs={12} md={6}>
-            {rosterCard}
-          </Grid>
+        <Grid item xs={12} md={6}>
+          {rosterCard}
         </Grid>
         <p>
           Activity ID: {team.Activity?.ID} Team ID: {teamID} (for testing purposes only)
         </p>
-        {openTeamForm ? (
-          <TeamForm
-            closeWithSnackbar={(status) => {
-              handleTeamForm(status);
-            }}
-            openTeamForm={openTeamForm}
-            setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-            activityID={team.Activity?.ID}
-            team={team}
-            isAdmin={participant.IsAdmin}
-          />
-        ) : null}
       </Grid>
     );
   }

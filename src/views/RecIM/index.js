@@ -20,7 +20,7 @@ const RecIM = () => {
         <Admin />
       </Route>
       <Route path="/recim/activity/:activityID/team/:teamID">
-        <Header />
+        <Header expandable="team" />
         <Team />
       </Route>
       <Route path="/recim/activity/:activityID/match/:matchID">

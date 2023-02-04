@@ -9,6 +9,7 @@ import { getActivityByID } from 'services/recim/activity';
 import { getTeamByID } from 'services/recim/team';
 import { getMatchByID } from 'services/recim/match';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
+import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 import recimLogo from './../../recim_logo.png';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
@@ -21,6 +22,8 @@ const Header = ({ expandable = false }) => {
   const [team, setTeam] = useState();
   const [match, setMatch] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
+  const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [hasPermissions, setHasPermissions] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -52,9 +55,47 @@ const Header = ({ expandable = false }) => {
     loadData();
   }, [matchID]);
 
+  //checks if the team is modifiable by the current user
+  useEffect(() => {
+    let hasCaptainPermissions = false;
+    let isAdmin = false;
+    if (user) {
+      isAdmin = user.IsAdmin;
+      if (team) {
+        let role =
+          team.Participant.find((person) => person.Username === user.Username) == null
+            ? 'Invalid'
+            : team.Participant.find((person) => person.Username === user.Username).Role;
+        hasCaptainPermissions =
+          team.Activity.RegistrationOpen &&
+          (role === 'Co-Captain' || role === 'Team-captain/Creator');
+      }
+    }
+    setHasPermissions(hasCaptainPermissions || isAdmin);
+  }, [team, user]);
+
   const handleActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenActivityForm(false);
+  };
+
+  const handleTeamForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenTeamForm(false);
+  };
+
+  const teamRecord = () => {
+    if (team) {
+      if (team.TeamRecord[0]) {
+        return (
+          <Typography variant="subtitle2">
+            {team.TeamRecord[0].Win} W : {team.TeamRecord[0].Loss} L : {team.TeamRecord[0].Tie} T
+          </Typography>
+        );
+      }
+      return <Typography variant="subtitle2">Activity has not started</Typography>;
+    }
+    return null;
   };
 
   const mainHeader = () => {
@@ -106,6 +147,42 @@ const Header = ({ expandable = false }) => {
               }}
               openActivityForm={openActivityForm}
               setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
+            />
+          ) : null}
+        </Grid>
+      );
+    }
+    if (expandable === 'team') {
+      return (
+        <Grid container direction="row" alignItems="center" columnSpacing={4}>
+          <Grid item>
+            <img src={''} alt="Team Icon" width="85em"></img>
+          </Grid>
+          <Grid item xs={8} md={5}>
+            <Typography variant="h5" className={styles.title}>
+              {team?.Name}
+              {hasPermissions ? (
+                <IconButton>
+                  <EditIcon
+                    onClick={() => {
+                      setOpenTeamForm(true);
+                    }}
+                  />
+                </IconButton>
+              ) : null}
+            </Typography>
+            {teamRecord()}
+          </Grid>
+          {openTeamForm ? (
+            <TeamForm
+              closeWithSnackbar={(status) => {
+                handleTeamForm(status);
+              }}
+              openTeamForm={openTeamForm}
+              setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+              activityID={team.Activity?.ID}
+              team={team}
+              isAdmin={user.IsAdmin}
             />
           ) : null}
         </Grid>
