@@ -130,7 +130,7 @@ const ActivityListing = ({ activity }) => {
   return (
     <ListItemButton component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
       <Grid container className={styles.listing} columnSpacing={2} alignItems="center">
-        <Grid item container xs={12} sm={4} alignContent="center" spacing={1}>
+        <Grid item container direction="column" xs={12} sm={4} spacing={1}>
           <Grid item>
             <Typography className={styles.listingTitle}>{activity.Name}</Typography>
           </Grid>
