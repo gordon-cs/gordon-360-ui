@@ -1,4 +1,4 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
+import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import styles from './Team.module.css';

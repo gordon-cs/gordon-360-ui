@@ -11,11 +11,12 @@ import { getTeamByID } from 'services/recim/team';
 import { getMatchByID } from 'services/recim/match';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
+import GordonLoader from 'components/Loader';
 import recimLogo from './../../recim_logo.png';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 
-const Header = ({ expandable = false }) => {
+const Header = ({ page, expandable = false }) => {
   const { profile } = useUser();
   const { activityID, teamID, matchID } = useParams();
   const [user, setUser] = useState();
@@ -103,7 +104,7 @@ const Header = ({ expandable = false }) => {
       }
       return <Typography variant="subtitle2">Activity has not started</Typography>;
     }
-    return null;
+    return <GordonLoader size={15} inline />;
   };
 
   const dayMonthDate = (date) => {
@@ -180,7 +181,7 @@ const Header = ({ expandable = false }) => {
           </Grid>
           <Grid item xs={8} md={5}>
             <Typography variant="h5" className={styles.title}>
-              {team?.Name}
+              {team?.Name ?? <GordonLoader size={15} inline />}
               {(user?.IsAdmin || (isCaptain && team?.Activity?.RegistrationOpen)) && (
                 <IconButton>
                   <EditIcon
@@ -262,7 +263,8 @@ const Header = ({ expandable = false }) => {
       {expandable && <Grid className={styles.mainHeader}>{mainHeader()}</Grid>}
       <AppBar className={styles.stickyNav} sx={!expandable && { mt: '-1rem' }}>
         <Breadcrumbs aria-label="breadcrumb">
-          {activity ? (
+          {/* Home breadcrumb: link or text */}
+          {activity || page === 'admin' ? (
             <LinkRouter className="gc360_text_link" underline="hover" color="inherit" to={'/recim'}>
               <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
               Rec-IM Home
@@ -273,6 +275,9 @@ const Header = ({ expandable = false }) => {
               Rec-IM Home
             </Typography>
           )}
+          {/* Admin breadcrumb: text */}
+          {page === 'admin' && <Typography color="text.primary">Admin</Typography>}
+          {/* Activity breadcrumb: link or text */}
           {activity &&
             (match || team ? (
               <LinkRouter
@@ -286,10 +291,13 @@ const Header = ({ expandable = false }) => {
             ) : (
               <Typography color="text.primary">{activity.Name}</Typography>
             ))}
+          {/* Team breadcrumb: text */}
           {team && <Typography color="text.primary">{team.Name}</Typography>}
-          {match && (
+          {/* Match breadcrumb: text */}
+          {matchID && (
             <Typography color="text.primary">
-              Match: {match.Team[0]?.Name ?? '____'} vs {match.Team[1]?.Name ?? '____'}{' '}
+              Match: {match?.Team[0]?.Name ?? <GordonLoader size={15} inline />} vs{' '}
+              {match?.Team[1]?.Name ?? <GordonLoader size={15} inline />}
             </Typography>
           )}
         </Breadcrumbs>

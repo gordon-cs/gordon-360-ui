@@ -11,14 +11,6 @@ import Header from './components/Header';
 const RecIM = () => {
   return (
     <Switch>
-      <Route exact path="/recim">
-        <Header expandable="home" />
-        <Home />
-      </Route>
-      <Route exact path="/recim/admin">
-        <Header />
-        <Admin />
-      </Route>
       <Route path="/recim/activity/:activityID/team/:teamID">
         <Header expandable="team" />
         <Team />
@@ -30,6 +22,14 @@ const RecIM = () => {
       <Route path="/recim/activity/:activityID">
         <Header expandable="activity" />
         <Activity />
+      </Route>
+      <Route exact path="/recim/admin">
+        <Header page="admin" expandable="home" />
+        <Admin />
+      </Route>
+      <Route exact path="/recim">
+        <Header expandable="home" />
+        <Home />
       </Route>
     </Switch>
   );

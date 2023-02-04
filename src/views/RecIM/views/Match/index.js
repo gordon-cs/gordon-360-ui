@@ -1,4 +1,4 @@
-import { Grid, Typography, Card, CardHeader, CardContent } from '@mui/material';
+import { Grid, Card, CardHeader, CardContent } from '@mui/material';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
@@ -19,7 +19,7 @@ const RosterCard = ({ participants, teamName }) => (
 );
 
 const Match = () => {
-  const { activityID, matchID } = useParams();
+  const { matchID } = useParams();
   const { profile } = useUser();
   const [match, setMatch] = useState();
   const [loading, setLoading] = useState(true);

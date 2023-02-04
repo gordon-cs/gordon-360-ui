@@ -83,11 +83,7 @@ const SeriesListing = ({ series }) => {
 
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
-  const [currentCapacity, setCurrentCapacity] = useState(
-    <span style={{ display: 'inline-block' }}>
-      <GordonLoader size={15} />
-    </span>,
-  );
+  const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
   useEffect(() => {
     const loadActivityType = async () => {
       let activityTypes = await getActivityTypes();

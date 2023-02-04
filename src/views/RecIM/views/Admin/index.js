@@ -68,37 +68,28 @@ const Admin = () => {
   if (!user?.IsAdmin) return <GordonUnauthorized feature={'the Rec-IM Command Center'} />;
 
   return (
-    <Grid container direction="column" rowSpacing={2} wrap="nowrap">
-      <Grid item alignItems="center" xs={12}>
-        {homeHeader}
-      </Grid>
-      <Grid item>
-        <Card>
-          <CardContent>
-            <Tabs
-              value={tab}
-              onChange={(event, newTab) => setTab(newTab)}
-              aria-label="admin control center tabs"
-            >
-              <Tab label="Activities" />
-              <Tab label="Teams" />
-              <Tab label="Participants" />
-            </Tabs>
-            <TabPanel value={tab} index={0}>
-              {activities ? <ActivityList activities={activities} /> : <GordonLoader />}
-            </TabPanel>
-            <TabPanel value={tab} index={1}>
-              {teams ? <TeamList teams={teams} /> : <GordonLoader />}
-            </TabPanel>
-            <TabPanel value={tab} index={2}>
-              {participants ? <ParticipantList participants={participants} /> : <GordonLoader />}
-            </TabPanel>
-          </CardContent>
-        </Card>
-      </Grid>
-      {/* for development purposes only */}
-      <Typography variant="subtitle1">Current UserID: {profile.ID}</Typography>
-    </Grid>
+    <Card>
+      <CardContent>
+        <Tabs
+          value={tab}
+          onChange={(event, newTab) => setTab(newTab)}
+          aria-label="admin control center tabs"
+        >
+          <Tab label="Activities" />
+          <Tab label="Teams" />
+          <Tab label="Participants" />
+        </Tabs>
+        <TabPanel value={tab} index={0}>
+          {activities ? <ActivityList activities={activities} /> : <GordonLoader />}
+        </TabPanel>
+        <TabPanel value={tab} index={1}>
+          {teams ? <TeamList teams={teams} /> : <GordonLoader />}
+        </TabPanel>
+        <TabPanel value={tab} index={2}>
+          {participants ? <ParticipantList participants={participants} /> : <GordonLoader />}
+        </TabPanel>
+      </CardContent>
+    </Card>
   );
 };
 
