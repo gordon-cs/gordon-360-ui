@@ -1,5 +1,4 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -8,7 +7,6 @@ import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import styles from './Activity.module.css';
 import { MatchList, SeriesList, TeamList } from './../../components/List';
-import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import CreateMatchForm from 'views/RecIM/components/Forms/CreateMatchForm';

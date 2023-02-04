@@ -1,4 +1,4 @@
-import { Grid, Typography, Card, CardContent, Tabs, Tab } from '@mui/material';
+import { Card, CardContent, Tabs, Tab } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -9,7 +9,6 @@ import { ActivityList, TeamList, ParticipantList } from '../../components/List';
 import { getActivities } from '../../../../services/recim/activity';
 import { getTeams } from '../../../../services/recim/team';
 import { getParticipants } from '../../../../services/recim/participant';
-import { homeHeader } from '../Home';
 
 const TabPanel = ({ children, value, index }) => {
   return (
