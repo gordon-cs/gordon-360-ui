@@ -164,12 +164,9 @@ const EditMatchStatsForm = ({
   const handleConfirm = () => {
     setSaving(true);
     let matchStatsRequest = { ...currentInfo, ...newInfo };
-    matchStatsRequest.Score = parseInt(matchStatsRequest.Score);
-    matchStatsRequest.Sportsmanship = parseInt(matchStatsRequest.Sportsmanship);
-    matchStatsRequest.TeamID = parseInt(matchStatsRequest.TeamID);
-    matchStatsRequest.StatusID = parseInt(
-      matchStatus.find((status) => status.Description === matchStatsRequest.StatusID).ID,
-    );
+    matchStatsRequest.StatusID = matchStatus.find(
+      (status) => status.Description === matchStatsRequest.StatusID,
+    ).ID;
 
     updateMatchStats(parseInt(teamMatchHistory.MatchID), matchStatsRequest).then(() => {
       setSaving(false);
