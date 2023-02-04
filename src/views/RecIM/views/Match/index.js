@@ -92,6 +92,7 @@ const Match = () => {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
+    console.log(match);
     let mainCard = (
       <Card>
         <CardContent>
@@ -122,12 +123,14 @@ const Match = () => {
             </Grid>
             <hr className={styles.recimNavHeaderLine} />
           </Grid>
-          <Grid container justifyContent="space-between" marginBottom="10px">
-            <Grid item className={styles.grayText}>
-              {match.Activity.Name}
-            </Grid>
-            <Grid item className={styles.grayText}>
-              {dayMonthDate(DateTime.fromISO(match.Time))}
+          <Grid container margin="10px">
+            <Grid item container direction={'column'}>
+              <Grid item className={styles.grayText}>
+                {match.Activity.Name}
+              </Grid>
+              <Grid item className={styles.grayText}>
+                {dayMonthDate(DateTime.fromISO(match.Time))}
+              </Grid>
             </Grid>
           </Grid>
           <Grid container alignItems="center" justifyContent="space-around">
@@ -137,7 +140,7 @@ const Match = () => {
                   {match.Team[0]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
-              <i className={styles.grayText}>Sportsmanship</i>
+              <i className={styles.grayText}>Sportsmanship: {match.Scores[0].Sportsmanship}</i>
             </Grid>
             <Grid item xs={2}>
               <img src={''} alt="Team Icon" width="85em"></img>
@@ -187,7 +190,7 @@ const Match = () => {
                   {match.Team[1]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
-              <i className={styles.grayText}>Sportsmanship</i>
+              <i className={styles.grayText}>Sportsmanship: {match.Scores[1].Sportsmanship}</i>
             </Grid>
           </Grid>
         </CardContent>

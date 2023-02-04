@@ -46,7 +46,7 @@ const EditMatchStatsForm = ({
       name: 'Sportsmanship',
       type: 'number',
       error: errorStatus.Sportsmanship,
-      helperText: '*Required',
+      helperText: "*Required & Can't be more than 5",
     },
     {
       label: 'Status',
@@ -63,12 +63,10 @@ const EditMatchStatsForm = ({
   const allFields = [createMatchStatsField].flat();
 
   const currentInfo = useMemo(() => {
-    console.log(matchStatus);
-    console.log(teamMatchHistory);
     return {
       TeamID: teamMatchHistory.TeamID,
-      Score: teamMatchHistory.TeamScore,
-      Sportsmanship: teamMatchHistory.Sportsmanship,
+      Score: `${teamMatchHistory.TeamScore}`,
+      Sportsmanship: `${teamMatchHistory.Sportsmanship}`,
       StatusID:
         matchStatus.find((type) => type.Description === teamMatchHistory.Status) == null
           ? ''
@@ -105,24 +103,17 @@ const EditMatchStatsForm = ({
         hasChanges = true;
       }
       switch (field) {
-        case 'Score' || 'Sportsmanship':
-          if (!/^[0-9]+$/.test(newInfo[field])) {
-            hasError = true;
-            handleSetError(field, true);
-          } else {
-            handleSetError(field, false);
-          }
+        case 'Sportsmanship':
+          hasError = hasError || newInfo[field] > 5;
+        case 'Score':
+          if (!/^[0-9]+$/.test(newInfo[field])) hasError = true;
           break;
         case 'StatusID':
-          if (newInfo[field] === '') {
-            handleSetError(field, true);
-            hasError = true;
-          } else {
-            handleSetError(field, false);
-          }
+          hasError = newInfo[field] === '';
           break;
         default:
       }
+      handleSetError(field, hasError);
     }
 
     setDisableUpdateButton(hasError || !hasChanges);
