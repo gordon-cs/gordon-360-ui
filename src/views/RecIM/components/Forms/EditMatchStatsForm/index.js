@@ -98,7 +98,6 @@ const EditMatchStatsForm = ({
         hasChanges = true;
       }
       handleSetError(field, newInfo[field] === '');
-      hasError = newInfo[field] === '' || hasError;
     }
     setDisableUpdateButton(hasError || !hasChanges);
   }, [newInfo, currentInfo]);
