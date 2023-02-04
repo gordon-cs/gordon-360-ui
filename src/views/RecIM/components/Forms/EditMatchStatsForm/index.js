@@ -106,7 +106,7 @@ const EditMatchStatsForm = ({
         case 'Sportsmanship':
           hasError = hasError || newInfo[field] > 5;
         case 'Score':
-          if (!/^[0-9]+$/.test(newInfo[field])) hasError = true;
+          hasError = !/^[0-9]+$/.test(newInfo[field]);
           break;
         case 'StatusID':
           hasError = newInfo[field] === '';
