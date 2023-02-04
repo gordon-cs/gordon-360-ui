@@ -141,7 +141,6 @@ const EditMatchStatsForm = ({
   }
 
   const handleConfirm = () => {
-    debugger;
     setSaving(true);
     let matchStatsRequest = { ...currentInfo, ...newInfo };
     matchStatsRequest.Score = parseInt(matchStatsRequest.Score);
