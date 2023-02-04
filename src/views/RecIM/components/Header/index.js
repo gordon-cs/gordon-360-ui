@@ -23,7 +23,7 @@ const Header = ({ expandable = false }) => {
   const [match, setMatch] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
-  const [hasPermissions, setHasPermissions] = useState(false);
+  const [isCaptain, setIsCaptain] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -57,21 +57,12 @@ const Header = ({ expandable = false }) => {
 
   //checks if the team is modifiable by the current user
   useEffect(() => {
-    let hasCaptainPermissions = false;
-    let isAdmin = false;
-    if (user) {
-      isAdmin = user.IsAdmin;
-      if (team) {
-        let role =
-          team.Participant.find((person) => person.Username === user.Username) == null
-            ? 'Invalid'
-            : team.Participant.find((person) => person.Username === user.Username).Role;
-        hasCaptainPermissions =
-          team.Activity.RegistrationOpen &&
-          (role === 'Co-Captain' || role === 'Team-captain/Creator');
-      }
+    if (user && team) {
+      let role =
+        team.Participant.find((teamParticipant) => teamParticipant.Username === user.Username)
+          ?.Role ?? 'Invalid';
+      setIsCaptain(role === 'Co-Captain' || role === 'Team-captain/Creator');
     }
-    setHasPermissions(hasCaptainPermissions || isAdmin);
   }, [team, user]);
 
   const handleActivityForm = (status) => {
@@ -139,7 +130,7 @@ const Header = ({ expandable = false }) => {
               <i>Description of activity</i>
             </Typography>
           </Grid>
-          {openActivityForm ? (
+          {openActivityForm && (
             <ActivityForm
               activity={activity}
               closeWithSnackbar={(status) => {
@@ -148,7 +139,7 @@ const Header = ({ expandable = false }) => {
               openActivityForm={openActivityForm}
               setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
             />
-          ) : null}
+          )}
         </Grid>
       );
     }
@@ -161,7 +152,7 @@ const Header = ({ expandable = false }) => {
           <Grid item xs={8} md={5}>
             <Typography variant="h5" className={styles.title}>
               {team?.Name}
-              {hasPermissions ? (
+              {(user?.IsAdmin || (isCaptain && team?.Activity?.RegistrationOpen)) && (
                 <IconButton>
                   <EditIcon
                     onClick={() => {
@@ -169,11 +160,11 @@ const Header = ({ expandable = false }) => {
                     }}
                   />
                 </IconButton>
-              ) : null}
+              )}
             </Typography>
             {teamRecord()}
           </Grid>
-          {openTeamForm ? (
+          {openTeamForm && (
             <TeamForm
               closeWithSnackbar={(status) => {
                 handleTeamForm(status);
@@ -184,7 +175,7 @@ const Header = ({ expandable = false }) => {
               team={team}
               isAdmin={user.IsAdmin}
             />
-          ) : null}
+          )}
         </Grid>
       );
     }

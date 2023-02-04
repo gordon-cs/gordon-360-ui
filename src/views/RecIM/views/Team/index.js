@@ -14,9 +14,9 @@ import InviteParticipantForm from '../../components/Forms/InviteParticipantForm'
 const Team = () => {
   const { teamID } = useParams();
   const { profile } = useUser();
-  const [team, setTeam] = useState(null);
+  const [team, setTeam] = useState();
   const [loading, setLoading] = useState(true);
-  const [participant, setParticipant] = useState(null);
+  const [user, setUser] = useState();
   const [hasPermissions, setHasPermissions] = useState(false);
 
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
@@ -30,7 +30,7 @@ const Team = () => {
       setLoading(true);
       setTeam(await getTeamByID(teamID));
       if (profile) {
-        setParticipant(await getParticipantByUsername(profile.AD_Username));
+        setUser(await getParticipantByUsername(profile.AD_Username));
       }
       setLoading(false);
     };
@@ -40,21 +40,18 @@ const Team = () => {
   //checks if the team is modifiable by the current user
   useEffect(() => {
     let hasCaptainPermissions = false;
-    let isAdmin = false;
-    if (participant) {
-      isAdmin = participant.IsAdmin;
+    if (user) {
       if (team) {
         let role =
-          team.Participant.find((person) => person.Username === participant.Username) == null
-            ? 'Invalid'
-            : team.Participant.find((person) => person.Username === participant.Username).Role;
+          team.Participant.find((teamParticipant) => teamParticipant.Username === user.Username)
+            ?.Role ?? 'Invalid';
         hasCaptainPermissions =
           team.Activity.RegistrationOpen &&
           (role === 'Co-Captain' || role === 'Team-captain/Creator');
       }
     }
-    setHasPermissions(hasCaptainPermissions || isAdmin);
-  }, [team, participant]);
+    setHasPermissions(hasCaptainPermissions || user?.IsAdmin);
+  }, [team, user]);
 
   if (loading) {
     return <GordonLoader />;
