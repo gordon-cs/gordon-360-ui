@@ -100,7 +100,6 @@ const EditMatchStatsForm = ({
       }
       switch (field) {
         case 'Score' || 'Sportsmanship':
-          debugger;
           if (!/^[0-9]+$/.test(newInfo[field])) {
             hasError = true;
             handleSetError(field, true);
