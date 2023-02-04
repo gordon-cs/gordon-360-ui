@@ -155,7 +155,7 @@ const Team = () => {
           {hasPermissions ? (
             <ParticipantList participants={team.Participant} showParticipantOptions />
           ) : (
-            <ParticipantList participants={team.Participant} />
+            <ParticipantList participants={team.Participant} showActiveOnly />
           )}
           {hasPermissions ? (
             <Grid container justifyContent="center">
