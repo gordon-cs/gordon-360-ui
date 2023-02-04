@@ -153,9 +153,9 @@ const Team = () => {
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
           {hasPermissions ? (
-            <ParticipantList participants={team.Participant} showParticipantOptions />
+            <ParticipantList participants={team.Participant} showParticipantOptions showInactive />
           ) : (
-            <ParticipantList participants={team.Participant} showActiveOnly />
+            <ParticipantList participants={team.Participant} />
           )}
           {hasPermissions ? (
             <Grid container justifyContent="center">
