@@ -151,25 +151,25 @@ const Activity = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
-          <Grid container className={styles.buttonArea}>
-            <Grid item xs={6}>
-              <Grid container justifyContent="center">
-                <Button
-                  variant="contained"
-                  color="warning"
-                  startIcon={<AddCircleRoundedIcon />}
-                  className={styles.actionButton}
-                  onClick={() => {
-                    setOpenCreateMatchForm(true);
-                  }}
-                >
-                  Create a New Match
-                </Button>
+          {participant.IsAdmin ? (
+            <Grid container className={styles.buttonArea}>
+              <Grid item xs={6}>
+                <Grid container justifyContent="center">
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    startIcon={<AddCircleRoundedIcon />}
+                    className={styles.actionButton}
+                    onClick={() => {
+                      setOpenCreateMatchForm(true);
+                    }}
+                  >
+                    Create a New Match
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={6}>
-              <Grid container justifyContent="center">
-                {participant.IsAdmin === true ? (
+              <Grid item xs={6}>
+                <Grid container justifyContent="center">
                   <Button
                     variant="contained"
                     color="warning"
@@ -181,10 +181,10 @@ const Activity = () => {
                   >
                     Create a New Series
                   </Button>
-                ) : null}
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          ) : null}
           {activity.Series?.length ? (
             activity.Series.map((series) => {
               return <ScheduleList series={series} activityID={activityID} />;
@@ -202,25 +202,27 @@ const Activity = () => {
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-          <Grid container className={styles.buttonArea}>
-            <Grid item xs={12}>
-              <Grid container justifyContent="center">
-                {canCreateTeam ? (
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    startIcon={<AddCircleRoundedIcon />}
-                    className={styles.actionButton}
-                    onClick={() => {
-                      setOpenTeamForm(true);
-                    }}
-                  >
-                    Create a New Team
-                  </Button>
-                ) : null}
+          {participant.IsAdmin ? (
+            <Grid container className={styles.buttonArea}>
+              <Grid item xs={12}>
+                <Grid container justifyContent="center">
+                  {canCreateTeam ? (
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      startIcon={<AddCircleRoundedIcon />}
+                      className={styles.actionButton}
+                      onClick={() => {
+                        setOpenTeamForm(true);
+                      }}
+                    >
+                      Create a New Team
+                    </Button>
+                  ) : null}
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          ) : null}
           {activity.Team?.length ? (
             <TeamList teams={activity.Team} />
           ) : (
