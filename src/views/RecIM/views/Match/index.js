@@ -64,7 +64,7 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID, profile]);
+  }, [matchID, profile, openEditMatchStatsForm]);
 
   useEffect(() => {
     if (match) {
@@ -212,6 +212,7 @@ const Match = () => {
         </Typography>
         {openEditMatchStatsForm ? (
           <EditMatchStatsForm
+            matchID={matchID}
             teamMatchHistory={selectedScores}
             closeWithSnackbar={(status) => {
               handleEditMatchStatsForm(status);

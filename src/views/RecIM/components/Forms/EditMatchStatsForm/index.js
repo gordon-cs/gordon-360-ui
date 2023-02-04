@@ -6,9 +6,10 @@ import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ContentCard } from '../components/ContentCard';
 import GordonLoader from 'components/Loader';
-import { getMatchStatusTypes, updateMatchStats } from 'services/recim/match';
+import { getMatchTeamStatusTypes, updateMatchStats } from 'services/recim/match';
 
 const EditMatchStatsForm = ({
+  matchID,
   teamMatchHistory,
   closeWithSnackbar,
   openEditMatchStatsForm,
@@ -25,7 +26,7 @@ const EditMatchStatsForm = ({
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      setMatchStatus(await getMatchStatusTypes());
+      setMatchStatus(await getMatchTeamStatusTypes());
       setLoading(false);
     };
     loadData();
@@ -61,13 +62,18 @@ const EditMatchStatsForm = ({
   const allFields = [createMatchStatsField].flat();
 
   const currentInfo = useMemo(() => {
+    console.log(matchStatus);
+    console.log(teamMatchHistory);
     return {
       TeamID: teamMatchHistory.TeamID,
       Score: teamMatchHistory.TeamScore,
-      Sportsmanship: '',
-      StatusID: teamMatchHistory.Status ?? '',
+      Sportsmanship: teamMatchHistory.Sportsmanship,
+      StatusID:
+        matchStatus.find((type) => type.Description === teamMatchHistory.Status) == null
+          ? ''
+          : matchStatus.find((type) => type.Description === teamMatchHistory.Status).Description,
     };
-  }, [teamMatchHistory]);
+  }, [teamMatchHistory, matchStatus]);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [isSaving, setSaving] = useState(false);
@@ -141,17 +147,12 @@ const EditMatchStatsForm = ({
   }
 
   const handleConfirm = () => {
-    debugger;
     setSaving(true);
     let matchStatsRequest = { ...currentInfo, ...newInfo };
-    matchStatsRequest.Score = parseInt(matchStatsRequest.Score);
-    matchStatsRequest.Sportsmanship = parseInt(matchStatsRequest.Sportsmanship);
-    matchStatsRequest.TeamID = parseInt(matchStatsRequest.TeamID);
-    matchStatsRequest.StatusID = parseInt(
-      matchStatus.find((status) => status.Description === matchStatsRequest.StatusID).ID,
-    );
-
-    updateMatchStats(parseInt(teamMatchHistory.MatchID), matchStatsRequest).then(() => {
+    matchStatsRequest.StatusID = matchStatus.find(
+      (status) => status.Description === matchStatsRequest.StatusID,
+    )?.ID;
+    updateMatchStats(matchID, matchStatsRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',

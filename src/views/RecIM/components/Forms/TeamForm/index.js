@@ -216,7 +216,7 @@ const TeamForm = ({
   return (
     <GordonDialogBox
       open={openTeamForm}
-      title="Create a Team"
+      title={team ? 'Edit your team' : 'Create a Team'}
       fullWidth
       maxWidth="sm"
       buttonClicked={() => setOpenConfirmWindow(true)}
