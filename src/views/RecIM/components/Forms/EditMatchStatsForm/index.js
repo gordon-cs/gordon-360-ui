@@ -17,7 +17,7 @@ const EditMatchStatsForm = ({
   const [errorStatus, setErrorStatus] = useState({
     Score: false,
     Sportsmanship: false,
-    Status: false,
+    StatusID: false,
   });
 
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,6 @@ const EditMatchStatsForm = ({
     };
     loadData();
   }, []);
-
 
   const createMatchStatsField = [
     {
@@ -50,7 +49,7 @@ const EditMatchStatsForm = ({
     },
     {
       label: 'Status',
-      name: 'Status',
+      name: 'StatusID',
       type: 'select',
       menuItems: matchStatus.map((type) => {
         return type.Description;
@@ -59,7 +58,6 @@ const EditMatchStatsForm = ({
       helperText: '*Required',
     },
   ];
-  console.log(teamMatchHistory)
 
   const allFields = [createMatchStatsField].flat();
 
@@ -68,7 +66,7 @@ const EditMatchStatsForm = ({
       TeamID: teamMatchHistory.TeamID,
       Score: teamMatchHistory.TeamScore,
       Sportsmanship: '',
-      Status: teamMatchHistory.Status ?? "",
+      StatusID: teamMatchHistory.Status ?? '',
     };
   }, [teamMatchHistory]);
 
@@ -145,21 +143,24 @@ const EditMatchStatsForm = ({
   }
 
   const handleConfirm = () => {
+    debugger;
     setSaving(true);
-    let updatedMatchStats = { ...currentInfo, ...newInfo}
-    updatedMatchStats.Score = parseInt(updatedMatchStats.Score)
-    updatedMatchStats.Sportsmanship = parseInt(updatedMatchStats.Sportsmanship)
-    updatedMatchStats.TeamID = parseInt(updatedMatchStats.TeamID)
-    console.log(updatedMatchStats)
+    let matchStatsRequest = { ...currentInfo, ...newInfo };
+    matchStatsRequest.Score = parseInt(matchStatsRequest.Score);
+    matchStatsRequest.Sportsmanship = parseInt(matchStatsRequest.Sportsmanship);
+    matchStatsRequest.TeamID = parseInt(matchStatsRequest.TeamID);
+    matchStatsRequest.StatusID = parseInt(
+      matchStatus.find((status) => status.Description === matchStatsRequest.StatusID).ID,
+    );
 
-    updateMatchStats(parseInt(teamMatchHistory.MatchID), updatedMatchStats).then(() => {
+    updateMatchStats(parseInt(teamMatchHistory.MatchID), matchStatsRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
-        message: 'Match edited successfully'
+        message: 'Match edited successfully',
       });
       handleWindowClose();
-    })
+    });
   };
 
   const handleWindowClose = () => {

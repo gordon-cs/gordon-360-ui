@@ -20,6 +20,7 @@ import { Link as LinkRouter } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
+import { getParticipantByUsername } from 'services/recim/participant';
 
 const dayMonthDate = (date) => {
   return (
@@ -51,16 +52,19 @@ const Match = () => {
   const [team1Score, setTeam1Score] = useState(0);
   const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
   const [selectedScores, setSelectedScores] = useState();
-  // const [openMatchForm, setOpenMatchForm] = useState(false);
+  const [participant, setParticipant] = useState({});
 
   useEffect(() => {
     const loadMatch = async () => {
       setLoading(true);
       setMatch(await getMatchByID(matchID));
+      if (profile) {
+        setParticipant(await getParticipantByUsername(profile.AD_Username));
+      }
       setLoading(false);
     };
     loadMatch();
-  }, [matchID]);
+  }, [matchID, profile]);
 
   useEffect(() => {
     if (match) {
@@ -77,7 +81,6 @@ const Match = () => {
   const handleEditMatchStatsForm = (status) => {
     setOpenEditMatchStatsForm(false);
   };
-
 
   if (loading) {
     return <GordonLoader />;
@@ -142,32 +145,34 @@ const Match = () => {
               <Typography variant="h5">
                 {team0Score} : {team1Score}
               </Typography>
-              <Grid item>
-                <Grid container columnSpacing={2} justifyItems="center">
-                  <Grid item>
-                    <IconButton
-                      onClick={() => {
-                        setSelectedScores(match.Scores[0]);
-                        setOpenEditMatchStatsForm(true);
-                      }}
-                      className={styles.editIconButton}
-                    >
-                      <EditIcon className={styles.editIconColor} />
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton
-                      onClick={() => {
-                        setSelectedScores(match.Scores[1]);
-                        setOpenEditMatchStatsForm(true);
-                      }}
-                      className={styles.editIconButton}
-                    >
-                      <EditIcon className={styles.editIconColor} />
-                    </IconButton>
+              {participant.IsAdmin ? (
+                <Grid item>
+                  <Grid container columnSpacing={2} justifyItems="center">
+                    <Grid item>
+                      <IconButton
+                        onClick={() => {
+                          setSelectedScores(match.Scores[0]);
+                          setOpenEditMatchStatsForm(true);
+                        }}
+                        className={styles.editIconButton}
+                      >
+                        <EditIcon className={styles.editIconColor} />
+                      </IconButton>
+                    </Grid>
+                    <Grid item>
+                      <IconButton
+                        onClick={() => {
+                          setSelectedScores(match.Scores[1]);
+                          setOpenEditMatchStatsForm(true);
+                        }}
+                        className={styles.editIconButton}
+                      >
+                        <EditIcon className={styles.editIconColor} />
+                      </IconButton>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              ) : null}
             </Grid>
             <Grid item xs={2}>
               <img src={''} alt="Team Icon" width="85em"></img>

@@ -42,7 +42,7 @@ type CreatedMatchStats = {
 
 type PatchMatchStats = {
   TeamID: number;
-  Status: string;
+  StatusID: number;
   Score: number;
   Sportsmanship: number;
 };
