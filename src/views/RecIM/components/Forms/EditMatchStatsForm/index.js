@@ -64,7 +64,7 @@ const EditMatchStatsForm = ({
     return {
       TeamID: teamMatchHistory.TeamID,
       Score: teamMatchHistory.TeamScore,
-      Sportsmanship: '',
+      Sportsmanship: 0,
       StatusID: teamMatchHistory.Status ?? '',
     };
   }, [teamMatchHistory]);
