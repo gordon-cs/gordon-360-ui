@@ -103,7 +103,7 @@ const CreateSeriesForm = ({
       referenceSeriesID: '',
       scheduleID: scheduleID, //nullable, if scheduleID is passed, it will be assigned to the series
     };
-  }, [activityID]);
+  }, [activityID, scheduleID]);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
