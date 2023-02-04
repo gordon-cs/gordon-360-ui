@@ -25,10 +25,10 @@
 }
 
 .editIconButton {
-  background-color: #fdb82c;
+  background-color: $secondary-yellow;
+  color: $neutral-black;
 }
 
-.editIconColor {
-  color: $neutral-black;
-  font-size: inherit;
+.editIconButton:hover {
+  background-color: rgb(177, 129, 13);
 }

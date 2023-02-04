@@ -16,7 +16,6 @@ const EditMatchStatsForm = ({
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     Score: false,
-    Sportsmanship: false,
     StatusID: false,
   });
 
