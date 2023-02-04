@@ -1,4 +1,4 @@
-import { List } from '@mui/material';
+import { List, Typography } from '@mui/material';
 import {
   ActivityListing,
   MatchListing,
@@ -7,6 +7,7 @@ import {
 } from './Listing';
 
 const ActivityList = ({ activities }) => {
+  if (!activities?.length) return <Typography>No activities to show.</Typography>;
   let content = activities.map((activity) => (
     <ActivityListing key={activity.ID} activity={activity} />
   ));
@@ -14,6 +15,7 @@ const ActivityList = ({ activities }) => {
 };
 
 const ParticipantList = ({ participants, minimal, showParticipantOptions, callbackFunction }) => {
+  if (!participants?.length) return <Typography>No participants to show.</Typography>;
   let content = participants.map((participant) => (
     <ParticipantListing
       key={participant.username}
@@ -27,13 +29,14 @@ const ParticipantList = ({ participants, minimal, showParticipantOptions, callba
 };
 
 const MatchList = ({ matches, activityID }) => {
-  let content = matches.map((match) => (
-    <MatchListing key={match.ID} match={match} activityID={activityID} />
-  ));
+  if (!matches?.length) return <Typography>No matches to show.</Typography>;
+  let content = matches.map((match) => <MatchListing key={match.ID} match={match} activityID={activityID}  />);
+
   return <List dense>{content}</List>;
 };
 
 const TeamList = ({ teams }) => {
+  if (!teams?.length) return <Typography>No teams to show.</Typography>;
   let content = teams.map((team) => <TeamListing key={team.ID} team={team} />);
   return <List dense>{content}</List>;
 };

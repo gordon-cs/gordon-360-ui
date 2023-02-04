@@ -75,7 +75,7 @@ const Activity = () => {
       participantTeams.forEach((team) => {
         if (team.Activity.ID === activity.ID) participating = true;
       });
-      setCanCreateTeam(participating || participant.IsAdmin);
+      setCanCreateTeam(!participating || participant.IsAdmin);
     }
   }, [activity, participant, participantTeams]);
   const handleTeamFormSubmit = (status, setOpenTeamForm) => {
@@ -127,7 +127,7 @@ const Activity = () => {
               <Grid item xs={8} md={5}>
                 <Typography variant="h5" className={styles.activityTitle}>
                   {activity.Name}
-                  {participant.IsAdmin === true ? (
+                  {participant?.IsAdmin ? (
                     <IconButton>
                       <EditIcon
                         onClick={() => {

@@ -66,9 +66,10 @@ const createActivity = (newActivity: UploadActivity): Promise<CreatedActivity> =
 
 const getActivityByID = (ID: number): Promise<Activity> => http.get(`recim/activities/${ID}`);
 
-const getAllActivities = (active: boolean, time: String): Promise<Activity[]> => {
+const getActivities = (active: boolean, time: String): Promise<Activity[]> => {
   if (time) return http.get(`recim/activities?active=${active}&time=${time}`);
-  return http.get(`recim/activities?active=${active}`);
+  if (active) return http.get(`recim/activities?active=${active}`);
+  return http.get(`recim/activities`);
 };
 
 const getActivityStatusTypes = (): Promise<Lookup[]> =>
@@ -84,7 +85,7 @@ export {
   createActivity,
   getActivityByID,
   getActivityStatusTypes,
-  getAllActivities,
+  getActivities,
   editActivity,
   getActivityTypes,
 };

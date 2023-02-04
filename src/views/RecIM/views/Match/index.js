@@ -70,8 +70,12 @@ const Match = () => {
     if (match) {
       const assignMatchScores = async () => {
         setLoading(true);
-        setTeam0Score(match.Scores.find((team) => team.OwnID === match.Team[0]?.ID)?.OwnScore ?? 0);
-        setTeam1Score(match.Scores.find((team) => team.OwnID === match.Team[1]?.ID)?.OwnScore ?? 0);
+        setTeam0Score(
+          match.Scores.find((team) => team.TeamID === match.Team[0]?.ID)?.TeamScore ?? 0,
+        );
+        setTeam1Score(
+          match.Scores.find((team) => team.TeamID === match.Team[1]?.ID)?.TeamScore ?? 0,
+        );
         setLoading(false);
       };
       assignMatchScores();
