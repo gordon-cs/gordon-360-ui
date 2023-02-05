@@ -200,7 +200,6 @@ const Activity = () => {
       </Card>
     );
     // CARD - teams
-    debugger;
     let teamsCard = (
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
