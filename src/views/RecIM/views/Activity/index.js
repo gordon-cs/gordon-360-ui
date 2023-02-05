@@ -235,7 +235,7 @@ const Activity = () => {
     );
 
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={2} direction="column" wrap="nowrap">
         <Grid item alignItems="center" xs={12}>
           {activityHeader}
         </Grid>
