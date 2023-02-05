@@ -6,9 +6,10 @@ import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ContentCard } from '../components/ContentCard';
 import GordonLoader from 'components/Loader';
-import { getMatchStatusTypes, updateMatchStats } from 'services/recim/match';
+import { getMatchTeamStatusTypes, updateMatchStats } from 'services/recim/match';
 
 const EditMatchStatsForm = ({
+  matchID,
   teamMatchHistory,
   closeWithSnackbar,
   openEditMatchStatsForm,
@@ -26,7 +27,7 @@ const EditMatchStatsForm = ({
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      setMatchStatus(await getMatchStatusTypes());
+      setMatchStatus(await getMatchTeamStatusTypes());
       setLoading(false);
     };
     loadData();
@@ -45,7 +46,7 @@ const EditMatchStatsForm = ({
       name: 'Sportsmanship',
       type: 'number',
       error: errorStatus.Sportsmanship,
-      helperText: '*Required',
+      helperText: "*Required & Can't be more than 5",
     },
     {
       label: 'Status',
@@ -64,11 +65,14 @@ const EditMatchStatsForm = ({
   const currentInfo = useMemo(() => {
     return {
       TeamID: teamMatchHistory.TeamID,
-      Score: teamMatchHistory.TeamScore,
-      Sportsmanship: '0',
-      StatusID: teamMatchHistory.Status ?? '',
+      Score: `${teamMatchHistory.TeamScore}`,
+      Sportsmanship: `${teamMatchHistory.Sportsmanship}`,
+      StatusID:
+        matchStatus.find((type) => type.Description === teamMatchHistory.Status) == null
+          ? ''
+          : matchStatus.find((type) => type.Description === teamMatchHistory.Status).Description,
     };
-  }, [teamMatchHistory]);
+  }, [teamMatchHistory, matchStatus]);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [isSaving, setSaving] = useState(false);
@@ -99,24 +103,18 @@ const EditMatchStatsForm = ({
         hasChanges = true;
       }
       switch (field) {
-        case 'Score' || 'Sportsmanship':
-          if (!/^[0-9]+$/.test(newInfo[field])) {
-            hasError = true;
-            handleSetError(field, true);
-          } else {
-            handleSetError(field, false);
-          }
+        case 'Sportsmanship':
+          hasError = hasError || newInfo[field] > 5;
+          //fall through
+        case 'Score':
+          hasError = !/^[0-9]+$/.test(newInfo[field]);
           break;
         case 'StatusID':
-          if (newInfo[field] === '') {
-            handleSetError(field, true);
-            hasError = true;
-          } else {
-            handleSetError(field, false);
-          }
+          hasError = newInfo[field] === '';
           break;
         default:
       }
+      handleSetError(field, hasError);
     }
 
     setDisableUpdateButton(hasError || !hasChanges);
@@ -165,9 +163,8 @@ const EditMatchStatsForm = ({
     let matchStatsRequest = { ...currentInfo, ...newInfo };
     matchStatsRequest.StatusID = matchStatus.find(
       (status) => status.Description === matchStatsRequest.StatusID,
-    ).ID;
-
-    updateMatchStats(parseInt(teamMatchHistory.MatchID), matchStatsRequest).then(() => {
+    )?.ID;
+    updateMatchStats(matchID, matchStatsRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
