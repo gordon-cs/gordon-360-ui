@@ -36,13 +36,13 @@ const Activity = () => {
   const { activityID } = useParams();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
-  const [activity, setActivity] = useState(null);
+  const [activity, setActivity] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openCreateMatchForm, setOpenCreateMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
-  const [participant, setParticipant] = useState(null);
-  const [participantTeams, setParticipantTeams] = useState(null);
+  const [participant, setParticipant] = useState();
+  const [participantTeams, setParticipantTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
 
   useEffect(() => {
@@ -151,7 +151,7 @@ const Activity = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
-          {participant.IsAdmin ? (
+          {participant?.IsAdmin ? (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={6}>
                 <Grid container justifyContent="center">
@@ -198,11 +198,12 @@ const Activity = () => {
       </Card>
     );
     // CARD - teams
+    debugger;
     let teamsCard = (
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-          {participant.IsAdmin ? (
+          {participant?.IsAdmin ? (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={12}>
                 <Grid container justifyContent="center">
