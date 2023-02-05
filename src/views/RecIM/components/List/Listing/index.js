@@ -27,50 +27,6 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate } from '../../Helpers';
 
-// const SeriesListing = ({ series }) => {
-//   let startDate = DateTime.fromISO(series.StartDate);
-//   let endDate = DateTime.fromISO(series.EndDate);
-
-//   const status = () => {
-//     let now = DateTime.fromMillis(Date.now());
-//     // future series
-//     if (now < startDate)
-//       return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small" />;
-//     // past series
-//     if (now > endDate)
-//       return <Chip icon={<RestoreIcon />} label="completed" color="default" size="small" />;
-//     // current series
-//     return <Chip icon={<ScheduleIcon />} label="ongoing" color="success" size="small" />;
-//   };
-
-//   return (
-//     <ListItem>
-//       <Grid container className={styles.listing} columnSpacing={2} alignItems="center">
-//         <Grid container direction="column" item xs={12} sm={4}>
-//           <Typography className={styles.listingTitle}>{series.Name}</Typography>
-//           <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
-//             Schedule Type: {series.Type}
-//           </Typography>
-//         </Grid>
-//         <Grid item xs={12} sm={4}>
-//           <Grid container direction="row">
-//             <Grid item xs={10}>
-//               <Typography>
-//                 <i>
-//                   {standardDate(startDate, false)} - {standardDate(endDate, false)}
-//                 </i>
-//               </Typography>
-//             </Grid>
-//           </Grid>
-//         </Grid>
-//         <Grid item xs={12} sm={4}>
-//           {status()}
-//         </Grid>
-//       </Grid>
-//     </ListItem>
-//   );
-// };
-
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
   const [currentCapacity, setCurrentCapacity] = useState(
