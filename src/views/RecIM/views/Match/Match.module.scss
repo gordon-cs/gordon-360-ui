@@ -18,3 +18,12 @@
 .grayText {
   color: $neutral-gray;
 }
+
+.editIconButton {
+  background-color: $secondary-yellow;
+  color: $neutral-black;
+}
+
+.editIconButton:hover {
+  background-color: rgb(177, 129, 13);
+}

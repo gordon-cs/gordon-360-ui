@@ -1,4 +1,12 @@
-import { Grid, Card, CardHeader, CardContent } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Breadcrumbs,
+  IconButton,
+} from '@mui/material';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
@@ -7,7 +15,13 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getMatchByID } from 'services/recim/match';
-// import EditIcon from '@mui/icons-material/Edit'
+import { DateTime } from 'luxon';
+import { Link as LinkRouter } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import EditIcon from '@mui/icons-material/Edit';
+import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
+import { getParticipantByUsername } from 'services/recim/participant';
+import { standardDate } from 'views/RecIM/components/Helpers';
 
 const RosterCard = ({ participants, teamName }) => (
   <Card>
@@ -23,16 +37,43 @@ const Match = () => {
   const { profile } = useUser();
   const [match, setMatch] = useState();
   const [loading, setLoading] = useState(true);
-  // const [openMatchForm, setOpenMatchForm] = useState(false);
+  const [team0Score, setTeam0Score] = useState(0);
+  const [team1Score, setTeam1Score] = useState(0);
+  const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
+  const [selectedScores, setSelectedScores] = useState();
+  const [participant, setParticipant] = useState({});
 
   useEffect(() => {
     const loadMatch = async () => {
       setLoading(true);
       setMatch(await getMatchByID(matchID));
+      if (profile) {
+        setParticipant(await getParticipantByUsername(profile.AD_Username));
+      }
       setLoading(false);
     };
     loadMatch();
-  }, [matchID]);
+  }, [matchID, profile, openEditMatchStatsForm]);
+
+  useEffect(() => {
+    if (match) {
+      const assignMatchScores = async () => {
+        setLoading(true);
+        setTeam0Score(
+          match.Scores.find((team) => team.TeamID === match.Team[0]?.ID)?.TeamScore ?? 0,
+        );
+        setTeam1Score(
+          match.Scores.find((team) => team.TeamID === match.Team[1]?.ID)?.TeamScore ?? 0,
+        );
+        setLoading(false);
+      };
+      assignMatchScores();
+    }
+  }, [match]);
+
+  const handleEditMatchStatsForm = (status) => {
+    setOpenEditMatchStatsForm(false);
+  };
 
   if (loading) {
     return <GordonLoader />;
@@ -40,6 +81,110 @@ const Match = () => {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
+    let mainCard = (
+      <Card>
+        <CardContent>
+          <Grid item container direction="column" alignItems="center">
+            <Grid item>
+              <Breadcrumbs aria-label="breadcrumb">
+                <LinkRouter
+                  className="gc360_text_link"
+                  underline="hover"
+                  color="inherit"
+                  to={'/recim'}
+                >
+                  <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+                  Rec-IM Home
+                </LinkRouter>
+                <LinkRouter
+                  className="gc360_text_link"
+                  underline="hover"
+                  color="inherit"
+                  to={`/recim/activity/${match.Activity.ID}`}
+                >
+                  {match.Activity.Name}
+                </LinkRouter>
+                <Typography color="text.primary">
+                  Match: {match.Team[0]?.Name ?? '____'} vs {match.Team[1]?.Name ?? '____'}{' '}
+                </Typography>
+              </Breadcrumbs>
+            </Grid>
+            <hr className={styles.recimNavHeaderLine} />
+          </Grid>
+          <Grid container margin="10px">
+            <Grid item container direction={'column'}>
+              <Grid item className={styles.grayText}>
+                {match.Activity.Name}
+              </Grid>
+              <Grid item className={styles.grayText}>
+                {standardDate(DateTime.fromISO(match.Time))}
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid container alignItems="center" justifyContent="space-around">
+            <Grid item xs={2}>
+              <LinkRouter to={`/recim/activity/${match.Activity.ID}/team/${match.Team[0]?.ID}`}>
+                <Typography variant="h5" className="gc360_text_link">
+                  {match.Team[0]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
+              <i className={styles.grayText}>Sportsmanship: {match.Scores[0].Sportsmanship}</i>
+            </Grid>
+            <Grid item xs={2}>
+              <img src={''} alt="Team Icon" width="85em"></img>
+            </Grid>
+            <Grid item container xs={4} sm={2} alignItems="center" direction="column">
+              <Typography variant="body" className={styles.grayText}>
+                <i>Match Score</i>
+              </Typography>
+              <Typography variant="h5">
+                {team0Score} : {team1Score}
+              </Typography>
+              {participant.IsAdmin ? (
+                <Grid item>
+                  <Grid container columnSpacing={2} justifyItems="center">
+                    <Grid item>
+                      <IconButton
+                        onClick={() => {
+                          setSelectedScores(match.Scores[0]);
+                          setOpenEditMatchStatsForm(true);
+                        }}
+                        className={styles.editIconButton}
+                      >
+                        <EditIcon className={styles.editIconColor} />
+                      </IconButton>
+                    </Grid>
+                    <Grid item>
+                      <IconButton
+                        onClick={() => {
+                          setSelectedScores(match.Scores[1]);
+                          setOpenEditMatchStatsForm(true);
+                        }}
+                        className={styles.editIconButton}
+                      >
+                        <EditIcon className={styles.editIconColor} />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              ) : null}
+            </Grid>
+            <Grid item xs={2}>
+              <img src={''} alt="Team Icon" width="85em"></img>
+            </Grid>
+            <Grid item xs={2}>
+              <LinkRouter to={`/recim/activity/${match.Activity.ID}/team/${match.Team[1]?.ID}`}>
+                <Typography variant="h5" className="gc360_text_link">
+                  {match.Team[1]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
+              <i className={styles.grayText}>Sportsmanship: {match.Scores[1].Sportsmanship}</i>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    );
+
     return (
       <>
         <Grid container justifyContent="center" spacing={2}>
@@ -50,6 +195,18 @@ const Match = () => {
             <RosterCard participants={match.Team[1]?.Participant} teamName={match.Team[1]?.Name} />
           </Grid>
         </Grid>
+        <Typography>Match ID: {matchID} (testing purposes only)</Typography>
+        {openEditMatchStatsForm ? (
+          <EditMatchStatsForm
+            matchID={matchID}
+            teamMatchHistory={selectedScores}
+            closeWithSnackbar={(status) => {
+              handleEditMatchStatsForm(status);
+            }}
+            openEditMatchStatsForm={openEditMatchStatsForm}
+            setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+          />
+        ) : null}
       </>
     );
   }
