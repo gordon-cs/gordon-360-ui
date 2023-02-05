@@ -17,6 +17,9 @@ import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 
 const Header = ({ page, expandable = false }) => {
+  window.onscroll = function () {
+    console.log('scroll');
+  };
   const { profile } = useUser();
   const { activityID, teamID, matchID } = useParams();
   const [user, setUser] = useState();
@@ -195,59 +198,59 @@ const Header = ({ page, expandable = false }) => {
         <GordonLoader />
       );
     }
-    if (expandable === 'match') {
-      return currentDisplay.match ? (
-        <>
-          <Grid container justifyContent="space-between" marginBottom="10px">
-            <Grid item className={styles.grayText}>
-              {currentDisplay.match?.Activity.Name}
-            </Grid>
-            <Grid item className={styles.grayText}>
-              {dayMonthDate(DateTime.fromISO(currentDisplay.match?.Time))}
-            </Grid>
-          </Grid>
-          <Grid container alignItems="center" justifyContent="space-around">
-            <Grid item xs={2}>
-              <LinkRouter
-                to={`/recim/activity/${currentDisplay.match?.Activity.ID}/team/${currentDisplay.match?.Team[0]?.ID}`}
-              >
-                <Typography variant="h5" className="gc360_text_link">
-                  {currentDisplay.match?.Team[0]?.Name ?? 'No team yet...'}
-                </Typography>
-              </LinkRouter>
-              <i className={styles.grayText}>Sportsmanship</i>
-            </Grid>
-            <Grid item xs={2}>
-              <img src={''} alt="Team Icon" width="85em"></img>
-            </Grid>
-            <Grid item container xs={4} sm={2} alignItems="center" direction="column">
-              <Typography variant="body" className={styles.grayText}>
-                <i>Match Score</i>
-              </Typography>
-              <Typography variant="h5">
-                {currentDisplay.match?.Scores[0].TeamScore} :{' '}
-                {currentDisplay.match?.Scores[1].TeamScore}
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <img src={''} alt="Team Icon" width="85em"></img>
-            </Grid>
-            <Grid item xs={2}>
-              <LinkRouter
-                to={`/recim/activity/${currentDisplay.match?.Activity.ID}/team/${currentDisplay.match?.Team[1]?.ID}`}
-              >
-                <Typography variant="h5" className="gc360_text_link">
-                  {currentDisplay.match?.Team[1]?.Name ?? 'No team yet...'}
-                </Typography>
-              </LinkRouter>
-              <i className={styles.grayText}>Sportsmanship</i>
-            </Grid>
-          </Grid>
-        </>
-      ) : (
-        <GordonLoader />
-      );
-    }
+    // if (expandable === 'match') {
+    //   return currentDisplay.match ? (
+    //     <>
+    //       <Grid container justifyContent="space-between" marginBottom="10px">
+    //         <Grid item className={styles.grayText}>
+    //           {currentDisplay.match?.Activity.Name}
+    //         </Grid>
+    //         <Grid item className={styles.grayText}>
+    //           {dayMonthDate(DateTime.fromISO(currentDisplay.match?.Time))}
+    //         </Grid>
+    //       </Grid>
+    //       <Grid container alignItems="center" justifyContent="space-around">
+    //         <Grid item xs={2}>
+    //           <LinkRouter
+    //             to={`/recim/activity/${currentDisplay.match?.Activity.ID}/team/${currentDisplay.match?.Team[0]?.ID}`}
+    //           >
+    //             <Typography variant="h5" className="gc360_text_link">
+    //               {currentDisplay.match?.Team[0]?.Name ?? 'No team yet...'}
+    //             </Typography>
+    //           </LinkRouter>
+    //           <i className={styles.grayText}>Sportsmanship</i>
+    //         </Grid>
+    //         <Grid item xs={2}>
+    //           <img src={''} alt="Team Icon" width="85em"></img>
+    //         </Grid>
+    //         <Grid item container xs={4} sm={2} alignItems="center" direction="column">
+    //           <Typography variant="body" className={styles.grayText}>
+    //             <i>Match Score</i>
+    //           </Typography>
+    //           <Typography variant="h5">
+    //             {currentDisplay.match?.Scores[0].TeamScore} :{' '}
+    //             {currentDisplay.match?.Scores[1].TeamScore}
+    //           </Typography>
+    //         </Grid>
+    //         <Grid item xs={2}>
+    //           <img src={''} alt="Team Icon" width="85em"></img>
+    //         </Grid>
+    //         <Grid item xs={2}>
+    //           <LinkRouter
+    //             to={`/recim/activity/${currentDisplay.match?.Activity.ID}/team/${currentDisplay.match?.Team[1]?.ID}`}
+    //           >
+    //             <Typography variant="h5" className="gc360_text_link">
+    //               {currentDisplay.match?.Team[1]?.Name ?? 'No team yet...'}
+    //             </Typography>
+    //           </LinkRouter>
+    //           <i className={styles.grayText}>Sportsmanship</i>
+    //         </Grid>
+    //       </Grid>
+    //     </>
+    //   ) : (
+    //     <GordonLoader />
+    //   );
+    // }
     return null;
   };
 

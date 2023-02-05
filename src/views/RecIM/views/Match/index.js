@@ -85,30 +85,6 @@ const Match = () => {
       <Card>
         <CardContent>
           <Grid item container direction="column" alignItems="center">
-            <Grid item>
-              <Breadcrumbs aria-label="breadcrumb">
-                <LinkRouter
-                  className="gc360_text_link"
-                  underline="hover"
-                  color="inherit"
-                  to={'/recim'}
-                >
-                  <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                  Rec-IM Home
-                </LinkRouter>
-                <LinkRouter
-                  className="gc360_text_link"
-                  underline="hover"
-                  color="inherit"
-                  to={`/recim/activity/${match.Activity.ID}`}
-                >
-                  {match.Activity.Name}
-                </LinkRouter>
-                <Typography color="text.primary">
-                  Match: {match.Team[0]?.Name ?? '____'} vs {match.Team[1]?.Name ?? '____'}{' '}
-                </Typography>
-              </Breadcrumbs>
-            </Grid>
             <hr className={styles.recimNavHeaderLine} />
           </Grid>
           <Grid container margin="10px">
@@ -117,7 +93,7 @@ const Match = () => {
                 {match.Activity.Name}
               </Grid>
               <Grid item className={styles.grayText}>
-                {standardDate(DateTime.fromISO(match.Time))}
+                {standardDate(DateTime.fromISO(match.Time), true)}
               </Grid>
             </Grid>
           </Grid>
@@ -128,7 +104,9 @@ const Match = () => {
                   {match.Team[0]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
-              <i className={styles.grayText}>Sportsmanship: {match.Scores[0].Sportsmanship}</i>
+              {participant?.IsAdmin ? (
+                <i className={styles.grayText}>Sportsmanship: {match.Scores[0].Sportsmanship}</i>
+              ) : null}
             </Grid>
             <Grid item xs={2}>
               <img src={''} alt="Team Icon" width="85em"></img>
@@ -178,7 +156,9 @@ const Match = () => {
                   {match.Team[1]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
-              <i className={styles.grayText}>Sportsmanship: {match.Scores[1].Sportsmanship}</i>
+              {participant?.IsAdmin ? (
+                <i className={styles.grayText}>Sportsmanship: {match.Scores[1].Sportsmanship}</i>
+              ) : null}
             </Grid>
           </Grid>
         </CardContent>
@@ -188,6 +168,9 @@ const Match = () => {
     return (
       <>
         <Grid container justifyContent="center" spacing={2}>
+          <Grid item xs={12} md={12}>
+            {mainCard}
+          </Grid>
           <Grid item xs={12} md={6}>
             <RosterCard participants={match.Team[0]?.Participant} teamName={match.Team[0]?.Name} />
           </Grid>
