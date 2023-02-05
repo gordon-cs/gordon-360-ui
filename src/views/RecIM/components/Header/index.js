@@ -23,11 +23,13 @@ const Header = ({ page, expandable = false }) => {
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [isCaptain, setIsCaptain] = useState(false);
-  const reset = useMemo(() => {return {
-    activity: null,
-    team: null,
-    match: null,
-  }},[]);
+  const reset = useMemo(() => {
+    return {
+      activity: null,
+      team: null,
+      match: null,
+    };
+  }, []);
   const [currentDisplay, setCurrentDisplay] = useState(reset);
 
   useEffect(() => {
