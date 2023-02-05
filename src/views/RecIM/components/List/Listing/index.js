@@ -16,67 +16,156 @@ import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { DateTime } from 'luxon';
+import GordonLoader from '../../../../../components/Loader';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import { editTeamParticipant } from 'services/recim/team';
+import { getActivityTypes, getActivityByID } from 'services/recim/activity';
+import SportsFootballIcon from '@mui/icons-material/SportsFootball';
+import SportsCricketIcon from '@mui/icons-material/SportsCricket';
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate } from '../../Helpers';
 
+// const SeriesListing = ({ series }) => {
+//   let startDate = DateTime.fromISO(series.StartDate);
+//   let endDate = DateTime.fromISO(series.EndDate);
+
+//   const status = () => {
+//     let now = DateTime.fromMillis(Date.now());
+//     // future series
+//     if (now < startDate)
+//       return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small" />;
+//     // past series
+//     if (now > endDate)
+//       return <Chip icon={<RestoreIcon />} label="completed" color="default" size="small" />;
+//     // current series
+//     return <Chip icon={<ScheduleIcon />} label="ongoing" color="success" size="small" />;
+//   };
+
+//   return (
+//     <ListItem>
+//       <Grid container className={styles.listing} columnSpacing={2} alignItems="center">
+//         <Grid container direction="column" item xs={12} sm={4}>
+//           <Typography className={styles.listingTitle}>{series.Name}</Typography>
+//           <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
+//             Schedule Type: {series.Type}
+//           </Typography>
+//         </Grid>
+//         <Grid item xs={12} sm={4}>
+//           <Grid container direction="row">
+//             <Grid item xs={10}>
+//               <Typography>
+//                 <i>
+//                   {standardDate(startDate, false)} - {standardDate(endDate, false)}
+//                 </i>
+//               </Typography>
+//             </Grid>
+//           </Grid>
+//         </Grid>
+//         <Grid item xs={12} sm={4}>
+//           {status()}
+//         </Grid>
+//       </Grid>
+//     </ListItem>
+//   );
+// };
+
 const ActivityListing = ({ activity }) => {
-  let registrationStart = DateTime.fromISO(activity.RegistrationStart);
+  const [activityType, setActivityType] = useState();
+  const [currentCapacity, setCurrentCapacity] = useState(
+    <span style={{ display: 'inline-block' }}>
+      <GordonLoader size={15} />
+    </span>,
+  );
+  useEffect(() => {
+    const loadActivityType = async () => {
+      let activityTypes = await getActivityTypes();
+      setActivityType(
+        activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
+      );
+    };
+    const calculateCurrentCapacity = async () => {
+      let fullActivity = await getActivityByID(activity.ID);
+      setCurrentCapacity(fullActivity.Team?.length);
+    };
+    loadActivityType();
+    calculateCurrentCapacity();
+  }, [activity]);
+
   let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
+  let activeSeries = activity.Series.find(
+    (series) => DateTime.fromISO(series.StartDate) < DateTime.now(),
+  );
+  let activeSeriesMessage = activeSeries
+    ? activeSeries.Name + ' until ' + standardDate(DateTime.fromISO(activeSeries.EndDate))
+    : null;
+
+  const activityTypeIconPair = [
+    {
+      type: 'League',
+      icon: <SportsFootballIcon />,
+    },
+    {
+      type: 'Tournament',
+      icon: <SportsCricketIcon />,
+    },
+    {
+      type: 'One Off',
+      icon: <LocalActivityIcon />,
+    },
+  ];
+
   return (
     <ListItemButton component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
-      <Grid container className={styles.listing} columnSpacing={2}>
-        <Grid item xs={12} sm={4} container alignContent="center">
-          <Typography className={styles.listingTitle}>{activity.Name}</Typography>
+      <Grid container className={styles.listing} columnSpacing={2} alignItems="center">
+        <Grid item container direction="column" xs={12} sm={4} spacing={1}>
+          <Grid item>
+            <Typography className={styles.listingTitle}>{activity.Name}</Typography>
+          </Grid>
+          <Grid item>
+            <Chip
+              icon={activityTypeIconPair.find((type) => type.type === activityType)?.icon}
+              label={activityType}
+              color={'success'}
+              className={styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]}
+              size="small"
+            ></Chip>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <Grid container direction="row">
-            <Grid item xs={10}>
+        <Grid item container xs={12} sm={7} direction="column" spacing={1}>
+          <Grid item>
+            <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
+              ActivityStart - ActivityEnd
+            </Typography>
+          </Grid>
+          <Grid item container columnSpacing={2}>
+            <Grid item>
               <Chip
                 icon={<EventAvailableIcon />}
-                label={activity.RegistrationOpen ? 'registration open' : 'registration closed'}
+                label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
                 color={activity.RegistrationOpen ? 'success' : 'info'}
                 size="small"
               ></Chip>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item>
               <Typography>
-                Registration close{activity.RegistrationOpen ? 's' : 'd'}{' '}
-                {standardDate(registrationEnd, false)}
-              </Typography>
-              <Typography sx={{ color: 'gray', fontSize: '0.7em' }}>
-                <i>
-                  testing purposes: {standardDate(registrationStart, true)} -{' '}
-                  {standardDate(registrationEnd, true)}
-                </i>
+                {activity.RegistrationOpen
+                  ? 'Registration closes ' + standardDate(registrationEnd)
+                  : activeSeriesMessage}
               </Typography>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <Grid container direction="row">
-            <Grid item xs={10}>
-              <Typography gutterBottom>Season</Typography>
-            </Grid>
-            <Grid item xs={10}>
-              {activity.Series.map((series) => {
-                return (
-                  <Typography key={series.ID}>
-                    {series.Name} {standardDate(DateTime.fromISO(series.StartDate), false)} -{' '}
-                    {standardDate(DateTime.fromISO(series.EndDate), false)}
-                  </Typography>
-                );
-              })}
-            </Grid>
-          </Grid>
+        <Grid item sm={1}>
+          <Typography variant="subtitle">
+            {currentCapacity}
+            <Typography variant="span" sx={{ p: 0.2 }}>
+              /
+            </Typography>
+            {activity.MaxCapacity}
+          </Typography>
         </Grid>
-        {/* include:
-          - activity type (activity, tournament, one-off)
-          - registration deadline IF there is one (start date as well for admin only)
-          - date(s) of activity (ex. season date range or tournament date)
-          */}
       </Grid>
     </ListItemButton>
   );
