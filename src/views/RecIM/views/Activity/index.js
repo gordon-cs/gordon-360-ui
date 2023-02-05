@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardContent,
   Button,
+  Chip,
   Breadcrumbs,
   IconButton,
 } from '@mui/material';
@@ -18,7 +19,7 @@ import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import styles from './Activity.module.css';
-import { MatchList, SeriesList, TeamList } from './../../components/List';
+import { MatchList, TeamList } from './../../components/List';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
@@ -26,19 +27,24 @@ import { Link as LinkRouter } from 'react-router-dom';
 import CreateMatchForm from 'views/RecIM/components/Forms/CreateMatchForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
+import UpdateIcon from '@mui/icons-material/Update';
+import RestoreIcon from '@mui/icons-material/Restore';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import { standardDate } from 'views/RecIM/components/Helpers';
+import { DateTime } from 'luxon';
 
 const Activity = () => {
   const navigate = useHistory();
   const { activityID } = useParams();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
-  const [activity, setActivity] = useState(null);
+  const [activity, setActivity] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
-  const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openCreateMatchForm, setOpenCreateMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
-  const [participant, setParticipant] = useState(null);
-  const [participantTeams, setParticipantTeams] = useState(null);
+  const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [participant, setParticipant] = useState();
+  const [participantTeams, setParticipantTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
 
   useEffect(() => {
@@ -146,37 +152,80 @@ const Activity = () => {
     let scheduleCard = (
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
-        <CardContent>
-          {activity.Series?.length ? (
-            <MatchList matches={activity.Series[0].Match} activityID={activity.ID} />
-          ) : (
-            <Typography variant="body1" paragraph>
-              Games have not yet been scheduled.
-            </Typography>
-          )}
+        <CardContent className={styles.schedule}>
           {participant?.IsAdmin ? (
-            <Grid container justifyContent="center">
-              <Button
-                variant="contained"
-                color="warning"
-                startIcon={<AddCircleRoundedIcon />}
-                className={styles.actionButton}
-                onClick={() => {
-                  setOpenCreateMatchForm(true);
-                }}
-              >
-                Create a New Match
-              </Button>
+            <Grid container className={styles.buttonArea}>
+              <Grid item xs={6}>
+                <Grid container justifyContent="center">
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    startIcon={<AddCircleRoundedIcon />}
+                    className={styles.actionButton}
+                    onClick={() => {
+                      setOpenCreateMatchForm(true);
+                    }}
+                  >
+                    Create a New Match
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container justifyContent="center">
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    startIcon={<AddCircleRoundedIcon />}
+                    className={styles.actionButton}
+                    onClick={() => {
+                      setOpenCreateSeriesForm(true);
+                    }}
+                  >
+                    Create a New Series
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
           ) : null}
+          {activity.Series?.length ? (
+            activity.Series.map((series) => {
+              return <ScheduleList series={series} activityID={activityID} />;
+            })
+          ) : (
+            <Typography variant="body1" paragraph>
+              No series scheduled yet!
+            </Typography>
+          )}
         </CardContent>
       </Card>
     );
     // CARD - teams
+    debugger;
     let teamsCard = (
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
+          {participant?.IsAdmin ? (
+            <Grid container className={styles.buttonArea}>
+              <Grid item xs={12}>
+                <Grid container justifyContent="center">
+                  {canCreateTeam ? (
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      startIcon={<AddCircleRoundedIcon />}
+                      className={styles.actionButton}
+                      onClick={() => {
+                        setOpenTeamForm(true);
+                      }}
+                    >
+                      Create a New Team
+                    </Button>
+                  ) : null}
+                </Grid>
+              </Grid>
+            </Grid>
+          ) : null}
           {activity.Team?.length ? (
             <TeamList teams={activity.Team} />
           ) : (
@@ -184,54 +233,10 @@ const Activity = () => {
               Be the first to create a team!
             </Typography>
           )}
-          <Grid container justifyContent="center">
-            {canCreateTeam ? (
-              <Button
-                variant="contained"
-                color="warning"
-                startIcon={<AddCircleRoundedIcon />}
-                className={styles.actionButton}
-                onClick={() => {
-                  setOpenTeamForm(true);
-                }}
-              >
-                Create a New Team
-              </Button>
-            ) : null}
-          </Grid>
         </CardContent>
       </Card>
     );
-    // CARD - series
-    let seriesCard = (
-      <Card>
-        <CardHeader title="Series" className={styles.cardHeader} />
-        <CardContent>
-          {activity.Series?.length ? (
-            <SeriesList series={activity.Series} />
-          ) : (
-            <Typography variant="body1" paragraph>
-              No series scheduled yet!
-            </Typography>
-          )}
-          <Grid container justifyContent="center">
-            {participant?.IsAdmin ? (
-              <Button
-                variant="contained"
-                color="warning"
-                startIcon={<AddCircleRoundedIcon />}
-                className={styles.actionButton}
-                onClick={() => {
-                  setOpenCreateSeriesForm(true);
-                }}
-              >
-                Create a New Series
-              </Button>
-            ) : null}
-          </Grid>
-        </CardContent>
-      </Card>
-    );
+
     return (
       <Grid container spacing={2} direction="column" wrap="nowrap">
         <Grid item alignItems="center" xs={12}>
@@ -241,9 +246,10 @@ const Activity = () => {
           <Grid item xs={12} md={6}>
             {scheduleCard}
           </Grid>
-          <Grid item container direction="column" xs={12} md={6} spacing={2} wrap="nowrap">
-            <Grid item>{seriesCard}</Grid>
-            <Grid item>{teamsCard}</Grid>
+          <Grid item direction={'column'} xs={12} md={6}>
+            <Grid item className={styles.gridItemStack}>
+              {teamsCard}
+            </Grid>
           </Grid>
         </Grid>
         {openTeamForm ? (
@@ -291,6 +297,57 @@ const Activity = () => {
       </Grid>
     );
   }
+};
+
+const ScheduleList = ({ series, activityID }) => {
+  let startDate = DateTime.fromISO(series.StartDate);
+  let endDate = DateTime.fromISO(series.EndDate);
+
+  const status = () => {
+    let now = DateTime.fromMillis(Date.now());
+    // future series
+    if (now < startDate)
+      return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
+    // past series
+    else if (now > endDate)
+      return <Chip icon={<RestoreIcon />} label="completed" color="success" size="small"></Chip>;
+    // current series
+    return <Chip icon={<ScheduleIcon />} label="ongoing" color="warning" size="small"></Chip>;
+  };
+
+  return (
+    <>
+      <Grid container className={styles.seriesHeader} alignItems="center" columnSpacing={2}>
+        <Grid item container direction="column" xs={12} sm={6}>
+          <Typography variant="h6" className={styles.seriesMainText}>
+            {series.Name}
+          </Typography>
+          <Typography className={styles.seriesSecondaryText}>
+            Schedule Type: {series.Type}
+          </Typography>
+        </Grid>
+        <Grid item container xs={12} sm={3}>
+          <Grid item xs={10}>
+            <Typography>
+              <i>
+                {standardDate(startDate, false)} - {standardDate(endDate, false)}
+              </i>
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid container item xs={12} sm={3} justifyContent="center">
+          {status()}
+        </Grid>
+      </Grid>
+      {series.Match.length ? (
+        <MatchList matches={series.Match} activityID={activityID} />
+      ) : (
+        <Typography variant="body1" paragraph>
+          Games have not yet been scheduled for this series.
+        </Typography>
+      )}
+    </>
+  );
 };
 
 export default Activity;

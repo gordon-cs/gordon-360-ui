@@ -45,6 +45,21 @@ const InformationField = ({
         />
       );
       break;
+    case 'number':
+      field = (
+        <TextField
+          variant="filled"
+          error={error}
+          className={`disable_select ${styles.field}`}
+          label={label}
+          name={name}
+          helperText={error ? helperText : null}
+          value={value}
+          onChange={(event) => onChange(event)}
+          type="number"
+        />
+      );
+      break;
     case 'checkbox':
       field = (
         <FormControlLabel

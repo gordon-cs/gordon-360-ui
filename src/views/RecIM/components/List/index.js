@@ -1,11 +1,5 @@
 import { List, Typography } from '@mui/material';
-import {
-  ActivityListing,
-  MatchListing,
-  ParticipantListing,
-  TeamListing,
-  SeriesListing,
-} from './Listing';
+import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
 
 const ActivityList = ({ activities }) => {
   if (!activities?.length) return <Typography>No activities to show.</Typography>;
@@ -44,10 +38,4 @@ const TeamList = ({ teams }) => {
   return <List dense>{content}</List>;
 };
 
-const SeriesList = ({ series }) => {
-  if (!series?.length) return <Typography>No series to show.</Typography>;
-  let content = series.map((series) => <SeriesListing key={series.ID} series={series} />);
-  return <List dense>{content}</List>;
-};
-
-export { ActivityList, ParticipantList, MatchList, TeamList, SeriesList };
+export { ActivityList, ParticipantList, MatchList, TeamList };
