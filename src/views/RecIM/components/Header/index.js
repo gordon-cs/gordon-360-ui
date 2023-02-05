@@ -49,7 +49,7 @@ const Header = ({ page, expandable = false }) => {
       setCurrentDisplay(temp);
     };
     loadCurrent();
-  }, [activityID, teamID, matchID]);
+  }, [activityID, teamID, matchID, reset]);
 
   //checks if the team is modifiable by the current user
   useEffect(() => {
