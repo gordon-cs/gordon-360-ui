@@ -9,17 +9,28 @@ const ActivityList = ({ activities }) => {
   return <List dense>{content}</List>;
 };
 
-const ParticipantList = ({ participants, minimal, showParticipantOptions, callbackFunction }) => {
+const ParticipantList = ({
+  participants,
+  minimal,
+  showParticipantOptions,
+  showInactive,
+  callbackFunction,
+}) => {
   if (!participants?.length) return <Typography>No participants to show.</Typography>;
-  let content = participants.map((participant) => (
-    <ParticipantListing
-      key={participant.username}
-      participant={participant}
-      minimal={minimal}
-      callbackFunction={callbackFunction}
-      showParticipantOptions={showParticipantOptions}
-    />
-  ));
+  let content = participants.map((participant) => {
+    if (!showInactive && participant.Role === "Inactive") {
+      return null;
+    }
+    return (
+      <ParticipantListing
+        key={participant.username}
+        participant={participant}
+        minimal={minimal}
+        callbackFunction={callbackFunction}
+        showParticipantOptions={showParticipantOptions}
+      />
+    );
+  });
   return <List dense>{content}</List>;
 };
 
