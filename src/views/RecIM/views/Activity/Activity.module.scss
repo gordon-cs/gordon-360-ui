@@ -15,7 +15,7 @@
 }
 
 .buttonArea {
-  background-color: $neutral-gray3;// $neutral-gray2;
+  background-color: $neutral-gray3;
   padding: 16px;
   margin-bottom: 0.2em;
   border-bottom-left-radius: 0.5em;
@@ -54,17 +54,21 @@
   color: $neutral-gray;
 }
 
-.seriesContainer {
-  background-color: $primary-blue;
-  border-radius: 0.5em;
-  margin-top: 1em;
+.seriesHeader {
+  color: $neutral-white;
+  background-color: $neutral-dark-gray3;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  margin-left: 0;
+  padding: 0.5rem;
 }
 
 .seriesMainText {
-  color: $neutral-white;
+  font-weight: bold;
 }
 
 .seriesSecondaryText {
-  color: $neutral-gray;
+  color: $neutral-light-gray;
   font-size: 0.7em;
 }

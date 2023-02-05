@@ -313,27 +313,22 @@ const ScheduleList = ({ series, activityID }) => {
 
   return (
     <>
-      <Grid
-        container
-        className={styles.seriesContainer}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Grid container direction="column" justifyContent="center" item xs={12} sm={3}>
-          <Typography className={styles.seriesMainText}>{series.Name}</Typography>
+      <Grid container className={styles.seriesHeader} alignItems="center" columnSpacing={2}>
+        <Grid item container direction="column" xs={12} sm={6}>
+          <Typography variant="h6" className={styles.seriesMainText}>
+            {series.Name}
+          </Typography>
           <Typography className={styles.seriesSecondaryText}>
             Schedule Type: {series.Type}
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={3}>
-          <Grid container direction="row" justifyContent="center">
-            <Grid item xs={10}>
-              <Typography className={styles.seriesMainText}>
-                <i>
-                  {standardDate(startDate, false)} - {standardDate(endDate, false)}
-                </i>
-              </Typography>
-            </Grid>
+        <Grid item container xs={12} sm={3}>
+          <Grid item xs={10}>
+            <Typography>
+              <i>
+                {standardDate(startDate, false)} - {standardDate(endDate, false)}
+              </i>
+            </Typography>
           </Grid>
         </Grid>
         <Grid container item xs={12} sm={3} justifyContent="center">
