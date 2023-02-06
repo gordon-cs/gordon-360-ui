@@ -97,6 +97,8 @@ Sometimes, you would like to connect the frontend on your local computer to the 
    [Ubuntu Installation](ubuntu.com/server/docs/service-openssh)
 
    MacOS & other Linux distributions should already have an SSH server installed.
+   
+   On MacOS, you may have to enable the SSH server in System Preferences. Follow [these instructions](https://osxdaily.com/2022/07/08/turn-on-ssh-mac/) to do so.
 
 2. Create the SSH tunnel
 
