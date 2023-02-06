@@ -1,5 +1,5 @@
 import { Grid, AppBar, Breadcrumbs, Typography, IconButton } from '@mui/material';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { Link as LinkRouter } from 'react-router-dom';
 import { DateTime } from 'luxon';
@@ -17,23 +17,17 @@ import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 
 const Header = ({ page, expandable = false }) => {
-  window.onscroll = function () {
-    console.log('scroll');
-  };
   const { profile } = useUser();
   const { activityID, teamID, matchID } = useParams();
   const [user, setUser] = useState();
+  const [activity, setActivity] = useState();
+  const [team, setTeam] = useState();
+  const [match, setMatch] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [isCaptain, setIsCaptain] = useState(false);
-  const reset = useMemo(() => {
-    return {
-      activity: null,
-      team: null,
-      match: null,
-    };
-  }, []);
-  const [currentDisplay, setCurrentDisplay] = useState(reset);
+  const [team0Score, setTeam0Score] = useState(0);
+  const [team1Score, setTeam1Score] = useState(0);
 
   useEffect(() => {
     const loadData = async () => {
@@ -45,27 +39,49 @@ const Header = ({ page, expandable = false }) => {
   }, [profile]);
 
   useEffect(() => {
-    setCurrentDisplay(reset);
-    const loadCurrent = async () => {
-      var temp = reset;
-      if (activityID) temp = { ...temp, activity: await getActivityByID(activityID) };
-      if (teamID) temp = { ...temp, team: await getTeamByID(teamID) };
-      if (matchID) temp = { ...temp, match: await getMatchByID(matchID) };
-      setCurrentDisplay(temp);
+    const loadData = async () => {
+      activityID ? setActivity(await getActivityByID(activityID)) : setActivity();
     };
-    loadCurrent();
-  }, [activityID, teamID, matchID, reset]);
+    loadData();
+  }, [activityID]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      teamID ? setTeam(await getTeamByID(teamID)) : setTeam();
+    };
+    loadData();
+  }, [teamID]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      matchID ? setMatch(await getMatchByID(matchID)) : setMatch();
+    };
+    loadData();
+  }, [matchID]);
 
   //checks if the team is modifiable by the current user
   useEffect(() => {
-    if (user && currentDisplay.team) {
+    if (user && team) {
       let role =
-        currentDisplay.team.Participant.find(
-          (teamParticipant) => teamParticipant.Username === user.Username,
-        )?.Role ?? 'Invalid';
+        team.Participant.find((teamParticipant) => teamParticipant.Username === user.Username)
+          ?.Role ?? 'Invalid';
       setIsCaptain(role === 'Co-Captain' || role === 'Team-captain/Creator');
     }
-  }, [currentDisplay.team, user]);
+  }, [team, user]);
+
+  useEffect(() => {
+    if (match) {
+      const assignMatchScores = async () => {
+        setTeam0Score(
+          match.Scores.find((team) => team.TeamID === match.Team[0]?.ID)?.TeamScore ?? 0,
+        );
+        setTeam1Score(
+          match.Scores.find((team) => team.TeamID === match.Team[1]?.ID)?.TeamScore ?? 0,
+        );
+      };
+      assignMatchScores();
+    }
+  }, [match]);
 
   const handleActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
@@ -77,7 +93,7 @@ const Header = ({ page, expandable = false }) => {
     setOpenTeamForm(false);
   };
 
-  const teamRecord = (team) => {
+  const teamRecord = () => {
     if (team) {
       if (team.TeamRecord[0]) {
         return (
@@ -122,14 +138,14 @@ const Header = ({ page, expandable = false }) => {
       );
     }
     if (expandable === 'activity') {
-      return currentDisplay.activity ? (
+      return (
         <Grid container direction="row" alignItems="center" columnSpacing={4}>
           <Grid item>
             <img src={''} alt="Activity Icon" width="85em"></img>
           </Grid>
           <Grid item xs={8} md={5}>
             <Typography variant="h5" className={styles.title}>
-              {currentDisplay.activity?.Name}
+              {activity?.Name}
               {user?.IsAdmin ? (
                 <IconButton>
                   <EditIcon
@@ -146,7 +162,7 @@ const Header = ({ page, expandable = false }) => {
           </Grid>
           {openActivityForm && (
             <ActivityForm
-              activity={currentDisplay.activity}
+              activity={activity}
               closeWithSnackbar={(status) => {
                 handleActivityForm(status);
               }}
@@ -155,21 +171,18 @@ const Header = ({ page, expandable = false }) => {
             />
           )}
         </Grid>
-      ) : (
-        <GordonLoader />
       );
     }
     if (expandable === 'team') {
-      return currentDisplay.team ? (
+      return (
         <Grid container direction="row" alignItems="center" columnSpacing={4}>
           <Grid item>
             <img src={''} alt="Team Icon" width="85em"></img>
           </Grid>
           <Grid item xs={8} md={5}>
             <Typography variant="h5" className={styles.title}>
-              {currentDisplay.team?.Name ?? <GordonLoader size={15} inline />}
-              {(user?.IsAdmin ||
-                (isCaptain && currentDisplay.team?.Activity?.RegistrationOpen)) && (
+              {team?.Name ?? <GordonLoader size={15} inline />}
+              {(user?.IsAdmin || (isCaptain && team?.Activity?.RegistrationOpen)) && (
                 <IconButton>
                   <EditIcon
                     onClick={() => {
@@ -179,7 +192,7 @@ const Header = ({ page, expandable = false }) => {
                 </IconButton>
               )}
             </Typography>
-            {teamRecord(currentDisplay.team)}
+            {teamRecord()}
           </Grid>
           {openTeamForm && (
             <TeamForm
@@ -188,69 +201,60 @@ const Header = ({ page, expandable = false }) => {
               }}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-              activityID={currentDisplay.team?.Activity?.ID}
-              team={currentDisplay.team}
+              activityID={team?.Activity?.ID}
+              team={team}
               isAdmin={user.IsAdmin}
             />
           )}
         </Grid>
-      ) : (
-        <GordonLoader />
       );
     }
-    // if (expandable === 'match') {
-    //   return currentDisplay.match ? (
-    //     <>
-    //       <Grid container justifyContent="space-between" marginBottom="10px">
-    //         <Grid item className={styles.grayText}>
-    //           {currentDisplay.match?.Activity.Name}
-    //         </Grid>
-    //         <Grid item className={styles.grayText}>
-    //           {dayMonthDate(DateTime.fromISO(currentDisplay.match?.Time))}
-    //         </Grid>
-    //       </Grid>
-    //       <Grid container alignItems="center" justifyContent="space-around">
-    //         <Grid item xs={2}>
-    //           <LinkRouter
-    //             to={`/recim/activity/${currentDisplay.match?.Activity.ID}/team/${currentDisplay.match?.Team[0]?.ID}`}
-    //           >
-    //             <Typography variant="h5" className="gc360_text_link">
-    //               {currentDisplay.match?.Team[0]?.Name ?? 'No team yet...'}
-    //             </Typography>
-    //           </LinkRouter>
-    //           <i className={styles.grayText}>Sportsmanship</i>
-    //         </Grid>
-    //         <Grid item xs={2}>
-    //           <img src={''} alt="Team Icon" width="85em"></img>
-    //         </Grid>
-    //         <Grid item container xs={4} sm={2} alignItems="center" direction="column">
-    //           <Typography variant="body" className={styles.grayText}>
-    //             <i>Match Score</i>
-    //           </Typography>
-    //           <Typography variant="h5">
-    //             {currentDisplay.match?.Scores[0].TeamScore} :{' '}
-    //             {currentDisplay.match?.Scores[1].TeamScore}
-    //           </Typography>
-    //         </Grid>
-    //         <Grid item xs={2}>
-    //           <img src={''} alt="Team Icon" width="85em"></img>
-    //         </Grid>
-    //         <Grid item xs={2}>
-    //           <LinkRouter
-    //             to={`/recim/activity/${currentDisplay.match?.Activity.ID}/team/${currentDisplay.match?.Team[1]?.ID}`}
-    //           >
-    //             <Typography variant="h5" className="gc360_text_link">
-    //               {currentDisplay.match?.Team[1]?.Name ?? 'No team yet...'}
-    //             </Typography>
-    //           </LinkRouter>
-    //           <i className={styles.grayText}>Sportsmanship</i>
-    //         </Grid>
-    //       </Grid>
-    //     </>
-    //   ) : (
-    //     <GordonLoader />
-    //   );
-    // }
+    if (expandable === 'match') {
+      return (
+        <>
+          <Grid container justifyContent="space-between" marginBottom="10px">
+            <Grid item className={styles.grayText}>
+              {match?.Activity.Name}
+            </Grid>
+            <Grid item className={styles.grayText}>
+              {dayMonthDate(DateTime.fromISO(match?.Time))}
+            </Grid>
+          </Grid>
+          <Grid container alignItems="center" justifyContent="space-around">
+            <Grid item xs={2}>
+              <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
+                <Typography variant="h5" className="gc360_text_link">
+                  {match?.Team[0]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
+              <i className={styles.grayText}>Sportsmanship</i>
+            </Grid>
+            <Grid item xs={2}>
+              <img src={''} alt="Team Icon" width="85em"></img>
+            </Grid>
+            <Grid item container xs={4} sm={2} alignItems="center" direction="column">
+              <Typography variant="body" className={styles.grayText}>
+                <i>Match Score</i>
+              </Typography>
+              <Typography variant="h5">
+                {team0Score} : {team1Score}
+              </Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <img src={''} alt="Team Icon" width="85em"></img>
+            </Grid>
+            <Grid item xs={2}>
+              <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
+                <Typography variant="h5" className="gc360_text_link">
+                  {match?.Team[1]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
+              <i className={styles.grayText}>Sportsmanship</i>
+            </Grid>
+          </Grid>
+        </>
+      );
+    }
     return null;
   };
 
@@ -260,7 +264,7 @@ const Header = ({ page, expandable = false }) => {
       <AppBar className={styles.stickyNav} sx={!expandable && { mt: '-1rem' }}>
         <Breadcrumbs aria-label="breadcrumb">
           {/* Home breadcrumb: link or text */}
-          {currentDisplay.activity || page === 'admin' ? (
+          {activity || page === 'admin' ? (
             <LinkRouter className="gc360_text_link" underline="hover" color="inherit" to={'/recim'}>
               <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
               Rec-IM Home
@@ -274,44 +278,26 @@ const Header = ({ page, expandable = false }) => {
           {/* Admin breadcrumb: text */}
           {page === 'admin' && <Typography color="text.primary">Admin</Typography>}
           {/* Activity breadcrumb: link or text */}
-          {currentDisplay.activity &&
-            (currentDisplay.match || currentDisplay.team ? (
+          {activity &&
+            (match || team ? (
               <LinkRouter
                 className="gc360_text_link"
                 underline="hover"
                 color="inherit"
-                to={`/recim/activity/${currentDisplay.activity?.ID}`}
+                to={`/recim/activity/${activity.ID}`}
               >
-                {currentDisplay.activity?.Name}
+                {activity.Name}
               </LinkRouter>
             ) : (
-              <Typography color="text.primary">{currentDisplay.activity?.Name}</Typography>
+              <Typography color="text.primary">{activity.Name}</Typography>
             ))}
           {/* Team breadcrumb: text */}
-          {currentDisplay.team && (
-            <Typography color="text.primary">{currentDisplay.team?.Name}</Typography>
-          )}
+          {team && <Typography color="text.primary">{team.Name}</Typography>}
           {/* Match breadcrumb: text */}
-          {currentDisplay.match && (
+          {matchID && (
             <Typography color="text.primary">
-              Match:{' '}
-              <LinkRouter
-                className="gc360_text_link"
-                underline="hover"
-                color="inherit"
-                to={`/recim/activity/${currentDisplay.activity?.ID}/team/${currentDisplay.match?.Team[0]?.ID}`}
-              >
-                {currentDisplay.match?.Team[0]?.Name ?? <GordonLoader size={15} inline />}
-              </LinkRouter>{' '}
-              vs{' '}
-              <LinkRouter
-                className="gc360_text_link"
-                underline="hover"
-                color="inherit"
-                to={`/recim/activity/${currentDisplay.activity?.ID}/team/${currentDisplay.match?.Team[1]?.ID}`}
-              >
-                {currentDisplay.match?.Team[1]?.Name ?? <GordonLoader size={15} inline />}
-              </LinkRouter>
+              Match: {match?.Team[0]?.Name ?? <GordonLoader size={15} inline />} vs{' '}
+              {match?.Team[1]?.Name ?? <GordonLoader size={15} inline />}
             </Typography>
           )}
         </Breadcrumbs>
