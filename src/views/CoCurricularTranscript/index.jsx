@@ -48,34 +48,45 @@ const CoCurricularTranscript = () => {
     return <GordonUnauthorized feature={'your experience transcript'} />;
   }
 
+  const majors = [
+    profile.Major1Description,
+    profile.Major2Description,
+    profile.Major3Description,
+  ].filter(Boolean);
+  const minors = [
+    profile.Minor1Description,
+    profile.Minor2Description,
+    profile.Minor3Description,
+  ].filter(Boolean);
+
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={10} xl={8}>
         <Card elevation={10}>
           <CardHeader
             title={
-              <Typography component="h1" variant="h5">
+              <Typography component="h1" variant="h4">
                 Gordon College Experience Transcript
               </Typography>
             }
             subheader={
               <>
-                <Typography component="p" variant="subtitle1">
+                <Typography component="p" variant="h6">
                   {profile.fullName}
                 </Typography>
                 {profile.GradDate && (
-                  <Typography component="p" variant="subtitle1">
+                  <Typography component="p" variant="h6">
                     Class of {transcriptService.getGradCohort(profile.GradDate)}
                   </Typography>
                 )}
-                {profile.Majors && (
-                  <Typography component="p" variant="subtitle1">
-                    Major{profile.Majors.length > 1 ? 's' : ''}: {profile.Majors.join(', ')}
+                {majors.length > 0 && (
+                  <Typography component="p" variant="h6">
+                    Major{majors.length > 1 ? 's' : ''}: {majors.join(', ')}
                   </Typography>
                 )}
-                {profile.Minors && (
-                  <Typography component="p" variant="subtitle1">
-                    Minor{profile.Minors.length > 1 ? 's' : ''}: {profile.Minors.join(', ')}
+                {minors.length > 0 && (
+                  <Typography component="p" variant="h6">
+                    Minor{minors.length > 1 ? 's' : ''}: {minors.join(', ')}
                   </Typography>
                 )}
               </>
