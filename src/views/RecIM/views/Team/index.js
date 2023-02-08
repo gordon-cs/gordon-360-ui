@@ -74,7 +74,7 @@ const Team = () => {
     //if you want to do something with the message make a snackbar function here
     setOpenTeamForm(false);
   };
-
+  // Team record needs to be variable based on what series is ongoing / which one they're in (TODO)
   const teamRecord = () => {
     if (team) {
       if (team.TeamRecord[0]) {
@@ -153,7 +153,7 @@ const Team = () => {
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
           {hasPermissions ? (
-            <ParticipantList participants={team.Participant} showParticipantOptions />
+            <ParticipantList participants={team.Participant} showParticipantOptions showInactive />
           ) : (
             <ParticipantList participants={team.Participant} />
           )}
