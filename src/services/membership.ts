@@ -1,6 +1,4 @@
 import http from './http';
-import sessionService from './session';
-import { compareByProperty, filter, sort } from './utils';
 
 export type MembershipView = {
   AccountPrivate: Privacy | null;
@@ -65,12 +63,24 @@ const get = async (
 const addMembership = (data: MembershipUpload): Promise<MembershipView> =>
   http.post('memberships', data);
 
+const editMembership = (membershipID: string, data: MembershipUpload): Promise<MembershipView> =>
+  http.put(`memberships/${membershipID}`, data);
+
+const setMembershipPrivacy = (membershipID: number, isPrivate: boolean): Promise<MembershipView> =>
+  http.put(`memberships/${membershipID}/privacy`, isPrivate);
+
+const remove = (membershipID: string): Promise<MembershipView> =>
+  http.del(`memberships/${membershipID}`);
+
 const checkAdmin = async (
   username: string,
   sessionCode: string,
   activityCode: string,
 ): Promise<boolean> => {
-  const admins = await getGroupAdmins(activityCode, sessionCode);
+  const admins = await get(activityCode, {
+    sessionCode,
+    participationTypes: [Participation.GroupAdmin],
+  });
   return admins.some((a) => a.Username === username);
 };
 
@@ -159,7 +169,6 @@ const membershipService = {
   checkAdmin,
   editMembership,
   get,
-  getGroupAdmins,
   getFollowersNum,
   getMembersNum,
   remove,

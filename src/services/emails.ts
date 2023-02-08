@@ -1,7 +1,7 @@
 import http from './http';
 import { Participation } from './membership';
 
-type Person = {
+export type Person = {
   FirstName: string;
   LastName: string;
   Email: string;
