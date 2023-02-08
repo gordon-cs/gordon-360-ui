@@ -1,4 +1,5 @@
 import http from './http';
+import { Participation } from './membership';
 
 type Person = {
   FirstName: string;
@@ -7,12 +8,10 @@ type Person = {
   Description: string;
 };
 
-type ParticipationType = 'advisor' | 'leader' | 'group-admin' | 'member' | 'guest';
-
 const getPerActivity = (
   activityCode: string,
   sessionCode: string = '',
-  participation?: ParticipationType,
+  participation?: Participation,
 ): Promise<Person[]> => {
   let url = `emails/activity/${activityCode}`;
   if (sessionCode && participation) {

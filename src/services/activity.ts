@@ -1,5 +1,6 @@
 import emailsService from './emails';
 import http from './http';
+import { Participation } from './membership';
 import { compareByProperty, sort } from './utils';
 
 type Activity = {
@@ -44,10 +45,10 @@ const getAll = (sessionCode: string) =>
     .then(sort(compareByProperty('ActivityDescription')));
 
 const getAdvisors = (activityCode: string, sessionCode: string): Promise<Person[]> =>
-  emailsService.getPerActivity(activityCode, sessionCode, 'advisor');
+  emailsService.getPerActivity(activityCode, sessionCode, Participation.Advisor);
 
 const getGroupAdmins = (activityCode: string, sessionCode: string): Promise<Person[]> =>
-  emailsService.getPerActivity(activityCode, sessionCode, 'group-admin');
+  emailsService.getPerActivity(activityCode, sessionCode, Participation.GroupAdmin);
 
 const getStatus = (activityCode: string, sessionCode: string): Promise<'OPEN' | 'CLOSED'> =>
   http.get(`activities/${sessionCode}/${activityCode}/status`);

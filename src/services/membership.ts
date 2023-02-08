@@ -34,6 +34,11 @@ export enum Participation {
   Leader = 'LEAD',
   Advisor = 'ADV',
   Guest = 'GUEST',
+  /**
+   * Group Admin is not strictly a participation type. It's a separate flag that Leaders and Advisors
+   * can have. However, it is convenient to treat it as a type of Participation in many cases.
+   */
+  GroupAdmin = 'GRP_ADMIN',
 }
 
 export type ParticipationDesc = keyof typeof Participation;
