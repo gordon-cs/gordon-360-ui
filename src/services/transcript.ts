@@ -12,7 +12,6 @@ type MembershipHistory = {
   // TODO: Get ActivityType from DB for categorization
   // activityType: string;
   activityDescription: string;
-  activityImage: string;
   activityImagePath: string;
   sessions: string[];
   leaderSessions: string[];
@@ -120,7 +119,6 @@ const groupByCode = (memberships: MembershipView[]) => {
     membershipHistories.push({
       activityCode: membership.ActivityCode,
       activityDescription: membership.ActivityDescription,
-      activityImage: membership.ActivityImage,
       activityImagePath: membership.ActivityImagePath,
       sessions,
       leaderSessions,

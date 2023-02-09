@@ -5,7 +5,6 @@ export type MembershipView = {
   AccountPrivate: Privacy | null;
   ActivityCode: string;
   ActivityDescription: string;
-  ActivityImage: string;
   ActivityImagePath: string;
   Description: string;
   EndDate: string;
