@@ -11,6 +11,7 @@ import { getTeamByID } from 'services/recim/team';
 import { getMatchByID } from 'services/recim/match';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
+import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 import GordonLoader from 'components/Loader';
 import recimLogo from './../../recim_logo.png';
 import HomeIcon from '@mui/icons-material/Home';
@@ -28,6 +29,8 @@ const Header = ({ page, expandable = false }) => {
   const [isCaptain, setIsCaptain] = useState(false);
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
+  const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
+  const [selectedScores, setSelectedScores] = useState();
 
   useEffect(() => {
     const loadData = async () => {
@@ -93,6 +96,10 @@ const Header = ({ page, expandable = false }) => {
     setOpenTeamForm(false);
   };
 
+  const handleEditMatchStatsForm = (status) => {
+    setOpenEditMatchStatsForm(false);
+  };
+
   const teamRecord = () => {
     if (team) {
       if (team.TeamRecord[0]) {
@@ -109,8 +116,8 @@ const Header = ({ page, expandable = false }) => {
 
   const dayMonthDate = (date) => {
     return (
-      date.weekdayLong +
-      ', ' +
+      date.weekdayShort +
+      ' ' +
       date.monthLong +
       ' ' +
       date.day +
@@ -212,12 +219,14 @@ const Header = ({ page, expandable = false }) => {
     if (expandable === 'match') {
       return (
         <>
-          <Grid container justifyContent="space-between" marginBottom="10px">
-            <Grid item className={styles.grayText}>
-              {match?.Activity.Name}
+          <Grid container justifyContent="center" spacing={4}>
+            <Grid item>
+              <Typography className={styles.subtitle}>{match?.Activity.Name}</Typography>
             </Grid>
-            <Grid item className={styles.grayText}>
-              {dayMonthDate(DateTime.fromISO(match?.Time))}
+            <Grid item>
+              <Typography className={styles.subtitle}>
+                {dayMonthDate(DateTime.fromISO(match?.Time))}
+              </Typography>
             </Grid>
           </Grid>
           <Grid container alignItems="center" justifyContent="space-around">
@@ -227,18 +236,45 @@ const Header = ({ page, expandable = false }) => {
                   {match?.Team[0]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
-              <i className={styles.grayText}>Sportsmanship</i>
+              {user?.IsAdmin ? (
+                <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
+              ) : null}
             </Grid>
             <Grid item xs={2}>
               <img src={''} alt="Team Icon" width="85em"></img>
             </Grid>
             <Grid item container xs={4} sm={2} alignItems="center" direction="column">
-              <Typography variant="body" className={styles.grayText}>
-                <i>Match Score</i>
-              </Typography>
               <Typography variant="h5">
                 {team0Score} : {team1Score}
               </Typography>
+              {user?.IsAdmin ? (
+                <Grid item>
+                  <Grid container columnSpacing={2} justifyItems="center">
+                    <Grid item>
+                      <IconButton
+                        onClick={() => {
+                          setSelectedScores(match?.Scores[0]);
+                          setOpenEditMatchStatsForm(true);
+                        }}
+                        className={styles.editIconButton}
+                      >
+                        <EditIcon className={styles.editIconColor} />
+                      </IconButton>
+                    </Grid>
+                    <Grid item>
+                      <IconButton
+                        onClick={() => {
+                          setSelectedScores(match?.Scores[1]);
+                          setOpenEditMatchStatsForm(true);
+                        }}
+                        className={styles.editIconButton}
+                      >
+                        <EditIcon className={styles.editIconColor} />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              ) : null}
             </Grid>
             <Grid item xs={2}>
               <img src={''} alt="Team Icon" width="85em"></img>
@@ -249,9 +285,22 @@ const Header = ({ page, expandable = false }) => {
                   {match?.Team[1]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
-              <i className={styles.grayText}>Sportsmanship</i>
+              {user?.IsAdmin ? (
+                <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
+              ) : null}
             </Grid>
           </Grid>
+          {openEditMatchStatsForm ? (
+            <EditMatchStatsForm
+              matchID={matchID}
+              teamMatchHistory={selectedScores}
+              closeWithSnackbar={(status) => {
+                handleEditMatchStatsForm(status);
+              }}
+              openEditMatchStatsForm={openEditMatchStatsForm}
+              setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+            />
+          ) : null}
         </>
       );
     }
