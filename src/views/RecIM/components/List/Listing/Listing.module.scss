@@ -4,6 +4,7 @@
   background-color: $neutral-light-gray;
   padding: 1em;
   border-radius: 0.5em;
+  align-items: center;
 }
 
 .listing:hover {
@@ -40,6 +41,11 @@
   font-size: 1.1em;
 }
 
+.listingSubtitle {
+  color: $neutral-gray;
+  font-size: 0.8em;
+}
+
 .activityType_league {
   background-color: #edb1ad;
 }
@@ -50,4 +56,10 @@
 
 .activityType_oneoff {
   background-color: #ffd040;
+}
+
+@media (min-width: $break-sm) {
+  .rightAlignLarge {
+    text-align: right;
+  }
 }

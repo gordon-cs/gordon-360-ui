@@ -8,4 +8,4 @@ const standardDate = (date, includeTime) => {
   return formattedDate;
 };
 
-export { standardDate }
+export { standardDate };

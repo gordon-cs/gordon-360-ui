@@ -105,7 +105,7 @@ const EditMatchStatsForm = ({
       switch (field) {
         case 'Sportsmanship':
           hasError = hasError || newInfo[field] > 5;
-          //fall through
+        //fall through
         case 'Score':
           hasError = !/^[0-9]+$/.test(newInfo[field]);
           break;

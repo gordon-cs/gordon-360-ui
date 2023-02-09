@@ -72,72 +72,89 @@ const ActivityListing = ({ activity }) => {
     },
   ];
 
+  if (!activity) return null;
   return (
-    <ListItemButton component={Link} to={`/recim/activity/${activity.ID}`} className="gc360_link">
-      <Grid container className={styles.listing} columnSpacing={2} alignItems="center">
-        <Grid item container direction="column" xs={12} sm={4} spacing={1}>
-          <Grid item>
-            <Typography className={styles.listingTitle}>{activity.Name}</Typography>
-          </Grid>
-          <Grid item>
-            <Chip
-              icon={activityTypeIconPair.find((type) => type.type === activityType)?.icon}
-              label={activityType}
-              color={'success'}
-              className={styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]}
-              size="small"
-            ></Chip>
-          </Grid>
-        </Grid>
-        <Grid item container xs={12} sm={7} direction="column" spacing={1}>
-          <Grid item>
-            <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-              ActivityStart - ActivityEnd
-            </Typography>
-          </Grid>
-          <Grid item container columnSpacing={2}>
+    <ListItem key={activity.ID}>
+      <ListItemButton
+        component={Link}
+        to={`/recim/activity/${activity.ID}`}
+        className={styles.listing}
+      >
+        <Grid container columnSpacing={2} alignItems="center">
+          <Grid item container direction="column" xs={12} sm={4} spacing={1}>
+            <Grid item>
+              <Typography className={styles.listingTitle}>{activity.Name}</Typography>
+            </Grid>
             <Grid item>
               <Chip
-                icon={<EventAvailableIcon />}
-                label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
-                color={activity.RegistrationOpen ? 'success' : 'info'}
+                icon={activityTypeIconPair.find((type) => type.type === activityType)?.icon}
+                label={activityType}
+                color={'success'}
+                className={
+                  styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]
+                }
                 size="small"
               ></Chip>
             </Grid>
+          </Grid>
+          <Grid item container xs={12} sm={7} direction="column" spacing={1}>
             <Grid item>
-              <Typography>
-                {activity.RegistrationOpen
-                  ? 'Registration closes ' + standardDate(registrationEnd)
-                  : activeSeriesMessage}
+              <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
+                ActivityStart - ActivityEnd
               </Typography>
             </Grid>
+            <Grid item container columnSpacing={2}>
+              <Grid item>
+                <Chip
+                  icon={<EventAvailableIcon />}
+                  label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
+                  color={activity.RegistrationOpen ? 'success' : 'info'}
+                  size="small"
+                ></Chip>
+              </Grid>
+              <Grid item>
+                <Typography>
+                  {activity.RegistrationOpen
+                    ? 'Registration closes ' + standardDate(registrationEnd)
+                    : activeSeriesMessage}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item sm={1}>
+            <Typography variant="subtitle">
+              {currentCapacity}
+              <Typography variant="span" sx={{ p: 0.2 }}>
+                /
+              </Typography>
+              {activity.MaxCapacity}
+            </Typography>
           </Grid>
         </Grid>
-        <Grid item sm={1}>
-          <Typography variant="subtitle">
-            {currentCapacity}
-            <Typography variant="span" sx={{ p: 0.2 }}>
-              /
-            </Typography>
-            {activity.MaxCapacity}
-          </Typography>
-        </Grid>
-      </Grid>
-    </ListItemButton>
+      </ListItemButton>
+    </ListItem>
   );
 };
 
 const TeamListing = ({ team }) => {
+  if (!team) return null;
   return (
-    <ListItemButton
-      component={Link}
-      to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
-      className="gc360_link"
-    >
-      <Grid container className={styles.listing}>
-        <Grid item>{team.Name}</Grid>
-      </Grid>
-    </ListItemButton>
+    <ListItem key={team.ID}>
+      <ListItemButton
+        component={Link}
+        to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
+        className={styles.listing}
+      >
+        <Grid container columnSpacing={2}>
+          <Grid item xs={12} sm={8}>
+            <Typography className={styles.listingTitle}>{team.Name}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
+            <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
+          </Grid>
+        </Grid>
+      </ListItemButton>
+    </ListItem>
   );
 };
 
@@ -148,6 +165,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
   const [name, setName] = useState();
   const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -170,10 +188,6 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     loadUserInfo();
     loadAvatar();
   }, [participant.Username]);
-
-  if (participant === null) {
-    return null;
-  }
 
   const handleParticipantOptions = (event) => {
     setAnchorEl(event.currentTarget);
@@ -198,6 +212,8 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     await editTeamParticipant(parseInt(teamID), editedParticipant);
     handleClose();
   };
+
+  if (!participant) return null;
   return (
     // first ListItem is used only for paddings/margins
     // second ListItem (nested inside) is used to layout avatar and secondaryAction
@@ -248,17 +264,19 @@ const MatchListing = ({ match, activityID }) => {
   }
 
   return (
-    <ListItemButton
-      component={Link}
-      to={`/recim/activity/${activityID}/match/${match.ID}`}
-      className="gc360_link"
-    >
-      <Grid container className={styles.listing}>
-        <Grid item>
-          {match.Team[0]?.Name} vs. {match.Team[1]?.Name}
+    <ListItem key={match.ID}>
+      <ListItemButton
+        component={Link}
+        to={`/recim/activity/${activityID}/match/${match.ID}`}
+        className={styles.listing}
+      >
+        <Grid container>
+          <Grid item>
+            {match.Team[0]?.Name} vs. {match.Team[1]?.Name}
+          </Grid>
         </Grid>
-      </Grid>
-    </ListItemButton>
+      </ListItemButton>
+    </ListItem>
   );
 };
 
