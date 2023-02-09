@@ -9,21 +9,13 @@ type Person = {
 };
 
 const getPerActivity = (
-  activityCode: string,
-  sessionCode: string = '',
-  participation?: Participation,
-): Promise<Person[]> => {
-  let url = `emails/activity/${activityCode}`;
-  if (sessionCode && participation) {
-    url += `?sessionCode=${sessionCode}&participationType=${participation}`;
-  } else if (sessionCode) {
-    url += `?sessionCode=${sessionCode}`;
-  } else if (participation) {
-    url += `?participationType=${participation}`;
-  }
-
-  return http.get(url);
-};
+  involvementCode: string,
+  queryParams: {
+    sessionCode?: string;
+    participationTypes?: Participation[];
+  },
+): Promise<Person[]> =>
+  http.get(`emails/involvement/${involvementCode}${http.toQueryString(queryParams)}`);
 
 const emailsService = {
   getPerActivity,

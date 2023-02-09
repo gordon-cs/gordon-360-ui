@@ -53,6 +53,15 @@ export type MembershipUpload = {
   Privacy: boolean;
 };
 
+const get = async (
+  activityCode: string,
+  queryParams: {
+    sessionCode?: string;
+    participationTypes?: Participation[];
+  },
+): Promise<MembershipView[]> =>
+  http.get(`memberships/activities/${activityCode}${http.toQueryString(queryParams)}`);
+
 const addMembership = (data: MembershipUpload): Promise<MembershipView> =>
   http.post('memberships', data);
 

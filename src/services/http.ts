@@ -132,12 +132,33 @@ const dataURItoBlob = (dataURI: string) => {
   return new Blob([ia], { type: mimeString });
 };
 
+const toQueryString = (
+  queryParams?: Record<string | number | symbol, string | number | boolean | Array<any>>,
+): string => {
+  if (!queryParams) return '';
+
+  const urlSearchParams = new URLSearchParams();
+
+  Object.entries(queryParams).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((value) => urlSearchParams.append(key, value.toString()));
+    } else {
+      urlSearchParams.append(key, value.toString());
+    }
+  });
+
+  const queryString = urlSearchParams.toString();
+
+  return queryString ? `?${queryString}` : '';
+};
+
 const httpUtils = {
   del,
   get,
   post,
   postImage,
   put,
+  toQueryString,
 };
 
 export default httpUtils;
