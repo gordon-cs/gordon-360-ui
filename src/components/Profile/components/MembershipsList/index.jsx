@@ -24,7 +24,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
     async function loadMemberships() {
       setLoading(true);
 
-      const memberships = await membershipService.get({ username });
+      const memberships = await membershipService.get({ username, sessionCode: '*' });
 
       if (myProf) {
         await Promise.all(
