@@ -1,26 +1,29 @@
 import { format } from 'date-fns';
+import { Participation } from 'services/membership';
 import sessionService from 'services/session';
+import { MembershipHistorySession } from 'services/user';
 import styles from './CoCurricularTranscriptActivity.module.css';
 
 type Props = {
   description: string;
-  sessions: string[];
-  leaderSessions: string[];
+  sessions: MembershipHistorySession[];
 };
 
-const Activity = ({ description, sessions, leaderSessions }: Props) => (
-  <div className={styles.experience_transcript_activities}>
-    <div className={styles.organization_role}>{description}</div>
-    <div className={styles.date}> {formatDuration(sessions)} </div>
-    {leaderSessions.length > 0 && (
-      <div className={styles.leadership_line}>
-        <div className={styles.organization_role}>Leader</div>
-        <div className={styles.date}>{formatDuration(leaderSessions)}</div>
-      </div>
-    )}
-  </div>
-);
-
+const Activity = ({ description, sessions }: Props) => {
+  const leaderSessions = sessions.filter((s) => s.Participation === Participation.Leader);
+  return (
+    <div className={styles.experience_transcript_activities}>
+      <div className={styles.organization_role}>{description}</div>
+      <div className={styles.date}> {formatDuration(sessions)} </div>
+      {leaderSessions.length > 0 && (
+        <div className={styles.leadership_line}>
+          <div className={styles.organization_role}>Leader</div>
+          <div className={styles.date}>{formatDuration(leaderSessions)}</div>
+        </div>
+      )}
+    </div>
+  );
+};
 export default Activity;
 
 // Helper functions for parsing and translating sessionCode which is of the format "YYYYSE"
@@ -70,14 +73,14 @@ const areConsecutive = (earlierSession: Date, laterSession: Date) => {
 
 // Param: sessionsList - a list of sessionCodes
 // Returns: A string representing the duration of the user's membership based on the sessionsList
-const formatDuration = (sessions: string[]) => {
+const formatDuration = (sessions: MembershipHistorySession[]) => {
   let duration = '';
   sessions.sort();
 
   // Pop first session code from array and split into months and years, which are saved as
   // the initial start and end dates
-  let curSess = sessions.shift();
-  
+  let curSess = sessions.shift()?.SessionCode;
+
   if (!curSess) return 'Unknown';
 
   let endDate = sessionService.parseSessionCode(curSess);
@@ -93,7 +96,7 @@ const formatDuration = (sessions: string[]) => {
   // the string 'duration' (because the streak is broken) and prepare to start a new streak.
   // Loop assumes sessions will be sorted from earliest to latest
   while (sessions.length > 0) {
-    curSess = sessions.shift() as string;
+    curSess = sessions.shift()?.SessionCode as string;
     let nextStartDate = sessionService.parseSessionCode(curSess);
     if (areConsecutive(endDate, nextStartDate)) {
       // a streak of consecutive involvement continues

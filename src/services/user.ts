@@ -4,6 +4,7 @@ import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
 import http from './http';
 import { Class } from './peopleSearch';
 import { Override } from './utils';
+import { Participation } from './membership';
 
 type CLWCredits = {
   current: number;
@@ -312,6 +313,24 @@ type ProfileFieldUpdate = {
 const requestInfoUpdate = (updatedFields: ProfileFieldUpdate[]) =>
   http.post('profiles/update/', updatedFields);
 
+export type MembershipHistory = {
+  ActivityCode: string;
+  // TODO: Get ActivityType from DB for categorization
+  // activityType: string;
+  ActivityDescription: string;
+  ActivityImagePath: string;
+  Sessions: MembershipHistorySession[];
+};
+
+export type MembershipHistorySession = {
+  MembershipID: number;
+  SessionCode: string;
+  Participation: Participation;
+};
+
+const getMembershipHistory = (username: string): Promise<MembershipHistory[]> =>
+  http.get(`profiles/${username}/memberships-history`);
+
 const userService = {
   setMobilePhonePrivacy,
   setHomePhonePrivacy,
@@ -322,6 +341,7 @@ const userService = {
   getDiningInfo,
   getProfileInfo,
   getMailboxCombination,
+  getMembershipHistory,
   resetImage,
   postImage,
   postIDImage,

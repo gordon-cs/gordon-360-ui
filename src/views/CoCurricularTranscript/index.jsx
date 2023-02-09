@@ -153,10 +153,9 @@ const CoCurricularTranscript = () => {
 
                 {activities.map((activity) => (
                   <Activity
-                    key={activity.activityCode}
-                    sessions={activity.sessions}
-                    leaderSessions={activity.leaderSessions}
-                    description={activity.activityDescription}
+                    key={activity.ActivityCode}
+                    sessions={activity.Sessions}
+                    description={activity.ActivityDescription}
                   />
                 ))}
               </>
