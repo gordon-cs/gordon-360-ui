@@ -23,19 +23,19 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
   useEffect(() => {
     async function loadMemberships() {
       setLoading(true);
+
+      const memberships = await membershipService.get({ username });
+
       if (myProf) {
-        const myMemberships = await membershipService.getMembershipsAlphabetically(username);
         await Promise.all(
-          myMemberships.map(async (membership) => {
+          memberships.map(async (membership) => {
             const involvement = await activity.get(membership.ActivityCode);
             membership.IsInvolvementPrivate = involvement.Privacy;
           }),
         );
-        setMemberships(myMemberships);
-      } else {
-        const publicMemberships = await membershipService.getPublicMemberships(username);
-        setMemberships(publicMemberships);
       }
+
+      setMemberships(memberships);
       setLoading(false);
     }
     loadMemberships();

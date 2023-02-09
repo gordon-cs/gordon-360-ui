@@ -11,27 +11,30 @@ import {
 import { ExpandMore } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import parseISO from 'date-fns/parseISO';
-import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
-import membershipService from 'services/membership';
+import membershipService, { Participation } from 'services/membership';
 import requestService from 'services/request';
 import RequestSent from './components/RequestSent';
 import RequestReceived from './components/RequestsReceived';
 import styles from './Requests.module.css';
 
-const Requests = () => {
+const Requests = ({ profile, session }) => {
   const [loading, setLoading] = useState(true);
   const [requestsSent, setRequestsSent] = useState([]);
   const [involvementsLeading, setInvolvementsLeading] = useState([]);
-  const { profile } = useUser();
 
   useEffect(() => {
-    membershipService
-      .getLeaderPositions(profile.AD_Username)
-      .then(setInvolvementsLeading)
-      .then(() => setLoading(false));
-    requestService.getSentMembershipRequests().then(setRequestsSent);
-  }, [profile]);
+    Promise.all([
+      membershipService
+        .get({
+          username: profile.AD_Username,
+          sessionCode: session,
+          participationTypes: [Participation.GroupAdmin],
+        })
+        .then(setInvolvementsLeading),
+      requestService.getSentMembershipRequests().then(setRequestsSent),
+    ]).then(() => setLoading(false));
+  }, [profile, session]);
 
   const handleCancelRequest = (request) => {
     setRequestsSent((prevRequestsSent) => prevRequestsSent.filter((r) => r !== request));
@@ -93,7 +96,7 @@ const Requests = () => {
         </CardContent>
       </>
     );
-  } else if (requestsSent?.length > 0) {
+  } else {
     content = (
       <>
         <Accordion defaultExpanded>
@@ -130,9 +133,6 @@ const Requests = () => {
         </Accordion>
       </>
     );
-  } else {
-    // otherwise hide component entirely since we have no requests
-    return null;
   }
 
   return (
