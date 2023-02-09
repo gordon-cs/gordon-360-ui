@@ -61,7 +61,7 @@ const get = async (queryParams: {
   involvementCode?: string;
   username?: string;
   sessionCode?: string;
-  participationTypes?: Participation[];
+  participationTypes?: Participation[] | Participation;
 }): Promise<MembershipView[]> => http.get(`memberships/${http.toQueryString(queryParams)}`);
 
 const addMembership = (data: MembershipUpload): Promise<MembershipView> =>
@@ -85,7 +85,7 @@ const checkAdmin = async (
     involvementCode,
     username,
     sessionCode,
-    participationTypes: [Participation.GroupAdmin],
+    participationTypes: Participation.GroupAdmin,
   });
   return admins.length > 0;
 };

@@ -29,7 +29,7 @@ const Requests = ({ profile, session }) => {
         .get({
           username: profile.AD_Username,
           sessionCode: session,
-          participationTypes: [Participation.GroupAdmin],
+          participationTypes: Participation.GroupAdmin,
         })
         .then(setInvolvementsLeading),
       requestService.getSentMembershipRequests().then(setRequestsSent),
