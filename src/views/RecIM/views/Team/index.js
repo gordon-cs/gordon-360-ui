@@ -53,24 +53,6 @@ const Team = () => {
     setHasPermissions(hasCaptainPermissions || user?.IsAdmin);
   }, [team, user]);
 
-  const handleTeamForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenTeamForm(false);
-  };
-  // Team record needs to be variable based on what series is ongoing / which one they're in (TODO)
-  const teamRecord = () => {
-    if (team) {
-      if (team.TeamRecord[0]) {
-        return (
-          <Typography variant="subtitle2">
-            {team.TeamRecord[0].Win} W : {team.TeamRecord[0].Loss} L : {team.TeamRecord[0].Tie} T
-          </Typography>
-        );
-      }
-      return <Typography variant="subtitle2">Activity has not started</Typography>;
-    }
-    return null;
-  };
   if (loading) {
     return <GordonLoader />;
   } else if (!profile) {

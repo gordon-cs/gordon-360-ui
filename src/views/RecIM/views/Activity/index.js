@@ -1,17 +1,8 @@
-import {
-  Grid,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  Button,
-  Chip,
-  Breadcrumbs,
-  IconButton,
-} from '@mui/material';
+import { Grid, Typography, Card, CardHeader, CardContent, Button, Chip } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -29,6 +20,7 @@ import { standardDate } from 'views/RecIM/components/Helpers';
 import { DateTime } from 'luxon';
 
 const Activity = () => {
+  const navigate = useHistory();
   const { activityID } = useParams();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);

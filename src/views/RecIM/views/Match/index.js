@@ -1,12 +1,4 @@
-import {
-  Grid,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  Breadcrumbs,
-  IconButton,
-} from '@mui/material';
+import { Grid, Typography, Card, CardHeader, CardContent, IconButton } from '@mui/material';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
@@ -17,7 +9,6 @@ import { ParticipantList } from './../../components/List';
 import { getMatchByID } from 'services/recim/match';
 import { DateTime } from 'luxon';
 import { Link as LinkRouter } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 import { getParticipantByUsername } from 'services/recim/participant';
