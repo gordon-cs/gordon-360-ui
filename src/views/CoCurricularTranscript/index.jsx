@@ -21,7 +21,7 @@ const CoCurricularTranscript = () => {
   useEffect(() => {
     const loadTranscript = async () => {
       setLoading(true);
-      const { honors, experiences, service, activities } = transcriptService.getMemberships(
+      const { honors, experiences, service, activities } = await transcriptService.getMemberships(
         profile.AD_Username,
       );
 
