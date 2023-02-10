@@ -50,9 +50,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
   const isAlumni = profile.PersonType?.includes('alu');
-  const [isViewerPolice, canViewSensitiveInfo] = useAuthGroups(
+  const [isViewerPolice, canViewSensitiveInfo, canViewAcademicInfo] = useAuthGroups(
     AuthGroup.Police,
     AuthGroup.SensitiveInfoView,
+    AuthGroup.AcademicInfoView,
   );
 
   // KeepPrivate has different values for Students and FacStaff.
@@ -307,7 +308,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     ) : null;
 
   const advisors =
-    myProf && isStudent ? (
+    (myProf || canViewAcademicInfo) && isStudent ? (
       <ProfileInfoListItem
         title={profile.Advisors?.length > 1 ? 'Advisors:' : 'Advisor:'}
         contentText={
