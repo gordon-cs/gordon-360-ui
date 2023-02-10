@@ -51,11 +51,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-train
-          path: build
+          path: dist
 
       - name: Upload master build artifacts for deployment
         if: ${{ github.ref == 'refs/heads/master' }}
         uses: actions/upload-artifact@v3
         with:
           name: build-prod
-          path: build
+          path: dist
