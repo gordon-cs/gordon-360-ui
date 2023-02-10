@@ -4,6 +4,7 @@ import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import Header from '../../components/Header';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getMatchByID } from 'services/recim/match';
@@ -32,7 +33,7 @@ const Match = () => {
     loadMatch();
   }, [matchID]);
 
-  if (loading) {
+  if (loading && !profile) {
     return <GordonLoader />;
   } else if (!profile) {
     // The user is not logged in
@@ -40,14 +41,25 @@ const Match = () => {
   } else {
     return (
       <>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <RosterCard participants={match.Team[0]?.Participant} teamName={match.Team[0]?.Name} />
+        <Header expandable="match" match={match} />
+        {loading ? (
+          <GordonLoader />
+        ) : (
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <RosterCard
+                participants={match.Team[0]?.Participant}
+                teamName={match.Team[0]?.Name}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <RosterCard
+                participants={match.Team[1]?.Participant}
+                teamName={match.Team[1]?.Name}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <RosterCard participants={match.Team[1]?.Participant} teamName={match.Team[1]?.Name} />
-          </Grid>
-        </Grid>
+        )}
       </>
     );
   }

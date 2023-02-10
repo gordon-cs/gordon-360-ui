@@ -12,23 +12,18 @@ const RecIM = () => {
   return (
     <Switch>
       <Route path="/recim/activity/:activityID/team/:teamID">
-        <Header expandable="team" />
         <Team />
       </Route>
       <Route path="/recim/activity/:activityID/match/:matchID">
-        <Header expandable="match" />
         <Match />
       </Route>
       <Route path="/recim/activity/:activityID">
-        <Header expandable="activity" />
         <Activity />
       </Route>
       <Route exact path="/recim/admin">
-        <Header page="admin" expandable="home" />
         <Admin />
       </Route>
       <Route exact path="/recim">
-        <Header expandable="home" />
         <Home />
       </Route>
     </Switch>

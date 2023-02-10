@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import Header from '../../components/Header';
 import styles from './Activity.module.css';
 import { MatchList, TeamList } from './../../components/List';
 import TeamForm from '../../components/Forms/TeamForm';
@@ -162,49 +163,52 @@ const Activity = () => {
     );
 
     return (
-      <Grid container justifyContent="center" spacing={2}>
-        <Grid item container justifyContent="center" spacing={2}>
-          <Grid item xs={12} md={6}>
-            {scheduleCard}
-          </Grid>
-          <Grid item direction={'column'} xs={12} md={6}>
-            <Grid item className={styles.gridItemStack}>
-              {teamsCard}
+      <>
+        <Header expandable="activity" activity={activity} />
+        <Grid container justifyContent="center" spacing={2}>
+          <Grid item container justifyContent="center" spacing={2}>
+            <Grid item xs={12} md={6}>
+              {scheduleCard}
+            </Grid>
+            <Grid item direction={'column'} xs={12} md={6}>
+              <Grid item className={styles.gridItemStack}>
+                {teamsCard}
+              </Grid>
             </Grid>
           </Grid>
+          {openTeamForm ? (
+            <TeamForm
+              closeWithSnackbar={(teamID, status) => {
+                handleTeamFormSubmit(status, setOpenTeamForm);
+                navigate.push(`${activityID}/team/${teamID}`);
+              }}
+              openTeamForm={openTeamForm}
+              setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+              activityID={activityID}
+            />
+          ) : openCreateMatchForm ? (
+            <CreateMatchForm
+              closeWithSnackbar={(status) => {
+                handleTeamFormSubmit(status, setOpenCreateMatchForm);
+              }}
+              openCreateMatchForm={openCreateMatchForm}
+              setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+              activity={activity}
+            />
+          ) : null}
+          {openCreateSeriesForm ? (
+            <CreateSeriesForm
+              closeWithSnackbar={(status) => {
+                handleCreateSeriesForm(status);
+              }}
+              openCreateSeriesForm={openCreateSeriesForm}
+              setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+              activityID={activity.ID}
+              existingActivitySeries={activity.Series}
+            />
+          ) : null}
         </Grid>
-        {openTeamForm ? (
-          <TeamForm
-            closeWithSnackbar={(teamID, status) => {
-              handleTeamFormSubmit(status, setOpenTeamForm);
-              navigate.push(`${activityID}/team/${teamID}`);
-            }}
-            openTeamForm={openTeamForm}
-            setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-            activityID={activityID}
-          />
-        ) : openCreateMatchForm ? (
-          <CreateMatchForm
-            closeWithSnackbar={(status) => {
-              handleTeamFormSubmit(status, setOpenCreateMatchForm);
-            }}
-            openCreateMatchForm={openCreateMatchForm}
-            setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
-            activity={activity}
-          />
-        ) : null}
-        {openCreateSeriesForm ? (
-          <CreateSeriesForm
-            closeWithSnackbar={(status) => {
-              handleCreateSeriesForm(status);
-            }}
-            openCreateSeriesForm={openCreateSeriesForm}
-            setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-            activityID={activity.ID}
-            existingActivitySeries={activity.Series}
-          />
-        ) : null}
-      </Grid>
+      </>
     );
   }
 };

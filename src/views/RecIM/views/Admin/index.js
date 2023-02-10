@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
+import Header from '../../components/Header';
 // import styles from './Admin.module.css'; //unused for now since I've imported homeHeader
 import { getParticipantByUsername } from 'services/recim/participant';
 import { ActivityList, TeamList, ParticipantList } from '../../components/List';
@@ -67,28 +68,31 @@ const Admin = () => {
   if (!user?.IsAdmin) return <GordonUnauthorized feature={'the Rec-IM Command Center'} />;
 
   return (
-    <Card>
-      <CardContent>
-        <Tabs
-          value={tab}
-          onChange={(event, newTab) => setTab(newTab)}
-          aria-label="admin control center tabs"
-        >
-          <Tab label="Activities" />
-          <Tab label="Teams" />
-          <Tab label="Participants" />
-        </Tabs>
-        <TabPanel value={tab} index={0}>
-          {activities ? <ActivityList activities={activities} /> : <GordonLoader />}
-        </TabPanel>
-        <TabPanel value={tab} index={1}>
-          {teams ? <TeamList teams={teams} /> : <GordonLoader />}
-        </TabPanel>
-        <TabPanel value={tab} index={2}>
-          {participants ? <ParticipantList participants={participants} /> : <GordonLoader />}
-        </TabPanel>
-      </CardContent>
-    </Card>
+    <>
+      <Header page="admin" expandable="home" admin />
+      <Card>
+        <CardContent>
+          <Tabs
+            value={tab}
+            onChange={(event, newTab) => setTab(newTab)}
+            aria-label="admin control center tabs"
+          >
+            <Tab label="Activities" />
+            <Tab label="Teams" />
+            <Tab label="Participants" />
+          </Tabs>
+          <TabPanel value={tab} index={0}>
+            {activities ? <ActivityList activities={activities} /> : <GordonLoader />}
+          </TabPanel>
+          <TabPanel value={tab} index={1}>
+            {teams ? <TeamList teams={teams} /> : <GordonLoader />}
+          </TabPanel>
+          <TabPanel value={tab} index={2}>
+            {participants ? <ParticipantList participants={participants} /> : <GordonLoader />}
+          </TabPanel>
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

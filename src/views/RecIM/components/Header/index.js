@@ -1,14 +1,10 @@
 import { Grid, AppBar, Breadcrumbs, Typography, IconButton } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
 import { Link as LinkRouter } from 'react-router-dom';
 import { DateTime } from 'luxon';
 import styles from './Header.module.css';
 import { useUser } from 'hooks';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { getActivityByID } from 'services/recim/activity';
-import { getTeamByID } from 'services/recim/team';
-import { getMatchByID } from 'services/recim/match';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
@@ -17,13 +13,20 @@ import recimLogo from './../../recim_logo.png';
 import HomeIcon from '@mui/icons-material/Home';
 import EditIcon from '@mui/icons-material/Edit';
 
-const Header = ({ page, expandable = false }) => {
+const RecIMBreadcrumb = ({ link, children }) => {
+  if (link) {
+    return (
+      <LinkRouter className="gc360_text_link" underline="hover" color="inherit" to={link}>
+        {children}
+      </LinkRouter>
+    );
+  }
+  return <Typography color="text.primary">{children}</Typography>;
+};
+
+const Header = ({ page, expandable = false, match, team, activity, home, admin }) => {
   const { profile } = useUser();
-  const { activityID, teamID, matchID } = useParams();
   const [user, setUser] = useState();
-  const [activity, setActivity] = useState();
-  const [team, setTeam] = useState();
-  const [match, setMatch] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [isCaptain, setIsCaptain] = useState(false);
@@ -40,27 +43,6 @@ const Header = ({ page, expandable = false }) => {
     };
     loadData();
   }, [profile]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      activityID ? setActivity(await getActivityByID(activityID)) : setActivity();
-    };
-    loadData();
-  }, [activityID]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      teamID ? setTeam(await getTeamByID(teamID)) : setTeam();
-    };
-    loadData();
-  }, [teamID]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      matchID ? setMatch(await getMatchByID(matchID)) : setMatch();
-    };
-    loadData();
-  }, [matchID]);
 
   //checks if the team is modifiable by the current user
   useEffect(() => {
@@ -292,7 +274,7 @@ const Header = ({ page, expandable = false }) => {
           </Grid>
           {openEditMatchStatsForm ? (
             <EditMatchStatsForm
-              matchID={matchID}
+              matchID={match.ID}
               teamMatchHistory={selectedScores}
               closeWithSnackbar={(status) => {
                 handleEditMatchStatsForm(status);
@@ -312,43 +294,30 @@ const Header = ({ page, expandable = false }) => {
       {expandable && <Grid className={styles.mainHeader}>{mainHeader()}</Grid>}
       <AppBar className={styles.stickyNav} sx={!expandable && { mt: '-1rem' }}>
         <Breadcrumbs aria-label="breadcrumb">
-          {/* Home breadcrumb: link or text */}
-          {activity || page === 'admin' ? (
-            <LinkRouter className="gc360_text_link" underline="hover" color="inherit" to={'/recim'}>
-              <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-              Rec-IM Home
-            </LinkRouter>
-          ) : (
-            <Typography color="text.primary">
-              <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-              Rec-IM Home
-            </Typography>
+          {/* Home breadcrumb */}
+          <RecIMBreadcrumb link={(activity || team || match || admin) && `/recim`}>
+            <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+            Rec-IM Home
+          </RecIMBreadcrumb>
+          {/* Activity breadcrumb */}
+          {(activity || team || match) && (
+            <RecIMBreadcrumb
+              link={(team || match) && `/recim/activity/${team?.Activity.ID ?? match?.Activity.ID}`}
+            >
+              {activity?.Name ?? team?.Activity.Name ?? match?.Activity.Name}
+            </RecIMBreadcrumb>
           )}
-          {/* Admin breadcrumb: text */}
-          {page === 'admin' && <Typography color="text.primary">Admin</Typography>}
-          {/* Activity breadcrumb: link or text */}
-          {activity &&
-            (match || team ? (
-              <LinkRouter
-                className="gc360_text_link"
-                underline="hover"
-                color="inherit"
-                to={`/recim/activity/${activity.ID}`}
-              >
-                {activity.Name}
-              </LinkRouter>
-            ) : (
-              <Typography color="text.primary">{activity.Name}</Typography>
-            ))}
-          {/* Team breadcrumb: text */}
-          {team && <Typography color="text.primary">{team.Name}</Typography>}
-          {/* Match breadcrumb: text */}
-          {matchID && (
-            <Typography color="text.primary">
+          {/* Team breadcrumb */}
+          {team && <RecIMBreadcrumb>{team.Name}</RecIMBreadcrumb>}
+          {/* Match breadcrumb */}
+          {match && (
+            <RecIMBreadcrumb>
               Match: {match?.Team[0]?.Name ?? <GordonLoader size={15} inline />} vs{' '}
               {match?.Team[1]?.Name ?? <GordonLoader size={15} inline />}
-            </Typography>
+            </RecIMBreadcrumb>
           )}
+          {/* Admin breadcrumb */}
+          {admin && <RecIMBreadcrumb>Admin</RecIMBreadcrumb>}
         </Breadcrumbs>
       </AppBar>
     </>

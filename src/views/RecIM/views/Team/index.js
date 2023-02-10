@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import Header from '../../components/Header';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from './../../components/List';
 import { getTeamByID } from 'services/recim/team';
@@ -111,14 +112,17 @@ const Team = () => {
     );
 
     return (
-      <Grid container justifyContent="center" spacing={2}>
-        <Grid item xs={12} md={6}>
-          {scheduleCard}
+      <>
+        <Header expandable="team" team={team} />
+        <Grid container justifyContent="center" spacing={2}>
+          <Grid item xs={12} md={6}>
+            {scheduleCard}
+          </Grid>
+          <Grid item xs={12} md={6}>
+            {rosterCard}
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6}>
-          {rosterCard}
-        </Grid>
-      </Grid>
+      </>
     );
   }
 };

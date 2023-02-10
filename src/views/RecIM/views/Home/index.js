@@ -5,8 +5,8 @@ import ActivityForm from '../../components/Forms/ActivityForm';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
+import Header from '../../components/Header';
 import styles from './Home.module.css';
-import recimLogo from './../../recim_logo.png';
 import { ActivityList, TeamList } from './../../components/List';
 import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
@@ -20,27 +20,6 @@ const TabPanel = ({ children, value, index }) => {
     </div>
   );
 };
-
-export const homeHeader = (
-  <Card>
-    <CardContent>
-      <Grid container direction="row" alignItems="center" spacing={4}>
-        <Grid item>
-          <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
-        </Grid>
-        <Grid item xs={8} md={5} lg={3}>
-          <hr className={styles.homeHeaderLine} />
-          <Typography variant="h5" className={styles.homeHeaderTitle}>
-            <b className="accentText">Gordon</b> Rec-IM
-          </Typography>
-          <Typography variant="h6" className={styles.homeHeaderSubtitle}>
-            <i>"Competition reveals character"</i>
-          </Typography>
-        </Grid>
-      </Grid>
-    </CardContent>
-  </Card>
-);
 
 const Home = () => {
   const { profile } = useUser();
@@ -197,45 +176,48 @@ const Home = () => {
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     return (
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
-          {activitiesCard}
+      <>
+        <Header expandable="home" home />
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={8}>
+            {activitiesCard}
+          </Grid>
+          <Grid item xs={12} md={4}>
+            {myTeamsCard}
+          </Grid>
+          {openActivityForm ? (
+            <ActivityForm
+              closeWithSnackbar={(status) => {
+                handleCreateActivityForm(status);
+              }}
+              openActivityForm={openActivityForm}
+              setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
+              setCreatedInstance={(activity) => setCreatedActivity(activity)}
+            />
+          ) : null}
+          {openCreateSeriesForm ? (
+            <CreateSeriesForm
+              closeWithSnackbar={(status) => {
+                handleCreateSeriesForm(status);
+              }}
+              openCreateSeriesForm={openCreateSeriesForm}
+              setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+              activityID={createdActivity.ID}
+              existingActivitySeries={[]}
+            />
+          ) : null}
+          {openWaiver ? (
+            <WaiverForm
+              username={profile.AD_Username}
+              closeWithSnackbar={(status) => {
+                handleOpenWaiverForm(status);
+              }}
+              openWaiverForm={openWaiver}
+              setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
+            />
+          ) : null}
         </Grid>
-        <Grid item xs={12} md={4}>
-          {myTeamsCard}
-        </Grid>
-        {openActivityForm ? (
-          <ActivityForm
-            closeWithSnackbar={(status) => {
-              handleCreateActivityForm(status);
-            }}
-            openActivityForm={openActivityForm}
-            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
-            setCreatedInstance={(activity) => setCreatedActivity(activity)}
-          />
-        ) : null}
-        {openCreateSeriesForm ? (
-          <CreateSeriesForm
-            closeWithSnackbar={(status) => {
-              handleCreateSeriesForm(status);
-            }}
-            openCreateSeriesForm={openCreateSeriesForm}
-            setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-            activityID={createdActivity.ID}
-            existingActivitySeries={[]}
-          />
-        ) : null}
-        {openWaiver ? (
-          <WaiverForm
-            username={profile.AD_Username}
-            closeWithSnackbar={(status) => {
-              handleOpenWaiverForm(status);
-            }}
-            openWaiverForm={openWaiver}
-            setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
-          />
-        ) : null}
-      </Grid>
+      </>
     );
   }
 };
