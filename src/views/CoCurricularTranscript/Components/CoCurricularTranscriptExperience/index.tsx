@@ -1,7 +1,12 @@
 import { format, parseISO } from 'date-fns';
+import { StudentEmployment } from 'services/transcript';
 import styles from './CoCurricularTranscriptExperience.module.css';
 
-const Experience = ({ Experience }) => (
+type Props = {
+  Experience: StudentEmployment;
+};
+
+const Experience = ({ Experience }: Props) => (
   <div className={styles.experience_transcript_activities}>
     <div className={styles.organization_role}>
       {Experience.Job_Department_Name}, {Experience.Job_Title}
@@ -10,9 +15,9 @@ const Experience = ({ Experience }) => (
   </div>
 );
 
-const formatDuration = ({ Job_Start_Date, Job_End_Date }) => {
+const formatDuration = ({ Job_Start_Date, Job_End_Date }: StudentEmployment) => {
   if (!Job_Start_Date) {
-    return null;
+    return '';
   }
 
   const startDate = parseISO(Job_Start_Date);

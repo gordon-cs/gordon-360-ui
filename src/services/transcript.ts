@@ -5,8 +5,16 @@ import userService, { MembershipHistory } from './user';
 const getMemberships = (username: string) =>
   userService.getMembershipHistory(username).then(categorizeMemberships);
 
-// TODO: Add type info
-const getEmployment = () => http.get('studentemployment/');
+export type StudentEmployment = {
+  Job_Title: string;
+  Job_Department: string;
+  Job_Department_Name: string;
+  Job_Start_Date?: string;
+  Job_End_Date?: string;
+  Job_Expected_End_Date?: string;
+};
+
+const getEmployment = (): Promise<StudentEmployment[]> => http.get('studentemployment/');
 
 // const MembershipTypeMap = {
 //   LEA: 'honors',
