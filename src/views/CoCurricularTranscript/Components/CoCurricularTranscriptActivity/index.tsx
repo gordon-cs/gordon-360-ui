@@ -1,6 +1,7 @@
-import { format } from 'date-fns';
+import { compareAsc, differenceInCalendarMonths, format } from 'date-fns';
 import { Participation } from 'services/membership';
 import sessionService from 'services/session';
+import { MembershipInterval } from 'services/transcript';
 import { MembershipHistorySession } from 'services/user';
 import styles from './CoCurricularTranscriptActivity.module.css';
 
@@ -26,108 +27,42 @@ const Activity = ({ description, sessions }: Props) => {
 };
 export default Activity;
 
-// Helper functions for parsing and translating sessionCode which is of the format "YYYYSE"
-// where SE is 09 for fall, 01 for spring, 05 for summer
-
-// Returns: string of month (Mon), month being last month of the given semester
-const sliceEnd = (sesCode: string) => {
-  switch (sesCode.slice(4, 6)) {
-    case '09':
-      return 'Dec';
-    case '01':
-      return 'May';
-    case '05':
-      return 'Sep';
-    default:
-      console.log('An unrecognized semester code was provided');
-      return '';
-  }
-};
-
 /**
- * Check whether two sessions are consecutive.
+ * Formats a list of sessions that the user was a member of this activity into a single string.
+ * The string is a resume-like (e.g. 'MMM yyyy') series of intervals, where each interval is a
+ * period of time representing consecutive semesters that the user was a member of the activity.
  *
- * Sessions are consecutive if they occur in the same calendar year, or if the earlier session was
- * a fall session and the later session is the following spring session.
- *
- * TODO: This logic assumes that sessions will be either fall or spring.
- * It might not handle winter, summer, graduate sessions correctly.
- *
- * @param {Date} earlierSession the chronologically earlier of the two sessions
- * @param {Date} laterSession the chronologically later of the two sessions
- * @returns Whether the later session is immediately after the earlier session
+ * @param sessionRecords - a list of sessions that user was a member of the same activity
+ * @returns A string representing the duration of the user's membership based on the sessionRecords
  */
-const areConsecutive = (earlierSession: Date, laterSession: Date) => {
-  const earlierYear = earlierSession.getFullYear();
-  const laterYear = laterSession.getFullYear();
-  return (
-    earlierYear === laterYear ||
-    (earlierYear + 1 === laterYear &&
-      earlierSession.getMonth() > 4 &&
-      laterSession.getMonth() === 0)
-  );
-};
+const formatDuration = (sessionRecords: MembershipHistorySession[]) => {
+  const sessions = sessionRecords
+    .map((s) => sessionService.parseSessionCode(s.SessionCode))
+    .sort(compareAsc);
 
-// Prepares a list of sessions to be displayed as one coherent string representing the timepsan
-// of the membership.
+  const intervalDescriptions: string[] = [];
+  let interval: MembershipInterval | undefined;
 
-// Param: sessionsList - a list of sessionCodes
-// Returns: A string representing the duration of the user's membership based on the sessionsList
-const formatDuration = (sessions: MembershipHistorySession[]) => {
-  let duration = '';
-  sessions.sort();
-
-  // Pop first session code from array and split into months and years, which are saved as
-  // the initial start and end dates
-  let curSess = sessions.shift()?.SessionCode;
-
-  if (!curSess) return 'Unknown';
-
-  let endDate = sessionService.parseSessionCode(curSess);
-
-  // format sessions into a string representing the timespan(s) of the membership
-  let startMon = format(endDate, 'MMM');
-  let endMon = sliceEnd(curSess);
-  let startYear = format(endDate, 'yyyy'),
-    endYear = startYear;
-
-  // For each other session, if it is consecutive to the current end date,
-  // save its end date as the new end date, otherwise, add the current start and end dates to
-  // the string 'duration' (because the streak is broken) and prepare to start a new streak.
-  // Loop assumes sessions will be sorted from earliest to latest
-  while (sessions.length > 0) {
-    curSess = sessions.shift()?.SessionCode as string;
-    let nextStartDate = sessionService.parseSessionCode(curSess);
-    if (areConsecutive(endDate, nextStartDate)) {
-      // a streak of consecutive involvement continues
-      endMon = sliceEnd(curSess);
-      endYear = format(nextStartDate, 'yyyy');
+  sessions.forEach((session) => {
+    if (interval === undefined) {
+      // If this is the first session, initialize interval.
+      interval = new MembershipInterval(session);
+    } else if (interval.consecutiveWith(session)) {
+      // If the current session is consecutive with the current interval, extend the interval.
+      interval.extendTo(session);
     } else {
-      // a streak has been broken; add its start and end to the string and start new streak
-
-      // don't show the year twice if the months are of the same year
-      if (startYear === endYear) {
-        duration += startMon;
-      } else {
-        duration += startMon + ' ' + startYear;
-      }
-      duration += '-' + endMon + ' ' + endYear + ', ';
-      startMon = format(nextStartDate, 'MMM');
-      endMon = sliceEnd(curSess);
-      startYear = endYear = format(nextStartDate, 'yyyy');
+      // If there is a break between the current interval and the current session,
+      // push description of the current interval
+      intervalDescriptions.push(interval.toString());
+      // And begin a new interval from the current session.
+      interval = new MembershipInterval(session);
     }
+  });
 
-    endDate = nextStartDate;
+  // If there was at least 1 session, the last interval will not be descrbied, so push it's description now
+  if (interval) {
+    intervalDescriptions.push(interval.toString());
   }
 
-  // Flush the remaining start and end info to duration.
-  // Again, don't show the year twice if the months are of the same year
-  if (startYear === endYear) {
-    duration += startMon;
-  } else {
-    duration += startMon + ' ' + startYear;
-  }
-  duration += '-' + endMon + ' ' + endYear;
-
-  return duration;
+  return intervalDescriptions.join(', ');
 };

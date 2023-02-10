@@ -85,7 +85,6 @@ const getTermCode = (): string => {
   return `${year.toString().substr(-2)}${term}`;
 };
 
-// TODO: Use Enum for session representation?
 const parseSessionCode = (sessionCode: string) => parse(sessionCode, 'yyyyMM', new Date());
 
 const sessionService = {
