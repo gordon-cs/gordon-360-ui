@@ -41,7 +41,6 @@ const Header = ({
       if (profile) {
         setUser(await getParticipantByUsername(profile.AD_Username));
       }
-      console.log(match);
     };
     loadData();
   }, [profile]);
