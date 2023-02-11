@@ -18,7 +18,7 @@ const ParticipantList = ({
 }) => {
   if (!participants?.length) return <Typography>No participants to show.</Typography>;
   let content = participants.map((participant) => {
-    if (!showInactive && participant.Role === "Inactive") {
+    if (!showInactive && participant.Role === 'Inactive') {
       return null;
     }
     return (

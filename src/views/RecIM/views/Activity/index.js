@@ -123,6 +123,7 @@ const Activity = () => {
         </CardContent>
       </Card>
     );
+
     let teamsCard = activity && (
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
@@ -176,7 +177,7 @@ const Activity = () => {
                 </Grid>
               </Grid>
             </Grid>
-            {openTeamForm ? (
+            {openTeamForm && (
               <TeamForm
                 closeWithSnackbar={(teamID, status) => {
                   handleTeamFormSubmit(status, setOpenTeamForm);
@@ -186,17 +187,48 @@ const Activity = () => {
                 setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
                 activityID={activityID}
               />
-            ) : (
-              openCreateMatchForm && (
-                <CreateMatchForm
-                  closeWithSnackbar={(status) => {
-                    handleTeamFormSubmit(status, setOpenCreateMatchForm);
-                  }}
-                  openCreateMatchForm={openCreateMatchForm}
-                  setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
-                  activity={activity}
-                />
-              )
+            )}
+            {openCreateMatchForm && (
+              <CreateMatchForm
+                closeWithSnackbar={(status) => {
+                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
+                }}
+                openCreateMatchForm={openCreateMatchForm}
+                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+                activity={activity}
+              />
+            )}
+            {openCreateSeriesForm && (
+              <CreateSeriesForm
+                closeWithSnackbar={(status) => {
+                  handleCreateSeriesForm(status);
+                }}
+                openCreateSeriesForm={openCreateSeriesForm}
+                setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+                activityID={activity.ID}
+                existingActivitySeries={activity.Series}
+              />
+            )}
+            {openTeamForm && (
+              <TeamForm
+                closeWithSnackbar={(teamID, status) => {
+                  handleTeamFormSubmit(status, setOpenTeamForm);
+                  navigate.push(`${activityID}/team/${teamID}`);
+                }}
+                openTeamForm={openTeamForm}
+                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+                activityID={activityID}
+              />
+            )}
+            {openCreateMatchForm && (
+              <CreateMatchForm
+                closeWithSnackbar={(status) => {
+                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
+                }}
+                openCreateMatchForm={openCreateMatchForm}
+                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+                activity={activity}
+              />
             )}
             {openCreateSeriesForm && (
               <CreateSeriesForm
