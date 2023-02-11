@@ -77,7 +77,7 @@ const Activity = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
-          {participant?.IsAdmin ? (
+          {participant?.IsAdmin && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={6}>
                 <Grid container justifyContent="center">
@@ -110,7 +110,7 @@ const Activity = () => {
                 </Grid>
               </Grid>
             </Grid>
-          ) : null}
+          )}
           {activity.Series?.length ? (
             activity.Series.map((series) => {
               return <ScheduleList series={series} activityID={activityID} />;
@@ -127,11 +127,11 @@ const Activity = () => {
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-          {participant?.IsAdmin ? (
+          {participant?.IsAdmin && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={12}>
                 <Grid container justifyContent="center">
-                  {canCreateTeam ? (
+                  {canCreateTeam && (
                     <Button
                       variant="contained"
                       color="warning"
@@ -143,11 +143,11 @@ const Activity = () => {
                     >
                       Create a New Team
                     </Button>
-                  ) : null}
+                  )}
                 </Grid>
               </Grid>
             </Grid>
-          ) : null}
+          )}
           {activity.Team?.length ? (
             <TeamList teams={activity.Team} />
           ) : (
@@ -186,16 +186,18 @@ const Activity = () => {
                 setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
                 activityID={activityID}
               />
-            ) : openCreateMatchForm ? (
-              <CreateMatchForm
-                closeWithSnackbar={(status) => {
-                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
-                }}
-                openCreateMatchForm={openCreateMatchForm}
-                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
-                activity={activity}
-              />
-            ) : null}
+            ) : (
+              openCreateMatchForm && (
+                <CreateMatchForm
+                  closeWithSnackbar={(status) => {
+                    handleTeamFormSubmit(status, setOpenCreateMatchForm);
+                  }}
+                  openCreateMatchForm={openCreateMatchForm}
+                  setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+                  activity={activity}
+                />
+              )
+            )}
             {openCreateSeriesForm && (
               <CreateSeriesForm
                 closeWithSnackbar={(status) => {
