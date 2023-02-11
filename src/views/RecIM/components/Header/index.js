@@ -5,7 +5,6 @@ import { DateTime } from 'luxon';
 import styles from './Header.module.css';
 import { useUser } from 'hooks';
 import { getParticipantByUsername } from 'services/recim/participant';
-import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 import GordonLoader from 'components/Loader';
 import recimLogo from './../../recim_logo.png';
 import HomeIcon from '@mui/icons-material/Home';
@@ -42,6 +41,7 @@ const Header = ({
       if (profile) {
         setUser(await getParticipantByUsername(profile.AD_Username));
       }
+      console.log(match);
     };
     loadData();
   }, [profile]);
@@ -170,6 +170,10 @@ const Header = ({
                   {match?.Team[0]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
+              <Typography className={styles.subtitle}>
+                {/* once this is added to the API, it will instantly work */}
+                {match?.Team[0]?.TeamRecord.Win ?? 0}W : {match?.Team[0]?.TeamRecord.Loss ?? 0}L
+              </Typography>
               {user?.IsAdmin && (
                 <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
               )}
@@ -221,6 +225,10 @@ const Header = ({
                   {match?.Team[1]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
+              <Typography className={styles.subtitle}>
+                {/* once this is added to the API, it will instantly work */}
+                {match?.Team[0]?.TeamRecord.Win ?? 0}W : {match?.Team[0]?.TeamRecord.Loss ?? 0}L
+              </Typography>
               {user?.IsAdmin && (
                 <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
               )}
