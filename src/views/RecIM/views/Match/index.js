@@ -41,7 +41,7 @@ const Match = () => {
   } else {
     return (
       <>
-        <Header expandable="match" match={match} />
+        <Header page="match" match={match} expandable />
         {loading ? (
           <GordonLoader />
         ) : (

@@ -113,7 +113,7 @@ const Home = () => {
         </Typography>
       )}
 
-      {hasPermissions ? createActivityButton : null}
+      {hasPermissions && createActivityButton}
     </CardContent>
   );
 
@@ -169,54 +169,55 @@ const Home = () => {
     setOpenWaiver(false);
   };
 
-  if (loading) {
-    return <GordonLoader />;
-  } else if (!profile) {
-    // The user is not logged in
-    return <GordonUnauthorized feature={'the Rec-IM page'} />;
+  if (!profile) {
+    return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     return (
       <>
-        <Header expandable="home" home />
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={8}>
-            {activitiesCard}
+        <Header page="home" home expandable />
+        {loading ? (
+          <GordonLoader />
+        ) : (
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={8}>
+              {activitiesCard}
+            </Grid>
+            <Grid item xs={12} md={4}>
+              {myTeamsCard}
+            </Grid>
+            {openActivityForm && (
+              <ActivityForm
+                closeWithSnackbar={(status) => {
+                  handleCreateActivityForm(status);
+                }}
+                openActivityForm={openActivityForm}
+                setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
+                setCreatedInstance={(activity) => setCreatedActivity(activity)}
+              />
+            )}
+            {openCreateSeriesForm && (
+              <CreateSeriesForm
+                closeWithSnackbar={(status) => {
+                  handleCreateSeriesForm(status);
+                }}
+                openCreateSeriesForm={openCreateSeriesForm}
+                setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+                activityID={createdActivity.ID}
+                existingActivitySeries={[]}
+              />
+            )}
+            {openWaiver && (
+              <WaiverForm
+                username={profile.AD_Username}
+                closeWithSnackbar={(status) => {
+                  handleOpenWaiverForm(status);
+                }}
+                openWaiverForm={openWaiver}
+                setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
+              />
+            )}
           </Grid>
-          <Grid item xs={12} md={4}>
-            {myTeamsCard}
-          </Grid>
-          {openActivityForm ? (
-            <ActivityForm
-              closeWithSnackbar={(status) => {
-                handleCreateActivityForm(status);
-              }}
-              openActivityForm={openActivityForm}
-              setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
-              setCreatedInstance={(activity) => setCreatedActivity(activity)}
-            />
-          ) : null}
-          {openCreateSeriesForm ? (
-            <CreateSeriesForm
-              closeWithSnackbar={(status) => {
-                handleCreateSeriesForm(status);
-              }}
-              openCreateSeriesForm={openCreateSeriesForm}
-              setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-              activityID={createdActivity.ID}
-              existingActivitySeries={[]}
-            />
-          ) : null}
-          {openWaiver ? (
-            <WaiverForm
-              username={profile.AD_Username}
-              closeWithSnackbar={(status) => {
-                handleOpenWaiverForm(status);
-              }}
-              openWaiverForm={openWaiver}
-              setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
-            />
-          ) : null}
-        </Grid>
+        )}
       </>
     );
   }

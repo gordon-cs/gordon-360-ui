@@ -69,7 +69,7 @@ const Admin = () => {
 
   return (
     <>
-      <Header page="admin" expandable="home" admin />
+      <Header page="admin" admin expandable />
       <Card>
         <CardContent>
           <Tabs

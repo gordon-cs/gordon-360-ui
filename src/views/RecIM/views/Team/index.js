@@ -54,13 +54,10 @@ const Team = () => {
     setHasPermissions(hasCaptainPermissions || user?.IsAdmin);
   }, [team, user]);
 
-  if (loading) {
-    return <GordonLoader />;
-  } else if (!profile) {
-    // The user is not logged in
-    return <GordonUnauthorized feature={'the Rec-IM page'} />;
+  if (!profile) {
+    return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
-    let rosterCard = (
+    let rosterCard = team && (
       <Card>
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
@@ -69,7 +66,7 @@ const Team = () => {
           ) : (
             <ParticipantList participants={team.Participant} />
           )}
-          {hasPermissions ? (
+          {hasPermissions && (
             <Grid container justifyContent="center">
               <Button
                 variant="contained"
@@ -83,7 +80,7 @@ const Team = () => {
                 Invite Participant
               </Button>
             </Grid>
-          ) : null}
+          )}
         </CardContent>
         <InviteParticipantForm
           closeWithSnackbar={(status) => {
@@ -96,7 +93,7 @@ const Team = () => {
       </Card>
     );
 
-    let scheduleCard = (
+    let scheduleCard = team && (
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
@@ -113,15 +110,19 @@ const Team = () => {
 
     return (
       <>
-        <Header expandable="team" team={team} />
-        <Grid container justifyContent="center" spacing={2}>
-          <Grid item xs={12} md={6}>
-            {scheduleCard}
+        <Header page="team" team={team} expandable />
+        {loading ? (
+          <GordonLoader />
+        ) : (
+          <Grid container justifyContent="center" spacing={2}>
+            <Grid item xs={12} md={6}>
+              {scheduleCard}
+            </Grid>
+            <Grid item xs={12} md={6}>
+              {rosterCard}
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            {rosterCard}
-          </Grid>
-        </Grid>
+        )}
       </>
     );
   }

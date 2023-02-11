@@ -109,7 +109,7 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
   };
 
   const mainHeader = () => {
-    if (expandable === 'home') {
+    if (page === 'home') {
       return (
         <Grid container direction="row" alignItems="center" spacing={4}>
           <Grid item>
@@ -126,7 +126,7 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
         </Grid>
       );
     }
-    if (expandable === 'activity') {
+    if (page === 'activity') {
       return (
         <Grid container direction="row" alignItems="center" columnSpacing={4}>
           <Grid item>
@@ -134,8 +134,8 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
           </Grid>
           <Grid item xs={8} md={5}>
             <Typography variant="h5" className={styles.title}>
-              {activity?.Name}
-              {user?.IsAdmin ? (
+              {activity?.Name ?? <GordonLoader size={15} inline />}
+              {user?.IsAdmin && (
                 <IconButton>
                   <EditIcon
                     onClick={() => {
@@ -143,7 +143,7 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
                     }}
                   />
                 </IconButton>
-              ) : null}
+              )}
             </Typography>
             <Typography variant="h6" className={styles.subtitle}>
               <i>Description of activity</i>
@@ -162,7 +162,7 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
         </Grid>
       );
     }
-    if (expandable === 'team') {
+    if (page === 'team') {
       return (
         <Grid container direction="row" alignItems="center" columnSpacing={4}>
           <Grid item>
@@ -198,7 +198,7 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
         </Grid>
       );
     }
-    if (expandable === 'match') {
+    if (page === 'match') {
       return (
         <>
           <Grid container justifyContent="center" spacing={4}>
@@ -218,9 +218,9 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
                   {match?.Team[0]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
-              {user?.IsAdmin ? (
+              {user?.IsAdmin && (
                 <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
-              ) : null}
+              )}
             </Grid>
             <Grid item xs={2}>
               <img src={''} alt="Team Icon" width="85em"></img>
@@ -229,7 +229,7 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
               <Typography variant="h5">
                 {team0Score} : {team1Score}
               </Typography>
-              {user?.IsAdmin ? (
+              {user?.IsAdmin && (
                 <Grid item>
                   <Grid container columnSpacing={2} justifyItems="center">
                     <Grid item>
@@ -256,7 +256,7 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
                     </Grid>
                   </Grid>
                 </Grid>
-              ) : null}
+              )}
             </Grid>
             <Grid item xs={2}>
               <img src={''} alt="Team Icon" width="85em"></img>
@@ -267,12 +267,12 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
                   {match?.Team[1]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
-              {user?.IsAdmin ? (
+              {user?.IsAdmin && (
                 <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
-              ) : null}
+              )}
             </Grid>
           </Grid>
-          {openEditMatchStatsForm ? (
+          {openEditMatchStatsForm && (
             <EditMatchStatsForm
               matchID={match.ID}
               teamMatchHistory={selectedScores}
@@ -282,7 +282,7 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
               openEditMatchStatsForm={openEditMatchStatsForm}
               setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
             />
-          ) : null}
+          )}
         </>
       );
     }

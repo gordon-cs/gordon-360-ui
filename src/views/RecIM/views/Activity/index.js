@@ -50,7 +50,7 @@ const Activity = () => {
   // disable create team if participant already is participating in this activity,
   // unless they're an admin
   useEffect(() => {
-    if (participantTeams && participant) {
+    if (activity && participantTeams && participant) {
       let participating = false;
       setCanCreateTeam(activity.RegistrationOpen);
       participantTeams.forEach((team) => {
@@ -70,13 +70,10 @@ const Activity = () => {
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
-  if (loading) {
-    return <GordonLoader />;
-  } else if (!profile) {
-    // The user is not logged in
-    return <GordonUnauthorized feature={'the Rec-IM page'} />;
+  if (!profile) {
+    return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
-    let scheduleCard = (
+    let scheduleCard = activity && (
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
@@ -126,7 +123,7 @@ const Activity = () => {
         </CardContent>
       </Card>
     );
-    let teamsCard = (
+    let teamsCard = activity && (
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
@@ -164,50 +161,54 @@ const Activity = () => {
 
     return (
       <>
-        <Header expandable="activity" activity={activity} />
-        <Grid container justifyContent="center" spacing={2}>
-          <Grid item container justifyContent="center" spacing={2}>
-            <Grid item xs={12} md={6}>
-              {scheduleCard}
-            </Grid>
-            <Grid item direction={'column'} xs={12} md={6}>
-              <Grid item className={styles.gridItemStack}>
-                {teamsCard}
+        <Header page="activity" activity={activity} expandable />
+        {loading ? (
+          <GordonLoader />
+        ) : (
+          <Grid container justifyContent="center" spacing={2}>
+            <Grid item container justifyContent="center" spacing={2}>
+              <Grid item xs={12} md={6}>
+                {scheduleCard}
+              </Grid>
+              <Grid item direction={'column'} xs={12} md={6}>
+                <Grid item className={styles.gridItemStack}>
+                  {teamsCard}
+                </Grid>
               </Grid>
             </Grid>
+            {openTeamForm ? (
+              <TeamForm
+                closeWithSnackbar={(teamID, status) => {
+                  handleTeamFormSubmit(status, setOpenTeamForm);
+                  navigate.push(`${activityID}/team/${teamID}`);
+                }}
+                openTeamForm={openTeamForm}
+                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+                activityID={activityID}
+              />
+            ) : openCreateMatchForm ? (
+              <CreateMatchForm
+                closeWithSnackbar={(status) => {
+                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
+                }}
+                openCreateMatchForm={openCreateMatchForm}
+                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+                activity={activity}
+              />
+            ) : null}
+            {openCreateSeriesForm && (
+              <CreateSeriesForm
+                closeWithSnackbar={(status) => {
+                  handleCreateSeriesForm(status);
+                }}
+                openCreateSeriesForm={openCreateSeriesForm}
+                setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+                activityID={activity.ID}
+                existingActivitySeries={activity.Series}
+              />
+            )}
           </Grid>
-          {openTeamForm ? (
-            <TeamForm
-              closeWithSnackbar={(teamID, status) => {
-                handleTeamFormSubmit(status, setOpenTeamForm);
-                navigate.push(`${activityID}/team/${teamID}`);
-              }}
-              openTeamForm={openTeamForm}
-              setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-              activityID={activityID}
-            />
-          ) : openCreateMatchForm ? (
-            <CreateMatchForm
-              closeWithSnackbar={(status) => {
-                handleTeamFormSubmit(status, setOpenCreateMatchForm);
-              }}
-              openCreateMatchForm={openCreateMatchForm}
-              setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
-              activity={activity}
-            />
-          ) : null}
-          {openCreateSeriesForm ? (
-            <CreateSeriesForm
-              closeWithSnackbar={(status) => {
-                handleCreateSeriesForm(status);
-              }}
-              openCreateSeriesForm={openCreateSeriesForm}
-              setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-              activityID={activity.ID}
-              existingActivitySeries={activity.Series}
-            />
-          ) : null}
-        </Grid>
+        )}
       </>
     );
   }
