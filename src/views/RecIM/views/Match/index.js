@@ -8,6 +8,7 @@ import Header from '../../components/Header';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getMatchByID } from 'services/recim/match';
+import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 
 const RosterCard = ({ participants, teamName }) => (
   <Card>
@@ -23,6 +24,8 @@ const Match = () => {
   const { profile } = useUser();
   const [match, setMatch] = useState();
   const [loading, setLoading] = useState(true);
+  const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
+  const [selectedScores, setSelectedScores] = useState();
 
   useEffect(() => {
     const loadMatch = async () => {
@@ -31,7 +34,11 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID]);
+  }, [matchID, openEditMatchStatsForm]);
+
+  const handleEditMatchStatsForm = (status) => {
+    setOpenEditMatchStatsForm(false);
+  };
 
   if (loading && !profile) {
     return <GordonLoader />;
@@ -41,7 +48,13 @@ const Match = () => {
   } else {
     return (
       <>
-        <Header page="match" match={match} expandable />
+        <Header
+          page="match"
+          match={match}
+          setOpenHeaderForm={setOpenEditMatchStatsForm}
+          setSelectedMatchScores={setSelectedScores}
+          expandable
+        />
         {loading ? (
           <GordonLoader />
         ) : (
@@ -59,6 +72,17 @@ const Match = () => {
               />
             </Grid>
           </Grid>
+        )}
+        {openEditMatchStatsForm && (
+          <EditMatchStatsForm
+            matchID={match.ID}
+            teamMatchHistory={selectedScores}
+            closeWithSnackbar={(status) => {
+              handleEditMatchStatsForm(status);
+            }}
+            openEditMatchStatsForm={openEditMatchStatsForm}
+            setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+          />
         )}
       </>
     );

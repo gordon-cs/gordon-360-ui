@@ -5,8 +5,6 @@ import { DateTime } from 'luxon';
 import styles from './Header.module.css';
 import { useUser } from 'hooks';
 import { getParticipantByUsername } from 'services/recim/participant';
-import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
-import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 import GordonLoader from 'components/Loader';
 import recimLogo from './../../recim_logo.png';
@@ -24,16 +22,20 @@ const RecIMBreadcrumb = ({ link, children }) => {
   return <Typography color="text.primary">{children}</Typography>;
 };
 
-const Header = ({ page, expandable = false, match, team, activity, home, admin }) => {
+const Header = ({
+  page,
+  expandable = false,
+  match,
+  team,
+  activity,
+  home,
+  admin,
+  setOpenHeaderForm,
+  setSelectedMatchScores, //will be removed when we have a single button on the match edit
+}) => {
   const { profile } = useUser();
   const [user, setUser] = useState();
-  const [openActivityForm, setOpenActivityForm] = useState(false);
-  const [openTeamForm, setOpenTeamForm] = useState(false);
   const [isCaptain, setIsCaptain] = useState(false);
-  const [team0Score, setTeam0Score] = useState(0);
-  const [team1Score, setTeam1Score] = useState(0);
-  const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
-  const [selectedScores, setSelectedScores] = useState();
 
   useEffect(() => {
     const loadData = async () => {
@@ -53,34 +55,6 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
       setIsCaptain(role === 'Co-Captain' || role === 'Team-captain/Creator');
     }
   }, [team, user]);
-
-  useEffect(() => {
-    if (match) {
-      const assignMatchScores = async () => {
-        setTeam0Score(
-          match.Scores.find((team) => team.TeamID === match.Team[0]?.ID)?.TeamScore ?? 0,
-        );
-        setTeam1Score(
-          match.Scores.find((team) => team.TeamID === match.Team[1]?.ID)?.TeamScore ?? 0,
-        );
-      };
-      assignMatchScores();
-    }
-  }, [match]);
-
-  const handleActivityForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenActivityForm(false);
-  };
-
-  const handleTeamForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenTeamForm(false);
-  };
-
-  const handleEditMatchStatsForm = (status) => {
-    setOpenEditMatchStatsForm(false);
-  };
 
   const teamRecord = () => {
     if (team) {
@@ -139,7 +113,7 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
                 <IconButton>
                   <EditIcon
                     onClick={() => {
-                      setOpenActivityForm(true);
+                      setOpenHeaderForm(true);
                     }}
                   />
                 </IconButton>
@@ -149,16 +123,6 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
               <i>Description of activity</i>
             </Typography>
           </Grid>
-          {openActivityForm && (
-            <ActivityForm
-              activity={activity}
-              closeWithSnackbar={(status) => {
-                handleActivityForm(status);
-              }}
-              openActivityForm={openActivityForm}
-              setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
-            />
-          )}
         </Grid>
       );
     }
@@ -175,7 +139,7 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
                 <IconButton>
                   <EditIcon
                     onClick={() => {
-                      setOpenTeamForm(true);
+                      setOpenHeaderForm(true);
                     }}
                   />
                 </IconButton>
@@ -183,18 +147,6 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
             </Typography>
             {teamRecord()}
           </Grid>
-          {openTeamForm && (
-            <TeamForm
-              closeWithSnackbar={(status) => {
-                handleTeamForm(status);
-              }}
-              openTeamForm={openTeamForm}
-              setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-              activityID={team?.Activity?.ID}
-              team={team}
-              isAdmin={user.IsAdmin}
-            />
-          )}
         </Grid>
       );
     }
@@ -227,7 +179,9 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
             </Grid>
             <Grid item container xs={4} sm={2} alignItems="center" direction="column">
               <Typography variant="h5">
-                {team0Score} : {team1Score}
+                {/* In the current implementation you don't need to "find" the right team because 
+                they're cast in the right order ALWAYS */}
+                {match?.Scores[0]?.TeamScore ?? 0} : {match?.Scores[1]?.TeamScore ?? 0}
               </Typography>
               {user?.IsAdmin && (
                 <Grid item>
@@ -235,8 +189,8 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
                     <Grid item>
                       <IconButton
                         onClick={() => {
-                          setSelectedScores(match?.Scores[0]);
-                          setOpenEditMatchStatsForm(true);
+                          setSelectedMatchScores(match?.Scores[0]);
+                          setOpenHeaderForm(true);
                         }}
                         className={styles.editIconButton}
                       >
@@ -246,8 +200,8 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
                     <Grid item>
                       <IconButton
                         onClick={() => {
-                          setSelectedScores(match?.Scores[1]);
-                          setOpenEditMatchStatsForm(true);
+                          setSelectedMatchScores(match?.Scores[1]);
+                          setOpenHeaderForm(true);
                         }}
                         className={styles.editIconButton}
                       >
@@ -272,17 +226,6 @@ const Header = ({ page, expandable = false, match, team, activity, home, admin }
               )}
             </Grid>
           </Grid>
-          {openEditMatchStatsForm && (
-            <EditMatchStatsForm
-              matchID={match.ID}
-              teamMatchHistory={selectedScores}
-              closeWithSnackbar={(status) => {
-                handleEditMatchStatsForm(status);
-              }}
-              openEditMatchStatsForm={openEditMatchStatsForm}
-              setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
-            />
-          )}
         </>
       );
     }

@@ -5,6 +5,7 @@ import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
+import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from './../../components/List';
 import { getTeamByID } from 'services/recim/team';
@@ -19,6 +20,7 @@ const Team = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState();
   const [hasPermissions, setHasPermissions] = useState(false);
+  const [openTeamForm, setOpenTeamForm] = useState(false);
 
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
   const handleInviteParticipantForm = (status) => {
@@ -36,7 +38,7 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID]);
+  }, [profile, teamID, openTeamForm]);
 
   //checks if the team is modifiable by the current user
   useEffect(() => {
@@ -53,6 +55,11 @@ const Team = () => {
     }
     setHasPermissions(hasCaptainPermissions || user?.IsAdmin);
   }, [team, user]);
+
+  const handleTeamForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenTeamForm(false);
+  };
 
   if (!profile) {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
@@ -110,7 +117,7 @@ const Team = () => {
 
     return (
       <>
-        <Header page="team" team={team} expandable />
+        <Header page="team" team={team} setOpenHeaderForm={setOpenTeamForm} expandable />
         {loading ? (
           <GordonLoader />
         ) : (
@@ -122,6 +129,18 @@ const Team = () => {
               {rosterCard}
             </Grid>
           </Grid>
+        )}
+        {openTeamForm && (
+          <TeamForm
+            closeWithSnackbar={(status) => {
+              handleTeamForm(status);
+            }}
+            openTeamForm={openTeamForm}
+            setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+            activityID={team?.Activity?.ID}
+            team={team}
+            isAdmin={user.IsAdmin}
+          />
         )}
       </>
     );

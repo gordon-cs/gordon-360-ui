@@ -13,6 +13,7 @@ import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import CreateMatchForm from 'views/RecIM/components/Forms/CreateMatchForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import UpdateIcon from '@mui/icons-material/Update';
 import RestoreIcon from '@mui/icons-material/Restore';
@@ -28,6 +29,7 @@ const Activity = () => {
   const [activity, setActivity] = useState();
   const [openCreateMatchForm, setOpenCreateMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
+  const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [participant, setParticipant] = useState();
   const [participantTeams, setParticipantTeams] = useState();
@@ -44,7 +46,14 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [profile, activityID, openTeamForm, openCreateSeriesForm, openCreateMatchForm]);
+  }, [
+    profile,
+    activityID,
+    openTeamForm,
+    openCreateSeriesForm,
+    openCreateMatchForm,
+    openActivityForm,
+  ]);
   // ^ May be bad practice, but will refresh page on dialog close
 
   // disable create team if participant already is participating in this activity,
@@ -66,6 +75,10 @@ const Activity = () => {
   const handleCreateSeriesForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenCreateSeriesForm(false);
+  };
+  const handleActivityForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenActivityForm(false);
   };
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -162,7 +175,12 @@ const Activity = () => {
 
     return (
       <>
-        <Header page="activity" activity={activity} expandable />
+        <Header
+          page="activity"
+          activity={activity}
+          setOpenHeaderForm={setOpenActivityForm}
+          expandable
+        />
         {loading ? (
           <GordonLoader />
         ) : (
@@ -177,36 +195,14 @@ const Activity = () => {
                 </Grid>
               </Grid>
             </Grid>
-            {openTeamForm && (
-              <TeamForm
-                closeWithSnackbar={(teamID, status) => {
-                  handleTeamFormSubmit(status, setOpenTeamForm);
-                  navigate.push(`${activityID}/team/${teamID}`);
-                }}
-                openTeamForm={openTeamForm}
-                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-                activityID={activityID}
-              />
-            )}
-            {openCreateMatchForm && (
-              <CreateMatchForm
-                closeWithSnackbar={(status) => {
-                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
-                }}
-                openCreateMatchForm={openCreateMatchForm}
-                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+            {openActivityForm && (
+              <ActivityForm
                 activity={activity}
-              />
-            )}
-            {openCreateSeriesForm && (
-              <CreateSeriesForm
                 closeWithSnackbar={(status) => {
-                  handleCreateSeriesForm(status);
+                  handleActivityForm(status);
                 }}
-                openCreateSeriesForm={openCreateSeriesForm}
-                setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-                activityID={activity.ID}
-                existingActivitySeries={activity.Series}
+                openActivityForm={openActivityForm}
+                setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
               />
             )}
             {openTeamForm && (
