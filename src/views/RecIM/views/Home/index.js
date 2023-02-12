@@ -77,7 +77,6 @@ const Home = () => {
     };
     loadData();
   }, [profile, openActivityForm, openWaiver, openCreateSeriesForm]);
-  console.log(invites);
 
   useEffect(() => {
     setOpenWaiver(participant == null);
@@ -165,8 +164,29 @@ const Home = () => {
 
   let myTeamsCard = (
     <Card>
-      <CardHeader title="My Teams" className={styles.cardHeader} />
+      <CardHeader title="Teams" className={styles.cardHeader} />
       <CardContent>
+      <Grid container className={styles.teamHeader} alignItems="center" columnSpacing={2}>
+            <Grid item container direction="column">
+              <Typography variant="h6" className={styles.teamHeaderMainText}>
+                My Team Invites
+              </Typography>
+            </Grid>
+          </Grid>
+        {invites ? (
+          <TeamList teams={invites} />
+        ) : (
+          <Typography variant="body1" paragraph>
+            You're not yet apart of any teams; join one to get started!
+          </Typography>
+        )}
+        <Grid container className={styles.teamHeader} alignItems="center" columnSpacing={2}>
+          <Grid item container direction="column">
+            <Typography variant="h6" className={styles.teamHeaderMainText}>
+              My Teams
+            </Typography>
+          </Grid>
+        </Grid>
         {myTeams ? (
           <TeamList teams={myTeams} />
         ) : (

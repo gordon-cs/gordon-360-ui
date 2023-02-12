@@ -49,7 +49,7 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID, openTeamForm]);
+  }, [profile, teamID, openTeamForm, openInviteParticipantForm]);
 
   //checks if the team is modifiable by the current user
   useEffect(() => {

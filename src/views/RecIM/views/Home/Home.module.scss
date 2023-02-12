@@ -31,3 +31,17 @@
 .cardHeader :global(.MuiCardHeader-title) {
   font-size: 1em;
 }
+
+.teamHeader {
+  color: $neutral-white;
+  background-color: $neutral-black-opacity55;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  margin-left: 0;
+  padding: 0.5rem;
+}
+
+.teamHeaderMainText {
+  font-weight: bold;
+}
