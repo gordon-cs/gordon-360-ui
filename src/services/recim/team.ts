@@ -69,6 +69,13 @@ type PatchTeam = {
   Logo: string;
 };
 
+type TeamInvite = {
+  activityID: number,
+  activityName: string,
+  teamID: number,
+  teamName: string
+}
+
 //Team Routes
 const getTeams = (active: boolean): Promise<Team[]> => {
   if (active) return http.get(`recim/Teams?active=${active}`);
@@ -107,6 +114,9 @@ const deleteTeamParticipant = async (teamID: number, username: string) => {
 const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>
   http.patch(`recim/Teams/${ID}`, updatedTeam);
 
+const getInvites = async (): Promise<TeamInvite[]> =>
+  http.get(`recim/Teams/invites`)
+
 export {
   getTeams,
   createTeam,
@@ -117,4 +127,5 @@ export {
   editTeamParticipant,
   deleteTeamParticipant,
   editTeam,
+  getInvites,
 };

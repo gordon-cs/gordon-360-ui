@@ -39,16 +39,15 @@ const InviteParticipantForm = ({
     setInviteList(inviteList.filter((participant) => participant.Username !== username));
   };
 
-  const handleSubmit = () => {
-    inviteList.forEach((value) => {
+  const handleSubmit = async () => {
+    for (let index = 0; index < inviteList.length; index++) {
+      debugger;
       let participantData = {
-        Username: value.Username,
+        Username: inviteList[index].Username,
         RoleTypeID: 2,
       };
-      addParticipantToTeam(teamID, participantData).catch((reason) => {
-        console.log(reason);
-      });
-    });
+      await addParticipantToTeam(teamID, participantData)
+    }
 
     handleWindowClose();
   };

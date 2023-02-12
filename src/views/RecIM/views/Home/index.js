@@ -12,6 +12,7 @@ import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+import { getInvites } from 'services/recim/team';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -51,6 +52,7 @@ const Home = () => {
   const [ongoingActivities, setOngoingActivities] = useState([]);
   const [registrableActivities, setRegistrableActivities] = useState([]);
   const [myTeams, setMyTeams] = useState([]);
+  const [invites, setInvites] = useState([]);
   const [participant, setParticipant] = useState([]);
   const [openWaiver, setOpenWaiver] = useState(false);
   const [createdActivity, setCreatedActivity] = useState({ ID: null });
@@ -66,6 +68,7 @@ const Home = () => {
       setLoading(true);
       // Get all active activities where registration has not closed
       setActivities(await getActivities(true));
+      setInvites(await getInvites());
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
         setMyTeams(await getParticipantTeams(profile.AD_Username));
@@ -74,6 +77,7 @@ const Home = () => {
     };
     loadData();
   }, [profile, openActivityForm, openWaiver, openCreateSeriesForm]);
+  console.log(invites);
 
   useEffect(() => {
     setOpenWaiver(participant == null);
