@@ -128,6 +128,6 @@ export {
   editTeamParticipant,
   deleteTeamParticipant,
   editTeam,
-  getInvites,
+  getTeamInvites,
   respondToTeamInvite,
 };
