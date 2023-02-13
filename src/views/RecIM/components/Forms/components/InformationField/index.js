@@ -45,6 +45,21 @@ const InformationField = ({
         />
       );
       break;
+    case 'number':
+      field = (
+        <TextField
+          variant="filled"
+          error={error}
+          className={`disable_select ${styles.field}`}
+          label={label}
+          name={name}
+          helperText={error ? helperText : null}
+          value={value}
+          onChange={(event) => onChange(event)}
+          type="number"
+        />
+      );
+      break;
     case 'checkbox':
       field = (
         <FormControlLabel
@@ -63,6 +78,31 @@ const InformationField = ({
         >
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={(event) => onChange(event)}>
+            {menuItems.map((item) => (
+              // @TODO key needs to be updated to item id once exists
+              <MenuItem key={item} className={styles.select_text} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+      break;
+    case 'multiselect':
+      field = (
+        <FormControl
+          variant="filled"
+          className={`${styles.select_text} ${styles.field}`}
+          style={{ width: '100%' }}
+        >
+          <InputLabel>{label}</InputLabel>
+          <Select
+            label={label}
+            name={name}
+            multiple
+            value={value}
+            onChange={(event) => onChange(event)}
+          >
             {menuItems.map((item) => (
               // @TODO key needs to be updated to item id once exists
               <MenuItem key={item} className={styles.select_text} value={item}>

@@ -1,88 +1,92 @@
 import { Grid } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { createTeam, editTeam, getTeamStatusTypes } from 'services/recim/team';
 import { InformationField } from '../components/InformationField';
 import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ContentCard } from '../components/ContentCard';
 import GordonLoader from 'components/Loader';
-import { useUser } from 'hooks';
+import { createMatch, getMatchSurfaces } from 'services/recim/match';
 
-const TeamForm = ({
-  isAdmin,
-  team,
+const CreateMatchForm = ({
   closeWithSnackbar,
-  openTeamForm,
-  setOpenTeamForm,
-  activityID,
+  openCreateMatchForm,
+  setOpenCreateMatchForm,
+  activity,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
-    Name: false,
-    ActivityID: false,
-    Logo: false,
-    statusID: false,
+    StartTime: false,
+    SeriesID: false,
+    SurfaceID: false,
+    TeamIDs: false,
   });
 
-  const { profile } = useUser();
-  const [teamStatus, setTeamStatus] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [surfaces, setSurfaces] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      setTeamStatus(await getTeamStatusTypes());
+      setSurfaces(await getMatchSurfaces());
       setLoading(false);
     };
     loadData();
-  }, [profile]);
+  }, []);
 
-  const createTeamFields = [
+  const createMatchFields = [
     {
-      label: 'Name',
-      name: 'Name',
-      type: 'text',
-      error: errorStatus.Name,
+      label: 'Start Time',
+      name: 'StartTime',
+      type: 'datetime',
+      error: errorStatus.StartTime,
+      helperText: '*Required',
+    },
+    {
+      label: 'Series',
+      name: 'SeriesID',
+      type: 'select',
+      menuItems: activity.Series.map((series) => {
+        return series.Name;
+      }),
+      error: errorStatus.SeriesID,
+      helperText: '*Required',
+    },
+    {
+      label: 'Surface ID',
+      name: 'SurfaceID',
+      type: 'select',
+      menuItems: surfaces.map((surface) => {
+        return surface.Description;
+      }),
+      error: errorStatus.SurfaceID,
+      helperText: '*Required',
+    },
+    {
+      label: 'Teams',
+      name: 'TeamIDs',
+      type: 'multiselect',
+      menuItems: activity.Team.map((team) => {
+        return team.Name;
+      }),
+      error: errorStatus.StartTime,
       helperText: '*Required',
     },
   ];
-  if (team && isAdmin) {
-    createTeamFields.push({
-      label: 'Team Status',
-      name: 'StatusID',
-      type: 'select',
-      menuItems: teamStatus.map((type) => {
-        return type.Description;
-      }),
-      error: errorStatus.statusID,
-      helperText: '*Required',
-    });
-  }
 
-  const allFields = [createTeamFields].flat();
+  const allFields = [createMatchFields].flat();
 
   const currentInfo = useMemo(() => {
-    if (team) {
-      return {
-        Name: team.Name,
-        ActivityID: Number(activityID),
-        StatusID:
-          teamStatus.find((type) => type.Description === team.Status) == null
-            ? ''
-            : teamStatus.find((type) => type.Description === team.Status).Description,
-        Logo: 'NONE',
-      };
-    }
     return {
-      Name: '',
-      ActivityID: Number(activityID),
-      Logo: 'NONE', // Placeholder (for error checking0)
+      StartTime: '',
+      SeriesID: '',
+      SurfaceID: '',
+      TeamIDs: [],
     };
-  }, [activityID, team, teamStatus]);
+  }, []);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
-  const [isSaving, setSaving] = useState(false);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
+  const [isSaving, setSaving] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
 
   const handleSetError = (field, condition) => {
@@ -94,11 +98,6 @@ const TeamForm = ({
     };
     setErrorStatus(getCurrentErrorStatus);
   };
-
-  // refresh dropdown select once fetch is complete
-  useEffect(() => {
-    setNewInfo(currentInfo);
-  }, [currentInfo]);
 
   // Field Validation
   useEffect(() => {
@@ -154,37 +153,36 @@ const TeamForm = ({
 
   const handleConfirm = () => {
     setSaving(true);
-    let teamRequest = { ...currentInfo, ...newInfo };
 
-    if (team) {
-      teamRequest.StatusID = teamStatus.find(
-        (type) => type.Description === teamRequest.StatusID,
-      ).ID;
+    let matchCreationRequest = { ...currentInfo, ...newInfo };
 
-      editTeam(team.ID, teamRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Team edited successfully',
-        });
+    matchCreationRequest.SeriesID = activity.Series.find(
+      (series) => series.Name === matchCreationRequest.SeriesID,
+    ).ID;
 
-        handleWindowClose();
+    matchCreationRequest.SurfaceID = surfaces.find(
+      (surface) => surface.Description === matchCreationRequest.SurfaceID,
+    ).ID;
+
+    let idArray = [];
+    matchCreationRequest.TeamIDs.forEach((value) => {
+      idArray.push(activity.Team.find((team) => team.Name === value).ID);
+    });
+    matchCreationRequest.TeamIDs = idArray;
+
+    createMatch(matchCreationRequest).then((result) => {
+      console.log(result);
+      closeWithSnackbar({
+        type: 'success',
+        message: 'Match created successfully',
       });
-    } else {
-      createTeam(profile.AD_Username, teamRequest).then((createdTeam) => {
-        setSaving(false);
-        closeWithSnackbar(createdTeam.ID, {
-          type: 'success',
-          message: 'Team created successfully',
-        });
 
-        handleWindowClose();
-      });
-    }
+      handleWindowClose();
+    });
   };
 
   const handleWindowClose = () => {
-    setOpenTeamForm(false);
+    setOpenCreateMatchForm(false);
     setOpenConfirmWindow(false);
     setNewInfo(currentInfo);
   };
@@ -212,11 +210,42 @@ const TeamForm = ({
       />
     ));
   };
-  if (loading) return <GordonLoader />;
+
+  let content;
+  if (loading) {
+    content = <GordonLoader />;
+  } else {
+    content = (
+      <>
+        <ContentCard title="Match Information">{mapFieldsToInputs(createMatchFields)}</ContentCard>
+
+        {/* Confirmation Dialog */}
+        <GordonDialogBox
+          open={openConfirmWindow}
+          title="Confirm Your Match"
+          buttonClicked={!isSaving ? handleConfirm : null}
+          buttonName="Confirm"
+          // in case you want to authenticate something change isButtonDisabled
+          isButtonDisabled={disableUpdateButton}
+          cancelButtonClicked={!isSaving ? handleWindowClose : null}
+          cancelButtonName="Cancel"
+        >
+          <ConfirmationWindowHeader />
+          <Grid container>
+            {getNewFields(currentInfo, newInfo).map((field) => (
+              <ConfirmationRow key={field} field={field} prevValue={currentInfo[field.Field]} />
+            ))}
+          </Grid>
+          {isSaving ? <GordonLoader size={32} /> : null}
+        </GordonDialogBox>
+      </>
+    );
+  }
+
   return (
     <GordonDialogBox
-      open={openTeamForm}
-      title={team ? 'Edit your team' : 'Create a Team'}
+      open={openCreateMatchForm}
+      title="Create a Team"
       fullWidth
       maxWidth="sm"
       buttonClicked={() => setOpenConfirmWindow(true)}
@@ -224,33 +253,13 @@ const TeamForm = ({
       buttonName="Submit"
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
-        setOpenTeamForm(false);
+        setOpenCreateMatchForm(false);
       }}
       cancelButtonName="cancel"
     >
-      <ContentCard title="Team Information">{mapFieldsToInputs(createTeamFields)}</ContentCard>
-
-      {/* Confirmation Dialog */}
-      <GordonDialogBox
-        open={openConfirmWindow}
-        title="Confirm Your Team"
-        buttonClicked={!isSaving ? handleConfirm : null}
-        buttonName="Confirm"
-        // in case you want to authenticate something change isButtonDisabled
-        isButtonDisabled={disableUpdateButton}
-        cancelButtonClicked={!isSaving ? handleWindowClose : null}
-        cancelButtonName="Cancel"
-      >
-        <ConfirmationWindowHeader />
-        <Grid container>
-          {getNewFields(currentInfo, newInfo).map((field) => (
-            <ConfirmationRow key={field} field={field} prevValue={currentInfo[field.Field]} />
-          ))}
-        </Grid>
-        {isSaving ? <GordonLoader size={32} /> : null}
-      </GordonDialogBox>
+      {content}
     </GordonDialogBox>
   );
 };
 
-export default TeamForm;
+export default CreateMatchForm;

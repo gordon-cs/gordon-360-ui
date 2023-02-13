@@ -13,6 +13,34 @@ export type Series = {
   Status: string;
   Match: Match[];
   TeamStanding: TeamRecord[];
+  Schedule: SeriesSchedule;
+};
+
+type SeriesSchedule = {
+  ID: number;
+  AvailableDays: Record<string, boolean>;
+  StartTime: string;
+  EndTime: string;
+  EstMatchTime: number; //in minutes
+};
+
+type UploadSeriesSchedule = {
+  SeriesID?: number;
+  AvailableDays: DaysOfWeek;
+  AvailableSurfaceIDs: number[];
+  DailyStartTime: string;
+  DailyEndTime: string;
+  EstMatchTime: number; //estimated match time in minutes
+};
+
+type DaysOfWeek = {
+  Sun: boolean;
+  Mon: boolean;
+  Tue: boolean;
+  Wed: boolean;
+  Thu: boolean;
+  Fri: boolean;
+  Sat: boolean;
 };
 
 type CreatedSeries = {
@@ -23,6 +51,7 @@ type CreatedSeries = {
   ActivityID: number;
   TypeID: number;
   StatusID: number;
+  ScheduleID: number;
 };
 
 type UploadSeries = {
@@ -31,6 +60,7 @@ type UploadSeries = {
   EndDate: string;
   ActivityID: number;
   TypeID: number;
+  ScheduleID?: number;
   NumberOfTeamsAdmitted: number; //used for subsequent series creation post initial setup, nullable
 };
 
@@ -39,6 +69,7 @@ type PatchSeries = {
   StartDate: string;
   EndDate: string;
   StatusID: number;
+  ScheduleID?: number;
 };
 
 //Series Routes
@@ -61,6 +92,14 @@ const getAllSeries = (): Promise<Series[]> => http.get(`recim/series`);
 const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<CreatedSeries> =>
   http.patch(`recim/series/${seriesID}`, updatedSeries);
 
+const putSeriesSchedule = async (schedule: UploadSeriesSchedule): Promise<SeriesSchedule> =>
+  http.put(`recim/series/schedule`, schedule);
+
+// AUTO SCHEDULER VERY DANGEROUS AS OF 2/4/2023 AS THERE IS NO TRUE DELETE ROUTES,
+// BE CAREFUL USING THIS AS DELETES WILL HAVE TO BE DONE MANUALLY
+const scheduleSeriesMatches = async (seriesID: number): Promise<Match[]> =>
+  http.post(`recim/series/schedule/${seriesID}`);
+
 export {
   createSeries,
   getSeriesByID,
@@ -68,4 +107,6 @@ export {
   getSeriesTypes,
   getAllSeries,
   editSeries,
+  putSeriesSchedule,
+  scheduleSeriesMatches,
 };

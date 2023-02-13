@@ -6,7 +6,7 @@ import {
   CardContent,
   Breadcrumbs,
   Button,
-  IconButton
+  IconButton,
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
@@ -16,6 +16,7 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from './../../components/List';
 import { getTeamByID } from 'services/recim/team';
+import { getParticipantByUsername } from 'services/recim/participant';
 import { Link as LinkRouter } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -24,11 +25,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 
 const Team = () => {
-  const { activityID, teamID } = useParams();
+  const { teamID } = useParams();
   const { profile } = useUser();
-  const [team, setTeam] = useState({});
+  const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(true);
   const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [participant, setParticipant] = useState(null);
+  const [hasPermissions, setHasPermissions] = useState(false);
 
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
   const handleInviteParticipantForm = (status) => {
@@ -36,24 +39,47 @@ const Team = () => {
     setOpenInviteParticipantForm(false);
   };
 
-
   useEffect(() => {
     const loadTeamData = async () => {
       setLoading(true);
       setTeam(await getTeamByID(teamID));
+      if (profile) {
+        setParticipant(await getParticipantByUsername(profile.AD_Username));
+      }
       setLoading(false);
     };
     loadTeamData();
-  }, [teamID, openTeamForm]);
+  }, [profile, teamID, openTeamForm]);
+
+  //checks if the team is modifiable by the current user
+  useEffect(() => {
+    let hasCaptainPermissions = false;
+    let isAdmin = false;
+    if (participant) {
+      isAdmin = participant.IsAdmin;
+      if (team) {
+        let role =
+          team.Participant.find((person) => person.Username === participant.Username) == null
+            ? 'Invalid'
+            : team.Participant.find((person) => person.Username === participant.Username).Role;
+        hasCaptainPermissions =
+          team.Activity.RegistrationOpen &&
+          (role === 'Co-Captain' || role === 'Team-captain/Creator');
+      }
+    }
+    setHasPermissions(hasCaptainPermissions || isAdmin);
+  }, [team, participant]);
+
   const handleTeamForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenTeamForm(false);
   };
+  // Team record needs to be variable based on what series is ongoing / which one they're in (TODO)
   const teamRecord = () => {
     if (team) {
       if (team.TeamRecord[0]) {
         return (
-          <Typography>
+          <Typography variant="subtitle2">
             {team.TeamRecord[0].Win} W : {team.TeamRecord[0].Loss} L : {team.TeamRecord[0].Tie} T
           </Typography>
         );
@@ -88,11 +114,11 @@ const Team = () => {
                     className="gc360_text_link"
                     underline="hover"
                     color="inherit"
-                    to={`/recim/activity/${activityID}`}
+                    to={`/recim/activity/${team.Activity?.ID}`}
                   >
-                    Activity Name
+                    {team.Activity?.Name}
                   </LinkRouter>
-                  <Typography color="text.primary">Team Name</Typography>
+                  <Typography color="text.primary">{team.Name}</Typography>
                 </Breadcrumbs>
               </Grid>
               <hr className={styles.recimNavHeaderLine} />
@@ -104,13 +130,15 @@ const Team = () => {
               <Grid item xs={8} md={5}>
                 <Typography variant="h5" className={styles.teamTitle}>
                   {team == null ? <GordonLoader /> : team.Name}
-                  <IconButton>
-                    <EditIcon
-                      onClick={() => {
-                        setOpenTeamForm(true);
-                      }}
-                    />
-                  </IconButton>
+                  {hasPermissions ? (
+                    <IconButton>
+                      <EditIcon
+                        onClick={() => {
+                          setOpenTeamForm(true);
+                        }}
+                      />
+                    </IconButton>
+                  ) : null}
                 </Typography>
                 {teamRecord()}
               </Grid>
@@ -124,22 +152,26 @@ const Team = () => {
       <Card>
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
-          <CardContent>
-          <ParticipantList participants={team.Participant} showParticipantOptions />
-          </CardContent>
-          <Grid container justifyContent="center">
-            <Button
-              variant="contained"
-              color="warning"
-              startIcon={<AddCircleRoundedIcon />}
-              className={styles.actionButton}
-              onClick={() => {
-                setOpenInviteParticipantForm(true);
-              }}
-            >
-              Invite Participant
-            </Button>
-          </Grid>
+          {hasPermissions ? (
+            <ParticipantList participants={team.Participant} showParticipantOptions showInactive />
+          ) : (
+            <ParticipantList participants={team.Participant} />
+          )}
+          {hasPermissions ? (
+            <Grid container justifyContent="center">
+              <Button
+                variant="contained"
+                color="warning"
+                startIcon={<AddCircleRoundedIcon />}
+                className={styles.actionButton}
+                onClick={() => {
+                  setOpenInviteParticipantForm(true);
+                }}
+              >
+                Invite Participant
+              </Button>
+            </Grid>
+          ) : null}
         </CardContent>
         <InviteParticipantForm
           closeWithSnackbar={(status) => {
@@ -157,7 +189,7 @@ const Team = () => {
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
           {team.Match?.length ? (
-            <MatchList matches={team.Match} activityID={team.ActivityID} />
+            <MatchList matches={team.Match} activityID={team.Activity?.ID} />
           ) : (
             <Typography variant="body1" paragraph>
               No matches scheduled at this time!
@@ -181,7 +213,7 @@ const Team = () => {
           </Grid>
         </Grid>
         <p>
-          Activity ID: {activityID} Team ID: {teamID} (for testing purposes only)
+          Activity ID: {team.Activity?.ID} Team ID: {teamID} (for testing purposes only)
         </p>
         {openTeamForm ? (
           <TeamForm
@@ -190,8 +222,9 @@ const Team = () => {
             }}
             openTeamForm={openTeamForm}
             setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-            activityID={activityID}
+            activityID={team.Activity?.ID}
             team={team}
+            isAdmin={participant.IsAdmin}
           />
         ) : null}
       </Grid>

@@ -7,7 +7,7 @@ import { Activity } from './activity';
 export type Match = {
   ID: number;
   Scores: TeamMatchHistory[];
-  Activity: Activity; // This will only be used for activity ID
+  Activity: Activity; // This will only be used for activity ID and name
   Time: string;
   Surface: string;
   Status: string;
@@ -42,9 +42,9 @@ type CreatedMatchStats = {
 
 type PatchMatchStats = {
   TeamID: number;
-  Status: string;
-  Score: number;
-  Sportsmanship: number;
+  StatusID?: number;
+  Score?: number;
+  Sportsmanship?: number;
 };
 
 type PatchMatch = {
