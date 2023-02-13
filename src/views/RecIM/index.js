@@ -10,12 +10,6 @@ import Match from './views/Match';
 const RecIM = () => {
   return (
     <Switch>
-      <Route exact path="/recim">
-        <Home />
-      </Route>
-      <Route exact path="/recim/admin">
-        <Admin />
-      </Route>
       <Route path="/recim/activity/:activityID/team/:teamID">
         <Team />
       </Route>
@@ -24,6 +18,12 @@ const RecIM = () => {
       </Route>
       <Route path="/recim/activity/:activityID">
         <Activity />
+      </Route>
+      <Route exact path="/recim/admin">
+        <Admin />
+      </Route>
+      <Route exact path="/recim">
+        <Home />
       </Route>
     </Switch>
   );

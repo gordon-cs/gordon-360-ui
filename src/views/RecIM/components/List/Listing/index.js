@@ -30,11 +30,7 @@ import { standardDate } from '../../Helpers';
 
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
-  const [currentCapacity, setCurrentCapacity] = useState(
-    <span style={{ display: 'inline-block' }}>
-      <GordonLoader size={15} />
-    </span>,
-  );
+  const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
   useEffect(() => {
     const loadActivityType = async () => {
       let activityTypes = await getActivityTypes();
@@ -54,9 +50,9 @@ const ActivityListing = ({ activity }) => {
   let activeSeries = activity.Series.find(
     (series) => DateTime.fromISO(series.StartDate) < DateTime.now(),
   );
-  let activeSeriesMessage = activeSeries
-    ? activeSeries.Name + ' until ' + standardDate(DateTime.fromISO(activeSeries.EndDate))
-    : null;
+  let activeSeriesMessage =
+    activeSeries &&
+    activeSeries.Name + ' until ' + standardDate(DateTime.fromISO(activeSeries.EndDate));
 
   const activityTypeIconPair = [
     {
@@ -250,11 +246,13 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
             <IconButton edge="end" onClick={() => callbackFunction(participant.Username)}>
               <ClearIcon />
             </IconButton>
-          ) : showParticipantOptions ? (
-            <IconButton edge="end" onClick={handleParticipantOptions}>
-              <MoreHorizIcon />
-            </IconButton>
-          ) : null
+          ) : (
+            showParticipantOptions && (
+              <IconButton edge="end" onClick={handleParticipantOptions}>
+                <MoreHorizIcon />
+              </IconButton>
+            )
+          )
         }
         disablePadding
       >
@@ -268,7 +266,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
           </ListItemAvatar>
           <ListItemText primary={name} secondary={participant.Role} />
         </ListItemButton>
-        {showParticipantOptions ? (
+        {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
             <MenuItem dense onClick={handleMakeCoCaptain} divider>
               Make co-captain
@@ -277,7 +275,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
               Remove from team
             </MenuItem>
           </Menu>
-        ) : null}
+        )}
       </ListItem>
     </ListItem>
   );

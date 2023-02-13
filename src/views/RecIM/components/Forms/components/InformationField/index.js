@@ -38,7 +38,7 @@ const InformationField = ({
           className={`disable_select ${styles.field}`}
           label={label}
           name={name}
-          helperText={error ? helperText : null}
+          helperText={error && helperText}
           value={value}
           onChange={(event) => onChange(event)}
           type={type}
@@ -53,7 +53,7 @@ const InformationField = ({
           className={`disable_select ${styles.field}`}
           label={label}
           name={name}
-          helperText={error ? helperText : null}
+          helperText={error && helperText}
           value={value}
           onChange={(event) => onChange(event)}
           type="number"

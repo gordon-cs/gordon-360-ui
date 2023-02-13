@@ -1,0 +1,32 @@
+@import '../../../../vars';
+
+%fixSpacingAndShadow {
+  margin-left: -0.5rem;
+  width: calc(100% + 1rem);
+  padding: 0.5rem 0.5rem;
+  // clip-path removes box shadow above this nav bar
+  clip-path: inset(0px -10px -10px -10px);
+}
+
+@media (min-width: $break-md) {
+  %fixSpacingAndShadow {
+    margin-left: -1rem;
+    width: calc(100% + 2rem);
+    padding: 0.5rem 1rem;
+  }
+}
+
+.mainHeader {
+  @extend %fixSpacingAndShadow;
+  background-color: $neutral-white;
+  margin-top: -1rem;
+  border-bottom: 1px solid $neutral-light-gray;
+}
+
+.stickyNav {
+  @extend %fixSpacingAndShadow;
+  background-color: $neutral-white;
+  position: sticky;
+  top: -1rem;
+  margin-bottom: 1rem;
+}

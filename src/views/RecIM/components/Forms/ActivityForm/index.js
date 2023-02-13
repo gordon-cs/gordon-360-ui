@@ -315,7 +315,7 @@ const ActivityForm = ({
         <GordonDialogBox
           open={openConfirmWindow}
           title="Confirm Your Activity"
-          buttonClicked={!isSaving ? handleConfirm : null}
+          buttonClicked={!isSaving && handleConfirm}
           buttonName="Confirm"
           // in case you want to authenticate something change isButtonDisabled
           isButtonDisabled={false}
@@ -330,7 +330,7 @@ const ActivityForm = ({
               <ConfirmationRow key={field} field={field} />
             ))}
           </Grid>
-          {isSaving ? <GordonLoader size={32} /> : null}
+          {isSaving && <GordonLoader size={32} />}
         </GordonDialogBox>
       </>
     );

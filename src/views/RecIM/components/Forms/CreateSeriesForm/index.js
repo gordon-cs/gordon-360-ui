@@ -252,11 +252,11 @@ const CreateSeriesForm = ({
         <GordonDialogBox
           open={openConfirmWindow}
           title="Confirm Your Activity"
-          buttonClicked={!isSaving ? handleConfirm : null}
+          buttonClicked={!isSaving && handleConfirm}
           buttonName="Confirm"
           // in case you want to authenticate something change isButtonDisabled
           isButtonDisabled={false}
-          cancelButtonClicked={!isSaving ? handleWindowClose : null}
+          cancelButtonClicked={!isSaving && handleWindowClose}
           cancelButtonName="Cancel"
         >
           <ConfirmationWindowHeader />
@@ -265,7 +265,7 @@ const CreateSeriesForm = ({
               <ConfirmationRow key={field} field={field} />
             ))}
           </Grid>
-          {isSaving ? <GordonLoader size={32} /> : null}
+          {isSaving && <GordonLoader size={32} />}
         </GordonDialogBox>
       </>
     );
