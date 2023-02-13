@@ -62,7 +62,7 @@ const get = async (queryParams: {
   username?: string;
   sessionCode?: string;
   participationTypes?: Participation[] | Participation;
-}): Promise<MembershipView[]> => http.get(`memberships/${http.toQueryString(queryParams)}`);
+}): Promise<MembershipView[]> => http.get(`memberships${http.toQueryString(queryParams)}`);
 
 const addMembership = (data: MembershipUpload): Promise<MembershipView> =>
   http.post('memberships', data);
