@@ -21,7 +21,7 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
-import { editTeamParticipant } from 'services/recim/team';
+import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 import { getActivityTypes, getActivityByID } from 'services/recim/activity';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
@@ -139,6 +139,15 @@ const ActivityListing = ({ activity }) => {
 
 const TeamListing = ({ team, invite }) => {
   if (!team) return null;
+
+  const handleAcceptInvite = async () => {
+    await respondToTeamInvite(team.ID, { Response: "accepted"})
+  }
+
+  const handleRejectInvite = async () => {
+    await respondToTeamInvite(team.ID, { Response: "rejected" })
+  }
+
   return (
     <ListItem key={team.ID}>
       <ListItemButton
@@ -158,12 +167,12 @@ const TeamListing = ({ team, invite }) => {
           {invite ? (
             <Grid container columnSpacing={2}>
               <Grid item>
-                <IconButton className={styles.greenButton}>
+                <IconButton className={styles.greenButton} onClick={handleAcceptInvite}>
                   <CheckIcon />
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton className={styles.redButton}>
+                <IconButton className={styles.redButton} onClick={handleRejectInvite}>
                   <ClearIcon />
                 </IconButton>
               </Grid>
