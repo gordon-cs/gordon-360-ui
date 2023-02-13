@@ -4,7 +4,6 @@ import Admin from './views/Admin';
 import Team from './views/Team';
 import Activity from './views/Activity';
 import Match from './views/Match';
-import Header from './components/Header';
 
 // Remember that more specific routes need to come first
 
