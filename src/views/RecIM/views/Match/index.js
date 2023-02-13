@@ -50,7 +50,8 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID]);
+  }, [matchID, openEditMatchStatsForm]);
+  // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   useEffect(() => {
     if (match) {
@@ -161,10 +162,10 @@ const Match = () => {
               </Typography>
             </LinkRouter>
             <Typography className={styles.subtitle}>
-              {match?.Team[1]?.TeamRecord.Win ?? 0}W : {match?.Team[0]?.TeamRecord.Loss ?? 0}L
+              {match?.Team[1]?.TeamRecord.Win ?? 0}W : {match?.Team[1]?.TeamRecord.Loss ?? 0}L
             </Typography>
             {user?.IsAdmin && (
-              <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
+              <i className={styles.subtitle}>Sportsmanship: {match?.Scores[1].Sportsmanship}</i>
             )}
           </Grid>
         </Grid>

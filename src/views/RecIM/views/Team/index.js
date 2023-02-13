@@ -39,7 +39,8 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID]);
+  }, [profile, teamID, openTeamForm]);
+  // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   //checks if the team is modifiable by the current user
   useEffect(() => {

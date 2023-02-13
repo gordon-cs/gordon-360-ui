@@ -56,8 +56,15 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [profile, activityID, openTeamForm, openCreateSeriesForm, openCreateMatchForm]);
-  // ^ May be bad practice, but will refresh page on dialog close
+  }, [
+    profile,
+    activityID,
+    openActivityForm,
+    openTeamForm,
+    openCreateSeriesForm,
+    openCreateMatchForm,
+  ]);
+  // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   // disable create team if participant already is participating in this activity,
   // unless they're an admin
