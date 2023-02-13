@@ -107,6 +107,10 @@ const Match = () => {
                 {match?.Team[0]?.Name ?? 'No team yet...'}
               </Typography>
             </LinkRouter>
+            <Typography className={styles.subtitle}>
+              {/* once this is added to the API, it will instantly work */}
+              {match?.Team[0]?.TeamRecord.Win ?? 0}W : {match?.Team[0]?.TeamRecord.Loss ?? 0}L
+            </Typography>
             {user?.IsAdmin && (
               <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
             )}
@@ -156,6 +160,9 @@ const Match = () => {
                 {match?.Team[1]?.Name ?? 'No team yet...'}
               </Typography>
             </LinkRouter>
+            <Typography className={styles.subtitle}>
+              {match?.Team[1]?.TeamRecord.Win ?? 0}W : {match?.Team[0]?.TeamRecord.Loss ?? 0}L
+            </Typography>
             {user?.IsAdmin && (
               <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
             )}
