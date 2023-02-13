@@ -7,15 +7,6 @@
   color: $neutral-white;
 }
 
-.homeHeaderTitle {
-  font-weight: bold;
-  color: $neutral-dark-gray2;
-}
-
-.homeHeaderSubtitle {
-  color: $neutral-gray;
-}
-
 .homeHeaderLine {
   border-top: 3px solid $neutral-gray2;
 }
@@ -30,4 +21,13 @@
 
 .cardHeader :global(.MuiCardHeader-title) {
   font-size: 1em;
+}
+
+.title {
+  font-weight: bold;
+  color: $neutral-dark-gray2;
+}
+
+.subtitle {
+  color: $neutral-gray;
 }

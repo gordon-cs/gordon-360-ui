@@ -1,16 +1,18 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Button } from '@mui/material';
+import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
+import TeamForm from 'views/RecIM/components/Forms/TeamForm';
+import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from './../../components/List';
 import { getTeamByID } from 'services/recim/team';
 import { getParticipantByUsername } from 'services/recim/participant';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Team = () => {
   const { teamID } = useParams();
@@ -18,6 +20,7 @@ const Team = () => {
   const [team, setTeam] = useState();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState();
+  const [openTeamForm, setOpenTeamForm] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
 
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
@@ -54,9 +57,53 @@ const Team = () => {
     setHasPermissions(hasCaptainPermissions || user?.IsAdmin);
   }, [team, user]);
 
+  const teamRecord = () => {
+    if (team) {
+      if (team.TeamRecord[0]) {
+        return (
+          <Typography variant="subtitle2">
+            {team.TeamRecord[0].Win} W : {team.TeamRecord[0].Loss} L : {team.TeamRecord[0].Tie} T
+          </Typography>
+        );
+      }
+      return <Typography variant="subtitle2">Activity has not started</Typography>;
+    }
+    return <GordonLoader size={15} inline />;
+  };
+
+  const handleTeamForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenTeamForm(false);
+  };
+
   if (!profile) {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
+    let headerContents = (
+      <Grid container direction="row" alignItems="center" columnSpacing={4}>
+        <Grid item>
+          <img src={''} alt="Team Icon" width="85em"></img>
+        </Grid>
+        <Grid item xs={8} md={5}>
+          <Typography variant="h5" className={styles.title}>
+            {team?.Name ?? <GordonLoader size={15} inline />}
+            {hasPermissions && (
+              <IconButton
+                onClick={() => {
+                  setOpenTeamForm(true);
+                }}
+                className={styles.editIconButton}
+                sx={{ ml: 1 }}
+              >
+                <EditIcon />
+              </IconButton>
+            )}
+          </Typography>
+          {teamRecord()}
+        </Grid>
+      </Grid>
+    );
+
     let rosterCard = team && (
       <Card>
         <CardHeader title="Roster" className={styles.cardHeader} />
@@ -110,7 +157,7 @@ const Team = () => {
 
     return (
       <>
-        <Header page="team" team={team} expandable />
+        <Header team={team}>{headerContents}</Header>
         {loading ? (
           <GordonLoader />
         ) : (
@@ -121,6 +168,19 @@ const Team = () => {
             <Grid item xs={12} md={6}>
               {rosterCard}
             </Grid>
+
+            {openTeamForm && (
+              <TeamForm
+                closeWithSnackbar={(status) => {
+                  handleTeamForm(status);
+                }}
+                openTeamForm={openTeamForm}
+                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+                activityID={team?.Activity?.ID}
+                team={team}
+                isAdmin={user.IsAdmin}
+              />
+            )}
           </Grid>
         )}
       </>

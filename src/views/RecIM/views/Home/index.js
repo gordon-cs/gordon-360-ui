@@ -12,12 +12,31 @@ import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+import recimLogo from './../../recim_logo.png';
 
 const TabPanel = ({ children, value, index }) => {
   return (
     <div hidden={value !== index} role="tabpanel">
       {children}
     </div>
+  );
+};
+
+export const HomeHeaderContents = () => {
+  return (
+    <Grid container direction="row" alignItems="center" spacing={4}>
+      <Grid item>
+        <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+      </Grid>
+      <Grid item xs={8} md={5} lg={3}>
+        <Typography variant="h5" className={styles.title}>
+          <b className="accentText">Gordon</b> Rec-IM
+        </Typography>
+        <Typography variant="h6" className={styles.subtitle}>
+          <i>"Competition reveals character"</i>
+        </Typography>
+      </Grid>
+    </Grid>
   );
 };
 
@@ -174,7 +193,9 @@ const Home = () => {
   } else {
     return (
       <>
-        <Header page="home" home expandable />
+        <Header>
+          <HomeHeaderContents />
+        </Header>
         {loading ? (
           <GordonLoader />
         ) : (

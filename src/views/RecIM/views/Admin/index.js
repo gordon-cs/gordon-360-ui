@@ -4,6 +4,7 @@ import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import Header from '../../components/Header';
+import { HomeHeaderContents } from '../Home';
 // import styles from './Admin.module.css'; //unused for now since I've imported homeHeader
 import { getParticipantByUsername } from 'services/recim/participant';
 import { ActivityList, TeamList, ParticipantList } from '../../components/List';
@@ -69,7 +70,9 @@ const Admin = () => {
 
   return (
     <>
-      <Header page="admin" admin expandable />
+      <Header admin>
+        <HomeHeaderContents />
+      </Header>
       <Card>
         <CardContent>
           <Tabs

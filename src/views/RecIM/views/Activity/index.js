@@ -1,4 +1,13 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Button, Chip } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  Chip,
+  IconButton,
+} from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -11,9 +20,11 @@ import styles from './Activity.module.css';
 import { MatchList, TeamList } from './../../components/List';
 import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
+import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import CreateMatchForm from 'views/RecIM/components/Forms/CreateMatchForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
+import EditIcon from '@mui/icons-material/Edit';
 import UpdateIcon from '@mui/icons-material/Update';
 import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
@@ -26,11 +37,12 @@ const Activity = () => {
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState();
+  const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openCreateMatchForm, setOpenCreateMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
-  const [participant, setParticipant] = useState();
-  const [participantTeams, setParticipantTeams] = useState();
+  const [user, setUser] = useState();
+  const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
 
   useEffect(() => {
@@ -38,8 +50,8 @@ const Activity = () => {
       setLoading(true);
       setActivity(await getActivityByID(activityID));
       if (profile) {
-        setParticipant(await getParticipantByUsername(profile.AD_Username));
-        setParticipantTeams(await getParticipantTeams(profile.AD_Username));
+        setUser(await getParticipantByUsername(profile.AD_Username));
+        setUserTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
     };
@@ -50,34 +62,79 @@ const Activity = () => {
   // disable create team if participant already is participating in this activity,
   // unless they're an admin
   useEffect(() => {
-    if (activity && participantTeams && participant) {
+    if (activity && userTeams && user) {
       let participating = false;
       setCanCreateTeam(activity.RegistrationOpen);
-      participantTeams.forEach((team) => {
+      userTeams.forEach((team) => {
         if (team.Activity.ID === activity.ID) participating = true;
       });
-      setCanCreateTeam(!participating || participant.IsAdmin);
+      setCanCreateTeam(!participating || user.IsAdmin);
     }
-  }, [activity, participant, participantTeams]);
+  }, [activity, user, userTeams]);
+
+  const handleActivityForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenActivityForm(false);
+  };
+
   const handleTeamFormSubmit = (status, setOpenTeamForm) => {
     //if you want to do something with the message make a snackbar function here
     setOpenTeamForm(false);
   };
+
   const handleCreateSeriesForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenCreateSeriesForm(false);
   };
+
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
   if (!profile) {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
+    let headerContents = (
+      <Grid container direction="row" alignItems="center" columnSpacing={4}>
+        <Grid item>
+          <img src={''} alt="Activity Icon" width="85em"></img>
+        </Grid>
+        <Grid item xs={8} md={5}>
+          <Typography variant="h5" className={styles.title}>
+            {activity?.Name ?? <GordonLoader size={15} inline />}
+            {user?.IsAdmin && (
+              <IconButton
+                onClick={() => {
+                  setOpenActivityForm(true);
+                }}
+                className={styles.editIconButton}
+                sx={{ ml: 1 }}
+              >
+                <EditIcon />
+              </IconButton>
+            )}
+          </Typography>
+          <Typography variant="h6" className={styles.subtitle}>
+            <i>Description of activity</i>
+          </Typography>
+        </Grid>
+        {openActivityForm && (
+          <ActivityForm
+            activity={activity}
+            closeWithSnackbar={(status) => {
+              handleActivityForm(status);
+            }}
+            openActivityForm={openActivityForm}
+            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
+          />
+        )}
+      </Grid>
+    );
+
     let scheduleCard = activity && (
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
-          {participant?.IsAdmin && (
+          {user?.IsAdmin && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={6}>
                 <Grid container justifyContent="center">
@@ -128,7 +185,7 @@ const Activity = () => {
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-          {participant?.IsAdmin && (
+          {user?.IsAdmin && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={12}>
                 <Grid container justifyContent="center">
@@ -162,7 +219,7 @@ const Activity = () => {
 
     return (
       <>
-        <Header page="activity" activity={activity} expandable />
+        <Header activity={activity}>{headerContents}</Header>
         {loading ? (
           <GordonLoader />
         ) : (

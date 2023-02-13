@@ -23,3 +23,21 @@
 .cardHeader :global(.MuiCardHeader-title) {
   font-size: 1em;
 }
+
+.title {
+  font-weight: bold;
+  color: $neutral-dark-gray2;
+}
+
+.subtitle {
+  color: $neutral-gray;
+}
+
+.editIconButton {
+  background-color: $secondary-yellow;
+  color: $neutral-black;
+}
+
+.editIconButton:hover {
+  background-color: rgb(177, 129, 13);
+}
