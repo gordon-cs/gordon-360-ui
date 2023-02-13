@@ -5,6 +5,7 @@ import {
   CardHeader,
   DialogContentText,
   Grid,
+  Link,
   List,
   TextField,
   Typography,
@@ -31,8 +32,7 @@ const CROP_DIM = 320; // pixels
 
 const InvolvementProfile = () => {
   const [involvementInfo, setInvolvementInfo] = useState(null);
-  const [advisors, setAdvisors] = useState([]);
-  const [groupAdmins, setGroupAdmins] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [photoOpen, setPhotoOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -56,17 +56,15 @@ const InvolvementProfile = () => {
   useEffect(() => {
     const loadPage = async () => {
       if (profile) {
-        const [involvementInfo, advisors, groupAdmins, sessionInfo, isAdmin] = await Promise.all([
+        const [involvementInfo, contacts, sessionInfo, isAdmin] = await Promise.all([
           involvementService.get(involvementCode),
-          involvementService.getAdvisors(involvementCode, sessionCode),
-          involvementService.getGroupAdmins(involvementCode, sessionCode),
+          involvementService.getContacts(involvementCode, sessionCode),
           sessionService.get(sessionCode),
           membershipService.checkAdmin(profile.AD_Username, sessionCode, involvementCode),
         ]);
 
         setInvolvementInfo(involvementInfo);
-        setAdvisors(advisors);
-        setGroupAdmins(groupAdmins);
+        setContacts(contacts);
         setSessionInfo(sessionInfo);
         setIsAdmin(isAdmin);
         setTempBlurb(involvementInfo.ActivityBlurb);
@@ -74,7 +72,7 @@ const InvolvementProfile = () => {
         setTempURL(involvementInfo.ActivityURL);
 
         if (isAdmin || isSiteAdmin) {
-          setEmailList(await emailsService.getPerActivity(involvementCode, sessionCode));
+          setEmailList(await emailsService.getPerActivity(involvementCode, { sessionCode }));
         }
 
         setLoading(false);
@@ -205,11 +203,6 @@ const InvolvementProfile = () => {
     return list.map((e) => e.Email).join(',');
   };
 
-  const sendEmail = () => {
-    window.location =
-      'mailto:' + parseEmailsFromList(groupAdmins) + '?bcc=' + parseEmailsFromList(emailList);
-  };
-
   if (!isOnline) {
     return <GordonOffline feature="This involvement" />;
   }
@@ -238,7 +231,12 @@ const InvolvementProfile = () => {
             </Button>
           </Grid>
           <Grid item>
-            <Button variant="contained" color="primary" onClick={sendEmail}>
+            <Button
+              variant="contained"
+              color="primary"
+              component={Link}
+              href={`mailto:${parseEmailsFromList(emailList)}`}
+            >
               Email Members/Subscribers
             </Button>
           </Grid>
@@ -422,18 +420,8 @@ const InvolvementProfile = () => {
                     <strong>Group Contacts</strong>
                   </Typography>
                   <List>
-                    {groupAdmins.map((admin, index) => (
-                      <ContactListItem key={index} contact={admin} />
-                    ))}
-                  </List>
-                </Grid>
-                <Grid item>
-                  <Typography>
-                    <strong>Group Advisors</strong>
-                  </Typography>
-                  <List>
-                    {advisors.map((advisor, index) => (
-                      <ContactListItem key={index} contact={advisor} />
+                    {contacts.map((contact, index) => (
+                      <ContactListItem key={index} contact={contact} />
                     ))}
                   </List>
                 </Grid>

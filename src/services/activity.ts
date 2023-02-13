@@ -1,5 +1,6 @@
-import emailsService from './emails';
+import emailsService, { Contact } from './emails';
 import http from './http';
+import { Participation } from './membership';
 import { compareByProperty, sort } from './utils';
 
 type Activity = {
@@ -13,12 +14,6 @@ type Activity = {
   ActivityURL: string;
   /** Whether the club is private or public to everyone, such as a scholars group etc. false=public true=private */
   Privacy: string;
-};
-
-type Person = {
-  FirstName: string;
-  LastName: string;
-  Email: string;
 };
 
 const closeActivity = (activityCode: string, sessionCode: string): Promise<void> =>
@@ -43,11 +38,11 @@ const getAll = (sessionCode: string) =>
     .get<Activity[]>(`activities/session/${sessionCode}`)
     .then(sort(compareByProperty('ActivityDescription')));
 
-const getAdvisors = (activityCode: string, sessionCode: string): Promise<Person[]> =>
-  emailsService.getPerActivity(activityCode, sessionCode, 'advisor');
-
-const getGroupAdmins = (activityCode: string, sessionCode: string): Promise<Person[]> =>
-  emailsService.getPerActivity(activityCode, sessionCode, 'group-admin');
+const getContacts = (activityCode: string, sessionCode: string): Promise<Contact[]> =>
+  emailsService.getPerActivity(activityCode, {
+    sessionCode,
+    participationTypes: [Participation.Advisor, Participation.GroupAdmin],
+  });
 
 const getStatus = (activityCode: string, sessionCode: string): Promise<'OPEN' | 'CLOSED'> =>
   http.get(`activities/${sessionCode}/${activityCode}/status`);
@@ -103,9 +98,8 @@ const involvementService = {
   editActivity,
   setActivityImage,
   get,
-  getAdvisors,
+  getContacts,
   getAll,
-  getGroupAdmins,
   getStatus,
   getTypes,
   getOpen,

@@ -13,7 +13,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   const [members, setMembers] = useState([]);
   const [followersNum, setFollowersNum] = useState(0);
   const [membersNum, setMembersNum] = useState(0);
-  const [participationDetail, setParticipationDetail] = useState([]);
+  const [membership, setMembership] = useState();
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [loading, setLoading] = useState(true);
   const { involvementCode, sessionCode } = useParams();
@@ -24,17 +24,17 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
       setLoading(true);
 
       try {
-        const [participationDetail, followersNum, membersNum] = await Promise.all([
-          membershipService.search(profile.AD_Username, sessionCode, involvementCode),
+        const [[membership], followersNum, membersNum] = await Promise.all([
+          membershipService.get({ username: profile.AD_Username, sessionCode, involvementCode }),
           membershipService.getFollowersNum(involvementCode, sessionCode),
           membershipService.getMembersNum(involvementCode, sessionCode),
         ]);
-        setParticipationDetail(participationDetail);
+        setMembership(membership);
         setFollowersNum(followersNum);
         setMembersNum(membersNum);
 
-        if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSiteAdmin) {
-          setMembers(await membershipService.get(involvementCode, sessionCode));
+        if (membership?.Participation !== Participation.Guest || isSiteAdmin) {
+          setMembers(await membershipService.get({ involvementCode, sessionCode }));
         }
 
         setLoading(false);
@@ -59,34 +59,25 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
       CommentText: 'Subscriber',
       GroupAdmin: false,
     };
-    await membershipService.addMembership(data);
-    setParticipationDetail(
-      await membershipService.search(profile.AD_Username, sessionCode, involvementCode),
-    );
+    const newMembership = await membershipService.addMembership(data);
+    setMembership(newMembership);
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
 
   const handleUnsubscribe = async () => {
-    await membershipService.remove(participationDetail[2]);
-    setParticipationDetail(
-      await membershipService.search(profile.AD_Username, sessionCode, involvementCode),
-    );
+    await membershipService.remove(membership?.MembershipID);
+    setMembership();
     setFollowersNum(await membershipService.getFollowersNum(involvementCode, sessionCode));
   };
 
   const handleAddMember = async () => {
-    setMembers(await membershipService.get(involvementCode, sessionCode));
+    setMembers(await membershipService.get({ involvementCode, sessionCode }));
   };
 
   const handleLeave = async () => {
-    const newParticipationDetail = await membershipService.search(
-      profile.AD_Username,
-      sessionCode,
-      involvementCode,
-    );
-    setParticipationDetail(newParticipationDetail);
+    setMembership();
     if (isSiteAdmin) {
-      setMembers(await membershipService.get(involvementCode, sessionCode));
+      setMembers(await membershipService.get({ involvementCode, sessionCode }));
     }
     setMembersNum(await membershipService.getMembersNum(involvementCode, sessionCode));
   };
@@ -96,7 +87,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   if (loading === true) {
     return <GordonLoader />;
   } else {
-    if ((participationDetail[0] && participationDetail[1] !== 'Guest') || isSiteAdmin) {
+    if (membership?.Participation !== Participation.Guest || isSiteAdmin) {
       content = (
         <>
           {(isAdmin || isSiteAdmin) && (
@@ -126,7 +117,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
       content = (
         <Grid item>
           <NonMemberButtons
-            isGuest={participationDetail[1] === 'Guest'}
+            isGuest={membership?.Participation === Participation.Guest}
             onSubscribe={handleSubscribe}
             onUnsubscribe={handleUnsubscribe}
             involvementDescription={involvementDescription}
