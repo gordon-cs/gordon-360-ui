@@ -41,7 +41,6 @@ const InviteParticipantForm = ({
 
   const handleSubmit = async () => {
     for (let index = 0; index < inviteList.length; index++) {
-      debugger;
       let participantData = {
         Username: inviteList[index].Username,
         RoleTypeID: 2,
