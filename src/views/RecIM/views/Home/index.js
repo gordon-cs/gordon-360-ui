@@ -12,7 +12,7 @@ import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
-import { getInvites } from 'services/recim/team';
+import { getTeamInvites } from 'services/recim/team';
 
 const TabPanel = ({ children, value, index }) => {
   return (
