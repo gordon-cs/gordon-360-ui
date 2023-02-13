@@ -132,17 +132,34 @@ const dataURItoBlob = (dataURI: string) => {
   return new Blob([ia], { type: mimeString });
 };
 
+type QueryStringPrimitive = string | number | boolean;
+type QueryStringSerializable = QueryStringPrimitive | Array<QueryStringPrimitive>;
+
+/**
+ * Convert an object into a URL query string.
+ *
+ * @param queryParams Object containing params to be serialized into a URL query string
+ * @returns URL query string of the form `'?key1=value1&key2=value2'`, or an empty string if `queryParams` is `undefined`.
+ */
 const toQueryString = (
-  queryParams?: Record<string | number | symbol, string | number | boolean | Array<any>>,
+  queryParams?: Record<string | number | symbol, QueryStringSerializable>,
 ): string => {
   if (!queryParams) return '';
 
+  // Instantiate new empty `URLSearchParams` object
+  // Note: we cannot use the `new URLSearchParams(obj: Object)` constructor because it only supports
+  // string values in the passed-in object.
   const urlSearchParams = new URLSearchParams();
 
+  // Add each property of `queryParams` object to the `urlSearchParams`
   Object.entries(queryParams).forEach(([key, value]) => {
     if (Array.isArray(value)) {
+      // If `value` is an array, append each element of the array to the searchParams
+      // This is *most* standard way of encoding arrays in a query string, and the only way
+      // that the browser-native URLSearchParams API supports
       value.forEach((value) => urlSearchParams.append(key, value.toString()));
     } else {
+      // For all primitive values, append them directly
       urlSearchParams.append(key, value.toString());
     }
   });
