@@ -20,6 +20,15 @@
   color: $neutral-white;
 }
 
+.greenButton {
+  background-color: #008000;
+  color: $neutral-white;
+}
+
+.greenButton:hover {
+  background-color: #00c000;
+}
+
 .redButton:hover {
   background-color: $alternative-red;
 }

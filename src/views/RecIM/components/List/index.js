@@ -43,9 +43,9 @@ const MatchList = ({ matches, activityID }) => {
   return <List dense>{content}</List>;
 };
 
-const TeamList = ({ teams }) => {
+const TeamList = ({ teams, invite }) => {
   if (!teams?.length) return <Typography>No teams to show.</Typography>;
-  let content = teams.map((team) => <TeamListing key={team.ID} team={team} />);
+  let content = teams.map((team) => <TeamListing key={team.ID} team={team} invite={invite} />);
   return <List dense>{content}</List>;
 };
 

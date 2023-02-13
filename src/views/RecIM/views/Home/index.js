@@ -174,7 +174,7 @@ const Home = () => {
             </Grid>
           </Grid>
         {invites ? (
-          <TeamList teams={invites} />
+          <TeamList teams={invites} invite />
         ) : (
           <Typography variant="body1" paragraph>
             You're not yet apart of any teams; join one to get started!

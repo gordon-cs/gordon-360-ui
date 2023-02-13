@@ -20,6 +20,7 @@ import GordonLoader from '../../../../../components/Loader';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
+import CheckIcon from '@mui/icons-material/Check';
 import { editTeamParticipant } from 'services/recim/team';
 import { getActivityTypes, getActivityByID } from 'services/recim/activity';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
@@ -136,7 +137,7 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const TeamListing = ({ team }) => {
+const TeamListing = ({ team, invite }) => {
   if (!team) return null;
   return (
     <ListItem key={team.ID}>
@@ -145,13 +146,29 @@ const TeamListing = ({ team }) => {
         to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
         className={styles.listing}
       >
-        <Grid container columnSpacing={2}>
-          <Grid item xs={12} sm={8}>
-            <Typography className={styles.listingTitle}>{team.Name}</Typography>
+        <Grid container rowSpacing={1}>
+          <Grid container columnSpacing={2}>
+            <Grid item xs={12} sm={8}>
+              <Typography className={styles.listingTitle}>{team.Name}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
+              <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
-            <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
-          </Grid>
+          {invite ? (
+            <Grid container columnSpacing={2}>
+              <Grid item>
+                <IconButton className={styles.greenButton}>
+                  <CheckIcon />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <IconButton className={styles.redButton}>
+                  <ClearIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+          ) : null}
         </Grid>
       </ListItemButton>
     </ListItem>
