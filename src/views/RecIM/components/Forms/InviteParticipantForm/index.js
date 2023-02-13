@@ -27,9 +27,11 @@ const InviteParticipantForm = ({
 
   const onSearchSubmit = (username) => {
     // Check if participant exists in invite list
-    if (inviteList.includes({ Username: username })) {
-      createSnackbar('Participant already in list', 'error');
-      return;
+    for (let index = 0; index < inviteList.length; index++) {
+      if (inviteList[index].Username === username) {
+        createSnackbar('Participant already in list', 'error');
+        return;
+      }
     }
 
     setInviteList([...inviteList, { Username: username }]);
@@ -45,7 +47,7 @@ const InviteParticipantForm = ({
         Username: inviteList[index].Username,
         RoleTypeID: 2,
       };
-      await addParticipantToTeam(teamID, participantData)
+      await addParticipantToTeam(teamID, participantData);
     }
 
     handleWindowClose();
