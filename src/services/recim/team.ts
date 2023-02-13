@@ -111,7 +111,7 @@ const deleteTeamParticipant = async (teamID: number, username: string) => {
 const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>
   http.patch(`recim/Teams/${ID}`, updatedTeam);
 
-const getInvites = async (): Promise<Team[]> => http.get(`recim/Teams/invites`);
+const getTeamInvites = async (): Promise<Team[]> => http.get(`recim/Teams/invites`);
 
 const respondToTeamInvite = async (
   teamID: number,
