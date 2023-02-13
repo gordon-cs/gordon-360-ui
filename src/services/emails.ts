@@ -1,7 +1,7 @@
 import http from './http';
 import { Participation } from './membership';
 
-export type Person = {
+export type Contact = {
   FirstName: string;
   LastName: string;
   Email: string;
@@ -14,7 +14,7 @@ const getPerActivity = (
     sessionCode?: string;
     participationTypes?: Participation[];
   },
-): Promise<Person[]> =>
+): Promise<Contact[]> =>
   http.get(`emails/involvement/${involvementCode}${http.toQueryString(queryParams)}`);
 
 const emailsService = {

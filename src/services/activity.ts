@@ -1,4 +1,4 @@
-import emailsService, { Person } from './emails';
+import emailsService, { Contact } from './emails';
 import http from './http';
 import { Participation } from './membership';
 import { compareByProperty, sort } from './utils';
@@ -38,7 +38,7 @@ const getAll = (sessionCode: string) =>
     .get<Activity[]>(`activities/session/${sessionCode}`)
     .then(sort(compareByProperty('ActivityDescription')));
 
-const getContacts = (activityCode: string, sessionCode: string): Promise<Person[]> =>
+const getContacts = (activityCode: string, sessionCode: string): Promise<Contact[]> =>
   emailsService.getPerActivity(activityCode, {
     sessionCode,
     participationTypes: [Participation.Advisor, Participation.GroupAdmin],
