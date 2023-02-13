@@ -62,12 +62,12 @@ const Team = () => {
     if (team) {
       if (team.TeamRecord[0]) {
         return (
-          <Typography variant="subtitle2">
+          <Typography className={styles.subtitle}>
             {team.TeamRecord[0].Win} W : {team.TeamRecord[0].Loss} L : {team.TeamRecord[0].Tie} T
           </Typography>
         );
       }
-      return <Typography variant="subtitle2">Activity has not started</Typography>;
+      return <Typography className={styles.subtitle}>Activity has not started</Typography>;
     }
     return <GordonLoader size={15} inline />;
   };
