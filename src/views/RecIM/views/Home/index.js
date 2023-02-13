@@ -68,7 +68,7 @@ const Home = () => {
       setLoading(true);
       // Get all active activities where registration has not closed
       setActivities(await getActivities(true));
-      setInvites(await getInvites());
+      setInvites(await getTeamInvites());
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
         setMyTeams(await getParticipantTeams(profile.AD_Username));
