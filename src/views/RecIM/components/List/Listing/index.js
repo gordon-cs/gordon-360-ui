@@ -164,7 +164,7 @@ const TeamListing = ({ team, invite }) => {
               <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
             </Grid>
           </Grid>
-          {invite ? (
+          {invite && (
             <Grid container columnSpacing={2}>
               <Grid item>
                 <IconButton className={styles.greenButton} onClick={handleAcceptInvite}>
@@ -177,7 +177,7 @@ const TeamListing = ({ team, invite }) => {
                 </IconButton>
               </Grid>
             </Grid>
-          ) : null}
+          )}
         </Grid>
       </ListItemButton>
     </ListItem>
