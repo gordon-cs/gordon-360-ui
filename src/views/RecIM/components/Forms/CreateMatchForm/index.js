@@ -223,11 +223,11 @@ const CreateMatchForm = ({
         <GordonDialogBox
           open={openConfirmWindow}
           title="Confirm Your Match"
-          buttonClicked={!isSaving ? handleConfirm : null}
+          buttonClicked={!isSaving && handleConfirm}
           buttonName="Confirm"
           // in case you want to authenticate something change isButtonDisabled
           isButtonDisabled={disableUpdateButton}
-          cancelButtonClicked={!isSaving ? handleWindowClose : null}
+          cancelButtonClicked={!isSaving && handleWindowClose}
           cancelButtonName="Cancel"
         >
           <ConfirmationWindowHeader />
@@ -236,7 +236,7 @@ const CreateMatchForm = ({
               <ConfirmationRow key={field} field={field} prevValue={currentInfo[field.Field]} />
             ))}
           </Grid>
-          {isSaving ? <GordonLoader size={32} /> : null}
+          {isSaving && <GordonLoader size={32} />}
         </GordonDialogBox>
       </>
     );

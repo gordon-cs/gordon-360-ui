@@ -6,27 +6,25 @@ import {
   CardContent,
   Button,
   Chip,
-  Breadcrumbs,
   IconButton,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import HomeIcon from '@mui/icons-material/Home';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useHistory } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import Header from '../../components/Header';
 import styles from './Activity.module.css';
 import { MatchList, TeamList } from './../../components/List';
-import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
-import { Link as LinkRouter } from 'react-router-dom';
+import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import CreateMatchForm from 'views/RecIM/components/Forms/CreateMatchForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
+import EditIcon from '@mui/icons-material/Edit';
 import UpdateIcon from '@mui/icons-material/Update';
 import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
@@ -43,8 +41,8 @@ const Activity = () => {
   const [openCreateMatchForm, setOpenCreateMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
-  const [participant, setParticipant] = useState();
-  const [participantTeams, setParticipantTeams] = useState();
+  const [user, setUser] = useState();
+  const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
 
   useEffect(() => {
@@ -52,8 +50,8 @@ const Activity = () => {
       setLoading(true);
       setActivity(await getActivityByID(activityID));
       if (profile) {
-        setParticipant(await getParticipantByUsername(profile.AD_Username));
-        setParticipantTeams(await getParticipantTeams(profile.AD_Username));
+        setUser(await getParticipantByUsername(profile.AD_Username));
+        setUserTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
     };
@@ -61,99 +59,89 @@ const Activity = () => {
   }, [
     profile,
     activityID,
+    openActivityForm,
     openTeamForm,
     openCreateSeriesForm,
-    openActivityForm,
     openCreateMatchForm,
   ]);
-  // ^ May be bad practice, but will refresh page on dialog close
+  // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   // disable create team if participant already is participating in this activity,
   // unless they're an admin
   useEffect(() => {
-    if (participantTeams && participant) {
+    if (activity && userTeams && user) {
       let participating = false;
       setCanCreateTeam(activity.RegistrationOpen);
-      participantTeams.forEach((team) => {
+      userTeams.forEach((team) => {
         if (team.Activity.ID === activity.ID) participating = true;
       });
-      setCanCreateTeam(!participating || participant.IsAdmin);
+      setCanCreateTeam(!participating || user.IsAdmin);
     }
-  }, [activity, participant, participantTeams]);
-  const handleTeamFormSubmit = (status, setOpenTeamForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenTeamForm(false);
-  };
-  const handleCreateSeriesForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenCreateSeriesForm(false);
-  };
+  }, [activity, user, userTeams]);
+
   const handleActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenActivityForm(false);
   };
+
+  const handleTeamFormSubmit = (status, setOpenTeamForm) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenTeamForm(false);
+  };
+
+  const handleCreateSeriesForm = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenCreateSeriesForm(false);
+  };
+
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
-  if (loading) {
-    return <GordonLoader />;
-  } else if (!profile) {
-    // The user is not logged in
-    return <GordonUnauthorized feature={'the Rec-IM page'} />;
+  if (!profile) {
+    return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
-    let activityHeader = (
-      <Card>
-        <CardContent>
-          <Grid container direction="column">
-            <Grid item container direction="column" alignItems="center">
-              <Grid item>
-                <Breadcrumbs aria-label="breadcrumb">
-                  <LinkRouter
-                    className="gc360_text_link"
-                    underline="hover"
-                    color="inherit"
-                    to={'/recim'}
-                  >
-                    <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                    Rec-IM Home
-                  </LinkRouter>
-                  <Typography color="text.primary">{activity.Name}</Typography>
-                </Breadcrumbs>
-              </Grid>
-              <hr className={styles.recimNavHeaderLine} />
-            </Grid>
-            <Grid item container direction="row" alignItems="center" columnSpacing={4}>
-              <Grid item>
-                <img src={''} alt="Activity Icon" width="85em"></img>
-              </Grid>
-              <Grid item xs={8} md={5}>
-                <Typography variant="h5" className={styles.activityTitle}>
-                  {activity.Name}
-                  {participant?.IsAdmin ? (
-                    <IconButton>
-                      <EditIcon
-                        onClick={() => {
-                          setOpenActivityForm(true);
-                        }}
-                      />
-                    </IconButton>
-                  ) : null}
-                </Typography>
-                <Typography variant="h6" className={styles.activitySubtitle}>
-                  <i>Description of activity</i>
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+    let headerContents = (
+      <Grid container direction="row" alignItems="center" columnSpacing={4}>
+        <Grid item>
+          <img src={''} alt="Activity Icon" width="85em"></img>
+        </Grid>
+        <Grid item xs={8} md={5}>
+          <Typography variant="h5" className={styles.title}>
+            {activity?.Name ?? <GordonLoader size={15} inline />}
+            {user?.IsAdmin && (
+              <IconButton
+                onClick={() => {
+                  setOpenActivityForm(true);
+                }}
+                className={styles.editIconButton}
+                sx={{ ml: 1 }}
+              >
+                <EditIcon />
+              </IconButton>
+            )}
+          </Typography>
+          <Typography variant="h6" className={styles.subtitle}>
+            <i>Description of activity</i>
+          </Typography>
+        </Grid>
+        {openActivityForm && (
+          <ActivityForm
+            activity={activity}
+            closeWithSnackbar={(status) => {
+              handleActivityForm(status);
+            }}
+            openActivityForm={openActivityForm}
+            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
+          />
+        )}
+      </Grid>
     );
-    // CARD - schedule
-    let scheduleCard = (
+
+    let scheduleCard = activity && (
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
-          {participant?.IsAdmin ? (
+          {user?.IsAdmin && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={6}>
                 <Grid container justifyContent="center">
@@ -186,7 +174,7 @@ const Activity = () => {
                 </Grid>
               </Grid>
             </Grid>
-          ) : null}
+          )}
           {activity.Series?.length ? (
             activity.Series.map((series) => {
               return <ScheduleList series={series} activityID={activityID} />;
@@ -199,16 +187,16 @@ const Activity = () => {
         </CardContent>
       </Card>
     );
-    // CARD - teams
-    let teamsCard = (
+
+    let teamsCard = activity && (
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-          {participant?.IsAdmin ? (
+          {user?.IsAdmin && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={12}>
                 <Grid container justifyContent="center">
-                  {canCreateTeam ? (
+                  {canCreateTeam && (
                     <Button
                       variant="contained"
                       color="warning"
@@ -220,11 +208,11 @@ const Activity = () => {
                     >
                       Create a New Team
                     </Button>
-                  ) : null}
+                  )}
                 </Grid>
               </Grid>
             </Grid>
-          ) : null}
+          )}
           {activity.Team?.length ? (
             <TeamList teams={activity.Team} />
           ) : (
@@ -237,63 +225,89 @@ const Activity = () => {
     );
 
     return (
-      <Grid container spacing={2} direction="column" wrap="nowrap">
-        <Grid item alignItems="center" xs={12}>
-          {activityHeader}
-        </Grid>
-        <Grid item container justifyContent="center" spacing={2}>
-          <Grid item xs={12} md={6}>
-            {scheduleCard}
-          </Grid>
-          <Grid item direction={'column'} xs={12} md={6}>
-            <Grid item className={styles.gridItemStack}>
-              {teamsCard}
+      <>
+        <Header activity={activity}>{headerContents}</Header>
+        {loading ? (
+          <GordonLoader />
+        ) : (
+          <Grid container justifyContent="center" spacing={2}>
+            <Grid item container justifyContent="center" spacing={2}>
+              <Grid item xs={12} md={6}>
+                {scheduleCard}
+              </Grid>
+              <Grid item direction={'column'} xs={12} md={6}>
+                <Grid item className={styles.gridItemStack}>
+                  {teamsCard}
+                </Grid>
+              </Grid>
             </Grid>
+            {openTeamForm && (
+              <TeamForm
+                closeWithSnackbar={(teamID, status) => {
+                  handleTeamFormSubmit(status, setOpenTeamForm);
+                  navigate.push(`${activityID}/team/${teamID}`);
+                }}
+                openTeamForm={openTeamForm}
+                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+                activityID={activityID}
+              />
+            )}
+            {openCreateMatchForm && (
+              <CreateMatchForm
+                closeWithSnackbar={(status) => {
+                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
+                }}
+                openCreateMatchForm={openCreateMatchForm}
+                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+                activity={activity}
+              />
+            )}
+            {openCreateSeriesForm && (
+              <CreateSeriesForm
+                closeWithSnackbar={(status) => {
+                  handleCreateSeriesForm(status);
+                }}
+                openCreateSeriesForm={openCreateSeriesForm}
+                setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+                activityID={activity.ID}
+                existingActivitySeries={activity.Series}
+              />
+            )}
+            {openTeamForm && (
+              <TeamForm
+                closeWithSnackbar={(teamID, status) => {
+                  handleTeamFormSubmit(status, setOpenTeamForm);
+                  navigate.push(`${activityID}/team/${teamID}`);
+                }}
+                openTeamForm={openTeamForm}
+                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+                activityID={activityID}
+              />
+            )}
+            {openCreateMatchForm && (
+              <CreateMatchForm
+                closeWithSnackbar={(status) => {
+                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
+                }}
+                openCreateMatchForm={openCreateMatchForm}
+                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+                activity={activity}
+              />
+            )}
+            {openCreateSeriesForm && (
+              <CreateSeriesForm
+                closeWithSnackbar={(status) => {
+                  handleCreateSeriesForm(status);
+                }}
+                openCreateSeriesForm={openCreateSeriesForm}
+                setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+                activityID={activity.ID}
+                existingActivitySeries={activity.Series}
+              />
+            )}
           </Grid>
-        </Grid>
-        {openTeamForm ? (
-          <TeamForm
-            closeWithSnackbar={(teamID, status) => {
-              handleTeamFormSubmit(status, setOpenTeamForm);
-              navigate.push(`${activityID}/team/${teamID}`);
-            }}
-            openTeamForm={openTeamForm}
-            setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-            activityID={activityID}
-          />
-        ) : openCreateMatchForm ? (
-          <CreateMatchForm
-            closeWithSnackbar={(status) => {
-              handleTeamFormSubmit(status, setOpenCreateMatchForm);
-            }}
-            openCreateMatchForm={openCreateMatchForm}
-            setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
-            activity={activity}
-          />
-        ) : null}
-        {openCreateSeriesForm ? (
-          <CreateSeriesForm
-            closeWithSnackbar={(status) => {
-              handleCreateSeriesForm(status);
-            }}
-            openCreateSeriesForm={openCreateSeriesForm}
-            setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-            activityID={activity.ID}
-            existingActivitySeries={activity.Series}
-          />
-        ) : null}
-        {openActivityForm ? (
-          <ActivityForm
-            activity={activity}
-            closeWithSnackbar={(status) => {
-              handleActivityForm(status);
-            }}
-            openActivityForm={openActivityForm}
-            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
-          />
-        ) : null}
-        <Typography>Activity ID: {activityID} (testing purposes only)</Typography>
-      </Grid>
+        )}
+      </>
     );
   }
 };

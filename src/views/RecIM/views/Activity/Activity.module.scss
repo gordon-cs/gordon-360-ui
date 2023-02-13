@@ -1,19 +1,5 @@
 @import '../../../../vars';
 
-.activityTitle {
-  font-weight: bold;
-  color: $neutral-dark-gray2;
-}
-
-.activitySubtitle {
-  color: $neutral-gray;
-}
-
-.recimNavHeaderLine {
-  border-top: 3px solid $neutral-gray2;
-  width: 20em;
-}
-
 .buttonArea {
   background-color: $neutral-light-gray;
   padding: 16px;
@@ -25,6 +11,27 @@
 .actionButton {
   text-transform: none;
 }
+
+.seriesHeader {
+  color: $neutral-white;
+  background-color: $neutral-black-opacity55;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  margin-left: 0;
+  padding: 0.5rem;
+}
+
+.seriesMainText {
+  font-weight: bold;
+}
+
+.seriesSecondaryText {
+  color: $neutral-light-gray;
+  font-size: 0.7em;
+}
+
+// All below should eventually be refactored to global styles
 
 // if desired, this should just be a global change and
 // universally applied to all 360 cards
@@ -50,21 +57,20 @@
   color: $neutral-gray;
 }
 
-.seriesHeader {
-  color: $neutral-white;
-  background-color: $neutral-black-opacity55;
-  border-radius: 0.5rem;
-  margin-top: 1rem;
-  width: 100%;
-  margin-left: 0;
-  padding: 0.5rem;
-}
-
-.seriesMainText {
+.title {
   font-weight: bold;
+  color: $neutral-dark-gray2;
 }
 
-.seriesSecondaryText {
-  color: $neutral-light-gray;
-  font-size: 0.7em;
+.subtitle {
+  color: $neutral-gray;
+}
+
+.editIconButton {
+  background-color: $secondary-yellow;
+  color: $neutral-black;
+}
+
+.editIconButton:hover {
+  background-color: rgb(177, 129, 13);
 }
