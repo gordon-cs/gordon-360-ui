@@ -26,6 +26,7 @@ import UpdatePhone from './components/UpdatePhoneDialog';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
+import { FaLessThanEqual } from 'react-icons/fa';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -261,11 +262,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
     ) : null;
 
-  const cliftonStrengths =
-    profile.CliftonStrengths && (myProf || !profile.CliftonStrengths.Private) ? (
-      <ProfileInfoListItem
-        title="Clifton Strengths:"
-        contentText={
+  const cliftonStrengths = (
+    <ProfileInfoListItem
+      title="Clifton Strengths:"
+      contentText={
+        profile.CliftonStrengths && (myProf || !profile.CliftonStrengths.Private) ? (
           <Typography>
             {profile.CliftonStrengths.Themes.map((strength) => (
               <a href={strength.link} target="_blank" rel="noopener noreferrer" key={strength.name}>
@@ -286,26 +287,40 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
               leaveTouchDelay={5000}
             />
           </Typography>
-        }
-        ContentIcon={
-          myProf && (
-            <FormControlLabel
-              control={
-                <Switch
-                  onChange={handleChangeCliftonStrengthsPrivacy}
-                  checked={!isCliftonStrengthsPrivate}
-                />
-              }
-              label={isCliftonStrengthsPrivate ? 'Private' : 'Public'}
-              labelPlacement="bottom"
-              disabled={!isOnline}
-            />
-          )
-        }
-        privateInfo={profile.CliftonStrengths.Private}
-        myProf={myProf}
-      />
-    ) : null;
+        ) : (
+          <Typography>
+            {' '}
+            No strengths to show.{' '}
+            <a
+              href="https://gordon.gallup.com/signin/default.aspx"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Take the test
+            </a>{' '}
+          </Typography>
+        )
+      }
+      ContentIcon={
+        myProf && (
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={handleChangeCliftonStrengthsPrivacy}
+                checked={!isCliftonStrengthsPrivate}
+              />
+            }
+            label={isCliftonStrengthsPrivate ? 'Private' : 'Public'}
+            labelPlacement="bottom"
+            disabled={!isOnline}
+          />
+        )
+      }
+      privateInfo={profile.CliftonStrengths.Private}
+      myProf={myProf}
+    />
+  );
+  //) : null;
 
   const advisors =
     (myProf || canViewAcademicInfo) && isStudent ? (
