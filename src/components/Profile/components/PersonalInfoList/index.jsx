@@ -320,7 +320,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       myProf={myProf}
     />
   );
-  //) : null;
 
   const advisors =
     (myProf || canViewAcademicInfo) && isStudent ? (
