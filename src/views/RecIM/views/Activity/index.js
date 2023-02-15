@@ -7,6 +7,7 @@ import {
   Button,
   Chip,
   IconButton,
+  setRef,
 } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -33,6 +34,7 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { standardDate } from 'views/RecIM/components/Helpers';
 import { DateTime } from 'luxon';
+import { scheduleSeriesMatches } from 'services/recim/series';
 
 const Activity = () => {
   const navigate = useHistory();
@@ -47,6 +49,7 @@ const Activity = () => {
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -66,6 +69,7 @@ const Activity = () => {
     openTeamForm,
     openCreateSeriesForm,
     openCreateMatchForm,
+    reload,
   ]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
@@ -180,7 +184,14 @@ const Activity = () => {
           )}
           {activity.Series?.length ? (
             activity.Series.map((series) => {
-              return <ScheduleList series={series} activityID={activityID} />;
+              return (
+                <ScheduleList
+                  series={series}
+                  activityID={activityID}
+                  reload={reload}
+                  setReload={setReload}
+                />
+              );
             })
           ) : (
             <Typography variant="body1" paragraph>
@@ -315,35 +326,28 @@ const Activity = () => {
   }
 };
 
-const ScheduleList = ({ series, activityID }) => {
+const ScheduleList = ({ series, activityID, reload, setReload }) => {
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
   let startDate = DateTime.fromISO(series.StartDate);
   let endDate = DateTime.fromISO(series.EndDate);
+
   const handleAutoSchedule = () => {
     setOpenAutoSchedulerDisclaimer(false);
+    setReload(!reload);
   };
 
   const handleButtonClick = () => {
-    console.log(series);
     const numMatches = (type, numTeams) => {
       switch (type) {
         case 'Round Robin':
           return (numTeams * (numTeams - 1)) / 2;
-        case 'Single Elimination':
-          var numByes = 0;
-          //while not power of 2
-          while (
-            !(numTeams + numByes != 0 && ((numTeams + numByes) & (numTeams + numByes - 1)) == 0)
-          ) {
-            numByes++;
-          }
-          var numGames = (numTeams - numByes) / 2; //games in first round
-          return numGames + Math.log2(numGames + numByes);
+        case 'Single Elim':
+          return numTeams - 1;
         case 'Ladder':
           return 1; //temporary
         case 'Double Elim':
-          return 1; //not implemented
+          return numTeams * 2 - 1;
       }
     };
     setDisclaimerContent(
@@ -422,9 +426,7 @@ const ScheduleList = ({ series, activityID }) => {
         maxWidth="sm"
         buttonClicked={() => handleAutoSchedule()}
         buttonName="I Understand"
-        cancelButtonClicked={() => {
-          setOpenAutoSchedulerDisclaimer(false);
-        }}
+        cancelButtonClicked={() => setOpenAutoSchedulerDisclaimer(false)}
         cancelButtonName="Cancel"
       >
         <ContentCard title={`You are attempting to use the auto-scheduler for ${series.Name}`}>
