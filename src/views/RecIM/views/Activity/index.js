@@ -8,11 +8,14 @@ import {
   Chip,
   IconButton,
 } from '@mui/material';
+import GordonDialogBox from 'components/GordonDialogBox';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useHistory } from 'react-router-dom';
 import { useUser } from 'hooks';
+import { ContentCard } from 'views/RecIM/components/Forms/components/ContentCard';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
@@ -313,8 +316,57 @@ const Activity = () => {
 };
 
 const ScheduleList = ({ series, activityID }) => {
+  const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
+  const [disclaimerContent, setDisclaimerContent] = useState('');
   let startDate = DateTime.fromISO(series.StartDate);
   let endDate = DateTime.fromISO(series.EndDate);
+  const handleAutoSchedule = () => {
+    setOpenAutoSchedulerDisclaimer(false);
+  };
+
+  const handleButtonClick = () => {
+    const numMatches = (type, numTeams) => {
+      switch (type) {
+        case 'Round Robin':
+          return (numTeams * (numTeams - 1)) / 2;
+        case 'Single Elimination':
+          var numByes = 0;
+          //while not power of 2
+          while (
+            !(numTeams + numByes != 0 && ((numTeams + numByes) & (numTeams + numByes - 1)) == 0)
+          ) {
+            numByes++;
+          }
+          var numGames = (numTeams - numByes) / 2; //games in first round
+          return numGames + Math.log2(numGames + numByes);
+        case 'Ladder':
+          return 1; //temporary
+        case 'Double Elimination':
+          return 'unknown number'; //not implemented
+      }
+    };
+    setDisclaimerContent(
+      <Typography margin={4}>
+        <Typography variant="h5"></Typography>
+
+        <Typography variant="body1" paragraph>
+          {series.Match.length > 0 &&
+            `${series.Name} already has ${series.Match.length} on-going/scheduled matches.`}
+          You are attempting to create an additional {''}
+          <b>{numMatches(series.Type, series.TeamStanding.length)}</b> {''}
+          matches in the format of {series.Type} among {series.TeamStanding.length} teams
+        </Typography>
+
+        <Typography variant="body1" paragraph>
+          Each match has an estimated length of {series.Schedule.EstMatchTime} minutes, with a 15
+          minutes buffer in between each match. Matches will be scheduled to start on {''}
+          {standardDate(startDate, false)}, or the earliest available day, at{' '}
+          {DateTime.fromISO(series.Schedule.StartTime).toLocaleString(DateTime.TIME_SIMPLE)}{' '}
+        </Typography>
+      </Typography>,
+    );
+    setOpenAutoSchedulerDisclaimer(true);
+  };
 
   const status = () => {
     let now = DateTime.fromMillis(Date.now());
@@ -330,21 +382,24 @@ const ScheduleList = ({ series, activityID }) => {
 
   return (
     <>
-      <Grid container className={styles.seriesHeader} alignItems="center" columnSpacing={2}>
+      <Grid container className={styles.seriesHeader} alignItems="center" columnSpacing={1}>
         <Grid item container direction="column" xs={12} sm={6}>
           <Typography variant="h6" className={styles.seriesMainText}>
-            {series.Name}
+            {series.Name}{' '}
+            <IconButton
+              onClick={() => {
+                handleButtonClick();
+              }}
+            >
+              <AddIcon />
+            </IconButton>
           </Typography>
-          <Typography className={styles.seriesSecondaryText}>
-            Schedule Type: {series.Type}
-          </Typography>
+          <Typography className={styles.seriesSecondaryText}>{series.Type}</Typography>
         </Grid>
         <Grid item container xs={12} sm={3}>
           <Grid item xs={10}>
-            <Typography>
-              <i>
-                {standardDate(startDate, false)} - {standardDate(endDate, false)}
-              </i>
+            <Typography className={styles.seriesDateText}>
+              {standardDate(startDate, false)} - {standardDate(endDate, false)}
             </Typography>
           </Grid>
         </Grid>
@@ -359,6 +414,22 @@ const ScheduleList = ({ series, activityID }) => {
           Games have not yet been scheduled for this series.
         </Typography>
       )}
+      <GordonDialogBox
+        open={openAutoSchedulerDisclaimer}
+        title="Auto-Scheduler Disclaimer"
+        fullWidth
+        maxWidth="sm"
+        buttonClicked={() => handleAutoSchedule()}
+        buttonName="I Understand"
+        cancelButtonClicked={() => {
+          setOpenAutoSchedulerDisclaimer(false);
+        }}
+        cancelButtonName="Cancel"
+      >
+        <ContentCard title={`You are attempting to use the auto-scheduler for ${series.Name}`}>
+          {disclaimerContent}
+        </ContentCard>
+      </GordonDialogBox>
     </>
   );
 };
