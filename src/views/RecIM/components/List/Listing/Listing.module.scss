@@ -1,14 +1,14 @@
 @import '../../../../../vars';
 
 .listing {
-  background-color: $neutral-light-gray;
+  background-color: $neutral-light-gray2-opacity20;
   padding: 1em;
   border-radius: 0.5em;
   align-items: center;
 }
 
 .listing:hover {
-  background-color: $neutral-light-gray2;
+  background-color: $neutral-light-gray2-opacity50;
 }
 
 :global(.MuiList-padding) {
