@@ -50,6 +50,7 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
+    console.log(match);
   }, [matchID, openEditMatchStatsForm]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
@@ -103,6 +104,9 @@ const Match = () => {
         </Grid>
         <Grid container alignItems="center" justifyContent="space-around">
           <Grid item xs={2}>
+            <img src={''} alt="Team Icon" width="85em"></img>
+          </Grid>
+          <Grid item xs={2}>
             <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
               <Typography variant="h5" className="gc360_text_link">
                 {match?.Team[0]?.Name ?? 'No team yet...'}
@@ -115,9 +119,6 @@ const Match = () => {
             {user?.IsAdmin && (
               <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
             )}
-          </Grid>
-          <Grid item xs={2}>
-            <img src={''} alt="Team Icon" width="85em"></img>
           </Grid>
           <Grid item container xs={4} sm={2} alignItems="center" direction="column">
             <Typography variant="h5">
@@ -152,10 +153,8 @@ const Match = () => {
               </Grid>
             )}
           </Grid>
-          <Grid item xs={2}>
-            <img src={''} alt="Team Icon" width="85em"></img>
-          </Grid>
-          <Grid item xs={2}>
+
+          <Grid item xs={2} textAlign="right">
             <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
               <Typography variant="h5" className="gc360_text_link">
                 {match?.Team[1]?.Name ?? 'No team yet...'}
@@ -167,6 +166,9 @@ const Match = () => {
             {user?.IsAdmin && (
               <i className={styles.subtitle}>Sportsmanship: {match?.Scores[1].Sportsmanship}</i>
             )}
+          </Grid>
+          <Grid item xs={2}>
+            <img src={''} alt="Team Icon" width="85em"></img>
           </Grid>
         </Grid>
       </>
