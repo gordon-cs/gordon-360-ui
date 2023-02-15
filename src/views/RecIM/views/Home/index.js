@@ -63,7 +63,7 @@ const Home = () => {
     const loadData = async () => {
       setLoading(true);
       // Get all active activities where registration has not closed
-      setActivities(await getActivities(true));
+      setActivities(await getActivities());
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
         setMyTeams(await getParticipantTeams(profile.AD_Username));
