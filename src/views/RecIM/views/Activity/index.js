@@ -7,7 +7,6 @@ import {
   Button,
   Chip,
   IconButton,
-  setRef,
 } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -352,6 +351,8 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
           return 1; //temporary
         case 'Double Elim':
           return numTeams * 2 - 1;
+        default:
+          return null;
       }
     };
     setDisclaimerContent(
