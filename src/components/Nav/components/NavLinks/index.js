@@ -6,6 +6,7 @@ import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import WellnessIcon from '@mui/icons-material/LocalHospital';
 import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
+import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
@@ -120,6 +121,18 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
+  const recimButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      openUnavailableDialog={setDialog}
+      onLinkClick={onLinkClick}
+      linkName={'Rec-IM'}
+      linkPath={'/recim'}
+      LinkIcon={RecIMIcon}
+      divider={false}
+    />
+  );
+
   const linksButton = (
     <GordonNavButton
       unavailable={isOnline ? null : 'offline'}
@@ -187,6 +200,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {peopleButton}
         {timesheetsButton}
         {wellnessButton}
+        {recimButton}
       </List>
 
       <Divider />
