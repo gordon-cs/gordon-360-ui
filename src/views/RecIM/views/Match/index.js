@@ -94,12 +94,12 @@ const Match = () => {
       <>
         <Grid container spacing={4}>
           <Grid item xs={6} textAlign="right">
-            <Typography className={styles.subtitle}>{match?.Activity.Name}</Typography>
-          </Grid>
-          <Grid item xs={6} textAlign="left">
             <Typography className={styles.subtitle}>
               {dayMonthDate(DateTime.fromISO(match?.Time))}
             </Typography>
+          </Grid>
+          <Grid item xs={6} textAlign="left">
+            <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
           </Grid>
         </Grid>
         <Grid container alignItems="center" justifyContent="space-around">
