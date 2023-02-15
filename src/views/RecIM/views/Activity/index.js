@@ -325,6 +325,7 @@ const ScheduleList = ({ series, activityID }) => {
   };
 
   const handleButtonClick = () => {
+    console.log(series);
     const numMatches = (type, numTeams) => {
       switch (type) {
         case 'Round Robin':
@@ -341,8 +342,8 @@ const ScheduleList = ({ series, activityID }) => {
           return numGames + Math.log2(numGames + numByes);
         case 'Ladder':
           return 1; //temporary
-        case 'Double Elimination':
-          return 'unknown number'; //not implemented
+        case 'Double Elim':
+          return 1; //not implemented
       }
     };
     setDisclaimerContent(
