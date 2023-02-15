@@ -269,9 +269,30 @@ const MatchListing = ({ match, activityID }) => {
         className={styles.listing}
       >
         <Grid container>
-          <Grid item>
-            {match.Team[0]?.Name} vs. {match.Team[1]?.Name}
-          </Grid>
+          {match.Team.length > 2 ? (
+            match.Team.map((team) => (
+              <>
+                <Grid item xs={10}>
+                  {team.Name}
+                </Grid>
+                <Grid item xs={2} textAlign="center">
+                  vs.
+                </Grid>
+              </>
+            ))
+          ) : (
+            <>
+              <Grid item xs={5}>
+                {match.Team[0]?.Name}
+              </Grid>
+              <Grid item xs={2} textAlign="center">
+                vs.
+              </Grid>
+              <Grid item xs={5}>
+                {match.Team[1]?.Name}
+              </Grid>
+            </>
+          )}
         </Grid>
       </ListItemButton>
     </ListItem>
