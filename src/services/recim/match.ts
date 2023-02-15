@@ -45,6 +45,7 @@ type PatchMatchStats = {
   StatusID?: number;
   Score?: number;
   Sportsmanship?: number;
+  TeamIDs?: Array<number>;
 };
 
 type PatchMatch = {
