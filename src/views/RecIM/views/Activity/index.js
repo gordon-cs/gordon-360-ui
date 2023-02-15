@@ -332,9 +332,13 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
   let startDate = DateTime.fromISO(series.StartDate);
   let endDate = DateTime.fromISO(series.EndDate);
 
+  //This is still currently a nuke without the delete button.
   const handleAutoSchedule = () => {
-    setOpenAutoSchedulerDisclaimer(false);
-    setReload(!reload);
+    scheduleSeriesMatches(series.ID).then((res) => {
+      console.log(res);
+      setOpenAutoSchedulerDisclaimer(false);
+      setReload(!reload);
+    });
   };
 
   const handleButtonClick = () => {
@@ -352,8 +356,6 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
     };
     setDisclaimerContent(
       <Typography margin={4}>
-        <Typography variant="h5"></Typography>
-
         <Typography variant="body1" paragraph>
           {series.Match.length > 0 &&
             `${series.Name} already has ${series.Match.length} on-going/scheduled matches.`}
