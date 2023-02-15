@@ -50,7 +50,6 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-    console.log(match);
   }, [matchID, openEditMatchStatsForm]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
