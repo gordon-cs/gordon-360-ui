@@ -22,13 +22,12 @@ const Team = () => {
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
-
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
   const handleInviteParticipantForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenInviteParticipantForm(false);
   };
-
+  console.log(team);
   useEffect(() => {
     const loadTeamData = async () => {
       setLoading(true);
@@ -114,7 +113,7 @@ const Team = () => {
           ) : (
             <ParticipantList participants={team.Participant} />
           )}
-          {hasPermissions && (
+          {hasPermissions && !team.Activity.SoloRegistration && (
             <Grid container justifyContent="center">
               <Button
                 variant="contained"
