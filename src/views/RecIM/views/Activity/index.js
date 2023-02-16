@@ -340,17 +340,19 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
   let startDate = DateTime.fromISO(series.StartDate);
   let endDate = DateTime.fromISO(series.EndDate);
 
-  //This is still currently a nuke without the delete button.
-  const handleAutoSchedule = () => {
-    scheduleSeriesMatches(series.ID).then((res) => {
-      console.log(res);
-      setOpenAutoSchedulerDisclaimer(false);
-      setReload(!reload);
-    });
+  // default closure
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
-  const handleButtonClick = (e) => {
-    setAnchorEl(e.currentTarget);
+  // edit button
+  const handleEdit = () => {
+    console.log(`edit series#${series.ID}, ${series.Name}`);
+    handleClose();
+  };
+
+  // autoschedule button
+  const handleAutoSchedule = () => {
     const numMatches = (type, numTeams) => {
       switch (type) {
         case 'Round Robin':
@@ -383,7 +385,27 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
         </Typography>
       </Typography>,
     );
-    //setOpenAutoSchedulerDisclaimer(true);
+    setOpenAutoSchedulerDisclaimer(true);
+    handleClose();
+  };
+
+  const handleConfirmAutoSchedule = () => {
+    scheduleSeriesMatches(series.ID).then((res) => {
+      console.log(res);
+      setOpenAutoSchedulerDisclaimer(false);
+      setReload(!reload);
+    });
+  };
+
+  // delete button
+  const handleDelete = () => {
+    console.log(`delete series#${series.ID}, ${series.Name}`);
+    handleClose();
+  };
+
+  // menu button click
+  const handleButtonClick = (e) => {
+    setAnchorEl(e.currentTarget);
   };
 
   const status = () => {
@@ -424,19 +446,14 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
             </IconButton>{' '}
           </Grid>
         )}
-        <Menu open={openMenu} onClose={() => setAnchorEl(null)} anchorEl={anchorEl}>
-          <MenuItem dense onClick={() => console.log('Edit series')} divider>
+        <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
+          <MenuItem dense onClick={handleEdit} divider>
             Edit
           </MenuItem>
-          <MenuItem dense onClick={() => console.log('Auto-schedule series')} divider>
+          <MenuItem dense onClick={handleAutoSchedule} divider>
             Auto-schedule
           </MenuItem>
-          <MenuItem
-            dense
-            onClick={() => console.log('delete series')}
-            className={styles.redButton}
-            divider
-          >
+          <MenuItem dense onClick={handleDelete} className={styles.redButton} divider>
             Delete
           </MenuItem>
         </Menu>
@@ -453,7 +470,7 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
         title="Auto-Scheduler Disclaimer"
         fullWidth
         maxWidth="sm"
-        buttonClicked={() => handleAutoSchedule()}
+        buttonClicked={() => handleConfirmAutoSchedule()}
         buttonName="I Understand"
         cancelButtonClicked={() => setOpenAutoSchedulerDisclaimer(false)}
         cancelButtonName="Cancel"
