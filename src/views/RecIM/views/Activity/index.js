@@ -333,8 +333,8 @@ const Activity = () => {
 };
 
 const ScheduleList = ({ series, activityID, reload, setReload }) => {
-  const [openMenu, setOpenMenu] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
+  const openMenu = Boolean(anchorEl);
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
   let startDate = DateTime.fromISO(series.StartDate);
@@ -383,7 +383,7 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
         </Typography>
       </Typography>,
     );
-    // setOpenAutoSchedulerDisclaimer(true);
+    //setOpenAutoSchedulerDisclaimer(true);
   };
 
   const status = () => {
@@ -416,36 +416,30 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
         <Grid container item sm={3} justifyContent="center">
           {status()}
         </Grid>
-        <Grid container item sm={1} justifyContent="center">
-          <IconButton
-            onClick={() => {
-              handleButtonClick();
-            }}
-          >
-            <TuneIcon inline />
-          </IconButton>{' '}
-        </Grid>
+
         {series.TeamStanding.length > 0 && (
-          <Menu open={openMenu} onClose={() => console.log('close')} anchorEl={anchorEl}>
-            <MenuItem dense onClick={() => console.log('Edit series')} divider>
-              Edit
-            </MenuItem>
-            <MenuItem
-              dense
-              onClick={() => console.log('Auto-schedule series')}
-              className={styles.redButton}
-            >
-              Auto-schedule
-            </MenuItem>
-            <MenuItem
-              dense
-              onClick={() => console.log('delete series')}
-              className={styles.redButton}
-            >
-              Delete
-            </MenuItem>
-          </Menu>
+          <Grid container item sm={1} justifyContent="center">
+            <IconButton onClick={handleButtonClick}>
+              <TuneIcon inline />
+            </IconButton>{' '}
+          </Grid>
         )}
+        <Menu open={openMenu} onClose={() => setAnchorEl(null)} anchorEl={anchorEl}>
+          <MenuItem dense onClick={() => console.log('Edit series')} divider>
+            Edit
+          </MenuItem>
+          <MenuItem dense onClick={() => console.log('Auto-schedule series')} divider>
+            Auto-schedule
+          </MenuItem>
+          <MenuItem
+            dense
+            onClick={() => console.log('delete series')}
+            className={styles.redButton}
+            divider
+          >
+            Delete
+          </MenuItem>
+        </Menu>
       </Grid>
       {series.Match.length ? (
         <MatchList matches={series.Match} activityID={activityID} />
