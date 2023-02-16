@@ -38,13 +38,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
 
   const createMatchFields = [
     {
-      label: 'Start Time',
-      name: 'StartTime',
-      type: 'datetime',
-      error: errorStatus.StartTime,
-      helperText: '*Required',
-    },
-    {
       label: 'Surface',
       name: 'SurfaceID',
       type: 'select',
@@ -57,6 +50,13 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
   ];
   if (activity) {
     createMatchFields.push(
+      {
+        label: 'Start Time',
+        name: 'StartTime',
+        type: 'datetime',
+        error: errorStatus.StartTime,
+        helperText: '*Required',
+      },
       {
         label: 'Series',
         name: 'SeriesID',
@@ -80,6 +80,13 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     );
   } else if (match) {
     createMatchFields.push(
+      {
+        label: 'Start Time',
+        name: 'Time',
+        type: 'datetime',
+        error: errorStatus.StartTime,
+        helperText: '*Required',
+      },
       {
         label: 'Teams',
         name: 'TeamIDs',
@@ -121,7 +128,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       teamIDs.push(match.Activity.Team.find((_team) => team.ID === _team.ID).Name),
     );
     return {
-      StartTime: match.Time,
+      Time: match.Time,
       StatusID:
         matchStatus.find((type) => type.Description === match.Status) == null
           ? ''
@@ -231,6 +238,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
           type: 'success',
           message: 'Match created successfully',
         });
+        handleWindowClose();
       });
     else if (match) {
       matchRequest.StatusID = matchStatus.find(
@@ -243,10 +251,9 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
           type: 'success',
           message: 'Match created successfully',
         });
+        handleWindowClose();
       });
     }
-
-    handleWindowClose();
   };
 
   const handleWindowClose = () => {
