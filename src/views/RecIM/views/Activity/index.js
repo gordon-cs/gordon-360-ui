@@ -387,7 +387,6 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
     // current series
     return <Chip icon={<ScheduleIcon />} label="ongoing" color="warning" size="small"></Chip>;
   };
-
   return (
     <>
       <Grid container className={styles.seriesHeader} alignItems="center" columnSpacing={1}>

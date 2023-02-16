@@ -39,8 +39,7 @@ const Header = ({ match, team, activity, admin, children }) => {
           {/* Match breadcrumb */}
           {match && (
             <RecIMBreadcrumb>
-              Match: {match?.Team[0]?.Name ?? <GordonLoader size={15} inline />} vs{' '}
-              {match?.Team[1]?.Name ?? <GordonLoader size={15} inline />}
+              Match: {match?.Team[0]?.Name ?? <i>TBD</i>} vs {match?.Team[1]?.Name ?? <i>TBD</i>}
             </RecIMBreadcrumb>
           )}
           {/* Admin breadcrumb */}

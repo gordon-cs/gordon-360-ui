@@ -256,11 +256,6 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
 };
 
 const MatchListing = ({ match, activityID }) => {
-  if (!match?.Team?.length) {
-    console.log('Error: MatchListing missing required info; this should be handled elsewhere');
-    return null;
-  }
-
   return (
     <ListItem key={match.ID}>
       <ListItemButton
@@ -270,7 +265,7 @@ const MatchListing = ({ match, activityID }) => {
       >
         <Grid container>
           <Grid item>
-            {match.Team[0]?.Name} vs. {match.Team[1]?.Name}
+            {match.Team[0]?.Name ?? <i>TBD</i>} vs. {match.Team[1]?.Name ?? <i>TBD</i>}
           </Grid>
         </Grid>
       </ListItemButton>
