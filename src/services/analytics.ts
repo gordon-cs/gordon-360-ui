@@ -24,7 +24,7 @@ const onEvent = (category: string, action: string, label?: string, value?: numbe
 const onPageView = () => ReactGA.pageview(window.location.pathname + window.location.search);
 
 const initialize = () => {
-  ReactGA.initialize(process.env.REACT_APP_ANALYTICS_ID ?? 'UA-101865570-1');
+  ReactGA.initialize(import.meta.env.VITE_ANALYTICS_ID ?? 'UA-101865570-1');
   // Set user role
   // TODO get user role from JWT
   ReactGA.set({ dimension1: 'god' });
