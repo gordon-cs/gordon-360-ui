@@ -7,10 +7,12 @@ import {
   Button,
   Chip,
   IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import AddIcon from '@mui/icons-material/Add';
+import TuneIcon from '@mui/icons-material/Tune';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useHistory } from 'react-router-dom';
@@ -331,6 +333,8 @@ const Activity = () => {
 };
 
 const ScheduleList = ({ series, activityID, reload, setReload }) => {
+  const [openMenu, setOpenMenu] = useState(false);
+  const [anchorEl, setAnchorEl] = useState();
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
   let startDate = DateTime.fromISO(series.StartDate);
@@ -345,7 +349,8 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
     });
   };
 
-  const handleButtonClick = () => {
+  const handleButtonClick = (e) => {
+    setAnchorEl(e.currentTarget);
     const numMatches = (type, numTeams) => {
       switch (type) {
         case 'Round Robin':
@@ -378,7 +383,7 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
         </Typography>
       </Typography>,
     );
-    setOpenAutoSchedulerDisclaimer(true);
+    // setOpenAutoSchedulerDisclaimer(true);
   };
 
   const status = () => {
@@ -395,16 +400,9 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
   return (
     <>
       <Grid container className={styles.seriesHeader} alignItems="center" columnSpacing={1}>
-        <Grid item container direction="column" xs={12} sm={6}>
+        <Grid item container direction="column" xs={10} sm={5}>
           <Typography variant="h6" className={styles.seriesMainText}>
             {series.Name}{' '}
-            <IconButton
-              onClick={() => {
-                handleButtonClick();
-              }}
-            >
-              <AddIcon />
-            </IconButton>
           </Typography>
           <Typography className={styles.seriesSecondaryText}>{series.Type}</Typography>
         </Grid>
@@ -415,9 +413,39 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid container item xs={12} sm={3} justifyContent="center">
+        <Grid container item sm={3} justifyContent="center">
           {status()}
         </Grid>
+        <Grid container item sm={1} justifyContent="center">
+          <IconButton
+            onClick={() => {
+              handleButtonClick();
+            }}
+          >
+            <TuneIcon inline />
+          </IconButton>{' '}
+        </Grid>
+        {series.TeamStanding.length > 0 && (
+          <Menu open={openMenu} onClose={() => console.log('close')} anchorEl={anchorEl}>
+            <MenuItem dense onClick={() => console.log('Edit series')} divider>
+              Edit
+            </MenuItem>
+            <MenuItem
+              dense
+              onClick={() => console.log('Auto-schedule series')}
+              className={styles.redButton}
+            >
+              Auto-schedule
+            </MenuItem>
+            <MenuItem
+              dense
+              onClick={() => console.log('delete series')}
+              className={styles.redButton}
+            >
+              Delete
+            </MenuItem>
+          </Menu>
+        )}
       </Grid>
       {series.Match.length ? (
         <MatchList matches={series.Match} activityID={activityID} />
