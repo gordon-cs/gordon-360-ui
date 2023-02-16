@@ -335,7 +335,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       </>
     );
   }
-
+  console.log(match);
   return (
     <>
       <GordonDialogBox
@@ -356,12 +356,13 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       </GordonDialogBox>
       {targetTeamID && (
         <EditMatchStatsForm
-          matchID={match}
+          match={match}
+          teamID={targetTeamID}
           closeWithSnackbar={(status) => {
             handleEditMatchStatsForm(status);
           }}
           openEditMatchStatsForm={Boolean(targetTeamID)}
-          setOpenEditMatchStatsForm={setTargetTeamID}
+          setTargetTeamID={setTargetTeamID}
         />
       )}
     </>

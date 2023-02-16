@@ -13,14 +13,13 @@ const EditMatchStatsForm = ({
   teamMatchHistory,
   closeWithSnackbar,
   openEditMatchStatsForm,
-  setOpenEditMatchStatsForm,
+  setTargetTeamID,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     Score: false,
     StatusID: false,
     Sportsmanship: false,
   });
-
   const [loading, setLoading] = useState(true);
   const [matchStatus, setMatchStatus] = useState([]);
 
@@ -63,6 +62,7 @@ const EditMatchStatsForm = ({
   const allFields = [createMatchStatsField].flat();
 
   const currentInfo = useMemo(() => {
+    console.log(teamMatchHistory);
     return {
       TeamID: teamMatchHistory.TeamID,
       Score: `${teamMatchHistory.TeamScore}`,
@@ -175,7 +175,7 @@ const EditMatchStatsForm = ({
   };
 
   const handleWindowClose = () => {
-    setOpenEditMatchStatsForm(false);
+    setTargetTeamID(null);
     setOpenConfirmWindow(false);
     setNewInfo(currentInfo);
   };
@@ -245,7 +245,7 @@ const EditMatchStatsForm = ({
       buttonName="Submit"
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
-        setOpenEditMatchStatsForm(false);
+        setTargetTeamID(null);
       }}
       cancelButtonName="cancel"
     >
