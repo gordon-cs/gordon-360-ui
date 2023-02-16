@@ -12,6 +12,7 @@ import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
 import { getMatchByID } from 'services/recim/match';
 import { DateTime } from 'luxon';
+import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import EditIcon from '@mui/icons-material/Edit';
 
 const RosterCard = ({ participants, teamName }) => (
@@ -30,9 +31,11 @@ const Match = () => {
   const [loading, setLoading] = useState(true);
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
+  const [openEditMatchForm, setOpenEditMatchForm] = useState(false);
   const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
   const [selectedScores, setSelectedScores] = useState();
   const [user, setUser] = useState();
+  console.log(match);
 
   useEffect(() => {
     const loadData = async () => {
@@ -135,6 +138,15 @@ const Match = () => {
                       className={styles.editIconButton}
                     >
                       <EditIcon className={styles.editIconColor} />
+                    </IconButton>
+                  </Grid>
+                  <Grid item>
+                    <IconButton
+                      onClick={() => {
+                        setOpenEditMatchForm(true);
+                      }}
+                    >
+                      <EditIcon />
                     </IconButton>
                   </Grid>
                   <Grid item>

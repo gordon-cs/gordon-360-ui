@@ -8,12 +8,7 @@ import { ContentCard } from '../components/ContentCard';
 import GordonLoader from 'components/Loader';
 import { createMatch, getMatchSurfaces } from 'services/recim/match';
 
-const CreateMatchForm = ({
-  closeWithSnackbar,
-  openCreateMatchForm,
-  setOpenCreateMatchForm,
-  activity,
-}) => {
+const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activity, match }) => {
   const [errorStatus, setErrorStatus] = useState({
     StartTime: false,
     SeriesID: false,
@@ -42,16 +37,6 @@ const CreateMatchForm = ({
       helperText: '*Required',
     },
     {
-      label: 'Series',
-      name: 'SeriesID',
-      type: 'select',
-      menuItems: activity.Series.map((series) => {
-        return series.Name;
-      }),
-      error: errorStatus.SeriesID,
-      helperText: '*Required',
-    },
-    {
       label: 'Surface ID',
       name: 'SurfaceID',
       type: 'select',
@@ -61,17 +46,42 @@ const CreateMatchForm = ({
       error: errorStatus.SurfaceID,
       helperText: '*Required',
     },
-    {
+  ];
+  if (activity) {
+    createMatchFields.push(
+      {
+        label: 'Series',
+        name: 'SeriesID',
+        type: 'select',
+        menuItems: activity.Series.map((series) => {
+          return series.Name;
+        }),
+        error: errorStatus.SeriesID,
+        helperText: '*Required',
+      },
+      {
+        label: 'Teams',
+        name: 'TeamIDs',
+        type: 'multiselect',
+        menuItems: activity.Team.map((team) => {
+          return team.Name;
+        }),
+        error: errorStatus.StartTime,
+        helperText: '*Required',
+      },
+    );
+  } else if (match) {
+    createMatchFields.push({
       label: 'Teams',
       name: 'TeamIDs',
       type: 'multiselect',
-      menuItems: activity.Team.map((team) => {
+      menuItems: match.Activity.Team.map((team) => {
         return team.Name;
       }),
       error: errorStatus.StartTime,
       helperText: '*Required',
-    },
-  ];
+    });
+  }
 
   const allFields = [createMatchFields].flat();
 
@@ -182,7 +192,7 @@ const CreateMatchForm = ({
   };
 
   const handleWindowClose = () => {
-    setOpenCreateMatchForm(false);
+    setOpenMatchForm(false);
     setOpenConfirmWindow(false);
     setNewInfo(currentInfo);
   };
@@ -244,7 +254,7 @@ const CreateMatchForm = ({
 
   return (
     <GordonDialogBox
-      open={openCreateMatchForm}
+      open={openMatchForm}
       title="Create a Team"
       fullWidth
       maxWidth="sm"
@@ -253,7 +263,7 @@ const CreateMatchForm = ({
       buttonName="Submit"
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
-        setOpenCreateMatchForm(false);
+        setOpenMatchForm(false);
       }}
       cancelButtonName="cancel"
     >
@@ -262,4 +272,4 @@ const CreateMatchForm = ({
   );
 };
 
-export default CreateMatchForm;
+export default MatchForm;

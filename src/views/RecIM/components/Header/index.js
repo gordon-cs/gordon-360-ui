@@ -1,7 +1,6 @@
 import { Grid, AppBar, Breadcrumbs, Typography } from '@mui/material';
 import { Link as LinkRouter } from 'react-router-dom';
 import styles from './Header.module.css';
-import GordonLoader from 'components/Loader';
 import HomeIcon from '@mui/icons-material/Home';
 
 const RecIMBreadcrumb = ({ link, children }) => {

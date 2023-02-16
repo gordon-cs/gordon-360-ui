@@ -24,7 +24,7 @@ import { MatchList, TeamList } from './../../components/List';
 import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
-import CreateMatchForm from 'views/RecIM/components/Forms/CreateMatchForm';
+import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
@@ -42,7 +42,7 @@ const Activity = () => {
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
-  const [openCreateMatchForm, setOpenCreateMatchForm] = useState(false);
+  const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [user, setUser] = useState();
@@ -67,7 +67,7 @@ const Activity = () => {
     openActivityForm,
     openTeamForm,
     openCreateSeriesForm,
-    openCreateMatchForm,
+    openMatchForm,
     reload,
   ]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
@@ -157,7 +157,7 @@ const Activity = () => {
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
                     onClick={() => {
-                      setOpenCreateMatchForm(true);
+                      setOpenMatchForm(true);
                     }}
                   >
                     Create a New Match
@@ -265,13 +265,13 @@ const Activity = () => {
                 activityID={activityID}
               />
             )}
-            {openCreateMatchForm && (
-              <CreateMatchForm
+            {openMatchForm && (
+              <MatchForm
                 closeWithSnackbar={(status) => {
-                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
+                  handleTeamFormSubmit(status, setOpenMatchForm);
                 }}
-                openCreateMatchForm={openCreateMatchForm}
-                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+                openMatchForm={openMatchForm}
+                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
                 activity={activity}
               />
             )}
@@ -297,13 +297,13 @@ const Activity = () => {
                 activityID={activityID}
               />
             )}
-            {openCreateMatchForm && (
-              <CreateMatchForm
+            {openMatchForm && (
+              <MatchForm
                 closeWithSnackbar={(status) => {
-                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
+                  handleTeamFormSubmit(status, setOpenMatchForm);
                 }}
-                openCreateMatchForm={openCreateMatchForm}
-                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+                openMatchForm={openMatchForm}
+                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
                 activity={activity}
               />
             )}
