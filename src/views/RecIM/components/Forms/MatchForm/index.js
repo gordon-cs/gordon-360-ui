@@ -30,7 +30,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     const loadData = async () => {
       setLoading(true);
       setSurfaces(await getMatchSurfaces());
-      if (match) setMatchStatus(await getMatchStatusTypes());
+      setMatchStatus(await getMatchStatusTypes());
       setLoading(false);
     };
     loadData();
@@ -106,31 +106,31 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
   const allFields = [createMatchFields].flat();
 
   const currentInfo = useMemo(() => {
-    if (activity)
+    if (match) {
+      //I tried using inbuild javascript functions but I can't wrap my head around multiple
+      //filters. You are welcome to improve on the logic below if you so desire.
+      var teamIDs = [];
+      match.Team.forEach((team) =>
+        teamIDs.push(match.Activity.Team.find((_team) => team.ID === _team.ID).Name),
+      );
       return {
-        StartTime: '',
-        SeriesID: '',
-        SurfaceID: '',
-        TeamIDs: [],
+        StartTime: match.Time,
+        StatusID:
+          matchStatus.find((type) => type.Description === match.Status) == null
+            ? ''
+            : matchStatus.find((type) => type.Description === match.Status).Description,
+        SurfaceID:
+          surfaces.find((type) => type.Description === match.Surface) == null
+            ? ''
+            : surfaces.find((type) => type.Description === match.Surface).Description,
+        TeamIDs: teamIDs,
       };
-
-    //I tried using inbuild javascript functions but I can't wrap my head around multiple
-    //filters. You are welcome to improve on the logic below if you so desire.
-    var teamIDs = [];
-    match.Team.forEach((team) =>
-      teamIDs.push(match.Activity.Team.find((_team) => team.ID === _team.ID).Name),
-    );
+    }
     return {
-      StartTime: match.Time,
-      StatusID:
-        matchStatus.find((type) => type.Description === match.Status) == null
-          ? ''
-          : matchStatus.find((type) => type.Description === match.Status).Description,
-      SurfaceID:
-        surfaces.find((type) => type.Description === match.Surface) == null
-          ? ''
-          : surfaces.find((type) => type.Description === match.Surface).Description,
-      TeamIDs: teamIDs,
+      StartTime: '',
+      SeriesID: '',
+      SurfaceID: '',
+      TeamIDs: [],
     };
   }, [surfaces, matchStatus, match]);
   const [newInfo, setNewInfo] = useState(currentInfo);
