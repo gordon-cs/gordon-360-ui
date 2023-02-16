@@ -8,7 +8,7 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { standardDate } from 'views/RecIM/components/Helpers';
 import { DateTime } from 'luxon';
-import { scheduleSeriesMatches } from 'services/recim/series';
+import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/series';
 import { useState } from 'react';
 import styles from './../../Activity.module.css';
 
@@ -16,6 +16,7 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
+  const [openDeleteDisclaimer, setOpenDeleteDisclaimer] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
   let startDate = DateTime.fromISO(series.StartDate);
   let endDate = DateTime.fromISO(series.EndDate);
@@ -79,8 +80,31 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
 
   // delete button
   const handleDelete = () => {
-    console.log(`delete series#${series.ID}, ${series.Name}`);
+    setDisclaimerContent(
+      <Typography margin={4}>
+        <Typography variant="body1" paragraph>
+          <b>{`Be advised, this process is irreversible.`}</b>
+        </Typography>
+        <Typography variant="body1" paragraph>
+          {`You are attempting to delete: Series #${series.ID}, ${series.Name}.`}
+        </Typography>
+        <Typography variant="body1" paragraph>
+          {`This includes the Series itself along with: `}
+          <b>{series.Match.length}</b>
+          {` number of Matches. `}
+        </Typography>
+      </Typography>,
+    );
+    setOpenDeleteDisclaimer(true);
     handleClose();
+  };
+
+  const handleConfirmDelete = () => {
+    deleteSeriesCascade(series.ID).then((res) => {
+      console.log(res);
+      setOpenDeleteDisclaimer(false);
+      setReload(!reload);
+    });
   };
 
   // menu button click
@@ -160,16 +184,16 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
         </ContentCard>
       </GordonDialogBox>
       <GordonDialogBox
-        open={openAutoSchedulerDisclaimer}
-        title="Auto-Scheduler Disclaimer"
+        open={openDeleteDisclaimer}
+        title="Delete Disclaimer"
         fullWidth
         maxWidth="sm"
-        buttonClicked={() => handleConfirmAutoSchedule()}
+        buttonClicked={() => handleConfirmDelete()}
         buttonName="I Understand"
-        cancelButtonClicked={() => setOpenAutoSchedulerDisclaimer(false)}
+        cancelButtonClicked={() => setOpenDeleteDisclaimer(false)}
         cancelButtonName="Cancel"
       >
-        <ContentCard title={`You are attempting to use the auto-scheduler for ${series.Name}`}>
+        <ContentCard title={`You are attempting DELETE '${series.Name}'`}>
           {disclaimerContent}
         </ContentCard>
       </GordonDialogBox>
