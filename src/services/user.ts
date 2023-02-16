@@ -262,16 +262,14 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
   if (!profile) return undefined;
 
   const fullName = `${profile?.FirstName} ${profile?.LastName}`;
-  const getCliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(
-    profile.AD_Username,
-  );
+  const cliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username);
 
   if (isStudent(profile)) {
     return {
       ...profile,
       fullName,
       Advisors: await getAdvisors(profile.AD_Username),
-      CliftonStrengths: getCliftonStrengths,
+      CliftonStrengths: cliftonStrengths,
       Majors: [
         profile.Major1Description,
         profile.Major2Description,
@@ -288,7 +286,7 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
     return {
       ...profile,
       fullName,
-      CliftonStrengths: getCliftonStrengths,
+      CliftonStrengths: cliftonStrengths,
     };
   }
 };
