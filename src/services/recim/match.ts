@@ -45,13 +45,13 @@ type PatchMatchStats = {
   StatusID?: number;
   Score?: number;
   Sportsmanship?: number;
-  TeamIDs?: Array<number>;
 };
 
 type PatchMatch = {
   Time: string;
   SurfaceID: number;
   StatusID: number;
+  TeamIDs?: Array<number>;
 };
 
 type CreatedAttendance = {

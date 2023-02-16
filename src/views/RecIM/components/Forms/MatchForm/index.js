@@ -6,7 +6,12 @@ import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ContentCard } from '../components/ContentCard';
 import GordonLoader from 'components/Loader';
-import { createMatch, getMatchSurfaces } from 'services/recim/match';
+import {
+  createMatch,
+  updateMatch,
+  getMatchSurfaces,
+  getMatchStatusTypes,
+} from 'services/recim/match';
 
 const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activity, match }) => {
   const [errorStatus, setErrorStatus] = useState({
@@ -14,15 +19,18 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     SeriesID: false,
     SurfaceID: false,
     TeamIDs: false,
+    StatusID: false,
   });
 
   const [loading, setLoading] = useState(false);
   const [surfaces, setSurfaces] = useState([]);
+  const [matchStatus, setMatchStatus] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       setSurfaces(await getMatchSurfaces());
+      if (match) setMatchStatus(await getMatchStatusTypes());
       setLoading(false);
     };
     loadData();
@@ -37,7 +45,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       helperText: '*Required',
     },
     {
-      label: 'Surface ID',
+      label: 'Surface',
       name: 'SurfaceID',
       type: 'select',
       menuItems: surfaces.map((surface) => {
@@ -66,38 +74,74 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         menuItems: activity.Team.map((team) => {
           return team.Name;
         }),
-        error: errorStatus.StartTime,
+        error: errorStatus.TeamIDs,
         helperText: '*Required',
       },
     );
   } else if (match) {
-    createMatchFields.push({
-      label: 'Teams',
-      name: 'TeamIDs',
-      type: 'multiselect',
-      menuItems: match.Activity.Team.map((team) => {
-        return team.Name;
-      }),
-      error: errorStatus.StartTime,
-      helperText: '*Required',
-    });
+    createMatchFields.push(
+      {
+        label: 'Teams',
+        name: 'TeamIDs',
+        type: 'multiselect',
+        menuItems: match.Activity.Team.map((team) => {
+          return team.Name;
+        }),
+        error: errorStatus.TeamIDs,
+        helperText: '*Required',
+      },
+      {
+        label: 'Status',
+        name: 'StatusID',
+        type: 'select',
+        menuItems: matchStatus.map((type) => {
+          return type.Description;
+        }),
+        error: errorStatus.TeamIDs,
+        helperText: '*Required',
+      },
+    );
   }
 
   const allFields = [createMatchFields].flat();
 
   const currentInfo = useMemo(() => {
-    return {
-      StartTime: '',
-      SeriesID: '',
-      SurfaceID: '',
-      TeamIDs: [],
-    };
-  }, []);
+    if (activity)
+      return {
+        StartTime: '',
+        SeriesID: '',
+        SurfaceID: '',
+        TeamIDs: [],
+      };
 
+    //I tried using inbuild javascript functions but I can't wrap my head around multiple
+    //filters. You are welcome to improve on the logic below if you so desire.
+    var teamIDs = [];
+    match.Team.forEach((team) =>
+      teamIDs.push(match.Activity.Team.find((_team) => team.ID === _team.ID).Name),
+    );
+    return {
+      StartTime: match.Time,
+      StatusID:
+        matchStatus.find((type) => type.Description === match.Status) == null
+          ? ''
+          : matchStatus.find((type) => type.Description === match.Status).Description,
+      SurfaceID:
+        surfaces.find((type) => type.Description === match.Surface) == null
+          ? ''
+          : surfaces.find((type) => type.Description === match.Surface).Description,
+      TeamIDs: teamIDs,
+    };
+  }, [surfaces, matchStatus, match]);
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
+
+  //re spreads fetched data to map to drop-down's once data has been loaded
+  useEffect(() => {
+    setNewInfo(currentInfo);
+  }, [currentInfo]);
 
   const handleSetError = (field, condition) => {
     const getCurrentErrorStatus = (currentValue) => {
@@ -108,7 +152,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     };
     setErrorStatus(getCurrentErrorStatus);
   };
-
   // Field Validation
   useEffect(() => {
     let hasError = false;
@@ -164,31 +207,46 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
   const handleConfirm = () => {
     setSaving(true);
 
-    let matchCreationRequest = { ...currentInfo, ...newInfo };
+    let matchRequest = { ...currentInfo, ...newInfo };
+    if (activity)
+      matchRequest.SeriesID = activity.Series.find(
+        (series) => series.Name === matchRequest.SeriesID,
+      ).ID;
 
-    matchCreationRequest.SeriesID = activity.Series.find(
-      (series) => series.Name === matchCreationRequest.SeriesID,
-    ).ID;
-
-    matchCreationRequest.SurfaceID = surfaces.find(
-      (surface) => surface.Description === matchCreationRequest.SurfaceID,
+    matchRequest.SurfaceID = surfaces.find(
+      (surface) => surface.Description === matchRequest.SurfaceID,
     ).ID;
 
     let idArray = [];
-    matchCreationRequest.TeamIDs.forEach((value) => {
-      idArray.push(activity.Team.find((team) => team.Name === value).ID);
+    matchRequest.TeamIDs.forEach((value) => {
+      if (activity) idArray.push(activity.Team.find((team) => team.Name === value).ID);
+      else if (match) idArray.push(match.Activity.Team.find((team) => team.Name === value).ID);
     });
-    matchCreationRequest.TeamIDs = idArray;
+    matchRequest.TeamIDs = idArray;
 
-    createMatch(matchCreationRequest).then((result) => {
-      console.log(result);
-      closeWithSnackbar({
-        type: 'success',
-        message: 'Match created successfully',
+    if (activity)
+      createMatch(matchRequest).then((result) => {
+        console.log(result);
+        closeWithSnackbar({
+          type: 'success',
+          message: 'Match created successfully',
+        });
       });
+    else if (match) {
+      matchRequest.StatusID = matchStatus.find(
+        (type) => type.Description === matchRequest.StatusID,
+      ).ID;
+      console.log(matchRequest);
+      updateMatch(match.ID, matchRequest).then((result) => {
+        console.log(result);
+        closeWithSnackbar({
+          type: 'success',
+          message: 'Match created successfully',
+        });
+      });
+    }
 
-      handleWindowClose();
-    });
+    handleWindowClose();
   };
 
   const handleWindowClose = () => {
@@ -255,7 +313,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
   return (
     <GordonDialogBox
       open={openMatchForm}
-      title="Create a Team"
+      title={activity ? `Create a Match` : `Edit a Match`}
       fullWidth
       maxWidth="sm"
       buttonClicked={() => setOpenConfirmWindow(true)}

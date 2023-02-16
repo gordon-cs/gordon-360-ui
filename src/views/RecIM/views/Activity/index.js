@@ -95,6 +95,11 @@ const Activity = () => {
     setOpenTeamForm(false);
   };
 
+  const handleMatchFormSubmit = (status, setOpenMatchForm) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenMatchForm(false);
+  };
+
   const handleCreateSeriesForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenCreateSeriesForm(false);
@@ -268,7 +273,7 @@ const Activity = () => {
             {openMatchForm && (
               <MatchForm
                 closeWithSnackbar={(status) => {
-                  handleTeamFormSubmit(status, setOpenMatchForm);
+                  handleMatchFormSubmit(status, setOpenMatchForm);
                 }}
                 openMatchForm={openMatchForm}
                 setOpenMatchForm={(bool) => setOpenMatchForm(bool)}

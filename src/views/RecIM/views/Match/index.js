@@ -14,6 +14,7 @@ import { getMatchByID } from 'services/recim/match';
 import { DateTime } from 'luxon';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import EditIcon from '@mui/icons-material/Edit';
+import { standardDate } from 'views/RecIM/components/Helpers';
 
 const RosterCard = ({ participants, teamName }) => (
   <Card>
@@ -31,11 +32,10 @@ const Match = () => {
   const [loading, setLoading] = useState(true);
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
-  const [openEditMatchForm, setOpenEditMatchForm] = useState(false);
+  const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
   const [selectedScores, setSelectedScores] = useState();
   const [user, setUser] = useState();
-  console.log(match);
 
   useEffect(() => {
     const loadData = async () => {
@@ -53,7 +53,7 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID, openEditMatchStatsForm]);
+  }, [matchID, openMatchForm, openEditMatchStatsForm]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   useEffect(() => {
@@ -74,16 +74,9 @@ const Match = () => {
     setOpenEditMatchStatsForm(false);
   };
 
-  const dayMonthDate = (date) => {
-    return (
-      date.weekdayShort +
-      ' ' +
-      date.monthLong +
-      ' ' +
-      date.day +
-      ', ' +
-      date.toLocaleString(DateTime.TIME_SIMPLE)
-    );
+  const handleMatchFormSubmit = (status, setOpenMatchForm) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenMatchForm(false);
   };
 
   if (loading && !profile) {
@@ -97,7 +90,7 @@ const Match = () => {
         <Grid container spacing={4}>
           <Grid item xs={6} textAlign="right">
             <Typography className={styles.subtitle}>
-              {dayMonthDate(DateTime.fromISO(match?.Time))}
+              {standardDate(DateTime.fromISO(match?.Time), true)}
             </Typography>
           </Grid>
           <Grid item xs={6} textAlign="left">
@@ -143,7 +136,7 @@ const Match = () => {
                   <Grid item>
                     <IconButton
                       onClick={() => {
-                        setOpenEditMatchForm(true);
+                        setOpenMatchForm(true);
                       }}
                     >
                       <EditIcon />
@@ -213,6 +206,16 @@ const Match = () => {
                 }}
                 openEditMatchStatsForm={openEditMatchStatsForm}
                 setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+              />
+            )}
+            {openMatchForm && (
+              <MatchForm
+                closeWithSnackbar={(status) => {
+                  handleMatchFormSubmit(status, setOpenMatchForm);
+                }}
+                openMatchForm={openMatchForm}
+                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+                match={match}
               />
             )}
           </Grid>
