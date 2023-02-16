@@ -244,7 +244,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       matchRequest.StatusID = matchStatus.find(
         (type) => type.Description === matchRequest.StatusID,
       ).ID;
-      console.log(matchRequest);
       updateMatch(match.ID, matchRequest).then((result) => {
         console.log(result);
         closeWithSnackbar({
