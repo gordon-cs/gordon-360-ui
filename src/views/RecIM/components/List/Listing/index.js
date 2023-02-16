@@ -132,26 +132,36 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const TeamListing = ({ team }) => {
+const TeamListing = ({ team, setTargetTeamID }) => {
   if (!team) return null;
-  return (
-    <ListItem key={team.ID}>
-      <ListItemButton
-        component={Link}
-        to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
-        className={styles.listing}
-      >
-        <Grid container columnSpacing={2}>
-          <Grid item xs={12} sm={8}>
-            <Typography className={styles.listingTitle}>{team.Name}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
-            <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
-          </Grid>
+  let content = setTargetTeamID ? (
+    <ListItemButton onClick={() => setTargetTeamID(team.ID)}>
+      <Grid container columnSpacing={2}>
+        <Grid item xs={12} sm={8}>
+          <Typography className={styles.listingTitle}>{team.Name}</Typography>
         </Grid>
-      </ListItemButton>
-    </ListItem>
+        <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
+          <Typography className={styles.listingSubtitle}>{team.Status}</Typography>
+        </Grid>
+      </Grid>
+    </ListItemButton>
+  ) : (
+    <ListItemButton
+      component={Link}
+      to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
+      className={styles.listing}
+    >
+      <Grid container columnSpacing={2}>
+        <Grid item xs={12} sm={8}>
+          <Typography className={styles.listingTitle}>{team.Name}</Typography>
+        </Grid>
+        <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
+          <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
+        </Grid>
+      </Grid>
+    </ListItemButton>
   );
+  return <ListItem key={team.ID}>{content}</ListItem>;
 };
 
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
