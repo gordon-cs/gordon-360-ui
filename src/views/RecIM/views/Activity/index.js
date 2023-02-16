@@ -453,7 +453,7 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
           <MenuItem dense onClick={handleAutoSchedule} divider>
             Auto-schedule
           </MenuItem>
-          <MenuItem dense onClick={handleDelete} className={styles.redButton} divider>
+          <MenuItem dense onClick={handleDelete} className={styles.redButton}>
             Delete
           </MenuItem>
         </Menu>
