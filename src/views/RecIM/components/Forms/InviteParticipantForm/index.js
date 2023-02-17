@@ -78,13 +78,15 @@ const InviteParticipantForm = ({
           <Grid item sx={{ width: '100%' }}>
             <ParticipantList minimal participants={inviteList} callbackFunction={removeInvite} />
           </Grid>
-          <Grid item>
-            <GordonQuickSearch
-              customPlaceholderText={'Search for people'}
-              disableLink
-              onSearchSubmit={(selectedUsername) => onSearchSubmit(selectedUsername)}
-            />
-          </Grid>
+          {!saving && (
+            <Grid item>
+              <GordonQuickSearch
+                customPlaceholderText={'Search for people'}
+                disableLink
+                onSearchSubmit={(selectedUsername) => onSearchSubmit(selectedUsername)}
+              />
+            </Grid>
+          )}
         </Grid>
         <GordonSnackbar
           open={snackbar.open}
