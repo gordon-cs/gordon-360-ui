@@ -133,25 +133,23 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   return (
     <>
       <Grid container className={styles.seriesHeader} alignItems="center" columnSpacing={1}>
-        <Grid item container direction="column" xs={10} sm={5}>
+        <Grid item container direction="column" xs={6} sm={5}>
           <Typography variant="h6" className={styles.seriesMainText}>
             {series.Name}{' '}
           </Typography>
           <Typography className={styles.seriesSecondaryText}>{series.Type}</Typography>
         </Grid>
-        <Grid item container xs={12} sm={3}>
-          <Grid item xs={10}>
-            <Typography className={styles.seriesDateText}>
-              {standardDate(startDate, false)} - {standardDate(endDate, false)}
-            </Typography>
-          </Grid>
+        <Grid item xs={6} sm={3}>
+          <Typography className={styles.seriesDateText}>
+            {standardDate(startDate, false)} - {standardDate(endDate, false)}
+          </Typography>
         </Grid>
-        <Grid container item sm={3} justifyContent="center">
+        <Grid container item xs={6} sm={3} justifyContent="center">
           {status()}
         </Grid>
 
         {isAdmin && (
-          <Grid container item sm={1} justifyContent="center">
+          <Grid container item xs={6} sm={1} justifyContent="center">
             <IconButton onClick={handleButtonClick}>
               <TuneIcon inline />
             </IconButton>{' '}
