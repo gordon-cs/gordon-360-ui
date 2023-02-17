@@ -9,8 +9,8 @@ import GordonLoader from 'components/Loader';
 import { getMatchTeamStatusTypes, updateMatchStats } from 'services/recim/match';
 
 const EditMatchStatsForm = ({
-  matchID,
-  teamMatchHistory,
+  match,
+  targetTeamID,
   closeWithSnackbar,
   openEditMatchStatsForm,
   setTargetTeamID,
@@ -62,17 +62,17 @@ const EditMatchStatsForm = ({
   const allFields = [createMatchStatsField].flat();
 
   const currentInfo = useMemo(() => {
-    console.log(teamMatchHistory);
+    var targetTeamStats = match.Scores.find((score) => score.TeamID === targetTeamID);
     return {
-      TeamID: teamMatchHistory.TeamID,
-      Score: `${teamMatchHistory.TeamScore}`,
-      Sportsmanship: `${teamMatchHistory.Sportsmanship}`,
+      TeamID: targetTeamID,
+      Score: `${targetTeamStats.TeamScore}`,
+      Sportsmanship: `${targetTeamStats.Sportsmanship}`,
       StatusID:
-        matchStatus.find((type) => type.Description === teamMatchHistory.Status) == null
+        matchStatus.find((type) => type.Description === targetTeamStats.Status) == null
           ? ''
-          : matchStatus.find((type) => type.Description === teamMatchHistory.Status).Description,
+          : matchStatus.find((type) => type.Description === targetTeamStats.Status).Description,
     };
-  }, [teamMatchHistory, matchStatus]);
+  }, [match, targetTeamID, matchStatus]);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [isSaving, setSaving] = useState(false);
@@ -164,7 +164,7 @@ const EditMatchStatsForm = ({
     matchStatsRequest.StatusID = matchStatus.find(
       (status) => status.Description === matchStatsRequest.StatusID,
     )?.ID;
-    updateMatchStats(matchID, matchStatsRequest).then(() => {
+    updateMatchStats(match.ID, matchStatsRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
         type: 'success',
@@ -210,7 +210,11 @@ const EditMatchStatsForm = ({
   } else {
     content = (
       <>
-        <ContentCard title="Match Stats">{mapFieldsToInputs(createMatchStatsField)}</ContentCard>
+        <ContentCard
+          title={`Match Stats for "${match.Team.find((team) => team.ID === targetTeamID).Name}"`}
+        >
+          {mapFieldsToInputs(createMatchStatsField)}
+        </ContentCard>
         {/* Confirmation Dialog */}
         <GordonDialogBox
           open={openConfirmWindow}

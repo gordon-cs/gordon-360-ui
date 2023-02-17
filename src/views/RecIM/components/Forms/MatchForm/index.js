@@ -357,7 +357,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       {targetTeamID && (
         <EditMatchStatsForm
           match={match}
-          teamID={targetTeamID}
+          targetTeamID={targetTeamID}
           closeWithSnackbar={(status) => {
             handleEditMatchStatsForm(status);
           }}
