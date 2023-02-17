@@ -12,7 +12,7 @@ import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/serie
 import { useState } from 'react';
 import styles from './../../Activity.module.css';
 
-const ScheduleList = ({ series, activityID, reload, setReload }) => {
+const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
@@ -143,20 +143,23 @@ const ScheduleList = ({ series, activityID, reload, setReload }) => {
           {status()}
         </Grid>
 
-        {series.TeamStanding.length > 0 && (
+        {isAdmin && (
           <Grid container item sm={1} justifyContent="center">
             <IconButton onClick={handleButtonClick}>
               <TuneIcon inline />
             </IconButton>{' '}
           </Grid>
         )}
+
         <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
           <MenuItem dense onClick={handleEdit} divider>
             Edit
           </MenuItem>
-          <MenuItem dense onClick={handleAutoSchedule} divider>
-            Auto-schedule
-          </MenuItem>
+          {series.TeamStanding.length > 0 && (
+            <MenuItem dense onClick={handleAutoSchedule} divider>
+              Auto-schedule
+            </MenuItem>
+          )}
           <MenuItem dense onClick={handleDelete} className={styles.redButton}>
             Delete
           </MenuItem>
