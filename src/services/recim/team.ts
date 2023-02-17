@@ -69,10 +69,6 @@ type PatchTeam = {
   Logo: string;
 };
 
-type TeamInviteResponse = {
-  Response: string;
-};
-
 //Team Routes
 const getTeams = (active: boolean): Promise<Team[]> => {
   if (active) return http.get(`recim/Teams?active=${active}`);
@@ -115,8 +111,8 @@ const getTeamInvites = async (): Promise<Team[]> => http.get(`recim/Teams/invite
 
 const respondToTeamInvite = async (
   teamID: number,
-  response: TeamInviteResponse,
-): Promise<CreatedTeamParticipant> => http.patch(`recim/Teams/${teamID}/invite`, response);
+  response: string,
+): Promise<CreatedTeamParticipant> => http.patch(`recim/Teams/${teamID}/invite/status`, response);
 
 export {
   getTeams,

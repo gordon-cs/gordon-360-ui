@@ -138,11 +138,11 @@ const TeamListing = ({ team, invite, match, setTargetTeamID }) => {
   if (!team && !match) return null;
 
   const handleAcceptInvite = async () => {
-    await respondToTeamInvite(team.ID, { Response: 'accepted' });
+    await respondToTeamInvite(team.ID, 'accepted');
   };
 
   const handleRejectInvite = async () => {
-    await respondToTeamInvite(team.ID, { Response: 'rejected' });
+    await respondToTeamInvite(team.ID, 'rejected');
   };
 
   let content;
