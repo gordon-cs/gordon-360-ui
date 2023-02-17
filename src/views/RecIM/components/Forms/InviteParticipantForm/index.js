@@ -6,6 +6,7 @@ import GordonQuickSearch from 'components/Header/components/QuickSearch';
 import GordonSnackbar from 'components/Snackbar';
 import { addParticipantToTeam } from 'services/recim/team';
 import { useCallback } from 'react';
+import GordonLoader from 'components/Loader';
 
 const InviteParticipantForm = ({
   closeWithSnackbar,
@@ -16,6 +17,7 @@ const InviteParticipantForm = ({
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
   const [inviteList, setInviteList] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [saving, setSaving] = useState(false);
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -42,6 +44,7 @@ const InviteParticipantForm = ({
   };
 
   const handleSubmit = async () => {
+    setSaving(true);
     for (let index = 0; index < inviteList.length; index++) {
       let participantData = {
         Username: inviteList[index].Username,
@@ -49,7 +52,7 @@ const InviteParticipantForm = ({
       };
       await addParticipantToTeam(teamID, participantData);
     }
-
+    setSaving(false);
     handleWindowClose();
   };
 
@@ -66,8 +69,8 @@ const InviteParticipantForm = ({
         fullWidth
         maxWidth="sm"
         buttonClicked={handleSubmit}
-        isButtonDisabled={disableUpdateButton}
-        buttonName="Send Invites"
+        isButtonDisabled={disableUpdateButton || saving}
+        buttonName={saving ? 'Sending...' : 'Send Invites'}
         cancelButtonClicked={handleWindowClose}
         cancelButtonName="cancel"
       >
@@ -89,6 +92,7 @@ const InviteParticipantForm = ({
           severity={snackbar.severity}
           onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
         />
+        {saving && <GordonLoader size={32} />}
       </GordonDialogBox>
     </>
   );
