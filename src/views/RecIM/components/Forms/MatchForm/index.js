@@ -126,7 +126,7 @@ const MatchForm = ({
     matchTeams.push({
       name: 'team',
       type: 'listing',
-      menuItems: match.Team,
+      data: match,
     });
   }
   const allFields = [createMatchFields].flat();
@@ -303,6 +303,7 @@ const MatchForm = ({
         value={newInfo[field.name]}
         type={field.type}
         menuItems={field.menuItems}
+        data={field.data}
         onChange={field.type === 'listing' ? setTargetTeamID : handleChange}
         xs={12}
         sm={12}
@@ -345,7 +346,6 @@ const MatchForm = ({
       </>
     );
   }
-  console.log(match);
   return (
     <>
       <GordonDialogBox
