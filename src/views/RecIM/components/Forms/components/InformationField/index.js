@@ -23,6 +23,7 @@ const InformationField = ({
   error,
   helperText,
   menuItems,
+  data,
   xs,
   sm,
   md,
@@ -34,7 +35,9 @@ const InformationField = ({
     case 'listing':
       switch (name) {
         case 'team':
-          field = <TeamList teams={menuItems} setTargetTeamID={onChange} />;
+          console.log(data);
+          field = <TeamList match={data} setTargetTeamID={onChange} />;
+          break;
         default:
           break;
       }

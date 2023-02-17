@@ -132,35 +132,54 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const TeamListing = ({ team, setTargetTeamID }) => {
-  if (!team) return null;
-  let content = setTargetTeamID ? (
-    <ListItemButton onClick={() => setTargetTeamID(team.ID)}>
-      <Grid container columnSpacing={2}>
-        <Grid item xs={12} sm={8}>
-          <Typography className={styles.listingTitle}>{team.Name}</Typography>
+const TeamListing = ({ team, match, setTargetTeamID }) => {
+  if (!team && !match) return null;
+  let content;
+  if (match) {
+    var targetTeamStats = match.Scores.find((score) => score.TeamID === team.ID);
+    content = (
+      <ListItemButton onClick={() => setTargetTeamID(team.ID)}>
+        <Grid container columnSpacing={2}>
+          <Grid item xs={12} sm={10}>
+            <Typography className={styles.listingSubtitle}>Name: </Typography>
+            <Typography className={styles.listingTitle}>{team.Name}</Typography>
+          </Grid>
+          <Grid item xs={8} sm={4}>
+            <Typography className={styles.listingSubtitle}>
+              Score: {targetTeamStats.TeamScore}
+            </Typography>
+          </Grid>
+          <Grid item xs={8} sm={4}>
+            <Typography className={styles.listingSubtitle}>
+              Sportsmanship: {targetTeamStats.Sportsmanship}
+            </Typography>
+          </Grid>
+          <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
+            <Typography className={styles.listingSubtitle}>
+              Status: {targetTeamStats.Status}
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
-          <Typography className={styles.listingSubtitle}>{team.Status}</Typography>
+      </ListItemButton>
+    );
+  } else {
+    content = (
+      <ListItemButton
+        component={Link}
+        to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
+        className={styles.listing}
+      >
+        <Grid container columnSpacing={2}>
+          <Grid item xs={12} sm={8}>
+            <Typography className={styles.listingTitle}>{team.Name}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
+            <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
+          </Grid>
         </Grid>
-      </Grid>
-    </ListItemButton>
-  ) : (
-    <ListItemButton
-      component={Link}
-      to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
-      className={styles.listing}
-    >
-      <Grid container columnSpacing={2}>
-        <Grid item xs={12} sm={8}>
-          <Typography className={styles.listingTitle}>{team.Name}</Typography>
-        </Grid>
-        <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
-          <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
-        </Grid>
-      </Grid>
-    </ListItemButton>
-  );
+      </ListItemButton>
+    );
+  }
   return <ListItem key={team.ID}>{content}</ListItem>;
 };
 
