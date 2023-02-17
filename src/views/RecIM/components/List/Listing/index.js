@@ -10,6 +10,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Button,
 } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
@@ -137,45 +138,62 @@ const TeamListing = ({ team, invite }) => {
   if (!team) return null;
 
   const handleAcceptInvite = async () => {
-    await respondToTeamInvite(team.ID, { Response: "accepted"})
-  }
+    await respondToTeamInvite(team.ID, { Response: 'accepted' });
+  };
 
   const handleRejectInvite = async () => {
-    await respondToTeamInvite(team.ID, { Response: "rejected" })
-  }
+    await respondToTeamInvite(team.ID, { Response: 'rejected' });
+  };
 
   return (
     <ListItem key={team.ID}>
-      <ListItemButton
-        component={Link}
-        to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
-        className={styles.listing}
-      >
-        <Grid container rowSpacing={1}>
-          <Grid container columnSpacing={2}>
-            <Grid item xs={12} sm={8}>
-              <Typography className={styles.listingTitle}>{team.Name}</Typography>
+      <Grid container direction="row" justifyContent="center">
+        <Grid item>
+          <ListItemButton
+            component={Link}
+            to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
+            className={styles.listing}
+          >
+            <Grid container>
+              <Grid container columnSpacing={2}>
+                <Grid item xs={12} sm={8}>
+                  <Typography className={styles.listingTitle}>{team.Name}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
+                  <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
+                </Grid>
+              </Grid>
+              {invite && <Grid item margin={3}></Grid>}
             </Grid>
-            <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
-              <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
-            </Grid>
-          </Grid>
-          {invite && (
+          </ListItemButton>
+        </Grid>
+        {invite && (
+          <Grid item position="relative" marginTop={-6}>
             <Grid container columnSpacing={2}>
               <Grid item>
-                <IconButton className={styles.greenButton} onClick={handleAcceptInvite}>
-                  <CheckIcon />
-                </IconButton>
+                <Button
+                  variant="contained"
+                  className={styles.acceptButton}
+                  startIcon={<CheckIcon />}
+                  onClick={handleAcceptInvite}
+                >
+                  Accept
+                </Button>
               </Grid>
               <Grid item>
-                <IconButton className={styles.redButton} onClick={handleRejectInvite}>
-                  <ClearIcon />
-                </IconButton>
+                <Button
+                  variant="contained"
+                  className={styles.rejectButton}
+                  startIcon={<ClearIcon />}
+                  onClick={handleRejectInvite}
+                >
+                  Reject
+                </Button>
               </Grid>
             </Grid>
-          )}
-        </Grid>
-      </ListItemButton>
+          </Grid>
+        )}
+      </Grid>
     </ListItem>
   );
 };
