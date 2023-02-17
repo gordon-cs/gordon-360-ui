@@ -63,3 +63,10 @@
     text-align: right;
   }
 }
+
+@media (max-width: $break-sm) {
+  .listingWrapper {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

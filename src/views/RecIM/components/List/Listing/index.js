@@ -70,7 +70,7 @@ const ActivityListing = ({ activity }) => {
 
   if (!activity) return null;
   return (
-    <ListItem key={activity.ID}>
+    <ListItem key={activity.ID} className={styles.listingWrapper}>
       <ListItemButton
         component={Link}
         to={`/recim/activity/${activity.ID}`}
@@ -180,7 +180,11 @@ const TeamListing = ({ team, match, setTargetTeamID }) => {
       </ListItemButton>
     );
   }
-  return <ListItem key={team.ID}>{content}</ListItem>;
+  return (
+    <ListItem key={team.ID} className={styles.listingWrapper}>
+      {content}
+    </ListItem>
+  );
 };
 
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
@@ -242,7 +246,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
   return (
     // first ListItem is used only for paddings/margins
     // second ListItem (nested inside) is used to layout avatar and secondaryAction
-    <ListItem key={participant.Username}>
+    <ListItem key={participant.Username} className={styles.listingWrapper}>
       <ListItem
         secondaryAction={
           minimal ? (
@@ -286,7 +290,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
 
 const MatchListing = ({ match, activityID }) => {
   return (
-    <ListItem key={match.ID}>
+    <ListItem key={match.ID} className={styles.listingWrapper}>
       <ListItemButton
         component={Link}
         to={`/recim/activity/${activityID}/match/${match.ID}`}

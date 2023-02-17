@@ -97,7 +97,7 @@ const Match = () => {
           </Grid>
           <Grid item xs={2}>
             <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
-              <Typography variant="h5" className="gc360_text_link">
+              <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
                 {match?.Team[0]?.Name ?? 'No team yet...'}
               </Typography>
             </LinkRouter>
@@ -133,7 +133,7 @@ const Match = () => {
 
           <Grid item xs={2} textAlign="right">
             <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
-              <Typography variant="h5" className="gc360_text_link">
+              <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
                 {match?.Team[1]?.Name ?? 'No team yet...'}
               </Typography>
             </LinkRouter>
