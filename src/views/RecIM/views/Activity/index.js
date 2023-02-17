@@ -173,7 +173,7 @@ const Activity = () => {
             activity.Series.map((series) => {
               return (
                 <ScheduleList
-                  isAdmin={user.IsAdmin}
+                  isAdmin={user?.IsAdmin}
                   series={series}
                   activityID={activityID}
                   reload={reload}
