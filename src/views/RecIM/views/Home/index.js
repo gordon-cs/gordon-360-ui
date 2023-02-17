@@ -164,19 +164,17 @@ const Home = () => {
     <Card>
       <CardHeader title="Teams" className={styles.cardHeader} />
       <CardContent>
-      <Grid container className={styles.teamHeader} alignItems="center" columnSpacing={2}>
-            <Grid item container direction="column">
-              <Typography variant="h6" className={styles.teamHeaderMainText}>
-                My Team Invites
-              </Typography>
+        {invites.length > 0 && (
+          <>
+            <Grid container className={styles.teamHeader} alignItems="center" columnSpacing={2}>
+              <Grid item container direction="column">
+                <Typography variant="h6" className={styles.teamHeaderMainText}>
+                  My Team Invites
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
-        {invites ? (
-          <TeamList teams={invites} invite />
-        ) : (
-          <Typography variant="body1" paragraph>
-            You're not yet apart of any teams; join one to get started!
-          </Typography>
+            <TeamList teams={invites} invite />
+          </>
         )}
         <Grid container className={styles.teamHeader} alignItems="center" columnSpacing={2}>
           <Grid item container direction="column">

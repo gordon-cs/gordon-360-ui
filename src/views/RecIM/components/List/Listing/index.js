@@ -148,7 +148,7 @@ const TeamListing = ({ team, invite }) => {
   return (
     <ListItem key={team.ID}>
       <Grid container direction="row" justifyContent="center">
-        <Grid item>
+        <Grid item xs={12}>
           <ListItemButton
             component={Link}
             to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
