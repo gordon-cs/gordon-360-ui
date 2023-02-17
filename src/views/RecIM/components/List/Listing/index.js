@@ -132,10 +132,38 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const TeamListing = ({ team }) => {
-  if (!team) return null;
-  return (
-    <ListItem key={team.ID}>
+const TeamListing = ({ team, match, setTargetTeamID }) => {
+  if (!team && !match) return null;
+  let content;
+  if (match) {
+    var targetTeamStats = match.Scores.find((score) => score.TeamID === team.ID);
+    content = (
+      <ListItemButton onClick={() => setTargetTeamID(team.ID)}>
+        <Grid container columnSpacing={2}>
+          <Grid item xs={12} sm={10}>
+            <Typography className={styles.listingSubtitle}>Name: </Typography>
+            <Typography className={styles.listingTitle}>{team.Name}</Typography>
+          </Grid>
+          <Grid item xs={8} sm={4}>
+            <Typography className={styles.listingSubtitle}>
+              Score: {targetTeamStats.TeamScore}
+            </Typography>
+          </Grid>
+          <Grid item xs={8} sm={4}>
+            <Typography className={styles.listingSubtitle}>
+              Sportsmanship: {targetTeamStats.Sportsmanship}
+            </Typography>
+          </Grid>
+          <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
+            <Typography className={styles.listingSubtitle}>
+              Status: {targetTeamStats.Status}
+            </Typography>
+          </Grid>
+        </Grid>
+      </ListItemButton>
+    );
+  } else {
+    content = (
       <ListItemButton
         component={Link}
         to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
@@ -150,8 +178,9 @@ const TeamListing = ({ team }) => {
           </Grid>
         </Grid>
       </ListItemButton>
-    </ListItem>
-  );
+    );
+  }
+  return <ListItem key={team.ID}>{content}</ListItem>;
 };
 
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username

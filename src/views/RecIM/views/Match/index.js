@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
-import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
@@ -33,9 +32,8 @@ const Match = () => {
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
   const [openMatchForm, setOpenMatchForm] = useState(false);
-  const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
-  const [selectedScores, setSelectedScores] = useState();
   const [user, setUser] = useState();
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -53,7 +51,7 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID, openMatchForm, openEditMatchStatsForm]);
+  }, [matchID, openMatchForm]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   useEffect(() => {
@@ -69,10 +67,6 @@ const Match = () => {
       assignMatchScores();
     }
   }, [match]);
-
-  const handleEditMatchStatsForm = (status) => {
-    setOpenEditMatchStatsForm(false);
-  };
 
   const handleMatchFormSubmit = (status, setOpenMatchForm) => {
     //if you want to do something with the message make a snackbar function here
@@ -125,32 +119,10 @@ const Match = () => {
                   <Grid item>
                     <IconButton
                       onClick={() => {
-                        setSelectedScores(match?.Scores[0]);
-                        setOpenEditMatchStatsForm(true);
-                      }}
-                      className={styles.editIconButton}
-                    >
-                      <EditIcon className={styles.editIconColor} />
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton
-                      onClick={() => {
                         setOpenMatchForm(true);
                       }}
                     >
                       <EditIcon />
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton
-                      onClick={() => {
-                        setSelectedScores(match?.Scores[1]);
-                        setOpenEditMatchStatsForm(true);
-                      }}
-                      className={styles.editIconButton}
-                    >
-                      <EditIcon className={styles.editIconColor} />
                     </IconButton>
                   </Grid>
                 </Grid>
@@ -197,19 +169,10 @@ const Match = () => {
                 teamName={match.Team[1]?.Name}
               />
             </Grid>
-            {openEditMatchStatsForm && (
-              <EditMatchStatsForm
-                matchID={match.ID}
-                teamMatchHistory={selectedScores}
-                closeWithSnackbar={(status) => {
-                  handleEditMatchStatsForm(status);
-                }}
-                openEditMatchStatsForm={openEditMatchStatsForm}
-                setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
-              />
-            )}
             {openMatchForm && (
               <MatchForm
+                reload={reload}
+                setReload={setReload}
                 closeWithSnackbar={(status) => {
                   handleMatchFormSubmit(status, setOpenMatchForm);
                 }}

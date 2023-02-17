@@ -42,10 +42,16 @@ const MatchList = ({ matches, activityID }) => {
 
   return <List dense>{content}</List>;
 };
-
-const TeamList = ({ teams }) => {
-  if (!teams?.length) return <Typography>No teams to show.</Typography>;
-  let content = teams.map((team) => <TeamListing key={team.ID} team={team} />);
+// onchange is used for edit Match teams
+const TeamList = ({ teams, match, setTargetTeamID }) => {
+  if (!teams?.length && !match) return <Typography>No teams to show.</Typography>;
+  let content = match
+    ? match.Team.map((team) => (
+        <TeamListing key={team.ID} team={team} match={match} setTargetTeamID={setTargetTeamID} />
+      ))
+    : teams.map((team) => (
+        <TeamListing key={team.ID} team={team} setTargetTeamID={setTargetTeamID} />
+      ));
   return <List dense>{content}</List>;
 };
 

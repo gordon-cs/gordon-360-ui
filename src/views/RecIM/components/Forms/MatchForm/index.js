@@ -12,8 +12,17 @@ import {
   getMatchSurfaces,
   getMatchStatusTypes,
 } from 'services/recim/match';
+import EditMatchStatsForm from '../EditMatchStatsForm';
 
-const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activity, match }) => {
+const MatchForm = ({
+  closeWithSnackbar,
+  openMatchForm,
+  setOpenMatchForm,
+  activity,
+  match,
+  reload,
+  setReload,
+}) => {
   const [errorStatus, setErrorStatus] = useState({
     StartTime: false,
     SeriesID: false,
@@ -25,6 +34,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
   const [loading, setLoading] = useState(false);
   const [surfaces, setSurfaces] = useState([]);
   const [matchStatus, setMatchStatus] = useState([]);
+  const [targetTeamID, setTargetTeamID] = useState();
 
   useEffect(() => {
     const loadData = async () => {
@@ -48,6 +58,10 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       helperText: '*Required',
     },
   ];
+
+  //second set of fields for Match stats
+  const matchTeams = [];
+
   if (activity) {
     createMatchFields.push(
       {
@@ -108,8 +122,13 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         helperText: '*Required',
       },
     );
-  }
 
+    matchTeams.push({
+      name: 'team',
+      type: 'listing',
+      data: match,
+    });
+  }
   const allFields = [createMatchFields].flat();
 
   const currentInfo = useMemo(() => {
@@ -261,6 +280,14 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     setNewInfo(currentInfo);
   };
 
+  const handleEditMatchStatsForm = (status) => {
+    //temporary, I can't think of a way to force update the form right now
+    console.log(status);
+    handleWindowClose();
+    setReload(!reload);
+    setTargetTeamID(null);
+  };
+
   /**
    * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
    * @returns JSX correct input for each field based on type
@@ -276,7 +303,8 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         value={newInfo[field.name]}
         type={field.type}
         menuItems={field.menuItems}
-        onChange={handleChange}
+        data={field.data}
+        onChange={field.type === 'listing' ? setTargetTeamID : handleChange}
         xs={12}
         sm={12}
         md={12}
@@ -291,7 +319,10 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
   } else {
     content = (
       <>
-        <ContentCard title="Match Information">{mapFieldsToInputs(createMatchFields)}</ContentCard>
+        <ContentCard title="Match Information" spacing={1}>
+          {mapFieldsToInputs(createMatchFields)}
+        </ContentCard>
+        <ContentCard title="Edit Teams">{mapFieldsToInputs(matchTeams)}</ContentCard>
 
         {/* Confirmation Dialog */}
         <GordonDialogBox
@@ -315,24 +346,36 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       </>
     );
   }
-
   return (
-    <GordonDialogBox
-      open={openMatchForm}
-      title={activity ? `Create a Match` : `Edit a Match`}
-      fullWidth
-      maxWidth="sm"
-      buttonClicked={() => setOpenConfirmWindow(true)}
-      isButtonDisabled={disableUpdateButton}
-      buttonName="Submit"
-      cancelButtonClicked={() => {
-        setNewInfo(currentInfo);
-        setOpenMatchForm(false);
-      }}
-      cancelButtonName="cancel"
-    >
-      {content}
-    </GordonDialogBox>
+    <>
+      <GordonDialogBox
+        open={openMatchForm}
+        title={activity ? `Create a Match` : `Edit a Match`}
+        fullWidth
+        maxWidth="sm"
+        buttonClicked={() => setOpenConfirmWindow(true)}
+        isButtonDisabled={disableUpdateButton}
+        buttonName="Submit"
+        cancelButtonClicked={() => {
+          setNewInfo(currentInfo);
+          setOpenMatchForm(false);
+        }}
+        cancelButtonName="cancel"
+      >
+        {content}
+      </GordonDialogBox>
+      {targetTeamID && (
+        <EditMatchStatsForm
+          match={match}
+          targetTeamID={targetTeamID}
+          closeWithSnackbar={(status) => {
+            handleEditMatchStatsForm(status);
+          }}
+          openEditMatchStatsForm={Boolean(targetTeamID)}
+          setTargetTeamID={setTargetTeamID}
+        />
+      )}
+    </>
   );
 };
 
