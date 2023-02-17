@@ -7,6 +7,8 @@ import { Lookup } from './recim';
 export type Activity = {
   ID: number;
   Name: string;
+  StartDate: string;
+  EndDate: string;
   RegistrationStart: string;
   RegistrationEnd: string;
   RegistrationOpen: boolean;
@@ -23,6 +25,8 @@ export type Activity = {
 type CreatedActivity = {
   ID: number;
   Name: string;
+  StartDate: string;
+  EndDate: string;
   RegistrationStart: string;
   RegistrationEnd: string;
   SportID: Sport;
@@ -36,6 +40,8 @@ type CreatedActivity = {
 
 type UploadActivity = {
   Name: string;
+  StartDate: string;
+  EndDate: string;
   RegistrationStart: string;
   RegistrationEnd: string;
   SportID: number;
@@ -48,6 +54,8 @@ type UploadActivity = {
 
 type PatchActivity = {
   Name: string;
+  StartDate: string;
+  EndDate: string;
   RegistrationStart: string;
   RegistrationEnd: string;
   SportID: number;

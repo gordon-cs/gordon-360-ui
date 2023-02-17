@@ -45,13 +45,11 @@ const ActivityListing = ({ activity }) => {
     calculateCurrentCapacity();
   }, [activity]);
 
-  let registrationEnd = DateTime.fromISO(activity.RegistrationEnd);
   let activeSeries = activity.Series.find(
     (series) => DateTime.fromISO(series.StartDate) < DateTime.now(),
   );
   let activeSeriesMessage =
-    activeSeries &&
-    activeSeries.Name + ' until ' + standardDate(DateTime.fromISO(activeSeries.EndDate));
+    activeSeries && activeSeries.Name + ' until ' + standardDate(activeSeries.EndDate);
 
   const activityTypeIconPair = [
     {
@@ -94,11 +92,13 @@ const ActivityListing = ({ activity }) => {
             </Grid>
           </Grid>
           <Grid item container xs={12} sm={7} direction="column" spacing={1}>
-            <Grid item>
-              <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-                ActivityStart - ActivityEnd
-              </Typography>
-            </Grid>
+            {activity.StartDate && (
+              <Grid item>
+                <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
+                  {standardDate(activity.StartDate)} - {standardDate(activity.EndDate)}
+                </Typography>
+              </Grid>
+            )}
             <Grid item container columnSpacing={2}>
               <Grid item>
                 <Chip
@@ -111,7 +111,7 @@ const ActivityListing = ({ activity }) => {
               <Grid item>
                 <Typography>
                   {activity.RegistrationOpen
-                    ? 'Registration closes ' + standardDate(registrationEnd)
+                    ? 'Registration closes ' + standardDate(activity.RegistrationEnd)
                     : activeSeriesMessage}
                 </Typography>
               </Grid>
