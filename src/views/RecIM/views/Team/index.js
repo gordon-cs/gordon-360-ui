@@ -27,7 +27,6 @@ const Team = () => {
     //if you want to do something with the message make a snackbar function here
     setOpenInviteParticipantForm(false);
   };
-  console.log(team);
   useEffect(() => {
     const loadTeamData = async () => {
       setLoading(true);
@@ -38,7 +37,7 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID, openTeamForm]);
+  }, [profile, teamID, openTeamForm, openInviteParticipantForm]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   //checks if the team is modifiable by the current user
