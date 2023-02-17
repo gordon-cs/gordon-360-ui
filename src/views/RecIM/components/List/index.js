@@ -44,8 +44,6 @@ const MatchList = ({ matches, activityID }) => {
 };
 // onchange is used for edit Match teams
 const TeamList = ({ teams, match, setTargetTeamID }) => {
-  console.log(teams);
-  console.log(match);
   if (!teams?.length && !match) return <Typography>No teams to show.</Typography>;
   let content = match
     ? match.Team.map((team) => (

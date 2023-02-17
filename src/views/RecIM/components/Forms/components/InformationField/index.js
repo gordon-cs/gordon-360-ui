@@ -35,7 +35,6 @@ const InformationField = ({
     case 'listing':
       switch (name) {
         case 'team':
-          console.log(data);
           field = <TeamList match={data} setTargetTeamID={onChange} />;
           break;
         default:

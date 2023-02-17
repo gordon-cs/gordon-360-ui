@@ -158,7 +158,7 @@ const MatchForm = ({
       SurfaceID: '',
       TeamIDs: [],
     };
-  }, [surfaces, matchStatus, match, reload]);
+  }, [surfaces, matchStatus, match]);
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
