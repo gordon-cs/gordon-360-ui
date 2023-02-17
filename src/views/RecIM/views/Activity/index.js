@@ -1,13 +1,4 @@
-import {
-  Grid,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  Button,
-  Chip,
-  IconButton,
-} from '@mui/material';
+import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -17,19 +8,15 @@ import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
 import styles from './Activity.module.css';
-import { MatchList, TeamList } from './../../components/List';
+import { TeamList } from './../../components/List';
 import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
-import CreateMatchForm from 'views/RecIM/components/Forms/CreateMatchForm';
+import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
-import UpdateIcon from '@mui/icons-material/Update';
-import RestoreIcon from '@mui/icons-material/Restore';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import { standardDate } from 'views/RecIM/components/Helpers';
-import { DateTime } from 'luxon';
+import ScheduleList from './components/ScheduleList';
 
 const Activity = () => {
   const navigate = useHistory();
@@ -38,19 +25,20 @@ const Activity = () => {
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
-  const [openCreateMatchForm, setOpenCreateMatchForm] = useState(false);
+  const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       setActivity(await getActivityByID(activityID));
       if (profile) {
-        setUser(await getParticipantByUsername(profile.AD_Username));
+        setUser(await getParticipantByUsername('Josh.Peters'));
         setUserTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
@@ -62,7 +50,8 @@ const Activity = () => {
     openActivityForm,
     openTeamForm,
     openCreateSeriesForm,
-    openCreateMatchForm,
+    openMatchForm,
+    reload,
   ]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
@@ -87,6 +76,11 @@ const Activity = () => {
   const handleTeamFormSubmit = (status, setOpenTeamForm) => {
     //if you want to do something with the message make a snackbar function here
     setOpenTeamForm(false);
+  };
+
+  const handleMatchFormSubmit = (status, setOpenMatchForm) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenMatchForm(false);
   };
 
   const handleCreateSeriesForm = (status) => {
@@ -151,7 +145,7 @@ const Activity = () => {
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
                     onClick={() => {
-                      setOpenCreateMatchForm(true);
+                      setOpenMatchForm(true);
                     }}
                   >
                     Create a New Match
@@ -177,7 +171,15 @@ const Activity = () => {
           )}
           {activity.Series?.length ? (
             activity.Series.map((series) => {
-              return <ScheduleList series={series} activityID={activityID} />;
+              return (
+                <ScheduleList
+                  isAdmin={user?.IsAdmin}
+                  series={series}
+                  activityID={activityID}
+                  reload={reload}
+                  setReload={setReload}
+                />
+              );
             })
           ) : (
             <Typography variant="body1" paragraph>
@@ -252,13 +254,13 @@ const Activity = () => {
                 activityID={activityID}
               />
             )}
-            {openCreateMatchForm && (
-              <CreateMatchForm
+            {openMatchForm && (
+              <MatchForm
                 closeWithSnackbar={(status) => {
-                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
+                  handleMatchFormSubmit(status, setOpenMatchForm);
                 }}
-                openCreateMatchForm={openCreateMatchForm}
-                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+                openMatchForm={openMatchForm}
+                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
                 activity={activity}
               />
             )}
@@ -284,13 +286,13 @@ const Activity = () => {
                 activityID={activityID}
               />
             )}
-            {openCreateMatchForm && (
-              <CreateMatchForm
+            {openMatchForm && (
+              <MatchForm
                 closeWithSnackbar={(status) => {
-                  handleTeamFormSubmit(status, setOpenCreateMatchForm);
+                  handleTeamFormSubmit(status, setOpenMatchForm);
                 }}
-                openCreateMatchForm={openCreateMatchForm}
-                setOpenCreateMatchForm={(bool) => setOpenCreateMatchForm(bool)}
+                openMatchForm={openMatchForm}
+                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
                 activity={activity}
               />
             )}
@@ -310,57 +312,6 @@ const Activity = () => {
       </>
     );
   }
-};
-
-const ScheduleList = ({ series, activityID }) => {
-  let startDate = DateTime.fromISO(series.StartDate);
-  let endDate = DateTime.fromISO(series.EndDate);
-
-  const status = () => {
-    let now = DateTime.fromMillis(Date.now());
-    // future series
-    if (now < startDate)
-      return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
-    // past series
-    else if (now > endDate)
-      return <Chip icon={<RestoreIcon />} label="completed" color="success" size="small"></Chip>;
-    // current series
-    return <Chip icon={<ScheduleIcon />} label="ongoing" color="warning" size="small"></Chip>;
-  };
-
-  return (
-    <>
-      <Grid container className={styles.seriesHeader} alignItems="center" columnSpacing={2}>
-        <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" className={styles.seriesMainText}>
-            {series.Name}
-          </Typography>
-          <Typography className={styles.seriesSecondaryText}>
-            Schedule Type: {series.Type}
-          </Typography>
-        </Grid>
-        <Grid item container xs={12} sm={3}>
-          <Grid item xs={10}>
-            <Typography>
-              <i>
-                {standardDate(startDate, false)} - {standardDate(endDate, false)}
-              </i>
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid container item xs={12} sm={3} justifyContent="center">
-          {status()}
-        </Grid>
-      </Grid>
-      {series.Match.length ? (
-        <MatchList matches={series.Match} activityID={activityID} />
-      ) : (
-        <Typography variant="body1" paragraph>
-          Games have not yet been scheduled for this series.
-        </Typography>
-      )}
-    </>
-  );
 };
 
 export default Activity;

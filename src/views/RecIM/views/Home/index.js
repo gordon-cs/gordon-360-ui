@@ -13,6 +13,7 @@ import { getParticipantTeams, getParticipantByUsername } from 'services/recim/pa
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 import recimLogo from './../../recim_logo.png';
+import { DateTime } from 'luxon';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -63,7 +64,7 @@ const Home = () => {
     const loadData = async () => {
       setLoading(true);
       // Get all active activities where registration has not closed
-      setActivities(await getActivities(true));
+      setActivities(await getActivities());
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
         setMyTeams(await getParticipantTeams(profile.AD_Username));
@@ -84,7 +85,10 @@ const Home = () => {
     let open = [];
     let ongoing = [];
     activities.forEach((activity) => {
-      if (activity.RegistrationOpen) {
+      if (
+        activity.RegistrationOpen ||
+        DateTime.now() < DateTime.fromISO(activity.RegistrationStart)
+      ) {
         open.push(activity);
       } else {
         ongoing.push(activity);

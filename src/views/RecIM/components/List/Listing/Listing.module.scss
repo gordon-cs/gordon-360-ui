@@ -1,7 +1,7 @@
 @import '../../../../../vars';
 
 .listing {
-  background-color: $neutral-light-gray;
+  background-color: $neutral-light-gray2-opacity40;
   padding: 1em;
   border-radius: 0.5em;
   align-items: center;
@@ -61,5 +61,12 @@
 @media (min-width: $break-sm) {
   .rightAlignLarge {
     text-align: right;
+  }
+}
+
+@media (max-width: $break-sm) {
+  .listingWrapper {
+    padding-left: 0;
+    padding-right: 0;
   }
 }

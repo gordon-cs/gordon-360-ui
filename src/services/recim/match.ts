@@ -51,6 +51,7 @@ type PatchMatch = {
   Time: string;
   SurfaceID: number;
   StatusID: number;
+  TeamIDs?: Array<number>;
 };
 
 type CreatedAttendance = {
@@ -83,6 +84,8 @@ const updateMatchStats = (
 const updateMatch = (ID: number, updatedMatch: PatchMatch): Promise<CreatedMatch> =>
   http.patch(`recim/matches/${ID}`, updatedMatch);
 
+const deleteMatchCascade = async (matchID: number) => http.del(`recim/matches/${matchID}`);
+
 export {
   createMatch,
   getMatchByID,
@@ -92,4 +95,5 @@ export {
   updateMatchStats,
   updateMatch,
   createMatchAttendance,
+  deleteMatchCascade,
 };
