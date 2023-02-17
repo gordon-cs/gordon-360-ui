@@ -38,7 +38,7 @@ const Activity = () => {
       setLoading(true);
       setActivity(await getActivityByID(activityID));
       if (profile) {
-        setUser(await getParticipantByUsername('Josh.Peters'));
+        setUser(await getParticipantByUsername(profile.AD_Username));
         setUserTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
