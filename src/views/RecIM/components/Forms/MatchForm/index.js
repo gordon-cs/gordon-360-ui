@@ -14,7 +14,15 @@ import {
 } from 'services/recim/match';
 import EditMatchStatsForm from '../EditMatchStatsForm';
 
-const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activity, match }) => {
+const MatchForm = ({
+  closeWithSnackbar,
+  openMatchForm,
+  setOpenMatchForm,
+  activity,
+  match,
+  reload,
+  setReload,
+}) => {
   const [errorStatus, setErrorStatus] = useState({
     StartTime: false,
     SeriesID: false,
@@ -121,8 +129,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       menuItems: match.Team,
     });
   }
-  console.log(match);
-  console.log(targetTeamID);
   const allFields = [createMatchFields].flat();
 
   const currentInfo = useMemo(() => {
@@ -152,7 +158,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       SurfaceID: '',
       TeamIDs: [],
     };
-  }, [surfaces, matchStatus, match]);
+  }, [surfaces, matchStatus, match, reload]);
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
@@ -275,6 +281,10 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
   };
 
   const handleEditMatchStatsForm = (status) => {
+    //temporary, I can't think of a way to force update the form right now
+    console.log(status);
+    handleWindowClose();
+    setReload(!reload);
     setTargetTeamID(null);
   };
 
