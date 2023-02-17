@@ -49,7 +49,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
-  const isAlumni = profile.PersonType?.includes('alu');
+  const isAlumni = true;
   const [isViewerPolice, canViewSensitiveInfo] = useAuthGroups(
     AuthGroup.Police,
     AuthGroup.SensitiveInfoView,
@@ -235,7 +235,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     );
 
   const updateAlumniInfoButton =
-    profile.PersonType === 'alu' && isOnline && myProf ? (
+    true && isOnline && myProf ? (
       <Grid container justifyContent="center">
         <Button
           variant="contained"

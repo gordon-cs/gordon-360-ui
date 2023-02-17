@@ -98,7 +98,9 @@ const putSeriesSchedule = async (schedule: UploadSeriesSchedule): Promise<Series
 // AUTO SCHEDULER VERY DANGEROUS AS OF 2/4/2023 AS THERE IS NO TRUE DELETE ROUTES,
 // BE CAREFUL USING THIS AS DELETES WILL HAVE TO BE DONE MANUALLY
 const scheduleSeriesMatches = async (seriesID: number): Promise<Match[]> =>
-  http.post(`recim/series/schedule/${seriesID}`);
+  http.post(`recim/series/${seriesID}/schedule`);
+
+const deleteSeriesCascade = async (seriesID: number) => http.del(`recim/series/${seriesID}`);
 
 export {
   createSeries,
@@ -109,4 +111,5 @@ export {
   editSeries,
   putSeriesSchedule,
   scheduleSeriesMatches,
+  deleteSeriesCascade,
 };

@@ -6,13 +6,14 @@ import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
-import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
 import { getMatchByID } from 'services/recim/match';
 import { DateTime } from 'luxon';
+import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import EditIcon from '@mui/icons-material/Edit';
+import { standardDate } from 'views/RecIM/components/Helpers';
 
 const RosterCard = ({ participants, teamName }) => (
   <Card>
@@ -30,9 +31,9 @@ const Match = () => {
   const [loading, setLoading] = useState(true);
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
-  const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
-  const [selectedScores, setSelectedScores] = useState();
+  const [openMatchForm, setOpenMatchForm] = useState(false);
   const [user, setUser] = useState();
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -50,7 +51,7 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID, openEditMatchStatsForm]);
+  }, [matchID, openMatchForm]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   useEffect(() => {
@@ -67,20 +68,9 @@ const Match = () => {
     }
   }, [match]);
 
-  const handleEditMatchStatsForm = (status) => {
-    setOpenEditMatchStatsForm(false);
-  };
-
-  const dayMonthDate = (date) => {
-    return (
-      date.weekdayShort +
-      ' ' +
-      date.monthLong +
-      ' ' +
-      date.day +
-      ', ' +
-      date.toLocaleString(DateTime.TIME_SIMPLE)
-    );
+  const handleMatchFormSubmit = (status, setOpenMatchForm) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenMatchForm(false);
   };
 
   if (loading && !profile) {
@@ -93,18 +83,21 @@ const Match = () => {
       <>
         <Grid container spacing={4}>
           <Grid item xs={6} textAlign="right">
-            <Typography className={styles.subtitle}>{match?.Activity.Name}</Typography>
+            <Typography className={styles.subtitle}>
+              {standardDate(DateTime.fromISO(match?.Time), true)}
+            </Typography>
           </Grid>
           <Grid item xs={6} textAlign="left">
-            <Typography className={styles.subtitle}>
-              {dayMonthDate(DateTime.fromISO(match?.Time))}
-            </Typography>
+            <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
           </Grid>
         </Grid>
         <Grid container alignItems="center" justifyContent="space-around">
           <Grid item xs={2}>
+            <img src={''} alt="Team Icon" width="85em"></img>
+          </Grid>
+          <Grid item xs={2}>
             <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
-              <Typography variant="h5" className="gc360_text_link">
+              <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
                 {match?.Team[0]?.Name ?? 'No team yet...'}
               </Typography>
             </LinkRouter>
@@ -113,11 +106,8 @@ const Match = () => {
               {match?.Team[0]?.TeamRecord.Win ?? 0}W : {match?.Team[0]?.TeamRecord.Loss ?? 0}L
             </Typography>
             {user?.IsAdmin && (
-              <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0].Sportsmanship}</i>
+              <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0]?.Sportsmanship}</i>
             )}
-          </Grid>
-          <Grid item xs={2}>
-            <img src={''} alt="Team Icon" width="85em"></img>
           </Grid>
           <Grid item container xs={4} sm={2} alignItems="center" direction="column">
             <Typography variant="h5">
@@ -129,35 +119,21 @@ const Match = () => {
                   <Grid item>
                     <IconButton
                       onClick={() => {
-                        setSelectedScores(match?.Scores[0]);
-                        setOpenEditMatchStatsForm(true);
+                        setOpenMatchForm(true);
                       }}
                       className={styles.editIconButton}
                     >
-                      <EditIcon className={styles.editIconColor} />
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton
-                      onClick={() => {
-                        setSelectedScores(match?.Scores[1]);
-                        setOpenEditMatchStatsForm(true);
-                      }}
-                      className={styles.editIconButton}
-                    >
-                      <EditIcon className={styles.editIconColor} />
+                      <EditIcon />
                     </IconButton>
                   </Grid>
                 </Grid>
               </Grid>
             )}
           </Grid>
-          <Grid item xs={2}>
-            <img src={''} alt="Team Icon" width="85em"></img>
-          </Grid>
-          <Grid item xs={2}>
+
+          <Grid item xs={2} textAlign="right">
             <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
-              <Typography variant="h5" className="gc360_text_link">
+              <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
                 {match?.Team[1]?.Name ?? 'No team yet...'}
               </Typography>
             </LinkRouter>
@@ -165,8 +141,11 @@ const Match = () => {
               {match?.Team[1]?.TeamRecord.Win ?? 0}W : {match?.Team[1]?.TeamRecord.Loss ?? 0}L
             </Typography>
             {user?.IsAdmin && (
-              <i className={styles.subtitle}>Sportsmanship: {match?.Scores[1].Sportsmanship}</i>
+              <i className={styles.subtitle}>Sportsmanship: {match?.Scores[1]?.Sportsmanship}</i>
             )}
+          </Grid>
+          <Grid item xs={2}>
+            <img src={''} alt="Team Icon" width="85em"></img>
           </Grid>
         </Grid>
       </>
@@ -191,15 +170,16 @@ const Match = () => {
                 teamName={match.Team[1]?.Name}
               />
             </Grid>
-            {openEditMatchStatsForm && (
-              <EditMatchStatsForm
-                matchID={match.ID}
-                teamMatchHistory={selectedScores}
+            {openMatchForm && (
+              <MatchForm
+                reload={reload}
+                setReload={setReload}
                 closeWithSnackbar={(status) => {
-                  handleEditMatchStatsForm(status);
+                  handleMatchFormSubmit(status, setOpenMatchForm);
                 }}
-                openEditMatchStatsForm={openEditMatchStatsForm}
-                setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+                openMatchForm={openMatchForm}
+                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+                match={match}
               />
             )}
           </Grid>

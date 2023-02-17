@@ -42,10 +42,14 @@ const MatchList = ({ matches, activityID }) => {
 
   return <List dense>{content}</List>;
 };
-
-const TeamList = ({ teams, invite }) => {
-  if (!teams?.length) return <Typography>No teams to show.</Typography>;
-  let content = teams.map((team) => <TeamListing key={team.ID} team={team} invite={invite} />);
+// setTargetTeamID is used for edit Match teams
+const TeamList = ({ teams, match, invite, setTargetTeamID }) => {
+  if (!teams?.length && !match) return <Typography>No teams to show.</Typography>;
+  let content = match
+    ? match.Team.map((team) => (
+        <TeamListing key={team.ID} team={team} match={match} setTargetTeamID={setTargetTeamID} />
+      ))
+    : teams.map((team) => <TeamListing key={team.ID} team={team} invite={invite} />);
   return <List dense>{content}</List>;
 };
 

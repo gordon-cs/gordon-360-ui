@@ -1,5 +1,15 @@
 @import '../../../../vars';
 
+.teamName {
+  font-size: calc(1rem + 1vw);
+}
+
+@media (min-width: $break-lg) {
+  .teamName {
+    font-size: 1.5rem;
+  }
+}
+
 // if desired, this should just be a global change and
 // universally applied to all 360 cards
 .cardHeader {

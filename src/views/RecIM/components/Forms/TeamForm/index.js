@@ -171,6 +171,7 @@ const TeamForm = ({
         handleWindowClose();
       });
     } else {
+      console.log(teamRequest);
       createTeam(profile.AD_Username, teamRequest).then((createdTeam) => {
         setSaving(false);
         closeWithSnackbar(createdTeam.ID, {

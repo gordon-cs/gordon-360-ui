@@ -13,8 +13,8 @@
 }
 
 .seriesHeader {
-  color: $neutral-white;
-  background-color: $neutral-black-opacity55;
+  color: $neutral-black-opacity70;
+  background-color: $neutral-black-opacity15;
   border-radius: 0.5rem;
   margin-top: 1rem;
   width: 100%;
@@ -27,8 +27,17 @@
 }
 
 .seriesSecondaryText {
-  color: $neutral-light-gray;
+  color: $neutral-dark-gray;
   font-size: 0.7em;
+}
+
+.seriesDateText {
+  color: $neutral-dark-gray;
+  font-size: 0.85em;
+}
+
+.ongoingChip {
+  background-color: #9fd1f5;
 }
 
 // All below should eventually be refactored to global styles
@@ -73,4 +82,13 @@
 
 .editIconButton:hover {
   background-color: rgb(177, 129, 13);
+}
+
+.redButton {
+  background-color: $secondary-red;
+  color: $neutral-white;
+}
+
+.redButton:hover {
+  background-color: $alternative-red;
 }

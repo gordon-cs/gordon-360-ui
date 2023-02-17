@@ -12,6 +12,7 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import styles from './InformationField.module.css';
+import { TeamList } from 'views/RecIM/components/List';
 
 const InformationField = ({
   label,
@@ -22,6 +23,7 @@ const InformationField = ({
   error,
   helperText,
   menuItems,
+  data,
   xs,
   sm,
   md,
@@ -30,6 +32,15 @@ const InformationField = ({
   let field;
   // eslint-disable-next-line default-case
   switch (type) {
+    case 'listing':
+      switch (name) {
+        case 'team':
+          field = <TeamList match={data} setTargetTeamID={onChange} />;
+          break;
+        default:
+          break;
+      }
+      break;
     case 'text':
       field = (
         <TextField

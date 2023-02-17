@@ -72,7 +72,7 @@ const ActivityListing = ({ activity }) => {
 
   if (!activity) return null;
   return (
-    <ListItem key={activity.ID}>
+    <ListItem key={activity.ID} className={styles.listingWrapper}>
       <ListItemButton
         component={Link}
         to={`/recim/activity/${activity.ID}`}
@@ -134,8 +134,8 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const TeamListing = ({ team, invite }) => {
-  if (!team) return null;
+const TeamListing = ({ team, invite, match, setTargetTeamID }) => {
+  if (!team && !match) return null;
 
   const handleAcceptInvite = async () => {
     await respondToTeamInvite(team.ID, { Response: 'accepted' });
@@ -145,8 +145,36 @@ const TeamListing = ({ team, invite }) => {
     await respondToTeamInvite(team.ID, { Response: 'rejected' });
   };
 
-  return (
-    <ListItem key={team.ID}>
+  let content;
+  if (match) {
+    var targetTeamStats = match.Scores.find((score) => score.TeamID === team.ID);
+    content = (
+      <ListItemButton onClick={() => setTargetTeamID(team.ID)}>
+        <Grid container columnSpacing={2}>
+          <Grid item xs={12} sm={10}>
+            <Typography className={styles.listingSubtitle}>Name: </Typography>
+            <Typography className={styles.listingTitle}>{team.Name}</Typography>
+          </Grid>
+          <Grid item xs={8} sm={4}>
+            <Typography className={styles.listingSubtitle}>
+              Score: {targetTeamStats.TeamScore}
+            </Typography>
+          </Grid>
+          <Grid item xs={8} sm={4}>
+            <Typography className={styles.listingSubtitle}>
+              Sportsmanship: {targetTeamStats.Sportsmanship}
+            </Typography>
+          </Grid>
+          <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
+            <Typography className={styles.listingSubtitle}>
+              Status: {targetTeamStats.Status}
+            </Typography>
+          </Grid>
+        </Grid>
+      </ListItemButton>
+    );
+  } else {
+    content = (
       <Grid container direction="row" justifyContent="center">
         <Grid item xs={12}>
           <ListItemButton
@@ -194,6 +222,11 @@ const TeamListing = ({ team, invite }) => {
           </Grid>
         )}
       </Grid>
+    );
+  }
+  return (
+    <ListItem key={team.ID} className={styles.listingWrapper}>
+      {content}
     </ListItem>
   );
 };
@@ -257,7 +290,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
   return (
     // first ListItem is used only for paddings/margins
     // second ListItem (nested inside) is used to layout avatar and secondaryAction
-    <ListItem key={participant.Username}>
+    <ListItem key={participant.Username} className={styles.listingWrapper}>
       <ListItem
         secondaryAction={
           minimal ? (
@@ -300,13 +333,8 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
 };
 
 const MatchListing = ({ match, activityID }) => {
-  if (!match?.Team?.length) {
-    console.log('Error: MatchListing missing required info; this should be handled elsewhere');
-    return null;
-  }
-
   return (
-    <ListItem key={match.ID}>
+    <ListItem key={match.ID} className={styles.listingWrapper}>
       <ListItemButton
         component={Link}
         to={`/recim/activity/${activityID}/match/${match.ID}`}
@@ -314,7 +342,7 @@ const MatchListing = ({ match, activityID }) => {
       >
         <Grid container>
           <Grid item>
-            {match.Team[0]?.Name} vs. {match.Team[1]?.Name}
+            {match.Team[0]?.Name ?? <i>TBD</i>} vs. {match.Team[1]?.Name ?? <i>TBD</i>}
           </Grid>
         </Grid>
       </ListItemButton>
