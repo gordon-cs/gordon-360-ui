@@ -121,6 +121,7 @@ const Match = () => {
                       onClick={() => {
                         setOpenMatchForm(true);
                       }}
+                      className={styles.editIconButton}
                     >
                       <EditIcon />
                     </IconButton>

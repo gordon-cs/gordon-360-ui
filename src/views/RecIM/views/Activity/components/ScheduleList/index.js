@@ -121,7 +121,14 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
     else if (now > endDate)
       return <Chip icon={<RestoreIcon />} label="completed" color="success" size="small"></Chip>;
     // current series
-    return <Chip icon={<ScheduleIcon />} label="ongoing" color="warning" size="small"></Chip>;
+    return (
+      <Chip
+        icon={<ScheduleIcon />}
+        label="ongoing"
+        size="small"
+        className={styles.ongoingChip}
+      ></Chip>
+    );
   };
   return (
     <>
