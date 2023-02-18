@@ -1,0 +1,38 @@
+@import '../../../../vars';
+
+// if desired, this should just be a global change and
+// universally applied to all 360 cards
+.cardHeader {
+  background-color: $primary-blue;
+  color: $neutral-white;
+}
+
+.actionButton {
+  text-transform: none;
+}
+
+:global(.MuiCardHeader-root).cardHeader {
+  padding: 0.7em 16px;
+}
+
+.cardHeader :global(.MuiCardHeader-title) {
+  font-size: 1em;
+}
+
+.title {
+  font-weight: bold;
+  color: $neutral-dark-gray2;
+}
+
+.subtitle {
+  color: $neutral-gray;
+}
+
+.editIconButton {
+  background-color: $secondary-yellow;
+  color: $neutral-black;
+}
+
+.editIconButton:hover {
+  background-color: rgb(177, 129, 13);
+}

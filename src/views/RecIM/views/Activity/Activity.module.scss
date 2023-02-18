@@ -1,0 +1,94 @@
+@import '../../../../vars';
+
+.buttonArea {
+  background-color: $neutral-light-gray;
+  padding: 16px;
+  margin-bottom: 0.2em;
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+}
+
+.actionButton {
+  text-transform: none;
+}
+
+.seriesHeader {
+  color: $neutral-black-opacity70;
+  background-color: $neutral-black-opacity15;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  margin-left: 0;
+  padding: 0.5rem;
+}
+
+.seriesMainText {
+  font-weight: bold;
+}
+
+.seriesSecondaryText {
+  color: $neutral-dark-gray;
+  font-size: 0.7em;
+}
+
+.seriesDateText {
+  color: $neutral-dark-gray;
+  font-size: 0.85em;
+}
+
+.ongoingChip {
+  background-color: #9fd1f5;
+}
+
+// All below should eventually be refactored to global styles
+
+// if desired, this should just be a global change and
+// universally applied to all 360 cards
+.cardHeader {
+  background-color: $primary-blue;
+  color: $neutral-white;
+}
+
+:global(.MuiCardHeader-root).cardHeader {
+  padding: 0.7em 16px;
+}
+
+:global(.MuiCardContent-root) {
+  padding: 16px;
+  padding-top: 0px;
+}
+
+.cardHeader :global(.MuiCardHeader-title) {
+  font-size: 1em;
+}
+
+.grayText {
+  color: $neutral-gray;
+}
+
+.title {
+  font-weight: bold;
+  color: $neutral-dark-gray2;
+}
+
+.subtitle {
+  color: $neutral-gray;
+}
+
+.editIconButton {
+  background-color: $secondary-yellow;
+  color: $neutral-black;
+}
+
+.editIconButton:hover {
+  background-color: rgb(177, 129, 13);
+}
+
+.redButton {
+  background-color: $secondary-red;
+  color: $neutral-white;
+}
+
+.redButton:hover {
+  background-color: $alternative-red;
+}

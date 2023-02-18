@@ -1,0 +1,72 @@
+@import '../../../../../vars';
+
+.listing {
+  background-color: $neutral-light-gray2-opacity40;
+  padding: 1em;
+  border-radius: 0.5em;
+  align-items: center;
+}
+
+.listing:hover {
+  background-color: $neutral-light-gray2;
+}
+
+:global(.MuiList-padding) {
+  padding: 0;
+}
+
+.redButton {
+  background-color: $secondary-red;
+  color: $neutral-white;
+}
+
+.redButton:hover {
+  background-color: $alternative-red;
+}
+
+.avatar {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 1rem 0 0;
+}
+
+.avatarSmall {
+  width: 2rem;
+  height: 2rem;
+}
+
+.listingTitle {
+  color: $neutral-dark-gray2;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.listingSubtitle {
+  color: $neutral-gray;
+  font-size: 0.8em;
+}
+
+.activityType_league {
+  background-color: #edb1ad;
+}
+
+.activityType_tournament {
+  background-color: #d2cb5c;
+}
+
+.activityType_oneoff {
+  background-color: #ffd040;
+}
+
+@media (min-width: $break-sm) {
+  .rightAlignLarge {
+    text-align: right;
+  }
+}
+
+@media (max-width: $break-sm) {
+  .listingWrapper {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
