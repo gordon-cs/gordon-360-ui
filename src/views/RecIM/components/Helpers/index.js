@@ -18,8 +18,8 @@ const standardDateTimeRange = (startDateTime, endDateTime) => {
     startDateTime.toLocaleString(DateTime.DATE_FULL) ===
     endDateTime.toLocaleString(DateTime.DATE_FULL);
   if (isOneDay) {
-    let endTime = startDateTime.toLocaleString(DateTime.TIME_SIMPLE);
-    return `${standardDate(startDateTime, true)} - ${endTime}`;
+    let endTime = startDateTime.toLocaleString(DateTime.TIME_SIMPLE).replace(':00', '');
+    return `${standardDate(startDateTime, true).replace(':00', '')} - ${endTime}`;
   }
   // Jan 1 3:00pm - Jan 31 3:00pm
   let isOneYear = startDateTime.year === endDateTime.year;
