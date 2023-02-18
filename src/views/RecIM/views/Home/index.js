@@ -177,7 +177,7 @@ const Home = () => {
                 </Typography>
               </Grid>
             </Grid>
-            <TeamList teams={invites} invite />
+            <TeamList teams={invites} invite setInvites={setInvites} />
           </>
         )}
         <Grid container className={styles.teamHeader} alignItems="center" columnSpacing={2}>

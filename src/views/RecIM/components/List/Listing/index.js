@@ -29,6 +29,7 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate } from '../../Helpers';
 
+
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
   const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
@@ -134,20 +135,24 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const TeamListing = ({ team, invite, match, setTargetTeamID }) => {
+const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
 
   const handleAcceptInvite = async () => {
-    await respondToTeamInvite(team.ID, 'accepted');
+    let response = 'accepted'
+    await respondToTeamInvite(team.ID, response);
+    callbackFunction(response, team.Activity.ID, team.ID);
   };
 
   const handleRejectInvite = async () => {
-    await respondToTeamInvite(team.ID, 'rejected');
+    let response = 'rejected'
+    await respondToTeamInvite(team.ID, response);
+    callbackFunction(response, team.Activity.ID, team.ID);
   };
 
   let content;
   if (match) {
-    var targetTeamStats = match.Scores.find((score) => score.TeamID === team.ID);
+    let targetTeamStats = match.Scores.find((score) => score.TeamID === team.ID);
     content = (
       <ListItemButton onClick={() => setTargetTeamID(team.ID)}>
         <Grid container columnSpacing={2}>
