@@ -51,7 +51,8 @@ const ActivityForm = ({
     };
     fetchData();
   }, []);
-  const createActivityFields = [
+
+  const activityFields = [
     {
       label: 'Name',
       name: 'name',
@@ -132,7 +133,7 @@ const ActivityForm = ({
     },
   ];
   if (activity) {
-    createActivityFields.push(
+    activityFields.push(
       {
         label: 'Activity Status',
         name: 'statusID',
@@ -154,7 +155,7 @@ const ActivityForm = ({
   }
 
   const allFields = [
-    createActivityFields,
+    activityFields,
     // if you need more fields put them here, or if you make a "second page"
   ].flat();
 
@@ -224,7 +225,7 @@ const ActivityForm = ({
       if (currentInfo[field] !== newInfo[field]) {
         hasChanges = true;
       }
-      let isFieldRequired = createActivityFields.find((n) => n.name === field).required;
+      let isFieldRequired = activityFields.find((n) => n.name === field).required;
       handleSetError(field, !newInfo[field] && isFieldRequired);
       if (!newInfo[field] && isFieldRequired) hasError = true;
     }
@@ -339,9 +340,7 @@ const ActivityForm = ({
   } else {
     content = (
       <>
-        <ContentCard title="Activity Information">
-          {mapFieldsToInputs(createActivityFields)}
-        </ContentCard>
+        <ContentCard title="Activity Information">{mapFieldsToInputs(activityFields)}</ContentCard>
 
         <GordonDialogBox
           open={openConfirmWindow}

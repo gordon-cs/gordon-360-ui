@@ -25,7 +25,7 @@ import { getActivityTypes, getActivityByID } from 'services/recim/activity';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
-import { standardDate } from '../../Helpers';
+import { standardDate, standardDateTimeRange } from '../../Helpers';
 
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
@@ -65,7 +65,6 @@ const ActivityListing = ({ activity }) => {
       icon: <LocalActivityIcon />,
     },
   ];
-
   if (!activity) return null;
   return (
     <ListItem key={activity.ID} className={styles.listingWrapper}>
@@ -95,7 +94,7 @@ const ActivityListing = ({ activity }) => {
             {activity.StartDate && (
               <Grid item>
                 <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-                  {standardDate(activity.StartDate)} - {standardDate(activity.EndDate)}
+                  {standardDateTimeRange(activity.StartDate, activity.EndDate)}
                 </Typography>
               </Grid>
             )}
