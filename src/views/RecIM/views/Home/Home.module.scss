@@ -23,6 +23,20 @@
   font-size: 1em;
 }
 
+.teamHeader {
+  color: $neutral-black-opacity70;
+  background-color: $neutral-black-opacity15;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  margin-left: 0;
+  padding: 0.5rem;
+}
+
+.teamHeaderMainText {
+  font-weight: bold;
+}
+
 .title {
   font-weight: bold;
   color: $neutral-dark-gray2;

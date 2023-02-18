@@ -1,5 +1,6 @@
 import { List, Typography } from '@mui/material';
 import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
+import { useHistory } from 'react-router-dom';
 
 const ActivityList = ({ activities }) => {
   if (!activities?.length) return <Typography>No activities to show.</Typography>;
@@ -42,15 +43,30 @@ const MatchList = ({ matches, activityID }) => {
 
   return <List dense>{content}</List>;
 };
-// onchange is used for edit Match teams
-const TeamList = ({ teams, match, setTargetTeamID }) => {
+// setTargetTeamID is used for edit Match teams
+const TeamList = ({ teams, match, invite, setInvites, setTargetTeamID }) => {
+  const navigate = useHistory();
   if (!teams?.length && !match) return <Typography>No teams to show.</Typography>;
+
+  const handleInviteResponse = (response, activityID, teamID) => {
+    if (response === 'accepted') {
+      navigate.push(`recim/activity/${activityID}/team/${teamID}`);
+    } else if (response === 'rejected') {
+      setInvites(teams.filter((team) => team.ID !== teamID));
+    }
+  };
+
   let content = match
     ? match.Team.map((team) => (
         <TeamListing key={team.ID} team={team} match={match} setTargetTeamID={setTargetTeamID} />
       ))
     : teams.map((team) => (
-        <TeamListing key={team.ID} team={team} setTargetTeamID={setTargetTeamID} />
+        <TeamListing
+          key={team.ID}
+          team={team}
+          invite={invite}
+          callbackFunction={handleInviteResponse}
+        />
       ));
   return <List dense>{content}</List>;
 };

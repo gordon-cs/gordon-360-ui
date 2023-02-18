@@ -199,7 +199,7 @@ const Activity = () => {
       <Card>
         <CardHeader title="Teams" className={styles.cardHeader} />
         <CardContent>
-          {user?.IsAdmin && (
+          {canCreateTeam && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={12}>
                 <Grid container justifyContent="center">
