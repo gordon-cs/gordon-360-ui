@@ -278,6 +278,20 @@ const ActivityForm = ({
     setNewInfo(currentInfo);
   };
 
+  useEffect(() => {
+    const listener = (event) => {
+      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+        if (!openConfirmWindow && !disableUpdateButton) {
+          setOpenConfirmWindow(true);
+        }
+      }
+    };
+    document.addEventListener('keypress', listener);
+    return () => {
+      document.removeEventListener('keypress', listener);
+    };
+  }, [openConfirmWindow, disableUpdateButton]);
+
   /**
    * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
    * @returns JSX correct input for each field based on type

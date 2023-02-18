@@ -1,4 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+// import { useEffect } from 'react';
 import { Alert, AlertTitle } from '@mui/material';
 import styles from './GordonDialogBox.module.css';
 
@@ -31,6 +32,18 @@ const GordonDialogBox = ({
   children,
   ...otherProps
 }) => {
+  // useEffect(() => {
+  //   const listener = (event) => {
+  //     if (event.code === "Enter" || event.code === "NumpadEnter") {
+  //       buttonClicked();
+  //     }
+  //   };
+  //   document.addEventListener("keypress", listener);
+  //   return () => {
+  //     document.removeEventListener("keypress", listener);
+  //   };
+  // }, [buttonClicked]);
+
   return (
     <Dialog
       className={styles.gc360_gordondialogbox}
