@@ -1,4 +1,4 @@
-import { Switch, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Home from './views/Home';
 import Admin from './views/Admin';
 import Team from './views/Team';
@@ -9,23 +9,13 @@ import Match from './views/Match';
 
 const RecIM = () => {
   return (
-    <Switch>
-      <Route path="/recim/activity/:activityID/team/:teamID">
-        <Team />
-      </Route>
-      <Route path="/recim/activity/:activityID/match/:matchID">
-        <Match />
-      </Route>
-      <Route path="/recim/activity/:activityID">
-        <Activity />
-      </Route>
-      <Route exact path="/recim/admin">
-        <Admin />
-      </Route>
-      <Route exact path="/recim">
-        <Home />
-      </Route>
-    </Switch>
+    <Routes>
+      <Route path="" element={<Home />}></Route>
+      <Route path="/activity/:activityID/team/:teamID" element={<Team />}></Route>
+      <Route path="/activity/:activityID/match/:matchID" element={<Match />}></Route>
+      <Route path="/activity/:activityID" element={<Activity />}></Route>
+      <Route path="/admin" element={<Admin />}></Route>
+    </Routes>
   );
 };
 

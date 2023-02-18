@@ -131,8 +131,8 @@ const routes = [
   },
   {
     name: 'Rec-IM',
-    path: '/recim',
-    component: RecIM,
+    path: '/recim/*',
+    element: <RecIM />,
   },
   {
     name: 'Page Not Found',
