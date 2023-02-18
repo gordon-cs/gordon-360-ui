@@ -102,18 +102,22 @@ const Home = () => {
   }, [activities]);
 
   const createActivityButton = (
-    <Grid container justifyContent="center">
-      <Button
-        variant="contained"
-        color="warning"
-        startIcon={<AddCircleRoundedIcon />}
-        className={styles.actionButton}
-        onClick={() => {
-          setOpenActivityForm(true);
-        }}
-      >
-        Create a New Activity
-      </Button>
+    <Grid container className={styles.buttonArea}>
+      <Grid item xs={12}>
+        <Grid container justifyContent="center">
+          <Button
+            variant="contained"
+            color="warning"
+            startIcon={<AddCircleRoundedIcon />}
+            className={styles.actionButton}
+            onClick={() => {
+              setOpenActivityForm(true);
+            }}
+          >
+            Create a New Activity
+          </Button>
+        </Grid>
+      </Grid>
     </Grid>
   );
 
@@ -138,14 +142,13 @@ const Home = () => {
           It looks like there aren't any Rec-IM activities currently open for registration
         </Typography>
       )}
-
-      {hasPermissions && createActivityButton}
     </CardContent>
   );
 
   let activitiesCard = (
     <Card>
       <CardHeader title="Rec-IM Activities" className={styles.cardHeader} />
+      {hasPermissions && createActivityButton}
       <Tabs
         value={tab}
         onChange={(event, newTab) => setTab(newTab)}
