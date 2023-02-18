@@ -10,6 +10,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Button,
 } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
@@ -20,12 +21,14 @@ import GordonLoader from '../../../../../components/Loader';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
-import { editTeamParticipant } from 'services/recim/team';
+import CheckIcon from '@mui/icons-material/Check';
+import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 import { getActivityTypes, getActivityByID } from 'services/recim/activity';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate } from '../../Helpers';
+
 
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
@@ -132,11 +135,24 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const TeamListing = ({ team, match, setTargetTeamID }) => {
+const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
+
+  const handleAcceptInvite = async () => {
+    let response = 'accepted'
+    await respondToTeamInvite(team.ID, response);
+    callbackFunction(response, team.Activity.ID, team.ID);
+  };
+
+  const handleRejectInvite = async () => {
+    let response = 'rejected'
+    await respondToTeamInvite(team.ID, response);
+    callbackFunction(response, team.Activity.ID, team.ID);
+  };
+
   let content;
   if (match) {
-    var targetTeamStats = match.Scores.find((score) => score.TeamID === team.ID);
+    let targetTeamStats = match.Scores.find((score) => score.TeamID === team.ID);
     content = (
       <ListItemButton onClick={() => setTargetTeamID(team.ID)}>
         <Grid container columnSpacing={2}>
@@ -164,20 +180,53 @@ const TeamListing = ({ team, match, setTargetTeamID }) => {
     );
   } else {
     content = (
-      <ListItemButton
-        component={Link}
-        to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
-        className={styles.listing}
-      >
-        <Grid container columnSpacing={2}>
-          <Grid item xs={12} sm={8}>
-            <Typography className={styles.listingTitle}>{team.Name}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
-            <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
-          </Grid>
+      <Grid container direction="row" justifyContent="center">
+        <Grid item xs={12}>
+          <ListItemButton
+            component={Link}
+            to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
+            className={styles.listing}
+          >
+            <Grid container>
+              <Grid container columnSpacing={2}>
+                <Grid item xs={12} sm={8}>
+                  <Typography className={styles.listingTitle}>{team.Name}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
+                  <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
+                </Grid>
+              </Grid>
+              {invite && <Grid item margin={3}></Grid>}
+            </Grid>
+          </ListItemButton>
         </Grid>
-      </ListItemButton>
+        {invite && (
+          <Grid item position="relative" marginTop={-6}>
+            <Grid container columnSpacing={2}>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  className={styles.acceptButton}
+                  startIcon={<CheckIcon />}
+                  onClick={handleAcceptInvite}
+                >
+                  Accept
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  className={styles.rejectButton}
+                  startIcon={<ClearIcon />}
+                  onClick={handleRejectInvite}
+                >
+                  Reject
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
+      </Grid>
     );
   }
   return (

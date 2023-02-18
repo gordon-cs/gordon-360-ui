@@ -236,7 +236,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     );
 
   const updateAlumniInfoButton =
-    profile.PersonType === 'alu' && isOnline && myProf ? (
+    isAlumni && isOnline && myProf ? (
       <Grid container justifyContent="center">
         <Button
           variant="contained"
