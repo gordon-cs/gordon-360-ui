@@ -1,6 +1,6 @@
 import { List, Typography } from '@mui/material';
 import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const ActivityList = ({ activities }) => {
   if (!activities?.length) return <Typography>No activities to show.</Typography>;
@@ -45,12 +45,12 @@ const MatchList = ({ matches, activityID }) => {
 };
 // setTargetTeamID is used for edit Match teams
 const TeamList = ({ teams, match, invite, setInvites, setTargetTeamID }) => {
-  const navigate = useHistory();
+  const navigate = useNavigate();
   if (!teams?.length && !match) return <Typography>No teams to show.</Typography>;
 
   const handleInviteResponse = (response, activityID, teamID) => {
     if (response === 'accepted') {
-      navigate.push(`recim/activity/${activityID}/team/${teamID}`);
+      navigate(`recim/activity/${activityID}/team/${teamID}`);
     } else if (response === 'rejected') {
       setInvites(teams.filter((team) => team.ID !== teamID));
     }
