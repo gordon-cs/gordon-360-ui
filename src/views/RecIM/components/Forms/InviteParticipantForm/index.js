@@ -6,6 +6,7 @@ import GordonQuickSearch from 'components/Header/components/QuickSearch';
 import GordonSnackbar from 'components/Snackbar';
 import { addParticipantToTeam } from 'services/recim/team';
 import { useCallback } from 'react';
+import GordonLoader from 'components/Loader';
 
 const InviteParticipantForm = ({
   closeWithSnackbar,
@@ -16,6 +17,7 @@ const InviteParticipantForm = ({
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
   const [inviteList, setInviteList] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [saving, setSaving] = useState(false);
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -27,9 +29,11 @@ const InviteParticipantForm = ({
 
   const onSearchSubmit = (username) => {
     // Check if participant exists in invite list
-    if (inviteList.includes({ Username: username })) {
-      createSnackbar('Participant already in list', 'error');
-      return;
+    for (let index = 0; index < inviteList.length; index++) {
+      if (inviteList[index].Username === username) {
+        createSnackbar('Participant already in list', 'error');
+        return;
+      }
     }
 
     setInviteList([...inviteList, { Username: username }]);
@@ -39,17 +43,16 @@ const InviteParticipantForm = ({
     setInviteList(inviteList.filter((participant) => participant.Username !== username));
   };
 
-  const handleSubmit = () => {
-    inviteList.forEach((value) => {
+  const handleSubmit = async () => {
+    setSaving(true);
+    for (let index = 0; index < inviteList.length; index++) {
       let participantData = {
-        Username: value.Username,
+        Username: inviteList[index].Username,
         RoleTypeID: 2,
       };
-      addParticipantToTeam(teamID, participantData).catch((reason) => {
-        console.log(reason);
-      });
-    });
-
+      await addParticipantToTeam(teamID, participantData);
+    }
+    setSaving(false);
     handleWindowClose();
   };
 
@@ -66,8 +69,8 @@ const InviteParticipantForm = ({
         fullWidth
         maxWidth="sm"
         buttonClicked={handleSubmit}
-        isButtonDisabled={disableUpdateButton}
-        buttonName="Send Invites"
+        isButtonDisabled={disableUpdateButton || saving}
+        buttonName={saving ? 'Sending...' : 'Send Invites'}
         cancelButtonClicked={handleWindowClose}
         cancelButtonName="cancel"
       >
@@ -75,13 +78,15 @@ const InviteParticipantForm = ({
           <Grid item sx={{ width: '100%' }}>
             <ParticipantList minimal participants={inviteList} callbackFunction={removeInvite} />
           </Grid>
-          <Grid item>
-            <GordonQuickSearch
-              customPlaceholderText={'Search for people'}
-              disableLink
-              onSearchSubmit={(selectedUsername) => onSearchSubmit(selectedUsername)}
-            />
-          </Grid>
+          {!saving && (
+            <Grid item>
+              <GordonQuickSearch
+                customPlaceholderText={'Search for people'}
+                disableLink
+                onSearchSubmit={(selectedUsername) => onSearchSubmit(selectedUsername)}
+              />
+            </Grid>
+          )}
         </Grid>
         <GordonSnackbar
           open={snackbar.open}
@@ -89,6 +94,7 @@ const InviteParticipantForm = ({
           severity={snackbar.severity}
           onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
         />
+        {saving && <GordonLoader size={32} />}
       </GordonDialogBox>
     </>
   );

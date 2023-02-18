@@ -15,13 +15,22 @@
   padding: 0;
 }
 
-.redButton {
-  background-color: $secondary-red;
+.rejectButton {
+  background-color: #900000;
   color: $neutral-white;
 }
 
-.redButton:hover {
-  background-color: $alternative-red;
+.rejectButton:hover {
+  background-color: #b00000;
+}
+
+.acceptButton {
+  background-color: #007000;
+  color: $neutral-white;
+}
+
+.acceptButton:hover {
+  background-color: #009000;
 }
 
 .avatar {

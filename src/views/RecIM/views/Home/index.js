@@ -12,6 +12,7 @@ import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+import { getTeamInvites } from 'services/recim/team';
 import recimLogo from './../../recim_logo.png';
 import { DateTime } from 'luxon';
 
@@ -50,6 +51,7 @@ const Home = () => {
   const [ongoingActivities, setOngoingActivities] = useState([]);
   const [registrableActivities, setRegistrableActivities] = useState([]);
   const [myTeams, setMyTeams] = useState([]);
+  const [invites, setInvites] = useState([]);
   const [participant, setParticipant] = useState([]);
   const [openWaiver, setOpenWaiver] = useState(false);
   const [createdActivity, setCreatedActivity] = useState({ ID: null });
@@ -65,6 +67,7 @@ const Home = () => {
       setLoading(true);
       // Get all active activities where registration has not closed
       setActivities(await getActivities());
+      setInvites(await getTeamInvites());
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
         setMyTeams(await getParticipantTeams(profile.AD_Username));
@@ -163,8 +166,27 @@ const Home = () => {
 
   let myTeamsCard = (
     <Card>
-      <CardHeader title="My Teams" className={styles.cardHeader} />
+      <CardHeader title="Teams" className={styles.cardHeader} />
       <CardContent>
+        {invites.length > 0 && (
+          <>
+            <Grid container className={styles.teamHeader} alignItems="center" columnSpacing={2}>
+              <Grid item container direction="column">
+                <Typography variant="h6" className={styles.teamHeaderMainText}>
+                  My Team Invites
+                </Typography>
+              </Grid>
+            </Grid>
+            <TeamList teams={invites} invite setInvites={setInvites} />
+          </>
+        )}
+        <Grid container className={styles.teamHeader} alignItems="center" columnSpacing={2}>
+          <Grid item container direction="column">
+            <Typography variant="h6" className={styles.teamHeaderMainText}>
+              My Teams
+            </Typography>
+          </Grid>
+        </Grid>
         {myTeams ? (
           <TeamList teams={myTeams} />
         ) : (
