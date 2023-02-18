@@ -4,10 +4,10 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { ContentCard } from '../components/ContentCard';
 import { InformationField } from '../components/InformationField';
 import { createParticipant } from 'services/recim/participant';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiverForm }) => {
-  const navigate = useHistory();
+  const navigate = useNavigate();
   const [errorStatus, setErrorStatus] = useState({
     readCheckbox: false,
     name: false,
@@ -87,7 +87,7 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
   const handleCancel = () => {
     setNewInfo(currentInfo);
     setOpenWaiverForm(false);
-    navigate.push(''); //routes back to home if user refuses waiver
+    navigate(''); //routes back to home if user refuses waiver
   };
 
   const handleConfirm = () => {

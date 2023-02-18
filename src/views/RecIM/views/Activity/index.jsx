@@ -2,7 +2,7 @@ import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } f
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -19,7 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ScheduleList from './components/ScheduleList';
 
 const Activity = () => {
-  const navigate = useHistory();
+  const navigate = useNavigate();
   const { activityID } = useParams();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
@@ -247,7 +247,7 @@ const Activity = () => {
               <TeamForm
                 closeWithSnackbar={(teamID, status) => {
                   handleTeamFormSubmit(status, setOpenTeamForm);
-                  navigate.push(`${activityID}/team/${teamID}`);
+                  navigate(`${activityID}/team/${teamID}`);
                 }}
                 openTeamForm={openTeamForm}
                 setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
@@ -279,7 +279,7 @@ const Activity = () => {
               <TeamForm
                 closeWithSnackbar={(teamID, status) => {
                   handleTeamFormSubmit(status, setOpenTeamForm);
-                  navigate.push(`${activityID}/team/${teamID}`);
+                  navigate(`${activityID}/team/${teamID}`);
                 }}
                 openTeamForm={openTeamForm}
                 setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
