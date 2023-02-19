@@ -279,7 +279,7 @@ const Activity = () => {
               <TeamForm
                 closeWithSnackbar={(teamID, status) => {
                   handleTeamFormSubmit(status, setOpenTeamForm);
-                  navigate(`${activityID}/team/${teamID}`);
+                  navigate(`/team/${teamID}`);
                 }}
                 openTeamForm={openTeamForm}
                 setOpenTeamForm={(bool) => setOpenTeamForm(bool)}

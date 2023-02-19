@@ -50,7 +50,7 @@ const TeamList = ({ teams, match, invite, setInvites, setTargetTeamID }) => {
 
   const handleInviteResponse = (response, activityID, teamID) => {
     if (response === 'accepted') {
-      navigate(`recim/activity/${activityID}/team/${teamID}`);
+      navigate(`activity/${activityID}/team/${teamID}`);
     } else if (response === 'rejected') {
       setInvites(teams.filter((team) => team.ID !== teamID));
     }
