@@ -241,17 +241,6 @@ const Activity = () => {
                 </Grid>
               </Grid>
             </Grid>
-            {openTeamForm && (
-              <TeamForm
-                closeWithSnackbar={(teamID, status) => {
-                  handleTeamFormSubmit(status, setOpenTeamForm);
-                  navigate(`${activityID}/team/${teamID}`);
-                }}
-                openTeamForm={openTeamForm}
-                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-                activityID={activityID}
-              />
-            )}
             {openMatchForm && (
               <MatchForm
                 closeWithSnackbar={(status) => {
@@ -277,7 +266,7 @@ const Activity = () => {
               <TeamForm
                 closeWithSnackbar={(teamID, status) => {
                   handleTeamFormSubmit(status, setOpenTeamForm);
-                  navigate(`/team/${teamID}`);
+                  navigate(`team/${teamID}`);
                 }}
                 openTeamForm={openTeamForm}
                 setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
