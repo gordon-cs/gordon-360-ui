@@ -107,25 +107,29 @@ const Team = () => {
       <Card>
         <CardHeader title="Roster" className={styles.cardHeader} />
         <CardContent>
+          {hasPermissions && !team.Activity.SoloRegistration && (
+            <Grid container className={styles.buttonArea}>
+              <Grid item xs={12}>
+                <Grid container justifyContent="center">
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    startIcon={<AddCircleRoundedIcon />}
+                    className={styles.actionButton}
+                    onClick={() => {
+                      setOpenInviteParticipantForm(true);
+                    }}
+                  >
+                    Invite Participant
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
           {hasPermissions ? (
             <ParticipantList participants={team.Participant} showParticipantOptions showInactive />
           ) : (
             <ParticipantList participants={team.Participant} />
-          )}
-          {hasPermissions && !team.Activity.SoloRegistration && (
-            <Grid container justifyContent="center">
-              <Button
-                variant="contained"
-                color="warning"
-                startIcon={<AddCircleRoundedIcon />}
-                className={styles.actionButton}
-                onClick={() => {
-                  setOpenInviteParticipantForm(true);
-                }}
-              >
-                Invite Participant
-              </Button>
-            </Grid>
           )}
         </CardContent>
         <InviteParticipantForm

@@ -198,19 +198,17 @@ const Activity = () => {
             <Grid container className={styles.buttonArea}>
               <Grid item xs={12}>
                 <Grid container justifyContent="center">
-                  {canCreateTeam && (
-                    <Button
-                      variant="contained"
-                      color="warning"
-                      startIcon={<AddCircleRoundedIcon />}
-                      className={styles.actionButton}
-                      onClick={() => {
-                        setOpenTeamForm(true);
-                      }}
-                    >
-                      Create a New Team
-                    </Button>
-                  )}
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    startIcon={<AddCircleRoundedIcon />}
+                    className={styles.actionButton}
+                    onClick={() => {
+                      setOpenTeamForm(true);
+                    }}
+                  >
+                    Create a New Team
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
