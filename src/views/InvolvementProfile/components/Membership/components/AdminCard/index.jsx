@@ -85,6 +85,9 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
         }
       }
     }
+    setUsername('');
+    setParticipationCode('');
+    setTitleComment('');
   };
 
   return (
