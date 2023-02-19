@@ -51,7 +51,7 @@ const patch = <TResponse>(
   body: Object = '',
   headers = new Headers(),
 ): Promise<TResponse> =>
-  makeRequest(endpoint, 'patch', JSON.stringify(body), setContentTypeJSON(headers));
+  makeRequest(endpoint, 'PATCH', JSON.stringify(body), setContentTypeJSON(headers));
 
 const del = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'delete');
 
