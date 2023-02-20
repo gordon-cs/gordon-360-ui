@@ -36,3 +36,11 @@
 .editIconButton:hover {
   background-color: rgb(177, 129, 13);
 }
+
+.buttonArea {
+  background-color: $neutral-light-gray;
+  padding: 16px;
+  margin-bottom: 0.2em;
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+}

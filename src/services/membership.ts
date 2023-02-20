@@ -1,9 +1,6 @@
 import http from './http';
-import sessionService from './session';
-import { compareByProperty, filter, sort } from './utils';
 
-export type Membership = {
-  // TODO: Currently never set by the API, always null
+export type MembershipView = {
   AccountPrivate: Privacy | null;
   ActivityCode: string;
   ActivityDescription: string;
@@ -13,8 +10,9 @@ export type Membership = {
   EndDate: string;
   FirstName: string;
   GroupAdmin: boolean;
-  IDNumber: number;
+  Username: string;
   LastName: string;
+  IsAlumni: boolean;
   MembershipID: number;
   Participation: Participation;
   ParticipationDescription: ParticipationDesc;
@@ -34,128 +32,101 @@ export enum Participation {
   Leader = 'LEAD',
   Advisor = 'ADV',
   Guest = 'GUEST',
+  /**
+   * Group Admin is not strictly a participation type. It's a separate flag that Leaders and Advisors
+   * can have. However, it is convenient to treat it as a type of Participation in many cases.
+   */
+  GroupAdmin = 'GRP_ADMIN',
 }
+
+export const NonGuestParticipations = [
+  Participation.Member,
+  Participation.Leader,
+  Participation.Advisor,
+];
 
 export type ParticipationDesc = keyof typeof Participation;
 
-export type MEMBERSHIP = {
-  ACT_CDE: string;
-  SESS_CDE: string;
-  ID_NUM: number;
-  PART_CDE: string;
-  COMMENT_TXT: string;
-  GRP_ADMIN?: boolean;
+export type MembershipUpload = {
+  Activity: string;
+  Session: string;
+  Username: string;
+  Participation: string;
+  CommentText: string;
+  GroupAdmin: boolean;
+  Privacy: boolean;
 };
 
-const addMembership = (data: MEMBERSHIP): Promise<MEMBERSHIP> => http.post('memberships', data);
+const get = async (queryParams: {
+  involvementCode?: string;
+  username?: string;
+  sessionCode?: string;
+  participationTypes?: Participation[] | Participation;
+}): Promise<MembershipView[]> => http.get(`memberships${http.toQueryString(queryParams)}`);
 
-const checkAdmin = async (
-  userID: string,
-  sessionCode: string,
-  activityCode: string,
-): Promise<boolean> => {
-  const admins = await getGroupAdminsForInvolvement(activityCode);
-  return admins.some((a) => a.SessionCode === sessionCode && a.IDNumber === parseInt(userID));
-};
+const addMembership = (data: MembershipUpload): Promise<MembershipView> =>
+  http.post('memberships', data);
 
-const editMembership = (membershipID: string, data: MEMBERSHIP): Promise<MEMBERSHIP> =>
+const editMembership = (membershipID: string, data: MembershipUpload): Promise<MembershipView> =>
   http.put(`memberships/${membershipID}`, data);
 
-const get = async (activityCode: string, sessionCode: string): Promise<Membership[]> =>
-  http.get(`memberships/activity/${activityCode}?sessionCode=${sessionCode}`);
+const setMembershipPrivacy = (membershipID: number, isPrivate: boolean): Promise<MembershipView> =>
+  http.put(`memberships/${membershipID}/privacy`, isPrivate);
 
-//Change the privacy value for a club membership
-const toggleMembershipPrivacy = (userMembership: Membership): Promise<void> =>
-  http.put(`memberships/${userMembership.MembershipID}/privacy/${!userMembership.Privacy}`);
-
-const getAll = (activityCode: string): Promise<Membership[]> =>
-  http.get(`memberships/activity/${activityCode}`);
-
-const getGroupAdminsForInvolvement = (activityCode: string): Promise<Membership[]> =>
-  http.get(`memberships/activity/${activityCode}/group-admin`);
-
-const getEmailAccount = (email: string): Promise<Object> => http.get(`accounts/email/${email}/`);
-
-const getFollowersNum = (activityCode: string, sessionCode: string): Promise<number> =>
-  http.get(`memberships/activity/${activityCode}/followers/${sessionCode}`);
-
-const getMembersNum = (activityCode: string, sessionCode: string): Promise<number> =>
-  http.get(`memberships/activity/${activityCode}/members/${sessionCode}`);
-
-const getMembershipsForUser = (username: string): Promise<Membership[]> =>
-  http.get(`memberships/student/${username}`);
-
-const getMembershipsAlphabetically = (username: string) =>
-  getMembershipsForUser(username).then(sort(compareByProperty('ActivityDescription')));
-
-const getMembershipsBySession = (username: string, sessionCode: string) =>
-  getMembershipsAlphabetically(username).then(filter((m) => m.SessionCode === sessionCode));
-
-const getCurrentMemberships = async (username: string) =>
-  sessionService
-    .getCurrent()
-    .then(({ SessionCode }) => getMembershipsBySession(username, SessionCode));
-
-const getMembershipsWithoutGuests = (username: string) =>
-  getMembershipsForUser(username).then(filter((i) => i.ParticipationDescription !== 'Guest'));
-
-const getSessionMembershipsWithoutGuests = (username: string, sessionCode: string) =>
-  getMembershipsBySession(username, sessionCode).then(
-    filter((m) => m.ParticipationDescription !== 'Guest'),
-  );
-
-const getLeaderPositions = async (username: string): Promise<Membership[]> =>
-  getCurrentMemberships(username).then(filter((m) => m.GroupAdmin));
-
-const getTranscriptMembershipsInfo = (username: string) =>
-  getMembershipsWithoutGuests(username).then(sort(compareByProperty('ActivityCode')));
-
-const getPublicMemberships = (username: string): Promise<Membership[]> =>
-  getMembershipsForUser(username).then(sort(compareByProperty('ActivityDescription')));
-
-const remove = (membershipID: string): Promise<MEMBERSHIP> =>
+const remove = (membershipID: string): Promise<MembershipView> =>
   http.del(`memberships/${membershipID}`);
 
-const search = async (
+const checkAdmin = async (
   username: string,
   sessionCode: string,
-  activityCode: string,
-): Promise<
-  [isMember: boolean, participation: ParticipationDesc | null, membershipID: number | null]
-> => {
-  const memberships: Membership[] = await getMembershipsForUser(username);
-  const membership = memberships.find(
-    (m) => m.ActivityCode === activityCode && m.SessionCode === sessionCode,
-  );
-  return membership
-    ? [true, membership.ParticipationDescription, membership.MembershipID]
-    : [false, null, null];
+  involvementCode: string,
+): Promise<boolean> => {
+  const admins = await get({
+    involvementCode,
+    username,
+    sessionCode,
+    participationTypes: Participation.GroupAdmin,
+  });
+  return admins.length > 0;
 };
 
-// TODO: Refactor API to not require unused Membership body
-const toggleGroupAdmin = async (membershipID: number, data: MEMBERSHIP): Promise<MEMBERSHIP> => {
-  return await http.put(`memberships/${membershipID}/group-admin`, data);
-};
+const setGroupAdmin = async (
+  membershipID: number,
+  isGroupAdmin: boolean,
+): Promise<MembershipView> =>
+  await http.put(`memberships/${membershipID}/group-admin`, isGroupAdmin);
+
+const getMembershipCount = (queryParams: {
+  activityCode?: string;
+  username?: string;
+  sessionCode?: string;
+  participationTypes?: Participation[];
+}): Promise<number> => http.get(`memberships/count${http.toQueryString(queryParams)}`);
+
+const getMembersNum = (involvementCode: string, sessionCode: string): Promise<number> =>
+  getMembershipCount({
+    activityCode: involvementCode,
+    sessionCode,
+    participationTypes: NonGuestParticipations,
+  });
+
+const getFollowersNum = (involvementCode: string, sessionCode: string): Promise<number> =>
+  getMembershipCount({
+    activityCode: involvementCode,
+    sessionCode,
+    participationTypes: [Participation.Guest],
+  });
 
 const membershipService = {
   addMembership,
   checkAdmin,
   editMembership,
   get,
-  getAll,
-  getAllGroupAdmins: getGroupAdminsForInvolvement,
-  getEmailAccount,
   getFollowersNum,
   getMembersNum,
   remove,
-  search,
-  toggleGroupAdmin,
-  toggleMembershipPrivacy,
-  getTranscriptMembershipsInfo,
-  getPublicMemberships,
-  getMembershipsAlphabetically,
-  getSessionMembershipsWithoutGuests,
-  getLeaderPositions,
+  setGroupAdmin,
+  setMembershipPrivacy,
 };
 
 export default membershipService;
