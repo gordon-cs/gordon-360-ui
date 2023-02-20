@@ -25,6 +25,7 @@ import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import newsService from 'services/news';
 import NewsList from './components/NewsList';
+import ApprovalNewsList from './components/ApprovalNewsList';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -317,12 +318,21 @@ const StudentNews = () => {
       content = <GordonLoader />;
     } else {
       content = (
-        <NewsList
-          news={news}
-          personalUnapprovedNews={personalUnapprovedNews}
-          handleNewsItemEdit={handleNewsItemEdit}
-          handleNewsItemDelete={handleNewsItemDelete}
-        />
+        <div>
+          <ApprovalNewsList
+            news={news}
+            personalUnapprovedNews={personalUnapprovedNews}
+            handleNewsItemEdit={handleNewsItemEdit}
+            handleNewsItemDelete={handleNewsItemDelete}
+          />
+
+          <NewsList
+            news={news}
+            personalUnapprovedNews={personalUnapprovedNews}
+            handleNewsItemEdit={handleNewsItemEdit}
+            handleNewsItemDelete={handleNewsItemDelete}
+          />
+        </div>
       );
     }
 
