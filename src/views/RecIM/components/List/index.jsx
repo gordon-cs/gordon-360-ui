@@ -26,7 +26,7 @@ const ParticipantList = ({
       <ParticipantListing
         key={participant.username}
         participant={participant}
-        minimal={minimal}
+        minimal={minimal || participant.Role === 'Team-captain/Creator'} //temporarily disable captains from leaving or changing their status
         callbackFunction={callbackFunction}
         showParticipantOptions={showParticipantOptions}
       />
