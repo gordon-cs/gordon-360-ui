@@ -51,27 +51,11 @@ const patch = <TResponse>(
   body: Object = '',
   headers = new Headers(),
 ): Promise<TResponse> =>
-  makeRequest(endpoint, 'patch', JSON.stringify(body), setContentTypeJSON(headers));
+  makeRequest(endpoint, 'PATCH', JSON.stringify(body), setContentTypeJSON(headers));
 
 const del = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'delete');
 
-/**
- * The base URL to use for requests to our API, e.g. `https://360api.gordon.edu`.
- *
- * In the development (i.e. local) environment, the base URL is relative (`/`), because we send api
- * requests through the development server proxy so that the `origin` HTTP header is set to URL of
- * the API server, cirucumventing CORS.
- *
- * When not in development, there is no proxy to re-write headers and forward requests, so requests
- * are sent directly to the API. This is fine because the API server allows CORS from the front-end
- * server. For example, 360api allows cross-origin requests from `https://360.gordon.edu`.
- *
- * For more info, see:
- *    - https://create-react-app.dev/docs/proxying-api-requests-in-development/
- *    - `src/setupProxy.js`
- *    - https://developer.mozilla.org/en-US/docs/Web/HTTP/
- */
-const apiBaseURL = process.env.REACT_APP_API_URL as string;
+const apiBaseURL = import.meta.env.DEV ? '/' : (import.meta.env.VITE_API_URL as string);
 
 /**
  * Make a request to the API
@@ -155,6 +139,43 @@ const dataURItoBlob = (dataURI: string) => {
   return new Blob([ia], { type: mimeString });
 };
 
+type QueryStringPrimitive = string | number | boolean;
+type QueryStringSerializable = QueryStringPrimitive | Array<QueryStringPrimitive>;
+
+/**
+ * Convert an object into a URL query string.
+ *
+ * @param queryParams Object containing params to be serialized into a URL query string
+ * @returns URL query string of the form `'?key1=value1&key2=value2'`, or an empty string if `queryParams` is `undefined`.
+ */
+const toQueryString = (
+  queryParams?: Record<string | number | symbol, QueryStringSerializable>,
+): string => {
+  if (!queryParams) return '';
+
+  // Instantiate new empty `URLSearchParams` object
+  // Note: we cannot use the `new URLSearchParams(obj: Object)` constructor because it only supports
+  // string values in the passed-in object.
+  const urlSearchParams = new URLSearchParams();
+
+  // Add each property of `queryParams` object to the `urlSearchParams`
+  Object.entries(queryParams).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      // If `value` is an array, append each element of the array to the searchParams
+      // This is *most* standard way of encoding arrays in a query string, and the only way
+      // that the browser-native URLSearchParams API supports
+      value.forEach((value) => urlSearchParams.append(key, value.toString()));
+    } else {
+      // For all primitive values, append them directly
+      urlSearchParams.append(key, value.toString());
+    }
+  });
+
+  const queryString = urlSearchParams.toString();
+
+  return queryString ? `?${queryString}` : '';
+};
+
 const httpUtils = {
   del,
   get,
@@ -162,6 +183,7 @@ const httpUtils = {
   patch,
   postImage,
   put,
+  toQueryString,
 };
 
 export default httpUtils;

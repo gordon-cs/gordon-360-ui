@@ -11,8 +11,8 @@ import storage from './storage';
 
 export const msalConfig = {
   auth: {
-    clientId: process.env.REACT_APP_AZURE_AD_CLIENT,
-    authority: `https://login.microsoftonline.com/${process.env.REACT_APP_AZURE_AD_TENANT}`,
+    clientId: import.meta.env.VITE_AZURE_AD_CLIENT as string,
+    authority: `https://login.microsoftonline.com/${import.meta.env.VITE_AZURE_AD_TENANT}`,
     postLogoutRedirectUri: window.location.origin,
     redirectUri: window.location.origin,
     validateAuthority: true,
@@ -133,6 +133,7 @@ export enum AuthGroup {
   SiteAdmin = '360-SiteAdmin-SG',
   Staff = '360-Staff-SG',
   Student = '360-Student-SG',
+  AcademicInfoView = '360-AcademicInfoView-SG',
 }
 
 export {

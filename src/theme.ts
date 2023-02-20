@@ -96,7 +96,7 @@ export const gordonColors = {
     },
     darkGray: '#31342B',
   },
-};
+} as const;
 
 // Material-UI breakpoints. This is to allow components to use Material-UI's breakpoints since
 // you cannot import variables from a vars.scss to a JS file.
@@ -106,7 +106,7 @@ export const windowBreakWidths = {
   breakMD: 900,
   breakLG: 1200,
   breakXL: 1536,
-};
+} as const;
 
 declare module '@mui/material/styles' {
   interface Palette {
