@@ -26,7 +26,6 @@ import UpdatePhone from './components/UpdatePhoneDialog';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
-import { FaLessThanEqual } from 'react-icons/fa';
 
 const PRIVATE_INFO = 'Private as requested.';
 
