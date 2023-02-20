@@ -26,7 +26,7 @@ const ParticipantList = ({
       <ParticipantListing
         key={participant.username}
         participant={participant}
-        minimal={minimal}
+        minimal={minimal || participant.Role === 'Team-captain/Creator'} 
         callbackFunction={callbackFunction}
         showParticipantOptions={showParticipantOptions}
       />
