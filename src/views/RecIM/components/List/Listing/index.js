@@ -27,8 +27,7 @@ import { getActivityTypes, getActivityByID } from 'services/recim/activity';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
-import { standardDate, standardDateTimeRange } from '../../Helpers';
-
+import { standardDate, formatDateTimeRange } from '../../Helpers';
 
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
@@ -97,7 +96,7 @@ const ActivityListing = ({ activity }) => {
             {activity.StartDate && (
               <Grid item>
                 <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-                  {standardDateTimeRange(activity.StartDate, activity.EndDate)}
+                  {formatDateTimeRange(activity.StartDate, activity.EndDate)}
                 </Typography>
               </Grid>
             )}
@@ -138,13 +137,13 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
   if (!team && !match) return null;
 
   const handleAcceptInvite = async () => {
-    let response = 'accepted'
+    let response = 'accepted';
     await respondToTeamInvite(team.ID, response);
     callbackFunction(response, team.Activity.ID, team.ID);
   };
 
   const handleRejectInvite = async () => {
-    let response = 'rejected'
+    let response = 'rejected';
     await respondToTeamInvite(team.ID, response);
     callbackFunction(response, team.Activity.ID, team.ID);
   };

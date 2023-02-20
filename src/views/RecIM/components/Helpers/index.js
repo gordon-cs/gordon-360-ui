@@ -9,7 +9,7 @@ const standardDate = (date, includeTime) => {
   return formattedDate;
 };
 
-const standardDateTimeRange = (startDateTime, endDateTime) => {
+const formatDateTimeRange = (startDateTime, endDateTime) => {
   if (!DateTime.isDateTime(startDateTime)) startDateTime = DateTime.fromISO(startDateTime);
   if (!DateTime.isDateTime(endDateTime)) endDateTime = DateTime.fromISO(endDateTime);
 
@@ -32,4 +32,4 @@ const standardDateTimeRange = (startDateTime, endDateTime) => {
   )}`;
 };
 
-export { standardDate, standardDateTimeRange };
+export { standardDate, formatDateTimeRange };

@@ -17,7 +17,7 @@ import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
 import ScheduleList from './components/ScheduleList';
-import { standardDateTimeRange } from '../../components/Helpers';
+import { formatDateTimeRange } from '../../components/Helpers';
 
 const Activity = () => {
   const navigate = useHistory();
@@ -118,7 +118,7 @@ const Activity = () => {
           <Typography variant="h6" className={styles.subtitle}>
             <i>
               {activity?.StartDate
-                ? standardDateTimeRange(activity.StartDate, activity.EndDate)
+                ? formatDateTimeRange(activity.StartDate, activity.EndDate)
                 : `Description of activity`}
             </i>
           </Typography>
