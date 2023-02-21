@@ -96,7 +96,9 @@ const ActivityListing = ({ activity }) => {
             {activity.StartDate && (
               <Grid item>
                 <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-                  {formatDateTimeRange(activity.StartDate, activity.EndDate)}
+                  {activity.EndDate
+                    ? formatDateTimeRange(activity.StartDate, activity.EndDate)
+                    : standardDate(activity.StartDate) + ` - TBD`}
                 </Typography>
               </Grid>
             )}
