@@ -102,6 +102,9 @@ const getTodaysNews = (): Promise<FormattedNewsObject[]> => getNewNews().then(ma
 const getPersonalUnapproved = (): Promise<FormattedNewsObject[]> =>
   http.get<FormattedNewsObject[]>('news/personal-unapproved').then(map(formatPosting));
 
+const getUnapproved = (): Promise<FormattedNewsObject[]> =>
+  http.get<FormattedNewsObject[]>('news/unapproved').then(map(formatPosting));
+
 // TODO: Not currently used
 const getNewsByCategory = async (category: number): Promise<NewsObject[]> =>
   getNotExpired().then(filter((posting) => posting.categoryID === category));
@@ -147,17 +150,40 @@ async function editStudentNews(newsID: number, newData: any): Promise<NewsObject
   }
 }
 
+/**
+ * Update a student news accepted status
+ *
+ * @param newsID The id number of the news item to update
+ * @param newStatusAccepted The new accepted status
+ * @description
+ * Updating the accepted status must be authored by student news admin
+ * AND the new accepted status must not be the same as the current accepted status
+ * @returns The updated news item with new accepted status
+ */
+async function updateAcceptedStatus(
+  newsID: number,
+  newStatusAccepted: boolean,
+): Promise<NewsObject | undefined> {
+  try {
+    return await http.put(`news/${newsID}/accepted`, newStatusAccepted);
+  } catch (reason) {
+    console.log('Caught news update error: ' + reason);
+  }
+}
+
 const newsService = {
   getNewsByCategory,
   getCategories,
   getTodaysNews,
   getPersonalUnapproved,
+  getUnapproved,
   getNewNews,
   getNotExpiredFormatted,
   getFilteredNews,
   submitStudentNews,
   deleteStudentNews,
   editStudentNews,
+  updateAcceptedStatus,
   getPostingByID,
 };
 

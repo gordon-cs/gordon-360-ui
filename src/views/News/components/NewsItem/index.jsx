@@ -1,4 +1,12 @@
-import { Button, CardContent, Collapse, Grid, Typography } from '@mui/material';
+import {
+  Button,
+  CardContent,
+  Collapse,
+  Grid,
+  FormControlLabel,
+  Switch,
+  Typography,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useUser } from 'hooks';
@@ -8,7 +16,15 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './NewsItem.module.css';
 
-const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsItemDelete }) => {
+const NewsItem = ({
+  posting,
+  unapproved,
+  size,
+  handleNewsItemEdit,
+  handleNewsItemDelete,
+  handleNewsApprovalStatus,
+  isAdmin,
+}) => {
   const [open, setOpen] = useState(false);
   const isOnline = useNetworkStatus();
   const { profile } = useUser();
@@ -30,12 +46,15 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
     </Typography>
   );
 
-  // Only show the edit button if the current user is the author of the posting
+  // Only show the edit button if the current user is the author of the posting OR is the Student News admin
   // AND posting is unapproved
   // null check temporarily fixes issue on home card when user has not yet been authenticated
   // it is because the home card doesn't give these properties
   let editButton;
-  if (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase() && unapproved) {
+  if (
+    (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase() || isAdmin) &&
+    unapproved
+  ) {
     editButton = (
       <Button
         variant="outlined"
@@ -51,10 +70,31 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
     editButton = <div></div>;
   }
 
+  // Only show the accepted status switch if the current user is the Student News admin
+  let acceptedStatusSwitch;
+  if (isAdmin) {
+    acceptedStatusSwitch = (
+      <FormControlLabel
+        control={
+          <Switch
+            onChange={() => handleNewsApprovalStatus(posting.SNID, unapproved)}
+            checked={!unapproved}
+          />
+        }
+        label={unapproved ? 'Unapproved' : 'Approved'}
+        labelPlacement="bottom"
+        disabled={!isOnline}
+      />
+    );
+  } else {
+    acceptedStatusSwitch = <div></div>;
+  }
+
   // Only show the delete button if the current user is the author of the posting
+  // OR is the Student News admin
   // null check temporarily fixes issue on home card when user has not yet been authenticated
   let deleteButton;
-  if (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase()) {
+  if (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase() || isAdmin) {
     deleteButton = (
       <Button
         variant="outlined"
@@ -98,6 +138,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
           <Grid container justifyContent="space-evenly">
             {editButton}
             {deleteButton}
+            {acceptedStatusSwitch}
           </Grid>
         </Collapse>
       </Grid>
@@ -146,6 +187,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
                   {/* these conditionally render - see respective methods */}
                   {editButton}
                   {deleteButton}
+                  {acceptedStatusSwitch}
                 </Grid>
               </Grid>
             </Grid>
@@ -171,6 +213,8 @@ NewsItem.propTypes = {
   size: PropTypes.string.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,
+  handleNewsApprovalStatus: PropTypes.func.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
 };
 
 export default NewsItem;

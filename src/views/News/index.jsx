@@ -25,7 +25,7 @@ import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import newsService from 'services/news';
 import NewsList from './components/NewsList';
-import ApprovalNewsList from './components/ApprovalNewsList';
+import { userIsInAuthGroup } from './../../services/auth';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -37,6 +37,7 @@ const StudentNews = () => {
   const [news, setNews] = useState([]);
   const allNewsRef = useRef([]);
   const [personalUnapprovedNews, setPersonalUnapprovedNews] = useState([]);
+  const [unapprovedNews, setUnapprovedNews] = useState([]);
   //const [filteredNews, setFilteredNews] = useState([]);
   const isOnline = useNetworkStatus();
   const [newPostCategory, setNewPostCategory] = useState('');
@@ -50,18 +51,23 @@ const StudentNews = () => {
   const [currentlyEditing, setCurrentlyEditing] = useState(false); // false if not editing, newsID if editing
   const cropperRef = useRef();
   const isAuthenticated = useIsAuthenticated();
+  const isAdmin = userIsInAuthGroup('NewsAdmin');
 
   const loadNews = useCallback(async () => {
     setLoading(true);
     if (isAuthenticated) {
       const newsCategories = await newsService.getCategories();
       const personalUnapprovedNews = await newsService.getPersonalUnapproved();
+      if (isAdmin) {
+        const unapprovedNews = await newsService.getUnapproved();
+      }
       const unexpiredNews = await newsService.getNotExpiredFormatted();
       setLoading(false);
       setCategories(newsCategories);
       setNews(unexpiredNews);
       allNewsRef.current = unexpiredNews;
       setPersonalUnapprovedNews(personalUnapprovedNews);
+      setUnapprovedNews(unapprovedNews);
       //setFilteredNews(unexpiredNews);
     } else {
       // TODO: test authentication handling and neaten code (ex. below)
@@ -291,6 +297,19 @@ const StudentNews = () => {
     loadNews();
   }
 
+  async function handleNewsApprovalStatus(snid, newsStatusAccepted) {
+    // update the news item accepted status and give feedback
+    let result = await newsService.updateAcceptedStatus(snid, newsStatusAccepted);
+    let newStatus = newsStatusAccepted ? 'approve' : 'unapprove';
+    if (result === undefined) {
+      createSnackbar(`News Posting Failed to ${newStatus}`, 'error');
+    } else {
+      createSnackbar(`News Posting ${newStatus}d Successfully`, 'success');
+    }
+
+    loadNews();
+  }
+
   function imageOnLoadHelper(reader) {
     var dataURL = reader.result.toString();
     var i = new Image();
@@ -319,18 +338,36 @@ const StudentNews = () => {
     } else {
       content = (
         <div>
-          <ApprovalNewsList
-            news={news}
-            personalUnapprovedNews={personalUnapprovedNews}
-            handleNewsItemEdit={handleNewsItemEdit}
-            handleNewsItemDelete={handleNewsItemDelete}
-          />
+          {isAdmin ? (
+            <NewsList
+              news={unapprovedNews}
+              header={'All Pending Posts'}
+              handleNewsItemEdit={handleNewsItemEdit}
+              handleNewsItemDelete={handleNewsItemDelete}
+              handleNewsApprovalStatus={handleNewsApprovalStatus}
+              isAdmin={isAdmin}
+            />
+          ) : (
+            <></>
+          )}
 
           <NewsList
-            news={news}
-            personalUnapprovedNews={personalUnapprovedNews}
+            news={personalUnapprovedNews}
+            header={'My Pending News'}
             handleNewsItemEdit={handleNewsItemEdit}
             handleNewsItemDelete={handleNewsItemDelete}
+            handleNewsApprovalStatus={handleNewsApprovalStatus}
+            isAdmin={false}
+          />
+          <NewsList
+            news={news}
+            header={'News'}
+            handleNewsItemEdit={handleNewsItemEdit}
+            handleNewsItemDelete={handleNewsItemDelete}
+            handleNewsApprovalStatus={handleNewsApprovalStatus}
+            unapproved={false}
+            isAdmin={isAdmin}
+            defaultExpanded={true}
           />
         </div>
       );

@@ -1,5 +1,15 @@
-import { Card, Grid, List, Typography } from '@mui/material';
+import {
+  Card,
+  CardHeader,
+  Grid,
+  List,
+  Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+} from '@mui/material';
 import PropTypes from 'prop-types';
+import { ExpandMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';
 import NewsItem from '../NewsItem';
@@ -53,7 +63,16 @@ const fullHeader = (
   </Grid>
 );
 
-const NewsList = ({ news, personalUnapprovedNews, handleNewsItemEdit, handleNewsItemDelete }) => {
+const NewsList = ({
+  news,
+  header,
+  handleNewsItemEdit,
+  handleNewsItemDelete,
+  handleNewsApprovalStatus,
+  unapproved,
+  isAdmin,
+  defaultExpanded,
+}) => {
   const [width, setWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -66,42 +85,45 @@ const NewsList = ({ news, personalUnapprovedNews, handleNewsItemEdit, handleNews
     };
   });
 
-  return news.length > 0 || personalUnapprovedNews.length > 0 ? (
+  return (
     <Card style={{ marginBottom: '1rem' }}>
-      {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
-      <Grid>
-        <List className={styles.news_list} disablePadding>
-          {personalUnapprovedNews.length > 0 &&
-            personalUnapprovedNews.map((posting) => (
-              <NewsItem
-                posting={posting}
-                unapproved
-                size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-                handleNewsItemEdit={handleNewsItemEdit}
-                handleNewsItemDelete={handleNewsItemDelete}
-                key={posting.SNID}
-              />
-            ))}
+      <Accordion defaultExpanded={defaultExpanded ?? false}>
+        <AccordionSummary
+          style={headerStyle}
+          expandIcon={<ExpandMore style={{ color: 'white' }} />}
+        >
+          <CardHeader title={header} style={{ padding: '0px' }} />
+        </AccordionSummary>
 
-          {news.length > 0 &&
-            news.map((posting) => (
-              <NewsItem
-                posting={posting}
-                //approved
-                size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-                handleNewsItemEdit={handleNewsItemEdit}
-                handleNewsItemDelete={handleNewsItemDelete}
-                key={posting.SNID}
-              />
-            ))}
-        </List>
-      </Grid>
+        {news.length > 0 ? (
+          <AccordionDetails style={{ flexDirection: 'column', padding: '0px' }}>
+            {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
+            <Grid>
+              <List className={styles.news_list} disablePadding>
+                {news.length > 0 &&
+                  news.map((posting) => (
+                    <NewsItem
+                      posting={posting}
+                      unapproved={unapproved ?? true}
+                      size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
+                      handleNewsItemEdit={handleNewsItemEdit}
+                      handleNewsItemDelete={handleNewsItemDelete}
+                      handleNewsApprovalStatus={handleNewsApprovalStatus}
+                      key={posting.SNID}
+                      isAdmin={isAdmin}
+                    />
+                  ))}
+              </List>
+            </Grid>
+          </AccordionDetails>
+        ) : (
+          //No news
+          <Typography variant="h4" align="center" padding="1rem">
+            No News To Show
+          </Typography>
+        )}
+      </Accordion>
     </Card>
-  ) : (
-    //No news
-    <Typography variant="h4" align="center">
-      No News To Show
-    </Typography>
   );
 };
 
@@ -117,21 +139,13 @@ NewsList.propTypes = {
       // Expiration: PropTypes.string.isRequired,
     }),
   ).isRequired,
-
-  personalUnapprovedNews: PropTypes.arrayOf(
-    PropTypes.shape({
-      SNID: PropTypes.number.isRequired,
-      Subject: PropTypes.string.isRequired,
-      ADUN: PropTypes.string.isRequired,
-      Entered: PropTypes.string.isRequired,
-      categoryName: PropTypes.string.isRequired,
-      Body: PropTypes.string.isRequired,
-      // Expiration: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-
+  header: PropTypes.string.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,
+  handleNewsApprovalStatus: PropTypes.func.isRequired,
+  unapproved: PropTypes.any,
+  isAdmin: PropTypes.bool.isRequired,
+  defaultExpanded: PropTypes.bool,
 };
 
 export default NewsList;
