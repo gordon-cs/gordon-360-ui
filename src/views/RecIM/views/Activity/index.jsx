@@ -61,11 +61,10 @@ const Activity = () => {
   useEffect(() => {
     if (activity && userTeams && user) {
       let participating = false;
-      setCanCreateTeam(activity.RegistrationOpen);
       userTeams.forEach((team) => {
         if (team.Activity.ID === activity.ID) participating = true;
       });
-      setCanCreateTeam(!participating || user.IsAdmin);
+      setCanCreateTeam(!participating || user.IsAdmin || activity.RegistrationOpen);
     }
   }, [activity, user, userTeams]);
 
