@@ -26,9 +26,11 @@ const ParticipantList = ({
       <ParticipantListing
         key={participant.username}
         participant={participant}
-        minimal={minimal || participant.Role === 'Team-captain/Creator'} 
+        minimal={minimal}
         callbackFunction={callbackFunction}
-        showParticipantOptions={showParticipantOptions}
+        showParticipantOptions={
+          showParticipantOptions && !participant.Role === 'Team-captain/Creator'
+        }
       />
     );
   });
