@@ -14,15 +14,7 @@ import {
 } from 'services/recim/match';
 import EditMatchStatsForm from '../EditMatchStatsForm';
 
-const MatchForm = ({
-  closeWithSnackbar,
-  openMatchForm,
-  setOpenMatchForm,
-  activity,
-  match,
-  reload,
-  setReload,
-}) => {
+const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activity, match }) => {
   const [errorStatus, setErrorStatus] = useState({
     StartTime: false,
     SeriesID: false,
@@ -284,7 +276,6 @@ const MatchForm = ({
     //temporary, I can't think of a way to force update the form right now
     console.log(status);
     handleWindowClose();
-    setReload(!reload);
     setTargetTeamID(null);
   };
 

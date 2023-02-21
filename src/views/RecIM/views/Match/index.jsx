@@ -33,7 +33,6 @@ const Match = () => {
   const [team1Score, setTeam1Score] = useState(0);
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [user, setUser] = useState();
-  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -172,8 +171,6 @@ const Match = () => {
             </Grid>
             {openMatchForm && (
               <MatchForm
-                reload={reload}
-                setReload={setReload}
                 closeWithSnackbar={(status) => {
                   handleMatchFormSubmit(status, setOpenMatchForm);
                 }}
