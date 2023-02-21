@@ -85,9 +85,6 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
         }
       }
     }
-    setUsername('');
-    setParticipationCode('');
-    setTitleComment('');
   };
 
   return (
@@ -149,7 +146,6 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
                 Participation
               </InputLabel>
               <Select
-                value={participationCode}
                 onChange={(event) => setParticipationCode(event.target.value)}
                 labelId="involvement-profile-add-member-select-participation"
               >
@@ -167,7 +163,6 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
               type="search"
               fullWidth
               onChange={(event) => setTitleComment(event.target.value)}
-              value={titleComment}
             />
           </Grid>
         </Grid>
