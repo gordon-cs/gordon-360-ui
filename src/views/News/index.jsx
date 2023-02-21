@@ -25,7 +25,7 @@ import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import newsService from 'services/news';
 import NewsList from './components/NewsList';
-import { userIsInAuthGroup } from './../../services/auth';
+import { userIsInAuthGroup } from 'services/auth';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -337,8 +337,8 @@ const StudentNews = () => {
       content = <GordonLoader />;
     } else {
       content = (
-        <div>
-          {isAdmin ? (
+        <>
+          {isAdmin && (
             <NewsList
               news={unapprovedNews}
               header={'All Pending Posts'}
@@ -347,8 +347,6 @@ const StudentNews = () => {
               handleNewsApprovalStatus={handleNewsApprovalStatus}
               isAdmin={isAdmin}
             />
-          ) : (
-            <></>
           )}
 
           <NewsList
@@ -369,7 +367,7 @@ const StudentNews = () => {
             isAdmin={isAdmin}
             defaultExpanded={true}
           />
-        </div>
+        </>
       );
     }
 

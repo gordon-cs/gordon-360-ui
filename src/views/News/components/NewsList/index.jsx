@@ -20,17 +20,11 @@ import styles from './NewsList.module.css';
 
 const BREAKPOINT_WIDTH = 540;
 
-const headerStyle = {
-  backgroundColor: gordonColors.primary.blue,
-  color: '#FFF',
-  padding: '10px',
-};
-
 const singleHeader = (
-  <div style={headerStyle}>
+  <div className={styles.header}>
     <Grid container direction="row">
       <Grid item xs={12}>
-        <Typography variant="body2" style={headerStyle}>
+        <Typography variant="body2" className={styles.header}>
           NEWS
         </Typography>
       </Grid>
@@ -39,24 +33,24 @@ const singleHeader = (
 );
 
 const fullHeader = (
-  <Grid container direction="row" style={headerStyle}>
+  <Grid container direction="row" className={styles.header}>
     <Grid item xs={2}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.header}>
         CATEGORY
       </Typography>
     </Grid>
     <Grid item xs={5}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.header}>
         SUBJECT
       </Typography>
     </Grid>
     <Grid item xs={3}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.header}>
         POSTED BY
       </Typography>
     </Grid>
     <Grid item xs={2}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.header}>
         POSTED
       </Typography>
     </Grid>
@@ -86,20 +80,20 @@ const NewsList = ({
   });
 
   return (
-    <Card style={{ marginBottom: '1rem' }}>
+    <Card className={styles.news_list}>
       <Accordion defaultExpanded={defaultExpanded ?? false}>
         <AccordionSummary
-          style={headerStyle}
-          expandIcon={<ExpandMore style={{ color: 'white' }} />}
+          className={styles.accordion}
+          expandIcon={<ExpandMore className={styles.expand_more} />}
         >
-          <CardHeader title={header} style={{ padding: '0px' }} />
+          <CardHeader title={header} className={styles.card_header} />
         </AccordionSummary>
 
         {news.length > 0 ? (
-          <AccordionDetails style={{ flexDirection: 'column', padding: '0px' }}>
+          <AccordionDetails className={styles.detail}>
             {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
             <Grid>
-              <List className={styles.news_list} disablePadding>
+              <List className={styles.list} disablePadding>
                 {news.length > 0 &&
                   news.map((posting) => (
                     <NewsItem
@@ -118,7 +112,7 @@ const NewsList = ({
           </AccordionDetails>
         ) : (
           //No news
-          <Typography variant="h4" align="center" padding="1rem">
+          <Typography variant="h4" className={styles.typography}>
             No News To Show
           </Typography>
         )}

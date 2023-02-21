@@ -87,7 +87,7 @@ const NewsItem = ({
       />
     );
   } else {
-    acceptedStatusSwitch = <div></div>;
+    acceptedStatusSwitch = null;
   }
 
   // Only show the delete button if the current user is the author of the posting
