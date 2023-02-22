@@ -16,10 +16,9 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   const [membership, setMembership] = useState();
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [loading, setLoading] = useState(true);
+  const [shouldShowMemberships, setShouldShowMemberships] = useState(false);
   const { involvementCode, sessionCode } = useParams();
   const { profile } = useUser();
-
-  const [isMemberAndNonGuest, setIsMemberAndNonGuest] = useState(false);
 
   useEffect(() => {
     const loadMembershipStats = async () => {
@@ -35,7 +34,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
         setFollowersNum(followersNum);
         setMembersNum(membersNum);
 
-        setIsMemberAndNonGuest(
+        setShouldShowMemberships(
           (membership && membership.Participation !== Participation.Guest) || isSiteAdmin,
         );
 
@@ -51,13 +50,13 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   useEffect(() => {
     const loadMembers = async () => {
       setLoading(true);
-      if (isMemberAndNonGuest) {
+      if (shouldShowMemberships) {
         setMembers(await membershipService.get({ involvementCode, sessionCode }));
       }
       setLoading(false);
     };
     loadMembers();
-  }, [involvementCode, sessionCode, isMemberAndNonGuest]);
+  }, [involvementCode, sessionCode, shouldShowMemberships]);
 
   const createSnackbar = (text, severity) => {
     setSnackbar({ open: true, text, severity });
@@ -100,7 +99,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   if (loading === true) {
     return <GordonLoader />;
   } else {
-    if (isMemberAndNonGuest) {
+    if (shouldShowMemberships) {
       content = (
         <>
           {(isAdmin || isSiteAdmin) && (
@@ -114,18 +113,16 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
               />
             </Grid>
           )}
-          {members.length > 0 && (
-            <Grid item>
-              <MemberList
-                members={members}
-                isAdmin={isAdmin}
-                isSiteAdmin={isSiteAdmin}
-                createSnackbar={createSnackbar}
-                onLeave={handleLeave}
-                onToggleIsAdmin={toggleIsAdmin}
-              />
-            </Grid>
-          )}
+          <Grid item>
+            <MemberList
+              members={members}
+              isAdmin={isAdmin}
+              isSiteAdmin={isSiteAdmin}
+              createSnackbar={createSnackbar}
+              onLeave={handleLeave}
+              onToggleIsAdmin={toggleIsAdmin}
+            />
+          </Grid>
         </>
       );
     } else {
