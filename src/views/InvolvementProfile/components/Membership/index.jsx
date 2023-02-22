@@ -19,6 +19,8 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   const { involvementCode, sessionCode } = useParams();
   const { profile } = useUser();
 
+  const [isMemberAndNonGuest, setIsMemberAndNonGuest] = useState(false);
+
   useEffect(() => {
     const loadMembers = async () => {
       setLoading(true);
@@ -33,7 +35,11 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
         setFollowersNum(followersNum);
         setMembersNum(membersNum);
 
-        if ((membership && membership.Participation !== Participation.Guest) || isSiteAdmin) {
+        setIsMemberAndNonGuest(
+          (membership && membership.Participation !== Participation.Guest) || isSiteAdmin,
+        );
+
+        if (isMemberAndNonGuest) {
           setMembers(await membershipService.get({ involvementCode, sessionCode }));
         }
 
@@ -87,7 +93,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   if (loading === true) {
     return <GordonLoader />;
   } else {
-    if (membership?.Participation !== Participation.Guest || isSiteAdmin) {
+    if (isMemberAndNonGuest) {
       content = (
         <>
           {(isAdmin || isSiteAdmin) && (
