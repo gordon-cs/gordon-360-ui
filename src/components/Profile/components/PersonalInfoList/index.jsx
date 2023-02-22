@@ -261,11 +261,15 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
     ) : null;
 
-  const cliftonStrengths = (
+  const showCliftonStrengthsBlock =
+    (profile.CliftonStrengths && !profile.CliftonStrengths.Private) ||
+    (myProf && (isStudent || isFacStaff));
+
+  const cliftonStrengths = showCliftonStrengthsBlock && (
     <ProfileInfoListItem
       title="Clifton Strengths:"
       contentText={
-        profile.CliftonStrengths && (myProf || !profile.CliftonStrengths.Private) ? (
+        profile.CliftonStrengths ? (
           <Typography>
             {profile.CliftonStrengths.Themes.map((strength) => (
               <a href={strength.link} target="_blank" rel="noopener noreferrer" key={strength.name}>
@@ -315,7 +319,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           />
         )
       }
-      privateInfo={profile.CliftonStrengths.Private}
+      privateInfo={profile.CliftonStrengths?.Private}
       myProf={myProf}
     />
   );
