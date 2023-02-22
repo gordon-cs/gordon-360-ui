@@ -22,7 +22,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   const [isMemberAndNonGuest, setIsMemberAndNonGuest] = useState(false);
 
   useEffect(() => {
-    const loadMembers = async () => {
+    const loadMembershipStats = async () => {
       setLoading(true);
 
       try {
@@ -39,18 +39,25 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
           (membership && membership.Participation !== Participation.Guest) || isSiteAdmin,
         );
 
-        if (isMemberAndNonGuest) {
-          setMembers(await membershipService.get({ involvementCode, sessionCode }));
-        }
-
         setLoading(false);
       } catch (error) {
         console.error(error);
       }
     };
 
-    loadMembers();
+    loadMembershipStats();
   }, [involvementCode, isAdmin, isSiteAdmin, sessionCode, profile.AD_Username]);
+
+  useEffect(() => {
+    const loadMembers = async () => {
+      setLoading(true);
+      if (isMemberAndNonGuest) {
+        setMembers(await membershipService.get({ involvementCode, sessionCode }));
+      }
+      setLoading(false);
+    };
+    loadMembers();
+  }, [involvementCode, sessionCode, isMemberAndNonGuest]);
 
   const createSnackbar = (text, severity) => {
     setSnackbar({ open: true, text, severity });
