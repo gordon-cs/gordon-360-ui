@@ -16,11 +16,12 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   const [membership, setMembership] = useState();
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [loading, setLoading] = useState(true);
+  const [shouldShowMemberships, setShouldShowMemberships] = useState(false);
   const { involvementCode, sessionCode } = useParams();
   const { profile } = useUser();
 
   useEffect(() => {
-    const loadMembers = async () => {
+    const loadMembershipStats = async () => {
       setLoading(true);
 
       try {
@@ -33,9 +34,9 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
         setFollowersNum(followersNum);
         setMembersNum(membersNum);
 
-        if ((membership && membership.Participation !== Participation.Guest) || isSiteAdmin) {
-          setMembers(await membershipService.get({ involvementCode, sessionCode }));
-        }
+        setShouldShowMemberships(
+          (membership && membership.Participation !== Participation.Guest) || isSiteAdmin,
+        );
 
         setLoading(false);
       } catch (error) {
@@ -43,8 +44,19 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
       }
     };
 
-    loadMembers();
+    loadMembershipStats();
   }, [involvementCode, isAdmin, isSiteAdmin, sessionCode, profile.AD_Username]);
+
+  useEffect(() => {
+    const loadMembers = async () => {
+      setLoading(true);
+      if (shouldShowMemberships) {
+        setMembers(await membershipService.get({ involvementCode, sessionCode }));
+      }
+      setLoading(false);
+    };
+    loadMembers();
+  }, [involvementCode, sessionCode, shouldShowMemberships]);
 
   const createSnackbar = (text, severity) => {
     setSnackbar({ open: true, text, severity });
@@ -87,7 +99,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   if (loading === true) {
     return <GordonLoader />;
   } else {
-    if (membership?.Participation !== Participation.Guest || isSiteAdmin) {
+    if (shouldShowMemberships) {
       content = (
         <>
           {(isAdmin || isSiteAdmin) && (
@@ -101,18 +113,16 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
               />
             </Grid>
           )}
-          {members.length > 0 && (
-            <Grid item>
-              <MemberList
-                members={members}
-                isAdmin={isAdmin}
-                isSiteAdmin={isSiteAdmin}
-                createSnackbar={createSnackbar}
-                onLeave={handleLeave}
-                onToggleIsAdmin={toggleIsAdmin}
-              />
-            </Grid>
-          )}
+          <Grid item>
+            <MemberList
+              members={members}
+              isAdmin={isAdmin}
+              isSiteAdmin={isSiteAdmin}
+              createSnackbar={createSnackbar}
+              onLeave={handleLeave}
+              onToggleIsAdmin={toggleIsAdmin}
+            />
+          </Grid>
         </>
       );
     } else {
