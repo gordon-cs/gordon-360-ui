@@ -23,6 +23,8 @@ const ActivityForm = ({
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
+    startDate: false,
+    endDate: false,
     registrationStart: false,
     registrationEnd: false,
     typeID: false,
@@ -49,19 +51,38 @@ const ActivityForm = ({
     };
     fetchData();
   }, []);
-  const createActivityFields = [
+
+  const activityFields = [
     {
       label: 'Name',
       name: 'name',
       type: 'text',
       error: errorStatus.name,
+      required: true,
       helperText: '*Required',
+    },
+    {
+      label: 'Activity Start',
+      name: 'startDate',
+      type: 'datetime',
+      error: errorStatus.startDate,
+      required: true,
+      helperText: '*Required',
+    },
+    {
+      label: 'Activity End',
+      name: 'endDate',
+      type: 'datetime',
+      error: errorStatus.endDate,
+      required: false,
+      helperText: '',
     },
     {
       label: 'Registration Start',
       name: 'registrationStart',
       type: 'datetime',
       error: errorStatus.registrationStart,
+      required: true,
       helperText: '*Required',
     },
     {
@@ -69,6 +90,7 @@ const ActivityForm = ({
       name: 'registrationEnd',
       type: 'datetime',
       error: errorStatus.registrationEnd,
+      required: false,
       helperText: '*Required',
     },
     {
@@ -79,6 +101,7 @@ const ActivityForm = ({
         return type.Description;
       }),
       error: errorStatus.typeID,
+      required: true,
       helperText: '*Required',
     },
     {
@@ -89,13 +112,15 @@ const ActivityForm = ({
         return sport.Name;
       }),
       error: errorStatus.sportID,
+      required: false,
       helperText: '*Required',
     },
     {
       label: 'Maximum Capacity',
       name: 'maxCapacity',
       type: 'text',
-      error: errorStatus.maxCapactity,
+      error: errorStatus.maxCapacity,
+      required: false,
       helperText: '*Required',
     },
     {
@@ -103,11 +128,12 @@ const ActivityForm = ({
       name: 'soloRegistration',
       type: 'checkbox',
       error: errorStatus.soloRegistration,
+      required: false,
       helperText: '*Required',
     },
   ];
   if (activity) {
-    createActivityFields.push(
+    activityFields.push(
       {
         label: 'Activity Status',
         name: 'statusID',
@@ -129,14 +155,16 @@ const ActivityForm = ({
   }
 
   const allFields = [
-    createActivityFields,
-    // if you need more fields put them here, or if you make a "second paage"
+    activityFields,
+    // if you need more fields put them here, or if you make a "second page"
   ].flat();
 
   const currentInfo = useMemo(() => {
     if (activity) {
       return {
         name: activity.Name,
+        startDate: activity.StartDate,
+        endDate: activity.EndDate,
         registrationStart: activity.RegistrationStart,
         registrationEnd: activity.RegistrationEnd,
         typeID:
@@ -158,8 +186,10 @@ const ActivityForm = ({
     }
     return {
       name: '',
-      registrationStart: '',
-      registrationEnd: '',
+      startDate: null,
+      endDate: null,
+      registrationStart: null,
+      registrationEnd: null,
       typeID: '',
       sportID: '',
       maxCapacity: '',
@@ -195,10 +225,12 @@ const ActivityForm = ({
       if (currentInfo[field] !== newInfo[field]) {
         hasChanges = true;
       }
-      handleSetError(field, newInfo[field] === '');
-      hasError = newInfo[field] === '' || hasError;
+      let isFieldRequired = activityFields.find((n) => n.name === field).required;
+      handleSetError(field, !newInfo[field] && isFieldRequired);
+      if (!newInfo[field] && isFieldRequired) hasError = true;
     }
     setDisableUpdateButton(hasError || !hasChanges);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newInfo, currentInfo]);
 
   const handleChange = (event, src) => {
@@ -308,9 +340,7 @@ const ActivityForm = ({
   } else {
     content = (
       <>
-        <ContentCard title="Activity Information">
-          {mapFieldsToInputs(createActivityFields)}
-        </ContentCard>
+        <ContentCard title="Activity Information">{mapFieldsToInputs(activityFields)}</ContentCard>
 
         <GordonDialogBox
           open={openConfirmWindow}

@@ -4,58 +4,39 @@ import { Team } from './team';
 import { Series } from './series';
 import { Lookup } from './recim';
 
-export type Activity = {
-  ID: number;
+type BaseActivity = {
   Name: string;
+  StartDate: string;
+  EndDate: string;
   RegistrationStart: string;
   RegistrationEnd: string;
-  RegistrationOpen: boolean;
   SportID: Sport;
   TypeID: number;
   MinCapacity: number;
   MaxCapacity: number;
   SoloRegistration: boolean;
+};
+
+export type Activity = BaseActivity & {
+  ID: number;
+  RegistrationOpen: boolean;
   Logo: string;
   Series: Series[];
   Team: Team[];
 };
 
-type CreatedActivity = {
+type CreatedActivity = BaseActivity & {
   ID: number;
-  Name: string;
-  RegistrationStart: string;
-  RegistrationEnd: string;
-  SportID: Sport;
   StatusID: number;
-  TypeID: number;
-  MinCapacity: number;
-  MaxCapacity: number;
-  SoloRegistration: boolean;
   Completed: boolean;
 };
 
-type UploadActivity = {
-  Name: string;
-  RegistrationStart: string;
-  RegistrationEnd: string;
-  SportID: number;
-  TypeID: number;
-  MinCapacity: number;
-  MaxCapacity: number;
-  SoloRegistration: boolean;
+type UploadActivity = BaseActivity & {
   Logo: string;
 };
 
-type PatchActivity = {
-  Name: string;
-  RegistrationStart: string;
-  RegistrationEnd: string;
-  SportID: number;
-  TypeID: number;
+type PatchActivity = BaseActivity & {
   StatusID: number;
-  MinCapacity: number;
-  MaxCapacity: number;
-  SoloRegistration: boolean;
   Logo: string;
   Completed: boolean;
 };
