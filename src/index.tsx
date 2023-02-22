@@ -6,7 +6,7 @@ import { register } from 'pwa';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { configureMSAL, msalConfig } from 'services/auth';
-import App from './app';
+import App from './app.jsx';
 import './app.global.css';
 import NetworkContextProvider from './contexts/NetworkContext';
 import theme from './theme';

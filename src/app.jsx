@@ -1,14 +1,14 @@
-import AppRedirect from 'components/AppRedirect';
-import BirthdayMessage from 'components/BirthdayMessage';
+import AppRedirect from 'components/AppRedirect/AppRedirect.jsx';
+import BirthdayMessage from 'components/BirthdayMessage/BirthdayMessage.jsx';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './app.global.css';
 import styles from './app.module.css';
-import ErrorBoundary from './components/ErrorBoundary';
-import GordonHeader from './components/Header';
-import GordonNav from './components/Nav';
-import routes from './routes';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.jsx';
+import GordonHeader from './components/Header/Header.jsx';
+import GordonNav from './components/Nav/Nav.jsx';
+import routes from './routes.jsx';
 import analytics from './services/analytics';
 
 const App = () => {
