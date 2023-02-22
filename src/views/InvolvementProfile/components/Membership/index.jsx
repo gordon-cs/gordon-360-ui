@@ -33,7 +33,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
         setFollowersNum(followersNum);
         setMembersNum(membersNum);
 
-        if (membership?.Participation !== Participation.Guest || isSiteAdmin) {
+        if ((membership && membership.Participation !== Participation.Guest) || isSiteAdmin) {
           setMembers(await membershipService.get({ involvementCode, sessionCode }));
         }
 
@@ -101,16 +101,18 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
               />
             </Grid>
           )}
-          <Grid item>
-            <MemberList
-              members={members}
-              isAdmin={isAdmin}
-              isSiteAdmin={isSiteAdmin}
-              createSnackbar={createSnackbar}
-              onLeave={handleLeave}
-              onToggleIsAdmin={toggleIsAdmin}
-            />
-          </Grid>
+          {members.length > 0 && (
+            <Grid item>
+              <MemberList
+                members={members}
+                isAdmin={isAdmin}
+                isSiteAdmin={isSiteAdmin}
+                createSnackbar={createSnackbar}
+                onLeave={handleLeave}
+                onToggleIsAdmin={toggleIsAdmin}
+              />
+            </Grid>
+          )}
         </>
       );
     } else {
