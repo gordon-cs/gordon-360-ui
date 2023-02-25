@@ -71,18 +71,15 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
       onAddMember();
       setIsDialogOpen(false);
     } catch (error) {
-      if (error.Message === 'The Person is already part of the activity.') {
-        createSnackbar(`${username} is already a member`, 'info');
-      } else {
-        switch (error.name) {
-          case 'NotFoundError':
-            createSnackbar('Nobody with that username was found', 'error');
-            break;
+      switch (error.name) {
+        case 'NotFoundError':
+          createSnackbar('Nobody with that username was found', 'error');
+          break;
 
-          default:
-            console.log(error);
-            break;
-        }
+        default:
+          createSnackbar('This member could not be added', 'error');
+          console.log(error);
+          break;
       }
     }
   };
