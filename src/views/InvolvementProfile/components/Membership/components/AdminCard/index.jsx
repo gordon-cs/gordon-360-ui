@@ -79,7 +79,6 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
         default:
           createSnackbar('This member could not be added', 'error');
           console.log(error);
-          break;
       }
     }
   };
