@@ -261,11 +261,15 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
     ) : null;
 
-  const cliftonStrengths =
-    profile.CliftonStrengths && (myProf || !profile.CliftonStrengths.Private) ? (
-      <ProfileInfoListItem
-        title="Clifton Strengths:"
-        contentText={
+  const showCliftonStrengthsBlock =
+    (profile.CliftonStrengths && !profile.CliftonStrengths.Private) ||
+    (myProf && (isStudent || isFacStaff));
+
+  const cliftonStrengths = showCliftonStrengthsBlock && (
+    <ProfileInfoListItem
+      title="Clifton Strengths:"
+      contentText={
+        profile.CliftonStrengths ? (
           <Typography>
             {profile.CliftonStrengths.Themes.map((strength) => (
               <a href={strength.link} target="_blank" rel="noopener noreferrer" key={strength.name}>
@@ -286,26 +290,39 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
               leaveTouchDelay={5000}
             />
           </Typography>
-        }
-        ContentIcon={
-          myProf && (
-            <FormControlLabel
-              control={
-                <Switch
-                  onChange={handleChangeCliftonStrengthsPrivacy}
-                  checked={!isCliftonStrengthsPrivate}
-                />
-              }
-              label={isCliftonStrengthsPrivate ? 'Private' : 'Public'}
-              labelPlacement="bottom"
-              disabled={!isOnline}
-            />
-          )
-        }
-        privateInfo={profile.CliftonStrengths.Private}
-        myProf={myProf}
-      />
-    ) : null;
+        ) : (
+          <Typography>
+            {' '}
+            No strengths to show.{' '}
+            <a
+              href="https://gordon.gallup.com/signin/default.aspx"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Take the test
+            </a>{' '}
+          </Typography>
+        )
+      }
+      ContentIcon={
+        myProf && (
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={handleChangeCliftonStrengthsPrivacy}
+                checked={!isCliftonStrengthsPrivate}
+              />
+            }
+            label={isCliftonStrengthsPrivate ? 'Private' : 'Public'}
+            labelPlacement="bottom"
+            disabled={!isOnline}
+          />
+        )
+      }
+      privateInfo={profile.CliftonStrengths?.Private}
+      myProf={myProf}
+    />
+  );
 
   const advisors =
     (myProf || canViewAcademicInfo) && isStudent ? (
