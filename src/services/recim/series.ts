@@ -89,8 +89,9 @@ const getSeriesTypes = (): Promise<Lookup[]> => http.get(`recim/series/lookup?ty
 
 const getAllSeries = (): Promise<Series[]> => http.get(`recim/series`);
 
-const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<CreatedSeries> =>
-  http.patch(`recim/series/${seriesID}`, updatedSeries);
+const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<CreatedSeries> => {
+  return http.patch(`recim/series/${seriesID}`, updatedSeries);
+};
 
 const putSeriesSchedule = async (schedule: UploadSeriesSchedule): Promise<SeriesSchedule> =>
   http.put(`recim/series/schedule`, schedule);

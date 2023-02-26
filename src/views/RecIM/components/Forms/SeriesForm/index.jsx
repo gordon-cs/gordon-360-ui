@@ -6,15 +6,21 @@ import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ContentCard } from '../components/ContentCard';
 import { InformationField } from '../components/InformationField';
-import { createSeries, getSeriesTypes } from 'services/recim/series';
+import {
+  createSeries,
+  editSeries,
+  getSeriesStatusTypes,
+  getSeriesTypes,
+} from 'services/recim/series';
 
-const CreateSeriesForm = ({
+const SeriesForm = ({
   closeWithSnackbar,
-  openCreateSeriesForm,
-  setOpenCreateSeriesForm,
+  openSeriesForm,
+  setOpenSeriesForm,
   activityID,
   existingActivitySeries,
   scheduleID,
+  series, // If series passed, allows edit
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
@@ -22,21 +28,25 @@ const CreateSeriesForm = ({
     endDate: false,
     typeID: false,
     numberOfTeamsAdmitted: false,
+    statusID: false,
   });
 
   // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
   const [seriesType, setSeriesType] = useState([]);
+  const [statuses, setStatuses] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       // Get all active activities where registration has not closed
       setSeriesType(await getSeriesTypes());
+      setStatuses(await getSeriesStatusTypes());
       setLoading(false);
     };
     loadData();
   }, []);
+
   const createSeriesFields = [
     {
       label: 'Name',
@@ -59,33 +69,49 @@ const CreateSeriesForm = ({
       error: errorStatus.endDate,
       helperText: '*Required',
     },
-    {
-      label: 'Series Type',
-      name: 'typeID',
-      type: 'select',
-      menuItems: seriesType.map((seriesType) => {
-        return seriesType.Description;
-      }),
-      error: errorStatus.type,
-      helperText: '*Required',
-    },
-    {
-      label: 'Reference Series',
-      name: 'referenceSeriesID',
-      type: 'select',
-      menuItems: existingActivitySeries.map((series) => {
-        return series.Name;
-      }),
-      helperText: '*Optional',
-    },
-    {
-      label: 'Number of Teams',
-      name: 'numberOfTeamsAdmitted',
-      type: 'text',
-      error: errorStatus.numberOfTeamsAdmitted,
-      helperText: '*Invalid Number',
-    },
   ];
+
+  if (series) {
+    createSeriesFields.push({
+      label: 'Series Status',
+      name: 'statusID',
+      type: 'select',
+      menuItems: statuses.map((status) => {
+        return status.Description;
+      }),
+      error: errorStatus.statusID,
+      helperText: '*Required',
+    });
+  } else {
+    createSeriesFields.push(
+      {
+        label: 'Series Type',
+        name: 'typeID',
+        type: 'select',
+        menuItems: seriesType.map((seriesType) => {
+          return seriesType.Description;
+        }),
+        error: errorStatus.type,
+        helperText: '*Required',
+      },
+      {
+        label: 'Reference Series',
+        name: 'referenceSeriesID',
+        type: 'select',
+        menuItems: existingActivitySeries.map((series) => {
+          return series.Name;
+        }),
+        helperText: '*Optional',
+      },
+      {
+        label: 'Number of Teams',
+        name: 'numberOfTeamsAdmitted',
+        type: 'text',
+        error: errorStatus.numberOfTeamsAdmitted,
+        helperText: '*Invalid Number',
+      },
+    );
+  }
 
   const allFields = [
     createSeriesFields,
@@ -93,17 +119,27 @@ const CreateSeriesForm = ({
   ].flat();
 
   const currentInfo = useMemo(() => {
-    return {
-      name: '',
-      startDate: '',
-      endDate: '',
-      typeID: '',
-      activityID: activityID,
-      numberOfTeamsAdmitted: '',
-      referenceSeriesID: '',
-      scheduleID: scheduleID, //nullable, if scheduleID is passed, it will be assigned to the series
-    };
-  }, [activityID, scheduleID]);
+    if (series) {
+      return {
+        name: series.Name,
+        startDate: series.StartDate,
+        endDate: series.EndDate,
+        statusID: series.Status,
+        scheduleID: scheduleID,
+      };
+    } else {
+      return {
+        name: '',
+        startDate: '',
+        endDate: '',
+        typeID: '',
+        activityID: activityID,
+        numberOfTeamsAdmitted: '',
+        referenceSeriesID: '',
+        scheduleID: scheduleID, //nullable, if scheduleID is passed, it will be assigned to the series
+      };
+    }
+  }, [activityID, scheduleID, series]);
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
@@ -188,26 +224,40 @@ const CreateSeriesForm = ({
 
   const handleConfirm = () => {
     setSaving(true);
-    let seriesCreationRequest = { ...currentInfo, ...newInfo };
 
-    seriesCreationRequest.typeID = seriesType.filter(
-      (type) => type.Description === seriesCreationRequest.typeID,
-    )[0].ID;
+    let seriesRequest = { ...currentInfo, ...newInfo };
 
-    let referenceSeriesID =
-      seriesCreationRequest.referenceSeriesID === currentInfo.referenceSeriesID
-        ? null
-        : existingActivitySeries.filter(
-            (ref) => ref.Name === seriesCreationRequest.referenceSeriesID,
-          )[0].ID;
-    createSeries(referenceSeriesID, seriesCreationRequest).then(() => {
-      setSaving(false);
-      closeWithSnackbar({
-        type: 'success',
-        message: 'Your new series has been created or whatever message you want here',
+    if (series) {
+      seriesRequest.statusID = statuses.find(
+        (status) => status.Description === seriesRequest.statusID,
+      ).ID;
+      editSeries(series.ID, seriesRequest).then(() => {
+        setSaving(false);
+        closeWithSnackbar({
+          type: 'success',
+          message: `Series ${series.Name}, has been successfully edited`,
+        });
+        handleWindowClose();
       });
-      handleWindowClose();
-    });
+    } else {
+      seriesRequest.typeID = seriesType.filter(
+        (type) => type.Description === seriesRequest.typeID,
+      )[0].ID;
+
+      let referenceSeriesID =
+        seriesRequest.referenceSeriesID === currentInfo.referenceSeriesID
+          ? null
+          : existingActivitySeries.filter((ref) => ref.Name === seriesRequest.referenceSeriesID)[0]
+              .ID;
+      createSeries(referenceSeriesID, seriesRequest).then(() => {
+        setSaving(false);
+        closeWithSnackbar({
+          type: 'success',
+          message: 'Your new series has been created or whatever message you want here',
+        });
+        handleWindowClose();
+      });
+    }
   };
 
   const handleWindowClose = () => {
@@ -272,8 +322,8 @@ const CreateSeriesForm = ({
   }
   return (
     <GordonDialogBox
-      open={openCreateSeriesForm}
-      title="Create Series"
+      open={openSeriesForm}
+      title={series ? 'Edit Series' : 'Create Series'}
       fullWidth
       maxWidth="lg"
       buttonClicked={() => setOpenConfirmWindow(true)}
@@ -281,14 +331,18 @@ const CreateSeriesForm = ({
       buttonName="Submit"
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
-        setOpenCreateSeriesForm(false);
+        setOpenSeriesForm(false);
       }}
       cancelButtonName="cancel"
     >
       {content}
-      <Typography>*Reference Series is used for selecting teams from an existing series</Typography>
+      {!series && (
+        <Typography>
+          *Reference Series is used for selecting teams from an existing series
+        </Typography>
+      )}
     </GordonDialogBox>
   );
 };
 
-export default CreateSeriesForm;
+export default SeriesForm;
