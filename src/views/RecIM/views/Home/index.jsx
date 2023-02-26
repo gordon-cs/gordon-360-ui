@@ -11,7 +11,7 @@ import { ActivityList, TeamList } from './../../components/List';
 import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
-import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from './../../recim_logo.png';
 import { DateTime } from 'luxon';
@@ -246,12 +246,12 @@ const Home = () => {
               />
             )}
             {openCreateSeriesForm && (
-              <CreateSeriesForm
+              <SeriesForm
                 closeWithSnackbar={(status) => {
                   handleCreateSeriesForm(status);
                 }}
-                openCreateSeriesForm={openCreateSeriesForm}
-                setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+                openSeriesForm={openCreateSeriesForm}
+                setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
                 activityID={createdActivity.ID}
                 existingActivitySeries={[]}
               />
