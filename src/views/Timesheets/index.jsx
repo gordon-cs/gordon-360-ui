@@ -379,9 +379,9 @@ const Timesheets = (props) => {
 
   return (
     <>
-      <Grid container spacing={2} className={styles.timesheets}>
-        <Grid item xs={12}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Grid container spacing={2} className={styles.timesheets}>
+          <Grid item xs={12}>
             <Card>
               <CardContent
                 style={{
@@ -504,10 +504,10 @@ const Timesheets = (props) => {
                 </Grid>
               </CardContent>
             </Card>
-          </LocalizationProvider>
+          </Grid>
+          <ShiftDisplay ref={setShiftDisplayComponent} />
         </Grid>
-        <ShiftDisplay ref={setShiftDisplayComponent} />
-      </Grid>
+      </LocalizationProvider>
       <SimpleSnackbar
         text={snackbarText}
         severity={snackbarSeverity}

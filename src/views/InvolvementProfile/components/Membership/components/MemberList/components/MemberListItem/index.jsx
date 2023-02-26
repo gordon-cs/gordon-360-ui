@@ -124,7 +124,7 @@ const MemberListItem = ({
   };
 
   const confirmLeave = async () => {
-    let deleted = await membership.remove(member.MembershipID);
+    const deleted = await membership.remove(member.MembershipID);
 
     const isRemovingSelf = member.Username === profile.AD_Username;
 
@@ -138,11 +138,10 @@ const MemberListItem = ({
         ? 'Successfully left'
         : `Successfully removed ${member.Username}`;
       createSnackbar(removeMessage, 'success');
+      onLeave();
+      setIsLeaveAlertOpen(false);
+      setIsRemoveAlertOpen(false);
     }
-
-    onLeave();
-    setIsLeaveAlertOpen(false);
-    setIsRemoveAlertOpen(false);
   };
 
   const handleRemove = () => {
