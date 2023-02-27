@@ -95,8 +95,6 @@ const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<Creat
 const putSeriesSchedule = async (schedule: UploadSeriesSchedule): Promise<SeriesSchedule> =>
   http.put(`recim/series/schedule`, schedule);
 
-// AUTO SCHEDULER VERY DANGEROUS AS OF 2/4/2023 AS THERE IS NO TRUE DELETE ROUTES,
-// BE CAREFUL USING THIS AS DELETES WILL HAVE TO BE DONE MANUALLY
 const scheduleSeriesMatches = async (seriesID: number): Promise<Match[]> =>
   http.post(`recim/series/${seriesID}/schedule`);
 

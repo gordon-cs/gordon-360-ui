@@ -244,7 +244,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
 
     if (activity)
       createMatch(matchRequest).then((result) => {
-        console.log(result);
         closeWithSnackbar({
           type: 'success',
           message: 'Match created successfully',
@@ -256,7 +255,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         (type) => type.Description === matchRequest.StatusID,
       ).ID;
       updateMatch(match.ID, matchRequest).then((result) => {
-        console.log(result);
         closeWithSnackbar({
           type: 'success',
           message: 'Match created successfully',
@@ -274,7 +272,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
 
   const handleEditMatchStatsForm = (status) => {
     //temporary, I can't think of a way to force update the form right now
-    console.log(status);
     handleWindowClose();
     setTargetTeamID(null);
   };
