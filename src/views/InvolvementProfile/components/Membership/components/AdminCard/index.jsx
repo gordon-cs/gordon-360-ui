@@ -21,6 +21,7 @@ import membershipService from 'services/membership';
 import { stripDomain } from 'services/utils';
 import { gordonColors } from 'theme';
 import RequestsReceived from './components/RequestsReceived';
+import { ConflictError, NotFoundError } from 'services/error';
 
 const headerStyle = {
   backgroundColor: gordonColors.primary.blue,
@@ -71,14 +72,13 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
       onAddMember();
       setIsDialogOpen(false);
     } catch (error) {
-      switch (error.name) {
-        case 'NotFoundError':
-          createSnackbar('Nobody with that username was found', 'error');
-          break;
-
-        default:
-          createSnackbar('This member could not be added', 'error');
-          console.log(error);
+      if (error instanceof ConflictError) {
+        createSnackbar(`${username} is already a member`, 'info');
+      } else if (error instanceof NotFoundError) {
+        createSnackbar('Nobody with that username was found', 'error');
+      } else {
+        createSnackbar('An error has occured', 'error');
+        console.log(error);
       }
     }
   };
