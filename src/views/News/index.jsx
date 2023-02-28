@@ -10,7 +10,10 @@ import {
   TextField,
   Tooltip,
   Typography,
+  Tabs,
+  Tab,
 } from '@mui/material';
+import { TabPanel, TabContext } from '@mui/lab';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
@@ -49,6 +52,7 @@ const StudentNews = () => {
   const [aspectRatio, setAspectRatio] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [currentlyEditing, setCurrentlyEditing] = useState(false); // false if not editing, newsID if editing
+  const [tabValue, setTabValue] = useState('news'); // set the default tab to 'news'
   const cropperRef = useRef();
   const isAuthenticated = useIsAuthenticated();
   const isAdmin = userIsInAuthGroup('NewsAdmin');
@@ -58,9 +62,7 @@ const StudentNews = () => {
     if (isAuthenticated) {
       const newsCategories = await newsService.getCategories();
       const personalUnapprovedNews = await newsService.getPersonalUnapproved();
-      if (isAdmin) {
-        const unapprovedNews = await newsService.getUnapproved();
-      }
+      const unapprovedNews = isAdmin ? await newsService.getUnapproved() : null;
       const unexpiredNews = await newsService.getNotExpiredFormatted();
       setLoading(false);
       setCategories(newsCategories);
@@ -98,6 +100,10 @@ const StudentNews = () => {
     setNewPostBody('');
     setCurrentlyEditing(false);
     setCropperImageData(null);
+  }
+
+  function handleSwitchTab(event, newValue) {
+    setTabValue(newValue);
   }
 
   // TODO: Currently disabled and unused
@@ -300,11 +306,11 @@ const StudentNews = () => {
   async function handleNewsApprovalStatus(snid, newsStatusAccepted) {
     // update the news item accepted status and give feedback
     let result = await newsService.updateAcceptedStatus(snid, newsStatusAccepted);
-    let newStatus = newsStatusAccepted ? 'approve' : 'unapprove';
+    let statusAction = newsStatusAccepted ? 'approve' : 'unapprove';
     if (result === undefined) {
-      createSnackbar(`News Posting Failed to ${newStatus}`, 'error');
+      createSnackbar(`News Posting Failed to ${statusAction}`, 'error');
     } else {
-      createSnackbar(`News Posting ${newStatus}d Successfully`, 'success');
+      createSnackbar(`News Posting ${statusAction}d Successfully`, 'success');
     }
 
     loadNews();
@@ -338,35 +344,48 @@ const StudentNews = () => {
     } else {
       content = (
         <>
-          {isAdmin && (
-            <NewsList
-              news={unapprovedNews}
-              header={'All Pending Posts'}
-              handleNewsItemEdit={handleNewsItemEdit}
-              handleNewsItemDelete={handleNewsItemDelete}
-              handleNewsApprovalStatus={handleNewsApprovalStatus}
-              isAdmin={isAdmin}
-            />
-          )}
-
-          <NewsList
-            news={personalUnapprovedNews}
-            header={'My Pending News'}
-            handleNewsItemEdit={handleNewsItemEdit}
-            handleNewsItemDelete={handleNewsItemDelete}
-            handleNewsApprovalStatus={handleNewsApprovalStatus}
-            isAdmin={false}
-          />
-          <NewsList
-            news={news}
-            header={'News'}
-            handleNewsItemEdit={handleNewsItemEdit}
-            handleNewsItemDelete={handleNewsItemDelete}
-            handleNewsApprovalStatus={handleNewsApprovalStatus}
-            unapproved={false}
-            isAdmin={isAdmin}
-            defaultExpanded={true}
-          />
+          <TabContext value={tabValue}>
+            <Tabs value={tabValue} onChange={handleSwitchTab} aria-label="basic tabs example">
+              <Tab label="News" value="news" />
+              <Tab label="My Pending News" value="my-pending-news" />
+              {isAdmin && <Tab label="All Pending Posts" value="all-pending-news" />}
+            </Tabs>
+            <TabPanel value="news">
+              <NewsList
+                news={news}
+                header={'News'}
+                handleNewsItemEdit={handleNewsItemEdit}
+                handleNewsItemDelete={handleNewsItemDelete}
+                handleNewsApprovalStatus={handleNewsApprovalStatus}
+                isUnapproved={false}
+                isAdmin={isAdmin}
+              />
+            </TabPanel>
+            <TabPanel value="my-pending-news">
+              <NewsList
+                news={personalUnapprovedNews}
+                header={'My Pending News'}
+                handleNewsItemEdit={handleNewsItemEdit}
+                handleNewsItemDelete={handleNewsItemDelete}
+                handleNewsApprovalStatus={handleNewsApprovalStatus}
+                isAdmin={false}
+              />
+            </TabPanel>
+            {isAdmin && (
+              <TabPanel value="all-pending-news">
+                {isAdmin && (
+                  <NewsList
+                    news={unapprovedNews}
+                    header={'All Pending News'}
+                    handleNewsItemEdit={handleNewsItemEdit}
+                    handleNewsItemDelete={handleNewsItemDelete}
+                    handleNewsApprovalStatus={handleNewsApprovalStatus}
+                    isAdmin={isAdmin}
+                  />
+                )}
+              </TabPanel>
+            )}
+          </TabContext>
         </>
       );
     }

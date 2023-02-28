@@ -9,22 +9,11 @@
     padding: 10px;
   }
 
-  .accordion {
+  .card_header {
     background-color: $primary-blue;
     color: white;
-  }
-
-  .expand_more {
-    color: white;
-  }
-
-  .card_header {
     padding: 0px;
-  }
-
-  .detail {
-    flex-direction: column;
-    padding: 0px;
+    text-align: center;
   }
 
   .list {

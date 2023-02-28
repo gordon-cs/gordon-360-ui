@@ -18,7 +18,7 @@ import styles from './NewsItem.module.css';
 
 const NewsItem = ({
   posting,
-  unapproved,
+  isUnapproved,
   size,
   handleNewsItemEdit,
   handleNewsItemDelete,
@@ -29,14 +29,14 @@ const NewsItem = ({
   const isOnline = useNetworkStatus();
   const { profile } = useUser();
 
-  if (unapproved) {
+  if (isUnapproved) {
     // Shows 'pending approval' instead of the date posted
     posting.dayPosted = <i>pending approval...</i>;
   }
 
   const author = (
     <Typography className={styles.news_column}>
-      {!isOnline || unapproved ? (
+      {!isOnline || isUnapproved ? (
         posting.author
       ) : (
         <Link className={styles.news_authorProfileLink} to={`/profile/${posting.ADUN}`}>
@@ -53,7 +53,7 @@ const NewsItem = ({
   let editButton;
   if (
     (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase() || isAdmin) &&
-    unapproved
+    isUnapproved
   ) {
     editButton = (
       <Button
@@ -77,11 +77,11 @@ const NewsItem = ({
       <FormControlLabel
         control={
           <Switch
-            onChange={() => handleNewsApprovalStatus(posting.SNID, unapproved)}
-            checked={!unapproved}
+            onChange={() => handleNewsApprovalStatus(posting.SNID, isUnapproved)}
+            checked={!isUnapproved}
           />
         }
-        label={unapproved ? 'Unapproved' : 'Approved'}
+        label={isUnapproved ? 'Unapproved' : 'Approved'}
         labelPlacement="bottom"
         disabled={!isOnline}
       />
@@ -120,7 +120,7 @@ const NewsItem = ({
         onClick={() => {
           setOpen(!open);
         }}
-        className={`${styles.news_item} ${unapproved ? styles.unapproved : styles.approved}`}
+        className={`${styles.news_item} ${isUnapproved ? styles.unapproved : styles.approved}`}
         justifyContent="center"
       >
         <Grid item xs={12}>
@@ -153,7 +153,7 @@ const NewsItem = ({
         onClick={() => {
           setOpen(!open);
         }}
-        className={`${styles.news_item} ${unapproved ? styles.unapproved : styles.approved}`}
+        className={`${styles.news_item} ${isUnapproved ? styles.unapproved : styles.approved}`}
       >
         <Grid item xs={2}>
           <Typography className={styles.news_column}>{posting.categoryName}</Typography>
@@ -209,7 +209,7 @@ NewsItem.propTypes = {
     // Expiration: PropTypes.string.isRequired,
   }).isRequired,
 
-  unapproved: PropTypes.any,
+  isUnapproved: PropTypes.any,
   size: PropTypes.string.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,

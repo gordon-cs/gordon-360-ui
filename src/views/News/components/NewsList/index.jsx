@@ -59,13 +59,11 @@ const fullHeader = (
 
 const NewsList = ({
   news,
-  header,
   handleNewsItemEdit,
   handleNewsItemDelete,
   handleNewsApprovalStatus,
-  unapproved,
+  isUnapproved,
   isAdmin,
-  defaultExpanded,
 }) => {
   const [width, setWidth] = useState(window.innerWidth);
 
@@ -81,42 +79,31 @@ const NewsList = ({
 
   return (
     <Card className={styles.news_list}>
-      <Accordion defaultExpanded={defaultExpanded ?? false}>
-        <AccordionSummary
-          className={styles.accordion}
-          expandIcon={<ExpandMore className={styles.expand_more} />}
-        >
-          <CardHeader title={header} className={styles.card_header} />
-        </AccordionSummary>
-
-        {news.length > 0 ? (
-          <AccordionDetails className={styles.detail}>
-            {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
-            <Grid>
-              <List className={styles.list} disablePadding>
-                {news.length > 0 &&
-                  news.map((posting) => (
-                    <NewsItem
-                      posting={posting}
-                      unapproved={unapproved ?? true}
-                      size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-                      handleNewsItemEdit={handleNewsItemEdit}
-                      handleNewsItemDelete={handleNewsItemDelete}
-                      handleNewsApprovalStatus={handleNewsApprovalStatus}
-                      key={posting.SNID}
-                      isAdmin={isAdmin}
-                    />
-                  ))}
-              </List>
-            </Grid>
-          </AccordionDetails>
-        ) : (
-          //No news
-          <Typography variant="h4" className={styles.typography}>
-            No News To Show
-          </Typography>
-        )}
-      </Accordion>
+      {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
+      {news.length > 0 ? (
+        <Grid>
+          <List className={styles.list} disablePadding>
+            {news.length > 0 &&
+              news.map((posting) => (
+                <NewsItem
+                  posting={posting}
+                  isUnapproved={isUnapproved ?? true}
+                  size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
+                  handleNewsItemEdit={handleNewsItemEdit}
+                  handleNewsItemDelete={handleNewsItemDelete}
+                  handleNewsApprovalStatus={handleNewsApprovalStatus}
+                  key={posting.SNID}
+                  isAdmin={isAdmin}
+                />
+              ))}
+          </List>
+        </Grid>
+      ) : (
+        //No news
+        <Typography variant="h4" className={styles.typography}>
+          No News To Show
+        </Typography>
+      )}
     </Card>
   );
 };
@@ -133,13 +120,11 @@ NewsList.propTypes = {
       // Expiration: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  header: PropTypes.string.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,
   handleNewsApprovalStatus: PropTypes.func.isRequired,
-  unapproved: PropTypes.any,
+  isUnapproved: PropTypes.any,
   isAdmin: PropTypes.bool.isRequired,
-  defaultExpanded: PropTypes.bool,
 };
 
 export default NewsList;
