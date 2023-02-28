@@ -86,10 +86,19 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 1. Your local machine must be configured as an SSH host
 
    [Windows Installation](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui).
+   
+   - If you are on Windows 11+, you may need to update the firewall to allow inbound connections on a public network.
+      - Search for `Check Firewall Status` in the start menu
+      - Click `Turn Windows Defender Firewall on or off`
+      - Uncheck `Block all incoming connections, including...` under the `Public network settings` header
+      - Click Ok
+   - Also on Windows, if you are a local administrator, you will not be able to use SSH key authentication unless you add the public SSH key to `C:\Program Data\ssh\administrators_authorized_keys` rather than to `C:\Users\[your username]\.ssh\authorized_keys`. Create the file if it does not exist.
 
    [Ubuntu Installation](ubuntu.com/server/docs/service-openssh)
 
    MacOS & other Linux distributions should already have an SSH server installed.
+   
+   On MacOS, you may have to enable the SSH server in System Preferences. Follow [these instructions](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) to do so.
 
 2. Create the SSH tunnel
 
@@ -107,12 +116,12 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 
    where:
 
-   - `API_VM_PORT_NUMBER` is the port on which the 360 API is running on the VM.
-   - `API_PC_PORT_NUMBER` is the port that you want the API to be sent to on your personal computer (not the VM).
+   - `API_VM_PORT_NUMBER` is the port that you selected for the API on the virtual machine like `http://localhost:[API_VM_PORT_NUMBER]`. Please make sure to use the non-HTTPS version as HTTPS does not work over the SSH tunnel.
+   - `API_PC_PORT_NUMBER` is the port that you want the API to be sent to on your personal computer. Feel free to use the same port as above for this one.
    - `USER` is your account on the host machine.
-   - `IP or HOSTNAME` is the IP or HOSTNAME of your host machine.
+   - `IP or HOSTNAME` is the IP or HOSTNAME of your host machine. You can find this on Windows by typing `ipconfig`, on Linux or Mac with `ifconfig`
 
-You are now able to point your local frontend to the remote backend by setting `VITE_APP_API_URL` to `localhost:[API_PC_PORT_NUMBER]`.
+You are now able to point your local frontend to the remote backend by setting `VITE_APP_API_URL` to `http://localhost:[API_PC_PORT_NUMBER]` in the `.env.development` file.
 
 # Code Style
 

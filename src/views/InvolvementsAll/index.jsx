@@ -14,7 +14,7 @@ import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import involvementService from 'services/activity';
-import membershipService from 'services/membership';
+import membershipService, { NonGuestParticipations } from 'services/membership';
 import sessionService from 'services/session';
 import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
@@ -87,10 +87,11 @@ const InvolvementsAll = () => {
       setTypes(await involvementService.getTypes(selectedSession));
       if (profile) {
         setMyInvolvements(
-          await membershipService.getSessionMembershipsWithoutGuests(
-            profile.AD_Username,
-            selectedSession,
-          ),
+          await membershipService.get({
+            username: profile.AD_Username,
+            sessionCode: selectedSession,
+            participationTypes: NonGuestParticipations,
+          }),
         );
       }
       setLoading(false);
@@ -197,7 +198,11 @@ const InvolvementsAll = () => {
         </Card>
       </Grid>
 
-      {!isOnline ? null : loadingProfile ? <GordonLoader /> : profile && <Requests />}
+      {!isOnline ? null : loadingProfile ? (
+        <GordonLoader />
+      ) : (
+        profile && <Requests profile={profile} session={selectedSession} />
+      )}
 
       {loadingProfile ? (
         <GordonLoader />

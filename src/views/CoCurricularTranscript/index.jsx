@@ -3,7 +3,7 @@ import { Button, Card, CardContent, Typography } from '@mui/material';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { Component } from 'react';
-import membershipService from 'services/membership';
+import membershipService, { NonGuestParticipations } from 'services/membership';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from './CoCurricularTranscript.module.css';
@@ -50,7 +50,10 @@ class Transcript extends Component {
 
       this.setState({ profile });
 
-      const memberships = await membershipService.getTranscriptMembershipsInfo(profile.AD_Username);
+      const memberships = await membershipService.get({
+        username: profile.AD_Username,
+        participationTypes: NonGuestParticipations,
+      });
       let categorizedMemberships = this.filterMemberships(memberships);
 
       let otherInvolvements = false;

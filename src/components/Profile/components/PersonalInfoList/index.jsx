@@ -50,9 +50,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
   const isAlumni = profile.PersonType?.includes('alu');
-  const [isViewerPolice, canViewSensitiveInfo] = useAuthGroups(
+  const [isViewerPolice, canViewSensitiveInfo, canViewAcademicInfo] = useAuthGroups(
     AuthGroup.Police,
     AuthGroup.SensitiveInfoView,
+    AuthGroup.AcademicInfoView,
   );
 
   // KeepPrivate has different values for Students and FacStaff.
@@ -208,8 +209,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             {profile.HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
-                ? `${profile.HomeCity}, ${profile.HomeState}`
-                : profile.Country}
+              ? `${profile.HomeCity}, ${profile.HomeState}`
+              : profile.Country}
           </span>
         </>
       }
@@ -260,16 +261,20 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
     ) : null;
 
-  const cliftonStrengths =
-    profile.CliftonStrengths && (myProf || !profile.CliftonStrengths.Private) ? (
-      <ProfileInfoListItem
-        title="Clifton Strengths:"
-        contentText={
+  const showCliftonStrengthsBlock =
+    (profile.CliftonStrengths && !profile.CliftonStrengths.Private) ||
+    (myProf && (isStudent || isFacStaff));
+
+  const cliftonStrengths = showCliftonStrengthsBlock && (
+    <ProfileInfoListItem
+      title="Clifton Strengths:"
+      contentText={
+        profile.CliftonStrengths ? (
           <Typography>
             {profile.CliftonStrengths.Themes.map((strength) => (
-              <Link href={strength.link} target="_blank" rel="noopener" key={strength.name}>
+              <a href={strength.link} target="_blank" rel="noopener noreferrer" key={strength.name}>
                 <b style={{ color: strength.color }}>{strength.name}</b>
-              </Link>
+              </a>
             )).reduce((prev, curr) => [prev, ', ', curr])}
             <GordonTooltip
               title={
@@ -285,29 +290,42 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
               leaveTouchDelay={5000}
             />
           </Typography>
-        }
-        ContentIcon={
-          myProf && (
-            <FormControlLabel
-              control={
-                <Switch
-                  onChange={handleChangeCliftonStrengthsPrivacy}
-                  checked={!isCliftonStrengthsPrivate}
-                />
-              }
-              label={isCliftonStrengthsPrivate ? 'Private' : 'Public'}
-              labelPlacement="bottom"
-              disabled={!isOnline}
-            />
-          )
-        }
-        privateInfo={profile.CliftonStrengths.Private}
-        myProf={myProf}
-      />
-    ) : null;
+        ) : (
+          <Typography>
+            {' '}
+            No strengths to show.{' '}
+            <a
+              href="https://gordon.gallup.com/signin/default.aspx"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Take the test
+            </a>{' '}
+          </Typography>
+        )
+      }
+      ContentIcon={
+        myProf && (
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={handleChangeCliftonStrengthsPrivacy}
+                checked={!isCliftonStrengthsPrivate}
+              />
+            }
+            label={isCliftonStrengthsPrivate ? 'Private' : 'Public'}
+            labelPlacement="bottom"
+            disabled={!isOnline}
+          />
+        )
+      }
+      privateInfo={profile.CliftonStrengths?.Private}
+      myProf={myProf}
+    />
+  );
 
   const advisors =
-    myProf && isStudent ? (
+    (myProf || canViewAcademicInfo) && isStudent ? (
       <ProfileInfoListItem
         title={profile.Advisors?.length > 1 ? 'Advisors:' : 'Advisor:'}
         contentText={
@@ -455,11 +473,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   const disclaimer =
     !myProf &&
-      (isHomePhonePrivate ||
-        isAddressPrivate ||
-        isMobilePhonePrivate ||
-        isCampusLocationPrivate ||
-        isSpousePrivate) ? (
+    (isHomePhonePrivate ||
+      isAddressPrivate ||
+      isMobilePhonePrivate ||
+      isCampusLocationPrivate ||
+      isSpousePrivate) ? (
       <Typography align="left" className={styles.disclaimer}>
         Private by request, visible only to faculty and staff
       </Typography>
@@ -468,8 +486,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   return (
     <Grid item xs={12}>
       <Card
-        className={`${styles.personal_info_list}  ${myProf ? styles.my_personal_info : styles.public_personal_info
-          }`}
+        className={`${styles.personal_info_list}  ${
+          myProf ? styles.my_personal_info : styles.public_personal_info
+        }`}
       >
         <Grid
           container
