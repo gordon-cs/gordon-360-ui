@@ -79,9 +79,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const isCampusLocationPrivate = isStudent && keepPrivate && profile.OnOffCampus !== PRIVATE_INFO;
 
   // Students' home phone is always private. FacStaffs' home phone is private for private users
-  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(
-    (isStudent || keepPrivate) && Boolean(profile.HomePhone),
-  );
+  // Why isHomePhonePrivate always no/false?
+  // For some reason, showing the disclaimer text...
+  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(isStudent || keepPrivate);
 
   // Street address info is always private, and City/State/Country info is private for private users
   const isAddressPrivate =
@@ -473,11 +473,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   const disclaimer =
     !myProf &&
-    (isHomePhonePrivate ||
-      isAddressPrivate ||
-      isMobilePhonePrivate ||
-      isCampusLocationPrivate ||
-      isSpousePrivate) ? (
+    (isAddressPrivate || isMobilePhonePrivate || isCampusLocationPrivate || isSpousePrivate) ? (
       <Typography align="left" className={styles.disclaimer}>
         Private by request, visible only to faculty and staff
       </Typography>
@@ -507,6 +503,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   <Switch
                     onChange={handleChangeHomePhonePrivacy}
                     color="secondary"
+                    // saying isHomePhonePrivate is always returning 'no' - which means it is always public
                     checked={!isHomePhonePrivate}
                   />
                 }
