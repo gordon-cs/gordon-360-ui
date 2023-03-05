@@ -345,9 +345,29 @@ const MatchListing = ({ match, activityID }) => {
         to={`/recim/activity/${activityID}/match/${match.ID}`}
         className={styles.listing}
       >
-        <Grid container>
+        <Grid container direction="column" alignItems="center">
+          <Grid item container>
+            <Grid item xs={5}>
+              <Typography className={styles.listingTitle}>
+                {match.Team[0]?.Name ?? <i>TBD</i>}
+              </Typography>
+            </Grid>
+            <Grid item xs={2} textAlign="center">
+              {match.Scores ? <Typography>vs.</Typography> : <Typography>vs.</Typography>}
+            </Grid>
+            <Grid item xs={5} textAlign="right">
+              <Typography className={styles.listingTitle}>
+                {match.Team[1]?.Name ?? <i>TBD</i>}
+              </Typography>
+            </Grid>
+          </Grid>
           <Grid item>
-            {match.Team[0]?.Name ?? <i>TBD</i>} vs. {match.Team[1]?.Name ?? <i>TBD</i>}
+            <Typography className={styles.listingSubtitle}>{match.Surface}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography className={styles.listingSubtitle}>
+              {standardDate(match.Time, true)}
+            </Typography>
           </Grid>
         </Grid>
       </ListItemButton>
