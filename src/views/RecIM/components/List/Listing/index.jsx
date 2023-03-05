@@ -338,6 +338,45 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
 };
 
 const MatchListing = ({ match, activityID }) => {
+  if (!match) return null;
+  if (match.Team?.length === 2) {
+    return (
+      <ListItem key={match.ID} className={styles.listingWrapper}>
+        <ListItemButton
+          component={Link}
+          to={`/recim/activity/${activityID}/match/${match.ID}`}
+          className={styles.listing}
+        >
+          <Grid container direction="column" alignItems="center">
+            <Grid item container>
+              <Grid item xs={5}>
+                <Typography className={styles.listingTitle}>
+                  {match.Team[0]?.Name ?? <i>TBD</i>}
+                </Typography>
+              </Grid>
+              <Grid item xs={2} textAlign="center">
+                {match.Scores ? <Typography>vs.</Typography> : <Typography>vs.</Typography>}
+              </Grid>
+              <Grid item xs={5} textAlign="right">
+                <Typography className={styles.listingTitle}>
+                  {match.Team[1]?.Name ?? <i>TBD</i>}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Typography className={styles.listingSubtitle}>{match.Surface}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={styles.listingSubtitle}>
+                {standardDate(match.Time, true)}
+              </Typography>
+            </Grid>
+          </Grid>
+        </ListItemButton>
+      </ListItem>
+    );
+  }
+  // ladder matches (or any match with more/less than two teams)
   return (
     <ListItem key={match.ID} className={styles.listingWrapper}>
       <ListItemButton
@@ -345,29 +384,28 @@ const MatchListing = ({ match, activityID }) => {
         to={`/recim/activity/${activityID}/match/${match.ID}`}
         className={styles.listing}
       >
-        <Grid container direction="column" alignItems="center">
-          <Grid item container>
-            <Grid item xs={5}>
-              <Typography className={styles.listingTitle}>
-                {match.Team[0]?.Name ?? <i>TBD</i>}
-              </Typography>
+        <Grid container>
+          <Grid item container direction="column" xs={6}>
+            <Grid item>
+              <Typography className={styles.listingSubtitle}>{match.Surface}</Typography>
             </Grid>
-            <Grid item xs={2} textAlign="center">
-              {match.Scores ? <Typography>vs.</Typography> : <Typography>vs.</Typography>}
-            </Grid>
-            <Grid item xs={5} textAlign="right">
-              <Typography className={styles.listingTitle}>
-                {match.Team[1]?.Name ?? <i>TBD</i>}
+            <Grid item>
+              <Typography className={styles.listingSubtitle}>
+                {standardDate(match.Time, true)}
               </Typography>
             </Grid>
           </Grid>
-          <Grid item>
-            <Typography className={styles.listingSubtitle}>{match.Surface}</Typography>
-          </Grid>
-          <Grid item>
-            <Typography className={styles.listingSubtitle}>
-              {standardDate(match.Time, true)}
-            </Typography>
+          <Grid item container direction="column" xs={6}>
+            {match.Team.map((team) => (
+              <Grid item container>
+                <Grid item xs={10}>
+                  <Typography className={styles.listingTitle}>{team.Name}</Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  {match.Scores ? <Typography>vs.</Typography> : <Typography>vs.</Typography>}
+                </Grid>
+              </Grid>
+            ))}
           </Grid>
         </Grid>
       </ListItemButton>
