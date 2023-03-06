@@ -1,5 +1,4 @@
-import { AuthError } from '@azure/msal-browser';
-import { NotFoundError } from './error';
+import { AuthError, NotFoundError } from './error';
 import http from './http';
 
 /**
