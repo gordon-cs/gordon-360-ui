@@ -1,3 +1,4 @@
+import { AuthError } from '@azure/msal-browser';
 import { NotFoundError } from './error';
 import http from './http';
 
@@ -63,7 +64,9 @@ type EnrollmentCheckin = {
   Demographic;
 
 const getStatus = (): Promise<boolean> =>
-  http.get<boolean>(`checkIn/status`).catch((err) => err instanceof NotFoundError);
+  http
+    .get<boolean>(`checkIn/status`)
+    .catch((err) => err instanceof NotFoundError || err instanceof AuthError);
 
 const markCompleted = (): Promise<void> => http.put(`checkIn/status`);
 
