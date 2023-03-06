@@ -396,6 +396,7 @@ const MatchListing = ({ match, activityID }) => {
             </Grid>
           </Grid>
           <Grid item container direction="column" xs={6}>
+            {!match.Team?.length && <Typography>No teams yet placed in this match.</Typography>}
             {match.Team.map((team) => (
               <Grid item container>
                 <Grid item xs={10}>
