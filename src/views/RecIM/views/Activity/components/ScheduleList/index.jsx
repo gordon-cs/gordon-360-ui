@@ -11,6 +11,7 @@ import { DateTime } from 'luxon';
 import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/series';
 import { useState } from 'react';
 import styles from './../../Activity.module.css';
+import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 
 const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [anchorEl, setAnchorEl] = useState();
@@ -18,6 +19,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
   const [openDeleteDisclaimer, setOpenDeleteDisclaimer] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
+  const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   let startDate = DateTime.fromISO(series.StartDate);
   let endDate = DateTime.fromISO(series.EndDate);
 
@@ -28,8 +30,13 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
 
   // edit button
   const handleEdit = () => {
-    console.log(`edit series#${series.ID}, ${series.Name}`);
+    setOpenEditSeriesForm(true);
     handleClose();
+  };
+
+  const handleEditSeriesForm = (status) => {
+    setReload((prev) => !prev);
+    setOpenEditSeriesForm(false);
   };
 
   // autoschedule button
@@ -74,7 +81,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
     scheduleSeriesMatches(series.ID).then((res) => {
       console.log(res);
       setOpenAutoSchedulerDisclaimer(false);
-      setReload(!reload);
+      setReload((prev) => !prev);
     });
   };
 
@@ -205,6 +212,17 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
           {disclaimerContent}
         </ContentCard>
       </GordonDialogBox>
+      {openEditSeriesForm && (
+        <SeriesForm
+          closeWithSnackbar={(status) => {
+            handleEditSeriesForm(status);
+          }}
+          openSeriesForm={openEditSeriesForm}
+          setOpenSeriesForm={(bool) => setOpenEditSeriesForm(bool)}
+          activityID={series.ActivityID}
+          series={series}
+        />
+      )}
     </>
   );
 };

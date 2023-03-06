@@ -21,6 +21,7 @@ import membershipService from 'services/membership';
 import { stripDomain } from 'services/utils';
 import { gordonColors } from 'theme';
 import RequestsReceived from './components/RequestsReceived';
+import { ConflictError, NotFoundError } from 'services/error';
 
 const headerStyle = {
   backgroundColor: gordonColors.primary.blue,
@@ -74,14 +75,13 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
       if (error.Message === 'The Person is already part of the activity.') {
         createSnackbar(`${username} is already a member`, 'info');
       } else {
-        switch (error.name) {
-          case 'NotFoundError':
-            createSnackbar('Nobody with that username was found', 'error');
-            break;
-
-          default:
-            console.log(error);
-            break;
+        if (error instanceof ConflictError) {
+          createSnackbar(`${username} is already a member`, 'info');
+        } else if (error instanceof NotFoundError) {
+          createSnackbar('Nobody with that username was found', 'error');
+        } else {
+          createSnackbar('An error has occured', 'error');
+          console.log(error);
         }
       }
     }
@@ -146,7 +146,6 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
                 Participation
               </InputLabel>
               <Select
-                value={participationCode}
                 onChange={(event) => setParticipationCode(event.target.value)}
                 labelId="involvement-profile-add-member-select-participation"
               >
@@ -164,7 +163,6 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
               type="search"
               fullWidth
               onChange={(event) => setTitleComment(event.target.value)}
-              value={titleComment}
             />
           </Grid>
         </Grid>

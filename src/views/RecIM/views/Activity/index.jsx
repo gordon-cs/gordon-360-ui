@@ -13,7 +13,7 @@ import TeamForm from '../../components/Forms/TeamForm';
 import { getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
-import CreateSeriesForm from 'views/RecIM/components/Forms/CreateSeriesForm';
+import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
 import ScheduleList from './components/ScheduleList';
@@ -256,12 +256,12 @@ const Activity = () => {
               />
             )}
             {openCreateSeriesForm && (
-              <CreateSeriesForm
+              <SeriesForm
                 closeWithSnackbar={(status) => {
                   handleCreateSeriesForm(status);
                 }}
-                openCreateSeriesForm={openCreateSeriesForm}
-                setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+                openSeriesForm={openCreateSeriesForm}
+                setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
                 activityID={activity.ID}
                 existingActivitySeries={activity.Series}
               />
@@ -285,17 +285,6 @@ const Activity = () => {
                 openMatchForm={openMatchForm}
                 setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
                 activity={activity}
-              />
-            )}
-            {openCreateSeriesForm && (
-              <CreateSeriesForm
-                closeWithSnackbar={(status) => {
-                  handleCreateSeriesForm(status);
-                }}
-                openCreateSeriesForm={openCreateSeriesForm}
-                setOpenCreateSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-                activityID={activity.ID}
-                existingActivitySeries={activity.Series}
               />
             )}
           </Grid>
