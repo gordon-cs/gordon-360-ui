@@ -29,6 +29,7 @@ import Dropzone from 'react-dropzone';
 import newsService from 'services/news';
 import NewsList from './components/NewsList';
 import { userIsInAuthGroup } from 'services/auth';
+import { Opacity } from '@mui/icons-material';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -515,10 +516,11 @@ const StudentNews = () => {
                       viewMode={3}
                       aspectRatio={aspectRatio}
                       highlight={false}
-                      background={false}
+                      background={true}
                       zoom={onCropperZoom}
                       zoomable={false}
                       dragMode={'none'}
+                      checkCrossOrigin={false}
                     />
                   </div>
                 )}
