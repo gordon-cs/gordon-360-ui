@@ -348,7 +348,7 @@ const StudentNews = () => {
             <Tabs value={tabValue} onChange={handleSwitchTab} aria-label="basic tabs example">
               <Tab label="News" value="news" />
               <Tab label="My Pending News" value="my-pending-news" />
-              {isAdmin && <Tab label="All Pending Posts" value="all-pending-news" />}
+              {isAdmin && <Tab label="All Pending News" value="all-pending-news" />}
             </Tabs>
             <TabPanel value="news">
               <NewsList
