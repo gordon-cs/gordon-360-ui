@@ -241,7 +241,7 @@ const EditMatchStatsForm = ({
   return (
     <GordonDialogBox
       open={openEditMatchStatsForm}
-      title={`Edit ${match.Team.find((team) => team.TeamID === targetTeamID).Name}'s Stats`}
+      title={`Edit ${match.Team.find((team) => team.ID === targetTeamID).Name}'s Stats`}
       fullWidth
       maxWidth="sm"
       buttonClicked={() => setOpenConfirmWindow(true)}
