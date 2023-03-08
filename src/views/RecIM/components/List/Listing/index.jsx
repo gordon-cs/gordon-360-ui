@@ -29,6 +29,8 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 
+import { getMatchByID } from 'services/recim/match';
+
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
   const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
@@ -355,7 +357,18 @@ const MatchListing = ({ match, activityID }) => {
                 </Typography>
               </Grid>
               <Grid item xs={2} textAlign="center">
-                {match.Scores ? <Typography>vs.</Typography> : <Typography>vs.</Typography>}
+                {/* show scores only if match is in the present/past */}
+                {DateTime.now() > DateTime.fromISO(match.Time) ? (
+                  <Typography>
+                    {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
+                      ?.TeamScore ?? 'TBD'}{' '}
+                    :{' '}
+                    {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[1]?.ID)
+                      ?.TeamScore ?? 'TBD'}
+                  </Typography>
+                ) : (
+                  <Typography>vs.</Typography>
+                )}
               </Grid>
               <Grid item xs={5} textAlign="right">
                 <Typography className={styles.listingTitle}>
@@ -403,7 +416,15 @@ const MatchListing = ({ match, activityID }) => {
                   <Typography className={styles.listingTitle}>{team.Name}</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  {match.Scores ? <Typography>vs.</Typography> : <Typography>vs.</Typography>}
+                  {/* show scores only if match is in the present/past */}
+                  {DateTime.now() > DateTime.fromISO(match.Time) ? (
+                    <Typography>
+                      {match.Scores?.find((matchTeam) => matchTeam.TeamID === team.ID)?.TeamScore ??
+                        0}
+                    </Typography>
+                  ) : (
+                    <Typography>vs.</Typography>
+                  )}
                 </Grid>
               </Grid>
             ))}
