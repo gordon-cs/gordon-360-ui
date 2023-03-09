@@ -112,7 +112,7 @@ const ActivityForm = ({
         return sport.Name;
       }),
       error: errorStatus.sportID,
-      required: false,
+      required: true,
       helperText: '*Required',
     },
     {
