@@ -128,13 +128,13 @@ const ActivityListing = ({ activity, showActivityOptions }) => {
         </ListItemButton>
         {showActivityOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
-            <MenuItem dense onClick={console.log('edit')} divider>
+            <MenuItem dense onClick={() => console.log('edit')} divider>
               Edit
             </MenuItem>
-            <MenuItem dense onClick={console.log('create series')} divider>
+            <MenuItem dense onClick={() => console.log('create series')} divider>
               Create Series
             </MenuItem>
-            <MenuItem dense onClick={console.log('delete')} className={styles.rejectButton}>
+            <MenuItem dense onClick={() => console.log('delete')} className={styles.rejectButton}>
               Delete
             </MenuItem>
           </Menu>

@@ -18,7 +18,7 @@ const EditMatchStatsForm = ({
   const [errorStatus, setErrorStatus] = useState({
     Score: false,
     StatusID: false,
-    Sportsmanship: false,
+    SportsmanshipScore: false,
   });
   const [loading, setLoading] = useState(true);
   const [matchStatus, setMatchStatus] = useState([]);
@@ -44,7 +44,7 @@ const EditMatchStatsForm = ({
       label: 'Sportsmanship',
       name: 'SportsmanshipScore',
       type: 'number',
-      error: errorStatus.Sportsmanship,
+      error: errorStatus.SportsmanshipScore,
       helperText: "*Required & Can't be more than 5",
     },
     {
@@ -66,7 +66,7 @@ const EditMatchStatsForm = ({
     return {
       TeamID: targetTeamID,
       Score: `${targetTeamStats.TeamScore}`,
-      Sportsmanship: `${targetTeamStats.Sportsmanship}`,
+      SportsmanshipScore: `${targetTeamStats.SportsmanshipRating}`,
       StatusID:
         matchStatus.find((type) => type.Description === targetTeamStats.Status) == null
           ? ''

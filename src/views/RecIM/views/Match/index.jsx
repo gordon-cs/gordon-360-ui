@@ -102,10 +102,13 @@ const Match = () => {
             </LinkRouter>
             <Typography className={styles.subtitle}>
               {/* once this is added to the API, it will instantly work */}
-              {match?.Team[0]?.TeamRecord.Win ?? 0}W : {match?.Team[0]?.TeamRecord.Loss ?? 0}L
+              {match?.Team[0]?.TeamRecord.WinCount ?? 0}W :{' '}
+              {match?.Team[0]?.TeamRecord.LossCount ?? 0}L
             </Typography>
             {user?.IsAdmin && (
-              <i className={styles.subtitle}>Sportsmanship: {match?.Scores[0]?.Sportsmanship}</i>
+              <i className={styles.subtitle}>
+                Sportsmanship: {match?.Scores[0]?.SportsmanshipRating}
+              </i>
             )}
           </Grid>
           <Grid item container xs={4} sm={2} alignItems="center" direction="column">
@@ -137,10 +140,13 @@ const Match = () => {
               </Typography>
             </LinkRouter>
             <Typography className={styles.subtitle}>
-              {match?.Team[1]?.TeamRecord.Win ?? 0}W : {match?.Team[1]?.TeamRecord.Loss ?? 0}L
+              {match?.Team[1]?.TeamRecord.WinCount ?? 0}W :{' '}
+              {match?.Team[1]?.TeamRecord.LossCount ?? 0}L
             </Typography>
             {user?.IsAdmin && (
-              <i className={styles.subtitle}>Sportsmanship: {match?.Scores[1]?.Sportsmanship}</i>
+              <i className={styles.subtitle}>
+                Sportsmanship: {match?.Scores[1]?.SportsmanshipRating}
+              </i>
             )}
           </Grid>
           <Grid item xs={2}>
