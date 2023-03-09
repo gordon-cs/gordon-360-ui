@@ -27,6 +27,115 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 
+/* Old activitylisting
+const ActivityListing = ({ activity }) => {
+  const [activityType, setActivityType] = useState();
+  const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
+  useEffect(() => {
+    const loadActivityType = async () => {
+      let activityTypes = await getActivityTypes();
+      setActivityType(
+        activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
+      );
+    };
+    const calculateCurrentCapacity = async () => {
+      let fullActivity = await getActivityByID(activity.ID);
+      setCurrentCapacity(fullActivity.Team?.length);
+    };
+    loadActivityType();
+    calculateCurrentCapacity();
+  }, [activity]);
+
+  let activeSeries = activity.Series.find(
+    (series) => DateTime.fromISO(series.StartDate) < DateTime.now(),
+  );
+  let activeSeriesMessage =
+    activeSeries && activeSeries.Name + ' until ' + standardDate(activeSeries.EndDate);
+
+  const activityTypeIconPair = [
+    {
+      type: 'League',
+      icon: <SportsFootballIcon />,
+    },
+    {
+      type: 'Tournament',
+      icon: <SportsCricketIcon />,
+    },
+    {
+      type: 'One Off',
+      icon: <LocalActivityIcon />,
+    },
+  ];
+  if (!activity) return null;
+  return (
+    <ListItem key={activity.ID} className={styles.listingWrapper}>
+      <ListItemButton
+        component={Link}
+        to={`/recim/activity/${activity.ID}`}
+        className={styles.listing}
+      >
+        <Grid container columnSpacing={2} alignItems="center">
+          <Grid item container direction="column" xs={12} sm={4} spacing={1}>
+            <Grid item>
+              <Typography className={styles.listingTitle}>{activity.Name}</Typography>
+            </Grid>
+            <Grid item>
+              <Chip
+                icon={activityTypeIconPair.find((type) => type.type === activityType)?.icon}
+                label={activityType}
+                color={'success'}
+                className={
+                  styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]
+                }
+                size="small"
+              ></Chip>
+            </Grid>
+          </Grid>
+          <Grid item container xs={12} sm={7} direction="column" spacing={1}>
+            {activity.StartDate && (
+              <Grid item>
+                <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
+                  {activity.EndDate
+                    ? formatDateTimeRange(activity.StartDate, activity.EndDate)
+                    : standardDate(activity.StartDate) + ` - TBD`}
+                </Typography>
+              </Grid>
+            )}
+            <Grid item container columnSpacing={2}>
+              <Grid item>
+                <Chip
+                  icon={<EventAvailableIcon />}
+                  label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
+                  color={activity.RegistrationOpen ? 'success' : 'info'}
+                  size="small"
+                ></Chip>
+              </Grid>
+              <Grid item>
+                <Typography>
+                  {activity.RegistrationOpen
+                    ? 'Registration closes ' + standardDate(activity.RegistrationEnd)
+                    : activeSeriesMessage}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item sm={1}>
+            <Typography variant="subtitle">
+              {currentCapacity}
+              <Typography variant="span" sx={{ p: 0.2 }}>
+                /
+              </Typography>
+              {activity.MaxCapacity}
+            </Typography>
+          </Grid>
+        </Grid>
+      </ListItemButton>
+    </ListItem>
+  );
+};
+*/
+
+//proposed new activitylisting
 const ActivityListing = ({ activity, showActivityOptions }) => {
   const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
