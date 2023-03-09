@@ -37,9 +37,7 @@ const ActivityListing = ({ activity }) => {
   useEffect(() => {
     const loadActivityType = async () => {
       let activityTypes = await getActivityTypes();
-      setActivityType(
-        activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
-      );
+      setActivityType(activity.Type);
     };
     const calculateCurrentCapacity = async () => {
       let fullActivity = await getActivityByID(activity.ID);
