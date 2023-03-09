@@ -29,8 +29,6 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 
-import { getMatchByID } from 'services/recim/match';
-
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
   const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
@@ -39,12 +37,7 @@ const ActivityListing = ({ activity }) => {
       let activityTypes = await getActivityTypes();
       setActivityType(activity.Type);
     };
-    const calculateCurrentCapacity = async () => {
-      let fullActivity = await getActivityByID(activity.ID);
-      setCurrentCapacity(fullActivity.Team?.length);
-    };
     loadActivityType();
-    calculateCurrentCapacity();
   }, [activity]);
 
   let activeSeries = activity.Series.find(
@@ -122,7 +115,7 @@ const ActivityListing = ({ activity }) => {
           </Grid>
           <Grid item sm={1}>
             <Typography variant="subtitle">
-              {currentCapacity}
+              Depricated
               <Typography variant="span" sx={{ p: 0.2 }}>
                 /
               </Typography>
@@ -339,6 +332,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
 
 const MatchListing = ({ match, activityID }) => {
   if (!match) return null;
+  console.log(match);
   if (match.Team?.length === 2) {
     return (
       <ListItem key={match.ID} className={styles.listingWrapper}>
