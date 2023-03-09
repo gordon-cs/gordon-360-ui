@@ -45,16 +45,16 @@ export type TeamMatchHistory = {
   OpposingTeamScore: number;
   Status: string;
   MatchStatusID: number;
-  Time: string;
-  Sportsmanship: number;
+  MatchStartTime: string;
+  SportsmanshipRating: number;
 };
 
 export type TeamRecord = {
   ID: number;
   Name: string;
-  Win: number;
-  Loss: number;
-  Tie: number;
+  WinCount: number;
+  LossCount: number;
+  TieCount: number;
 };
 
 type UploadTeam = {

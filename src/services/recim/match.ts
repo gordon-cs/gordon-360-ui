@@ -8,7 +8,7 @@ export type Match = {
   ID: number;
   Scores: TeamMatchHistory[];
   Activity: Activity; // This will only be used for activity ID and name
-  Time: string;
+  StartTime: string;
   Surface: string;
   Status: string;
   SeriesID: number;
@@ -18,7 +18,7 @@ export type Match = {
 
 type CreatedMatch = {
   ID: number;
-  Time: string;
+  StartTime: string;
   SurfaceID: number;
   StatusID: number;
   SeriesID: number;
@@ -37,18 +37,18 @@ type CreatedMatchStats = {
   MatchID: number;
   StatusID: number;
   Score: number;
-  Sportsmanship: number;
+  SportsmanshipScore: number;
 };
 
 type PatchMatchStats = {
   TeamID: number;
   StatusID?: number;
   Score?: number;
-  Sportsmanship?: number;
+  SportsmanshipScore?: number;
 };
 
 type PatchMatch = {
-  Time: string;
+  StartTime: string;
   SurfaceID: number;
   StatusID: number;
   TeamIDs?: Array<number>;
@@ -84,7 +84,8 @@ const updateMatchStats = (
 const updateMatch = (ID: number, updatedMatch: PatchMatch): Promise<CreatedMatch> =>
   http.patch(`recim/matches/${ID}`, updatedMatch);
 
-const deleteMatchCascade = async (matchID: number) => http.del(`recim/matches/${matchID}`);
+const deleteMatchCascade = async (matchID: number): Promise<CreatedMatch> =>
+  http.del(`recim/matches/${matchID}`);
 
 export {
   createMatch,
