@@ -17,28 +17,23 @@ import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { DateTime } from 'luxon';
-import GordonLoader from '../../../../../components/Loader';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
-import { getActivityTypes, getActivityByID } from 'services/recim/activity';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 
-const ActivityListing = ({ activity }) => {
-  const [activityType, setActivityType] = useState();
-  const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
-  useEffect(() => {
-    const loadActivityType = async () => {
-      let activityTypes = await getActivityTypes();
-      setActivityType(activity.Type);
-    };
-    loadActivityType();
-  }, [activity]);
+const ActivityListing = ({ activity, showActivityOptions }) => {
+  const [anchorEl, setAnchorEl] = useState();
+  const moreOptionsOpen = Boolean(anchorEl);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   let activeSeries = activity.Series.find(
     (series) => DateTime.fromISO(series.StartDate) < DateTime.now(),
@@ -60,70 +55,91 @@ const ActivityListing = ({ activity }) => {
       icon: <LocalActivityIcon />,
     },
   ];
+
+  const handleActivityOptions = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   if (!activity) return null;
   return (
     <ListItem key={activity.ID} className={styles.listingWrapper}>
-      <ListItemButton
-        component={Link}
-        to={`/recim/activity/${activity.ID}`}
-        className={styles.listing}
+      <ListItem
+        secondaryAction={
+          showActivityOptions && (
+            <IconButton edge="end" onClick={handleActivityOptions}>
+              <MoreHorizIcon />
+            </IconButton>
+          )
+        }
+        disablePadding
       >
-        <Grid container columnSpacing={2} alignItems="center">
-          <Grid item container direction="column" xs={12} sm={4} spacing={1}>
-            <Grid item>
-              <Typography className={styles.listingTitle}>{activity.Name}</Typography>
-            </Grid>
-            <Grid item>
-              <Chip
-                icon={activityTypeIconPair.find((type) => type.type === activityType)?.icon}
-                label={activityType}
-                color={'success'}
-                className={
-                  styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]
-                }
-                size="small"
-              ></Chip>
-            </Grid>
-          </Grid>
-          <Grid item container xs={12} sm={7} direction="column" spacing={1}>
-            {activity.StartDate && (
+        <ListItemButton
+          component={Link}
+          to={`/recim/activity/${activity.ID}`}
+          className={styles.listing}
+        >
+          <Grid container columnSpacing={2} alignItems="center">
+            <Grid item container direction="column" xs={12} sm={4} spacing={1}>
               <Grid item>
-                <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-                  {activity.EndDate
-                    ? formatDateTimeRange(activity.StartDate, activity.EndDate)
-                    : standardDate(activity.StartDate) + ` - TBD`}
-                </Typography>
+                <Typography className={styles.listingTitle}>{activity.Name}</Typography>
               </Grid>
-            )}
-            <Grid item container columnSpacing={2}>
               <Grid item>
                 <Chip
-                  icon={<EventAvailableIcon />}
-                  label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
-                  color={activity.RegistrationOpen ? 'success' : 'info'}
+                  icon={activityTypeIconPair.find((type) => type.type === activity.Type)?.icon}
+                  label={activity.Type}
+                  color={'success'}
+                  className={
+                    styles['activityType_' + activity?.Type?.toLowerCase().replace(/\s+/g, '')]
+                  }
                   size="small"
                 ></Chip>
               </Grid>
-              <Grid item>
-                <Typography>
-                  {activity.RegistrationOpen
-                    ? 'Registration closes ' + standardDate(activity.RegistrationEnd)
-                    : activeSeriesMessage}
-                </Typography>
+            </Grid>
+            <Grid item container xs={12} sm={7} direction="column" spacing={1}>
+              {activity.StartDate && (
+                <Grid item>
+                  <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
+                    {activity.EndDate
+                      ? formatDateTimeRange(activity.StartDate, activity.EndDate)
+                      : standardDate(activity.StartDate) + ` - TBD`}
+                  </Typography>
+                </Grid>
+              )}
+              <Grid item container columnSpacing={2}>
+                <Grid item>
+                  <Chip
+                    icon={<EventAvailableIcon />}
+                    label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
+                    color={activity.RegistrationOpen ? 'success' : 'info'}
+                    size="small"
+                  ></Chip>
+                </Grid>
+                <Grid item>
+                  <Typography>
+                    {activity.RegistrationOpen
+                      ? 'Registration closes ' + standardDate(activity.RegistrationEnd)
+                      : activeSeriesMessage}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
+            <Grid item sm={1}></Grid>
           </Grid>
-          <Grid item sm={1}>
-            <Typography variant="subtitle">
-              Depricated
-              <Typography variant="span" sx={{ p: 0.2 }}>
-                /
-              </Typography>
-              {activity.MaxCapacity}
-            </Typography>
-          </Grid>
-        </Grid>
-      </ListItemButton>
+        </ListItemButton>
+        {showActivityOptions && (
+          <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
+            <MenuItem dense onClick={console.log('edit')} divider>
+              Edit
+            </MenuItem>
+            <MenuItem dense onClick={console.log('create series')} divider>
+              Create Series
+            </MenuItem>
+            <MenuItem dense onClick={console.log('delete')} className={styles.rejectButton}>
+              Delete
+            </MenuItem>
+          </Menu>
+        )}
+      </ListItem>
     </ListItem>
   );
 };
@@ -320,7 +336,7 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
             <MenuItem dense onClick={handleMakeCoCaptain} divider>
               Make co-captain
             </MenuItem>
-            <MenuItem dense onClick={handleRemoveFromTeam} className={styles.redButton}>
+            <MenuItem dense onClick={handleRemoveFromTeam} className={styles.rejectButton}>
               Remove from team
             </MenuItem>
           </Menu>
@@ -332,7 +348,6 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
 
 const MatchListing = ({ match, activityID }) => {
   if (!match) return null;
-  console.log(match);
   if (match.Team?.length === 2) {
     return (
       <ListItem key={match.ID} className={styles.listingWrapper}>

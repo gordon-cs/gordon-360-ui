@@ -2,10 +2,14 @@ import { List, Typography } from '@mui/material';
 import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
 import { useNavigate } from 'react-router-dom';
 
-const ActivityList = ({ activities }) => {
+const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length) return <Typography>No activities to show.</Typography>;
   let content = activities.map((activity) => (
-    <ActivityListing key={activity.ID} activity={activity} />
+    <ActivityListing
+      key={activity.ID}
+      activity={activity}
+      showActivityOptions={showActivityOptions}
+    />
   ));
   return <List dense>{content}</List>;
 };
@@ -29,7 +33,7 @@ const ParticipantList = ({
         minimal={minimal}
         callbackFunction={callbackFunction}
         showParticipantOptions={
-          showParticipantOptions && !participant.Role === 'Team-captain/Creator'
+          showParticipantOptions && participant.Role !== 'Team-captain/Creator'
         }
       />
     );
@@ -38,9 +42,9 @@ const ParticipantList = ({
 };
 
 const MatchList = ({ matches, activityID }) => {
-  if (!matches?.length) return <Typography>No matches to show.</Typography>;
+  if (!matches?.length || !matches[0]) return <Typography>No matches to show.</Typography>;
   let content = matches.map((match) => (
-    <MatchListing key={match.ID} match={match} activityID={activityID} />
+    <MatchListing key={match?.ID} match={match} activityID={activityID} />
   ));
 
   return <List dense>{content}</List>;
