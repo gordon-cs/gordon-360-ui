@@ -42,7 +42,7 @@ const EditMatchStatsForm = ({
     },
     {
       label: 'Sportsmanship',
-      name: 'Sportsmanship',
+      name: 'SportsmanshipScore',
       type: 'number',
       error: errorStatus.Sportsmanship,
       helperText: "*Required & Can't be more than 5",

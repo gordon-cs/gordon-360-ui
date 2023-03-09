@@ -169,7 +169,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
           </Grid>
           <Grid item xs={8} sm={4}>
             <Typography className={styles.listingSubtitle}>
-              Sportsmanship: {targetTeamStats.Sportsmanship}
+              Sportsmanship: {targetTeamStats.SportsmanshipRating}
             </Typography>
           </Grid>
           <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
@@ -358,7 +358,7 @@ const MatchListing = ({ match, activityID }) => {
               </Grid>
               <Grid item xs={2} textAlign="center">
                 {/* show scores only if match is in the present/past */}
-                {DateTime.now() > DateTime.fromISO(match.Time) ? (
+                {DateTime.now() > DateTime.fromISO(match.StartTime) ? (
                   <Typography>
                     {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
                       ?.TeamScore ?? 'TBD'}{' '}
@@ -381,7 +381,7 @@ const MatchListing = ({ match, activityID }) => {
             </Grid>
             <Grid item>
               <Typography className={styles.listingSubtitle}>
-                {standardDate(match.Time, true)}
+                {standardDate(match.StartTime, true)}
               </Typography>
             </Grid>
           </Grid>
@@ -404,7 +404,7 @@ const MatchListing = ({ match, activityID }) => {
             </Grid>
             <Grid item>
               <Typography className={styles.listingSubtitle}>
-                {standardDate(match.Time, true)}
+                {standardDate(match.StartTime, true)}
               </Typography>
             </Grid>
           </Grid>
@@ -417,7 +417,7 @@ const MatchListing = ({ match, activityID }) => {
                 </Grid>
                 <Grid item xs={2}>
                   {/* show scores only if match is in the present/past */}
-                  {DateTime.now() > DateTime.fromISO(match.Time) ? (
+                  {DateTime.now() > DateTime.fromISO(match.StartTime) ? (
                     <Typography>
                       {match.Scores?.find((matchTeam) => matchTeam.TeamID === team.ID)?.TeamScore ??
                         0}

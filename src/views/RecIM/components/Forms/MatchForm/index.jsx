@@ -88,7 +88,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     createMatchFields.push(
       {
         label: 'Start Time',
-        name: 'Time',
+        name: 'StartTime',
         type: 'datetime',
         error: errorStatus.StartTime,
         helperText: '*Required',
@@ -132,7 +132,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         teamIDs.push(match.Activity.Team.find((_team) => team.ID === _team.ID).Name),
       );
       return {
-        StartTime: match.Time,
+        StartTime: match.StartTime,
         StatusID:
           matchStatus.find((type) => type.Description === match.Status) == null
             ? ''

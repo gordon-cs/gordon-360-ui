@@ -19,6 +19,7 @@ type BaseActivity = {
 export type Activity = BaseActivity & {
   ID: number;
   RegistrationOpen: boolean;
+  Status: string;
   Type: string;
   Sport: Sport;
   Logo: string;
@@ -75,6 +76,7 @@ const editActivity = async (
 
 export {
   createActivity,
+  deleteActivity,
   getActivityByID,
   getActivityStatusTypes,
   getActivities,

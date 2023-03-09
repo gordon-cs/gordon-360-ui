@@ -83,7 +83,7 @@ const Match = () => {
         <Grid container spacing={4}>
           <Grid item xs={6} textAlign="right">
             <Typography className={styles.subtitle}>
-              {standardDate(DateTime.fromISO(match?.Time), true)}
+              {standardDate(DateTime.fromISO(match?.StartTime), true)}
             </Typography>
           </Grid>
           <Grid item xs={6} textAlign="left">
