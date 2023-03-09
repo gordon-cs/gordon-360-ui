@@ -29,5 +29,5 @@
   position: sticky;
   top: -1rem;
   margin-bottom: 1rem;
-  z-index: 0; // this component defaults to a higher z-index that overlays quick search
+  z-index: 1; // this component defaults to a higher z-index that overlays quick search
 }

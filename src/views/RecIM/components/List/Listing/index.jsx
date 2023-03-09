@@ -29,6 +29,8 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 
+import { getMatchByID } from 'services/recim/match';
+
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
   const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
@@ -338,6 +340,56 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
 };
 
 const MatchListing = ({ match, activityID }) => {
+  if (!match) return null;
+  if (match.Team?.length === 2) {
+    return (
+      <ListItem key={match.ID} className={styles.listingWrapper}>
+        <ListItemButton
+          component={Link}
+          to={`/recim/activity/${activityID}/match/${match.ID}`}
+          className={styles.listing}
+        >
+          <Grid container direction="column" alignItems="center">
+            <Grid item container>
+              <Grid item xs={5}>
+                <Typography className={styles.listingTitle}>
+                  {match.Team[0]?.Name ?? <i>TBD</i>}
+                </Typography>
+              </Grid>
+              <Grid item xs={2} textAlign="center">
+                {/* show scores only if match is in the present/past */}
+                {DateTime.now() > DateTime.fromISO(match.Time) ? (
+                  <Typography>
+                    {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
+                      ?.TeamScore ?? 'TBD'}{' '}
+                    :{' '}
+                    {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[1]?.ID)
+                      ?.TeamScore ?? 'TBD'}
+                  </Typography>
+                ) : (
+                  <Typography>vs.</Typography>
+                )}
+              </Grid>
+              <Grid item xs={5} textAlign="right">
+                <Typography className={styles.listingTitle}>
+                  {match.Team[1]?.Name ?? <i>TBD</i>}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Typography className={styles.listingSubtitle}>{match.Surface}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={styles.listingSubtitle}>
+                {standardDate(match.Time, true)}
+              </Typography>
+            </Grid>
+          </Grid>
+        </ListItemButton>
+      </ListItem>
+    );
+  }
+  // ladder matches (or any match with more/less than two teams)
   return (
     <ListItem key={match.ID} className={styles.listingWrapper}>
       <ListItemButton
@@ -346,8 +398,36 @@ const MatchListing = ({ match, activityID }) => {
         className={styles.listing}
       >
         <Grid container>
-          <Grid item>
-            {match.Team[0]?.Name ?? <i>TBD</i>} vs. {match.Team[1]?.Name ?? <i>TBD</i>}
+          <Grid item container direction="column" xs={6}>
+            <Grid item>
+              <Typography className={styles.listingSubtitle}>{match.Surface}</Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={styles.listingSubtitle}>
+                {standardDate(match.Time, true)}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item container direction="column" xs={6}>
+            {!match.Team?.length && <Typography>No teams yet placed in this match.</Typography>}
+            {match.Team.map((team) => (
+              <Grid item container>
+                <Grid item xs={10}>
+                  <Typography className={styles.listingTitle}>{team.Name}</Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  {/* show scores only if match is in the present/past */}
+                  {DateTime.now() > DateTime.fromISO(match.Time) ? (
+                    <Typography>
+                      {match.Scores?.find((matchTeam) => matchTeam.TeamID === team.ID)?.TeamScore ??
+                        0}
+                    </Typography>
+                  ) : (
+                    <Typography>vs.</Typography>
+                  )}
+                </Grid>
+              </Grid>
+            ))}
           </Grid>
         </Grid>
       </ListItemButton>
