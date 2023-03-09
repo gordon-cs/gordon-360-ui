@@ -1,14 +1,14 @@
-import { isValid, parseISO, format } from 'date-fns';
+import { isValid, format } from 'date-fns';
 
 const standardDate = (date, includeTime) => {
-  if (!isValid(date)) date = parseISO(date);
+  if (!isValid(date)) date = Date.parse(date);
   let formattedDate = includeTime ? format(date, 'MMM d h:mmaaa') : format(date, 'MMM d');
   return formattedDate;
 };
 
 const formatDateTimeRange = (startDateTime, endDateTime) => {
-  if (!isValid(startDateTime)) startDateTime = parseISO(startDateTime);
-  if (!isValid(endDateTime)) endDateTime = parseISO(endDateTime);
+  if (!isValid(startDateTime)) startDateTime = new Date(Date.parse(startDateTime));
+  if (!isValid(endDateTime)) endDateTime = new Date(Date.parse(endDateTime));
 
   // Jan 1 3:00pm - 6:00pm
   let isOneDay = format(startDateTime, 'MM dd yyyy') === format(endDateTime, 'MM dd yyyy');
@@ -17,7 +17,7 @@ const formatDateTimeRange = (startDateTime, endDateTime) => {
     return `${standardDate(startDateTime, true).replace(':00', '')} - ${endTime}`;
   }
   // Jan 1 3:00pm - Jan 31 3:00pm
-  let isOneYear = format(startDateTime, 'yyyy') === format(endDateTime, 'yyyy');
+  let isOneYear = startDateTime.getFullYear() === endDateTime.getFullYear();
   if (isOneYear) {
     return `${standardDate(startDateTime)} - ${standardDate(endDateTime)}`;
   }

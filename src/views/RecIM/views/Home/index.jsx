@@ -14,7 +14,7 @@ import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from './../../recim_logo.png';
-import { isFuture, parseISO } from 'date-fns';
+import { isFuture } from 'date-fns';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -88,7 +88,7 @@ const Home = () => {
     let open = [];
     let ongoing = [];
     activities.forEach((activity) => {
-      if (activity.RegistrationOpen || isFuture(parseISO(activity.RegistrationStart))) {
+      if (activity.RegistrationOpen || isFuture(Date.parse(activity.RegistrationStart))) {
         open.push(activity);
       } else {
         ongoing.push(activity);

@@ -27,7 +27,7 @@ import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
-import { parseISO, isPast } from 'date-fns';
+import { isPast } from 'date-fns';
 
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
@@ -47,7 +47,7 @@ const ActivityListing = ({ activity }) => {
     calculateCurrentCapacity();
   }, [activity]);
 
-  let activeSeries = activity.Series.find((series) => isPast(parseISO(series.StartDate)));
+  let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
   let activeSeriesMessage =
     activeSeries && activeSeries.Name + ' until ' + standardDate(activeSeries.EndDate);
 
@@ -354,7 +354,7 @@ const MatchListing = ({ match, activityID }) => {
               </Grid>
               <Grid item xs={2} textAlign="center">
                 {/* show scores only if match is in the present/past */}
-                {isPast(parseISO(match.Time)) ? (
+                {isPast(Date.parse(match.Time)) ? (
                   <Typography>
                     {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
                       ?.TeamScore ?? 'TBD'}{' '}
@@ -413,7 +413,7 @@ const MatchListing = ({ match, activityID }) => {
                 </Grid>
                 <Grid item xs={2}>
                   {/* show scores only if match is in the present/past */}
-                  {isPast(parseISO(match.Time)) ? (
+                  {isPast(Date.parse(match.Time)) ? (
                     <Typography>
                       {match.Scores?.find((matchTeam) => matchTeam.TeamID === team.ID)?.TeamScore ??
                         0}

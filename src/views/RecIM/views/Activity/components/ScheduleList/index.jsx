@@ -7,7 +7,7 @@ import UpdateIcon from '@mui/icons-material/Update';
 import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { standardDate } from 'views/RecIM/components/Helpers';
-import { format, parseISO, isPast, isFuture } from 'date-fns';
+import { format, isPast, isFuture } from 'date-fns';
 import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/series';
 import { useState } from 'react';
 import styles from './../../Activity.module.css';
@@ -119,10 +119,10 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
 
   const status = () => {
     // future series
-    if (isFuture(parseISO(series.StartDate)))
+    if (isFuture(Date.parse(series.StartDate)))
       return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
     // past series
-    else if (isPast(parseISO(series.EndDate)))
+    else if (isPast(Date.parse(series.EndDate)))
       return <Chip icon={<RestoreIcon />} label="completed" color="success" size="small"></Chip>;
     // current series
     return (
