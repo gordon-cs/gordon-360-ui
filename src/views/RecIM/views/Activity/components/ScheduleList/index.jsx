@@ -7,7 +7,7 @@ import UpdateIcon from '@mui/icons-material/Update';
 import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { standardDate } from 'views/RecIM/components/Helpers';
-import { DateTime } from 'luxon';
+import { format, parseISO, isPast, isFuture } from 'date-fns';
 import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/series';
 import { useState } from 'react';
 import styles from './../../Activity.module.css';
@@ -20,8 +20,6 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [openDeleteDisclaimer, setOpenDeleteDisclaimer] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
-  let startDate = DateTime.fromISO(series.StartDate);
-  let endDate = DateTime.fromISO(series.EndDate);
 
   // default closure
   const handleClose = () => {
@@ -68,8 +66,8 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
         <Typography variant="body1" paragraph>
           Each match has an estimated length of {series.Schedule.EstMatchTime} minutes, with a 15
           minutes buffer in between each match. Matches will be scheduled to start on {''}
-          {standardDate(startDate, false)}, or the earliest available day, at{' '}
-          {DateTime.fromISO(series.Schedule.StartTime).toLocaleString(DateTime.TIME_SIMPLE)}.{' '}
+          {standardDate(series.StartDate, false)}, or the earliest available day, at{' '}
+          {format(series.Schedule.StartTime, 'h:mmaaa')}.{' '}
         </Typography>
       </Typography>,
     );
@@ -120,12 +118,11 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   };
 
   const status = () => {
-    let now = DateTime.fromMillis(Date.now());
     // future series
-    if (now < startDate)
+    if (isFuture(parseISO(series.StartDate)))
       return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
     // past series
-    else if (now > endDate)
+    else if (isPast(parseISO(series.EndDate)))
       return <Chip icon={<RestoreIcon />} label="completed" color="success" size="small"></Chip>;
     // current series
     return (
@@ -148,7 +145,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
         </Grid>
         <Grid item xs={6} sm={3}>
           <Typography className={styles.seriesDateText}>
-            {standardDate(startDate, false)} - {standardDate(endDate, false)}
+            {standardDate(series.StartDate, false)} - {standardDate(series.EndDate, false)}
           </Typography>
         </Grid>
         <Grid container item xs={6} sm={3} justifyContent="center">
