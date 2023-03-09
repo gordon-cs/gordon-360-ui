@@ -114,6 +114,10 @@ const respondToTeamInvite = async (
   response: string,
 ): Promise<CreatedTeamParticipant> => http.patch(`recim/Teams/${teamID}/invite/status`, response);
 
+//temporary solution, may need a cleaner route implementation or have attendance count return in team
+const getParticipantAttendanceCountForTeam = (teamID: number, username: string): Promise<number> =>
+  http.get(`recim/Teams/${teamID}/attendance?username=${username}`);
+
 export {
   getTeams,
   createTeam,
@@ -126,4 +130,5 @@ export {
   editTeam,
   getTeamInvites,
   respondToTeamInvite,
+  getParticipantAttendanceCountForTeam,
 };

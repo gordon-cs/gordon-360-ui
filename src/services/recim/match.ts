@@ -54,18 +54,38 @@ type PatchMatch = {
   TeamIDs?: Array<number>;
 };
 
-type CreatedAttendance = {
+type MatchAttendance = {
+  TeamID: number;
+  Attendance: Attendance;
+};
+
+type UploadMatchAttendance = {
+  TeamID: number;
+  Attendance: UploadAttendance[];
+};
+
+type UploadAttendance = {
+  Username: string;
+};
+
+type Attendance = {
   ID: number;
   MatchID: number;
-  ParticipantUsername: string;
+  Username: string;
+  TeamID: number;
 };
 
 //Match Routes
 const createMatch = (newMatch: UploadMatch): Promise<CreatedMatch> =>
   http.post('recim/matches', newMatch);
 
-const createMatchAttendance = (username: string, matchID: number): Promise<CreatedAttendance> =>
-  http.post(`recim/matches/${matchID}/attendance`, username);
+const createMatchAttendance = (
+  attendance: UploadMatchAttendance,
+  matchID: number,
+): Promise<Attendance[]> => http.put(`recim/matches/${matchID}/attendance`, attendance);
+
+const getMatchAttendance = (matchID: number): Promise<MatchAttendance> =>
+  http.get(`recim/matches/${matchID}/attendance`);
 
 const getMatchByID = (ID: number): Promise<Match> => http.get(`recim/matches/${ID}`);
 
@@ -96,5 +116,6 @@ export {
   updateMatchStats,
   updateMatch,
   createMatchAttendance,
+  getMatchAttendance,
   deleteMatchCascade,
 };
