@@ -6,14 +6,14 @@ import { Lookup } from './recim';
 
 type BaseActivity = {
   Name: string;
-  StartDate: string;
-  EndDate: string;
+  StartDate?: string;
+  EndDate?: string;
   RegistrationStart: string;
   RegistrationEnd: string;
-  MinCapacity: number;
-  MaxCapacity: number;
+  MinCapacity?: number;
+  MaxCapacity?: number;
   SoloRegistration: boolean;
-  SeriesScheduleID: number;
+  SeriesScheduleID?: number;
 };
 
 export type Activity = BaseActivity & {

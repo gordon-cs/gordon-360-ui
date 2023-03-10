@@ -274,9 +274,6 @@ const ActivityForm = ({
   const handleConfirm = () => {
     setSaving(true);
     let activityRequest = { ...currentInfo, ...newInfo };
-    // solution while not handling activity max capacity
-    activityRequest.maxCapacity =
-      activityRequest.maxCapacity === '' ? 0 : activityRequest.maxCapacity;
 
     activityRequest.sportID = sports.find((sport) => sport.Name === activityRequest.sportID).ID;
     activityRequest.typeID = activityTypes.find(
