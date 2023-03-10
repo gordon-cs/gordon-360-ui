@@ -14,6 +14,7 @@ const ParticipantList = ({
   participants,
   minimal,
   showParticipantOptions,
+  withAttendance,
   showInactive,
   callbackFunction,
 }) => {
@@ -27,6 +28,7 @@ const ParticipantList = ({
         key={participant.username}
         participant={participant}
         minimal={minimal}
+        withAttendance={withAttendance}
         callbackFunction={callbackFunction}
         showParticipantOptions={
           showParticipantOptions && !participant.Role === 'Team-captain/Creator'

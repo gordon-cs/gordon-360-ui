@@ -11,6 +11,7 @@ import {
   Menu,
   MenuItem,
   Button,
+  Switch,
 } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
@@ -234,8 +235,13 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
   );
 };
 
-// We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
-const ParticipantListing = ({ participant, minimal, callbackFunction, showParticipantOptions }) => {
+const ParticipantListing = ({
+  participant,
+  minimal,
+  callbackFunction,
+  showParticipantOptions,
+  withAttendance,
+}) => {
   const { teamID } = useParams();
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState();
@@ -296,17 +302,21 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     <ListItem key={participant.Username} className={styles.listingWrapper}>
       <ListItem
         secondaryAction={
-          minimal ? (
-            <IconButton edge="end" onClick={() => callbackFunction(participant.Username)}>
-              <ClearIcon />
-            </IconButton>
-          ) : (
-            showParticipantOptions && (
+          <>
+            {minimal && (
+              <IconButton edge="end" onClick={() => callbackFunction(participant.Username)}>
+                <ClearIcon />
+              </IconButton>
+            )}
+            {showParticipantOptions && (
               <IconButton edge="end" onClick={handleParticipantOptions}>
                 <MoreHorizIcon />
               </IconButton>
-            )
-          )
+            )}
+            {withAttendance && (
+              <Switch color="secondary" inputProps={{ 'aria-label': 'attendance toggle' }} />
+            )}
+          </>
         }
         disablePadding
       >
