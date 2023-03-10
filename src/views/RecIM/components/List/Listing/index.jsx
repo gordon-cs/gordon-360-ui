@@ -16,7 +16,6 @@ import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
-import { DateTime } from 'luxon';
 import GordonLoader from '../../../../../components/Loader';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -28,8 +27,7 @@ import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
-
-import { getMatchByID } from 'services/recim/match';
+import { isPast } from 'date-fns';
 
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
@@ -49,9 +47,7 @@ const ActivityListing = ({ activity }) => {
     calculateCurrentCapacity();
   }, [activity]);
 
-  let activeSeries = activity.Series.find(
-    (series) => DateTime.fromISO(series.StartDate) < DateTime.now(),
-  );
+  let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
   let activeSeriesMessage =
     activeSeries && activeSeries.Name + ' until ' + standardDate(activeSeries.EndDate);
 
@@ -358,7 +354,7 @@ const MatchListing = ({ match, activityID }) => {
               </Grid>
               <Grid item xs={2} textAlign="center">
                 {/* show scores only if match is in the present/past */}
-                {DateTime.now() > DateTime.fromISO(match.Time) ? (
+                {isPast(Date.parse(match.Time)) ? (
                   <Typography>
                     {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
                       ?.TeamScore ?? 'TBD'}{' '}
@@ -417,7 +413,7 @@ const MatchListing = ({ match, activityID }) => {
                 </Grid>
                 <Grid item xs={2}>
                   {/* show scores only if match is in the present/past */}
-                  {DateTime.now() > DateTime.fromISO(match.Time) ? (
+                  {isPast(Date.parse(match.Time)) ? (
                     <Typography>
                       {match.Scores?.find((matchTeam) => matchTeam.TeamID === team.ID)?.TeamScore ??
                         0}

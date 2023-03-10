@@ -10,7 +10,6 @@ import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
 import { getMatchByID } from 'services/recim/match';
-import { DateTime } from 'luxon';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import EditIcon from '@mui/icons-material/Edit';
 import { standardDate } from 'views/RecIM/components/Helpers';
@@ -82,9 +81,7 @@ const Match = () => {
       <>
         <Grid container spacing={4}>
           <Grid item xs={6} textAlign="right">
-            <Typography className={styles.subtitle}>
-              {standardDate(DateTime.fromISO(match?.Time), true)}
-            </Typography>
+            <Typography className={styles.subtitle}>{standardDate(match?.Time, true)}</Typography>
           </Grid>
           <Grid item xs={6} textAlign="left">
             <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
