@@ -1,7 +1,12 @@
 import { isValid, format } from 'date-fns';
 
 const standardDate = (date, includeTime) => {
-  if (!isValid(date)) date = Date.parse(date);
+  if (!isValid(date)) date = new Date(Date.parse(date)); // try parsing if invalid
+  if (!isValid(date)) {
+    // if still invalid (perhaps null)
+    console.log('standardDate called with an invalid or null date');
+    return;
+  }
   let formattedDate = includeTime ? format(date, 'MMM d h:mmaaa') : format(date, 'MMM d');
   return formattedDate;
 };
