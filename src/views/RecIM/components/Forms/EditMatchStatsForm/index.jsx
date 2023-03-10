@@ -66,7 +66,7 @@ const EditMatchStatsForm = ({
     return {
       TeamID: targetTeamID,
       Score: `${targetTeamStats.TeamScore}`,
-      SportsmanshipScore: `${targetTeamStats.SportsmanshipRating}`,
+      SportsmanshipScore: `${targetTeamStats.SportsmanshipScore}`,
       StatusID:
         matchStatus.find((type) => type.Description === targetTeamStats.Status) == null
           ? ''

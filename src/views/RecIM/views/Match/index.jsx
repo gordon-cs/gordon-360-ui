@@ -77,11 +77,14 @@ const Match = () => {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
+    console.log(match);
     let headerContents = (
       <>
         <Grid container spacing={4}>
           <Grid item xs={6} textAlign="right">
-            <Typography className={styles.subtitle}>{standardDate(match?.Time, true)}</Typography>
+            <Typography className={styles.subtitle}>
+              {standardDate(match?.StartTime, true)}
+            </Typography>
           </Grid>
           <Grid item xs={6} textAlign="left">
             <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
@@ -104,7 +107,7 @@ const Match = () => {
             </Typography>
             {user?.IsAdmin && (
               <i className={styles.subtitle}>
-                Sportsmanship: {match?.Scores[0]?.SportsmanshipRating}
+                Sportsmanship: {match?.Scores[0]?.SportsmanshipScore}
               </i>
             )}
           </Grid>
@@ -142,7 +145,7 @@ const Match = () => {
             </Typography>
             {user?.IsAdmin && (
               <i className={styles.subtitle}>
-                Sportsmanship: {match?.Scores[1]?.SportsmanshipRating}
+                Sportsmanship: {match?.Scores[1]?.SportsmanshipScore}
               </i>
             )}
           </Grid>

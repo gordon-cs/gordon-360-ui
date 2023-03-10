@@ -46,7 +46,7 @@ export type TeamMatchHistory = {
   Status: string;
   MatchStatusID: number;
   MatchStartTime: string;
-  SportsmanshipRating: number;
+  SportsmanshipScore: number;
 };
 
 export type TeamRecord = {
