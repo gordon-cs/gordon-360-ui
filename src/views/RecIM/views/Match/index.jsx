@@ -82,7 +82,7 @@ const Match = () => {
         <Grid container spacing={4}>
           <Grid item xs={6} textAlign="right">
             <Typography className={styles.subtitle}>
-              {standardDate(match?.StartTime, true)}
+              {match && standardDate(match.StartTime, true)}
             </Typography>
           </Grid>
           <Grid item xs={6} textAlign="left">
