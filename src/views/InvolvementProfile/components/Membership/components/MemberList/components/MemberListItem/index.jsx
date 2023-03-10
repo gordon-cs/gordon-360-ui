@@ -154,10 +154,6 @@ const MemberListItem = ({
   let content;
   let options;
 
-  let mailLoc = Number(member.Mail_Location)
-    ? `Box #${member.Mail_Location}`
-    : member.Mail_Location || null;
-
   if (isAdmin || isSiteAdmin) {
     const disabled = participationDescription === 'Guest' || participationDescription === 'Member';
     // Can't make guests or members a group admin
@@ -281,10 +277,7 @@ const MemberListItem = ({
           <Grid item xs={4} style={rowComponentStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
-          <Grid item xs={2} style={rowComponentStyle}>
-            <Typography>{profile.Mail_Location}</Typography>
-          </Grid>
-          <Grid item xs={2} style={rowComponentStyle}>
+          <Grid item xs={4} style={rowComponentStyle}>
             {options}
           </Grid>
         </Grid>
@@ -345,7 +338,6 @@ const MemberListItem = ({
               </Grid>
               <Grid item xs={3} sm={2}>
                 <Typography>{member.ParticipationDescription} </Typography>
-                <Typography>{mailLoc}</Typography>
               </Grid>
             </Grid>
           </AccordionSummary>
@@ -381,7 +373,7 @@ const MemberListItem = ({
               {!avatar && <PlaceHolderAvatar />}
             </Avatar>
           </Grid>
-          <Grid item xs={3} style={rowStyle}>
+          <Grid item xs={5} style={rowStyle}>
             {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
               <Typography>
                 {member.FirstName} {member.LastName}
@@ -396,9 +388,6 @@ const MemberListItem = ({
           </Grid>
           <Grid item xs={4} style={rowStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
-          </Grid>
-          <Grid item xs={2} style={rowStyle}>
-            <Typography>{mailLoc}</Typography>
           </Grid>
           <Grid item xs={2} style={rowStyle}>
             {options}
