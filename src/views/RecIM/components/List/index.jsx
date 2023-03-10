@@ -44,7 +44,7 @@ const ParticipantList = ({
 const MatchList = ({ matches, activityID }) => {
   if (!matches?.length || !matches[0]) return <Typography>No matches to show.</Typography>;
   let content = matches.map((match) => (
-    <MatchListing key={match?.ID} match={match} activityID={activityID} />
+    <MatchListing key={match.ID} match={match} activityID={activityID} />
   ));
 
   return <List dense>{content}</List>;
