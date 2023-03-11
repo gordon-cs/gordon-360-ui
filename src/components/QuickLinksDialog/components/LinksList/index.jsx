@@ -11,6 +11,14 @@ function ListItemLink(props) {
 
 const GordonLinksList = () => (
   <>
+    <List>
+      <ListItemLink rel="noopener" href="/recim" className="gc360_text_link">
+        <ListItemIcon>
+          <LinkIcon style={{ fontSize: 16 }} />
+        </ListItemIcon>
+        <ListItemText primary="Rec-IM" />
+      </ListItemLink>
+    </List>
     <List
       component="nav"
       subheader={

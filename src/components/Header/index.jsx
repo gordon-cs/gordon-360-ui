@@ -213,7 +213,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
               />
               {requiresAuthTab('People', <PeopleIcon />)}
               {requiresAuthTab('Timesheets', <WorkIcon />)}
-              {requiresAuthTab('Rec-IM', <RecIMIcon />)}
+              {/* {requiresAuthTab('Rec-IM', <RecIMIcon />)} */}
             </Tabs>
           </div>
 

@@ -186,7 +186,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {eventsButton}
         {peopleButton}
         {timesheetsButton}
-        {recimButton}
+        {/* {recimButton} */}
       </List>
 
       <Divider />
