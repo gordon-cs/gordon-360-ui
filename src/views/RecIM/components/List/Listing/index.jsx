@@ -21,8 +21,12 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
-import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
-import { getActivityTypes } from 'services/recim/activity';
+import {
+  deleteTeamParticipant,
+  editTeamParticipant,
+  respondToTeamInvite,
+} from 'services/recim/team';
+import { getActivityTypes, isActivityRegisterable } from 'services/recim/activity';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
@@ -353,14 +357,19 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
 
 // We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
 const ParticipantListing = ({ participant, minimal, callbackFunction, showParticipantOptions }) => {
-  const { teamID } = useParams();
+  const { teamID, activityID } = useParams();
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState();
   const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
 
+  const handleClickOff = () => {
+    setAnchorEl(null);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
+    callbackFunction((val) => !val);
   };
 
   useEffect(() => {
@@ -386,23 +395,41 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     setAnchorEl(event.currentTarget);
   };
 
+  const handleRemoveFromTeam = async () => {
+    let isRegistrationPeriod = await isActivityRegisterable(activityID);
+    if (isRegistrationPeriod) await handleDeleteFromTeam();
+    else await handleMakeInactive();
+  };
+
   const handleMakeCoCaptain = async () => {
     let editedParticipant = {
       Username: participant.Username,
       RoleTypeID: 4,
     }; // Role 4 is co-captain
-
     await editTeamParticipant(parseInt(teamID), editedParticipant); // Role 4 is co-captain
     handleClose();
   };
 
-  const handleRemoveFromTeam = async () => {
+  const reinstateMember = async () => {
+    let editedParticipant = {
+      Username: participant.Username,
+      RoleTypeID: 3,
+    }; // Role 3 is member
+    await editTeamParticipant(parseInt(teamID), editedParticipant);
+    handleClose();
+  };
+
+  const handleMakeInactive = async () => {
     let editedParticipant = {
       Username: participant.Username,
       RoleTypeID: 6,
     }; // Role 6 is inactive
-
     await editTeamParticipant(parseInt(teamID), editedParticipant);
+    handleClose();
+  };
+
+  const handleDeleteFromTeam = async () => {
+    await deleteTeamParticipant(parseInt(teamID), participant.Username);
     handleClose();
   };
 
@@ -438,13 +465,22 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
           <ListItemText primary={name} secondary={participant.Role} />
         </ListItemButton>
         {showParticipantOptions && (
-          <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
-            <MenuItem dense onClick={handleMakeCoCaptain} divider>
-              Make co-captain
-            </MenuItem>
-            <MenuItem dense onClick={handleRemoveFromTeam} className={styles.rejectButton}>
-              Remove from team
-            </MenuItem>
+          <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
+            {participant.Role !== 'Inactive' && (
+              <MenuItem dense onClick={handleMakeCoCaptain} divider>
+                Make co-captain
+              </MenuItem>
+            )}
+            {participant.Role !== 'Inactive' && (
+              <MenuItem dense onClick={handleRemoveFromTeam} className={styles.rejectButton}>
+                Remove from team
+              </MenuItem>
+            )}
+            {participant.Role === 'Inactive' && (
+              <MenuItem dense onClick={reinstateMember}>
+                Reinstate Member
+              </MenuItem>
+            )}
           </Menu>
         )}
       </ListItem>
