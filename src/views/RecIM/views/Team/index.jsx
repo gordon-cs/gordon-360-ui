@@ -17,6 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 const Team = () => {
   const { teamID } = useParams();
   const { profile } = useUser();
+  const [reload, setReload] = useState(false);
   const [team, setTeam] = useState();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState();
@@ -37,7 +38,7 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID, openTeamForm, openInviteParticipantForm]);
+  }, [profile, teamID, openTeamForm, openInviteParticipantForm, reload]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   //checks if the team is modifiable by the current user
@@ -128,7 +129,12 @@ const Team = () => {
             </Grid>
           )}
           {hasPermissions ? (
-            <ParticipantList participants={team.Participant} showParticipantOptions showInactive />
+            <ParticipantList
+              participants={team.Participant}
+              callbackFunction={(bool) => setReload(bool)}
+              showParticipantOptions
+              showInactive
+            />
           ) : (
             <ParticipantList participants={team.Participant} />
           )}

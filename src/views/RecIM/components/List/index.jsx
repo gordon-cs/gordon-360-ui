@@ -31,7 +31,7 @@ const ParticipantList = ({
         key={participant.username}
         participant={participant}
         minimal={minimal}
-        callbackFunction={callbackFunction}
+        callbackFunction={(bool) => callbackFunction(bool)}
         showParticipantOptions={
           showParticipantOptions &&
           participant.Role !== 'Team-captain/Creator' &&
