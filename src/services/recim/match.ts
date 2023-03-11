@@ -68,6 +68,17 @@ type UploadAttendance = {
   Username: string;
 };
 
+type Surface = {
+  ID: number;
+  Name: string;
+  Description: string;
+};
+
+type UploadSurface = {
+  Name?: string;
+  Description?: string; // location/capacity/misc details
+};
+
 type Attendance = {
   ID: number;
   MatchID: number;
@@ -94,8 +105,6 @@ const getMatchStatusTypes = (): Promise<Lookup[]> => http.get(`recim/matches/loo
 const getMatchTeamStatusTypes = (): Promise<Lookup[]> =>
   http.get(`recim/matches/lookup?type=teamstatus`);
 
-const getMatchSurfaces = (): Promise<Lookup[]> => http.get(`recim/matches/lookup?type=surface`);
-
 const updateMatchStats = (
   matchID: number,
   updatedTeamStats: PatchMatchStats,
@@ -107,15 +116,28 @@ const updateMatch = (ID: number, updatedMatch: PatchMatch): Promise<CreatedMatch
 const deleteMatchCascade = async (matchID: number): Promise<CreatedMatch> =>
   http.del(`recim/matches/${matchID}`);
 
+const getSurfaces = (): Promise<Surface[]> => http.get(`recim/matches/surfaces`);
+
+const createSurface = (newSurface: UploadSurface): Promise<Surface> =>
+  http.post(`recim/matches/surfaces`, newSurface);
+
+const patchSurface = (surfaceID: number, updatedSurface: UploadSurface): Promise<Surface> =>
+  http.patch(`recim/matches/surfaces/${surfaceID}`, updatedSurface);
+
+const deleteSurface = (surfaceID: number) => http.del(`recim/matches/surfaces/${surfaceID}`);
+
 export {
   createMatch,
   getMatchByID,
   getMatchStatusTypes,
   getMatchTeamStatusTypes,
-  getMatchSurfaces,
   updateMatchStats,
   updateMatch,
   createMatchAttendance,
   getMatchAttendance,
   deleteMatchCascade,
+  getSurfaces,
+  createSurface,
+  patchSurface,
+  deleteSurface,
 };

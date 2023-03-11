@@ -6,12 +6,7 @@ import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ContentCard } from '../components/ContentCard';
 import GordonLoader from 'components/Loader';
-import {
-  createMatch,
-  updateMatch,
-  getMatchSurfaces,
-  getMatchStatusTypes,
-} from 'services/recim/match';
+import { createMatch, updateMatch, getSurfaces, getMatchStatusTypes } from 'services/recim/match';
 import EditMatchStatsForm from '../EditMatchStatsForm';
 
 const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activity, match }) => {
@@ -31,7 +26,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      setSurfaces(await getMatchSurfaces());
+      setSurfaces(await getSurfaces());
       setMatchStatus(await getMatchStatusTypes());
       setLoading(false);
     };
@@ -44,7 +39,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       name: 'SurfaceID',
       type: 'select',
       menuItems: surfaces.map((surface) => {
-        return surface.Description;
+        return surface.Name;
       }),
       error: errorStatus.SurfaceID,
       helperText: '*Required',
@@ -138,9 +133,9 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
             ? ''
             : matchStatus.find((type) => type.Description === match.Status).Description,
         SurfaceID:
-          surfaces.find((type) => type.Description === match.Surface) == null
+          surfaces.find((type) => type.Name === match.Surface) == null
             ? ''
-            : surfaces.find((type) => type.Description === match.Surface).Description,
+            : surfaces.find((type) => type.Name === match.Surface).Name,
         TeamIDs: teamIDs,
       };
     }
@@ -231,9 +226,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         (series) => series.Name === matchRequest.SeriesID,
       ).ID;
 
-    matchRequest.SurfaceID = surfaces.find(
-      (surface) => surface.Description === matchRequest.SurfaceID,
-    ).ID;
+    matchRequest.SurfaceID = surfaces.find((surface) => surface.Name === matchRequest.SurfaceID).ID;
 
     let idArray = [];
     matchRequest.TeamIDs.forEach((value) => {
