@@ -45,16 +45,16 @@ export type TeamMatchHistory = {
   OpposingTeamScore: number;
   Status: string;
   MatchStatusID: number;
-  Time: string;
-  Sportsmanship: number;
+  MatchStartTime: string;
+  SportsmanshipScore: number;
 };
 
 export type TeamRecord = {
   ID: number;
   Name: string;
-  Win: number;
-  Loss: number;
-  Tie: number;
+  WinCount: number;
+  LossCount: number;
+  TieCount: number;
 };
 
 type UploadTeam = {
@@ -96,13 +96,11 @@ const addParticipantToTeam = async (
 const editTeamParticipant = async (
   teamID: number,
   editedParticipant: UploadTeamParticipant,
-): Promise<CreatedTeamParticipant> => {
-  return await http.patch(`recim/Teams/${teamID}/participants`, editedParticipant);
-};
+): Promise<CreatedTeamParticipant> =>
+  await http.patch(`recim/Teams/${teamID}/participants`, editedParticipant);
 
-const deleteTeamParticipant = async (teamID: number, username: string) => {
+const deleteTeamParticipant = async (teamID: number, username: string) =>
   await http.del(`recim/Teams/${teamID}/participants?username=${username}`);
-};
 
 const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>
   http.patch(`recim/Teams/${ID}`, updatedTeam);
@@ -113,6 +111,10 @@ const respondToTeamInvite = async (
   teamID: number,
   response: string,
 ): Promise<CreatedTeamParticipant> => http.patch(`recim/Teams/${teamID}/invite/status`, response);
+
+//temporary solution, may need a cleaner route implementation or have attendance count return in team
+const getParticipantAttendanceCountForTeam = (teamID: number, username: string): Promise<number> =>
+  http.get(`recim/Teams/${teamID}/attendance?username=${username}`);
 
 export {
   getTeams,
@@ -126,4 +128,5 @@ export {
   editTeam,
   getTeamInvites,
   respondToTeamInvite,
+  getParticipantAttendanceCountForTeam,
 };
