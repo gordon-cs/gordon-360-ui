@@ -16,22 +16,21 @@ import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
-import GordonLoader from '../../../../../components/Loader';
 import { isPast } from 'date-fns';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
+import { getActivityTypes } from 'services/recim/activity';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 
-/* Old activitylisting
+// Old activitylisting
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
-  const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
   useEffect(() => {
     const loadActivityType = async () => {
       let activityTypes = await getActivityTypes();
@@ -39,12 +38,7 @@ const ActivityListing = ({ activity }) => {
         activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
       );
     };
-    const calculateCurrentCapacity = async () => {
-      let fullActivity = await getActivityByID(activity.ID);
-      setCurrentCapacity(fullActivity.Team?.length);
-    };
     loadActivityType();
-    calculateCurrentCapacity();
   }, [activity]);
 
   let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
@@ -118,6 +112,8 @@ const ActivityListing = ({ activity }) => {
               </Grid>
             </Grid>
           </Grid>
+          {/* DEPRECATED
+          
           <Grid item sm={1}>
             <Typography variant="subtitle">
               {currentCapacity}
@@ -126,15 +122,14 @@ const ActivityListing = ({ activity }) => {
               </Typography>
               {activity.MaxCapacity}
             </Typography>
-          </Grid>
+          </Grid> */}
         </Grid>
       </ListItemButton>
     </ListItem>
   );
 };
-*/
 
-//proposed new activitylisting
+/*proposed new activitylisting
 const ActivityListing = ({ activity, showActivityOptions }) => {
   const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
@@ -249,6 +244,7 @@ const ActivityListing = ({ activity, showActivityOptions }) => {
     </ListItem>
   );
 };
+*/
 
 const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
