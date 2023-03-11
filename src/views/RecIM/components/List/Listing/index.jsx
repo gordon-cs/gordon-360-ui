@@ -112,17 +112,6 @@ const ActivityListing = ({ activity }) => {
               </Grid>
             </Grid>
           </Grid>
-          {/* DEPRECATED
-          
-          <Grid item sm={1}>
-            <Typography variant="subtitle">
-              {currentCapacity}
-              <Typography variant="span" sx={{ p: 0.2 }}>
-                /
-              </Typography>
-              {activity.MaxCapacity}
-            </Typography>
-          </Grid> */}
         </Grid>
       </ListItemButton>
     </ListItem>
