@@ -33,7 +33,9 @@ const ParticipantList = ({
         minimal={minimal}
         callbackFunction={callbackFunction}
         showParticipantOptions={
-          showParticipantOptions && participant.Role !== 'Team-captain/Creator'
+          showParticipantOptions &&
+          participant.Role !== 'Team-captain/Creator' &&
+          participant.Role !== 'Requested Join' // don't promote people who haven't joined
         }
       />
     );
