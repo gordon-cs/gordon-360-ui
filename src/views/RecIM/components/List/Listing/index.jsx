@@ -31,6 +31,7 @@ import { standardDate, formatDateTimeRange } from '../../Helpers';
 // Old activitylisting
 const ActivityListing = ({ activity }) => {
   const [activityType, setActivityType] = useState();
+  //const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
   useEffect(() => {
     const loadActivityType = async () => {
       let activityTypes = await getActivityTypes();
@@ -38,7 +39,12 @@ const ActivityListing = ({ activity }) => {
         activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
       );
     };
+    // const calculateCurrentCapacity = async () => {
+    //   let fullActivity = await getActivityByID(activity.ID);
+    //   setCurrentCapacity(fullActivity.Team?.length);
+    // };
     loadActivityType();
+    // calculateCurrentCapacity();
   }, [activity]);
 
   let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
@@ -112,6 +118,15 @@ const ActivityListing = ({ activity }) => {
               </Grid>
             </Grid>
           </Grid>
+          {/* <Grid item sm={1}>
+            <Typography variant="subtitle">
+              {currentCapacity}
+              <Typography variant="span" sx={{ p: 0.2 }}>
+                /
+              </Typography>
+              {activity.MaxCapacity}
+            </Typography>
+          </Grid> */}
         </Grid>
       </ListItemButton>
     </ListItem>
