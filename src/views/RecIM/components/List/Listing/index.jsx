@@ -30,22 +30,22 @@ import { standardDate, formatDateTimeRange } from '../../Helpers';
 
 // Old activitylisting
 const ActivityListing = ({ activity }) => {
-  const [activityType, setActivityType] = useState();
+  //const [activityType, setActivityType] = useState();
   //const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
-  useEffect(() => {
-    const loadActivityType = async () => {
-      let activityTypes = await getActivityTypes();
-      setActivityType(
-        activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
-      );
-    };
-    // const calculateCurrentCapacity = async () => {
-    //   let fullActivity = await getActivityByID(activity.ID);
-    //   setCurrentCapacity(fullActivity.Team?.length);
-    // };
-    loadActivityType();
-    // calculateCurrentCapacity();
-  }, [activity]);
+  // useEffect(() => {
+  //   const loadActivityType = async () => {
+  //     let activityTypes = await getActivityTypes();
+  //     setActivityType(
+  //       activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
+  //     );
+  //   };
+  //   const calculateCurrentCapacity = async () => {
+  //     let fullActivity = await getActivityByID(activity.ID);
+  //     setCurrentCapacity(fullActivity.Team?.length);
+  //   };
+  //   loadActivityType();
+  //   calculateCurrentCapacity();
+  // }, [activity]);
 
   let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
   let activeSeriesMessage =
@@ -80,11 +80,11 @@ const ActivityListing = ({ activity }) => {
             </Grid>
             <Grid item>
               <Chip
-                icon={activityTypeIconPair.find((type) => type.type === activityType)?.icon}
-                label={activityType}
+                icon={activityTypeIconPair.find((type) => type.type === activity.Type)?.icon}
+                label={activity.Type}
                 color={'success'}
                 className={
-                  styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]
+                  styles['activityType_' + activity?.Type.toLowerCase().replace(/\s+/g, '')]
                 }
                 size="small"
               ></Chip>
