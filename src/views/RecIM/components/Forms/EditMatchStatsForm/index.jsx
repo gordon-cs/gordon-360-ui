@@ -18,7 +18,7 @@ const EditMatchStatsForm = ({
   const [errorStatus, setErrorStatus] = useState({
     Score: false,
     StatusID: false,
-    Sportsmanship: false,
+    SportsmanshipScore: false,
   });
   const [loading, setLoading] = useState(true);
   const [matchStatus, setMatchStatus] = useState([]);
@@ -42,9 +42,9 @@ const EditMatchStatsForm = ({
     },
     {
       label: 'Sportsmanship',
-      name: 'Sportsmanship',
+      name: 'SportsmanshipScore',
       type: 'number',
-      error: errorStatus.Sportsmanship,
+      error: errorStatus.SportsmanshipScore,
       helperText: "*Required & Can't be more than 5",
     },
     {
@@ -66,7 +66,7 @@ const EditMatchStatsForm = ({
     return {
       TeamID: targetTeamID,
       Score: `${targetTeamStats.TeamScore}`,
-      Sportsmanship: `${targetTeamStats.Sportsmanship}`,
+      SportsmanshipScore: `${targetTeamStats.SportsmanshipScore}`,
       StatusID:
         matchStatus.find((type) => type.Description === targetTeamStats.Status) == null
           ? ''
@@ -241,7 +241,7 @@ const EditMatchStatsForm = ({
   return (
     <GordonDialogBox
       open={openEditMatchStatsForm}
-      title={`Edit ${match.Team.find((team) => team.TeamID === targetTeamID).Name}'s Stats`}
+      title={`Edit ${match.Team.find((team) => team.ID === targetTeamID).Name}'s Stats`}
       fullWidth
       maxWidth="sm"
       buttonClicked={() => setOpenConfirmWindow(true)}
