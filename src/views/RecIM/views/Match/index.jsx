@@ -19,6 +19,7 @@ const RosterCard = ({
   teamName,
   withAttendance = false,
   attendance,
+  isAdmin,
   matchID,
   teamID,
 }) => (
@@ -29,6 +30,7 @@ const RosterCard = ({
         participants={participants}
         withAttendance={withAttendance}
         attendance={attendance}
+        isAdmin={isAdmin}
         matchID={matchID}
         teamID={teamID}
       />
@@ -47,8 +49,6 @@ const Match = () => {
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
 
-  console.log('attendance', matchAttendance ? matchAttendance[0].Attendance : null);
-
   useEffect(() => {
     const loadData = async () => {
       if (profile) {
@@ -62,6 +62,7 @@ const Match = () => {
     const loadMatch = async () => {
       setLoading(true);
       setMatch(await getMatchByID(matchID));
+      setMatchAttendance(await getMatchAttendance(matchID));
       setLoading(false);
     };
     loadMatch();
@@ -78,11 +79,7 @@ const Match = () => {
           match.Scores.find((team) => team.TeamID === match.Team[1]?.ID)?.TeamScore ?? 0,
         );
       };
-      const assignMatchAttendance = async () => {
-        setMatchAttendance(await getMatchAttendance(match.ID));
-      };
       assignMatchScores();
-      assignMatchAttendance();
     }
   }, [match]);
 
@@ -190,6 +187,7 @@ const Match = () => {
                 attendance={
                   matchAttendance?.find((item) => item.TeamID === match.Team[0]?.ID)?.Attendance
                 }
+                isAdmin={user?.IsAdmin}
                 matchID={match.ID}
                 teamID={match.Team[0]?.ID}
               />
@@ -202,6 +200,7 @@ const Match = () => {
                 attendance={
                   matchAttendance?.find((item) => item.TeamID === match.Team[1]?.ID)?.Attendance
                 }
+                isAdmin={user?.IsAdmin}
                 matchID={match.ID}
                 teamID={match.Team[1]?.ID}
               />

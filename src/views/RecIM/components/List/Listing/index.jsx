@@ -360,6 +360,7 @@ const ParticipantListing = ({
   callbackFunction,
   showParticipantOptions,
   withAttendance,
+  isAdmin,
   initialAttendance,
   teamID,
   matchID,
@@ -370,8 +371,6 @@ const ParticipantListing = ({
   const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
-
-  // console.log(name, didAttend);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -455,6 +454,7 @@ const ParticipantListing = ({
                     inputProps={{ 'aria-label': 'attendance toggle' }}
                     defaultChecked={initialAttendance}
                     onChange={(event) => handleAttendance(event.target.checked)}
+                    disabled={!isAdmin}
                   />
                 }
                 label={didAttend ? 'Present' : <i>Absent</i>}

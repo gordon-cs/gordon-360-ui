@@ -20,6 +20,7 @@ const ParticipantList = ({
   showParticipantOptions,
   withAttendance,
   attendance,
+  isAdmin,
   matchID,
   teamID,
   showInactive,
@@ -39,6 +40,7 @@ const ParticipantList = ({
         initialAttendance={
           withAttendance && attendance?.find((att) => att.Username === participant.Username)
         }
+        isAdmin={isAdmin}
         matchID={matchID}
         teamID={teamID}
         callbackFunction={callbackFunction}
