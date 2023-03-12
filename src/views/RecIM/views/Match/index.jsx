@@ -9,18 +9,26 @@ import Header from '../../components/Header';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { getMatchByID } from 'services/recim/match';
+import { getMatchByID, getMatchAttendance } from 'services/recim/match';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import EditIcon from '@mui/icons-material/Edit';
 import { standardDate } from 'views/RecIM/components/Helpers';
 
-const RosterCard = ({ participants, teamName, withAttendance = false, matchID, teamID }) => (
+const RosterCard = ({
+  participants,
+  teamName,
+  withAttendance = false,
+  attendance,
+  matchID,
+  teamID,
+}) => (
   <Card>
     <CardHeader title={teamName ?? 'No team yet...'} className={styles.cardHeader} />
     <CardContent>
       <ParticipantList
         participants={participants}
         withAttendance={withAttendance}
+        attendance={attendance}
         matchID={matchID}
         teamID={teamID}
       />
@@ -37,6 +45,7 @@ const Match = () => {
   const [team1Score, setTeam1Score] = useState(0);
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [user, setUser] = useState();
+  const [matchAttendance, setMatchAttendance] = useState();
 
   useEffect(() => {
     const loadData = async () => {
@@ -67,7 +76,11 @@ const Match = () => {
           match.Scores.find((team) => team.TeamID === match.Team[1]?.ID)?.TeamScore ?? 0,
         );
       };
+      const assignMatchAttendance = async () => {
+        setMatchAttendance(await getMatchAttendance(match.ID));
+      };
       assignMatchScores();
+      assignMatchAttendance();
     }
   }, [match]);
 
@@ -172,6 +185,9 @@ const Match = () => {
                 participants={match.Team[0]?.Participant}
                 teamName={match.Team[0]?.Name}
                 withAttendance
+                attendance={
+                  matchAttendance?.find((item) => item.TeamID === match.Team[0]?.ID)?.Attendance
+                }
                 matchID={match.ID}
                 teamID={match.Team[0]?.ID}
               />
@@ -181,6 +197,9 @@ const Match = () => {
                 participants={match.Team[1]?.Participant}
                 teamName={match.Team[1]?.Name}
                 withAttendance
+                attendance={
+                  matchAttendance?.find((item) => item.TeamID === match.Team[1]?.ID)?.Attendance
+                }
                 matchID={match.ID}
                 teamID={match.Team[1]?.ID}
               />

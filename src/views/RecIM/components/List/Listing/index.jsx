@@ -364,6 +364,7 @@ const ParticipantListing = ({
   callbackFunction,
   showParticipantOptions,
   withAttendance,
+  attendance,
   teamID,
   matchID,
 }) => {
@@ -421,16 +422,14 @@ const ParticipantListing = ({
   };
 
   const handleAttendance = async (attended) => {
-    let test = await getMatchAttendance(matchID);
-    console.log(test);
-    let attendance = {
+    console.log(attendance);
+    let att = {
       teamID: teamID,
       username: participant.Username,
     };
-    console.log('Request:', matchID, attendance);
-    attended
-      ? await removeAttendance(matchID, attendance)
-      : await updateAttendance(matchID, attendance);
+    console.log('Request:', matchID, att);
+    attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
+    console.log('new attendance', await getMatchAttendance(matchID));
   };
 
   if (!participant) return null;
@@ -455,6 +454,9 @@ const ParticipantListing = ({
               <Switch
                 color="secondary"
                 inputProps={{ 'aria-label': 'attendance toggle' }}
+                defaultChecked={
+                  attendance.find((att) => att.Username === participant.Username) != null
+                }
                 onChange={(event) => handleAttendance(event.target.checked)}
               />
             )}

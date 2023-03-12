@@ -36,6 +36,7 @@ const ParticipantList = ({
         participant={participant}
         minimal={minimal}
         withAttendance={withAttendance}
+        attendance={attendance}
         matchID={matchID}
         teamID={teamID}
         callbackFunction={callbackFunction}
