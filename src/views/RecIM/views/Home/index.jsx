@@ -120,8 +120,8 @@ const Home = () => {
 
   let ongoingActivitiesContent = (
     <CardContent>
-      {registrableActivities.length > 0 ? (
-        <ActivityList activities={ongoingActivities} />
+      {ongoingActivities.length > 0 ? (
+        <ActivityList activities={ongoingActivities} showActivityOptions={hasPermissions} />
       ) : (
         <Typography variant="body1" paragraph>
           It looks like there aren't any Rec-IM activities currently ongoing
@@ -133,7 +133,7 @@ const Home = () => {
   let upcomingActivitiesContent = (
     <CardContent>
       {registrableActivities.length > 0 ? (
-        <ActivityList activities={registrableActivities} />
+        <ActivityList activities={registrableActivities} showActivityOptions={hasPermissions} />
       ) : (
         <Typography variant="body1" paragraph>
           It looks like there aren't any Rec-IM activities currently open for registration
