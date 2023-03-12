@@ -7,7 +7,7 @@ import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ContentCard } from '../components/ContentCard';
 import { InformationField } from '../components/InformationField';
 import { putSeriesSchedule } from 'services/recim/series';
-import { getMatchSurfaces } from 'services/recim/match';
+import { getSurfaces } from 'services/recim/match';
 
 const SeriesScheduleForm = ({
   closeWithSnackbar,
@@ -30,7 +30,7 @@ const SeriesScheduleForm = ({
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      setSurfaces(await getMatchSurfaces());
+      setSurfaces(await getSurfaces());
       setLoading(false);
     };
     loadData();
@@ -90,7 +90,7 @@ const SeriesScheduleForm = ({
       label: 'Surfaces',
       name: 'AvailableSurfaceIDs',
       type: 'multiselect',
-      menuItems: surfaces.map((surface) => surface.Description),
+      menuItems: surfaces.map((surface) => surface.Name),
       error: errorStatus.AvailableSurfaceIDs,
       helperText: '*Required',
     },
@@ -234,7 +234,7 @@ const SeriesScheduleForm = ({
 
     seriesRequest.AvailableSurfaceIDs = seriesRequest.AvailableSurfaceIDs.map(
       (surfaceDescription) => {
-        return surfaces.find((surface) => surfaceDescription === surface.Description).ID;
+        return surfaces.find((surface) => surfaceDescription === surface.Name).ID;
       },
     );
 
