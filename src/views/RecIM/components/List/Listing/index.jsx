@@ -365,7 +365,7 @@ const ParticipantListing = ({
   teamID,
   matchID,
 }) => {
-  const { teamIDParam } = useParams(); // @TODO will fail if not on team page
+  const { teamID: teamIDParam } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState();
   const [anchorEl, setAnchorEl] = useState();
@@ -469,7 +469,7 @@ const ParticipantListing = ({
         <ListItemButton
           to={`/profile/${participant.Username}`}
           className={`${styles.listing} ${
-            withAttendance && didAttend ? styles.attendedListing : styles.absentListing
+            withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
           }`}
         >
           <ListItemAvatar>
