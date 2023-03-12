@@ -17,36 +17,36 @@ import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
-import GordonLoader from '../../../../../components/Loader';
+import { isPast } from 'date-fns';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
-import { getActivityTypes, getActivityByID } from 'services/recim/activity';
+import { getActivityTypes } from 'services/recim/activity';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
-import { isPast } from 'date-fns';
 
+// Old activitylisting
 const ActivityListing = ({ activity }) => {
-  const [activityType, setActivityType] = useState();
-  const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
-  useEffect(() => {
-    const loadActivityType = async () => {
-      let activityTypes = await getActivityTypes();
-      setActivityType(
-        activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
-      );
-    };
-    const calculateCurrentCapacity = async () => {
-      let fullActivity = await getActivityByID(activity.ID);
-      setCurrentCapacity(fullActivity.Team?.length);
-    };
-    loadActivityType();
-    calculateCurrentCapacity();
-  }, [activity]);
+  //const [activityType, setActivityType] = useState();
+  //const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
+  // useEffect(() => {
+  //   const loadActivityType = async () => {
+  //     let activityTypes = await getActivityTypes();
+  //     setActivityType(
+  //       activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
+  //     );
+  //   };
+  //   const calculateCurrentCapacity = async () => {
+  //     let fullActivity = await getActivityByID(activity.ID);
+  //     setCurrentCapacity(fullActivity.Team?.length);
+  //   };
+  //   loadActivityType();
+  //   calculateCurrentCapacity();
+  // }, [activity]);
 
   let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
   let activeSeriesMessage =
@@ -81,11 +81,11 @@ const ActivityListing = ({ activity }) => {
             </Grid>
             <Grid item>
               <Chip
-                icon={activityTypeIconPair.find((type) => type.type === activityType)?.icon}
-                label={activityType}
+                icon={activityTypeIconPair.find((type) => type.type === activity.Type)?.icon}
+                label={activity.Type}
                 color={'success'}
                 className={
-                  styles['activityType_' + activityType?.toLowerCase().replace(/\s+/g, '')]
+                  styles['activityType_' + activity?.Type.toLowerCase().replace(/\s+/g, '')]
                 }
                 size="small"
               ></Chip>
@@ -119,7 +119,7 @@ const ActivityListing = ({ activity }) => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item sm={1}>
+          {/* <Grid item sm={1}>
             <Typography variant="subtitle">
               {currentCapacity}
               <Typography variant="span" sx={{ p: 0.2 }}>
@@ -127,12 +127,129 @@ const ActivityListing = ({ activity }) => {
               </Typography>
               {activity.MaxCapacity}
             </Typography>
-          </Grid>
+          </Grid> */}
         </Grid>
       </ListItemButton>
     </ListItem>
   );
 };
+
+/*proposed new activitylisting
+const ActivityListing = ({ activity, showActivityOptions }) => {
+  const [anchorEl, setAnchorEl] = useState();
+  const moreOptionsOpen = Boolean(anchorEl);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
+  let activeSeriesMessage =
+    activeSeries && activeSeries.Name + ' until ' + standardDate(activeSeries.EndDate);
+
+  const activityTypeIconPair = [
+    {
+      type: 'League',
+      icon: <SportsFootballIcon />,
+    },
+    {
+      type: 'Tournament',
+      icon: <SportsCricketIcon />,
+    },
+    {
+      type: 'One Off',
+      icon: <LocalActivityIcon />,
+    },
+  ];
+
+  const handleActivityOptions = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  if (!activity) return null;
+  return (
+    <ListItem key={activity.ID} className={styles.listingWrapper}>
+      <ListItem
+        secondaryAction={
+          showActivityOptions && (
+            <IconButton edge="end" onClick={handleActivityOptions}>
+              <MoreHorizIcon />
+            </IconButton>
+          )
+        }
+        disablePadding
+      >
+        <ListItemButton
+          component={Link}
+          to={`/recim/activity/${activity.ID}`}
+          className={styles.listing}
+        >
+          <Grid container columnSpacing={2} alignItems="center">
+            <Grid item container direction="column" xs={12} sm={4} spacing={1}>
+              <Grid item>
+                <Typography className={styles.listingTitle}>{activity.Name}</Typography>
+              </Grid>
+              <Grid item>
+                <Chip
+                  icon={activityTypeIconPair.find((type) => type.type === activity.Type)?.icon}
+                  label={activity.Type}
+                  color={'success'}
+                  className={
+                    styles['activityType_' + activity?.Type?.toLowerCase().replace(/\s+/g, '')]
+                  }
+                  size="small"
+                ></Chip>
+              </Grid>
+            </Grid>
+            <Grid item container xs={12} sm={7} direction="column" spacing={1}>
+              {activity.StartDate && (
+                <Grid item>
+                  <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
+                    {activity.EndDate
+                      ? formatDateTimeRange(activity.StartDate, activity.EndDate)
+                      : standardDate(activity.StartDate) + ` - TBD`}
+                  </Typography>
+                </Grid>
+              )}
+              <Grid item container columnSpacing={2}>
+                <Grid item>
+                  <Chip
+                    icon={<EventAvailableIcon />}
+                    label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
+                    color={activity.RegistrationOpen ? 'success' : 'info'}
+                    size="small"
+                  ></Chip>
+                </Grid>
+                <Grid item>
+                  <Typography>
+                    {activity.RegistrationOpen
+                      ? 'Registration closes ' + standardDate(activity.RegistrationEnd)
+                      : activeSeriesMessage}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item sm={1}></Grid>
+          </Grid>
+        </ListItemButton>
+        {showActivityOptions && (
+          <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
+            <MenuItem dense onClick={() => console.log('edit')} divider>
+              Edit
+            </MenuItem>
+            <MenuItem dense onClick={() => console.log('create series')} divider>
+              Create Series
+            </MenuItem>
+            <MenuItem dense onClick={() => console.log('delete')} className={styles.rejectButton}>
+              Delete
+            </MenuItem>
+          </Menu>
+        )}
+      </ListItem>
+    </ListItem>
+  );
+};
+*/
 
 const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
@@ -166,7 +283,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
           </Grid>
           <Grid item xs={8} sm={4}>
             <Typography className={styles.listingSubtitle}>
-              Sportsmanship: {targetTeamStats.Sportsmanship}
+              Sportsmanship: {targetTeamStats.SportsmanshipRating}
             </Typography>
           </Grid>
           <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
@@ -335,7 +452,7 @@ const ParticipantListing = ({
             <MenuItem dense onClick={handleMakeCoCaptain} divider>
               Make co-captain
             </MenuItem>
-            <MenuItem dense onClick={handleRemoveFromTeam} className={styles.redButton}>
+            <MenuItem dense onClick={handleRemoveFromTeam} className={styles.rejectButton}>
               Remove from team
             </MenuItem>
           </Menu>
@@ -387,7 +504,7 @@ const MatchListing = ({ match, activityID }) => {
             </Grid>
             <Grid item>
               <Typography className={styles.listingSubtitle}>
-                {standardDate(match.Time, true)}
+                {standardDate(match.StartTime, true)}
               </Typography>
             </Grid>
           </Grid>
@@ -410,7 +527,7 @@ const MatchListing = ({ match, activityID }) => {
             </Grid>
             <Grid item>
               <Typography className={styles.listingSubtitle}>
-                {standardDate(match.Time, true)}
+                {standardDate(match.StartTime, true)}
               </Typography>
             </Grid>
           </Grid>
