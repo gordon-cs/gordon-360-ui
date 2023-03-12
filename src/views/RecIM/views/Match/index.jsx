@@ -47,6 +47,8 @@ const Match = () => {
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
 
+  console.log('attendance', matchAttendance ? matchAttendance[0].Attendance : null);
+
   useEffect(() => {
     const loadData = async () => {
       if (profile) {

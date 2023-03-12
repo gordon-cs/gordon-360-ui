@@ -11,7 +11,8 @@ import {
   Menu,
   MenuItem,
   Button,
-  Switch,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
@@ -368,6 +369,9 @@ const ParticipantListing = ({
   const [name, setName] = useState();
   const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
+  const [didAttend, setDidAttend] = useState(initialAttendance != null);
+
+  // console.log(name, didAttend);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -417,6 +421,7 @@ const ParticipantListing = ({
   };
 
   const handleAttendance = async (attended) => {
+    setDidAttend(attended);
     let att = {
       teamID: teamID,
       username: participant.Username,
@@ -443,18 +448,30 @@ const ParticipantListing = ({
               </IconButton>
             )}
             {withAttendance && (
-              <Switch
-                color="secondary"
-                inputProps={{ 'aria-label': 'attendance toggle' }}
-                defaultChecked={initialAttendance}
-                onChange={(event) => handleAttendance(event.target.checked)}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    color="secondary"
+                    inputProps={{ 'aria-label': 'attendance toggle' }}
+                    defaultChecked={initialAttendance}
+                    onChange={(event) => handleAttendance(event.target.checked)}
+                  />
+                }
+                label={didAttend ? 'Present' : <i>Absent</i>}
+                labelPlacement="start"
+                className={!didAttend && styles.listingSubtitle}
               />
             )}
           </>
         }
         disablePadding
       >
-        <ListItemButton to={`/profile/${participant.Username}`} className={styles.listing}>
+        <ListItemButton
+          to={`/profile/${participant.Username}`}
+          className={`${styles.listing} ${
+            withAttendance && didAttend ? styles.attendedListing : styles.absentListing
+          }`}
+        >
           <ListItemAvatar>
             <Avatar
               src={`data:image/jpg;base64,${avatar}`}
