@@ -237,7 +237,7 @@ const ActivityForm = ({
   //re spreads fetched data to map to drop-down's once data has been loaded
   useEffect(() => {
     setNewInfo(currentInfo);
-    if (!currentInfo.Logo) {
+    if (currentInfo.Logo !== null) {
       setCropperImageData(currentInfo.Logo);
     } else {
       setCropperImageData(null);
@@ -345,6 +345,10 @@ const ActivityForm = ({
     setNewInfo(currentInfo);
     setCropperImageData(null);
   };
+
+  /**********************************************************
+  /*Following functions are solely related to photo submission*
+  /**********************************************************/
 
   async function clearPhotoDialogErrorTimeout() {
     clearTimeout(photoDialogErrorTimeout);
