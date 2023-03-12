@@ -90,10 +90,16 @@ type Attendance = {
 const createMatch = (newMatch: UploadMatch): Promise<CreatedMatch> =>
   http.post('recim/matches', newMatch);
 
-const createMatchAttendance = (
+const updateMatchAttendance = (
   attendance: UploadMatchAttendance,
   matchID: number,
 ): Promise<Attendance[]> => http.put(`recim/matches/${matchID}/attendance`, attendance);
+
+const updateAttendance = (matchID: number, attendance: Attendance): Promise<Attendance> =>
+  http.post(`recim/matches/${matchID}/attendance`, attendance);
+
+const removeAttendance = (matchID: number, attendance: Attendance): Promise<Attendance> =>
+  http.del(`recim/matches/${matchID}/attendance`, attendance);
 
 const getMatchAttendance = (matchID: number): Promise<MatchAttendance> =>
   http.get(`recim/matches/${matchID}/attendance`);
@@ -133,7 +139,9 @@ export {
   getMatchTeamStatusTypes,
   updateMatchStats,
   updateMatch,
-  createMatchAttendance,
+  updateMatchAttendance,
+  updateAttendance,
+  removeAttendance,
   getMatchAttendance,
   deleteMatchCascade,
   getSurfaces,

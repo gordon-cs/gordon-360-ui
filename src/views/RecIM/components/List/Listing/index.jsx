@@ -23,7 +23,13 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
-import { getActivityTypes } from 'services/recim/activity';
+// import { getActivityTypes } from 'services/recim/activity';
+import {
+  removeAttendance,
+  getMatchAttendance,
+  getMatchByID,
+  updateAttendance,
+} from 'services/recim/match';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
@@ -358,8 +364,10 @@ const ParticipantListing = ({
   callbackFunction,
   showParticipantOptions,
   withAttendance,
+  teamID,
+  matchID,
 }) => {
-  const { teamID } = useParams();
+  const { teamIDParam } = useParams(); // @TODO will fail if not on team page
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState();
   const [anchorEl, setAnchorEl] = useState();
@@ -398,7 +406,7 @@ const ParticipantListing = ({
       RoleTypeID: 4,
     }; // Role 4 is co-captain
 
-    await editTeamParticipant(parseInt(teamID), editedParticipant); // Role 4 is co-captain
+    await editTeamParticipant(parseInt(teamIDParam), editedParticipant); // Role 4 is co-captain
     handleClose();
   };
 
@@ -408,8 +416,21 @@ const ParticipantListing = ({
       RoleTypeID: 6,
     }; // Role 6 is inactive
 
-    await editTeamParticipant(parseInt(teamID), editedParticipant);
+    await editTeamParticipant(parseInt(teamIDParam), editedParticipant);
     handleClose();
+  };
+
+  const handleAttendance = async (attended) => {
+    let test = await getMatchAttendance(matchID);
+    console.log(test);
+    let attendance = {
+      teamID: teamID,
+      username: participant.Username,
+    };
+    console.log('Request:', matchID, attendance);
+    attended
+      ? await removeAttendance(matchID, attendance)
+      : await updateAttendance(matchID, attendance);
   };
 
   if (!participant) return null;
@@ -431,7 +452,11 @@ const ParticipantListing = ({
               </IconButton>
             )}
             {withAttendance && (
-              <Switch color="secondary" inputProps={{ 'aria-label': 'attendance toggle' }} />
+              <Switch
+                color="secondary"
+                inputProps={{ 'aria-label': 'attendance toggle' }}
+                onChange={(event) => handleAttendance(event.target.checked)}
+              />
             )}
           </>
         }

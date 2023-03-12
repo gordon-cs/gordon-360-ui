@@ -14,11 +14,16 @@ import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import EditIcon from '@mui/icons-material/Edit';
 import { standardDate } from 'views/RecIM/components/Helpers';
 
-const RosterCard = ({ participants, teamName, withAttendance = false }) => (
+const RosterCard = ({ participants, teamName, withAttendance = false, matchID, teamID }) => (
   <Card>
     <CardHeader title={teamName ?? 'No team yet...'} className={styles.cardHeader} />
     <CardContent>
-      <ParticipantList participants={participants} withAttendance={withAttendance} />
+      <ParticipantList
+        participants={participants}
+        withAttendance={withAttendance}
+        matchID={matchID}
+        teamID={teamID}
+      />
     </CardContent>
   </Card>
 );
@@ -167,6 +172,8 @@ const Match = () => {
                 participants={match.Team[0]?.Participant}
                 teamName={match.Team[0]?.Name}
                 withAttendance
+                matchID={match.ID}
+                teamID={match.Team[0]?.ID}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -174,6 +181,8 @@ const Match = () => {
                 participants={match.Team[1]?.Participant}
                 teamName={match.Team[1]?.Name}
                 withAttendance
+                matchID={match.ID}
+                teamID={match.Team[1]?.ID}
               />
             </Grid>
             {openMatchForm && (
