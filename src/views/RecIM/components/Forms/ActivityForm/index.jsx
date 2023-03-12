@@ -144,6 +144,14 @@ const ActivityForm = ({
       required: false,
       helperText: '*Required',
     },
+    {
+      label: 'Logo',
+      name: 'Logo',
+      type: '',
+      error: errorStatus.Logo,
+      required: false,
+      helperText: '*Required',
+    },
   ];
   if (activity) {
     activityFields.push(
@@ -155,7 +163,6 @@ const ActivityForm = ({
           return type.Description;
         }),
         error: errorStatus.statusID,
-        required: true,
         helperText: '*Required',
       },
       {
@@ -163,7 +170,6 @@ const ActivityForm = ({
         name: 'completed',
         type: 'checkbox',
         error: errorStatus.completed,
-        required: true,
         helperText: '*Required',
       },
     );
@@ -440,23 +446,25 @@ const ActivityForm = ({
    * @returns JSX correct input for each field based on type
    */
   const mapFieldsToInputs = (fields) => {
-    return fields.map((field) => (
-      <InformationField
-        key={field.name}
-        error={field.error}
-        label={field.label}
-        name={field.name}
-        helperText={field.helperText}
-        value={newInfo[field.name]}
-        type={field.type}
-        menuItems={field.menuItems}
-        onChange={handleChange}
-        xs={12}
-        sm={6}
-        md={4}
-        lg={3}
-      />
-    ));
+    return fields.map((field) =>
+      field.label !== 'Logo' ? (
+        <InformationField
+          key={field.name}
+          error={field.error}
+          label={field.label}
+          name={field.name}
+          helperText={field.helperText}
+          value={newInfo[field.name]}
+          type={field.type}
+          menuItems={field.menuItems}
+          onChange={handleChange}
+          xs={12}
+          sm={6}
+          md={4}
+          lg={3}
+        />
+      ) : null,
+    );
   };
 
   let content;
@@ -465,7 +473,65 @@ const ActivityForm = ({
   } else {
     content = (
       <>
-        <ContentCard title="Activity Information">{mapFieldsToInputs(activityFields)}</ContentCard>
+        <ContentCard title="Activity Information">
+          {mapFieldsToInputs(activityFields)}
+          <div className="gc360_photo_dialog_box">
+            <DialogContent>
+              <DialogContentText className="gc360_photo_dialog_box_content_text">
+                {createPhotoDialogBoxMessage()}
+              </DialogContentText>
+              {!cropperImageData && (
+                <Dropzone
+                  onDropAccepted={onDropAccepted}
+                  onDropRejected={onDropRejected}
+                  accept="image/jpeg, image/jpg, image/png"
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <section>
+                      <div className="gc360_photo_dialog_box_content_dropzone" {...getRootProps()}>
+                        <input {...getInputProps()} />
+                      </div>
+                    </section>
+                  )}
+                </Dropzone>
+              )}
+              {cropperImageData && (
+                <div className="gc360_photo_dialog_box_content_cropper">
+                  <Cropper
+                    ref={cropperRef}
+                    src={cropperImageData}
+                    autoCropArea={1}
+                    viewMode={3}
+                    aspectRatio={aspectRatio}
+                    highlight={false}
+                    background={false}
+                    zoom={onCropperZoom}
+                    zoomable={false}
+                    dragMode={'none'}
+                    checkCrossOrigin={false}
+                  />
+                </div>
+              )}
+            </DialogContent>
+            <DialogActions className="gc360_photo_dialog_box_actions_top">
+              {cropperImageData && (
+                <Tooltip
+                  classes={{ tooltip: 'tooltip' }}
+                  id="tooltip-hide"
+                  title="Remove this image"
+                >
+                  <Button
+                    variant="outlined"
+                    onClick={() => setCropperImageData(null)}
+                    className="gc360_photo_dialog_box_content_button"
+                  >
+                    Remove picture
+                  </Button>
+                </Tooltip>
+              )}
+            </DialogActions>
+          </div>
+        </ContentCard>
 
         <GordonDialogBox
           open={openConfirmWindow}
@@ -510,58 +576,6 @@ const ActivityForm = ({
       cancelButtonName="cancel"
     >
       {content}
-      <div className="gc360_photo_dialog_box">
-        <DialogContent>
-          <DialogContentText className="gc360_photo_dialog_box_content_text">
-            {createPhotoDialogBoxMessage()}
-          </DialogContentText>
-          {!cropperImageData && (
-            <Dropzone
-              onDropAccepted={onDropAccepted}
-              onDropRejected={onDropRejected}
-              accept="image/jpeg, image/jpg, image/png"
-            >
-              {({ getRootProps, getInputProps }) => (
-                <section>
-                  <div className="gc360_photo_dialog_box_content_dropzone" {...getRootProps()}>
-                    <input {...getInputProps()} />
-                  </div>
-                </section>
-              )}
-            </Dropzone>
-          )}
-          {cropperImageData && (
-            <div className="gc360_photo_dialog_box_content_cropper">
-              <Cropper
-                ref={cropperRef}
-                src={cropperImageData}
-                autoCropArea={1}
-                viewMode={3}
-                aspectRatio={aspectRatio}
-                highlight={false}
-                background={false}
-                zoom={onCropperZoom}
-                zoomable={false}
-                dragMode={'none'}
-                checkCrossOrigin={false}
-              />
-            </div>
-          )}
-        </DialogContent>
-        <DialogActions className="gc360_photo_dialog_box_actions_top">
-          {cropperImageData && (
-            <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-hide" title="Remove this image">
-              <Button
-                variant="outlined"
-                onClick={() => setCropperImageData(null)}
-                className="gc360_photo_dialog_box_content_button"
-              >
-                Remove picture
-              </Button>
-            </Tooltip>
-          )}
-        </DialogActions>
-      </div>
     </GordonDialogBox>
   );
 };
