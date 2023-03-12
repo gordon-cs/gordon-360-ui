@@ -97,7 +97,7 @@ const Activity = () => {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item>
-          <img src={''} alt="Activity Icon" width="85em"></img>
+          <img src={activity?.Logo ?? ''} alt="Activity Icon" width="85em"></img>
         </Grid>
         <Grid item xs={8} md={5}>
           <Typography variant="h5" className={styles.title}>
