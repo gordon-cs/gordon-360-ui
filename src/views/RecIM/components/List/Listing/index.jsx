@@ -24,12 +24,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 // import { getActivityTypes } from 'services/recim/activity';
-import {
-  removeAttendance,
-  getMatchAttendance,
-  getMatchByID,
-  updateAttendance,
-} from 'services/recim/match';
+import { removeAttendance, updateAttendance } from 'services/recim/match';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
@@ -364,7 +359,7 @@ const ParticipantListing = ({
   callbackFunction,
   showParticipantOptions,
   withAttendance,
-  attendance,
+  initialAttendance,
   teamID,
   matchID,
 }) => {
@@ -422,14 +417,11 @@ const ParticipantListing = ({
   };
 
   const handleAttendance = async (attended) => {
-    console.log(attendance);
     let att = {
       teamID: teamID,
       username: participant.Username,
     };
-    console.log('Request:', matchID, att);
     attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
-    console.log('new attendance', await getMatchAttendance(matchID));
   };
 
   if (!participant) return null;
@@ -454,9 +446,7 @@ const ParticipantListing = ({
               <Switch
                 color="secondary"
                 inputProps={{ 'aria-label': 'attendance toggle' }}
-                defaultChecked={
-                  attendance.find((att) => att.Username === participant.Username) != null
-                }
+                defaultChecked={initialAttendance}
                 onChange={(event) => handleAttendance(event.target.checked)}
               />
             )}

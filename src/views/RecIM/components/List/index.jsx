@@ -36,7 +36,9 @@ const ParticipantList = ({
         participant={participant}
         minimal={minimal}
         withAttendance={withAttendance}
-        attendance={attendance}
+        initialAttendance={
+          withAttendance && attendance?.find((att) => att.Username === participant.Username)
+        }
         matchID={matchID}
         teamID={teamID}
         callbackFunction={callbackFunction}
