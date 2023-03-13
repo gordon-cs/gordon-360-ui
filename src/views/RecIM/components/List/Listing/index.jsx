@@ -285,7 +285,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
           </Grid>
           <Grid item xs={8} sm={4}>
             <Typography className={styles.listingSubtitle}>
-              Sportsmanship: {targetTeamStats.SportsmanshipRating}
+              Sportsmanship: {targetTeamStats.SportsmanshipScore}
             </Typography>
           </Grid>
           <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
