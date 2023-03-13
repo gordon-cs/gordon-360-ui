@@ -67,7 +67,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
           Each match has an estimated length of {series.Schedule.EstMatchTime} minutes, with a 15
           minutes buffer in between each match. Matches will be scheduled to start on {''}
           {standardDate(series.StartDate, false)}, or the earliest available day, at{' '}
-          {format(series.Schedule.StartTime, 'h:mmaaa')}.{' '}
+          {format(Date.parse(series.Schedule.StartTime), 'h:mmaaa')}.{' '}
         </Typography>
       </Typography>,
     );
