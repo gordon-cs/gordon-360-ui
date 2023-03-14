@@ -9,10 +9,12 @@ import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from '../../components/List';
-import { getTeamByID } from 'services/recim/team';
+import { getTeamByID, deleteTeam } from 'services/recim/team';
 import { getParticipantByUsername } from 'services/recim/participant';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import EditIcon from '@mui/icons-material/Edit';
+import SettingsIcon from '@mui/icons-material/Settings';
+import GordonDialogBox from 'components/GordonDialogBox';
 
 const Team = () => {
   const { teamID } = useParams();
@@ -21,6 +23,7 @@ const Team = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
   const handleInviteParticipantForm = (status) => {
@@ -76,30 +79,55 @@ const Team = () => {
     setOpenTeamForm(false);
   };
 
+  const handleDelete = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this team '" +
+          team.Name +
+          "'? This action cannot be undone.",
+      )
+    ) {
+      deleteTeam(teamID);
+      setOpenSettings(false);
+    }
+  };
+
   if (!profile) {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item>
-          <img src={''} alt="Team Icon" width="85em"></img>
+        <Grid item container xs={10} columnSpacing={4} direction="row" alignItems="center">
+          <Grid item>
+            <img src={''} alt="Team Icon" width="85em"></img>
+          </Grid>
+          <Grid item>
+            <Typography variant="h5" className={styles.title}>
+              {team?.Name ?? <GordonLoader size={15} inline />}
+              {hasPermissions && (
+                <IconButton
+                  onClick={() => {
+                    setOpenTeamForm(true);
+                  }}
+                  className={styles.editIconButton}
+                  sx={{ ml: 1 }}
+                >
+                  <EditIcon />
+                </IconButton>
+              )}
+            </Typography>
+            {teamRecord()}
+          </Grid>
         </Grid>
-        <Grid item xs={8} md={5}>
-          <Typography variant="h5" className={styles.title}>
-            {team?.Name ?? <GordonLoader size={15} inline />}
-            {hasPermissions && (
-              <IconButton
-                onClick={() => {
-                  setOpenTeamForm(true);
-                }}
-                className={styles.editIconButton}
-                sx={{ ml: 1 }}
-              >
-                <EditIcon />
-              </IconButton>
-            )}
-          </Typography>
-          {teamRecord()}
+        <Grid item xs={2} textAlign={'right'}>
+          <IconButton
+            onClick={() => {
+              setOpenSettings(true);
+            }}
+            sx={{ mr: '1rem' }}
+          >
+            <SettingsIcon fontSize="large" />
+          </IconButton>
         </Grid>
       </Grid>
     );
@@ -184,6 +212,27 @@ const Team = () => {
                 team={team}
                 isAdmin={user.IsAdmin}
               />
+            )}
+            {openSettings && (
+              <GordonDialogBox
+                title="Admin Settings"
+                fullWidth
+                open={openSettings}
+                cancelButtonClicked={() => setOpenSettings(false)}
+                cancelButtonName="Close"
+              >
+                <br />
+                <Grid container alignItems="center" justifyContent="space-between">
+                  <Grid item>
+                    <Typography>Permanently delete the team '{team.Name}'</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Button color="error" variant="contained" onClick={handleDelete}>
+                      Delete this team
+                    </Button>
+                  </Grid>
+                </Grid>
+              </GordonDialogBox>
             )}
           </Grid>
         )}
