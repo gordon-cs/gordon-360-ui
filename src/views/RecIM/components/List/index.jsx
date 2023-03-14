@@ -18,6 +18,11 @@ const ParticipantList = ({
   participants,
   minimal,
   showParticipantOptions,
+  withAttendance,
+  attendance,
+  isAdmin,
+  matchID,
+  teamID,
   showInactive,
   callbackFunction,
 }) => {
@@ -31,6 +36,13 @@ const ParticipantList = ({
         key={participant.username}
         participant={participant}
         minimal={minimal}
+        withAttendance={withAttendance}
+        initialAttendance={
+          withAttendance && attendance?.find((att) => att.Username === participant.Username)
+        }
+        isAdmin={isAdmin}
+        matchID={matchID}
+        teamID={teamID}
         callbackFunction={(bool) => callbackFunction(bool)}
         showParticipantOptions={
           showParticipantOptions &&
