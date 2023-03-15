@@ -6,6 +6,7 @@ export type Participant = {
   Username: string;
   Email: string;
   Role: string;
+  GamesAttended: number;
   Status: string;
   Notification: ParticipantNotification[];
   IsAdmin: boolean;
