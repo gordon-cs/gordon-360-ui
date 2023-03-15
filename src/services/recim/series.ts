@@ -99,7 +99,7 @@ const putSeriesSchedule = async (schedule: UploadSeriesSchedule): Promise<Series
   http.put(`recim/series/schedule`, schedule);
 
 const scheduleSeriesMatches = async (seriesID: number): Promise<Match[]> =>
-  http.post(`recim/series/${seriesID}/autoschedule`);
+  http.post(`recim/series/${seriesID}/autoschedule`, {});
 
 const deleteSeriesCascade = async (seriesID: number): Promise<CreatedSeries> =>
   http.del(`recim/series/${seriesID}`);
