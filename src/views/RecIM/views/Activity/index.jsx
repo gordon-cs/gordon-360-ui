@@ -10,14 +10,16 @@ import Header from '../../components/Header';
 import styles from './Activity.module.css';
 import { TeamList } from '../../components/List';
 import TeamForm from '../../components/Forms/TeamForm';
-import { getActivityByID } from 'services/recim/activity';
+import { deleteActivity, getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
+import GordonDialogBox from 'components/GordonDialogBox';
 
 const Activity = () => {
   const navigate = useNavigate();
@@ -33,6 +35,7 @@ const Activity = () => {
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
   const [reload, setReload] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -88,6 +91,20 @@ const Activity = () => {
     setOpenCreateSeriesForm(false);
   };
 
+  const handleDelete = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this team '" +
+          activity.Name +
+          "'? This action cannot be undone.",
+      )
+    ) {
+      deleteActivity(activityID);
+      setOpenSettings(false);
+      navigate(`/recim`);
+    }
+  };
+
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -96,32 +113,46 @@ const Activity = () => {
   } else {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item>
-          <img src={''} alt="Activity Icon" width="85em"></img>
+        <Grid item container xs={10} columnSpacing={4} direction="row" alignItems="center">
+          <Grid item>
+            <img src={''} alt="Activity Icon" width="85em"></img>
+          </Grid>
+          <Grid item>
+            <Typography variant="h5" className={styles.title}>
+              {activity?.Name ?? <GordonLoader size={15} inline />}
+              {user?.IsAdmin && (
+                <IconButton
+                  onClick={() => {
+                    setOpenActivityForm(true);
+                  }}
+                  className={styles.editIconButton}
+                  sx={{ ml: 1 }}
+                >
+                  <EditIcon />
+                </IconButton>
+              )}
+            </Typography>
+            <Typography variant="h6" className={styles.subtitle}>
+              <i>
+                {activity?.StartDate
+                  ? formatDateTimeRange(activity.StartDate, activity.EndDate)
+                  : `Description of activity`}
+              </i>
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={8} md={5}>
-          <Typography variant="h5" className={styles.title}>
-            {activity?.Name ?? <GordonLoader size={15} inline />}
-            {user?.IsAdmin && (
-              <IconButton
-                onClick={() => {
-                  setOpenActivityForm(true);
-                }}
-                className={styles.editIconButton}
-                sx={{ ml: 1 }}
-              >
-                <EditIcon />
-              </IconButton>
-            )}
-          </Typography>
-          <Typography variant="h6" className={styles.subtitle}>
-            <i>
-              {activity?.StartDate
-                ? formatDateTimeRange(activity.StartDate, activity.EndDate)
-                : `Description of activity`}
-            </i>
-          </Typography>
-        </Grid>
+        {user?.IsAdmin && (
+          <Grid item xs={2} textAlign={'right'}>
+            <IconButton
+              onClick={() => {
+                setOpenSettings(true);
+              }}
+              sx={{ mr: '1rem' }}
+            >
+              <SettingsIcon fontSize="large" />
+            </IconButton>
+          </Grid>
+        )}
         {openActivityForm && (
           <ActivityForm
             activity={activity}
@@ -286,6 +317,27 @@ const Activity = () => {
                 setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
                 activity={activity}
               />
+            )}
+            {openSettings && (
+              <GordonDialogBox
+                title="Admin Settings"
+                fullWidth
+                open={openSettings}
+                cancelButtonClicked={() => setOpenSettings(false)}
+                cancelButtonName="Close"
+              >
+                <br />
+                <Grid container alignItems="center" justifyContent="space-between">
+                  <Grid item>
+                    <Typography>Permanently delete the activity '{activity.Name}'</Typography>
+                  </Grid>
+                  <Grid item>
+                    <Button color="error" variant="contained" onClick={handleDelete}>
+                      Delete this team
+                    </Button>
+                  </Grid>
+                </Grid>
+              </GordonDialogBox>
             )}
           </Grid>
         )}

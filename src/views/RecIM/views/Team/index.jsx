@@ -1,6 +1,7 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -17,6 +18,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import GordonDialogBox from 'components/GordonDialogBox';
 
 const Team = () => {
+  const navigate = useNavigate();
   const { teamID } = useParams();
   const { profile } = useUser();
   const [team, setTeam] = useState();
@@ -89,6 +91,7 @@ const Team = () => {
     ) {
       deleteTeam(teamID);
       setOpenSettings(false);
+      navigate(`/recim/activity/${team.Activity.ID}`);
     }
   };
 
@@ -119,16 +122,18 @@ const Team = () => {
             {teamRecord()}
           </Grid>
         </Grid>
-        <Grid item xs={2} textAlign={'right'}>
-          <IconButton
-            onClick={() => {
-              setOpenSettings(true);
-            }}
-            sx={{ mr: '1rem' }}
-          >
-            <SettingsIcon fontSize="large" />
-          </IconButton>
-        </Grid>
+        {user?.IsAdmin && (
+          <Grid item xs={2} textAlign={'right'}>
+            <IconButton
+              onClick={() => {
+                setOpenSettings(true);
+              }}
+              sx={{ mr: '1rem' }}
+            >
+              <SettingsIcon fontSize="large" />
+            </IconButton>
+          </Grid>
+        )}
       </Grid>
     );
 
