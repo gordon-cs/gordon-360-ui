@@ -102,6 +102,7 @@ const Activity = () => {
       deleteActivity(activityID);
       setOpenSettings(false);
       navigate(`/recim`);
+      // @TODO add snackbar
     }
   };
 
@@ -113,7 +114,7 @@ const Activity = () => {
   } else {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item container xs={10} columnSpacing={4} direction="row" alignItems="center">
+        <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
           <Grid item>
             <img src={''} alt="Activity Icon" width="85em"></img>
           </Grid>
@@ -142,7 +143,7 @@ const Activity = () => {
           </Grid>
         </Grid>
         {user?.IsAdmin && (
-          <Grid item xs={2} textAlign={'right'}>
+          <Grid item xs={3} textAlign={'right'}>
             <IconButton
               onClick={() => {
                 setOpenSettings(true);

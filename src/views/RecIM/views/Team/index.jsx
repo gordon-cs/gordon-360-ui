@@ -92,6 +92,7 @@ const Team = () => {
       deleteTeam(teamID);
       setOpenSettings(false);
       navigate(`/recim/activity/${team.Activity.ID}`);
+      // @TODO add snackbar
     }
   };
 
@@ -100,7 +101,7 @@ const Team = () => {
   } else {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item container xs={10} columnSpacing={4} direction="row" alignItems="center">
+        <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
           <Grid item>
             <img src={''} alt="Team Icon" width="85em"></img>
           </Grid>
@@ -123,7 +124,7 @@ const Team = () => {
           </Grid>
         </Grid>
         {user?.IsAdmin && (
-          <Grid item xs={2} textAlign={'right'}>
+          <Grid item xs={3} textAlign={'right'}>
             <IconButton
               onClick={() => {
                 setOpenSettings(true);
