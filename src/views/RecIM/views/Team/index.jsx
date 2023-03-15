@@ -1,7 +1,6 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';

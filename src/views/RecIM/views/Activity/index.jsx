@@ -1,8 +1,7 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -334,7 +333,7 @@ const Activity = () => {
                   </Grid>
                   <Grid item>
                     <Button color="error" variant="contained" onClick={handleDelete}>
-                      Delete this team
+                      Delete this activity
                     </Button>
                   </Grid>
                 </Grid>
