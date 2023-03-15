@@ -62,7 +62,8 @@ const Team = () => {
       if (team.TeamRecord[0]) {
         return (
           <Typography className={styles.subtitle}>
-            {team.TeamRecord[0].Win} W : {team.TeamRecord[0].Loss} L : {team.TeamRecord[0].Tie} T
+            {team.TeamRecord[0].WinCount ?? 0}W : {team.TeamRecord[0].LossCount ?? 0}L :{' '}
+            {team.TeamRecord[0].TieCount ?? 0}T
           </Typography>
         );
       }

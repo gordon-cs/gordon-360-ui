@@ -84,7 +84,7 @@ const ActivityForm = ({
       name: 'startDate',
       type: 'datetime',
       error: errorStatus.startDate,
-      required: true,
+      required: false,
       helperText: '*Required',
     },
     {
@@ -130,7 +130,7 @@ const ActivityForm = ({
         return sport.Name;
       }),
       error: errorStatus.sportID,
-      required: false,
+      required: true,
       helperText: '*Required',
     },
     {
@@ -195,9 +195,9 @@ const ActivityForm = ({
         registrationStart: activity.RegistrationStart,
         registrationEnd: activity.RegistrationEnd,
         typeID:
-          activityTypes.find((type) => type.ID === activity.TypeID) == null
+          activityTypes.find((type) => type.Description === activity.Type) == null
             ? ''
-            : activityTypes.find((type) => type.ID === activity.TypeID).Description,
+            : activityTypes.find((type) => type.Description === activity.Type).Description,
         sportID:
           sports.find((type) => type.ID === activity.Sport.ID) == null
             ? ''
