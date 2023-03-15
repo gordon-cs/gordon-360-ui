@@ -7,6 +7,7 @@ import GordonSnackbar from 'components/Snackbar';
 import { addParticipantToTeam } from 'services/recim/team';
 import { useCallback } from 'react';
 import GordonLoader from 'components/Loader';
+import styles from './InviteParticipantForm.module.css';
 
 const InviteParticipantForm = ({
   closeWithSnackbar,
@@ -73,6 +74,7 @@ const InviteParticipantForm = ({
         buttonName={saving ? 'Sending...' : 'Send Invites'}
         cancelButtonClicked={handleWindowClose}
         cancelButtonName="cancel"
+        PaperProps={{ className: styles.dialogPaper }} // allow people search overflow
       >
         <Grid container alignItems="center" direction="column" spacing={2} p={2}>
           <Grid item sx={{ width: '100%' }}>
