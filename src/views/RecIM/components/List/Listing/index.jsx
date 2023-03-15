@@ -515,19 +515,19 @@ const ParticipantListing = ({
         </ListItemButton>
         {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
-            {participant.Role !== 'Inactive' && (
+            {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (
               <MenuItem dense onClick={handleMakeCoCaptain} divider>
                 Make co-captain
+              </MenuItem>
+            )}
+            {(participant.Role === 'Inactive' || participant.Role === 'Co-Captain') && (
+              <MenuItem dense onClick={reinstateMember}>
+                {participant.Role === 'Inactive' ? `Reinstate Member` : `Demote to Member`}
               </MenuItem>
             )}
             {participant.Role !== 'Inactive' && (
               <MenuItem dense onClick={handleRemoveFromTeam} className={styles.rejectButton}>
                 Remove from team
-              </MenuItem>
-            )}
-            {participant.Role === 'Inactive' && (
-              <MenuItem dense onClick={reinstateMember}>
-                Reinstate Member
               </MenuItem>
             )}
           </Menu>
