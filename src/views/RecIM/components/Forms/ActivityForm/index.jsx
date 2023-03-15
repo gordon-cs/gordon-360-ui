@@ -23,6 +23,11 @@ import { getAllSports } from 'services/recim/sport';
 import { isMobile } from 'react-device-detect';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
+import {
+  createPhotoDialogBoxMessage,
+  imageOnLoadHelper,
+  onDropRejected,
+} from 'views/RecIM/components/Helpers/index';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -35,7 +40,7 @@ const ActivityForm = ({
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
-    Logo: false,
+    logo: false,
     startDate: false,
     endDate: false,
     registrationStart: false,
@@ -224,11 +229,12 @@ const ActivityForm = ({
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [isSaving, setSaving] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
-  const [cropperImageData, setCropperImageData] = useState(null); //null if no picture chosen, else contains picture
-  const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState(null);
-  const [photoDialogError, setPhotoDialogError] = useState(null);
-  const [aspectRatio, setAspectRatio] = useState(null);
+  const [cropperImageData, setCropperImageData] = useState(); //null if no picture chosen, else contains picture
+  const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState();
+  const [photoDialogError, setPhotoDialogError] = useState();
+  const [aspectRatio, setAspectRatio] = useState();
   const cropperRef = useRef();
+  const [activityRequest, setActivityRequest] = useState({ ...currentInfo, ...newInfo });
 
   const handleSetError = (field, condition) => {
     const getCurrentErrorStatus = (currentValue) => {
@@ -245,8 +251,6 @@ const ActivityForm = ({
     setNewInfo(currentInfo);
     if (currentInfo.Logo !== null) {
       setCropperImageData(currentInfo.Logo);
-    } else {
-      setCropperImageData(null);
     }
   }, [currentInfo]);
 
@@ -301,24 +305,47 @@ const ActivityForm = ({
           Label: getFieldLabel(key),
         });
     });
+
+    //push previous and new image if the Logos are different
+    const prevLogo = currentInfo.Logo ?? 'None';
+    const newLogo = activityRequest.Logo ?? 'None';
+    if (prevLogo !== newLogo) {
+      updatedFields.push({
+        Field: 'Previous Logo',
+        Value: prevLogo,
+        Label: 'Previous Logo',
+      });
+      updatedFields.push({
+        Field: 'New Logo',
+        Value: newLogo,
+        Label: 'New Logo',
+      });
+    }
+
     return updatedFields;
   }
+
+  const handleSubmit = async () => {
+    let newActivityRequest = { ...currentInfo, ...newInfo };
+    newActivityRequest.sportID = sports.find(
+      (sport) => sport.Name === newActivityRequest.sportID,
+    ).ID;
+    newActivityRequest.typeID = activityTypes.find(
+      (type) => type.Description === newActivityRequest.typeID,
+    ).ID;
+
+    newActivityRequest.Logo =
+      cropperImageData !== null
+        ? cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL()
+        : null;
+
+    // wait for the value update on ActivityRequest, otherwise the Confirm Window may not show images (prev and new) properly
+    await setActivityRequest(newActivityRequest);
+  };
 
   const handleConfirm = () => {
     setSaving(true);
 
-    let imageData = null;
-
-    if (cropperImageData !== null) {
-      imageData = cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-    }
-
-    let activityRequest = { ...currentInfo, ...newInfo };
-    activityRequest.Logo = imageData;
-    activityRequest.sportID = sports.find((sport) => sport.Name === activityRequest.sportID).ID;
-    activityRequest.typeID = activityTypes.find(
-      (type) => type.Description === activityRequest.typeID,
-    ).ID;
     if (activity) {
       activityRequest.statusID = activityStatusTypes.find(
         (type) => type.Description === activityRequest.statusID,
@@ -353,8 +380,26 @@ const ActivityForm = ({
   };
 
   /**********************************************************
-  /*Following functions are solely related to photo submission*
-  /**********************************************************/
+/*Following functions are solely related to photo submission*
+/**********************************************************/
+
+  // function onCropperZoom(event) {
+  //   if (event.detail.ratio > 1) {
+  //     event.preventDefault();
+  //     cropperRef.current.cropper.zoomTo(1);
+  //   }
+  // }
+
+  // async function onThisDropAccepted(fileList) {
+  //   let result = await onDropAccepted(fileList);
+  //   await setCropperImageData(result.dataURL);
+  //   await setAspectRatio(result.aspectRatio);
+  //   //console.log('result: ', result);
+  // }
+
+  // async function onThisDropRejected() {
+  //   return onDropRejected();
+  // }
 
   async function clearPhotoDialogErrorTimeout() {
     clearTimeout(photoDialogErrorTimeout);
@@ -435,7 +480,6 @@ const ActivityForm = ({
       var aRatio = i.width / i.height;
       setAspectRatio(aRatio);
       setPhotoDialogError(null);
-      setAspectRatio(aRatio);
       setCropperImageData(dataURL);
     };
     i.src = dataURL;
@@ -478,7 +522,7 @@ const ActivityForm = ({
           <div className="gc360_photo_dialog_box">
             <DialogContent>
               <DialogContentText className="gc360_photo_dialog_box_content_text">
-                {createPhotoDialogBoxMessage()}
+                {createPhotoDialogBoxMessage(cropperImageData, isMobile)}
               </DialogContentText>
               {!cropperImageData && (
                 <Dropzone
@@ -565,6 +609,7 @@ const ActivityForm = ({
       fullWidth
       maxWidth="lg"
       buttonClicked={() => {
+        handleSubmit();
         setOpenConfirmWindow(true);
       }}
       isButtonDisabled={disableUpdateButton}

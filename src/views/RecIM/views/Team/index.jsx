@@ -13,6 +13,7 @@ import { getTeamByID } from 'services/recim/team';
 import { getParticipantByUsername } from 'services/recim/participant';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import EditIcon from '@mui/icons-material/Edit';
+import defaultLogo from 'views/RecIM/recim_logo.png';
 
 const Team = () => {
   const { teamID } = useParams();
@@ -81,7 +82,7 @@ const Team = () => {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item>
-          <img src={team?.Logo ?? ''} alt="Team Icon" width="85em"></img>
+          <img src={team?.Logo ?? defaultLogo} alt="Team Icon" width="85em"></img>
         </Grid>
         <Grid item xs={8} md={5}>
           <Typography variant="h5" className={styles.title}>

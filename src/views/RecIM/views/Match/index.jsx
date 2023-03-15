@@ -13,6 +13,7 @@ import { getMatchByID } from 'services/recim/match';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import EditIcon from '@mui/icons-material/Edit';
 import { standardDate } from 'views/RecIM/components/Helpers';
+import defaultLogo from 'views/RecIM/recim_logo.png';
 
 const RosterCard = ({ participants, teamName }) => (
   <Card>
@@ -91,7 +92,13 @@ const Match = () => {
         </Grid>
         <Grid container alignItems="center" justifyContent="space-around">
           <Grid item xs={2}>
-            <img src={''} alt="Team Icon" width="85em"></img>
+            <img
+              src={
+                match?.Activity.Team.find((t) => t.ID === match?.Team[0]?.ID).Logo ?? defaultLogo
+              }
+              alt="Team Icon"
+              width="85em"
+            ></img>
           </Grid>
           <Grid item xs={2}>
             <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
@@ -143,7 +150,13 @@ const Match = () => {
             )}
           </Grid>
           <Grid item xs={2}>
-            <img src={''} alt="Team Icon" width="85em"></img>
+            <img
+              src={
+                match?.Activity.Team.find((t) => t.ID === match?.Team[1]?.ID).Logo ?? defaultLogo
+              }
+              alt="Team Icon"
+              width="85em"
+            ></img>
           </Grid>
         </Grid>
       </>

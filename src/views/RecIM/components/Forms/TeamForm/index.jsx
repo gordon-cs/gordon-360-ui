@@ -96,11 +96,12 @@ const TeamForm = ({
   const [isSaving, setSaving] = useState(false);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
-  const [cropperImageData, setCropperImageData] = useState(null); //null if no picture chosen, else contains picture
-  const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState(null);
-  const [photoDialogError, setPhotoDialogError] = useState(null);
-  const [aspectRatio, setAspectRatio] = useState(null);
+  const [cropperImageData, setCropperImageData] = useState(); //null if no picture chosen, else contains picture
+  const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState();
+  const [photoDialogError, setPhotoDialogError] = useState();
+  const [aspectRatio, setAspectRatio] = useState();
   const cropperRef = useRef();
+  const [teamRequest, setTeamRequest] = useState({ ...currentInfo, ...newInfo });
 
   const handleSetError = (field, condition) => {
     const getCurrentErrorStatus = (currentValue) => {
@@ -117,8 +118,6 @@ const TeamForm = ({
     setNewInfo(currentInfo);
     if (currentInfo.Logo !== null) {
       setCropperImageData(currentInfo.Logo);
-    } else {
-      setCropperImageData(null);
     }
   }, [currentInfo]);
 
@@ -171,20 +170,39 @@ const TeamForm = ({
           Label: getFieldLabel(key),
         });
     });
+
+    //push previous and new image if the Logos are different
+    const prevLogo = currentInfo.Logo ?? 'None';
+    const newLogo = teamRequest.Logo ?? 'None';
+    if (prevLogo !== newLogo) {
+      updatedFields.push({
+        Field: 'Previous Logo',
+        Value: prevLogo,
+        Label: 'Previous Logo',
+      });
+      updatedFields.push({
+        Field: 'New Logo',
+        Value: newLogo,
+        Label: 'New Logo',
+      });
+    }
+
     return updatedFields;
   }
 
+  const handleSubmit = async () => {
+    let newTeamRequest = { ...currentInfo, ...newInfo };
+    newTeamRequest.Logo =
+      cropperImageData !== null
+        ? cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL()
+        : null;
+
+    // wait for the value update on TeamRequest, otherwise the Confirm Window may not show images (prev and new) properly
+    await setTeamRequest(newTeamRequest);
+  };
+
   const handleConfirm = () => {
     setSaving(true);
-
-    let imageData = null;
-
-    if (cropperImageData !== null) {
-      imageData = cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-    }
-
-    let teamRequest = { ...currentInfo, ...newInfo };
-    teamRequest.Logo = imageData;
 
     if (team) {
       teamRequest.StatusID = teamStatus.find(
@@ -303,7 +321,6 @@ const TeamForm = ({
       var aRatio = i.width / i.height;
       setAspectRatio(aRatio);
       setPhotoDialogError(null);
-      setAspectRatio(aRatio);
       setCropperImageData(dataURL);
     };
     i.src = dataURL;
@@ -339,7 +356,10 @@ const TeamForm = ({
       title={team ? 'Edit your team' : 'Create a Team'}
       fullWidth
       maxWidth="sm"
-      buttonClicked={() => setOpenConfirmWindow(true)}
+      buttonClicked={() => {
+        handleSubmit();
+        setOpenConfirmWindow(true);
+      }}
       isButtonDisabled={disableUpdateButton}
       buttonName="Submit"
       cancelButtonClicked={() => {
