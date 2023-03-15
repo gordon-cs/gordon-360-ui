@@ -420,7 +420,7 @@ const ParticipantListing = ({
       RoleTypeID: 4,
     }; // Role 4 is co-captain
 
-    await editTeamParticipant(parseInt(teamIDParam), editedParticipant); // Role 4 is co-captain
+    await editTeamParticipant(teamIDParam, editedParticipant); // Role 4 is co-captain
     handleClose();
   };
 
@@ -429,7 +429,7 @@ const ParticipantListing = ({
       Username: participant.Username,
       RoleTypeID: 3,
     }; // Role 3 is member
-    await editTeamParticipant(parseInt(teamIDParam), editedParticipant);
+    await editTeamParticipant(teamIDParam, editedParticipant);
     handleClose();
   };
 
@@ -438,7 +438,7 @@ const ParticipantListing = ({
       Username: participant.Username,
       RoleTypeID: 6,
     }; // Role 6 is inactive
-    await editTeamParticipant(parseInt(teamIDParam), editedParticipant);
+    await editTeamParticipant(teamIDParam, editedParticipant);
     handleClose();
   };
 
@@ -447,7 +447,7 @@ const ParticipantListing = ({
       Username: participant.Username,
       RoleTypeID: 0,
     }; // deleted
-    await editTeamParticipant(parseInt(teamIDParam), editedParticipant);
+    await editTeamParticipant(teamIDParam, editedParticipant);
     handleClose();
   };
 
