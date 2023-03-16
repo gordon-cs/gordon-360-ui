@@ -23,11 +23,7 @@ import { getAllSports } from 'services/recim/sport';
 import { isMobile } from 'react-device-detect';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
-import {
-  createPhotoDialogBoxMessage,
-  imageOnLoadHelper,
-  onDropRejected,
-} from 'views/RecIM/components/Helpers/index';
+import { CropperHelper } from 'views/RecIM/components/Helpers/index';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -230,11 +226,12 @@ const ActivityForm = ({
   const [isSaving, setSaving] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
   const [cropperImageData, setCropperImageData] = useState(); //null if no picture chosen, else contains picture
-  const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState();
   const [photoDialogError, setPhotoDialogError] = useState();
   const [aspectRatio, setAspectRatio] = useState();
+  const [message, setMessage] = useState();
   const cropperRef = useRef();
   const [activityRequest, setActivityRequest] = useState({ ...currentInfo, ...newInfo });
+  const cropperHelper = new CropperHelper();
 
   const handleSetError = (field, condition) => {
     const getCurrentErrorStatus = (currentValue) => {
@@ -379,69 +376,9 @@ const ActivityForm = ({
     setCropperImageData(null);
   };
 
-  /**********************************************************
-/*Following functions are solely related to photo submission*
-/**********************************************************/
-
-  // function onCropperZoom(event) {
-  //   if (event.detail.ratio > 1) {
-  //     event.preventDefault();
-  //     cropperRef.current.cropper.zoomTo(1);
-  //   }
-  // }
-
-  // async function onThisDropAccepted(fileList) {
-  //   let result = await onDropAccepted(fileList);
-  //   await setCropperImageData(result.dataURL);
-  //   await setAspectRatio(result.aspectRatio);
-  //   //console.log('result: ', result);
-  // }
-
-  // async function onThisDropRejected() {
-  //   return onDropRejected();
-  // }
-
-  async function clearPhotoDialogErrorTimeout() {
-    clearTimeout(photoDialogErrorTimeout);
-    setPhotoDialogErrorTimeout(null);
-    setPhotoDialogError(null);
-  }
-
-  /**
-   * Creates the Photo Dialog message that will be displayed to the user
-   *
-   * @returns {string} The message of the Photo Dialog
-   */
-  function createPhotoDialogBoxMessage() {
-    let message = '';
-    // If an error occured and there's no currently running timeout, the error is displayed
-    // and a timeout for that error message is created
-    if (photoDialogError !== null) {
-      message = <span style={{ color: '#B63228' }}>{photoDialogError}</span>;
-      if (photoDialogErrorTimeout === null) {
-        // Shows the error message for 6 seconds and then returns back to normal text
-        setPhotoDialogErrorTimeout(
-          setTimeout(() => {
-            setPhotoDialogErrorTimeout(null);
-            setPhotoDialogError(null);
-          }, 6000),
-        );
-      }
-    }
-
-    // If no error occured and the cropper is shown, the cropper text is displayed
-    else if (cropperImageData) {
-      message = 'Drag & Drop Picture, or Click to Browse Files';
-    }
-
-    // If no error occured and the cropper is not shown, the pick a file text is displayed
-    else {
-      message = isMobile
-        ? 'Tap Image to Browse Files'
-        : 'Drag & Drop Picture, or Click to Browse Files';
-    }
-    return message;
-  }
+  /*****************************************************************************************************
+/*Following functions are solely related to photo submission and essential to implement CropperHelper*
+/****************************************************************************************************/
 
   function onCropperZoom(event) {
     if (event.detail.ratio > 1) {
@@ -450,39 +387,24 @@ const ActivityForm = ({
     }
   }
 
-  /**
-   * Handles the acceptance of the user dropping an image in the Photo Uploader in News submission
-   *
-   * @param {*} fileList The image dropped in the Dropzone of the Photo Uploader
-   */
-  function onDropAccepted(fileList) {
-    var previewImageFile = fileList[0];
-    var reader = new FileReader();
-    reader.onload = () => {
-      imageOnLoadHelper(reader);
-    };
-    reader.readAsDataURL(previewImageFile);
+  async function onDropAccepted(fileList) {
+    setPhotoDialogError(null);
+    cropperHelper.onDropAccepted(fileList, setCropperImageData, setAspectRatio);
   }
 
-  /**
-   * Handles the rejection of the user dropping an invalid file in the Photo Updater Dialog Box
-   * Copied from Identification
-   */
   async function onDropRejected() {
-    await clearPhotoDialogErrorTimeout();
-    setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
+    await cropperHelper.onDropRejected(setPhotoDialogError);
   }
 
-  function imageOnLoadHelper(reader) {
-    var dataURL = reader.result.toString();
-    var i = new Image();
-    i.onload = async () => {
-      var aRatio = i.width / i.height;
-      setAspectRatio(aRatio);
-      setPhotoDialogError(null);
-      setCropperImageData(dataURL);
-    };
-    i.src = dataURL;
+  function createPhotoDialogBoxMessage() {
+    cropperHelper
+      .createPhotoDialogBoxMessage(
+        photoDialogError,
+        setPhotoDialogError,
+        cropperImageData,
+        isMobile,
+      )
+      .then((value) => setMessage(value));
   }
 
   /**
@@ -522,7 +444,8 @@ const ActivityForm = ({
           <div className="gc360_photo_dialog_box">
             <DialogContent>
               <DialogContentText className="gc360_photo_dialog_box_content_text">
-                {createPhotoDialogBoxMessage(cropperImageData, isMobile)}
+                {createPhotoDialogBoxMessage()}
+                {photoDialogError ? <span style={{ color: '#B63228' }}>{message}</span> : message}
               </DialogContentText>
               {!cropperImageData && (
                 <Dropzone
