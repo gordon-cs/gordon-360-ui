@@ -18,6 +18,7 @@ import { getParticipantByUsername, getParticipantTeams } from 'services/recim/pa
 import EditIcon from '@mui/icons-material/Edit';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
+import defaultLogo from 'views/RecIM/recim_logo.png';
 
 const Activity = () => {
   const navigate = useNavigate();
@@ -97,7 +98,7 @@ const Activity = () => {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item>
-          <img src={''} alt="Activity Icon" width="85em"></img>
+          <img src={activity?.Logo ?? defaultLogo} alt="Activity Icon" width="85em"></img>
         </Grid>
         <Grid item xs={8} md={5}>
           <Typography variant="h5" className={styles.title}>
