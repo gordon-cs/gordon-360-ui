@@ -111,7 +111,7 @@ const Match = () => {
         <Grid container alignItems="center" justifyContent="space-around">
           <Grid item xs={2}>
             <img
-              src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID).Logo ?? defaultLogo}
+              src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID)?.Logo ?? defaultLogo}
               alt="Team Icon"
               width="85em"
             ></img>
@@ -173,7 +173,7 @@ const Match = () => {
           </Grid>
           <Grid item xs={2}>
             <img
-              src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID).Logo ?? defaultLogo}
+              src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID)?.Logo ?? defaultLogo}
               alt="Team Icon"
               width="85em"
             ></img>

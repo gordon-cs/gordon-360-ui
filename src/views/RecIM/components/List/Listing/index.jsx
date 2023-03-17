@@ -301,6 +301,15 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
       </ListItemButton>
     );
   } else {
+    let ActivityRecord = {
+      WinCount: 0,
+      LossCount: 0,
+    };
+
+    team.TeamRecord.forEach((record) => {
+      ActivityRecord.WinCount += record.WinCount;
+      ActivityRecord.LossCount += record.LossCount;
+    });
     content = (
       <Grid container direction="row" justifyContent="center">
         <Grid item xs={12}>
@@ -311,10 +320,15 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
           >
             <Grid container>
               <Grid container columnSpacing={2}>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={8} sm={6}>
                   <Typography className={styles.listingTitle}>{team.Name}</Typography>
                 </Grid>
-                <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
+                <Grid item xs={4} sm={6} className={styles.rightAlignLarge}>
+                  <Typography className={styles.listingSubtitle}>
+                    {ActivityRecord.WinCount}W : {ActivityRecord.LossCount}L
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6} className={styles.listingSubtitle}>
                   <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
                 </Grid>
               </Grid>

@@ -120,11 +120,12 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
 
   const currentInfo = useMemo(() => {
     if (match) {
+      console.log(match);
       //I tried using inbuild javascript functions but I can't wrap my head around multiple
       //filters. You are welcome to improve on the logic below if you so desire.
       var teamIDs = [];
       match.Team.forEach((team) =>
-        teamIDs.push(match.Series.TeamStanding.find((_team) => team.ID === _team.TeamID).Name),
+        teamIDs.push(match.Series.TeamStanding.find((_team) => team.ID === _team.TeamID)?.Name),
       );
       return {
         StartTime: match.StartTime,
@@ -216,7 +217,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     });
     return updatedFields;
   }
-
+  console.log(match, activity);
   const handleConfirm = () => {
     setSaving(true);
 
@@ -232,7 +233,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     matchRequest.TeamIDs.forEach((value) => {
       if (activity) idArray.push(activity.Team.find((team) => team.Name === value).ID);
       else if (match)
-        idArray.push(match.Series.TeamStanding.find((team) => team.Name === value).TeamID);
+        idArray.push(match.Series.TeamStanding.find((team) => team.Name === value)?.TeamID);
     });
     matchRequest.TeamIDs = idArray;
 
