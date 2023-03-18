@@ -120,7 +120,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
 
   const currentInfo = useMemo(() => {
     if (match) {
-      console.log(match);
       //I tried using inbuild javascript functions but I can't wrap my head around multiple
       //filters. You are welcome to improve on the logic below if you so desire.
       var teamIDs = [];
@@ -217,7 +216,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     });
     return updatedFields;
   }
-  console.log(match, activity);
   const handleConfirm = () => {
     setSaving(true);
 
