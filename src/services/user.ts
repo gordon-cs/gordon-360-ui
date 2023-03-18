@@ -1,8 +1,8 @@
 import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
-import { Class } from './peopleSearch';
 import http from './http';
+import { Class } from './peopleSearch';
 import { Override } from './utils';
 
 type CLWCredits = {
@@ -249,7 +249,7 @@ const getBirthdate = async (): Promise<DateTime> =>
 
 const isBirthdayToday = async () => {
   const birthday = await getBirthdate();
-  return birthday?.toISODate() === DateTime.now().toISODate();
+  return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
 };
 
 // TODO: Add type info
