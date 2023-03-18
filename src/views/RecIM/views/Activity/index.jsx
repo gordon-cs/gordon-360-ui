@@ -280,13 +280,6 @@ const Activity = () => {
         </CardContent>
       </Card>
     );
-    console.log(
-      activity,
-      activity?.Series[0]?.StartDate,
-      selectedSeriesTab,
-      activity?.Series[0]?.StartDate < new Date().toJSON() &&
-        new Date().toJSON() < activity?.Series[0]?.EndDate,
-    );
     return (
       <>
         <Header activity={activity}>{headerContents}</Header>

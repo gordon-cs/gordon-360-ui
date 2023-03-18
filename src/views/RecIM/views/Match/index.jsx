@@ -95,7 +95,6 @@ const Match = () => {
     // The user is not logged in
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
-    console.log(match);
     let headerContents = (
       <>
         <Grid container spacing={4}>
