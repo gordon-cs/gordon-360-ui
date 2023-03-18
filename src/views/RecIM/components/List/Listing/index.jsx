@@ -553,7 +553,6 @@ const ParticipantListing = ({
 const MatchListing = ({ match, activityID }) => {
   if (!match) return null;
   if (match.Team?.length === 2) {
-    console.log(match);
     return (
       <ListItem key={match.ID} className={styles.listingWrapper}>
         <ListItemButton
@@ -568,16 +567,16 @@ const MatchListing = ({ match, activityID }) => {
               </Grid>
             )}
             <Grid item container>
-              <Grid item xs={5}>
+              <Grid item xs={4.5}>
                 <Typography className={styles.listingTitle}>
                   {match.Team[0]?.Name ?? <i>TBD</i>}
                 </Typography>
               </Grid>
-              <Grid item xs={2} textAlign="center">
+              <Grid item xs={3} textAlign="center">
                 {/* show scores only if match is completed*/}
                 {match.Status === 'Completed' ? (
                   <Grid container direction="row">
-                    <Grid item xs={5}>
+                    <Grid item xs={5} textAlign="right">
                       <Typography>
                         {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
                           ?.TeamScore ?? 'TBD'}
@@ -587,7 +586,7 @@ const MatchListing = ({ match, activityID }) => {
                     <Grid item xs={2}>
                       <Typography>{':'}</Typography>{' '}
                     </Grid>
-                    <Grid item xs={5}>
+                    <Grid item xs={5} textAlign="left">
                       <Typography>
                         {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[1]?.ID)
                           ?.TeamScore ?? 'TBD'}
@@ -598,7 +597,7 @@ const MatchListing = ({ match, activityID }) => {
                   <Typography>vs.</Typography>
                 )}
               </Grid>
-              <Grid item xs={5} textAlign="right">
+              <Grid item xs={4.5} textAlign="right">
                 <Typography className={styles.listingTitle}>
                   {match.Team[1]?.Name ?? <i>TBD</i>}
                 </Typography>

@@ -1,3 +1,4 @@
+@use 'sass:color';
 @import '../../../../../vars';
 
 .listing {
@@ -25,21 +26,21 @@
 }
 
 .rejectButton {
-  background-color: #900000;
+  background-color: $primary-blue;
   color: $neutral-white;
 }
 
 .rejectButton:hover {
-  background-color: #b00000;
+  background-color: $primary-blue-tint;
 }
 
 .acceptButton {
-  background-color: #007000;
+  background-color: $primary-cyan;
   color: $neutral-white;
 }
 
 .acceptButton:hover {
-  background-color: #009000;
+  background-color: $primary-cyan-shade;
 }
 
 .avatar {
