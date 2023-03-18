@@ -136,7 +136,7 @@ const Requests = ({ profile, session }) => {
   }
 
   return (
-    <Grid item xs={12} lg={8}>
+    <Grid item xs={12} lg={12}>
       <Card className={styles.requests}>{content}</Card>
     </Grid>
   );

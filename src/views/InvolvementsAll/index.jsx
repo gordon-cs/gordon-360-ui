@@ -8,6 +8,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Tab,
 } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useNetworkStatus, useUser } from 'hooks';
@@ -19,6 +20,7 @@ import sessionService from 'services/session';
 import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -35,6 +37,7 @@ const InvolvementsAll = () => {
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
   const location = useLocation();
+  const [tabIndex, setTabIndex] = useState('1');
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
@@ -78,6 +81,10 @@ const InvolvementsAll = () => {
     setSelectedSession(value);
     value = sessionService.decodeSessionCode(value);
     navigate(`?session=${value}`);
+  };
+
+  const handleChange = (event, newValue) => {
+    setTabIndex(newValue);
   };
 
   useEffect(() => {
@@ -195,9 +202,129 @@ const InvolvementsAll = () => {
               </Grid>
             </Grid>
           </CardContent>
+          {/* start tabs */}
+          <TabContext value={tabIndex}>
+            <Grid item xs={16}>
+              <TabList
+                onChange={handleChange}
+                aria-label="involvements tabs"
+                variant="fullWidth"
+                centered
+              >
+                <Tab
+                  label={`My ${myInvolvementsHeadingText} Involvements`}
+                  style={{
+                    backgroundColor: gordonColors.neutral.grayShades[50],
+                    //color: gordonColors.neutral.grayShades[50],
+                  }}
+                  value="1"
+                />
+                <Tab
+                  label="Membership Requests"
+                  style={{
+                    backgroundColor: gordonColors.neutral.grayShades[50],
+                    //color: gordonColors.neutral.grayShades[50],
+                  }}
+                  value="2"
+                />
+                <Tab
+                  label={`${involvementSessionText} Involvements`}
+                  style={{
+                    backgroundColor: gordonColors.neutral.grayShades[50],
+                    //color: gordonColors.neutral.grayShades[50],
+                  }}
+                  value="3"
+                />
+              </TabList>
+            </Grid>
+            <TabPanel value="1">
+              {loadingProfile ? (
+                <GordonLoader />
+              ) : (
+                profile && (
+                  <Grid item xs={12} lg={12}>
+                    <Card>
+                      <CardHeader
+                        title={`My ${myInvolvementsHeadingText} Involvements`}
+                        style={{
+                          backgroundColor: gordonColors.primary.blue,
+                          color: gordonColors.neutral.grayShades[50],
+                          textAlign: 'center',
+                        }}
+                      />
+                      <CardContent>
+                        {loading ? (
+                          <GordonLoader />
+                        ) : (
+                          <InvolvementsGrid
+                            involvements={myInvolvements}
+                            sessionCode={selectedSession}
+                            noInvolvementsText={myInvolvementsNoneText}
+                          />
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                )
+              )}
+            </TabPanel>
+            <TabPanel value="2">
+              <Grid
+                item
+                xs={12}
+                lg={12}
+                xl={12}
+                container
+                alignItems="center"
+                justifyContent="center"
+              >
+                {!isOnline ? null : loadingProfile ? (
+                  <GordonLoader />
+                ) : (
+                  profile && <Requests profile={profile} session={selectedSession} />
+                )}
+              </Grid>
+            </TabPanel>
+            <TabPanel value="3">
+              <Grid item xs={12} lg={12}>
+                <Card>
+                  <CardHeader
+                    title={`${involvementSessionText} Involvements`}
+                    style={{
+                      backgroundColor: gordonColors.primary.blue,
+                      color: gordonColors.neutral.grayShades[50],
+                    }}
+                  />
+                  <CardContent>
+                    <Grid item xs={12} lg={6} marginTop={4} marginBottom={4}>
+                      <TextField
+                        id="search"
+                        variant="filled"
+                        label="Search"
+                        type="search"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        fullWidth
+                      />
+                    </Grid>
+                    {loading ? (
+                      <GordonLoader />
+                    ) : (
+                      <InvolvementsGrid
+                        involvements={involvements}
+                        sessionCode={selectedSession}
+                        noInvolvementsText="There aren't any involvements for the selected session and type"
+                      />
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            </TabPanel>
+          </TabContext>
         </Card>
       </Grid>
 
+      {/*add tab components 
       {!isOnline ? null : loadingProfile ? (
         <GordonLoader />
       ) : (
@@ -231,9 +358,9 @@ const InvolvementsAll = () => {
             </Card>
           </Grid>
         )
-      )}
+      )} */}
 
-      {/* All Involvements (public) */}
+      {/* All Involvements (public) 
       <Grid item xs={12} lg={8}>
         <Card>
           <CardHeader
@@ -255,7 +382,7 @@ const InvolvementsAll = () => {
             )}
           </CardContent>
         </Card>
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 };
