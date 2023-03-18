@@ -25,6 +25,15 @@
   padding: 0;
 }
 
+.redButton {
+  background-color: $secondary-red;
+  color: $neutral-white;
+}
+
+.redButton:hover {
+  background-color: $alternative-red;
+}
+
 .rejectButton {
   background-color: $primary-blue;
   color: $neutral-white;

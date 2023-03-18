@@ -539,7 +539,7 @@ const ParticipantListing = ({
               </MenuItem>
             )}
             {participant.Role !== 'Inactive' && (
-              <MenuItem dense onClick={handleRemoveFromTeam} className={styles.rejectButton}>
+              <MenuItem dense onClick={handleRemoveFromTeam} className={styles.redButton}>
                 Remove from team
               </MenuItem>
             )}
