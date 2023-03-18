@@ -341,7 +341,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                   )}
                   {invite && (
                     <Grid item>
-                      <IconButton className={styles.rejectButton} onClick={handleAcceptInvite}>
+                      <IconButton className={styles.rejectButton} onClick={handleRejectInvite}>
                         <ClearIcon />
                       </IconButton>
                     </Grid>

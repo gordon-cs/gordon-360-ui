@@ -64,9 +64,9 @@ const MatchList = ({ matches, activityID }) => {
   return <List dense>{content}</List>;
 };
 // setTargetTeamID is used for edit Match teams
-const TeamList = ({ teams, match, invite, setInvites, setTargetTeamID }) => {
+const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID }) => {
   const navigate = useNavigate();
-  if (!teams?.length && !match) return <Typography>No teams to show.</Typography>;
+  if (!teams?.length && !match && !series) return <Typography>No teams to show.</Typography>;
 
   const handleInviteResponse = (response, activityID, teamID) => {
     if (response === 'accepted') {
@@ -75,6 +75,28 @@ const TeamList = ({ teams, match, invite, setInvites, setTargetTeamID }) => {
       setInvites(teams.filter((team) => team.ID !== teamID));
     }
   };
+
+  var teamStanding;
+  if (series) {
+    teams = [];
+    teamStanding = series.TeamStanding.sort((a, b) => a.WinCount < b.WinCount);
+    teamStanding.forEach((team) =>
+      teams.push({
+        ID: team.TeamID,
+        Name: team.Name,
+        Activity: {
+          ID: series.ActivityID,
+        },
+        TeamRecord: [
+          {
+            WinCount: team.WinCount,
+            LossCount: team.LossCount,
+            TieCount: team.TieCount,
+          },
+        ],
+      }),
+    );
+  }
 
   let content = match
     ? match.Team.map((team) => (

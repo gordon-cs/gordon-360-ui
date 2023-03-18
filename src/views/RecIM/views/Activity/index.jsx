@@ -27,7 +27,7 @@ import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
 import ScheduleList from './components/ScheduleList';
-import { formatDateTimeRange, standardDate } from '../../components/Helpers';
+import { formatDateTimeRange } from '../../components/Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 import { TabPanel } from 'views/RecIM/components';
 import { Box } from '@mui/system';
