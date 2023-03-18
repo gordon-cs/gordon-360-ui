@@ -1,4 +1,14 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  IconButton,
+  Tabs,
+  Tab,
+} from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -19,6 +29,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import { TabPanel } from 'views/RecIM/components';
+import { Box } from '@mui/system';
 
 const Activity = () => {
   const navigate = useNavigate();
@@ -195,40 +207,125 @@ const Activity = () => {
       </Card>
     );
 
-    let teamsCard = activity && (
-      <Card>
-        <CardHeader title="Teams" className={styles.cardHeader} />
-        <CardContent>
-          {canCreateTeam && (
-            <Grid container className={styles.buttonArea}>
-              <Grid item xs={12}>
-                <Grid container justifyContent="center">
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    startIcon={<AddCircleRoundedIcon />}
-                    className={styles.actionButton}
-                    onClick={() => {
-                      setOpenTeamForm(true);
-                    }}
-                  >
-                    Create a Team
-                  </Button>
+    let teamsCard =
+      activity &&
+      (activity.Series.length > 0 ? (
+        <Card>
+          <CardHeader title="Teams" className={styles.cardHeader} />
+          <CardContent>
+            {canCreateTeam && (
+              <Grid container className={styles.buttonArea}>
+                <Grid item xs={12}>
+                  <Grid container justifyContent="center">
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      startIcon={<AddCircleRoundedIcon />}
+                      className={styles.actionButton}
+                      onClick={() => {
+                        setOpenTeamForm(true);
+                      }}
+                    >
+                      Create a Team
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          )}
-          {activity.Team?.length ? (
-            <TeamList teams={activity.Team} />
-          ) : (
-            <Typography variant="body1" paragraph>
-              Be the first to create a team!
-            </Typography>
-          )}
-        </CardContent>
-      </Card>
-    );
-
+            )}
+            <Box display="flex" justifyContent="center" width="100%">
+              <Tabs
+                value={0}
+                //onChange={(event, newTab) => setTeamTab(newTab)}
+                variant="scrollable"
+                scrollButtons="auto"
+                aria-label="admin control center tabs"
+              >
+                <Tab label="placeholder1" />
+                <Tab label="placeholder2" />
+                {/* <Tab label="placeholder3" />
+                <Tab label="placeholder4" />
+                <Tab label="placeholder5" />
+                <Tab label="placeholder6" />
+                <Tab label="placeholder7" />
+                <Tab label="placeholder8" />
+                <Tab label="placeholder9" /> */}
+              </Tabs>
+            </Box>
+            <TabPanel value={0} index={0}>
+              {/*placeholder */}
+            </TabPanel>
+            <TabPanel value={0} index={1}>
+              {/*placeholder */}
+            </TabPanel>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardHeader title="Teams" className={styles.cardHeader} />
+          <CardContent>
+            {canCreateTeam && (
+              <Grid container className={styles.buttonArea}>
+                <Grid item xs={12}>
+                  <Grid container justifyContent="center">
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      startIcon={<AddCircleRoundedIcon />}
+                      className={styles.actionButton}
+                      onClick={() => {
+                        setOpenTeamForm(true);
+                      }}
+                    >
+                      Create a Team
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            )}
+            {activity.Team?.length ? (
+              <TeamList teams={activity.Team} />
+            ) : (
+              <Typography variant="body1" paragraph>
+                Be the first to create a team!
+              </Typography>
+            )}
+          </CardContent>
+        </Card>
+      ));
+    // let teamsCard = activity && (
+    //   <Card>
+    //     <CardHeader title="Teams" className={styles.cardHeader} />
+    //     <CardContent>
+    //       {canCreateTeam && (
+    //         <Grid container className={styles.buttonArea}>
+    //           <Grid item xs={12}>
+    //             <Grid container justifyContent="center">
+    //               <Button
+    //                 variant="contained"
+    //                 color="warning"
+    //                 startIcon={<AddCircleRoundedIcon />}
+    //                 className={styles.actionButton}
+    //                 onClick={() => {
+    //                   setOpenTeamForm(true);
+    //                 }}
+    //               >
+    //                 Create a Team
+    //               </Button>
+    //             </Grid>
+    //           </Grid>
+    //         </Grid>
+    //       )}
+    //       {activity.Team?.length ? (
+    //         <TeamList teams={activity.Team} />
+    //       ) : (
+    //         <Typography variant="body1" paragraph>
+    //           Be the first to create a team!
+    //         </Typography>
+    //       )}
+    //     </CardContent>
+    //   </Card>
+    // );
+    console.log(activity);
     return (
       <>
         <Header activity={activity}>{headerContents}</Header>
@@ -237,10 +334,10 @@ const Activity = () => {
         ) : (
           <Grid container justifyContent="center" spacing={2}>
             <Grid item container justifyContent="center" spacing={2}>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={7}>
                 {scheduleCard}
               </Grid>
-              <Grid item direction={'column'} xs={12} md={6}>
+              <Grid item direction={'column'} xs={12} md={5}>
                 <Grid item className={styles.gridItemStack}>
                   {teamsCard}
                 </Grid>

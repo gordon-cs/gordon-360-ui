@@ -25,14 +25,7 @@ import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from './../../recim_logo.png';
 import { isFuture } from 'date-fns';
-
-const TabPanel = ({ children, value, index }) => {
-  return (
-    <div hidden={value !== index} role="tabpanel">
-      {children}
-    </div>
-  );
-};
+import { TabPanel } from 'views/RecIM/components';
 
 export const HomeHeaderContents = () => {
   return (
