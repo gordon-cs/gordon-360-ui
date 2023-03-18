@@ -27,7 +27,7 @@ import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
 import ScheduleList from './components/ScheduleList';
-import { formatDateTimeRange } from '../../components/Helpers';
+import { formatDateTimeRange, standardDate } from '../../components/Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 import { TabPanel } from 'views/RecIM/components';
 import { Box } from '@mui/system';
@@ -45,6 +45,7 @@ const Activity = () => {
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
+  const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
@@ -80,6 +81,18 @@ const Activity = () => {
       setCanCreateTeam((!participating && activity.RegistrationOpen) || user.IsAdmin);
     }
   }, [activity, user, userTeams]);
+
+  // autofocus on active series
+  useEffect(() => {
+    if (activity)
+      if (activity.Series.length > 0) {
+        let now = new Date().toJSON();
+        let index = activity.Series.findIndex(
+          (series) => series.StartDate < now && now < series.EndDate,
+        );
+        if (index !== -1) setSelectedSeriesTab(index);
+      }
+  }, [activity]);
 
   const handleActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
@@ -207,125 +220,73 @@ const Activity = () => {
       </Card>
     );
 
-    let teamsCard =
-      activity &&
-      (activity.Series.length > 0 ? (
-        <Card>
-          <CardHeader title="Teams" className={styles.cardHeader} />
-          <CardContent>
-            {canCreateTeam && (
-              <Grid container className={styles.buttonArea}>
-                <Grid item xs={12}>
-                  <Grid container justifyContent="center">
-                    <Button
-                      variant="contained"
-                      color="warning"
-                      startIcon={<AddCircleRoundedIcon />}
-                      className={styles.actionButton}
-                      onClick={() => {
-                        setOpenTeamForm(true);
-                      }}
-                    >
-                      Create a Team
-                    </Button>
-                  </Grid>
+    let teamsCard = activity && (
+      <Card>
+        <CardHeader title="Teams" className={styles.cardHeader} />
+        <CardContent>
+          {canCreateTeam && (
+            <Grid container className={styles.buttonArea}>
+              <Grid item xs={12}>
+                <Grid container justifyContent="center">
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    startIcon={<AddCircleRoundedIcon />}
+                    className={styles.actionButton}
+                    onClick={() => {
+                      setOpenTeamForm(true);
+                    }}
+                  >
+                    Create a Team
+                  </Button>
                 </Grid>
               </Grid>
-            )}
-            <Box display="flex" justifyContent="center" width="100%">
-              <Tabs
-                value={0}
-                //onChange={(event, newTab) => setTeamTab(newTab)}
-                variant="scrollable"
-                scrollButtons="auto"
-                aria-label="admin control center tabs"
-              >
-                <Tab label="placeholder1" />
-                <Tab label="placeholder2" />
-                {/* <Tab label="placeholder3" />
-                <Tab label="placeholder4" />
-                <Tab label="placeholder5" />
-                <Tab label="placeholder6" />
-                <Tab label="placeholder7" />
-                <Tab label="placeholder8" />
-                <Tab label="placeholder9" /> */}
-              </Tabs>
-            </Box>
-            <TabPanel value={0} index={0}>
-              {/*placeholder */}
-            </TabPanel>
-            <TabPanel value={0} index={1}>
-              {/*placeholder */}
-            </TabPanel>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card>
-          <CardHeader title="Teams" className={styles.cardHeader} />
-          <CardContent>
-            {canCreateTeam && (
-              <Grid container className={styles.buttonArea}>
-                <Grid item xs={12}>
-                  <Grid container justifyContent="center">
-                    <Button
-                      variant="contained"
-                      color="warning"
-                      startIcon={<AddCircleRoundedIcon />}
-                      className={styles.actionButton}
-                      onClick={() => {
-                        setOpenTeamForm(true);
-                      }}
-                    >
-                      Create a Team
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-            )}
-            {activity.Team?.length ? (
-              <TeamList teams={activity.Team} />
-            ) : (
-              <Typography variant="body1" paragraph>
-                Be the first to create a team!
-              </Typography>
-            )}
-          </CardContent>
-        </Card>
-      ));
-    // let teamsCard = activity && (
-    //   <Card>
-    //     <CardHeader title="Teams" className={styles.cardHeader} />
-    //     <CardContent>
-    //       {canCreateTeam && (
-    //         <Grid container className={styles.buttonArea}>
-    //           <Grid item xs={12}>
-    //             <Grid container justifyContent="center">
-    //               <Button
-    //                 variant="contained"
-    //                 color="warning"
-    //                 startIcon={<AddCircleRoundedIcon />}
-    //                 className={styles.actionButton}
-    //                 onClick={() => {
-    //                   setOpenTeamForm(true);
-    //                 }}
-    //               >
-    //                 Create a Team
-    //               </Button>
-    //             </Grid>
-    //           </Grid>
-    //         </Grid>
-    //       )}
-    //       {activity.Team?.length ? (
-    //         <TeamList teams={activity.Team} />
-    //       ) : (
-    //         <Typography variant="body1" paragraph>
-    //           Be the first to create a team!
-    //         </Typography>
-    //       )}
-    //     </CardContent>
-    //   </Card>
-    // );
-    console.log(activity);
+            </Grid>
+          )}{' '}
+          {activity.Series.length > 0 ? (
+            <>
+              <Box className={styles.scrollableCenteredTabs}>
+                <Tabs
+                  value={selectedSeriesTab}
+                  onChange={(event, tabIndex) => setSelectedSeriesTab(tabIndex)}
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  aria-label="admin control center tabs"
+                >
+                  {activity.Series.map((series) => {
+                    return <Tab label={series.Name} />;
+                  })}
+                </Tabs>
+              </Box>
+              {activity.Series.map((series, index) => {
+                return (
+                  <TabPanel value={selectedSeriesTab} index={index}>
+                    <TeamList series={series} />
+                  </TabPanel>
+                );
+              })}
+            </>
+          ) : (
+            <>
+              {activity.Team?.length ? (
+                <TeamList teams={activity.Team} />
+              ) : (
+                <Typography variant="body1" paragraph>
+                  Be the first to create a team!
+                </Typography>
+              )}
+            </>
+          )}
+        </CardContent>
+      </Card>
+    );
+    console.log(
+      activity,
+      activity?.Series[0]?.StartDate,
+      selectedSeriesTab,
+      activity?.Series[0]?.StartDate < new Date().toJSON() &&
+        new Date().toJSON() < activity?.Series[0]?.EndDate,
+    );
     return (
       <>
         <Header activity={activity}>{headerContents}</Header>
