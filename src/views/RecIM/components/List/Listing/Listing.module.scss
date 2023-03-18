@@ -76,9 +76,10 @@
   background-color: #ffd040;
 }
 
-@media (min-width: $break-sm) {
+@media (min-width: $break-xs) {
   .rightAlignLarge {
     text-align: right;
+    justify-content: flex-end;
   }
 }
 

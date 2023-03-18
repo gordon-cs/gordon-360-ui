@@ -153,7 +153,7 @@ const Activity = () => {
                       setOpenMatchForm(true);
                     }}
                   >
-                    Create a New Match
+                    Create a Match
                   </Button>
                 </Grid>
               </Grid>
@@ -168,7 +168,7 @@ const Activity = () => {
                       setOpenCreateSeriesForm(true);
                     }}
                   >
-                    Create a New Series
+                    Create a Series
                   </Button>
                 </Grid>
               </Grid>
@@ -212,7 +212,7 @@ const Activity = () => {
                       setOpenTeamForm(true);
                     }}
                   >
-                    Create a New Team
+                    Create a Team
                   </Button>
                 </Grid>
               </Grid>

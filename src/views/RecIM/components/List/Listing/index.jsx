@@ -306,7 +306,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
       LossCount: 0,
     };
 
-    team.TeamRecord.forEach((record) => {
+    team.TeamRecord?.forEach((record) => {
       ActivityRecord.WinCount += record.WinCount;
       ActivityRecord.LossCount += record.LossCount;
     });
@@ -320,48 +320,47 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
           >
             <Grid container>
               <Grid container columnSpacing={2}>
-                <Grid item xs={8} sm={6}>
+                <Grid item xs={8} sm={5}>
                   <Typography className={styles.listingTitle}>{team.Name}</Typography>
                 </Grid>
-                <Grid item xs={4} sm={6} className={styles.rightAlignLarge}>
-                  <Typography className={styles.listingSubtitle}>
-                    {ActivityRecord.WinCount}W : {ActivityRecord.LossCount}L
-                  </Typography>
+                <Grid
+                  item
+                  xs={4}
+                  sm={7}
+                  container
+                  className={styles.rightAlignLarge}
+                  direction="row"
+                  spacing={1}
+                >
+                  {invite && (
+                    <Grid item>
+                      <IconButton className={styles.acceptButton} onClick={handleAcceptInvite}>
+                        <CheckIcon />
+                      </IconButton>
+                    </Grid>
+                  )}
+                  {invite && (
+                    <Grid item>
+                      <IconButton className={styles.rejectButton} onClick={handleAcceptInvite}>
+                        <ClearIcon />
+                      </IconButton>
+                    </Grid>
+                  )}
+                  {team.TeamRecord && !invite && (
+                    <Grid item>
+                      <Typography className={styles.listingSubtitle}>
+                        {ActivityRecord.WinCount}W : {ActivityRecord.LossCount}L
+                      </Typography>
+                    </Grid>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={6} className={styles.listingSubtitle}>
                   <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
                 </Grid>
               </Grid>
-              {invite && <Grid item margin={3}></Grid>}
             </Grid>
           </ListItemButton>
         </Grid>
-        {invite && (
-          <Grid item position="relative" marginTop={-6}>
-            <Grid container columnSpacing={2}>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  className={styles.acceptButton}
-                  startIcon={<CheckIcon />}
-                  onClick={handleAcceptInvite}
-                >
-                  Accept
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  className={styles.rejectButton}
-                  startIcon={<ClearIcon />}
-                  onClick={handleRejectInvite}
-                >
-                  Reject
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
       </Grid>
     );
   }
@@ -554,6 +553,7 @@ const ParticipantListing = ({
 const MatchListing = ({ match, activityID }) => {
   if (!match) return null;
   if (match.Team?.length === 2) {
+    console.log(match);
     return (
       <ListItem key={match.ID} className={styles.listingWrapper}>
         <ListItemButton
@@ -562,6 +562,11 @@ const MatchListing = ({ match, activityID }) => {
           className={styles.listing}
         >
           <Grid container direction="column" alignItems="center">
+            {match.Status === 'Completed' && (
+              <Grid xs={12} item>
+                <Typography className={styles.listingSubtitle}>Final</Typography>
+              </Grid>
+            )}
             <Grid item container>
               <Grid item xs={5}>
                 <Typography className={styles.listingTitle}>
@@ -569,15 +574,26 @@ const MatchListing = ({ match, activityID }) => {
                 </Typography>
               </Grid>
               <Grid item xs={2} textAlign="center">
-                {/* show scores only if match is in the present/past */}
-                {isPast(Date.parse(match.Time)) ? (
-                  <Typography>
-                    {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
-                      ?.TeamScore ?? 'TBD'}{' '}
-                    :{' '}
-                    {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[1]?.ID)
-                      ?.TeamScore ?? 'TBD'}
-                  </Typography>
+                {/* show scores only if match is completed*/}
+                {match.Status === 'Completed' ? (
+                  <Grid container direction="row">
+                    <Grid item xs={5}>
+                      <Typography>
+                        {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
+                          ?.TeamScore ?? 'TBD'}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={2}>
+                      <Typography>{':'}</Typography>{' '}
+                    </Grid>
+                    <Grid item xs={5}>
+                      <Typography>
+                        {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[1]?.ID)
+                          ?.TeamScore ?? 'TBD'}
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 ) : (
                   <Typography>vs.</Typography>
                 )}
@@ -628,8 +644,8 @@ const MatchListing = ({ match, activityID }) => {
                   <Typography className={styles.listingTitle}>{team.Name}</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  {/* show scores only if match is in the present/past */}
-                  {isPast(Date.parse(match.Time)) ? (
+                  {/* show scores only if match is completed*/}
+                  {match.Status === 'Completed' ? (
                     <Typography>
                       {match.Scores?.find((matchTeam) => matchTeam.TeamID === team.ID)?.TeamScore ??
                         0}

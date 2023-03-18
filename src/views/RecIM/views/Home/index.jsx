@@ -111,7 +111,7 @@ const Home = () => {
               setOpenActivityForm(true);
             }}
           >
-            Create a New Activity
+            Create a Activity
           </Button>
         </Grid>
       </Grid>
