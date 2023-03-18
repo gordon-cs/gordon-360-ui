@@ -593,6 +593,8 @@ const MatchListing = ({ match, activityID }) => {
                       </Typography>
                     </Grid>
                   </Grid>
+                ) : match.Status === 'Forfeited' ? (
+                  <Typography className={styles.listingSubtitle}>Forfeited</Typography>
                 ) : (
                   <Typography>vs.</Typography>
                 )}

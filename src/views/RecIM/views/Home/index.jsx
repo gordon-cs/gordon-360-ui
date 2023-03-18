@@ -168,9 +168,7 @@ const Home = () => {
       {participantTeams ? (
         <TeamList teams={participantTeams} />
       ) : (
-        <Typography className={styles.secondaryText}>
-          You're not yet apart of any teams; join one to get started!
-        </Typography>
+        <Typography className={styles.secondaryText}>You're not yet apart of any teams!</Typography>
       )}
     </CardContent>
   );
