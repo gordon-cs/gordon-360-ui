@@ -92,3 +92,9 @@
 .redButton:hover {
   background-color: $alternative-red;
 }
+
+.scrollableCenteredTabs {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
