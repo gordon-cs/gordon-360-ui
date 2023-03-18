@@ -195,7 +195,7 @@ const TeamForm = ({
   const handleSubmit = async () => {
     let newTeamRequest = { ...currentInfo, ...newInfo };
     newTeamRequest.Logo =
-      cropperImageData !== null
+      cropperImageData != null
         ? cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL()
         : null;
 

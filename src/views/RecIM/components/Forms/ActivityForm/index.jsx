@@ -330,9 +330,8 @@ const ActivityForm = ({
     newActivityRequest.typeID = activityTypes.find(
       (type) => type.Description === newActivityRequest.typeID,
     ).ID;
-
     newActivityRequest.Logo =
-      cropperImageData !== null
+      cropperImageData != null
         ? cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL()
         : null;
 
