@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -8,6 +8,7 @@ import { ContentCard } from '../components/ContentCard';
 import { InformationField } from '../components/InformationField';
 import { putSeriesSchedule } from 'services/recim/series';
 import { getSurfaces } from 'services/recim/match';
+import styles from '../Forms.module.css';
 
 const SeriesScheduleForm = ({
   closeWithSnackbar,
@@ -36,7 +37,7 @@ const SeriesScheduleForm = ({
     loadData();
   }, []);
 
-  const seriesScheduleFields = [
+  const availableDays = [
     {
       label: 'Monday',
       name: 'Mon',
@@ -86,6 +87,9 @@ const SeriesScheduleForm = ({
       error: errorStatus.AvailableDays,
       helperText: '*Required',
     },
+  ];
+
+  const availableSurfaces = [
     {
       label: 'Surfaces',
       name: 'AvailableSurfaceIDs',
@@ -94,6 +98,9 @@ const SeriesScheduleForm = ({
       error: errorStatus.AvailableSurfaceIDs,
       helperText: '*Required',
     },
+  ];
+
+  const matchTimes = [
     {
       label: 'Daily Start Time',
       name: 'DailyStartTime',
@@ -109,7 +116,7 @@ const SeriesScheduleForm = ({
       helperText: '*Required',
     },
     {
-      label: 'Estimated Match Length',
+      label: 'Estimated Match Length (minutes)',
       name: 'EstMatchTime',
       type: 'text',
       error: errorStatus.EstMatchTime,
@@ -117,10 +124,7 @@ const SeriesScheduleForm = ({
     },
   ];
 
-  const allFields = [
-    seriesScheduleFields,
-    // if you need more fields put them here, or if you make a "second page"
-  ].flat();
+  const allFields = [availableDays, availableSurfaces, matchTimes].flat();
 
   const currentInfo = useMemo(() => {
     return {
@@ -283,9 +287,24 @@ const SeriesScheduleForm = ({
   } else {
     content = (
       <>
-        <ContentCard title="Series Information">
-          {mapFieldsToInputs(seriesScheduleFields)}
+        <ContentCard title="Available Days of the Week">
+          {mapFieldsToInputs(availableDays)}
         </ContentCard>
+        <ContentCard title="Available Series Surfaces">
+          {/* temporary solution, hard to see what surfaces were selected */}
+          <Grid container direction="column" marginTop={2}>
+            {mapFieldsToInputs(availableSurfaces)}
+          </Grid>
+          <Grid item xs={12}>
+            <Typography className={styles.selectedSurfaces}>*Selected surfaces: </Typography>
+          </Grid>
+          <Grid item xs={12} marginLeft={1}>
+            {newInfo.AvailableSurfaceIDs.map((surface) => (
+              <Typography className={styles.selectedSurfaces}>{surface}</Typography>
+            ))}
+          </Grid>
+        </ContentCard>
+        <ContentCard title="Match Times">{mapFieldsToInputs(matchTimes)}</ContentCard>
 
         <GordonDialogBox
           open={openConfirmWindow}
