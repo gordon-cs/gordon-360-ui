@@ -237,59 +237,54 @@ const Match = () => {
                 teamID={match.Team[1]?.ID}
               />
             </Grid>
-            {openMatchForm && (
-              <MatchForm
-                closeWithSnackbar={(status) => {
-                  handleMatchFormSubmit(status, setOpenMatchForm);
-                }}
-                openMatchForm={openMatchForm}
-                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
-                match={match}
-              />
-            )}
-            {openSettings && (
-              <GordonDialogBox
-                title="Admin Settings"
-                fullWidth
-                open={openSettings}
-                cancelButtonClicked={() => setOpenSettings(false)}
-                cancelButtonName="Close"
-              >
-                <br />
-                <Grid container alignItems="center" justifyContent="space-between">
-                  <Grid item>
-                    <Typography>Permanently delete the match '{matchName}'</Typography>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => setOpenConfirmDelete(true)}
-                    >
-                      Delete this match
-                    </Button>
-                  </Grid>
-                </Grid>
-              </GordonDialogBox>
-            )}
 
-            {openConfirmDelete && (
-              <GordonDialogBox
-                title="Confirm Deletion"
-                open={openConfirmDelete}
-                cancelButtonClicked={() => setOpenConfirmDelete(false)}
-                cancelButtonName="No, keep this team"
-                buttonName="Yes, delete this team"
-                buttonClicked={() => handleDelete()}
-                severity="error"
-              >
-                <br />
-                <Typography variant="body1">
-                  Are you sure you want to permanently delete this match: '{matchName}'?
-                </Typography>
-                <Typography variant="body1">This action cannot be undone.</Typography>
-              </GordonDialogBox>
-            )}
+            {/* forms and dialogs */}
+            <MatchForm
+              closeWithSnackbar={(status) => {
+                handleMatchFormSubmit(status, setOpenMatchForm);
+              }}
+              openMatchForm={openMatchForm}
+              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              match={match}
+            />
+            <GordonDialogBox
+              title="Admin Settings"
+              fullWidth
+              open={openSettings}
+              cancelButtonClicked={() => setOpenSettings(false)}
+              cancelButtonName="Close"
+            >
+              <br />
+              <Grid container alignItems="center" justifyContent="space-between">
+                <Grid item>
+                  <Typography>Permanently delete the match '{matchName}'</Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={() => setOpenConfirmDelete(true)}
+                  >
+                    Delete this match
+                  </Button>
+                </Grid>
+              </Grid>
+            </GordonDialogBox>
+            <GordonDialogBox
+              title="Confirm Delete"
+              open={openConfirmDelete}
+              cancelButtonClicked={() => setOpenConfirmDelete(false)}
+              cancelButtonName="No, keep this team"
+              buttonName="Yes, delete this team"
+              buttonClicked={() => handleDelete()}
+              severity="error"
+            >
+              <br />
+              <Typography variant="body1">
+                Are you sure you want to permanently delete this match: '{matchName}'?
+              </Typography>
+              <Typography variant="body1">This action cannot be undone.</Typography>
+            </GordonDialogBox>
           </Grid>
         )}
       </>

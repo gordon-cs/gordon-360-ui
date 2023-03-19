@@ -279,95 +279,85 @@ const Activity = () => {
                 </Grid>
               </Grid>
             </Grid>
-            {openMatchForm && (
-              <MatchForm
-                closeWithSnackbar={(status) => {
-                  handleMatchFormSubmit(status, setOpenMatchForm);
-                }}
-                openMatchForm={openMatchForm}
-                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
-                activity={activity}
-              />
-            )}
-            {openCreateSeriesForm && (
-              <SeriesForm
-                closeWithSnackbar={(status) => {
-                  handleCreateSeriesForm(status);
-                }}
-                openSeriesForm={openCreateSeriesForm}
-                setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-                activityID={activity.ID}
-                existingActivitySeries={activity.Series}
-              />
-            )}
-            {openTeamForm && (
-              <TeamForm
-                closeWithSnackbar={(teamID, status) => {
-                  handleTeamFormSubmit(status, setOpenTeamForm);
-                  navigate(`team/${teamID}`);
-                }}
-                openTeamForm={openTeamForm}
-                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-                activityID={activityID}
-              />
-            )}
-            {openMatchForm && (
-              <MatchForm
-                closeWithSnackbar={(status) => {
-                  handleTeamFormSubmit(status, setOpenMatchForm);
-                }}
-                openMatchForm={openMatchForm}
-                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
-                activity={activity}
-              />
-            )}
-            {openSettings && (
-              <GordonDialogBox
-                title="Admin Settings"
-                fullWidth
-                open={openSettings}
-                cancelButtonClicked={() => setOpenSettings(false)}
-                cancelButtonName="Close"
-              >
-                <br />
-                <Grid container alignItems="center" justifyContent="space-between">
-                  <Grid item>
-                    <Typography>Permanently delete the activity '{activity.Name}'</Typography>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => setOpenConfirmDelete(true)}
-                    >
-                      Delete this activity
-                    </Button>
-                  </Grid>
+
+            {/* forms and dialogs */}
+            <MatchForm
+              closeWithSnackbar={(status) => {
+                handleMatchFormSubmit(status, setOpenMatchForm);
+              }}
+              openMatchForm={openMatchForm}
+              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              activity={activity}
+            />
+            <SeriesForm
+              closeWithSnackbar={(status) => {
+                handleCreateSeriesForm(status);
+              }}
+              openSeriesForm={openCreateSeriesForm}
+              setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+              activityID={activity.ID}
+              existingActivitySeries={activity.Series}
+            />
+            <TeamForm
+              closeWithSnackbar={(teamID, status) => {
+                handleTeamFormSubmit(status, setOpenTeamForm);
+                navigate(`team/${teamID}`);
+              }}
+              openTeamForm={openTeamForm}
+              setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+              activityID={activityID}
+            />
+            <MatchForm
+              closeWithSnackbar={(status) => {
+                handleTeamFormSubmit(status, setOpenMatchForm);
+              }}
+              openMatchForm={openMatchForm}
+              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              activity={activity}
+            />
+            <GordonDialogBox
+              title="Admin Settings"
+              fullWidth
+              open={openSettings}
+              cancelButtonClicked={() => setOpenSettings(false)}
+              cancelButtonName="Close"
+            >
+              <br />
+              <Grid container alignItems="center" justifyContent="space-between">
+                <Grid item>
+                  <Typography>Permanently delete the activity '{activity.Name}'</Typography>
                 </Grid>
-              </GordonDialogBox>
-            )}
-            {openConfirmDelete && (
-              <GordonDialogBox
-                title="Confirm Deletion"
-                open={openConfirmDelete}
-                cancelButtonClicked={() => setOpenConfirmDelete(false)}
-                cancelButtonName="No, keep this activity"
-                buttonName="Yes, delete this activity"
-                buttonClicked={() => handleDelete()}
-                severity="error"
-              >
-                <br />
-                <Typography variant="body1">
-                  Are you sure you want to permanently delete this activity: '{activity.Name}'?
-                </Typography>
-                <Typography variant="body1">
-                  This includes <b>{activity.Team?.length ?? 0} teams</b> and
-                  <b> {activity.Series?.length ?? 0} series</b>, with a total of{' '}
-                  <b>{getNumMatches(activity.Series)} matches</b>.
-                </Typography>
-                <Typography variant="body1">This action cannot be undone.</Typography>
-              </GordonDialogBox>
-            )}
+                <Grid item>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={() => setOpenConfirmDelete(true)}
+                  >
+                    Delete this activity
+                  </Button>
+                </Grid>
+              </Grid>
+            </GordonDialogBox>
+            <GordonDialogBox
+              title="Confirm Delete"
+              open={openConfirmDelete}
+              cancelButtonClicked={() => setOpenConfirmDelete(false)}
+              cancelButtonName="No, keep this activity"
+              buttonName="Yes, delete this activity"
+              buttonClicked={() => handleDelete()}
+              severity="error"
+            >
+              <br />
+              <Typography variant="body1">
+                Are you sure you want to permanently delete this activity: '{activity.Name}'?
+              </Typography>
+              <Typography variant="body1">
+                This includes <b>{activity.Team?.length ?? 0} teams</b> and
+                <b> {activity.Series?.length ?? 0} series</b>, with a total of{' '}
+                <b>{getNumMatches(activity.Series)} matches</b>.
+              </Typography>
+              <Typography variant="body1">This action cannot be undone.</Typography>
+            </GordonDialogBox>
           </Grid>
         )}
       </>
