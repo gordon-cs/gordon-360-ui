@@ -3,7 +3,7 @@ import styles from './ContentCard.module.css';
 
 const ContentCard = (props) => {
   return (
-    <Card>
+    <Card className={styles.update}>
       <CardHeader className={styles.update_header} title={props.title} />
       <CardContent>
         <Grid container spacing={2}>
