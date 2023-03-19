@@ -307,14 +307,6 @@ const Activity = () => {
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={activityID}
             />
-            <MatchForm
-              closeWithSnackbar={(status) => {
-                handleTeamFormSubmit(status, setOpenMatchForm);
-              }}
-              openMatchForm={openMatchForm}
-              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
-              activity={activity}
-            />
             <GordonDialogBox
               title="Admin Settings"
               fullWidth
