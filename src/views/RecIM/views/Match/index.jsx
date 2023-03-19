@@ -121,86 +121,112 @@ const Match = () => {
             <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
           </Grid>
         </Grid>
-        <Grid container alignItems="center" justifyContent="space-around">
-          <Grid item xs={2}>
-            <img
-              src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID)?.Logo ?? defaultLogo}
-              alt="Team Icon"
-              width="85em"
-            ></img>
-          </Grid>
-          <Grid item xs={2}>
-            <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
-              <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
-                {match?.Team[0]?.Name ?? 'No team yet...'}
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="space-around"
+          spacing={1}
+          flexWrap="nowrap"
+          className={styles.header}
+        >
+          {/* left team info */}
+          <Grid
+            item
+            container
+            xs={5}
+            columnSpacing={2}
+            justifyContent="space-around"
+            className={styles.teamInfo}
+          >
+            <Grid item sm={3} lg="auto" className={styles.teamInfo_imgContainer}>
+              <img
+                src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID)?.Logo ?? defaultLogo}
+                alt="Team Icon"
+                className={styles.headerImg}
+              ></img>
+            </Grid>
+            <Grid item sm={9} lg="auto">
+              <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
+                <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
+                  {match?.Team[0]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
+              <Typography className={styles.subtitle}>
+                {match?.Team[0]?.TeamRecord.WinCount ?? 0}W :{' '}
+                {match?.Team[0]?.TeamRecord.LossCount ?? 0}L
               </Typography>
-            </LinkRouter>
-            <Typography className={styles.subtitle}>
-              {/* once this is added to the API, it will instantly work */}
-              {match?.Team[0]?.TeamRecord.WinCount ?? 0}W :{' '}
-              {match?.Team[0]?.TeamRecord.LossCount ?? 0}L
-            </Typography>
-            {user?.IsAdmin && (
-              <i className={styles.subtitle}>
-                Sportsmanship: {match?.Scores[0]?.SportsmanshipScore}
-              </i>
-            )}
-          </Grid>
-          <Grid item container xs={4} sm={2} alignItems="center" direction="column">
-            <Typography variant="h5">
-              {team0Score} : {team1Score}
-            </Typography>
-            {user?.IsAdmin && (
-              <Grid item>
-                <Grid container columnSpacing={2} justifyItems="center">
-                  <Grid item>
-                    <IconButton
-                      onClick={() => {
-                        setOpenMatchForm(true);
-                      }}
-                      className={styles.editIconButton}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton
-                      onClick={() => {
-                        setOpenSettings(true);
-                      }}
-                    >
-                      <SettingsIcon fontSize="large" />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Grid>
-            )}
+              {user?.IsAdmin && (
+                <i className={styles.subtitle}>
+                  Sportsmanship: {match?.Scores[0]?.SportsmanshipScore}
+                </i>
+              )}
+            </Grid>
           </Grid>
 
-          <Grid item xs={2} textAlign="right">
-            <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
-              <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
-                {match?.Team[1]?.Name ?? 'No team yet...'}
-              </Typography>
-            </LinkRouter>
-            <Typography className={styles.subtitle}>
-              {match?.Team[1]?.TeamRecord.WinCount ?? 0}W :{' '}
-              {match?.Team[1]?.TeamRecord.LossCount ?? 0}L
+          <Grid item container xs={2} alignItems="center" direction="column">
+            <Typography variant="h5" className={styles.matchScore}>
+              {team0Score} : {team1Score}
             </Typography>
-            {user?.IsAdmin && (
-              <i className={styles.subtitle}>
-                Sportsmanship: {match?.Scores[1]?.SportsmanshipScore}
-              </i>
-            )}
           </Grid>
-          <Grid item xs={2}>
-            <img
-              src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID)?.Logo ?? defaultLogo}
-              alt="Team Icon"
-              width="85em"
-            ></img>
+
+          {/* right team info */}
+          <Grid
+            item
+            container
+            xs={5}
+            columnSpacing={2}
+            justifyContent="space-around"
+            className={styles.teamInfo}
+          >
+            <Grid item sm={9} lg="auto">
+              <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
+                <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
+                  {match?.Team[1]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
+              <Typography className={styles.subtitle}>
+                {match?.Team[1]?.TeamRecord.WinCount ?? 0}W :{' '}
+                {match?.Team[1]?.TeamRecord.LossCount ?? 0}L
+              </Typography>
+              {user?.IsAdmin && (
+                <i className={styles.subtitle}>
+                  Sportsmanship: {match?.Scores[1]?.SportsmanshipScore}
+                </i>
+              )}
+            </Grid>
+            <Grid item sm={3} lg="auto" className={styles.teamInfo_imgContainer}>
+              <img
+                src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID)?.Logo ?? defaultLogo}
+                alt="Team Icon"
+                className={styles.headerImg}
+              ></img>
+            </Grid>
           </Grid>
         </Grid>
+
+        {user?.IsAdmin && (
+          <Grid container columnSpacing={2} justifyContent="center">
+            <Grid item>
+              <IconButton
+                onClick={() => {
+                  setOpenMatchForm(true);
+                }}
+                className={styles.editIconButton}
+              >
+                <EditIcon />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton
+                onClick={() => {
+                  setOpenSettings(true);
+                }}
+              >
+                <SettingsIcon fontSize="large" />
+              </IconButton>
+            </Grid>
+          </Grid>
+        )}
       </>
     );
 

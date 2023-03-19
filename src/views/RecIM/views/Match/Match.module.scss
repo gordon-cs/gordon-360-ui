@@ -1,7 +1,51 @@
 @import '../../../../vars';
 
-.teamName {
-  font-size: calc(1rem + 1vw);
+.header {
+  font-size: 0.8rem;
+}
+
+.header h5 {
+  font-size: 1.5em;
+}
+
+.matchScore {
+  white-space: nowrap;
+  font-weight: bold;
+  color: $neutral-dark-gray;
+}
+
+.headerImg {
+  width: 3em;
+}
+
+.teamInfo {
+  flex-direction: column;
+  text-align: center;
+}
+
+.teamInfo_imgContainer {
+  order: -1;
+}
+
+@media (min-width: $break-sm) {
+  .header {
+    font-size: 1rem;
+  }
+  .headerImg {
+    width: 5em;
+  }
+  .teamInfo {
+    flex-direction: row;
+  }
+  .teamInfoLeft {
+    text-align: right;
+  }
+  .teamInfoRight {
+    text-align: left;
+  }
+  .teamInfo_imgContainer {
+    order: 0;
+  }
 }
 
 @media (min-width: $break-lg) {
