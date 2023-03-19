@@ -1,4 +1,14 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  IconButton,
+  Tabs,
+  Tab,
+} from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -19,6 +29,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import { TabPanel } from 'views/RecIM/components';
+import { Box } from '@mui/system';
 
 const Activity = () => {
   const navigate = useNavigate();
@@ -33,6 +45,7 @@ const Activity = () => {
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
+  const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
@@ -68,6 +81,18 @@ const Activity = () => {
       setCanCreateTeam((!participating && activity.RegistrationOpen) || user.IsAdmin);
     }
   }, [activity, user, userTeams]);
+
+  // autofocus on active series
+  useEffect(() => {
+    if (activity)
+      if (activity.Series.length > 0) {
+        let now = new Date().toJSON();
+        let index = activity.Series.findIndex(
+          (series) => series.StartDate < now && now < series.EndDate,
+        );
+        if (index !== -1) setSelectedSeriesTab(index);
+      }
+  }, [activity]);
 
   const handleActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
@@ -153,7 +178,7 @@ const Activity = () => {
                       setOpenMatchForm(true);
                     }}
                   >
-                    Create a New Match
+                    Create a Match
                   </Button>
                 </Grid>
               </Grid>
@@ -168,7 +193,7 @@ const Activity = () => {
                       setOpenCreateSeriesForm(true);
                     }}
                   >
-                    Create a New Series
+                    Create a Series
                   </Button>
                 </Grid>
               </Grid>
@@ -187,9 +212,7 @@ const Activity = () => {
               );
             })
           ) : (
-            <Typography variant="body1" paragraph>
-              No series scheduled yet!
-            </Typography>
+            <Typography className={styles.secondaryTex}>No series scheduled yet!</Typography>
           )}
         </CardContent>
       </Card>
@@ -212,23 +235,49 @@ const Activity = () => {
                       setOpenTeamForm(true);
                     }}
                   >
-                    Create a New Team
+                    Create a Team
                   </Button>
                 </Grid>
               </Grid>
             </Grid>
-          )}
-          {activity.Team?.length ? (
-            <TeamList teams={activity.Team} />
+          )}{' '}
+          {activity.Series.length > 0 ? (
+            <>
+              <Box className={styles.scrollableCenteredTabs}>
+                <Tabs
+                  value={selectedSeriesTab}
+                  onChange={(event, tabIndex) => setSelectedSeriesTab(tabIndex)}
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  aria-label="admin control center tabs"
+                >
+                  {activity.Series.map((series) => {
+                    return <Tab label={series.Name} />;
+                  })}
+                </Tabs>
+              </Box>
+              {activity.Series.map((series, index) => {
+                return (
+                  <TabPanel value={selectedSeriesTab} index={index}>
+                    <TeamList series={series} />
+                  </TabPanel>
+                );
+              })}
+            </>
           ) : (
-            <Typography variant="body1" paragraph>
-              Be the first to create a team!
-            </Typography>
+            <>
+              {activity.Team?.length ? (
+                <TeamList teams={activity.Team} />
+              ) : (
+                <Typography className={styles.secondaryText}>
+                  Be the first to create a team!
+                </Typography>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
     );
-
     return (
       <>
         <Header activity={activity}>{headerContents}</Header>
@@ -237,10 +286,10 @@ const Activity = () => {
         ) : (
           <Grid container justifyContent="center" spacing={2}>
             <Grid item container justifyContent="center" spacing={2}>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={7}>
                 {scheduleCard}
               </Grid>
-              <Grid item direction={'column'} xs={12} md={6}>
+              <Grid item direction={'column'} xs={12} md={5}>
                 <Grid item className={styles.gridItemStack}>
                   {teamsCard}
                 </Grid>

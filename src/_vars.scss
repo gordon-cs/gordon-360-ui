@@ -5,9 +5,11 @@
 // Ensure that the relative path (i.e. `../../`, etc.) is correct when importing from a nested
 // component.
 
-// For use in a .js file, see `src/theme.js`.
+// For use in a .ts file, see `src/theme.ts`.
 $primary-blue: #014983;
+$primary-blue-tint: #016bc0;
 $primary-cyan: #00aeef;
+$primary-cyan-shade: #0098d0;
 $secondary-green: #b2bb1c;
 $secondary-yellow: #fdb913;
 $secondary-orange: #de571f;

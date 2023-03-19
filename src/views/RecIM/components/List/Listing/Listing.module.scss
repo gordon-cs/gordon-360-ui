@@ -1,3 +1,4 @@
+@use 'sass:color';
 @import '../../../../../vars';
 
 .listing {
@@ -24,22 +25,31 @@
   padding: 0;
 }
 
+.redButton {
+  background-color: $secondary-red;
+  color: $neutral-white;
+}
+
+.redButton:hover {
+  background-color: $alternative-red;
+}
+
 .rejectButton {
-  background-color: #900000;
+  background-color: $primary-blue;
   color: $neutral-white;
 }
 
 .rejectButton:hover {
-  background-color: #b00000;
+  background-color: $primary-blue-tint;
 }
 
 .acceptButton {
-  background-color: #007000;
+  background-color: $primary-cyan;
   color: $neutral-white;
 }
 
 .acceptButton:hover {
-  background-color: #009000;
+  background-color: $primary-cyan-shade;
 }
 
 .avatar {
@@ -76,9 +86,10 @@
   background-color: #ffd040;
 }
 
-@media (min-width: $break-sm) {
+@media (min-width: $break-xs) {
   .rightAlignLarge {
     text-align: right;
+    justify-content: flex-end;
   }
 }
 
