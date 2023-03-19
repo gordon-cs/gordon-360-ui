@@ -50,6 +50,7 @@ const Match = () => {
   const [team1Score, setTeam1Score] = useState(0);
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
   const [matchName, setMatchName] = useState();
@@ -95,18 +96,11 @@ const Match = () => {
   };
 
   const handleDelete = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this team '" +
-          matchName +
-          "'? This action cannot be undone.",
-      )
-    ) {
-      deleteMatchCascade(matchID);
-      setOpenSettings(false);
-      navigate(`/recim/activity/${match.Activity.ID}`);
-      // @TODO add snackbar
-    }
+    deleteMatchCascade(matchID);
+    setOpenConfirmDelete(false);
+    setOpenSettings(false);
+    navigate(`/recim/activity/${match.Activity.ID}`);
+    // @TODO add snackbar
   };
 
   if (loading && !profile) {
@@ -130,9 +124,7 @@ const Match = () => {
         <Grid container alignItems="center" justifyContent="space-around">
           <Grid item xs={2}>
             <img
-              src={
-                match?.Activity.Team.find((t) => t.ID === match?.Team[0]?.ID).Logo ?? defaultLogo
-              }
+              src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID)?.Logo ?? defaultLogo}
               alt="Team Icon"
               width="85em"
             ></img>
@@ -203,9 +195,7 @@ const Match = () => {
           </Grid>
           <Grid item xs={2}>
             <img
-              src={
-                match?.Activity.Team.find((t) => t.ID === match?.Team[1]?.ID).Logo ?? defaultLogo
-              }
+              src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID)?.Logo ?? defaultLogo}
               alt="Team Icon"
               width="85em"
             ></img>
@@ -271,11 +261,33 @@ const Match = () => {
                     <Typography>Permanently delete the match '{matchName}'</Typography>
                   </Grid>
                   <Grid item>
-                    <Button color="error" variant="contained" onClick={handleDelete}>
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => setOpenConfirmDelete(true)}
+                    >
                       Delete this match
                     </Button>
                   </Grid>
                 </Grid>
+              </GordonDialogBox>
+            )}
+
+            {openConfirmDelete && (
+              <GordonDialogBox
+                title="Confirm Deletion"
+                open={openConfirmDelete}
+                cancelButtonClicked={() => setOpenConfirmDelete(false)}
+                cancelButtonName="No, keep this team"
+                buttonName="Yes, delete this team"
+                buttonClicked={() => handleDelete()}
+                severity="error"
+              >
+                <br />
+                <Typography>
+                  Are you sure you want to permanently delete this match: '{matchName}'? <br />
+                  This action cannot be undone.
+                </Typography>
               </GordonDialogBox>
             )}
           </Grid>

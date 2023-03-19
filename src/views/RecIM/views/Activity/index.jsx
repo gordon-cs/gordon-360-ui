@@ -36,6 +36,7 @@ const Activity = () => {
   const [canCreateTeam, setCanCreateTeam] = useState(true);
   const [reload, setReload] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -92,18 +93,11 @@ const Activity = () => {
   };
 
   const handleDelete = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this team '" +
-          activity.Name +
-          "'? This action cannot be undone.",
-      )
-    ) {
-      deleteActivity(activityID);
-      setOpenSettings(false);
-      navigate(`/recim`);
-      // @TODO add snackbar
-    }
+    deleteActivity(activityID);
+    setOpenConfirmDelete(false);
+    setOpenSettings(false);
+    navigate(`/recim`);
+    // @TODO add snackbar
   };
 
   // profile hook used for future authentication
@@ -333,11 +327,33 @@ const Activity = () => {
                     <Typography>Permanently delete the activity '{activity.Name}'</Typography>
                   </Grid>
                   <Grid item>
-                    <Button color="error" variant="contained" onClick={handleDelete}>
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => setOpenConfirmDelete(true)}
+                    >
                       Delete this activity
                     </Button>
                   </Grid>
                 </Grid>
+              </GordonDialogBox>
+            )}
+            {openConfirmDelete && (
+              <GordonDialogBox
+                title="Confirm Deletion"
+                open={openConfirmDelete}
+                cancelButtonClicked={() => setOpenConfirmDelete(false)}
+                cancelButtonName="No, keep this activity"
+                buttonName="Yes, delete this activity"
+                buttonClicked={() => handleDelete()}
+                severity="error"
+              >
+                <br />
+                <Typography>
+                  Are you sure you want to permanently delete this activity: '{activity.Name}'?{' '}
+                  <br />
+                  This action cannot be undone.
+                </Typography>
               </GordonDialogBox>
             )}
           </Grid>
