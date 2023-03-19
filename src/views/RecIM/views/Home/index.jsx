@@ -127,7 +127,7 @@ const Home = () => {
       {ongoingActivities.length > 0 ? (
         <ActivityList activities={ongoingActivities} showActivityOptions={hasPermissions} />
       ) : (
-        <Typography variant="body1" paragraph>
+        <Typography className={styles.secondaryText}>
           It looks like there aren't any Rec-IM activities currently ongoing
         </Typography>
       )}
@@ -139,7 +139,7 @@ const Home = () => {
       {registrableActivities.length > 0 ? (
         <ActivityList activities={registrableActivities} showActivityOptions={hasPermissions} />
       ) : (
-        <Typography variant="body1" paragraph>
+        <Typography className={styles.secondaryText}>
           It looks like there aren't any Rec-IM activities currently open for registration
         </Typography>
       )}
@@ -169,22 +169,24 @@ const Home = () => {
   let activitiesCard = (
     <Card>
       <CardHeader title="Rec-IM Activities" className={styles.cardHeader} />
-      {hasPermissions && createActivityButton}
-      <Tabs
-        value={activityTab}
-        onChange={(event, newTab) => setActivityTab(newTab)}
-        aria-label="admin control center tabs"
-        centered
-      >
-        <Tab label="Upcoming Activities" />
-        <Tab label="Ongoing Activities" />
-      </Tabs>
-      <TabPanel value={activityTab} index={0}>
-        {upcomingActivitiesContent}
-      </TabPanel>
-      <TabPanel value={activityTab} index={1}>
-        {ongoingActivitiesContent}
-      </TabPanel>
+      <CardContent>
+        {hasPermissions && createActivityButton}
+        <Tabs
+          value={activityTab}
+          onChange={(event, newTab) => setActivityTab(newTab)}
+          aria-label="admin control center tabs"
+          centered
+        >
+          <Tab label="Upcoming Activities" />
+          <Tab label="Ongoing Activities" />
+        </Tabs>
+        <TabPanel value={activityTab} index={0}>
+          {upcomingActivitiesContent}
+        </TabPanel>
+        <TabPanel value={activityTab} index={1}>
+          {ongoingActivitiesContent}
+        </TabPanel>
+      </CardContent>
     </Card>
   );
   let myTeamsCard = (
@@ -242,10 +244,10 @@ const Home = () => {
           <GordonLoader />
         ) : (
           <Grid container spacing={2}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={7}>
               {activitiesCard}
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={5}>
               {myTeamsCard}
             </Grid>
             {openActivityForm && (
