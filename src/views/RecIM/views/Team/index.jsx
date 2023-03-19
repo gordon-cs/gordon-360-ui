@@ -27,6 +27,7 @@ const Team = () => {
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
   const handleInviteParticipantForm = (status) => {
@@ -83,18 +84,11 @@ const Team = () => {
   };
 
   const handleDelete = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this team '" +
-          team.Name +
-          "'? This action cannot be undone.",
-      )
-    ) {
-      deleteTeam(teamID);
-      setOpenSettings(false);
-      navigate(`/recim/activity/${team.Activity.ID}`);
-      // @TODO add snackbar
-    }
+    deleteTeam(teamID);
+    setOpenConfirmDelete(false);
+    setOpenSettings(false);
+    navigate(`/recim/activity/${team.Activity.ID}`);
+    // @TODO add snackbar
   };
 
   if (!profile) {
@@ -239,11 +233,32 @@ const Team = () => {
                     <Typography>Permanently delete the team '{team.Name}'</Typography>
                   </Grid>
                   <Grid item>
-                    <Button color="error" variant="contained" onClick={handleDelete}>
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => setOpenConfirmDelete(true)}
+                    >
                       Delete this team
                     </Button>
                   </Grid>
                 </Grid>
+              </GordonDialogBox>
+            )}
+            {openConfirmDelete && (
+              <GordonDialogBox
+                title="Confirm Deletion"
+                open={openConfirmDelete}
+                cancelButtonClicked={() => setOpenConfirmDelete(false)}
+                cancelButtonName="No, keep this team"
+                buttonName="Yes, delete this team"
+                buttonClicked={() => handleDelete()}
+                severity="error"
+              >
+                <br />
+                <Typography>
+                  Are you sure you want to permanently delete this team: '{team.Name}'? <br />
+                  This action cannot be undone.
+                </Typography>
               </GordonDialogBox>
             )}
           </Grid>
