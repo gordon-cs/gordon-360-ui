@@ -146,10 +146,10 @@ const InvolvementsAll = () => {
         <Card>
           <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={12} lg={8}>
                 <CardHeader title={searchPageTitle} />
               </Grid>
-              <Grid item xs={12} lg={6}>
+              {/* <Grid item xs={12} lg={6}>
                 <TextField
                   id="search"
                   variant="filled"
@@ -159,8 +159,8 @@ const InvolvementsAll = () => {
                   onChange={(event) => setSearch(event.target.value)}
                   fullWidth
                 />
-              </Grid>
-              <Grid item xs={12} md={6} lg={3}>
+              </Grid> */}
+              <Grid item xs={12} md={6} lg={4}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel id="activity-session">Term</InputLabel>
                   <Select
@@ -180,7 +180,7 @@ const InvolvementsAll = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} md={6} lg={3}>
+              {/* <Grid item xs={12} md={6} lg={3}>
                 <FormControl fullWidth variant="filled">
                   <InputLabel id="activity-type">Type</InputLabel>
                   <Select
@@ -199,7 +199,7 @@ const InvolvementsAll = () => {
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid> */}
             </Grid>
           </CardContent>
           {/* start tabs */}
@@ -214,7 +214,7 @@ const InvolvementsAll = () => {
                 <Tab
                   label={`My ${myInvolvementsHeadingText} Involvements`}
                   style={{
-                    backgroundColor: gordonColors.neutral.grayShades[50],
+                    backgroundColor: gordonColors.neutral.grayShades[300],
                     //color: gordonColors.neutral.grayShades[50],
                   }}
                   value="1"
@@ -222,7 +222,7 @@ const InvolvementsAll = () => {
                 <Tab
                   label="Membership Requests"
                   style={{
-                    backgroundColor: gordonColors.neutral.grayShades[50],
+                    backgroundColor: gordonColors.neutral.grayShades[300],
                     //color: gordonColors.neutral.grayShades[50],
                   }}
                   value="2"
@@ -230,7 +230,7 @@ const InvolvementsAll = () => {
                 <Tab
                   label={`${involvementSessionText} Involvements`}
                   style={{
-                    backgroundColor: gordonColors.neutral.grayShades[50],
+                    backgroundColor: gordonColors.neutral.grayShades[300],
                     //color: gordonColors.neutral.grayShades[50],
                   }}
                   value="3"
@@ -296,16 +296,38 @@ const InvolvementsAll = () => {
                     }}
                   />
                   <CardContent>
-                    <Grid item xs={12} lg={6} marginTop={4} marginBottom={4}>
-                      <TextField
-                        id="search"
-                        variant="filled"
-                        label="Search"
-                        type="search"
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                        fullWidth
-                      />
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} lg={6} marginTop={2} marginBottom={4}>
+                        <TextField
+                          id="search"
+                          variant="filled"
+                          label="Search"
+                          type="search"
+                          value={search}
+                          onChange={(event) => setSearch(event.target.value)}
+                          fullWidth
+                        />
+                      </Grid>
+                      <Grid item xs={12} md={6} lg={6} marginTop={2} marginBottom={4}>
+                        <FormControl fullWidth variant="filled">
+                          <InputLabel id="activity-type">Type</InputLabel>
+                          <Select
+                            labelId="activity-type"
+                            id="activity-type"
+                            value={type}
+                            onChange={(event) => setType(event.target.value)}
+                          >
+                            <MenuItem label="All" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {types.map((type) => (
+                              <MenuItem value={type} key={type}>
+                                {type}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
                     </Grid>
                     {loading ? (
                       <GordonLoader />
