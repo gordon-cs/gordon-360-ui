@@ -292,13 +292,13 @@ const SeriesScheduleForm = ({
         </ContentCard>
         <ContentCard title="Available Series Surfaces">
           {/* temporary solution, hard to see what surfaces were selected */}
-          <Grid container direction="column" marginTop={2}>
+          <Grid container direction="column" marginTop={2} marginLeft={2}>
             {mapFieldsToInputs(availableSurfaces)}
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} marginLeft={2}>
             <Typography className={styles.selectedSurfaces}>*Selected surfaces: </Typography>
           </Grid>
-          <Grid item xs={12} marginLeft={1}>
+          <Grid item xs={12} marginLeft={3}>
             {newInfo.AvailableSurfaceIDs.map((surface) => (
               <Typography className={styles.selectedSurfaces}>{surface}</Typography>
             ))}
