@@ -1,4 +1,4 @@
-import { Grid, Typography, Chip, IconButton, Menu, MenuItem } from '@mui/material';
+import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Divider } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ContentCard } from 'views/RecIM/components/Forms/components/ContentCard';
@@ -22,9 +22,8 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [disclaimerContent, setDisclaimerContent] = useState('');
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
-  let startDate = DateTime.fromISO(series.StartDate);
-  let endDate = DateTime.fromISO(series.EndDate);
-
+  // let startDate = DateTime.fromISO(series.StartDate);
+  // let endDate = DateTime.fromISO(series.EndDate);
 
   // default closure
   const handleClose = () => {
@@ -174,19 +173,25 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
         )}
 
         <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
-          <MenuItem dense onClick={handleEditSeries} divider>
-            Edit Series Info
-          </MenuItem>
-          <MenuItem dense onClick={handleSeriesSchedule} divider>
-            Edit Schedule
-          </MenuItem>
+          <Typography className={styles.menuTitle}>Schedule</Typography>
           <MenuItem
             dense
             disabled={series.TeamStanding.length === 0}
             onClick={handleAutoSchedule}
             divider
           >
-            Auto-schedule
+            Auto-schedule Series
+          </MenuItem>
+          <MenuItem dense onClick={handleSeriesSchedule} divider>
+            Edit Schedule
+          </MenuItem>
+          <Typography className={styles.menuTitle}>Series</Typography>
+          <MenuItem dense onClick={handleEditSeries} divider>
+            Edit Series Info
+          </MenuItem>
+          <MenuItem dense divider>
+            {/* create match to be handled after form refactor */}
+            Create a Match
           </MenuItem>
           <MenuItem dense onClick={handleDelete} className={styles.redButton}>
             Delete
