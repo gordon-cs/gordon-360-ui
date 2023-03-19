@@ -1,8 +1,7 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -10,15 +9,25 @@ import Header from '../../components/Header';
 import styles from './Activity.module.css';
 import { TeamList } from '../../components/List';
 import TeamForm from '../../components/Forms/TeamForm';
-import { getActivityByID } from 'services/recim/activity';
+import { deleteActivity, getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
+import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+
+const getNumMatches = (seriesArray) => {
+  let n = 0;
+  seriesArray.forEach((series) => {
+    n += series.Match?.length ?? 0;
+  });
+  return n;
+};
 
 const Activity = () => {
   const navigate = useNavigate();
@@ -34,6 +43,8 @@ const Activity = () => {
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
   const [reload, setReload] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -89,6 +100,14 @@ const Activity = () => {
     setOpenCreateSeriesForm(false);
   };
 
+  const handleDelete = () => {
+    deleteActivity(activityID);
+    setOpenConfirmDelete(false);
+    setOpenSettings(false);
+    navigate(`/recim`);
+    // @TODO add snackbar
+  };
+
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -97,32 +116,46 @@ const Activity = () => {
   } else {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item>
-          <img src={activity?.Logo ?? defaultLogo} alt="Activity Icon" width="85em"></img>
+        <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
+          <Grid item>
+            <img src={activity?.Logo ?? defaultLogo} alt="Activity Icon" width="85em"></img>
+          </Grid>
+          <Grid item>
+            <Typography variant="h5" className={styles.title}>
+              {activity?.Name ?? <GordonLoader size={15} inline />}
+              {user?.IsAdmin && (
+                <IconButton
+                  onClick={() => {
+                    setOpenActivityForm(true);
+                  }}
+                  className={styles.editIconButton}
+                  sx={{ ml: 1 }}
+                >
+                  <EditIcon />
+                </IconButton>
+              )}
+            </Typography>
+            <Typography variant="h6" className={styles.subtitle}>
+              <i>
+                {activity?.StartDate
+                  ? formatDateTimeRange(activity.StartDate, activity.EndDate)
+                  : `Description of activity`}
+              </i>
+            </Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={8} md={5}>
-          <Typography variant="h5" className={styles.title}>
-            {activity?.Name ?? <GordonLoader size={15} inline />}
-            {user?.IsAdmin && (
-              <IconButton
-                onClick={() => {
-                  setOpenActivityForm(true);
-                }}
-                className={styles.editIconButton}
-                sx={{ ml: 1 }}
-              >
-                <EditIcon />
-              </IconButton>
-            )}
-          </Typography>
-          <Typography variant="h6" className={styles.subtitle}>
-            <i>
-              {activity?.StartDate
-                ? formatDateTimeRange(activity.StartDate, activity.EndDate)
-                : `Description of activity`}
-            </i>
-          </Typography>
-        </Grid>
+        {user?.IsAdmin && (
+          <Grid item xs={3} textAlign={'right'}>
+            <IconButton
+              onClick={() => {
+                setOpenSettings(true);
+              }}
+              sx={{ mr: '1rem' }}
+            >
+              <SettingsIcon fontSize="large" />
+            </IconButton>
+          </Grid>
+        )}
         {openActivityForm && (
           <ActivityForm
             activity={activity}
@@ -246,48 +279,77 @@ const Activity = () => {
                 </Grid>
               </Grid>
             </Grid>
-            {openMatchForm && (
-              <MatchForm
-                closeWithSnackbar={(status) => {
-                  handleMatchFormSubmit(status, setOpenMatchForm);
-                }}
-                openMatchForm={openMatchForm}
-                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
-                activity={activity}
-              />
-            )}
-            {openCreateSeriesForm && (
-              <SeriesForm
-                closeWithSnackbar={(status) => {
-                  handleCreateSeriesForm(status);
-                }}
-                openSeriesForm={openCreateSeriesForm}
-                setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-                activityID={activity.ID}
-                existingActivitySeries={activity.Series}
-              />
-            )}
-            {openTeamForm && (
-              <TeamForm
-                closeWithSnackbar={(teamID, status) => {
-                  handleTeamFormSubmit(status, setOpenTeamForm);
-                  navigate(`team/${teamID}`);
-                }}
-                openTeamForm={openTeamForm}
-                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-                activityID={activityID}
-              />
-            )}
-            {openMatchForm && (
-              <MatchForm
-                closeWithSnackbar={(status) => {
-                  handleTeamFormSubmit(status, setOpenMatchForm);
-                }}
-                openMatchForm={openMatchForm}
-                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
-                activity={activity}
-              />
-            )}
+
+            {/* forms and dialogs */}
+            <MatchForm
+              closeWithSnackbar={(status) => {
+                handleMatchFormSubmit(status, setOpenMatchForm);
+              }}
+              openMatchForm={openMatchForm}
+              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              activity={activity}
+            />
+            <SeriesForm
+              closeWithSnackbar={(status) => {
+                handleCreateSeriesForm(status);
+              }}
+              openSeriesForm={openCreateSeriesForm}
+              setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+              activityID={activity.ID}
+              existingActivitySeries={activity.Series}
+            />
+            <TeamForm
+              closeWithSnackbar={(teamID, status) => {
+                handleTeamFormSubmit(status, setOpenTeamForm);
+                navigate(`team/${teamID}`);
+              }}
+              openTeamForm={openTeamForm}
+              setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+              activityID={activityID}
+            />
+            <GordonDialogBox
+              title="Admin Settings"
+              fullWidth
+              open={openSettings}
+              cancelButtonClicked={() => setOpenSettings(false)}
+              cancelButtonName="Close"
+            >
+              <br />
+              <Grid container alignItems="center" justifyContent="space-between">
+                <Grid item>
+                  <Typography>Permanently delete the activity '{activity.Name}'</Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={() => setOpenConfirmDelete(true)}
+                  >
+                    Delete this activity
+                  </Button>
+                </Grid>
+              </Grid>
+            </GordonDialogBox>
+            <GordonDialogBox
+              title="Confirm Delete"
+              open={openConfirmDelete}
+              cancelButtonClicked={() => setOpenConfirmDelete(false)}
+              cancelButtonName="No, keep this activity"
+              buttonName="Yes, delete this activity"
+              buttonClicked={() => handleDelete()}
+              severity="error"
+            >
+              <br />
+              <Typography variant="body1">
+                Are you sure you want to permanently delete this activity: '{activity.Name}'?
+              </Typography>
+              <Typography variant="body1">
+                This includes <b>{activity.Team?.length ?? 0} teams</b> and
+                <b> {activity.Series?.length ?? 0} series</b>, with a total of{' '}
+                <b>{getNumMatches(activity.Series)} matches</b>.
+              </Typography>
+              <Typography variant="body1">This action cannot be undone.</Typography>
+            </GordonDialogBox>
           </Grid>
         )}
       </>
