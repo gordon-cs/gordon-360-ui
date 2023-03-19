@@ -11,6 +11,8 @@ import {
   Menu,
   MenuItem,
   Button,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
@@ -21,8 +23,13 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
-import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
-import { getActivityTypes } from 'services/recim/activity';
+import {
+  deleteTeamParticipant,
+  editTeamParticipant,
+  respondToTeamInvite,
+} from 'services/recim/team';
+import { getActivityTypes, isActivityRegisterable } from 'services/recim/activity';
+import { removeAttendance, updateAttendance } from 'services/recim/match';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
@@ -282,7 +289,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
           </Grid>
           <Grid item xs={8} sm={4}>
             <Typography className={styles.listingSubtitle}>
-              Sportsmanship: {targetTeamStats.SportsmanshipRating}
+              Sportsmanship: {targetTeamStats.SportsmanshipScore}
             </Typography>
           </Grid>
           <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
@@ -351,16 +358,31 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
   );
 };
 
-// We could also use ParticipantID (not student ID) if we have that and prefer it to AD_Username
-const ParticipantListing = ({ participant, minimal, callbackFunction, showParticipantOptions }) => {
-  const { teamID } = useParams();
+const ParticipantListing = ({
+  participant,
+  minimal,
+  callbackFunction,
+  showParticipantOptions,
+  withAttendance,
+  isAdmin,
+  initialAttendance,
+  teamID,
+  matchID,
+}) => {
+  const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState();
   const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
+  const [didAttend, setDidAttend] = useState(initialAttendance != null);
+
+  const handleClickOff = () => {
+    setAnchorEl(null);
+  };
 
   const handleClose = () => {
     setAnchorEl(null);
+    callbackFunction((val) => !val);
   };
 
   useEffect(() => {
@@ -386,24 +408,56 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     setAnchorEl(event.currentTarget);
   };
 
+  const handleRemoveFromTeam = async () => {
+    let isRegistrationPeriod = await isActivityRegisterable(activityID);
+    if (isRegistrationPeriod) await handleDeleteFromTeam();
+    else await handleMakeInactive();
+  };
+
   const handleMakeCoCaptain = async () => {
     let editedParticipant = {
       Username: participant.Username,
       RoleTypeID: 4,
     }; // Role 4 is co-captain
 
-    await editTeamParticipant(parseInt(teamID), editedParticipant); // Role 4 is co-captain
+    await editTeamParticipant(teamIDParam, editedParticipant); // Role 4 is co-captain
     handleClose();
   };
 
-  const handleRemoveFromTeam = async () => {
+  const reinstateMember = async () => {
+    let editedParticipant = {
+      Username: participant.Username,
+      RoleTypeID: 3,
+    }; // Role 3 is member
+    await editTeamParticipant(teamIDParam, editedParticipant);
+    handleClose();
+  };
+
+  const handleMakeInactive = async () => {
     let editedParticipant = {
       Username: participant.Username,
       RoleTypeID: 6,
     }; // Role 6 is inactive
-
-    await editTeamParticipant(parseInt(teamID), editedParticipant);
+    await editTeamParticipant(teamIDParam, editedParticipant);
     handleClose();
+  };
+
+  const handleDeleteFromTeam = async () => {
+    let editedParticipant = {
+      Username: participant.Username,
+      RoleTypeID: 0,
+    }; // deleted
+    await editTeamParticipant(teamIDParam, editedParticipant);
+    handleClose();
+  };
+
+  const handleAttendance = async (attended) => {
+    setDidAttend(attended);
+    let att = {
+      teamID: teamID,
+      username: participant.Username,
+    };
+    attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
   };
 
   if (!participant) return null;
@@ -413,21 +467,43 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
     <ListItem key={participant.Username} className={styles.listingWrapper}>
       <ListItem
         secondaryAction={
-          minimal ? (
-            <IconButton edge="end" onClick={() => callbackFunction(participant.Username)}>
-              <ClearIcon />
-            </IconButton>
-          ) : (
-            showParticipantOptions && (
+          <>
+            {minimal && (
+              <IconButton edge="end" onClick={() => callbackFunction(participant.Username)}>
+                <ClearIcon />
+              </IconButton>
+            )}
+            {showParticipantOptions && (
               <IconButton edge="end" onClick={handleParticipantOptions}>
                 <MoreHorizIcon />
               </IconButton>
-            )
-          )
+            )}
+            {withAttendance && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    color="secondary"
+                    inputProps={{ 'aria-label': 'attendance toggle' }}
+                    defaultChecked={initialAttendance}
+                    onChange={(event) => handleAttendance(event.target.checked)}
+                    disabled={!isAdmin}
+                  />
+                }
+                label={didAttend ? 'Present' : <i>Absent</i>}
+                labelPlacement="start"
+                className={!didAttend && styles.listingSubtitle}
+              />
+            )}
+          </>
         }
         disablePadding
       >
-        <ListItemButton to={`/profile/${participant.Username}`} className={styles.listing}>
+        <ListItemButton
+          to={`/profile/${participant.Username}`}
+          className={`${styles.listing} ${
+            withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
+          }`}
+        >
           <ListItemAvatar>
             <Avatar
               src={`data:image/jpg;base64,${avatar}`}
@@ -438,13 +514,22 @@ const ParticipantListing = ({ participant, minimal, callbackFunction, showPartic
           <ListItemText primary={name} secondary={participant.Role} />
         </ListItemButton>
         {showParticipantOptions && (
-          <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
-            <MenuItem dense onClick={handleMakeCoCaptain} divider>
-              Make co-captain
-            </MenuItem>
-            <MenuItem dense onClick={handleRemoveFromTeam} className={styles.rejectButton}>
-              Remove from team
-            </MenuItem>
+          <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
+            {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (
+              <MenuItem dense onClick={handleMakeCoCaptain} divider>
+                Make co-captain
+              </MenuItem>
+            )}
+            {(participant.Role === 'Inactive' || participant.Role === 'Co-Captain') && (
+              <MenuItem dense onClick={reinstateMember}>
+                {participant.Role === 'Inactive' ? `Reinstate Member` : `Demote to Member`}
+              </MenuItem>
+            )}
+            {participant.Role !== 'Inactive' && (
+              <MenuItem dense onClick={handleRemoveFromTeam} className={styles.rejectButton}>
+                Remove from team
+              </MenuItem>
+            )}
           </Menu>
         )}
       </ListItem>

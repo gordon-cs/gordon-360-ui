@@ -3,6 +3,7 @@ import { Participant } from './participant';
 import { Team, TeamMatchHistory } from './team';
 import { Lookup } from './recim';
 import { Activity } from './activity';
+import { Series } from './series';
 
 export type Match = {
   ID: number;
@@ -11,7 +12,7 @@ export type Match = {
   StartTime: string;
   Surface: string;
   Status: string;
-  SeriesID: number;
+  Series: Series;
   Attendance: Participant[];
   Team: Team[];
 };
@@ -90,10 +91,16 @@ type Attendance = {
 const createMatch = (newMatch: UploadMatch): Promise<CreatedMatch> =>
   http.post('recim/matches', newMatch);
 
-const createMatchAttendance = (
+const updateMatchAttendance = (
   attendance: UploadMatchAttendance,
   matchID: number,
 ): Promise<Attendance[]> => http.put(`recim/matches/${matchID}/attendance`, attendance);
+
+const updateAttendance = (matchID: number, attendance: Attendance): Promise<Attendance> =>
+  http.post(`recim/matches/${matchID}/attendance`, attendance);
+
+const removeAttendance = (matchID: number, attendance: Attendance): Promise<Attendance> =>
+  http.del(`recim/matches/${matchID}/attendance`, attendance);
 
 const getMatchAttendance = (matchID: number): Promise<MatchAttendance> =>
   http.get(`recim/matches/${matchID}/attendance`);
@@ -133,7 +140,9 @@ export {
   getMatchTeamStatusTypes,
   updateMatchStats,
   updateMatch,
-  createMatchAttendance,
+  updateMatchAttendance,
+  updateAttendance,
+  removeAttendance,
   getMatchAttendance,
   deleteMatchCascade,
   getSurfaces,

@@ -11,6 +11,15 @@
   background-color: $neutral-light-gray2;
 }
 
+.attendedListing {
+  outline: solid 1px $secondary-green;
+}
+
+.absentListing {
+  opacity: 0.6;
+  font-style: italic;
+}
+
 :global(.MuiList-padding) {
   padding: 0;
 }
