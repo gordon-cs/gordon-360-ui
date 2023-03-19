@@ -155,10 +155,10 @@ const Team = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
-          {team.Match?.length ? (
+          {team.Match?.length > 0 ? (
             <MatchList matches={team.Match} activityID={team.Activity?.ID} />
           ) : (
-            <Typography variant="body1" paragraph>
+            <Typography className={styles.secondaryText}>
               No matches scheduled at this time!
             </Typography>
           )}

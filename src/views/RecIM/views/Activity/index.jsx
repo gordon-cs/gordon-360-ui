@@ -212,9 +212,7 @@ const Activity = () => {
               );
             })
           ) : (
-            <Typography variant="body1" paragraph>
-              No series scheduled yet!
-            </Typography>
+            <Typography className={styles.secondaryTex}>No series scheduled yet!</Typography>
           )}
         </CardContent>
       </Card>
@@ -271,7 +269,7 @@ const Activity = () => {
               {activity.Team?.length ? (
                 <TeamList teams={activity.Team} />
               ) : (
-                <Typography variant="body1" paragraph>
+                <Typography className={styles.secondaryText}>
                   Be the first to create a team!
                 </Typography>
               )}

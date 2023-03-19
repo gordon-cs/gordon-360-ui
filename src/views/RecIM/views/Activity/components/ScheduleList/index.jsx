@@ -177,7 +177,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
       {series.Match.length ? (
         <MatchList matches={series.Match} activityID={activityID} />
       ) : (
-        <Typography variant="body1" paragraph>
+        <Typography className={styles.secondaryText}>
           Games have not yet been scheduled for this series.
         </Typography>
       )}

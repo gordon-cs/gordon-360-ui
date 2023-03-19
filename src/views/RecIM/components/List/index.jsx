@@ -58,7 +58,9 @@ const ParticipantList = ({
 const MatchList = ({ matches, activityID }) => {
   if (!matches?.length || !matches[0]) return <Typography>No matches to show.</Typography>;
   let content = matches.map((match) => (
-    <MatchListing key={match.ID} match={match} activityID={activityID} />
+    <MatchListing key={match?.ID} match={match} activityID={activityID} />
+    // I have no idea why, but on ladder matches, match can't be found
+    // despite it showing up on the debugger.
   ));
 
   return <List dense>{content}</List>;
