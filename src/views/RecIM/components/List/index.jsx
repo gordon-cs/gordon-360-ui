@@ -43,7 +43,7 @@ const ParticipantList = ({
         isAdmin={isAdmin}
         matchID={matchID}
         teamID={teamID}
-        callbackFunction={callbackFunction}
+        callbackFunction={(bool) => callbackFunction(bool)}
         showParticipantOptions={
           showParticipantOptions &&
           participant.Role !== 'Team-captain/Creator' &&

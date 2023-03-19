@@ -92,7 +92,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         label: 'Teams',
         name: 'TeamIDs',
         type: 'multiselect',
-        menuItems: match.Activity.Team.map((team) => {
+        menuItems: match.Series.TeamStanding.map((team) => {
           return team.Name;
         }),
         error: errorStatus.TeamIDs,
@@ -124,7 +124,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       //filters. You are welcome to improve on the logic below if you so desire.
       var teamIDs = [];
       match.Team.forEach((team) =>
-        teamIDs.push(match.Activity.Team.find((_team) => team.ID === _team.ID).Name),
+        teamIDs.push(match.Series.TeamStanding.find((_team) => team.ID === _team.TeamID).Name),
       );
       return {
         StartTime: match.StartTime,
@@ -231,7 +231,8 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     let idArray = [];
     matchRequest.TeamIDs.forEach((value) => {
       if (activity) idArray.push(activity.Team.find((team) => team.Name === value).ID);
-      else if (match) idArray.push(match.Activity.Team.find((team) => team.Name === value).ID);
+      else if (match)
+        idArray.push(match.Series.TeamStanding.find((team) => team.Name === value).TeamID);
     });
     matchRequest.TeamIDs = idArray;
 

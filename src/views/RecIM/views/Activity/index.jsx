@@ -19,6 +19,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
+import defaultLogo from 'views/RecIM/recim_logo.png';
 
 const Activity = () => {
   const navigate = useNavigate();
@@ -115,7 +116,7 @@ const Activity = () => {
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
           <Grid item>
-            <img src={''} alt="Activity Icon" width="85em"></img>
+            <img src={activity?.Logo ?? defaultLogo} alt="Activity Icon" width="85em"></img>
           </Grid>
           <Grid item>
             <Typography variant="h5" className={styles.title}>

@@ -51,6 +51,7 @@ export type TeamMatchHistory = {
 
 export type TeamRecord = {
   ID: number;
+  TeamID: number;
   Name: string;
   WinCount: number;
   LossCount: number;
