@@ -284,10 +284,10 @@ const Match = () => {
                 severity="error"
               >
                 <br />
-                <Typography>
-                  Are you sure you want to permanently delete this match: '{matchName}'? <br />
-                  This action cannot be undone.
+                <Typography variant="body1">
+                  Are you sure you want to permanently delete this match: '{matchName}'?
                 </Typography>
+                <Typography variant="body1">This action cannot be undone.</Typography>
               </GordonDialogBox>
             )}
           </Grid>

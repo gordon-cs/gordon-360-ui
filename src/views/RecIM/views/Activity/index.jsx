@@ -21,6 +21,14 @@ import { formatDateTimeRange } from '../../components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 
+const getNumMatches = (seriesArray) => {
+  let n = 0;
+  seriesArray.forEach((series) => {
+    n += series.Match?.length ?? 0;
+  });
+  return n;
+};
+
 const Activity = () => {
   const navigate = useNavigate();
   const { activityID } = useParams();
@@ -349,11 +357,15 @@ const Activity = () => {
                 severity="error"
               >
                 <br />
-                <Typography>
-                  Are you sure you want to permanently delete this activity: '{activity.Name}'?{' '}
-                  <br />
-                  This action cannot be undone.
+                <Typography variant="body1">
+                  Are you sure you want to permanently delete this activity: '{activity.Name}'?
                 </Typography>
+                <Typography variant="body1">
+                  This includes <b>{activity.Team?.length ?? 0} teams</b> and
+                  <b> {activity.Series?.length ?? 0} series</b>, with a total of{' '}
+                  <b>{getNumMatches(activity.Series)} matches</b>.
+                </Typography>
+                <Typography variant="body1">This action cannot be undone.</Typography>
               </GordonDialogBox>
             )}
           </Grid>

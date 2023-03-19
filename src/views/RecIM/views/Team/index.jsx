@@ -255,10 +255,14 @@ const Team = () => {
                 severity="error"
               >
                 <br />
-                <Typography>
-                  Are you sure you want to permanently delete this team: '{team.Name}'? <br />
-                  This action cannot be undone.
+                <Typography variant="body1">
+                  Are you sure you want to permanently delete this team: '{team.Name}'?
                 </Typography>
+                <Typography variant="body1">
+                  This will remove this team for {team.Participant?.length ?? 0} participant
+                  {team.Participant?.length !== 1 && 's'}.
+                </Typography>
+                <Typography variant="body1">This action cannot be undone.</Typography>
               </GordonDialogBox>
             )}
           </Grid>
