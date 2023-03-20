@@ -41,6 +41,7 @@ const GordonDialogBox = ({
       <DialogTitle
         className={titleClass ? titleClass : styles.gc360_gordondialogbox_title}
         id="alert-dialog-title"
+        sx={severity ? { bgcolor: `${severity}.main`, pb: '0' } : { bgcolor: 'primary.main' }}
       >
         {severity ? (
           <Alert variant="filled" severity={severity}>
@@ -65,7 +66,7 @@ const GordonDialogBox = ({
           <Button
             variant="contained"
             onClick={buttonClicked}
-            color="primary"
+            color={severity ?? 'primary'}
             disabled={isButtonDisabled}
           >
             {buttonName ?? 'Okay'}

@@ -1,6 +1,5 @@
-import { Grid, Typography, Card, CardHeader, CardContent, IconButton } from '@mui/material';
-import { Link as LinkRouter } from 'react-router-dom';
-import { useParams } from 'react-router';
+import { Grid, Typography, Card, CardHeader, CardContent, IconButton, Button } from '@mui/material';
+import { useNavigate, useParams, Link as LinkRouter } from 'react-router-dom';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
@@ -9,10 +8,12 @@ import Header from '../../components/Header';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { getMatchByID, getMatchAttendance } from 'services/recim/match';
+import { getMatchByID, getMatchAttendance, deleteMatchCascade } from 'services/recim/match';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import EditIcon from '@mui/icons-material/Edit';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { standardDate } from 'views/RecIM/components/Helpers';
+import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 
 const RosterCard = ({
@@ -40,6 +41,7 @@ const RosterCard = ({
 );
 
 const Match = () => {
+  const navigate = useNavigate();
   const { matchID } = useParams();
   const { profile } = useUser();
   const [match, setMatch] = useState();
@@ -47,8 +49,11 @@ const Match = () => {
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
   const [openMatchForm, setOpenMatchForm] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
+  const [matchName, setMatchName] = useState();
 
   useEffect(() => {
     const loadData = async () => {
@@ -80,6 +85,7 @@ const Match = () => {
           match.Scores.find((team) => team.TeamID === match.Team[1]?.ID)?.TeamScore ?? 0,
         );
       };
+      setMatchName(`${match?.Team[0]?.Name ?? 'TBD'} vs ${match?.Team[1]?.Name ?? 'TBD'}`);
       assignMatchScores();
     }
   }, [match]);
@@ -87,6 +93,14 @@ const Match = () => {
   const handleMatchFormSubmit = (status, setOpenMatchForm) => {
     //if you want to do something with the message make a snackbar function here
     setOpenMatchForm(false);
+  };
+
+  const handleDelete = () => {
+    deleteMatchCascade(matchID);
+    setOpenConfirmDelete(false);
+    setOpenSettings(false);
+    navigate(`/recim/activity/${match.Activity.ID}`);
+    // @TODO add snackbar
   };
 
   if (loading && !profile) {
@@ -147,6 +161,15 @@ const Match = () => {
                       className={styles.editIconButton}
                     >
                       <EditIcon />
+                    </IconButton>
+                  </Grid>
+                  <Grid item>
+                    <IconButton
+                      onClick={() => {
+                        setOpenSettings(true);
+                      }}
+                    >
+                      <SettingsIcon fontSize="large" />
                     </IconButton>
                   </Grid>
                 </Grid>
@@ -214,16 +237,54 @@ const Match = () => {
                 teamID={match.Team[1]?.ID}
               />
             </Grid>
-            {openMatchForm && (
-              <MatchForm
-                closeWithSnackbar={(status) => {
-                  handleMatchFormSubmit(status, setOpenMatchForm);
-                }}
-                openMatchForm={openMatchForm}
-                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
-                match={match}
-              />
-            )}
+
+            {/* forms and dialogs */}
+            <MatchForm
+              closeWithSnackbar={(status) => {
+                handleMatchFormSubmit(status, setOpenMatchForm);
+              }}
+              openMatchForm={openMatchForm}
+              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              match={match}
+            />
+            <GordonDialogBox
+              title="Admin Settings"
+              fullWidth
+              open={openSettings}
+              cancelButtonClicked={() => setOpenSettings(false)}
+              cancelButtonName="Close"
+            >
+              <br />
+              <Grid container alignItems="center" justifyContent="space-between">
+                <Grid item>
+                  <Typography>Permanently delete the match '{matchName}'</Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={() => setOpenConfirmDelete(true)}
+                  >
+                    Delete this match
+                  </Button>
+                </Grid>
+              </Grid>
+            </GordonDialogBox>
+            <GordonDialogBox
+              title="Confirm Delete"
+              open={openConfirmDelete}
+              cancelButtonClicked={() => setOpenConfirmDelete(false)}
+              cancelButtonName="No, keep this team"
+              buttonName="Yes, delete this team"
+              buttonClicked={() => handleDelete()}
+              severity="error"
+            >
+              <br />
+              <Typography variant="body1">
+                Are you sure you want to permanently delete this match: '{matchName}'?
+              </Typography>
+              <Typography variant="body1">This action cannot be undone.</Typography>
+            </GordonDialogBox>
           </Grid>
         )}
       </>
