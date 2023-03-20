@@ -245,7 +245,7 @@ const Activity = () => {
               );
             })
           ) : (
-            <Typography className={styles.secondaryTex}>No series scheduled yet!</Typography>
+            <Typography className={styles.secondaryText}>No series scheduled yet!</Typography>
           )}
         </CardContent>
       </Card>

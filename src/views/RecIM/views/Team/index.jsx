@@ -216,7 +216,7 @@ const Team = () => {
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={team?.Activity?.ID}
               team={team}
-              isAdmin={user.IsAdmin}
+              isAdmin={user?.IsAdmin}
             />
             <GordonDialogBox
               title="Admin Settings"

@@ -62,6 +62,7 @@ const Home = () => {
   const [activityTab, setActivityTab] = useState(0);
   const [teamTab, setTeamTab] = useState(0);
 
+  console.log(activities);
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -158,10 +159,10 @@ const Home = () => {
 
   let myTeams = (
     <CardContent>
-      {participantTeams ? (
+      {participantTeams.length > 0 ? (
         <TeamList teams={participantTeams} />
       ) : (
-        <Typography className={styles.secondaryText}>You're not yet apart of any teams!</Typography>
+        <Typography className={styles.secondaryText}>You're not yet apart of any teams</Typography>
       )}
     </CardContent>
   );
