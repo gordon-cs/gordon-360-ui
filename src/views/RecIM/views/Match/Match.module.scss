@@ -2,55 +2,57 @@
 
 .header {
   font-size: 0.8rem;
-}
 
-.header h5 {
-  font-size: 1.5em;
-}
-
-.matchScore {
-  white-space: nowrap;
-  font-weight: bold;
-  color: $neutral-dark-gray;
-}
-
-.headerImg {
-  width: 3em;
-}
-
-.teamInfo {
-  flex-direction: column;
-  text-align: center;
-}
-
-.teamInfo_imgContainer {
-  order: -1;
+  h5 {
+    font-size: 1.5em;
+  }
+  .teamInfo {
+    flex-direction: column;
+    text-align: center;
+  }
+  .matchScore {
+    white-space: nowrap;
+    font-weight: bold;
+    color: $neutral-dark-gray;
+  }
+  .headerImg {
+    width: 3em;
+  }
+  .headerImgContainer {
+    order: -1;
+  }
 }
 
 @media (min-width: $break-sm) {
   .header {
-    font-size: 1rem;
-  }
-  .headerImg {
-    width: 5em;
-  }
-  .teamInfo {
-    flex-direction: row;
-  }
-  .teamInfoLeft {
-    text-align: right;
-  }
-  .teamInfoRight {
-    text-align: left;
-  }
-  .teamInfo_imgContainer {
-    order: 0;
+    font-size: 0.9rem;
+
+    .headerImg {
+      width: 5em;
+    }
+    .teamInfo {
+      flex-direction: row;
+      align-items: center;
+    }
+    .teamInfoLeft {
+      text-align: right;
+    }
+    .teamInfoRight {
+      text-align: left;
+    }
+    .headerImgContainer {
+      order: 0;
+    }
   }
 }
 
 @media (min-width: $break-lg) {
-  .teamName {
-    font-size: 1.5rem;
+  .header {
+    font-size: 1rem;
+
+    .teamName {
+      font-size: 1.5rem;
+    }
   }
 }
 
@@ -80,6 +82,7 @@
 
 .subtitle {
   color: $neutral-gray;
+  font-size: 0.9em;
 }
 
 .editIconButton {

@@ -110,8 +110,9 @@ const Match = () => {
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
-      <>
-        <Grid container spacing={4}>
+      <Grid container direction="column" className={styles.header}>
+        {/* match time/location */}
+        <Grid item container spacing={4}>
           <Grid item xs={6} textAlign="right">
             <Typography className={styles.subtitle}>
               {match && standardDate(match.StartTime, true)}
@@ -121,13 +122,15 @@ const Match = () => {
             <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
           </Grid>
         </Grid>
+
+        {/* team info */}
         <Grid
+          item
           container
           alignItems="center"
           justifyContent="space-around"
           spacing={1}
           flexWrap="nowrap"
-          className={styles.header}
         >
           {/* left team info */}
           <Grid
@@ -136,16 +139,16 @@ const Match = () => {
             xs={5}
             columnSpacing={2}
             justifyContent="space-around"
-            className={styles.teamInfo}
+            className={`${styles.teamInfo} ${styles.teamInfoLeft}`}
           >
-            <Grid item sm={3} lg="auto" className={styles.teamInfo_imgContainer}>
+            <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
               <img
                 src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID)?.Logo ?? defaultLogo}
                 alt="Team Icon"
                 className={styles.headerImg}
               ></img>
             </Grid>
-            <Grid item sm={9} lg="auto">
+            <Grid item sm={8} lg="auto">
               <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
                 <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
                   {match?.Team[0]?.Name ?? 'No team yet...'}
@@ -176,9 +179,9 @@ const Match = () => {
             xs={5}
             columnSpacing={2}
             justifyContent="space-around"
-            className={styles.teamInfo}
+            className={`${styles.teamInfo} ${styles.teamInfoRight}`}
           >
-            <Grid item sm={9} lg="auto">
+            <Grid item sm={8} lg="auto">
               <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
                 <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
                   {match?.Team[1]?.Name ?? 'No team yet...'}
@@ -194,7 +197,7 @@ const Match = () => {
                 </i>
               )}
             </Grid>
-            <Grid item sm={3} lg="auto" className={styles.teamInfo_imgContainer}>
+            <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
               <img
                 src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID)?.Logo ?? defaultLogo}
                 alt="Team Icon"
@@ -204,8 +207,9 @@ const Match = () => {
           </Grid>
         </Grid>
 
+        {/* admin controls */}
         {user?.IsAdmin && (
-          <Grid container columnSpacing={2} justifyContent="center">
+          <Grid item container columnSpacing={2} justifyContent="center">
             <Grid item>
               <IconButton
                 onClick={() => {
@@ -227,7 +231,7 @@ const Match = () => {
             </Grid>
           </Grid>
         )}
-      </>
+      </Grid>
     );
 
     return (
