@@ -68,7 +68,6 @@ const MatchList = ({ matches, activityID }) => {
 // setTargetTeamID is used for edit Match teams
 const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID }) => {
   const navigate = useNavigate();
-  if (!teams?.length && !match && !series) return <Typography>No teams to show.</Typography>;
 
   const handleInviteResponse = (response, activityID, teamID) => {
     if (response === 'accepted') {
