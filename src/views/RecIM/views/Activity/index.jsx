@@ -1,9 +1,18 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  IconButton,
+  Tabs,
+  Tab,
+} from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -11,16 +20,28 @@ import Header from '../../components/Header';
 import styles from './Activity.module.css';
 import { TeamList } from '../../components/List';
 import TeamForm from '../../components/Forms/TeamForm';
-import { getActivityByID } from 'services/recim/activity';
+import { deleteActivity, getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
+import SettingsIcon from '@mui/icons-material/Settings';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
+import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import { TabPanel } from 'views/RecIM/components';
+import { Box } from '@mui/system';
+
+const getNumMatches = (seriesArray) => {
+  let n = 0;
+  seriesArray.forEach((series) => {
+    n += series.Match?.length ?? 0;
+  });
+  return n;
+};
 
 const Activity = () => {
   const navigate = useNavigate();
@@ -36,7 +57,10 @@ const Activity = () => {
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
+  const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
   const [reload, setReload] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -73,6 +97,18 @@ const Activity = () => {
     }
   }, [activity, user, userTeams]);
 
+  // autofocus on active series
+  useEffect(() => {
+    if (activity)
+      if (activity.Series.length > 0) {
+        let now = new Date().toJSON();
+        let index = activity.Series.findIndex(
+          (series) => series.StartDate < now && now < series.EndDate,
+        );
+        if (index !== -1) setSelectedSeriesTab(index);
+      }
+  }, [activity]);
+
   const handleActivityForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenActivityForm(false);
@@ -96,6 +132,13 @@ const Activity = () => {
   const handleOpenImageOptionsSubmit = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenImageOptions(false);
+
+  const handleDelete = () => {
+    deleteActivity(activityID);
+    setOpenConfirmDelete(false);
+    setOpenSettings(false);
+    navigate(`/recim`);
+    // @TODO add snackbar
   };
 
   // profile hook used for future authentication
@@ -106,48 +149,62 @@ const Activity = () => {
   } else {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item className={styles.logoFlexBox}>
-          <img
-            src={activity?.Logo ?? defaultLogo}
-            className={styles.logo}
-            alt="Activity Icon"
-          ></img>
-          {user?.IsAdmin && (
-            <Button
-              variant="contained"
-              color="warning"
-              className={styles.photoOptionButton}
-              onClick={() => {
-                setOpenImageOptions(true);
-              }}
-            >
-              Photo Options
-            </Button>
-          )}
-        </Grid>
-        <Grid item xs={8} md={5}>
-          <Typography variant="h5" className={styles.title}>
-            {activity?.Name ?? <GordonLoader size={15} inline />}
+        <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
+          <Grid item className={styles.logoFlexBox}>
+            <img
+              src={activity?.Logo ?? defaultLogo}
+              className={styles.logo}
+              alt="Activity Icon"
+            ></img>
             {user?.IsAdmin && (
-              <IconButton
+              <Button
+                variant="contained"
+                color="warning"
+                className={styles.photoOptionButton}
                 onClick={() => {
-                  setOpenActivityForm(true);
+                  setOpenImageOptions(true);
                 }}
-                className={styles.editIconButton}
-                sx={{ ml: 1 }}
               >
-                <EditIcon />
-              </IconButton>
+                Photo Options
+              </Button>
             )}
-          </Typography>
-          <Typography variant="h6" className={styles.subtitle}>
-            <i>
-              {activity?.StartDate
-                ? formatDateTimeRange(activity.StartDate, activity.EndDate)
-                : `Description of activity`}
-            </i>
-          </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="h5" className={styles.title}>
+              {activity?.Name ?? <GordonLoader size={15} inline />}
+              {user?.IsAdmin && (
+                <IconButton
+                  onClick={() => {
+                    setOpenActivityForm(true);
+                  }}
+                  className={styles.editIconButton}
+                  sx={{ ml: 1 }}
+                >
+                  <EditIcon />
+                </IconButton>
+              )}
+            </Typography>
+            <Typography variant="h6" className={styles.subtitle}>
+              <i>
+                {activity?.StartDate
+                  ? formatDateTimeRange(activity.StartDate, activity.EndDate)
+                  : `Description of activity`}
+              </i>
+            </Typography>
+          </Grid>
         </Grid>
+        {user?.IsAdmin && (
+          <Grid item xs={3} textAlign={'right'}>
+            <IconButton
+              onClick={() => {
+                setOpenSettings(true);
+              }}
+              sx={{ mr: '1rem' }}
+            >
+              <SettingsIcon fontSize="large" />
+            </IconButton>
+          </Grid>
+        )}
         {openActivityForm && (
           <ActivityForm
             activity={activity}
@@ -178,7 +235,7 @@ const Activity = () => {
                       setOpenMatchForm(true);
                     }}
                   >
-                    Create a New Match
+                    Create a Match
                   </Button>
                 </Grid>
               </Grid>
@@ -193,7 +250,7 @@ const Activity = () => {
                       setOpenCreateSeriesForm(true);
                     }}
                   >
-                    Create a New Series
+                    Create a Series
                   </Button>
                 </Grid>
               </Grid>
@@ -212,9 +269,7 @@ const Activity = () => {
               );
             })
           ) : (
-            <Typography variant="body1" paragraph>
-              No series scheduled yet!
-            </Typography>
+            <Typography className={styles.secondaryTex}>No series scheduled yet!</Typography>
           )}
         </CardContent>
       </Card>
@@ -237,23 +292,49 @@ const Activity = () => {
                       setOpenTeamForm(true);
                     }}
                   >
-                    Create a New Team
+                    Create a Team
                   </Button>
                 </Grid>
               </Grid>
             </Grid>
-          )}
-          {activity.Team?.length ? (
-            <TeamList teams={activity.Team} />
+          )}{' '}
+          {activity.Series.length > 0 ? (
+            <>
+              <Box className={styles.scrollableCenteredTabs}>
+                <Tabs
+                  value={selectedSeriesTab}
+                  onChange={(event, tabIndex) => setSelectedSeriesTab(tabIndex)}
+                  variant="scrollable"
+                  scrollButtons="auto"
+                  aria-label="admin control center tabs"
+                >
+                  {activity.Series.map((series) => {
+                    return <Tab label={series.Name} />;
+                  })}
+                </Tabs>
+              </Box>
+              {activity.Series.map((series, index) => {
+                return (
+                  <TabPanel value={selectedSeriesTab} index={index}>
+                    <TeamList series={series} />
+                  </TabPanel>
+                );
+              })}
+            </>
           ) : (
-            <Typography variant="body1" paragraph>
-              Be the first to create a team!
-            </Typography>
+            <>
+              {activity.Team?.length ? (
+                <TeamList teams={activity.Team} />
+              ) : (
+                <Typography className={styles.secondaryText}>
+                  Be the first to create a team!
+                </Typography>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
     );
-
     return (
       <>
         <Header activity={activity}>{headerContents}</Header>
@@ -262,57 +343,42 @@ const Activity = () => {
         ) : (
           <Grid container justifyContent="center" spacing={2}>
             <Grid item container justifyContent="center" spacing={2}>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={7}>
                 {scheduleCard}
               </Grid>
-              <Grid item direction={'column'} xs={12} md={6}>
+              <Grid item direction={'column'} xs={12} md={5}>
                 <Grid item className={styles.gridItemStack}>
                   {teamsCard}
                 </Grid>
               </Grid>
             </Grid>
-            {openMatchForm && (
-              <MatchForm
-                closeWithSnackbar={(status) => {
-                  handleMatchFormSubmit(status, setOpenMatchForm);
-                }}
-                openMatchForm={openMatchForm}
-                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
-                activity={activity}
-              />
-            )}
-            {openCreateSeriesForm && (
-              <SeriesForm
-                closeWithSnackbar={(status) => {
-                  handleCreateSeriesForm(status);
-                }}
-                openSeriesForm={openCreateSeriesForm}
-                setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-                activityID={activity.ID}
-                existingActivitySeries={activity.Series}
-              />
-            )}
-            {openTeamForm && (
-              <TeamForm
-                closeWithSnackbar={(teamID, status) => {
-                  handleTeamFormSubmit(status, setOpenTeamForm);
-                  navigate(`team/${teamID}`);
-                }}
-                openTeamForm={openTeamForm}
-                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-                activityID={activityID}
-              />
-            )}
-            {openMatchForm && (
-              <MatchForm
-                closeWithSnackbar={(status) => {
-                  handleTeamFormSubmit(status, setOpenMatchForm);
-                }}
-                openMatchForm={openMatchForm}
-                setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
-                activity={activity}
-              />
-            )}
+            {/* forms and dialogs */}
+            <MatchForm
+              closeWithSnackbar={(status) => {
+                handleMatchFormSubmit(status, setOpenMatchForm);
+              }}
+              openMatchForm={openMatchForm}
+              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              activity={activity}
+            />
+            <SeriesForm
+              closeWithSnackbar={(status) => {
+                handleCreateSeriesForm(status);
+              }}
+              openSeriesForm={openCreateSeriesForm}
+              setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+              activityID={activity.ID}
+              existingActivitySeries={activity.Series}
+            />
+            <TeamForm
+              closeWithSnackbar={(teamID, status) => {
+                handleTeamFormSubmit(status, setOpenTeamForm);
+                navigate(`team/${teamID}`);
+              }}
+              openTeamForm={openTeamForm}
+              setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+              activityID={activityID}
+            />
             {openImageOptions && (
               <ImageOptions
                 category={'Activity'}
@@ -324,6 +390,49 @@ const Activity = () => {
                 setOpenImageOptions={setOpenImageOptions}
               />
             )}
+            <GordonDialogBox
+              title="Admin Settings"
+              fullWidth
+              open={openSettings}
+              cancelButtonClicked={() => setOpenSettings(false)}
+              cancelButtonName="Close"
+            >
+              <br />
+              <Grid container alignItems="center" justifyContent="space-between">
+                <Grid item>
+                  <Typography>Permanently delete the activity '{activity.Name}'</Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={() => setOpenConfirmDelete(true)}
+                  >
+                    Delete this activity
+                  </Button>
+                </Grid>
+              </Grid>
+            </GordonDialogBox>
+            <GordonDialogBox
+              title="Confirm Delete"
+              open={openConfirmDelete}
+              cancelButtonClicked={() => setOpenConfirmDelete(false)}
+              cancelButtonName="No, keep this activity"
+              buttonName="Yes, delete this activity"
+              buttonClicked={() => handleDelete()}
+              severity="error"
+            >
+              <br />
+              <Typography variant="body1">
+                Are you sure you want to permanently delete this activity: '{activity.Name}'?
+              </Typography>
+              <Typography variant="body1">
+                This includes <b>{activity.Team?.length ?? 0} teams</b> and
+                <b> {activity.Series?.length ?? 0} series</b>, with a total of{' '}
+                <b>{getNumMatches(activity.Series)} matches</b>.
+              </Typography>
+              <Typography variant="body1">This action cannot be undone.</Typography>
+            </GordonDialogBox>
           </Grid>
         )}
       </>

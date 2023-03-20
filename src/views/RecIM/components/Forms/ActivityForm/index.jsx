@@ -284,7 +284,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
     newActivityRequest.typeID = activityTypes.find(
       (type) => type.Description === newActivityRequest.typeID,
     ).ID;
-
+    
     setActivityRequest(newActivityRequest);
   };
 

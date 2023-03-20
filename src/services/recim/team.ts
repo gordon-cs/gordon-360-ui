@@ -117,6 +117,8 @@ const respondToTeamInvite = async (
 const getParticipantAttendanceCountForTeam = (teamID: number, username: string): Promise<number> =>
   http.get(`recim/Teams/${teamID}/attendance?username=${username}`);
 
+const deleteTeam = (ID: number): Promise<Team> => http.del(`recim/Teams/${ID}`);
+
 export {
   getTeams,
   createTeam,
@@ -130,4 +132,5 @@ export {
   getTeamInvites,
   respondToTeamInvite,
   getParticipantAttendanceCountForTeam,
+  deleteTeam,
 };

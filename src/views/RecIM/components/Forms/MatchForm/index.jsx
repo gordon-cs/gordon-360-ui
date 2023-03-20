@@ -124,7 +124,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       //filters. You are welcome to improve on the logic below if you so desire.
       var teamIDs = [];
       match.Team.forEach((team) =>
-        teamIDs.push(match.Series.TeamStanding.find((_team) => team.ID === _team.TeamID).Name),
+        teamIDs.push(match.Series.TeamStanding.find((_team) => team.ID === _team.TeamID)?.Name),
       );
       return {
         StartTime: match.StartTime,
@@ -216,7 +216,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     });
     return updatedFields;
   }
-
   const handleConfirm = () => {
     setSaving(true);
 
@@ -232,13 +231,12 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
     matchRequest.TeamIDs.forEach((value) => {
       if (activity) idArray.push(activity.Team.find((team) => team.Name === value).ID);
       else if (match)
-        idArray.push(match.Series.TeamStanding.find((team) => team.Name === value).TeamID);
+        idArray.push(match.Series.TeamStanding.find((team) => team.Name === value)?.TeamID);
     });
     matchRequest.TeamIDs = idArray;
 
     if (activity)
       createMatch(matchRequest).then((result) => {
-        console.log(result);
         closeWithSnackbar({
           type: 'success',
           message: 'Match created successfully',
@@ -250,7 +248,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         (type) => type.Description === matchRequest.StatusID,
       ).ID;
       updateMatch(match.ID, matchRequest).then((result) => {
-        console.log(result);
         closeWithSnackbar({
           type: 'success',
           message: 'Match created successfully',
@@ -268,7 +265,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
 
   const handleEditMatchStatsForm = (status) => {
     //temporary, I can't think of a way to force update the form right now
-    console.log(status);
     handleWindowClose();
     setTargetTeamID(null);
   };

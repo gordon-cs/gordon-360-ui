@@ -1,6 +1,6 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -10,13 +10,16 @@ import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from '../../components/List';
-import { getTeamByID } from 'services/recim/team';
+import { getTeamByID, deleteTeam } from 'services/recim/team';
 import { getParticipantByUsername } from 'services/recim/participant';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import EditIcon from '@mui/icons-material/Edit';
+import SettingsIcon from '@mui/icons-material/Settings';
+import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 
 const Team = () => {
+  const navigate = useNavigate();
   const { teamID } = useParams();
   const { profile } = useUser();
   const [reload, setReload] = useState(false);
@@ -25,6 +28,8 @@ const Team = () => {
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openImageOptions, setOpenImageOptions] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
   const handleInviteParticipantForm = (status) => {
@@ -83,6 +88,13 @@ const Team = () => {
   const handleOpenImageOptionsSubmit = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenImageOptions(false);
+
+  const handleDelete = () => {
+    deleteTeam(teamID);
+    setOpenConfirmDelete(false);
+    setOpenSettings(false);
+    navigate(`/recim/activity/${team.Activity.ID}`);
+    // @TODO add snackbar
   };
 
   if (!profile) {
@@ -90,38 +102,56 @@ const Team = () => {
   } else {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item className={styles.logoFlexBox}>
-          <img src={team?.Logo ?? defaultLogo} className={styles.logo} alt="Team Icon"></img>
-          {user?.IsAdmin && (
-            <Button
-              variant="contained"
-              color="warning"
-              className={styles.photoOptionButton}
-              onClick={() => {
-                setOpenImageOptions(true);
-              }}
-            >
-              Photo Options
-            </Button>
-          )}
-        </Grid>
-        <Grid item xs={8} md={5}>
-          <Typography variant="h5" className={styles.title}>
-            {team?.Name ?? <GordonLoader size={15} inline />}
-            {hasPermissions && (
-              <IconButton
+        <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
+          <Grid item className={styles.logoFlexBox}>
+            <img 
+              src={team?.Logo ?? defaultLogo}
+              className={styles.logo}
+              alt="Team Icon"
+            ></img>
+            {user?.IsAdmin && (
+              <Button
+                variant="contained"
+                color="warning"
+                className={styles.photoOptionButton}
                 onClick={() => {
-                  setOpenTeamForm(true);
+                  setOpenImageOptions(true);
                 }}
-                className={styles.editIconButton}
-                sx={{ ml: 1 }}
               >
-                <EditIcon />
-              </IconButton>
+                Photo Options
+              </Button>
             )}
-          </Typography>
-          {teamRecord()}
+          </Grid>
+          <Grid item>
+            <Typography variant="h5" className={styles.title}>
+              {team?.Name ?? <GordonLoader size={15} inline />}
+              {hasPermissions && (
+                <IconButton
+                  onClick={() => {
+                    setOpenTeamForm(true);
+                  }}
+                  className={styles.editIconButton}
+                  sx={{ ml: 1 }}
+                >
+                  <EditIcon />
+                </IconButton>
+              )}
+            </Typography>
+            {teamRecord()}
+          </Grid>
         </Grid>
+        {user?.IsAdmin && (
+          <Grid item xs={3} textAlign={'right'}>
+            <IconButton
+              onClick={() => {
+                setOpenSettings(true);
+              }}
+              sx={{ mr: '1rem' }}
+            >
+              <SettingsIcon fontSize="large" />
+            </IconButton>
+          </Grid>
+        )}
       </Grid>
     );
 
@@ -174,10 +204,10 @@ const Team = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent>
-          {team.Match?.length ? (
+          {team.Match?.length > 0 ? (
             <MatchList matches={team.Match} activityID={team.Activity?.ID} />
           ) : (
-            <Typography variant="body1" paragraph>
+            <Typography className={styles.secondaryText}>
               No matches scheduled at this time!
             </Typography>
           )}
@@ -222,6 +252,70 @@ const Team = () => {
                 setOpenImageOptions={setOpenImageOptions}
               />
             )}
+            {/* forms and dialogs */}
+            <TeamForm
+              closeWithSnackbar={(status) => {
+                handleTeamForm(status);
+              }}
+              openTeamForm={openTeamForm}
+              setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+              activityID={team?.Activity?.ID}
+              team={team}
+              isAdmin={user.IsAdmin}
+            />
+            {openImageOptions && (
+              <ImageOptions
+                category={'Team'}
+                component={team}
+                closeWithSnackbar={(status) => {
+                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+                }}
+                openImageOptions={openImageOptions}
+                setOpenImageOptions={setOpenImageOptions}
+              />
+            )}
+            <GordonDialogBox
+              title="Admin Settings"
+              fullWidth
+              open={openSettings}
+              cancelButtonClicked={() => setOpenSettings(false)}
+              cancelButtonName="Close"
+            >
+              <br />
+              <Grid container alignItems="center" justifyContent="space-between">
+                <Grid item>
+                  <Typography>Permanently delete the team '{team.Name}'</Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={() => setOpenConfirmDelete(true)}
+                  >
+                    Delete this team
+                  </Button>
+                </Grid>
+              </Grid>
+            </GordonDialogBox>
+            <GordonDialogBox
+              title="Confirm Delete"
+              open={openConfirmDelete}
+              cancelButtonClicked={() => setOpenConfirmDelete(false)}
+              cancelButtonName="No, keep this team"
+              buttonName="Yes, delete this team"
+              buttonClicked={() => handleDelete()}
+              severity="error"
+            >
+              <br />
+              <Typography variant="body1">
+                Are you sure you want to permanently delete this team: '{team.Name}'?
+              </Typography>
+              <Typography variant="body1">
+                This will remove this team for {team.Participant?.length ?? 0} participant
+                {team.Participant?.length !== 1 && 's'}.
+              </Typography>
+              <Typography variant="body1">This action cannot be undone.</Typography>
+            </GordonDialogBox>
           </Grid>
         )}
       </>
