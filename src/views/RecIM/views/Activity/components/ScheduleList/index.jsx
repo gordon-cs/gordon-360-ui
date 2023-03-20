@@ -1,4 +1,4 @@
-import { Grid, Typography, Chip, IconButton, Menu, MenuItem } from '@mui/material';
+import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Switch } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ContentCard } from 'views/RecIM/components/Forms/components/ContentCard';
@@ -13,6 +13,7 @@ import { useState } from 'react';
 import styles from './../../Activity.module.css';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import SeriesScheduleForm from 'views/RecIM/components/Forms/SeriesScheduleForm';
+import RecimBracket from 'views/RecIM/components/RecimBracket';
 
 const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [anchorEl, setAnchorEl] = useState();
@@ -22,6 +23,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [disclaimerContent, setDisclaimerContent] = useState('');
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
+  const [showBracket, setShowBracket] = useState(false);
 
   // default closure
   const handleClose = () => {
@@ -190,8 +192,20 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
           </MenuItem>
         </Menu>
       </Grid>
+
+      {series.Type === 'Single Elim' && (
+        <Grid container justifyContent="center" alignItems="center">
+          show bracket
+          <Switch color="secondary" onClick={(event) => setShowBracket(event.target.checked)} />
+        </Grid>
+      )}
+
       {series.Match.length ? (
-        <MatchList matches={series.Match} activityID={activityID} />
+        showBracket ? (
+          <RecimBracket></RecimBracket>
+        ) : (
+          <MatchList matches={series.Match} activityID={activityID} />
+        )
       ) : (
         <Typography className={styles.secondaryText}>
           Games have not yet been scheduled for this series.
