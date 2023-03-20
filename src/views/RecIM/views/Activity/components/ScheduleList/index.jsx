@@ -12,6 +12,7 @@ import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/serie
 import { useState } from 'react';
 import styles from './../../Activity.module.css';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
+import SeriesScheduleForm from 'views/RecIM/components/Forms/SeriesScheduleForm';
 
 const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [anchorEl, setAnchorEl] = useState();
@@ -20,6 +21,10 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [openDeleteDisclaimer, setOpenDeleteDisclaimer] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
+  const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
+  let startDate = DateTime.fromISO(series.StartDate);
+  let endDate = DateTime.fromISO(series.EndDate);
+
 
   // default closure
   const handleClose = () => {
@@ -27,14 +32,24 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   };
 
   // edit button
-  const handleEdit = () => {
+  const handleEditSeries = () => {
     setOpenEditSeriesForm(true);
+    handleClose();
+  };
+
+  const handleSeriesSchedule = () => {
+    setOpenSeriesScheduleForm(true);
     handleClose();
   };
 
   const handleEditSeriesForm = (status) => {
     setReload((prev) => !prev);
     setOpenEditSeriesForm(false);
+  };
+
+  const handleSeriesScheduleForm = (status) => {
+    setReload((prev) => !prev);
+    setOpenSeriesScheduleForm(false);
   };
 
   // autoschedule button
@@ -77,7 +92,6 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
 
   const handleConfirmAutoSchedule = () => {
     scheduleSeriesMatches(series.ID).then((res) => {
-      console.log(res);
       setOpenAutoSchedulerDisclaimer(false);
       setReload((prev) => !prev);
     });
@@ -106,7 +120,6 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
 
   const handleConfirmDelete = () => {
     deleteSeriesCascade(series.ID).then((res) => {
-      console.log(res);
       setOpenDeleteDisclaimer(false);
       setReload(!reload);
     });
@@ -161,14 +174,20 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
         )}
 
         <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
-          <MenuItem dense onClick={handleEdit} divider>
-            Edit
+          <MenuItem dense onClick={handleEditSeries} divider>
+            Edit Series Info
           </MenuItem>
-          {series.TeamStanding.length > 0 && (
-            <MenuItem dense onClick={handleAutoSchedule} divider>
-              Auto-schedule
-            </MenuItem>
-          )}
+          <MenuItem dense onClick={handleSeriesSchedule} divider>
+            Edit Schedule
+          </MenuItem>
+          <MenuItem
+            dense
+            disabled={series.TeamStanding.length === 0}
+            onClick={handleAutoSchedule}
+            divider
+          >
+            Auto-schedule
+          </MenuItem>
           <MenuItem dense onClick={handleDelete} className={styles.redButton}>
             Delete
           </MenuItem>
@@ -218,6 +237,16 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
           setOpenSeriesForm={(bool) => setOpenEditSeriesForm(bool)}
           activityID={series.ActivityID}
           series={series}
+        />
+      )}
+      {openSeriesScheduleForm && (
+        <SeriesScheduleForm
+          closeWithSnackbar={(status) => {
+            handleSeriesScheduleForm(status);
+          }}
+          openSeriesScheduleForm={openSeriesScheduleForm}
+          setOpenSeriesScheduleForm={(bool) => setOpenSeriesScheduleForm(bool)}
+          seriesID={series.ID}
         />
       )}
     </>
