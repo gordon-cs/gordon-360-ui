@@ -96,6 +96,10 @@
   background-color: rgb(177, 129, 13);
 }
 
+.menuButton:hover {
+  background-color: $neutral-black-opacity10;
+}
+
 .redButton {
   background-color: $secondary-red;
   color: $neutral-white;

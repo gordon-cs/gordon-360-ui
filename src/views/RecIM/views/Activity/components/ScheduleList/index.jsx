@@ -1,4 +1,4 @@
-import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Divider } from '@mui/material';
+import { Grid, Typography, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ContentCard } from 'views/RecIM/components/Forms/components/ContentCard';
@@ -9,21 +9,28 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import { standardDate } from 'views/RecIM/components/Helpers';
 import { format, isPast, isFuture } from 'date-fns';
 import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/series';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './../../Activity.module.css';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import SeriesScheduleForm from 'views/RecIM/components/Forms/SeriesScheduleForm';
+import { useWindowSize } from 'hooks';
+import { windowBreakWidths } from 'theme';
 
 const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [anchorEl, setAnchorEl] = useState();
+  const [width] = useWindowSize();
   const openMenu = Boolean(anchorEl);
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
   const [openDeleteDisclaimer, setOpenDeleteDisclaimer] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
-  // let startDate = DateTime.fromISO(series.StartDate);
-  // let endDate = DateTime.fromISO(series.EndDate);
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  useEffect(() => {
+    if (width < windowBreakWidths.breakSM) setIsMobileView(true);
+    else setIsMobileView(false);
+  }, [width]);
 
   // default closure
   const handleClose = () => {
@@ -155,41 +162,48 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
           </Typography>
           <Typography className={styles.seriesSecondaryText}>{series.Type}</Typography>
         </Grid>
+        {isMobileView && (
+          <Grid item xs={5} textAlign="right">
+            {status()}
+          </Grid>
+        )}
         <Grid item xs={6} sm={3}>
           <Typography className={styles.seriesDateText}>
             {standardDate(series.StartDate, false)} - {standardDate(series.EndDate, false)}
           </Typography>
         </Grid>
-        <Grid container item xs={6} sm={3} justifyContent="center">
-          {status()}
-        </Grid>
+        {!isMobileView && (
+          <Grid item xs={6} sm={2.5}>
+            {status()}
+          </Grid>
+        )}
 
         {isAdmin && (
-          <Grid container item xs={6} sm={1} justifyContent="center">
+          <Grid container item xs={5} sm={1} justifyContent="right">
             <IconButton onClick={handleButtonClick}>
               <TuneIcon inline />
             </IconButton>{' '}
           </Grid>
         )}
 
-        <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
+        <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl} className={styles.menu}>
           <Typography className={styles.menuTitle}>Schedule</Typography>
           <MenuItem
             dense
             disabled={series.TeamStanding.length === 0}
             onClick={handleAutoSchedule}
-            divider
+            className={styles.menuButton}
           >
             Auto-schedule Series
           </MenuItem>
-          <MenuItem dense onClick={handleSeriesSchedule} divider>
+          <MenuItem dense onClick={handleSeriesSchedule} className={styles.menuButton} divider>
             Edit Schedule
           </MenuItem>
           <Typography className={styles.menuTitle}>Series</Typography>
-          <MenuItem dense onClick={handleEditSeries} divider>
+          <MenuItem dense onClick={handleEditSeries} className={styles.menuButton}>
             Edit Series Info
           </MenuItem>
-          <MenuItem dense divider>
+          <MenuItem dense className={styles.menuButton}>
             {/* create match to be handled after form refactor */}
             Create a Match
           </MenuItem>
