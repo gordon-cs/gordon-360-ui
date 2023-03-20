@@ -1,9 +1,11 @@
 import { List, Typography } from '@mui/material';
 import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
 import { useNavigate } from 'react-router-dom';
+import styles from './List.module.css';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
-  if (!activities?.length) return <Typography>No activities to show.</Typography>;
+  if (!activities?.length)
+    return <Typography className={styles.secondaryText}>No activities to show.</Typography>;
   let content = activities.map((activity) => (
     <ActivityListing
       key={activity.ID}
@@ -26,7 +28,8 @@ const ParticipantList = ({
   showInactive,
   callbackFunction,
 }) => {
-  if (!participants?.length) return <Typography>No participants to show.</Typography>;
+  if (!participants?.length)
+    return <Typography className={styles.secondaryText}>No participants to show.</Typography>;
   let content = participants.map((participant) => {
     if (!showInactive && participant.Role === 'Inactive') {
       return null;
@@ -56,7 +59,8 @@ const ParticipantList = ({
 };
 
 const MatchList = ({ matches, activityID }) => {
-  if (!matches?.length || !matches[0]) return <Typography>No matches to show.</Typography>;
+  if (!matches?.length || !matches[0])
+    return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
   let content = matches.map((match) => (
     <MatchListing key={match?.ID} match={match} activityID={activityID} />
     // I have no idea why, but on ladder matches, match can't be found
@@ -65,9 +69,13 @@ const MatchList = ({ matches, activityID }) => {
 
   return <List dense>{content}</List>;
 };
+
 // setTargetTeamID is used for edit Match teams
 const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID }) => {
   const navigate = useNavigate();
+
+  if (!teams?.length && !match && !series)
+    return <Typography className={styles.secondaryText}>No teams to show.</Typography>;
 
   const handleInviteResponse = (response, activityID, teamID) => {
     if (response === 'accepted') {
