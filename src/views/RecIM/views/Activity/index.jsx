@@ -1,5 +1,6 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +15,7 @@ import { getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
+import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
 import ScheduleList from './components/ScheduleList';
@@ -30,6 +32,7 @@ const Activity = () => {
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [openImageOptions, setOpenImageOptions] = useState(false);
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
@@ -53,6 +56,7 @@ const Activity = () => {
     openTeamForm,
     openCreateSeriesForm,
     openMatchForm,
+    openImageOptions,
     reload,
   ]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
@@ -89,6 +93,11 @@ const Activity = () => {
     setOpenCreateSeriesForm(false);
   };
 
+  const handleOpenImageOptionsSubmit = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenImageOptions(false);
+  };
+
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -97,8 +106,24 @@ const Activity = () => {
   } else {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item>
-          <img src={activity?.Logo ?? defaultLogo} alt="Activity Icon" width="85em"></img>
+        <Grid item className={styles.logoFlexBox}>
+          <img
+            src={activity?.Logo ?? defaultLogo}
+            className={styles.logo}
+            alt="Activity Icon"
+          ></img>
+          {user?.IsAdmin && (
+            <Button
+              variant="contained"
+              color="warning"
+              className={styles.photoOptionButton}
+              onClick={() => {
+                setOpenImageOptions(true);
+              }}
+            >
+              Photo Options
+            </Button>
+          )}
         </Grid>
         <Grid item xs={8} md={5}>
           <Typography variant="h5" className={styles.title}>
@@ -286,6 +311,17 @@ const Activity = () => {
                 openMatchForm={openMatchForm}
                 setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
                 activity={activity}
+              />
+            )}
+            {openImageOptions && (
+              <ImageOptions
+                category={'Activity'}
+                component={activity}
+                closeWithSnackbar={(status) => {
+                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+                }}
+                openImageOptions={openImageOptions}
+                setOpenImageOptions={setOpenImageOptions}
               />
             )}
           </Grid>

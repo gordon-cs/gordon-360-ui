@@ -6,6 +6,7 @@ import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
+import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from '../../components/List';
@@ -23,6 +24,7 @@ const Team = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [openImageOptions, setOpenImageOptions] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
   const handleInviteParticipantForm = (status) => {
@@ -39,7 +41,7 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID, openTeamForm, openInviteParticipantForm, reload]);
+  }, [profile, teamID, openTeamForm, openInviteParticipantForm, openImageOptions, reload]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   //checks if the team is modifiable by the current user
@@ -78,13 +80,30 @@ const Team = () => {
     setOpenTeamForm(false);
   };
 
+  const handleOpenImageOptionsSubmit = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenImageOptions(false);
+  };
+
   if (!profile) {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item>
-          <img src={team?.Logo ?? defaultLogo} alt="Team Icon" width="85em"></img>
+        <Grid item className={styles.logoFlexBox}>
+          <img src={team?.Logo ?? defaultLogo} className={styles.logo} alt="Team Icon"></img>
+          {user?.IsAdmin && (
+            <Button
+              variant="contained"
+              color="warning"
+              className={styles.photoOptionButton}
+              onClick={() => {
+                setOpenImageOptions(true);
+              }}
+            >
+              Photo Options
+            </Button>
+          )}
         </Grid>
         <Grid item xs={8} md={5}>
           <Typography variant="h5" className={styles.title}>
@@ -190,6 +209,17 @@ const Team = () => {
                 activityID={team?.Activity?.ID}
                 team={team}
                 isAdmin={user.IsAdmin}
+              />
+            )}
+            {openImageOptions && (
+              <ImageOptions
+                category={'Team'}
+                component={team}
+                closeWithSnackbar={(status) => {
+                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+                }}
+                openImageOptions={openImageOptions}
+                setOpenImageOptions={setOpenImageOptions}
               />
             )}
           </Grid>

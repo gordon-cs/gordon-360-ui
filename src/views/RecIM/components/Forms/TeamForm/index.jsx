@@ -6,19 +6,15 @@ import {
   DialogContentText,
   Tooltip,
 } from '@mui/material';
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { createTeam, editTeam, getTeamStatusTypes } from 'services/recim/team';
 import { InformationField } from '../components/InformationField';
 import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
 import { ConfirmationRow } from '../components/ConfirmationRow';
 import { ContentCard } from '../components/ContentCard';
-import { isMobile } from 'react-device-detect';
 import GordonLoader from 'components/Loader';
-import Cropper from 'react-cropper';
-import Dropzone from 'react-dropzone';
 import { useUser } from 'hooks';
-import { CropperHelper } from 'views/RecIM/components/Helpers/index';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -33,7 +29,6 @@ const TeamForm = ({
   const [errorStatus, setErrorStatus] = useState({
     Name: false,
     ActivityID: false,
-    Logo: false,
     statusID: false,
   });
 
@@ -83,13 +78,11 @@ const TeamForm = ({
           teamStatus.find((type) => type.Description === team.Status) == null
             ? ''
             : teamStatus.find((type) => type.Description === team.Status).Description,
-        Logo: team.Logo,
       };
     }
     return {
       Name: '',
       ActivityID: Number(activityID),
-      Logo: null,
     };
   }, [activityID, team, teamStatus]);
 
@@ -97,13 +90,7 @@ const TeamForm = ({
   const [isSaving, setSaving] = useState(false);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
-  const [cropperImageData, setCropperImageData] = useState(); //null if no picture chosen, else contains picture
-  const [photoDialogError, setPhotoDialogError] = useState();
-  const [aspectRatio, setAspectRatio] = useState();
-  const [message, setMessage] = useState();
-  const cropperRef = useRef();
   const [teamRequest, setTeamRequest] = useState({ ...currentInfo, ...newInfo });
-  const cropperHelper = new CropperHelper();
 
   const handleSetError = (field, condition) => {
     const getCurrentErrorStatus = (currentValue) => {
@@ -118,9 +105,6 @@ const TeamForm = ({
   // refresh dropdown select once fetch is complete
   useEffect(() => {
     setNewInfo(currentInfo);
-    if (currentInfo.Logo !== null) {
-      setCropperImageData(currentInfo.Logo);
-    }
   }, [currentInfo]);
 
   // Field Validation
@@ -128,7 +112,7 @@ const TeamForm = ({
     let hasError = false;
     let hasChanges = false;
     for (const field in currentInfo) {
-      if (currentInfo[field] !== newInfo[field] || currentInfo.Logo !== cropperRef.current) {
+      if (currentInfo[field] !== newInfo[field]) {
         hasChanges = true;
       }
       handleSetError(field, newInfo[field] === '');
@@ -173,34 +157,13 @@ const TeamForm = ({
         });
     });
 
-    //push previous and new image if the Logos are different
-    const prevLogo = currentInfo.Logo ?? 'None';
-    const newLogo = teamRequest.Logo ?? 'None';
-    if (prevLogo !== newLogo) {
-      updatedFields.push({
-        Field: 'Previous Logo',
-        Value: prevLogo,
-        Label: 'Previous Logo',
-      });
-      updatedFields.push({
-        Field: 'New Logo',
-        Value: newLogo,
-        Label: 'New Logo',
-      });
-    }
-
     return updatedFields;
   }
 
   const handleSubmit = async () => {
     let newTeamRequest = { ...currentInfo, ...newInfo };
-    newTeamRequest.Logo =
-      cropperImageData !== null
-        ? cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL()
-        : null;
 
-    // wait for the value update on TeamRequest, otherwise the Confirm Window may not show images (prev and new) properly
-    await setTeamRequest(newTeamRequest);
+    setTeamRequest(newTeamRequest);
   };
 
   const handleConfirm = () => {
@@ -237,39 +200,7 @@ const TeamForm = ({
     setOpenTeamForm(false);
     setOpenConfirmWindow(false);
     setNewInfo(currentInfo);
-    setCropperImageData(null);
   };
-
-  /*****************************************************************************************************
-  /*Following functions are solely related to photo submission and essential to implement CropperHelper*
-  /****************************************************************************************************/
-
-  function onCropperZoom(event) {
-    if (event.detail.ratio > 1) {
-      event.preventDefault();
-      cropperRef.current.cropper.zoomTo(1);
-    }
-  }
-
-  async function onDropAccepted(fileList) {
-    setPhotoDialogError(null);
-    cropperHelper.onDropAccepted(fileList, setCropperImageData, setAspectRatio);
-  }
-
-  async function onDropRejected() {
-    await cropperHelper.onDropRejected(setPhotoDialogError);
-  }
-
-  function createPhotoDialogBoxMessage() {
-    cropperHelper
-      .createPhotoDialogBoxMessage(
-        photoDialogError,
-        setPhotoDialogError,
-        cropperImageData,
-        isMobile,
-      )
-      .then((value) => setMessage(value));
-  }
 
   /**
    * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
@@ -313,62 +244,7 @@ const TeamForm = ({
       }}
       cancelButtonName="cancel"
     >
-      <ContentCard title="Team Information">
-        {mapFieldsToInputs(createTeamFields)}
-        <div className="gc360_photo_dialog_box">
-          <DialogContent>
-            <DialogContentText className="gc360_photo_dialog_box_content_text">
-              {createPhotoDialogBoxMessage()}
-              {photoDialogError ? <span style={{ color: '#B63228' }}>{message}</span> : message}
-            </DialogContentText>
-            {!cropperImageData && (
-              <Dropzone
-                onDropAccepted={onDropAccepted}
-                onDropRejected={onDropRejected}
-                accept="image/jpeg, image/jpg, image/png"
-              >
-                {({ getRootProps, getInputProps }) => (
-                  <section>
-                    <div className="gc360_photo_dialog_box_content_dropzone" {...getRootProps()}>
-                      <input {...getInputProps()} />
-                    </div>
-                  </section>
-                )}
-              </Dropzone>
-            )}
-            {cropperImageData && (
-              <div className="gc360_photo_dialog_box_content_cropper">
-                <Cropper
-                  ref={cropperRef}
-                  src={cropperImageData}
-                  autoCropArea={1}
-                  viewMode={3}
-                  aspectRatio={aspectRatio}
-                  highlight={false}
-                  background={false}
-                  zoom={onCropperZoom}
-                  zoomable={false}
-                  dragMode={'none'}
-                  checkCrossOrigin={false}
-                />
-              </div>
-            )}
-          </DialogContent>
-          <DialogActions className="gc360_photo_dialog_box_actions_top">
-            {cropperImageData && (
-              <Tooltip classes={{ tooltip: 'tooltip' }} id="tooltip-hide" title="Remove this image">
-                <Button
-                  variant="outlined"
-                  onClick={() => setCropperImageData(null)}
-                  className="gc360_photo_dialog_box_content_button"
-                >
-                  Remove picture
-                </Button>
-              </Tooltip>
-            )}
-          </DialogActions>
-        </div>
-      </ContentCard>
+      <ContentCard title="Team Information">{mapFieldsToInputs(createTeamFields)}</ContentCard>
 
       {/* Confirmation Dialog */}
       <GordonDialogBox

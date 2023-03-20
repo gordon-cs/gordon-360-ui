@@ -44,3 +44,26 @@
   border-bottom-left-radius: 0.5em;
   border-bottom-right-radius: 0.5em;
 }
+
+.logoFlexBox {
+  flex-direction: column;
+  display: inherit;
+}
+
+.logo {
+  width: 100px;
+  max-height: 100px;
+}
+
+.photoOptionButton {
+  text-transform: none;
+
+  font-size: small;
+  //color: $neutral-black;
+  //background-color: $neutral-black-opacity125;
+  transform: translate(0%, 0%);
+  width: 100px;
+  height: 30px;
+  margin-top: 5px;
+  padding: 0px;
+}
