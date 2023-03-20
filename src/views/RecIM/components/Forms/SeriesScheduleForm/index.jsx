@@ -10,7 +10,6 @@ import { getSeriesSchedule, putSeriesSchedule } from 'services/recim/series';
 import { getSurfaces } from 'services/recim/match';
 import styles from '../Forms.module.css';
 
-
 const SeriesScheduleForm = ({
   closeWithSnackbar,
   openSeriesScheduleForm,
@@ -41,7 +40,7 @@ const SeriesScheduleForm = ({
     };
     loadData();
   }, []);
-  
+
   const availableDays = [
     {
       label: 'Monday',
@@ -162,7 +161,6 @@ const SeriesScheduleForm = ({
       EstMatchTime: '',
     };
   }, [seriesID, seriesSchedule]);
-
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
@@ -330,7 +328,7 @@ const SeriesScheduleForm = ({
           </Grid>
         </ContentCard>
         <ContentCard title="Match Times">{mapFieldsToInputs(matchTimes)}</ContentCard>
-        
+
         <GordonDialogBox
           open={openConfirmWindow}
           title="Confirm Your Activity"
