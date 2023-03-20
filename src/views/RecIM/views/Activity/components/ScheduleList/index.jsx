@@ -16,7 +16,6 @@ import SeriesScheduleForm from 'views/RecIM/components/Forms/SeriesScheduleForm'
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
 
-
 const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [anchorEl, setAnchorEl] = useState();
   const [width] = useWindowSize();
@@ -32,7 +31,6 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
     if (width < windowBreakWidths.breakSM) setIsMobileView(true);
     else setIsMobileView(false);
   }, [width]);
-
 
   // default closure
   const handleClose = () => {
