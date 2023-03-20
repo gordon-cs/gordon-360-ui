@@ -85,11 +85,7 @@
   font-size: 0.9em;
 }
 
-.editIconButton {
-  background-color: $secondary-yellow;
-  color: $neutral-black;
-}
-
-.editIconButton:hover {
-  background-color: rgb(177, 129, 13);
+.redButton {
+  background-color: $secondary-red;
+  color: $neutral-white;
 }

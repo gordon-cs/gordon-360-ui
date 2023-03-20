@@ -1,4 +1,13 @@
-import { Grid, Typography, Card, CardHeader, CardContent, IconButton, Button } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  IconButton,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 import { useNavigate, useParams, Link as LinkRouter } from 'react-router-dom';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
@@ -10,7 +19,6 @@ import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
 import { getMatchByID, getMatchAttendance, deleteMatchCascade } from 'services/recim/match';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
-import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { standardDate } from 'views/RecIM/components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -49,11 +57,12 @@ const Match = () => {
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
   const [openMatchForm, setOpenMatchForm] = useState(false);
-  const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
   const [matchName, setMatchName] = useState();
+  const [anchorEl, setAnchorEl] = useState();
+  const openMenu = Boolean(anchorEl);
 
   useEffect(() => {
     const loadData = async () => {
@@ -95,10 +104,17 @@ const Match = () => {
     setOpenMatchForm(false);
   };
 
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSettingsClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
   const handleDelete = () => {
     deleteMatchCascade(matchID);
     setOpenConfirmDelete(false);
-    setOpenSettings(false);
     navigate(`/recim/activity/${match.Activity.ID}`);
     // @TODO add snackbar
   };
@@ -167,9 +183,19 @@ const Match = () => {
           </Grid>
 
           <Grid item container xs={2} alignItems="center" direction="column">
-            <Typography variant="h5" className={styles.matchScore}>
-              {team0Score} : {team1Score}
-            </Typography>
+            <Grid item sx={{ mt: 3 }}>
+              <Typography variant="h5" className={styles.matchScore}>
+                {team0Score} : {team1Score}
+              </Typography>
+            </Grid>
+            {/* admin controls */}
+            {user?.IsAdmin && (
+              <Grid item>
+                <IconButton onClick={handleSettingsClick} className={styles.editIconButton}>
+                  <SettingsIcon fontSize="large" />
+                </IconButton>
+              </Grid>
+            )}
           </Grid>
 
           {/* right team info */}
@@ -206,31 +232,6 @@ const Match = () => {
             </Grid>
           </Grid>
         </Grid>
-
-        {/* admin controls */}
-        {user?.IsAdmin && (
-          <Grid item container columnSpacing={2} justifyContent="center">
-            <Grid item>
-              <IconButton
-                onClick={() => {
-                  setOpenMatchForm(true);
-                }}
-                className={styles.editIconButton}
-              >
-                <EditIcon />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton
-                onClick={() => {
-                  setOpenSettings(true);
-                }}
-              >
-                <SettingsIcon fontSize="large" />
-              </IconButton>
-            </Grid>
-          </Grid>
-        )}
       </Grid>
     );
 
@@ -269,6 +270,25 @@ const Match = () => {
             </Grid>
 
             {/* forms and dialogs */}
+            <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
+              <MenuItem
+                dense
+                onClick={() => {
+                  setOpenMatchForm(true);
+                }}
+              >
+                Edit Match
+              </MenuItem>
+              <MenuItem
+                dense
+                className={styles.redButton}
+                onClick={() => {
+                  setOpenConfirmDelete(true);
+                }}
+              >
+                Delete Match
+              </MenuItem>
+            </Menu>
             <MatchForm
               closeWithSnackbar={(status) => {
                 handleMatchFormSubmit(status, setOpenMatchForm);
@@ -278,34 +298,11 @@ const Match = () => {
               match={match}
             />
             <GordonDialogBox
-              title="Admin Settings"
-              fullWidth
-              open={openSettings}
-              cancelButtonClicked={() => setOpenSettings(false)}
-              cancelButtonName="Close"
-            >
-              <br />
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
-                  <Typography>Permanently delete the match '{matchName}'</Typography>
-                </Grid>
-                <Grid item>
-                  <Button
-                    color="error"
-                    variant="contained"
-                    onClick={() => setOpenConfirmDelete(true)}
-                  >
-                    Delete this match
-                  </Button>
-                </Grid>
-              </Grid>
-            </GordonDialogBox>
-            <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}
               cancelButtonClicked={() => setOpenConfirmDelete(false)}
-              cancelButtonName="No, keep this team"
-              buttonName="Yes, delete this team"
+              cancelButtonName="No, keep this match"
+              buttonName="Yes, delete this match"
               buttonClicked={() => handleDelete()}
               severity="error"
             >
