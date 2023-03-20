@@ -22,9 +22,6 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [disclaimerContent, setDisclaimerContent] = useState('');
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
-  let startDate = DateTime.fromISO(series.StartDate);
-  let endDate = DateTime.fromISO(series.EndDate);
-
 
   // default closure
   const handleClose = () => {
