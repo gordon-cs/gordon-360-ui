@@ -132,6 +132,7 @@ const Activity = () => {
   const handleOpenImageOptionsSubmit = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenImageOptions(false);
+  };
 
   const handleDelete = () => {
     deleteActivity(activityID);

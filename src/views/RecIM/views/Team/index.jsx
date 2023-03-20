@@ -88,6 +88,7 @@ const Team = () => {
   const handleOpenImageOptionsSubmit = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenImageOptions(false);
+  };
 
   const handleDelete = () => {
     deleteTeam(teamID);
@@ -104,11 +105,7 @@ const Team = () => {
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
           <Grid item className={styles.logoFlexBox}>
-            <img 
-              src={team?.Logo ?? defaultLogo}
-              className={styles.logo}
-              alt="Team Icon"
-            ></img>
+            <img src={team?.Logo ?? defaultLogo} className={styles.logo} alt="Team Icon"></img>
             {user?.IsAdmin && (
               <Button
                 variant="contained"
