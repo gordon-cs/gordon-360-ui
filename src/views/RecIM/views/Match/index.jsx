@@ -1,4 +1,13 @@
-import { Grid, Typography, Card, CardHeader, CardContent, IconButton } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  IconButton,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 import { Link as LinkRouter } from 'react-router-dom';
 import { useParams } from 'react-router';
 import { useUser } from 'hooks';
@@ -13,6 +22,7 @@ import { getMatchByID, getMatchAttendance } from 'services/recim/match';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import EditIcon from '@mui/icons-material/Edit';
 import { standardDate } from 'views/RecIM/components/Helpers';
+import { Settings } from '@mui/icons-material';
 
 const RosterCard = ({
   participants,
@@ -48,6 +58,8 @@ const Match = () => {
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
+  const [anchorEl, setAnchorEl] = useState();
+  const openMenu = Boolean(anchorEl);
 
   useEffect(() => {
     const loadData = async () => {
@@ -86,6 +98,14 @@ const Match = () => {
   const handleMatchFormSubmit = (status, setOpenMatchForm) => {
     //if you want to do something with the message make a snackbar function here
     setOpenMatchForm(false);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSettingsClick = (e) => {
+    setAnchorEl(e.currentTarget);
   };
 
   if (loading && !profile) {
@@ -168,6 +188,23 @@ const Match = () => {
           <Grid item xs={2}>
             <img src={''} alt="Team Icon" width="85em"></img>
           </Grid>
+          {user?.IsAdmin && (
+            <Grid item>
+              <IconButton onClick={handleSettingsClick}>
+                <Settings />
+              </IconButton>
+            </Grid>
+          )}
+          <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
+            <MenuItem
+              dense
+              onClick={() => {
+                setOpenMatchForm(true);
+              }}
+            >
+              Edit Match
+            </MenuItem>
+          </Menu>
         </Grid>
       </>
     );
