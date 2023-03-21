@@ -90,8 +90,8 @@ const Team = () => {
     setOpenImageOptions(false);
   };
 
-  const handleDelete = () => {
-    deleteTeam(teamID);
+  const handleDelete = async () => {
+    await deleteTeam(teamID);
     setOpenConfirmDelete(false);
     setOpenSettings(false);
     navigate(`/recim/activity/${team.Activity.ID}`);
