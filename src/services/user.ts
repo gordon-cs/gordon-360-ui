@@ -175,8 +175,13 @@ type MealPlanComponent = {
 
 export type ProfileImages = { def: string; pref?: string };
 
-const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo =>
-  profile?.PersonType.includes('stu') || false;
+function isStudent(profile: Profile): profile is StudentProfileInfo;
+function isStudent(profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo;
+function isStudent(
+  profile: UnformattedProfileInfo | Profile,
+): profile is UnformattedStudentProfileInfo | StudentProfileInfo {
+  return profile?.PersonType.includes('stu') || false;
+}
 
 function formatCountry(profile: UnformattedProfileInfo) {
   if (profile?.Country?.includes(',')) {
@@ -349,6 +354,7 @@ const userService = {
   getEmergencyInfo,
   updateSocialLink,
   isBirthdayToday,
+  isStudent,
 };
 
 export default userService;
