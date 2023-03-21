@@ -45,6 +45,32 @@
   border-bottom-right-radius: 0.5em;
 }
 
+.logoFlexBox {
+  flex-direction: column;
+  display: inherit;
+}
+
+.logo {
+  border-radius: 50%;
+  width: 6.9em;
+  height: 6.9em;
+  // max-height: 100px;
+  object-fit: cover;
+}
+
+.photoOptionButton {
+  text-transform: none;
+
+  font-size: small;
+  //color: $neutral-black;
+  //background-color: $neutral-black-opacity125;
+  transform: translate(0%, 0%);
+  width: 100px;
+  height: 30px;
+  margin-top: 5px;
+  padding: 0px;
+}
+
 .secondaryText {
   margin-top: 1em;
   color: $neutral-gray;

@@ -6,6 +6,7 @@ import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
+import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from '../../components/List';
@@ -26,6 +27,7 @@ const Team = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [openImageOptions, setOpenImageOptions] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
@@ -44,7 +46,7 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID, openTeamForm, openInviteParticipantForm, reload]);
+  }, [profile, teamID, openTeamForm, openInviteParticipantForm, openImageOptions, reload]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   //checks if the team is modifiable by the current user
@@ -83,6 +85,11 @@ const Team = () => {
     setOpenTeamForm(false);
   };
 
+  const handleOpenImageOptionsSubmit = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenImageOptions(false);
+  };
+
   const handleDelete = () => {
     deleteTeam(teamID);
     setOpenConfirmDelete(false);
@@ -97,8 +104,20 @@ const Team = () => {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
-          <Grid item>
-            <img src={team?.Logo ?? defaultLogo} alt="Team Icon" width="85em"></img>
+          <Grid item className={styles.logoFlexBox}>
+            <img src={team?.Logo ?? defaultLogo} className={styles.logo} alt="Team Icon"></img>
+            {user?.IsAdmin && (
+              <Button
+                variant="contained"
+                color="warning"
+                className={styles.photoOptionButton}
+                onClick={() => {
+                  setOpenImageOptions(true);
+                }}
+              >
+                Photo Options
+              </Button>
+            )}
           </Grid>
           <Grid item>
             <Typography variant="h5" className={styles.title}>
@@ -207,6 +226,29 @@ const Team = () => {
               {rosterCard}
             </Grid>
 
+            {openTeamForm && (
+              <TeamForm
+                closeWithSnackbar={(status) => {
+                  handleTeamForm(status);
+                }}
+                openTeamForm={openTeamForm}
+                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+                activityID={team?.Activity?.ID}
+                team={team}
+                isAdmin={user.IsAdmin}
+              />
+            )}
+            {openImageOptions && (
+              <ImageOptions
+                category={'Team'}
+                component={team}
+                closeWithSnackbar={(status) => {
+                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+                }}
+                openImageOptions={openImageOptions}
+                setOpenImageOptions={setOpenImageOptions}
+              />
+            )}
             {/* forms and dialogs */}
             <TeamForm
               closeWithSnackbar={(status) => {
@@ -218,6 +260,17 @@ const Team = () => {
               team={team}
               isAdmin={user.IsAdmin}
             />
+            {openImageOptions && (
+              <ImageOptions
+                category={'Team'}
+                component={team}
+                closeWithSnackbar={(status) => {
+                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+                }}
+                openImageOptions={openImageOptions}
+                setOpenImageOptions={setOpenImageOptions}
+              />
+            )}
             <GordonDialogBox
               title="Admin Settings"
               fullWidth

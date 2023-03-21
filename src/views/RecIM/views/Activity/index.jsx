@@ -10,6 +10,7 @@ import {
   Tab,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
@@ -23,6 +24,7 @@ import { deleteActivity, getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
+import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -51,6 +53,7 @@ const Activity = () => {
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [openImageOptions, setOpenImageOptions] = useState(false);
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
@@ -77,6 +80,7 @@ const Activity = () => {
     openTeamForm,
     openCreateSeriesForm,
     openMatchForm,
+    openImageOptions,
     reload,
   ]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
@@ -125,6 +129,11 @@ const Activity = () => {
     setOpenCreateSeriesForm(false);
   };
 
+  const handleOpenImageOptionsSubmit = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenImageOptions(false);
+  };
+
   const handleDelete = () => {
     deleteActivity(activityID);
     setOpenConfirmDelete(false);
@@ -142,8 +151,24 @@ const Activity = () => {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
-          <Grid item>
-            <img src={activity?.Logo ?? defaultLogo} alt="Activity Icon" width="85em"></img>
+          <Grid item className={styles.logoFlexBox}>
+            <img
+              src={activity?.Logo ?? defaultLogo}
+              className={styles.logo}
+              alt="Activity Icon"
+            ></img>
+            {user?.IsAdmin && (
+              <Button
+                variant="contained"
+                color="warning"
+                className={styles.photoOptionButton}
+                onClick={() => {
+                  setOpenImageOptions(true);
+                }}
+              >
+                Photo Options
+              </Button>
+            )}
           </Grid>
           <Grid item>
             <Typography variant="h5" className={styles.title}>
@@ -328,7 +353,6 @@ const Activity = () => {
                 </Grid>
               </Grid>
             </Grid>
-
             {/* forms and dialogs */}
             <MatchForm
               closeWithSnackbar={(status) => {
@@ -356,6 +380,17 @@ const Activity = () => {
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={activityID}
             />
+            {openImageOptions && (
+              <ImageOptions
+                category={'Activity'}
+                component={activity}
+                closeWithSnackbar={(status) => {
+                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+                }}
+                openImageOptions={openImageOptions}
+                setOpenImageOptions={setOpenImageOptions}
+              />
+            )}
             <GordonDialogBox
               title="Admin Settings"
               fullWidth
