@@ -95,8 +95,8 @@ const Match = () => {
     setOpenMatchForm(false);
   };
 
-  const handleDelete = () => {
-    deleteMatchCascade(matchID);
+  const handleDelete = async () => {
+    await deleteMatchCascade(matchID);
     setOpenConfirmDelete(false);
     setOpenSettings(false);
     navigate(`/recim/activity/${match.Activity.ID}`);
@@ -274,8 +274,8 @@ const Match = () => {
               title="Confirm Delete"
               open={openConfirmDelete}
               cancelButtonClicked={() => setOpenConfirmDelete(false)}
-              cancelButtonName="No, keep this team"
-              buttonName="Yes, delete this team"
+              cancelButtonName="No, keep this match"
+              buttonName="Yes, delete this match"
               buttonClicked={() => handleDelete()}
               severity="error"
             >
