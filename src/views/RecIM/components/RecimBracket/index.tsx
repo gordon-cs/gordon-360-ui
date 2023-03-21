@@ -1,6 +1,6 @@
-import { Bracket } from 'react-brackets';
+import { Bracket, IRoundProps } from 'react-brackets';
 
-const rounds = [
+const rounds: IRoundProps[] = [
   {
     title: 'Round one',
     seeds: [
@@ -17,7 +17,7 @@ const rounds = [
     ],
   },
   {
-    title: 'Round one',
+    title: 'Round two',
     seeds: [
       {
         id: 3,
