@@ -51,8 +51,11 @@
 }
 
 .logo {
-  width: 100px;
-  max-height: 100px;
+  border-radius: 50%;
+  width: 6.9em;
+  height: 6.9em;
+  // max-height: 100px;
+  object-fit: cover;
 }
 
 .photoOptionButton {
