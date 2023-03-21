@@ -200,7 +200,7 @@ const ImageOptions = ({
     }
     // If no error occured and the cropper is shown, the cropper text is displayed
     else if (cropperImageData) {
-      message = 'Crop Photo to liking & Click Submit';
+      message = 'Select an image then crop to desired dimensions';
     }
     // If no error occured and the cropper is not shown, the pick a file text is displayed
     else {
@@ -342,7 +342,7 @@ const ImageOptions = ({
                 >
                   <Button
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     onClick={handleCloseSubmit}
                     disabled={!showCropper}
                   >
