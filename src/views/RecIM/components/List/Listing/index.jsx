@@ -336,14 +336,14 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                 >
                   {invite && (
                     <Grid item>
-                      <IconButton className={styles.acceptButton} onClick={handleAcceptInvite}>
+                      <IconButton className={styles.acceptIcon} onClick={handleAcceptInvite}>
                         <CheckIcon />
                       </IconButton>
                     </Grid>
                   )}
                   {invite && (
                     <Grid item>
-                      <IconButton className={styles.rejectButton} onClick={handleRejectInvite}>
+                      <IconButton className={styles.rejectIcon} onClick={handleRejectInvite}>
                         <ClearIcon />
                       </IconButton>
                     </Grid>
