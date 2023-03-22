@@ -3,7 +3,7 @@ import { Participation } from 'services/membership';
 import sessionService from 'services/session';
 import { MembershipInterval } from 'services/transcript';
 import { MembershipHistorySession } from 'services/user';
-import styles from './CoCurricularTranscriptActivity.module.css';
+import styles from './Activity.module.css';
 
 type Props = {
   description: string;

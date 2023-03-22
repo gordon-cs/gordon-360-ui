@@ -1,6 +1,6 @@
 import { format, parseISO } from 'date-fns';
 import { StudentEmployment } from 'services/transcript';
-import styles from './CoCurricularTranscriptExperience.module.css';
+import styles from './Experience.module.css';
 
 type Props = {
   Experience: StudentEmployment;
@@ -20,13 +20,13 @@ const formatDuration = ({ Job_Start_Date, Job_End_Date }: StudentEmployment) => 
     return '';
   }
 
-  const startDate = parseISO(Job_Start_Date);
+  const startDate = new Date(Date.parse(Job_Start_Date));
 
   if (!Job_End_Date) {
     return format(startDate, "MMM yyyy '- Present'");
   }
 
-  const endDate = parseISO(Job_End_Date);
+  const endDate = new Date(Date.parse(Job_End_Date));
 
   if (endDate.getFullYear() === startDate.getFullYear()) {
     return `${format(startDate, 'MMM')} - ${format(endDate, 'MMM yyyy')}`;

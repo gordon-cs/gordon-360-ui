@@ -7,8 +7,8 @@ import { useEffect, useState } from 'react';
 import transcriptService, { TranscriptItems } from 'services/transcript';
 import userService, { Profile } from 'services/user';
 import styles from './CoCurricularTranscript.module.css';
-import Activity from './Components/CoCurricularTranscriptActivity';
-import Experience from './Components/CoCurricularTranscriptExperience';
+import Activity from './Components/Activity';
+import Experience from './Components/Experience';
 
 const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
   experiences: 'Experiences',
