@@ -112,9 +112,9 @@
 .logoContainer {
   position: relative;
   border-radius: 50%;
-  width: 6.9em;
-  height: 6.9em;
-  box-shadow: 0 4px 5px $neutral-black-opacity40;
+  width: 6em;
+  height: 6em;
+  //box-shadow: 0 2px 4px $neutral-black-opacity40;
   overflow: hidden;
 }
 
@@ -122,9 +122,9 @@
   transition: 0.5s ease;
   position: relative;
   border-radius: 50%;
-  width: 6.9em;
-  height: 6.9em;
-  box-shadow: 0 4px 20px $neutral-black-opacity70;
+  width: 6em;
+  height: 6em;
+  box-shadow: 0 3px 6px $secondary-yellow;
   overflow: hidden;
 }
 
@@ -136,7 +136,6 @@
   z-index: 10;
   background: $neutral-black-opacity55;
   border-radius: 16px;
-  box-shadow: 0 4px 30px $neutral-black-opacity10;
 }
 
 .overlayText {
@@ -150,8 +149,8 @@
 
 .logo {
   display: block;
-  width: 6.9em;
-  height: 6.9em;
+  width: 6em;
+  height: 6em;
   object-fit: cover;
 }
 

@@ -2,7 +2,7 @@
 @import '../../../../../vars';
 
 .listing {
-  background-color: $neutral-light-gray2-opacity20;
+  background-color: $neutral-light-gray2-opacity10;
   margin-top: 0.1em;
   margin-bottom: 0.1em;
   padding: 1em;
@@ -14,8 +14,8 @@
 
 //trial new listing look
 .listing:hover {
-  background-color: $neutral-light-gray2-opacity20;
-  box-shadow: inset 2px 2px $neutral-black-opacity10;
+  background-color: $neutral-light-gray2-opacity40;
+  box-shadow: inset 1px 1px $neutral-black-opacity10;
   transition: all 0.3s ease-in-out;
 }
 
@@ -41,22 +41,22 @@
   background-color: $alternative-red;
 }
 
-.rejectButton {
+.rejectIcon {
   background-color: $primary-blue;
   color: $neutral-white;
 }
 
-.rejectButton:hover {
-  background-color: $primary-blue-tint;
+.rejectIcon:hover {
+  background-color: $primary-blue-300;
 }
 
-.acceptButton {
+.acceptIcon {
   background-color: $primary-cyan;
   color: $neutral-white;
 }
 
-.acceptButton:hover {
-  background-color: $primary-cyan-shade;
+.acceptIcon:hover {
+  background-color: $primary-cyan-600;
 }
 
 .avatar {
