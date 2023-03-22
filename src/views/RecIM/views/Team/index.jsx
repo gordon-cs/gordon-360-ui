@@ -90,8 +90,8 @@ const Team = () => {
     setOpenImageOptions(false);
   };
 
-  const handleDelete = () => {
-    deleteTeam(teamID);
+  const handleDelete = async () => {
+    await deleteTeam(teamID);
     setOpenConfirmDelete(false);
     setOpenSettings(false);
     navigate(`/recim/activity/${team.Activity.ID}`);
@@ -104,20 +104,21 @@ const Team = () => {
     let headerContents = (
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
-          <Grid item className={styles.logoFlexBox}>
-            <img src={team?.Logo ?? defaultLogo} className={styles.logo} alt="Team Icon"></img>
-            {user?.IsAdmin && (
-              <Button
-                variant="contained"
-                color="warning"
-                className={styles.photoOptionButton}
-                onClick={() => {
-                  setOpenImageOptions(true);
-                }}
-              >
-                Photo Options
-              </Button>
-            )}
+          <Grid item>
+            <Button
+              className={styles.logoContainer}
+              disabled={!hasPermissions}
+              onClick={() => {
+                setOpenImageOptions(true);
+              }}
+            >
+              <img src={team?.Logo ?? defaultLogo} className={styles.logo} alt="Team Icon"></img>
+              {hasPermissions && (
+                <div className={styles.overlay}>
+                  <Typography className={styles.overlayText}>edit</Typography>
+                </div>
+              )}
+            </Button>
           </Grid>
           <Grid item>
             <Typography variant="h5" className={styles.title}>
@@ -258,7 +259,7 @@ const Team = () => {
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={team?.Activity?.ID}
               team={team}
-              isAdmin={user.IsAdmin}
+              isAdmin={user?.IsAdmin}
             />
             {openImageOptions && (
               <ImageOptions

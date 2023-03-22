@@ -112,8 +112,8 @@ const Match = () => {
     setAnchorEl(e.currentTarget);
   };
 
-  const handleDelete = () => {
-    deleteMatchCascade(matchID);
+  const handleDelete = async () => {
+    await deleteMatchCascade(matchID);
     setOpenConfirmDelete(false);
     navigate(`/recim/activity/${match.Activity.ID}`);
     // @TODO add snackbar
