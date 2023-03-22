@@ -4,7 +4,7 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
-import transcriptService, { StudentEmployment } from 'services/transcript';
+import transcriptService, { StudentEmployment, TranscriptItems } from 'services/transcript';
 import userService, { MembershipHistory, Profile } from 'services/user';
 import styles from './CoCurricularTranscript.module.css';
 import Activity from './Components/CoCurricularTranscriptActivity';
@@ -12,11 +12,7 @@ import Experience from './Components/CoCurricularTranscriptExperience';
 
 const CoCurricularTranscript = () => {
   const [loading, setLoading] = useState(true);
-  const [honors, setHonors] = useState<MembershipHistory[]>([]);
-  const [experiences, setExperience] = useState<MembershipHistory[]>([]);
-  const [employments, setEmployments] = useState<StudentEmployment[]>([]);
-  const [service, setService] = useState<MembershipHistory[]>([]);
-  const [activities, setActivities] = useState<MembershipHistory[]>([]);
+  const [transcriptItems, setTranscriptItems] = useState<TranscriptItems | undefined>();
   const { profile, loading: loadingProfile } = useUser();
 
   useEffect(() => {
@@ -24,17 +20,8 @@ const CoCurricularTranscript = () => {
       if (!profile) return;
 
       setLoading(true);
-      const [memberships, jobs] = await Promise.all([
-        transcriptService.getMemberships(profile.AD_Username),
-        transcriptService.getEmployment(),
-      ]);
-      const { honors, experiences, service, activities } = memberships;
 
-      setHonors(honors);
-      setExperience(experiences);
-      setService(service);
-      setActivities(activities);
-      setEmployments(jobs);
+      await transcriptService.getItems(profile.AD_Username).then(setTranscriptItems);
 
       setLoading(false);
     };
@@ -64,12 +51,12 @@ const CoCurricularTranscript = () => {
             disableTypography
           />
           <CardContent>
-            {honors.length > 0 && (
+            {transcriptItems!.honors.length > 0 && (
               <>
                 <Typography variant="h6" component="h2">
                   <b>Honors, Leadership, and Research</b>
                 </Typography>
-                {honors.map((activity) => (
+                {transcriptItems!.honors.map((activity) => (
                   <Activity
                     key={activity.ActivityCode}
                     sessions={activity.Sessions}
@@ -78,34 +65,30 @@ const CoCurricularTranscript = () => {
                 ))}
               </>
             )}
-            {(experiences.length > 0 || employments.length > 0) && (
+            {transcriptItems!.experiences.length > 0 && (
               <>
                 <Typography variant="h6" component="h2">
                   <b>Experience</b>
                 </Typography>
-                {experiences
-                  .map((activity) => (
+                {transcriptItems!.experiences.map((activity) =>
+                  'Sessions' in activity ? (
                     <Activity
                       key={activity.ActivityCode}
                       sessions={activity.Sessions}
                       description={activity.ActivityDescription}
                     />
-                  ))
-                  .concat(
-                    employments
-                      .map((employment, index) => (
-                        <Experience key={index} Experience={employment} />
-                      ))
-                      .reverse(),
-                  )}
+                  ) : (
+                    <Experience Experience={activity} key={activity.Job_Title} />
+                  ),
+                )}
               </>
             )}
-            {service.length > 0 && (
+            {transcriptItems!.service.length > 0 && (
               <>
                 <Typography variant="h6" component="h2">
                   <b>Service Learning</b>
                 </Typography>
-                {service.map((activity) => (
+                {transcriptItems!.service.map((activity) => (
                   <Activity
                     key={activity.ActivityCode}
                     sessions={activity.Sessions}
@@ -114,13 +97,13 @@ const CoCurricularTranscript = () => {
                 ))}
               </>
             )}
-            {activities.length > 0 && (
+            {transcriptItems!.activities.length > 0 && (
               <>
                 <Typography variant="h6" component="h2">
                   <b>Activities</b>
                 </Typography>
 
-                {activities.map((activity) => (
+                {transcriptItems!.activities.map((activity) => (
                   <Activity
                     key={activity.ActivityCode}
                     sessions={activity.Sessions}

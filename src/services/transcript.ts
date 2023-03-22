@@ -2,9 +2,6 @@ import { differenceInCalendarMonths, format, parse, setMonth } from 'date-fns';
 import http from './http';
 import userService, { MembershipHistory } from './user';
 
-const getMemberships = (username: string) =>
-  userService.getMembershipHistory(username).then(categorizeMemberships);
-
 export type StudentEmployment = {
   Job_Title: string;
   Job_Department: string;
@@ -14,7 +11,18 @@ export type StudentEmployment = {
   Job_Expected_End_Date?: string;
 };
 
-const getEmployment = (): Promise<StudentEmployment[]> => http.get('studentemployment/');
+export type TranscriptItems = {
+  honors: MembershipHistory[];
+  experiences: (MembershipHistory | StudentEmployment)[];
+  service: MembershipHistory[];
+  activities: MembershipHistory[];
+};
+
+const getItems = (username: string) =>
+  Promise.all([
+    userService.getMembershipHistory(username),
+    http.get<StudentEmployment[]>('studentemployment/'),
+  ]).then(([memberships, jobs]) => categorizeMemberships(memberships, jobs));
 
 // const MembershipTypeMap = {
 //   LEA: 'honors',
@@ -37,10 +45,13 @@ const getEmployment = (): Promise<StudentEmployment[]> => http.get('studentemplo
  * @param memberships An array of membership objects retrieved from the database.
  * @returns An array of four arrays-one per category-into which the  memberships have been filtered
  */
-const categorizeMemberships = async (memberships: MembershipHistory[]) => {
-  const groupedMembershipHistory = {
+const categorizeMemberships = async (
+  memberships: MembershipHistory[],
+  jobs: StudentEmployment[],
+) => {
+  const groupedMembershipHistory: TranscriptItems = {
     honors: [] as MembershipHistory[],
-    experiences: [] as MembershipHistory[],
+    experiences: jobs as (MembershipHistory | StudentEmployment)[],
     service: [] as MembershipHistory[],
     activities: [] as MembershipHistory[],
   };
@@ -59,6 +70,8 @@ const categorizeMemberships = async (memberships: MembershipHistory[]) => {
    */
 
   groupedMembershipHistory.activities = memberships;
+
+  groupedMembershipHistory.experiences.sort(sortByDate);
 
   return groupedMembershipHistory;
 };
@@ -108,10 +121,33 @@ export class MembershipInterval {
   }
 }
 
+const sortByDate = (
+  a: MembershipHistory | StudentEmployment,
+  b: MembershipHistory | StudentEmployment,
+) => {
+  const aDate = getExperienceEndDate(a);
+  const bDate = getExperienceEndDate(b);
+
+  return aDate > bDate ? -1 : bDate > aDate ? 1 : 0;
+};
+
+const getExperienceEndDate = (experience: MembershipHistory | StudentEmployment) => {
+  const date =
+    'Sessions' in experience
+      ? experience.LatestDate
+      : experience.Job_End_Date ?? experience.Job_Expected_End_Date ?? experience.Job_Start_Date;
+
+  if (date) {
+    return Date.parse(date);
+  }
+
+  return 0;
+};
+
 const transcriptService = {
-  getMemberships,
-  getEmployment,
+  getItems,
   getGradCohort,
+  sortByDate,
 };
 
 export default transcriptService;

@@ -325,6 +325,7 @@ export type MembershipHistory = {
   ActivityDescription: string;
   ActivityImagePath: string;
   Sessions: MembershipHistorySession[];
+  LatestDate: string;
 };
 
 export type MembershipHistorySession = {
