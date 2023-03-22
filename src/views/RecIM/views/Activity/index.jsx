@@ -10,6 +10,7 @@ import {
   Tab,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
@@ -23,6 +24,7 @@ import { deleteActivity, getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
+import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -51,6 +53,7 @@ const Activity = () => {
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [openImageOptions, setOpenImageOptions] = useState(false);
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
@@ -58,6 +61,7 @@ const Activity = () => {
   const [reload, setReload] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -65,7 +69,6 @@ const Activity = () => {
       setActivity(await getActivityByID(activityID));
       if (profile) {
         setUser(await getParticipantByUsername(profile.AD_Username));
-        setUserTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
     };
@@ -77,8 +80,19 @@ const Activity = () => {
     openTeamForm,
     openCreateSeriesForm,
     openMatchForm,
+    openImageOptions,
     reload,
   ]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (user) {
+        setUserTeams(await getParticipantTeams(profile.AD_Username));
+        setIsAdmin(user.IsAdmin);
+      }
+    };
+    loadData();
+  }, [user]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   // disable create team if participant already is participating in this activity,
@@ -125,8 +139,13 @@ const Activity = () => {
     setOpenCreateSeriesForm(false);
   };
 
-  const handleDelete = () => {
-    deleteActivity(activityID);
+  const handleOpenImageOptionsSubmit = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenImageOptions(false);
+  };
+
+  const handleDelete = async () => {
+    await deleteActivity(activityID);
     setOpenConfirmDelete(false);
     setOpenSettings(false);
     navigate(`/recim`);
@@ -143,12 +162,29 @@ const Activity = () => {
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
           <Grid item>
-            <img src={activity?.Logo ?? defaultLogo} alt="Activity Icon" width="85em"></img>
+            <Button
+              className={styles.logoContainer}
+              disabled={!isAdmin}
+              onClick={() => {
+                setOpenImageOptions(true);
+              }}
+            >
+              <img
+                src={activity?.Logo ?? defaultLogo}
+                className={styles.logo}
+                alt="Activity Icon"
+              ></img>
+              {isAdmin && (
+                <div className={styles.overlay}>
+                  <Typography className={styles.overlayText}>edit</Typography>
+                </div>
+              )}
+            </Button>
           </Grid>
           <Grid item>
             <Typography variant="h5" className={styles.title}>
               {activity?.Name ?? <GordonLoader size={15} inline />}
-              {user?.IsAdmin && (
+              {isAdmin && (
                 <IconButton
                   onClick={() => {
                     setOpenActivityForm(true);
@@ -169,7 +205,7 @@ const Activity = () => {
             </Typography>
           </Grid>
         </Grid>
-        {user?.IsAdmin && (
+        {isAdmin && (
           <Grid item xs={3} textAlign={'right'}>
             <IconButton
               onClick={() => {
@@ -198,7 +234,7 @@ const Activity = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
-          {user?.IsAdmin && (
+          {isAdmin && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={6}>
                 <Grid container justifyContent="center">
@@ -236,7 +272,7 @@ const Activity = () => {
             activity.Series.map((series) => {
               return (
                 <ScheduleList
-                  isAdmin={user?.IsAdmin}
+                  isAdmin={isAdmin}
                   series={series}
                   activityID={activityID}
                   reload={reload}
@@ -328,7 +364,6 @@ const Activity = () => {
                 </Grid>
               </Grid>
             </Grid>
-
             {/* forms and dialogs */}
             <MatchForm
               closeWithSnackbar={(status) => {
@@ -356,6 +391,17 @@ const Activity = () => {
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={activityID}
             />
+            {openImageOptions && (
+              <ImageOptions
+                category={'Activity'}
+                component={activity}
+                closeWithSnackbar={(status) => {
+                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+                }}
+                openImageOptions={openImageOptions}
+                setOpenImageOptions={setOpenImageOptions}
+              />
+            )}
             <GordonDialogBox
               title="Admin Settings"
               fullWidth

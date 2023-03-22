@@ -2,14 +2,21 @@
 @import '../../../../../vars';
 
 .listing {
-  background-color: $neutral-light-gray2-opacity40;
+  background-color: $neutral-light-gray2-opacity20;
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
   padding: 1em;
   border-radius: 0.5em;
   align-items: center;
+  box-shadow: inset -1px -1px $neutral-light-gray2-opacity50;
+  transition: all 0.3s ease-in-out;
 }
 
+//trial new listing look
 .listing:hover {
-  background-color: $neutral-light-gray2;
+  background-color: $neutral-light-gray2-opacity20;
+  box-shadow: inset 2px 2px $neutral-black-opacity10;
+  transition: all 0.3s ease-in-out;
 }
 
 .attendedListing {

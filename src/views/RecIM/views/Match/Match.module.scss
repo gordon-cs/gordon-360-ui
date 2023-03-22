@@ -16,7 +16,9 @@
     color: $neutral-dark-gray;
   }
   .headerImg {
-    width: 3em;
+    width: 4.5em;
+    object-fit: cover;
+    border-radius: 50%;
   }
   .headerImgContainer {
     order: -1;
@@ -28,7 +30,9 @@
     font-size: 0.9rem;
 
     .headerImg {
-      width: 5em;
+      width: 6em;
+      object-fit: cover;
+      border-radius: 50%;
     }
     .teamInfo {
       flex-direction: row;
