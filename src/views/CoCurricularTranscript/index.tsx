@@ -4,11 +4,18 @@ import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
-import transcriptService, { StudentEmployment, TranscriptItems } from 'services/transcript';
-import userService, { MembershipHistory, Profile } from 'services/user';
+import transcriptService, { TranscriptItems } from 'services/transcript';
+import userService, { Profile } from 'services/user';
 import styles from './CoCurricularTranscript.module.css';
 import Activity from './Components/CoCurricularTranscriptActivity';
 import Experience from './Components/CoCurricularTranscriptExperience';
+
+const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
+  experiences: 'Experiences',
+  activities: 'Activities',
+  honors: 'Honors, Leadership, and Research',
+  service: 'Service Learning',
+};
 
 const CoCurricularTranscript = () => {
   const [loading, setLoading] = useState(true);
@@ -51,67 +58,31 @@ const CoCurricularTranscript = () => {
             disableTypography
           />
           <CardContent>
-            {transcriptItems!.honors.length > 0 && (
-              <>
-                <Typography variant="h6" component="h2">
-                  <b>Honors, Leadership, and Research</b>
-                </Typography>
-                {transcriptItems!.honors.map((activity) => (
-                  <Activity
-                    key={activity.ActivityCode}
-                    sessions={activity.Sessions}
-                    description={activity.ActivityDescription}
-                  />
-                ))}
-              </>
-            )}
-            {transcriptItems!.experiences.length > 0 && (
-              <>
-                <Typography variant="h6" component="h2">
-                  <b>Experience</b>
-                </Typography>
-                {transcriptItems!.experiences.map((activity) =>
-                  'Sessions' in activity ? (
-                    <Activity
-                      key={activity.ActivityCode}
-                      sessions={activity.Sessions}
-                      description={activity.ActivityDescription}
-                    />
-                  ) : (
-                    <Experience Experience={activity} key={activity.Job_Title} />
+            {transcriptItems &&
+              Object.entries(transcriptItems).map(
+                ([key, items]) =>
+                  items.length > 0 && (
+                    <>
+                      <Typography variant="h6" component="h2">
+                        <b>{SectionTitle[key as keyof TranscriptItems]}</b>
+                      </Typography>
+                      {items.map((activity) =>
+                        'Sessions' in activity ? (
+                          <Activity
+                            key={activity.ActivityCode}
+                            sessions={activity.Sessions}
+                            description={activity.ActivityDescription}
+                          />
+                        ) : (
+                          <Experience
+                            Experience={activity}
+                            key={activity.Job_Title + activity.Job_Start_Date}
+                          />
+                        ),
+                      )}
+                    </>
                   ),
-                )}
-              </>
-            )}
-            {transcriptItems!.service.length > 0 && (
-              <>
-                <Typography variant="h6" component="h2">
-                  <b>Service Learning</b>
-                </Typography>
-                {transcriptItems!.service.map((activity) => (
-                  <Activity
-                    key={activity.ActivityCode}
-                    sessions={activity.Sessions}
-                    description={activity.ActivityDescription}
-                  />
-                ))}
-              </>
-            )}
-            {transcriptItems!.activities.length > 0 && (
-              <>
-                <Typography variant="h6" component="h2">
-                  <b>Activities</b>
-                </Typography>
-
-                {transcriptItems!.activities.map((activity) => (
-                  <Activity
-                    key={activity.ActivityCode}
-                    sessions={activity.Sessions}
-                    description={activity.ActivityDescription}
-                  />
-                ))}
-              </>
-            )}
+              )}
           </CardContent>
         </Card>
         <Fab
