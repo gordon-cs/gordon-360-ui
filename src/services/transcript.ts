@@ -22,7 +22,7 @@ const getItems = (username: string) =>
   Promise.all([
     userService.getMembershipHistory(username),
     http.get<StudentEmployment[]>('studentemployment/'),
-  ]).then(([memberships, jobs]) => categorizeMemberships(memberships, jobs));
+  ]).then(([memberships, jobs]) => categorizeItems(memberships, jobs));
 
 // const MembershipTypeMap = {
 //   LEA: 'honors',
@@ -34,21 +34,20 @@ const getItems = (username: string) =>
 // } as const;
 
 /**
- * Filters general memberships from the 360 Database into one of four categories
- *        1. Honors, Leadership, and Research
- *        2. Experience
- *        3. Service and Service Learning
- *        4. Activities (the catch-all)
+ * Sorts transcript items into one of these categories:
+ *  1. Honors, Leadership, and Research
+ *  2. Experience
+ *  3. Service and Service Learning
+ *  4. Activities (the catch-all)
+ *
  * Memberships ars sorted based on their Activity Code, although this is not a perfect indicator
  * of which category a membership should belong to.
  *
  * @param memberships An array of membership objects retrieved from the database.
- * @returns An array of four arrays-one per category-into which the  memberships have been filtered
+ * @param jobs Student jobs
+ * @returns Transcript items categorized into the above categories
  */
-const categorizeMemberships = async (
-  memberships: MembershipHistory[],
-  jobs: StudentEmployment[],
-) => {
+const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEmployment[]) => {
   const groupedMembershipHistory: TranscriptItems = {
     honors: [] as MembershipHistory[],
     experiences: jobs as (MembershipHistory | StudentEmployment)[],
@@ -71,7 +70,9 @@ const categorizeMemberships = async (
 
   groupedMembershipHistory.activities = memberships;
 
-  groupedMembershipHistory.experiences.sort(sortByDate);
+  groupedMembershipHistory.experiences.sort(
+    (a, b) => getExperienceEndDate(b) - getExperienceEndDate(a),
+  );
 
   return groupedMembershipHistory;
 };
@@ -121,16 +122,6 @@ export class MembershipInterval {
   }
 }
 
-const sortByDate = (
-  a: MembershipHistory | StudentEmployment,
-  b: MembershipHistory | StudentEmployment,
-) => {
-  const aDate = getExperienceEndDate(a);
-  const bDate = getExperienceEndDate(b);
-
-  return aDate > bDate ? -1 : bDate > aDate ? 1 : 0;
-};
-
 const getExperienceEndDate = (experience: MembershipHistory | StudentEmployment) => {
   const date =
     'Sessions' in experience
@@ -147,7 +138,6 @@ const getExperienceEndDate = (experience: MembershipHistory | StudentEmployment)
 const transcriptService = {
   getItems,
   getGradCohort,
-  sortByDate,
 };
 
 export default transcriptService;
