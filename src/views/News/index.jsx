@@ -29,8 +29,10 @@ import Dropzone from 'react-dropzone';
 import newsService from 'services/news';
 import NewsList from './components/NewsList';
 import { userIsInAuthGroup } from 'services/auth';
+import styles from './News.module.scss';
 
 const CROP_DIM = 200; // Width of cropped image canvas
+const NEWS_TABS = ['news', 'my-pending-news', 'all-pending-news'];
 
 const StudentNews = () => {
   const [search, setSearch] = useState('');
@@ -345,12 +347,17 @@ const StudentNews = () => {
       content = (
         <>
           <TabContext value={tabValue}>
-            <Tabs value={tabValue} onChange={handleSwitchTab} aria-label="basic tabs example">
-              <Tab label="News" value="news" />
-              <Tab label="My Pending News" value="my-pending-news" />
-              {isAdmin && <Tab label="All Pending News" value="all-pending-news" />}
+            <Tabs
+              value={tabValue}
+              onChange={handleSwitchTab}
+              centered={true}
+              aria-label="News Lists"
+            >
+              <Tab label="News" value={NEWS_TABS[0]} className={styles.tab} />
+              <Tab label="My Pending News" value={NEWS_TABS[1]} className={styles.tab} />
+              {isAdmin && <Tab label="All Pending News" value={NEWS_TABS[2]} />}
             </Tabs>
-            <TabPanel value="news">
+            <TabPanel value={NEWS_TABS[0]}>
               <NewsList
                 news={news}
                 header={'News'}
@@ -361,7 +368,7 @@ const StudentNews = () => {
                 isAdmin={isAdmin}
               />
             </TabPanel>
-            <TabPanel value="my-pending-news">
+            <TabPanel value={NEWS_TABS[1]}>
               <NewsList
                 news={personalUnapprovedNews}
                 header={'My Pending News'}
@@ -372,7 +379,7 @@ const StudentNews = () => {
               />
             </TabPanel>
             {isAdmin && (
-              <TabPanel value="all-pending-news">
+              <TabPanel value={NEWS_TABS[2]}>
                 {isAdmin && (
                   <NewsList
                     news={unapprovedNews}
@@ -412,20 +419,6 @@ const StudentNews = () => {
           </Fab>
 
           <Grid container justifyContent="center" spacing={2}>
-            {/* Search */}
-            <Grid item xs={12} lg={8}>
-              <TextField
-                id="search"
-                label="Search news"
-                variant="filled"
-                value={search}
-                onChange={(event) => {
-                  setSearch(event.target.value);
-                }}
-                fullWidth
-              />
-            </Grid>
-
             <Grid item xs={12} lg={8} style={{ marginBottom: '7rem' }}>
               {/* list of news */}
               {content}

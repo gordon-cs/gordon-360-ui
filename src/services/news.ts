@@ -164,11 +164,7 @@ async function updateAcceptedStatus(
   newsID: number,
   newStatusAccepted: boolean,
 ): Promise<NewsObject | undefined> {
-  try {
-    return await http.put(`news/${newsID}/accepted`, newStatusAccepted);
-  } catch (reason) {
-    console.log('Caught news update error: ' + reason);
-  }
+  return await http.put(`news/${newsID}/accepted`, newStatusAccepted);
 }
 
 const newsService = {

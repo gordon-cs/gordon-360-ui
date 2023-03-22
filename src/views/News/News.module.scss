@@ -1,0 +1,17 @@
+@import '../../vars';
+
+.tabs {
+  color: $primary-blue;
+}
+
+.tab {
+  background-color: $neutral-white;
+  color: $primary-blue;
+  border-width: 10px;
+  border-color: $primary-blue;
+}
+
+.selectedTab {
+  background-color: $neutral-white;
+  color: $primary-blue;
+}
