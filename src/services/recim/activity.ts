@@ -44,6 +44,7 @@ type PatchActivity = BaseActivity & {
   TypeID: number;
   StatusID: number;
   Logo: string;
+  IsLogoUpdate: boolean;
   Completed: boolean;
 };
 

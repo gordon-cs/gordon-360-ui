@@ -68,6 +68,7 @@ type PatchTeam = {
   Name: string;
   StatusID: number;
   Logo: string;
+  IsLogoUpdate: boolean;
 };
 
 //Team Routes

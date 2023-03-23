@@ -119,6 +119,7 @@ const ImageOptions = ({
       case 'Activity': {
         let activityRequest = {
           Logo: cropperRef.current.cropper.getCroppedCanvas({ width: CROPPER_WIDTH }).toDataURL(),
+          IsLogoUpdate: true,
         };
 
         editActivity(component.ID, activityRequest).then(() => {
@@ -134,6 +135,7 @@ const ImageOptions = ({
       case 'Team': {
         let teamRequest = {
           Logo: cropperRef.current.cropper.getCroppedCanvas({ width: CROPPER_WIDTH }).toDataURL(),
+          IsLogoUpdate: true,
         };
 
         editTeam(component.ID, teamRequest).then(() => {
