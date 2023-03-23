@@ -284,7 +284,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
     newActivityRequest.typeID = activityTypes.find(
       (type) => type.Description === newActivityRequest.typeID,
     ).ID;
-    
+
     setActivityRequest(newActivityRequest);
   };
 
@@ -295,6 +295,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       activityRequest.statusID = activityStatusTypes.find(
         (type) => type.Description === activityRequest.statusID,
       ).ID;
+      activity.isLogoUpdate = false;
       editActivity(activity.ID, activityRequest).then((res) => {
         setSaving(false);
         closeWithSnackbar({
