@@ -17,6 +17,7 @@ import Cropper from 'react-cropper';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 
 const CROPPER_WIDTH = 300;
+const ASPECT_RATIO = 1;
 
 const ImageOptions = ({
   category,
@@ -79,6 +80,7 @@ const ImageOptions = ({
       case 'Activity': {
         let activityRequest = {
           Logo: null,
+          IsLogoUpdate: true,
         };
 
         editActivity(component.ID, activityRequest).then(() => {
@@ -94,6 +96,7 @@ const ImageOptions = ({
       case 'Team': {
         let teamRequest = {
           Logo: null,
+          IsLogoUpdate: true,
         };
 
         editTeam(component.ID, teamRequest).then(() => {
@@ -296,6 +299,7 @@ const ImageOptions = ({
                     }}
                     autoCropArea={1}
                     viewMode={3}
+                    aspectRatio={ASPECT_RATIO}
                     highlight={false}
                     background={false}
                     zoom={onCropperZoom}
