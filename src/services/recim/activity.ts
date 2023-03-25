@@ -44,6 +44,7 @@ type PatchActivity = BaseActivity & {
   TypeID: number;
   StatusID: number;
   Logo: string;
+  IsLogoUpdate: boolean;
   Completed: boolean;
 };
 
@@ -62,6 +63,9 @@ const getActivities = (active: boolean, time: String): Promise<Activity[]> => {
   return http.get(`recim/activities`);
 };
 
+const isActivityRegisterable = (ID: number): Promise<boolean> =>
+  http.get(`recim/activities/${ID}/registerable`);
+
 const getActivityStatusTypes = (): Promise<Lookup[]> =>
   http.get(`recim/activities/lookup?type=status`);
 
@@ -79,6 +83,7 @@ export {
   deleteActivity,
   getActivityByID,
   getActivityStatusTypes,
+  isActivityRegisterable,
   getActivities,
   editActivity,
   getActivityTypes,

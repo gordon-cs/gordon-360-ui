@@ -14,7 +14,6 @@ const TeamForm = ({
   const [errorStatus, setErrorStatus] = useState({
     Name: false,
     ActivityID: false,
-    Logo: false,
     statusID: false,
   });
 
@@ -64,13 +63,11 @@ const TeamForm = ({
           teamStatus.find((type) => type.Description === team.Status) == null
             ? ''
             : teamStatus.find((type) => type.Description === team.Status).Description,
-        Logo: null,
       };
     }
     return {
       Name: '',
       ActivityID: Number(activityID),
-      Logo: null,
     };
   }, [activityID, team, teamStatus]);
 
@@ -90,6 +87,7 @@ const TeamForm = ({
       teamRequest.StatusID = teamStatus.find(
         (type) => type.Description === teamRequest.StatusID,
       ).ID;
+      teamRequest.IsLogoUpdate = false;
 
       editTeam(team.ID, teamRequest).then(() => {
         setSaving(false);

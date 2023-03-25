@@ -8,13 +8,7 @@ import {
 } from 'services/recim/activity';
 import { getAllSports } from 'services/recim/sport';
 
-const ActivityForm = ({
-  activity,
-  closeWithSnackbar,
-  openActivityForm,
-  setOpenActivityForm,
-  setCreatedInstance,
-}) => {
+const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenActivityForm }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
     startDate: false,
@@ -198,14 +192,11 @@ const ActivityForm = ({
 
     let activityRequest = { ...currentInfo, ...newInfo };
 
-    activityRequest.sportID = sports.find((sport) => sport.Name === activityRequest.sportID).ID;
-    activityRequest.typeID = activityTypes.find(
-      (type) => type.Description === activityRequest.typeID,
-    ).ID;
     if (activity) {
       activityRequest.statusID = activityStatusTypes.find(
         (type) => type.Description === activityRequest.statusID,
       ).ID;
+      activity.isLogoUpdate = false;
       editActivity(activity.ID, activityRequest).then((res) => {
         setSaving(false);
         closeWithSnackbar({
@@ -213,7 +204,6 @@ const ActivityForm = ({
           message: 'Your new activity has been created or whatever message you want here',
         });
         handleWindowClose();
-        setCreatedInstance(res);
       });
     } else {
       createActivity(activityRequest).then((res) => {
@@ -223,7 +213,6 @@ const ActivityForm = ({
           message: 'Your new activity has been created or whatever message you want here',
         });
         handleWindowClose();
-        setCreatedInstance(res);
       });
     }
   };

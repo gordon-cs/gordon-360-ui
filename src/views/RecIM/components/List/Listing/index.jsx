@@ -10,7 +10,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Button,
   Checkbox,
   FormControlLabel,
 } from '@mui/material';
@@ -23,8 +22,12 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
-import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
-// import { getActivityTypes } from 'services/recim/activity';
+import {
+  deleteTeamParticipant,
+  editTeamParticipant,
+  respondToTeamInvite,
+} from 'services/recim/team';
+import { getActivityTypes, isActivityRegisterable } from 'services/recim/activity';
 import { removeAttendance, updateAttendance } from 'services/recim/match';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
@@ -285,7 +288,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
           </Grid>
           <Grid item xs={8} sm={4}>
             <Typography className={styles.listingSubtitle}>
-              Sportsmanship: {targetTeamStats.SportsmanshipRating}
+              Sportsmanship: {targetTeamStats.SportsmanshipScore}
             </Typography>
           </Grid>
           <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
@@ -297,6 +300,15 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
       </ListItemButton>
     );
   } else {
+    let ActivityRecord = {
+      WinCount: 0,
+      LossCount: 0,
+    };
+
+    team.TeamRecord?.forEach((record) => {
+      ActivityRecord.WinCount += record.WinCount;
+      ActivityRecord.LossCount += record.LossCount;
+    });
     content = (
       <Grid container direction="row" justifyContent="center">
         <Grid item xs={12}>
@@ -307,43 +319,47 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
           >
             <Grid container>
               <Grid container columnSpacing={2}>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={8} sm={5}>
                   <Typography className={styles.listingTitle}>{team.Name}</Typography>
                 </Grid>
-                <Grid item xs={12} sm={4} className={styles.rightAlignLarge}>
+                <Grid
+                  item
+                  xs={4}
+                  sm={7}
+                  container
+                  className={styles.rightAlignLarge}
+                  direction="row"
+                  spacing={1}
+                >
+                  {invite && (
+                    <Grid item>
+                      <IconButton className={styles.acceptButton} onClick={handleAcceptInvite}>
+                        <CheckIcon />
+                      </IconButton>
+                    </Grid>
+                  )}
+                  {invite && (
+                    <Grid item>
+                      <IconButton className={styles.rejectButton} onClick={handleRejectInvite}>
+                        <ClearIcon />
+                      </IconButton>
+                    </Grid>
+                  )}
+                  {team.TeamRecord && !invite && (
+                    <Grid item>
+                      <Typography className={styles.listingSubtitle}>
+                        {ActivityRecord.WinCount}W : {ActivityRecord.LossCount}L
+                      </Typography>
+                    </Grid>
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6} className={styles.listingSubtitle}>
                   <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
                 </Grid>
               </Grid>
-              {invite && <Grid item margin={3}></Grid>}
             </Grid>
           </ListItemButton>
         </Grid>
-        {invite && (
-          <Grid item position="relative" marginTop={-6}>
-            <Grid container columnSpacing={2}>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  className={styles.acceptButton}
-                  startIcon={<CheckIcon />}
-                  onClick={handleAcceptInvite}
-                >
-                  Accept
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  className={styles.rejectButton}
-                  startIcon={<ClearIcon />}
-                  onClick={handleRejectInvite}
-                >
-                  Reject
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
       </Grid>
     );
   }
@@ -365,15 +381,20 @@ const ParticipantListing = ({
   teamID,
   matchID,
 }) => {
-  const { teamID: teamIDParam } = useParams(); // for use by team page roster
+  const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState();
   const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
 
+  const handleClickOff = () => {
+    setAnchorEl(null);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
+    callbackFunction((val) => !val);
   };
 
   useEffect(() => {
@@ -399,23 +420,46 @@ const ParticipantListing = ({
     setAnchorEl(event.currentTarget);
   };
 
+  const handleRemoveFromTeam = async () => {
+    let isRegistrationPeriod = await isActivityRegisterable(activityID);
+    if (isRegistrationPeriod) await handleDeleteFromTeam();
+    else await handleMakeInactive();
+  };
+
   const handleMakeCoCaptain = async () => {
     let editedParticipant = {
       Username: participant.Username,
       RoleTypeID: 4,
     }; // Role 4 is co-captain
 
-    await editTeamParticipant(parseInt(teamIDParam), editedParticipant); // Role 4 is co-captain
+    await editTeamParticipant(teamIDParam, editedParticipant); // Role 4 is co-captain
     handleClose();
   };
 
-  const handleRemoveFromTeam = async () => {
+  const reinstateMember = async () => {
+    let editedParticipant = {
+      Username: participant.Username,
+      RoleTypeID: 3,
+    }; // Role 3 is member
+    await editTeamParticipant(teamIDParam, editedParticipant);
+    handleClose();
+  };
+
+  const handleMakeInactive = async () => {
     let editedParticipant = {
       Username: participant.Username,
       RoleTypeID: 6,
     }; // Role 6 is inactive
+    await editTeamParticipant(teamIDParam, editedParticipant);
+    handleClose();
+  };
 
-    await editTeamParticipant(parseInt(teamIDParam), editedParticipant);
+  const handleDeleteFromTeam = async () => {
+    let editedParticipant = {
+      Username: participant.Username,
+      RoleTypeID: 0,
+    }; // deleted
+    await editTeamParticipant(teamIDParam, editedParticipant);
     handleClose();
   };
 
@@ -482,13 +526,22 @@ const ParticipantListing = ({
           <ListItemText primary={name} secondary={participant.Role} />
         </ListItemButton>
         {showParticipantOptions && (
-          <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
-            <MenuItem dense onClick={handleMakeCoCaptain} divider>
-              Make co-captain
-            </MenuItem>
-            <MenuItem dense onClick={handleRemoveFromTeam} className={styles.rejectButton}>
-              Remove from team
-            </MenuItem>
+          <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
+            {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (
+              <MenuItem dense onClick={handleMakeCoCaptain} divider>
+                Make co-captain
+              </MenuItem>
+            )}
+            {(participant.Role === 'Inactive' || participant.Role === 'Co-Captain') && (
+              <MenuItem dense onClick={reinstateMember}>
+                {participant.Role === 'Inactive' ? `Reinstate Member` : `Demote to Member`}
+              </MenuItem>
+            )}
+            {participant.Role !== 'Inactive' && (
+              <MenuItem dense onClick={handleRemoveFromTeam} className={styles.redButton}>
+                Remove from team
+              </MenuItem>
+            )}
           </Menu>
         )}
       </ListItem>
@@ -507,27 +560,45 @@ const MatchListing = ({ match, activityID }) => {
           className={styles.listing}
         >
           <Grid container direction="column" alignItems="center">
+            {match.Status === 'Completed' && (
+              <Grid xs={12} item>
+                <Typography className={styles.listingSubtitle}>Final</Typography>
+              </Grid>
+            )}
             <Grid item container>
-              <Grid item xs={5}>
+              <Grid item xs={4.5}>
                 <Typography className={styles.listingTitle}>
                   {match.Team[0]?.Name ?? <i>TBD</i>}
                 </Typography>
               </Grid>
-              <Grid item xs={2} textAlign="center">
-                {/* show scores only if match is in the present/past */}
-                {isPast(Date.parse(match.Time)) ? (
-                  <Typography>
-                    {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
-                      ?.TeamScore ?? 'TBD'}{' '}
-                    :{' '}
-                    {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[1]?.ID)
-                      ?.TeamScore ?? 'TBD'}
-                  </Typography>
+              <Grid item xs={3} textAlign="center">
+                {/* show scores only if match is completed*/}
+                {match.Status === 'Completed' ? (
+                  <Grid container direction="row">
+                    <Grid item xs={5} textAlign="right">
+                      <Typography>
+                        {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
+                          ?.TeamScore ?? 'TBD'}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={2}>
+                      <Typography>{':'}</Typography>{' '}
+                    </Grid>
+                    <Grid item xs={5} textAlign="left">
+                      <Typography>
+                        {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[1]?.ID)
+                          ?.TeamScore ?? 'TBD'}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ) : match.Status === 'Forfeited' ? (
+                  <Typography className={styles.listingSubtitle}>Forfeited</Typography>
                 ) : (
                   <Typography>vs.</Typography>
                 )}
               </Grid>
-              <Grid item xs={5} textAlign="right">
+              <Grid item xs={4.5} textAlign="right">
                 <Typography className={styles.listingTitle}>
                   {match.Team[1]?.Name ?? <i>TBD</i>}
                 </Typography>
@@ -573,8 +644,8 @@ const MatchListing = ({ match, activityID }) => {
                   <Typography className={styles.listingTitle}>{team.Name}</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                  {/* show scores only if match is in the present/past */}
-                  {isPast(Date.parse(match.Time)) ? (
+                  {/* show scores only if match is completed*/}
+                  {match.Status === 'Completed' ? (
                     <Typography>
                       {match.Scores?.find((matchTeam) => matchTeam.TeamID === team.ID)?.TeamScore ??
                         0}

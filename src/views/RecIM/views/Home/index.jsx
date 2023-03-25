@@ -1,5 +1,15 @@
 import GordonUnauthorized from 'components/GordonUnauthorized';
-import { Grid, Typography, Card, CardHeader, CardContent, Button, Tabs, Tab } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  Tabs,
+  Tab,
+  Badge,
+} from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ActivityForm from '../../components/Forms/ActivityForm';
 import { useUser } from 'hooks';
@@ -15,14 +25,7 @@ import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from './../../recim_logo.png';
 import { isFuture } from 'date-fns';
-
-const TabPanel = ({ children, value, index }) => {
-  return (
-    <div hidden={value !== index} role="tabpanel">
-      {children}
-    </div>
-  );
-};
+import { TabPanel } from 'views/RecIM/components';
 
 export const HomeHeaderContents = () => {
   return (
@@ -50,13 +53,14 @@ const Home = () => {
   const [activities, setActivities] = useState([]);
   const [ongoingActivities, setOngoingActivities] = useState([]);
   const [registrableActivities, setRegistrableActivities] = useState([]);
-  const [myTeams, setMyTeams] = useState([]);
+  const [participantTeams, setParticipantTeams] = useState([]);
   const [invites, setInvites] = useState([]);
   const [participant, setParticipant] = useState([]);
   const [openWaiver, setOpenWaiver] = useState(false);
   const [createdActivity, setCreatedActivity] = useState({ ID: null });
   const [hasPermissions, setHasPermissions] = useState(false);
-  const [tab, setTab] = useState(0);
+  const [activityTab, setActivityTab] = useState(0);
+  const [teamTab, setTeamTab] = useState(0);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -70,7 +74,7 @@ const Home = () => {
       setInvites(await getTeamInvites());
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
-        setMyTeams(await getParticipantTeams(profile.AD_Username));
+        setParticipantTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
     };
@@ -111,7 +115,7 @@ const Home = () => {
               setOpenActivityForm(true);
             }}
           >
-            Create a New Activity
+            Create a Activity
           </Button>
         </Grid>
       </Grid>
@@ -123,7 +127,7 @@ const Home = () => {
       {ongoingActivities.length > 0 ? (
         <ActivityList activities={ongoingActivities} showActivityOptions={hasPermissions} />
       ) : (
-        <Typography variant="body1" paragraph>
+        <Typography className={styles.secondaryText}>
           It looks like there aren't any Rec-IM activities currently ongoing
         </Typography>
       )}
@@ -135,9 +139,29 @@ const Home = () => {
       {registrableActivities.length > 0 ? (
         <ActivityList activities={registrableActivities} showActivityOptions={hasPermissions} />
       ) : (
-        <Typography variant="body1" paragraph>
+        <Typography className={styles.secondaryText}>
           It looks like there aren't any Rec-IM activities currently open for registration
         </Typography>
+      )}
+    </CardContent>
+  );
+
+  let myInvites = (
+    <CardContent>
+      {invites.length > 0 ? (
+        <TeamList teams={invites} invite setInvites={setInvites} />
+      ) : (
+        <Typography className={styles.secondaryText}>No pending invites</Typography>
+      )}
+    </CardContent>
+  );
+
+  let myTeams = (
+    <CardContent>
+      {participantTeams ? (
+        <TeamList teams={participantTeams} />
+      ) : (
+        <Typography className={styles.secondaryText}>You're not yet apart of any teams!</Typography>
       )}
     </CardContent>
   );
@@ -145,56 +169,50 @@ const Home = () => {
   let activitiesCard = (
     <Card>
       <CardHeader title="Rec-IM Activities" className={styles.cardHeader} />
-      {hasPermissions && createActivityButton}
-      <Tabs
-        value={tab}
-        onChange={(event, newTab) => setTab(newTab)}
-        aria-label="admin control center tabs"
-        centered
-      >
-        <Tab label="Upcoming Activities" />
-        <Tab label="Ongoing Activities" />
-      </Tabs>
-      <TabPanel value={tab} index={0}>
-        {upcomingActivitiesContent}
-      </TabPanel>
-      <TabPanel value={tab} index={1}>
-        {ongoingActivitiesContent}
-      </TabPanel>
+      <CardContent>
+        {hasPermissions && createActivityButton}
+        <Tabs
+          value={activityTab}
+          onChange={(event, newTab) => setActivityTab(newTab)}
+          aria-label="admin control center tabs"
+          centered
+        >
+          <Tab label="Upcoming Activities" />
+          <Tab label="Ongoing Activities" />
+        </Tabs>
+        <TabPanel value={activityTab} index={0}>
+          {upcomingActivitiesContent}
+        </TabPanel>
+        <TabPanel value={activityTab} index={1}>
+          {ongoingActivitiesContent}
+        </TabPanel>
+      </CardContent>
     </Card>
   );
-
   let myTeamsCard = (
     <Card>
       <CardHeader title="Teams" className={styles.cardHeader} />
-      <CardContent>
-        {invites.length > 0 && (
-          <>
-            <Grid container className={styles.teamHeader} alignItems="center" columnSpacing={2}>
-              <Grid item container direction="column">
-                <Typography variant="h6" className={styles.teamHeaderMainText}>
-                  My Team Invites
-                </Typography>
-              </Grid>
-            </Grid>
-            <TeamList teams={invites} invite setInvites={setInvites} />
-          </>
-        )}
-        <Grid container className={styles.teamHeader} alignItems="center" columnSpacing={2}>
-          <Grid item container direction="column">
-            <Typography variant="h6" className={styles.teamHeaderMainText}>
-              My Teams
-            </Typography>
-          </Grid>
-        </Grid>
-        {myTeams ? (
-          <TeamList teams={myTeams} />
-        ) : (
-          <Typography variant="body1" paragraph>
-            You're not yet apart of any teams; join one to get started!
-          </Typography>
-        )}
-      </CardContent>
+      <Tabs
+        value={teamTab}
+        onChange={(event, newTab) => setTeamTab(newTab)}
+        aria-label="admin control center tabs"
+        centered
+      >
+        <Tab label="My Teams" />
+        <Tab
+          label={
+            <Badge color="secondary" variant="dot" badgeContent={invites.length}>
+              Invites
+            </Badge>
+          }
+        />
+      </Tabs>
+      <TabPanel value={teamTab} index={0}>
+        {myTeams}
+      </TabPanel>
+      <TabPanel value={teamTab} index={1}>
+        {myInvites}
+      </TabPanel>
     </Card>
   );
 
@@ -226,10 +244,10 @@ const Home = () => {
           <GordonLoader />
         ) : (
           <Grid container spacing={2}>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={7}>
               {activitiesCard}
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={5}>
               {myTeamsCard}
             </Grid>
             {openActivityForm && (
