@@ -46,7 +46,7 @@ const Requests = ({ profile, session }) => {
   } else if (involvementsLeading?.length > 0) {
     content = (
       <>
-        <CardHeader title="Membership Requests" className={styles.requests_header} />
+        {/* <CardHeader title="Membership Requests" className={styles.requests_header} /> */}
 
         <CardContent>
           <Accordion>
@@ -137,7 +137,8 @@ const Requests = ({ profile, session }) => {
 
   return (
     <Grid item xs={12} lg={12}>
-      <Card className={styles.requests}>{content}</Card>
+      {/* <Card className={styles.requests}></Card> */}
+      {content}
     </Grid>
   );
 };

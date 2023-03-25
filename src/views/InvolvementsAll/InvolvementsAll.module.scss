@@ -1,0 +1,13 @@
+@import '../../vars';
+
+.tab {
+  background-color: $primary-blue;
+  color: $neutral-white;
+  font-size: 1.3rem;
+  text-transform: none;
+}
+
+.tab:global(.Mui-selected) {
+  color: $neutral-white;
+  background-color: $primary-blue;
+}
