@@ -17,6 +17,8 @@ const Form = ({
   setOpenForm,
   openForm,
   handleConfirm,
+  additionalContent,
+  additionCancelActions,
 }) => {
   const allFields = [
     fields,
@@ -134,6 +136,7 @@ const Form = ({
     content = (
       <>
         <ContentCard title={`${formTitle.name} Information`}>
+          {additionalContent}
           {mapFieldsToInputs(fields)}
         </ContentCard>
 
@@ -177,6 +180,9 @@ const Form = ({
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
         setOpenForm(false);
+        if (additionCancelActions) {
+          additionCancelActions();
+        }
       }}
       cancelButtonName="cancel"
     >

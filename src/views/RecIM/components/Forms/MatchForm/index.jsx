@@ -2,7 +2,13 @@ import { useState, useMemo, useEffect } from 'react';
 import Form from '../Form';
 import { createMatch, updateMatch, getSurfaces, getMatchStatusTypes } from 'services/recim/match';
 
-const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activity, match }) => {
+const MatchForm = ({
+  closeWithSnackbar,
+  openMatchInformationForm,
+  setOpenMatchInformationForm,
+  activity,
+  match,
+}) => {
   const [errorStatus, setErrorStatus] = useState({
     StartTime: false,
     SeriesID: false,
@@ -169,7 +175,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       createMatch(matchRequest).then((result) => {
         closeWithSnackbar({
           type: 'success',
-          message: 'Match created successfully',
+          message: 'Match information created successfully',
         });
         handleWindowClose();
       });
@@ -180,7 +186,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       updateMatch(match.ID, matchRequest).then((result) => {
         closeWithSnackbar({
           type: 'success',
-          message: 'Match created successfully',
+          message: 'Match information edited successfully',
         });
         handleWindowClose();
       });
@@ -195,8 +201,8 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}
       loading={loading}
-      setOpenForm={setOpenMatchForm}
-      openForm={openMatchForm}
+      setOpenForm={setOpenMatchInformationForm}
+      openForm={openMatchInformationForm}
       handleConfirm={handleConfirm}
     />
   );

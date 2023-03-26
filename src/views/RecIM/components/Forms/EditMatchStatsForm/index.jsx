@@ -1,13 +1,12 @@
 import { useState, useMemo, useEffect } from 'react';
 import { getMatchTeamStatusTypes, updateMatchStats } from 'services/recim/match';
-import Form from "../Form"
+import Form from '../Form';
 
 const EditMatchStatsForm = ({
   match,
-  targetTeamID,
   closeWithSnackbar,
   openEditMatchStatsForm,
-  setOpenEditMatchStatsForm
+  setOpenEditMatchStatsForm,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     Score: false,
@@ -16,6 +15,7 @@ const EditMatchStatsForm = ({
   });
   const [loading, setLoading] = useState(true);
   const [matchStatus, setMatchStatus] = useState([]);
+  const [targetTeamID, setTargetTeamID] = useState(match.Team[0].ID);
 
   useEffect(() => {
     const loadData = async () => {
@@ -33,7 +33,7 @@ const EditMatchStatsForm = ({
       type: 'number',
       error: errorStatus.Score,
       helperText: '*Required',
-      required: true
+      required: true,
     },
     {
       label: 'Sportsmanship',
@@ -41,7 +41,7 @@ const EditMatchStatsForm = ({
       type: 'number',
       error: errorStatus.SportsmanshipScore,
       helperText: "*Required & Can't be more than 5",
-      required: true
+      required: true,
     },
     {
       label: 'Status',
@@ -52,7 +52,7 @@ const EditMatchStatsForm = ({
       }),
       error: errorStatus.StatusID,
       helperText: '*Required',
-      required: true
+      required: true,
     },
   ];
 
@@ -72,13 +72,13 @@ const EditMatchStatsForm = ({
   const errorCases = (field, value) => {
     switch (field) {
       case 'Sportsmanship':
-        return (value < 0) || (value > 5);
+        return value < 0 || value > 5;
       case 'Score':
         return !/^[0-9]+$/.test(value);
       default:
         return false;
     }
-  }
+  };
 
   const handleConfirm = (newInfo, handleWindowClose, setSaving) => {
     setSaving(true);
@@ -98,7 +98,7 @@ const EditMatchStatsForm = ({
 
   return (
     <Form
-      formTitle={{ name: 'Match', formType: 'Edit' }}
+      formTitle={{ name: 'Match Stats', formType: 'Edit' }}
       fields={createMatchStatsField}
       currentInfo={currentInfo}
       errorCases={errorCases}
@@ -108,8 +108,7 @@ const EditMatchStatsForm = ({
       openForm={openEditMatchStatsForm}
       handleConfirm={handleConfirm}
     />
-
-  )
+  );
 };
 
 export default EditMatchStatsForm;

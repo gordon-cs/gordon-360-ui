@@ -23,6 +23,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { standardDate } from 'views/RecIM/components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 
 const RosterCard = ({
   participants,
@@ -56,7 +57,8 @@ const Match = () => {
   const [loading, setLoading] = useState(true);
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
-  const [openMatchForm, setOpenMatchForm] = useState(false);
+  const [openMatchInformationForm, setOpenMatchInformationForm] = useState(false);
+  const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
@@ -81,7 +83,7 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID, openMatchForm]);
+  }, [matchID, openMatchInformationForm]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   useEffect(() => {
@@ -99,9 +101,8 @@ const Match = () => {
     }
   }, [match]);
 
-  const handleMatchFormSubmit = (status, setOpenMatchForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenMatchForm(false);
+  const handleFormSubmit = (status, setOpenForm) => {
+    setOpenForm(false);
   };
 
   const handleClose = () => {
@@ -231,26 +232,11 @@ const Match = () => {
               ></img>
             </Grid>
           </Grid>
-          {user?.IsAdmin && (
-            <Grid item>
-              <IconButton onClick={handleSettingsClick}>
-                <SettingsIcon />
-              </IconButton>
-            </Grid>
-          )}
-          <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
-            <MenuItem
-              dense
-              onClick={() => {
-                setOpenMatchForm(true);
-              }}
-            >
-              Edit Match
-            </MenuItem>
-          </Menu>
         </Grid>
       </Grid>
     );
+
+    console.log(match);
 
     return (
       <>
@@ -291,10 +277,18 @@ const Match = () => {
               <MenuItem
                 dense
                 onClick={() => {
-                  setOpenMatchForm(true);
+                  setOpenEditMatchStatsForm(true);
                 }}
               >
-                Edit Match
+                Edit Match Stats
+              </MenuItem>
+              <MenuItem
+                dense
+                onClick={() => {
+                  setOpenMatchInformationForm(true);
+                }}
+              >
+                Edit Match Information
               </MenuItem>
               <MenuItem
                 dense
@@ -308,11 +302,19 @@ const Match = () => {
             </Menu>
             <MatchForm
               closeWithSnackbar={(status) => {
-                handleMatchFormSubmit(status, setOpenMatchForm);
+                handleFormSubmit(status, setOpenMatchInformationForm);
               }}
-              openMatchForm={openMatchForm}
-              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              openMatchInformationForm={openMatchInformationForm}
+              setOpenMatchInformationForm={(bool) => setOpenMatchInformationForm(bool)}
               match={match}
+            />
+            <EditMatchStatsForm
+              match={match}
+              closeWithSnackbar={(status) => {
+                handleFormSubmit(status, setOpenEditMatchStatsForm);
+              }}
+              openEditMatchStatsForm={openEditMatchStatsForm}
+              setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
             />
             <GordonDialogBox
               title="Confirm Delete"
