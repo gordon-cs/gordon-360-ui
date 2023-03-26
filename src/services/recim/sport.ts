@@ -21,6 +21,7 @@ type PatchSport = {
   Description: string;
   Rules: string;
   Logo: string;
+  IsLogoUpdate: boolean;
 };
 
 //Sport Routes
