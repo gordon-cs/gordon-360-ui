@@ -182,6 +182,7 @@ const Team = () => {
               callbackFunction={(bool) => setReload(bool)}
               showParticipantOptions
               showInactive
+              isAdmin={true}
             />
           ) : (
             <ParticipantList participants={team.Participant} />
