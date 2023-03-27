@@ -10,7 +10,6 @@ import {
   Tab,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
@@ -25,6 +24,7 @@ import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
+import userService from 'services/user';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -154,13 +154,18 @@ const Activity = () => {
   };
 
   const handleJoinActivity = async () => {
+    setLoading(true);
+    const { def: defaultImage, pref: preferredImage } = await userService.getImage(
+      profile.AD_Username,
+    );
+    const profileInfo = await userService.getProfileInfo(profile.AD_Username);
     const request = {
-      Name: profile.AD_Username,
+      Name: profileInfo.fullName,
       ActivityID: activityID,
-      Logo: null,
+      Logo: null, //preferredImage || defaultImage,
     };
-    console.log(profile.AD_Username, request);
     createTeam(profile.AD_Username, request).then((createdTeam) => {
+      setReload(!reload);
       // closeWithSnackbar(createdTeam.ID, {
       //   type: 'success',
       //   message: 'Activity joined successfully',
