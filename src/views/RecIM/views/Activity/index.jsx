@@ -395,6 +395,7 @@ const Activity = () => {
                 </Grid>
               </Grid>
             </Grid>
+
             {/* forms and dialogs */}
             <MatchForm
               closeWithSnackbar={(status) => {
@@ -436,17 +437,15 @@ const Activity = () => {
               soloTeam
               activityID={activityID}
             />
-            {openImageOptions && (
-              <ImageOptions
-                category={'Activity'}
-                component={activity}
-                closeWithSnackbar={(status) => {
-                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
-                }}
-                openImageOptions={openImageOptions}
-                setOpenImageOptions={setOpenImageOptions}
-              />
-            )}
+            <ImageOptions
+              category={'Activity'}
+              component={activity}
+              closeWithSnackbar={(status) => {
+                handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+              }}
+              openImageOptions={openImageOptions}
+              setOpenImageOptions={setOpenImageOptions}
+            />
             <GordonDialogBox
               title="Admin Settings"
               fullWidth

@@ -244,29 +244,6 @@ const Team = () => {
               {rosterCard}
             </Grid>
 
-            {openTeamForm && (
-              <TeamForm
-                closeWithSnackbar={(status) => {
-                  handleTeamForm(status);
-                }}
-                openTeamForm={openTeamForm}
-                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-                activityID={team?.Activity?.ID}
-                team={team}
-                isAdmin={user.IsAdmin}
-              />
-            )}
-            {openImageOptions && (
-              <ImageOptions
-                category={'Team'}
-                component={team}
-                closeWithSnackbar={(status) => {
-                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
-                }}
-                openImageOptions={openImageOptions}
-                setOpenImageOptions={setOpenImageOptions}
-              />
-            )}
             {/* forms and dialogs */}
             <TeamForm
               closeWithSnackbar={(status) => {
@@ -278,17 +255,15 @@ const Team = () => {
               team={team}
               isAdmin={user?.IsAdmin}
             />
-            {openImageOptions && (
-              <ImageOptions
-                category={'Team'}
-                component={team}
-                closeWithSnackbar={(status) => {
-                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
-                }}
-                openImageOptions={openImageOptions}
-                setOpenImageOptions={setOpenImageOptions}
-              />
-            )}
+            <ImageOptions
+              category={'Team'}
+              component={team}
+              closeWithSnackbar={(status) => {
+                handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+              }}
+              openImageOptions={openImageOptions}
+              setOpenImageOptions={setOpenImageOptions}
+            />
             <GordonDialogBox
               title="Admin Settings"
               fullWidth
