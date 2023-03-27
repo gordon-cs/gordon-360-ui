@@ -34,6 +34,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 import { TabPanel } from 'views/RecIM/components';
 import { Box } from '@mui/system';
+import { createTeam } from 'services/recim/team';
 
 const getNumMatches = (seriesArray) => {
   let n = 0;
@@ -150,6 +151,21 @@ const Activity = () => {
     setOpenSettings(false);
     navigate(`/recim`);
     // @TODO add snackbar
+  };
+
+  const handleJoinActivity = async () => {
+    const request = {
+      Name: profile.AD_Username,
+      ActivityID: activityID,
+      Logo: null,
+    };
+    console.log(profile.AD_Username, request);
+    createTeam(profile.AD_Username, request).then((createdTeam) => {
+      // closeWithSnackbar(createdTeam.ID, {
+      //   type: 'success',
+      //   message: 'Activity joined successfully',
+      // });
+    });
   };
 
   // profile hook used for future authentication
@@ -301,10 +317,10 @@ const Activity = () => {
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
                     onClick={() => {
-                      setOpenTeamForm(true);
+                      activity.SoloRegistration ? handleJoinActivity() : setOpenTeamForm(true);
                     }}
                   >
-                    Create a Team
+                    {activity.SoloRegistration ? 'Join Activity' : 'Create a Team'}
                   </Button>
                 </Grid>
               </Grid>
