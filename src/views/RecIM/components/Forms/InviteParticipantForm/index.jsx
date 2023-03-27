@@ -57,8 +57,8 @@ const InviteParticipantForm = ({
         RoleTypeID: 2,
       };
 
-      // if creating a solo team, create the team first
       if (soloTeam) {
+        // if creating a solo team, create the team first
         const username = inviteList[index].Username;
         const profileInfo = await userService.getProfileInfo(username);
         const request = {
@@ -66,6 +66,7 @@ const InviteParticipantForm = ({
           ActivityID: activityID,
         };
         createTeam(username, request).then((team) => {
+          // add the participant to the team and then remove the admin's default participation
           addParticipantToTeam(team.ID, participantData);
           deleteTeamParticipant(team.ID, profile.AD_Username);
         });
