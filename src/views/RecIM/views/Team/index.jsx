@@ -139,7 +139,7 @@ const Team = () => {
           <Grid item>
             <Typography variant="h5" className={styles.title}>
               {team?.Name ?? <GordonLoader size={15} inline />}
-              {hasPermissions && (
+              {hasPermissions && !team?.Activity.SoloRegistration && (
                 <IconButton
                   onClick={() => {
                     setOpenTeamForm(true);
