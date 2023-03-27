@@ -195,7 +195,7 @@ const MatchForm = ({
 
   return (
     <Form
-      formTitle={{ name: 'Match', formType: match ? 'Edit' : 'Create' }}
+      formTitles={{ name: 'Match', formType: match ? 'Edit' : 'Create' }}
       fields={createMatchFields}
       currentInfo={currentInfo}
       errorCases={errorCases}

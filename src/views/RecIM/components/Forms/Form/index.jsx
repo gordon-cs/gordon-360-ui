@@ -8,7 +8,7 @@ import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
 
 const Form = ({
-  formTitle,
+  formTitles,
   fields,
   currentInfo,
   errorCases,
@@ -19,6 +19,8 @@ const Form = ({
   handleConfirm,
   additionalContent,
   additionCancelActions,
+  newInfoCallback,
+  showSubmitButton = true,
 }) => {
   const allFields = [
     fields,
@@ -78,7 +80,11 @@ const Form = ({
           event.target.type === 'checkbox' ? event.target.checked : event.target.value,
       };
     };
-    setNewInfo(getNewInfo);
+    let tempNewInfo = getNewInfo(newInfo);
+    if (newInfoCallback) {
+      newInfoCallback(tempNewInfo);
+    }
+    setNewInfo(tempNewInfo);
   };
 
   const getFieldLabel = (fieldName) => {
@@ -129,20 +135,40 @@ const Form = ({
     ));
   };
 
-  let content;
-  if (loading) {
-    content = <GordonLoader />;
-  } else {
-    content = (
-      <>
-        <ContentCard title={`${formTitle.name} Information`}>
-          {additionalContent}
-          {mapFieldsToInputs(fields)}
-        </ContentCard>
+  return (
+    <GordonDialogBox
+      open={openForm}
+      title={`${formTitles.formType} ${formTitles.name}`}
+      fullWidth
+      maxWidth="lg"
+      buttonClicked={
+        showSubmitButton
+          ? () => {
+              // This will submit the data and close the window if we do not allow open confirm
+              setOpenConfirmWindow(true);
+            }
+          : null
+      }
+      isButtonDisabled={disableUpdateButton}
+      buttonName={'Submit'}
+      cancelButtonClicked={() => {
+        setNewInfo(currentInfo);
+        setOpenForm(false);
+        if (additionCancelActions) {
+          additionCancelActions();
+        }
+      }}
+      cancelButtonName={showSubmitButton ? 'cancel' : 'close'}
+    >
+      <ContentCard title={`${formTitles.name} Information`}>
+        {additionalContent}
+        {loading ? <GordonLoader /> : mapFieldsToInputs(fields)}
+      </ContentCard>
 
+      {!loading && (
         <GordonDialogBox
           open={openConfirmWindow}
-          title={`Confirm Your ${formTitle.name}`}
+          title={`Confirm Your ${formTitles.name}`}
           buttonClicked={() => {
             !isSaving && handleConfirm(newInfo, handleWindowClose, setSaving);
           }}
@@ -162,31 +188,7 @@ const Form = ({
           </Grid>
           {isSaving && <GordonLoader size={32} />}
         </GordonDialogBox>
-      </>
-    );
-  }
-
-  return (
-    <GordonDialogBox
-      open={openForm}
-      title={`${formTitle.formType} ${formTitle.name}`}
-      fullWidth
-      maxWidth="lg"
-      buttonClicked={() => {
-        setOpenConfirmWindow(true);
-      }}
-      isButtonDisabled={disableUpdateButton}
-      buttonName="Submit"
-      cancelButtonClicked={() => {
-        setNewInfo(currentInfo);
-        setOpenForm(false);
-        if (additionCancelActions) {
-          additionCancelActions();
-        }
-      }}
-      cancelButtonName="cancel"
-    >
-      {content}
+      )}
     </GordonDialogBox>
   );
 };

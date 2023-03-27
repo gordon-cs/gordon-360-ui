@@ -1,9 +1,13 @@
+import { Box } from '@mui/system';
+import { Tabs, Tab } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
 import { getMatchTeamStatusTypes, updateMatchStats } from 'services/recim/match';
 import Form from '../Form';
+import styles from './EditMatchStatsForm.module.css';
 
 const EditMatchStatsForm = ({
   match,
+  setMatch,
   closeWithSnackbar,
   openEditMatchStatsForm,
   setOpenEditMatchStatsForm,
@@ -16,6 +20,7 @@ const EditMatchStatsForm = ({
   const [loading, setLoading] = useState(true);
   const [matchStatus, setMatchStatus] = useState([]);
   const [targetTeamID, setTargetTeamID] = useState(match.Team[0].ID);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   useEffect(() => {
     const loadData = async () => {
@@ -25,6 +30,19 @@ const EditMatchStatsForm = ({
     };
     loadData();
   }, []);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [targetTeamID]);
+
+  const newInfoCallback = (newInfo) => {
+    let teamIndex = match.Scores.findIndex((value) => value.TeamID === newInfo.TeamID);
+    let scores = match.Scores;
+    scores[teamIndex].TeamScore = newInfo.Score;
+    scores[teamIndex].SportsmanshipScore = newInfo.SportsmanshipScore;
+    scores[teamIndex].Status = newInfo.StatusID;
+    setMatch({ ...match, scores });
+  };
 
   const createMatchStatsField = [
     {
@@ -80,6 +98,28 @@ const EditMatchStatsForm = ({
     }
   };
 
+  const navigationContent = (
+    <>
+      <Box className={styles.scrollableCenteredTabs} mt={1}>
+        <Tabs
+          value={selectedTab}
+          onChange={(event, tabIndex) => {
+            setLoading(true);
+            setSelectedTab(tabIndex);
+            setTargetTeamID(match.Team[tabIndex].ID);
+          }}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="team name edit stats tabs"
+        >
+          {match.Team.map((team) => {
+            return <Tab disabled={Object.values(errorStatus).includes(true)} label={team.Name} />;
+          })}
+        </Tabs>
+      </Box>
+    </>
+  );
+
   const handleConfirm = (newInfo, handleWindowClose, setSaving) => {
     setSaving(true);
     let matchStatsRequest = { ...currentInfo, ...newInfo };
@@ -98,7 +138,7 @@ const EditMatchStatsForm = ({
 
   return (
     <Form
-      formTitle={{ name: 'Match Stats', formType: 'Edit' }}
+      formTitles={{ name: 'Match Stats', formType: 'Edit' }}
       fields={createMatchStatsField}
       currentInfo={currentInfo}
       errorCases={errorCases}
@@ -107,6 +147,9 @@ const EditMatchStatsForm = ({
       setOpenForm={setOpenEditMatchStatsForm}
       openForm={openEditMatchStatsForm}
       handleConfirm={handleConfirm}
+      additionalContent={navigationContent}
+      newInfoCallback={newInfoCallback}
+      showSubmitButton={false}
     />
   );
 };

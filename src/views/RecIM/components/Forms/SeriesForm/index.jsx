@@ -190,7 +190,7 @@ const SeriesForm = ({
 
   return (
     <Form
-      formTitle={{ name: 'Series', formType: series ? 'Edit' : 'Create' }}
+      formTitles={{ name: 'Series', formType: series ? 'Edit' : 'Create' }}
       fields={createSeriesFields}
       currentInfo={currentInfo}
       errorCases={errorCases}

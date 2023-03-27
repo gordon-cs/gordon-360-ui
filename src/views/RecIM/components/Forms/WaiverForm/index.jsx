@@ -116,7 +116,7 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
 
   return (
     <Form
-      formTitle={{ name: 'Activity', formType: 'Form' }}
+      formTitles={{ name: 'Activity', formType: 'Form' }}
       fields={waiverFields}
       currentInfo={currentInfo}
       errorCases={errorCases}

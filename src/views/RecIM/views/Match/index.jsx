@@ -236,8 +236,6 @@ const Match = () => {
       </Grid>
     );
 
-    console.log(match);
-
     return (
       <>
         <Header match={match}>{headerContents}</Header>
@@ -310,6 +308,7 @@ const Match = () => {
             />
             <EditMatchStatsForm
               match={match}
+              setMatch={setMatch}
               closeWithSnackbar={(status) => {
                 handleFormSubmit(status, setOpenEditMatchStatsForm);
               }}

@@ -113,7 +113,7 @@ const TeamForm = ({
 
   return (
     <Form
-      formTitle={{ name: 'Team', formType: team ? 'Edit' : 'Create' }}
+      formTitles={{ name: 'Team', formType: team ? 'Edit' : 'Create' }}
       fields={createTeamFields}
       currentInfo={currentInfo}
       errorCases={errorCases}
