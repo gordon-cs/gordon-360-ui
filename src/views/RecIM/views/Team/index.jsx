@@ -123,7 +123,7 @@ const Team = () => {
           <Grid item>
             <Button
               className={styles.logoContainer}
-              disabled={!hasPermissions}
+              disabled={!hasPermissions || team?.Activity.SoloRegistration}
               onClick={() => {
                 setOpenImageOptions(true);
               }}
