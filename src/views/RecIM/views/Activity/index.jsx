@@ -36,6 +36,7 @@ import defaultLogo from 'views/RecIM/recim_logo.png';
 import { TabPanel } from 'views/RecIM/components';
 import { Box } from '@mui/system';
 import { createTeam } from 'services/recim/team';
+import InviteParticipantForm from 'views/RecIM/components/Forms/InviteParticipantForm';
 
 const getNumMatches = (seriesArray) => {
   let n = 0;
@@ -56,6 +57,7 @@ const Activity = () => {
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openImageOptions, setOpenImageOptions] = useState(false);
+  const [openAddSoloTeam, setOpenAddSoloTeam] = useState(false);
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
@@ -310,7 +312,7 @@ const Activity = () => {
           {canCreateTeam && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={12}>
-                <Grid container justifyContent="center">
+                <Grid container justifyContent="space-around">
                   <Button
                     variant="contained"
                     color="warning"
@@ -322,6 +324,19 @@ const Activity = () => {
                   >
                     {activity.SoloRegistration ? 'Join Activity' : 'Create a Team'}
                   </Button>
+                  {activity.SoloRegistration && isAdmin && (
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      startIcon={<AddCircleRoundedIcon />}
+                      className={styles.actionButton}
+                      onClick={() => {
+                        setOpenAddSoloTeam(true);
+                      }}
+                    >
+                      Add Participant
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </Grid>
@@ -405,6 +420,20 @@ const Activity = () => {
               }}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
+              activityID={activityID}
+            />
+            <InviteParticipantForm
+              closeWithSnackbar={(status) => {
+                setReload(!reload);
+                setSnackbar({
+                  message: 'Added participant successfully',
+                  severity: 'success',
+                  open: true,
+                });
+              }}
+              openInviteParticipantForm={openAddSoloTeam}
+              setOpenInviteParticipantForm={(bool) => setOpenAddSoloTeam(bool)}
+              soloTeam
               activityID={activityID}
             />
             {openImageOptions && (

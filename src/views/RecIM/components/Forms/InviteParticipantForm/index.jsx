@@ -4,17 +4,22 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { ParticipantList } from './../../List';
 import GordonQuickSearch from 'components/Header/components/QuickSearch';
 import GordonSnackbar from 'components/Snackbar';
-import { addParticipantToTeam } from 'services/recim/team';
+import { addParticipantToTeam, createTeam, deleteTeamParticipant } from 'services/recim/team';
 import { useCallback } from 'react';
 import GordonLoader from 'components/Loader';
 import styles from './InviteParticipantForm.module.css';
+import userService from 'services/user';
+import { useUser } from 'hooks';
 
 const InviteParticipantForm = ({
   closeWithSnackbar,
   openInviteParticipantForm,
   setOpenInviteParticipantForm,
   teamID,
+  soloTeam,
+  activityID,
 }) => {
+  const { profile } = useUser();
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
   const [inviteList, setInviteList] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
@@ -51,13 +56,29 @@ const InviteParticipantForm = ({
         Username: inviteList[index].Username,
         RoleTypeID: 2,
       };
-      await addParticipantToTeam(teamID, participantData);
+
+      // if creating a solo team, create the team first
+      if (soloTeam) {
+        const username = inviteList[index].Username;
+        const profileInfo = await userService.getProfileInfo(username);
+        const request = {
+          Name: profileInfo.fullName,
+          ActivityID: activityID,
+        };
+        createTeam(username, request).then((team) => {
+          addParticipantToTeam(team.ID, participantData);
+          deleteTeamParticipant(team.ID, profile.AD_Username);
+        });
+      } else {
+        await addParticipantToTeam(teamID, participantData);
+      }
     }
     setSaving(false);
     handleWindowClose();
   };
 
   const handleWindowClose = () => {
+    closeWithSnackbar();
     setOpenInviteParticipantForm(false);
     setInviteList([]);
   };
