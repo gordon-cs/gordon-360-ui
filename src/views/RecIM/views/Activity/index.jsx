@@ -15,6 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Activity.module.css';
 import { TeamList } from '../../components/List';
@@ -63,6 +64,7 @@ const Activity = () => {
   const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   useEffect(() => {
     const loadData = async () => {
@@ -160,12 +162,9 @@ const Activity = () => {
       Name: profileInfo.fullName,
       ActivityID: activityID,
     };
-    createTeam(profile.AD_Username, request).then((createdTeam) => {
+    createTeam(profile.AD_Username, request).then(() => {
       setReload(!reload);
-      // closeWithSnackbar(createdTeam.ID, {
-      //   type: 'success',
-      //   message: 'Activity joined successfully',
-      // });
+      setSnackbar({ message: 'Activity joined successfully', severity: 'success', open: true });
     });
   };
 
@@ -462,6 +461,12 @@ const Activity = () => {
               </Typography>
               <Typography variant="body1">This action cannot be undone.</Typography>
             </GordonDialogBox>
+            <GordonSnackbar
+              open={snackbar.open}
+              text={snackbar.message}
+              severity={snackbar.severity}
+              onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+            />
           </Grid>
         )}
       </>
