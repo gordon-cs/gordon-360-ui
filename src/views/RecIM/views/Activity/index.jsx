@@ -155,14 +155,10 @@ const Activity = () => {
 
   const handleJoinActivity = async () => {
     setLoading(true);
-    const { def: defaultImage, pref: preferredImage } = await userService.getImage(
-      profile.AD_Username,
-    );
     const profileInfo = await userService.getProfileInfo(profile.AD_Username);
     const request = {
       Name: profileInfo.fullName,
       ActivityID: activityID,
-      Logo: `data:image/jpg;base64, ${preferredImage || defaultImage}`,
     };
     createTeam(profile.AD_Username, request).then((createdTeam) => {
       setReload(!reload);
