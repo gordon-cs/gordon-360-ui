@@ -162,7 +162,7 @@ const Activity = () => {
     const request = {
       Name: profileInfo.fullName,
       ActivityID: activityID,
-      Logo: null, //preferredImage || defaultImage,
+      Logo: `data:image/jpg;base64, ${preferredImage || defaultImage}`,
     };
     createTeam(profile.AD_Username, request).then((createdTeam) => {
       setReload(!reload);
