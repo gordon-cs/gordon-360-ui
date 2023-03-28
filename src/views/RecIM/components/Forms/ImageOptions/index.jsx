@@ -37,7 +37,7 @@ const ImageOptions = ({
 
   // load ImageOptions
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
     loadImageOptions().then(() => setLoading(false));
   }, []);
 
