@@ -561,6 +561,12 @@ const ParticipantListing = ({
 const MatchListing = ({ match, activityID }) => {
   if (!match) return null;
   if (match.Team?.length === 2) {
+    const team0Score = match.Scores?.find(
+      (matchTeam) => matchTeam.TeamID === match.Team[0]?.ID,
+    )?.TeamScore;
+    const team1Score = match.Scores?.find(
+      (matchTeam) => matchTeam.TeamID === match.Team[1]?.ID,
+    )?.TeamScore;
     return (
       <ListItem key={match.ID} className={styles.listingWrapper}>
         <ListItemButton
@@ -576,7 +582,7 @@ const MatchListing = ({ match, activityID }) => {
             )}
             <Grid item container>
               <Grid item xs={4.5}>
-                <Typography className={styles.listingTitle}>
+                <Typography className={team0Score > team1Score && styles.matchWinner}>
                   {match.Team[0]?.Name ?? <i>TBD</i>}
                 </Typography>
               </Grid>
@@ -585,9 +591,8 @@ const MatchListing = ({ match, activityID }) => {
                 {match.Status === 'Completed' ? (
                   <Grid container direction="row">
                     <Grid item xs={5} textAlign="right">
-                      <Typography>
-                        {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
-                          ?.TeamScore ?? 'TBD'}
+                      <Typography sx={team0Score > team1Score && { fontWeight: 'bold' }}>
+                        {team0Score ?? 'TBD'}
                       </Typography>
                     </Grid>
 
@@ -595,10 +600,7 @@ const MatchListing = ({ match, activityID }) => {
                       <Typography>{':'}</Typography>{' '}
                     </Grid>
                     <Grid item xs={5} textAlign="left">
-                      <Typography>
-                        {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[1]?.ID)
-                          ?.TeamScore ?? 'TBD'}
-                      </Typography>
+                      <Typography>{team1Score ?? 'TBD'}</Typography>
                     </Grid>
                   </Grid>
                 ) : match.Status === 'Forfeited' ? (
@@ -608,7 +610,7 @@ const MatchListing = ({ match, activityID }) => {
                 )}
               </Grid>
               <Grid item xs={4.5} textAlign="right">
-                <Typography className={styles.listingTitle}>
+                <Typography className={team1Score > team0Score && styles.matchWinner}>
                   {match.Team[1]?.Name ?? <i>TBD</i>}
                 </Typography>
               </Grid>
