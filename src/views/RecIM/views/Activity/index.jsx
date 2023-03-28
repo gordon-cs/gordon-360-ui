@@ -164,10 +164,10 @@ const Activity = () => {
       Name: profileInfo.fullName,
       ActivityID: activityID,
     };
-    createTeam(profile.AD_Username, request).then(() => {
-      setReload(!reload);
-      setSnackbar({ message: 'Activity joined successfully', severity: 'success', open: true });
-    });
+    await createTeam(profile.AD_Username, request);
+    setReload(!reload);
+    setSnackbar({ message: 'Activity joined successfully', severity: 'success', open: true });
+    setLoading(false);
   };
 
   // profile hook used for future authentication
