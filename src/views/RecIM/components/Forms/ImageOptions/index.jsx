@@ -37,24 +37,23 @@ const ImageOptions = ({
 
   // load ImageOptions
   useEffect(() => {
-    const loadImageOptions2 = async () => {
-      setLoading(true);
-      await loadImageOptions();
-      setLoading(false);
-    };
-    loadImageOptions2();
+    setLoading(true);
+    loadImageOptions().then(() => setLoading(false));
   }, []);
 
-  const loadImageOptions = async () => {
-    let dataURL = component?.Logo ?? defaultLogo;
-    let i = new Image();
-    i.onload = () => {
-      let aRatio = i.width / i.height;
-      setImageWidth(CROPPER_WIDTH);
-      setImageHeight(CROPPER_WIDTH / aRatio);
-      setCropperImageData(dataURL);
-    };
-    i.src = dataURL;
+  const loadImageOptions = () => {
+    return new Promise((resolve, reject) => {
+      let dataURL = component?.Logo ?? defaultLogo;
+      let i = new Image();
+      i.onload = () => {
+        let aRatio = i.width / i.height;
+        setImageWidth(CROPPER_WIDTH);
+        setImageHeight(CROPPER_WIDTH / aRatio);
+        setCropperImageData(dataURL);
+        resolve();
+      };
+      i.src = dataURL;
+    });
   };
 
   const handleWindowClose = () => {
@@ -318,7 +317,7 @@ const ImageOptions = ({
                   color="primary"
                   onClick={() => {
                     loadImageOptions();
-                    setShowCropper();
+                    setShowCropper(null);
                   }}
                   className="gc360_photo_dialog_box_content_button"
                 >
