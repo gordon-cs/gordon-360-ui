@@ -7,12 +7,25 @@ import { windowBreakWidths } from 'theme';
 const RecIMBreadcrumb = ({ link, children }) => {
   if (link) {
     return (
-      <LinkRouter className="gc360_text_link" underline="hover" color="inherit" to={link}>
+      <LinkRouter
+        className={`${styles.breadcrumbText} gc360_text_link`}
+        underline="hover"
+        color="inherit"
+        to={link}
+      >
         {children}
       </LinkRouter>
     );
   }
-  return <Typography color="text.primary">{children}</Typography>;
+  return (
+    <Typography color="text.primary" className={styles.breadcrumbText}>
+      {children}
+    </Typography>
+  );
+};
+
+const truncate = (str) => {
+  return str.length > 10 ? str.substring(0, 5) + '...' : str;
 };
 
 const Header = ({ match, team, activity, admin, children }) => {
@@ -41,9 +54,9 @@ const Header = ({ match, team, activity, admin, children }) => {
           {match && (
             <RecIMBreadcrumb>
               {largeWidth
-                ? `Match: ${match?.Team[0]?.Name ?? <i>TBD</i>} vs{' '}
+                ? `Match: ${match?.Team[0]?.Name ?? <i>TBD</i>} vs 
               ${match?.Team[1]?.Name ?? <i>TBD</i>}`
-                : `Match`}
+                : `Match: ${truncate(match?.Team[0].Name)} vs ${truncate(match?.Team[1].Name)}`}
             </RecIMBreadcrumb>
           )}
           {/* Admin breadcrumb */}
