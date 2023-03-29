@@ -79,9 +79,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const isCampusLocationPrivate = isStudent && keepPrivate && profile.OnOffCampus !== PRIVATE_INFO;
 
   // Students' home phone is always private. FacStaffs' home phone is private for private users
-  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(
-    (isStudent || keepPrivate) && Boolean(profile.HomePhone),
-  );
+  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(isStudent || keepPrivate);
 
   // Street address info is always private, and City/State/Country info is private for private users
   const isAddressPrivate =
@@ -116,6 +114,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   const handleChangeHomePhonePrivacy = async () => {
     try {
+      // this user service currently sets mobile_privacy to true or false - same as setMobilePhonePrivacy, which is NOT optimal or sensical. See user.ts
       await userService.setHomePhonePrivacy(!isHomePhonePrivate);
       setIsHomePhonePrivate(!isHomePhonePrivate);
 
@@ -501,6 +500,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </Grid>
           <Grid item xs={4} align="right">
             {/* visible only for fac/staff on their profile */}
+            {/* isHomePhonePrivate is a misleading name for determining if personal information should be shown */}
             {isFacStaff && myProf ? (
               <FormControlLabel
                 control={

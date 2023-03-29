@@ -22,13 +22,10 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
-import {
-  deleteTeamParticipant,
-  editTeamParticipant,
-  respondToTeamInvite,
-} from 'services/recim/team';
+import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 import { getActivityTypes, isActivityRegisterable } from 'services/recim/activity';
 import { removeAttendance, updateAttendance } from 'services/recim/match';
+import { getParticipantAttendanceCountForTeam } from 'services/recim/team';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
@@ -390,6 +387,7 @@ const ParticipantListing = ({
   const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
+  const [attendanceCount, setAttendanceCount] = useState();
 
   const handleClickOff = () => {
     setAnchorEl(null);
@@ -415,9 +413,13 @@ const ParticipantListing = ({
         setName(profileInfo.fullName);
       }
     };
+    const loadAttendanceCount = async () => {
+      setAttendanceCount(await getParticipantAttendanceCountForTeam(teamID, participant.Username));
+    };
     loadUserInfo();
     loadAvatar();
-  }, [participant.Username]);
+    if (teamID && withAttendance) loadAttendanceCount();
+  }, [participant.Username, teamID, withAttendance]);
 
   const handleParticipantOptions = (event) => {
     setAnchorEl(event.currentTarget);
@@ -494,20 +496,27 @@ const ParticipantListing = ({
               </IconButton>
             )}
             {withAttendance && (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="secondary"
-                    inputProps={{ 'aria-label': 'attendance toggle' }}
-                    defaultChecked={initialAttendance}
-                    onChange={(event) => handleAttendance(event.target.checked)}
-                    disabled={!isAdmin}
-                  />
-                }
-                label={didAttend ? 'Present' : <i>Absent</i>}
-                labelPlacement="start"
-                className={!didAttend && styles.listingSubtitle}
-              />
+              <>
+                {isAdmin && (
+                  <Typography className={styles.listingSubtitle}>
+                    attended {attendanceCount} match{attendanceCount !== 1 && `es`}
+                  </Typography>
+                )}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="secondary"
+                      inputProps={{ 'aria-label': 'attendance toggle' }}
+                      defaultChecked={initialAttendance}
+                      onChange={(event) => handleAttendance(event.target.checked)}
+                      disabled={!isAdmin}
+                    />
+                  }
+                  label={didAttend ? 'Present' : <i>Absent</i>}
+                  labelPlacement="start"
+                  className={!didAttend && styles.listingSubtitle}
+                />
+              </>
             )}
           </>
         }
