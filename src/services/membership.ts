@@ -1,10 +1,10 @@
 import http from './http';
 
 export type MembershipView = {
+  ActivityType: 'LEA' | 'MIN' | 'RES';
   AccountPrivate: Privacy | null;
   ActivityCode: string;
   ActivityDescription: string;
-  ActivityImage: string;
   ActivityImagePath: string;
   Description: string;
   EndDate: string;
@@ -100,7 +100,7 @@ const getMembershipCount = (queryParams: {
   activityCode?: string;
   username?: string;
   sessionCode?: string;
-  participationTypes?: Participation[];
+  participationTypes?: Participation[] | Participation;
 }): Promise<number> => http.get(`memberships/count${http.toQueryString(queryParams)}`);
 
 const getMembersNum = (involvementCode: string, sessionCode: string): Promise<number> =>
@@ -114,7 +114,7 @@ const getFollowersNum = (involvementCode: string, sessionCode: string): Promise<
   getMembershipCount({
     activityCode: involvementCode,
     sessionCode,
-    participationTypes: [Participation.Guest],
+    participationTypes: Participation.Guest,
   });
 
 const membershipService = {
