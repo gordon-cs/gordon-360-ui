@@ -16,7 +16,7 @@ const InviteParticipantForm = ({
   openInviteParticipantForm,
   setOpenInviteParticipantForm,
   teamID,
-  soloTeam,
+  individualSport,
   activityID,
 }) => {
   const { profile } = useUser();
@@ -57,8 +57,8 @@ const InviteParticipantForm = ({
         RoleTypeID: 2,
       };
 
-      if (soloTeam) {
-        // if creating a solo team, create the team first
+      if (individualSport) {
+        // if inviting a participant to an individual sport activity, create the team first
         const username = inviteList[index].Username;
         const profileInfo = await userService.getProfileInfo(username);
         const request = {
