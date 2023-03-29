@@ -110,7 +110,7 @@ const Team = () => {
   };
 
   // default closure
-  const handleClose = () => {
+  const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
@@ -312,16 +312,31 @@ const Team = () => {
               setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
               teamID={teamID}
             />
-            <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl} className={styles.menu}>
+            <Menu
+              open={openMenu}
+              onClose={handleMenuClose}
+              anchorEl={anchorEl}
+              className={styles.menu}
+            >
               <Typography className={styles.menuTitle}>
                 {user?.IsAdmin ? 'Admin' : 'Captain'} Settings
               </Typography>
-              <MenuItem dense onClick={() => setOpenTeamForm(true)} className={styles.menuButton}>
+              <MenuItem
+                dense
+                onClick={() => {
+                  setOpenTeamForm(true);
+                  handleMenuClose();
+                }}
+                className={styles.menuButton}
+              >
                 Edit Team Details
               </MenuItem>
               <MenuItem
                 dense
-                onClick={() => setOpenInviteParticipantForm(true)}
+                onClick={() => {
+                  setOpenInviteParticipantForm(true);
+                  handleMenuClose();
+                }}
                 className={styles.menuButton}
               >
                 Invite a Participant
@@ -329,7 +344,10 @@ const Team = () => {
               {user?.IsAdmin && (
                 <MenuItem
                   dense
-                  onClick={() => setOpenConfirmDelete(true)}
+                  onClick={() => {
+                    setOpenConfirmDelete(true);
+                    handleMenuClose();
+                  }}
                   className={styles.redButton}
                 >
                   Delete

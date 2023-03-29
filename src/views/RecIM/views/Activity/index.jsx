@@ -60,7 +60,6 @@ const Activity = () => {
   const [canCreateTeam, setCanCreateTeam] = useState(true);
   const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
   const [reload, setReload] = useState(false);
-  const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
@@ -150,13 +149,12 @@ const Activity = () => {
   const handleDelete = async () => {
     await deleteActivity(activityID);
     setOpenConfirmDelete(false);
-    setOpenSettings(false);
     navigate(`/recim`);
     // @TODO add snackbar
   };
 
   // default closure
-  const handleClose = () => {
+  const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
@@ -228,16 +226,6 @@ const Activity = () => {
               />
             </IconButton>
           </Grid>
-        )}
-        {openActivityForm && (
-          <ActivityForm
-            activity={activity}
-            closeWithSnackbar={(status) => {
-              handleActivityForm(status);
-            }}
-            openActivityForm={openActivityForm}
-            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
-          />
         )}
       </Grid>
     );
@@ -377,6 +365,15 @@ const Activity = () => {
               </Grid>
             </Grid>
             {/* forms and dialogs */}
+
+            <ActivityForm
+              activity={activity}
+              closeWithSnackbar={(status) => {
+                handleActivityForm(status);
+              }}
+              openActivityForm={openActivityForm}
+              setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
+            />
             <MatchForm
               closeWithSnackbar={(status) => {
                 handleMatchFormSubmit(status, setOpenMatchForm);
@@ -414,18 +411,29 @@ const Activity = () => {
                 setOpenImageOptions={setOpenImageOptions}
               />
             )}
-            <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl} className={styles.menu}>
+            <Menu
+              open={openMenu}
+              onClose={handleMenuClose}
+              anchorEl={anchorEl}
+              className={styles.menu}
+            >
               <Typography className={styles.menuTitle}>Admin Settings</Typography>
               <MenuItem
                 dense
-                onClick={() => setOpenActivityForm(true)}
+                onClick={() => {
+                  setOpenActivityForm(true);
+                  handleMenuClose();
+                }}
                 className={styles.menuButton}
               >
                 Edit Activity Details
               </MenuItem>
               <MenuItem
                 dense
-                onClick={() => setOpenConfirmDelete(true)}
+                onClick={() => {
+                  setOpenConfirmDelete(true);
+                  handleMenuClose();
+                }}
                 className={styles.redButton}
               >
                 Delete
