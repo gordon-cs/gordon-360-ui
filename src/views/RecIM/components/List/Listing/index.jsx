@@ -535,7 +535,7 @@ const ParticipantListing = ({
               variant="rounded"
             ></Avatar>
           </ListItemAvatar>
-          <ListItemText primary={name} secondary={participant.Role} />
+          <ListItemText primary={participant.Username} secondary={participant.Role} />
         </ListItemButton>
         {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>

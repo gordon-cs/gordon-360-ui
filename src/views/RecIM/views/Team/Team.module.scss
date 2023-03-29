@@ -112,3 +112,23 @@
 .logo:hover {
   transform: scale(1.02);
 }
+
+.menuTitle {
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+  color: $neutral-gray;
+  text-align: center;
+}
+
+.menuButton:hover {
+  background-color: $neutral-black-opacity10;
+}
+
+.redButton {
+  background-color: $secondary-red;
+  color: $neutral-white;
+}
+
+.redButton:hover {
+  background-color: $alternative-red;
+}

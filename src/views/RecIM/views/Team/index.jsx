@@ -1,4 +1,15 @@
-import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  IconButton,
+  Menu,
+  MenuItem,
+  Divider,
+} from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Team.module.css';
@@ -13,7 +24,6 @@ import { ParticipantList, MatchList } from '../../components/List';
 import { getTeamByID, deleteTeam } from 'services/recim/team';
 import { getParticipantByUsername } from 'services/recim/participant';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
@@ -28,7 +38,6 @@ const Team = () => {
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openImageOptions, setOpenImageOptions] = useState(false);
-  const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
@@ -36,6 +45,9 @@ const Team = () => {
     //if you want to do something with the message make a snackbar function here
     setOpenInviteParticipantForm(false);
   };
+  const [anchorEl, setAnchorEl] = useState();
+  const openMenu = Boolean(anchorEl);
+
   useEffect(() => {
     const loadTeamData = async () => {
       setLoading(true);
@@ -93,9 +105,18 @@ const Team = () => {
   const handleDelete = async () => {
     await deleteTeam(teamID);
     setOpenConfirmDelete(false);
-    setOpenSettings(false);
     navigate(`/recim/activity/${team.Activity.ID}`);
     // @TODO add snackbar
+  };
+
+  // default closure
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  // menu button click
+  const handleButtonClick = (e) => {
+    setAnchorEl(e.currentTarget);
   };
 
   if (!profile) {
@@ -123,30 +144,29 @@ const Team = () => {
           <Grid item>
             <Typography variant="h5" className={styles.title}>
               {team?.Name ?? <GordonLoader size={15} inline />}
-              {hasPermissions && (
-                <IconButton
-                  onClick={() => {
-                    setOpenTeamForm(true);
-                  }}
-                  className={styles.editIconButton}
-                  sx={{ ml: 1 }}
-                >
-                  <EditIcon />
-                </IconButton>
-              )}
             </Typography>
             {teamRecord()}
           </Grid>
         </Grid>
-        {user?.IsAdmin && (
+        {hasPermissions && (
           <Grid item xs={3} textAlign={'right'}>
-            <IconButton
-              onClick={() => {
-                setOpenSettings(true);
-              }}
-              sx={{ mr: '1rem' }}
-            >
-              <SettingsIcon fontSize="large" />
+            <IconButton onClick={handleButtonClick} sx={{ mr: '1rem' }}>
+              <SettingsIcon
+                fontSize="large"
+                sx={
+                  openMenu && {
+                    animation: 'spin 0.2s linear ',
+                    '@keyframes spin': {
+                      '0%': {
+                        transform: 'rotate(360deg)',
+                      },
+                      '100%': {
+                        transform: 'rotate(240deg)',
+                      },
+                    },
+                  }
+                }
+              />
             </IconButton>
           </Grid>
         )}
@@ -188,14 +208,6 @@ const Team = () => {
             <ParticipantList participants={team.Participant} />
           )}
         </CardContent>
-        <InviteParticipantForm
-          closeWithSnackbar={(status) => {
-            handleInviteParticipantForm(status);
-          }}
-          openInviteParticipantForm={openInviteParticipantForm}
-          setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
-          teamID={teamID}
-        />
       </Card>
     );
 
@@ -274,29 +286,6 @@ const Team = () => {
               />
             )}
             <GordonDialogBox
-              title="Admin Settings"
-              fullWidth
-              open={openSettings}
-              cancelButtonClicked={() => setOpenSettings(false)}
-              cancelButtonName="Close"
-            >
-              <br />
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
-                  <Typography>Permanently delete the team '{team.Name}'</Typography>
-                </Grid>
-                <Grid item>
-                  <Button
-                    color="error"
-                    variant="contained"
-                    onClick={() => setOpenConfirmDelete(true)}
-                  >
-                    Delete this team
-                  </Button>
-                </Grid>
-              </Grid>
-            </GordonDialogBox>
-            <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}
               cancelButtonClicked={() => setOpenConfirmDelete(false)}
@@ -315,6 +304,38 @@ const Team = () => {
               </Typography>
               <Typography variant="body1">This action cannot be undone.</Typography>
             </GordonDialogBox>
+            <InviteParticipantForm
+              closeWithSnackbar={(status) => {
+                handleInviteParticipantForm(status);
+              }}
+              openInviteParticipantForm={openInviteParticipantForm}
+              setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
+              teamID={teamID}
+            />
+            <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl} className={styles.menu}>
+              <Typography className={styles.menuTitle}>
+                {user?.IsAdmin ? 'Admin' : 'Captain'} Settings
+              </Typography>
+              <MenuItem dense onClick={() => setOpenTeamForm(true)} className={styles.menuButton}>
+                Edit Team Details
+              </MenuItem>
+              <MenuItem
+                dense
+                onClick={() => setOpenInviteParticipantForm(true)}
+                className={styles.menuButton}
+              >
+                Invite a Participant
+              </MenuItem>
+              {user?.IsAdmin && (
+                <MenuItem
+                  dense
+                  onClick={() => setOpenConfirmDelete(true)}
+                  className={styles.redButton}
+                >
+                  Delete
+                </MenuItem>
+              )}
+            </Menu>
           </Grid>
         )}
       </>
