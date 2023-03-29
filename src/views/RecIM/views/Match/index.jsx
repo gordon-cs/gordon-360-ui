@@ -166,7 +166,12 @@ const Match = () => {
             </Grid>
             <Grid item sm={8} lg="auto">
               <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
-                <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
+                <Typography
+                  variant="h5"
+                  className={`${styles.teamName} gc360_text_link ${
+                    team0Score > team1Score && styles.matchWinner
+                  }`}
+                >
                   {match?.Team[0]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
@@ -182,8 +187,13 @@ const Match = () => {
             </Grid>
           </Grid>
 
-          <Grid item container xs={2} alignItems="center" direction="column">
-            <Grid item sx={{ mt: 3 }}>
+          <Grid item container xs={2} alignItems="center" direction="column" sx={{ mt: 3 }}>
+            {match?.Status === 'Completed' && (
+              <Grid item>
+                <Typography className={styles.subtitle}>Final</Typography>
+              </Grid>
+            )}
+            <Grid item>
               <Typography variant="h5" className={styles.matchScore}>
                 {team0Score} : {team1Score}
               </Typography>
