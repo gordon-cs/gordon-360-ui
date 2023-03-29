@@ -34,11 +34,13 @@ const Header = ({ match, team, activity, admin, children }) => {
     <>
       {children && <Grid className={styles.mainHeader}>{children}</Grid>}
       <AppBar className={styles.stickyNav} sx={!children && { mt: '-1rem' }}>
-        <Breadcrumbs aria-label="breadcrumb" sx={{ alignItems: 'center' }}>
+        <Breadcrumbs aria-label="breadcrumb">
           {/* Home breadcrumb */}
           <RecIMBreadcrumb link={(activity || team || match || admin) && `/recim`}>
-            <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-            {largeWidth && 'Rec-IM Home'}
+            <Grid container alignItems="center">
+              <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+              {largeWidth && 'Rec-IM Home'}
+            </Grid>
           </RecIMBreadcrumb>
           {/* Activity breadcrumb */}
           {(activity || team || match) && (
