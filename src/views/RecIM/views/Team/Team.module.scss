@@ -65,21 +65,20 @@
 }
 
 .logoContainer {
-  position: relative;
-  border-radius: 50%;
-  width: 6em;
-  height: 6em;
-  box-shadow: 0 2px 4px $neutral-black-opacity40;
-  overflow: hidden;
-}
-
-.logoContainer:hover {
   transition: 0.5s ease;
   position: relative;
   border-radius: 50%;
   width: 6em;
   height: 6em;
-  box-shadow: 0 3px 6px $neutral-black-opacity55;
+  //box-shadow: 0 2px 4px $neutral-black-opacity40;
+  overflow: hidden;
+}
+
+.logoContainer:hover {
+  transform: scale(1.03);
+  position: relative;
+  border-radius: 50%;
+  box-shadow: 0 3px 6px $neutral-black-opacity40;
   overflow: hidden;
 }
 
@@ -103,8 +102,13 @@
 }
 
 .logo {
+  transition: 0.6s ease;
   display: block;
   width: 6em;
   height: 6em;
   object-fit: cover;
+}
+
+.logo:hover {
+  transform: scale(1.02);
 }
