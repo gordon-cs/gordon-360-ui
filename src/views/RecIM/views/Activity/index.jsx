@@ -8,6 +8,8 @@ import {
   IconButton,
   Tabs,
   Tab,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 
@@ -26,7 +28,6 @@ import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
-import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
@@ -62,6 +63,8 @@ const Activity = () => {
   const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [anchorEl, setAnchorEl] = useState();
+  const openMenu = Boolean(anchorEl);
 
   useEffect(() => {
     const loadData = async () => {
@@ -152,6 +155,16 @@ const Activity = () => {
     // @TODO add snackbar
   };
 
+  // default closure
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  // menu button click
+  const handleButtonClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -184,17 +197,6 @@ const Activity = () => {
           <Grid item>
             <Typography variant="h5" className={styles.title}>
               {activity?.Name ?? <GordonLoader size={15} inline />}
-              {isAdmin && (
-                <IconButton
-                  onClick={() => {
-                    setOpenActivityForm(true);
-                  }}
-                  className={styles.editIconButton}
-                  sx={{ ml: 1 }}
-                >
-                  <EditIcon />
-                </IconButton>
-              )}
             </Typography>
             <Typography variant="h6" className={styles.subtitle}>
               <i>
@@ -207,13 +209,23 @@ const Activity = () => {
         </Grid>
         {isAdmin && (
           <Grid item xs={3} textAlign={'right'}>
-            <IconButton
-              onClick={() => {
-                setOpenSettings(true);
-              }}
-              sx={{ mr: '1rem' }}
-            >
-              <SettingsIcon fontSize="large" />
+            <IconButton onClick={handleButtonClick} sx={{ mr: '1rem' }}>
+              <SettingsIcon
+                fontSize="large"
+                sx={
+                  openMenu && {
+                    animation: 'spin 0.2s linear ',
+                    '@keyframes spin': {
+                      '0%': {
+                        transform: 'rotate(360deg)',
+                      },
+                      '100%': {
+                        transform: 'rotate(240deg)',
+                      },
+                    },
+                  }
+                }
+              />
             </IconButton>
           </Grid>
         )}
@@ -402,29 +414,23 @@ const Activity = () => {
                 setOpenImageOptions={setOpenImageOptions}
               />
             )}
-            <GordonDialogBox
-              title="Admin Settings"
-              fullWidth
-              open={openSettings}
-              cancelButtonClicked={() => setOpenSettings(false)}
-              cancelButtonName="Close"
-            >
-              <br />
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
-                  <Typography>Permanently delete the activity '{activity.Name}'</Typography>
-                </Grid>
-                <Grid item>
-                  <Button
-                    color="error"
-                    variant="contained"
-                    onClick={() => setOpenConfirmDelete(true)}
-                  >
-                    Delete this activity
-                  </Button>
-                </Grid>
-              </Grid>
-            </GordonDialogBox>
+            <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl} className={styles.menu}>
+              <Typography className={styles.menuTitle}>Admin Settings</Typography>
+              <MenuItem
+                dense
+                onClick={() => setOpenActivityForm(true)}
+                className={styles.menuButton}
+              >
+                Edit Activity Details
+              </MenuItem>
+              <MenuItem
+                dense
+                onClick={() => setOpenConfirmDelete(true)}
+                className={styles.redButton}
+              >
+                Delete
+              </MenuItem>
+            </Menu>
             <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}
