@@ -56,10 +56,10 @@ const ApartApp = () => {
       );
     } else if (isUserStudent) {
       return (
-        // <div className={'student_apartment_application'}>
-        //   <StudentApplication userProfile={userProfile} />
-        // </div>
-        <Grid container justifyContent="center" spacing="16">
+       <div className={'student_apartment_application'}>
+         <StudentApplication userProfile={userProfile} />
+       </div>
+        /*<Grid container justifyContent="center" spacing="16">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent
@@ -86,7 +86,7 @@ const ApartApp = () => {
               </CardContent>
             </Card>
           </Grid>
-        </Grid>
+        </Grid>*/
       );
     } else {
       return (
