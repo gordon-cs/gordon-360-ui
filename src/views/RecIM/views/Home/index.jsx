@@ -71,10 +71,8 @@ const Home = () => {
       setLoading(true);
       // Get all active activities where registration has not closed
       setActivities(await getActivities());
-      setInvites(await getTeamInvites());
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
-        setParticipantTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
     };
@@ -82,9 +80,17 @@ const Home = () => {
   }, [profile, openActivityForm, openWaiver, openCreateSeriesForm]);
 
   useEffect(() => {
+    const loadParticipantData = async () => {
+      setLoading(true);
+      setInvites(await getTeamInvites());
+      setParticipantTeams(await getParticipantTeams(profile.AD_Username));
+      setLoading(false);
+    };
+
     setOpenWaiver(participant == null);
     if (participant) {
       setHasPermissions(participant.IsAdmin);
+      loadParticipantData();
     }
   }, [participant]);
 
