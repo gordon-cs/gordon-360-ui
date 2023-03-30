@@ -1,15 +1,14 @@
-import { Grid } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
-import GordonDialogBox from 'components/GordonDialogBox';
-import { InformationField } from '../components/InformationField';
-import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
-import { ConfirmationRow } from '../components/ConfirmationRow';
-import { ContentCard } from '../components/ContentCard';
-import GordonLoader from 'components/Loader';
+import Form from '../Form';
 import { createMatch, updateMatch, getSurfaces, getMatchStatusTypes } from 'services/recim/match';
-import EditMatchStatsForm from '../EditMatchStatsForm';
 
-const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activity, match }) => {
+const MatchForm = ({
+  closeWithSnackbar,
+  openMatchInformationForm,
+  setOpenMatchInformationForm,
+  activity,
+  match,
+}) => {
   const [errorStatus, setErrorStatus] = useState({
     StartTime: false,
     SeriesID: false,
@@ -21,7 +20,6 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
   const [loading, setLoading] = useState(false);
   const [surfaces, setSurfaces] = useState([]);
   const [matchStatus, setMatchStatus] = useState([]);
-  const [targetTeamID, setTargetTeamID] = useState();
 
   useEffect(() => {
     const loadData = async () => {
@@ -43,11 +41,9 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       }),
       error: errorStatus.SurfaceID,
       helperText: '*Required',
+      required: true,
     },
   ];
-
-  //second set of fields for Match stats
-  const matchTeams = [];
 
   if (activity) {
     createMatchFields.push(
@@ -57,6 +53,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         type: 'datetime',
         error: errorStatus.StartTime,
         helperText: '*Required',
+        required: true,
       },
       {
         label: 'Series',
@@ -67,6 +64,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         }),
         error: errorStatus.SeriesID,
         helperText: '*Required',
+        required: true,
       },
       {
         label: 'Teams',
@@ -77,6 +75,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         }),
         error: errorStatus.TeamIDs,
         helperText: '*Required',
+        required: true,
       },
     );
   } else if (match) {
@@ -87,6 +86,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         type: 'datetime',
         error: errorStatus.StartTime,
         helperText: '*Required',
+        required: true,
       },
       {
         label: 'Teams',
@@ -97,6 +97,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         }),
         error: errorStatus.TeamIDs,
         helperText: '*Required',
+        required: true,
       },
       {
         label: 'Status',
@@ -107,16 +108,10 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
         }),
         error: errorStatus.TeamIDs,
         helperText: '*Required',
+        required: true,
       },
     );
-
-    matchTeams.push({
-      name: 'team',
-      type: 'listing',
-      data: match,
-    });
   }
-  const allFields = [createMatchFields].flat();
 
   const currentInfo = useMemo(() => {
     if (match) {
@@ -146,80 +141,21 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       TeamIDs: [],
     };
   }, [surfaces, matchStatus, match]);
-  const [newInfo, setNewInfo] = useState(currentInfo);
-  const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
-  const [isSaving, setSaving] = useState(false);
-  const [disableUpdateButton, setDisableUpdateButton] = useState(true);
 
-  //re spreads fetched data to map to drop-down's once data has been loaded
-  useEffect(() => {
-    setNewInfo(currentInfo);
-  }, [currentInfo]);
-
-  const handleSetError = (field, condition) => {
-    const getCurrentErrorStatus = (currentValue) => {
-      return {
-        ...currentValue,
-        [field]: condition,
-      };
-    };
-    setErrorStatus(getCurrentErrorStatus);
-  };
-  // Field Validation
-  useEffect(() => {
-    let hasError = false;
-    let hasChanges = false;
-    for (const field in currentInfo) {
-      if (currentInfo[field] !== newInfo[field]) {
-        hasChanges = true;
-      }
-      handleSetError(field, newInfo[field] === '');
-      hasError = newInfo[field] === '' || hasError;
+  const errorCases = (field, value) => {
+    switch (field) {
+      default:
+        return false;
     }
-    setDisableUpdateButton(hasError || !hasChanges);
-  }, [newInfo, currentInfo]);
-
-  const handleChange = (event, src) => {
-    const getNewInfo = (currentValue) => {
-      // datetime pickers return value rather than event,
-      // so we can also manually specify target source and value
-      if (src) {
-        let newValue = event;
-        return {
-          ...currentValue,
-          [src]: newValue,
-        };
-      }
-      return {
-        ...currentValue,
-        [event.target.name]:
-          event.target.type === 'checkbox' ? event.target.checked : event.target.value,
-      };
-    };
-    setNewInfo(getNewInfo);
   };
 
-  const getFieldLabel = (fieldName) => {
-    const matchingField = allFields.find((field) => field.name === fieldName);
-    return matchingField.label;
-  };
-
-  function getNewFields(currentInfo, newInfo) {
-    const updatedFields = [];
-    Object.entries(newInfo).forEach(([key, value]) => {
-      if (currentInfo[key] !== value)
-        updatedFields.push({
-          Field: key,
-          Value: value,
-          Label: getFieldLabel(key),
-        });
-    });
-    return updatedFields;
-  }
-  const handleConfirm = () => {
+  const handleConfirm = (newInfo, handleWindowClose, setSaving) => {
     setSaving(true);
 
+    let teamNames = newInfo.TeamIDs;
     let matchRequest = { ...currentInfo, ...newInfo };
+    matchRequest.TeamIDs = teamNames;
+
     if (activity)
       matchRequest.SeriesID = activity.Series.find(
         (series) => series.Name === matchRequest.SeriesID,
@@ -239,7 +175,7 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       createMatch(matchRequest).then((result) => {
         closeWithSnackbar({
           type: 'success',
-          message: 'Match created successfully',
+          message: 'Match information created successfully',
         });
         handleWindowClose();
       });
@@ -250,113 +186,25 @@ const MatchForm = ({ closeWithSnackbar, openMatchForm, setOpenMatchForm, activit
       updateMatch(match.ID, matchRequest).then((result) => {
         closeWithSnackbar({
           type: 'success',
-          message: 'Match created successfully',
+          message: 'Match information edited successfully',
         });
         handleWindowClose();
       });
     }
   };
 
-  const handleWindowClose = () => {
-    setOpenMatchForm(false);
-    setOpenConfirmWindow(false);
-    setNewInfo(currentInfo);
-  };
-
-  const handleEditMatchStatsForm = (status) => {
-    //temporary, I can't think of a way to force update the form right now
-    handleWindowClose();
-    setTargetTeamID(null);
-  };
-
-  /**
-   * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
-   * @returns JSX correct input for each field based on type
-   */
-  const mapFieldsToInputs = (fields) => {
-    return fields.map((field) => (
-      <InformationField
-        key={field.name}
-        error={field.error}
-        label={field.label}
-        name={field.name}
-        helperText={field.helperText}
-        value={newInfo[field.name]}
-        type={field.type}
-        menuItems={field.menuItems}
-        data={field.data}
-        onChange={field.type === 'listing' ? setTargetTeamID : handleChange}
-        xs={12}
-        sm={12}
-        md={12}
-        lg={12}
-      />
-    ));
-  };
-
-  let content;
-  if (loading) {
-    content = <GordonLoader />;
-  } else {
-    content = (
-      <>
-        <ContentCard title="Match Information" spacing={1}>
-          {mapFieldsToInputs(createMatchFields)}
-        </ContentCard>
-        <ContentCard title="Edit Teams">{mapFieldsToInputs(matchTeams)}</ContentCard>
-
-        {/* Confirmation Dialog */}
-        <GordonDialogBox
-          open={openConfirmWindow}
-          title="Confirm Your Match"
-          buttonClicked={!isSaving && handleConfirm}
-          buttonName="Confirm"
-          // in case you want to authenticate something change isButtonDisabled
-          isButtonDisabled={disableUpdateButton}
-          cancelButtonClicked={!isSaving && handleWindowClose}
-          cancelButtonName="Cancel"
-        >
-          <ConfirmationWindowHeader />
-          <Grid container>
-            {getNewFields(currentInfo, newInfo).map((field) => (
-              <ConfirmationRow key={field} field={field} prevValue={currentInfo[field.Field]} />
-            ))}
-          </Grid>
-          {isSaving && <GordonLoader size={32} />}
-        </GordonDialogBox>
-      </>
-    );
-  }
   return (
-    <>
-      <GordonDialogBox
-        open={openMatchForm}
-        title={activity ? `Create a Match` : `Edit a Match`}
-        fullWidth
-        maxWidth="sm"
-        buttonClicked={() => setOpenConfirmWindow(true)}
-        isButtonDisabled={disableUpdateButton}
-        buttonName="Submit"
-        cancelButtonClicked={() => {
-          setNewInfo(currentInfo);
-          setOpenMatchForm(false);
-        }}
-        cancelButtonName="cancel"
-      >
-        {content}
-      </GordonDialogBox>
-      {targetTeamID && (
-        <EditMatchStatsForm
-          match={match}
-          targetTeamID={targetTeamID}
-          closeWithSnackbar={(status) => {
-            handleEditMatchStatsForm(status);
-          }}
-          openEditMatchStatsForm={Boolean(targetTeamID)}
-          setTargetTeamID={setTargetTeamID}
-        />
-      )}
-    </>
+    <Form
+      formTitles={{ name: 'Match', formType: match ? 'Edit' : 'Create' }}
+      fields={createMatchFields}
+      currentInfo={currentInfo}
+      errorCases={errorCases}
+      setErrorStatus={setErrorStatus}
+      loading={loading}
+      setOpenForm={setOpenMatchInformationForm}
+      openForm={openMatchInformationForm}
+      handleConfirm={handleConfirm}
+    />
   );
 };
 

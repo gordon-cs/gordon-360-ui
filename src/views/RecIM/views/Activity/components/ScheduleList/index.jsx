@@ -1,7 +1,7 @@
 import { Grid, Typography, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import TuneIcon from '@mui/icons-material/Tune';
-import { ContentCard } from 'views/RecIM/components/Forms/components/ContentCard';
+import { ContentCard } from 'views/RecIM/components/Forms/Form/components/ContentCard';
 import { MatchList } from 'views/RecIM/components/List';
 import UpdateIcon from '@mui/icons-material/Update';
 import RestoreIcon from '@mui/icons-material/Restore';
