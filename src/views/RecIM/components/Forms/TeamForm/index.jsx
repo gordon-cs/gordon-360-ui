@@ -20,6 +20,7 @@ const TeamForm = ({
   const { profile } = useUser();
   const [teamStatus, setTeamStatus] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isSaving, setSaving] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -78,7 +79,7 @@ const TeamForm = ({
     }
   };
 
-  const handleConfirm = (newInfo, handleWindowClose, setSaving) => {
+  const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
 
     let teamRequest = { ...currentInfo, ...newInfo };
@@ -119,6 +120,7 @@ const TeamForm = ({
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}
       loading={loading}
+      isSaving={isSaving}
       setOpenForm={setOpenTeamForm}
       openForm={openTeamForm}
       handleConfirm={handleConfirm}

@@ -18,6 +18,7 @@ const MatchForm = ({
   });
 
   const [loading, setLoading] = useState(false);
+  const [isSaving, setSaving] = useState(false);
   const [surfaces, setSurfaces] = useState([]);
   const [matchStatus, setMatchStatus] = useState([]);
 
@@ -149,7 +150,7 @@ const MatchForm = ({
     }
   };
 
-  const handleConfirm = (newInfo, handleWindowClose, setSaving) => {
+  const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
 
     let teamNames = newInfo.TeamIDs;
@@ -201,6 +202,7 @@ const MatchForm = ({
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}
       loading={loading}
+      isSaving={isSaving}
       setOpenForm={setOpenMatchInformationForm}
       openForm={openMatchInformationForm}
       handleConfirm={handleConfirm}

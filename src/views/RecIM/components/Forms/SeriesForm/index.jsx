@@ -27,6 +27,7 @@ const SeriesForm = ({
 
   // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
+  const [isSaving, setSaving] = useState(false);
   const [seriesType, setSeriesType] = useState([]);
   const [statuses, setStatuses] = useState([]);
 
@@ -150,7 +151,7 @@ const SeriesForm = ({
     }
   };
 
-  const handleConfirm = (newInfo, handleWindowClose, setSaving) => {
+  const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
 
     let seriesRequest = { ...currentInfo, ...newInfo };
@@ -196,6 +197,7 @@ const SeriesForm = ({
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}
       loading={loading}
+      isSaving={isSaving}
       setOpenForm={setOpenSeriesForm}
       openForm={openSeriesForm}
       handleConfirm={handleConfirm}

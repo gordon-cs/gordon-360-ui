@@ -25,6 +25,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
 
   // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
+  const [isSaving, setSaving] = useState(false);
   const [sports, setSports] = useState([]);
   const [activityTypes, setActivityTypes] = useState([]);
   const [activityStatusTypes, setActivityStatusTypes] = useState([]);
@@ -187,7 +188,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
     }
   };
 
-  const handleConfirm = (newInfo, handleWindowClose, setSaving) => {
+  const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
 
     let activityRequest = { ...currentInfo, ...newInfo };
@@ -225,6 +226,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}
       loading={loading}
+      isSaving={isSaving}
       setOpenForm={setOpenActivityForm}
       openForm={openActivityForm}
       handleConfirm={handleConfirm}
