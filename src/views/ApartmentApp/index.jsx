@@ -1,4 +1,4 @@
-// import StudentApplication from './components/StudentApplication';
+import StudentApplication from './components/StudentApplication';
 import { Button, Card, CardContent, Grid } from '@mui/material';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonOffline from 'components/GordonOffline';
