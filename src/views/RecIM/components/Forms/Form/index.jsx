@@ -82,7 +82,7 @@ const Form = ({
     };
     let tempNewInfo = getNewInfo(newInfo);
     if (newInfoCallback) {
-      newInfoCallback(tempNewInfo);
+      newInfoCallback(tempNewInfo, disableUpdateButton);
     }
     setNewInfo(tempNewInfo);
   };

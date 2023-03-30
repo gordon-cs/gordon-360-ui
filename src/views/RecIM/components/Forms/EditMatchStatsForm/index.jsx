@@ -7,7 +7,6 @@ import styles from './EditMatchStatsForm.module.css';
 
 const EditMatchStatsForm = ({
   match,
-  setMatch,
   closeWithSnackbar,
   openEditMatchStatsForm,
   setOpenEditMatchStatsForm,
@@ -21,6 +20,7 @@ const EditMatchStatsForm = ({
   const [matchStatus, setMatchStatus] = useState([]);
   const [targetTeamID, setTargetTeamID] = useState(match.Team[0].ID);
   const [selectedTab, setSelectedTab] = useState(0);
+  const [teamUpdateData, setTeamUpdateData] = useState({});
 
   useEffect(() => {
     const loadData = async () => {
@@ -35,13 +35,16 @@ const EditMatchStatsForm = ({
     setLoading(false);
   }, [targetTeamID]);
 
-  const newInfoCallback = (newInfo) => {
-    let teamIndex = match.Scores.findIndex((value) => value.TeamID === newInfo.TeamID);
-    let scores = match.Scores;
-    scores[teamIndex].TeamScore = newInfo.Score;
-    scores[teamIndex].SportsmanshipScore = newInfo.SportsmanshipScore;
-    scores[teamIndex].Status = newInfo.StatusID;
-    setMatch({ ...match, scores });
+  const newInfoCallback = (newInfo, updateData) => {
+    if (updateData) {
+      setTeamUpdateData((prev) => ({ ...prev, targetTeamID: newInfo }));
+    } else {
+      setTeamUpdateData((prev) => {
+        const state = { ...prev };
+        delete state[targetTeamID];
+        return state;
+      });
+    }
   };
 
   const createMatchStatsField = [
