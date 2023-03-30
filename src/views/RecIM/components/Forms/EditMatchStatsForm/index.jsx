@@ -1,26 +1,35 @@
 import { Box } from '@mui/system';
 import { Tabs, Tab } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
-import { getMatchTeamStatusTypes, updateMatchStats } from 'services/recim/match';
+import { getMatchTeamStatusTypes, updateMatchStats, getMatchByID } from 'services/recim/match';
 import Form from '../Form';
 import styles from './EditMatchStatsForm.module.css';
+import { useParams } from 'react-router';
 
 const EditMatchStatsForm = ({
   match,
+  setMatch,
   closeWithSnackbar,
   openEditMatchStatsForm,
   setOpenEditMatchStatsForm,
 }) => {
+  const { matchID } = useParams();
   const [errorStatus, setErrorStatus] = useState({
     Score: false,
     StatusID: false,
     SportsmanshipScore: false,
   });
+
   const [loading, setLoading] = useState(true);
+  const [isSaving, setSaving] = useState(false);
   const [matchStatus, setMatchStatus] = useState([]);
   const [targetTeamID, setTargetTeamID] = useState(match.Team[0].ID);
   const [selectedTab, setSelectedTab] = useState(0);
-  const [teamUpdateData, setTeamUpdateData] = useState({});
+  const [request, setRequest] = useState(null);
+
+  const newInfoCallback = (newInfo) => {
+    setRequest(newInfo);
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -32,20 +41,12 @@ const EditMatchStatsForm = ({
   }, []);
 
   useEffect(() => {
+    const updateMatch = async () => {
+      setMatch(await getMatchByID(matchID));
+    };
+    updateMatch();
     setLoading(false);
-  }, [targetTeamID]);
-
-  const newInfoCallback = (newInfo, updateData) => {
-    if (updateData) {
-      setTeamUpdateData((prev) => ({ ...prev, targetTeamID: newInfo }));
-    } else {
-      setTeamUpdateData((prev) => {
-        const state = { ...prev };
-        delete state[targetTeamID];
-        return state;
-      });
-    }
-  };
+  }, [targetTeamID, setMatch, matchID]);
 
   const createMatchStatsField = [
     {
@@ -79,7 +80,7 @@ const EditMatchStatsForm = ({
 
   const currentInfo = useMemo(() => {
     var targetTeamStats = match.Scores.find((score) => score.TeamID === targetTeamID);
-    return {
+    let info = {
       TeamID: targetTeamID,
       Score: `${targetTeamStats.TeamScore}`,
       SportsmanshipScore: `${targetTeamStats.SportsmanshipScore}`,
@@ -88,14 +89,16 @@ const EditMatchStatsForm = ({
           ? ''
           : matchStatus.find((type) => type.Description === targetTeamStats.Status).Description,
     };
+    setRequest(info);
+    return info;
   }, [match, targetTeamID, matchStatus]);
 
   const errorCases = (field, value) => {
     switch (field) {
-      case 'Sportsmanship':
-        return value < 0 || value > 5;
+      case 'SportsmanshipScore':
+        return value < 0;
       case 'Score':
-        return !/^[0-9]+$/.test(value);
+        return !/^[0-9]+$/.test(value) || value < 0;
       default:
         return false;
     }
@@ -108,6 +111,7 @@ const EditMatchStatsForm = ({
           value={selectedTab}
           onChange={(event, tabIndex) => {
             setLoading(true);
+            handleConfirm();
             setSelectedTab(tabIndex);
             setTargetTeamID(match.Team[tabIndex].ID);
           }}
@@ -123,20 +127,25 @@ const EditMatchStatsForm = ({
     </>
   );
 
-  const handleConfirm = (newInfo, handleWindowClose, setSaving) => {
-    setSaving(true);
-    let matchStatsRequest = { ...currentInfo, ...newInfo };
-    matchStatsRequest.StatusID = matchStatus.find(
-      (status) => status.Description === matchStatsRequest.StatusID,
-    )?.ID;
-    updateMatchStats(match.ID, matchStatsRequest).then(() => {
-      setSaving(false);
-      closeWithSnackbar({
-        type: 'success',
-        message: 'Match edited successfully',
+  const handleConfirm = (handleWindowClose) => {
+    if (request !== currentInfo) {
+      setSaving(true);
+      let requestInfo = { ...currentInfo, ...request };
+      requestInfo.StatusID = matchStatus.find(
+        (status) => status.Description === requestInfo.StatusID,
+      )?.ID;
+      updateMatchStats(match.ID, requestInfo).then(() => {
+        setSaving(false);
+
+        if (handleWindowClose) {
+          closeWithSnackbar({
+            type: 'success',
+            message: 'Match edited successfully',
+          });
+          handleWindowClose();
+        }
       });
-      handleWindowClose();
-    });
+    }
   };
 
   return (
@@ -147,12 +156,13 @@ const EditMatchStatsForm = ({
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}
       loading={loading}
+      isSaving={isSaving}
       setOpenForm={setOpenEditMatchStatsForm}
       openForm={openEditMatchStatsForm}
       handleConfirm={handleConfirm}
       additionalContent={navigationContent}
       newInfoCallback={newInfoCallback}
-      showSubmitButton={false}
+      showConfirmationWindow={false}
     />
   );
 };

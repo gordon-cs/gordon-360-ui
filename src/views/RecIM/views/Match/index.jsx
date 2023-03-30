@@ -83,7 +83,7 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID, openMatchInformationForm]);
+  }, [matchID, openMatchInformationForm, openEditMatchStatsForm]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   useEffect(() => {

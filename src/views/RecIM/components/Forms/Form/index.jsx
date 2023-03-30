@@ -14,13 +14,14 @@ const Form = ({
   errorCases,
   setErrorStatus,
   loading,
+  isSaving,
   setOpenForm,
   openForm,
   handleConfirm,
   additionalContent,
   additionCancelActions,
   newInfoCallback,
-  showSubmitButton = true,
+  showConfirmationWindow = true,
 }) => {
   const allFields = [
     fields,
@@ -29,7 +30,6 @@ const Form = ({
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
-  const [isSaving, setSaving] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
 
   const handleSetError = (field, condition) => {
@@ -54,10 +54,17 @@ const Form = ({
       if (currentInfo[field] !== newInfo[field]) {
         hasChanges = true;
       }
-      hasError =
+      if (
         (fields.find((n) => n.name === field)?.required && !newInfo[field]) ||
-        errorCases(field, newInfo[field]);
-      handleSetError(field, hasError);
+        errorCases(field, newInfo[field])
+      ) {
+        handleSetError(field, true);
+        if (!hasError) {
+          hasError = true;
+        }
+      } else {
+        handleSetError(field, false);
+      }
     }
     setDisableUpdateButton(hasError || !hasChanges);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,9 +87,10 @@ const Form = ({
           event.target.type === 'checkbox' ? event.target.checked : event.target.value,
       };
     };
+
     let tempNewInfo = getNewInfo(newInfo);
     if (newInfoCallback) {
-      newInfoCallback(tempNewInfo, disableUpdateButton);
+      newInfoCallback(tempNewInfo);
     }
     setNewInfo(tempNewInfo);
   };
@@ -141,14 +149,14 @@ const Form = ({
       title={`${formTitles.formType} ${formTitles.name}`}
       fullWidth
       maxWidth="lg"
-      buttonClicked={
-        showSubmitButton
-          ? () => {
-              // This will submit the data and close the window if we do not allow open confirm
-              setOpenConfirmWindow(true);
-            }
-          : null
-      }
+      buttonClicked={() => {
+        // This will submit the data and close the window if we do not allow open confirm
+        if (showConfirmationWindow) {
+          setOpenConfirmWindow(true);
+        } else {
+          handleConfirm(handleWindowClose);
+        }
+      }}
       isButtonDisabled={disableUpdateButton}
       buttonName={'Submit'}
       cancelButtonClicked={() => {
@@ -158,7 +166,7 @@ const Form = ({
           additionCancelActions();
         }
       }}
-      cancelButtonName={showSubmitButton ? 'cancel' : 'close'}
+      cancelButtonName={'cancel'}
     >
       <ContentCard title={`${formTitles.name} Information`}>
         {additionalContent}
@@ -170,7 +178,7 @@ const Form = ({
           open={openConfirmWindow}
           title={`Confirm Your ${formTitles.name}`}
           buttonClicked={() => {
-            !isSaving && handleConfirm(newInfo, handleWindowClose, setSaving);
+            !isSaving && handleConfirm(newInfo, handleWindowClose);
           }}
           buttonName="Confirm"
           // in case you want to authenticate something change isButtonDisabled
