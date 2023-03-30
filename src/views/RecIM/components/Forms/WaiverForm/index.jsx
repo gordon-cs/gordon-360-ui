@@ -10,6 +10,7 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
     readCheckbox: false,
     name: false,
   });
+  const [isSaving, setSaving] = useState(false);
 
   const waiverFields = [
     {
@@ -48,8 +49,10 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
     navigate('/'); //routes back to home if user refuses waiver
   };
 
-  const handleConfirm = (newInfo, handleWindowClose, setSaving) => {
+  const handleConfirm = (newInfo, handleWindowClose) => {
+    setSaving(true);
     createParticipant(username).then(() => {
+      setSaving(false);
       closeWithSnackbar({
         type: 'success',
         message: 'Your new activity has been created or whatever message you want here',
@@ -122,6 +125,7 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}
       loading={false}
+      isSaving={isSaving}
       setOpenForm={setOpenWaiverForm}
       openForm={openWaiverForm}
       handleConfirm={handleConfirm}

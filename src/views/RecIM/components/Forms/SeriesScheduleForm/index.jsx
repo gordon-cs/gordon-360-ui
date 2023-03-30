@@ -19,6 +19,7 @@ const SeriesScheduleForm = ({
 
   // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
+  const [isSaving, setSaving] = useState(false);
   const [surfaces, setSurfaces] = useState([]);
 
   useEffect(() => {
@@ -146,7 +147,7 @@ const SeriesScheduleForm = ({
     }
   };
 
-  const handleConfirm = (newInfo, handleWindowClose, setSaving) => {
+  const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
 
     let dayOfTheWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -184,6 +185,7 @@ const SeriesScheduleForm = ({
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}
       loading={loading}
+      isSaving={isSaving}
       setOpenForm={setOpenSeriesScheduleForm}
       openForm={openSeriesScheduleForm}
       handleConfirm={handleConfirm}
