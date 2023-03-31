@@ -1,5 +1,5 @@
-import { Class } from './peopleSearch';
 import http from './http';
+import { Class } from './peopleSearch';
 import { StudentProfileInfo, UnformattedStudentProfileInfo } from './user';
 import { map } from './utils';
 
