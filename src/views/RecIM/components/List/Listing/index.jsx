@@ -678,10 +678,12 @@ const SurfaceListing = ({ surface }) => {
   if (!surface) return null;
   return (
     <ListItem key={surface.ID} className={styles.listingWrapper}>
-      <Grid container className={styles.listing}>
-        <ListItemText>{surface.Name}</ListItemText>
-        <Typography className={styles.listingSubtitle}>{surface.Description}</Typography>
-      </Grid>
+      <ListItem className={styles.listing}>
+        <Grid container direction="column">
+          <ListItemText>{surface.Name}</ListItemText>
+          <Typography className={styles.listingSubtitle}>{surface.Description}</Typography>
+        </Grid>
+      </ListItem>
     </ListItem>
   );
 };
