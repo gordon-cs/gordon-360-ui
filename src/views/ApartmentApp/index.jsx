@@ -57,7 +57,8 @@ const ApartApp = () => {
         <div className={'student_apartment_application'}>
           <StudentApplication userProfile={profile} />
         </div>
-        /*<Grid container justifyContent="center" spacing="16">
+        /*
+        <Grid container justifyContent="center" spacing="16">
           <Grid item xs={12} md={8}>
             <Card>
               <CardContent
@@ -84,7 +85,8 @@ const ApartApp = () => {
               </CardContent>
             </Card>
           </Grid>
-        </Grid>*/
+        </Grid>
+        */
       );
     } else {
       return (
