@@ -1,14 +1,12 @@
-import StudentApplication from './components/StudentApplication';
-import { Button, Card, CardContent, Grid } from '@mui/material';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+import StudentApplication from './components/StudentApplication';
 // eslint-disable-next-line no-unused-vars
 import { useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
-import { Link } from 'react-router-dom';
 import { AuthGroup } from 'services/auth';
 import styles from './ApartmentApp.module.css';
 import StaffMenu from './components/StaffMenu';
@@ -56,9 +54,9 @@ const ApartApp = () => {
       );
     } else if (isUserStudent) {
       return (
-       <div className={'student_apartment_application'}>
-         <StudentApplication userProfile={userProfile} />
-       </div>
+        <div className={'student_apartment_application'}>
+          <StudentApplication userProfile={profile} />
+        </div>
         /*<Grid container justifyContent="center" spacing="16">
           <Grid item xs={12} md={8}>
             <Card>
