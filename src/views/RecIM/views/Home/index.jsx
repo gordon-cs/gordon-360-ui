@@ -12,16 +12,17 @@ import {
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ActivityForm from '../../components/Forms/ActivityForm';
+import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
+import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { useUser } from 'hooks';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import GordonLoader from 'components/Loader';
+import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Home.module.css';
 import { ActivityList, TeamList } from './../../components/List';
 import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
-import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
-import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from './../../recim_logo.png';
 import { isFuture } from 'date-fns';
@@ -50,6 +51,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [activities, setActivities] = useState([]);
   const [ongoingActivities, setOngoingActivities] = useState([]);
   const [registrableActivities, setRegistrableActivities] = useState([]);
@@ -65,6 +67,10 @@ const Home = () => {
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -92,7 +98,7 @@ const Home = () => {
       setHasPermissions(participant.IsAdmin);
       loadParticipantData();
     }
-  }, [participant]);
+  }, [participant, profile]);
 
   useEffect(() => {
     let open = [];
@@ -222,20 +228,8 @@ const Home = () => {
     </Card>
   );
 
-  const handleCreateActivityForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenCreateSeriesForm(true);
-    setOpenActivityForm(false);
-  };
-
-  const handleCreateSeriesForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenCreateSeriesForm(false);
-  };
-
-  const handleOpenWaiverForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenWaiver(false);
+  const handleFormSubmit = (status, setOpenForm) => {
+    setOpenForm(false);
   };
 
   if (!profile) {
@@ -259,7 +253,8 @@ const Home = () => {
             {openActivityForm && (
               <ActivityForm
                 closeWithSnackbar={(status) => {
-                  handleCreateActivityForm(status);
+                  handleFormSubmit(status, setOpenActivityForm);
+                  setOpenCreateSeriesForm(true);
                 }}
                 openActivityForm={openActivityForm}
                 setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
@@ -269,7 +264,7 @@ const Home = () => {
             {openCreateSeriesForm && (
               <SeriesForm
                 closeWithSnackbar={(status) => {
-                  handleCreateSeriesForm(status);
+                  handleFormSubmit(status, setOpenCreateSeriesForm);
                 }}
                 openSeriesForm={openCreateSeriesForm}
                 setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
@@ -281,7 +276,7 @@ const Home = () => {
               <WaiverForm
                 username={profile.AD_Username}
                 closeWithSnackbar={(status) => {
-                  handleOpenWaiverForm(status);
+                  handleFormSubmit(status, setOpenWaiver);
                 }}
                 openWaiverForm={openWaiver}
                 setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
@@ -289,6 +284,12 @@ const Home = () => {
             )}
           </Grid>
         )}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        />
       </>
     );
   }

@@ -92,7 +92,7 @@ const Activity = () => {
       }
     };
     loadData();
-  }, [user, profile.AD_Username]);
+  }, [user, profile]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   // disable create team if participant already is participating in this activity,

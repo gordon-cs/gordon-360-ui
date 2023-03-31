@@ -202,19 +202,30 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
         setSaving(false);
         closeWithSnackbar({
           type: 'success',
-          message: 'Your new activity has been created or whatever message you want here',
+          message: `Activity ${activity.Name} has been successfully edited`,
         });
         handleWindowClose();
       });
     } else {
+
+      activityRequest.sportID = sports.find(
+        (type) => type.Name === activityRequest.sportID
+      ).ID
+      activityRequest.typeID = activityTypes.find(
+        (type) => type.Description === activityRequest.typeID
+      ).ID
+      console.log(activityRequest)
       createActivity(activityRequest).then((res) => {
         setSaving(false);
         closeWithSnackbar({
           type: 'success',
-          message: 'Your new activity has been created or whatever message you want here',
+          message: `Activity ${activityRequest.name} has been created`,
         });
         handleWindowClose();
-      });
+      }).catch(
+        setSaving(false)
+
+      );
     }
   };
 
