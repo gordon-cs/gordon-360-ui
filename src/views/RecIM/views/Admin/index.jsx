@@ -7,10 +7,11 @@ import Header from '../../components/Header';
 import { HomeHeaderContents } from '../Home';
 // import styles from './Admin.module.css'; //unused for now since I've imported homeHeader
 import { getParticipantByUsername } from 'services/recim/participant';
-import { ActivityList, TeamList, ParticipantList } from '../../components/List';
+import { ActivityList, TeamList, ParticipantList, SurfacesList } from '../../components/List';
 import { getActivities } from '../../../../services/recim/activity';
 import { getTeams } from '../../../../services/recim/team';
 import { getParticipants } from '../../../../services/recim/participant';
+import { getSurfaces } from '../../../../services/recim/match';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -28,6 +29,7 @@ const Admin = () => {
   const [activities, setActivities] = useState();
   const [teams, setTeams] = useState();
   const [participants, setParticipants] = useState();
+  const [surfaces, setSurfaces] = useState();
   const [tab, setTab] = useState(0);
   //const [shouldRefresh, setShouldRefresh] = useState(false);
   // I suggest a refresh button as an option to prevent ONLY refreshing via window reload
@@ -52,8 +54,12 @@ const Admin = () => {
     const loadParticipants = async () => {
       setParticipants(await getParticipants());
     };
+    const loadSurfaces = async () => {
+      setSurfaces(await getSurfaces());
+    };
     loadActivities();
     loadTeams();
+    loadSurfaces();
     // if you don't do this, you can see every participant via looking at the network tab
     // on console, feel free to add the loadActivities/Teams to this 'if' statement if you desire
     // but at the very least, participants need to be hidden
@@ -83,6 +89,7 @@ const Admin = () => {
             <Tab label="Activities" />
             <Tab label="Teams" />
             <Tab label="Participants" />
+            <Tab label="Surfaces" />
           </Tabs>
           <TabPanel value={tab} index={0}>
             {activities ? <ActivityList activities={activities} /> : <GordonLoader />}
@@ -92,6 +99,9 @@ const Admin = () => {
           </TabPanel>
           <TabPanel value={tab} index={2}>
             {participants ? <ParticipantList participants={participants} /> : <GordonLoader />}
+          </TabPanel>
+          <TabPanel value={tab} index={3}>
+            {surfaces ? <SurfacesList surfaces={surfaces} /> : <GordonLoader />}
           </TabPanel>
         </CardContent>
       </Card>

@@ -1,5 +1,11 @@
 import { List, Typography } from '@mui/material';
-import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
+import {
+  ActivityListing,
+  MatchListing,
+  ParticipantListing,
+  SurfaceListing,
+  TeamListing,
+} from './Listing';
 import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
 
@@ -122,4 +128,12 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
   return <List dense>{content}</List>;
 };
 
-export { ActivityList, ParticipantList, MatchList, TeamList };
+const SurfacesList = ({ surfaces }) => {
+  if (!surfaces?.length)
+    return <Typography className={styles.secondaryText}>No surfaces to show.</Typography>;
+  console.log(surfaces);
+  let content = surfaces.map((surface) => <SurfaceListing key={surface.ID} surface={surface} />);
+  return <List dense>{content}</List>;
+};
+
+export { ActivityList, ParticipantList, MatchList, TeamList, SurfacesList };
