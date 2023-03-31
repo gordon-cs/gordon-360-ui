@@ -23,6 +23,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { standardDate } from 'views/RecIM/components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 
 const RosterCard = ({
   participants,
@@ -56,7 +57,8 @@ const Match = () => {
   const [loading, setLoading] = useState(true);
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
-  const [openMatchForm, setOpenMatchForm] = useState(false);
+  const [openMatchInformationForm, setOpenMatchInformationForm] = useState(false);
+  const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
@@ -81,7 +83,7 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID, openMatchForm]);
+  }, [matchID, openMatchInformationForm, openEditMatchStatsForm]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   useEffect(() => {
@@ -99,9 +101,8 @@ const Match = () => {
     }
   }, [match]);
 
-  const handleMatchFormSubmit = (status, setOpenMatchForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenMatchForm(false);
+  const handleFormSubmit = (status, setOpenForm) => {
+    setOpenForm(false);
   };
 
   const handleClose = () => {
@@ -166,7 +167,12 @@ const Match = () => {
             </Grid>
             <Grid item sm={8} lg="auto">
               <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
-                <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
+                <Typography
+                  variant="h5"
+                  className={`${styles.teamName} gc360_text_link ${
+                    team0Score > team1Score && styles.matchWinner
+                  }`}
+                >
                   {match?.Team[0]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
@@ -182,8 +188,13 @@ const Match = () => {
             </Grid>
           </Grid>
 
-          <Grid item container xs={2} alignItems="center" direction="column">
-            <Grid item sx={{ mt: 3 }}>
+          <Grid item container xs={2} alignItems="center" direction="column" sx={{ mt: 3 }}>
+            {match?.Status === 'Completed' && (
+              <Grid item>
+                <Typography className={styles.subtitle}>Final</Typography>
+              </Grid>
+            )}
+            <Grid item>
               <Typography variant="h5" className={styles.matchScore}>
                 {team0Score} : {team1Score}
               </Typography>
@@ -274,10 +285,18 @@ const Match = () => {
               <MenuItem
                 dense
                 onClick={() => {
-                  setOpenMatchForm(true);
+                  setOpenEditMatchStatsForm(true);
                 }}
               >
-                Edit Match
+                Edit Match Stats
+              </MenuItem>
+              <MenuItem
+                dense
+                onClick={() => {
+                  setOpenMatchInformationForm(true);
+                }}
+              >
+                Edit Match Information
               </MenuItem>
               <MenuItem
                 dense
@@ -291,11 +310,20 @@ const Match = () => {
             </Menu>
             <MatchForm
               closeWithSnackbar={(status) => {
-                handleMatchFormSubmit(status, setOpenMatchForm);
+                handleFormSubmit(status, setOpenMatchInformationForm);
               }}
-              openMatchForm={openMatchForm}
-              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              openMatchInformationForm={openMatchInformationForm}
+              setOpenMatchInformationForm={(bool) => setOpenMatchInformationForm(bool)}
               match={match}
+            />
+            <EditMatchStatsForm
+              match={match}
+              setMatch={setMatch}
+              closeWithSnackbar={(status) => {
+                handleFormSubmit(status, setOpenEditMatchStatsForm);
+              }}
+              openEditMatchStatsForm={openEditMatchStatsForm}
+              setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
             />
             <GordonDialogBox
               title="Confirm Delete"

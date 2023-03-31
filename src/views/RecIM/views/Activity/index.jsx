@@ -94,7 +94,7 @@ const Activity = () => {
       }
     };
     loadData();
-  }, [user]);
+  }, [user, profile.AD_Username]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   // disable create team if participant already is participating in this activity,
@@ -121,29 +121,9 @@ const Activity = () => {
       }
   }, [activity]);
 
-  const handleActivityForm = (status) => {
+  const handleFormSubmit = (status, setOpenForm) => {
     //if you want to do something with the message make a snackbar function here
-    setOpenActivityForm(false);
-  };
-
-  const handleTeamFormSubmit = (status, setOpenTeamForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenTeamForm(false);
-  };
-
-  const handleMatchFormSubmit = (status, setOpenMatchForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenMatchForm(false);
-  };
-
-  const handleCreateSeriesForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenCreateSeriesForm(false);
-  };
-
-  const handleOpenImageOptionsSubmit = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenImageOptions(false);
+    setOpenForm(false);
   };
 
   const handleDelete = async () => {
@@ -376,15 +356,15 @@ const Activity = () => {
             />
             <MatchForm
               closeWithSnackbar={(status) => {
-                handleMatchFormSubmit(status, setOpenMatchForm);
+                handleFormSubmit(status, setOpenMatchForm);
               }}
-              openMatchForm={openMatchForm}
-              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              openMatchInformationForm={openMatchForm}
+              setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
               activity={activity}
             />
             <SeriesForm
               closeWithSnackbar={(status) => {
-                handleCreateSeriesForm(status);
+                handleFormSubmit(status, setOpenCreateSeriesForm);
               }}
               openSeriesForm={openCreateSeriesForm}
               setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
@@ -393,7 +373,7 @@ const Activity = () => {
             />
             <TeamForm
               closeWithSnackbar={(teamID, status) => {
-                handleTeamFormSubmit(status, setOpenTeamForm);
+                handleFormSubmit(status, setOpenTeamForm);
                 navigate(`team/${teamID}`);
               }}
               openTeamForm={openTeamForm}
@@ -405,7 +385,7 @@ const Activity = () => {
                 category={'Activity'}
                 component={activity}
                 closeWithSnackbar={(status) => {
-                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+                  handleFormSubmit(status, setOpenImageOptions);
                 }}
                 openImageOptions={openImageOptions}
                 setOpenImageOptions={setOpenImageOptions}

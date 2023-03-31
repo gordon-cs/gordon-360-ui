@@ -1,27 +1,35 @@
-import { Grid } from '@mui/material';
+import { Box } from '@mui/system';
+import { Tabs, Tab } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
-import GordonDialogBox from 'components/GordonDialogBox';
-import { InformationField } from '../components/InformationField';
-import { ConfirmationWindowHeader } from '../components/ConfirmationHeader';
-import { ConfirmationRow } from '../components/ConfirmationRow';
-import { ContentCard } from '../components/ContentCard';
-import GordonLoader from 'components/Loader';
-import { getMatchTeamStatusTypes, updateMatchStats } from 'services/recim/match';
+import { getMatchTeamStatusTypes, updateMatchStats, getMatchByID } from 'services/recim/match';
+import Form from '../Form';
+import styles from './EditMatchStatsForm.module.css';
+import { useParams } from 'react-router';
 
 const EditMatchStatsForm = ({
   match,
-  targetTeamID,
+  setMatch,
   closeWithSnackbar,
   openEditMatchStatsForm,
-  setTargetTeamID,
+  setOpenEditMatchStatsForm,
 }) => {
+  const { matchID } = useParams();
   const [errorStatus, setErrorStatus] = useState({
     Score: false,
     StatusID: false,
     SportsmanshipScore: false,
   });
+
   const [loading, setLoading] = useState(true);
+  const [isSaving, setSaving] = useState(false);
   const [matchStatus, setMatchStatus] = useState([]);
+  const [targetTeamID, setTargetTeamID] = useState(match.Team[0].ID);
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [request, setRequest] = useState(null);
+
+  const newInfoCallback = (newInfo) => {
+    setRequest(newInfo);
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -32,6 +40,14 @@ const EditMatchStatsForm = ({
     loadData();
   }, []);
 
+  useEffect(() => {
+    const updateMatch = async () => {
+      setMatch(await getMatchByID(matchID));
+    };
+    updateMatch();
+    setLoading(false);
+  }, [targetTeamID, setMatch, matchID]);
+
   const createMatchStatsField = [
     {
       label: 'Score',
@@ -39,6 +55,7 @@ const EditMatchStatsForm = ({
       type: 'number',
       error: errorStatus.Score,
       helperText: '*Required',
+      required: true,
     },
     {
       label: 'Sportsmanship',
@@ -46,6 +63,7 @@ const EditMatchStatsForm = ({
       type: 'number',
       error: errorStatus.SportsmanshipScore,
       helperText: "*Required & Can't be more than 5",
+      required: true,
     },
     {
       label: 'Status',
@@ -56,14 +74,13 @@ const EditMatchStatsForm = ({
       }),
       error: errorStatus.StatusID,
       helperText: '*Required',
+      required: true,
     },
   ];
 
-  const allFields = [createMatchStatsField].flat();
-
   const currentInfo = useMemo(() => {
     var targetTeamStats = match.Scores.find((score) => score.TeamID === targetTeamID);
-    return {
+    let info = {
       TeamID: targetTeamID,
       Score: `${targetTeamStats.TeamScore}`,
       SportsmanshipScore: `${targetTeamStats.SportsmanshipScore}`,
@@ -72,189 +89,81 @@ const EditMatchStatsForm = ({
           ? ''
           : matchStatus.find((type) => type.Description === targetTeamStats.Status).Description,
     };
+    setRequest(info);
+    return info;
   }, [match, targetTeamID, matchStatus]);
 
-  const [newInfo, setNewInfo] = useState(currentInfo);
-  const [isSaving, setSaving] = useState(false);
-  const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
-  const [disableUpdateButton, setDisableUpdateButton] = useState(true);
-
-  const handleSetError = (field, condition) => {
-    const getCurrentErrorStatus = (currentValue) => {
-      return {
-        ...currentValue,
-        [field]: condition,
-      };
-    };
-    setErrorStatus(getCurrentErrorStatus);
-  };
-
-  // refresh dropdown select once fetch is complete
-  useEffect(() => {
-    setNewInfo(currentInfo);
-  }, [currentInfo]);
-
-  // Field Validation
-  useEffect(() => {
-    let hasChanges = false;
-    let hasError = false;
-    for (const field in currentInfo) {
-      if (currentInfo[field] !== newInfo[field]) {
-        hasChanges = true;
-      }
-      switch (field) {
-        case 'Sportsmanship':
-          hasError = hasError || newInfo[field] > 5;
-        //fall through
-        case 'Score':
-          hasError = !/^[0-9]+$/.test(newInfo[field]);
-          break;
-        case 'StatusID':
-          hasError = newInfo[field] === '';
-          break;
-        default:
-      }
-      handleSetError(field, hasError);
+  const errorCases = (field, value) => {
+    switch (field) {
+      case 'SportsmanshipScore':
+        return value < 0;
+      case 'Score':
+        return !/^[0-9]+$/.test(value) || value < 0;
+      default:
+        return false;
     }
-
-    setDisableUpdateButton(hasError || !hasChanges);
-  }, [newInfo, currentInfo]);
-
-  const handleChange = (event, src) => {
-    const getNewInfo = (currentValue) => {
-      // datetime pickers return value rather than event,
-      // so we can also manually specify target source and value
-      if (src) {
-        let newValue = event;
-        return {
-          ...currentValue,
-          [src]: newValue,
-        };
-      }
-      return {
-        ...currentValue,
-        [event.target.name]:
-          event.target.type === 'checkbox' ? event.target.checked : event.target.value,
-      };
-    };
-    setNewInfo(getNewInfo);
   };
 
-  const getFieldLabel = (fieldName) => {
-    const matchingField = allFields.find((field) => field.name === fieldName);
-    return matchingField.label;
-  };
+  const navigationContent = (
+    <>
+      <Box className={styles.scrollableCenteredTabs} mt={1}>
+        <Tabs
+          value={selectedTab}
+          onChange={(event, tabIndex) => {
+            setLoading(true);
+            handleConfirm();
+            setSelectedTab(tabIndex);
+            setTargetTeamID(match.Team[tabIndex].ID);
+          }}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="team name edit stats tabs"
+        >
+          {match.Team.map((team) => {
+            return <Tab disabled={Object.values(errorStatus).includes(true)} label={team.Name} />;
+          })}
+        </Tabs>
+      </Box>
+    </>
+  );
 
-  function getNewFields(currentInfo, newInfo) {
-    const updatedFields = [];
-    Object.entries(newInfo).forEach(([key, value]) => {
-      if (currentInfo[key] !== value)
-        updatedFields.push({
-          Field: key,
-          Value: value,
-          Label: getFieldLabel(key),
-        });
-    });
-    return updatedFields;
-  }
+  const handleConfirm = (handleWindowClose) => {
+    if (request !== currentInfo) {
+      setSaving(true);
+      let requestInfo = { ...currentInfo, ...request };
+      requestInfo.StatusID = matchStatus.find(
+        (status) => status.Description === requestInfo.StatusID,
+      )?.ID;
+      updateMatchStats(match.ID, requestInfo).then(() => {
+        setSaving(false);
 
-  const handleConfirm = () => {
-    setSaving(true);
-    let matchStatsRequest = { ...currentInfo, ...newInfo };
-    matchStatsRequest.StatusID = matchStatus.find(
-      (status) => status.Description === matchStatsRequest.StatusID,
-    )?.ID;
-    updateMatchStats(match.ID, matchStatsRequest).then(() => {
-      setSaving(false);
-      closeWithSnackbar({
-        type: 'success',
-        message: 'Match edited successfully',
+        if (handleWindowClose) {
+          closeWithSnackbar({
+            type: 'success',
+            message: 'Match edited successfully',
+          });
+          handleWindowClose();
+        }
       });
-      handleWindowClose();
-    });
+    }
   };
-
-  const handleWindowClose = () => {
-    setTargetTeamID(null);
-    setOpenConfirmWindow(false);
-    setNewInfo(currentInfo);
-  };
-
-  /**
-   * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
-   * @returns JSX correct input for each field based on type
-   */
-  const mapFieldsToInputs = (fields) => {
-    return fields.map((field) => (
-      <InformationField
-        key={field.name}
-        error={field.error}
-        label={field.label}
-        name={field.name}
-        helperText={field.helperText}
-        value={newInfo[field.name]}
-        type={field.type}
-        menuItems={field.menuItems}
-        onChange={handleChange}
-        xs={12}
-        sm={12}
-        md={12}
-        lg={12}
-      />
-    ));
-  };
-
-  let content;
-  if (loading) {
-    content = <GordonLoader />;
-  } else {
-    content = (
-      <>
-        <ContentCard
-          title={`Match Stats for "${match.Team.find((team) => team.ID === targetTeamID).Name}"`}
-        >
-          {mapFieldsToInputs(createMatchStatsField)}
-        </ContentCard>
-        {/* Confirmation Dialog */}
-        <GordonDialogBox
-          open={openConfirmWindow}
-          title="Confirm your Match Stats"
-          buttonClicked={!isSaving && handleConfirm}
-          buttonName="Confirm"
-          // in case you want to authenticate something change isButtonDisabled
-          isButtonDisabled={disableUpdateButton}
-          cancelButtonClicked={!isSaving && handleWindowClose}
-          cancelButtonName="Cancel"
-        >
-          <ConfirmationWindowHeader />
-          <Grid container>
-            {getNewFields(currentInfo, newInfo).map((field) => (
-              <ConfirmationRow key={field} field={field} prevValue={currentInfo[field.Field]} />
-            ))}
-          </Grid>
-          {isSaving && <GordonLoader size={32} />}
-        </GordonDialogBox>
-      </>
-    );
-  }
 
   return (
-    <GordonDialogBox
-      open={openEditMatchStatsForm}
-      title={`Edit ${match.Team.find((team) => team.ID === targetTeamID).Name}'s Stats`}
-      fullWidth
-      maxWidth="sm"
-      buttonClicked={() => setOpenConfirmWindow(true)}
-      isButtonDisabled={disableUpdateButton}
-      buttonName="Submit"
-      cancelButtonClicked={() => {
-        setNewInfo(currentInfo);
-        setTargetTeamID(null);
-      }}
-      cancelButtonName="cancel"
-    >
-      {content}
-    </GordonDialogBox>
+    <Form
+      formTitles={{ name: 'Match Stats', formType: 'Edit' }}
+      fields={createMatchStatsField}
+      currentInfo={currentInfo}
+      errorCases={errorCases}
+      setErrorStatus={setErrorStatus}
+      loading={loading}
+      isSaving={isSaving}
+      setOpenForm={setOpenEditMatchStatsForm}
+      openForm={openEditMatchStatsForm}
+      handleConfirm={handleConfirm}
+      additionalContent={navigationContent}
+      newInfoCallback={newInfoCallback}
+      showConfirmationWindow={false}
+    />
   );
 };
 

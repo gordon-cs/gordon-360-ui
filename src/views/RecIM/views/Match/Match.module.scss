@@ -97,3 +97,8 @@
 .redButton:hover {
   background-color: $alternative-red;
 }
+
+.matchWinner {
+  font-weight: bold;
+  text-decoration: underline $secondary-green 0.2em;
+}
