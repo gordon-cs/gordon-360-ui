@@ -1,17 +1,27 @@
 @import '../../vars';
 
-.tabs {
-  color: $primary-blue;
+.tabsIndicator {
+  display: none;
 }
 
 .tab {
-  background-color: $neutral-white;
-  color: $primary-blue;
-  border-width: 10px;
-  border-color: $primary-blue;
+  font-size: medium;
+  width: 10rem;
+  height: 4rem;
+  color: $neutral-white;
+  background-color: $primary-cyan;
+  border-radius: 1rem 1rem 0 0;
+  margin: 0 0.25rem;
+
+  &:global(.Mui-selected) {
+    background-color: $primary-blue;
+    font-weight: bold;
+    color: $neutral-white;
+  }
 }
 
-.selectedTab {
-  background-color: $neutral-white;
-  color: $primary-blue;
+.tabPanel {
+  &:global(.MuiTabPanel-root) {
+    padding-top: 0;
+  }
 }

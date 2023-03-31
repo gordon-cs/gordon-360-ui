@@ -54,7 +54,7 @@ const StudentNews = () => {
   const [aspectRatio, setAspectRatio] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [currentlyEditing, setCurrentlyEditing] = useState(false); // false if not editing, newsID if editing
-  const [tabValue, setTabValue] = useState('news'); // set the default tab to 'news'
+  const [tabValue, setTabValue] = useState(NEWS_TABS[0]); // set the default tab to 'news'
   const cropperRef = useRef();
   const isAuthenticated = useIsAuthenticated();
   const isAdmin = userIsInAuthGroup('NewsAdmin');
@@ -352,12 +352,29 @@ const StudentNews = () => {
               onChange={handleSwitchTab}
               centered={true}
               aria-label="News Lists"
+              TabIndicatorProps={{
+                className: styles.tabsIndicator,
+              }}
             >
-              <Tab label="News" value={NEWS_TABS[0]} className={styles.tab} />
-              <Tab label="My Pending News" value={NEWS_TABS[1]} className={styles.tab} />
-              {isAdmin && <Tab label="All Pending News" value={NEWS_TABS[2]} />}
+              <Tab label="News" value={NEWS_TABS[0]} disableRipple={true} className={styles.tab} />
+
+              <Tab
+                label="My Pending News"
+                value={NEWS_TABS[1]}
+                disableRipple={true}
+                className={styles.tab}
+              />
+
+              {isAdmin && (
+                <Tab
+                  label="All Pending News"
+                  value={NEWS_TABS[2]}
+                  disableRipple={true}
+                  className={styles.tab}
+                />
+              )}
             </Tabs>
-            <TabPanel value={NEWS_TABS[0]}>
+            <TabPanel value={NEWS_TABS[0]} className={styles.tabPanel}>
               <NewsList
                 news={news}
                 header={'News'}
@@ -368,7 +385,7 @@ const StudentNews = () => {
                 isAdmin={isAdmin}
               />
             </TabPanel>
-            <TabPanel value={NEWS_TABS[1]}>
+            <TabPanel value={NEWS_TABS[1]} className={styles.tabPanel}>
               <NewsList
                 news={personalUnapprovedNews}
                 header={'My Pending News'}
@@ -379,7 +396,7 @@ const StudentNews = () => {
               />
             </TabPanel>
             {isAdmin && (
-              <TabPanel value={NEWS_TABS[2]}>
+              <TabPanel value={NEWS_TABS[2]} className={styles.tabPanel}>
                 {isAdmin && (
                   <NewsList
                     news={unapprovedNews}
