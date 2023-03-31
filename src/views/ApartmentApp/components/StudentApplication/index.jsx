@@ -620,7 +620,14 @@ const StudentApplication = ({ userProfile }) => {
         );
         // No additional `else` is needed for this, since `isApplicantValid` handles the `createSnackbar` internally
         if (validApplicants.every((v) => v)) {
-          const saveResult = await housing.saveApartmentApplication(applicationDetails);
+          // Quick fix since the API is trying
+          //  to validate the public profile object but there is no Hall property
+          let applicationDetailsNoProfiles = applicationDetails;
+          applicationDetailsNoProfiles.Applicants = applicationDetails.Applicants.map((a) => {
+            a.Profile.Hall = '';
+            return a;
+          });
+          const saveResult = await housing.saveApartmentApplication(applicationDetailsNoProfiles);
           if (saveResult) {
             setApplicationDetails((prevApplicationDetails) => ({
               ...prevApplicationDetails,
@@ -643,6 +650,7 @@ const StudentApplication = ({ userProfile }) => {
       } else if (e instanceof NotFoundError) {
         createSnackbar('Error: This application was not found in the database.', 'error');
       } else {
+        console.log(e);
         createSnackbar('Something went wrong while trying to save the application.', 'error');
       }
       setSaving('error');
