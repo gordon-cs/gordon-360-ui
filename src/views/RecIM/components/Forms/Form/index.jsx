@@ -143,6 +143,26 @@ const Form = ({
     ));
   };
 
+  const DiaglogContent = () => {
+    let index = 0;
+    return fields.map((set) => {
+      console.log(formTitles.contentCardTitles);
+      let content = (
+        <ContentCard
+          title={
+            formTitles.contentCardTitles
+              ? formTitles.contentCardTitles[index++]
+              : `${formTitles.name} Information`
+          }
+        >
+          {additionalContent}
+          {loading ? <GordonLoader /> : mapFieldsToInputs(set)}
+        </ContentCard>
+      );
+      return content;
+    });
+  };
+
   return (
     <GordonDialogBox
       open={openForm}
@@ -168,15 +188,7 @@ const Form = ({
       }}
       cancelButtonName={'cancel'}
     >
-      {fields.map((set) => {
-        let content = (
-          <ContentCard title={formTitles.contentCardTitles[0] ?? `${formTitles.name} Information`}>
-            {additionalContent}
-            {loading ? <GordonLoader /> : mapFieldsToInputs(set)}
-          </ContentCard>
-        );
-        return content;
-      })}
+      {DiaglogContent()}
 
       {!loading && (
         <GordonDialogBox
