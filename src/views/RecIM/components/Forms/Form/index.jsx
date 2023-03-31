@@ -168,10 +168,15 @@ const Form = ({
       }}
       cancelButtonName={'cancel'}
     >
-      <ContentCard title={`${formTitles.name} Information`}>
-        {additionalContent}
-        {loading ? <GordonLoader /> : mapFieldsToInputs(fields)}
-      </ContentCard>
+      {fields.map((set) => {
+        let content = (
+          <ContentCard title={formTitles.contentCardTitles[0] ?? `${formTitles.name} Information`}>
+            {additionalContent}
+            {loading ? <GordonLoader /> : mapFieldsToInputs(set)}
+          </ContentCard>
+        );
+        return content;
+      })}
 
       {!loading && (
         <GordonDialogBox

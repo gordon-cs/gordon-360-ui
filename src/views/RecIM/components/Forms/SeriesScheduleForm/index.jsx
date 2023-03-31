@@ -1,9 +1,7 @@
-import { Grid, Typography } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
 import Form from '../Form';
 import { putSeriesSchedule, getSeriesSchedule } from 'services/recim/series';
 import { getSurfaces } from 'services/recim/match';
-import styles from '../Forms.module.css';
 
 const SeriesScheduleForm = ({
   closeWithSnackbar,
@@ -208,8 +206,12 @@ const SeriesScheduleForm = ({
 
   return (
     <Form
-      formTitles={{ name: 'Schedule', formType: 'Edit' }}
-      fields={allFields}
+      formTitles={{
+        name: 'Schedule',
+        contentCardTitles: ['Available Days', 'Available Surfaces', 'Time Information'],
+        formType: 'Edit',
+      }}
+      fields={[availableDays, availableSurfaces, matchTimes]}
       currentInfo={currentInfo}
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}

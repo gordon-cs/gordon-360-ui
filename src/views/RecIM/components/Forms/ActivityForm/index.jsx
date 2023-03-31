@@ -221,7 +221,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
   return (
     <Form
       formTitles={{ name: 'Activity', formType: activity ? 'Edit' : 'Create' }}
-      fields={activityFields}
+      fields={[activityFields]}
       currentInfo={currentInfo}
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}

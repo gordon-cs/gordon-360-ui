@@ -94,7 +94,7 @@ const Activity = () => {
       }
     };
     loadData();
-  }, [user, profile.AD_Username]);
+  }, [user, profile]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   // disable create team if participant already is participating in this activity,
@@ -195,10 +195,10 @@ const Activity = () => {
                     animation: 'spin 0.2s linear ',
                     '@keyframes spin': {
                       '0%': {
-                        transform: 'rotate(360deg)',
+                        transform: 'rotate(0deg)',
                       },
                       '100%': {
-                        transform: 'rotate(240deg)',
+                        transform: 'rotate(120deg)',
                       },
                     },
                   }
@@ -349,7 +349,7 @@ const Activity = () => {
             <ActivityForm
               activity={activity}
               closeWithSnackbar={(status) => {
-                handleActivityForm(status);
+                handleFormSubmit(status, setOpenActivityForm);
               }}
               openActivityForm={openActivityForm}
               setOpenActivityForm={(bool) => setOpenActivityForm(bool)}

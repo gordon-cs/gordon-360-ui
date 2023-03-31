@@ -151,7 +151,7 @@ const EditMatchStatsForm = ({
   return (
     <Form
       formTitles={{ name: 'Match Stats', formType: 'Edit' }}
-      fields={createMatchStatsField}
+      fields={[createMatchStatsField]}
       currentInfo={currentInfo}
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}
