@@ -8,7 +8,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Divider,
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -27,6 +26,7 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import userService from 'services/user';
 
 const Team = () => {
   const navigate = useNavigate();
@@ -34,6 +34,7 @@ const Team = () => {
   const { profile } = useUser();
   const [reload, setReload] = useState(false);
   const [team, setTeam] = useState();
+  const [logo, setLogo] = useState();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
@@ -41,6 +42,7 @@ const Team = () => {
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
+
   const handleInviteParticipantForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenInviteParticipantForm(false);
@@ -76,6 +78,19 @@ const Team = () => {
     }
     setHasPermissions(hasCaptainPermissions || user?.IsAdmin);
   }, [team, user]);
+
+  useEffect(() => {
+    const setSoloLogo = async () => {
+      let username = team.Participant[0]?.Username;
+      const { def: defaultImage, pref: preferredImage } = await userService.getImage(username);
+      setLogo(`data:image/jpg;base64,${preferredImage || defaultImage}`);
+    };
+    if (team?.Activity.SoloRegistration) {
+      setLogo(setSoloLogo());
+    } else {
+      setLogo(team?.Logo ?? defaultLogo);
+    }
+  }, [team]);
 
   const teamRecord = () => {
     if (team) {
@@ -128,13 +143,13 @@ const Team = () => {
           <Grid item>
             <Button
               className={styles.logoContainer}
-              disabled={!hasPermissions}
+              disabled={!hasPermissions || team?.Activity.SoloRegistration}
               onClick={() => {
                 setOpenImageOptions(true);
               }}
             >
-              <img src={team?.Logo ?? defaultLogo} className={styles.logo} alt="Team Icon"></img>
-              {hasPermissions && (
+              <img src={logo} className={styles.logo} alt="Team Icon"></img>
+              {hasPermissions && !team?.Activity.SoloRegistration && (
                 <div className={styles.overlay}>
                   <Typography className={styles.overlayText}>edit</Typography>
                 </div>
@@ -240,29 +255,6 @@ const Team = () => {
               {rosterCard}
             </Grid>
 
-            {openTeamForm && (
-              <TeamForm
-                closeWithSnackbar={(status) => {
-                  handleTeamForm(status);
-                }}
-                openTeamForm={openTeamForm}
-                setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
-                activityID={team?.Activity?.ID}
-                team={team}
-                isAdmin={user.IsAdmin}
-              />
-            )}
-            {openImageOptions && (
-              <ImageOptions
-                category={'Team'}
-                component={team}
-                closeWithSnackbar={(status) => {
-                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
-                }}
-                openImageOptions={openImageOptions}
-                setOpenImageOptions={setOpenImageOptions}
-              />
-            )}
             {/* forms and dialogs */}
             <TeamForm
               closeWithSnackbar={(status) => {
@@ -274,17 +266,15 @@ const Team = () => {
               team={team}
               isAdmin={user?.IsAdmin}
             />
-            {openImageOptions && (
-              <ImageOptions
-                category={'Team'}
-                component={team}
-                closeWithSnackbar={(status) => {
-                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
-                }}
-                openImageOptions={openImageOptions}
-                setOpenImageOptions={setOpenImageOptions}
-              />
-            )}
+            <ImageOptions
+              category={'Team'}
+              component={team}
+              closeWithSnackbar={(status) => {
+                handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+              }}
+              openImageOptions={openImageOptions}
+              setOpenImageOptions={setOpenImageOptions}
+            />
             <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}
