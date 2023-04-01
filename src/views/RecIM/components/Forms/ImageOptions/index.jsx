@@ -29,15 +29,15 @@ const ImageOptions = ({
   const [cropperImageData, setCropperImageData] = useState();
   const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState();
   const [photoDialogError, setPhotoDialogError] = useState();
-  const [showCropper, setShowCropper] = useState();
+  const [showCropper, setShowCropper] = useState(false);
   const [imageWidth, setImageWidth] = useState();
   const [imageHeight, setImageHeight] = useState();
   const cropperRef = useRef();
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(false);
 
   // load ImageOptions
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
     loadImageOptions().then(() => setLoading(false));
   }, []);
 

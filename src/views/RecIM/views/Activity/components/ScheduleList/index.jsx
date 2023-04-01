@@ -1,12 +1,12 @@
 import { Grid, Typography, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import TuneIcon from '@mui/icons-material/Tune';
-import { ContentCard } from 'views/RecIM/components/Forms/components/ContentCard';
+import { ContentCard } from 'views/RecIM/components/Forms/Form/components/ContentCard';
 import { MatchList } from 'views/RecIM/components/List';
 import UpdateIcon from '@mui/icons-material/Update';
 import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import { standardDate } from 'views/RecIM/components/Helpers';
+import { formatDateTimeRange, standardDate } from 'views/RecIM/components/Helpers';
 import { format, isPast, isFuture } from 'date-fns';
 import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/series';
 import { useState } from 'react';
@@ -155,7 +155,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
         </Grid>
         <Grid item xs={6} sm={3}>
           <Typography className={styles.seriesDateText}>
-            {standardDate(series.StartDate, false)} - {standardDate(series.EndDate, false)}
+            {formatDateTimeRange(series.StartDate, series.EndDate)}
           </Typography>
         </Grid>
         <Grid container item xs={6} sm={3} justifyContent="center">

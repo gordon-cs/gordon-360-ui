@@ -17,13 +17,7 @@ const ConfirmationRow = ({ field }) => {
   ) : (
     <Typography variant="body2" className={styles.text_current}>
       {/* if datetime, format appropriately */}
-      {isValid(field.Value) ? (
-        format(field.Value, 'MMM dd, y hh:mm aa')
-      ) : field.Value.includes('recim') || field.Value.includes('image') ? (
-        <img src={field.Value} width="50em" />
-      ) : (
-        `${field.Value}`
-      )}
+      {isValid(field.Value) ? format(field.Value, 'MMM dd, y hh:mm aa') : `${field.Value}`}
     </Typography>
   );
 

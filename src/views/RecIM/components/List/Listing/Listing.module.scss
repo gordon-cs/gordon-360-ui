@@ -74,6 +74,11 @@
   font-size: 0.8em;
 }
 
+.matchWinner {
+  font-weight: bold;
+  text-decoration: underline 0.2em $secondary-green;
+}
+
 .activityType_league {
   background-color: #edb1ad;
 }
