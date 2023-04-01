@@ -30,6 +30,7 @@ const truncate = (str) => {
 
 const Header = ({ match, team, activity, admin, children }) => {
   const largeWidth = useMediaQuery(`(min-width: ${windowBreakWidths.breakSM}px)`);
+  console.log(match);
   return (
     <>
       {children && <Grid className={styles.mainHeader}>{children}</Grid>}
@@ -56,9 +57,11 @@ const Header = ({ match, team, activity, admin, children }) => {
           {match && (
             <RecIMBreadcrumb>
               {largeWidth
-                ? `Match: ${match?.Team[0]?.Name ?? <i>TBD</i>} vs 
-              ${match?.Team[1]?.Name ?? <i>TBD</i>}`
-                : `Match: ${truncate(match?.Team[0].Name)} vs ${truncate(match?.Team[1].Name)}`}
+                ? `Match: ${match?.Team[0]?.Name ?? 'TBD'} vs 
+              ${match?.Team[1]?.Name ?? 'TBD'}`
+                : `Match: ${truncate(match?.Team[0]?.Name ?? 'TBD')} vs ${truncate(
+                    match?.Team[1]?.Name ?? 'TBD',
+                  )}`}
             </RecIMBreadcrumb>
           )}
           {/* Admin breadcrumb */}

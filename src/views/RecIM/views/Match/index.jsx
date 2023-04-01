@@ -260,7 +260,7 @@ const Match = () => {
         </Grid>
       </Grid>
     );
-
+    console.log(match);
     return (
       <>
         <Header match={match}>{headerContents}</Header>
@@ -301,6 +301,7 @@ const Match = () => {
               <MenuItem
                 className={styles.menuButton}
                 dense
+                disabled={match.Scores.length === 0}
                 onClick={() => {
                   setOpenEditMatchStatsForm(true);
                 }}
@@ -334,15 +335,17 @@ const Match = () => {
               setOpenMatchInformationForm={(bool) => setOpenMatchInformationForm(bool)}
               match={match}
             />
-            <EditMatchStatsForm
-              match={match}
-              setMatch={setMatch}
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenEditMatchStatsForm);
-              }}
-              openEditMatchStatsForm={openEditMatchStatsForm}
-              setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
-            />
+            {match.Scores.length !== 0 && (
+              <EditMatchStatsForm
+                match={match}
+                setMatch={setMatch}
+                closeWithSnackbar={(status) => {
+                  handleFormSubmit(status, setOpenEditMatchStatsForm);
+                }}
+                openEditMatchStatsForm={openEditMatchStatsForm}
+                setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+              />
+            )}
             <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}
