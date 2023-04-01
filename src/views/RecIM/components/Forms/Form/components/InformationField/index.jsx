@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
 } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -100,28 +101,33 @@ const InformationField = ({
       );
       break;
     case 'multiselect':
+      xs = sm = md = lg = 12; // ensure multi select takes max size
       field = (
-        <FormControl
-          variant="filled"
-          className={`${styles.select_text} ${styles.field}`}
-          style={{ width: '100%' }}
-        >
-          <InputLabel>{label}</InputLabel>
-          <Select
-            label={label}
-            name={name}
-            multiple
-            value={value}
-            onChange={(event) => onChange(event)}
+        <>
+          <FormControl
+            variant="filled"
+            className={`${styles.select_text} ${styles.field}`}
+            style={{ width: '100%' }}
           >
-            {menuItems.map((item) => (
-              // @TODO key needs to be updated to item id once exists
-              <MenuItem key={item} className={styles.select_text} value={item}>
-                {item}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            <InputLabel>{label}</InputLabel>
+            <Select
+              label={label}
+              name={name}
+              multiple
+              value={value}
+              onChange={(event) => onChange(event)}
+            >
+              {menuItems.map((item) => (
+                // @TODO key needs to be updated to item id once exists
+                <MenuItem key={item} className={styles.select_text} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Typography className={styles.multiselectText}>Selected: </Typography>
+          <Typography className={styles.multiselectItemText}>{value.toString()}</Typography>
+        </>
       );
       break;
     case 'datetime':
