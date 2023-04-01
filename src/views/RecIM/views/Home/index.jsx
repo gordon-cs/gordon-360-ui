@@ -228,10 +228,6 @@ const Home = () => {
     </Card>
   );
 
-  const handleFormSubmit = (status, setOpenForm) => {
-    setOpenForm(false);
-  };
-
   if (!profile) {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
@@ -252,10 +248,10 @@ const Home = () => {
             </Grid>
             {openActivityForm && (
               <ActivityForm
-                closeWithSnackbar={(status) => {
-                  handleFormSubmit(status, setOpenActivityForm);
+                onClose={() => {
                   setOpenCreateSeriesForm(true);
                 }}
+                createSnackbar={createSnackbar}
                 openActivityForm={openActivityForm}
                 setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
                 setCreatedInstance={(activity) => setCreatedActivity(activity)}
@@ -263,9 +259,7 @@ const Home = () => {
             )}
             {openCreateSeriesForm && (
               <SeriesForm
-                closeWithSnackbar={(status) => {
-                  handleFormSubmit(status, setOpenCreateSeriesForm);
-                }}
+                createSnackbar={createSnackbar}
                 openSeriesForm={openCreateSeriesForm}
                 setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
                 activityID={createdActivity.ID}
@@ -275,9 +269,7 @@ const Home = () => {
             {openWaiver && (
               <WaiverForm
                 username={profile.AD_Username}
-                closeWithSnackbar={(status) => {
-                  handleFormSubmit(status, setOpenWaiver);
-                }}
+                createSnackbar={createSnackbar}
                 openWaiverForm={openWaiver}
                 setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
               />

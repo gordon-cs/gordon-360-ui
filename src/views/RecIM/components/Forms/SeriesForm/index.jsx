@@ -8,7 +8,7 @@ import {
 } from 'services/recim/series';
 
 const SeriesForm = ({
-  closeWithSnackbar,
+  createSnackbar,
   openSeriesForm,
   setOpenSeriesForm,
   activityID,
@@ -138,6 +138,7 @@ const SeriesForm = ({
     }
   }, [activityID, scheduleID, series]);
 
+
   const isNumeric = (value) => {
     return /^-?\d+$/.test(value) || value.length === 0;
   };
@@ -160,14 +161,18 @@ const SeriesForm = ({
       seriesRequest.statusID = statuses.find(
         (status) => status.Description === seriesRequest.statusID,
       ).ID;
-      editSeries(series.ID, seriesRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: `Series ${series.Name}, has been successfully edited`,
+      editSeries(series.ID, seriesRequest)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(`Series ${seriesRequest.name} has been successfully edited`, 'success');
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          createSnackbar(
+            `There was a problem editing your series, please try again: ${reason}`,
+            'error',
+          );
         });
-        handleWindowClose();
-      });
     } else {
       seriesRequest.typeID = seriesType.filter(
         (type) => type.Description === seriesRequest.typeID,
@@ -178,14 +183,20 @@ const SeriesForm = ({
           ? null
           : existingActivitySeries.filter((ref) => ref.Name === seriesRequest.referenceSeriesID)[0]
               .ID;
-      createSeries(referenceSeriesID, seriesRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Your new series has been created or whatever message you want here',
+      createSeries(referenceSeriesID, seriesRequest)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(`Series ${seriesRequest.name} has been successfully created`, 'success');
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          console.log(reason)
+          createSnackbar(
+            `There was a problem creating your series, please try again: ${reason.title}`,
+            'error',
+          );
         });
-        handleWindowClose();
-      });
     }
   };
 

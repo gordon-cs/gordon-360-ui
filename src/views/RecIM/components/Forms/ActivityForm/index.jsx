@@ -8,7 +8,14 @@ import {
 } from 'services/recim/activity';
 import { getAllSports } from 'services/recim/sport';
 
-const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenActivityForm }) => {
+const ActivityForm = ({
+  activity,
+  onClose,
+  createSnackbar,
+  openActivityForm,
+  setOpenActivityForm,
+  setCreatedInstance,
+}) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
     startDate: false,
@@ -198,34 +205,46 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
         (type) => type.Description === activityRequest.statusID,
       ).ID;
       activity.isLogoUpdate = false;
-      editActivity(activity.ID, activityRequest).then((res) => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: `Activity ${activity.Name} has been successfully edited`,
+      editActivity(activity.ID, activityRequest)
+        .then((res) => {
+          setSaving(false);
+          createSnackbar(
+            `Activity ${activityRequest.name} has been successfully edited`,
+            'success',
+          );
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          createSnackbar(
+            `There was a problem editing your activity, please try again: ${reason}`,
+            'error',
+          );
         });
-        handleWindowClose();
-      });
     } else {
-
-      activityRequest.sportID = sports.find(
-        (type) => type.Name === activityRequest.sportID
-      ).ID
+      activityRequest.sportID = sports.find((type) => type.Name === activityRequest.sportID).ID;
       activityRequest.typeID = activityTypes.find(
-        (type) => type.Description === activityRequest.typeID
-      ).ID
-      console.log(activityRequest)
-      createActivity(activityRequest).then((res) => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: `Activity ${activityRequest.name} has been created`,
+        (type) => type.Description === activityRequest.typeID,
+      ).ID;
+      console.log(activityRequest);
+      createActivity(activityRequest)
+        .then((res) => {
+          setSaving(false);
+          createSnackbar(
+            `Activity ${activityRequest.name} has been successfully created`,
+            'success',
+          );
+          if (setCreatedInstance) {
+            setCreatedInstance(res);
+          }
+          handleWindowClose(onClose);
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(
+            `There was a problem creating your activity, please try again: ${reason}`,
+            'error',
+          );
         });
-        handleWindowClose();
-      }).catch(
-        setSaving(false)
-
-      );
     }
   };
 

@@ -113,10 +113,13 @@ const Form = ({
     return updatedFields;
   }
 
-  const handleWindowClose = () => {
+  const handleWindowClose = (onClose) => {
     setOpenConfirmWindow(false);
     setOpenForm(false);
     setNewInfo(currentInfo);
+    if (onClose) {
+      onClose();
+    }
   };
 
   /**

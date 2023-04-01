@@ -11,11 +11,12 @@ import {
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Activity.module.css';
 import { TeamList } from '../../components/List';
@@ -48,6 +49,7 @@ const Activity = () => {
   const { activityID } = useParams();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [activity, setActivity] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openMatchForm, setOpenMatchForm] = useState(false);
@@ -62,6 +64,10 @@ const Activity = () => {
   const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -122,7 +128,7 @@ const Activity = () => {
   const handleFormSubmit = (status, setOpenForm) => {
     //if you want to do something with the message make a snackbar function here
     setOpenForm(false);
-  }
+  };
 
   const handleDelete = async () => {
     await deleteActivity(activityID);
@@ -354,9 +360,7 @@ const Activity = () => {
               activity={activity}
             />
             <SeriesForm
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenCreateSeriesForm);
-              }}
+              createSnackbar={createSnackbar}
               openSeriesForm={openCreateSeriesForm}
               setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
               activityID={activity.ID}
@@ -427,6 +431,12 @@ const Activity = () => {
             </GordonDialogBox>
           </Grid>
         )}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        />
       </>
     );
   }
