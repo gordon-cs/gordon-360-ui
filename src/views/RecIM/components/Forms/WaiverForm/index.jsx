@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { createParticipant } from 'services/recim/participant';
 import { useNavigate } from 'react-router-dom';
 
-const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiverForm }) => {
+const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverForm }) => {
   const navigate = useNavigate();
   const [errorStatus, setErrorStatus] = useState({
     readCheckbox: false,
@@ -51,14 +51,19 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
-    createParticipant(username).then(() => {
-      setSaving(false);
-      closeWithSnackbar({
-        type: 'success',
-        message: 'Your new activity has been created or whatever message you want here',
+    createParticipant(username)
+      .then(() => {
+        setSaving(false);
+        createSnackbar('You have successfully signed the waiver form', 'success');
+        handleWindowClose();
+      })
+      .catch((reason) => {
+        setSaving(false);
+        createSnackbar(
+          'There was an error signing the waiver form, please try again later',
+          'error',
+        );
       });
-      handleWindowClose();
-    });
   };
 
   let waiverContent = (

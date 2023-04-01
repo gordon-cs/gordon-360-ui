@@ -93,7 +93,7 @@ const Home = () => {
       setLoading(false);
     };
 
-    setOpenWaiver(participant == null);
+    setOpenWaiver(true);
     if (participant) {
       setHasPermissions(participant.IsAdmin);
       loadParticipantData();
