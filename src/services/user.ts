@@ -2,9 +2,9 @@ import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
 import http from './http';
+import { Participation } from './membership';
 import { Class } from './peopleSearch';
 import { Override } from './utils';
-import { Participation } from './membership';
 
 type CLWCredits = {
   current: number;
@@ -264,11 +264,16 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
   const fullName = `${profile?.FirstName} ${profile?.LastName}`;
   const cliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username);
 
+  let advisors: StudentAdvisorInfo[] = [];
+  try {
+    advisors = await getAdvisors(profile.AD_Username);
+  } catch {}
+
   if (isStudent(profile)) {
     return {
       ...profile,
       fullName,
-      Advisors: await getAdvisors(profile.AD_Username),
+      Advisors: advisors,
       CliftonStrengths: cliftonStrengths,
       Majors: [
         profile.Major1Description,
