@@ -142,7 +142,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       },
     );
   }
-
   const currentInfo = useMemo(() => {
     if (activity) {
       return {
@@ -151,18 +150,9 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
         endDate: activity.EndDate,
         registrationStart: activity.RegistrationStart,
         registrationEnd: activity.RegistrationEnd,
-        typeID:
-          activityTypes.find((type) => type.Description === activity.Type) == null
-            ? ''
-            : activityTypes.find((type) => type.Description === activity.Type).Description,
-        sportID:
-          sports.find((type) => type.ID === activity.Sport.ID) == null
-            ? ''
-            : sports.find((type) => type.ID === activity.Sport.ID).Name,
-        statusID:
-          activityStatusTypes.find((type) => type.Description === activity.Status) == null
-            ? ''
-            : activityStatusTypes.find((type) => type.Description === activity.Status).Description,
+        typeID: activity.Type,
+        sportID: activity.Sport?.Name,
+        statusID: activity.Status,
         maxCapacity: activity.MaxCapacity,
         soloRegistration: activity.SoloRegistration,
         completed: activity.Completed,
@@ -179,7 +169,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       maxCapacity: '',
       soloRegistration: false,
     };
-  }, [activity, activityTypes, activityStatusTypes, sports]);
+  }, [activity]);
 
   const errorCases = (field, value) => {
     switch (field) {
@@ -193,10 +183,17 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
 
     let activityRequest = { ...currentInfo, ...newInfo };
 
+    activityRequest.statusID = activityStatusTypes.find(
+      (type) => type.Description === activityRequest.statusID,
+    ).ID;
+
+    activityRequest.sportID = sports.find((type) => type.Name === activityRequest.sportID).ID;
+
+    activityRequest.typeID = activityTypes.find(
+      (type) => type.Description === activityRequest.typeID,
+    ).ID;
+
     if (activity) {
-      activityRequest.statusID = activityStatusTypes.find(
-        (type) => type.Description === activityRequest.statusID,
-      ).ID;
       activity.isLogoUpdate = false;
       editActivity(activity.ID, activityRequest).then((res) => {
         setSaving(false);

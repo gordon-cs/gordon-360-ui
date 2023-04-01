@@ -30,7 +30,6 @@ const truncate = (str) => {
 
 const Header = ({ match, team, activity, admin, children }) => {
   const largeWidth = useMediaQuery(`(min-width: ${windowBreakWidths.breakSM}px)`);
-  console.log(match);
   return (
     <>
       {children && <Grid className={styles.mainHeader}>{children}</Grid>}
@@ -40,7 +39,7 @@ const Header = ({ match, team, activity, admin, children }) => {
           <RecIMBreadcrumb link={(activity || team || match || admin) && `/recim`}>
             <Grid container alignItems="center">
               <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-              {largeWidth && 'Rec-IM Home'}
+              {largeWidth ? 'Rec-IM Home' : 'Home'}
             </Grid>
           </RecIMBreadcrumb>
           {/* Activity breadcrumb */}

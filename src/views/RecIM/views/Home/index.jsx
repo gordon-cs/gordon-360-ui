@@ -207,7 +207,7 @@ const Home = () => {
         <Tab label="My Teams" />
         <Tab
           label={
-            <Badge color="secondary" variant="dot" badgeContent={invites.length}>
+            <Badge color="secondary" variant="dot" sx={{ zIndex: 0 }} badgeContent={invites.length}>
               Invites
             </Badge>
           }

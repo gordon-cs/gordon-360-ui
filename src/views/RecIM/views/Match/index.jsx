@@ -260,7 +260,7 @@ const Match = () => {
         </Grid>
       </Grid>
     );
-    console.log(match);
+
     return (
       <>
         <Header match={match}>{headerContents}</Header>
