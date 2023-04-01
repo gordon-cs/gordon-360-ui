@@ -133,8 +133,6 @@ const SeriesScheduleForm = ({
     },
   ];
 
-  const allFields = [availableDays, availableSurfaces, matchTimes].flat();
-
   const currentInfo = useMemo(() => {
     if (seriesSchedule)
       return {

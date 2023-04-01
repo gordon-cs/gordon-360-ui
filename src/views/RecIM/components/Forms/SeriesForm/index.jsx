@@ -15,6 +15,7 @@ const SeriesForm = ({
   existingActivitySeries,
   scheduleID,
   series, // If series passed, allows edit
+  activityTeams,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     name: false,
@@ -70,17 +71,30 @@ const SeriesForm = ({
   ];
 
   if (series) {
-    createSeriesFields.push({
-      label: 'Series Status',
-      name: 'statusID',
-      type: 'select',
-      menuItems: statuses.map((status) => {
-        return status.Description;
-      }),
-      error: errorStatus.statusID,
-      helperText: '*Required',
-      required: true,
-    });
+    createSeriesFields.push(
+      {
+        label: 'Series Status',
+        name: 'statusID',
+        type: 'select',
+        menuItems: statuses.map((status) => {
+          return status.Description;
+        }),
+        error: errorStatus.statusID,
+        helperText: '*Required',
+        required: true,
+      },
+      {
+        label: 'Teams',
+        name: 'TeamIDs',
+        type: 'multiselect',
+        menuItems: activityTeams.map((team) => {
+          return team.Name;
+        }),
+        error: errorStatus.TeamIDs,
+        helperText: '*Required',
+        required: true,
+      },
+    );
   } else {
     createSeriesFields.push(
       {
@@ -117,10 +131,15 @@ const SeriesForm = ({
 
   const currentInfo = useMemo(() => {
     if (series) {
+      var teamIDs = [];
+      series.TeamStanding.forEach((team) =>
+        teamIDs.push(activityTeams.find((_team) => _team.ID === team.TeamID)?.Name),
+      );
       return {
         name: series.Name,
         startDate: series.StartDate,
         endDate: series.EndDate,
+        TeamIDs: teamIDs,
         statusID: series.Status,
         scheduleID: scheduleID,
       };
@@ -160,6 +179,13 @@ const SeriesForm = ({
       seriesRequest.statusID = statuses.find(
         (status) => status.Description === seriesRequest.statusID,
       ).ID;
+
+      let idArray = [];
+      seriesRequest.TeamIDs.forEach((value) => {
+        idArray.push(activityTeams.find((team) => team.Name === value).ID);
+      });
+      seriesRequest.TeamIDs = idArray;
+
       editSeries(series.ID, seriesRequest).then(() => {
         setSaving(false);
         closeWithSnackbar({

@@ -17,7 +17,7 @@ import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
 
-const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
+const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activityTeams }) => {
   const [anchorEl, setAnchorEl] = useState();
   const [width] = useWindowSize();
   const openMenu = Boolean(anchorEl);
@@ -256,6 +256,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
           setOpenSeriesForm={(bool) => setOpenEditSeriesForm(bool)}
           activityID={series.ActivityID}
           series={series}
+          activityTeams={activityTeams}
         />
       )}
       {openSeriesScheduleForm && (

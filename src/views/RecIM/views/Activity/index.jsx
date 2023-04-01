@@ -239,6 +239,7 @@ const Activity = () => {
                   activityID={activityID}
                   reload={reload}
                   setReload={setReload}
+                  activityTeams={activity?.Team}
                 />
               );
             })
