@@ -200,6 +200,11 @@ const ActivityForm = ({
 
     let activityRequest = { ...currentInfo, ...newInfo };
 
+    activityRequest.sportID = sports.find((type) => type.Name === activityRequest.sportID).ID;
+    activityRequest.typeID = activityTypes.find(
+      (type) => type.Description === activityRequest.typeID,
+    ).ID;
+
     if (activity) {
       activityRequest.statusID = activityStatusTypes.find(
         (type) => type.Description === activityRequest.statusID,
@@ -215,16 +220,10 @@ const ActivityForm = ({
           handleWindowClose();
         })
         .catch((reason) => {
-          createSnackbar(
-            `There was a problem editing your activity, please try again: ${reason}`,
-            'error',
-          );
+          setSaving(false);
+          createSnackbar(`There was a problem editing your activity, please try again`, 'error');
         });
     } else {
-      activityRequest.sportID = sports.find((type) => type.Name === activityRequest.sportID).ID;
-      activityRequest.typeID = activityTypes.find(
-        (type) => type.Description === activityRequest.typeID,
-      ).ID;
       console.log(activityRequest);
       createActivity(activityRequest)
         .then((res) => {
@@ -241,10 +240,7 @@ const ActivityForm = ({
         })
         .catch((reason) => {
           setSaving(false);
-          createSnackbar(
-            `There was a problem creating your activity, please try again: ${reason}`,
-            'error',
-          );
+          createSnackbar(`There was a problem creating your activity, please try again`, 'error');
         });
     }
   };
