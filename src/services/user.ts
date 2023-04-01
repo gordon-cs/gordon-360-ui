@@ -5,7 +5,6 @@ import http from './http';
 import { Participation } from './membership';
 import { Class } from './peopleSearch';
 import { Override } from './utils';
-import { Participation } from './membership';
 
 type CLWCredits = {
   current: number;
