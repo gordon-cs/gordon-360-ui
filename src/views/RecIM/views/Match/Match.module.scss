@@ -102,3 +102,14 @@
   font-weight: bold;
   text-decoration: underline $secondary-green 0.2em;
 }
+
+.menuTitle {
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+  color: $neutral-gray;
+  text-align: center;
+}
+
+.menuButton:hover {
+  background-color: $neutral-black-opacity10;
+}

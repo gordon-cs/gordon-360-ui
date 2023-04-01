@@ -202,7 +202,22 @@ const Match = () => {
             {/* admin controls */}
             {user?.IsAdmin && (
               <Grid item>
-                <IconButton onClick={handleSettingsClick} className={styles.editIconButton}>
+                <IconButton
+                  onClick={handleSettingsClick}
+                  sx={
+                    openMenu && {
+                      animation: 'spin 0.2s linear ',
+                      '@keyframes spin': {
+                        '0%': {
+                          transform: 'rotate(0deg)',
+                        },
+                        '100%': {
+                          transform: 'rotate(120deg)',
+                        },
+                      },
+                    }
+                  }
+                >
                   <SettingsIcon fontSize="large" />
                 </IconButton>
               </Grid>
@@ -282,7 +297,9 @@ const Match = () => {
 
             {/* forms and dialogs */}
             <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
+              <Typography className={styles.menuTitle}>Admin Settings</Typography>
               <MenuItem
+                className={styles.menuButton}
                 dense
                 onClick={() => {
                   setOpenEditMatchStatsForm(true);
@@ -291,6 +308,7 @@ const Match = () => {
                 Edit Match Stats
               </MenuItem>
               <MenuItem
+                className={styles.menuButton}
                 dense
                 onClick={() => {
                   setOpenMatchInformationForm(true);
