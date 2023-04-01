@@ -62,7 +62,6 @@ const Home = () => {
   const [activityTab, setActivityTab] = useState(0);
   const [teamTab, setTeamTab] = useState(0);
 
-  console.log(activities);
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner

@@ -13,6 +13,7 @@ import { useState, useEffect } from 'react';
 import styles from './../../Activity.module.css';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import SeriesScheduleForm from 'views/RecIM/components/Forms/SeriesScheduleForm';
+import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
 
@@ -25,6 +26,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [disclaimerContent, setDisclaimerContent] = useState('');
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
+  const [openMatchForm, setOpenMatchForm] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
@@ -43,19 +45,19 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
     handleClose();
   };
 
+  const handleCreateMatch = () => {
+    setOpenMatchForm(true);
+    handleClose();
+  };
+
   const handleSeriesSchedule = () => {
     setOpenSeriesScheduleForm(true);
     handleClose();
   };
 
-  const handleEditSeriesForm = (status) => {
+  const handleFormSubmit = (status, setOpenForm) => {
     setReload((prev) => !prev);
-    setOpenEditSeriesForm(false);
-  };
-
-  const handleSeriesScheduleForm = (status) => {
-    setReload((prev) => !prev);
-    setOpenSeriesScheduleForm(false);
+    setOpenForm(false);
   };
 
   // autoschedule button
@@ -202,8 +204,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
           <MenuItem dense onClick={handleEditSeries} className={styles.menuButton}>
             Edit Series Info
           </MenuItem>
-          <MenuItem dense className={styles.menuButton}>
-            {/* create match to be handled after form refactor */}
+          <MenuItem dense onClick={handleCreateMatch} className={styles.menuButton}>
             Create a Match
           </MenuItem>
           <MenuItem dense onClick={handleDelete} className={styles.redButton}>
@@ -249,7 +250,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
       {openEditSeriesForm && (
         <SeriesForm
           closeWithSnackbar={(status) => {
-            handleEditSeriesForm(status);
+            handleFormSubmit(status, setOpenEditSeriesForm);
           }}
           openSeriesForm={openEditSeriesForm}
           setOpenSeriesForm={(bool) => setOpenEditSeriesForm(bool)}
@@ -260,11 +261,21 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
       {openSeriesScheduleForm && (
         <SeriesScheduleForm
           closeWithSnackbar={(status) => {
-            handleSeriesScheduleForm(status);
+            handleFormSubmit(status, setOpenSeriesScheduleForm);
           }}
           openSeriesScheduleForm={openSeriesScheduleForm}
           setOpenSeriesScheduleForm={(bool) => setOpenSeriesScheduleForm(bool)}
           seriesID={series.ID}
+        />
+      )}
+      {openMatchForm && (
+        <MatchForm
+          closeWithSnackbar={(status) => {
+            handleFormSubmit(status, setOpenMatchForm);
+          }}
+          openMatchInformationForm={openMatchForm}
+          setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
+          series={series}
         />
       )}
     </>

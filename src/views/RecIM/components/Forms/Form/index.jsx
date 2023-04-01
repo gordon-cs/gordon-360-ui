@@ -23,10 +23,7 @@ const Form = ({
   newInfoCallback,
   showConfirmationWindow = true,
 }) => {
-  const allFields = [
-    fields,
-    // if you need more fields put them here, or if you make a "second page"
-  ].flat();
+  const allFields = fields.flat();
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
@@ -146,7 +143,6 @@ const Form = ({
   const DiaglogContent = () => {
     let index = 0;
     return fields.map((set) => {
-      console.log(formTitles.contentCardTitles);
       let content = (
         <ContentCard
           title={

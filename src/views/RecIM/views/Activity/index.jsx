@@ -24,7 +24,6 @@ import { TeamList } from '../../components/List';
 import TeamForm from '../../components/Forms/TeamForm';
 import { deleteActivity, getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
-import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
@@ -51,7 +50,6 @@ const Activity = () => {
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
-  const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openImageOptions, setOpenImageOptions] = useState(false);
@@ -81,7 +79,6 @@ const Activity = () => {
     openActivityForm,
     openTeamForm,
     openCreateSeriesForm,
-    openMatchForm,
     openImageOptions,
     reload,
   ]);
@@ -212,26 +209,11 @@ const Activity = () => {
 
     let scheduleCard = activity && (
       <Card>
-        <CardHeader title="Schedule" className={styles.cardHeader} />
+        <CardHeader title="Activity Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
           {isAdmin && (
             <Grid container className={styles.buttonArea}>
-              <Grid item xs={6}>
-                <Grid container justifyContent="center">
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    startIcon={<AddCircleRoundedIcon />}
-                    className={styles.actionButton}
-                    onClick={() => {
-                      setOpenMatchForm(true);
-                    }}
-                  >
-                    Create a Match
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Grid container justifyContent="center">
                   <Button
                     variant="contained"
@@ -353,14 +335,6 @@ const Activity = () => {
               }}
               openActivityForm={openActivityForm}
               setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
-            />
-            <MatchForm
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenMatchForm);
-              }}
-              openMatchInformationForm={openMatchForm}
-              setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
-              activity={activity}
             />
             <SeriesForm
               closeWithSnackbar={(status) => {
