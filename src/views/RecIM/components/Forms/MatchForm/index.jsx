@@ -3,7 +3,7 @@ import Form from '../Form';
 import { createMatch, updateMatch, getSurfaces, getMatchStatusTypes } from 'services/recim/match';
 
 const MatchForm = ({
-  closeWithSnackbar,
+  createSnackbar,
   openMatchInformationForm,
   setOpenMatchInformationForm,
   activity,
@@ -173,24 +173,30 @@ const MatchForm = ({
     matchRequest.TeamIDs = idArray;
 
     if (activity)
-      createMatch(matchRequest).then((result) => {
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Match information created successfully',
+      createMatch(matchRequest)
+        .then((result) => {
+          setSaving(false);
+          createSnackbar(`Match was successfully created`, 'success');
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(`There was a problem creating your match`, 'error');
         });
-        handleWindowClose();
-      });
     else if (match) {
       matchRequest.StatusID = matchStatus.find(
         (type) => type.Description === matchRequest.StatusID,
       ).ID;
-      updateMatch(match.ID, matchRequest).then((result) => {
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Match information edited successfully',
+      updateMatch(match.ID, matchRequest)
+        .then((result) => {
+          setSaving(false);
+          createSnackbar(`Match was successfully edited`, 'success');
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(`There was a problem editing your match`, 'error');
         });
-        handleWindowClose();
-      });
     }
   };
 

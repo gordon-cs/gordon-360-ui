@@ -236,7 +236,8 @@ const ActivityForm = ({
           if (setCreatedInstance) {
             setCreatedInstance(res);
           }
-          handleWindowClose(onClose);
+          onClose();
+          handleWindowClose();
         })
         .catch((reason) => {
           setSaving(false);

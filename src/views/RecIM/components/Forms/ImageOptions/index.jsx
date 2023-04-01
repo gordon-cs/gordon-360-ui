@@ -7,7 +7,7 @@ import {
   DialogTitle,
   Tooltip,
 } from '@mui/material';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import GordonLoader from 'components/Loader';
@@ -21,8 +21,8 @@ const ASPECT_RATIO = 1;
 
 const ImageOptions = ({
   category,
+  createSnackbar,
   component,
-  closeWithSnackbar,
   openImageOptions,
   setOpenImageOptions,
 }) => {
@@ -35,13 +35,7 @@ const ImageOptions = ({
   const cropperRef = useRef();
   const [loading, setLoading] = useState();
 
-  // load ImageOptions
-  useEffect(() => {
-    setLoading(true);
-    loadImageOptions().then(() => setLoading(false));
-  }, []);
-
-  const loadImageOptions = () => {
+  const loadImageOptions = useCallback(() => {
     return new Promise((resolve, reject) => {
       let dataURL = component?.Logo ?? defaultLogo;
       let i = new Image();
@@ -54,7 +48,12 @@ const ImageOptions = ({
       };
       i.src = dataURL;
     });
-  };
+  }, [component]);
+  // load ImageOptions
+  useEffect(() => {
+    setLoading(true);
+    loadImageOptions().then(() => setLoading(false));
+  }, [loadImageOptions]);
 
   const handleWindowClose = () => {
     setOpenImageOptions(false);
@@ -83,13 +82,14 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        editActivity(component.ID, activityRequest).then(() => {
-          closeWithSnackbar({
-            type: 'success',
-            message: 'Activity Logo set to default successfully',
+        editActivity(component.ID, activityRequest)
+          .then(() => {
+            createSnackbar('Activity logo set to default successfully', 'success');
+            handleWindowClose();
+          })
+          .catch((reason) => {
+            createSnackbar('There was a problem setting the logo to default', 'error');
           });
-          handleWindowClose();
-        });
         break;
       }
       // reset Logo on Rec-IM Team page
@@ -99,14 +99,17 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        editTeam(component.ID, teamRequest).then(() => {
-          closeWithSnackbar({
-            type: 'success',
-            message: 'Team Logo set to default successfully',
+        editTeam(component.ID, teamRequest)
+          .then(() => {
+            createSnackbar('Team Logo set to default successfully', 'success');
+            handleWindowClose();
+          })
+          .catch((reason) => {
+            createSnackbar('There was a problem setting the logo to defaul', 'error');
           });
-
-          handleWindowClose();
-        });
+        break;
+      }
+      default: {
         break;
       }
     }
@@ -125,13 +128,14 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        editActivity(component.ID, activityRequest).then(() => {
-          closeWithSnackbar({
-            type: 'success',
-            message: 'Activity Logo edited successfully',
+        editActivity(component.ID, activityRequest)
+          .then(() => {
+            createSnackbar('Activity logo edited successfully', 'success');
+            handleWindowClose();
+          })
+          .catch((reason) => {
+            createSnackbar('There was a problem editing the activity logo', 'erorr');
           });
-          handleWindowClose();
-        });
         break;
       }
       // update Logo on Rec-IM Team page
@@ -141,14 +145,17 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        editTeam(component.ID, teamRequest).then(() => {
-          closeWithSnackbar({
-            type: 'success',
-            message: 'Team Logo edited successfully',
+        editTeam(component.ID, teamRequest)
+          .then(() => {
+            createSnackbar('Team logo edited successfully', 'success');
+            handleWindowClose();
+          })
+          .catch((reason) => {
+            createSnackbar('There was a problem editing your team logo', 'error');
           });
-
-          handleWindowClose();
-        });
+        break;
+      }
+      default: {
         break;
       }
     }

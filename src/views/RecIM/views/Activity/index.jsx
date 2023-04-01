@@ -125,11 +125,6 @@ const Activity = () => {
       }
   }, [activity]);
 
-  const handleFormSubmit = (status, setOpenForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenForm(false);
-  };
-
   const handleDelete = async () => {
     await deleteActivity(activityID);
     setOpenConfirmDelete(false);
@@ -206,9 +201,7 @@ const Activity = () => {
         {openActivityForm && (
           <ActivityForm
             activity={activity}
-            closeWithSnackbar={(status) => {
-              handleFormSubmit(status, setOpenActivityForm);
-            }}
+            createSnackbar={createSnackbar}
             openActivityForm={openActivityForm}
             setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
           />
@@ -352,9 +345,7 @@ const Activity = () => {
             </Grid>
             {/* forms and dialogs */}
             <MatchForm
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenMatchForm);
-              }}
+              createSnackbar={createSnackbar}
               openMatchInformationForm={openMatchForm}
               setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
               activity={activity}
@@ -367,10 +358,10 @@ const Activity = () => {
               existingActivitySeries={activity.Series}
             />
             <TeamForm
-              closeWithSnackbar={(teamID, status) => {
-                handleFormSubmit(status, setOpenTeamForm);
+              onClose={(teamID) => {
                 navigate(`team/${teamID}`);
               }}
+              createSnackbar={createSnackbar}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={activityID}
@@ -378,10 +369,8 @@ const Activity = () => {
             {openImageOptions && (
               <ImageOptions
                 category={'Activity'}
+                createSnackbar={createSnackbar}
                 component={activity}
-                closeWithSnackbar={(status) => {
-                  handleFormSubmit(status, setOpenImageOptions);
-                }}
                 openImageOptions={openImageOptions}
                 setOpenImageOptions={setOpenImageOptions}
               />
