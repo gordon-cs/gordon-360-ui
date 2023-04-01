@@ -1,9 +1,10 @@
 import { Grid, Typography, Card, CardHeader, CardContent, Button, IconButton } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
@@ -25,6 +26,7 @@ const Team = () => {
   const [reload, setReload] = useState(false);
   const [team, setTeam] = useState();
   const [loading, setLoading] = useState(true);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openImageOptions, setOpenImageOptions] = useState(false);
@@ -32,10 +34,11 @@ const Team = () => {
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
-  const handleInviteParticipantForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenInviteParticipantForm(false);
-  };
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
+
   useEffect(() => {
     const loadTeamData = async () => {
       setLoading(true);
@@ -78,16 +81,6 @@ const Team = () => {
       return <Typography className={styles.subtitle}>Activity has not started</Typography>;
     }
     return <GordonLoader size={15} inline />;
-  };
-
-  const handleTeamForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenTeamForm(false);
-  };
-
-  const handleOpenImageOptionsSubmit = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenImageOptions(false);
   };
 
   const handleDelete = async () => {
@@ -189,9 +182,7 @@ const Team = () => {
           )}
         </CardContent>
         <InviteParticipantForm
-          closeWithSnackbar={(status) => {
-            handleInviteParticipantForm(status);
-          }}
+          createSnackbar={createSnackbar}
           openInviteParticipantForm={openInviteParticipantForm}
           setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
           teamID={teamID}
@@ -230,9 +221,7 @@ const Team = () => {
 
             {openTeamForm && (
               <TeamForm
-                closeWithSnackbar={(status) => {
-                  handleTeamForm(status);
-                }}
+                createSnackbar={createSnackbar}
                 openTeamForm={openTeamForm}
                 setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
                 activityID={team?.Activity?.ID}
@@ -244,18 +233,14 @@ const Team = () => {
               <ImageOptions
                 category={'Team'}
                 component={team}
-                closeWithSnackbar={(status) => {
-                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
-                }}
+                createSnackbar={createSnackbar}
                 openImageOptions={openImageOptions}
                 setOpenImageOptions={setOpenImageOptions}
               />
             )}
             {/* forms and dialogs */}
             <TeamForm
-              closeWithSnackbar={(status) => {
-                handleTeamForm(status);
-              }}
+              createSnackbar={createSnackbar}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={team?.Activity?.ID}
@@ -266,9 +251,7 @@ const Team = () => {
               <ImageOptions
                 category={'Team'}
                 component={team}
-                closeWithSnackbar={(status) => {
-                  handleOpenImageOptionsSubmit(status, setOpenImageOptions);
-                }}
+                createSnackbar={createSnackbar}
                 openImageOptions={openImageOptions}
                 setOpenImageOptions={setOpenImageOptions}
               />
@@ -317,6 +300,12 @@ const Team = () => {
             </GordonDialogBox>
           </Grid>
         )}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        />
       </>
     );
   }
