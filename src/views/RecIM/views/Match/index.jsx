@@ -17,7 +17,12 @@ import Header from '../../components/Header';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { getMatchByID, getMatchAttendance, deleteMatchCascade } from 'services/recim/match';
+import {
+  getMatchByID,
+  getMatchAttendance,
+  deleteMatchCascade,
+  updateMatch,
+} from 'services/recim/match';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { standardDate } from 'views/RecIM/components/Helpers';
@@ -65,6 +70,8 @@ const Match = () => {
   const [matchName, setMatchName] = useState();
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
+
+  console.log(match);
   useEffect(() => {
     const loadData = async () => {
       if (profile) {
@@ -117,6 +124,14 @@ const Match = () => {
     setOpenConfirmDelete(false);
     navigate(`/recim/activity/${match.Activity.ID}`);
     // @TODO add snackbar
+  };
+
+  const handleMatchCompletedShortcut = async () => {
+    if (match) {
+      if (match.Status === 'Completed')
+        await updateMatch(match.ID, { StatusID: 2 }); //confirmed (no memory of previous)
+      else await updateMatch(match.ID, { StatusID: 6 }); //completed
+    }
   };
 
   if (loading && !profile) {
@@ -302,6 +317,16 @@ const Match = () => {
             {/* forms and dialogs */}
             <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
               <Typography className={styles.menuTitle}>Admin Settings</Typography>
+              <MenuItem
+                className={styles.greenMenuButton}
+                dense
+                disabled={match.Scores.length === 0}
+                onClick={() => {
+                  setOpenEditMatchStatsForm(true);
+                }}
+              >
+                Mark as Completed
+              </MenuItem>
               <MenuItem
                 className={styles.menuButton}
                 dense

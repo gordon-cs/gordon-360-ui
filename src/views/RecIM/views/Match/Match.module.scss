@@ -98,6 +98,15 @@
   background-color: $alternative-red;
 }
 
+.greenMenuButton {
+  background-color: $secondary-green;
+  color: $neutral-white;
+}
+
+.greenMenuButton:hover {
+  background-color: $alternative-red;
+}
+
 .matchWinner {
   font-weight: bold;
   text-decoration: underline $secondary-green 0.2em;
