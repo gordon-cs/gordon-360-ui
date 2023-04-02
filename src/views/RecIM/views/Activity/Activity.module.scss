@@ -174,3 +174,24 @@
   justify-content: center;
   width: 100%;
 }
+
+.seriesScheduleMenu {
+  margin: 1em;
+}
+
+.seriesScheduleMenuItem {
+  margin: 1em;
+  color: $neutral-gray;
+  text-align: center;
+
+  &_available {
+    text-decoration-line: overline;
+    text-decoration-style: solid;
+    text-decoration-color: $primary-cyan;
+    text-decoration-thickness: 3px;
+    color: $neutral-dark-gray2;
+    font-weight: bold;
+    margin: 1em;
+    text-align: center;
+  }
+}

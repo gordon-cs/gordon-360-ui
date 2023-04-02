@@ -1,4 +1,4 @@
-import { Grid, Typography, Chip, IconButton, Menu, MenuItem } from '@mui/material';
+import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Divider } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ContentCard } from 'views/RecIM/components/Forms/Form/components/ContentCard';
@@ -7,9 +7,17 @@ import UpdateIcon from '@mui/icons-material/Update';
 import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import { formatDateTimeRange, standardDate } from 'views/RecIM/components/Helpers';
+import {
+  formatDateTimeRange,
+  standardDate,
+  standardTimeOnly,
+} from 'views/RecIM/components/Helpers';
 import { format, isPast, isFuture } from 'date-fns';
-import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/series';
+import {
+  deleteSeriesCascade,
+  scheduleSeriesMatches,
+  getSeriesSchedule,
+} from 'services/recim/series';
 import { useState, useEffect } from 'react';
 import styles from './../../Activity.module.css';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
@@ -30,11 +38,20 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
+  const [seriesSchedule, setSeriesSchedule] = useState();
 
   useEffect(() => {
     if (width < windowBreakWidths.breakSM) setIsMobileView(true);
     else setIsMobileView(false);
   }, [width]);
+
+  useEffect(() => {
+    const loadSchedule = async () => {
+      let fetchedSchedule = await getSeriesSchedule(series.ID);
+      if (fetchedSchedule.ID !== 0) setSeriesSchedule(fetchedSchedule);
+    };
+    loadSchedule();
+  }, [series]);
 
   // default closure
   const handleClose = () => {
@@ -169,6 +186,48 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
       ></Chip>
     );
   };
+
+  const scheduleMenu = () => {
+    let daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let reformatedSchedule = [];
+    daysArr.forEach((day) => {
+      reformatedSchedule.push({
+        Day: isMobileView ? day.substring(0, 1) : day,
+        Available: seriesSchedule?.AvailableDays[day],
+      });
+    });
+    return (
+      <Menu
+        open={showDetailsMenu}
+        onClose={handleClose}
+        anchorEl={anchorEl}
+        className={styles.menu}
+      >
+        <Typography className={styles.menuTitle}>Schedule</Typography>
+        <Divider />
+        <Typography className={styles.menuTitle}>
+          {standardTimeOnly(seriesSchedule?.StartTime)} -{' '}
+          {standardTimeOnly(seriesSchedule?.EndTime)}
+        </Typography>
+        <Grid container direction="row" xs={12} className={styles.seriesScheduleMenu}>
+          {reformatedSchedule.map((day) => (
+            <Grid item direction="column">
+              <Typography
+                className={`${
+                  day.Available
+                    ? styles.seriesScheduleMenuItem_available
+                    : styles.seriesScheduleMenuItem
+                }`}
+              >
+                {day.Day}
+              </Typography>
+            </Grid>
+          ))}
+        </Grid>
+      </Menu>
+    );
+  };
+
   return (
     <>
       <Grid container className={styles.seriesHeader} alignItems="center" columnSpacing={1}>
@@ -201,18 +260,15 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
             </IconButton>{' '}
           </Grid>
         )}
-        <Grid container item xs={12} justifyContent="center">
-          <IconButton onClick={handleOpenScheduleDetails}>
-            <CalendarTodayIcon inline />
-          </IconButton>{' '}
-        </Grid>
+        {seriesSchedule && (
+          <Grid container item xs={12} justifyContent="center">
+            <IconButton onClick={handleOpenScheduleDetails}>
+              <CalendarTodayIcon inline />
+            </IconButton>{' '}
+          </Grid>
+        )}
         {/* details menu */}
-        <Menu
-          open={showDetailsMenu}
-          onClose={handleClose}
-          anchorEl={anchorEl}
-          className={styles.menu}
-        ></Menu>
+        {scheduleMenu()}
         {/* options menu */}
         <Menu
           open={showAdminTools}

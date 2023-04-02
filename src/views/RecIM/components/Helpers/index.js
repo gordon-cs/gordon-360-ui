@@ -30,4 +30,14 @@ const formatDateTimeRange = (startDateTime, endDateTime) => {
   return `${format(startDateTime, 'MMM d yyyy')} - ${format(endDateTime, 'MMM d yyyy')}`;
 };
 
-export { standardDate, formatDateTimeRange };
+const standardTimeOnly = (date) => {
+  if (!isValid(date)) date = new Date(Date.parse(date)); // try parsing if invalid
+  if (!isValid(date)) {
+    // if still invalid (perhaps null)
+    console.log('standardDate called with an invalid or null date');
+    return;
+  }
+  return format(date, 'h:mmaaa');
+};
+
+export { standardDate, formatDateTimeRange, standardTimeOnly };
