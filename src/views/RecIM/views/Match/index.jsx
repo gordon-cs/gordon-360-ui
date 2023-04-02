@@ -72,7 +72,6 @@ const Match = () => {
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
 
-  console.log(match);
   useEffect(() => {
     const loadData = async () => {
       if (profile) {
