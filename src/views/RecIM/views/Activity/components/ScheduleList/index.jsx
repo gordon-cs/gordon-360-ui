@@ -6,6 +6,7 @@ import { MatchList } from 'views/RecIM/components/List';
 import UpdateIcon from '@mui/icons-material/Update';
 import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { formatDateTimeRange, standardDate } from 'views/RecIM/components/Helpers';
 import { format, isPast, isFuture } from 'date-fns';
 import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/series';
@@ -20,7 +21,8 @@ import { windowBreakWidths } from 'theme';
 const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activityTeams }) => {
   const [anchorEl, setAnchorEl] = useState();
   const [width] = useWindowSize();
-  const openMenu = Boolean(anchorEl);
+  const [showAdminTools, setShowAdminTools] = useState(false);
+  const [showDetailsMenu, setShowDetailsMenu] = useState(false);
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
   const [openDeleteDisclaimer, setOpenDeleteDisclaimer] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
@@ -37,6 +39,8 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
   // default closure
   const handleClose = () => {
     setAnchorEl(null);
+    setShowAdminTools(false);
+    setShowDetailsMenu(false);
   };
 
   // edit button
@@ -133,7 +137,17 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
     });
   };
 
+  const handleOpenScheduleDetails = (e) => {
+    handleButtonClick(e);
+    setShowDetailsMenu(true);
+  };
+
   // menu button click
+  const handleOpenAdminTools = (e) => {
+    handleButtonClick(e);
+    setShowAdminTools(true);
+  };
+
   const handleButtonClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -182,12 +196,30 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
 
         {isAdmin && (
           <Grid container item xs={5} sm={1} justifyContent="right">
-            <IconButton onClick={handleButtonClick}>
+            <IconButton onClick={handleOpenAdminTools}>
               <TuneIcon inline />
             </IconButton>{' '}
           </Grid>
         )}
-        <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl} className={styles.menu}>
+        <Grid container item xs={12} justifyContent="center">
+          <IconButton onClick={handleOpenScheduleDetails}>
+            <CalendarTodayIcon inline />
+          </IconButton>{' '}
+        </Grid>
+        {/* details menu */}
+        <Menu
+          open={showDetailsMenu}
+          onClose={handleClose}
+          anchorEl={anchorEl}
+          className={styles.menu}
+        ></Menu>
+        {/* options menu */}
+        <Menu
+          open={showAdminTools}
+          onClose={handleClose}
+          anchorEl={anchorEl}
+          className={styles.menu}
+        >
           <Typography className={styles.menuTitle}>Schedule</Typography>
           <MenuItem
             dense
