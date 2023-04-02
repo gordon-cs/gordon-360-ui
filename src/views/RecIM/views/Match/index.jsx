@@ -65,7 +65,6 @@ const Match = () => {
   const [matchName, setMatchName] = useState();
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
-
   useEffect(() => {
     const loadData = async () => {
       if (profile) {
@@ -170,7 +169,7 @@ const Match = () => {
                 <Typography
                   variant="h5"
                   className={`${styles.teamName} gc360_text_link ${
-                    team0Score > team1Score && styles.matchWinner
+                    team0Score > team1Score && match?.Status === 'Completed' && styles.matchWinner
                   }`}
                 >
                   {match?.Team[0]?.Name ?? 'No team yet...'}
@@ -235,7 +234,12 @@ const Match = () => {
           >
             <Grid item sm={8} lg="auto">
               <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
-                <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
+                <Typography
+                  variant="h5"
+                  className={`${styles.teamName} gc360_text_link ${
+                    team1Score > team0Score && match?.Status === 'Completed' && styles.matchWinner
+                  }`}
+                >
                   {match?.Team[1]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
