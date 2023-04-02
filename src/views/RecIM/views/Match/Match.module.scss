@@ -99,12 +99,14 @@
 }
 
 .greenMenuButton {
-  background-color: $secondary-green;
-  color: $neutral-white;
+  // color: $secondary-green;
+  // color: $neutral-white;
+  transition: all 0.3s ease-in-out;
 }
 
 .greenMenuButton:hover {
-  background-color: $alternative-red;
+  box-shadow: inset 0px 0px 7px $secondary-green;
+  transition: all 0.3s ease-in-out;
 }
 
 .matchWinner {

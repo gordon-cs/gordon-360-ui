@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useNavigate, useParams, Link as LinkRouter } from 'react-router-dom';
 import { useUser } from 'hooks';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
@@ -68,6 +68,7 @@ const Match = () => {
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
   const [matchName, setMatchName] = useState();
+  const [reloadFlag, setReloadFlag] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
 
@@ -96,10 +97,6 @@ const Match = () => {
     }
   }, [match]);
 
-  const handleFormSubmit = useCallback((status, setOpenForm) => {
-    setOpenForm(false);
-  }, []);
-
   useEffect(() => {
     const loadMatch = async () => {
       setLoading(true);
@@ -108,7 +105,12 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID, handleFormSubmit]);
+  }, [matchID, reloadFlag]);
+
+  const handleFormSubmit = (status, setOpenForm) => {
+    setOpenForm(false);
+    setReloadFlag((bool) => !bool);
+  };
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -130,6 +132,7 @@ const Match = () => {
       if (match.Status === 'Completed')
         await updateMatch(match.ID, { StatusID: 2 }); //confirmed (no memory of previous)
       else await updateMatch(match.ID, { StatusID: 6 }); //completed
+      setReloadFlag((bool) => !bool);
     }
   };
 
@@ -320,11 +323,9 @@ const Match = () => {
                 className={styles.greenMenuButton}
                 dense
                 disabled={match.Scores.length === 0}
-                onClick={() => {
-                  setOpenEditMatchStatsForm(true);
-                }}
+                onClick={() => handleMatchCompletedShortcut()}
               >
-                Mark as Completed
+                Mark as {match?.Status === 'Completed' ? 'Confirmed' : 'Completed'}
               </MenuItem>
               <MenuItem
                 className={styles.menuButton}
