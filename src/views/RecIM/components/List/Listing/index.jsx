@@ -24,12 +24,13 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 import { getActivityTypes, isActivityRegisterable } from 'services/recim/activity';
-import { removeAttendance, updateAttendance } from 'services/recim/match';
+import { deleteSurface, removeAttendance, updateAttendance } from 'services/recim/match';
 import { getParticipantAttendanceCountForTeam } from 'services/recim/team';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
+import GordonDialogBox from 'components/GordonDialogBox';
 
 // Old activitylisting
 const ActivityListing = ({ activity }) => {
@@ -676,6 +677,7 @@ const MatchListing = ({ match, activityID }) => {
 
 const SurfaceListing = ({ surface }) => {
   const [anchorEl, setAnchorEl] = useState();
+  const [openConfirmDelete, setOpenConfirmDelete] = useState();
   const optionsOpen = Boolean(anchorEl);
 
   if (!surface) return null;
@@ -712,13 +714,31 @@ const SurfaceListing = ({ surface }) => {
           }}
         >
           <MenuItem dense onClick={null} divider>
-            Edit surface
+            Edit details
           </MenuItem>
-          <MenuItem dense onClick={null} className={styles.redButton}>
+          <MenuItem dense onClick={() => setOpenConfirmDelete(true)} className={styles.redButton}>
             Delete surface
           </MenuItem>
         </Menu>
       </ListItem>
+      <GordonDialogBox
+        title="Confirm Delete"
+        open={openConfirmDelete}
+        cancelButtonClicked={() => setOpenConfirmDelete(false)}
+        buttonName="Yes, delete this surface"
+        buttonClicked={async () => {
+          await deleteSurface(surface.ID);
+          setOpenConfirmDelete(false);
+        }}
+        severity="error"
+      >
+        <br />
+        <Typography variant="body1">
+          Are you sure you want to permanently delete this surface:
+          <i>'{surface.Name}'</i>?
+        </Typography>
+        <Typography variant="body1">This action cannot be undone.</Typography>
+      </GordonDialogBox>
     </ListItem>
   );
 };
