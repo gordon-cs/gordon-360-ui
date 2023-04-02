@@ -675,14 +675,49 @@ const MatchListing = ({ match, activityID }) => {
 };
 
 const SurfaceListing = ({ surface }) => {
+  const [anchorEl, setAnchorEl] = useState();
+  const optionsOpen = Boolean(anchorEl);
+
   if (!surface) return null;
+
+  const handleOptions = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   return (
     <ListItem key={surface.ID} className={styles.listingWrapper}>
-      <ListItem className={styles.listing}>
+      <ListItem
+        className={styles.listing}
+        secondaryAction={
+          <IconButton edge="end" onClick={handleOptions}>
+            <MoreHorizIcon />
+          </IconButton>
+        }
+      >
         <Grid container direction="column">
           <ListItemText>{surface.Name}</ListItemText>
           <Typography className={styles.listingSubtitle}>{surface.Description}</Typography>
         </Grid>
+        <Menu
+          open={optionsOpen}
+          onClose={() => setAnchorEl()}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem dense onClick={null} divider>
+            Edit surface
+          </MenuItem>
+          <MenuItem dense onClick={null} className={styles.redButton}>
+            Delete surface
+          </MenuItem>
+        </Menu>
       </ListItem>
     </ListItem>
   );
