@@ -119,6 +119,7 @@ const InformationField = ({
             >
               {menuItems.map((item) => (
                 // @TODO key needs to be updated to item id once exists
+                // @TODO known bug, select does not shrink to ellipsis
                 <MenuItem key={item} className={styles.select_text} value={item}>
                   {item}
                 </MenuItem>

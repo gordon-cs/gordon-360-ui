@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { useNavigate, useParams, Link as LinkRouter } from 'react-router-dom';
 import { useUser } from 'hooks';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
@@ -82,17 +82,6 @@ const Match = () => {
   }, [profile]);
 
   useEffect(() => {
-    const loadMatch = async () => {
-      setLoading(true);
-      setMatch(await getMatchByID(matchID));
-      setMatchAttendance(await getMatchAttendance(matchID));
-      setLoading(false);
-    };
-    loadMatch();
-  }, [matchID, openMatchInformationForm, openEditMatchStatsForm]);
-  // @TODO modify above dependency to only refresh upon form submit (not cancel)
-
-  useEffect(() => {
     if (match) {
       const assignMatchScores = async () => {
         setTeam0Score(
@@ -107,9 +96,19 @@ const Match = () => {
     }
   }, [match]);
 
-  const handleFormSubmit = (status, setOpenForm) => {
+  const handleFormSubmit = useCallback((status, setOpenForm) => {
     setOpenForm(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    const loadMatch = async () => {
+      setLoading(true);
+      setMatch(await getMatchByID(matchID));
+      setMatchAttendance(await getMatchAttendance(matchID));
+      setLoading(false);
+    };
+    loadMatch();
+  }, [matchID, handleFormSubmit]);
 
   const handleClose = () => {
     setAnchorEl(null);
