@@ -41,7 +41,7 @@ const InstructionsCard = () => {
     { description: 'Current Senior', points: 4 },
     { description: '23+ years old', points: 1 },
     { description: 'Full-time, off-campus program credit', points: 1 },
-    { description: 'Academic probation', points: -1 },
+    { description: 'Academic/Chapel probation', points: -1 },
     { description: 'Possible academic suspension', points: -2 },
     { description: `${thisYear - 1}-${thisYear} Disciplinary Probation`, points: -3 },
   ];
@@ -124,7 +124,7 @@ const InstructionsCard = () => {
           <strong>
             <em>building</em>
           </strong>{' '}
-          no later than Apr. 8. Further information about specific apartment/room selection will be
+          no later than Apr. 13. Further information about specific apartment/room selection will be
           communicated in that email.
         </Typography>
       </CardContent>
