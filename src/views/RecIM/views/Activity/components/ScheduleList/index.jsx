@@ -14,7 +14,7 @@ import styles from './../../Activity.module.css';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import SeriesScheduleForm from 'views/RecIM/components/Forms/SeriesScheduleForm';
 
-const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
+const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, createSnackbar }) => {
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
@@ -24,29 +24,19 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
 
   // default closure
-  const handleClose = () => {
+  const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
   // edit button
-  const handleEditSeries = () => {
+  const handleEditSeriesMenuClick = () => {
     setOpenEditSeriesForm(true);
-    handleClose();
+    handleMenuClose();
   };
 
-  const handleSeriesSchedule = () => {
+  const handleSeriesScheduleMenuClick = () => {
     setOpenSeriesScheduleForm(true);
-    handleClose();
-  };
-
-  const handleEditSeriesForm = (status) => {
-    setReload((prev) => !prev);
-    setOpenEditSeriesForm(false);
-  };
-
-  const handleSeriesScheduleForm = (status) => {
-    setReload((prev) => !prev);
-    setOpenSeriesScheduleForm(false);
+    handleMenuClose();
   };
 
   // autoschedule button
@@ -84,7 +74,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
       </Typography>,
     );
     setOpenAutoSchedulerDisclaimer(true);
-    handleClose();
+    handleMenuClose();
   };
 
   const handleConfirmAutoSchedule = () => {
@@ -112,7 +102,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
       </Typography>,
     );
     setOpenDeleteDisclaimer(true);
-    handleClose();
+    handleMenuClose();
   };
 
   const handleConfirmDelete = () => {
@@ -170,11 +160,11 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
           </Grid>
         )}
 
-        <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
-          <MenuItem dense onClick={handleEditSeries} divider>
+        <Menu open={openMenu} onClose={handleMenuClose} anchorEl={anchorEl}>
+          <MenuItem dense onClick={handleEditSeriesMenuClick} divider>
             Edit Series Info
           </MenuItem>
-          <MenuItem dense onClick={handleSeriesSchedule} divider>
+          <MenuItem dense onClick={handleSeriesScheduleMenuClick} divider>
             Edit Schedule
           </MenuItem>
           <MenuItem
@@ -227,8 +217,9 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
       </GordonDialogBox>
       {openEditSeriesForm && (
         <SeriesForm
-          closeWithSnackbar={(status) => {
-            handleEditSeriesForm(status);
+          createSnackbar={createSnackbar}
+          onClose={() => {
+            setReload((prev) => !prev);
           }}
           openSeriesForm={openEditSeriesForm}
           setOpenSeriesForm={(bool) => setOpenEditSeriesForm(bool)}
@@ -238,8 +229,9 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
       )}
       {openSeriesScheduleForm && (
         <SeriesScheduleForm
-          closeWithSnackbar={(status) => {
-            handleSeriesScheduleForm(status);
+          createSnackbar={createSnackbar}
+          onClose={() => {
+            setReload((prev) => !prev);
           }}
           openSeriesScheduleForm={openSeriesScheduleForm}
           setOpenSeriesScheduleForm={(bool) => setOpenSeriesScheduleForm(bool)}

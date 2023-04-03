@@ -256,6 +256,7 @@ const Activity = () => {
                   activityID={activityID}
                   reload={reload}
                   setReload={setReload}
+                  createSnackbar={createSnackbar}
                 />
               );
             })
@@ -352,6 +353,9 @@ const Activity = () => {
             />
             <SeriesForm
               createSnackbar={createSnackbar}
+              onClose={() => {
+                //temporary placeholder, reload rework will be in new PR
+              }}
               openSeriesForm={openCreateSeriesForm}
               setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
               activityID={activity.ID}

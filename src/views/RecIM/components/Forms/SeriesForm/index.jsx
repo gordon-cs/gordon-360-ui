@@ -9,6 +9,7 @@ import {
 
 const SeriesForm = ({
   createSnackbar,
+  onClose,
   openSeriesForm,
   setOpenSeriesForm,
   activityID,
@@ -138,7 +139,6 @@ const SeriesForm = ({
     }
   }, [activityID, scheduleID, series]);
 
-
   const isNumeric = (value) => {
     return /^-?\d+$/.test(value) || value.length === 0;
   };
@@ -165,6 +165,7 @@ const SeriesForm = ({
         .then(() => {
           setSaving(false);
           createSnackbar(`Series ${seriesRequest.name} has been successfully edited`, 'success');
+          onClose();
           handleWindowClose();
         })
         .catch((reason) => {
@@ -187,15 +188,13 @@ const SeriesForm = ({
         .then(() => {
           setSaving(false);
           createSnackbar(`Series ${seriesRequest.name} has been successfully created`, 'success');
+          onClose();
           handleWindowClose();
         })
         .catch((reason) => {
           setSaving(false);
-          console.log(reason)
-          createSnackbar(
-            `There was a problem creating your series, please try again: ${reason.title}`,
-            'error',
-          );
+          console.log(reason);
+          createSnackbar(`There was a problem creating your series, please try again`, 'error');
         });
     }
   };
