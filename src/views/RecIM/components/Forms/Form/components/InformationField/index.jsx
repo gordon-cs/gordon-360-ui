@@ -14,6 +14,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import styles from './InformationField.module.css';
 import { TeamList } from 'views/RecIM/components/List';
+import { useWindowSize } from 'hooks';
 
 const InformationField = ({
   label,
@@ -30,6 +31,8 @@ const InformationField = ({
   md,
   lg,
 }) => {
+  const [width] = useWindowSize();
+
   let field;
   // eslint-disable-next-line default-case
   switch (type) {
@@ -83,13 +86,15 @@ const InformationField = ({
       break;
     case 'select':
       field = (
-        <FormControl
-          variant="filled"
-          className={`${styles.select_text} ${styles.field}`}
-          style={{ width: '100%' }}
-        >
+        <FormControl variant="filled" className={`${styles.select_text} ${styles.field}`}>
           <InputLabel>{label}</InputLabel>
-          <Select label={label} name={name} value={value} onChange={(event) => onChange(event)}>
+          <Select
+            label={label}
+            name={name}
+            value={value}
+            onChange={(event) => onChange(event)}
+            style={{ width: `${width * 0.6}px` }}
+          >
             {menuItems.map((item) => (
               // @TODO key needs to be updated to item id once exists
               <MenuItem key={item} className={styles.select_text} value={item}>
@@ -102,13 +107,10 @@ const InformationField = ({
       break;
     case 'multiselect':
       xs = sm = md = lg = 12; // ensure multi select takes max size
+      let selected = '';
       field = (
-        <>
-          <FormControl
-            variant="filled"
-            className={`${styles.select_text} ${styles.field}`}
-            style={{ width: '100%' }}
-          >
+        <Grid item s>
+          <FormControl variant="filled" className={`${styles.select_text} ${styles.field}`}>
             <InputLabel>{label}</InputLabel>
             <Select
               label={label}
@@ -116,10 +118,10 @@ const InformationField = ({
               multiple
               value={value}
               onChange={(event) => onChange(event)}
+              style={{ width: `${width * 0.6}px` }}
             >
               {menuItems.map((item) => (
                 // @TODO key needs to be updated to item id once exists
-                // @TODO known bug, select does not shrink to ellipsis
                 <MenuItem key={item} className={styles.select_text} value={item}>
                   {item}
                 </MenuItem>
@@ -127,8 +129,13 @@ const InformationField = ({
             </Select>
           </FormControl>
           <Typography className={styles.multiselectText}>Selected: </Typography>
-          <Typography className={styles.multiselectItemText}>{value.toString()}</Typography>
-        </>
+          <Typography className={styles.multiselectItemText}>
+            {value.forEach((item) => {
+              selected += `${item}, `;
+            })}
+            {selected.substring(0, selected.length - 2)}
+          </Typography>
+        </Grid>
       );
       break;
     case 'datetime':
