@@ -54,7 +54,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
   }, [series]);
 
   // default closure
-  const handleClose = () => {
+  const closeMenusAndForms = () => {
     setAnchorEl(null);
     setShowAdminTools(false);
     setShowDetailsMenu(false);
@@ -63,17 +63,17 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
   // edit button
   const handleEditSeries = () => {
     setOpenEditSeriesForm(true);
-    handleClose();
+    closeMenusAndForms();
   };
 
   const handleCreateMatch = () => {
     setOpenMatchForm(true);
-    handleClose();
+    closeMenusAndForms();
   };
 
   const handleSeriesSchedule = () => {
     setOpenSeriesScheduleForm(true);
-    handleClose();
+    closeMenusAndForms();
   };
 
   const handleFormSubmit = (status, setOpenForm) => {
@@ -116,7 +116,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
       </Typography>,
     );
     setOpenAutoSchedulerDisclaimer(true);
-    handleClose();
+    closeMenusAndForms();
   };
 
   const handleConfirmAutoSchedule = () => {
@@ -144,7 +144,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
       </Typography>,
     );
     setOpenDeleteDisclaimer(true);
-    handleClose();
+    closeMenusAndForms();
   };
 
   const handleConfirmDelete = () => {
@@ -199,7 +199,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
     return (
       <Menu
         open={showDetailsMenu}
-        onClose={handleClose}
+        onClose={closeMenusAndForms}
         anchorEl={anchorEl}
         className={styles.menu}
       >
@@ -280,7 +280,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
         {/* options menu */}
         <Menu
           open={showAdminTools}
-          onClose={handleClose}
+          onClose={closeMenusAndForms}
           anchorEl={anchorEl}
           className={styles.menu}
         >
