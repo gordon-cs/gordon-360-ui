@@ -186,7 +186,6 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
       ></Chip>
     );
   };
-
   const scheduleMenu = () => {
     let daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     let reformatedSchedule = [];
@@ -203,7 +202,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
         anchorEl={anchorEl}
         className={styles.menu}
       >
-        <Typography className={styles.menuTitle}>Schedule</Typography>
+        <Typography className={styles.menuTitle}>{series?.Name}'s Schedule</Typography>
         <Divider />
         <Typography className={styles.menuTitle}>
           {standardTimeOnly(seriesSchedule?.StartTime)} -{' '}
