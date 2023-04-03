@@ -57,7 +57,7 @@ const Agreements = ({ deleting, onChange }) => {
       },
       {
         checked: false,
-        label: `Each individual on this application intends to register as a full-time student by (${selectionDate})`,
+        label: `Each individual on this application intends to register as a full-time student by ${selectionDate}`,
       },
       {
         checked: false,
