@@ -1,4 +1,11 @@
-import { FaFacebookF, FaHandshake, FaInstagram, FaLinkedin, FaTwitter, FaCalendar } from 'react-icons/fa';
+import {
+  FaFacebookF,
+  FaHandshake,
+  FaInstagram,
+  FaLinkedin,
+  FaTwitter,
+  FaCalendar,
+} from 'react-icons/fa';
 
 export enum Platform {
   Facebook = 'Facebook',
@@ -12,7 +19,7 @@ export enum Platform {
 export const platforms = Object.values(Platform);
 
 export type SocialMediaInfo = {
-    Icon: JSX.Element;
+  Icon: JSX.Element;
   prefix: string;
   prefix2?: string;
 };
@@ -50,6 +57,6 @@ export const socialMediaInfo: {
   // Maybe exclusively a certain URL
   Calendar: {
     Icon: <FaCalendar />,
-    prefix: 'https://', 
+    prefix: 'https://',
   },
 };
