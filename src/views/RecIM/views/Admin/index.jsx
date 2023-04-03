@@ -1,11 +1,10 @@
-import { Card, CardContent, Tabs, Tab, Button } from '@mui/material';
+import { Card, CardContent, Tabs, Tab, Button, Grid } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
-import { HomeHeaderContents } from '../Home';
 import styles from './Admin.module.css';
 import { getParticipantByUsername } from 'services/recim/participant';
 import { ActivityList, TeamList, ParticipantList, SurfacesList } from '../../components/List';
@@ -13,10 +12,11 @@ import { getActivities } from '../../../../services/recim/activity';
 import { getTeams } from '../../../../services/recim/team';
 import { getParticipants } from '../../../../services/recim/participant';
 import { deleteSurface, getSurfaces } from '../../../../services/recim/match';
-import { Add } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { Typography } from '@mui/material';
+import recimLogo from './../../recim_logo.png';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -76,15 +76,29 @@ const Admin = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
+  let headerContents = (
+    <Grid container direction="row" alignItems="center" columnSpacing={4}>
+      <Grid item>
+        <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="h5" className={styles.title}>
+          <b className="accentText">Gordon</b> Rec-IM
+        </Typography>
+        <Typography variant="h6" className={styles.subtitle}>
+          <i>"Competition reveals character"</i>
+        </Typography>
+      </Grid>
+    </Grid>
+  );
+
   if (loading) return <GordonLoader />;
   // The user is not logged in
   if (!profile || !user) return <GordonUnauthorized feature={'the Rec-IM page'} />;
   if (!user?.IsAdmin) return <GordonUnauthorized feature={'the Rec-IM Command Center'} />;
   return (
     <>
-      <Header admin>
-        <HomeHeaderContents />
-      </Header>
+      <Header admin>{headerContents}</Header>
       <Card>
         <CardContent>
           <Tabs
@@ -111,7 +125,7 @@ const Admin = () => {
               <>
                 <Button
                   color="secondary"
-                  startIcon={<Add />}
+                  startIcon={<AddIcon />}
                   className={styles.addSurfaceButton}
                   onClick={() => {
                     setSurface();

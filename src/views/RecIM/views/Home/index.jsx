@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import {
   Grid,
@@ -9,6 +10,7 @@ import {
   Tabs,
   Tab,
   Badge,
+  IconButton,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ActivityForm from '../../components/Forms/ActivityForm';
@@ -26,26 +28,10 @@ import { getTeamInvites } from 'services/recim/team';
 import recimLogo from './../../recim_logo.png';
 import { isFuture } from 'date-fns';
 import { TabPanel } from 'views/RecIM/components';
-
-export const HomeHeaderContents = () => {
-  return (
-    <Grid container direction="row" alignItems="center" spacing={4}>
-      <Grid item>
-        <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
-      </Grid>
-      <Grid item xs={8} md={5} lg={3}>
-        <Typography variant="h5" className={styles.title}>
-          <b className="accentText">Gordon</b> Rec-IM
-        </Typography>
-        <Typography variant="h6" className={styles.subtitle}>
-          <i>"Competition reveals character"</i>
-        </Typography>
-      </Grid>
-    </Grid>
-  );
-};
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const Home = () => {
+  const navigate = useNavigate();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
   const [openActivityForm, setOpenActivityForm] = useState(false);
@@ -107,6 +93,36 @@ const Home = () => {
     setOngoingActivities(ongoing);
     setRegistrableActivities(open);
   }, [activities]);
+
+  let headerContents = (
+    <Grid container direction="row" alignItems="center" columnSpacing={4}>
+      <Grid item container xs={9} alignItems="center" columnSpacing={2}>
+        <Grid item>
+          <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+        </Grid>
+        <Grid item xs={8}>
+          <Typography variant="h5" className={styles.title}>
+            <b className="accentText">Gordon</b> Rec-IM
+          </Typography>
+          <Typography variant="h6" className={styles.subtitle}>
+            <i>"Competition reveals character"</i>
+          </Typography>
+        </Grid>
+      </Grid>
+      {participant?.IsAdmin && (
+        <Grid item xs={3} textAlign={'right'}>
+          <IconButton
+            onClick={() => {
+              navigate(`/recim/admin`);
+            }}
+            sx={{ mr: '1rem' }}
+          >
+            <SettingsIcon fontSize="large" />
+          </IconButton>
+        </Grid>
+      )}
+    </Grid>
+  );
 
   const createActivityButton = (
     <Grid container className={styles.buttonArea}>
@@ -243,9 +259,7 @@ const Home = () => {
   } else {
     return (
       <>
-        <Header>
-          <HomeHeaderContents />
-        </Header>
+        <Header>{headerContents}</Header>
         {loading ? (
           <GordonLoader />
         ) : (
