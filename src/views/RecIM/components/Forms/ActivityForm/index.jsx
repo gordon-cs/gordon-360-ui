@@ -183,10 +183,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
 
     let activityRequest = { ...currentInfo, ...newInfo };
 
-    activityRequest.statusID = activityStatusTypes.find(
-      (type) => type.Description === activityRequest.statusID,
-    ).ID;
-
     activityRequest.sportID = sports.find((type) => type.Name === activityRequest.sportID).ID;
 
     activityRequest.typeID = activityTypes.find(
@@ -195,6 +191,9 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
 
     if (activity) {
       activity.isLogoUpdate = false;
+      activityRequest.statusID = activityStatusTypes.find(
+        (type) => type.Description === activityRequest.statusID,
+      ).ID;
       editActivity(activity.ID, activityRequest).then((res) => {
         setSaving(false);
         closeWithSnackbar({
