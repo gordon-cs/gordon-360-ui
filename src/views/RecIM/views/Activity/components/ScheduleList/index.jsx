@@ -260,7 +260,15 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
             </IconButton>{' '}
           </Grid>
         )}
-        {seriesSchedule && (
+        {/* reformats seriesSchedule to take the place of admin tools so that user have a cleaner visual */}
+        {!isAdmin && seriesSchedule && (
+          <Grid container item xs={5} sm={1} justifyContent="right">
+            <IconButton onClick={handleOpenScheduleDetails}>
+              <CalendarTodayIcon inline />
+            </IconButton>{' '}
+          </Grid>
+        )}
+        {isAdmin && seriesSchedule && (
           <Grid container item xs={12} justifyContent="center">
             <IconButton onClick={handleOpenScheduleDetails}>
               <CalendarTodayIcon inline />
