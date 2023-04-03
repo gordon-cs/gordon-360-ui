@@ -7,14 +7,12 @@
   color: $neutral-white;
 }
 
-.actionButton {
+.addSurfaceButton {
   text-transform: none;
 }
 
-:global(.MuiCardHeader-root).cardHeader {
-  padding: 0.7em 16px;
-}
-
-.cardHeader :global(.MuiCardHeader-title) {
-  font-size: 1em;
+@media (min-width: $break-sm) {
+  .addSurfaceButton {
+    margin-left: 16px;
+  }
 }

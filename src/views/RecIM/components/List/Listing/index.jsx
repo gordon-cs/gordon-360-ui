@@ -675,7 +675,7 @@ const MatchListing = ({ match, activityID }) => {
   );
 };
 
-const SurfaceListing = ({ surface }) => {
+const SurfaceListing = ({ surface, refresh, confirmDelete, editDetails }) => {
   const [anchorEl, setAnchorEl] = useState();
   const [openConfirmDelete, setOpenConfirmDelete] = useState();
   const optionsOpen = Boolean(anchorEl);
@@ -713,10 +713,10 @@ const SurfaceListing = ({ surface }) => {
             horizontal: 'right',
           }}
         >
-          <MenuItem dense onClick={null} divider>
+          <MenuItem dense onClick={() => editDetails(surface)} divider>
             Edit details
           </MenuItem>
-          <MenuItem dense onClick={() => setOpenConfirmDelete(true)} className={styles.redButton}>
+          <MenuItem dense onClick={() => confirmDelete(surface)} className={styles.redButton}>
             Delete surface
           </MenuItem>
         </Menu>
@@ -728,6 +728,8 @@ const SurfaceListing = ({ surface }) => {
         buttonName="Yes, delete this surface"
         buttonClicked={async () => {
           await deleteSurface(surface.ID);
+          console.log('delete');
+          refresh();
           setOpenConfirmDelete(false);
         }}
         severity="error"

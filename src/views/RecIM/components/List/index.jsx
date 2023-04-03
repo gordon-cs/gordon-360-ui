@@ -128,11 +128,17 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
   return <List dense>{content}</List>;
 };
 
-const SurfacesList = ({ surfaces }) => {
+const SurfacesList = ({ surfaces, refresh, confirmDelete, editDetails }) => {
   if (!surfaces?.length)
     return <Typography className={styles.secondaryText}>No surfaces to show.</Typography>;
-  console.log(surfaces);
-  let content = surfaces.map((surface) => <SurfaceListing key={surface.ID} surface={surface} />);
+  let content = surfaces.map((surface) => (
+    <SurfaceListing
+      key={surface.ID}
+      surface={surface}
+      confirmDelete={confirmDelete}
+      editDetails={editDetails}
+    />
+  ));
   return <List dense>{content}</List>;
 };
 
