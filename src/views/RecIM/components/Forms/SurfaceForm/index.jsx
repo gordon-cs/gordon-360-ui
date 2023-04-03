@@ -9,7 +9,6 @@ const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfa
   });
 
   const [isSaving, setSaving] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const createSurfaceFields = [
     {
@@ -83,7 +82,6 @@ const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfa
       currentInfo={currentInfo}
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}
-      loading={loading}
       isSaving={isSaving}
       setOpenForm={setOpenSurfaceForm}
       openForm={openSurfaceForm}

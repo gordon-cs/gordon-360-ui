@@ -675,7 +675,7 @@ const MatchListing = ({ match, activityID }) => {
   );
 };
 
-const SurfaceListing = ({ surface, refresh, confirmDelete, editDetails }) => {
+const SurfaceListing = ({ surface, confirmDelete, editDetails }) => {
   const [anchorEl, setAnchorEl] = useState();
   const [openConfirmDelete, setOpenConfirmDelete] = useState();
   const optionsOpen = Boolean(anchorEl);
@@ -728,8 +728,6 @@ const SurfaceListing = ({ surface, refresh, confirmDelete, editDetails }) => {
         buttonName="Yes, delete this surface"
         buttonClicked={async () => {
           await deleteSurface(surface.ID);
-          console.log('delete');
-          refresh();
           setOpenConfirmDelete(false);
         }}
         severity="error"
