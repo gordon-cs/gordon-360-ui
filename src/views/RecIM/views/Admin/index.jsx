@@ -39,6 +39,7 @@ const Admin = () => {
   const [openSurfaceForm, setOpenSurfaceForm] = useState();
   const [openConfirmDelete, setOpenConfirmDelete] = useState();
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [surface, setSurface] = useState();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -112,17 +113,22 @@ const Admin = () => {
                   color="secondary"
                   startIcon={<Add />}
                   className={styles.addSurfaceButton}
-                  onClick={() => setOpenSurfaceForm(true)}
+                  onClick={() => {
+                    setSurface();
+                    setOpenSurfaceForm(true);
+                  }}
                 >
                   add a surface
                 </Button>
                 <SurfacesList
                   surfaces={surfaces}
                   confirmDelete={(surface) => {
-                    setOpenConfirmDelete(surface);
+                    setSurface(surface);
+                    setOpenConfirmDelete(true);
                   }}
                   editDetails={(surface) => {
-                    setOpenSurfaceForm(surface);
+                    setSurface(surface);
+                    setOpenSurfaceForm(true);
                   }}
                 />
               </>
@@ -133,7 +139,7 @@ const Admin = () => {
         </CardContent>
       </Card>
       <SurfaceForm
-        surface={openSurfaceForm}
+        surface={surface}
         closeWithSnackbar={async (snackbar) => {
           createSnackbar(snackbar.message, snackbar.status);
           setSurfaces(await getSurfaces());
@@ -147,7 +153,7 @@ const Admin = () => {
         cancelButtonClicked={() => setOpenConfirmDelete(false)}
         buttonName="Yes, delete this surface"
         buttonClicked={async () => {
-          await deleteSurface(openConfirmDelete?.ID);
+          await deleteSurface(surface?.ID);
           setSurfaces(await getSurfaces());
           setOpenConfirmDelete(false);
         }}
@@ -156,7 +162,7 @@ const Admin = () => {
         <br />
         <Typography variant="body1">
           Are you sure you want to permanently delete this surface:
-          <i>'{openConfirmDelete?.Name}'</i>?
+          <i>'{surface?.Name}'</i>?
         </Typography>
         <Typography variant="body1">This action cannot be undone.</Typography>
       </GordonDialogBox>

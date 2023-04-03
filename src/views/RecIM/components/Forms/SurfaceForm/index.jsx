@@ -65,13 +65,12 @@ const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfa
         handleWindowClose();
       });
     } else {
-      createSurface(surfaceRequest).then((createdSurface) => {
+      createSurface(surfaceRequest).then(() => {
         setSaving(false);
         closeWithSnackbar({
           type: 'success',
           message: 'Surface created successfully',
         });
-
         handleWindowClose();
       });
     }
