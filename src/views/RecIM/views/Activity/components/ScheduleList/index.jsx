@@ -200,7 +200,8 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
         open={showDetailsMenu}
         onClose={closeMenusAndForms}
         anchorEl={anchorEl}
-        className={styles.menu}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Typography className={styles.menuTitle}>{series?.Name}'s Schedule</Typography>
         <Divider />

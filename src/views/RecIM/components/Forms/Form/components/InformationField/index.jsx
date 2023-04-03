@@ -93,7 +93,7 @@ const InformationField = ({
             name={name}
             value={value}
             onChange={(event) => onChange(event)}
-            style={{ width: `${width * 0.6}px` }}
+            style={{ maxWidth: `${width * 0.65}px` }}
           >
             {menuItems.map((item) => (
               // @TODO key needs to be updated to item id once exists
@@ -118,7 +118,7 @@ const InformationField = ({
               multiple
               value={value}
               onChange={(event) => onChange(event)}
-              style={{ width: `${width * 0.6}px` }}
+              style={{ maxWidth: `${width * 0.65}px` }}
             >
               {menuItems.map((item) => (
                 // @TODO key needs to be updated to item id once exists
