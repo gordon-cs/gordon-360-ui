@@ -83,7 +83,7 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        await editActivity(component.ID, activityRequest).then(() => {
+        editActivity(component.ID, activityRequest).then(() => {
           closeWithSnackbar({
             type: 'success',
             message: 'Activity Logo set to default successfully',
@@ -99,7 +99,7 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        await editTeam(component.ID, teamRequest).then(() => {
+        editTeam(component.ID, teamRequest).then(() => {
           closeWithSnackbar({
             type: 'success',
             message: 'Team Logo set to default successfully',
@@ -125,7 +125,7 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        await editActivity(component.ID, activityRequest).then(() => {
+        editActivity(component.ID, activityRequest).then(() => {
           closeWithSnackbar({
             type: 'success',
             message: 'Activity Logo edited successfully',
@@ -141,7 +141,7 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        await editTeam(component.ID, teamRequest).then(() => {
+        editTeam(component.ID, teamRequest).then(() => {
           closeWithSnackbar({
             type: 'success',
             message: 'Team Logo edited successfully',
