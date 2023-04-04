@@ -42,14 +42,7 @@ const PeopleSearch = () => {
       {searchResults !== null && (
         <Grid item xs={12} lg={10} xl={8}>
           <Card ref={printRef}>
-            <CardHeader
-              variant="h2"
-              className={styles.header}
-              title="Results"
-              style={{
-                backgroundColor: theme.colorSchemes.light.palette.primary,
-              }}
-            />
+            <CardHeader variant="h2" className={styles.header} title="Results" />
             {searchResults.length ? (
               searchResults.map((person, index) => (
                 <PeopleSearchResult
