@@ -311,7 +311,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
         <Grid item xs={12}>
           <ListItemButton
             component={Link}
-            to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
+            //to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
             className={styles.listing}
           >
             <Grid container>

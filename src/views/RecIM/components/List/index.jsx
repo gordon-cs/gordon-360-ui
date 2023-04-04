@@ -1,6 +1,6 @@
 import { List, Typography } from '@mui/material';
 import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import styles from './List.module.css';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
