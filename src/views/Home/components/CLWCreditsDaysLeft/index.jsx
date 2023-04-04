@@ -8,6 +8,7 @@ import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import theme from 'theme';
 
 const CLWCreditsDaysLeft = () => {
   const [firstDay, setFirstDay] = useState('');
@@ -40,9 +41,9 @@ const CLWCreditsDaysLeft = () => {
     loadData();
   }, []);
 
-  let daysColor = gordonColors.primary.blue;
+  let daysColor = theme.colorSchemes.light.palette.primary[300];
   let chapelColor = gordonColors.primary.cyan;
-  let emptyColor = gordonColors.neutral.lightGray;
+  let emptyColor = theme.colorSchemes.light.palette.neutral.grayShades[100];
 
   defaults.global.legend.display = false;
 
@@ -59,7 +60,7 @@ const CLWCreditsDaysLeft = () => {
         // Allow different tooltips for different datasets within the same pie;
         callbacks: {
           // Code taken from https://github.com/chartjs/Chart.js/issues/1417
-          label: function(item, data) {
+          label: function (item, data) {
             return (
               data.datasets[item.datasetIndex].label[item.index] +
               ': ' +
@@ -75,7 +76,7 @@ const CLWCreditsDaysLeft = () => {
     const remaining = current > required ? 0 : required - current;
     const data = {
       legendEntries: ['Days Finished', 'CL&W Credits'],
-      legendColors: [gordonColors.primary.blue, gordonColors.primary.cyan],
+      legendColors: [theme.colorSchemes.light.palette.primary[300], gordonColors.primary.cyan],
       datasets: [
         {
           label: ['Days Finished', 'Days Remaining'],

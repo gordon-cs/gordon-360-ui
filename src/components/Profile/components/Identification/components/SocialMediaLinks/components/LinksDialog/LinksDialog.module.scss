@@ -4,7 +4,7 @@
   display: grid;
   grid-template-rows: auto auto auto;
   &_title {
-    background-color: $primary-blue;
+    background-color: var(--mui-palette-primary-300);
     color: $neutral-white;
     text-align: center;
     grid-row: 1;
@@ -45,7 +45,7 @@
       grid-column: 1;
       padding-top: 20px;
       font-size: 26px;
-      color: $primary-blue;
+      color: var(--mui-palette-primary-300);
     }
     &_field {
       grid-column: 2;

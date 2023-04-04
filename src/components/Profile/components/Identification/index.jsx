@@ -24,6 +24,7 @@ import { gordonColors, windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
 import defaultGordonImage from './defaultGordonImage';
 import styles from './Identification.module.css';
+import theme from 'theme';
 
 const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   const CROP_DIM = 200; // pixels
@@ -49,11 +50,11 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   // Styles used throughout this component
   const style = {
     button: {
-      background: gordonColors.primary.blue,
+      background: theme.colorSchemes.light.palette.primary[300],
       color: 'white',
 
       changeImageButton: {
-        background: gordonColors.primary.blue,
+        background: theme.colorSchemes.light.palette.primary[300],
         color: 'white',
       },
 
@@ -63,8 +64,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
       },
       cancelButton: {
         backgroundColor: 'white',
-        color: gordonColors.primary.blue,
-        border: `1px solid ${gordonColors.primary.blue}`,
+        color: theme.colorSchemes.light.palette.primary[300],
+        border: `1px solid ${theme.colorSchemes.light.palette.primary[300]}`,
         width: showCropper ? '38%' : '86%',
       },
       hidden: {

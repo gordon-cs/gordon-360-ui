@@ -26,7 +26,7 @@ import styles from './ShiftItem.module.css';
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.colorSchemes.light.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
     boxShadow: theme.shadows[1],
     fontSize: 11,

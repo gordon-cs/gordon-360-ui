@@ -10,6 +10,7 @@ import { SearchResult } from 'services/peopleSearch';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import SearchFieldList from './components/SearchFieldList';
 import styles from './PeopleSearch.module.scss';
+import theme from 'theme';
 
 //Configuration constants
 const NUM_NONLAZY_IMAGES = 20; //The number of results for which images will be fetched immediately
@@ -41,7 +42,14 @@ const PeopleSearch = () => {
       {searchResults !== null && (
         <Grid item xs={12} lg={10} xl={8}>
           <Card ref={printRef}>
-            <CardHeader variant="h2" className={styles.header} title="Results" />
+            <CardHeader
+              variant="h2"
+              className={styles.header}
+              title="Results"
+              style={{
+                backgroundColor: theme.colorSchemes.light.palette.primary,
+              }}
+            />
             {searchResults.length ? (
               searchResults.map((person, index) => (
                 <PeopleSearchResult

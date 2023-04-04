@@ -1,7 +1,7 @@
 @import '../../../../vars';
 
 .header {
-  background: $primary-blue;
+  background: var(--mui-palette-primary-300);
   color: $neutral-white;
   padding-left: 2rem;
 }

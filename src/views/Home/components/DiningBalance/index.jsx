@@ -6,11 +6,12 @@ import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import theme from 'theme';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
 
-let daysColor = gordonColors.primary.blue;
+let daysColor = theme.colorSchemes.light.palette.primary[300];
 let swipesColor = gordonColors.secondary.green;
 let dollarsColor = gordonColors.secondary.yellow;
 let guestColor = gordonColors.secondary.orange;

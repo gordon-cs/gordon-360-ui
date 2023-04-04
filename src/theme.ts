@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles';
+import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
 
 // Colors from http://www.gordon.edu/brandstandards
 // Shades from https://goo.gl/AF45tZ
@@ -38,6 +39,23 @@ export const gordonColors = {
       A200: '#89dfff',
       A400: '#23c3ff',
       A700: '#09bcff',
+      contrastDefaultColor: 'light',
+    },
+    pinkShades: {
+      50: '#FFE6F5',
+      100: '#FFCDEA',
+      200: '#FFB6E1',
+      300: '#FFA3D9',
+      400: '#FF91D2',
+      500: '#FF85CD',
+      600: '#FF79C7',
+      700: '#FF6EC3',
+      800: '#FF5CBB',
+      900: '#FF4BB4',
+      A100: '#FF47B3',
+      A200: '#FF31AA',
+      A400: '#FF189F',
+      A700: '#F1008D',
       contrastDefaultColor: 'light',
     },
   },
@@ -124,9 +142,9 @@ declare module '@mui/material' {
   }
 }
 
-const theme = createTheme({
+/*const theme = createTheme({
   palette: {
-    primary: gordonColors.primary.blueShades,
+    primary: gordonColors.primary.pinkShades,
     secondary: gordonColors.primary.cyanShades,
     error: gordonColors.secondary.redShades,
     success: gordonColors.secondary.greenShades,
@@ -153,6 +171,22 @@ const theme = createTheme({
         containedSecondary: {
           color: gordonColors.neutral.grayShades.A100,
         },
+      },
+    },
+  },
+}); */
+
+const theme = extendTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: gordonColors.primary.blueShades,
+        secondary: gordonColors.primary.cyanShades,
+        error: gordonColors.secondary.redShades,
+        success: gordonColors.secondary.greenShades,
+        warning: gordonColors.secondary.yellowShades,
+        info: gordonColors.primary.cyanShades,
+        neutral: gordonColors.neutral,
       },
     },
   },
