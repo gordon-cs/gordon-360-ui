@@ -127,7 +127,7 @@ const Activity = () => {
   const handleFormSubmit = (status, setOpenForm) => {
     //if you want to do something with the message make a snackbar function here
     setOpenForm(false);
-  }
+  };
 
   const handleDelete = async () => {
     await deleteActivity(activityID);
@@ -157,8 +157,8 @@ const Activity = () => {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
-      <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
+      <Grid container alignItems="center" columnSpacing={4}>
+        <Grid item container xs={9} columnSpacing={4} alignItems="center">
           <Grid item>
             <Button
               className={styles.logoContainer}
