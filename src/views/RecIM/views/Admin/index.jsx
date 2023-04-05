@@ -76,6 +76,33 @@ const Admin = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
+  const handleOpenCreate = () => {
+    setSurface();
+    setOpenSurfaceForm(true);
+  };
+
+  const handleOpenEdit = (surface) => {
+    setSurface(surface);
+    setOpenSurfaceForm(true);
+  };
+
+  const handleOpenConfirmDelete = (surface) => {
+    setSurface(surface);
+    setOpenConfirmDelete(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    await deleteSurface(surface?.ID);
+    setSurfaces(await getSurfaces());
+    setOpenConfirmDelete(false);
+    createSnackbar('Surface deleted successfully', 'success');
+  };
+
+  const handleClose = async (snackbar) => {
+    createSnackbar(snackbar.message, snackbar.status);
+    setSurfaces(await getSurfaces());
+  };
+
   let headerContents = (
     <Grid container direction="row" alignItems="center" columnSpacing={4}>
       <Grid item>
@@ -127,23 +154,14 @@ const Admin = () => {
                   color="secondary"
                   startIcon={<AddIcon />}
                   className={styles.addSurfaceButton}
-                  onClick={() => {
-                    setSurface();
-                    setOpenSurfaceForm(true);
-                  }}
+                  onClick={handleOpenCreate}
                 >
                   add a surface
                 </Button>
                 <SurfacesList
                   surfaces={surfaces}
-                  confirmDelete={(surface) => {
-                    setSurface(surface);
-                    setOpenConfirmDelete(true);
-                  }}
-                  editDetails={(surface) => {
-                    setSurface(surface);
-                    setOpenSurfaceForm(true);
-                  }}
+                  confirmDelete={handleOpenConfirmDelete}
+                  editDetails={handleOpenEdit}
                 />
               </>
             ) : (
@@ -154,10 +172,7 @@ const Admin = () => {
       </Card>
       <SurfaceForm
         surface={surface}
-        closeWithSnackbar={async (snackbar) => {
-          createSnackbar(snackbar.message, snackbar.status);
-          setSurfaces(await getSurfaces());
-        }}
+        closeWithSnackbar={handleClose}
         openSurfaceForm={openSurfaceForm}
         setOpenSurfaceForm={(bool) => setOpenSurfaceForm(bool)}
       />
@@ -166,11 +181,7 @@ const Admin = () => {
         open={openConfirmDelete}
         cancelButtonClicked={() => setOpenConfirmDelete(false)}
         buttonName="Yes, delete this surface"
-        buttonClicked={async () => {
-          await deleteSurface(surface?.ID);
-          setSurfaces(await getSurfaces());
-          setOpenConfirmDelete(false);
-        }}
+        buttonClicked={handleConfirmDelete}
         severity="error"
       >
         <br />

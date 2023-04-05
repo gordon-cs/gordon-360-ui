@@ -111,12 +111,7 @@ const Home = () => {
       </Grid>
       {participant?.IsAdmin && (
         <Grid item xs={3} textAlign={'right'}>
-          <IconButton
-            onClick={() => {
-              navigate(`/recim/admin`);
-            }}
-            sx={{ mr: '1rem' }}
-          >
+          <IconButton onClick={() => navigate(`/recim/admin`)} sx={{ mr: '1rem' }}>
             <SettingsIcon fontSize="large" />
           </IconButton>
         </Grid>
