@@ -9,6 +9,7 @@ import {
   Tabs,
   Tab,
   Badge,
+  Box,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ActivityForm from '../../components/Forms/ActivityForm';
@@ -23,7 +24,7 @@ import { getParticipantTeams, getParticipantByUsername } from 'services/recim/pa
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getTeamInvites } from 'services/recim/team';
-import recimLogo from './../../recim_logo.png';
+import recimLogo from '/public/images/recim_logo.png';
 import { isFuture } from 'date-fns';
 import { TabPanel } from 'views/RecIM/components';
 
@@ -35,7 +36,10 @@ export const HomeHeaderContents = () => {
       </Grid>
       <Grid item xs={8} md={5} lg={3}>
         <Typography variant="h5" className={styles.title}>
-          <b className="accentText">Gordon</b> Rec-IM
+          <Box component="span" sx={{ color: 'secondary.main' }}>
+            Gordon
+          </Box>{' '}
+          Rec-IM
         </Typography>
         <Typography variant="h6" className={styles.subtitle}>
           <i>"Competition reveals character"</i>

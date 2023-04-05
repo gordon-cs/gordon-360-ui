@@ -31,6 +31,21 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 
+const activityTypeIconPair = [
+  {
+    type: 'League',
+    icon: <SportsFootballIcon />,
+  },
+  {
+    type: 'Tournament',
+    icon: <SportsCricketIcon />,
+  },
+  {
+    type: 'One Off',
+    icon: <LocalActivityIcon />,
+  },
+];
+
 // Old activitylisting
 const ActivityListing = ({ activity }) => {
   //const [activityType, setActivityType] = useState();
@@ -54,20 +69,6 @@ const ActivityListing = ({ activity }) => {
   let activeSeriesMessage =
     activeSeries && activeSeries.Name + ' until ' + standardDate(activeSeries.EndDate);
 
-  const activityTypeIconPair = [
-    {
-      type: 'League',
-      icon: <SportsFootballIcon />,
-    },
-    {
-      type: 'Tournament',
-      icon: <SportsCricketIcon />,
-    },
-    {
-      type: 'One Off',
-      icon: <LocalActivityIcon />,
-    },
-  ];
   if (!activity) return null;
   return (
     <ListItem key={activity.ID} className={styles.listingWrapper}>
@@ -90,7 +91,7 @@ const ActivityListing = ({ activity }) => {
                   styles['activityType_' + activity?.Type.toLowerCase().replace(/\s+/g, '')]
                 }
                 size="small"
-              ></Chip>
+              />
             </Grid>
           </Grid>
           <Grid item container xs={12} sm={7} direction="column" spacing={1}>
@@ -110,7 +111,7 @@ const ActivityListing = ({ activity }) => {
                   label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
                   color={activity.RegistrationOpen ? 'success' : 'info'}
                   size="small"
-                ></Chip>
+                />
               </Grid>
               <Grid item>
                 <Typography>
@@ -200,7 +201,7 @@ const ActivityListing = ({ activity, showActivityOptions }) => {
                     styles['activityType_' + activity?.Type?.toLowerCase().replace(/\s+/g, '')]
                   }
                   size="small"
-                ></Chip>
+                />
               </Grid>
             </Grid>
             <Grid item container xs={12} sm={7} direction="column" spacing={1}>
@@ -220,7 +221,7 @@ const ActivityListing = ({ activity, showActivityOptions }) => {
                     label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
                     color={activity.RegistrationOpen ? 'success' : 'info'}
                     size="small"
-                  ></Chip>
+                  />
                 </Grid>
                 <Grid item>
                   <Typography>

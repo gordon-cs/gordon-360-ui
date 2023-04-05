@@ -8,9 +8,9 @@ import { HomeHeaderContents } from '../Home';
 // import styles from './Admin.module.css'; //unused for now since I've imported homeHeader
 import { getParticipantByUsername } from 'services/recim/participant';
 import { ActivityList, TeamList, ParticipantList } from '../../components/List';
-import { getActivities } from '../../../../services/recim/activity';
-import { getTeams } from '../../../../services/recim/team';
-import { getParticipants } from '../../../../services/recim/participant';
+import { getActivities } from 'services/recim/activity';
+import { getTeams } from 'services/recim/team';
+import { getParticipants } from 'services/recim/participant';
 
 const TabPanel = ({ children, value, index }) => {
   return (

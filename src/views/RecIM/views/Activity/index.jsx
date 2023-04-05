@@ -32,7 +32,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
-import defaultLogo from 'views/RecIM/recim_logo.png';
+import defaultLogo from '/public/images/recim_logo.png';
 import { TabPanel } from 'views/RecIM/components';
 import { Box } from '@mui/system';
 import { createTeam } from 'services/recim/team';
@@ -127,7 +127,7 @@ const Activity = () => {
   const handleFormSubmit = (status, setOpenForm) => {
     //if you want to do something with the message make a snackbar function here
     setOpenForm(false);
-  }
+  };
 
   const handleDelete = async () => {
     await deleteActivity(activityID);

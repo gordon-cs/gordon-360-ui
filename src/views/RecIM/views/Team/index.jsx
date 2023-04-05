@@ -16,7 +16,7 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GordonDialogBox from 'components/GordonDialogBox';
-import defaultLogo from 'views/RecIM/recim_logo.png';
+import defaultLogo from '/public/images/recim_logo.png';
 import userService from 'services/user';
 
 const Team = () => {
@@ -55,15 +55,13 @@ const Team = () => {
   //checks if the team is modifiable by the current user
   useEffect(() => {
     let hasCaptainPermissions = false;
-    if (user) {
-      if (team) {
-        let role =
-          team.Participant.find((teamParticipant) => teamParticipant.Username === user.Username)
-            ?.Role ?? 'Invalid';
-        hasCaptainPermissions =
-          team.Activity.RegistrationOpen &&
-          (role === 'Co-Captain' || role === 'Team-captain/Creator');
-      }
+    if (user && team) {
+      let role = team.Participant.find(
+        (teamParticipant) => teamParticipant.Username === user.Username,
+      )?.Role;
+      hasCaptainPermissions =
+        team.Activity.RegistrationOpen &&
+        (role === 'Co-Captain' || role === 'Team-captain/Creator');
     }
     setHasPermissions(hasCaptainPermissions || user?.IsAdmin);
   }, [team, user]);

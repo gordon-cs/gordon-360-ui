@@ -22,7 +22,7 @@ import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { standardDate } from 'views/RecIM/components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
-import defaultLogo from 'views/RecIM/recim_logo.png';
+import defaultLogo from '/public/images/recim_logo.png';
 import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 
 const RosterCard = ({
