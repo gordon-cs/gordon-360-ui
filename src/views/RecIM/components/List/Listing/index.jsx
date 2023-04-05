@@ -22,13 +22,10 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
-import {
-  deleteTeamParticipant,
-  editTeamParticipant,
-  respondToTeamInvite,
-} from 'services/recim/team';
+import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 import { getActivityTypes, isActivityRegisterable } from 'services/recim/activity';
 import { removeAttendance, updateAttendance } from 'services/recim/match';
+import { getParticipantAttendanceCountForTeam } from 'services/recim/team';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
@@ -387,6 +384,7 @@ const ParticipantListing = ({
   const [anchorEl, setAnchorEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
+  const [attendanceCount, setAttendanceCount] = useState();
 
   const handleClickOff = () => {
     setAnchorEl(null);
@@ -412,9 +410,13 @@ const ParticipantListing = ({
         setName(profileInfo.fullName);
       }
     };
+    const loadAttendanceCount = async () => {
+      setAttendanceCount(await getParticipantAttendanceCountForTeam(teamID, participant.Username));
+    };
     loadUserInfo();
     loadAvatar();
-  }, [participant.Username]);
+    if (teamID && withAttendance) loadAttendanceCount();
+  }, [participant.Username, teamID, withAttendance]);
 
   const handleParticipantOptions = (event) => {
     setAnchorEl(event.currentTarget);
@@ -491,20 +493,27 @@ const ParticipantListing = ({
               </IconButton>
             )}
             {withAttendance && (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    color="secondary"
-                    inputProps={{ 'aria-label': 'attendance toggle' }}
-                    defaultChecked={initialAttendance}
-                    onChange={(event) => handleAttendance(event.target.checked)}
-                    disabled={!isAdmin}
-                  />
-                }
-                label={didAttend ? 'Present' : <i>Absent</i>}
-                labelPlacement="start"
-                className={!didAttend && styles.listingSubtitle}
-              />
+              <>
+                {isAdmin && (
+                  <Typography className={styles.listingSubtitle}>
+                    attended {attendanceCount} match{attendanceCount !== 1 && `es`}
+                  </Typography>
+                )}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="secondary"
+                      inputProps={{ 'aria-label': 'attendance toggle' }}
+                      defaultChecked={initialAttendance}
+                      onChange={(event) => handleAttendance(event.target.checked)}
+                      disabled={!isAdmin}
+                    />
+                  }
+                  label={didAttend ? 'Present' : <i>Absent</i>}
+                  labelPlacement="start"
+                  className={!didAttend && styles.listingSubtitle}
+                />
+              </>
             )}
           </>
         }
@@ -552,6 +561,12 @@ const ParticipantListing = ({
 const MatchListing = ({ match, activityID }) => {
   if (!match) return null;
   if (match.Team?.length === 2) {
+    const team0Score = match.Scores?.find(
+      (matchTeam) => matchTeam.TeamID === match.Team[0]?.ID,
+    )?.TeamScore;
+    const team1Score = match.Scores?.find(
+      (matchTeam) => matchTeam.TeamID === match.Team[1]?.ID,
+    )?.TeamScore;
     return (
       <ListItem key={match.ID} className={styles.listingWrapper}>
         <ListItemButton
@@ -567,7 +582,7 @@ const MatchListing = ({ match, activityID }) => {
             )}
             <Grid item container>
               <Grid item xs={4.5}>
-                <Typography className={styles.listingTitle}>
+                <Typography className={team0Score > team1Score && styles.matchWinner}>
                   {match.Team[0]?.Name ?? <i>TBD</i>}
                 </Typography>
               </Grid>
@@ -576,9 +591,8 @@ const MatchListing = ({ match, activityID }) => {
                 {match.Status === 'Completed' ? (
                   <Grid container direction="row">
                     <Grid item xs={5} textAlign="right">
-                      <Typography>
-                        {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[0]?.ID)
-                          ?.TeamScore ?? 'TBD'}
+                      <Typography sx={team0Score > team1Score && { fontWeight: 'bold' }}>
+                        {team0Score ?? 'TBD'}
                       </Typography>
                     </Grid>
 
@@ -586,10 +600,7 @@ const MatchListing = ({ match, activityID }) => {
                       <Typography>{':'}</Typography>{' '}
                     </Grid>
                     <Grid item xs={5} textAlign="left">
-                      <Typography>
-                        {match.Scores?.find((matchTeam) => matchTeam.TeamID === match.Team[1]?.ID)
-                          ?.TeamScore ?? 'TBD'}
-                      </Typography>
+                      <Typography>{team1Score ?? 'TBD'}</Typography>
                     </Grid>
                   </Grid>
                 ) : match.Status === 'Forfeited' ? (
@@ -599,7 +610,7 @@ const MatchListing = ({ match, activityID }) => {
                 )}
               </Grid>
               <Grid item xs={4.5} textAlign="right">
-                <Typography className={styles.listingTitle}>
+                <Typography className={team1Score > team0Score && styles.matchWinner}>
                   {match.Team[1]?.Name ?? <i>TBD</i>}
                 </Typography>
               </Grid>

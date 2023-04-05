@@ -1,4 +1,13 @@
-import { Grid, Typography, Card, CardHeader, CardContent, IconButton, Button } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  IconButton,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 import { useNavigate, useParams, Link as LinkRouter } from 'react-router-dom';
 import { useUser } from 'hooks';
 import { useState, useEffect } from 'react';
@@ -10,11 +19,11 @@ import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
 import { getMatchByID, getMatchAttendance, deleteMatchCascade } from 'services/recim/match';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
-import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { standardDate } from 'views/RecIM/components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import EditMatchStatsForm from 'views/RecIM/components/Forms/EditMatchStatsForm';
 
 const RosterCard = ({
   participants,
@@ -48,12 +57,14 @@ const Match = () => {
   const [loading, setLoading] = useState(true);
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
-  const [openMatchForm, setOpenMatchForm] = useState(false);
-  const [openSettings, setOpenSettings] = useState(false);
+  const [openMatchInformationForm, setOpenMatchInformationForm] = useState(false);
+  const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
   const [matchName, setMatchName] = useState();
+  const [anchorEl, setAnchorEl] = useState();
+  const openMenu = Boolean(anchorEl);
 
   useEffect(() => {
     const loadData = async () => {
@@ -72,7 +83,7 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID, openMatchForm]);
+  }, [matchID, openMatchInformationForm, openEditMatchStatsForm]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   useEffect(() => {
@@ -90,15 +101,21 @@ const Match = () => {
     }
   }, [match]);
 
-  const handleMatchFormSubmit = (status, setOpenMatchForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenMatchForm(false);
+  const handleFormSubmit = (status, setOpenForm) => {
+    setOpenForm(false);
   };
 
-  const handleDelete = () => {
-    deleteMatchCascade(matchID);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSettingsClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleDelete = async () => {
+    await deleteMatchCascade(matchID);
     setOpenConfirmDelete(false);
-    setOpenSettings(false);
     navigate(`/recim/activity/${match.Activity.ID}`);
     // @TODO add snackbar
   };
@@ -110,8 +127,9 @@ const Match = () => {
     return <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
-      <>
-        <Grid container spacing={4}>
+      <Grid container direction="column" className={styles.header}>
+        {/* match time/location */}
+        <Grid item container spacing={4}>
           <Grid item xs={6} textAlign="right">
             <Typography className={styles.subtitle}>
               {match && standardDate(match.StartTime, true)}
@@ -121,87 +139,111 @@ const Match = () => {
             <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
           </Grid>
         </Grid>
-        <Grid container alignItems="center" justifyContent="space-around">
-          <Grid item xs={2}>
-            <img
-              src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID)?.Logo ?? defaultLogo}
-              alt="Team Icon"
-              width="85em"
-            ></img>
-          </Grid>
-          <Grid item xs={2}>
-            <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
-              <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
-                {match?.Team[0]?.Name ?? 'No team yet...'}
+
+        {/* team info */}
+        <Grid
+          item
+          container
+          alignItems="center"
+          justifyContent="space-around"
+          spacing={1}
+          flexWrap="nowrap"
+        >
+          {/* left team info */}
+          <Grid
+            item
+            container
+            xs={5}
+            columnSpacing={2}
+            justifyContent="space-around"
+            className={`${styles.teamInfo} ${styles.teamInfoLeft}`}
+          >
+            <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
+              <img
+                src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID)?.Logo ?? defaultLogo}
+                alt="Team Icon"
+                className={styles.headerImg}
+              ></img>
+            </Grid>
+            <Grid item sm={8} lg="auto">
+              <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
+                <Typography
+                  variant="h5"
+                  className={`${styles.teamName} gc360_text_link ${
+                    team0Score > team1Score && styles.matchWinner
+                  }`}
+                >
+                  {match?.Team[0]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
+              <Typography className={styles.subtitle}>
+                {match?.Team[0]?.TeamRecord.WinCount ?? 0}W :{' '}
+                {match?.Team[0]?.TeamRecord.LossCount ?? 0}L
               </Typography>
-            </LinkRouter>
-            <Typography className={styles.subtitle}>
-              {/* once this is added to the API, it will instantly work */}
-              {match?.Team[0]?.TeamRecord.WinCount ?? 0}W :{' '}
-              {match?.Team[0]?.TeamRecord.LossCount ?? 0}L
-            </Typography>
-            {user?.IsAdmin && (
-              <i className={styles.subtitle}>
-                Sportsmanship: {match?.Scores[0]?.SportsmanshipScore}
-              </i>
-            )}
+              {user?.IsAdmin && (
+                <i className={styles.subtitle}>
+                  Sportsmanship: {match?.Scores[0]?.SportsmanshipScore}
+                </i>
+              )}
+            </Grid>
           </Grid>
-          <Grid item container xs={4} sm={2} alignItems="center" direction="column">
-            <Typography variant="h5">
-              {team0Score} : {team1Score}
-            </Typography>
+
+          <Grid item container xs={2} alignItems="center" direction="column" sx={{ mt: 3 }}>
+            {match?.Status === 'Completed' && (
+              <Grid item>
+                <Typography className={styles.subtitle}>Final</Typography>
+              </Grid>
+            )}
+            <Grid item>
+              <Typography variant="h5" className={styles.matchScore}>
+                {team0Score} : {team1Score}
+              </Typography>
+            </Grid>
+            {/* admin controls */}
             {user?.IsAdmin && (
               <Grid item>
-                <Grid container columnSpacing={2} justifyItems="center">
-                  <Grid item>
-                    <IconButton
-                      onClick={() => {
-                        setOpenMatchForm(true);
-                      }}
-                      className={styles.editIconButton}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  </Grid>
-                  <Grid item>
-                    <IconButton
-                      onClick={() => {
-                        setOpenSettings(true);
-                      }}
-                    >
-                      <SettingsIcon fontSize="large" />
-                    </IconButton>
-                  </Grid>
-                </Grid>
+                <IconButton onClick={handleSettingsClick} className={styles.editIconButton}>
+                  <SettingsIcon fontSize="large" />
+                </IconButton>
               </Grid>
             )}
           </Grid>
 
-          <Grid item xs={2} textAlign="right">
-            <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
-              <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
-                {match?.Team[1]?.Name ?? 'No team yet...'}
+          {/* right team info */}
+          <Grid
+            item
+            container
+            xs={5}
+            columnSpacing={2}
+            justifyContent="space-around"
+            className={`${styles.teamInfo} ${styles.teamInfoRight}`}
+          >
+            <Grid item sm={8} lg="auto">
+              <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
+                <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
+                  {match?.Team[1]?.Name ?? 'No team yet...'}
+                </Typography>
+              </LinkRouter>
+              <Typography className={styles.subtitle}>
+                {match?.Team[1]?.TeamRecord.WinCount ?? 0}W :{' '}
+                {match?.Team[1]?.TeamRecord.LossCount ?? 0}L
               </Typography>
-            </LinkRouter>
-            <Typography className={styles.subtitle}>
-              {match?.Team[1]?.TeamRecord.WinCount ?? 0}W :{' '}
-              {match?.Team[1]?.TeamRecord.LossCount ?? 0}L
-            </Typography>
-            {user?.IsAdmin && (
-              <i className={styles.subtitle}>
-                Sportsmanship: {match?.Scores[1]?.SportsmanshipScore}
-              </i>
-            )}
-          </Grid>
-          <Grid item xs={2}>
-            <img
-              src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID)?.Logo ?? defaultLogo}
-              alt="Team Icon"
-              width="85em"
-            ></img>
+              {user?.IsAdmin && (
+                <i className={styles.subtitle}>
+                  Sportsmanship: {match?.Scores[1]?.SportsmanshipScore}
+                </i>
+              )}
+            </Grid>
+            <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
+              <img
+                src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID)?.Logo ?? defaultLogo}
+                alt="Team Icon"
+                className={styles.headerImg}
+              ></img>
+            </Grid>
           </Grid>
         </Grid>
-      </>
+      </Grid>
     );
 
     return (
@@ -239,43 +281,56 @@ const Match = () => {
             </Grid>
 
             {/* forms and dialogs */}
+            <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
+              <MenuItem
+                dense
+                onClick={() => {
+                  setOpenEditMatchStatsForm(true);
+                }}
+              >
+                Edit Match Stats
+              </MenuItem>
+              <MenuItem
+                dense
+                onClick={() => {
+                  setOpenMatchInformationForm(true);
+                }}
+              >
+                Edit Match Information
+              </MenuItem>
+              <MenuItem
+                dense
+                className={styles.redButton}
+                onClick={() => {
+                  setOpenConfirmDelete(true);
+                }}
+              >
+                Delete Match
+              </MenuItem>
+            </Menu>
             <MatchForm
               closeWithSnackbar={(status) => {
-                handleMatchFormSubmit(status, setOpenMatchForm);
+                handleFormSubmit(status, setOpenMatchInformationForm);
               }}
-              openMatchForm={openMatchForm}
-              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              openMatchInformationForm={openMatchInformationForm}
+              setOpenMatchInformationForm={(bool) => setOpenMatchInformationForm(bool)}
               match={match}
             />
-            <GordonDialogBox
-              title="Admin Settings"
-              fullWidth
-              open={openSettings}
-              cancelButtonClicked={() => setOpenSettings(false)}
-              cancelButtonName="Close"
-            >
-              <br />
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
-                  <Typography>Permanently delete the match '{matchName}'</Typography>
-                </Grid>
-                <Grid item>
-                  <Button
-                    color="error"
-                    variant="contained"
-                    onClick={() => setOpenConfirmDelete(true)}
-                  >
-                    Delete this match
-                  </Button>
-                </Grid>
-              </Grid>
-            </GordonDialogBox>
+            <EditMatchStatsForm
+              match={match}
+              setMatch={setMatch}
+              closeWithSnackbar={(status) => {
+                handleFormSubmit(status, setOpenEditMatchStatsForm);
+              }}
+              openEditMatchStatsForm={openEditMatchStatsForm}
+              setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+            />
             <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}
               cancelButtonClicked={() => setOpenConfirmDelete(false)}
-              cancelButtonName="No, keep this team"
-              buttonName="Yes, delete this team"
+              cancelButtonName="No, keep this match"
+              buttonName="Yes, delete this match"
               buttonClicked={() => handleDelete()}
               severity="error"
             >

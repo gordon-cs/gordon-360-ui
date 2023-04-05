@@ -15,6 +15,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Activity.module.css';
 import { TeamList } from '../../components/List';
@@ -23,6 +24,8 @@ import { deleteActivity, getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
+import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
+import userService from 'services/user';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -32,6 +35,8 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 import { TabPanel } from 'views/RecIM/components';
 import { Box } from '@mui/system';
+import { createTeam } from 'services/recim/team';
+import InviteParticipantForm from 'views/RecIM/components/Forms/InviteParticipantForm';
 
 const getNumMatches = (seriesArray) => {
   let n = 0;
@@ -51,6 +56,8 @@ const Activity = () => {
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [openImageOptions, setOpenImageOptions] = useState(false);
+  const [openAddSoloTeam, setOpenAddSoloTeam] = useState(false);
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
@@ -58,6 +65,8 @@ const Activity = () => {
   const [reload, setReload] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   useEffect(() => {
     const loadData = async () => {
@@ -65,7 +74,6 @@ const Activity = () => {
       setActivity(await getActivityByID(activityID));
       if (profile) {
         setUser(await getParticipantByUsername(profile.AD_Username));
-        setUserTeams(await getParticipantTeams(profile.AD_Username));
       }
       setLoading(false);
     };
@@ -77,8 +85,19 @@ const Activity = () => {
     openTeamForm,
     openCreateSeriesForm,
     openMatchForm,
+    openImageOptions,
     reload,
   ]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (user) {
+        setUserTeams(await getParticipantTeams(profile.AD_Username));
+        setIsAdmin(user.IsAdmin);
+      }
+    };
+    loadData();
+  }, [user, profile.AD_Username]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   // disable create team if participant already is participating in this activity,
@@ -105,32 +124,30 @@ const Activity = () => {
       }
   }, [activity]);
 
-  const handleActivityForm = (status) => {
+  const handleFormSubmit = (status, setOpenForm) => {
     //if you want to do something with the message make a snackbar function here
-    setOpenActivityForm(false);
-  };
+    setOpenForm(false);
+  }
 
-  const handleTeamFormSubmit = (status, setOpenTeamForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenTeamForm(false);
-  };
-
-  const handleMatchFormSubmit = (status, setOpenMatchForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenMatchForm(false);
-  };
-
-  const handleCreateSeriesForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenCreateSeriesForm(false);
-  };
-
-  const handleDelete = () => {
-    deleteActivity(activityID);
+  const handleDelete = async () => {
+    await deleteActivity(activityID);
     setOpenConfirmDelete(false);
     setOpenSettings(false);
     navigate(`/recim`);
     // @TODO add snackbar
+  };
+
+  const handleJoinActivity = async () => {
+    setLoading(true);
+    const profileInfo = await userService.getProfileInfo(profile.AD_Username);
+    const request = {
+      Name: profileInfo.fullName,
+      ActivityID: activityID,
+    };
+    await createTeam(profile.AD_Username, request);
+    setReload(!reload);
+    setSnackbar({ message: 'Activity joined successfully', severity: 'success', open: true });
+    setLoading(false);
   };
 
   // profile hook used for future authentication
@@ -143,12 +160,29 @@ const Activity = () => {
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
           <Grid item>
-            <img src={activity?.Logo ?? defaultLogo} alt="Activity Icon" width="85em"></img>
+            <Button
+              className={styles.logoContainer}
+              disabled={!isAdmin}
+              onClick={() => {
+                setOpenImageOptions(true);
+              }}
+            >
+              <img
+                src={activity?.Logo ?? defaultLogo}
+                className={styles.logo}
+                alt="Activity Icon"
+              ></img>
+              {isAdmin && (
+                <div className={styles.overlay}>
+                  <Typography className={styles.overlayText}>edit</Typography>
+                </div>
+              )}
+            </Button>
           </Grid>
           <Grid item>
             <Typography variant="h5" className={styles.title}>
               {activity?.Name ?? <GordonLoader size={15} inline />}
-              {user?.IsAdmin && (
+              {isAdmin && (
                 <IconButton
                   onClick={() => {
                     setOpenActivityForm(true);
@@ -169,7 +203,7 @@ const Activity = () => {
             </Typography>
           </Grid>
         </Grid>
-        {user?.IsAdmin && (
+        {isAdmin && (
           <Grid item xs={3} textAlign={'right'}>
             <IconButton
               onClick={() => {
@@ -185,7 +219,7 @@ const Activity = () => {
           <ActivityForm
             activity={activity}
             closeWithSnackbar={(status) => {
-              handleActivityForm(status);
+              handleFormSubmit(status, setOpenActivityForm);
             }}
             openActivityForm={openActivityForm}
             setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
@@ -198,7 +232,7 @@ const Activity = () => {
       <Card>
         <CardHeader title="Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
-          {user?.IsAdmin && (
+          {isAdmin && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={6}>
                 <Grid container justifyContent="center">
@@ -236,7 +270,7 @@ const Activity = () => {
             activity.Series.map((series) => {
               return (
                 <ScheduleList
-                  isAdmin={user?.IsAdmin}
+                  isAdmin={isAdmin}
                   series={series}
                   activityID={activityID}
                   reload={reload}
@@ -258,18 +292,31 @@ const Activity = () => {
           {canCreateTeam && (
             <Grid container className={styles.buttonArea}>
               <Grid item xs={12}>
-                <Grid container justifyContent="center">
+                <Grid container justifyContent="space-around">
                   <Button
                     variant="contained"
                     color="warning"
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
                     onClick={() => {
-                      setOpenTeamForm(true);
+                      activity.SoloRegistration ? handleJoinActivity() : setOpenTeamForm(true);
                     }}
                   >
-                    Create a Team
+                    {activity.SoloRegistration ? 'Join Activity' : 'Create a Team'}
                   </Button>
+                  {activity.SoloRegistration && isAdmin && (
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      startIcon={<AddCircleRoundedIcon />}
+                      className={styles.actionButton}
+                      onClick={() => {
+                        setOpenAddSoloTeam(true);
+                      }}
+                    >
+                      Add Participant
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </Grid>
@@ -332,15 +379,15 @@ const Activity = () => {
             {/* forms and dialogs */}
             <MatchForm
               closeWithSnackbar={(status) => {
-                handleMatchFormSubmit(status, setOpenMatchForm);
+                handleFormSubmit(status, setOpenMatchForm);
               }}
-              openMatchForm={openMatchForm}
-              setOpenMatchForm={(bool) => setOpenMatchForm(bool)}
+              openMatchInformationForm={openMatchForm}
+              setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
               activity={activity}
             />
             <SeriesForm
               closeWithSnackbar={(status) => {
-                handleCreateSeriesForm(status);
+                handleFormSubmit(status, setOpenCreateSeriesForm);
               }}
               openSeriesForm={openCreateSeriesForm}
               setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
@@ -349,12 +396,35 @@ const Activity = () => {
             />
             <TeamForm
               closeWithSnackbar={(teamID, status) => {
-                handleTeamFormSubmit(status, setOpenTeamForm);
+                handleFormSubmit(status, setOpenTeamForm);
                 navigate(`team/${teamID}`);
               }}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={activityID}
+            />
+            <InviteParticipantForm
+              closeWithSnackbar={(status) => {
+                setReload(!reload);
+                setSnackbar({
+                  message: 'Added participant successfully',
+                  severity: 'success',
+                  open: true,
+                });
+              }}
+              openInviteParticipantForm={openAddSoloTeam}
+              setOpenInviteParticipantForm={(bool) => setOpenAddSoloTeam(bool)}
+              soloTeam
+              activityID={activityID}
+            />
+            <ImageOptions
+              category={'Activity'}
+              component={activity}
+              closeWithSnackbar={(status) => {
+                handleFormSubmit(status, setOpenImageOptions);
+              }}
+              openImageOptions={openImageOptions}
+              setOpenImageOptions={setOpenImageOptions}
             />
             <GordonDialogBox
               title="Admin Settings"
@@ -399,6 +469,12 @@ const Activity = () => {
               </Typography>
               <Typography variant="body1">This action cannot be undone.</Typography>
             </GordonDialogBox>
+            <GordonSnackbar
+              open={snackbar.open}
+              text={snackbar.message}
+              severity={snackbar.severity}
+              onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+            />
           </Grid>
         )}
       </>

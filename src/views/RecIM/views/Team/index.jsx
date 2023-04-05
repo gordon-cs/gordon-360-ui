@@ -6,6 +6,7 @@ import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import Header from '../../components/Header';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
+import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import InviteParticipantForm from '../../components/Forms/InviteParticipantForm';
 import { useUser } from 'hooks';
 import { ParticipantList, MatchList } from '../../components/List';
@@ -16,6 +17,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import userService from 'services/user';
 
 const Team = () => {
   const navigate = useNavigate();
@@ -23,13 +25,16 @@ const Team = () => {
   const { profile } = useUser();
   const [reload, setReload] = useState(false);
   const [team, setTeam] = useState();
+  const [logo, setLogo] = useState();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
+  const [openImageOptions, setOpenImageOptions] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
+
   const handleInviteParticipantForm = (status) => {
     //if you want to do something with the message make a snackbar function here
     setOpenInviteParticipantForm(false);
@@ -44,7 +49,7 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID, openTeamForm, openInviteParticipantForm, reload]);
+  }, [profile, teamID, openTeamForm, openInviteParticipantForm, openImageOptions, reload]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   //checks if the team is modifiable by the current user
@@ -62,6 +67,19 @@ const Team = () => {
     }
     setHasPermissions(hasCaptainPermissions || user?.IsAdmin);
   }, [team, user]);
+
+  useEffect(() => {
+    const setSoloLogo = async () => {
+      let username = team.Participant[0]?.Username;
+      const { def: defaultImage, pref: preferredImage } = await userService.getImage(username);
+      setLogo(`data:image/jpg;base64,${preferredImage || defaultImage}`);
+    };
+    if (team?.Activity.SoloRegistration) {
+      setLogo(setSoloLogo());
+    } else {
+      setLogo(team?.Logo ?? defaultLogo);
+    }
+  }, [team]);
 
   const teamRecord = () => {
     if (team) {
@@ -83,8 +101,13 @@ const Team = () => {
     setOpenTeamForm(false);
   };
 
-  const handleDelete = () => {
-    deleteTeam(teamID);
+  const handleOpenImageOptionsSubmit = (status) => {
+    //if you want to do something with the message make a snackbar function here
+    setOpenImageOptions(false);
+  };
+
+  const handleDelete = async () => {
+    await deleteTeam(teamID);
     setOpenConfirmDelete(false);
     setOpenSettings(false);
     navigate(`/recim/activity/${team.Activity.ID}`);
@@ -98,12 +121,25 @@ const Team = () => {
       <Grid container direction="row" alignItems="center" columnSpacing={4}>
         <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
           <Grid item>
-            <img src={team?.Logo ?? defaultLogo} alt="Team Icon" width="85em"></img>
+            <Button
+              className={styles.logoContainer}
+              disabled={!hasPermissions || team?.Activity.SoloRegistration}
+              onClick={() => {
+                setOpenImageOptions(true);
+              }}
+            >
+              <img src={logo} className={styles.logo} alt="Team Icon"></img>
+              {hasPermissions && !team?.Activity.SoloRegistration && (
+                <div className={styles.overlay}>
+                  <Typography className={styles.overlayText}>edit</Typography>
+                </div>
+              )}
+            </Button>
           </Grid>
           <Grid item>
             <Typography variant="h5" className={styles.title}>
               {team?.Name ?? <GordonLoader size={15} inline />}
-              {hasPermissions && (
+              {hasPermissions && !team?.Activity.SoloRegistration && (
                 <IconButton
                   onClick={() => {
                     setOpenTeamForm(true);
@@ -162,6 +198,7 @@ const Team = () => {
               callbackFunction={(bool) => setReload(bool)}
               showParticipantOptions
               showInactive
+              isAdmin={true}
             />
           ) : (
             <ParticipantList participants={team.Participant} />
@@ -216,7 +253,16 @@ const Team = () => {
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={team?.Activity?.ID}
               team={team}
-              isAdmin={user.IsAdmin}
+              isAdmin={user?.IsAdmin}
+            />
+            <ImageOptions
+              category={'Team'}
+              component={team}
+              closeWithSnackbar={(status) => {
+                handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+              }}
+              openImageOptions={openImageOptions}
+              setOpenImageOptions={setOpenImageOptions}
             />
             <GordonDialogBox
               title="Admin Settings"

@@ -1,12 +1,62 @@
 @import '../../../../vars';
 
-.teamName {
-  font-size: calc(1rem + 1vw);
+.header {
+  font-size: 0.8rem;
+
+  h5 {
+    font-size: 1.5em;
+  }
+  .teamInfo {
+    flex-direction: column;
+    text-align: center;
+  }
+  .matchScore {
+    white-space: nowrap;
+    font-weight: bold;
+    color: $neutral-dark-gray;
+  }
+  .headerImg {
+    width: 4.5em;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .headerImgContainer {
+    order: -1;
+  }
+}
+
+@media (min-width: $break-sm) {
+  .header {
+    font-size: 0.9rem;
+
+    .headerImg {
+      width: 6em;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .teamInfo {
+      flex-direction: row;
+      align-items: center;
+    }
+    .teamInfoLeft {
+      text-align: right;
+    }
+    .teamInfoRight {
+      text-align: left;
+    }
+    .headerImgContainer {
+      order: 0;
+    }
+  }
 }
 
 @media (min-width: $break-lg) {
-  .teamName {
-    font-size: 1.5rem;
+  .header {
+    font-size: 1rem;
+
+    .teamName {
+      font-size: 1.5rem;
+    }
   }
 }
 
@@ -36,13 +86,19 @@
 
 .subtitle {
   color: $neutral-gray;
+  font-size: 0.9em;
 }
 
-.editIconButton {
-  background-color: $secondary-yellow;
-  color: $neutral-black;
+.redButton {
+  background-color: $secondary-red;
+  color: $neutral-white;
 }
 
-.editIconButton:hover {
-  background-color: rgb(177, 129, 13);
+.redButton:hover {
+  background-color: $alternative-red;
+}
+
+.matchWinner {
+  font-weight: bold;
+  text-decoration: underline $secondary-green 0.2em;
 }
