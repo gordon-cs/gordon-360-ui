@@ -6,12 +6,11 @@ const MatchForm = ({
   closeWithSnackbar,
   openMatchInformationForm,
   setOpenMatchInformationForm,
-  activity,
+  series,
   match,
 }) => {
   const [errorStatus, setErrorStatus] = useState({
     StartTime: false,
-    SeriesID: false,
     SurfaceID: false,
     TeamIDs: false,
     StatusID: false,
@@ -46,7 +45,7 @@ const MatchForm = ({
     },
   ];
 
-  if (activity) {
+  if (series) {
     createMatchFields.push(
       {
         label: 'Start Time',
@@ -57,21 +56,10 @@ const MatchForm = ({
         required: true,
       },
       {
-        label: 'Series',
-        name: 'SeriesID',
-        type: 'select',
-        menuItems: activity.Series.map((series) => {
-          return series.Name;
-        }),
-        error: errorStatus.SeriesID,
-        helperText: '*Required',
-        required: true,
-      },
-      {
         label: 'Teams',
         name: 'TeamIDs',
         type: 'multiselect',
-        menuItems: activity.Team.map((team) => {
+        menuItems: series.TeamStanding.map((team) => {
           return team.Name;
         }),
         error: errorStatus.TeamIDs,
@@ -137,7 +125,7 @@ const MatchForm = ({
     }
     return {
       StartTime: '',
-      SeriesID: '',
+      SeriesID: series?.ID,
       SurfaceID: '',
       TeamIDs: [],
     };
@@ -157,22 +145,17 @@ const MatchForm = ({
     let matchRequest = { ...currentInfo, ...newInfo };
     matchRequest.TeamIDs = teamNames;
 
-    if (activity)
-      matchRequest.SeriesID = activity.Series.find(
-        (series) => series.Name === matchRequest.SeriesID,
-      ).ID;
-
     matchRequest.SurfaceID = surfaces.find((surface) => surface.Name === matchRequest.SurfaceID).ID;
 
     let idArray = [];
     matchRequest.TeamIDs.forEach((value) => {
-      if (activity) idArray.push(activity.Team.find((team) => team.Name === value).ID);
+      if (series) idArray.push(series.TeamStanding.find((team) => team.Name === value).TeamID);
       else if (match)
         idArray.push(match.Series.TeamStanding.find((team) => team.Name === value)?.TeamID);
     });
     matchRequest.TeamIDs = idArray;
 
-    if (activity)
+    if (series)
       createMatch(matchRequest).then((result) => {
         closeWithSnackbar({
           type: 'success',
@@ -197,7 +180,7 @@ const MatchForm = ({
   return (
     <Form
       formTitles={{ name: 'Match', formType: match ? 'Edit' : 'Create' }}
-      fields={createMatchFields}
+      fields={[createMatchFields]}
       currentInfo={currentInfo}
       errorCases={errorCases}
       setErrorStatus={setErrorStatus}

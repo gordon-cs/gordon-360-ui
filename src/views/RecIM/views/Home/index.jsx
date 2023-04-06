@@ -175,10 +175,10 @@ const Home = () => {
 
   let myTeams = (
     <CardContent>
-      {participantTeams ? (
+      {participantTeams.length > 0 ? (
         <TeamList teams={participantTeams} />
       ) : (
-        <Typography className={styles.secondaryText}>You're not yet apart of any teams!</Typography>
+        <Typography className={styles.secondaryText}>You're not yet apart of any teams</Typography>
       )}
     </CardContent>
   );
@@ -218,7 +218,7 @@ const Home = () => {
         <Tab label="My Teams" />
         <Tab
           label={
-            <Badge color="secondary" variant="dot" badgeContent={invites.length}>
+            <Badge color="secondary" variant="dot" sx={{ zIndex: 0 }} badgeContent={invites.length}>
               Invites
             </Badge>
           }

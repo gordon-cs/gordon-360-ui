@@ -8,6 +8,8 @@ import {
   IconButton,
   Tabs,
   Tab,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState } from 'react';
@@ -22,12 +24,10 @@ import { TeamList } from '../../components/List';
 import TeamForm from '../../components/Forms/TeamForm';
 import { deleteActivity, getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
-import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import userService from 'services/user';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
-import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
@@ -53,7 +53,6 @@ const Activity = () => {
   const [loading, setLoading] = useState(true);
   const [activity, setActivity] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
-  const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openImageOptions, setOpenImageOptions] = useState(false);
@@ -63,9 +62,10 @@ const Activity = () => {
   const [canCreateTeam, setCanCreateTeam] = useState(true);
   const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
   const [reload, setReload] = useState(false);
-  const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [anchorEl, setAnchorEl] = useState();
+  const openMenu = Boolean(anchorEl);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   useEffect(() => {
@@ -84,7 +84,6 @@ const Activity = () => {
     openActivityForm,
     openTeamForm,
     openCreateSeriesForm,
-    openMatchForm,
     openImageOptions,
     reload,
   ]);
@@ -97,7 +96,7 @@ const Activity = () => {
       }
     };
     loadData();
-  }, [user, profile.AD_Username]);
+  }, [user, profile]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   // disable create team if participant already is participating in this activity,
@@ -132,9 +131,18 @@ const Activity = () => {
   const handleDelete = async () => {
     await deleteActivity(activityID);
     setOpenConfirmDelete(false);
-    setOpenSettings(false);
     navigate(`/recim`);
     // @TODO add snackbar
+  };
+
+  // default closure
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  // menu button click
+  const handleButtonClick = (e) => {
+    setAnchorEl(e.currentTarget);
   };
 
   const handleJoinActivity = async () => {
@@ -182,17 +190,6 @@ const Activity = () => {
           <Grid item>
             <Typography variant="h5" className={styles.title}>
               {activity?.Name ?? <GordonLoader size={15} inline />}
-              {isAdmin && (
-                <IconButton
-                  onClick={() => {
-                    setOpenActivityForm(true);
-                  }}
-                  className={styles.editIconButton}
-                  sx={{ ml: 1 }}
-                >
-                  <EditIcon />
-                </IconButton>
-              )}
             </Typography>
             <Typography variant="h6" className={styles.subtitle}>
               <i>
@@ -205,51 +202,36 @@ const Activity = () => {
         </Grid>
         {isAdmin && (
           <Grid item xs={3} textAlign={'right'}>
-            <IconButton
-              onClick={() => {
-                setOpenSettings(true);
-              }}
-              sx={{ mr: '1rem' }}
-            >
-              <SettingsIcon fontSize="large" />
+            <IconButton onClick={handleButtonClick} sx={{ mr: '1rem' }}>
+              <SettingsIcon
+                fontSize="large"
+                sx={
+                  openMenu && {
+                    animation: 'spin 0.2s linear ',
+                    '@keyframes spin': {
+                      '0%': {
+                        transform: 'rotate(0deg)',
+                      },
+                      '100%': {
+                        transform: 'rotate(120deg)',
+                      },
+                    },
+                  }
+                }
+              />
             </IconButton>
           </Grid>
-        )}
-        {openActivityForm && (
-          <ActivityForm
-            activity={activity}
-            closeWithSnackbar={(status) => {
-              handleFormSubmit(status, setOpenActivityForm);
-            }}
-            openActivityForm={openActivityForm}
-            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
-          />
         )}
       </Grid>
     );
 
     let scheduleCard = activity && (
       <Card>
-        <CardHeader title="Schedule" className={styles.cardHeader} />
+        <CardHeader title="Activity Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
           {isAdmin && (
             <Grid container className={styles.buttonArea}>
-              <Grid item xs={6}>
-                <Grid container justifyContent="center">
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    startIcon={<AddCircleRoundedIcon />}
-                    className={styles.actionButton}
-                    onClick={() => {
-                      setOpenMatchForm(true);
-                    }}
-                  >
-                    Create a Match
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Grid container justifyContent="center">
                   <Button
                     variant="contained"
@@ -275,11 +257,12 @@ const Activity = () => {
                   activityID={activityID}
                   reload={reload}
                   setReload={setReload}
+                  activityTeams={activity?.Team}
                 />
               );
             })
           ) : (
-            <Typography className={styles.secondaryTex}>No series scheduled yet!</Typography>
+            <Typography className={styles.secondaryText}>No series scheduled yet!</Typography>
           )}
         </CardContent>
       </Card>
@@ -377,13 +360,14 @@ const Activity = () => {
             </Grid>
 
             {/* forms and dialogs */}
-            <MatchForm
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenMatchForm);
-              }}
-              openMatchInformationForm={openMatchForm}
-              setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
+
+            <ActivityForm
               activity={activity}
+              closeWithSnackbar={(status) => {
+                handleFormSubmit(status, setOpenActivityForm);
+              }}
+              openActivityForm={openActivityForm}
+              setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
             />
             <SeriesForm
               closeWithSnackbar={(status) => {
@@ -403,6 +387,18 @@ const Activity = () => {
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={activityID}
             />
+            {openImageOptions && (
+              <ImageOptions
+                category={'Activity'}
+                component={activity}
+                closeWithSnackbar={(status) => {
+                  handleFormSubmit(status, setOpenImageOptions);
+                }}
+                openImageOptions={openImageOptions}
+                setOpenImageOptions={setOpenImageOptions}
+              />
+            )}
+
             <InviteParticipantForm
               closeWithSnackbar={(status) => {
                 setReload(!reload);
@@ -426,29 +422,34 @@ const Activity = () => {
               openImageOptions={openImageOptions}
               setOpenImageOptions={setOpenImageOptions}
             />
-            <GordonDialogBox
-              title="Admin Settings"
-              fullWidth
-              open={openSettings}
-              cancelButtonClicked={() => setOpenSettings(false)}
-              cancelButtonName="Close"
+            <Menu
+              open={openMenu}
+              onClose={handleMenuClose}
+              anchorEl={anchorEl}
+              className={styles.menu}
             >
-              <br />
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
-                  <Typography>Permanently delete the activity '{activity.Name}'</Typography>
-                </Grid>
-                <Grid item>
-                  <Button
-                    color="error"
-                    variant="contained"
-                    onClick={() => setOpenConfirmDelete(true)}
-                  >
-                    Delete this activity
-                  </Button>
-                </Grid>
-              </Grid>
-            </GordonDialogBox>
+              <Typography className={styles.menuTitle}>Admin Settings</Typography>
+              <MenuItem
+                dense
+                onClick={() => {
+                  setOpenActivityForm(true);
+                  handleMenuClose();
+                }}
+                className={styles.menuButton}
+              >
+                Edit Activity Details
+              </MenuItem>
+              <MenuItem
+                dense
+                onClick={() => {
+                  setOpenConfirmDelete(true);
+                  handleMenuClose();
+                }}
+                className={styles.redButton}
+              >
+                Delete
+              </MenuItem>
+            </Menu>
             <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}

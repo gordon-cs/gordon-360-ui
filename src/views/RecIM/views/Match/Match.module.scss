@@ -98,7 +98,29 @@
   background-color: $alternative-red;
 }
 
+.greenMenuButton {
+  // color: $secondary-green;
+  // color: $neutral-white;
+  transition: all 0.3s ease-in-out;
+}
+
+.greenMenuButton:hover {
+  box-shadow: inset 0px 0px 7px $secondary-green;
+  transition: all 0.3s ease-in-out;
+}
+
 .matchWinner {
   font-weight: bold;
   text-decoration: underline $secondary-green 0.2em;
+}
+
+.menuTitle {
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+  color: $neutral-gray;
+  text-align: center;
+}
+
+.menuButton:hover {
+  background-color: $neutral-black-opacity10;
 }

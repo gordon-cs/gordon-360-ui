@@ -275,24 +275,27 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
     content = (
       <ListItemButton onClick={() => setTargetTeamID(team.ID)}>
         <Grid container columnSpacing={2}>
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12}>
             <Typography className={styles.listingSubtitle}>Name: </Typography>
             <Typography className={styles.listingTitle}>{team.Name}</Typography>
           </Grid>
-          <Grid item xs={8} sm={4}>
-            <Typography className={styles.listingSubtitle}>
-              Score: {targetTeamStats.TeamScore}
-            </Typography>
-          </Grid>
-          <Grid item xs={8} sm={4}>
-            <Typography className={styles.listingSubtitle}>
-              Sportsmanship: {targetTeamStats.SportsmanshipScore}
-            </Typography>
-          </Grid>
-          <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
-            <Typography className={styles.listingSubtitle}>
-              Status: {targetTeamStats.Status}
-            </Typography>
+
+          <Grid item container>
+            <Grid item xs={6}>
+              <Typography className={styles.listingSubtitle}>
+                Score: {targetTeamStats.TeamScore}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography className={styles.listingSubtitle}>
+                Status: {targetTeamStats.Status}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography className={styles.listingSubtitle}>
+                Sportsmanship: {targetTeamStats.SportsmanshipScore}
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
       </ListItemButton>
@@ -331,14 +334,14 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                 >
                   {invite && (
                     <Grid item>
-                      <IconButton className={styles.acceptButton} onClick={handleAcceptInvite}>
+                      <IconButton className={styles.acceptIcon} onClick={handleAcceptInvite}>
                         <CheckIcon />
                       </IconButton>
                     </Grid>
                   )}
                   {invite && (
                     <Grid item>
-                      <IconButton className={styles.rejectButton} onClick={handleRejectInvite}>
+                      <IconButton className={styles.rejectIcon} onClick={handleRejectInvite}>
                         <ClearIcon />
                       </IconButton>
                     </Grid>

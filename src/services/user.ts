@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
 import http from './http';
+import { Participation } from './membership';
 import { Class } from './peopleSearch';
 import { Override } from './utils';
 
@@ -174,8 +175,13 @@ type MealPlanComponent = {
 
 export type ProfileImages = { def: string; pref?: string };
 
-const isStudent = (profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo =>
-  profile?.PersonType.includes('stu') || false;
+function isStudent(profile: Profile): profile is StudentProfileInfo;
+function isStudent(profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo;
+function isStudent(
+  profile: UnformattedProfileInfo | Profile,
+): profile is UnformattedStudentProfileInfo | StudentProfileInfo {
+  return profile?.PersonType.includes('stu') || false;
+}
 
 function formatCountry(profile: UnformattedProfileInfo) {
   if (profile?.Country?.includes(',')) {
@@ -242,8 +248,6 @@ const setHomePhonePrivacy = (makePrivate: boolean) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getEmployment = () => http.get('studentemployment/');
-
 const getBirthdate = async (): Promise<DateTime> =>
   DateTime.fromISO(await http.get('profiles/birthdate'));
 
@@ -251,10 +255,6 @@ const isBirthdayToday = async () => {
   const birthday = await getBirthdate();
   return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
 };
-
-// TODO: Add type info
-const getEmploymentInfo = () => getEmployment();
-//.then(sort(compareBySession))
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
   const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
@@ -264,11 +264,16 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
   const fullName = `${profile?.FirstName} ${profile?.LastName}`;
   const cliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username);
 
+  let advisors: StudentAdvisorInfo[] = [];
+  try {
+    advisors = await getAdvisors(profile.AD_Username);
+  } catch {}
+
   if (isStudent(profile)) {
     return {
       ...profile,
       fullName,
-      Advisors: await getAdvisors(profile.AD_Username),
+      Advisors: advisors,
       CliftonStrengths: cliftonStrengths,
       Majors: [
         profile.Major1Description,
@@ -318,6 +323,25 @@ type ProfileFieldUpdate = {
 const requestInfoUpdate = (updatedFields: ProfileFieldUpdate[]) =>
   http.post('profiles/update/', updatedFields);
 
+export type MembershipHistory = {
+  ActivityCode: string;
+  // TODO: Get ActivityType from DB for categorization
+  // activityType: string;
+  ActivityDescription: string;
+  ActivityImagePath: string;
+  Sessions: MembershipHistorySession[];
+  LatestDate: string;
+};
+
+export type MembershipHistorySession = {
+  MembershipID: number;
+  SessionCode: string;
+  Participation: Participation;
+};
+
+const getMembershipHistory = (username: string): Promise<MembershipHistory[]> =>
+  http.get(`profiles/${username}/memberships-history`);
+
 const userService = {
   setMobilePhonePrivacy,
   setHomePhonePrivacy,
@@ -328,14 +352,15 @@ const userService = {
   getDiningInfo,
   getProfileInfo,
   getMailboxCombination,
+  getMembershipHistory,
   resetImage,
   postImage,
   postIDImage,
   requestInfoUpdate,
-  getEmploymentInfo,
   getEmergencyInfo,
   updateSocialLink,
   isBirthdayToday,
+  isStudent,
 };
 
 export default userService;
