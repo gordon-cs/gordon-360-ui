@@ -1,4 +1,4 @@
-import { Grid, Typography, Chip, IconButton, Menu, MenuItem } from '@mui/material';
+import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Divider } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ContentCard } from 'views/RecIM/components/Forms/Form/components/ContentCard';
@@ -6,9 +6,18 @@ import { MatchList } from 'views/RecIM/components/List';
 import UpdateIcon from '@mui/icons-material/Update';
 import RestoreIcon from '@mui/icons-material/Restore';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import { formatDateTimeRange, standardDate } from 'views/RecIM/components/Helpers';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import {
+  formatDateTimeRange,
+  standardDate,
+  standardTimeOnly,
+} from 'views/RecIM/components/Helpers';
 import { format, isPast, isFuture } from 'date-fns';
-import { deleteSeriesCascade, scheduleSeriesMatches } from 'services/recim/series';
+import {
+  deleteSeriesCascade,
+  scheduleSeriesMatches,
+  getSeriesSchedule,
+} from 'services/recim/series';
 import { useState, useEffect } from 'react';
 import styles from './../../Activity.module.css';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
@@ -20,7 +29,8 @@ import { windowBreakWidths } from 'theme';
 const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activityTeams }) => {
   const [anchorEl, setAnchorEl] = useState();
   const [width] = useWindowSize();
-  const openMenu = Boolean(anchorEl);
+  const [showAdminTools, setShowAdminTools] = useState(false);
+  const [showDetailsMenu, setShowDetailsMenu] = useState(false);
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
   const [openDeleteDisclaimer, setOpenDeleteDisclaimer] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
@@ -28,31 +38,42 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
+  const [seriesSchedule, setSeriesSchedule] = useState();
 
   useEffect(() => {
     if (width < windowBreakWidths.breakSM) setIsMobileView(true);
     else setIsMobileView(false);
   }, [width]);
 
+  useEffect(() => {
+    const loadSchedule = async () => {
+      let fetchedSchedule = await getSeriesSchedule(series.ID);
+      if (fetchedSchedule.ID !== 0) setSeriesSchedule(fetchedSchedule);
+    };
+    loadSchedule();
+  }, [series]);
+
   // default closure
-  const handleClose = () => {
+  const closeMenusAndForms = () => {
     setAnchorEl(null);
+    setShowAdminTools(false);
+    setShowDetailsMenu(false);
   };
 
   // edit button
   const handleEditSeries = () => {
     setOpenEditSeriesForm(true);
-    handleClose();
+    closeMenusAndForms();
   };
 
   const handleCreateMatch = () => {
     setOpenMatchForm(true);
-    handleClose();
+    closeMenusAndForms();
   };
 
   const handleSeriesSchedule = () => {
     setOpenSeriesScheduleForm(true);
-    handleClose();
+    closeMenusAndForms();
   };
 
   const handleFormSubmit = (status, setOpenForm) => {
@@ -95,7 +116,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
       </Typography>,
     );
     setOpenAutoSchedulerDisclaimer(true);
-    handleClose();
+    closeMenusAndForms();
   };
 
   const handleConfirmAutoSchedule = () => {
@@ -123,7 +144,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
       </Typography>,
     );
     setOpenDeleteDisclaimer(true);
-    handleClose();
+    closeMenusAndForms();
   };
 
   const handleConfirmDelete = () => {
@@ -133,7 +154,17 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
     });
   };
 
+  const handleOpenScheduleDetails = (e) => {
+    handleButtonClick(e);
+    setShowDetailsMenu(true);
+  };
+
   // menu button click
+  const handleOpenAdminTools = (e) => {
+    handleButtonClick(e);
+    setShowAdminTools(true);
+  };
+
   const handleButtonClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -155,6 +186,48 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
       ></Chip>
     );
   };
+  const scheduleMenu = () => {
+    let daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let reformatedSchedule = [];
+    daysArr.forEach((day) => {
+      reformatedSchedule.push({
+        Day: isMobileView ? day.substring(0, 1) : day,
+        Available: seriesSchedule?.AvailableDays[day],
+      });
+    });
+    return (
+      <Menu
+        open={showDetailsMenu}
+        onClose={closeMenusAndForms}
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Typography className={styles.menuTitle}>{series?.Name}'s Schedule</Typography>
+        <Divider />
+        <Typography className={styles.menuTitle}>
+          {standardTimeOnly(seriesSchedule?.StartTime)} -{' '}
+          {standardTimeOnly(seriesSchedule?.EndTime)}
+        </Typography>
+        <Grid container direction="row" xs={12} className={styles.seriesScheduleMenu}>
+          {reformatedSchedule.map((day) => (
+            <Grid item direction="column">
+              <Typography
+                className={`${
+                  day.Available
+                    ? styles.seriesScheduleMenuItem_available
+                    : styles.seriesScheduleMenuItem
+                }`}
+              >
+                {day.Day}
+              </Typography>
+            </Grid>
+          ))}
+        </Grid>
+      </Menu>
+    );
+  };
+
   return (
     <>
       <Grid container className={styles.seriesHeader} alignItems="center" columnSpacing={1}>
@@ -182,12 +255,35 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
 
         {isAdmin && (
           <Grid container item xs={5} sm={1} justifyContent="right">
-            <IconButton onClick={handleButtonClick}>
+            <IconButton onClick={handleOpenAdminTools}>
               <TuneIcon inline />
             </IconButton>{' '}
           </Grid>
         )}
-        <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl} className={styles.menu}>
+        {/* reformats seriesSchedule to take the place of admin tools so that user have a cleaner visual */}
+        {!isAdmin && seriesSchedule && (
+          <Grid container item xs={5} sm={1} justifyContent="right">
+            <IconButton onClick={handleOpenScheduleDetails}>
+              <CalendarTodayIcon inline />
+            </IconButton>{' '}
+          </Grid>
+        )}
+        {isAdmin && seriesSchedule && (
+          <Grid container item xs={12} justifyContent="center">
+            <IconButton onClick={handleOpenScheduleDetails}>
+              <CalendarTodayIcon inline />
+            </IconButton>{' '}
+          </Grid>
+        )}
+        {/* details menu */}
+        {scheduleMenu()}
+        {/* options menu */}
+        <Menu
+          open={showAdminTools}
+          onClose={closeMenusAndForms}
+          anchorEl={anchorEl}
+          className={styles.menu}
+        >
           <Typography className={styles.menuTitle}>Schedule</Typography>
           <MenuItem
             dense
