@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ConfirmationRow } from './components/ConfirmationRow';
@@ -26,6 +26,10 @@ const Form = ({
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
+  const updatedFields = useMemo(
+    () => Object.entries(newInfo).filter(([key, value]) => currentInfo[key] !== value),
+    [currentInfo, newInfo],
+  );
 
   const handleSetError = (field, condition) => {
     const getCurrentErrorStatus = (currentValue) => {
@@ -90,14 +94,6 @@ const Form = ({
     setNewInfo(tempNewInfo);
   };
 
-  const getUpdatedFields = (currentInfo, newInfo, fields) =>
-    Object.entries(newInfo)
-      .filter(([key, value]) => currentInfo[key] !== value)
-      .map(([key, value]) => ({
-        value,
-        label: fields.flat().find((field) => field.name === key)?.label,
-      }));
-
   const handleWindowClose = () => {
     setOpenConfirmWindow(false);
     setOpenForm(false);
@@ -159,8 +155,12 @@ const Form = ({
         >
           <ConfirmationWindowHeader />
           <Grid container>
-            {getUpdatedFields(currentInfo, newInfo).map((field) => (
-              <ConfirmationRow key={field} field={field} />
+            {updatedFields.map(([key, value]) => (
+              <ConfirmationRow
+                key={key}
+                value={value}
+                label={fields.flat().find((field) => field.name === key)?.label}
+              />
             ))}
           </Grid>
           {isSaving && <GordonLoader size={32} />}
