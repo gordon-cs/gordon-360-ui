@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ConfirmationRow } from './components/ConfirmationRow';
@@ -115,7 +115,7 @@ const Form = ({
         }
       }}
       isButtonDisabled={disableUpdateButton}
-      buttonName={'Submit'}
+      buttonName="Submit"
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
         setOpenForm(false);
@@ -123,7 +123,7 @@ const Form = ({
           additionCancelActions();
         }
       }}
-      cancelButtonName={'cancel'}
+      cancelButtonName="cancel"
     >
       {loading
         ? GordonLoader
