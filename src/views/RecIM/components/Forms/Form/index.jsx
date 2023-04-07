@@ -125,18 +125,20 @@ const Form = ({
       }}
       cancelButtonName="cancel"
     >
-      {loading
-        ? GordonLoader
-        : fields.map((fieldSet, index) => (
-            <ContentCard
-              title={formTitles.contentCardTitles?.[index] ?? `${formTitles.name} Information`}
-            >
-              {additionalContent}
-              {fieldSet.map((field) => (
-                <InformationField {...field} value={newInfo[field.name]} onChange={handleChange} />
-              ))}
-            </ContentCard>
-          ))}
+      {loading ? (
+        <GordonLoader />
+      ) : (
+        fields.map((fieldSet, index) => (
+          <ContentCard
+            title={formTitles.contentCardTitles?.[index] ?? `${formTitles.name} Information`}
+          >
+            {additionalContent}
+            {fieldSet.map((field) => (
+              <InformationField {...field} value={newInfo[field.name]} onChange={handleChange} />
+            ))}
+          </ContentCard>
+        ))
+      )}
 
       {!loading && (
         <GordonDialogBox
