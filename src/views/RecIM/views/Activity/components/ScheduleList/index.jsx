@@ -202,7 +202,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
 
       {series.Match.length ? (
         showBracket ? (
-          <RecimBracket />
+          <RecimBracket series={series} />
         ) : (
           <MatchList matches={series.Match} activityID={activityID} />
         )
