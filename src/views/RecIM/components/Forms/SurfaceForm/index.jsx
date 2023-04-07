@@ -41,7 +41,7 @@ const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfa
     };
   }, [surface]);
 
-  const errorCases = (field, value) => {
+  const isFieldInvalid = (field, value) => {
     switch (field) {
       default:
         return false;
@@ -80,7 +80,7 @@ const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfa
       formTitles={{ name: 'Surface', formType: surface ? 'Edit' : 'Create' }}
       fields={createSurfaceFields}
       currentInfo={currentInfo}
-      errorCases={errorCases}
+      isFieldInvalid={isFieldInvalid}
       setErrorStatus={setErrorStatus}
       isSaving={isSaving}
       setOpenForm={setOpenSurfaceForm}

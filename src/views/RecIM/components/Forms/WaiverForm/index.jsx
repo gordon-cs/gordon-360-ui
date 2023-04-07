@@ -38,7 +38,7 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
     };
   }, []);
 
-  const errorCases = (field, value) => {
+  const isFieldInvalid = (field, value) => {
     switch (field) {
       default:
         return false;
@@ -122,7 +122,7 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
       formTitles={{ name: 'Activity', formType: 'Form' }}
       fields={[waiverFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
+      isFieldInvalid={isFieldInvalid}
       setErrorStatus={setErrorStatus}
       loading={false}
       isSaving={isSaving}

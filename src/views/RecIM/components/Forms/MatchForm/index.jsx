@@ -131,7 +131,7 @@ const MatchForm = ({
     };
   }, [surfaces, matchStatus, match]);
 
-  const errorCases = (field, value) => {
+  const isFieldInvalid = (field, value) => {
     switch (field) {
       default:
         return false;
@@ -182,7 +182,7 @@ const MatchForm = ({
       formTitles={{ name: 'Match', formType: match ? 'Edit' : 'Create' }}
       fields={[createMatchFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
+      isFieldInvalid={isFieldInvalid}
       setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}

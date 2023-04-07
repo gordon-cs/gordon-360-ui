@@ -161,7 +161,7 @@ const SeriesForm = ({
     return /^-?\d+$/.test(value) || value.length === 0;
   };
 
-  const errorCases = (field, value) => {
+  const isFieldInvalid = (field, value) => {
     switch (field) {
       case 'numberOfTeamsAdmitted':
         return !isNumeric(value);
@@ -220,7 +220,7 @@ const SeriesForm = ({
       formTitles={{ name: 'Series', formType: series ? 'Edit' : 'Create' }}
       fields={[createSeriesFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
+      isFieldInvalid={isFieldInvalid}
       setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}

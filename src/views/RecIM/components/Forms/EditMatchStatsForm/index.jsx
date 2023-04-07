@@ -93,7 +93,7 @@ const EditMatchStatsForm = ({
     return info;
   }, [match, targetTeamID, matchStatus]);
 
-  const errorCases = (field, value) => {
+  const isFieldInvalid = (field, value) => {
     switch (field) {
       case 'SportsmanshipScore':
         return value < 0;
@@ -153,7 +153,7 @@ const EditMatchStatsForm = ({
       formTitles={{ name: 'Match Stats', formType: 'Edit' }}
       fields={[createMatchStatsField]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
+      isFieldInvalid={isFieldInvalid}
       setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}

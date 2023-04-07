@@ -171,7 +171,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
     };
   }, [activity]);
 
-  const errorCases = (field, value) => {
+  const isFieldInvalid = (field, value) => {
     switch (field) {
       default:
         return false;
@@ -219,7 +219,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       formTitles={{ name: 'Activity', formType: activity ? 'Edit' : 'Create' }}
       fields={[activityFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
+      isFieldInvalid={isFieldInvalid}
       setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}

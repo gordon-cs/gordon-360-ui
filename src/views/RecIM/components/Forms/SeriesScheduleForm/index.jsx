@@ -165,7 +165,7 @@ const SeriesScheduleForm = ({
     };
   }, [seriesID, seriesSchedule]);
 
-  const errorCases = (field, value) => {
+  const isFieldInvalid = (field, value) => {
     switch (field) {
       default:
         return false;
@@ -211,7 +211,7 @@ const SeriesScheduleForm = ({
       }}
       fields={[availableDays, availableSurfaces, matchTimes]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
+      isFieldInvalid={isFieldInvalid}
       setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}

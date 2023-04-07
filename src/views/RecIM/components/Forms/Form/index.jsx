@@ -11,7 +11,7 @@ const Form = ({
   formTitles,
   fields,
   currentInfo,
-  errorCases,
+  isFieldInvalid,
   setErrorStatus,
   loading,
   isSaving,
@@ -51,7 +51,7 @@ const Form = ({
       }
       if (
         (fields.find((n) => n.name === field)?.required && !newInfo[field]) ||
-        errorCases(field, newInfo[field])
+        isFieldInvalid(field, newInfo[field])
       ) {
         handleSetError(field, true);
         if (!hasError) {

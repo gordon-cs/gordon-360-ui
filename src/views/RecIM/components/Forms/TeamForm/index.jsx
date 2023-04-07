@@ -72,7 +72,7 @@ const TeamForm = ({
     };
   }, [activityID, team, teamStatus]);
 
-  const errorCases = (field, value) => {
+  const isFieldInvalid = (field, value) => {
     switch (field) {
       default:
         return false;
@@ -117,7 +117,7 @@ const TeamForm = ({
       formTitles={{ name: 'Team', formType: team ? 'Edit' : 'Create' }}
       fields={[createTeamFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
+      isFieldInvalid={isFieldInvalid}
       setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}
