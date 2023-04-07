@@ -26,11 +26,13 @@ const InformationField = ({
   helperText,
   menuItems,
   data,
-  xs,
-  sm,
-  md,
-  lg,
 }) => {
+  let gridSizes = {
+    xs: 12,
+    sm: 6,
+    md: 4,
+    lg: 3,
+  };
   const [width] = useWindowSize();
 
   let field;
@@ -106,7 +108,7 @@ const InformationField = ({
       );
       break;
     case 'multiselect':
-      xs = sm = md = lg = 12; // ensure multi select takes max size
+      gridSizes = { xs: 12 }; // ensure multi select takes max size
       let selected = '';
       field = (
         <Grid item s>
@@ -152,7 +154,7 @@ const InformationField = ({
       break;
   }
   return (
-    <Grid item xs={xs} sm={sm} md={md} lg={lg}>
+    <Grid item {...gridSizes}>
       {field}
     </Grid>
   );

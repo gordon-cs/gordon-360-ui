@@ -104,46 +104,6 @@ const Form = ({
     setNewInfo(currentInfo);
   };
 
-  /**
-   * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
-   * @returns JSX correct input for each field based on type
-   */
-  const mapFieldsToInputs = (fields) => {
-    return fields.map((field) => (
-      <InformationField
-        key={field.name}
-        error={field.error}
-        label={field.label}
-        name={field.name}
-        helperText={field.helperText}
-        value={newInfo[field.name]}
-        type={field.type}
-        menuItems={field.menuItems}
-        onChange={handleChange}
-        xs={12}
-        sm={6}
-        md={4}
-        lg={3}
-      />
-    ));
-  };
-
-  const DialogContent = () => {
-    let index = 0;
-    return fields.map((set) => (
-      <ContentCard
-        title={
-          formTitles.contentCardTitles
-            ? formTitles.contentCardTitles[index++]
-            : `${formTitles.name} Information`
-        }
-      >
-        {additionalContent}
-        {loading ? <GordonLoader /> : mapFieldsToInputs(set)}
-      </ContentCard>
-    ));
-  };
-
   return (
     <GordonDialogBox
       open={openForm}
@@ -169,7 +129,18 @@ const Form = ({
       }}
       cancelButtonName={'cancel'}
     >
-      {DialogContent()}
+      {loading
+        ? GordonLoader
+        : fields.map((fieldSet, index) => (
+            <ContentCard
+              title={formTitles.contentCardTitles?.[index] ?? `${formTitles.name} Information`}
+            >
+              {additionalContent}
+              {fieldSet.map((field) => (
+                <InformationField {...field} value={newInfo[field.name]} onChange={handleChange} />
+              ))}
+            </ContentCard>
+          ))}
 
       {!loading && (
         <GordonDialogBox
