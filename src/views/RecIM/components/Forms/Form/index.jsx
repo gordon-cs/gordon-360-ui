@@ -23,8 +23,6 @@ const Form = ({
   newInfoCallback,
   showConfirmationWindow = true,
 }) => {
-  const allFields = fields.flat();
-
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
@@ -92,23 +90,13 @@ const Form = ({
     setNewInfo(tempNewInfo);
   };
 
-  const getFieldLabel = (fieldName) => {
-    const matchingField = allFields.find((field) => field.name === fieldName);
-    return matchingField.label;
-  };
-
-  function getNewFields(currentInfo, newInfo) {
-    const updatedFields = [];
-    Object.entries(newInfo).forEach(([key, value]) => {
-      if (currentInfo[key] !== value)
-        updatedFields.push({
-          Field: key,
-          Value: value,
-          Label: getFieldLabel(key),
-        });
-    });
-    return updatedFields;
-  }
+  const getUpdatedFields = (currentInfo, newInfo, fields) =>
+    Object.entries(newInfo)
+      .filter(([key, value]) => currentInfo[key] !== value)
+      .map(([key, value]) => ({
+        value,
+        label: fields.flat().find((field) => field.name === key)?.label,
+      }));
 
   const handleWindowClose = () => {
     setOpenConfirmWindow(false);
@@ -200,7 +188,7 @@ const Form = ({
         >
           <ConfirmationWindowHeader />
           <Grid container>
-            {getNewFields(currentInfo, newInfo).map((field) => (
+            {getUpdatedFields(currentInfo, newInfo).map((field) => (
               <ConfirmationRow key={field} field={field} />
             ))}
           </Grid>
