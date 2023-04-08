@@ -1,32 +1,26 @@
 import { useState, useMemo } from 'react';
-import Form from '../Form';
+import Form, { requiredFieldValidation } from '../Form';
 import { createSurface, editSurface } from 'services/recim/match';
 
+const createSurfaceFields = [
+  {
+    label: 'Name',
+    name: 'Name',
+    type: 'text',
+    validate: requiredFieldValidation,
+    helperText: '*Required',
+    required: true,
+  },
+  {
+    label: 'Description',
+    name: 'Description',
+    type: 'text',
+    required: false,
+  },
+];
+
 const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfaceForm }) => {
-  const [errorStatus, setErrorStatus] = useState({
-    Name: false,
-    Description: false,
-  });
-
   const [isSaving, setSaving] = useState(false);
-
-  const createSurfaceFields = [
-    {
-      label: 'Name',
-      name: 'Name',
-      type: 'text',
-      error: errorStatus.Name,
-      helperText: '*Required',
-      required: true,
-    },
-    {
-      label: 'Description',
-      name: 'Description',
-      type: 'text',
-      error: errorStatus.Name,
-      required: false,
-    },
-  ];
 
   const currentInfo = useMemo(() => {
     if (surface) {
@@ -40,13 +34,6 @@ const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfa
       Description: '',
     };
   }, [surface]);
-
-  const isFieldInvalid = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
@@ -78,10 +65,8 @@ const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfa
   return (
     <Form
       formTitles={{ name: 'Surface', formType: surface ? 'Edit' : 'Create' }}
-      fields={createSurfaceFields}
+      fields={[createSurfaceFields]}
       currentInfo={currentInfo}
-      isFieldInvalid={isFieldInvalid}
-      setErrorStatus={setErrorStatus}
       isSaving={isSaving}
       setOpenForm={setOpenSurfaceForm}
       openForm={openSurfaceForm}

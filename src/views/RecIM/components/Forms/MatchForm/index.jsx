@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import Form from '../Form';
+import Form, { requiredFieldValidation } from '../Form';
 import { createMatch, updateMatch, getSurfaces, getMatchStatusTypes } from 'services/recim/match';
 
 const MatchForm = ({
@@ -9,13 +9,6 @@ const MatchForm = ({
   series,
   match,
 }) => {
-  const [errorStatus, setErrorStatus] = useState({
-    StartTime: false,
-    SurfaceID: false,
-    TeamIDs: false,
-    StatusID: false,
-  });
-
   const [loading, setLoading] = useState(false);
   const [isSaving, setSaving] = useState(false);
   const [surfaces, setSurfaces] = useState([]);
@@ -36,10 +29,8 @@ const MatchForm = ({
       label: 'Surface',
       name: 'SurfaceID',
       type: 'select',
-      menuItems: surfaces.map((surface) => {
-        return surface.Name;
-      }),
-      error: errorStatus.SurfaceID,
+      menuItems: surfaces.map((surface) => surface.Name),
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -51,7 +42,7 @@ const MatchForm = ({
         label: 'Start Time',
         name: 'StartTime',
         type: 'datetime',
-        error: errorStatus.StartTime,
+        validate: requiredFieldValidation,
         helperText: '*Required',
         required: true,
       },
@@ -59,10 +50,8 @@ const MatchForm = ({
         label: 'Teams',
         name: 'TeamIDs',
         type: 'multiselect',
-        menuItems: series.TeamStanding.map((team) => {
-          return team.Name;
-        }),
-        error: errorStatus.TeamIDs,
+        menuItems: series.TeamStanding.map((team) => team.Name),
+        validate: requiredFieldValidation,
         helperText: '*Required',
         required: true,
       },
@@ -73,7 +62,7 @@ const MatchForm = ({
         label: 'Start Time',
         name: 'StartTime',
         type: 'datetime',
-        error: errorStatus.StartTime,
+        validate: requiredFieldValidation,
         helperText: '*Required',
         required: true,
       },
@@ -81,10 +70,8 @@ const MatchForm = ({
         label: 'Teams',
         name: 'TeamIDs',
         type: 'multiselect',
-        menuItems: match.Series.TeamStanding.map((team) => {
-          return team.Name;
-        }),
-        error: errorStatus.TeamIDs,
+        menuItems: match.Series.TeamStanding.map((team) => team.Name),
+        validate: requiredFieldValidation,
         helperText: '*Required',
         required: true,
       },
@@ -92,10 +79,8 @@ const MatchForm = ({
         label: 'Status',
         name: 'StatusID',
         type: 'select',
-        menuItems: matchStatus.map((type) => {
-          return type.Description;
-        }),
-        error: errorStatus.TeamIDs,
+        menuItems: matchStatus.map((type) => type.Description),
+        validate: requiredFieldValidation,
         helperText: '*Required',
         required: true,
       },
@@ -130,13 +115,6 @@ const MatchForm = ({
       TeamIDs: [],
     };
   }, [surfaces, matchStatus, match]);
-
-  const isFieldInvalid = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
@@ -182,8 +160,6 @@ const MatchForm = ({
       formTitles={{ name: 'Match', formType: match ? 'Edit' : 'Create' }}
       fields={[createMatchFields]}
       currentInfo={currentInfo}
-      isFieldInvalid={isFieldInvalid}
-      setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}
       setOpenForm={setOpenMatchInformationForm}

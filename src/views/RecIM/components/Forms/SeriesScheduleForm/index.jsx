@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import Form from '../Form';
+import Form, { requiredFieldValidation } from '../Form';
 import { putSeriesSchedule, getSeriesSchedule } from 'services/recim/series';
 import { getSurfaces } from 'services/recim/match';
 
@@ -9,14 +9,6 @@ const SeriesScheduleForm = ({
   setOpenSeriesScheduleForm,
   seriesID,
 }) => {
-  const [errorStatus, setErrorStatus] = useState({
-    AvailableDays: false,
-    AvailableSurfaceIDs: false,
-    DailyStartTime: false,
-    DailyEndTime: false,
-    EstMatchTime: false,
-  });
-
   // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
   const [isSaving, setSaving] = useState(false);
@@ -40,7 +32,7 @@ const SeriesScheduleForm = ({
       label: 'Monday',
       name: 'Mon',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -48,7 +40,7 @@ const SeriesScheduleForm = ({
       label: 'Tuesday',
       name: 'Tue',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -56,7 +48,7 @@ const SeriesScheduleForm = ({
       label: 'Wednesday',
       name: 'Wed',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -64,7 +56,7 @@ const SeriesScheduleForm = ({
       label: 'Thursday',
       name: 'Thu',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -72,7 +64,7 @@ const SeriesScheduleForm = ({
       label: 'Friday',
       name: 'Fri',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -80,7 +72,7 @@ const SeriesScheduleForm = ({
       label: 'Saturday',
       name: 'Sat',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -88,7 +80,7 @@ const SeriesScheduleForm = ({
       label: 'Sunday',
       name: 'Sun',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -100,7 +92,7 @@ const SeriesScheduleForm = ({
       name: 'AvailableSurfaceIDs',
       type: 'multiselect',
       menuItems: surfaces.map((surface) => surface.Name),
-      error: errorStatus.AvailableSurfaceIDs,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -111,7 +103,7 @@ const SeriesScheduleForm = ({
       label: 'Daily Start Time',
       name: 'DailyStartTime',
       type: 'datetime',
-      error: errorStatus.DailyStartTime,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -119,7 +111,7 @@ const SeriesScheduleForm = ({
       label: 'Daily End Time',
       name: 'DailyEndTime',
       type: 'datetime',
-      error: errorStatus.DailyEndTime,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -127,7 +119,7 @@ const SeriesScheduleForm = ({
       label: 'Estimated Match Length (min)',
       name: 'EstMatchTime',
       type: 'text',
-      error: errorStatus.EstMatchTime,
+      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -164,13 +156,6 @@ const SeriesScheduleForm = ({
       EstMatchTime: '',
     };
   }, [seriesID, seriesSchedule]);
-
-  const isFieldInvalid = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
@@ -211,8 +196,6 @@ const SeriesScheduleForm = ({
       }}
       fields={[availableDays, availableSurfaces, matchTimes]}
       currentInfo={currentInfo}
-      isFieldInvalid={isFieldInvalid}
-      setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}
       setOpenForm={setOpenSeriesScheduleForm}
