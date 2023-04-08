@@ -281,36 +281,41 @@ const InvolvementProfile = () => {
             isButtonDisabled={!preview}
             cancelButtonClicked={handleCloseCancel}
           >
-            <DialogContentText id="edit-involvement-image-dialog-description">
-              {window.innerWidth < 600
-                ? 'Tap Image to Browse Files'
-                : 'Drag & Drop Picture, or Click to Browse Files'}
-            </DialogContentText>
-            <Grid container justifyContent="center" spacing={2}>
+            <Grid container justifyContent="center" spacing={0}>
               {!preview && (
-                <Dropzone
-                  onDropAccepted={onDropAccepted.bind(this)}
-                  onDropRejected={onDropRejected.bind(this)}
-                  accept="image/jpeg, image/jpg, image/png"
-                >
-                  {({ getRootProps, getInputProps }) => (
-                    <section>
-                      <div className={styles.photoUploader} {...getRootProps()}>
-                        <input {...getInputProps()} />
-                        <img
-                          className="rounded_corners"
-                          src={ActivityImagePath}
-                          alt=""
-                          style={{ maxWidth: '320px', maxHeight: '320px' }}
-                        />
-                      </div>
-                    </section>
-                  )}
-                </Dropzone>
+                <>
+                  <DialogContentText
+                    id="edit-involvement-image-dialog-description"
+                    style={{ textAlign: 'center' }}
+                  >
+                    {window.innerWidth < 600
+                      ? 'Tap Image to Browse Files'
+                      : 'Drag & Drop Picture, or Click to Browse Files'}
+                  </DialogContentText>
+                  <Dropzone
+                    onDropAccepted={onDropAccepted.bind(this)}
+                    onDropRejected={onDropRejected.bind(this)}
+                    accept="image/jpeg, image/jpg, image/png"
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <section>
+                        <div className={styles.photoUploader} {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          <img
+                            className="rounded_corners"
+                            src={ActivityImagePath}
+                            alt=""
+                            style={{ maxWidth: '320px', maxHeight: '320px' }}
+                          />
+                        </div>
+                      </section>
+                    )}
+                  </Dropzone>
+                </>
               )}
               {preview && (
                 <>
-                  <Grid item>
+                  <Grid item style={{ marginTop: '20px' }}>
                     <Cropper
                       ref={cropperRef}
                       src={preview}
@@ -331,7 +336,7 @@ const InvolvementProfile = () => {
                     />
                   </Grid>
 
-                  <Grid item>
+                  <Grid item style={{ marginTop: '20px' }}>
                     <Button variant="contained" onClick={() => setPreview(null)}>
                       Choose Another Image
                     </Button>
