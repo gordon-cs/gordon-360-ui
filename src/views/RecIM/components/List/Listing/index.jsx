@@ -306,12 +306,14 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
       ActivityRecord.WinCount += record.WinCount;
       ActivityRecord.LossCount += record.LossCount;
     });
+
+    console.log(invite);
     content = (
       <Grid container direction="row" justifyContent="center">
         <Grid item xs={12}>
           <ListItemButton
             component={Link}
-            //to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
+            to={invite ? null : `/recim/activity/${team.Activity.ID}/team/${team.ID}`}
             className={styles.listing}
           >
             <Grid container>

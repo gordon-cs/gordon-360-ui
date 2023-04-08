@@ -115,7 +115,7 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
         <TeamListing
           key={team.ID}
           team={team}
-          invite={invite}
+          invite={invite ?? false}
           callbackFunction={handleInviteResponse}
         />
       ));
