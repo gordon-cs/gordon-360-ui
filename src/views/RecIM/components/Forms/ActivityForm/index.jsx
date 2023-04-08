@@ -9,21 +9,6 @@ import {
 import { getAllSports } from 'services/recim/sport';
 
 const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenActivityForm }) => {
-  const [errorStatus, setErrorStatus] = useState({
-    name: false,
-    startDate: false,
-    endDate: false,
-    registrationStart: false,
-    registrationEnd: false,
-    typeID: false,
-    sportID: false,
-    maxCapacity: false,
-    soloRegistration: false,
-    statusID: false,
-    completed: false,
-  });
-
-  // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
   const [isSaving, setSaving] = useState(false);
   const [sports, setSports] = useState([]);
@@ -33,9 +18,11 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      setSports(await getAllSports());
-      setActivityTypes(await getActivityTypes());
-      setActivityStatusTypes(await getActivityStatusTypes());
+      await Promise.all([
+        getAllSports().then(setSports),
+        getActivityTypes().then(setActivityTypes),
+        getActivityStatusTypes().then(setActivityStatusTypes),
+      ]);
       setLoading(false);
     };
     fetchData();
@@ -46,7 +33,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Name',
       name: 'name',
       type: 'text',
-      error: errorStatus.name,
       required: true,
       helperText: '*Required',
     },
@@ -54,7 +40,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Activity Start',
       name: 'startDate',
       type: 'datetime',
-      error: errorStatus.startDate,
       required: false,
       helperText: '*Required',
     },
@@ -62,7 +47,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Activity End',
       name: 'endDate',
       type: 'datetime',
-      error: errorStatus.endDate,
       required: false,
       helperText: '',
     },
@@ -70,7 +54,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Registration Start',
       name: 'registrationStart',
       type: 'datetime',
-      error: errorStatus.registrationStart,
       required: true,
       helperText: '*Required',
     },
@@ -78,7 +61,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Registration End',
       name: 'registrationEnd',
       type: 'datetime',
-      error: errorStatus.registrationEnd,
       required: false,
       helperText: '*Required',
     },
@@ -86,10 +68,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Activity Type',
       name: 'typeID',
       type: 'select',
-      menuItems: activityTypes.map((type) => {
-        return type.Description;
-      }),
-      error: errorStatus.typeID,
+      menuItems: activityTypes.map((type) => type.Description),
       required: true,
       helperText: '*Required',
     },
@@ -97,10 +76,7 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Sport',
       name: 'sportID',
       type: 'select',
-      menuItems: sports.map((sport) => {
-        return sport.Name;
-      }),
-      error: errorStatus.sportID,
+      menuItems: sports.map((sport) => sport.Name),
       required: true,
       helperText: '*Required',
     },
@@ -108,7 +84,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Maximum Capacity',
       name: 'maxCapacity',
       type: 'text',
-      error: errorStatus.maxCapacity,
       required: false,
       helperText: '*Required',
     },
@@ -116,32 +91,29 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Individual Sport',
       name: 'soloRegistration',
       type: 'checkbox',
-      error: errorStatus.soloRegistration,
       required: false,
       helperText: '*Required',
     },
   ];
+
   if (activity) {
     activityFields.push(
       {
         label: 'Activity Status',
         name: 'statusID',
         type: 'select',
-        menuItems: activityStatusTypes.map((type) => {
-          return type.Description;
-        }),
-        error: errorStatus.statusID,
+        menuItems: activityStatusTypes.map((type) => type.Description),
         helperText: '*Required',
       },
       {
         label: 'Completed',
         name: 'completed',
         type: 'checkbox',
-        error: errorStatus.completed,
         helperText: '*Required',
       },
     );
   }
+
   const currentInfo = useMemo(() => {
     if (activity) {
       return {
@@ -170,13 +142,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       soloRegistration: false,
     };
   }, [activity]);
-
-  const errorCases = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
@@ -219,8 +184,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       formTitles={{ name: 'Activity', formType: activity ? 'Edit' : 'Create' }}
       fields={[activityFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
-      setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}
       setOpenForm={setOpenActivityForm}

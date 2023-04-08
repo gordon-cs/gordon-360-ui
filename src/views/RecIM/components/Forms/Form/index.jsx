@@ -1,18 +1,26 @@
-import { Grid } from '@mui/material';
-import { useState, useEffect } from 'react';
-import GordonLoader from 'components/Loader';
-import GordonDialogBox from 'components/GordonDialogBox';
-import { ConfirmationRow } from './components/ConfirmationRow';
-import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
-import { ContentCard } from './components/ContentCard';
-import { InformationField } from './components/InformationField';
+import { Grid } from "@mui/material";
+import { useState, useEffect, useMemo } from "react";
+import GordonLoader from "components/Loader";
+import GordonDialogBox from "components/GordonDialogBox";
+import { ConfirmationRow } from "./components/ConfirmationRow";
+import { ConfirmationWindowHeader } from "./components/ConfirmationHeader";
+import { ContentCard } from "./components/ContentCard";
+import { InformationField } from "./components/InformationField";
+
+export const validateFieldFromUpdatedInfo = (updatedInfo) => (field) => {
+  const value = updatedInfo[field.name];
+
+  if (field.required && !Boolean(value)) return true;
+  if (value < field?.min) return true;
+  if (value > field?.max) return true;
+
+  return false;
+};
 
 const Form = ({
   formTitles,
-  fields,
+  fields: fieldSets,
   currentInfo,
-  errorCases,
-  setErrorStatus,
   loading,
   isSaving,
   setOpenForm,
@@ -23,137 +31,54 @@ const Form = ({
   newInfoCallback,
   showConfirmationWindow = true,
 }) => {
-  const allFields = fields.flat();
-
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
-  const [disableUpdateButton, setDisableUpdateButton] = useState(true);
 
-  const handleSetError = (field, condition) => {
-    const getCurrentErrorStatus = (currentValue) => {
-      return {
-        ...currentValue,
-        [field]: condition,
-      };
-    };
-    setErrorStatus(getCurrentErrorStatus);
-  };
+  const allFields = useMemo(() => fieldSets.flat(), [fieldSets]);
+
+  const isFieldInvalid = validateFieldFromUpdatedInfo(newInfo);
+
+  const errors = allFields.filter(isFieldInvalid).map((f) => f.name);
+
+  const updatedFields = useMemo(
+    () =>
+      Object.entries(newInfo).filter(
+        ([key, value]) => currentInfo[key] !== value
+      ),
+    [currentInfo, newInfo]
+  );
 
   useEffect(() => {
     setNewInfo(currentInfo);
   }, [currentInfo]);
 
-  // Field Validation
-  useEffect(() => {
-    let hasError = false;
-    let hasChanges = false;
-    for (const field in currentInfo) {
-      if (currentInfo[field] !== newInfo[field]) {
-        hasChanges = true;
-      }
-      if (
-        (fields.find((n) => n.name === field)?.required && !newInfo[field]) ||
-        errorCases(field, newInfo[field])
-      ) {
-        handleSetError(field, true);
-        if (!hasError) {
-          hasError = true;
-        }
-      } else {
-        handleSetError(field, false);
-      }
-    }
-    setDisableUpdateButton(hasError || !hasChanges);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newInfo, currentInfo]);
-
   const handleChange = (event, src) => {
-    const getNewInfo = (currentValue) => {
+    const updateField = (prevFields) => {
       // datetime pickers return value rather than event,
       // so we can also manually specify target source and value
       if (src) {
-        let newValue = event;
+        const newValue = event;
         return {
-          ...currentValue,
+          ...prevFields,
           [src]: newValue,
         };
       }
       return {
-        ...currentValue,
+        ...prevFields,
         [event.target.name]:
-          event.target.type === 'checkbox' ? event.target.checked : event.target.value,
+          event.target.type === "checkbox"
+            ? event.target.checked
+            : event.target.value,
       };
     };
-
-    let tempNewInfo = getNewInfo(newInfo);
-    if (newInfoCallback) {
-      newInfoCallback(tempNewInfo);
-    }
-    setNewInfo(tempNewInfo);
+    setNewInfo(updateField);
+    newInfoCallback?.(updateField);
   };
-
-  const getFieldLabel = (fieldName) => {
-    const matchingField = allFields.find((field) => field.name === fieldName);
-    return matchingField.label;
-  };
-
-  function getNewFields(currentInfo, newInfo) {
-    const updatedFields = [];
-    Object.entries(newInfo).forEach(([key, value]) => {
-      if (currentInfo[key] !== value)
-        updatedFields.push({
-          Field: key,
-          Value: value,
-          Label: getFieldLabel(key),
-        });
-    });
-    return updatedFields;
-  }
 
   const handleWindowClose = () => {
     setOpenConfirmWindow(false);
     setOpenForm(false);
     setNewInfo(currentInfo);
-  };
-
-  /**
-   * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
-   * @returns JSX correct input for each field based on type
-   */
-  const mapFieldsToInputs = (fields) => {
-    return fields.map((field) => (
-      <InformationField
-        key={field.name}
-        error={field.error}
-        label={field.label}
-        name={field.name}
-        helperText={field.helperText}
-        value={newInfo[field.name]}
-        type={field.type}
-        menuItems={field.menuItems}
-        onChange={handleChange}
-        xs={12}
-        sm={6}
-        md={4}
-        lg={3}
-      />
-    ));
-  };
-
-  const DialogContent = () => {
-    let index = 0;
-    return fields.map((set) => (
-      <ContentCard
-        title={
-          formTitles.contentCardTitles
-            ? formTitles.contentCardTitles[index++]
-            : `${formTitles.name} Information`
-        }
-      >
-        {additionalContent}
-        {loading ? <GordonLoader /> : mapFieldsToInputs(set)}
-      </ContentCard>
-    ));
   };
 
   return (
@@ -167,11 +92,11 @@ const Form = ({
         if (showConfirmationWindow) {
           setOpenConfirmWindow(true);
         } else {
-          handleConfirm(handleWindowClose);
+          handleConfirm(newInfo, handleWindowClose);
         }
       }}
-      isButtonDisabled={disableUpdateButton}
-      buttonName={'Submit'}
+      isButtonDisabled={errors?.length > 0}
+      buttonName="Submit"
       cancelButtonClicked={() => {
         setNewInfo(currentInfo);
         setOpenForm(false);
@@ -179,9 +104,30 @@ const Form = ({
           additionCancelActions();
         }
       }}
-      cancelButtonName={'cancel'}
+      cancelButtonName="cancel"
     >
-      {DialogContent()}
+      {loading ? (
+        <GordonLoader />
+      ) : (
+        fieldSets.map((fieldSet, index) => (
+          <ContentCard
+            title={
+              formTitles.contentCardTitles?.[index] ??
+              `${formTitles.name} Information`
+            }
+          >
+            {additionalContent}
+            {fieldSet.map((field) => (
+              <InformationField
+                {...field}
+                error={errors.find((e) => e === field.name)}
+                value={newInfo[field.name]}
+                onChange={handleChange}
+              />
+            ))}
+          </ContentCard>
+        ))
+      )}
 
       {!loading && (
         <GordonDialogBox
@@ -200,8 +146,12 @@ const Form = ({
         >
           <ConfirmationWindowHeader />
           <Grid container>
-            {getNewFields(currentInfo, newInfo).map((field) => (
-              <ConfirmationRow key={field} field={field} />
+            {updatedFields.map(([key, value]) => (
+              <ConfirmationRow
+                key={key}
+                value={value}
+                label={allFields.find((field) => field.name === key)?.label}
+              />
             ))}
           </Grid>
           {isSaving && <GordonLoader size={32} />}
