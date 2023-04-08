@@ -24,12 +24,13 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 import { getActivityTypes, isActivityRegisterable } from 'services/recim/activity';
-import { removeAttendance, updateAttendance } from 'services/recim/match';
+import { deleteSurface, removeAttendance, updateAttendance } from 'services/recim/match';
 import { getParticipantAttendanceCountForTeam } from 'services/recim/team';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
+import GordonDialogBox from 'components/GordonDialogBox';
 
 // Old activitylisting
 const ActivityListing = ({ activity }) => {
@@ -274,24 +275,27 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
     content = (
       <ListItemButton onClick={() => setTargetTeamID(team.ID)}>
         <Grid container columnSpacing={2}>
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12}>
             <Typography className={styles.listingSubtitle}>Name: </Typography>
             <Typography className={styles.listingTitle}>{team.Name}</Typography>
           </Grid>
-          <Grid item xs={8} sm={4}>
-            <Typography className={styles.listingSubtitle}>
-              Score: {targetTeamStats.TeamScore}
-            </Typography>
-          </Grid>
-          <Grid item xs={8} sm={4}>
-            <Typography className={styles.listingSubtitle}>
-              Sportsmanship: {targetTeamStats.SportsmanshipScore}
-            </Typography>
-          </Grid>
-          <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
-            <Typography className={styles.listingSubtitle}>
-              Status: {targetTeamStats.Status}
-            </Typography>
+
+          <Grid item container>
+            <Grid item xs={6}>
+              <Typography className={styles.listingSubtitle}>
+                Score: {targetTeamStats.TeamScore}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography className={styles.listingSubtitle}>
+                Status: {targetTeamStats.Status}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography className={styles.listingSubtitle}>
+                Sportsmanship: {targetTeamStats.SportsmanshipScore}
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
       </ListItemButton>
@@ -332,14 +336,14 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                 >
                   {invite && (
                     <Grid item>
-                      <IconButton className={styles.acceptButton} onClick={handleAcceptInvite}>
+                      <IconButton className={styles.acceptIcon} onClick={handleAcceptInvite}>
                         <CheckIcon />
                       </IconButton>
                     </Grid>
                   )}
                   {invite && (
                     <Grid item>
-                      <IconButton className={styles.rejectButton} onClick={handleRejectInvite}>
+                      <IconButton className={styles.rejectIcon} onClick={handleRejectInvite}>
                         <ClearIcon />
                       </IconButton>
                     </Grid>
@@ -676,4 +680,72 @@ const MatchListing = ({ match, activityID }) => {
   );
 };
 
-export { ActivityListing, TeamListing, ParticipantListing, MatchListing };
+const SurfaceListing = ({ surface, confirmDelete, editDetails }) => {
+  const [anchorEl, setAnchorEl] = useState();
+  const [openConfirmDelete, setOpenConfirmDelete] = useState();
+  const optionsOpen = Boolean(anchorEl);
+
+  if (!surface) return null;
+
+  const handleOptions = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  return (
+    <ListItem key={surface.ID} className={styles.listingWrapper}>
+      <ListItem
+        className={styles.listing}
+        secondaryAction={
+          <IconButton edge="end" onClick={handleOptions}>
+            <MoreHorizIcon />
+          </IconButton>
+        }
+      >
+        <Grid container direction="column">
+          <ListItemText>{surface.Name}</ListItemText>
+          <Typography className={styles.listingSubtitle}>{surface.Description}</Typography>
+        </Grid>
+        <Menu
+          open={optionsOpen}
+          onClose={() => setAnchorEl()}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem dense onClick={() => editDetails(surface)} divider>
+            Edit details
+          </MenuItem>
+          <MenuItem dense onClick={() => confirmDelete(surface)} className={styles.redButton}>
+            Delete surface
+          </MenuItem>
+        </Menu>
+      </ListItem>
+      <GordonDialogBox
+        title="Confirm Delete"
+        open={openConfirmDelete}
+        cancelButtonClicked={() => setOpenConfirmDelete(false)}
+        buttonName="Yes, delete this surface"
+        buttonClicked={async () => {
+          await deleteSurface(surface.ID);
+          setOpenConfirmDelete(false);
+        }}
+        severity="error"
+      >
+        <br />
+        <Typography variant="body1">
+          Are you sure you want to permanently delete this surface:
+          <i>'{surface.Name}'</i>?
+        </Typography>
+        <Typography variant="body1">This action cannot be undone.</Typography>
+      </GordonDialogBox>
+    </ListItem>
+  );
+};
+
+export { ActivityListing, TeamListing, ParticipantListing, MatchListing, SurfaceListing };

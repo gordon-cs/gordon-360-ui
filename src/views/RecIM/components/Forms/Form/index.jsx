@@ -23,10 +23,7 @@ const Form = ({
   newInfoCallback,
   showConfirmationWindow = true,
 }) => {
-  const allFields = [
-    fields,
-    // if you need more fields put them here, or if you make a "second page"
-  ].flat();
+  const allFields = fields.flat();
 
   const [newInfo, setNewInfo] = useState(currentInfo);
   const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
@@ -143,6 +140,22 @@ const Form = ({
     ));
   };
 
+  const DialogContent = () => {
+    let index = 0;
+    return fields.map((set) => (
+      <ContentCard
+        title={
+          formTitles.contentCardTitles
+            ? formTitles.contentCardTitles[index++]
+            : `${formTitles.name} Information`
+        }
+      >
+        {additionalContent}
+        {loading ? <GordonLoader /> : mapFieldsToInputs(set)}
+      </ContentCard>
+    ));
+  };
+
   return (
     <GordonDialogBox
       open={openForm}
@@ -168,10 +181,7 @@ const Form = ({
       }}
       cancelButtonName={'cancel'}
     >
-      <ContentCard title={`${formTitles.name} Information`}>
-        {additionalContent}
-        {loading ? <GordonLoader /> : mapFieldsToInputs(fields)}
-      </ContentCard>
+      {DialogContent()}
 
       {!loading && (
         <GordonDialogBox

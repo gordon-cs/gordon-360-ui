@@ -17,7 +17,12 @@ import Header from '../../components/Header';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { getMatchByID, getMatchAttendance, deleteMatchCascade } from 'services/recim/match';
+import {
+  getMatchByID,
+  getMatchAttendance,
+  deleteMatchCascade,
+  updateMatch,
+} from 'services/recim/match';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { standardDate } from 'views/RecIM/components/Helpers';
@@ -63,6 +68,7 @@ const Match = () => {
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
   const [matchName, setMatchName] = useState();
+  const [reloadFlag, setReloadFlag] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
 
@@ -74,17 +80,6 @@ const Match = () => {
     };
     loadData();
   }, [profile]);
-
-  useEffect(() => {
-    const loadMatch = async () => {
-      setLoading(true);
-      setMatch(await getMatchByID(matchID));
-      setMatchAttendance(await getMatchAttendance(matchID));
-      setLoading(false);
-    };
-    loadMatch();
-  }, [matchID, openMatchInformationForm, openEditMatchStatsForm]);
-  // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   useEffect(() => {
     if (match) {
@@ -101,8 +96,19 @@ const Match = () => {
     }
   }, [match]);
 
+  useEffect(() => {
+    const loadMatch = async () => {
+      setLoading(true);
+      setMatch(await getMatchByID(matchID));
+      setMatchAttendance(await getMatchAttendance(matchID));
+      setLoading(false);
+    };
+    loadMatch();
+  }, [matchID, reloadFlag]);
+
   const handleFormSubmit = (status, setOpenForm) => {
     setOpenForm(false);
+    setReloadFlag((bool) => !bool);
   };
 
   const handleClose = () => {
@@ -118,6 +124,15 @@ const Match = () => {
     setOpenConfirmDelete(false);
     navigate(`/recim/activity/${match.Activity.ID}`);
     // @TODO add snackbar
+  };
+
+  const handleMatchCompletedShortcut = async () => {
+    if (match) {
+      if (match.Status === 'Completed')
+        await updateMatch(match.ID, { StatusID: 2 }); //confirmed (no memory of previous)
+      else await updateMatch(match.ID, { StatusID: 6 }); //completed
+      setReloadFlag((bool) => !bool);
+    }
   };
 
   if (loading && !profile) {
@@ -170,7 +185,7 @@ const Match = () => {
                 <Typography
                   variant="h5"
                   className={`${styles.teamName} gc360_text_link ${
-                    team0Score > team1Score && styles.matchWinner
+                    team0Score > team1Score && match?.Status === 'Completed' && styles.matchWinner
                   }`}
                 >
                   {match?.Team[0]?.Name ?? 'No team yet...'}
@@ -202,7 +217,22 @@ const Match = () => {
             {/* admin controls */}
             {user?.IsAdmin && (
               <Grid item>
-                <IconButton onClick={handleSettingsClick} className={styles.editIconButton}>
+                <IconButton
+                  onClick={handleSettingsClick}
+                  sx={
+                    openMenu && {
+                      animation: 'spin 0.2s linear ',
+                      '@keyframes spin': {
+                        '0%': {
+                          transform: 'rotate(0deg)',
+                        },
+                        '100%': {
+                          transform: 'rotate(120deg)',
+                        },
+                      },
+                    }
+                  }
+                >
                   <SettingsIcon fontSize="large" />
                 </IconButton>
               </Grid>
@@ -220,7 +250,12 @@ const Match = () => {
           >
             <Grid item sm={8} lg="auto">
               <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
-                <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
+                <Typography
+                  variant="h5"
+                  className={`${styles.teamName} gc360_text_link ${
+                    team1Score > team0Score && match?.Status === 'Completed' && styles.matchWinner
+                  }`}
+                >
                   {match?.Team[1]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
@@ -282,8 +317,19 @@ const Match = () => {
 
             {/* forms and dialogs */}
             <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
+              <Typography className={styles.menuTitle}>Admin Settings</Typography>
               <MenuItem
+                className={styles.greenMenuButton}
                 dense
+                disabled={match.Scores.length === 0}
+                onClick={() => handleMatchCompletedShortcut()}
+              >
+                Mark as {match?.Status === 'Completed' ? 'Confirmed' : 'Completed'}
+              </MenuItem>
+              <MenuItem
+                className={styles.menuButton}
+                dense
+                disabled={match.Scores.length === 0}
                 onClick={() => {
                   setOpenEditMatchStatsForm(true);
                 }}
@@ -291,6 +337,7 @@ const Match = () => {
                 Edit Match Stats
               </MenuItem>
               <MenuItem
+                className={styles.menuButton}
                 dense
                 onClick={() => {
                   setOpenMatchInformationForm(true);
@@ -316,15 +363,17 @@ const Match = () => {
               setOpenMatchInformationForm={(bool) => setOpenMatchInformationForm(bool)}
               match={match}
             />
-            <EditMatchStatsForm
-              match={match}
-              setMatch={setMatch}
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenEditMatchStatsForm);
-              }}
-              openEditMatchStatsForm={openEditMatchStatsForm}
-              setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
-            />
+            {match.Scores.length !== 0 && (
+              <EditMatchStatsForm
+                match={match}
+                setMatch={setMatch}
+                closeWithSnackbar={(status) => {
+                  handleFormSubmit(status, setOpenEditMatchStatsForm);
+                }}
+                openEditMatchStatsForm={openEditMatchStatsForm}
+                setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+              />
+            )}
             <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}

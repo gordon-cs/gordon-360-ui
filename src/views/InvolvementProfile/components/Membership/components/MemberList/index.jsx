@@ -70,9 +70,7 @@ const MemberList = ({
           <Grid item xs={4}>
             Title/Participation
           </Grid>
-          <Grid item xs={2}>
-            Mail #
-          </Grid>
+          <Grid item xs={2} />
           <Grid item xs={2}>
             Admin
           </Grid>
@@ -86,14 +84,11 @@ const MemberList = ({
       title={
         <Grid container direction="row">
           <Grid item xs={1} />
-          <Grid item xs={3}>
+          <Grid item xs={5}>
             Name
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             Title/Participation
-          </Grid>
-          <Grid item xs={4}>
-            Mail #
           </Grid>
         </Grid>
       }
