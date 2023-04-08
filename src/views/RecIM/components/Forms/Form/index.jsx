@@ -10,10 +10,11 @@ import { InformationField } from './components/InformationField';
 const validateFieldFromUpdatedInfo = (updatedInfo) => (field) => {
   const value = updatedInfo[field.name];
 
-  if (field.required && !Boolean(value)) return false;
-  if (field.minimum && value < field.minimum) return false;
+  if (field.required && !Boolean(value)) return true;
+  if (field.minimum && value < field.minimum) return true;
+  if (field.maximum && value > field.maximum) return true;
 
-  return true;
+  return false;
 };
 
 const Form = ({
@@ -34,9 +35,9 @@ const Form = ({
 
   const allFields = useMemo(() => fieldSets.flat(), [fieldSets]);
 
-  const isFieldValid = validateFieldFromUpdatedInfo(newInfo);
+  const isFieldInvalid = validateFieldFromUpdatedInfo(newInfo);
 
-  const errors = allFields.filter(isFieldValid).map((f) => f.name);
+  const errors = allFields.filter(isFieldInvalid).map((f) => f.name);
 
   const updatedFields = useMemo(
     () => Object.entries(newInfo).filter(([key, value]) => currentInfo[key] !== value),
