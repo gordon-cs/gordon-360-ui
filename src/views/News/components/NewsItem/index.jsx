@@ -70,6 +70,30 @@ const NewsItem = ({
     editButton = <div></div>;
   }
 
+  // Only show the edit image button if the current user is the author of the posting OR is the Student News admin
+  // AND posting is unapproved
+  // null check temporarily fixes issue on home card when user has not yet been authenticated
+  // it is because the home card doesn't give these properties
+  let editImageButton;
+  if (
+    (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase() || isAdmin) &&
+    isUnapproved
+  ) {
+    editImageButton = (
+      <Button
+        variant="outlined"
+        color="primary"
+        startIcon={<EditIcon />}
+        onClick={() => handleNewsItemEdit(posting.SNID)}
+        className={styles.btn}
+      >
+        Edit Image
+      </Button>
+    );
+  } else {
+    editImageButton = <div></div>;
+  }
+
   // Only show the accepted status switch if the current user is the Student News admin
   let acceptedStatusSwitch;
   if (isAdmin) {
@@ -133,10 +157,17 @@ const NewsItem = ({
           <CardContent>
             <Typography className={styles.news_content}>"{posting.categoryName}"</Typography>
             <Typography className={styles.news_content}>{posting.Body}</Typography>
-            {posting.Image !== null && <img src={`${posting.Image}`} alt=" " />}
+            {posting.Image !== null && (
+              <img
+                src={`${posting.Image}`}
+                alt=" "
+                onClick={() => handleNewsItemEdit(posting.SNID)}
+              />
+            )}
           </CardContent>
           <Grid container justifyContent="space-evenly">
             {editButton}
+            {editImageButton}
             {deleteButton}
             {acceptedStatusSwitch}
           </Grid>
@@ -179,13 +210,20 @@ const NewsItem = ({
                 <Typography type="caption" className={styles.descriptionText}>
                   {posting.Body}
                 </Typography>
-                {posting.Image !== null && <img src={`${posting.Image}`} alt=" " />}
+                {posting.Image !== null && (
+                  <img
+                    src={`${posting.Image}`}
+                    alt=" "
+                    onClick={() => handleNewsItemEdit(posting.SNID)}
+                  />
+                )}
               </Grid>
               {/* Possible action buttons */}
               <Grid item xs={4}>
                 <Grid container justifyContent="space-evenly">
                   {/* these conditionally render - see respective methods */}
                   {editButton}
+                  {editImageButton}
                   {deleteButton}
                   {acceptedStatusSwitch}
                 </Grid>
