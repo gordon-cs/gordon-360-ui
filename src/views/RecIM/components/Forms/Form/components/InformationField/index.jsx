@@ -147,6 +147,11 @@ const InformationField = ({
             label={label}
             value={value}
             onChange={(value) => onChange(value, name)}
+            slotProps={{
+              textField: {
+                error,
+              },
+            }}
           />
         </LocalizationProvider>
       );
