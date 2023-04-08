@@ -12,12 +12,6 @@ const TeamForm = ({
   setOpenTeamForm,
   activityID,
 }) => {
-  const [errorStatus, setErrorStatus] = useState({
-    Name: false,
-    ActivityID: false,
-    statusID: false,
-  });
-
   const { profile } = useUser();
   const [teamStatus, setTeamStatus] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -37,20 +31,17 @@ const TeamForm = ({
       label: 'Name',
       name: 'Name',
       type: 'text',
-      error: errorStatus.Name,
       helperText: '*Required',
       required: true,
     },
   ];
+
   if (team && isAdmin) {
     createTeamFields.push({
       label: 'Team Status',
       name: 'StatusID',
       type: 'select',
-      menuItems: teamStatus.map((type) => {
-        return type.Description;
-      }),
-      error: errorStatus.statusID,
+      menuItems: teamStatus.map((type) => type.Description),
       helperText: '*Required',
       required: true,
     });
@@ -72,13 +63,6 @@ const TeamForm = ({
       ActivityID: Number(activityID),
     };
   }, [activityID, team, teamStatus]);
-
-  const errorCases = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
@@ -119,10 +103,8 @@ const TeamForm = ({
   return (
     <Form
       formTitles={{ name: 'Team', formType: team ? 'Edit' : 'Create' }}
-      fields={createTeamFields}
+      fields={[createTeamFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
-      setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}
       setOpenForm={setOpenTeamForm}

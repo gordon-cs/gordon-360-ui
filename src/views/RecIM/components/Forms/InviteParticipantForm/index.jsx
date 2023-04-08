@@ -3,16 +3,21 @@ import { useState, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ParticipantList } from './../../List';
 import GordonQuickSearch from 'components/Header/components/QuickSearch';
-import { addParticipantToTeam } from 'services/recim/team';
+import { addParticipantToTeam, createTeam, deleteTeamParticipant } from 'services/recim/team';
 import GordonLoader from 'components/Loader';
 import styles from './InviteParticipantForm.module.css';
+import userService from 'services/user';
+import { useUser } from 'hooks';
 
 const InviteParticipantForm = ({
   createSnackbar,
   openInviteParticipantForm,
   setOpenInviteParticipantForm,
   teamID,
+  individualSport,
+  activityID,
 }) => {
+  const { profile } = useUser();
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
   const [inviteList, setInviteList] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -37,7 +42,7 @@ const InviteParticipantForm = ({
     setInviteList(inviteList.filter((participant) => participant.Username !== username));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setSaving(true);
     let errorList = [];
     for (let index = 0; index < inviteList.length; index++) {
@@ -45,19 +50,53 @@ const InviteParticipantForm = ({
         Username: inviteList[index].Username,
         RoleTypeID: 2,
       };
-      addParticipantToTeam(teamID, participantData).catch((reason) => {
-        errorList.push({username: inviteList[index].Username, reason: reason.title})
-      });
+
+      if (individualSport) {
+        // if inviting a participant to an individual sport activity, create the team first
+        const username = inviteList[index].Username;
+        const profileInfo = await userService.getProfileInfo(username);
+        const request = {
+          Name: profileInfo.fullName,
+          ActivityID: activityID,
+        };
+        createTeam(username, request)
+          .then((team) => {
+            // add the participant to the team and then remove the admin's default participation
+            addParticipantToTeam(team.ID, participantData).catch((reason) => {
+              createSnackbar(
+                `There was a problem adding ${username} to team: ${reason.title}`,
+                'error',
+              );
+            });
+            deleteTeamParticipant(team.ID, profile.AD_Username);
+          })
+          .catch((reason) => {
+            createSnackbar(
+              `There was a problem deleting ${profile.AD_Username} from team: ${reason.title}`,
+              'error',
+            );
+          })
+          .catch((reason) => {
+            createSnackbar(
+              `There was an issue creating team ${profileInfo.fullName}: ${reason.title}`,
+              'error',
+            );
+          });
+      } else {
+        addParticipantToTeam(teamID, participantData).catch((reason) => {
+          errorList.push({ username: inviteList[index].Username, reason: reason.title });
+        });
+      }
     }
     setSaving(false);
-    let errorMessage = "Error inviting:\n"
+    let errorMessage = 'Error inviting:\n';
     errorList.forEach((value) => {
-      errorMessage += errorMessage + `${value.username} with reason ${value.reason}`
-    })
+      errorMessage += errorMessage + `${value.username} with reason ${value.reason}`;
+    });
     if (errorList.length !== 0) {
-      createSnackbar(errorMessage, 'error')
+      createSnackbar(errorMessage, 'error');
     } else {
-      createSnackbar('Invited your participants successfully', 'success')
+      createSnackbar('Invited your participants successfully', 'success');
     }
     handleWindowClose();
   };

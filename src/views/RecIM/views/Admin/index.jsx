@@ -1,16 +1,22 @@
-import { Card, CardContent, Tabs, Tab } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { Card, CardContent, Tabs, Tab, Button, Grid } from '@mui/material';
+import { useState, useEffect, useCallback } from 'react';
 import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
+import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
-import { HomeHeaderContents } from '../Home';
-// import styles from './Admin.module.css'; //unused for now since I've imported homeHeader
+import styles from './Admin.module.css';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { ActivityList, TeamList, ParticipantList } from '../../components/List';
+import { ActivityList, TeamList, ParticipantList, SurfacesList } from '../../components/List';
 import { getActivities } from '../../../../services/recim/activity';
 import { getTeams } from '../../../../services/recim/team';
 import { getParticipants } from '../../../../services/recim/participant';
+import { deleteSurface, getSurfaces } from '../../../../services/recim/match';
+import AddIcon from '@mui/icons-material/Add';
+import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
+import GordonDialogBox from 'components/GordonDialogBox';
+import { Typography } from '@mui/material';
+import recimLogo from './../../recim_logo.png';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -28,9 +34,12 @@ const Admin = () => {
   const [activities, setActivities] = useState();
   const [teams, setTeams] = useState();
   const [participants, setParticipants] = useState();
+  const [surfaces, setSurfaces] = useState();
   const [tab, setTab] = useState(0);
-  //const [shouldRefresh, setShouldRefresh] = useState(false);
-  // I suggest a refresh button as an option to prevent ONLY refreshing via window reload
+  const [openSurfaceForm, setOpenSurfaceForm] = useState();
+  const [openConfirmDelete, setOpenConfirmDelete] = useState();
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [surface, setSurface] = useState();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -52,27 +61,71 @@ const Admin = () => {
     const loadParticipants = async () => {
       setParticipants(await getParticipants());
     };
-    loadActivities();
-    loadTeams();
-    // if you don't do this, you can see every participant via looking at the network tab
-    // on console, feel free to add the loadActivities/Teams to this 'if' statement if you desire
-    // but at the very least, participants need to be hidden
+    const loadSurfaces = async () => {
+      setSurfaces(await getSurfaces());
+    };
     if (user?.IsAdmin) {
+      loadActivities();
+      loadTeams();
       loadParticipants();
+      loadSurfaces();
     }
-  }, [user]); //add shouldReload in the dependency array when refresh button implemented
+  }, [user?.IsAdmin]);
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
+
+  const handleOpenCreate = () => {
+    setSurface();
+    setOpenSurfaceForm(true);
+  };
+
+  const handleOpenEdit = (surface) => {
+    setSurface(surface);
+    setOpenSurfaceForm(true);
+  };
+
+  const handleOpenConfirmDelete = (surface) => {
+    setSurface(surface);
+    setOpenConfirmDelete(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    await deleteSurface(surface?.ID);
+    setSurfaces(await getSurfaces());
+    setOpenConfirmDelete(false);
+    createSnackbar('Surface deleted successfully', 'success');
+  };
+
+  const handleClose = async (snackbar) => {
+    createSnackbar(snackbar.message, snackbar.status);
+    setSurfaces(await getSurfaces());
+  };
+
+  let headerContents = (
+    <Grid container direction="row" alignItems="center" columnSpacing={4}>
+      <Grid item>
+        <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+      </Grid>
+      <Grid item xs={8}>
+        <Typography variant="h5" className={styles.title}>
+          <b className="accentText">Gordon</b> Rec-IM
+        </Typography>
+        <Typography variant="h6" className={styles.subtitle}>
+          <i>"Competition reveals character"</i>
+        </Typography>
+      </Grid>
+    </Grid>
+  );
 
   if (loading) return <GordonLoader />;
   // The user is not logged in
   if (!profile || !user) return <GordonUnauthorized feature={'the Rec-IM page'} />;
-
   if (!user?.IsAdmin) return <GordonUnauthorized feature={'the Rec-IM Command Center'} />;
-
   return (
     <>
-      <Header admin>
-        <HomeHeaderContents />
-      </Header>
+      <Header admin>{headerContents}</Header>
       <Card>
         <CardContent>
           <Tabs
@@ -83,6 +136,7 @@ const Admin = () => {
             <Tab label="Activities" />
             <Tab label="Teams" />
             <Tab label="Participants" />
+            <Tab label="Surfaces" />
           </Tabs>
           <TabPanel value={tab} index={0}>
             {activities ? <ActivityList activities={activities} /> : <GordonLoader />}
@@ -93,8 +147,56 @@ const Admin = () => {
           <TabPanel value={tab} index={2}>
             {participants ? <ParticipantList participants={participants} /> : <GordonLoader />}
           </TabPanel>
+          <TabPanel value={tab} index={3}>
+            {surfaces ? (
+              <>
+                <Button
+                  color="secondary"
+                  startIcon={<AddIcon />}
+                  className={styles.addSurfaceButton}
+                  onClick={handleOpenCreate}
+                >
+                  add a surface
+                </Button>
+                <SurfacesList
+                  surfaces={surfaces}
+                  confirmDelete={handleOpenConfirmDelete}
+                  editDetails={handleOpenEdit}
+                />
+              </>
+            ) : (
+              <GordonLoader />
+            )}
+          </TabPanel>
         </CardContent>
       </Card>
+      <SurfaceForm
+        surface={surface}
+        closeWithSnackbar={handleClose}
+        openSurfaceForm={openSurfaceForm}
+        setOpenSurfaceForm={(bool) => setOpenSurfaceForm(bool)}
+      />
+      <GordonDialogBox
+        title="Confirm Delete"
+        open={openConfirmDelete}
+        cancelButtonClicked={() => setOpenConfirmDelete(false)}
+        buttonName="Yes, delete this surface"
+        buttonClicked={handleConfirmDelete}
+        severity="error"
+      >
+        <br />
+        <Typography variant="body1">
+          Are you sure you want to permanently delete this surface:
+          <i>'{surface?.Name}'</i>?
+        </Typography>
+        <Typography variant="body1">This action cannot be undone.</Typography>
+      </GordonDialogBox>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </>
   );
 };

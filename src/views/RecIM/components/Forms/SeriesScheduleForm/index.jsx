@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import Form from '../Form';
-import { putSeriesSchedule } from 'services/recim/series';
+import { putSeriesSchedule, getSeriesSchedule } from 'services/recim/series';
 import { getSurfaces } from 'services/recim/match';
 
 const SeriesScheduleForm = ({
@@ -10,34 +10,29 @@ const SeriesScheduleForm = ({
   setOpenSeriesScheduleForm,
   seriesID,
 }) => {
-  const [errorStatus, setErrorStatus] = useState({
-    AvailableDays: false,
-    AvailableSurfaceIDs: false,
-    DailyStartTime: false,
-    DailyEndTime: false,
-    EstMatchTime: false,
-  });
-
   // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
   const [isSaving, setSaving] = useState(false);
   const [surfaces, setSurfaces] = useState([]);
+  const [seriesSchedule, setSeriesSchedule] = useState();
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       setSurfaces(await getSurfaces());
+      let fetchedSchedule = await getSeriesSchedule(seriesID);
+      if (fetchedSchedule.ID !== 0) setSeriesSchedule(fetchedSchedule);
+
       setLoading(false);
     };
     loadData();
   }, []);
 
-  const seriesScheduleFields = [
+  const availableDays = [
     {
       label: 'Monday',
       name: 'Mon',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
       helperText: '*Required',
       required: true,
     },
@@ -45,7 +40,6 @@ const SeriesScheduleForm = ({
       label: 'Tuesday',
       name: 'Tue',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
       helperText: '*Required',
       required: true,
     },
@@ -53,7 +47,6 @@ const SeriesScheduleForm = ({
       label: 'Wednesday',
       name: 'Wed',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
       helperText: '*Required',
       required: true,
     },
@@ -61,7 +54,6 @@ const SeriesScheduleForm = ({
       label: 'Thursday',
       name: 'Thu',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
       helperText: '*Required',
       required: true,
     },
@@ -69,7 +61,6 @@ const SeriesScheduleForm = ({
       label: 'Friday',
       name: 'Fri',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
       helperText: '*Required',
       required: true,
     },
@@ -77,7 +68,6 @@ const SeriesScheduleForm = ({
       label: 'Saturday',
       name: 'Sat',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
       helperText: '*Required',
       required: true,
     },
@@ -85,24 +75,27 @@ const SeriesScheduleForm = ({
       label: 'Sunday',
       name: 'Sun',
       type: 'checkbox',
-      error: errorStatus.AvailableDays,
       helperText: '*Required',
       required: true,
     },
+  ];
+
+  const availableSurfaces = [
     {
       label: 'Surfaces',
       name: 'AvailableSurfaceIDs',
       type: 'multiselect',
       menuItems: surfaces.map((surface) => surface.Name),
-      error: errorStatus.AvailableSurfaceIDs,
       helperText: '*Required',
       required: true,
     },
+  ];
+
+  const matchTimes = [
     {
       label: 'Daily Start Time',
       name: 'DailyStartTime',
       type: 'datetime',
-      error: errorStatus.DailyStartTime,
       helperText: '*Required',
       required: true,
     },
@@ -110,21 +103,34 @@ const SeriesScheduleForm = ({
       label: 'Daily End Time',
       name: 'DailyEndTime',
       type: 'datetime',
-      error: errorStatus.DailyEndTime,
       helperText: '*Required',
       required: true,
     },
     {
-      label: 'Estimated Match Length',
+      label: 'Estimated Match Length (min)',
       name: 'EstMatchTime',
       type: 'text',
-      error: errorStatus.EstMatchTime,
       helperText: '*Required',
       required: true,
     },
   ];
 
   const currentInfo = useMemo(() => {
+    if (seriesSchedule)
+      return {
+        SeriesID: seriesID,
+        Sun: seriesSchedule.AvailableDays.Sunday,
+        Mon: seriesSchedule.AvailableDays.Monday,
+        Tue: seriesSchedule.AvailableDays.Tuesday,
+        Wed: seriesSchedule.AvailableDays.Wednesday,
+        Thu: seriesSchedule.AvailableDays.Thursday,
+        Fri: seriesSchedule.AvailableDays.Friday,
+        Sat: seriesSchedule.AvailableDays.Saturday,
+        AvailableSurfaceIDs: [], //needs new GetSeriesSurfaces route
+        DailyStartTime: seriesSchedule.StartTime, //@TODO needs to be set to Time selector
+        DailyEndTime: seriesSchedule.EndTime, //@TODO needs to be set to Time selector
+        EstMatchTime: seriesSchedule.EstMatchTime,
+      };
     return {
       SeriesID: seriesID,
       Sun: false,
@@ -139,14 +145,7 @@ const SeriesScheduleForm = ({
       DailyEndTime: '',
       EstMatchTime: '',
     };
-  }, [seriesID]);
-
-  const errorCases = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
+  }, [seriesID, seriesSchedule]);
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
@@ -183,11 +182,13 @@ const SeriesScheduleForm = ({
 
   return (
     <Form
-      formTitles={{ name: 'Team', formType: 'Edit' }}
-      fields={seriesScheduleFields}
+      formTitles={{
+        name: 'Schedule',
+        contentCardTitles: ['Available Days', 'Available Surfaces', 'Time Information'],
+        formType: 'Edit',
+      }}
+      fields={[availableDays, availableSurfaces, matchTimes]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
-      setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}
       setOpenForm={setOpenSeriesScheduleForm}

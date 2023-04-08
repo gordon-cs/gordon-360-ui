@@ -7,7 +7,7 @@ import {
   DialogTitle,
   Tooltip,
 } from '@mui/material';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import GordonLoader from 'components/Loader';
@@ -29,13 +29,19 @@ const ImageOptions = ({
   const [cropperImageData, setCropperImageData] = useState();
   const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState();
   const [photoDialogError, setPhotoDialogError] = useState();
-  const [showCropper, setShowCropper] = useState();
+  const [showCropper, setShowCropper] = useState(false);
   const [imageWidth, setImageWidth] = useState();
   const [imageHeight, setImageHeight] = useState();
   const cropperRef = useRef();
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(false);
 
-  const loadImageOptions = useCallback(() => {
+  // load ImageOptions
+  useEffect(() => {
+    // setLoading(true);
+    loadImageOptions().then(() => setLoading(false));
+  });
+
+  const loadImageOptions = () => {
     return new Promise((resolve, reject) => {
       let dataURL = component?.Logo ?? defaultLogo;
       let i = new Image();
@@ -48,12 +54,7 @@ const ImageOptions = ({
       };
       i.src = dataURL;
     });
-  }, [component]);
-  // load ImageOptions
-  useEffect(() => {
-    setLoading(true);
-    loadImageOptions().then(() => setLoading(false));
-  }, [loadImageOptions]);
+  };
 
   const handleWindowClose = () => {
     setOpenImageOptions(false);

@@ -128,7 +128,7 @@ const getSurfaces = (): Promise<Surface[]> => http.get(`recim/matches/surfaces`)
 const createSurface = (newSurface: UploadSurface): Promise<Surface> =>
   http.post(`recim/matches/surfaces`, newSurface);
 
-const patchSurface = (surfaceID: number, updatedSurface: UploadSurface): Promise<Surface> =>
+const editSurface = (surfaceID: number, updatedSurface: UploadSurface): Promise<Surface> =>
   http.patch(`recim/matches/surfaces/${surfaceID}`, updatedSurface);
 
 const deleteSurface = (surfaceID: number) => http.del(`recim/matches/surfaces/${surfaceID}`);
@@ -147,6 +147,6 @@ export {
   deleteMatchCascade,
   getSurfaces,
   createSurface,
-  patchSurface,
+  editSurface,
   deleteSurface,
 };
