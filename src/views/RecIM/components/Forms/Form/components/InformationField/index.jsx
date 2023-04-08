@@ -22,6 +22,8 @@ const InformationField = ({
   type,
   value,
   required,
+  max,
+  min,
   onChange,
   error,
   helperText,
@@ -73,6 +75,10 @@ const InformationField = ({
           label={label}
           name={name}
           required={required}
+          inputProps={{
+            max,
+            min,
+          }}
           helperText={error && helperText}
           value={value}
           onChange={(event) => onChange(event)}

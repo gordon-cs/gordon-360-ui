@@ -7,12 +7,12 @@ import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
 
-const validateFieldFromUpdatedInfo = (updatedInfo) => (field) => {
+export const validateFieldFromUpdatedInfo = (updatedInfo) => (field) => {
   const value = updatedInfo[field.name];
 
   if (field.required && !Boolean(value)) return true;
-  if (field.minimum && value < field.minimum) return true;
-  if (field.maximum && value > field.maximum) return true;
+  if (value < field?.min) return true;
+  if (value > field?.max) return true;
 
   return false;
 };
@@ -28,6 +28,7 @@ const Form = ({
   handleConfirm,
   additionalContent,
   additionCancelActions,
+  newInfoCallback,
   showConfirmationWindow = true,
 }) => {
   const [newInfo, setNewInfo] = useState(currentInfo);
@@ -49,22 +50,24 @@ const Form = ({
   }, [currentInfo]);
 
   const handleChange = (event, src) => {
-    setNewInfo((currentValue) => {
+    const updateField = (prevFields) => {
       // datetime pickers return value rather than event,
       // so we can also manually specify target source and value
       if (src) {
         const newValue = event;
         return {
-          ...currentValue,
+          ...prevFields,
           [src]: newValue,
         };
       }
       return {
-        ...currentValue,
+        ...prevFields,
         [event.target.name]:
           event.target.type === 'checkbox' ? event.target.checked : event.target.value,
       };
-    });
+    };
+    setNewInfo(updateField);
+    newInfoCallback(updateField);
   };
 
   const handleWindowClose = () => {

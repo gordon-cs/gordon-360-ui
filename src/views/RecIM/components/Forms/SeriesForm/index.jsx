@@ -98,7 +98,7 @@ const SeriesForm = ({
           label: 'Number of Teams',
           name: 'numberOfTeamsAdmitted',
           type: 'number',
-          minimum: 1,
+          min: 1,
           helperText: '*Invalid Number',
           required: true,
         },
