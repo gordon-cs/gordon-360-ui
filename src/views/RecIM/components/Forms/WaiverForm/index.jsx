@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import Form, { requiredFieldValidation } from '../Form';
+import Form from '../Form';
 import { useState, useMemo } from 'react';
 import { createParticipant } from 'services/recim/participant';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,6 @@ const waiverFields = [
     label: 'By Clicking this, I have certified that I have read the Gordon Waiver',
     name: 'readCheckbox',
     type: 'checkbox',
-    validate: requiredFieldValidation,
     helperText: '*Required',
     required: true,
   },
@@ -17,7 +16,6 @@ const waiverFields = [
     label: 'Electronic Signature',
     name: 'name',
     type: 'text',
-    validate: requiredFieldValidation,
     helperText: '*Required',
     required: true,
   },

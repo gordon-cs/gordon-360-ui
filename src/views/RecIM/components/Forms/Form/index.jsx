@@ -7,8 +7,14 @@ import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
 
-export const requiredFieldValidation = (value) => Boolean(value);
-export const isNumeric = (value) => value > 0;
+const validateFieldFromUpdatedInfo = (updatedInfo) => (field) => {
+  const value = updatedInfo[field.name];
+
+  if (field.required && !Boolean(value)) return false;
+  if (field.minimum && value < field.minimum) return false;
+
+  return true;
+};
 
 const Form = ({
   formTitles,
@@ -28,9 +34,9 @@ const Form = ({
 
   const allFields = useMemo(() => fieldSets.flat(), [fieldSets]);
 
-  const errors = allFields
-    .filter((f) => !(f.validate?.(newInfo[f.name]) ?? true))
-    .map((f) => f.name);
+  const isFieldValid = validateFieldFromUpdatedInfo(newInfo);
+
+  const errors = allFields.filter(isFieldValid).map((f) => f.name);
 
   const updatedFields = useMemo(
     () => Object.entries(newInfo).filter(([key, value]) => currentInfo[key] !== value),

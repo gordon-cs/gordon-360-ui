@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import Form, { isNumeric, requiredFieldValidation } from '../Form';
+import Form from '../Form';
 import {
   createSeries,
   editSeries,
@@ -12,7 +12,6 @@ const commonFields = [
     label: 'Name',
     name: 'name',
     type: 'text',
-    validate: requiredFieldValidation,
     helperText: '*Required',
     required: true,
   },
@@ -20,7 +19,6 @@ const commonFields = [
     label: 'Series Start Date',
     name: 'startDate',
     type: 'datetime',
-    validate: requiredFieldValidation,
     helperText: '*Required',
     required: true,
   },
@@ -28,7 +26,6 @@ const commonFields = [
     label: 'Series End Date',
     name: 'endDate',
     type: 'datetime',
-    validate: requiredFieldValidation,
     helperText: '*Required',
     required: true,
   },
@@ -68,7 +65,6 @@ const SeriesForm = ({
           name: 'statusID',
           type: 'select',
           menuItems: statuses.map((status) => status.Description),
-          validate: requiredFieldValidation,
           helperText: '*Required',
           required: true,
         },
@@ -77,7 +73,6 @@ const SeriesForm = ({
           name: 'TeamIDs',
           type: 'multiselect',
           menuItems: activityTeams.map((team) => team.Name),
-          validate: requiredFieldValidation,
           helperText: '*Required',
           required: true,
         },
@@ -88,7 +83,6 @@ const SeriesForm = ({
           name: 'typeID',
           type: 'select',
           menuItems: seriesType.map((seriesType) => seriesType.Description),
-          validate: requiredFieldValidation,
           helperText: '*Required',
           required: true,
         },
@@ -104,7 +98,7 @@ const SeriesForm = ({
           label: 'Number of Teams',
           name: 'numberOfTeamsAdmitted',
           type: 'number',
-          validate: isNumeric,
+          minimum: 1,
           helperText: '*Invalid Number',
           required: true,
         },

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import Form, { requiredFieldValidation } from '../Form';
+import Form from '../Form';
 import { createMatch, updateMatch, getSurfaces, getMatchStatusTypes } from 'services/recim/match';
 
 const MatchForm = ({
@@ -30,7 +30,6 @@ const MatchForm = ({
       name: 'SurfaceID',
       type: 'select',
       menuItems: surfaces.map((surface) => surface.Name),
-      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -42,7 +41,6 @@ const MatchForm = ({
         label: 'Start Time',
         name: 'StartTime',
         type: 'datetime',
-        validate: requiredFieldValidation,
         helperText: '*Required',
         required: true,
       },
@@ -51,7 +49,6 @@ const MatchForm = ({
         name: 'TeamIDs',
         type: 'multiselect',
         menuItems: series.TeamStanding.map((team) => team.Name),
-        validate: requiredFieldValidation,
         helperText: '*Required',
         required: true,
       },
@@ -62,7 +59,6 @@ const MatchForm = ({
         label: 'Start Time',
         name: 'StartTime',
         type: 'datetime',
-        validate: requiredFieldValidation,
         helperText: '*Required',
         required: true,
       },
@@ -71,7 +67,6 @@ const MatchForm = ({
         name: 'TeamIDs',
         type: 'multiselect',
         menuItems: match.Series.TeamStanding.map((team) => team.Name),
-        validate: requiredFieldValidation,
         helperText: '*Required',
         required: true,
       },
@@ -80,7 +75,6 @@ const MatchForm = ({
         name: 'StatusID',
         type: 'select',
         menuItems: matchStatus.map((type) => type.Description),
-        validate: requiredFieldValidation,
         helperText: '*Required',
         required: true,
       },

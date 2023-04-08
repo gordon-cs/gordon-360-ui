@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import Form, { requiredFieldValidation } from '../Form';
+import Form from '../Form';
 import { createSurface, editSurface } from 'services/recim/match';
 
 const createSurfaceFields = [
@@ -7,7 +7,6 @@ const createSurfaceFields = [
     label: 'Name',
     name: 'Name',
     type: 'text',
-    validate: requiredFieldValidation,
     helperText: '*Required',
     required: true,
   },

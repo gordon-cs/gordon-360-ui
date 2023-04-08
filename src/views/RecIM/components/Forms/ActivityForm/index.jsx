@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import Form, { requiredFieldValidation } from '../Form';
+import Form from '../Form';
 import {
   createActivity,
   getActivityTypes,
@@ -33,7 +33,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Name',
       name: 'name',
       type: 'text',
-      validate: requiredFieldValidation,
       required: true,
       helperText: '*Required',
     },
@@ -55,7 +54,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       label: 'Registration Start',
       name: 'registrationStart',
       type: 'datetime',
-      validate: requiredFieldValidation,
       required: true,
       helperText: '*Required',
     },
@@ -71,7 +69,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       name: 'typeID',
       type: 'select',
       menuItems: activityTypes.map((type) => type.Description),
-      validate: requiredFieldValidation,
       required: true,
       helperText: '*Required',
     },
@@ -80,7 +77,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       name: 'sportID',
       type: 'select',
       menuItems: sports.map((sport) => sport.Name),
-      validate: requiredFieldValidation,
       required: true,
       helperText: '*Required',
     },
@@ -106,17 +102,13 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
         label: 'Activity Status',
         name: 'statusID',
         type: 'select',
-        menuItems: activityStatusTypes.map((type) => {
-          return type.Description;
-        }),
-        validate: requiredFieldValidation,
+        menuItems: activityStatusTypes.map((type) => type.Description),
         helperText: '*Required',
       },
       {
         label: 'Completed',
         name: 'completed',
         type: 'checkbox',
-        validate: requiredFieldValidation,
         helperText: '*Required',
       },
     );

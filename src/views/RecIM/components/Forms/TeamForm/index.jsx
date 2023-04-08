@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import Form, { requiredFieldValidation } from '../Form';
+import Form from '../Form';
 import { createTeam, editTeam, getTeamStatusTypes } from 'services/recim/team';
 import { useUser } from 'hooks';
 
@@ -30,7 +30,6 @@ const TeamForm = ({
       label: 'Name',
       name: 'Name',
       type: 'text',
-      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     },
@@ -42,7 +41,6 @@ const TeamForm = ({
       name: 'StatusID',
       type: 'select',
       menuItems: teamStatus.map((type) => type.Description),
-      validate: requiredFieldValidation,
       helperText: '*Required',
       required: true,
     });
