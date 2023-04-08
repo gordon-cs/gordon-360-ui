@@ -4,32 +4,26 @@ import { useState, useMemo } from 'react';
 import { createParticipant } from 'services/recim/participant';
 import { useNavigate } from 'react-router-dom';
 
+const waiverFields = [
+  {
+    label: 'By Clicking this, I have certified that I have read the Gordon Waiver',
+    name: 'readCheckbox',
+    type: 'checkbox',
+    helperText: '*Required',
+    required: true,
+  },
+  {
+    label: 'Electronic Signature',
+    name: 'name',
+    type: 'text',
+    helperText: '*Required',
+    required: true,
+  },
+];
+
 const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiverForm }) => {
   const navigate = useNavigate();
-  const [errorStatus, setErrorStatus] = useState({
-    readCheckbox: false,
-    name: false,
-  });
   const [isSaving, setSaving] = useState(false);
-
-  const waiverFields = [
-    {
-      label: 'By Clicking this, I have certified that I have read the Gordon Waiver',
-      name: 'readCheckbox',
-      type: 'checkbox',
-      error: errorStatus.readCheckbox,
-      helperText: '*Required',
-      required: true,
-    },
-    {
-      label: 'Electronic Signature',
-      name: 'name',
-      type: 'text',
-      error: errorStatus.name,
-      helperText: '*Required',
-      required: true,
-    },
-  ];
 
   const currentInfo = useMemo(() => {
     return {
@@ -37,13 +31,6 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
       name: '',
     };
   }, []);
-
-  const isFieldInvalid = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
 
   const handleCancel = () => {
     navigate('/'); //routes back to home if user refuses waiver
@@ -122,8 +109,6 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
       formTitles={{ name: 'Activity', formType: 'Form' }}
       fields={[waiverFields]}
       currentInfo={currentInfo}
-      isFieldInvalid={isFieldInvalid}
-      setErrorStatus={setErrorStatus}
       loading={false}
       isSaving={isSaving}
       setOpenForm={setOpenWaiverForm}

@@ -2,7 +2,7 @@ import { Box } from '@mui/system';
 import { Tabs, Tab } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
 import { getMatchTeamStatusTypes, updateMatchStats, getMatchByID } from 'services/recim/match';
-import Form from '../Form';
+import Form, { validateFieldFromUpdatedInfo } from '../Form';
 import styles from './EditMatchStatsForm.module.css';
 import { useParams } from 'react-router';
 
@@ -14,22 +14,12 @@ const EditMatchStatsForm = ({
   setOpenEditMatchStatsForm,
 }) => {
   const { matchID } = useParams();
-  const [errorStatus, setErrorStatus] = useState({
-    Score: false,
-    StatusID: false,
-    SportsmanshipScore: false,
-  });
-
   const [loading, setLoading] = useState(true);
   const [isSaving, setSaving] = useState(false);
   const [matchStatus, setMatchStatus] = useState([]);
   const [targetTeamID, setTargetTeamID] = useState(match.Team[0].ID);
   const [selectedTab, setSelectedTab] = useState(0);
   const [request, setRequest] = useState(null);
-
-  const newInfoCallback = (newInfo) => {
-    setRequest(newInfo);
-  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -53,7 +43,7 @@ const EditMatchStatsForm = ({
       label: 'Score',
       name: 'Score',
       type: 'number',
-      error: errorStatus.Score,
+      min: 0,
       helperText: '*Required',
       required: true,
     },
@@ -61,7 +51,8 @@ const EditMatchStatsForm = ({
       label: 'Sportsmanship',
       name: 'SportsmanshipScore',
       type: 'number',
-      error: errorStatus.SportsmanshipScore,
+      min: 1,
+      max: 5,
       helperText: "*Required & Can't be more than 5",
       required: true,
     },
@@ -69,10 +60,7 @@ const EditMatchStatsForm = ({
       label: 'Status',
       name: 'StatusID',
       type: 'select',
-      menuItems: matchStatus.map((type) => {
-        return type.Description;
-      }),
-      error: errorStatus.StatusID,
+      menuItems: matchStatus.map((type) => type.Description),
       helperText: '*Required',
       required: true,
     },
@@ -93,16 +81,9 @@ const EditMatchStatsForm = ({
     return info;
   }, [match, targetTeamID, matchStatus]);
 
-  const isFieldInvalid = (field, value) => {
-    switch (field) {
-      case 'SportsmanshipScore':
-        return value < 0;
-      case 'Score':
-        return !/^[0-9]+$/.test(value) || value < 0;
-      default:
-        return false;
-    }
-  };
+  const errors = request
+    ? createMatchStatsField.filter(validateFieldFromUpdatedInfo(request))
+    : null;
 
   const navigationContent = (
     <>
@@ -120,7 +101,7 @@ const EditMatchStatsForm = ({
           aria-label="team name edit stats tabs"
         >
           {match.Team.map((team) => {
-            return <Tab disabled={Object.values(errorStatus).includes(true)} label={team.Name} />;
+            return <Tab disabled={errors?.length > 0} label={team.Name} />;
           })}
         </Tabs>
       </Box>
@@ -153,15 +134,13 @@ const EditMatchStatsForm = ({
       formTitles={{ name: 'Match Stats', formType: 'Edit' }}
       fields={[createMatchStatsField]}
       currentInfo={currentInfo}
-      isFieldInvalid={isFieldInvalid}
-      setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}
       setOpenForm={setOpenEditMatchStatsForm}
       openForm={openEditMatchStatsForm}
       handleConfirm={handleConfirm}
       additionalContent={navigationContent}
-      newInfoCallback={newInfoCallback}
+      newInfoCallback={setRequest}
       showConfirmationWindow={false}
     />
   );
