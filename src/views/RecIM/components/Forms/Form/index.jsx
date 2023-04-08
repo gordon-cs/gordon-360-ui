@@ -1,11 +1,11 @@
-import { Grid } from '@mui/material';
-import { useState, useEffect, useMemo } from 'react';
-import GordonLoader from 'components/Loader';
-import GordonDialogBox from 'components/GordonDialogBox';
-import { ConfirmationRow } from './components/ConfirmationRow';
-import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
-import { ContentCard } from './components/ContentCard';
-import { InformationField } from './components/InformationField';
+import { Grid } from "@mui/material";
+import { useState, useEffect, useMemo } from "react";
+import GordonLoader from "components/Loader";
+import GordonDialogBox from "components/GordonDialogBox";
+import { ConfirmationRow } from "./components/ConfirmationRow";
+import { ConfirmationWindowHeader } from "./components/ConfirmationHeader";
+import { ContentCard } from "./components/ContentCard";
+import { InformationField } from "./components/InformationField";
 
 export const validateFieldFromUpdatedInfo = (updatedInfo) => (field) => {
   const value = updatedInfo[field.name];
@@ -41,8 +41,11 @@ const Form = ({
   const errors = allFields.filter(isFieldInvalid).map((f) => f.name);
 
   const updatedFields = useMemo(
-    () => Object.entries(newInfo).filter(([key, value]) => currentInfo[key] !== value),
-    [currentInfo, newInfo],
+    () =>
+      Object.entries(newInfo).filter(
+        ([key, value]) => currentInfo[key] !== value
+      ),
+    [currentInfo, newInfo]
   );
 
   useEffect(() => {
@@ -63,11 +66,13 @@ const Form = ({
       return {
         ...prevFields,
         [event.target.name]:
-          event.target.type === 'checkbox' ? event.target.checked : event.target.value,
+          event.target.type === "checkbox"
+            ? event.target.checked
+            : event.target.value,
       };
     };
     setNewInfo(updateField);
-    newInfoCallback(updateField);
+    newInfoCallback?.(updateField);
   };
 
   const handleWindowClose = () => {
@@ -106,7 +111,10 @@ const Form = ({
       ) : (
         fieldSets.map((fieldSet, index) => (
           <ContentCard
-            title={formTitles.contentCardTitles?.[index] ?? `${formTitles.name} Information`}
+            title={
+              formTitles.contentCardTitles?.[index] ??
+              `${formTitles.name} Information`
+            }
           >
             {additionalContent}
             {fieldSet.map((field) => (
