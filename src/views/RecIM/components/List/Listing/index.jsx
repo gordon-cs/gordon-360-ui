@@ -310,8 +310,6 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
       ActivityRecord.WinCount += record.WinCount;
       ActivityRecord.LossCount += record.LossCount;
     });
-
-    console.log(invite);
     content = (
       <Grid container direction="row" justifyContent="center">
         <Grid item xs={12}>
