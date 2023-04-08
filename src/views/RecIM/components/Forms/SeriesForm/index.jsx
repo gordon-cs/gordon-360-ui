@@ -1,11 +1,38 @@
 import { useState, useEffect, useMemo } from 'react';
-import Form from '../Form';
+import Form, { isNumeric, requiredFieldValidation } from '../Form';
 import {
   createSeries,
   editSeries,
   getSeriesStatusTypes,
   getSeriesTypes,
 } from 'services/recim/series';
+
+const commonFields = [
+  {
+    label: 'Name',
+    name: 'name',
+    type: 'text',
+    validate: requiredFieldValidation,
+    helperText: '*Required',
+    required: true,
+  },
+  {
+    label: 'Series Start Date',
+    name: 'startDate',
+    type: 'datetime',
+    validate: requiredFieldValidation,
+    helperText: '*Required',
+    required: true,
+  },
+  {
+    label: 'Series End Date',
+    name: 'endDate',
+    type: 'datetime',
+    validate: requiredFieldValidation,
+    helperText: '*Required',
+    required: true,
+  },
+];
 
 const SeriesForm = ({
   closeWithSnackbar,
@@ -17,15 +44,6 @@ const SeriesForm = ({
   series, // If series passed, allows edit
   activityTeams,
 }) => {
-  const [errorStatus, setErrorStatus] = useState({
-    name: false,
-    startDate: false,
-    endDate: false,
-    typeID: false,
-    numberOfTeamsAdmitted: false,
-    statusID: false,
-  });
-
   // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
   const [isSaving, setSaving] = useState(false);
@@ -43,103 +61,64 @@ const SeriesForm = ({
     loadData();
   }, []);
 
-  const createSeriesFields = [
-    {
-      label: 'Name',
-      name: 'name',
-      type: 'text',
-      error: errorStatus.name,
-      helperText: '*Required',
-      required: true,
-    },
-    {
-      label: 'Series Start Date',
-      name: 'startDate',
-      type: 'datetime',
-      error: errorStatus.startDate,
-      helperText: '*Required',
-      required: true,
-    },
-    {
-      label: 'Series End Date',
-      name: 'endDate',
-      type: 'datetime',
-      error: errorStatus.endDate,
-      helperText: '*Required',
-      required: true,
-    },
-  ];
-
-  if (series) {
-    createSeriesFields.push(
-      {
-        label: 'Series Status',
-        name: 'statusID',
-        type: 'select',
-        menuItems: statuses.map((status) => {
-          return status.Description;
-        }),
-        error: errorStatus.statusID,
-        helperText: '*Required',
-        required: true,
-      },
-      {
-        label: 'Teams',
-        name: 'TeamIDs',
-        type: 'multiselect',
-        menuItems: activityTeams.map((team) => {
-          return team.Name;
-        }),
-        error: errorStatus.TeamIDs,
-        helperText: '*Required',
-        required: true,
-      },
-    );
-  } else {
-    createSeriesFields.push(
-      {
-        label: 'Series Type',
-        name: 'typeID',
-        type: 'select',
-        menuItems: seriesType.map((seriesType) => {
-          return seriesType.Description;
-        }),
-        error: errorStatus.type,
-        helperText: '*Required',
-        required: true,
-      },
-      {
-        label: 'Reference Series',
-        name: 'referenceSeriesID',
-        type: 'select',
-        menuItems: existingActivitySeries.map((series) => {
-          return series.Name;
-        }),
-        helperText: '*Optional',
-        required: false,
-      },
-      {
-        label: 'Number of Teams',
-        name: 'numberOfTeamsAdmitted',
-        type: 'text',
-        error: errorStatus.numberOfTeamsAdmitted,
-        helperText: '*Invalid Number',
-        required: true,
-      },
-    );
-  }
+  const additionalFields = series
+    ? [
+        {
+          label: 'Series Status',
+          name: 'statusID',
+          type: 'select',
+          menuItems: statuses.map((status) => status.Description),
+          validate: requiredFieldValidation,
+          helperText: '*Required',
+          required: true,
+        },
+        {
+          label: 'Teams',
+          name: 'TeamIDs',
+          type: 'multiselect',
+          menuItems: activityTeams.map((team) => team.Name),
+          validate: requiredFieldValidation,
+          helperText: '*Required',
+          required: true,
+        },
+      ]
+    : [
+        {
+          label: 'Series Type',
+          name: 'typeID',
+          type: 'select',
+          menuItems: seriesType.map((seriesType) => seriesType.Description),
+          validate: requiredFieldValidation,
+          helperText: '*Required',
+          required: true,
+        },
+        {
+          label: 'Reference Series',
+          name: 'referenceSeriesID',
+          type: 'select',
+          menuItems: existingActivitySeries.map((series) => series.Name),
+          helperText: '*Optional',
+          required: false,
+        },
+        {
+          label: 'Number of Teams',
+          name: 'numberOfTeamsAdmitted',
+          type: 'number',
+          validate: isNumeric,
+          helperText: '*Invalid Number',
+          required: true,
+        },
+      ];
 
   const currentInfo = useMemo(() => {
     if (series) {
-      var teamIDs = [];
-      series.TeamStanding.forEach((team) =>
-        teamIDs.push(activityTeams.find((_team) => _team.ID === team.TeamID)?.Name),
-      );
       return {
         name: series.Name,
         startDate: series.StartDate,
         endDate: series.EndDate,
-        TeamIDs: teamIDs,
+        TeamIDs: series.TeamStanding.map(
+          (ts) => activityTeams.find((t) => t.ID === ts.TeamID)?.Name,
+        ),
         statusID: series.Status,
         scheduleID: scheduleID,
       };
@@ -155,20 +134,7 @@ const SeriesForm = ({
         scheduleID: scheduleID, //nullable, if scheduleID is passed, it will be assigned to the series
       };
     }
-  }, [activityID, scheduleID, series]);
-
-  const isNumeric = (value) => {
-    return /^-?\d+$/.test(value) || value.length === 0;
-  };
-
-  const isFieldInvalid = (field, value) => {
-    switch (field) {
-      case 'numberOfTeamsAdmitted':
-        return !isNumeric(value);
-      default:
-        return false;
-    }
-  };
+  }, [activityID, activityTeams, scheduleID, series]);
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
@@ -218,10 +184,8 @@ const SeriesForm = ({
   return (
     <Form
       formTitles={{ name: 'Series', formType: series ? 'Edit' : 'Create' }}
-      fields={[createSeriesFields]}
+      fields={[commonFields.concat(additionalFields)]}
       currentInfo={currentInfo}
-      isFieldInvalid={isFieldInvalid}
-      setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}
       setOpenForm={setOpenSeriesForm}
