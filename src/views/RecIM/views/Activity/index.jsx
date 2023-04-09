@@ -399,9 +399,7 @@ const Activity = () => {
             />
             <InviteParticipantForm
               createSnackbar={createSnackbar}
-              onClose={() => {
-                setReload((prev) => !prev);
-              }}
+              onClose={() => setReload((prev) => !prev)}
               openInviteParticipantForm={openAddSoloTeam}
               setOpenInviteParticipantForm={(bool) => setOpenAddSoloTeam(bool)}
               soloTeam
