@@ -4,7 +4,8 @@ import { putSeriesSchedule, getSeriesSchedule } from 'services/recim/series';
 import { getSurfaces } from 'services/recim/match';
 
 const SeriesScheduleForm = ({
-  closeWithSnackbar,
+  createSnackbar,
+  onClose,
   openSeriesScheduleForm,
   setOpenSeriesScheduleForm,
   seriesID,
@@ -25,7 +26,7 @@ const SeriesScheduleForm = ({
       setLoading(false);
     };
     loadData();
-  }, []);
+  }, [seriesID]);
 
   const availableDays = [
     {
@@ -166,14 +167,20 @@ const SeriesScheduleForm = ({
       },
     );
 
-    putSeriesSchedule(seriesRequest).then(() => {
-      setSaving(false);
-      closeWithSnackbar({
-        type: 'success',
-        message: `The series schedule has been edited`,
+    putSeriesSchedule(seriesRequest)
+      .then(() => {
+        setSaving(false);
+        createSnackbar(`Series schedule has been edited`, 'success');
+        onClose();
+        handleWindowClose();
+      })
+      .catch((reason) => {
+        setSaving(false);
+        createSnackbar(
+          `There was a problem with editing the series schedule: ${reason.title}`,
+          'error',
+        );
       });
-      handleWindowClose();
-    });
   };
 
   return (

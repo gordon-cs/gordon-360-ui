@@ -32,7 +32,8 @@ const commonFields = [
 ];
 
 const SeriesForm = ({
-  closeWithSnackbar,
+  createSnackbar,
+  onClose,
   openSeriesForm,
   setOpenSeriesForm,
   activityID,
@@ -145,14 +146,16 @@ const SeriesForm = ({
       });
       seriesRequest.TeamIDs = idArray;
 
-      editSeries(series.ID, seriesRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: `Series ${series.Name}, has been successfully edited`,
+      editSeries(series.ID, seriesRequest)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(`Series ${seriesRequest.name} has been successfully edited`, 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          createSnackbar(`There was a problem editing your series: ${reason.title}`, 'error');
         });
-        handleWindowClose();
-      });
     } else {
       seriesRequest.typeID = seriesType.filter(
         (type) => type.Description === seriesRequest.typeID,
@@ -163,14 +166,17 @@ const SeriesForm = ({
           ? null
           : existingActivitySeries.filter((ref) => ref.Name === seriesRequest.referenceSeriesID)[0]
               .ID;
-      createSeries(referenceSeriesID, seriesRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Your new series has been created or whatever message you want here',
+      createSeries(referenceSeriesID, seriesRequest)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(`Series ${seriesRequest.name} has been successfully created`, 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(`There was a problem creating your series: ${reason.title}`, 'error');
         });
-        handleWindowClose();
-      });
     }
   };
 

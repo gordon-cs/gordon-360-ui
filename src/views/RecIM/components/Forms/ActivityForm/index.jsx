@@ -8,7 +8,15 @@ import {
 } from 'services/recim/activity';
 import { getAllSports } from 'services/recim/sport';
 
-const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenActivityForm }) => {
+const ActivityForm = ({
+  activity,
+  onClose,
+  createSnackbar,
+  openActivityForm,
+  setOpenActivityForm,
+  setCreatedInstance,
+}) => {
+  // Fetch data required for form creation
   const [loading, setLoading] = useState(true);
   const [isSaving, setSaving] = useState(false);
   const [sports, setSports] = useState([]);
@@ -149,7 +157,6 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
     let activityRequest = { ...currentInfo, ...newInfo };
 
     activityRequest.sportID = sports.find((type) => type.Name === activityRequest.sportID).ID;
-
     activityRequest.typeID = activityTypes.find(
       (type) => type.Description === activityRequest.typeID,
     ).ID;
@@ -159,23 +166,45 @@ const ActivityForm = ({ activity, closeWithSnackbar, openActivityForm, setOpenAc
       activityRequest.statusID = activityStatusTypes.find(
         (type) => type.Description === activityRequest.statusID,
       ).ID;
-      editActivity(activity.ID, activityRequest).then((res) => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Your new activity has been created or whatever message you want here',
+      activity.isLogoUpdate = false;
+      editActivity(activity.ID, activityRequest)
+        .then((res) => {
+          setSaving(false);
+          createSnackbar(
+            `Activity ${activityRequest.name} has been successfully edited`,
+            'success',
+          );
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(
+            `There was a problem editing your activity, please try again: ${reason.title}`,
+            'error',
+          );
         });
-        handleWindowClose();
-      });
     } else {
-      createActivity(activityRequest).then((res) => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Your new activity has been created or whatever message you want here',
+      createActivity(activityRequest)
+        .then((res) => {
+          setSaving(false);
+          createSnackbar(
+            `Activity ${activityRequest.name} has been successfully created`,
+            'success',
+          );
+          if (setCreatedInstance) {
+            setCreatedInstance(res);
+          }
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(
+            `There was a problem creating your activity, please try again: ${reason.title}`,
+            'error',
+          );
         });
-        handleWindowClose();
-      });
     }
   };
 

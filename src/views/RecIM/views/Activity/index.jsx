@@ -12,7 +12,8 @@ import {
   MenuItem,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import { useEffect, useState } from 'react';
+
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
@@ -51,6 +52,8 @@ const Activity = () => {
   const { activityID } = useParams();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [activity, setActivity] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
@@ -61,12 +64,14 @@ const Activity = () => {
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
   const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
-  const [reload, setReload] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -78,15 +83,7 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [
-    profile,
-    activityID,
-    openActivityForm,
-    openTeamForm,
-    openCreateSeriesForm,
-    openImageOptions,
-    reload,
-  ]);
+  }, [profile, activityID, reload]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -123,16 +120,18 @@ const Activity = () => {
       }
   }, [activity]);
 
-  const handleFormSubmit = (status, setOpenForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenForm(false);
-  };
-
-  const handleDelete = async () => {
-    await deleteActivity(activityID);
-    setOpenConfirmDelete(false);
-    navigate(`/recim`);
-    // @TODO add snackbar
+  const handleDelete = () => {
+    deleteActivity(activityID)
+      .then(() => {
+        setOpenConfirmDelete(false);
+        navigate(`/recim`);
+      })
+      .catch((reason) => {
+        createSnackbar(
+          `There was a problem deleting activity ${activity.Name}: ${reason}`,
+          'error',
+        );
+      });
   };
 
   // default closure
@@ -154,7 +153,7 @@ const Activity = () => {
     };
     await createTeam(profile.AD_Username, request);
     setReload(!reload);
-    setSnackbar({ message: 'Activity joined successfully', severity: 'success', open: true });
+    createSnackbar(`Activity ${activity.Name} has been joined successfully`, 'success');
     setLoading(false);
   };
 
@@ -257,6 +256,7 @@ const Activity = () => {
                   activityID={activityID}
                   reload={reload}
                   setReload={setReload}
+                  createSnackbar={createSnackbar}
                   activityTeams={activity?.Team}
                 />
               );
@@ -359,19 +359,17 @@ const Activity = () => {
               </Grid>
             </Grid>
 
-            {/* forms and dialogs */}
-
             <ActivityForm
               activity={activity}
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenActivityForm);
-              }}
+              onClose={() => setReload((prev) => !prev)}
+              createSnackbar={createSnackbar}
               openActivityForm={openActivityForm}
               setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
             />
             <SeriesForm
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenCreateSeriesForm);
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
               }}
               openSeriesForm={openCreateSeriesForm}
               setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
@@ -379,48 +377,29 @@ const Activity = () => {
               existingActivitySeries={activity.Series}
             />
             <TeamForm
-              closeWithSnackbar={(teamID, status) => {
-                handleFormSubmit(status, setOpenTeamForm);
-                navigate(`team/${teamID}`);
-              }}
+              onClose={(teamID) => navigate(`team/${teamID}`)}
+              createSnackbar={createSnackbar}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={activityID}
             />
-            {openImageOptions && (
-              <ImageOptions
-                category={'Activity'}
-                component={activity}
-                closeWithSnackbar={(status) => {
-                  handleFormSubmit(status, setOpenImageOptions);
-                }}
-                openImageOptions={openImageOptions}
-                setOpenImageOptions={setOpenImageOptions}
-              />
-            )}
-
-            <InviteParticipantForm
-              closeWithSnackbar={(status) => {
-                setReload(!reload);
-                setSnackbar({
-                  message: 'Added participant successfully',
-                  severity: 'success',
-                  open: true,
-                });
+            <ImageOptions
+              category={'Activity'}
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
               }}
+              component={activity}
+              openImageOptions={openImageOptions}
+              setOpenImageOptions={setOpenImageOptions}
+            />
+            <InviteParticipantForm
+              createSnackbar={createSnackbar}
+              onClose={() => setReload((prev) => !prev)}
               openInviteParticipantForm={openAddSoloTeam}
               setOpenInviteParticipantForm={(bool) => setOpenAddSoloTeam(bool)}
               soloTeam
               activityID={activityID}
-            />
-            <ImageOptions
-              category={'Activity'}
-              component={activity}
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenImageOptions);
-              }}
-              openImageOptions={openImageOptions}
-              setOpenImageOptions={setOpenImageOptions}
             />
             <Menu
               open={openMenu}
@@ -478,6 +457,12 @@ const Activity = () => {
             />
           </Grid>
         )}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        />
       </>
     );
   }

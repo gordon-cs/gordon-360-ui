@@ -9,7 +9,8 @@ import { useParams } from 'react-router';
 const EditMatchStatsForm = ({
   match,
   setMatch,
-  closeWithSnackbar,
+  createSnackbar,
+  onClose,
   openEditMatchStatsForm,
   setOpenEditMatchStatsForm,
 }) => {
@@ -115,17 +116,26 @@ const EditMatchStatsForm = ({
       requestInfo.StatusID = matchStatus.find(
         (status) => status.Description === requestInfo.StatusID,
       )?.ID;
-      updateMatchStats(match.ID, requestInfo).then(() => {
-        setSaving(false);
+      updateMatchStats(match.ID, requestInfo)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(
+            `Match stats successfully edited for team ${match.Team[selectedTab].Name}`,
+            'success',
+          );
 
-        if (handleWindowClose) {
-          closeWithSnackbar({
-            type: 'success',
-            message: 'Match edited successfully',
-          });
-          handleWindowClose();
-        }
-      });
+          if (handleWindowClose) {
+            onClose();
+            handleWindowClose();
+          }
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(
+            `There was a problem editing the match stats for team ${match.Team[selectedTab].Name}`,
+            'error',
+          );
+        });
     }
   };
 

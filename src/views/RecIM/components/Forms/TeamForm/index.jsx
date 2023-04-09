@@ -6,7 +6,8 @@ import { useUser } from 'hooks';
 const TeamForm = ({
   isAdmin,
   team,
-  closeWithSnackbar,
+  onClose,
+  createSnackbar,
   openTeamForm,
   setOpenTeamForm,
   activityID,
@@ -74,25 +75,35 @@ const TeamForm = ({
       ).ID;
       teamRequest.IsLogoUpdate = false;
 
-      editTeam(team.ID, teamRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Team edited successfully',
+      editTeam(team.ID, teamRequest)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(`Team ${teamRequest.Name} has been edited successfully`, 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(
+            `There was a problem editing your team ${teamRequest.Name}: ${reason.title}`,
+            'error',
+          );
         });
-
-        handleWindowClose();
-      });
     } else {
-      createTeam(profile.AD_Username, teamRequest).then((createdTeam) => {
-        setSaving(false);
-        closeWithSnackbar(createdTeam.ID, {
-          type: 'success',
-          message: 'Team created successfully',
+      createTeam(profile.AD_Username, teamRequest)
+        .then((createdTeam) => {
+          setSaving(false);
+          createSnackbar(`Team ${teamRequest.Name} has been created successfully`, 'success');
+          onClose(createdTeam.ID);
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(
+            `There was a problem creating your team ${teamRequest.Name}: ${reason.title}`,
+            'error',
+          );
         });
-
-        handleWindowClose();
-      });
     }
   };
 

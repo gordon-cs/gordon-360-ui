@@ -21,7 +21,7 @@ const waiverFields = [
   },
 ];
 
-const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiverForm }) => {
+const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverForm, onClose }) => {
   const navigate = useNavigate();
   const [isSaving, setSaving] = useState(false);
 
@@ -38,14 +38,17 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
-    createParticipant(username).then(() => {
-      setSaving(false);
-      closeWithSnackbar({
-        type: 'success',
-        message: 'Your new activity has been created or whatever message you want here',
+    createParticipant(username)
+      .then(() => {
+        setSaving(false);
+        createSnackbar('You have successfully signed the waiver form', 'success');
+        onClose();
+        handleWindowClose();
+      })
+      .catch((reason) => {
+        setSaving(false);
+        createSnackbar(`There was an error signing the waiver form: ${reason.title}`, 'error');
       });
-      handleWindowClose();
-    });
   };
 
   let waiverContent = (
