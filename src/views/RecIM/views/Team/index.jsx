@@ -268,9 +268,7 @@ const Team = () => {
               category={'Team'}
               component={team}
               createSnackbar={createSnackbar}
-              onClose={() => {
-                setReload((prev) => !prev);
-              }}
+              onClose={() => setReload((prev) => !prev)}
               openImageOptions={openImageOptions}
               setOpenImageOptions={setOpenImageOptions}
             />
