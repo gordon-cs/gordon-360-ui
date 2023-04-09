@@ -370,9 +370,7 @@ const Match = () => {
               <EditMatchStatsForm
                 match={match}
                 setMatch={setMatch}
-                onClose={() => {
-                  setAnchorEl(null);
-                }}
+                onClose={() => setAnchorEl(null)}
                 createSnackbar={createSnackbar}
                 openEditMatchStatsForm={openEditMatchStatsForm}
                 setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
