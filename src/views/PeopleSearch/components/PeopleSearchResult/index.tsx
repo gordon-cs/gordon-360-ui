@@ -1,4 +1,5 @@
-import { Card, CardContent, CardMedia, Divider, Typography } from '@mui/material';
+import { Card, CardContent, CardMedia, Divider, Typography, Button } from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
@@ -114,6 +115,11 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
               </SecondaryText>
               <SecondaryText className={styles.secondary_text}>{person.Email}</SecondaryText>
               <SecondaryText className={styles.secondary_text}>{mailLocation}</SecondaryText>
+              <a href={`mailto:${person.Email}`}>
+                <div>
+                  <EmailIcon />
+                </div>
+              </a>
             </CardContent>
           </Card>
         </Link>
