@@ -170,9 +170,7 @@ const Admin = () => {
       <SurfaceForm
         surface={surface}
         createSnackbar={createSnackbar}
-        onClose={async () => {
-          setSurfaces(await getSurfaces());
-        }}
+        onClose={async () =>  setSurfaces(await getSurfaces())}
         openSurfaceForm={openSurfaceForm}
         setOpenSurfaceForm={(bool) => setOpenSurfaceForm(bool)}
       />
