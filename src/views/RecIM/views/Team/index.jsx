@@ -255,9 +255,7 @@ const Team = () => {
             {/* forms and dialogs */}
             <TeamForm
               createSnackbar={createSnackbar}
-              onClose={() => {
-                setReload((prev) => !prev);
-              }}
+              onClose={() => setReload((prev) => !prev)}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={team?.Activity?.ID}
