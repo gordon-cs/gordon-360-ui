@@ -318,9 +318,7 @@ const Team = () => {
             </GordonDialogBox>
             <InviteParticipantForm
               createSnackbar={createSnackbar}
-              onClose={() => {
-                setReload((prev) => !prev);
-              }}
+              onClose={() => setReload((prev) => !prev)}
               openInviteParticipantForm={openInviteParticipantForm}
               setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
               teamID={teamID}
