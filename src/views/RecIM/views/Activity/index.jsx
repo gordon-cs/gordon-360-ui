@@ -361,9 +361,7 @@ const Activity = () => {
 
             <ActivityForm
               activity={activity}
-              onClose={() => {
-                setReload((prev) => !prev);
-              }}
+              onClose={() => setReload((prev) => !prev)}
               createSnackbar={createSnackbar}
               openActivityForm={openActivityForm}
               setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
