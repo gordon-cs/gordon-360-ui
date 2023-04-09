@@ -6,17 +6,12 @@ import { useUser } from 'hooks';
 const TeamForm = ({
   isAdmin,
   team,
-  closeWithSnackbar,
+  onClose,
+  createSnackbar,
   openTeamForm,
   setOpenTeamForm,
   activityID,
 }) => {
-  const [errorStatus, setErrorStatus] = useState({
-    Name: false,
-    ActivityID: false,
-    statusID: false,
-  });
-
   const { profile } = useUser();
   const [teamStatus, setTeamStatus] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -36,20 +31,17 @@ const TeamForm = ({
       label: 'Name',
       name: 'Name',
       type: 'text',
-      error: errorStatus.Name,
       helperText: '*Required',
       required: true,
     },
   ];
+
   if (team && isAdmin) {
     createTeamFields.push({
       label: 'Team Status',
       name: 'StatusID',
       type: 'select',
-      menuItems: teamStatus.map((type) => {
-        return type.Description;
-      }),
-      error: errorStatus.statusID,
+      menuItems: teamStatus.map((type) => type.Description),
       helperText: '*Required',
       required: true,
     });
@@ -72,13 +64,6 @@ const TeamForm = ({
     };
   }, [activityID, team, teamStatus]);
 
-  const errorCases = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
-
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
 
@@ -90,25 +75,35 @@ const TeamForm = ({
       ).ID;
       teamRequest.IsLogoUpdate = false;
 
-      editTeam(team.ID, teamRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Team edited successfully',
+      editTeam(team.ID, teamRequest)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(`Team ${teamRequest.Name} has been edited successfully`, 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(
+            `There was a problem editing your team ${teamRequest.Name}: ${reason.title}`,
+            'error',
+          );
         });
-
-        handleWindowClose();
-      });
     } else {
-      createTeam(profile.AD_Username, teamRequest).then((createdTeam) => {
-        setSaving(false);
-        closeWithSnackbar(createdTeam.ID, {
-          type: 'success',
-          message: 'Team created successfully',
+      createTeam(profile.AD_Username, teamRequest)
+        .then((createdTeam) => {
+          setSaving(false);
+          createSnackbar(`Team ${teamRequest.Name} has been created successfully`, 'success');
+          onClose(createdTeam.ID);
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(
+            `There was a problem creating your team ${teamRequest.Name}: ${reason.title}`,
+            'error',
+          );
         });
-
-        handleWindowClose();
-      });
     }
   };
 
@@ -117,8 +112,6 @@ const TeamForm = ({
       formTitles={{ name: 'Team', formType: team ? 'Edit' : 'Create' }}
       fields={[createTeamFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
-      setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}
       setOpenForm={setOpenTeamForm}

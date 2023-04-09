@@ -9,11 +9,12 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
 import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
@@ -32,23 +33,23 @@ const Team = () => {
   const navigate = useNavigate();
   const { teamID } = useParams();
   const { profile } = useUser();
-  const [reload, setReload] = useState(false);
   const [team, setTeam] = useState();
   const [logo, setLogo] = useState();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openImageOptions, setOpenImageOptions] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [hasPermissions, setHasPermissions] = useState(false);
   const [openInviteParticipantForm, setOpenInviteParticipantForm] = useState(false);
-
-  const handleInviteParticipantForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenInviteParticipantForm(false);
-  };
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   useEffect(() => {
     const loadTeamData = async () => {
@@ -60,7 +61,7 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID, openTeamForm, openInviteParticipantForm, openImageOptions, reload]);
+  }, [profile, teamID, reload]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   //checks if the team is modifiable by the current user
@@ -105,16 +106,6 @@ const Team = () => {
       return <Typography className={styles.subtitle}>Activity has not started</Typography>;
     }
     return <GordonLoader size={15} inline />;
-  };
-
-  const handleTeamForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenTeamForm(false);
-  };
-
-  const handleOpenImageOptionsSubmit = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenImageOptions(false);
   };
 
   const handleDelete = async () => {
@@ -223,6 +214,12 @@ const Team = () => {
             <ParticipantList participants={team.Participant} />
           )}
         </CardContent>
+        <InviteParticipantForm
+          createSnackbar={createSnackbar}
+          openInviteParticipantForm={openInviteParticipantForm}
+          setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
+          teamID={teamID}
+        />
       </Card>
     );
 
@@ -257,8 +254,9 @@ const Team = () => {
 
             {/* forms and dialogs */}
             <TeamForm
-              closeWithSnackbar={(status) => {
-                handleTeamForm(status);
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
               }}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
@@ -269,12 +267,36 @@ const Team = () => {
             <ImageOptions
               category={'Team'}
               component={team}
-              closeWithSnackbar={(status) => {
-                handleOpenImageOptionsSubmit(status, setOpenImageOptions);
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
               }}
               openImageOptions={openImageOptions}
               setOpenImageOptions={setOpenImageOptions}
             />
+            <GordonDialogBox
+              title="Admin Settings"
+              fullWidth
+              open={openConfirmDelete}
+              cancelButtonClicked={() => setOpenConfirmDelete(false)}
+              cancelButtonName="Close"
+            >
+              <br />
+              <Grid container alignItems="center" justifyContent="space-between">
+                <Grid item>
+                  <Typography>Permanently delete the team '{team.Name}'</Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    color="error"
+                    variant="contained"
+                    onClick={() => setOpenConfirmDelete(true)}
+                  >
+                    Delete this team
+                  </Button>
+                </Grid>
+              </Grid>
+            </GordonDialogBox>
             <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}
@@ -295,8 +317,9 @@ const Team = () => {
               <Typography variant="body1">This action cannot be undone.</Typography>
             </GordonDialogBox>
             <InviteParticipantForm
-              closeWithSnackbar={(status) => {
-                handleInviteParticipantForm(status);
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
               }}
               openInviteParticipantForm={openInviteParticipantForm}
               setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
@@ -346,6 +369,12 @@ const Team = () => {
             </Menu>
           </Grid>
         )}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        />
       </>
     );
   }

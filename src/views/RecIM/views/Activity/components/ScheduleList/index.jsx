@@ -26,7 +26,15 @@ import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
 
-const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activityTeams }) => {
+const ScheduleList = ({
+  isAdmin,
+  series,
+  activityID,
+  reload,
+  setReload,
+  activityTeams,
+  createSnackbar,
+}) => {
   const [anchorEl, setAnchorEl] = useState();
   const [width] = useWindowSize();
   const [showAdminTools, setShowAdminTools] = useState(false);
@@ -61,7 +69,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
   };
 
   // edit button
-  const handleEditSeries = () => {
+  const handleEditSeriesMenuClick = () => {
     setOpenEditSeriesForm(true);
     closeMenusAndForms();
   };
@@ -71,14 +79,9 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
     closeMenusAndForms();
   };
 
-  const handleSeriesSchedule = () => {
+  const handleSeriesScheduleMenuClick = () => {
     setOpenSeriesScheduleForm(true);
     closeMenusAndForms();
-  };
-
-  const handleFormSubmit = (status, setOpenForm) => {
-    setReload((prev) => !prev);
-    setOpenForm(false);
   };
 
   // autoschedule button
@@ -260,6 +263,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
             </IconButton>{' '}
           </Grid>
         )}
+
         {/* reformats seriesSchedule to take the place of admin tools so that user have a cleaner visual */}
         {!isAdmin && seriesSchedule && (
           <Grid container item xs={5} sm={1} justifyContent="right">
@@ -293,11 +297,16 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
           >
             Auto-schedule Series
           </MenuItem>
-          <MenuItem dense onClick={handleSeriesSchedule} className={styles.menuButton} divider>
+          <MenuItem
+            dense
+            onClick={handleSeriesScheduleMenuClick}
+            className={styles.menuButton}
+            divider
+          >
             Edit Schedule
           </MenuItem>
           <Typography className={styles.menuTitle}>Series</Typography>
-          <MenuItem dense onClick={handleEditSeries} className={styles.menuButton}>
+          <MenuItem dense onClick={handleEditSeriesMenuClick} className={styles.menuButton}>
             Edit Series Info
           </MenuItem>
           <MenuItem dense onClick={handleCreateMatch} className={styles.menuButton}>
@@ -343,38 +352,35 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload, activity
           {disclaimerContent}
         </ContentCard>
       </GordonDialogBox>
-      {openEditSeriesForm && (
-        <SeriesForm
-          closeWithSnackbar={(status) => {
-            handleFormSubmit(status, setOpenEditSeriesForm);
-          }}
-          openSeriesForm={openEditSeriesForm}
-          setOpenSeriesForm={(bool) => setOpenEditSeriesForm(bool)}
-          activityID={series.ActivityID}
-          series={series}
-          activityTeams={activityTeams}
-        />
-      )}
-      {openSeriesScheduleForm && (
-        <SeriesScheduleForm
-          closeWithSnackbar={(status) => {
-            handleFormSubmit(status, setOpenSeriesScheduleForm);
-          }}
-          openSeriesScheduleForm={openSeriesScheduleForm}
-          setOpenSeriesScheduleForm={(bool) => setOpenSeriesScheduleForm(bool)}
-          seriesID={series.ID}
-        />
-      )}
-      {openMatchForm && (
-        <MatchForm
-          closeWithSnackbar={(status) => {
-            handleFormSubmit(status, setOpenMatchForm);
-          }}
-          openMatchInformationForm={openMatchForm}
-          setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
-          series={series}
-        />
-      )}
+      <SeriesForm
+        createSnackbar={createSnackbar}
+        onClose={() => {
+          setReload((prev) => !prev);
+        }}
+        openSeriesForm={openEditSeriesForm}
+        setOpenSeriesForm={(bool) => setOpenEditSeriesForm(bool)}
+        activityID={series.ActivityID}
+        series={series}
+        activityTeams={activityTeams}
+      />
+      <SeriesScheduleForm
+        createSnackbar={createSnackbar}
+        onClose={() => {
+          setReload((prev) => !prev);
+        }}
+        openSeriesScheduleForm={openSeriesScheduleForm}
+        setOpenSeriesScheduleForm={(bool) => setOpenSeriesScheduleForm(bool)}
+        seriesID={series.ID}
+      />
+      <MatchForm
+        createSnackbar={createSnackbar}
+        onClose={() => {
+          setReload((prev) => !prev);
+        }}
+        openMatchInformationForm={openMatchForm}
+        setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
+        series={series}
+      />
     </>
   );
 };

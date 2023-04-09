@@ -3,8 +3,8 @@ import styles from './ConfirmationRow.module.css';
 import { Check, Remove } from '@mui/icons-material';
 import { isValid, format } from 'date-fns';
 
-const ConfirmationRow = ({ field }) => {
-  const isCheckbox = typeof field.Value === 'boolean';
+const ConfirmationRow = ({ value, label }) => {
+  const isCheckbox = typeof value === 'boolean';
   const truthIcon = (value) => {
     return value ? (
       <Check className={styles.icon_current} />
@@ -13,11 +13,11 @@ const ConfirmationRow = ({ field }) => {
     );
   };
   const currentValue = isCheckbox ? (
-    truthIcon(field.Value)
+    truthIcon(value)
   ) : (
     <Typography variant="body2" className={styles.text_current}>
       {/* if datetime, format appropriately */}
-      {isValid(field.Value) ? format(field.Value, 'MMM dd, y hh:mm aa') : `${field.Value}`}
+      {isValid(value) ? format(value, 'MMM dd, y hh:mm aa') : `${value}`}
     </Typography>
   );
 
@@ -31,7 +31,7 @@ const ConfirmationRow = ({ field }) => {
     >
       <Grid item>
         <Typography variant="body2" className={styles.label}>
-          {field.Label}
+          {label}
         </Typography>
       </Grid>
       <Grid item>

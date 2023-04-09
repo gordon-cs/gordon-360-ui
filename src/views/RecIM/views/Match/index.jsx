@@ -10,9 +10,10 @@ import {
 } from '@mui/material';
 import { useNavigate, useParams, Link as LinkRouter } from 'react-router-dom';
 import { useUser } from 'hooks';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
@@ -60,6 +61,8 @@ const Match = () => {
   const { profile } = useUser();
   const [match, setMatch] = useState();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
   const [openMatchInformationForm, setOpenMatchInformationForm] = useState(false);
@@ -68,9 +71,12 @@ const Match = () => {
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
   const [matchName, setMatchName] = useState();
-  const [reloadFlag, setReloadFlag] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -104,12 +110,7 @@ const Match = () => {
       setLoading(false);
     };
     loadMatch();
-  }, [matchID, reloadFlag]);
-
-  const handleFormSubmit = (status, setOpenForm) => {
-    setOpenForm(false);
-    setReloadFlag((bool) => !bool);
-  };
+  }, [matchID, reload]);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -131,7 +132,7 @@ const Match = () => {
       if (match.Status === 'Completed')
         await updateMatch(match.ID, { StatusID: 2 }); //confirmed (no memory of previous)
       else await updateMatch(match.ID, { StatusID: 6 }); //completed
-      setReloadFlag((bool) => !bool);
+      setReload((prev) => !prev);
     }
   };
 
@@ -356,20 +357,23 @@ const Match = () => {
               </MenuItem>
             </Menu>
             <MatchForm
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenMatchInformationForm);
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
               }}
               openMatchInformationForm={openMatchInformationForm}
               setOpenMatchInformationForm={(bool) => setOpenMatchInformationForm(bool)}
               match={match}
             />
+
             {match.Scores.length !== 0 && (
               <EditMatchStatsForm
                 match={match}
                 setMatch={setMatch}
-                closeWithSnackbar={(status) => {
-                  handleFormSubmit(status, setOpenEditMatchStatsForm);
+                onClose={() => {
+                  setAnchorEl(null);
                 }}
+                createSnackbar={createSnackbar}
                 openEditMatchStatsForm={openEditMatchStatsForm}
                 setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
               />
@@ -391,6 +395,12 @@ const Match = () => {
             </GordonDialogBox>
           </Grid>
         )}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        />
       </>
     );
   }

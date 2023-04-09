@@ -2,31 +2,24 @@ import { useState, useMemo } from 'react';
 import Form from '../Form';
 import { createSurface, editSurface } from 'services/recim/match';
 
-const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfaceForm }) => {
-  const [errorStatus, setErrorStatus] = useState({
-    Name: false,
-    Description: false,
-  });
+const createSurfaceFields = [
+  {
+    label: 'Name',
+    name: 'Name',
+    type: 'text',
+    helperText: '*Required',
+    required: true,
+  },
+  {
+    label: 'Description',
+    name: 'Description',
+    type: 'text',
+    required: false,
+  },
+];
 
+const SurfaceForm = ({ surface, createSnackbar, onClose, openSurfaceForm, setOpenSurfaceForm }) => {
   const [isSaving, setSaving] = useState(false);
-
-  const createSurfaceFields = [
-    {
-      label: 'Name',
-      name: 'Name',
-      type: 'text',
-      error: errorStatus.Name,
-      helperText: '*Required',
-      required: true,
-    },
-    {
-      label: 'Description',
-      name: 'Description',
-      type: 'text',
-      error: errorStatus.Name,
-      required: false,
-    },
-  ];
 
   const currentInfo = useMemo(() => {
     if (surface) {
@@ -41,47 +34,41 @@ const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfa
     };
   }, [surface]);
 
-  const errorCases = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
-
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
 
     let surfaceRequest = { ...currentInfo, ...newInfo };
 
     if (surface) {
-      editSurface(surface.ID, surfaceRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Surface edited successfully',
+      editSurface(surface.ID, surfaceRequest)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(`Surface ${surfaceRequest.Name} has been edited successfully`, 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          createSnackbar(`There was a problem editing your surface: ${reason.title}`, 'error');
         });
-
-        handleWindowClose();
-      });
     } else {
-      createSurface(surfaceRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Surface created successfully',
+      createSurface(surfaceRequest)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(`Surface ${surfaceRequest.Name} has been created successfully`, 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          createSnackbar(`There was a problem creating your surface: ${reason.title}`, 'error');
         });
-        handleWindowClose();
-      });
     }
   };
 
   return (
     <Form
       formTitles={{ name: 'Surface', formType: surface ? 'Edit' : 'Create' }}
-      fields={createSurfaceFields}
+      fields={[createSurfaceFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
-      setErrorStatus={setErrorStatus}
       isSaving={isSaving}
       setOpenForm={setOpenSurfaceForm}
       openForm={openSurfaceForm}

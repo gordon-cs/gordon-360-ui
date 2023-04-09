@@ -21,16 +21,21 @@ const InformationField = ({
   name,
   type,
   value,
+  required,
+  max,
+  min,
   onChange,
   error,
   helperText,
   menuItems,
   data,
-  xs,
-  sm,
-  md,
-  lg,
 }) => {
+  let gridSizes = {
+    xs: 12,
+    sm: 6,
+    md: 4,
+    lg: 3,
+  };
   const [width] = useWindowSize();
 
   let field;
@@ -53,6 +58,7 @@ const InformationField = ({
           className={`disable_select ${styles.field}`}
           label={label}
           name={name}
+          required={required}
           helperText={error && helperText}
           value={value}
           onChange={(event) => onChange(event)}
@@ -68,6 +74,11 @@ const InformationField = ({
           className={`disable_select ${styles.field}`}
           label={label}
           name={name}
+          required={required}
+          inputProps={{
+            max,
+            min,
+          }}
           helperText={error && helperText}
           value={value}
           onChange={(event) => onChange(event)}
@@ -92,6 +103,7 @@ const InformationField = ({
             label={label}
             name={name}
             value={value}
+            required={required}
             onChange={(event) => onChange(event)}
             style={{ maxWidth: `${width * 0.65}px` }}
           >
@@ -106,8 +118,7 @@ const InformationField = ({
       );
       break;
     case 'multiselect':
-      xs = sm = md = lg = 12; // ensure multi select takes max size
-      let selected = '';
+      gridSizes = { xs: 12 }; // ensure multi select takes max size
       field = (
         <Grid item s>
           <FormControl variant="filled" className={`${styles.select_text} ${styles.field}`}>
@@ -117,6 +128,7 @@ const InformationField = ({
               name={name}
               multiple
               value={value}
+              required={required}
               onChange={(event) => onChange(event)}
               style={{ maxWidth: `${width * 0.65}px` }}
             >
@@ -129,12 +141,7 @@ const InformationField = ({
             </Select>
           </FormControl>
           <Typography className={styles.multiselectText}>Selected: </Typography>
-          <Typography className={styles.multiselectItemText}>
-            {value.forEach((item) => {
-              selected += `${item}, `;
-            })}
-            {selected.substring(0, selected.length - 2)}
-          </Typography>
+          <Typography className={styles.multiselectItemText}>{value.join(', ')}</Typography>
         </Grid>
       );
       break;
@@ -146,13 +153,18 @@ const InformationField = ({
             label={label}
             value={value}
             onChange={(value) => onChange(value, name)}
+            slotProps={{
+              textField: {
+                error,
+              },
+            }}
           />
         </LocalizationProvider>
       );
       break;
   }
   return (
-    <Grid item xs={xs} sm={sm} md={md} lg={lg}>
+    <Grid item {...gridSizes}>
       {field}
     </Grid>
   );
