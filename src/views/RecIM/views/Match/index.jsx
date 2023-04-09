@@ -358,9 +358,7 @@ const Match = () => {
             </Menu>
             <MatchForm
               createSnackbar={createSnackbar}
-              onClose={() => {
-                setReload((prev) => !prev);
-              }}
+              onClose={() => setReload((prev) => !prev)}
               openMatchInformationForm={openMatchInformationForm}
               setOpenMatchInformationForm={(bool) => setOpenMatchInformationForm(bool)}
               match={match}
