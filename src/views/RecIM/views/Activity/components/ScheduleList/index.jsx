@@ -354,9 +354,7 @@ const ScheduleList = ({
       </GordonDialogBox>
       <SeriesForm
         createSnackbar={createSnackbar}
-        onClose={() => {
-          setReload((prev) => !prev);
-        }}
+        onClose={() => setReload((prev) => !prev)}
         openSeriesForm={openEditSeriesForm}
         setOpenSeriesForm={(bool) => setOpenEditSeriesForm(bool)}
         activityID={series.ActivityID}
@@ -365,18 +363,14 @@ const ScheduleList = ({
       />
       <SeriesScheduleForm
         createSnackbar={createSnackbar}
-        onClose={() => {
-          setReload((prev) => !prev);
-        }}
+        onClose={() => setReload((prev) => !prev)}
         openSeriesScheduleForm={openSeriesScheduleForm}
         setOpenSeriesScheduleForm={(bool) => setOpenSeriesScheduleForm(bool)}
         seriesID={series.ID}
       />
       <MatchForm
         createSnackbar={createSnackbar}
-        onClose={() => {
-          setReload((prev) => !prev);
-        }}
+        onClose={() => setReload((prev) => !prev)}
         openMatchInformationForm={openMatchForm}
         setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
         series={series}
