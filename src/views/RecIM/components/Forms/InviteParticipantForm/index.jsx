@@ -11,6 +11,7 @@ import { useUser } from 'hooks';
 
 const InviteParticipantForm = ({
   createSnackbar,
+  onClose,
   openInviteParticipantForm,
   setOpenInviteParticipantForm,
   teamID,
@@ -98,6 +99,7 @@ const InviteParticipantForm = ({
     } else {
       createSnackbar('Invited your participants successfully', 'success');
     }
+    onClose();
     handleWindowClose();
   };
 

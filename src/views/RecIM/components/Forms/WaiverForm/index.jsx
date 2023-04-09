@@ -21,7 +21,7 @@ const waiverFields = [
   },
 ];
 
-const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverForm }) => {
+const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverForm, onClose }) => {
   const navigate = useNavigate();
   const [isSaving, setSaving] = useState(false);
 
@@ -42,6 +42,7 @@ const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverFor
       .then(() => {
         setSaving(false);
         createSnackbar('You have successfully signed the waiver form', 'success');
+        onClose();
         handleWindowClose();
       })
       .catch((reason) => {

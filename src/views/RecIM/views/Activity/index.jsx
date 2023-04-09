@@ -52,6 +52,7 @@ const Activity = () => {
   const { activityID } = useParams();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [activity, setActivity] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
@@ -63,7 +64,6 @@ const Activity = () => {
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
   const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
-  const [reload, setReload] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
@@ -83,15 +83,7 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [
-    profile,
-    activityID,
-    openActivityForm,
-    openTeamForm,
-    openCreateSeriesForm,
-    openImageOptions,
-    reload,
-  ]);
+  }, [profile, activityID, reload]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -128,11 +120,18 @@ const Activity = () => {
       }
   }, [activity]);
 
-  const handleDelete = async () => {
-    await deleteActivity(activityID);
-    setOpenConfirmDelete(false);
-    navigate(`/recim`);
-    // @TODO add snackbar
+  const handleDelete = () => {
+    deleteActivity(activityID)
+      .then(() => {
+        setOpenConfirmDelete(false);
+        navigate(`/recim`);
+      })
+      .catch((reason) => {
+        createSnackbar(
+          `There was a problem deleting activity ${activity.Name}: ${reason}`,
+          'error',
+        );
+      });
   };
 
   // default closure
@@ -154,7 +153,7 @@ const Activity = () => {
     };
     await createTeam(profile.AD_Username, request);
     setReload(!reload);
-    setSnackbar({ message: 'Activity joined successfully', severity: 'success', open: true });
+    createSnackbar(`Activity ${activity.Name} has been joined successfully`, 'success');
     setLoading(false);
   };
 
@@ -362,6 +361,9 @@ const Activity = () => {
 
             <ActivityForm
               activity={activity}
+              onClose={() => {
+                setReload((prev) => !prev);
+              }}
               createSnackbar={createSnackbar}
               openActivityForm={openActivityForm}
               setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
@@ -369,7 +371,7 @@ const Activity = () => {
             <SeriesForm
               createSnackbar={createSnackbar}
               onClose={() => {
-                //temporary placeholder, reload rework will be in new PR
+                setReload((prev) => !prev);
               }}
               openSeriesForm={openCreateSeriesForm}
               setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
@@ -385,29 +387,25 @@ const Activity = () => {
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={activityID}
             />
-            {openImageOptions && (
-              <ImageOptions
-                category={'Activity'}
-                createSnackbar={createSnackbar}
-                component={activity}
-                openImageOptions={openImageOptions}
-                setOpenImageOptions={setOpenImageOptions}
-              />
-            )}
-
+            <ImageOptions
+              category={'Activity'}
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
+              }}
+              component={activity}
+              openImageOptions={openImageOptions}
+              setOpenImageOptions={setOpenImageOptions}
+            />
             <InviteParticipantForm
               createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
+              }}
               openInviteParticipantForm={openAddSoloTeam}
               setOpenInviteParticipantForm={(bool) => setOpenAddSoloTeam(bool)}
               soloTeam
               activityID={activityID}
-            />
-            <ImageOptions
-              category={'Activity'}
-              component={activity}
-              createSnackbar={createSnackbar}
-              openImageOptions={openImageOptions}
-              setOpenImageOptions={setOpenImageOptions}
             />
             <Menu
               open={openMenu}

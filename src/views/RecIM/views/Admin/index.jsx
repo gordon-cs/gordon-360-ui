@@ -64,12 +64,14 @@ const Admin = () => {
     const loadSurfaces = async () => {
       setSurfaces(await getSurfaces());
     };
+    setLoading(true);
     if (user?.IsAdmin) {
       loadActivities();
       loadTeams();
       loadParticipants();
       loadSurfaces();
     }
+    setLoading(false);
   }, [user?.IsAdmin]);
 
   const createSnackbar = useCallback((message, severity) => {
@@ -96,11 +98,6 @@ const Admin = () => {
     setSurfaces(await getSurfaces());
     setOpenConfirmDelete(false);
     createSnackbar('Surface deleted successfully', 'success');
-  };
-
-  const handleClose = async (snackbar) => {
-    createSnackbar(snackbar.message, snackbar.status);
-    setSurfaces(await getSurfaces());
   };
 
   let headerContents = (
@@ -172,7 +169,10 @@ const Admin = () => {
       </Card>
       <SurfaceForm
         surface={surface}
-        closeWithSnackbar={handleClose}
+        createSnackbar={createSnackbar}
+        onClose={async () => {
+          setSurfaces(await getSurfaces());
+        }}
         openSurfaceForm={openSurfaceForm}
         setOpenSurfaceForm={(bool) => setOpenSurfaceForm(bool)}
       />

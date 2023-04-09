@@ -22,6 +22,7 @@ const ASPECT_RATIO = 1;
 const ImageOptions = ({
   category,
   createSnackbar,
+  onClose,
   component,
   openImageOptions,
   setOpenImageOptions,
@@ -86,10 +87,14 @@ const ImageOptions = ({
         editActivity(component.ID, activityRequest)
           .then(() => {
             createSnackbar('Activity logo set to default successfully', 'success');
+            onClose();
             handleWindowClose();
           })
           .catch((reason) => {
-            createSnackbar('There was a problem setting the logo to default', 'error');
+            createSnackbar(
+              `There was a problem setting the logo to default: ${reason.title}`,
+              'error',
+            );
           });
         break;
       }
@@ -103,10 +108,14 @@ const ImageOptions = ({
         editTeam(component.ID, teamRequest)
           .then(() => {
             createSnackbar('Team Logo set to default successfully', 'success');
+            onClose();
             handleWindowClose();
           })
           .catch((reason) => {
-            createSnackbar('There was a problem setting the logo to defaul', 'error');
+            createSnackbar(
+              `There was a problem setting the logo to default: ${reason.title}`,
+              'error',
+            );
           });
         break;
       }
@@ -132,10 +141,14 @@ const ImageOptions = ({
         editActivity(component.ID, activityRequest)
           .then(() => {
             createSnackbar('Activity logo edited successfully', 'success');
+            onClose();
             handleWindowClose();
           })
           .catch((reason) => {
-            createSnackbar('There was a problem editing the activity logo', 'erorr');
+            createSnackbar(
+              `There was a problem editing the activity logo: ${reason.title}`,
+              'erorr',
+            );
           });
         break;
       }
@@ -149,10 +162,11 @@ const ImageOptions = ({
         editTeam(component.ID, teamRequest)
           .then(() => {
             createSnackbar('Team logo edited successfully', 'success');
+            onClose();
             handleWindowClose();
           })
           .catch((reason) => {
-            createSnackbar('There was a problem editing your team logo', 'error');
+            createSnackbar(`There was a problem editing your team logo: ${reason.title}`, 'error');
           });
         break;
       }

@@ -79,11 +79,15 @@ const TeamForm = ({
         .then(() => {
           setSaving(false);
           createSnackbar(`Team ${teamRequest.Name} has been edited successfully`, 'success');
+          onClose();
           handleWindowClose();
         })
         .catch((reason) => {
           setSaving(false);
-          createSnackbar(`There was a problem editing your team ${teamRequest.Name}`, 'error');
+          createSnackbar(
+            `There was a problem editing your team ${teamRequest.Name}: ${reason.title}`,
+            'error',
+          );
         });
     } else {
       createTeam(profile.AD_Username, teamRequest)
@@ -95,7 +99,10 @@ const TeamForm = ({
         })
         .catch((reason) => {
           setSaving(false);
-          createSnackbar(`There was a problem creating your team ${teamRequest.Name}`, 'error');
+          createSnackbar(
+            `There was a problem creating your team ${teamRequest.Name}: ${reason.title}`,
+            'error',
+          );
         });
     }
   };

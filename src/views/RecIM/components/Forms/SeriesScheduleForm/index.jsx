@@ -26,7 +26,7 @@ const SeriesScheduleForm = ({
       setLoading(false);
     };
     loadData();
-  }, []);
+  }, [seriesID]);
 
   const availableDays = [
     {
@@ -176,7 +176,10 @@ const SeriesScheduleForm = ({
       })
       .catch((reason) => {
         setSaving(false);
-        createSnackbar(`There was a problem with editing the series schedule`, 'error');
+        createSnackbar(
+          `There was a problem with editing the series schedule: ${reason.title}`,
+          'error',
+        );
       });
   };
 

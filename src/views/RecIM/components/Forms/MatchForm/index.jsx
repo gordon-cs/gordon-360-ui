@@ -4,6 +4,7 @@ import { createMatch, updateMatch, getSurfaces, getMatchStatusTypes } from 'serv
 
 const MatchForm = ({
   createSnackbar,
+  onClose,
   openMatchInformationForm,
   setOpenMatchInformationForm,
   series,
@@ -132,11 +133,12 @@ const MatchForm = ({
         .then((result) => {
           setSaving(false);
           createSnackbar(`Match was successfully created`, 'success');
+          onClose();
           handleWindowClose();
         })
         .catch((reason) => {
           setSaving(false);
-          createSnackbar(`There was a problem creating your match`, 'error');
+          createSnackbar(`There was a problem creating your match: ${reason.title}`, 'error');
         });
     else if (match) {
       matchRequest.StatusID = matchStatus.find(
@@ -146,11 +148,12 @@ const MatchForm = ({
         .then((result) => {
           setSaving(false);
           createSnackbar(`Match was successfully edited`, 'success');
+          onClose();
           handleWindowClose();
         })
         .catch((reason) => {
           setSaving(false);
-          createSnackbar(`There was a problem editing your match`, 'error');
+          createSnackbar(`There was a problem editing your match: ${reason.title}`, 'error');
         });
     }
   };

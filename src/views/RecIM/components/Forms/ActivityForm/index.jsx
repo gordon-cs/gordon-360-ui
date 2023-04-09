@@ -174,14 +174,17 @@ const ActivityForm = ({
             `Activity ${activityRequest.name} has been successfully edited`,
             'success',
           );
+          onClose();
           handleWindowClose();
         })
         .catch((reason) => {
           setSaving(false);
-          createSnackbar(`There was a problem editing your activity, please try again`, 'error');
+          createSnackbar(
+            `There was a problem editing your activity, please try again: ${reason.title}`,
+            'error',
+          );
         });
     } else {
-      console.log(activityRequest);
       createActivity(activityRequest)
         .then((res) => {
           setSaving(false);
@@ -197,7 +200,10 @@ const ActivityForm = ({
         })
         .catch((reason) => {
           setSaving(false);
-          createSnackbar(`There was a problem creating your activity, please try again`, 'error');
+          createSnackbar(
+            `There was a problem creating your activity, please try again: ${reason.title}`,
+            'error',
+          );
         });
     }
   };

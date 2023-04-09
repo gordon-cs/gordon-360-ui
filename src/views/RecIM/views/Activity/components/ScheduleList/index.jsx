@@ -84,11 +84,6 @@ const ScheduleList = ({
     closeMenusAndForms();
   };
 
-  const handleFormSubmit = (status, setOpenForm) => {
-    setReload((prev) => !prev);
-    setOpenForm(false);
-  };
-
   // autoschedule button
   const handleAutoSchedule = () => {
     const numMatches = (type, numTeams) => {
@@ -357,40 +352,35 @@ const ScheduleList = ({
           {disclaimerContent}
         </ContentCard>
       </GordonDialogBox>
-      {openEditSeriesForm && (
-        <SeriesForm
-          createSnackbar={createSnackbar}
-          onClose={() => {
-            setReload((prev) => !prev);
-          }}
-          openSeriesForm={openEditSeriesForm}
-          setOpenSeriesForm={(bool) => setOpenEditSeriesForm(bool)}
-          activityID={series.ActivityID}
-          series={series}
-          activityTeams={activityTeams}
-        />
-      )}
-      {openSeriesScheduleForm && (
-        <SeriesScheduleForm
-          createSnackbar={createSnackbar}
-          onClose={() => {
-            setReload((prev) => !prev);
-          }}
-          openSeriesScheduleForm={openSeriesScheduleForm}
-          setOpenSeriesScheduleForm={(bool) => setOpenSeriesScheduleForm(bool)}
-          seriesID={series.ID}
-        />
-      )}
-      {openMatchForm && (
-        <MatchForm
-          closeWithSnackbar={(status) => {
-            handleFormSubmit(status, setOpenMatchForm);
-          }}
-          openMatchInformationForm={openMatchForm}
-          setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
-          series={series}
-        />
-      )}
+      <SeriesForm
+        createSnackbar={createSnackbar}
+        onClose={() => {
+          setReload((prev) => !prev);
+        }}
+        openSeriesForm={openEditSeriesForm}
+        setOpenSeriesForm={(bool) => setOpenEditSeriesForm(bool)}
+        activityID={series.ActivityID}
+        series={series}
+        activityTeams={activityTeams}
+      />
+      <SeriesScheduleForm
+        createSnackbar={createSnackbar}
+        onClose={() => {
+          setReload((prev) => !prev);
+        }}
+        openSeriesScheduleForm={openSeriesScheduleForm}
+        setOpenSeriesScheduleForm={(bool) => setOpenSeriesScheduleForm(bool)}
+        seriesID={series.ID}
+      />
+      <MatchForm
+        createSnackbar={createSnackbar}
+        onClose={() => {
+          setReload((prev) => !prev);
+        }}
+        openMatchInformationForm={openMatchForm}
+        setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
+        series={series}
+      />
     </>
   );
 };

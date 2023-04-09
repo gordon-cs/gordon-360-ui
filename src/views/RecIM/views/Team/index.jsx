@@ -33,10 +33,10 @@ const Team = () => {
   const navigate = useNavigate();
   const { teamID } = useParams();
   const { profile } = useUser();
-  const [reload, setReload] = useState(false);
   const [team, setTeam] = useState();
   const [logo, setLogo] = useState();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [user, setUser] = useState();
   const [openTeamForm, setOpenTeamForm] = useState(false);
@@ -51,11 +51,6 @@ const Team = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
-  const handleInviteParticipantForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenInviteParticipantForm(false);
-  };
-
   useEffect(() => {
     const loadTeamData = async () => {
       setLoading(true);
@@ -66,7 +61,7 @@ const Team = () => {
       setLoading(false);
     };
     loadTeamData();
-  }, [profile, teamID, openTeamForm, openInviteParticipantForm, openImageOptions, reload]);
+  }, [profile, teamID, reload]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   //checks if the team is modifiable by the current user
@@ -260,6 +255,9 @@ const Team = () => {
             {/* forms and dialogs */}
             <TeamForm
               createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
+              }}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={team?.Activity?.ID}
@@ -270,6 +268,9 @@ const Team = () => {
               category={'Team'}
               component={team}
               createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
+              }}
               openImageOptions={openImageOptions}
               setOpenImageOptions={setOpenImageOptions}
             />
@@ -316,8 +317,9 @@ const Team = () => {
               <Typography variant="body1">This action cannot be undone.</Typography>
             </GordonDialogBox>
             <InviteParticipantForm
-              closeWithSnackbar={(status) => {
-                handleInviteParticipantForm(status);
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
               }}
               openInviteParticipantForm={openInviteParticipantForm}
               setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}

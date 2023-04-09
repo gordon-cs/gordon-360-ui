@@ -18,7 +18,7 @@ const createSurfaceFields = [
   },
 ];
 
-const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfaceForm }) => {
+const SurfaceForm = ({ surface, createSnackbar, onClose, openSurfaceForm, setOpenSurfaceForm }) => {
   const [isSaving, setSaving] = useState(false);
 
   const currentInfo = useMemo(() => {
@@ -40,24 +40,27 @@ const SurfaceForm = ({ surface, closeWithSnackbar, openSurfaceForm, setOpenSurfa
     let surfaceRequest = { ...currentInfo, ...newInfo };
 
     if (surface) {
-      editSurface(surface.ID, surfaceRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Surface edited successfully',
+      editSurface(surface.ID, surfaceRequest)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(`Surface ${surfaceRequest.Name} has been edited successfully`, 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          createSnackbar(`There was a problem editing your surface: ${reason.title}`, 'error');
         });
-
-        handleWindowClose();
-      });
     } else {
-      createSurface(surfaceRequest).then(() => {
-        setSaving(false);
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Surface created successfully',
+      createSurface(surfaceRequest)
+        .then(() => {
+          setSaving(false);
+          createSnackbar(`Surface ${surfaceRequest.Name} has been created successfully`, 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          createSnackbar(`There was a problem creating your surface: ${reason.title}`, 'error');
         });
-        handleWindowClose();
-      });
     }
   };
 

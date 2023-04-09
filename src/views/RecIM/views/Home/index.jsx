@@ -35,6 +35,7 @@ const Home = () => {
   const navigate = useNavigate();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
@@ -69,7 +70,7 @@ const Home = () => {
       setLoading(false);
     };
     loadData();
-  }, [profile, openActivityForm, openWaiver, openCreateSeriesForm]);
+  }, [profile, reload]);
 
   useEffect(() => {
     const loadParticipantData = async () => {
@@ -255,34 +256,35 @@ const Home = () => {
             <Grid item xs={12} md={5}>
               {myTeamsCard}
             </Grid>
-            {openActivityForm && (
-              <ActivityForm
-                onClose={() => {
-                  setOpenCreateSeriesForm(true);
-                }}
-                createSnackbar={createSnackbar}
-                openActivityForm={openActivityForm}
-                setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
-                setCreatedInstance={(activity) => setCreatedActivity(activity)}
-              />
-            )}
-            {openCreateSeriesForm && (
-              <SeriesForm
-                createSnackbar={createSnackbar}
-                openSeriesForm={openCreateSeriesForm}
-                setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-                activityID={createdActivity.ID}
-                existingActivitySeries={[]}
-              />
-            )}
-            {openWaiver && (
-              <WaiverForm
-                username={profile.AD_Username}
-                createSnackbar={createSnackbar}
-                openWaiverForm={openWaiver}
-                setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
-              />
-            )}
+            <ActivityForm
+              onClose={() => {
+                setOpenCreateSeriesForm(true);
+                setReload((prev) => !prev);
+              }}
+              createSnackbar={createSnackbar}
+              openActivityForm={openActivityForm}
+              setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
+              setCreatedInstance={(activity) => setCreatedActivity(activity)}
+            />
+            <SeriesForm
+              createSnackbar={createSnackbar}
+              openSeriesForm={openCreateSeriesForm}
+              onClose={() => {
+                navigate(`/recim/activity/${createdActivity.ID}`);
+              }}
+              setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+              activityID={createdActivity.ID}
+              existingActivitySeries={[]}
+            />
+            <WaiverForm
+              username={profile.AD_Username}
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
+              }}
+              openWaiverForm={openWaiver}
+              setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
+            />
           </Grid>
         )}
         <GordonSnackbar
