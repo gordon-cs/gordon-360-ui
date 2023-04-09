@@ -379,9 +379,7 @@ const Activity = () => {
               existingActivitySeries={activity.Series}
             />
             <TeamForm
-              onClose={(teamID) => {
-                navigate(`team/${teamID}`);
-              }}
+              onClose={(teamID) => navigate(`team/${teamID}`)}
               createSnackbar={createSnackbar}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
