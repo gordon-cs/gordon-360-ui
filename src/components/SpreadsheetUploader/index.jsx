@@ -13,6 +13,14 @@ const acceptedTypes = [
   'text/csv',
 ];
 
+const displayCell = (cellData) => {
+  if (cellData instanceof Date) {
+    return cellData.toLocaleString();
+  } else {
+    return cellData;
+  }
+};
+
 const SpreadsheetUploader = ({
   open,
   setOpen,
@@ -35,7 +43,7 @@ const SpreadsheetUploader = ({
 
       const data = await file.arrayBuffer();
 
-      const workbook = read(data);
+      const workbook = read(data, { cellDates: true });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
       const uploadedData = utils.sheet_to_json(sheet);
@@ -123,7 +131,7 @@ const SpreadsheetUploader = ({
                 {requiredColumns.map((columnName) =>
                   row[columnName] ? (
                     <Typography variant="body2">
-                      <b>{columnName}:</b> {row[columnName]}
+                      <b>{columnName}:</b> {displayCell(row[columnName])}
                     </Typography>
                   ) : null,
                 )}
