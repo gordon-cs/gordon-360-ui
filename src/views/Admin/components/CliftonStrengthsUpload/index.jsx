@@ -119,14 +119,15 @@ const CliftonStrengthsUpload = () => {
         title="Clifton Strengths Upload"
         requiredColumns={[
           'Email',
-          'DateCompleted',
-          'Theme1',
-          'Theme2',
-          'Theme3',
-          'Theme4',
-          'Theme5',
-          'AccessCode',
+          'Date Completed',
+          'Theme_1',
+          'Theme_2',
+          'Theme_3',
+          'Theme_4',
+          'Theme_5',
+          'Access Code',
         ]}
+        otherColumns={['Last Name', 'First Name', 'Status']}
         buttonName="Upload Strengths"
         template={templateUrl}
       />
