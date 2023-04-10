@@ -4,7 +4,7 @@ import { Team } from './team';
 import { Series } from './series';
 import { Lookup } from './recim';
 
-type BaseActivity = {
+export type BaseActivity = {
   Name: string;
   StartDate?: string;
   EndDate?: string;
