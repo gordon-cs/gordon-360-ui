@@ -28,7 +28,7 @@ import { getParticipantTeams, getParticipantByUsername } from 'services/recim/pa
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from './../../recim_logo.png';
 import { isFuture } from 'date-fns';
-import { TabPanel } from 'views/RecIM/components';
+import { TabPanel } from 'views/RecIM/components/TabPanel';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 const Home = () => {
