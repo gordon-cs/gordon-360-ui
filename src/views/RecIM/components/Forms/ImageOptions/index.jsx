@@ -40,7 +40,7 @@ const ImageOptions = ({
   useEffect(() => {
     // setLoading(true);
     loadImageOptions().then(() => setLoading(false));
-  });
+  }, []);
 
   const loadImageOptions = () => {
     return new Promise((resolve, reject) => {
@@ -338,7 +338,6 @@ const ImageOptions = ({
                   variant="contained"
                   color="primary"
                   onClick={() => {
-                    loadImageOptions();
                     setShowCropper(null);
                   }}
                   className="gc360_photo_dialog_box_content_button"
