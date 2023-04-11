@@ -45,7 +45,7 @@
     "react-to-print": "^2.14.1",
     "react-visibility-sensor": "^5.1.1",
     "url-regex-safe": "^2.1.0",
-    "xlsx": "^0.17.3"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.176",
