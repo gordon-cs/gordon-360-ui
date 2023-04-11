@@ -41,7 +41,6 @@
     "react-media": ">=1.10.0",
     "react-router": "6.4.2",
     "react-router-dom": "^6.4.2",
-    "react-timeago": "^6.2.0",
     "react-to-print": "^2.14.1",
     "react-visibility-sensor": "^5.1.1",
     "url-regex-safe": "^2.1.0",
