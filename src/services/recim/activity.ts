@@ -4,7 +4,7 @@ import { Team } from './team';
 import { Series } from './series';
 import { Lookup } from './recim';
 
-export type BaseActivity = {
+type BaseActivity = {
   Name: string;
   StartDate?: string;
   EndDate?: string;
@@ -27,7 +27,7 @@ export type Activity = BaseActivity & {
   Team: Team[];
 };
 
-type CreatedActivity = BaseActivity & {
+export type CreatedActivity = BaseActivity & {
   ID: number;
   StatusID: number;
   Completed: boolean;

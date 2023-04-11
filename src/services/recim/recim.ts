@@ -1,4 +1,4 @@
-import { BaseActivity } from './activity';
+import { CreatedActivity } from './activity';
 import http from '../http';
 
 export type Lookup = {
@@ -7,7 +7,6 @@ export type Lookup = {
 };
 
 type Account = {
-  GordonID: string;
   FirstName: string;
   LastName: string;
   Email: string;
@@ -17,7 +16,7 @@ type Account = {
 
 type ActivityReport = {
   NumberOfParticipants: number;
-  Activity: BaseActivity;
+  Activity: CreatedActivity;
 };
 
 type NewParticipantReport = {
