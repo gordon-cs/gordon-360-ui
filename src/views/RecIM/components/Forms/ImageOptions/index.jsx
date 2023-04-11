@@ -137,9 +137,6 @@ const ImageOptions = ({
           Logo: cropperRef.current.cropper.getCroppedCanvas({ width: CROPPER_WIDTH }).toDataURL(),
           IsLogoUpdate: true,
         };
-        //console.log(cropperRef);
-
-        console.log('cropperImageData: ', cropperImageData);
 
         editActivity(component.ID, activityRequest)
           .then(() => {
