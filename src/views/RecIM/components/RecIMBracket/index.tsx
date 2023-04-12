@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Bracket, IRoundProps } from 'react-brackets';
 import { Series, BracketInfo, getBracketInfo } from 'services/recim/series';
 import { standardDate } from '../Helpers';
-// import { Match } from 'services/recim/match';
 
 const RecIMBracket = ({ series }: { series: Series }) => {
   const [bracketInfo, setBracketInfo] = useState<BracketInfo[]>();
@@ -29,7 +28,6 @@ const RecIMBracket = ({ series }: { series: Series }) => {
       const request = await getBracketInfo(series.ID);
       setBracketInfo(request as BracketInfo[]);
     };
-
     loadBracketInfo();
   }, [series.ID]);
 
@@ -43,16 +41,15 @@ const RecIMBracket = ({ series }: { series: Series }) => {
         ...matchS,
       }));
 
-      // consider changing the types below
-      // type tt = BracketInfo & Match;
-      type ArrayObjectType = {
-        // [roundNum: string]: tt[];
+      // consider changing the typing strategy here
+      // BracketMatchInfo has the combined properties of Match && BracketInfo, but using this errors
+      type BracketMatchInfo = {
         [key: string]: any;
       };
 
       let dataRounds = data.reduce(function (
-        memo: { [key: string]: ArrayObjectType[] },
-        x: ArrayObjectType,
+        memo: { [key: string]: BracketMatchInfo[] },
+        x: BracketMatchInfo,
       ) {
         if (!memo[x['RoundNumber']]) {
           memo[x['RoundNumber']] = [];
@@ -67,9 +64,9 @@ const RecIMBracket = ({ series }: { series: Series }) => {
         dataRounds[key].sort((a, b) => a.SeedIndex - b.SeedIndex);
 
         // check if 0 seed doesn't exist
-        const newArray: ArrayObjectType[] = [];
+        const newArray: BracketMatchInfo[] = [];
         if (dataRounds[key][0].SeedIndex !== 0) {
-          const newObj: ArrayObjectType = {
+          const newObj: BracketMatchInfo = {
             SeedIndex: 0,
             Activity: null,
             Attendance: null,
@@ -99,7 +96,7 @@ const RecIMBracket = ({ series }: { series: Series }) => {
 
             for (let j = 0; j < missingIndexes; j++) {
               const newNum = dataRounds[key][i].SeedIndex + j + 1;
-              const newObj: ArrayObjectType = {
+              const newObj: BracketMatchInfo = {
                 SeedIndex: newNum,
                 Activity: null,
                 Attendance: null,
@@ -121,12 +118,10 @@ const RecIMBracket = ({ series }: { series: Series }) => {
         }
         dataRounds[key] = newArray;
       }
-      // console.log('dataRounds', dataRounds);
 
       setRounds(
         Object.keys(dataRounds).map((index) => {
           let roundNum = parseInt(index);
-          // console.log('round:', index, roundNum, dataRounds[roundNum]);
           return {
             title: 'Round ' + roundNum,
             seeds: dataRounds[index].map((match) => {
