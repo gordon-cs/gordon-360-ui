@@ -116,7 +116,11 @@ const SeriesScheduleForm = ({
   ];
 
   const currentInfo = useMemo(() => {
-    if (seriesSchedule)
+    if (seriesSchedule) {
+      var seriesSurfaces = [];
+      seriesSchedule.SurfaceIDs.forEach((surface) =>
+        seriesSurfaces.push(surfaces.find((_surface) => _surface.ID === surface)?.Name),
+      );
       return {
         SeriesID: seriesID,
         Sun: seriesSchedule.AvailableDays.Sunday,
@@ -126,11 +130,13 @@ const SeriesScheduleForm = ({
         Thu: seriesSchedule.AvailableDays.Thursday,
         Fri: seriesSchedule.AvailableDays.Friday,
         Sat: seriesSchedule.AvailableDays.Saturday,
-        AvailableSurfaceIDs: [], //needs new GetSeriesSurfaces route
+        AvailableSurfaceIDs: seriesSurfaces,
         DailyStartTime: seriesSchedule.StartTime, //@TODO needs to be set to Time selector
         DailyEndTime: seriesSchedule.EndTime, //@TODO needs to be set to Time selector
         EstMatchTime: seriesSchedule.EstMatchTime,
       };
+    }
+
     return {
       SeriesID: seriesID,
       Sun: false,

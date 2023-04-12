@@ -27,7 +27,7 @@ export type Activity = BaseActivity & {
   Team: Team[];
 };
 
-type CreatedActivity = BaseActivity & {
+export type CreatedActivity = BaseActivity & {
   ID: number;
   StatusID: number;
   Completed: boolean;
