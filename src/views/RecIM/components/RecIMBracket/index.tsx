@@ -46,10 +46,11 @@ const RecIMBracket = ({ series }: { series: Series }) => {
       // consider changing the types below
       // type tt = BracketInfo & Match;
       type ArrayObjectType = {
+        // [roundNum: string]: tt[];
         [key: string]: any;
       };
 
-      const dataRounds = data.reduce(function (
+      let dataRounds = data.reduce(function (
         memo: { [key: string]: ArrayObjectType[] },
         x: ArrayObjectType,
       ) {
@@ -61,6 +62,67 @@ const RecIMBracket = ({ series }: { series: Series }) => {
       },
       {});
 
+      // iterate through each round
+      for (const key in dataRounds) {
+        dataRounds[key].sort((a, b) => a.SeedIndex - b.SeedIndex);
+
+        // check if 0 seed doesn't exist
+        const newArray: ArrayObjectType[] = [];
+        if (dataRounds[key][0].SeedIndex !== 0) {
+          const newObj: ArrayObjectType = {
+            SeedIndex: 0,
+            Activity: null,
+            Attendance: null,
+            ID: null,
+            IsLosers: false,
+            MatchID: null,
+            RoundNumber: 12,
+            RoundOf: null,
+            Scores: [],
+            Series: null,
+            StartTime: null,
+            Status: null,
+            Surface: null,
+            Team: [],
+          };
+          newArray.push(newObj);
+        }
+        for (let i = 0; i < dataRounds[key].length; i++) {
+          newArray.push(dataRounds[key][i]);
+
+          if (
+            i < dataRounds[key].length - 1 &&
+            dataRounds[key][i + 1].SeedIndex - dataRounds[key][i].SeedIndex > 1
+          ) {
+            const missingIndexes =
+              dataRounds[key][i + 1].SeedIndex - dataRounds[key][i].SeedIndex - 1;
+
+            for (let j = 0; j < missingIndexes; j++) {
+              const newNum = dataRounds[key][i].SeedIndex + j + 1;
+              const newObj: ArrayObjectType = {
+                SeedIndex: newNum,
+                Activity: null,
+                Attendance: null,
+                ID: null,
+                IsLosers: false,
+                MatchID: null,
+                RoundNumber: null,
+                RoundOf: null,
+                Scores: [],
+                Series: null,
+                StartTime: null,
+                Status: null,
+                Surface: null,
+                Team: [],
+              };
+              newArray.push(newObj);
+            }
+          }
+        }
+        dataRounds[key] = newArray;
+      }
+      // console.log('dataRounds', dataRounds);
+
       setRounds(
         Object.keys(dataRounds).map((index) => {
           let roundNum = parseInt(index);
@@ -69,8 +131,9 @@ const RecIMBracket = ({ series }: { series: Series }) => {
             title: 'Round ' + roundNum,
             seeds: dataRounds[index].map((match) => {
               return {
-                id: match.MatchID ?? 0,
-                date: standardDate(match.StartTime, true),
+                // using random id to prevent unique key error
+                id: match.MatchID ?? Math.random(),
+                date: match.StartTime ? standardDate(match.StartTime, true) : '',
                 teams: [{ name: match.Team[0]?.Name ?? '' }, { name: match.Team[1]?.Name ?? '' }],
               };
             }),
