@@ -4,7 +4,7 @@ import { Series, BracketInfo, getBracketInfo } from 'services/recim/series';
 import { standardDate } from '../Helpers';
 // import { Match } from 'services/recim/match';
 
-const RecimBracket = ({ series }: { series: Series }) => {
+const RecIMBracket = ({ series }: { series: Series }) => {
   const [bracketInfo, setBracketInfo] = useState<BracketInfo[]>();
   const [rounds, setRounds] = useState<IRoundProps[]>([
     {
@@ -85,4 +85,4 @@ const RecimBracket = ({ series }: { series: Series }) => {
   return <Bracket rounds={rounds} />;
 };
 
-export default RecimBracket;
+export default RecIMBracket;

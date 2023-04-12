@@ -13,7 +13,7 @@ import { useState } from 'react';
 import styles from './../../Activity.module.css';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import SeriesScheduleForm from 'views/RecIM/components/Forms/SeriesScheduleForm';
-import RecimBracket from 'views/RecIM/components/RecimBracket/index';
+import RecIMBracket from 'views/RecIM/components/RecIMBracket/index';
 
 const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
   const [anchorEl, setAnchorEl] = useState();
@@ -202,7 +202,7 @@ const ScheduleList = ({ isAdmin, series, activityID, reload, setReload }) => {
 
       {series.Match.length ? (
         showBracket ? (
-          <RecimBracket series={series} />
+          <RecIMBracket series={series} />
         ) : (
           <MatchList matches={series.Match} activityID={activityID} />
         )
