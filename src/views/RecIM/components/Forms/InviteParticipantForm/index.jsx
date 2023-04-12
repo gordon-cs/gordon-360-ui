@@ -3,16 +3,15 @@ import { useState, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ParticipantList } from './../../List';
 import GordonQuickSearch from 'components/Header/components/QuickSearch';
-import GordonSnackbar from 'components/Snackbar';
 import { addParticipantToTeam, createTeam, deleteTeamParticipant } from 'services/recim/team';
-import { useCallback } from 'react';
 import GordonLoader from 'components/Loader';
 import styles from './InviteParticipantForm.module.css';
 import userService from 'services/user';
 import { useUser } from 'hooks';
 
 const InviteParticipantForm = ({
-  closeWithSnackbar,
+  createSnackbar,
+  onClose,
   openInviteParticipantForm,
   setOpenInviteParticipantForm,
   teamID,
@@ -22,12 +21,7 @@ const InviteParticipantForm = ({
   const { profile } = useUser();
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
   const [inviteList, setInviteList] = useState([]);
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [saving, setSaving] = useState(false);
-
-  const createSnackbar = useCallback((message, severity) => {
-    setSnackbar({ message, severity, open: true });
-  }, []);
 
   useEffect(() => {
     setDisableUpdateButton(!inviteList || !inviteList.length);
@@ -51,6 +45,7 @@ const InviteParticipantForm = ({
 
   const handleSubmit = async () => {
     setSaving(true);
+    let errorList = [];
     for (let index = 0; index < inviteList.length; index++) {
       let participantData = {
         Username: inviteList[index].Username,
@@ -65,21 +60,50 @@ const InviteParticipantForm = ({
           Name: profileInfo.fullName,
           ActivityID: activityID,
         };
-        createTeam(username, request).then((team) => {
-          // add the participant to the team and then remove the admin's default participation
-          addParticipantToTeam(team.ID, participantData);
-          deleteTeamParticipant(team.ID, profile.AD_Username);
-        });
+        createTeam(username, request)
+          .then((team) => {
+            // add the participant to the team and then remove the admin's default participation
+            addParticipantToTeam(team.ID, participantData).catch((reason) => {
+              createSnackbar(
+                `There was a problem adding ${username} to team: ${reason.title}`,
+                'error',
+              );
+            });
+            deleteTeamParticipant(team.ID, profile.AD_Username);
+          })
+          .catch((reason) => {
+            createSnackbar(
+              `There was a problem deleting ${profile.AD_Username} from team: ${reason.title}`,
+              'error',
+            );
+          })
+          .catch((reason) => {
+            createSnackbar(
+              `There was an issue creating team ${profileInfo.fullName}: ${reason.title}`,
+              'error',
+            );
+          });
       } else {
-        await addParticipantToTeam(teamID, participantData);
+        addParticipantToTeam(teamID, participantData).catch((reason) => {
+          errorList.push({ username: inviteList[index].Username, reason: reason.title });
+        });
       }
     }
     setSaving(false);
+    let errorMessage = 'Error inviting:\n';
+    errorList.forEach((value) => {
+      errorMessage += errorMessage + `${value.username} with reason ${value.reason}`;
+    });
+    if (errorList.length !== 0) {
+      createSnackbar(errorMessage, 'error');
+    } else {
+      createSnackbar('Invited your participants successfully', 'success');
+    }
+    onClose();
     handleWindowClose();
   };
 
   const handleWindowClose = () => {
-    closeWithSnackbar();
     setOpenInviteParticipantForm(false);
     setInviteList([]);
   };
@@ -112,12 +136,6 @@ const InviteParticipantForm = ({
             </Grid>
           )}
         </Grid>
-        <GordonSnackbar
-          open={snackbar.open}
-          text={snackbar.message}
-          severity={snackbar.severity}
-          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-        />
         {saving && <GordonLoader size={32} />}
       </GordonDialogBox>
     </>

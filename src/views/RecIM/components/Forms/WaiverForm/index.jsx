@@ -4,32 +4,26 @@ import { useState, useMemo } from 'react';
 import { createParticipant } from 'services/recim/participant';
 import { useNavigate } from 'react-router-dom';
 
-const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiverForm }) => {
-  const navigate = useNavigate();
-  const [errorStatus, setErrorStatus] = useState({
-    readCheckbox: false,
-    name: false,
-  });
-  const [isSaving, setSaving] = useState(false);
+const waiverFields = [
+  {
+    label: 'By Clicking this, I have certified that I have read the Gordon Waiver',
+    name: 'readCheckbox',
+    type: 'checkbox',
+    helperText: '*Required',
+    required: true,
+  },
+  {
+    label: 'Electronic Signature',
+    name: 'name',
+    type: 'text',
+    helperText: '*Required',
+    required: true,
+  },
+];
 
-  const waiverFields = [
-    {
-      label: 'By Clicking this, I have certified that I have read the Gordon Waiver',
-      name: 'readCheckbox',
-      type: 'checkbox',
-      error: errorStatus.readCheckbox,
-      helperText: '*Required',
-      required: true,
-    },
-    {
-      label: 'Electronic Signature',
-      name: 'name',
-      type: 'text',
-      error: errorStatus.name,
-      helperText: '*Required',
-      required: true,
-    },
-  ];
+const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverForm, onClose }) => {
+  const navigate = useNavigate();
+  const [isSaving, setSaving] = useState(false);
 
   const currentInfo = useMemo(() => {
     return {
@@ -38,27 +32,23 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
     };
   }, []);
 
-  const errorCases = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
-
   const handleCancel = () => {
     navigate('/'); //routes back to home if user refuses waiver
   };
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
-    createParticipant(username).then(() => {
-      setSaving(false);
-      closeWithSnackbar({
-        type: 'success',
-        message: 'Your new activity has been created or whatever message you want here',
+    createParticipant(username)
+      .then(() => {
+        setSaving(false);
+        createSnackbar('You have successfully signed the waiver form', 'success');
+        onClose();
+        handleWindowClose();
+      })
+      .catch((reason) => {
+        setSaving(false);
+        createSnackbar(`There was an error signing the waiver form: ${reason.title}`, 'error');
       });
-      handleWindowClose();
-    });
   };
 
   let waiverContent = (
@@ -120,10 +110,8 @@ const WaiverForm = ({ username, closeWithSnackbar, openWaiverForm, setOpenWaiver
   return (
     <Form
       formTitles={{ name: 'Activity', formType: 'Form' }}
-      fields={waiverFields}
+      fields={[waiverFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
-      setErrorStatus={setErrorStatus}
       loading={false}
       isSaving={isSaving}
       setOpenForm={setOpenWaiverForm}

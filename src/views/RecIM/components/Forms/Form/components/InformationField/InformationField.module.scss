@@ -1,7 +1,17 @@
+@import '../../../../../../../vars';
 .select_text {
   text-transform: capitalize;
 }
 
 .field {
   width: 100%;
+}
+
+.multiselectText {
+  margin-top: 0.5em;
+  color: $neutral-gray;
+}
+
+.multiselectItemText {
+  color: $neutral-gray;
 }

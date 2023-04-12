@@ -10,14 +10,20 @@ import {
 } from '@mui/material';
 import { useNavigate, useParams, Link as LinkRouter } from 'react-router-dom';
 import { useUser } from 'hooks';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Match.module.css';
 import { ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { getMatchByID, getMatchAttendance, deleteMatchCascade } from 'services/recim/match';
+import {
+  getMatchByID,
+  getMatchAttendance,
+  deleteMatchCascade,
+  updateMatch,
+} from 'services/recim/match';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { standardDate } from 'views/RecIM/components/Helpers';
@@ -55,6 +61,8 @@ const Match = () => {
   const { profile } = useUser();
   const [match, setMatch] = useState();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [team0Score, setTeam0Score] = useState(0);
   const [team1Score, setTeam1Score] = useState(0);
   const [openMatchInformationForm, setOpenMatchInformationForm] = useState(false);
@@ -66,6 +74,10 @@ const Match = () => {
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
 
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
+
   useEffect(() => {
     const loadData = async () => {
       if (profile) {
@@ -74,17 +86,6 @@ const Match = () => {
     };
     loadData();
   }, [profile]);
-
-  useEffect(() => {
-    const loadMatch = async () => {
-      setLoading(true);
-      setMatch(await getMatchByID(matchID));
-      setMatchAttendance(await getMatchAttendance(matchID));
-      setLoading(false);
-    };
-    loadMatch();
-  }, [matchID, openMatchInformationForm, openEditMatchStatsForm]);
-  // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   useEffect(() => {
     if (match) {
@@ -101,9 +102,15 @@ const Match = () => {
     }
   }, [match]);
 
-  const handleFormSubmit = (status, setOpenForm) => {
-    setOpenForm(false);
-  };
+  useEffect(() => {
+    const loadMatch = async () => {
+      setLoading(true);
+      setMatch(await getMatchByID(matchID));
+      setMatchAttendance(await getMatchAttendance(matchID));
+      setLoading(false);
+    };
+    loadMatch();
+  }, [matchID, reload]);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -118,6 +125,15 @@ const Match = () => {
     setOpenConfirmDelete(false);
     navigate(`/recim/activity/${match.Activity.ID}`);
     // @TODO add snackbar
+  };
+
+  const handleMatchCompletedShortcut = async () => {
+    if (match) {
+      if (match.Status === 'Completed')
+        await updateMatch(match.ID, { StatusID: 2 }); //confirmed (no memory of previous)
+      else await updateMatch(match.ID, { StatusID: 6 }); //completed
+      setReload((prev) => !prev);
+    }
   };
 
   if (loading && !profile) {
@@ -170,7 +186,7 @@ const Match = () => {
                 <Typography
                   variant="h5"
                   className={`${styles.teamName} gc360_text_link ${
-                    team0Score > team1Score && styles.matchWinner
+                    team0Score > team1Score && match?.Status === 'Completed' && styles.matchWinner
                   }`}
                 >
                   {match?.Team[0]?.Name ?? 'No team yet...'}
@@ -202,7 +218,22 @@ const Match = () => {
             {/* admin controls */}
             {user?.IsAdmin && (
               <Grid item>
-                <IconButton onClick={handleSettingsClick} className={styles.editIconButton}>
+                <IconButton
+                  onClick={handleSettingsClick}
+                  sx={
+                    openMenu && {
+                      animation: 'spin 0.2s linear ',
+                      '@keyframes spin': {
+                        '0%': {
+                          transform: 'rotate(0deg)',
+                        },
+                        '100%': {
+                          transform: 'rotate(120deg)',
+                        },
+                      },
+                    }
+                  }
+                >
                   <SettingsIcon fontSize="large" />
                 </IconButton>
               </Grid>
@@ -220,7 +251,12 @@ const Match = () => {
           >
             <Grid item sm={8} lg="auto">
               <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
-                <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
+                <Typography
+                  variant="h5"
+                  className={`${styles.teamName} gc360_text_link ${
+                    team1Score > team0Score && match?.Status === 'Completed' && styles.matchWinner
+                  }`}
+                >
                   {match?.Team[1]?.Name ?? 'No team yet...'}
                 </Typography>
               </LinkRouter>
@@ -282,8 +318,19 @@ const Match = () => {
 
             {/* forms and dialogs */}
             <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
+              <Typography className={styles.menuTitle}>Admin Settings</Typography>
               <MenuItem
+                className={styles.greenMenuButton}
                 dense
+                disabled={match.Scores.length === 0}
+                onClick={() => handleMatchCompletedShortcut()}
+              >
+                Mark as {match?.Status === 'Completed' ? 'Confirmed' : 'Completed'}
+              </MenuItem>
+              <MenuItem
+                className={styles.menuButton}
+                dense
+                disabled={match.Scores.length === 0}
                 onClick={() => {
                   setOpenEditMatchStatsForm(true);
                 }}
@@ -291,6 +338,7 @@ const Match = () => {
                 Edit Match Stats
               </MenuItem>
               <MenuItem
+                className={styles.menuButton}
                 dense
                 onClick={() => {
                   setOpenMatchInformationForm(true);
@@ -309,22 +357,23 @@ const Match = () => {
               </MenuItem>
             </Menu>
             <MatchForm
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenMatchInformationForm);
-              }}
+              createSnackbar={createSnackbar}
+              onClose={() => setReload((prev) => !prev)}
               openMatchInformationForm={openMatchInformationForm}
               setOpenMatchInformationForm={(bool) => setOpenMatchInformationForm(bool)}
               match={match}
             />
-            <EditMatchStatsForm
-              match={match}
-              setMatch={setMatch}
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenEditMatchStatsForm);
-              }}
-              openEditMatchStatsForm={openEditMatchStatsForm}
-              setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
-            />
+
+            {match.Scores.length !== 0 && (
+              <EditMatchStatsForm
+                match={match}
+                setMatch={setMatch}
+                onClose={() => setAnchorEl(null)}
+                createSnackbar={createSnackbar}
+                openEditMatchStatsForm={openEditMatchStatsForm}
+                setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+              />
+            )}
             <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}
@@ -342,6 +391,12 @@ const Match = () => {
             </GordonDialogBox>
           </Grid>
         )}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        />
       </>
     );
   }

@@ -21,8 +21,9 @@ const ASPECT_RATIO = 1;
 
 const ImageOptions = ({
   category,
+  createSnackbar,
+  onClose,
   component,
-  closeWithSnackbar,
   openImageOptions,
   setOpenImageOptions,
 }) => {
@@ -83,13 +84,18 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        editActivity(component.ID, activityRequest).then(() => {
-          closeWithSnackbar({
-            type: 'success',
-            message: 'Activity Logo set to default successfully',
+        editActivity(component.ID, activityRequest)
+          .then(() => {
+            createSnackbar('Activity logo set to default successfully', 'success');
+            onClose();
+            handleWindowClose();
+          })
+          .catch((reason) => {
+            createSnackbar(
+              `There was a problem setting the logo to default: ${reason.title}`,
+              'error',
+            );
           });
-          handleWindowClose();
-        });
         break;
       }
       // reset Logo on Rec-IM Team page
@@ -99,14 +105,21 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        editTeam(component.ID, teamRequest).then(() => {
-          closeWithSnackbar({
-            type: 'success',
-            message: 'Team Logo set to default successfully',
+        editTeam(component.ID, teamRequest)
+          .then(() => {
+            createSnackbar('Team Logo set to default successfully', 'success');
+            onClose();
+            handleWindowClose();
+          })
+          .catch((reason) => {
+            createSnackbar(
+              `There was a problem setting the logo to default: ${reason.title}`,
+              'error',
+            );
           });
-
-          handleWindowClose();
-        });
+        break;
+      }
+      default: {
         break;
       }
     }
@@ -125,13 +138,18 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        editActivity(component.ID, activityRequest).then(() => {
-          closeWithSnackbar({
-            type: 'success',
-            message: 'Activity Logo edited successfully',
+        editActivity(component.ID, activityRequest)
+          .then(() => {
+            createSnackbar('Activity logo edited successfully', 'success');
+            onClose();
+            handleWindowClose();
+          })
+          .catch((reason) => {
+            createSnackbar(
+              `There was a problem editing the activity logo: ${reason.title}`,
+              'erorr',
+            );
           });
-          handleWindowClose();
-        });
         break;
       }
       // update Logo on Rec-IM Team page
@@ -141,14 +159,18 @@ const ImageOptions = ({
           IsLogoUpdate: true,
         };
 
-        editTeam(component.ID, teamRequest).then(() => {
-          closeWithSnackbar({
-            type: 'success',
-            message: 'Team Logo edited successfully',
+        editTeam(component.ID, teamRequest)
+          .then(() => {
+            createSnackbar('Team logo edited successfully', 'success');
+            onClose();
+            handleWindowClose();
+          })
+          .catch((reason) => {
+            createSnackbar(`There was a problem editing your team logo: ${reason.title}`, 'error');
           });
-
-          handleWindowClose();
-        });
+        break;
+      }
+      default: {
         break;
       }
     }
@@ -316,7 +338,6 @@ const ImageOptions = ({
                   variant="contained"
                   color="primary"
                   onClick={() => {
-                    loadImageOptions();
                     setShowCropper(null);
                   }}
                   className="gc360_photo_dialog_box_content_button"

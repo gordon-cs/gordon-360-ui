@@ -1,5 +1,15 @@
 @import '../../../../vars';
 
+.addSurfaceButton {
+  text-transform: none;
+}
+
+@media (min-width: $break-sm) {
+  .addSurfaceButton {
+    margin-left: 16px;
+  }
+}
+
 // if desired, this should just be a global change and
 // universally applied to all 360 cards
 .cardHeader {
@@ -7,14 +17,11 @@
   color: $neutral-white;
 }
 
-.actionButton {
-  text-transform: none;
+.title {
+  font-weight: bold;
+  color: $neutral-dark-gray2;
 }
 
-:global(.MuiCardHeader-root).cardHeader {
-  padding: 0.7em 16px;
-}
-
-.cardHeader :global(.MuiCardHeader-title) {
-  font-size: 1em;
+.subtitle {
+  color: $neutral-gray;
 }

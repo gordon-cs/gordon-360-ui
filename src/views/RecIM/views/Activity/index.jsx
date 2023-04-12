@@ -8,9 +8,12 @@ import {
   IconButton,
   Tabs,
   Tab,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import { useEffect, useState } from 'react';
+
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
@@ -22,18 +25,16 @@ import { TeamList } from '../../components/List';
 import TeamForm from '../../components/Forms/TeamForm';
 import { deleteActivity, getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
-import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import userService from 'services/user';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
-import EditIcon from '@mui/icons-material/Edit';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
-import { TabPanel } from 'views/RecIM/components';
+import { TabPanel } from 'views/RecIM/components/TabPanel';
 import { Box } from '@mui/system';
 import { createTeam } from 'services/recim/team';
 import InviteParticipantForm from 'views/RecIM/components/Forms/InviteParticipantForm';
@@ -51,9 +52,10 @@ const Activity = () => {
   const { activityID } = useParams();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [activity, setActivity] = useState();
   const [openActivityForm, setOpenActivityForm] = useState(false);
-  const [openMatchForm, setOpenMatchForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
   const [openTeamForm, setOpenTeamForm] = useState(false);
   const [openImageOptions, setOpenImageOptions] = useState(false);
@@ -62,11 +64,14 @@ const Activity = () => {
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
   const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
-  const [reload, setReload] = useState(false);
-  const [openSettings, setOpenSettings] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [anchorEl, setAnchorEl] = useState();
+  const openMenu = Boolean(anchorEl);
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -78,16 +83,7 @@ const Activity = () => {
       setLoading(false);
     };
     loadData();
-  }, [
-    profile,
-    activityID,
-    openActivityForm,
-    openTeamForm,
-    openCreateSeriesForm,
-    openMatchForm,
-    openImageOptions,
-    reload,
-  ]);
+  }, [profile, activityID, reload]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -97,7 +93,7 @@ const Activity = () => {
       }
     };
     loadData();
-  }, [user, profile.AD_Username]);
+  }, [user, profile]);
   // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   // disable create team if participant already is participating in this activity,
@@ -124,17 +120,28 @@ const Activity = () => {
       }
   }, [activity]);
 
-  const handleFormSubmit = (status, setOpenForm) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenForm(false);
-  }
+  const handleDelete = () => {
+    deleteActivity(activityID)
+      .then(() => {
+        setOpenConfirmDelete(false);
+        navigate(`/recim`);
+      })
+      .catch((reason) => {
+        createSnackbar(
+          `There was a problem deleting activity ${activity.Name}: ${reason}`,
+          'error',
+        );
+      });
+  };
 
-  const handleDelete = async () => {
-    await deleteActivity(activityID);
-    setOpenConfirmDelete(false);
-    setOpenSettings(false);
-    navigate(`/recim`);
-    // @TODO add snackbar
+  // default closure
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  // menu button click
+  const handleButtonClick = (e) => {
+    setAnchorEl(e.currentTarget);
   };
 
   const handleJoinActivity = async () => {
@@ -146,7 +153,7 @@ const Activity = () => {
     };
     await createTeam(profile.AD_Username, request);
     setReload(!reload);
-    setSnackbar({ message: 'Activity joined successfully', severity: 'success', open: true });
+    createSnackbar(`Activity ${activity.Name} has been joined successfully`, 'success');
     setLoading(false);
   };
 
@@ -157,8 +164,8 @@ const Activity = () => {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
-      <Grid container direction="row" alignItems="center" columnSpacing={4}>
-        <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
+      <Grid container alignItems="center" columnSpacing={4}>
+        <Grid item container xs={9} columnSpacing={4} alignItems="center">
           <Grid item>
             <Button
               className={styles.logoContainer}
@@ -182,17 +189,6 @@ const Activity = () => {
           <Grid item>
             <Typography variant="h5" className={styles.title}>
               {activity?.Name ?? <GordonLoader size={15} inline />}
-              {isAdmin && (
-                <IconButton
-                  onClick={() => {
-                    setOpenActivityForm(true);
-                  }}
-                  className={styles.editIconButton}
-                  sx={{ ml: 1 }}
-                >
-                  <EditIcon />
-                </IconButton>
-              )}
             </Typography>
             <Typography variant="h6" className={styles.subtitle}>
               <i>
@@ -205,51 +201,36 @@ const Activity = () => {
         </Grid>
         {isAdmin && (
           <Grid item xs={3} textAlign={'right'}>
-            <IconButton
-              onClick={() => {
-                setOpenSettings(true);
-              }}
-              sx={{ mr: '1rem' }}
-            >
-              <SettingsIcon fontSize="large" />
+            <IconButton onClick={handleButtonClick} sx={{ mr: '1rem' }}>
+              <SettingsIcon
+                fontSize="large"
+                sx={
+                  openMenu && {
+                    animation: 'spin 0.2s linear ',
+                    '@keyframes spin': {
+                      '0%': {
+                        transform: 'rotate(0deg)',
+                      },
+                      '100%': {
+                        transform: 'rotate(120deg)',
+                      },
+                    },
+                  }
+                }
+              />
             </IconButton>
           </Grid>
-        )}
-        {openActivityForm && (
-          <ActivityForm
-            activity={activity}
-            closeWithSnackbar={(status) => {
-              handleFormSubmit(status, setOpenActivityForm);
-            }}
-            openActivityForm={openActivityForm}
-            setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
-          />
         )}
       </Grid>
     );
 
     let scheduleCard = activity && (
       <Card>
-        <CardHeader title="Schedule" className={styles.cardHeader} />
+        <CardHeader title="Activity Schedule" className={styles.cardHeader} />
         <CardContent className={styles.schedule}>
           {isAdmin && (
             <Grid container className={styles.buttonArea}>
-              <Grid item xs={6}>
-                <Grid container justifyContent="center">
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    startIcon={<AddCircleRoundedIcon />}
-                    className={styles.actionButton}
-                    onClick={() => {
-                      setOpenMatchForm(true);
-                    }}
-                  >
-                    Create a Match
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Grid container justifyContent="center">
                   <Button
                     variant="contained"
@@ -275,11 +256,13 @@ const Activity = () => {
                   activityID={activityID}
                   reload={reload}
                   setReload={setReload}
+                  createSnackbar={createSnackbar}
+                  activityTeams={activity?.Team}
                 />
               );
             })
           ) : (
-            <Typography className={styles.secondaryTex}>No series scheduled yet!</Typography>
+            <Typography className={styles.secondaryText}>No series scheduled yet!</Typography>
           )}
         </CardContent>
       </Card>
@@ -376,18 +359,17 @@ const Activity = () => {
               </Grid>
             </Grid>
 
-            {/* forms and dialogs */}
-            <MatchForm
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenMatchForm);
-              }}
-              openMatchInformationForm={openMatchForm}
-              setOpenMatchInformationForm={(bool) => setOpenMatchForm(bool)}
+            <ActivityForm
               activity={activity}
+              onClose={() => setReload((prev) => !prev)}
+              createSnackbar={createSnackbar}
+              openActivityForm={openActivityForm}
+              setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
             />
             <SeriesForm
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenCreateSeriesForm);
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
               }}
               openSeriesForm={openCreateSeriesForm}
               setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
@@ -395,60 +377,58 @@ const Activity = () => {
               existingActivitySeries={activity.Series}
             />
             <TeamForm
-              closeWithSnackbar={(teamID, status) => {
-                handleFormSubmit(status, setOpenTeamForm);
-                navigate(`team/${teamID}`);
-              }}
+              onClose={(teamID) => navigate(`team/${teamID}`)}
+              createSnackbar={createSnackbar}
               openTeamForm={openTeamForm}
               setOpenTeamForm={(bool) => setOpenTeamForm(bool)}
               activityID={activityID}
             />
-            <InviteParticipantForm
-              closeWithSnackbar={(status) => {
-                setReload(!reload);
-                setSnackbar({
-                  message: 'Added participant successfully',
-                  severity: 'success',
-                  open: true,
-                });
+            <ImageOptions
+              category={'Activity'}
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
               }}
+              component={activity}
+              openImageOptions={openImageOptions}
+              setOpenImageOptions={setOpenImageOptions}
+            />
+            <InviteParticipantForm
+              createSnackbar={createSnackbar}
+              onClose={() => setReload((prev) => !prev)}
               openInviteParticipantForm={openAddSoloTeam}
               setOpenInviteParticipantForm={(bool) => setOpenAddSoloTeam(bool)}
               soloTeam
               activityID={activityID}
             />
-            <ImageOptions
-              category={'Activity'}
-              component={activity}
-              closeWithSnackbar={(status) => {
-                handleFormSubmit(status, setOpenImageOptions);
-              }}
-              openImageOptions={openImageOptions}
-              setOpenImageOptions={setOpenImageOptions}
-            />
-            <GordonDialogBox
-              title="Admin Settings"
-              fullWidth
-              open={openSettings}
-              cancelButtonClicked={() => setOpenSettings(false)}
-              cancelButtonName="Close"
+            <Menu
+              open={openMenu}
+              onClose={handleMenuClose}
+              anchorEl={anchorEl}
+              className={styles.menu}
             >
-              <br />
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
-                  <Typography>Permanently delete the activity '{activity.Name}'</Typography>
-                </Grid>
-                <Grid item>
-                  <Button
-                    color="error"
-                    variant="contained"
-                    onClick={() => setOpenConfirmDelete(true)}
-                  >
-                    Delete this activity
-                  </Button>
-                </Grid>
-              </Grid>
-            </GordonDialogBox>
+              <Typography className={styles.menuTitle}>Admin Settings</Typography>
+              <MenuItem
+                dense
+                onClick={() => {
+                  setOpenActivityForm(true);
+                  handleMenuClose();
+                }}
+                className={styles.menuButton}
+              >
+                Edit Activity Details
+              </MenuItem>
+              <MenuItem
+                dense
+                onClick={() => {
+                  setOpenConfirmDelete(true);
+                  handleMenuClose();
+                }}
+                className={styles.redButton}
+              >
+                Delete
+              </MenuItem>
+            </Menu>
             <GordonDialogBox
               title="Confirm Delete"
               open={openConfirmDelete}
@@ -477,6 +457,12 @@ const Activity = () => {
             />
           </Grid>
         )}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        />
       </>
     );
   }
