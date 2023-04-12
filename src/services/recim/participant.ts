@@ -93,7 +93,10 @@ const sendNotification = (
   http.post(`participants/${username}/notifications`, notification);
 
 const editParticipantAdmin = (username: string, isAdmin: boolean): Promise<Participant> =>
-  http.patch(`recim/participants/${username}`, isAdmin);
+  http.patch(`recim/participants/${username}/admin`, isAdmin);
+
+const editParticipantAllowEmails = (username: string, AllowEmails: boolean): Promise<Participant> =>
+  http.patch(`recim/participants/${username}/emails`, AllowEmails);
 
 const editParticipantActivity = (
   username: string,
@@ -116,6 +119,7 @@ export {
   getParticipantActivityPrivTypes,
   sendNotification,
   editParticipantAdmin,
+  editParticipantAllowEmails,
   editParticipantActivity,
   editParticipantStatus,
 };

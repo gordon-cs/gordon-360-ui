@@ -22,6 +22,7 @@ type SeriesSchedule = {
   StartTime: string;
   EndTime: string;
   EstMatchTime: number; //in minutes
+  SurfaceIDs: number[];
 };
 
 type UploadSeriesSchedule = {
