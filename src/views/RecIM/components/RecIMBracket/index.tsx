@@ -132,8 +132,9 @@ const RecIMBracket = ({ series }: { series: Series }) => {
       setRounds(
         Object.keys(dataRounds).map((index) => {
           let roundNum = parseInt(index);
+          let roundOf = dataRounds[roundNum][0]?.RoundOf;
           return {
-            title: 'Round ' + roundNum,
+            title: roundOf === 2 ? 'Finals' : roundOf === 4 ? 'Semifinals' : 'Round ' + roundNum,
             seeds: dataRounds[index].map((match) => {
               return {
                 // using random id to prevent unique key error
