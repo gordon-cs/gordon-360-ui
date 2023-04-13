@@ -135,7 +135,6 @@ const RecIMBracket = ({ series }: { series: Series }) => {
           return {
             title: 'Round ' + roundNum,
             seeds: dataRounds[index].map((match) => {
-              console.log(match);
               return {
                 // using random id to prevent unique key error
                 id: match.MatchID ?? Math.random(),
