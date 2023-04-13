@@ -1,7 +1,26 @@
 import { useState, useEffect } from 'react';
-import { Bracket, IRoundProps } from 'react-brackets';
+import { Bracket, IRoundProps, Seed, SeedItem, SeedTeam } from 'react-brackets';
 import { Series, BracketInfo, getBracketInfo } from 'services/recim/series';
 import { standardDate } from '../Helpers';
+import { IRenderSeedProps } from 'react-brackets';
+import { Link } from 'react-router-dom';
+import styles from './RecIMBracket.module.css';
+
+const CustomSeed = ({ seed, breakpoint, roundIndex, seedIndex }: IRenderSeedProps) => {
+  // mobileBreakpoint is required to be passed down to a seed
+  return (
+    <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 12 }}>
+      <Link to={`match/${seed.id}`} className={styles.bracketMatchLink}>
+        <SeedItem>
+          <div>
+            <SeedTeam>{seed.teams[0]?.name || '----------- '}</SeedTeam>
+            <SeedTeam>{seed.teams[1]?.name || '----------- '}</SeedTeam>
+          </div>
+        </SeedItem>
+      </Link>
+    </Seed>
+  );
+};
 
 const RecIMBracket = ({ series }: { series: Series }) => {
   const [bracketInfo, setBracketInfo] = useState<BracketInfo[]>();
@@ -140,7 +159,7 @@ const RecIMBracket = ({ series }: { series: Series }) => {
     generateBracket();
   }, [bracketInfo, series.Match]);
 
-  return <Bracket rounds={rounds} />;
+  return <Bracket rounds={rounds} renderSeedComponent={CustomSeed} />;
 };
 
 export default RecIMBracket;
