@@ -7,3 +7,10 @@
 .bracketMatchLink:hover {
   opacity: 0.85;
 }
+
+.score {
+  display: block;
+  float: right;
+  color: $neutral-light-gray;
+  font-weight: bold;
+}

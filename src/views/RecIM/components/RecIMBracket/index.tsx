@@ -5,6 +5,7 @@ import { standardDate } from '../Helpers';
 import { IRenderSeedProps } from 'react-brackets';
 import { Link } from 'react-router-dom';
 import styles from './RecIMBracket.module.css';
+import GordonLoader from 'components/Loader';
 
 const CustomSeed = ({ seed, breakpoint, roundIndex, seedIndex }: IRenderSeedProps) => {
   // mobileBreakpoint is required to be passed down to a seed
@@ -13,8 +14,14 @@ const CustomSeed = ({ seed, breakpoint, roundIndex, seedIndex }: IRenderSeedProp
       <Link to={`match/${seed.id}`} className={styles.bracketMatchLink}>
         <SeedItem>
           <div>
-            <SeedTeam>{seed.teams[0]?.name || '----------- '}</SeedTeam>
-            <SeedTeam>{seed.teams[1]?.name || '----------- '}</SeedTeam>
+            <SeedTeam>
+              {seed.teams[0]?.name || '----------- '}
+              <span className={styles.score}>{seed.teams[0]?.score}</span>
+            </SeedTeam>
+            <SeedTeam>
+              {seed.teams[1]?.name || '----------- '}
+              <span className={styles.score}>{seed.teams[1]?.score}</span>
+            </SeedTeam>
           </div>
         </SeedItem>
       </Link>
@@ -24,23 +31,7 @@ const CustomSeed = ({ seed, breakpoint, roundIndex, seedIndex }: IRenderSeedProp
 
 const RecIMBracket = ({ series }: { series: Series }) => {
   const [bracketInfo, setBracketInfo] = useState<BracketInfo[]>();
-  const [rounds, setRounds] = useState<IRoundProps[]>([
-    {
-      title: 'Round one',
-      seeds: [
-        {
-          id: 1,
-          date: new Date().toDateString(),
-          teams: [{ name: 'Team A' }, { name: 'Team B' }],
-        },
-        {
-          id: 2,
-          date: new Date().toDateString(),
-          teams: [{ name: 'Team C' }, { name: 'Team D' }],
-        },
-      ],
-    },
-  ]);
+  const [rounds, setRounds] = useState<IRoundProps[]>();
 
   useEffect(() => {
     const loadBracketInfo = async () => {
@@ -144,11 +135,25 @@ const RecIMBracket = ({ series }: { series: Series }) => {
           return {
             title: 'Round ' + roundNum,
             seeds: dataRounds[index].map((match) => {
+              console.log(match);
               return {
                 // using random id to prevent unique key error
                 id: match.MatchID ?? Math.random(),
                 date: match.StartTime ? standardDate(match.StartTime, true) : '',
-                teams: [{ name: match.Team[0]?.Name ?? '' }, { name: match.Team[1]?.Name ?? '' }],
+                teams: [
+                  {
+                    name: match.Team[0]?.Name ?? '',
+                    score:
+                      match.Status === 'Completed' &&
+                      match.Scores.find((s: any) => s.TeamID === match.Team[0]?.ID)?.TeamScore,
+                  },
+                  {
+                    name: match.Team[1]?.Name ?? '',
+                    score:
+                      match.Status === 'Completed' &&
+                      match.Scores.find((s: any) => s.TeamID === match.Team[1]?.ID)?.TeamScore,
+                  },
+                ],
               };
             }),
           };
@@ -159,7 +164,7 @@ const RecIMBracket = ({ series }: { series: Series }) => {
     generateBracket();
   }, [bracketInfo, series.Match]);
 
-  return <Bracket rounds={rounds} renderSeedComponent={CustomSeed} />;
+  return rounds ? <Bracket rounds={rounds} renderSeedComponent={CustomSeed} /> : <GordonLoader />;
 };
 
 export default RecIMBracket;
