@@ -85,11 +85,13 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
   return (
     <>
       <VisibilitySensor onChange={handleVisibilityChange}>
-        <Link className="gc360_link" to={`/profile/${person.AD_Username}`}>
-          <Card className={styles.result} elevation={0}>
+        <Card className={styles.result} elevation={0}>
+          <Link className="gc360_link" to={`/profile/${person.AD_Username}`}>
             {avatar && (
               <CardMedia src={avatar} title={fullName} component="img" className={styles.avatar} />
             )}
+          </Link>
+          <Link className="gc360_link" to={`/profile/${person.AD_Username}`} style={{ flex: 5 }}>
             <CardContent>
               <Typography variant="h5" className={styles.name}>
                 {person.FirstName} {nickname} {person.LastName} {maidenName}
@@ -115,14 +117,14 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
               </SecondaryText>
               <SecondaryText className={styles.secondary_text}>{person.Email}</SecondaryText>
               <SecondaryText className={styles.secondary_text}>{mailLocation}</SecondaryText>
-              <a href={`mailto:${person.Email}`}>
-                <div>
-                  <EmailIcon />
-                </div>
-              </a>
             </CardContent>
-          </Card>
-        </Link>
+          </Link>
+          <a href={`mailto:${person.Email}`} style={{ flex: 1, marginLeft: 15 }}>
+            <div>
+              <EmailIcon />
+            </div>
+          </a>
+        </Card>
       </VisibilitySensor>
       <Divider />
     </>

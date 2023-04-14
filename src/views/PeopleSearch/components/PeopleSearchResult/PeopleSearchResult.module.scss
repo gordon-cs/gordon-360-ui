@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  flex-direction: row;
   gap: min(1rem, 1vw);
 
   & :global(.MuiCardContent-root) {
