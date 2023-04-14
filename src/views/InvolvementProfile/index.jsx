@@ -313,8 +313,13 @@ const InvolvementProfile = () => {
               </>
             )}
             {preview && (
-              <Grid container justifyContent="center" spacing={2}>
-                <Grid item style={{ marginTop: '20px' }}>
+              <Grid
+                container
+                justifyContent="center"
+                spacing={2}
+                className={styles.update_image_components}
+              >
+                <Grid item>
                   <Cropper
                     ref={cropperRef}
                     src={preview}
@@ -335,7 +340,7 @@ const InvolvementProfile = () => {
                   />
                 </Grid>
 
-                <Grid item style={{ marginTop: '20px' }}>
+                <Grid item>
                   <Button variant="contained" onClick={() => setPreview(null)}>
                     Choose Another Image
                   </Button>
