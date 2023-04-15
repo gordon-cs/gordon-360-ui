@@ -4,6 +4,7 @@ import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Class, SearchResult } from 'services/peopleSearch';
+import { useWindowSize } from 'hooks';
 import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
 
@@ -13,6 +14,7 @@ import styles from './PeopleSearchResult.module.css';
 const GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/erVfwAJRwPA/3pinwAAAABJRU5ErkJggg==';
 const JPG_BASE64_HEADER = 'data:image/jpg;base64,';
+const breakpointWidth = 810;
 
 const SecondaryText = ({
   children,
@@ -36,6 +38,8 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
     person.AD_Username ? GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 : null,
   );
   const [hasBeenRun, setHasBeenRun] = useState(false);
+  const [width] = useWindowSize();
+  const isMobileView = width < breakpointWidth;
 
   const loadAvatar = useCallback(async () => {
     if (person.AD_Username) {
@@ -82,6 +86,16 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
       break;
   }
 
+  const emailIcon = isMobileView ? (
+    <></>
+  ) : (
+    <a href={`mailto:${person.Email}`} className={styles.mailingIconContainer}>
+      <div>
+        <EmailIcon />
+      </div>
+    </a>
+  );
+
   return (
     <>
       <VisibilitySensor onChange={handleVisibilityChange}>
@@ -124,11 +138,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
               </CardContent>
             </Card>
           </Link>
-          <a href={`mailto:${person.Email}`} className={styles.mailingIconContainer}>
-            <div>
-              <EmailIcon />
-            </div>
-          </a>
+          {emailIcon}
         </Card>
       </VisibilitySensor>
       <Divider />
