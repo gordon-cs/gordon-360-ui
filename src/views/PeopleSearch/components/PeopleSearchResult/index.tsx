@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Divider, Typography, Button } from '@mui/material';
+import { Card, CardContent, CardMedia, Divider, Typography } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -85,41 +85,46 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
   return (
     <>
       <VisibilitySensor onChange={handleVisibilityChange}>
-        <Card className={styles.result} elevation={0}>
-          <Link className="gc360_link" to={`/profile/${person.AD_Username}`}>
-            {avatar && (
-              <CardMedia src={avatar} title={fullName} component="img" className={styles.avatar} />
-            )}
+        <Card className={styles.resultContainer} elevation={0}>
+          <Link style={{ flex: 7 }} className="gc360_link" to={`/profile/${person.AD_Username}`}>
+            <Card className={styles.result} elevation={0}>
+              {avatar && (
+                <CardMedia
+                  src={avatar}
+                  title={fullName}
+                  component="img"
+                  className={styles.avatar}
+                />
+              )}
+              <CardContent>
+                <Typography variant="h5" className={styles.name}>
+                  {person.FirstName} {nickname} {person.LastName} {maidenName}
+                </Typography>
+                <Typography className={styles.subtitle}>
+                  {classOrJobTitle ?? person.Type}
+                  {person.Type === 'Alumni' && person.PreferredClassYear
+                    ? ' ' + person.PreferredClassYear
+                    : null}
+                </Typography>
+                <SecondaryText className={styles.secondary_text}>
+                  {(person.Type === 'Student' || person.Type === 'Alumni') && (
+                    <>
+                      {person.Major1Description}
+                      {person.Major2Description
+                        ? (person.Major1Description ? ', ' : '') + `${person.Major2Description}`
+                        : null}
+                      {person.Type === 'Student' && person.Major3Description
+                        ? `, ${person.Major3Description}`
+                        : null}
+                    </>
+                  )}
+                </SecondaryText>
+                <SecondaryText className={styles.secondary_text}>{person.Email}</SecondaryText>
+                <SecondaryText className={styles.secondary_text}>{mailLocation}</SecondaryText>
+              </CardContent>
+            </Card>
           </Link>
-          <Link className="gc360_link" to={`/profile/${person.AD_Username}`} style={{ flex: 5 }}>
-            <CardContent>
-              <Typography variant="h5" className={styles.name}>
-                {person.FirstName} {nickname} {person.LastName} {maidenName}
-              </Typography>
-              <Typography className={styles.subtitle}>
-                {classOrJobTitle ?? person.Type}
-                {person.Type === 'Alumni' && person.PreferredClassYear
-                  ? ' ' + person.PreferredClassYear
-                  : null}
-              </Typography>
-              <SecondaryText className={styles.secondary_text}>
-                {(person.Type === 'Student' || person.Type === 'Alumni') && (
-                  <>
-                    {person.Major1Description}
-                    {person.Major2Description
-                      ? (person.Major1Description ? ', ' : '') + `${person.Major2Description}`
-                      : null}
-                    {person.Type === 'Student' && person.Major3Description
-                      ? `, ${person.Major3Description}`
-                      : null}
-                  </>
-                )}
-              </SecondaryText>
-              <SecondaryText className={styles.secondary_text}>{person.Email}</SecondaryText>
-              <SecondaryText className={styles.secondary_text}>{mailLocation}</SecondaryText>
-            </CardContent>
-          </Link>
-          <a href={`mailto:${person.Email}`} style={{ flex: 1, marginLeft: 15 }}>
+          <a href={`mailto:${person.Email}`} className={styles.mailingIconContainer}>
             <div>
               <EmailIcon />
             </div>
