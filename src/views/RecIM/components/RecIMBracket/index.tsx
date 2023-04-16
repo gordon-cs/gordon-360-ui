@@ -71,32 +71,23 @@ const RecIMBracket = ({ series }: { series: Series }) => {
 
       // iterate through each round
       for (const key in dataRounds) {
+        // first sort the array by seed
         dataRounds[key].sort((a, b) => a.SeedIndex - b.SeedIndex);
 
-        // check if 0 seed doesn't exist
-        const newArray: BracketMatchInfo[] = [];
+        // fill in round with missing seeds
+        // (created by two teams on bye week that would have faced each other)
+        const filledRound: BracketMatchInfo[] = [];
+        // check if 0 seed doesn't exist and fill in
         if (dataRounds[key][0].SeedIndex !== 0) {
           const newObj: BracketMatchInfo = {
             SeedIndex: 0,
-            Activity: null,
-            Attendance: null,
-            ID: null,
-            IsLosers: false,
-            MatchID: null,
-            RoundNumber: 12,
-            RoundOf: null,
-            Scores: [],
-            Series: null,
-            StartTime: null,
-            Status: null,
-            Surface: null,
-            Team: [],
+            MatchID: -1,
           };
-          newArray.push(newObj);
+          filledRound.push(newObj);
         }
+        // check for other missing seeds and fill in
         for (let i = 0; i < dataRounds[key].length; i++) {
-          newArray.push(dataRounds[key][i]);
-
+          filledRound.push(dataRounds[key][i]);
           if (
             i < dataRounds[key].length - 1 &&
             dataRounds[key][i + 1].SeedIndex - dataRounds[key][i].SeedIndex > 1
@@ -108,25 +99,16 @@ const RecIMBracket = ({ series }: { series: Series }) => {
               const newNum = dataRounds[key][i].SeedIndex + j + 1;
               const newObj: BracketMatchInfo = {
                 SeedIndex: newNum,
-                Activity: null,
-                Attendance: null,
-                ID: null,
-                IsLosers: false,
-                MatchID: null,
-                RoundNumber: null,
-                RoundOf: null,
-                Scores: [],
-                Series: null,
-                StartTime: null,
-                Status: null,
-                Surface: null,
-                Team: [],
+                // using the seed index as a unique key identifier,
+                // negated to avoid any potential duplicate keys with real matches
+                // (has no real meaning)
+                MatchID: -newNum,
               };
-              newArray.push(newObj);
+              filledRound.push(newObj);
             }
           }
         }
-        dataRounds[key] = newArray;
+        dataRounds[key] = filledRound;
       }
 
       setRounds(
@@ -137,21 +119,20 @@ const RecIMBracket = ({ series }: { series: Series }) => {
             title: roundOf === 2 ? 'Finals' : roundOf === 4 ? 'Semifinals' : 'Round ' + roundNum,
             seeds: dataRounds[index].map((match) => {
               return {
-                // using random id to prevent unique key error
-                id: match.MatchID ?? Math.random(),
+                id: match.MatchID,
                 date: match.StartTime ? standardDate(match.StartTime, true) : '',
                 teams: [
                   {
-                    name: match.Team[0]?.Name ?? '',
+                    name: match.Team?.[0]?.Name ?? '',
                     score:
                       match.Status === 'Completed' &&
-                      match.Scores.find((s: any) => s.TeamID === match.Team[0]?.ID)?.TeamScore,
+                      match.Scores.find((s: any) => s.TeamID === match.Team?.[0]?.ID)?.TeamScore,
                   },
                   {
-                    name: match.Team[1]?.Name ?? '',
+                    name: match.Team?.[1]?.Name ?? '',
                     score:
                       match.Status === 'Completed' &&
-                      match.Scores.find((s: any) => s.TeamID === match.Team[1]?.ID)?.TeamScore,
+                      match.Scores.find((s: any) => s.TeamID === match.Team?.[1]?.ID)?.TeamScore,
                   },
                 ],
               };
