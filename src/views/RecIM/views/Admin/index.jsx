@@ -7,7 +7,13 @@ import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Admin.module.css';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { ActivityList, TeamList, ParticipantList, SurfacesList } from '../../components/List';
+import {
+  ActivityList,
+  TeamList,
+  ParticipantList,
+  SurfaceList,
+  SportList,
+} from '../../components/List';
 import { getActivities } from '../../../../services/recim/activity';
 import { getTeams } from '../../../../services/recim/team';
 import { getParticipants } from '../../../../services/recim/participant';
@@ -18,7 +24,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { Typography } from '@mui/material';
 import recimLogo from './../../recim_logo.png';
 import { useNavigate } from 'react-router';
-import { getAllSports } from 'services/recim/sport';
+import { deleteSport, getAllSports } from 'services/recim/sport';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -38,12 +44,15 @@ const Admin = () => {
   const [teams, setTeams] = useState();
   const [participants, setParticipants] = useState();
   const [surfaces, setSurfaces] = useState();
+  const [surface, setSurface] = useState();
   const [sports, setSports] = useState();
+  const [sport, setSport] = useState();
   const [tab, setTab] = useState(0);
   const [openSurfaceForm, setOpenSurfaceForm] = useState();
-  const [openConfirmDelete, setOpenConfirmDelete] = useState();
+  const [openSportForm, setOpenSportForm] = useState(false);
+  const [openConfirmDeleteSurface, setOpenConfirmDeleteSurface] = useState();
+  const [openConfirmDeleteSport, setOpenConfirmDeleteSport] = useState();
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [surface, setSurface] = useState();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -77,29 +86,66 @@ const Admin = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
-  const handleOpenCreate = () => {
+  const handleOpenCreateSurface = () => {
     setSurface();
     setOpenSurfaceForm(true);
   };
 
-  const handleOpenEdit = (surface) => {
+  const handleOpenCreateSport = () => {
+    setSport();
+    setOpenSportForm(true);
+  };
+
+  const handleOpenEditSurface = (surface) => {
     setSurface(surface);
     setOpenSurfaceForm(true);
   };
 
-  const handleOpenConfirmDelete = (surface) => {
+  const handleOpenEditSport = (sport) => {
+    setSport(sport);
+    setOpenSportForm(true);
+  };
+
+  const handleOpenConfirmDeleteSurface = (surface) => {
     setSurface(surface);
-    setOpenConfirmDelete(true);
+    setOpenConfirmDeleteSurface(true);
   };
 
-  const handleConfirmDelete = async () => {
-    await deleteSurface(surface?.ID);
+  const handleOpenConfirmDeleteSport = (sport) => {
+    setSport(sport);
+    setOpenConfirmDeleteSport(true);
+  };
+
+  const handleConfirmDeleteSurface = async () => {
+    await deleteSurface(surface?.ID)
+      .then((value) => {
+        createSnackbar(`Surface ${surface.Name} deleted successfully`, 'success');
+      })
+      .catch((reason) => {
+        createSnackbar(
+          `There was a problem deleting surface ${surface.Name}: ${reason.title}`,
+          'error',
+        );
+      });
     setSurfaces(await getSurfaces());
-    setOpenConfirmDelete(false);
-    createSnackbar('Surface deleted successfully', 'success');
+    setOpenConfirmDeleteSurface(false);
   };
 
-  console.log(sports);
+  const handleConfirmDeleteSport = async () => {
+    await deleteSport(sport?.ID)
+      .then((value) => {
+        createSnackbar(`Sport ${sport.Name} deleted successfully`, 'success');
+      })
+      .catch((reason) => {
+        console.log(reason);
+        createSnackbar(
+          `There was a problem deleting sport ${sport.Name}: ${reason.title}`,
+          'error',
+        );
+      });
+    setSports(await getAllSports());
+    setOpenConfirmDeleteSport(false);
+  };
 
   let headerContents = (
     <Grid container direction="row" alignItems="center" columnSpacing={4}>
@@ -157,22 +203,42 @@ const Admin = () => {
                 <Button
                   color="secondary"
                   startIcon={<AddIcon />}
-                  className={styles.addSurfaceButton}
-                  onClick={handleOpenCreate}
+                  className={styles.addResourceButton}
+                  onClick={handleOpenCreateSurface}
                 >
                   add a surface
                 </Button>
-                <SurfacesList
+                <SurfaceList
                   surfaces={surfaces}
-                  confirmDelete={handleOpenConfirmDelete}
-                  editDetails={handleOpenEdit}
+                  confirmDelete={handleOpenConfirmDeleteSurface}
+                  editDetails={handleOpenEditSurface}
                 />
               </>
             ) : (
               <GordonLoader />
             )}
           </TabPanel>
-          <TabPanel value={tab} index={4}></TabPanel>
+          <TabPanel value={tab} index={4}>
+            {sports ? (
+              <>
+                <Button
+                  color="secondary"
+                  startIcon={<AddIcon />}
+                  className={styles.addResourceButton}
+                  onClick={handleOpenCreateSport}
+                >
+                  add a sport
+                </Button>
+                <SportList
+                  sports={sports}
+                  confirmDelete={handleOpenConfirmDeleteSport}
+                  editDetails={handleOpenEditSport}
+                />
+              </>
+            ) : (
+              <GordonLoader />
+            )}
+          </TabPanel>
         </CardContent>
       </Card>
       <SurfaceForm
@@ -183,17 +249,38 @@ const Admin = () => {
         setOpenSurfaceForm={(bool) => setOpenSurfaceForm(bool)}
       />
       <GordonDialogBox
-        title="Confirm Delete"
-        open={openConfirmDelete}
-        cancelButtonClicked={() => setOpenConfirmDelete(false)}
+        title="Confirm Delete Surface"
+        open={openConfirmDeleteSurface}
+        cancelButtonClicked={() => setOpenConfirmDeleteSurface(false)}
         buttonName="Yes, delete this surface"
-        buttonClicked={handleConfirmDelete}
+        buttonClicked={handleConfirmDeleteSurface}
         severity="error"
       >
         <br />
         <Typography variant="body1">
           Are you sure you want to permanently delete this surface:
           <i>'{surface?.Name}'</i>?
+        </Typography>
+        <Typography variant="body1">This action cannot be undone.</Typography>
+      </GordonDialogBox>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
+      <GordonDialogBox
+        title="Confirm Delete Sport"
+        open={openConfirmDeleteSport}
+        cancelButtonClicked={() => setOpenConfirmDeleteSport(false)}
+        buttonName="Yes, delete this sport"
+        buttonClicked={handleConfirmDeleteSport}
+        severity="error"
+      >
+        <br />
+        <Typography variant="body1">
+          Are you sure you want to permanently delete this sport:
+          <i>'{sport?.Name}'</i>?
         </Typography>
         <Typography variant="body1">This action cannot be undone.</Typography>
       </GordonDialogBox>

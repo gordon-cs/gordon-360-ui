@@ -35,6 +35,6 @@ const getSportByID = async (ID: number): Promise<Sport> => http.get(`recim/sport
 const editSport = async (ID: number, updatedSport: PatchSport): Promise<Sport> =>
   http.patch(`recim/series/${ID}`, updatedSport);
 
-const deleteSport = async (ID: number) => console.log('temp');
+const deleteSport = async (ID: number) => http.del(`recim/sports/${ID}`);
 
 export { createSport, getSportByID, editSport, getAllSports, deleteSport };
