@@ -368,7 +368,10 @@ const Match = () => {
               <EditMatchStatsForm
                 match={match}
                 setMatch={setMatch}
-                onClose={() => setAnchorEl(null)}
+                onClose={() => {
+                  setAnchorEl(null);
+                  setReload((prev) => !prev);
+                }}
                 createSnackbar={createSnackbar}
                 openEditMatchStatsForm={openEditMatchStatsForm}
                 setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}

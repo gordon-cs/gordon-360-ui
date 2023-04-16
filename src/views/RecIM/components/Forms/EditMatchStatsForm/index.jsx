@@ -109,7 +109,7 @@ const EditMatchStatsForm = ({
     </>
   );
 
-  const handleConfirm = (handleWindowClose) => {
+  const handleConfirm = (newInfo, handleWindowClose) => {
     if (request !== currentInfo) {
       setSaving(true);
       let requestInfo = { ...currentInfo, ...request };
