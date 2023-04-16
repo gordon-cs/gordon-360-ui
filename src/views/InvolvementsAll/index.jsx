@@ -135,7 +135,7 @@ const InvolvementsAll = () => {
 
   const searchPageTitle = (
     <div align="center">
-      Search
+      {/* Search */}
       <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
       Involvements
     </div>
@@ -147,10 +147,10 @@ const InvolvementsAll = () => {
         <Card>
           <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={12} lg={8}>
+              <Grid item xs={12} lg={8} marginTop={1}>
                 <CardHeader title={searchPageTitle} />
               </Grid>
-              <Grid item xs={12} md={6} lg={4}>
+              <Grid item xs={12} md={6} lg={4} marginTop={2}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel id="activity-session">Term</InputLabel>
                   <Select
@@ -171,36 +171,44 @@ const InvolvementsAll = () => {
                 </FormControl>
               </Grid>
             </Grid>
-          </CardContent>
-          <TabContext value={tabIndex}>
-            <Grid item xs={16}>
-              <TabList
-                onChange={handleChange}
-                aria-label="involvements tabs"
-                variant="fullWidth"
-                centered
-                indicatorColor="secondary"
-              >
-                <Tab
-                  label={`My ${myInvolvementsHeadingText} Involvements`}
-                  className={styles.tab}
-                  value="1"
-                />
-                <Tab label="Membership Requests" className={styles.tab} value="2" />
-                <Tab
-                  label={`${involvementSessionText} Involvements`}
-                  className={styles.tab}
-                  value="3"
-                />
-              </TabList>
-            </Grid>
-            <TabPanel value="1">
-              {loadingProfile ? (
-                <GordonLoader />
-              ) : (
-                profile && (
-                  <Grid item xs={12} lg={12}>
-                    <CardContent>
+            <TabContext value={tabIndex}>
+              <Grid item xs={16} marginTop={2}>
+                <TabList
+                  onChange={handleChange}
+                  aria-label="involvements tabs"
+                  variant="fullWidth"
+                  centered
+                  indicatorColor="secondary"
+                >
+                  <Tab
+                    // label={`My ${myInvolvementsHeadingText} Involvements`}
+                    sx={{ border: '2px solid', borderColor: gordonColors.secondary.neutral }}
+                    label="Personal"
+                    className={styles.tab}
+                    value="1"
+                  />
+                  <Tab
+                    sx={{ border: '2px solid', borderColor: gordonColors.secondary.neutral }}
+                    label="Requests"
+                    className={styles.tab}
+                    value="2"
+                  />
+                  <Tab
+                    // label={`${involvementSessionText} Involvements`}
+                    sx={{ border: '2px solid', borderColor: gordonColors.secondary.neutral }}
+                    //sx={{ borderColor: 'primary.main' }}
+                    label="All"
+                    className={styles.tab}
+                    value="3"
+                  />
+                </TabList>
+              </Grid>
+              <TabPanel value="1">
+                {loadingProfile ? (
+                  <GordonLoader />
+                ) : (
+                  profile && (
+                    <Grid item xs={12} lg={12}>
                       {loading ? (
                         <GordonLoader />
                       ) : (
@@ -210,31 +218,29 @@ const InvolvementsAll = () => {
                           noInvolvementsText={myInvolvementsNoneText}
                         />
                       )}
-                    </CardContent>
-                  </Grid>
-                )
-              )}
-            </TabPanel>
-            <TabPanel value="2">
-              <Grid
-                item
-                xs={12}
-                lg={12}
-                xl={12}
-                container
-                alignItems="center"
-                justifyContent="center"
-              >
-                {!isOnline ? null : loadingProfile ? (
-                  <GordonLoader />
-                ) : (
-                  profile && <Requests profile={profile} session={selectedSession} />
+                    </Grid>
+                  )
                 )}
-              </Grid>
-            </TabPanel>
-            <TabPanel value="3">
-              <Grid item xs={12} lg={12}>
-                <CardContent>
+              </TabPanel>
+              <TabPanel value="2">
+                <Grid
+                  item
+                  xs={12}
+                  lg={12}
+                  xl={12}
+                  container
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  {!isOnline ? null : loadingProfile ? (
+                    <GordonLoader />
+                  ) : (
+                    profile && <Requests profile={profile} session={selectedSession} />
+                  )}
+                </Grid>
+              </TabPanel>
+              <TabPanel value="3">
+                <Grid item xs={12} lg={12}>
                   <Grid container spacing={2}>
                     <Grid item xs={12} lg={6} marginBottom={4}>
                       <TextField
@@ -277,10 +283,10 @@ const InvolvementsAll = () => {
                       noInvolvementsText="There aren't any involvements for the selected session and type"
                     />
                   )}
-                </CardContent>
-              </Grid>
-            </TabPanel>
-          </TabContext>
+                </Grid>
+              </TabPanel>
+            </TabContext>
+          </CardContent>
         </Card>
       </Grid>
     </Grid>
