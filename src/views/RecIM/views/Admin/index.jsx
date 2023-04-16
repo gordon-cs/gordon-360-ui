@@ -17,6 +17,8 @@ import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { Typography } from '@mui/material';
 import recimLogo from './../../recim_logo.png';
+import { useNavigate } from 'react-router';
+import { getAllSports } from 'services/recim/sport';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -28,6 +30,7 @@ const TabPanel = ({ children, value, index }) => {
 
 const Admin = () => {
   const { profile } = useUser();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   //using term User to not get confused with the liberal usage of participant on this page
   const [user, setUser] = useState();
@@ -35,6 +38,7 @@ const Admin = () => {
   const [teams, setTeams] = useState();
   const [participants, setParticipants] = useState();
   const [surfaces, setSurfaces] = useState();
+  const [sports, setSports] = useState();
   const [tab, setTab] = useState(0);
   const [openSurfaceForm, setOpenSurfaceForm] = useState();
   const [openConfirmDelete, setOpenConfirmDelete] = useState();
@@ -52,24 +56,19 @@ const Admin = () => {
 
   // initialize all data
   useEffect(() => {
-    const loadActivities = async () => {
-      setActivities(await getActivities());
+    const loadData = async () => {
+      await Promise.all([
+        getActivities().then(setActivities),
+        getTeams().then(setTeams),
+        getParticipants().then(setParticipants),
+        getSurfaces().then(setSurfaces),
+        getAllSports().then(setSports),
+      ]);
     };
-    const loadTeams = async () => {
-      setTeams(await getTeams());
-    };
-    const loadParticipants = async () => {
-      setParticipants(await getParticipants());
-    };
-    const loadSurfaces = async () => {
-      setSurfaces(await getSurfaces());
-    };
+
     setLoading(true);
     if (user?.IsAdmin) {
-      loadActivities();
-      loadTeams();
-      loadParticipants();
-      loadSurfaces();
+      loadData();
     }
     setLoading(false);
   }, [user?.IsAdmin]);
@@ -100,6 +99,8 @@ const Admin = () => {
     createSnackbar('Surface deleted successfully', 'success');
   };
 
+  console.log(sports);
+
   let headerContents = (
     <Grid container direction="row" alignItems="center" columnSpacing={4}>
       <Grid item>
@@ -119,7 +120,12 @@ const Admin = () => {
   if (loading) return <GordonLoader />;
   // The user is not logged in
   if (!profile || !user) return <GordonUnauthorized feature={'the Rec-IM page'} />;
-  if (!user?.IsAdmin) return <GordonUnauthorized feature={'the Rec-IM Command Center'} />;
+
+  // Navigate away from admin page if user is not an admin
+  if (!user?.IsAdmin) {
+    navigate(`/recim`);
+  }
+
   return (
     <>
       <Header admin>{headerContents}</Header>
@@ -134,6 +140,7 @@ const Admin = () => {
             <Tab label="Teams" />
             <Tab label="Participants" />
             <Tab label="Surfaces" />
+            <Tab label="Sports" />
           </Tabs>
           <TabPanel value={tab} index={0}>
             {activities ? <ActivityList activities={activities} /> : <GordonLoader />}
@@ -165,12 +172,13 @@ const Admin = () => {
               <GordonLoader />
             )}
           </TabPanel>
+          <TabPanel value={tab} index={4}></TabPanel>
         </CardContent>
       </Card>
       <SurfaceForm
         surface={surface}
         createSnackbar={createSnackbar}
-        onClose={async () =>  setSurfaces(await getSurfaces())}
+        onClose={async () => setSurfaces(await getSurfaces())}
         openSurfaceForm={openSurfaceForm}
         setOpenSurfaceForm={(bool) => setOpenSurfaceForm(bool)}
       />
