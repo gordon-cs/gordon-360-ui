@@ -1,4 +1,4 @@
-import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Divider } from '@mui/material';
+import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Divider, Switch } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import TuneIcon from '@mui/icons-material/Tune';
 import { ContentCard } from 'views/RecIM/components/Forms/Form/components/ContentCard';
@@ -22,6 +22,7 @@ import { useState, useEffect } from 'react';
 import styles from './../../Activity.module.css';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import SeriesScheduleForm from 'views/RecIM/components/Forms/SeriesScheduleForm';
+import RecIMBracket from 'views/RecIM/components/RecIMBracket/index';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
@@ -44,6 +45,7 @@ const ScheduleList = ({
   const [disclaimerContent, setDisclaimerContent] = useState('');
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
+  const [showBracket, setShowBracket] = useState(false);
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
   const [seriesSchedule, setSeriesSchedule] = useState();
@@ -317,8 +319,20 @@ const ScheduleList = ({
           </MenuItem>
         </Menu>
       </Grid>
+
+      {series.Type === 'Single Elim' && (
+        <Grid container justifyContent="center" alignItems="center">
+          show bracket
+          <Switch color="secondary" onClick={(event) => setShowBracket(event.target.checked)} />
+        </Grid>
+      )}
+
       {series.Match.length ? (
-        <MatchList matches={series.Match} activityID={activityID} />
+        showBracket ? (
+          <RecIMBracket series={series} />
+        ) : (
+          <MatchList matches={series.Match} activityID={activityID} />
+        )
       ) : (
         <Typography className={styles.secondaryText}>
           Games have not yet been scheduled for this series.
