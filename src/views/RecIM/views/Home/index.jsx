@@ -136,7 +136,6 @@ const Home = () => {
         <Grid container justifyContent="center">
           <Button
             variant="contained"
-            color="warning"
             startIcon={<AddCircleRoundedIcon />}
             className={styles.actionButton}
             onClick={() => {

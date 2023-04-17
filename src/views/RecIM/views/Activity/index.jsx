@@ -270,7 +270,6 @@ const Activity = () => {
                 <Grid container justifyContent="center">
                   <Button
                     variant="contained"
-                    color="warning"
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
                     onClick={() => {
@@ -314,7 +313,6 @@ const Activity = () => {
                 <Grid container justifyContent="space-around">
                   <Button
                     variant="contained"
-                    color="warning"
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
                     onClick={() => {
@@ -326,7 +324,6 @@ const Activity = () => {
                   {activity.SoloRegistration && isAdmin && (
                     <Button
                       variant="contained"
-                      color="warning"
                       startIcon={<AddCircleRoundedIcon />}
                       className={styles.actionButton}
                       onClick={() => {

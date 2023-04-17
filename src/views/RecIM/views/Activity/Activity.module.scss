@@ -10,6 +10,11 @@
 
 .actionButton {
   text-transform: none;
+  background-color: $primary-cyan;
+}
+
+.actionButton:hover {
+  background-color: $primary-cyan-600;
 }
 
 .seriesHeader {
