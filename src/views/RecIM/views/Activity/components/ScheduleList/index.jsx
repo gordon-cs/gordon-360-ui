@@ -1,6 +1,6 @@
 import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Divider, Switch } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
-import TuneIcon from '@mui/icons-material/Tune';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { ContentCard } from 'views/RecIM/components/Forms/Form/components/ContentCard';
 import { MatchList } from 'views/RecIM/components/List';
 import UpdateIcon from '@mui/icons-material/Update';
@@ -261,7 +261,7 @@ const ScheduleList = ({
         {isAdmin && (
           <Grid container item xs={5} sm={1} justifyContent="right">
             <IconButton onClick={handleOpenAdminTools}>
-              <TuneIcon inline />
+              <MoreHorizIcon inline />
             </IconButton>{' '}
           </Grid>
         )}
