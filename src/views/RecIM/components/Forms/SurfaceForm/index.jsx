@@ -48,6 +48,7 @@ const SurfaceForm = ({ surface, createSnackbar, onClose, openSurfaceForm, setOpe
           handleWindowClose();
         })
         .catch((reason) => {
+          setSaving(false);
           createSnackbar(`There was a problem editing your surface: ${reason.title}`, 'error');
         });
     } else {
@@ -59,6 +60,7 @@ const SurfaceForm = ({ surface, createSnackbar, onClose, openSurfaceForm, setOpe
           handleWindowClose();
         })
         .catch((reason) => {
+          setSaving(false);
           createSnackbar(`There was a problem creating your surface: ${reason.title}`, 'error');
         });
     }

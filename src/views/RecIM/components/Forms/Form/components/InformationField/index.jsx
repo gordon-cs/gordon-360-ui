@@ -66,6 +66,25 @@ const InformationField = ({
         />
       );
       break;
+    case 'multiline':
+      gridSizes = { md: 12, lg: 6 };
+      field = (
+        <TextField
+          variant="filled"
+          error={error}
+          className={`disable_select ${styles.field}`}
+          label={label}
+          name={name}
+          required={required}
+          helperText={error && helperText}
+          value={value}
+          onChange={(event) => onChange(event)}
+          type={type}
+          multiline
+          rows={4}
+        />
+      );
+      break;
     case 'number':
       field = (
         <TextField

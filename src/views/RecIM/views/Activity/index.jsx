@@ -10,7 +10,12 @@ import {
   Tab,
   Menu,
   MenuItem,
+  Tooltip,
+  tooltipClasses,
+  ClickAwayListener,
 } from '@mui/material';
+import { gordonColors } from 'theme';
+import { styled } from '@mui/material/styles';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 
 import { useEffect, useState, useCallback } from 'react';
@@ -30,6 +35,7 @@ import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import userService from 'services/user';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
 import SettingsIcon from '@mui/icons-material/Settings';
+import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -46,6 +52,16 @@ const getNumMatches = (seriesArray) => {
   });
   return n;
 };
+
+const RulesTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: gordonColors.neutral.lightGray,
+    color: gordonColors.neutral.contrastText,
+    maxWidth: 200,
+  },
+}));
 
 const Activity = () => {
   const navigate = useNavigate();
@@ -66,8 +82,9 @@ const Activity = () => {
   const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [anchorEl, setAnchorEl] = useState();
-  const openMenu = Boolean(anchorEl);
+  const [adminAnchorEl, setAdminAnchorEl] = useState();
+  const openAdminMenu = Boolean(adminAnchorEl);
+  const [openTooltip, setOpenTooltip] = useState(false);
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -94,7 +111,6 @@ const Activity = () => {
     };
     loadData();
   }, [user, profile]);
-  // @TODO modify above dependency to only refresh upon form submit (not cancel)
 
   // disable create team if participant already is participating in this activity,
   // unless they're an admin
@@ -136,12 +152,12 @@ const Activity = () => {
 
   // default closure
   const handleMenuClose = () => {
-    setAnchorEl(null);
+    setAdminAnchorEl(null);
   };
 
   // menu button click
   const handleButtonClick = (e) => {
-    setAnchorEl(e.currentTarget);
+    setAdminAnchorEl(e.currentTarget);
   };
 
   const handleJoinActivity = async () => {
@@ -156,7 +172,6 @@ const Activity = () => {
     createSnackbar(`Activity ${activity.Name} has been joined successfully`, 'success');
     setLoading(false);
   };
-
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
@@ -199,13 +214,13 @@ const Activity = () => {
             </Typography>
           </Grid>
         </Grid>
-        {isAdmin && (
-          <Grid item xs={3} textAlign={'right'}>
+        <Grid item xs={3} textAlign={'right'}>
+          {isAdmin && (
             <IconButton onClick={handleButtonClick} sx={{ mr: '1rem' }}>
               <SettingsIcon
                 fontSize="large"
                 sx={
-                  openMenu && {
+                  openAdminMenu && {
                     animation: 'spin 0.2s linear ',
                     '@keyframes spin': {
                       '0%': {
@@ -219,8 +234,30 @@ const Activity = () => {
                 }
               />
             </IconButton>
-          </Grid>
-        )}
+          )}
+          <ClickAwayListener onClickAway={() => setOpenTooltip(false)}>
+            <Grid item>
+              <RulesTooltip
+                placement="bottom-start"
+                open={openTooltip}
+                title={
+                  <>
+                    <Typography fontWeight="bold" fontSize="1.5em">
+                      Rules for {activity?.Sport.Name}:
+                    </Typography>{' '}
+                    <Typography fontWeight="italic" fontSize="1.2em" fontStyle="italic">
+                      {activity?.Sport.Rules}
+                    </Typography>
+                  </>
+                }
+              >
+                <IconButton sx={{ mr: '1.3rem' }} onClick={() => setOpenTooltip((prev) => !prev)}>
+                  <ImportContactsIcon />
+                </IconButton>
+              </RulesTooltip>
+            </Grid>
+          </ClickAwayListener>
+        </Grid>
       </Grid>
     );
 
@@ -402,9 +439,9 @@ const Activity = () => {
               activityID={activityID}
             />
             <Menu
-              open={openMenu}
+              open={openAdminMenu}
               onClose={handleMenuClose}
-              anchorEl={anchorEl}
+              anchorEl={adminAnchorEl}
               className={styles.menu}
             >
               <Typography className={styles.menuTitle}>Admin Settings</Typography>

@@ -7,16 +7,25 @@ import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Admin.module.css';
 import { getParticipantByUsername } from 'services/recim/participant';
-import { ActivityList, TeamList, ParticipantList, SurfacesList } from '../../components/List';
+import {
+  ActivityList,
+  TeamList,
+  ParticipantList,
+  SurfaceList,
+  SportList,
+} from '../../components/List';
 import { getActivities } from '../../../../services/recim/activity';
 import { getTeams } from '../../../../services/recim/team';
 import { getParticipants } from '../../../../services/recim/participant';
 import { deleteSurface, getSurfaces } from '../../../../services/recim/match';
 import AddIcon from '@mui/icons-material/Add';
 import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
+import SportForm from 'views/RecIM/components/Forms/SportForm';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { Typography } from '@mui/material';
 import recimLogo from './../../recim_logo.png';
+import { useNavigate } from 'react-router';
+import { deleteSport, getAllSports } from 'services/recim/sport';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -28,6 +37,7 @@ const TabPanel = ({ children, value, index }) => {
 
 const Admin = () => {
   const { profile } = useUser();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   //using term User to not get confused with the liberal usage of participant on this page
   const [user, setUser] = useState();
@@ -35,11 +45,15 @@ const Admin = () => {
   const [teams, setTeams] = useState();
   const [participants, setParticipants] = useState();
   const [surfaces, setSurfaces] = useState();
+  const [surface, setSurface] = useState();
+  const [sports, setSports] = useState();
+  const [sport, setSport] = useState();
   const [tab, setTab] = useState(0);
   const [openSurfaceForm, setOpenSurfaceForm] = useState();
-  const [openConfirmDelete, setOpenConfirmDelete] = useState();
+  const [openSportForm, setOpenSportForm] = useState(false);
+  const [openConfirmDeleteSurface, setOpenConfirmDeleteSurface] = useState();
+  const [openConfirmDeleteSport, setOpenConfirmDeleteSport] = useState();
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [surface, setSurface] = useState();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -52,24 +66,19 @@ const Admin = () => {
 
   // initialize all data
   useEffect(() => {
-    const loadActivities = async () => {
-      setActivities(await getActivities());
+    const loadData = async () => {
+      await Promise.all([
+        getActivities().then(setActivities),
+        getTeams().then(setTeams),
+        getParticipants().then(setParticipants),
+        getSurfaces().then(setSurfaces),
+        getAllSports().then(setSports),
+      ]);
     };
-    const loadTeams = async () => {
-      setTeams(await getTeams());
-    };
-    const loadParticipants = async () => {
-      setParticipants(await getParticipants());
-    };
-    const loadSurfaces = async () => {
-      setSurfaces(await getSurfaces());
-    };
+
     setLoading(true);
     if (user?.IsAdmin) {
-      loadActivities();
-      loadTeams();
-      loadParticipants();
-      loadSurfaces();
+      loadData();
     }
     setLoading(false);
   }, [user?.IsAdmin]);
@@ -78,26 +87,64 @@ const Admin = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
-  const handleOpenCreate = () => {
+  const handleOpenCreateSurface = () => {
     setSurface();
     setOpenSurfaceForm(true);
   };
 
-  const handleOpenEdit = (surface) => {
+  const handleOpenCreateSport = () => {
+    setSport();
+    setOpenSportForm(true);
+  };
+
+  const handleOpenEditSurface = (surface) => {
     setSurface(surface);
     setOpenSurfaceForm(true);
   };
 
-  const handleOpenConfirmDelete = (surface) => {
-    setSurface(surface);
-    setOpenConfirmDelete(true);
+  const handleOpenEditSport = (sport) => {
+    setSport(sport);
+    setOpenSportForm(true);
   };
 
-  const handleConfirmDelete = async () => {
-    await deleteSurface(surface?.ID);
+  const handleOpenConfirmDeleteSurface = (surface) => {
+    setSurface(surface);
+    setOpenConfirmDeleteSurface(true);
+  };
+
+  const handleOpenConfirmDeleteSport = (sport) => {
+    setSport(sport);
+    setOpenConfirmDeleteSport(true);
+  };
+
+  const handleConfirmDeleteSurface = async () => {
+    await deleteSurface(surface?.ID)
+      .then((value) => {
+        createSnackbar(`Surface ${surface.Name} deleted successfully`, 'success');
+      })
+      .catch((reason) => {
+        createSnackbar(
+          `There was a problem deleting surface ${surface.Name}: ${reason.title}`,
+          'error',
+        );
+      });
     setSurfaces(await getSurfaces());
-    setOpenConfirmDelete(false);
-    createSnackbar('Surface deleted successfully', 'success');
+    setOpenConfirmDeleteSurface(false);
+  };
+
+  const handleConfirmDeleteSport = async () => {
+    await deleteSport(sport?.ID)
+      .then((value) => {
+        createSnackbar(`Sport ${sport.Name} deleted successfully`, 'success');
+      })
+      .catch((reason) => {
+        createSnackbar(
+          `There was a problem deleting sport ${sport.Name}: ${reason.title}`,
+          'error',
+        );
+      });
+    setSports(await getAllSports());
+    setOpenConfirmDeleteSport(false);
   };
 
   let headerContents = (
@@ -119,7 +166,12 @@ const Admin = () => {
   if (loading) return <GordonLoader />;
   // The user is not logged in
   if (!profile || !user) return <GordonUnauthorized feature={'the Rec-IM page'} />;
-  if (!user?.IsAdmin) return <GordonUnauthorized feature={'the Rec-IM Command Center'} />;
+
+  // Navigate away from admin page if user is not an admin
+  if (!user?.IsAdmin) {
+    navigate(`/recim`);
+  }
+
   return (
     <>
       <Header admin>{headerContents}</Header>
@@ -134,6 +186,7 @@ const Admin = () => {
             <Tab label="Teams" />
             <Tab label="Participants" />
             <Tab label="Surfaces" />
+            <Tab label="Sports" />
           </Tabs>
           <TabPanel value={tab} index={0}>
             {activities ? <ActivityList activities={activities} /> : <GordonLoader />}
@@ -150,15 +203,36 @@ const Admin = () => {
                 <Button
                   color="secondary"
                   startIcon={<AddIcon />}
-                  className={styles.addSurfaceButton}
-                  onClick={handleOpenCreate}
+                  className={styles.addResourceButton}
+                  onClick={handleOpenCreateSurface}
                 >
                   add a surface
                 </Button>
-                <SurfacesList
+                <SurfaceList
                   surfaces={surfaces}
-                  confirmDelete={handleOpenConfirmDelete}
-                  editDetails={handleOpenEdit}
+                  confirmDelete={handleOpenConfirmDeleteSurface}
+                  editDetails={handleOpenEditSurface}
+                />
+              </>
+            ) : (
+              <GordonLoader />
+            )}
+          </TabPanel>
+          <TabPanel value={tab} index={4}>
+            {sports ? (
+              <>
+                <Button
+                  color="secondary"
+                  startIcon={<AddIcon />}
+                  className={styles.addResourceButton}
+                  onClick={handleOpenCreateSport}
+                >
+                  add a sport
+                </Button>
+                <SportList
+                  sports={sports}
+                  confirmDelete={handleOpenConfirmDeleteSport}
+                  editDetails={handleOpenEditSport}
                 />
               </>
             ) : (
@@ -167,6 +241,13 @@ const Admin = () => {
           </TabPanel>
         </CardContent>
       </Card>
+      <SportForm
+        sport={sport}
+        createSnackbar={createSnackbar}
+        onClose={async () => setSports(await getAllSports())}
+        openSportForm={openSportForm}
+        setOpenSportForm={setOpenSportForm}
+      />
       <SurfaceForm
         surface={surface}
         createSnackbar={createSnackbar}
@@ -175,17 +256,38 @@ const Admin = () => {
         setOpenSurfaceForm={(bool) => setOpenSurfaceForm(bool)}
       />
       <GordonDialogBox
-        title="Confirm Delete"
-        open={openConfirmDelete}
-        cancelButtonClicked={() => setOpenConfirmDelete(false)}
+        title="Confirm Delete Surface"
+        open={openConfirmDeleteSurface}
+        cancelButtonClicked={() => setOpenConfirmDeleteSurface(false)}
         buttonName="Yes, delete this surface"
-        buttonClicked={handleConfirmDelete}
+        buttonClicked={handleConfirmDeleteSurface}
         severity="error"
       >
         <br />
         <Typography variant="body1">
           Are you sure you want to permanently delete this surface:
           <i>'{surface?.Name}'</i>?
+        </Typography>
+        <Typography variant="body1">This action cannot be undone.</Typography>
+      </GordonDialogBox>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
+      <GordonDialogBox
+        title="Confirm Delete Sport"
+        open={openConfirmDeleteSport}
+        cancelButtonClicked={() => setOpenConfirmDeleteSport(false)}
+        buttonName="Yes, delete this sport"
+        buttonClicked={handleConfirmDeleteSport}
+        severity="error"
+      >
+        <br />
+        <Typography variant="body1">
+          Are you sure you want to permanently delete this sport:
+          <i>'{sport?.Name}'</i>?
         </Typography>
         <Typography variant="body1">This action cannot be undone.</Typography>
       </GordonDialogBox>
