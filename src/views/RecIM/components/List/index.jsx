@@ -8,6 +8,7 @@ import {
   IconButton,
   Tabs,
   Tab,
+  Box,
   Menu,
   MenuItem,
   Tooltip,
@@ -28,6 +29,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
 import { ConnectingAirportsOutlined } from '@mui/icons-material';
 import { standardDate } from '../Helpers';
+import { TabPanel } from '../TabPanel';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -85,7 +87,7 @@ const ParticipantList = ({
 };
 
 const MatchList = ({ matches, activityID }) => {
-  const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
+  const [selectedDay, setSelectedDay] = useState(0);
 
   if (!matches?.length || !matches[0])
     return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
@@ -120,36 +122,51 @@ const MatchList = ({ matches, activityID }) => {
     }
   });
 
-  let content = matches.map((match) => (
-    <MatchListing key={match?.ID} match={match} activityID={activityID} />
-  ));
+  useEffect(() => {
+    let now = standardDate(new Date().toJSON(), false, false);
+    let index = organizedMatches.findIndex((day) => day.DayOnly === now);
+    if (index !== -1) setSelectedDay(index);
+  }, []);
 
-  // let matchTabs = (
-  //   <>
-  //     <Box>
-  //       <Tabs
-  //         value={selectedSeriesTab}
-  //         onChange={(event, tabIndex) => setSelectedSeriesTab(tabIndex)}
-  //         variant="scrollable"
-  //         scrollButtons="auto"
-  //         aria-label="admin control center tabs"
-  //       >
-  //         {activity.Series.map((series) => {
-  //           return <Tab label={series.Name} />;
-  //         })}
-  //       </Tabs>
-  //     </Box>
-  //     {activity.Series.map((series, index) => {
-  //       return (
-  //         <TabPanel value={selectedSeriesTab} index={index}>
-  //           <TeamList series={series} />
-  //         </TabPanel>
-  //       );
-  //     })}
-  //   </>
-  // );
+  let matchTabs = (
+    <>
+      <Box className={styles.scrollableCenteredTabs}>
+        <Tabs
+          value={selectedDay}
+          onChange={(event, tabIndex) => setSelectedDay(tabIndex)}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="admin control center tabs"
+        >
+          {organizedMatches.map((day) => {
+            return (
+              <Tab
+                label={
+                  <Grid>
+                    <Typography sx={{ fontSize: '1em' }}>{day.DayOfWeek}</Typography>
+                    <Typography sx={{ fontSize: '0.8em' }}>{day.DayOnly}</Typography>
+                  </Grid>
+                }
+              />
+            );
+          })}
+        </Tabs>
+      </Box>
 
-  return <List dense>{content}</List>;
+      {organizedMatches.map((day, index) => {
+        return (
+          <TabPanel value={selectedDay} index={index}>
+            <List dense>
+              {day.Matches.map((match) => (
+                <MatchListing key={match?.ID} match={match} activityID={activityID} />
+              ))}
+            </List>
+          </TabPanel>
+        );
+      })}
+    </>
+  );
+  return matchTabs;
 };
 
 // setTargetTeamID is used for edit Match teams
