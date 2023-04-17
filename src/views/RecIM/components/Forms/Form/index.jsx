@@ -76,6 +76,14 @@ const Form = ({
     setNewInfo(currentInfo);
   };
 
+  const handleCancelClick = () => {
+    setNewInfo(currentInfo);
+    setOpenForm(false);
+    if (additionCancelActions) {
+      additionCancelActions();
+    }
+  };
+
   return (
     <GordonDialogBox
       open={openForm}
@@ -92,14 +100,9 @@ const Form = ({
       }}
       isButtonDisabled={errors?.length > 0}
       buttonName="Submit"
-      cancelButtonClicked={() => {
-        setNewInfo(currentInfo);
-        setOpenForm(false);
-        if (additionCancelActions) {
-          additionCancelActions();
-        }
-      }}
+      cancelButtonClicked={handleCancelClick}
       cancelButtonName="cancel"
+      onClose={handleCancelClick}
     >
       {loading ? (
         <GordonLoader />
