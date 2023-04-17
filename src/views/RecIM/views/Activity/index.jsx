@@ -178,7 +178,7 @@ const Activity = () => {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
-      <Grid container alignItems="center" columnSpacing={4}>
+      <Grid container alignItems="center" columnSpacing={4} className={styles.header}>
         <Grid item container xs={9} columnSpacing={4} alignItems="center">
           <Grid item>
             <Button
@@ -201,10 +201,10 @@ const Activity = () => {
             </Button>
           </Grid>
           <Grid item>
-            <Typography variant="h5" className={styles.title}>
+            <Typography className={styles.title}>
               {activity?.Name ?? <GordonLoader size={15} inline />}
             </Typography>
-            <Typography variant="h6" className={styles.subtitle}>
+            <Typography className={styles.subtitle}>
               <i>
                 {activity?.StartDate
                   ? formatDateTimeRange(activity.StartDate, activity.EndDate)

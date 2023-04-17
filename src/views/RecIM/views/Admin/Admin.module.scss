@@ -4,7 +4,21 @@
   text-transform: none;
 }
 
+.header {
+  font-size: 0.9rem;
+}
+
+.headerImg {
+  width: 4em;
+}
+
 @media (min-width: $break-sm) {
+  .header {
+    font-size: 1rem;
+  }
+  .headerImg {
+    width: 5em;
+  }
   .addResourceButton {
     margin-left: 16px;
   }
@@ -20,8 +34,10 @@
 .title {
   font-weight: bold;
   color: $neutral-dark-gray2;
+  font-size: 1.5em;
 }
 
 .subtitle {
   color: $neutral-gray;
+  font-size: 1em;
 }

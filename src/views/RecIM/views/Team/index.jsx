@@ -127,7 +127,13 @@ const Team = () => {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
-      <Grid container direction="row" alignItems="center" columnSpacing={4}>
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        columnSpacing={4}
+        className={styles.header}
+      >
         <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
           <Grid item>
             <Button
@@ -145,8 +151,8 @@ const Team = () => {
               )}
             </Button>
           </Grid>
-          <Grid item>
-            <Typography variant="h5" className={styles.title}>
+          <Grid item xs={8}>
+            <Typography className={styles.title}>
               {team?.Name ?? <GordonLoader size={15} inline />}
             </Typography>
             {teamRecord()}

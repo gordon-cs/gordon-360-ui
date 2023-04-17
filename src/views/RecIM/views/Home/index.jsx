@@ -103,19 +103,19 @@ const Home = () => {
   }, [activities]);
 
   let headerContents = (
-    <Grid container direction="row" alignItems="center" columnSpacing={4}>
+    <Grid container alignItems="center" columnSpacing={4} className={styles.header}>
       <Grid item container xs={9} alignItems="center" columnSpacing={2}>
         <Grid item>
-          <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+          <img src={recimLogo} alt="Rec-IM Logo" className={styles.headerImg}></img>
         </Grid>
         <Grid item xs={8}>
-          <Typography variant="h5" className={styles.title}>
+          <Typography className={styles.title}>
             <Box component="span" sx={{ color: 'secondary.main' }}>
               Gordon
             </Box>{' '}
             Rec-IM
           </Typography>
-          <Typography variant="h6" className={styles.subtitle}>
+          <Typography className={styles.subtitle}>
             <i>"Competition reveals character"</i>
           </Typography>
         </Grid>
