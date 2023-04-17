@@ -87,16 +87,18 @@ const ActivityListing = ({ activity }) => {
               </Grid>
             )}
             <Grid item container columnSpacing={2}>
+              {activity.RegistrationOpen && (
+                <Grid item>
+                  <Chip
+                    icon={<EventAvailableIcon />}
+                    label={'Registration Open'}
+                    color={'success'}
+                    size="small"
+                  />
+                </Grid>
+              )}
               <Grid item>
-                <Chip
-                  icon={<EventAvailableIcon />}
-                  label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
-                  color={activity.RegistrationOpen ? 'success' : 'info'}
-                  size="small"
-                />
-              </Grid>
-              <Grid item>
-                <Typography>
+                <Typography className={styles.listingSubtitle}>
                   {activity.RegistrationOpen
                     ? 'Registration closes ' + standardDate(activity.RegistrationEnd)
                     : activeSeriesMessage}
