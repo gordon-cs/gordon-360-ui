@@ -66,7 +66,7 @@ const StudentNews = () => {
   const [tabValue, setTabValue] = useState(NEWS_TABS[0]); // set the default tab to 'news'
   const cropperRef = useRef();
   const isAuthenticated = useIsAuthenticated();
-  const isAdmin = true; //userIsInAuthGroup('NewsAdmin');
+  const isAdmin = userIsInAuthGroup('NewsAdmin');
   const [width, setWidth] = useState(window.innerWidth);
 
   const loadNews = useCallback(async () => {
@@ -316,17 +316,12 @@ const StudentNews = () => {
    * When the Remove button is clicked for a posting image
    */
   async function handleImageUpdate() {
-    let croppedImage = null;
+    let croppedImage = '';
     if (cropperImageData) {
       croppedImage = cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
     }
 
-    // create the JSON newData object to update with
-    let newImageData = {
-      Image: croppedImage,
-    };
-
-    let result = await newsService.editStudentNewsImage(currentlyEditingImage, newImageData);
+    let result = await newsService.editStudentNewsImage(currentlyEditingImage, croppedImage);
     if (result === undefined) {
       createSnackbar('News Posting image Failed to Update', 'error');
     } else {
