@@ -67,6 +67,7 @@ const InformationField = ({
       );
       break;
     case 'multiline':
+      gridSizes = { md: 12, lg: 6 };
       field = (
         <TextField
           variant="filled"
