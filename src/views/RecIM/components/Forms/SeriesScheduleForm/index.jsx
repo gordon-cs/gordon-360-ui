@@ -95,14 +95,14 @@ const SeriesScheduleForm = ({
     {
       label: 'Daily Start Time',
       name: 'DailyStartTime',
-      type: 'datetime',
+      type: 'time',
       helperText: '*Required',
       required: true,
     },
     {
       label: 'Daily End Time',
       name: 'DailyEndTime',
-      type: 'datetime',
+      type: 'time',
       helperText: '*Required',
       required: true,
     },
@@ -151,7 +151,7 @@ const SeriesScheduleForm = ({
       DailyEndTime: '',
       EstMatchTime: '',
     };
-  }, [seriesID, seriesSchedule]);
+  }, [seriesID, seriesSchedule, surfaces]);
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);

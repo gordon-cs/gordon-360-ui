@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { DateTimePicker } from '@mui/x-date-pickers';
+import { DateTimePicker, TimePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import styles from './InformationField.module.css';
@@ -181,6 +181,22 @@ const InformationField = ({
         </LocalizationProvider>
       );
       break;
+    case 'time':
+      field = (
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <TimePicker
+            renderInput={(props) => <TextField {...props} variant="filled" />}
+            label={label}
+            value={value}
+            onChange={(value) => onChange(value, name)}
+            slotProps={{
+              textField: {
+                error,
+              },
+            }}
+          />
+        </LocalizationProvider>
+      );
   }
   return (
     <Grid item {...gridSizes}>
