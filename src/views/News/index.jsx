@@ -40,7 +40,6 @@ const BREAKPOINT_WIDTH = 575;
 const TAB_BREAKPOINT_WIDTH = 375;
 
 const StudentNews = () => {
-  const [search, setSearch] = useState('');
   const [openPostActivity, setOpenPostActivity] = useState(false);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
@@ -102,14 +101,6 @@ const StudentNews = () => {
       window.removeEventListener('resize', handleResize);
     };
   });
-
-  useEffect(() => {
-    if (search) {
-      setNews(newsService.getFilteredNews(allNewsRef.current, search));
-    } else {
-      setNews(allNewsRef.current);
-    }
-  }, [search]);
 
   function handlePostClick() {
     setOpenPostActivity(true);
