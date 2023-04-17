@@ -23,7 +23,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
-import { getActivityTypes, isActivityRegisterable } from 'services/recim/activity';
+import { isActivityRegisterable } from 'services/recim/activity';
 import { removeAttendance, updateAttendance } from 'services/recim/match';
 import { getParticipantAttendanceCountForTeam } from 'services/recim/team';
 import SportsFootballIcon from '@mui/icons-material/SportsFootball';
@@ -48,23 +48,6 @@ const activityTypeIconPair = [
 
 // Old activitylisting
 const ActivityListing = ({ activity }) => {
-  //const [activityType, setActivityType] = useState();
-  //const [currentCapacity, setCurrentCapacity] = useState(<GordonLoader size={15} inline />);
-  // useEffect(() => {
-  //   const loadActivityType = async () => {
-  //     let activityTypes = await getActivityTypes();
-  //     setActivityType(
-  //       activityTypes.find((activityType) => activityType.ID === activity.TypeID).Description,
-  //     );
-  //   };
-  //   const calculateCurrentCapacity = async () => {
-  //     let fullActivity = await getActivityByID(activity.ID);
-  //     setCurrentCapacity(fullActivity.Team?.length);
-  //   };
-  //   loadActivityType();
-  //   calculateCurrentCapacity();
-  // }, [activity]);
-
   let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
   let activeSeriesMessage =
     activeSeries && activeSeries.Name + ' until ' + standardDate(activeSeries.EndDate);
@@ -122,137 +105,11 @@ const ActivityListing = ({ activity }) => {
               </Grid>
             </Grid>
           </Grid>
-          {/* <Grid item sm={1}>
-            <Typography variant="subtitle">
-              {currentCapacity}
-              <Typography variant="span" sx={{ p: 0.2 }}>
-                /
-              </Typography>
-              {activity.MaxCapacity}
-            </Typography>
-          </Grid> */}
         </Grid>
       </ListItemButton>
     </ListItem>
   );
 };
-
-/*proposed new activitylisting
-const ActivityListing = ({ activity, showActivityOptions }) => {
-  const [anchorEl, setAnchorEl] = useState();
-  const moreOptionsOpen = Boolean(anchorEl);
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
-  let activeSeriesMessage =
-    activeSeries && activeSeries.Name + ' until ' + standardDate(activeSeries.EndDate);
-
-  const activityTypeIconPair = [
-    {
-      type: 'League',
-      icon: <SportsFootballIcon />,
-    },
-    {
-      type: 'Tournament',
-      icon: <SportsCricketIcon />,
-    },
-    {
-      type: 'One Off',
-      icon: <LocalActivityIcon />,
-    },
-  ];
-
-  const handleActivityOptions = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  if (!activity) return null;
-  return (
-    <ListItem key={activity.ID} className={styles.listingWrapper}>
-      <ListItem
-        secondaryAction={
-          showActivityOptions && (
-            <IconButton edge="end" onClick={handleActivityOptions}>
-              <MoreHorizIcon />
-            </IconButton>
-          )
-        }
-        disablePadding
-      >
-        <ListItemButton
-          component={Link}
-          to={`/recim/activity/${activity.ID}`}
-          className={styles.listing}
-        >
-          <Grid container columnSpacing={2} alignItems="center">
-            <Grid item container direction="column" xs={12} sm={4} spacing={1}>
-              <Grid item>
-                <Typography className={styles.listingTitle}>{activity.Name}</Typography>
-              </Grid>
-              <Grid item>
-                <Chip
-                  icon={activityTypeIconPair.find((type) => type.type === activity.Type)?.icon}
-                  label={activity.Type}
-                  color={'success'}
-                  className={
-                    styles['activityType_' + activity?.Type?.toLowerCase().replace(/\s+/g, '')]
-                  }
-                  size="small"
-                />
-              </Grid>
-            </Grid>
-            <Grid item container xs={12} sm={7} direction="column" spacing={1}>
-              {activity.StartDate && (
-                <Grid item>
-                  <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-                    {activity.EndDate
-                      ? formatDateTimeRange(activity.StartDate, activity.EndDate)
-                      : standardDate(activity.StartDate) + ` - TBD`}
-                  </Typography>
-                </Grid>
-              )}
-              <Grid item container columnSpacing={2}>
-                <Grid item>
-                  <Chip
-                    icon={<EventAvailableIcon />}
-                    label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
-                    color={activity.RegistrationOpen ? 'success' : 'info'}
-                    size="small"
-                  />
-                </Grid>
-                <Grid item>
-                  <Typography>
-                    {activity.RegistrationOpen
-                      ? 'Registration closes ' + standardDate(activity.RegistrationEnd)
-                      : activeSeriesMessage}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item sm={1}></Grid>
-          </Grid>
-        </ListItemButton>
-        {showActivityOptions && (
-          <Menu open={moreOptionsOpen} onClose={handleClose} anchorEl={anchorEl}>
-            <MenuItem dense onClick={() => console.log('edit')} divider>
-              Edit
-            </MenuItem>
-            <MenuItem dense onClick={() => console.log('create series')} divider>
-              Create Series
-            </MenuItem>
-            <MenuItem dense onClick={() => console.log('delete')} className={styles.rejectButton}>
-              Delete
-            </MenuItem>
-          </Menu>
-        )}
-      </ListItem>
-    </ListItem>
-  );
-};
-*/
 
 const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
@@ -275,24 +132,27 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
     content = (
       <ListItemButton onClick={() => setTargetTeamID(team.ID)}>
         <Grid container columnSpacing={2}>
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12}>
             <Typography className={styles.listingSubtitle}>Name: </Typography>
             <Typography className={styles.listingTitle}>{team.Name}</Typography>
           </Grid>
-          <Grid item xs={8} sm={4}>
-            <Typography className={styles.listingSubtitle}>
-              Score: {targetTeamStats.TeamScore}
-            </Typography>
-          </Grid>
-          <Grid item xs={8} sm={4}>
-            <Typography className={styles.listingSubtitle}>
-              Sportsmanship: {targetTeamStats.SportsmanshipScore}
-            </Typography>
-          </Grid>
-          <Grid item xs={8} sm={4} className={styles.rightAlignLarge}>
-            <Typography className={styles.listingSubtitle}>
-              Status: {targetTeamStats.Status}
-            </Typography>
+
+          <Grid item container>
+            <Grid item xs={6}>
+              <Typography className={styles.listingSubtitle}>
+                Score: {targetTeamStats.TeamScore}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography className={styles.listingSubtitle}>
+                Status: {targetTeamStats.Status}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography className={styles.listingSubtitle}>
+                Sportsmanship: {targetTeamStats.SportsmanshipScore}
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
       </ListItemButton>
@@ -312,7 +172,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
         <Grid item xs={12}>
           <ListItemButton
             component={Link}
-            to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
+            to={invite ? null : `/recim/activity/${team.Activity.ID}/team/${team.ID}`}
             className={styles.listing}
           >
             <Grid container>
@@ -331,14 +191,14 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                 >
                   {invite && (
                     <Grid item>
-                      <IconButton className={styles.acceptButton} onClick={handleAcceptInvite}>
+                      <IconButton className={styles.acceptIcon} onClick={handleAcceptInvite}>
                         <CheckIcon />
                       </IconButton>
                     </Grid>
                   )}
                   {invite && (
                     <Grid item>
-                      <IconButton className={styles.rejectButton} onClick={handleRejectInvite}>
+                      <IconButton className={styles.rejectIcon} onClick={handleRejectInvite}>
                         <ClearIcon />
                       </IconButton>
                     </Grid>
@@ -675,4 +535,145 @@ const MatchListing = ({ match, activityID }) => {
   );
 };
 
-export { ActivityListing, TeamListing, ParticipantListing, MatchListing };
+const SportListing = ({ sport, confirmDelete, editDetails }) => {
+  const [anchorEl, setAnchorEl] = useState();
+  const optionsOpen = Boolean(anchorEl);
+
+  if (!sport) return null;
+
+  const handleOptions = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  return (
+    <ListItem key={sport.ID} className={styles.listingWrapper}>
+      <ListItem
+        className={styles.listing}
+        secondaryAction={
+          <IconButton edge="end" onClick={handleOptions}>
+            <MoreHorizIcon />
+          </IconButton>
+        }
+      >
+        <Grid container direction="row">
+          <Grid item container direction="column" xs={6}>
+            <ListItemText>{sport.Name}</ListItemText>
+            <Typography className={styles.listingSubtitle}>{sport.Description}</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography className={styles.listingAdditionalInfo}>
+              <b>Rules: </b>
+              {sport.Rules}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Menu
+          open={optionsOpen}
+          onClose={() => setAnchorEl()}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem
+            dense
+            onClick={() => {
+              editDetails(sport);
+              setAnchorEl(null);
+            }}
+            divider
+          >
+            Edit details
+          </MenuItem>
+          <MenuItem
+            dense
+            onClick={() => {
+              confirmDelete(sport);
+              setAnchorEl(null);
+            }}
+            className={styles.redButton}
+          >
+            Delete sport
+          </MenuItem>
+        </Menu>
+      </ListItem>
+    </ListItem>
+  );
+};
+
+const SurfaceListing = ({ surface, confirmDelete, editDetails }) => {
+  const [anchorEl, setAnchorEl] = useState();
+  const optionsOpen = Boolean(anchorEl);
+
+  if (!surface) return null;
+
+  const handleOptions = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  return (
+    <ListItem key={surface.ID} className={styles.listingWrapper}>
+      <ListItem
+        className={styles.listing}
+        secondaryAction={
+          <IconButton edge="end" onClick={handleOptions}>
+            <MoreHorizIcon />
+          </IconButton>
+        }
+      >
+        <Grid container direction="column">
+          <ListItemText>{surface.Name}</ListItemText>
+          <Typography className={styles.listingSubtitle}>{surface.Description}</Typography>
+        </Grid>
+        <Menu
+          open={optionsOpen}
+          onClose={() => setAnchorEl()}
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem
+            dense
+            onClick={() => {
+              editDetails(surface);
+              setAnchorEl(null);
+            }}
+            divider
+          >
+            Edit details
+          </MenuItem>
+          <MenuItem
+            dense
+            onClick={() => {
+              confirmDelete(surface);
+              setAnchorEl(null);
+            }}
+            className={styles.redButton}
+          >
+            Delete surface
+          </MenuItem>
+        </Menu>
+      </ListItem>
+    </ListItem>
+  );
+};
+
+export {
+  ActivityListing,
+  TeamListing,
+  ParticipantListing,
+  MatchListing,
+  SurfaceListing,
+  SportListing,
+};

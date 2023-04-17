@@ -39,7 +39,7 @@ const Header = ({ match, team, activity, admin, children }) => {
           <RecIMBreadcrumb link={(activity || team || match || admin) && `/recim`}>
             <Grid container alignItems="center">
               <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-              {largeWidth && 'Rec-IM Home'}
+              {largeWidth ? 'Rec-IM Home' : 'Home'}
             </Grid>
           </RecIMBreadcrumb>
           {/* Activity breadcrumb */}
@@ -56,9 +56,11 @@ const Header = ({ match, team, activity, admin, children }) => {
           {match && (
             <RecIMBreadcrumb>
               {largeWidth
-                ? `Match: ${match?.Team[0]?.Name ?? <i>TBD</i>} vs 
-              ${match?.Team[1]?.Name ?? <i>TBD</i>}`
-                : `Match: ${truncate(match?.Team[0].Name)} vs ${truncate(match?.Team[1].Name)}`}
+                ? `Match: ${match?.Team[0]?.Name ?? 'TBD'} vs 
+              ${match?.Team[1]?.Name ?? 'TBD'}`
+                : `Match: ${truncate(match?.Team[0]?.Name ?? 'TBD')} vs ${truncate(
+                    match?.Team[1]?.Name ?? 'TBD',
+                  )}`}
             </RecIMBreadcrumb>
           )}
           {/* Admin breadcrumb */}

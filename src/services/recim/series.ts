@@ -22,6 +22,7 @@ type SeriesSchedule = {
   StartTime: string;
   EndTime: string;
   EstMatchTime: number; //in minutes
+  SurfaceIDs: number[];
 };
 
 type UploadSeriesSchedule = {
@@ -72,6 +73,14 @@ type PatchSeries = {
   ScheduleID?: number;
 };
 
+export type BracketInfo = {
+  MatchID: number;
+  RoundNumber: number;
+  RoundOf: number;
+  SeedIndex: number;
+  IsLosers: boolean;
+};
+
 //Series Routes
 const createSeries = async (
   referenceSeriesID: number,
@@ -104,6 +113,9 @@ const scheduleSeriesMatches = async (seriesID: number): Promise<Match[]> =>
 const deleteSeriesCascade = async (seriesID: number): Promise<CreatedSeries> =>
   http.del(`recim/series/${seriesID}`);
 
+const getBracketInfo = async (seriesID: number): Promise<BracketInfo[]> =>
+  http.get(`recim/series/${seriesID}/bracket`);
+
 export {
   createSeries,
   getSeriesByID,
@@ -115,4 +127,5 @@ export {
   putSeriesSchedule,
   scheduleSeriesMatches,
   deleteSeriesCascade,
+  getBracketInfo,
 };

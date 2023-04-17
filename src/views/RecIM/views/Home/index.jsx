@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import GordonUnauthorized from 'components/GordonUnauthorized';
 import {
   Grid,
@@ -10,50 +11,35 @@ import {
   Tab,
   Badge,
   Box,
+  IconButton,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ActivityForm from '../../components/Forms/ActivityForm';
+import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
+import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { useUser } from 'hooks';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import GordonLoader from 'components/Loader';
+import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Home.module.css';
 import { ActivityList, TeamList } from './../../components/List';
 import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
-import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
-import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from '/public/images/recim_logo.png';
 import { isFuture } from 'date-fns';
-import { TabPanel } from 'views/RecIM/components';
-
-export const HomeHeaderContents = () => {
-  return (
-    <Grid container direction="row" alignItems="center" spacing={4}>
-      <Grid item>
-        <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
-      </Grid>
-      <Grid item xs={8} md={5} lg={3}>
-        <Typography variant="h5" className={styles.title}>
-          <Box component="span" sx={{ color: 'secondary.main' }}>
-            Gordon
-          </Box>{' '}
-          Rec-IM
-        </Typography>
-        <Typography variant="h6" className={styles.subtitle}>
-          <i>"Competition reveals character"</i>
-        </Typography>
-      </Grid>
-    </Grid>
-  );
-};
+import { TabPanel } from 'views/RecIM/components/TabPanel';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const Home = () => {
+  const navigate = useNavigate();
   const { profile } = useUser();
   const [loading, setLoading] = useState(true);
+  const [reload, setReload] = useState(false);
   const [openActivityForm, setOpenActivityForm] = useState(false);
   const [openCreateSeriesForm, setOpenCreateSeriesForm] = useState(false);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [activities, setActivities] = useState([]);
   const [ongoingActivities, setOngoingActivities] = useState([]);
   const [registrableActivities, setRegistrableActivities] = useState([]);
@@ -70,6 +56,10 @@ const Home = () => {
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
 
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -81,7 +71,7 @@ const Home = () => {
       setLoading(false);
     };
     loadData();
-  }, [profile, openActivityForm, openWaiver, openCreateSeriesForm]);
+  }, [profile, reload]);
 
   useEffect(() => {
     const loadParticipantData = async () => {
@@ -96,7 +86,7 @@ const Home = () => {
       setHasPermissions(participant.IsAdmin);
       loadParticipantData();
     }
-  }, [participant]);
+  }, [participant, profile]);
 
   useEffect(() => {
     let open = [];
@@ -111,6 +101,31 @@ const Home = () => {
     setOngoingActivities(ongoing);
     setRegistrableActivities(open);
   }, [activities]);
+
+  let headerContents = (
+    <Grid container direction="row" alignItems="center" columnSpacing={4}>
+      <Grid item container xs={9} alignItems="center" columnSpacing={2}>
+        <Grid item>
+          <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+        </Grid>
+        <Grid item xs={8}>
+          <Typography variant="h5" className={styles.title}>
+            <b className="accentText">Gordon</b> Rec-IM
+          </Typography>
+          <Typography variant="h6" className={styles.subtitle}>
+            <i>"Competition reveals character"</i>
+          </Typography>
+        </Grid>
+      </Grid>
+      {participant?.IsAdmin && (
+        <Grid item xs={3} textAlign={'right'}>
+          <IconButton onClick={() => navigate(`/recim/admin`)} sx={{ mr: '1rem' }}>
+            <SettingsIcon fontSize="large" />
+          </IconButton>
+        </Grid>
+      )}
+    </Grid>
+  );
 
   const createActivityButton = (
     <Grid container className={styles.buttonArea}>
@@ -168,10 +183,10 @@ const Home = () => {
 
   let myTeams = (
     <CardContent>
-      {participantTeams ? (
+      {participantTeams.length > 0 ? (
         <TeamList teams={participantTeams} />
       ) : (
-        <Typography className={styles.secondaryText}>You're not yet apart of any teams!</Typography>
+        <Typography className={styles.secondaryText}>You're not yet apart of any teams</Typography>
       )}
     </CardContent>
   );
@@ -211,7 +226,7 @@ const Home = () => {
         <Tab label="My Teams" />
         <Tab
           label={
-            <Badge color="secondary" variant="dot" badgeContent={invites.length}>
+            <Badge color="secondary" variant="dot" sx={{ zIndex: 0 }} badgeContent={invites.length}>
               Invites
             </Badge>
           }
@@ -226,30 +241,12 @@ const Home = () => {
     </Card>
   );
 
-  const handleCreateActivityForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenCreateSeriesForm(true);
-    setOpenActivityForm(false);
-  };
-
-  const handleCreateSeriesForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenCreateSeriesForm(false);
-  };
-
-  const handleOpenWaiverForm = (status) => {
-    //if you want to do something with the message make a snackbar function here
-    setOpenWaiver(false);
-  };
-
   if (!profile) {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     return (
       <>
-        <Header>
-          <HomeHeaderContents />
-        </Header>
+        <Header>{headerContents}</Header>
         {loading ? (
           <GordonLoader />
         ) : (
@@ -260,39 +257,43 @@ const Home = () => {
             <Grid item xs={12} md={5}>
               {myTeamsCard}
             </Grid>
-            {openActivityForm && (
-              <ActivityForm
-                closeWithSnackbar={(status) => {
-                  handleCreateActivityForm(status);
-                }}
-                openActivityForm={openActivityForm}
-                setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
-                setCreatedInstance={(activity) => setCreatedActivity(activity)}
-              />
-            )}
-            {openCreateSeriesForm && (
-              <SeriesForm
-                closeWithSnackbar={(status) => {
-                  handleCreateSeriesForm(status);
-                }}
-                openSeriesForm={openCreateSeriesForm}
-                setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
-                activityID={createdActivity.ID}
-                existingActivitySeries={[]}
-              />
-            )}
-            {openWaiver && (
-              <WaiverForm
-                username={profile.AD_Username}
-                closeWithSnackbar={(status) => {
-                  handleOpenWaiverForm(status);
-                }}
-                openWaiverForm={openWaiver}
-                setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
-              />
-            )}
+            <ActivityForm
+              onClose={() => {
+                setOpenCreateSeriesForm(true);
+                setReload((prev) => !prev);
+              }}
+              createSnackbar={createSnackbar}
+              openActivityForm={openActivityForm}
+              setOpenActivityForm={(bool) => setOpenActivityForm(bool)}
+              setCreatedInstance={(activity) => setCreatedActivity(activity)}
+            />
+            <SeriesForm
+              createSnackbar={createSnackbar}
+              openSeriesForm={openCreateSeriesForm}
+              onClose={() => {
+                navigate(`/recim/activity/${createdActivity.ID}`);
+              }}
+              setOpenSeriesForm={(bool) => setOpenCreateSeriesForm(bool)}
+              activityID={createdActivity.ID}
+              existingActivitySeries={[]}
+            />
+            <WaiverForm
+              username={profile.AD_Username}
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
+              }}
+              openWaiverForm={openWaiver}
+              setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
+            />
           </Grid>
         )}
+        <GordonSnackbar
+          open={snackbar.open}
+          text={snackbar.message}
+          severity={snackbar.severity}
+          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        />
       </>
     );
   }

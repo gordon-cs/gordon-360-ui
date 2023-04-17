@@ -1,5 +1,12 @@
 import { List, Typography } from '@mui/material';
-import { ActivityListing, MatchListing, ParticipantListing, TeamListing } from './Listing';
+import {
+  ActivityListing,
+  MatchListing,
+  ParticipantListing,
+  SurfaceListing,
+  TeamListing,
+  SportListing,
+} from './Listing';
 import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
 
@@ -115,11 +122,29 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
         <TeamListing
           key={team.ID}
           team={team}
-          invite={invite}
+          invite={invite ?? false}
           callbackFunction={handleInviteResponse}
         />
       ));
   return <List dense>{content}</List>;
 };
 
-export { ActivityList, ParticipantList, MatchList, TeamList };
+const SportList = ({ sports, confirmDelete, editDetails }) => {
+  if (!sports?.length)
+    return <Typography className={styles.secondaryText}>No sports to show.</Typography>;
+  let content = sports.map((sport) => (
+    <SportListing sport={sport} confirmDelete={confirmDelete} editDetails={editDetails} />
+  ));
+  return <List dense>{content}</List>;
+};
+
+const SurfaceList = ({ surfaces, confirmDelete, editDetails }) => {
+  if (!surfaces?.length)
+    return <Typography className={styles.secondaryText}>No surfaces to show.</Typography>;
+  let content = surfaces.map((surface) => (
+    <SurfaceListing surface={surface} confirmDelete={confirmDelete} editDetails={editDetails} />
+  ));
+  return <List dense>{content}</List>;
+};
+
+export { ActivityList, ParticipantList, MatchList, TeamList, SurfaceList, SportList };

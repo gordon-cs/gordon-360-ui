@@ -3,20 +3,13 @@ import Form from '../Form';
 import { createMatch, updateMatch, getSurfaces, getMatchStatusTypes } from 'services/recim/match';
 
 const MatchForm = ({
-  closeWithSnackbar,
+  createSnackbar,
+  onClose,
   openMatchInformationForm,
   setOpenMatchInformationForm,
-  activity,
+  series,
   match,
 }) => {
-  const [errorStatus, setErrorStatus] = useState({
-    StartTime: false,
-    SeriesID: false,
-    SurfaceID: false,
-    TeamIDs: false,
-    StatusID: false,
-  });
-
   const [loading, setLoading] = useState(false);
   const [isSaving, setSaving] = useState(false);
   const [surfaces, setSurfaces] = useState([]);
@@ -37,33 +30,18 @@ const MatchForm = ({
       label: 'Surface',
       name: 'SurfaceID',
       type: 'select',
-      menuItems: surfaces.map((surface) => {
-        return surface.Name;
-      }),
-      error: errorStatus.SurfaceID,
+      menuItems: surfaces.map((surface) => surface.Name),
       helperText: '*Required',
       required: true,
     },
   ];
 
-  if (activity) {
+  if (series) {
     createMatchFields.push(
       {
         label: 'Start Time',
         name: 'StartTime',
         type: 'datetime',
-        error: errorStatus.StartTime,
-        helperText: '*Required',
-        required: true,
-      },
-      {
-        label: 'Series',
-        name: 'SeriesID',
-        type: 'select',
-        menuItems: activity.Series.map((series) => {
-          return series.Name;
-        }),
-        error: errorStatus.SeriesID,
         helperText: '*Required',
         required: true,
       },
@@ -71,10 +49,7 @@ const MatchForm = ({
         label: 'Teams',
         name: 'TeamIDs',
         type: 'multiselect',
-        menuItems: activity.Team.map((team) => {
-          return team.Name;
-        }),
-        error: errorStatus.TeamIDs,
+        menuItems: series.TeamStanding.map((team) => team.Name),
         helperText: '*Required',
         required: true,
       },
@@ -85,7 +60,6 @@ const MatchForm = ({
         label: 'Start Time',
         name: 'StartTime',
         type: 'datetime',
-        error: errorStatus.StartTime,
         helperText: '*Required',
         required: true,
       },
@@ -93,10 +67,7 @@ const MatchForm = ({
         label: 'Teams',
         name: 'TeamIDs',
         type: 'multiselect',
-        menuItems: match.Series.TeamStanding.map((team) => {
-          return team.Name;
-        }),
-        error: errorStatus.TeamIDs,
+        menuItems: match.Series.TeamStanding.map((team) => team.Name),
         helperText: '*Required',
         required: true,
       },
@@ -104,10 +75,7 @@ const MatchForm = ({
         label: 'Status',
         name: 'StatusID',
         type: 'select',
-        menuItems: matchStatus.map((type) => {
-          return type.Description;
-        }),
-        error: errorStatus.TeamIDs,
+        menuItems: matchStatus.map((type) => type.Description),
         helperText: '*Required',
         required: true,
       },
@@ -137,18 +105,11 @@ const MatchForm = ({
     }
     return {
       StartTime: '',
-      SeriesID: '',
+      SeriesID: series?.ID,
       SurfaceID: '',
       TeamIDs: [],
     };
-  }, [surfaces, matchStatus, match]);
-
-  const errorCases = (field, value) => {
-    switch (field) {
-      default:
-        return false;
-    }
-  };
+  }, [surfaces, matchStatus, match, series]);
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
@@ -157,50 +118,51 @@ const MatchForm = ({
     let matchRequest = { ...currentInfo, ...newInfo };
     matchRequest.TeamIDs = teamNames;
 
-    if (activity)
-      matchRequest.SeriesID = activity.Series.find(
-        (series) => series.Name === matchRequest.SeriesID,
-      ).ID;
-
     matchRequest.SurfaceID = surfaces.find((surface) => surface.Name === matchRequest.SurfaceID).ID;
 
     let idArray = [];
     matchRequest.TeamIDs.forEach((value) => {
-      if (activity) idArray.push(activity.Team.find((team) => team.Name === value).ID);
+      if (series) idArray.push(series.TeamStanding.find((team) => team.Name === value).TeamID);
       else if (match)
         idArray.push(match.Series.TeamStanding.find((team) => team.Name === value)?.TeamID);
     });
     matchRequest.TeamIDs = idArray;
 
-    if (activity)
-      createMatch(matchRequest).then((result) => {
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Match information created successfully',
+    if (series)
+      createMatch(matchRequest)
+        .then((result) => {
+          setSaving(false);
+          createSnackbar(`Match was successfully created`, 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(`There was a problem creating your match: ${reason.title}`, 'error');
         });
-        handleWindowClose();
-      });
     else if (match) {
       matchRequest.StatusID = matchStatus.find(
         (type) => type.Description === matchRequest.StatusID,
       ).ID;
-      updateMatch(match.ID, matchRequest).then((result) => {
-        closeWithSnackbar({
-          type: 'success',
-          message: 'Match information edited successfully',
+      updateMatch(match.ID, matchRequest)
+        .then((result) => {
+          setSaving(false);
+          createSnackbar(`Match was successfully edited`, 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(`There was a problem editing your match: ${reason.title}`, 'error');
         });
-        handleWindowClose();
-      });
     }
   };
 
   return (
     <Form
       formTitles={{ name: 'Match', formType: match ? 'Edit' : 'Create' }}
-      fields={createMatchFields}
+      fields={[createMatchFields]}
       currentInfo={currentInfo}
-      errorCases={errorCases}
-      setErrorStatus={setErrorStatus}
       loading={loading}
       isSaving={isSaving}
       setOpenForm={setOpenMatchInformationForm}
