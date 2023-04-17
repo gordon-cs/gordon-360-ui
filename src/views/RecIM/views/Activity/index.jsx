@@ -251,11 +251,7 @@ const Activity = () => {
                   </>
                 }
               >
-                <IconButton
-                  disableRipple
-                  sx={{ mr: '1.3rem' }}
-                  onClick={() => setOpenTooltip((prev) => !prev)}
-                >
+                <IconButton sx={{ mr: '1.3rem' }} onClick={() => setOpenTooltip((prev) => !prev)}>
                   <ImportContactsIcon />
                 </IconButton>
               </RulesTooltip>
