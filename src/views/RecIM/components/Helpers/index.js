@@ -1,12 +1,15 @@
 import { isValid, format } from 'date-fns';
 
-const standardDate = (date, includeTime) => {
+const standardDate = (date, includeTime, includeDayOfWeek) => {
   if (!isValid(date)) date = new Date(Date.parse(date)); // try parsing if invalid
   if (!isValid(date)) {
     // if still invalid (perhaps null)
     return;
   }
-  let formattedDate = includeTime ? format(date, 'MMM d h:mmaaa') : format(date, 'MMM d');
+  let formattedDate;
+  if (includeTime) formattedDate = format(date, 'MMM d h:mmaaa');
+  else if (includeDayOfWeek) formattedDate = format(date, 'EEE MMM d');
+  else formattedDate = format(date, 'MMM d');
   return formattedDate;
 };
 

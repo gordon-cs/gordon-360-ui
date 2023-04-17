@@ -320,7 +320,7 @@ const ScheduleList = ({
         </Menu>
       </Grid>
 
-      {series.Type === 'Single Elim' && (
+      {series.Type === 'Single Elim' && series.Match.length > 0 && (
         <Grid container justifyContent="center" alignItems="center">
           show bracket
           <Switch color="secondary" onClick={(event) => setShowBracket(event.target.checked)} />
@@ -338,6 +338,7 @@ const ScheduleList = ({
           Games have not yet been scheduled for this series.
         </Typography>
       )}
+      {}
       <GordonDialogBox
         open={openAutoSchedulerDisclaimer}
         title="Auto-Scheduler Disclaimer"

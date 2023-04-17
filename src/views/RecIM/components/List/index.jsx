@@ -1,4 +1,21 @@
-import { List, Typography } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Card,
+  CardHeader,
+  CardContent,
+  Button,
+  IconButton,
+  Tabs,
+  Tab,
+  Menu,
+  MenuItem,
+  Tooltip,
+  tooltipClasses,
+  ClickAwayListener,
+  List,
+} from '@mui/material';
+import { useEffect, useState, useCallback } from 'react';
 import {
   ActivityListing,
   MatchListing,
@@ -9,6 +26,8 @@ import {
 } from './Listing';
 import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
+import { ConnectingAirportsOutlined } from '@mui/icons-material';
+import { standardDate } from '../Helpers';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -66,13 +85,69 @@ const ParticipantList = ({
 };
 
 const MatchList = ({ matches, activityID }) => {
+  const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
+
   if (!matches?.length || !matches[0])
     return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
+
+  let formattedMatches = [];
+  matches.forEach((m) => {
+    let date = standardDate(m.StartTime, false, true);
+    formattedMatches.push({
+      ...m,
+      DayOfWeek: date.slice(0, 3),
+      DayOnly: date.slice(4),
+    });
+  });
+
+  let organizedMatches = [
+    {
+      DayOfWeek: formattedMatches[0].DayOfWeek,
+      DayOnly: formattedMatches[0].DayOnly,
+      Matches: [formattedMatches[0]],
+    },
+  ];
+  let j = 0;
+  formattedMatches.forEach((m) => {
+    if (organizedMatches[j].DayOnly === m.DayOnly) organizedMatches[j].Matches.push(m);
+    else {
+      organizedMatches.push({
+        DayOfWeek: m.DayOfWeek,
+        DayOnly: m.DayOnly,
+        Matches: [m],
+      });
+      j++;
+    }
+  });
+
   let content = matches.map((match) => (
     <MatchListing key={match?.ID} match={match} activityID={activityID} />
-    // I have no idea why, but on ladder matches, match can't be found
-    // despite it showing up on the debugger.
   ));
+
+  // let matchTabs = (
+  //   <>
+  //     <Box>
+  //       <Tabs
+  //         value={selectedSeriesTab}
+  //         onChange={(event, tabIndex) => setSelectedSeriesTab(tabIndex)}
+  //         variant="scrollable"
+  //         scrollButtons="auto"
+  //         aria-label="admin control center tabs"
+  //       >
+  //         {activity.Series.map((series) => {
+  //           return <Tab label={series.Name} />;
+  //         })}
+  //       </Tabs>
+  //     </Box>
+  //     {activity.Series.map((series, index) => {
+  //       return (
+  //         <TabPanel value={selectedSeriesTab} index={index}>
+  //           <TeamList series={series} />
+  //         </TabPanel>
+  //       );
+  //     })}
+  //   </>
+  // );
 
   return <List dense>{content}</List>;
 };
