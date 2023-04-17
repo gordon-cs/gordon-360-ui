@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import AddPhotoIcon from '@mui/icons-material/AddPhotoAlternate';
 import { useUser } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import PropTypes from 'prop-types';
@@ -21,6 +22,7 @@ const NewsItem = ({
   isUnapproved,
   size,
   handleNewsItemEdit,
+  handleNewsImageEdit,
   handleNewsItemDelete,
   handleNewsApprovalStatus,
   isAdmin,
@@ -83,11 +85,11 @@ const NewsItem = ({
       <Button
         variant="outlined"
         color="primary"
-        startIcon={<EditIcon />}
-        onClick={() => handleNewsItemEdit(posting.SNID)}
+        startIcon={posting.Image === null ? <AddPhotoIcon /> : <EditIcon />}
+        onClick={() => handleNewsImageEdit(posting.SNID)}
         className={styles.btn}
       >
-        Edit Image
+        {posting.Image === null ? 'Attach Image' : 'Edit Image'}
       </Button>
     );
   } else {
@@ -157,13 +159,7 @@ const NewsItem = ({
           <CardContent>
             <Typography className={styles.news_content}>"{posting.categoryName}"</Typography>
             <Typography className={styles.news_content}>{posting.Body}</Typography>
-            {posting.Image !== null && (
-              <img
-                src={`${posting.Image}`}
-                alt=" "
-                onClick={() => handleNewsItemEdit(posting.SNID)}
-              />
-            )}
+            {posting.Image !== null && <img src={`${posting.Image}`} alt=" " />}
           </CardContent>
           <Grid container justifyContent="space-evenly">
             {editButton}
@@ -210,13 +206,7 @@ const NewsItem = ({
                 <Typography type="caption" className={styles.descriptionText}>
                   {posting.Body}
                 </Typography>
-                {posting.Image !== null && (
-                  <img
-                    src={`${posting.Image}`}
-                    alt=" "
-                    onClick={() => handleNewsItemEdit(posting.SNID)}
-                  />
-                )}
+                {posting.Image !== null && <img src={`${posting.Image}`} alt=" " />}
               </Grid>
               {/* Possible action buttons */}
               <Grid item xs={4}>

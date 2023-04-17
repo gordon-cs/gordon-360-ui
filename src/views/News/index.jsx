@@ -1,7 +1,9 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Button,
+  Dialog,
   DialogActions,
+  DialogTitle,
   DialogContent,
   DialogContentText,
   Fab,
@@ -33,6 +35,9 @@ import styles from './News.module.scss';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 const NEWS_TABS = ['news', 'my-pending-news', 'all-pending-news'];
+const NEWS_HEADERS = ['News', 'My Pending News', 'All Pending News'];
+const BREAKPOINT_WIDTH = 575;
+const TAB_BREAKPOINT_WIDTH = 375;
 
 const StudentNews = () => {
   const [search, setSearch] = useState('');
@@ -49,15 +54,20 @@ const StudentNews = () => {
   const [newPostSubject, setNewPostSubject] = useState('');
   const [newPostBody, setNewPostBody] = useState('');
   const [cropperImageData, setCropperImageData] = useState(null); //null if no picture chosen, else contains picture
+  const [dropperImageData, setDropperImageData] = useState(null); // null if no picture attached, else contains picture
   const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState(null);
   const [photoDialogError, setPhotoDialogError] = useState(null);
-  const [aspectRatio, setAspectRatio] = useState(null);
+  const [aspectRatio, setAspectRatio] = useState(null); // this ratio is for cropper
+  const [dropperAspectRatio, setDropperAspectRatio] = useState(1); // this ratio is for drop zone, default 1 to display a square drpper zone
   const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' });
   const [currentlyEditing, setCurrentlyEditing] = useState(false); // false if not editing, newsID if editing
+  const [currentlyEditingImage, setCurrentlyEditingImage] = useState(false); // false if not editing image, newID if editing
+  const [showCropper, setShowCropper] = useState(null);
   const [tabValue, setTabValue] = useState(NEWS_TABS[0]); // set the default tab to 'news'
   const cropperRef = useRef();
   const isAuthenticated = useIsAuthenticated();
-  const isAdmin = userIsInAuthGroup('NewsAdmin');
+  const isAdmin = true; //userIsInAuthGroup('NewsAdmin');
+  const [width, setWidth] = useState(window.innerWidth);
 
   const loadNews = useCallback(async () => {
     setLoading(true);
@@ -84,6 +94,16 @@ const StudentNews = () => {
   }, [isAuthenticated, loadNews]);
 
   useEffect(() => {
+    function handleResize() {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener('resize', handleResize);
+    return (_) => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
+
+  useEffect(() => {
     if (search) {
       setNews(newsService.getFilteredNews(allNewsRef.current, search));
     } else {
@@ -97,11 +117,20 @@ const StudentNews = () => {
 
   function handleWindowClose() {
     setOpenPostActivity(false);
+    setShowCropper(null);
     setNewPostCategory('');
     setNewPostSubject('');
     setNewPostBody('');
     setCurrentlyEditing(false);
     setCropperImageData(null);
+  }
+
+  function handlePhotoWindowClose() {
+    setCurrentlyEditingImage(false);
+    setShowCropper(null);
+    setCropperImageData(null);
+    setDropperImageData(null);
+    setDropperAspectRatio(1);
   }
 
   function handleSwitchTab(event, newValue) {
@@ -181,12 +210,13 @@ const StudentNews = () => {
     setNewPostSubject(newsItem.Subject);
     setNewPostBody(newsItem.Body);
     setCurrentlyEditing(newsID);
+  }
 
-    if (newsItem.Image !== null) {
-      setCropperImageData(newsItem.Image);
-    } else {
-      setCropperImageData(null);
-    }
+  async function handleNewsImageEdit(newsID) {
+    let newsItem = await newsService.getPostingByID(newsID);
+
+    DropperOnLoadHelper(newsItem.Image);
+    setCurrentlyEditingImage(newsID);
   }
 
   /**
@@ -234,18 +264,12 @@ const StudentNews = () => {
   async function handleUpdate() {
     let newsID = currentlyEditing;
 
-    let imageData = null;
-
-    if (cropperImageData !== null) {
-      imageData = cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
-    }
-
     // create the JSON newData object to update with
     let newData = {
       categoryID: newPostCategory,
       Subject: newPostSubject,
       Body: newPostBody,
-      Image: imageData,
+      Image: null,
     };
 
     // update the news item and give feedback
@@ -289,6 +313,31 @@ const StudentNews = () => {
   }
 
   /**
+   * When the Remove button is clicked for a posting image
+   */
+  async function handleImageUpdate() {
+    let croppedImage = null;
+    if (cropperImageData) {
+      croppedImage = cropperRef.current.cropper.getCroppedCanvas({ width: CROP_DIM }).toDataURL();
+    }
+
+    // create the JSON newData object to update with
+    let newImageData = {
+      Image: croppedImage,
+    };
+
+    let result = await newsService.editStudentNewsImage(currentlyEditingImage, newImageData);
+    if (result === undefined) {
+      createSnackbar('News Posting image Failed to Update', 'error');
+    } else {
+      createSnackbar('News Posting image Updated Successfully', 'success');
+      handlePhotoWindowClose();
+    }
+
+    loadNews();
+  }
+
+  /**
    * When the delete button is clicked for a posting
    *
    * @param {number} snid The SNID of the post to be deleted
@@ -318,6 +367,7 @@ const StudentNews = () => {
     loadNews();
   }
 
+  // the helper that loads image for cropper
   function imageOnLoadHelper(reader) {
     var dataURL = reader.result.toString();
     var i = new Image();
@@ -325,8 +375,21 @@ const StudentNews = () => {
       var aRatio = i.width / i.height;
       setAspectRatio(aRatio);
       setPhotoDialogError(null);
-      setAspectRatio(aRatio);
       setCropperImageData(dataURL);
+
+      setShowCropper(true);
+    };
+    i.src = dataURL;
+  }
+
+  // the helper that loads image for dropper if there's any
+  function DropperOnLoadHelper(dataURL) {
+    var i = new Image();
+    i.onload = async () => {
+      var aRatio = i.width / i.height;
+      setDropperAspectRatio(aRatio);
+      setPhotoDialogError(null);
+      setDropperImageData(dataURL);
     };
     i.src = dataURL;
   }
@@ -344,75 +407,234 @@ const StudentNews = () => {
     if (loading === true) {
       content = <GordonLoader />;
     } else {
-      content = (
-        <>
-          <TabContext value={tabValue}>
-            <Tabs
-              value={tabValue}
-              onChange={handleSwitchTab}
-              centered={true}
-              aria-label="News Lists"
-              TabIndicatorProps={{
-                className: styles.tabsIndicator,
-              }}
-            >
-              <Tab label="News" value={NEWS_TABS[0]} disableRipple={true} className={styles.tab} />
-
-              <Tab
-                label="My Pending News"
-                value={NEWS_TABS[1]}
-                disableRipple={true}
-                className={styles.tab}
-              />
-
-              {isAdmin && (
-                <Tab
-                  label="All Pending News"
-                  value={NEWS_TABS[2]}
-                  disableRipple={true}
-                  className={styles.tab}
-                />
-              )}
-            </Tabs>
-            <TabPanel value={NEWS_TABS[0]} className={styles.tabPanel}>
-              <NewsList
-                news={news}
-                header={'News'}
-                handleNewsItemEdit={handleNewsItemEdit}
-                handleNewsItemDelete={handleNewsItemDelete}
-                handleNewsApprovalStatus={handleNewsApprovalStatus}
-                isUnapproved={false}
-                isAdmin={isAdmin}
-              />
-            </TabPanel>
-            <TabPanel value={NEWS_TABS[1]} className={styles.tabPanel}>
+      content =
+        width < TAB_BREAKPOINT_WIDTH ? (
+          <>
+            <NewsList
+              news={news}
+              header={NEWS_HEADERS[0]}
+              handleNewsItemEdit={handleNewsItemEdit}
+              handleNewsImageEdit={handleNewsImageEdit}
+              handleNewsItemDelete={handleNewsItemDelete}
+              handleNewsApprovalStatus={handleNewsApprovalStatus}
+              isUnapproved={false}
+              isAdmin={isAdmin}
+            />
+            {personalUnapprovedNews.length > 0 && (
               <NewsList
                 news={personalUnapprovedNews}
-                header={'My Pending News'}
+                header={NEWS_HEADERS[1]}
                 handleNewsItemEdit={handleNewsItemEdit}
+                handleNewsImageEdit={handleNewsImageEdit}
                 handleNewsItemDelete={handleNewsItemDelete}
                 handleNewsApprovalStatus={handleNewsApprovalStatus}
                 isAdmin={false}
               />
-            </TabPanel>
-            {isAdmin && (
-              <TabPanel value={NEWS_TABS[2]} className={styles.tabPanel}>
+            )}
+
+            {isAdmin && unapprovedNews.length > 0 && (
+              <NewsList
+                news={unapprovedNews}
+                header={NEWS_HEADERS[2]}
+                handleNewsItemEdit={handleNewsItemEdit}
+                handleNewsImageEdit={handleNewsImageEdit}
+                handleNewsItemDelete={handleNewsItemDelete}
+                handleNewsApprovalStatus={handleNewsApprovalStatus}
+                isAdmin={isAdmin}
+              />
+            )}
+          </>
+        ) : (
+          <>
+            <TabContext value={tabValue}>
+              <Tabs
+                value={tabValue}
+                onChange={handleSwitchTab}
+                centered={true}
+                aria-label="News Lists"
+                TabIndicatorProps={{
+                  className: styles.tabsIndicator,
+                }}
+              >
+                <Tab
+                  label={NEWS_HEADERS[0]}
+                  value={NEWS_TABS[0]}
+                  disableRipple={true}
+                  className={width < BREAKPOINT_WIDTH ? styles.smallTab : styles.tab}
+                />
+
+                <Tab
+                  label={NEWS_HEADERS[1]}
+                  value={NEWS_TABS[1]}
+                  disableRipple={true}
+                  className={width < BREAKPOINT_WIDTH ? styles.smallTab : styles.tab}
+                />
+
                 {isAdmin && (
-                  <NewsList
-                    news={unapprovedNews}
-                    header={'All Pending News'}
-                    handleNewsItemEdit={handleNewsItemEdit}
-                    handleNewsItemDelete={handleNewsItemDelete}
-                    handleNewsApprovalStatus={handleNewsApprovalStatus}
-                    isAdmin={isAdmin}
+                  <Tab
+                    label={NEWS_HEADERS[2]}
+                    value={NEWS_TABS[2]}
+                    disableRipple={true}
+                    className={width < BREAKPOINT_WIDTH ? styles.smallTab : styles.tab}
                   />
                 )}
+              </Tabs>
+              <TabPanel value={NEWS_TABS[0]} className={styles.tabPanel}>
+                <NewsList
+                  news={news}
+                  header={NEWS_HEADERS[0]}
+                  handleNewsItemEdit={handleNewsItemEdit}
+                  handleNewsImageEdit={handleNewsImageEdit}
+                  handleNewsItemDelete={handleNewsItemDelete}
+                  handleNewsApprovalStatus={handleNewsApprovalStatus}
+                  isUnapproved={false}
+                  isAdmin={isAdmin}
+                />
               </TabPanel>
-            )}
-          </TabContext>
-        </>
-      );
+              <TabPanel value={NEWS_TABS[1]} className={styles.tabPanel}>
+                <NewsList
+                  news={personalUnapprovedNews}
+                  header={NEWS_HEADERS[1]}
+                  handleNewsItemEdit={handleNewsItemEdit}
+                  handleNewsImageEdit={handleNewsImageEdit}
+                  handleNewsItemDelete={handleNewsItemDelete}
+                  handleNewsApprovalStatus={handleNewsApprovalStatus}
+                  isAdmin={false}
+                />
+              </TabPanel>
+              {isAdmin && (
+                <TabPanel value={NEWS_TABS[2]} className={styles.tabPanel}>
+                  {isAdmin && (
+                    <NewsList
+                      news={unapprovedNews}
+                      header={NEWS_HEADERS[2]}
+                      handleNewsItemEdit={handleNewsItemEdit}
+                      handleNewsImageEdit={handleNewsImageEdit}
+                      handleNewsItemDelete={handleNewsItemDelete}
+                      handleNewsApprovalStatus={handleNewsApprovalStatus}
+                      isAdmin={isAdmin}
+                    />
+                  )}
+                </TabPanel>
+              )}
+            </TabContext>
+          </>
+        );
     }
+
+    // this logic has some really weird issues, TODO
+    let createPhotoDialogBox = () => {
+      return (
+        <Dialog
+          className="gc360_photo_dialog"
+          open={currentlyEditingImage}
+          keepMounted
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <div className="gc360_photo_dialog_box">
+            <DialogTitle className="gc360_photo_dialog_box_title">Update Photo</DialogTitle>
+            <DialogContent className="gc360_photo_dialog_box_content">
+              <DialogContentText className="gc360_photo_dialog_box_content_text">
+                {createPhotoDialogBoxMessage()}
+              </DialogContentText>
+              {!showCropper && (
+                <Dropzone
+                  onDropAccepted={onDropAccepted}
+                  onDropRejected={onDropRejected}
+                  accept="image/jpeg, image/jpg, image/png"
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <section>
+                      <div
+                        className="gc360_photo_dialog_box_content_dropzone"
+                        style={{ height: 200, width: 200 * dropperAspectRatio }}
+                        {...getRootProps()}
+                      >
+                        <input {...getInputProps()} />
+                        {dropperImageData ? (
+                          <img
+                            className="gc360_photo_dialog_box_content_dropzone_img"
+                            src={dropperImageData}
+                            alt="Photo"
+                          />
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                    </section>
+                  )}
+                </Dropzone>
+              )}
+              {showCropper && (
+                <div className="gc360_photo_dialog_box_content_cropper">
+                  <Cropper
+                    ref={cropperRef}
+                    src={cropperImageData}
+                    autoCropArea={1}
+                    viewMode={3}
+                    aspectRatio={aspectRatio}
+                    highlight={false}
+                    background={false}
+                    zoom={onCropperZoom}
+                    zoomable={false}
+                    dragMode={'none'}
+                    checkCrossOrigin={false}
+                  />
+                </div>
+              )}
+            </DialogContent>
+            <DialogActions className="gc360_photo_dialog_box_actions_top">
+              {showCropper && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setShowCropper(null);
+                    setCropperImageData(null);
+                  }}
+                  className="gc360_photo_dialog_box_content_button"
+                >
+                  {dropperImageData ? 'Go Back' : 'Remove Picture'}
+                </Button>
+              )}
+            </DialogActions>
+            <DialogActions className="gc360_photo_dialog_box_actions_bottom">
+              <Button variant="outlined" color="primary" onClick={handlePhotoWindowClose}>
+                Cancel
+              </Button>
+              {!showCropper && dropperImageData && (
+                <Tooltip
+                  classes={{ tooltip: 'tooltip' }}
+                  id="tooltip-reset"
+                  title="Reset the Rec-IM logo to default Logo"
+                >
+                  <Button variant="contained" color="error" onClick={handleImageUpdate}>
+                    Remove
+                  </Button>
+                </Tooltip>
+              )}
+              {showCropper && (
+                <Tooltip
+                  classes={{ tooltip: 'tooltip' }}
+                  id="tooltip-submit"
+                  title="Crop to current region and submit"
+                >
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleImageUpdate}
+                    disabled={!showCropper}
+                  >
+                    Submit
+                  </Button>
+                </Tooltip>
+              )}
+            </DialogActions>
+          </div>
+        </Dialog>
+      );
+    };
 
     let newsJSX;
 
@@ -441,6 +663,9 @@ const StudentNews = () => {
               {content}
             </Grid>
           </Grid>
+
+          {/* Create Photo Dialog Box */}
+          {createPhotoDialogBox()}
 
           {/* Create Posting */}
           <GordonDialogBox
@@ -493,65 +718,68 @@ const StudentNews = () => {
                 />
               </Grid>
             </Grid>
-            <div className="gc360_photo_dialog_box">
-              <DialogContent className="gc360_photo_dialog_box_content">
-                <DialogContentText className="gc360_photo_dialog_box_content_text">
-                  {createPhotoDialogBoxMessage()}
-                </DialogContentText>
-                {!cropperImageData && (
-                  <Dropzone
-                    onDropAccepted={onDropAccepted}
-                    onDropRejected={onDropRejected}
-                    accept="image/jpeg, image/jpg, image/png"
-                  >
-                    {({ getRootProps, getInputProps }) => (
-                      <section>
-                        <div
-                          className="gc360_photo_dialog_box_content_dropzone"
-                          {...getRootProps()}
-                        >
-                          <input {...getInputProps()} />
-                        </div>
-                      </section>
-                    )}
-                  </Dropzone>
-                )}
-                {cropperImageData && (
-                  <div className="gc360_photo_dialog_box_content_cropper">
-                    <Cropper
-                      ref={cropperRef}
-                      src={cropperImageData}
-                      autoCropArea={1}
-                      viewMode={3}
-                      aspectRatio={aspectRatio}
-                      highlight={false}
-                      background={false}
-                      zoom={onCropperZoom}
-                      zoomable={false}
-                      dragMode={'none'}
-                      checkCrossOrigin={false}
-                    />
-                  </div>
-                )}
-              </DialogContent>
-              <DialogActions className="gc360_photo_dialog_box_actions_top">
-                {cropperImageData && (
-                  <Tooltip
-                    classes={{ tooltip: 'tooltip' }}
-                    id="tooltip-hide"
-                    title="Remove this image from the post"
-                  >
-                    <Button
-                      variant="outlined"
-                      onClick={() => setCropperImageData(null)}
-                      className="gc360_photo_dialog_box_content_button"
+            {!currentlyEditing && (
+              <div className="gc360_photo_dialog_box">
+                <DialogContent className="gc360_photo_dialog_box_content">
+                  <DialogContentText className="gc360_photo_dialog_box_content_text">
+                    {createPhotoDialogBoxMessage()}
+                  </DialogContentText>
+                  {!cropperImageData && (
+                    <Dropzone
+                      onDropAccepted={onDropAccepted}
+                      onDropRejected={onDropRejected}
+                      accept="image/jpeg, image/jpg, image/png"
                     >
-                      Remove picture
-                    </Button>
-                  </Tooltip>
-                )}
-              </DialogActions>
-            </div>
+                      {({ getRootProps, getInputProps }) => (
+                        <section>
+                          <div
+                            className="gc360_photo_dialog_box_content_dropzone"
+                            {...getRootProps()}
+                          >
+                            <input {...getInputProps()} />
+                          </div>
+                        </section>
+                      )}
+                    </Dropzone>
+                  )}
+
+                  {cropperImageData && (
+                    <div className="gc360_photo_dialog_box_content_cropper">
+                      <Cropper
+                        ref={cropperRef}
+                        src={cropperImageData}
+                        autoCropArea={1}
+                        viewMode={3}
+                        aspectRatio={aspectRatio}
+                        highlight={false}
+                        background={false}
+                        zoom={onCropperZoom}
+                        zoomable={false}
+                        dragMode={'none'}
+                        checkCrossOrigin={false}
+                      />
+                    </div>
+                  )}
+                </DialogContent>
+                <DialogActions className="gc360_photo_dialog_box_actions_top">
+                  {cropperImageData && (
+                    <Tooltip
+                      classes={{ tooltip: 'tooltip' }}
+                      id="tooltip-hide"
+                      title="Remove this image from the post"
+                    >
+                      <Button
+                        variant="outlined"
+                        onClick={() => setCropperImageData(null)}
+                        className="gc360_photo_dialog_box_content_button"
+                      >
+                        Remove picture
+                      </Button>
+                    </Tooltip>
+                  )}
+                </DialogActions>
+              </div>
+            )}
             {/* SUBMISSION GUIDELINES */}
             <Typography variant="caption" color="textSecondary" display="block">
               Student News is intended for announcing Gordon sponsored events, lost and found,

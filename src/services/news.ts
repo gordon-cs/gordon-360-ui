@@ -150,6 +150,17 @@ async function editStudentNews(newsID: number, newData: any): Promise<NewsObject
   }
 }
 
+async function editStudentNewsImage(
+  newsID: number,
+  newImageData: any,
+): Promise<NewsObject | undefined> {
+  try {
+    return await http.put(`news/${newsID}/image`, newImageData);
+  } catch (reason) {
+    console.log('Caught news image update error: ' + reason);
+  }
+}
+
 /**
  * Update a student news accepted status
  *
@@ -179,6 +190,7 @@ const newsService = {
   submitStudentNews,
   deleteStudentNews,
   editStudentNews,
+  editStudentNewsImage,
   updateAcceptedStatus,
   getPostingByID,
 };

@@ -15,51 +15,13 @@ import { gordonColors } from 'theme';
 import NewsItem from '../NewsItem';
 import styles from './NewsList.module.css';
 
-//https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
-//Excellent resource for handling rerender on resize -Josh
-
 const BREAKPOINT_WIDTH = 540;
-
-const singleHeader = (
-  <div className={styles.header}>
-    <Grid container direction="row">
-      <Grid item xs={12}>
-        <Typography variant="body2" className={styles.header}>
-          NEWS
-        </Typography>
-      </Grid>
-    </Grid>
-  </div>
-);
-
-const fullHeader = (
-  <Grid container direction="row" className={styles.header}>
-    <Grid item xs={2}>
-      <Typography variant="body2" className={styles.header}>
-        CATEGORY
-      </Typography>
-    </Grid>
-    <Grid item xs={5}>
-      <Typography variant="body2" className={styles.header}>
-        SUBJECT
-      </Typography>
-    </Grid>
-    <Grid item xs={3}>
-      <Typography variant="body2" className={styles.header}>
-        POSTED BY
-      </Typography>
-    </Grid>
-    <Grid item xs={2}>
-      <Typography variant="body2" className={styles.header}>
-        POSTED
-      </Typography>
-    </Grid>
-  </Grid>
-);
 
 const NewsList = ({
   news,
+  header,
   handleNewsItemEdit,
+  handleNewsImageEdit,
   handleNewsItemDelete,
   handleNewsApprovalStatus,
   isUnapproved,
@@ -77,6 +39,46 @@ const NewsList = ({
     };
   });
 
+  //https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
+  //Excellent resource for handling rerender on resize -Josh
+
+  const singleHeader = (
+    <div className={styles.header}>
+      <Grid container direction="row">
+        <Grid item xs={12}>
+          <Typography variant="body2" className={styles.header}>
+            {header}
+          </Typography>
+        </Grid>
+      </Grid>
+    </div>
+  );
+
+  const fullHeader = (
+    <Grid container direction="row" className={styles.header}>
+      <Grid item xs={2}>
+        <Typography variant="body2" className={styles.header}>
+          CATEGORY
+        </Typography>
+      </Grid>
+      <Grid item xs={5}>
+        <Typography variant="body2" className={styles.header}>
+          SUBJECT
+        </Typography>
+      </Grid>
+      <Grid item xs={3}>
+        <Typography variant="body2" className={styles.header}>
+          POSTED BY
+        </Typography>
+      </Grid>
+      <Grid item xs={2}>
+        <Typography variant="body2" className={styles.header}>
+          POSTED
+        </Typography>
+      </Grid>
+    </Grid>
+  );
+
   return (
     <Card className={styles.news_list}>
       {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
@@ -90,6 +92,7 @@ const NewsList = ({
                   isUnapproved={isUnapproved ?? true}
                   size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
                   handleNewsItemEdit={handleNewsItemEdit}
+                  handleNewsImageEdit={handleNewsImageEdit}
                   handleNewsItemDelete={handleNewsItemDelete}
                   handleNewsApprovalStatus={handleNewsApprovalStatus}
                   key={posting.SNID}

@@ -20,6 +20,22 @@
   }
 }
 
+.smallTab {
+  font-size: 0.6rem;
+  width: 5rem;
+  height: 2.5rem;
+  color: $neutral-white;
+  background-color: $primary-cyan;
+  border-radius: 0.5rem 0.5rem 0 0;
+  margin: 0 0.2rem;
+
+  &:global(.Mui-selected) {
+    background-color: $primary-blue;
+    font-weight: bold;
+    color: $neutral-white;
+  }
+}
+
 .tabPanel {
   &:global(.MuiTabPanel-root) {
     padding-top: 0;
