@@ -110,7 +110,10 @@ const Home = () => {
         </Grid>
         <Grid item xs={8}>
           <Typography variant="h5" className={styles.title}>
-            <b className="accentText">Gordon</b> Rec-IM
+            <Box component="span" sx={{ color: 'secondary.main' }}>
+              Gordon
+            </Box>{' '}
+            Rec-IM
           </Typography>
           <Typography variant="h6" className={styles.subtitle}>
             <i>"Competition reveals character"</i>
@@ -140,7 +143,7 @@ const Home = () => {
               setOpenActivityForm(true);
             }}
           >
-            Create a Activity
+            Create an Activity
           </Button>
         </Grid>
       </Grid>

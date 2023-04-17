@@ -46,7 +46,6 @@ const activityTypeIconPair = [
   },
 ];
 
-// Old activitylisting
 const ActivityListing = ({ activity }) => {
   let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
   let activeSeriesMessage =

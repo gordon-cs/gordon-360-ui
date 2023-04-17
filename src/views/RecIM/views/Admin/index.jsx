@@ -1,4 +1,4 @@
-import { Card, CardContent, Tabs, Tab, Button, Grid } from '@mui/material';
+import { Card, CardContent, Tabs, Tab, Button, Grid, Box } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -154,7 +154,10 @@ const Admin = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography variant="h5" className={styles.title}>
-          <b className="accentText">Gordon</b> Rec-IM
+          <Box component="span" sx={{ color: 'secondary.main' }}>
+            Gordon
+          </Box>{' '}
+          Rec-IM
         </Typography>
         <Typography variant="h6" className={styles.subtitle}>
           <i>"Competition reveals character"</i>
