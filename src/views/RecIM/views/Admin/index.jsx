@@ -20,6 +20,7 @@ import { getParticipants } from '../../../../services/recim/participant';
 import { deleteSurface, getSurfaces } from '../../../../services/recim/match';
 import AddIcon from '@mui/icons-material/Add';
 import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
+import SportForm from 'views/RecIM/components/Forms/SportForm';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { Typography } from '@mui/material';
 import recimLogo from './../../recim_logo.png';
@@ -137,7 +138,6 @@ const Admin = () => {
         createSnackbar(`Sport ${sport.Name} deleted successfully`, 'success');
       })
       .catch((reason) => {
-        console.log(reason);
         createSnackbar(
           `There was a problem deleting sport ${sport.Name}: ${reason.title}`,
           'error',
@@ -241,6 +241,13 @@ const Admin = () => {
           </TabPanel>
         </CardContent>
       </Card>
+      <SportForm
+        sport={sport}
+        createSnackbar={createSnackbar}
+        onClose={async () => setSports(await getAllSports())}
+        openSportForm={openSportForm}
+        setOpenSportForm={setOpenSportForm}
+      />
       <SurfaceForm
         surface={surface}
         createSnackbar={createSnackbar}

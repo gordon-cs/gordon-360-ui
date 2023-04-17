@@ -553,9 +553,17 @@ const SportListing = ({ sport, confirmDelete, editDetails }) => {
           </IconButton>
         }
       >
-        <Grid container direction="column">
-          <ListItemText>{sport.Name}</ListItemText>
-          <Typography className={styles.listingSubtitle}>{sport.Description}</Typography>
+        <Grid container direction="row">
+          <Grid item container direction="column" xs={6}>
+            <ListItemText>{sport.Name}</ListItemText>
+            <Typography className={styles.listingSubtitle}>{sport.Description}</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography className={styles.listingAdditionalInfo}>
+              <b>Rules: </b>
+              {sport.Rules}
+            </Typography>
+          </Grid>
         </Grid>
         <Menu
           open={optionsOpen}
