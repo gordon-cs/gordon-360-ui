@@ -79,6 +79,11 @@
 .listingSubtitle {
   color: $neutral-gray;
   font-size: 0.8em;
+
+  &_small {
+    color: $neutral-gray;
+    font-size: 0.7em;
+  }
 }
 
 .listingAdditionalInfo {

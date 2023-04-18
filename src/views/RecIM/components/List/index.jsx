@@ -177,12 +177,12 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
       if (a.WinCount == b.WinCount) {
         if (a.LossCount < b.LossCount) return -1;
         if (a.LossCount == b.LossCount) {
-          return 0;
+          if (a.SportsmanshipRating > b.SportsmanshipRating) return -1;
+          //spot for more tiebreakers if customer desires
         }
       }
       return 1;
     });
-    console.log(teamStanding);
     teamStanding.forEach((team) => {
       teams.push({
         ID: team.TeamID,
@@ -195,6 +195,7 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
             WinCount: team.WinCount,
             LossCount: team.LossCount,
             TieCount: team.TieCount,
+            SportsmanshipRating: team.SportsmanshipRating ?? 5,
           },
         ],
       });

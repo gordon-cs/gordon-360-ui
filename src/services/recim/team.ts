@@ -56,6 +56,7 @@ export type TeamRecord = {
   WinCount: number;
   LossCount: number;
   TieCount: number;
+  SportsmanshipRating: number;
 };
 
 type UploadTeam = {
