@@ -529,7 +529,6 @@ const StudentNews = () => {
         );
     }
 
-    // this logic has some really weird issues, TODO
     let createPhotoDialogBox = () => {
       return (
         <Dialog
