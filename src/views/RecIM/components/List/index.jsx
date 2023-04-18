@@ -105,6 +105,7 @@ const MatchList = ({ matches, activityID }) => {
       j++;
     }
   });
+
   organizedMatches.sort((a, b) => a.FullDate > b.FullDate);
 
   let matchTabs = (
