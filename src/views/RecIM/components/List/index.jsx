@@ -10,7 +10,7 @@ import {
 } from './Listing';
 import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
-import { standardDate } from '../Helpers';
+import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
@@ -71,44 +71,63 @@ const ParticipantList = ({
 const MatchList = ({ matches, activityID }) => {
   const [selectedDay, setSelectedDay] = useState(0);
   useEffect(() => {
-    let now = standardDate(new Date().toJSON(), false, false);
-    let index = organizedMatches.findIndex((day) => day.DayOnly === now);
+    let now = getFullDate(new Date().toJSON());
+    let index = organizedMatches.findIndex((day) => day.FullDate === now);
     if (index !== -1) setSelectedDay(index);
   }, []);
 
   if (!matches?.length || !matches[0])
     return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
 
-  let formattedMatches = [];
-  matches.forEach((m) => {
-    let date = standardDate(m.StartTime, false, true);
-    formattedMatches.push({
-      ...m,
-      DayOfWeek: date.slice(0, 3),
-      DayOnly: date.slice(4),
-    });
-  });
-
+  let firstDate = standardDate(matches[0].StartTime, false, true);
+  let firstFullDate = getFullDate(matches[0].StartTime);
   let organizedMatches = [
     {
-      DayOfWeek: formattedMatches[0].DayOfWeek,
-      DayOnly: formattedMatches[0].DayOnly,
-      Matches: [formattedMatches[0]],
+      FullDate: firstFullDate,
+      DayOfWeek: firstDate.slice(0, 3),
+      DayOnly: firstDate.slice(4),
+      Matches: [],
     },
   ];
+
   let j = 0;
-  formattedMatches.forEach((m) => {
-    if (organizedMatches[j].DayOnly === m.DayOnly) organizedMatches[j].Matches.push(m);
+  matches.forEach((m) => {
+    let date = standardDate(m.StartTime, false, true);
+    let fullDate = getFullDate(m.StartTime);
+    if (organizedMatches[j].DayOnly === date.slice(4)) organizedMatches[j].Matches.push(m);
     else {
       organizedMatches.push({
-        DayOfWeek: m.DayOfWeek,
-        DayOnly: m.DayOnly,
+        FullDate: fullDate,
+        DayOfWeek: date.slice(0, 3),
+        DayOnly: date.slice(4),
         Matches: [m],
       });
       j++;
     }
   });
 
+  // let organizedMatches = [
+  //   {
+  //     FullDate: formattedMatches[0].FullDate,
+  //     DayOfWeek: formattedMatches[0].DayOfWeek,
+  //     DayOnly: formattedMatches[0].DayOnly,
+  //     Matches: [],
+  //   },
+  // ];
+
+  // formattedMatches.forEach((m) => {
+  //   if (organizedMatches[j].DayOnly === m.DayOnly) organizedMatches[j].Matches.push(m);
+  //   else {
+  //     organizedMatches.push({
+  //       FullDate: m.FullDate,
+  //       DayOfWeek: m.DayOfWeek,
+  //       DayOnly: m.DayOnly,
+  //       Matches: [m],
+  //     });
+  //     j++;
+  //   }
+  // });
+  organizedMatches.sort((a, b) => a.FullDate > b.FullDate);
   let matchTabs = (
     <>
       <Box className={styles.scrollableCenteredTabs}>
@@ -118,7 +137,6 @@ const MatchList = ({ matches, activityID }) => {
           value={selectedDay}
           onChange={(event, tabIndex) => setSelectedDay(tabIndex)}
           variant="scrollable"
-          //scrollButtons="auto"
           aria-label="admin control center tabs"
         >
           {organizedMatches.map((day) => {

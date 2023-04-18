@@ -1,5 +1,13 @@
 import { isValid, format } from 'date-fns';
 
+const getFullDate = (date) => {
+  if (!isValid(date)) date = new Date(Date.parse(date)); // try parsing if invalid
+  if (!isValid(date)) {
+    console.log('invalid date');
+  }
+  return format(date, 'MMM d yyyy');
+};
+
 const standardDate = (date, includeTime, includeDayOfWeek) => {
   if (!isValid(date)) date = new Date(Date.parse(date)); // try parsing if invalid
   if (!isValid(date)) {
@@ -41,4 +49,4 @@ const standardTimeOnly = (date) => {
   return format(date, 'h:mmaaa');
 };
 
-export { standardDate, formatDateTimeRange, standardTimeOnly };
+export { getFullDate, standardDate, formatDateTimeRange, standardTimeOnly };
