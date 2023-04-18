@@ -1,22 +1,5 @@
-import {
-  Grid,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  Button,
-  IconButton,
-  Tabs,
-  Tab,
-  Box,
-  Menu,
-  MenuItem,
-  Tooltip,
-  tooltipClasses,
-  ClickAwayListener,
-  List,
-} from '@mui/material';
-import { useEffect, useState, useCallback } from 'react';
+import { Grid, Typography, Tabs, Tab, Box, List } from '@mui/material';
+import { useEffect, useState } from 'react';
 import {
   ActivityListing,
   MatchListing,
@@ -27,7 +10,6 @@ import {
 } from './Listing';
 import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
-import { ConnectingAirportsOutlined } from '@mui/icons-material';
 import { standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
 
@@ -88,6 +70,11 @@ const ParticipantList = ({
 
 const MatchList = ({ matches, activityID }) => {
   const [selectedDay, setSelectedDay] = useState(0);
+  useEffect(() => {
+    let now = standardDate(new Date().toJSON(), false, false);
+    let index = organizedMatches.findIndex((day) => day.DayOnly === now);
+    if (index !== -1) setSelectedDay(index);
+  }, []);
 
   if (!matches?.length || !matches[0])
     return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
@@ -122,20 +109,16 @@ const MatchList = ({ matches, activityID }) => {
     }
   });
 
-  useEffect(() => {
-    let now = standardDate(new Date().toJSON(), false, false);
-    let index = organizedMatches.findIndex((day) => day.DayOnly === now);
-    if (index !== -1) setSelectedDay(index);
-  }, []);
-
   let matchTabs = (
     <>
       <Box className={styles.scrollableCenteredTabs}>
         <Tabs
+          scrollButtons
+          allowScrollButtonsMobile
           value={selectedDay}
           onChange={(event, tabIndex) => setSelectedDay(tabIndex)}
           variant="scrollable"
-          scrollButtons="auto"
+          //scrollButtons="auto"
           aria-label="admin control center tabs"
         >
           {organizedMatches.map((day) => {
