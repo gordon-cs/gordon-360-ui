@@ -1,17 +1,27 @@
 @import '../../vars';
 
+.tabs {
+  &:global(.MuiTabs-root) {
+    min-height: 0;
+  }
+}
+
 .tabsIndicator {
   display: none;
 }
 
-.tab {
+%tab {
   font-size: medium;
-  width: 10rem;
-  height: 4rem;
   color: $neutral-white;
+  width: 49.25%;
   background-color: $primary-cyan;
   border-radius: 1rem 1rem 0 0;
-  margin: 0 0.25rem;
+  margin: 0 0;
+
+  &:global(.MuiTab-root) {
+    min-height: 3rem;
+    max-width: none;
+  }
 
   &:global(.Mui-selected) {
     background-color: $primary-blue;
@@ -20,24 +30,76 @@
   }
 }
 
-.smallTab {
+.tab {
+  @extend %tab;
+}
+
+.right_tab {
+  @extend %tab;
+  margin-left: 1.5%;
+}
+
+%tab_admin_view {
+  @extend %tab;
+  width: 32.3%;
+}
+
+.tab_admin_view {
+  @extend %tab_admin_view;
+}
+
+.mid_tab_admin_view {
+  @extend %tab_admin_view;
+  width: 32.4%;
+  margin: 0 1.5%;
+}
+
+%small_tab {
   font-size: 0.6rem;
-  width: 5rem;
-  height: 2.5rem;
+  width: 49.25%;
   color: $neutral-white;
   background-color: $primary-cyan;
   border-radius: 0.5rem 0.5rem 0 0;
-  margin: 0 0.2rem;
+  margin: 0 0;
+
+  &:global(.MuiTab-root) {
+    min-height: 2rem;
+    max-width: none;
+  }
 
   &:global(.Mui-selected) {
     background-color: $primary-blue;
     font-weight: bold;
     color: $neutral-white;
   }
+}
+
+.small_tab {
+  @extend %small_tab;
+}
+
+.small_right_tab {
+  @extend %small_tab;
+  margin-left: 1.5%;
+}
+
+%small_tab_admin_view {
+  @extend %small_tab;
+  width: 32.3%;
+}
+
+.small_tab_admin_view {
+  @extend %small_tab_admin_view;
+}
+
+.small_mid_tab_admin_view {
+  @extend %small_tab_admin_view;
+  width: 32.4%;
+  margin: 0 1.5%;
 }
 
 .tabPanel {
   &:global(.MuiTabPanel-root) {
-    padding-top: 0;
+    padding: 0;
   }
 }

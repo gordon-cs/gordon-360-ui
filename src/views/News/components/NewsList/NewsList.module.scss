@@ -1,6 +1,6 @@
 @import '../../../../vars';
 
-.news_list {
+%news_list {
   margin-bottom: 1rem;
 
   .header {
@@ -23,5 +23,17 @@
   .typography {
     text-align: center;
     padding: 1rem;
+  }
+}
+
+.news_list {
+  @extend %news_list;
+}
+
+.full_news_list {
+  @extend %news_list;
+
+  &:global(.MuiPaper-root) {
+    border-radius: 0 0 4px 4px;
   }
 }

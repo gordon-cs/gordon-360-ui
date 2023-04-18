@@ -36,8 +36,8 @@ import styles from './News.module.scss';
 const CROP_DIM = 200; // Width of cropped image canvas
 const NEWS_TABS = ['news', 'my-pending-news', 'all-pending-news'];
 const NEWS_HEADERS = ['News', 'My Pending News', 'All Pending News'];
-const BREAKPOINT_WIDTH = 575;
-const TAB_BREAKPOINT_WIDTH = 375;
+const BREAKPOINT_WIDTH = 605;
+const TAB_BREAKPOINT_WIDTH = 410;
 
 const StudentNews = () => {
   const [openPostActivity, setOpenPostActivity] = useState(false);
@@ -436,24 +436,40 @@ const StudentNews = () => {
               <Tabs
                 value={tabValue}
                 onChange={handleSwitchTab}
-                centered={true}
                 aria-label="News Lists"
                 TabIndicatorProps={{
                   className: styles.tabsIndicator,
                 }}
+                className={styles.tabs}
               >
                 <Tab
                   label={NEWS_HEADERS[0]}
                   value={NEWS_TABS[0]}
                   disableRipple={true}
-                  className={width < BREAKPOINT_WIDTH ? styles.smallTab : styles.tab}
+                  className={
+                    width < BREAKPOINT_WIDTH
+                      ? isAdmin
+                        ? styles.small_tab_admin_view
+                        : styles.small_tab
+                      : isAdmin
+                      ? styles.tab_admin_view
+                      : styles.tab
+                  }
                 />
 
                 <Tab
                   label={NEWS_HEADERS[1]}
                   value={NEWS_TABS[1]}
                   disableRipple={true}
-                  className={width < BREAKPOINT_WIDTH ? styles.smallTab : styles.tab}
+                  className={
+                    width < BREAKPOINT_WIDTH
+                      ? isAdmin
+                        ? styles.small_mid_tab_admin_view
+                        : styles.small_right_tab
+                      : isAdmin
+                      ? styles.mid_tab_admin_view
+                      : styles.right_tab
+                  }
                 />
 
                 {isAdmin && (
@@ -461,7 +477,9 @@ const StudentNews = () => {
                     label={NEWS_HEADERS[2]}
                     value={NEWS_TABS[2]}
                     disableRipple={true}
-                    className={width < BREAKPOINT_WIDTH ? styles.smallTab : styles.tab}
+                    className={
+                      width < BREAKPOINT_WIDTH ? styles.small_tab_admin_view : styles.tab_admin_view
+                    }
                   />
                 )}
               </Tabs>
@@ -475,6 +493,7 @@ const StudentNews = () => {
                   handleNewsApprovalStatus={handleNewsApprovalStatus}
                   isUnapproved={false}
                   isAdmin={isAdmin}
+                  tabBreakpointWidth={TAB_BREAKPOINT_WIDTH}
                 />
               </TabPanel>
               <TabPanel value={NEWS_TABS[1]} className={styles.tabPanel}>
@@ -486,6 +505,7 @@ const StudentNews = () => {
                   handleNewsItemDelete={handleNewsItemDelete}
                   handleNewsApprovalStatus={handleNewsApprovalStatus}
                   isAdmin={false}
+                  tabBreakpointWidth={TAB_BREAKPOINT_WIDTH}
                 />
               </TabPanel>
               {isAdmin && (
@@ -499,6 +519,7 @@ const StudentNews = () => {
                       handleNewsItemDelete={handleNewsItemDelete}
                       handleNewsApprovalStatus={handleNewsApprovalStatus}
                       isAdmin={isAdmin}
+                      tabBreakpointWidth={TAB_BREAKPOINT_WIDTH}
                     />
                   )}
                 </TabPanel>
@@ -574,7 +595,7 @@ const StudentNews = () => {
               {showCropper && (
                 <Button
                   variant="contained"
-                  color="primary"
+                  color={dropperImageData ? 'primary' : 'error'}
                   onClick={() => {
                     setShowCropper(null);
                     setCropperImageData(null);

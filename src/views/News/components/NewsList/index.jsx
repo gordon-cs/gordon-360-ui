@@ -26,6 +26,7 @@ const NewsList = ({
   handleNewsApprovalStatus,
   isUnapproved,
   isAdmin,
+  tabBreakpointWidth,
 }) => {
   const [width, setWidth] = useState(window.innerWidth);
 
@@ -80,7 +81,7 @@ const NewsList = ({
   );
 
   return (
-    <Card className={styles.news_list}>
+    <Card className={width >= tabBreakpointWidth ? styles.full_news_list : styles.news_list}>
       {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
       {news.length > 0 ? (
         <Grid>
