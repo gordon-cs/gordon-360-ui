@@ -231,6 +231,8 @@ const ParticipantListing = ({
   minimal,
   callbackFunction,
   showParticipantOptions,
+  isAdminPage,
+  editCustomParticipant,
   withAttendance,
   isAdmin,
   initialAttendance,
@@ -241,34 +243,42 @@ const ParticipantListing = ({
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState();
   const [anchorEl, setAnchorEl] = useState();
+  const [anchorCustomEl, setAnchorCustomEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
+  const moreOptionsCustomOpen = Boolean(anchorCustomEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
   const [attendanceCount, setAttendanceCount] = useState();
 
   const handleClickOff = () => {
     setAnchorEl(null);
+    setAnchorCustomEl(null);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setAnchorCustomEl(null);
     callbackFunction((val) => !val);
   };
 
   useEffect(() => {
     const loadAvatar = async () => {
-      if (participant.Username) {
-        const { def: defaultImage, pref: preferredImage } = await user.getImage(
-          participant.Username,
-        );
-        setAvatar(preferredImage || defaultImage);
+      if (!participant.IsCustom) {
+        if (participant.Username) {
+          const { def: defaultImage, pref: preferredImage } = await user.getImage(
+            participant.Username,
+          );
+          setAvatar(preferredImage || defaultImage);
+        }
+      } else {
+        // TODO - Depdent on how we want to store their Pics
       }
     };
     const loadUserInfo = async () => {
       if (participant.Username) {
-        const profileInfo = await user.getProfileInfo(participant.Username);
-        setName(profileInfo.fullName);
+        setName(`${participant.FirstName} ${participant.LastName}`);
       }
     };
+
     const loadAttendanceCount = async () => {
       setAttendanceCount(await getParticipantAttendanceCountForTeam(teamID, participant.Username));
     };
@@ -276,6 +286,10 @@ const ParticipantListing = ({
     loadAvatar();
     if (teamID && withAttendance) loadAttendanceCount();
   }, [participant.Username, teamID, withAttendance]);
+
+  const handleCustomParticipantOptions = (event) => {
+    setAnchorCustomEl(event.currentTarget);
+  };
 
   const handleParticipantOptions = (event) => {
     setAnchorEl(event.currentTarget);
@@ -341,6 +355,11 @@ const ParticipantListing = ({
       <ListItem
         secondaryAction={
           <>
+            {isAdminPage && participant.IsCustom && (
+              <IconButton edge="end" onClick={handleCustomParticipantOptions}>
+                <MoreHorizIcon />
+              </IconButton>
+            )}
             {minimal && (
               <IconButton edge="end" onClick={() => callbackFunction(participant.Username)}>
                 <ClearIcon />
@@ -410,6 +429,32 @@ const ParticipantListing = ({
                 Remove from team
               </MenuItem>
             )}
+          </Menu>
+        )}
+        {isAdminPage && participant.IsCustom && (
+          <Menu
+            open={moreOptionsCustomOpen}
+            onClose={handleClickOff}
+            anchorEl={anchorCustomEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <MenuItem
+              dense
+              onClick={() => {
+                editCustomParticipant(participant);
+                setAnchorCustomEl(null);
+              }}
+              divider
+            >
+              Edit Participant Information
+            </MenuItem>
           </Menu>
         )}
       </ListItem>

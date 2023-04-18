@@ -19,6 +19,7 @@ import { getTeams } from '../../../../services/recim/team';
 import { getParticipants } from '../../../../services/recim/participant';
 import { deleteSurface, getSurfaces } from '../../../../services/recim/match';
 import AddIcon from '@mui/icons-material/Add';
+import ParticipantForm from 'views/RecIM/components/Forms/ParticipantForm';
 import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
 import SportForm from 'views/RecIM/components/Forms/SportForm';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -44,11 +45,13 @@ const Admin = () => {
   const [activities, setActivities] = useState();
   const [teams, setTeams] = useState();
   const [participants, setParticipants] = useState();
+  const [participant, setParticipant] = useState();
   const [surfaces, setSurfaces] = useState();
   const [surface, setSurface] = useState();
   const [sports, setSports] = useState();
   const [sport, setSport] = useState();
   const [tab, setTab] = useState(0);
+  const [openParticipantForm, setOpenParticipantForm] = useState();
   const [openSurfaceForm, setOpenSurfaceForm] = useState();
   const [openSportForm, setOpenSportForm] = useState(false);
   const [openConfirmDeleteSurface, setOpenConfirmDeleteSurface] = useState();
@@ -87,6 +90,11 @@ const Admin = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
+  const handleOpenCreateParticipant = () => {
+    setParticipant();
+    setOpenParticipantForm(true);
+  };
+
   const handleOpenCreateSurface = () => {
     setSurface();
     setOpenSurfaceForm(true);
@@ -95,6 +103,11 @@ const Admin = () => {
   const handleOpenCreateSport = () => {
     setSport();
     setOpenSportForm(true);
+  };
+
+  const handleOpenEditParticipant = (participant) => {
+    setParticipant(participant);
+    setOpenParticipantForm(true);
   };
 
   const handleOpenEditSurface = (surface) => {
@@ -195,7 +208,25 @@ const Admin = () => {
             {teams ? <TeamList teams={teams} /> : <GordonLoader />}
           </TabPanel>
           <TabPanel value={tab} index={2}>
-            {participants ? <ParticipantList participants={participants} /> : <GordonLoader />}
+            {participants ? (
+              <>
+                <Button
+                  color="secondary"
+                  startIcon={<AddIcon />}
+                  className={styles.addResourceButton}
+                  onClick={handleOpenCreateParticipant}
+                >
+                  add a participant
+                </Button>
+                <ParticipantList
+                  participants={participants}
+                  isAdminPage={true}
+                  editCustomParticipant={handleOpenEditParticipant}
+                />
+              </>
+            ) : (
+              <GordonLoader />
+            )}
           </TabPanel>
           <TabPanel value={tab} index={3}>
             {surfaces ? (
@@ -241,6 +272,13 @@ const Admin = () => {
           </TabPanel>
         </CardContent>
       </Card>
+      <ParticipantForm
+        participant={participant}
+        createSnackbar={createSnackbar}
+        onClose={async () => setParticipants(await getParticipants())}
+        openParticipantForm={openParticipantForm}
+        setOpenParticipantForm={setOpenParticipantForm}
+      />
       <SportForm
         sport={sport}
         createSnackbar={createSnackbar}

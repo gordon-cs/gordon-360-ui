@@ -26,6 +26,8 @@ const ActivityList = ({ activities, showActivityOptions }) => {
 const ParticipantList = ({
   participants,
   minimal,
+  isAdminPage,
+  editCustomParticipant,
   showParticipantOptions,
   withAttendance,
   attendance,
@@ -46,6 +48,8 @@ const ParticipantList = ({
         key={participant.username}
         participant={participant}
         minimal={minimal}
+        isAdminPage={isAdminPage}
+        editCustomParticipant={editCustomParticipant}
         withAttendance={withAttendance}
         initialAttendance={
           withAttendance && attendance?.find((att) => att.Username === participant.Username)

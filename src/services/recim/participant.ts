@@ -6,10 +6,22 @@ export type Participant = {
   Username: string;
   Email: string;
   Role: string;
+  AllowEmails: boolean;
+  SpecifiedGender: string;
   GamesAttended: number;
   Status: string;
   Notification: ParticipantNotification[];
   IsAdmin: boolean;
+  IsCustom: boolean;
+  FirstName: string;
+  LastName: string;
+};
+
+type CustomParticipant = {
+  AllowEmails: boolean;
+  SpecifiedGender: string;
+  FirstName: string;
+  LastName: string;
 };
 
 type PatchParticipantActivity = {
@@ -69,6 +81,11 @@ type CreatedParticipantActivity = {
 const createParticipant = (username: string): Promise<Participant> =>
   http.put(`recim/participants/${username}`);
 
+const createCustomParticipant = (
+  username: string,
+  newcustomParticipant: CustomParticipant,
+): Promise<Participant> => http.put(`recim/participants/${username}/custom`, newcustomParticipant);
+
 const getParticipants = (): Promise<Participant[]> => http.get(`recim/participants`);
 
 const getParticipantByUsername = (username: string): Promise<Participant> =>
@@ -92,6 +109,12 @@ const sendNotification = (
 ): Promise<CreatedParticipantNotification> =>
   http.post(`participants/${username}/notifications`, notification);
 
+const editCustomParticipant = (
+  username: string,
+  updatedCustomParticipant: CustomParticipant,
+): Promise<Participant> =>
+  http.patch(`recim/participants/${username}/custom/update`, updatedCustomParticipant);
+
 const editParticipantAdmin = (username: string, isAdmin: boolean): Promise<Participant> =>
   http.patch(`recim/participants/${username}/admin`, isAdmin);
 
@@ -111,6 +134,7 @@ const editParticipantStatus = (
 
 export {
   createParticipant,
+  createCustomParticipant,
   getParticipants,
   getParticipantByUsername,
   getParticipantTeams,
@@ -118,6 +142,7 @@ export {
   getParticipantStatusTypes,
   getParticipantActivityPrivTypes,
   sendNotification,
+  editCustomParticipant,
   editParticipantAdmin,
   editParticipantAllowEmails,
   editParticipantActivity,
