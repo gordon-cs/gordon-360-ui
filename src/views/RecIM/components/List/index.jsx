@@ -105,29 +105,8 @@ const MatchList = ({ matches, activityID }) => {
       j++;
     }
   });
-
-  // let organizedMatches = [
-  //   {
-  //     FullDate: formattedMatches[0].FullDate,
-  //     DayOfWeek: formattedMatches[0].DayOfWeek,
-  //     DayOnly: formattedMatches[0].DayOnly,
-  //     Matches: [],
-  //   },
-  // ];
-
-  // formattedMatches.forEach((m) => {
-  //   if (organizedMatches[j].DayOnly === m.DayOnly) organizedMatches[j].Matches.push(m);
-  //   else {
-  //     organizedMatches.push({
-  //       FullDate: m.FullDate,
-  //       DayOfWeek: m.DayOfWeek,
-  //       DayOnly: m.DayOnly,
-  //       Matches: [m],
-  //     });
-  //     j++;
-  //   }
-  // });
   organizedMatches.sort((a, b) => a.FullDate > b.FullDate);
+
   let matchTabs = (
     <>
       <Box className={styles.scrollableCenteredTabs}>
@@ -185,11 +164,26 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
     }
   };
 
-  var teamStanding;
   if (series) {
     teams = [];
-    teamStanding = series.TeamStanding.sort((a, b) => a.WinCount < b.WinCount);
-    teamStanding.forEach((team) =>
+    /**
+     * sort by:
+     * 1) wins
+     * 2) reverse losses
+     * 3) sportsmanship
+     */
+    var teamStanding = series.TeamStanding.sort((a, b) => {
+      if (a.WinCount > b.WinCount) return -1;
+      if (a.WinCount == b.WinCount) {
+        if (a.LossCount < b.LossCount) return -1;
+        if (a.LossCount == b.LossCount) {
+          return 0;
+        }
+      }
+      return 1;
+    });
+    console.log(teamStanding);
+    teamStanding.forEach((team) => {
       teams.push({
         ID: team.TeamID,
         Name: team.Name,
@@ -203,8 +197,8 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
             TieCount: team.TieCount,
           },
         ],
-      }),
-    );
+      });
+    });
   }
 
   let content = match
