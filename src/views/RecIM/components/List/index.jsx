@@ -106,27 +106,6 @@ const MatchList = ({ matches, activityID }) => {
     }
   });
 
-  // let organizedMatches = [
-  //   {
-  //     FullDate: formattedMatches[0].FullDate,
-  //     DayOfWeek: formattedMatches[0].DayOfWeek,
-  //     DayOnly: formattedMatches[0].DayOnly,
-  //     Matches: [],
-  //   },
-  // ];
-
-  // formattedMatches.forEach((m) => {
-  //   if (organizedMatches[j].DayOnly === m.DayOnly) organizedMatches[j].Matches.push(m);
-  //   else {
-  //     organizedMatches.push({
-  //       FullDate: m.FullDate,
-  //       DayOfWeek: m.DayOfWeek,
-  //       DayOnly: m.DayOnly,
-  //       Matches: [m],
-  //     });
-  //     j++;
-  //   }
-  // });
   organizedMatches.sort((a, b) => a.FullDate > b.FullDate);
   let matchTabs = (
     <>
