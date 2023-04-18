@@ -156,14 +156,16 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
       </ListItemButton>
     );
   } else {
-    let ActivityRecord = {
+    let Record = {
       WinCount: 0,
+      TieCount: 0,
       LossCount: 0,
     };
 
     team.TeamRecord?.forEach((record) => {
-      ActivityRecord.WinCount += record.WinCount;
-      ActivityRecord.LossCount += record.LossCount;
+      Record.WinCount += record.WinCount;
+      Record.TieCount += record.TieCount;
+      Record.LossCount += record.LossCount;
     });
     content = (
       <Grid container direction="row" justifyContent="center">
@@ -204,7 +206,10 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                   {team.TeamRecord && !invite && (
                     <Grid item>
                       <Typography className={styles.listingSubtitle}>
-                        {ActivityRecord.WinCount}W : {ActivityRecord.LossCount}L
+                        {Record.WinCount}W : {Record.TieCount}T : {Record.LossCount}L
+                      </Typography>
+                      <Typography className={styles.listingSubtitle_small}>
+                        Sportsmanship: {team?.TeamRecord[0].SportsmanshipRating}
                       </Typography>
                     </Grid>
                   )}
