@@ -113,6 +113,7 @@ const ActivityListing = ({ activity }) => {
 const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
 
+  console.log(team);
   const handleAcceptInvite = async () => {
     let response = 'accepted';
     await respondToTeamInvite(team.ID, response);
@@ -212,7 +213,8 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                         {Record.WinCount}W : {Record.TieCount}T : {Record.LossCount}L
                       </Typography>
                       <Typography className={styles.listingSubtitle_small}>
-                        Sportsmanship: {team.TeamRecord[0]?.SportsmanshipRating}
+                        Sportsmanship:{' '}
+                        {team.TeamRecord[0]?.SportsmanshipRating ?? team.SportsmanshipRating}
                       </Typography>
                     </Grid>
                   )}
