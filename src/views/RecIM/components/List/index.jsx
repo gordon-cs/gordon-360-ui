@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
 import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
+import addDays from 'date-fns/addDays';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -70,10 +71,22 @@ const ParticipantList = ({
 
 const MatchList = ({ matches, activityID }) => {
   const [selectedDay, setSelectedDay] = useState(0);
+
   useEffect(() => {
-    let now = getFullDate(new Date().toJSON());
-    let index = organizedMatches.findIndex((day) => day.FullDate === now);
-    if (index !== -1) setSelectedDay(index);
+    let now = new Date();
+    let today = getFullDate(now.toJSON());
+    let index = organizedMatches.findIndex((day) => day.FullDate === today);
+    if (index === -1)
+      for (let i = 1; i < 8; i++) {
+        now = addDays(now, i);
+        today = getFullDate(now.toJSON());
+        index = organizedMatches.findIndex((day) => day.FullDate === today);
+        if (index !== -1) {
+          setSelectedDay(index);
+          break;
+        }
+      }
+    else setSelectedDay(index);
   }, []);
 
   if (!matches?.length || !matches[0])
@@ -107,6 +120,7 @@ const MatchList = ({ matches, activityID }) => {
   });
 
   organizedMatches.sort((a, b) => a.FullDate > b.FullDate);
+
   let matchTabs = (
     <>
       <Box className={styles.scrollableCenteredTabs}>
