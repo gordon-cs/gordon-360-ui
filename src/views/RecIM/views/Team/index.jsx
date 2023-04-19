@@ -193,7 +193,7 @@ const Team = () => {
                 <Grid container justifyContent="center">
                   <Button
                     variant="contained"
-                    color="warning"
+                    color="secondary"
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
                     onClick={() => {
