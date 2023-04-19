@@ -13,6 +13,9 @@ import {
   Tooltip,
   tooltipClasses,
   ClickAwayListener,
+  FormControl,
+  InputLabel,
+  Select,
 } from '@mui/material';
 import { gordonColors } from 'theme';
 import { styled } from '@mui/material/styles';
@@ -84,6 +87,7 @@ const Activity = () => {
   const [adminAnchorEl, setAdminAnchorEl] = useState();
   const openAdminMenu = Boolean(adminAnchorEl);
   const [openTooltip, setOpenTooltip] = useState(false);
+  const [teamListFilter, setTeamListFilter] = useState(false);
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -297,7 +301,9 @@ const Activity = () => {
               );
             })
           ) : (
-            <Typography className={styles.secondaryText}>No series scheduled yet!</Typography>
+            <Typography sx={{ mt: '1em' }} className={styles.secondaryText}>
+              No series scheduled yet!
+            </Typography>
           )}
         </CardContent>
       </Card>
@@ -339,33 +345,41 @@ const Activity = () => {
           )}{' '}
           {activity.Series.length > 0 ? (
             <>
-              <Box className={styles.scrollableCenteredTabs}>
-                <Tabs
-                  value={selectedSeriesTab}
-                  onChange={(event, tabIndex) => setSelectedSeriesTab(tabIndex)}
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="admin control center tabs"
-                >
-                  {activity.Series.map((series) => {
-                    return <Tab label={series.Name} />;
-                  })}
-                </Tabs>
-              </Box>
-              {activity.Series.map((series, index) => {
-                return (
-                  <TabPanel value={selectedSeriesTab} index={index}>
-                    <TeamList series={series} />
-                  </TabPanel>
-                );
-              })}
+              <Grid container justifyContent="center" alignItems="center" columnSpacing={2}>
+                <Grid item>
+                  <Typography className={styles.secondaryText}>Filter by series: </Typography>
+                </Grid>
+                <Grid item>
+                  <FormControl variant="filled">
+                    <Select
+                      value={teamListFilter}
+                      onChange={(e) => setTeamListFilter(e.target.value)}
+                      className={styles.teamListFilterSelect}
+                      displayEmpty
+                    >
+                      <MenuItem value={false}>
+                        <em>All Teams</em>
+                      </MenuItem>
+                      {activity.Series.map((series) => {
+                        return <MenuItem value={series.ID}>{series.Name}</MenuItem>;
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <TeamList
+                series={
+                  teamListFilter && activity.Series.find((series) => series.ID === teamListFilter)
+                }
+                teams={!teamListFilter && activity.Team}
+              />
             </>
           ) : (
             <>
               {activity.Team?.length ? (
                 <TeamList teams={activity.Team} />
               ) : (
-                <Typography className={styles.secondaryText}>
+                <Typography sx={{ mt: '1em' }} className={styles.secondaryText}>
                   Be the first to create a team!
                 </Typography>
               )}

@@ -87,7 +87,6 @@
 }
 
 .secondaryText {
-  margin-top: 1em;
   color: $neutral-gray;
   text-align: center;
 }
@@ -202,6 +201,14 @@
     font-weight: bold;
     margin: 1em;
     text-align: center;
+  }
+}
+
+.teamListFilterSelect {
+  width: 10rem;
+  text-align: center;
+  :global(.MuiSelect-filled) {
+    padding: 0.6em 1em;
   }
 }
 
