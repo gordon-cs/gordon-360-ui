@@ -1,4 +1,5 @@
-import { List, Typography } from '@mui/material';
+import { Grid, Typography, Tabs, Tab, Box, List } from '@mui/material';
+import { useEffect, useState } from 'react';
 import {
   ActivityListing,
   MatchListing,
@@ -9,6 +10,9 @@ import {
 } from './Listing';
 import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
+import { getFullDate, standardDate } from '../Helpers';
+import { TabPanel } from '../TabPanel';
+import addDays from 'date-fns/addDays';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -66,15 +70,97 @@ const ParticipantList = ({
 };
 
 const MatchList = ({ matches, activityID }) => {
+  const [selectedDay, setSelectedDay] = useState(0);
+
+  useEffect(() => {
+    let now = new Date();
+    let today = getFullDate(now.toJSON());
+    let index = organizedMatches.findIndex((day) => day.FullDate === today);
+    if (index === -1)
+      for (let i = 1; i < 8; i++) {
+        now = addDays(now, i);
+        today = getFullDate(now.toJSON());
+        index = organizedMatches.findIndex((day) => day.FullDate === today);
+        if (index !== -1) {
+          setSelectedDay(index);
+          break;
+        }
+      }
+    else setSelectedDay(index);
+  }, []);
+
   if (!matches?.length || !matches[0])
     return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
-  let content = matches.map((match) => (
-    <MatchListing key={match?.ID} match={match} activityID={activityID} />
-    // I have no idea why, but on ladder matches, match can't be found
-    // despite it showing up on the debugger.
-  ));
 
-  return <List dense>{content}</List>;
+  let firstDate = standardDate(matches[0].StartTime, false, true);
+  let firstFullDate = getFullDate(matches[0].StartTime);
+  let organizedMatches = [
+    {
+      FullDate: firstFullDate,
+      DayOfWeek: firstDate.slice(0, 3),
+      DayOnly: firstDate.slice(4),
+      Matches: [],
+    },
+  ];
+
+  let j = 0;
+  matches.forEach((m) => {
+    let date = standardDate(m.StartTime, false, true);
+    let fullDate = getFullDate(m.StartTime);
+    if (organizedMatches[j].DayOnly === date.slice(4)) organizedMatches[j].Matches.push(m);
+    else {
+      organizedMatches.push({
+        FullDate: fullDate,
+        DayOfWeek: date.slice(0, 3),
+        DayOnly: date.slice(4),
+        Matches: [m],
+      });
+      j++;
+    }
+  });
+
+  organizedMatches.sort((a, b) => a.FullDate > b.FullDate);
+
+  let matchTabs = (
+    <>
+      <Box className={styles.scrollableCenteredTabs}>
+        <Tabs
+          scrollButtons
+          allowScrollButtonsMobile
+          value={selectedDay}
+          onChange={(event, tabIndex) => setSelectedDay(tabIndex)}
+          variant="scrollable"
+          aria-label="admin control center tabs"
+        >
+          {organizedMatches.map((day) => {
+            return (
+              <Tab
+                label={
+                  <Grid>
+                    <Typography sx={{ fontSize: '1em' }}>{day.DayOfWeek}</Typography>
+                    <Typography sx={{ fontSize: '0.8em' }}>{day.DayOnly}</Typography>
+                  </Grid>
+                }
+              />
+            );
+          })}
+        </Tabs>
+      </Box>
+
+      {organizedMatches.map((day, index) => {
+        return (
+          <TabPanel value={selectedDay} index={index}>
+            <List dense>
+              {day.Matches.map((match) => (
+                <MatchListing key={match?.ID} match={match} activityID={activityID} />
+              ))}
+            </List>
+          </TabPanel>
+        );
+      })}
+    </>
+  );
+  return matchTabs;
 };
 
 // setTargetTeamID is used for edit Match teams

@@ -17,7 +17,6 @@ import {
 import { gordonColors } from 'theme';
 import { styled } from '@mui/material/styles';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
