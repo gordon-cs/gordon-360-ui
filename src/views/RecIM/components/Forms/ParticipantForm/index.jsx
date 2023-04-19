@@ -72,7 +72,7 @@ const ParticipantForm = ({
         .then(() => {
           setSaving(false);
           createSnackbar(
-            `Participant ${participantRequest.FullName} has been edited successfully`,
+            `Participant ${participantRequest.FirstName} ${participantRequest.LastName} has been updated successfully`,
             'success',
           );
           onClose();
@@ -90,7 +90,7 @@ const ParticipantForm = ({
         .then(() => {
           setSaving(false);
           createSnackbar(
-            `Participant ${participantRequest.FullName} has been created successfully`,
+            `Participant ${participantRequest.FirstName} ${participantRequest.LastName} has been created successfully`,
             'success',
           );
           onClose();

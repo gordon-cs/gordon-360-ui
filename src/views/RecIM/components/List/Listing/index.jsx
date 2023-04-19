@@ -232,7 +232,7 @@ const ParticipantListing = ({
   callbackFunction,
   showParticipantOptions,
   isAdminPage,
-  editCustomParticipant,
+  editDetails,
   withAttendance,
   isAdmin,
   initialAttendance,
@@ -448,7 +448,7 @@ const ParticipantListing = ({
             <MenuItem
               dense
               onClick={() => {
-                editCustomParticipant(participant);
+                editDetails(participant);
                 setAnchorCustomEl(null);
               }}
               divider

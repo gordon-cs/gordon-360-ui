@@ -221,7 +221,7 @@ const Admin = () => {
                 <ParticipantList
                   participants={participants}
                   isAdminPage={true}
-                  editCustomParticipant={handleOpenEditParticipant}
+                  editDetails={handleOpenEditParticipant}
                 />
               </>
             ) : (
