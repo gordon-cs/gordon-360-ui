@@ -113,7 +113,6 @@ const ActivityListing = ({ activity }) => {
 const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
 
-  console.log(team);
   const handleAcceptInvite = async () => {
     let response = 'accepted';
     await respondToTeamInvite(team.ID, response);

@@ -147,7 +147,15 @@ const MatchList = ({ matches, activityID }) => {
       })}
     </>
   );
-  return matchTabs;
+  return organizedMatches.length === 1 ? (
+    <List dense>
+      {organizedMatches[0].Matches.map((match) => (
+        <MatchListing key={match?.ID} match={match} activityID={activityID} />
+      ))}
+    </List>
+  ) : (
+    matchTabs
+  );
 };
 
 // setTargetTeamID is used for edit Match teams
