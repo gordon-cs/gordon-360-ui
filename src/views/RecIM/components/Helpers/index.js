@@ -6,7 +6,7 @@ const standardDate = (date, includeTime) => {
     // if still invalid (perhaps null)
     return;
   }
-  let formattedDate = includeTime ? format(date, 'MMM d h:mmaaa') : format(date, 'MMM d');
+  let formattedDate = includeTime ? format(date, 'MMM d, h:mmaaa') : format(date, 'MMM d');
   return formattedDate;
 };
 

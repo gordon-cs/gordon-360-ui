@@ -461,8 +461,11 @@ const MatchListing = ({ match, activityID }) => {
                     <Grid item xs={2}>
                       <Typography>{':'}</Typography>{' '}
                     </Grid>
+
                     <Grid item xs={5} textAlign="left">
-                      <Typography>{team1Score ?? 'TBD'}</Typography>
+                      <Typography sx={team1Score > team0Score && { fontWeight: 'bold' }}>
+                        {team1Score ?? 'TBD'}
+                      </Typography>
                     </Grid>
                   </Grid>
                 ) : match.Status === 'Forfeited' ? (
