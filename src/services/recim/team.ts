@@ -50,8 +50,9 @@ export type TeamMatchHistory = {
 };
 
 export type TeamRecord = {
-  ID: number;
+  SeriesID: number;
   TeamID: number;
+  Logo: string;
   Name: string;
   WinCount: number;
   LossCount: number;
