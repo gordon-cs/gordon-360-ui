@@ -30,6 +30,7 @@ import SportsFootballIcon from '@mui/icons-material/SportsFootball';
 import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
+import defaultLogo from 'views/RecIM/recim_logo.png';
 
 const ActivityListing = ({ activity }) => {
   let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
@@ -123,7 +124,6 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
     await respondToTeamInvite(team.ID, response);
     callbackFunction(response, team.Activity.ID, team.ID);
   };
-
   let content;
   if (match) {
     let targetTeamStats = match.Scores.find((score) => score.TeamID === team.ID);
@@ -175,15 +175,18 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
             to={invite ? null : `/recim/activity/${team.Activity.ID}/team/${team.ID}`}
             className={styles.listing}
           >
-            <Grid container>
-              <Grid container columnSpacing={2}>
-                <Grid item xs={8} sm={5}>
+            <ListItemAvatar>
+              <Avatar src={team.Logo ?? defaultLogo} className={styles.teamLogo}></Avatar>
+            </ListItemAvatar>
+            <Grid container direction="row" spacing={2}>
+              <Grid container item columnSpacing={2}>
+                <Grid container item xs={7.5} sm={6}>
                   <Typography className={styles.listingTitle}>{team.Name}</Typography>
                 </Grid>
                 <Grid
                   item
-                  xs={4}
-                  sm={7}
+                  xs={4.5}
+                  sm={6}
                   container
                   className={styles.rightAlignLarge}
                   direction="row"
@@ -209,13 +212,15 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                         {Record.WinCount}W : {Record.TieCount}T : {Record.LossCount}L
                       </Typography>
                       <Typography className={styles.listingSubtitle_small}>
-                        Sportsmanship: {team?.TeamRecord[0].SportsmanshipRating}
+                        Sportsmanship: {team.TeamRecord[0]?.SportsmanshipRating}
                       </Typography>
                     </Grid>
                   )}
                 </Grid>
-                <Grid item xs={12} sm={6} className={styles.listingSubtitle}>
-                  <Typography className={styles.listingSubtitle}>{team.Activity?.Name}</Typography>
+                <Grid item xs={12}>
+                  <Typography className={styles.listingSubtitle_small}>
+                    {team.Activity?.Name}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>

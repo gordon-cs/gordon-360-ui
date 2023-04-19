@@ -187,6 +187,7 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
     teamStanding.forEach((team) => {
       teams.push({
         ID: team.TeamID,
+        Logo: team.Logo,
         Name: team.Name,
         Activity: {
           ID: series.ActivityID,
