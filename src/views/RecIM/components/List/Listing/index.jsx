@@ -124,6 +124,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
     await respondToTeamInvite(team.ID, response);
     callbackFunction(response, team.Activity.ID, team.ID);
   };
+
   let content;
   if (match) {
     let targetTeamStats = match.Scores.find((score) => score.TeamID === team.ID);
@@ -172,7 +173,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
         <Grid item xs={12}>
           <ListItemButton
             component={Link}
-            to={invite ? null : `/recim/activity/${team.Activity.ID}/team/${team.ID}`}
+            to={`/recim/activity/${team.Activity.ID}/team/${team.ID}`}
             className={styles.listing}
           >
             <ListItemAvatar>
@@ -201,7 +202,15 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                   )}
                   {invite && (
                     <Grid item>
-                      <IconButton className={styles.rejectIcon} onClick={handleRejectInvite}>
+                      <IconButton
+                        className={styles.rejectIcon}
+                        onClick={(e) => {
+                          // the next two lines prevent parent from redirecting while executing handleRejectInvite()
+                          e.stopPropagation();
+                          e.preventDefault();
+                          handleRejectInvite();
+                        }}
+                      >
                         <ClearIcon />
                       </IconButton>
                     </Grid>
