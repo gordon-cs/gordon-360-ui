@@ -385,10 +385,10 @@ const Activity = () => {
         ) : (
           <Grid container justifyContent="center" spacing={2}>
             <Grid item container justifyContent="center" spacing={2}>
-              <Grid item xs={12} md={7}>
+              <Grid item xs={12} md={6.5}>
                 {scheduleCard}
               </Grid>
-              <Grid item direction={'column'} xs={12} md={5}>
+              <Grid item direction={'column'} xs={12} md={5.5}>
                 <Grid item className={styles.gridItemStack}>
                   {teamsCard}
                 </Grid>

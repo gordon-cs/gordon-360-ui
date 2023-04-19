@@ -160,7 +160,15 @@ const MatchList = ({ matches, activityID }) => {
       })}
     </>
   );
-  return matchTabs;
+  return organizedMatches.length === 1 ? (
+    <List dense>
+      {organizedMatches[0].Matches.map((match) => (
+        <MatchListing key={match?.ID} match={match} activityID={activityID} />
+      ))}
+    </List>
+  ) : (
+    matchTabs
+  );
 };
 
 // setTargetTeamID is used for edit Match teams
@@ -178,13 +186,29 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
     }
   };
 
-  var teamStanding;
   if (series) {
     teams = [];
-    teamStanding = series.TeamStanding.sort((a, b) => a.WinCount < b.WinCount);
-    teamStanding.forEach((team) =>
+    /**
+     * sort by:
+     * 1) wins
+     * 2) reverse losses
+     * 3) sportsmanship
+     */
+    var teamStanding = series.TeamStanding.sort((a, b) => {
+      if (a.WinCount > b.WinCount) return -1;
+      if (a.WinCount == b.WinCount) {
+        if (a.LossCount < b.LossCount) return -1;
+        if (a.LossCount == b.LossCount) {
+          if (a.SportsmanshipRating > b.SportsmanshipRating) return -1;
+          //spot for more tiebreakers if customer desires
+        }
+      }
+      return 1;
+    });
+    teamStanding.forEach((team) => {
       teams.push({
         ID: team.TeamID,
+        Logo: team.Logo,
         Name: team.Name,
         Activity: {
           ID: series.ActivityID,
@@ -194,10 +218,11 @@ const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID })
             WinCount: team.WinCount,
             LossCount: team.LossCount,
             TieCount: team.TieCount,
+            SportsmanshipRating: team.SportsmanshipRating ?? 5,
           },
         ],
-      }),
-    );
+      });
+    });
   }
 
   let content = match
