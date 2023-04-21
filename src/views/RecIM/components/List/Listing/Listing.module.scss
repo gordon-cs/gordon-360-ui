@@ -42,6 +42,8 @@
 }
 
 .rejectIcon {
+  width: 2rem;
+  height: 2rem;
   background-color: $primary-blue;
   color: $neutral-white;
 }
@@ -51,6 +53,8 @@
 }
 
 .acceptIcon {
+  width: 2rem;
+  height: 2rem;
   background-color: $primary-cyan;
   color: $neutral-white;
 }
@@ -73,12 +77,17 @@
 .listingTitle {
   color: $neutral-dark-gray2;
   font-weight: bold;
-  font-size: 1.1em;
+  font-size: 0.9em;
 }
 
 .listingSubtitle {
   color: $neutral-gray;
   font-size: 0.8em;
+
+  &_small {
+    color: $neutral-gray;
+    font-size: 0.7em;
+  }
 }
 
 .listingAdditionalInfo {
@@ -104,10 +113,32 @@
   background-color: rgba($secondary-yellow, 0.4);
 }
 
+.teamLogo {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 1rem 0 0;
+}
+
 @media (min-width: $break-xs) {
   .rightAlignLarge {
     text-align: right;
     justify-content: flex-end;
+  }
+
+  .listingSubtitle {
+    color: $neutral-gray;
+    font-size: 0.7em;
+
+    &_small {
+      color: $neutral-gray;
+      font-size: 0.6em;
+    }
+  }
+
+  .listingTitle {
+    color: $neutral-dark-gray2;
+    font-weight: bold;
+    font-size: 1.1em;
   }
 }
 
@@ -115,5 +146,25 @@
   .listingWrapper {
     padding-left: 0;
     padding-right: 0;
+  }
+}
+
+@media (min-width: $break-sm) {
+  .teamLogo {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 1rem 0 0;
+  }
+
+  .rejectIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: $primary-blue;
+    color: $neutral-white;
+  }
+  .acceptIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: $primary-cyan;
   }
 }
