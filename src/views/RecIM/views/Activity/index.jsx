@@ -128,10 +128,10 @@ const Activity = () => {
   useEffect(() => {
     if (activity?.Series.length > 0) {
       let now = new Date().toJSON();
-      let index = activity.Series.find(
+      let activeSeries = activity.Series.find(
         (series) => series.StartDate < now && now < series.EndDate,
-      )?.ID;
-      if (index !== -1) setTeamListFilter(index);
+      );
+      if (activeSeries) setTeamListFilter(activeSeries.ID);
     }
   }, [activity]);
 

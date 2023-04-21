@@ -63,8 +63,8 @@ const Home = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      // Get all active activities where registration has not closed
-      setActivities(await getActivities());
+      // Get all active activities
+      setActivities(await getActivities(true));
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
       }
