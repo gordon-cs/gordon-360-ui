@@ -42,8 +42,6 @@ import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
-import { TabPanel } from 'views/RecIM/components/TabPanel';
-import { Box } from '@mui/system';
 import { createTeam } from 'services/recim/team';
 import InviteParticipantForm from 'views/RecIM/components/Forms/InviteParticipantForm';
 
@@ -81,7 +79,6 @@ const Activity = () => {
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
-  const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminAnchorEl, setAdminAnchorEl] = useState();
@@ -127,16 +124,15 @@ const Activity = () => {
     }
   }, [activity, user, userTeams]);
 
-  // autofocus on active series
+  // auto select active series for filtering team list
   useEffect(() => {
-    if (activity)
-      if (activity.Series.length > 0) {
-        let now = new Date().toJSON();
-        let index = activity.Series.findIndex(
-          (series) => series.StartDate < now && now < series.EndDate,
-        );
-        if (index !== -1) setSelectedSeriesTab(index);
-      }
+    if (activity?.Series.length > 0) {
+      let now = new Date().toJSON();
+      let index = activity.Series.find(
+        (series) => series.StartDate < now && now < series.EndDate,
+      )?.ID;
+      if (index !== -1) setTeamListFilter(index);
+    }
   }, [activity]);
 
   const handleDelete = () => {

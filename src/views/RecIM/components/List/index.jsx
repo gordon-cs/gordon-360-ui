@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
 import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
-import addDays from 'date-fns/addDays';
+import { addDays } from 'date-fns';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
