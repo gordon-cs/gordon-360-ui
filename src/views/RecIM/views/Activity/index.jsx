@@ -41,7 +41,7 @@ import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
-import defaultLogo from '/public/images/recim_logo.png';
+import defaultLogo from 'views/RecIM/recim_logo.png';
 import { TabPanel } from 'views/RecIM/components/TabPanel';
 import { Box } from '@mui/system';
 import { createTeam } from 'services/recim/team';

@@ -26,7 +26,7 @@ import { getParticipantByUsername } from 'services/recim/participant';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GordonDialogBox from 'components/GordonDialogBox';
-import defaultLogo from '/public/images/recim_logo.png';
+import defaultLogo from 'views/RecIM/recim_logo.png';
 import userService from 'services/user';
 
 const Team = () => {

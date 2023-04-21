@@ -14,7 +14,7 @@ import GordonLoader from 'components/Loader';
 import { editActivity } from 'services/recim/activity';
 import { editTeam } from 'services/recim/team';
 import Cropper from 'react-cropper';
-import defaultLogo from '/public/images/recim_logo.png';
+import defaultLogo from 'views/RecIM/recim_logo.png';
 
 const CROPPER_WIDTH = 300;
 const ASPECT_RATIO = 1;

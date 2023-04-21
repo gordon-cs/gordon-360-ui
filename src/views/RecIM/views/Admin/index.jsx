@@ -23,7 +23,7 @@ import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
 import SportForm from 'views/RecIM/components/Forms/SportForm';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { Typography } from '@mui/material';
-import recimLogo from '/public/images/recim_logo.png';
+import recimLogo from 'views/RecIM/recim_logo.png';
 import { useNavigate } from 'react-router';
 import { deleteSport, getAllSports } from 'services/recim/sport';
 

@@ -27,7 +27,7 @@ import { ActivityList, TeamList } from './../../components/List';
 import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import { getTeamInvites } from 'services/recim/team';
-import recimLogo from '/public/images/recim_logo.png';
+import recimLogo from 'views/RecIM/recim_logo.png';
 import { isFuture } from 'date-fns';
 import { TabPanel } from 'views/RecIM/components/TabPanel';
 import SettingsIcon from '@mui/icons-material/Settings';
