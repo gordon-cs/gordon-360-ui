@@ -26,7 +26,8 @@ import RecIMBracket from 'views/RecIM/components/RecIMBracket/index';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
-import { deleteMatchCascade } from 'services/recim/match';
+import { deleteMatchList } from 'services/recim/match';
+import GordonLoader from 'components/Loader';
 
 const ScheduleList = ({
   isAdmin,
@@ -37,6 +38,7 @@ const ScheduleList = ({
   activityTeams,
   createSnackbar,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
   const [width] = useWindowSize();
   const [showAdminTools, setShowAdminTools] = useState(false);
@@ -194,12 +196,13 @@ const ScheduleList = ({
     });
   };
 
-  const handleConfirmDeleteMatches = () => {
-    series.Match.forEach(async (match) => {
-      await deleteMatchCascade(match.ID);
+  const handleConfirmDeleteMatches = async () => {
+    setLoading(true);
+    deleteMatchList(series.Match).then(() => {
+      setOpenConfirmDeleteMatches(false);
+      setLoading(false);
+      setReload(!reload);
     });
-    setOpenConfirmDeleteMatches(false);
-    setReload(!reload);
   };
 
   const handleOpenScheduleDetails = (e) => {
@@ -413,7 +416,8 @@ const ScheduleList = ({
         title="Confirm Delete Matches"
         open={openConfirmDeleteMatches}
         cancelButtonClicked={() => setOpenConfirmDeleteMatches(false)}
-        buttonName="Delete matches"
+        isButtonDisabled={loading}
+        buttonName={loading ? 'Deleting...' : 'Delete matches'}
         buttonClicked={() => handleConfirmDeleteMatches()}
         severity="error"
       >
