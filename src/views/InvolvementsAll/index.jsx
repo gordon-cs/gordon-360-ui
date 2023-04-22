@@ -84,7 +84,7 @@ const InvolvementsAll = () => {
     navigate(`?session=${value}`);
   };
 
-  const handleChange = (event, newValue) => {
+  const handleChangeTab = (event, newValue) => {
     setTabIndex(newValue);
   };
 
@@ -135,7 +135,6 @@ const InvolvementsAll = () => {
 
   const searchPageTitle = (
     <div align="center">
-      {/* Search */}
       <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
       Involvements
     </div>
@@ -174,33 +173,15 @@ const InvolvementsAll = () => {
             <TabContext value={tabIndex}>
               <Grid item xs={16} marginTop={2}>
                 <TabList
-                  onChange={handleChange}
+                  onChange={handleChangeTab}
                   aria-label="involvements tabs"
                   variant="fullWidth"
                   centered
                   indicatorColor="secondary"
                 >
-                  <Tab
-                    // label={`My ${myInvolvementsHeadingText} Involvements`}
-                    sx={{ border: '2px solid', borderColor: gordonColors.secondary.neutral }}
-                    label="Personal"
-                    className={styles.tab}
-                    value="1"
-                  />
-                  <Tab
-                    sx={{ border: '2px solid', borderColor: gordonColors.secondary.neutral }}
-                    label="Requests"
-                    className={styles.tab}
-                    value="2"
-                  />
-                  <Tab
-                    // label={`${involvementSessionText} Involvements`}
-                    sx={{ border: '2px solid', borderColor: gordonColors.secondary.neutral }}
-                    //sx={{ borderColor: 'primary.main' }}
-                    label="All"
-                    className={styles.tab}
-                    value="3"
-                  />
+                  <Tab label="Personal" className={styles.tab} value="1" />
+                  <Tab label="Requests" className={styles.tab} value="2" />
+                  <Tab label="All" className={styles.tab} value="3" />
                 </TabList>
               </Grid>
               <TabPanel value="1">
