@@ -441,7 +441,7 @@ const Activity = () => {
               onClose={() => setReload((prev) => !prev)}
               openInviteParticipantForm={openAddSoloTeam}
               setOpenInviteParticipantForm={(bool) => setOpenAddSoloTeam(bool)}
-              soloTeam
+              individualSport
               activityID={activityID}
             />
             <Menu

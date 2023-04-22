@@ -60,7 +60,7 @@ const InviteParticipantForm = ({
           Name: profileInfo.fullName,
           ActivityID: activityID,
         };
-        createTeam(username, request)
+        await createTeam(username, request)
           .then((team) => {
             // add the participant to the team and then remove the admin's default participation
             addParticipantToTeam(team.ID, participantData).catch((reason) => {
