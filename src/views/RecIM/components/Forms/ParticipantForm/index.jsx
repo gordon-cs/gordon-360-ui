@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import Form from '../Form';
 import { createCustomParticipant, editCustomParticipant } from 'services/recim/participant';
 
-const genderTypes = ['U', 'M', 'F'];
+const genderTypes = ['Undefined', 'Male', 'Female'];
 
 const createParticipantFields = [
   {
@@ -50,12 +50,34 @@ const ParticipantForm = ({
 }) => {
   const [isSaving, setSaving] = useState(false);
 
+  const getGenderChar = (gender) => {
+    switch (gender) {
+      case 'Male':
+        return 'M';
+      case 'Female':
+        return 'F';
+      default:
+        return 'U';
+    }
+  };
+
+  const getGender = (genderChar) => {
+    switch (genderChar) {
+      case 'M':
+        return 'Male';
+      case 'F':
+        return 'Female';
+      default:
+        return 'Undefined';
+    }
+  };
+
   const currentInfo = useMemo(() => {
     if (participant) {
       return {
         FirstName: participant.FirstName,
         LastName: participant.LastName,
-        SpecifiedGender: participant.SpecifiedGender,
+        SpecifiedGender: getGender(participant.SpecifiedGender),
         AllowEmails: participant.AllowEmails,
         Email: participant.Email,
       };
@@ -63,7 +85,7 @@ const ParticipantForm = ({
     return {
       FirstName: '',
       LastName: '',
-      SpecifiedGender: 'U',
+      SpecifiedGender: 'Undefined',
       AllowEmails: true,
       Email: '',
     };
@@ -75,6 +97,7 @@ const ParticipantForm = ({
     let participantUsername =
       participant?.Username ?? (newInfo.FirstName + '.' + newInfo.LastName).replaceAll(' ', '');
     let participantRequest = { ...currentInfo, ...newInfo };
+    participantRequest.SpecifiedGender = getGenderChar(participantRequest.SpecifiedGender);
 
     if (participant) {
       editCustomParticipant(participantUsername, participantRequest)
