@@ -32,6 +32,13 @@ const createParticipantFields = [
     helperText: '*Required', // checkbox: either 0 or 1 => default 1
     required: false,
   },
+  {
+    label: 'Email Address',
+    name: 'Email',
+    type: 'text',
+    helperText: '*Required',
+    required: true,
+  },
 ];
 
 const ParticipantForm = ({
@@ -50,6 +57,7 @@ const ParticipantForm = ({
         LastName: participant.LastName,
         SpecifiedGender: participant.SpecifiedGender,
         AllowEmails: participant.AllowEmails,
+        Email: participant.Email,
       };
     }
     return {
@@ -57,6 +65,7 @@ const ParticipantForm = ({
       LastName: '',
       SpecifiedGender: 'U',
       AllowEmails: true,
+      Email: '',
     };
   }, [participant]);
 
@@ -108,7 +117,7 @@ const ParticipantForm = ({
 
   return (
     <Form
-      formTitles={{ name: 'Participant', formType: participant ? 'Edit' : 'Create' }}
+      formTitles={{ name: 'Non-Gordon Participant', formType: participant ? 'Edit' : 'Create' }}
       fields={[createParticipantFields]}
       currentInfo={currentInfo}
       isSaving={isSaving}

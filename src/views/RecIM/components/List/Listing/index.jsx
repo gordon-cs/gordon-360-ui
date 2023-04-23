@@ -270,7 +270,7 @@ const ParticipantListing = ({
           setAvatar(preferredImage || defaultImage);
         }
       } else {
-        // TODO - Depdent on how we want to store their Pics
+        // TODO - Depdens on how we want to store custom participants' Pics
       }
     };
     const loadUserInfo = async () => {
@@ -285,7 +285,14 @@ const ParticipantListing = ({
     loadUserInfo();
     loadAvatar();
     if (teamID && withAttendance) loadAttendanceCount();
-  }, [participant.Username, teamID, withAttendance]);
+  }, [
+    participant.Username,
+    participant.LastName,
+    participant.FirstName,
+    participant.IsCustom,
+    teamID,
+    withAttendance,
+  ]);
 
   const handleCustomParticipantOptions = (event) => {
     setAnchorCustomEl(event.currentTarget);
@@ -397,21 +404,38 @@ const ParticipantListing = ({
         }
         disablePadding
       >
-        <ListItemButton
-          to={`/profile/${participant.Username}`}
-          className={`${styles.listing} ${
-            withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
-          }`}
-        >
-          <ListItemAvatar>
-            <Avatar
-              src={`data:image/jpg;base64,${avatar}`}
-              className={minimal ? styles.avatarSmall : styles.avatar}
-              variant="rounded"
-            ></Avatar>
-          </ListItemAvatar>
-          <ListItemText primary={name} secondary={participant.Role} />
-        </ListItemButton>
+        {participant.IsCustom ? (
+          <ListItem
+            className={`${styles.listing} ${
+              withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
+            }`}
+          >
+            <ListItemAvatar>
+              <Avatar
+                src={`data:image/jpg;base64,${avatar}`}
+                className={minimal ? styles.avatarSmall : styles.avatar}
+                variant="rounded"
+              ></Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={name} secondary={participant.Role} />
+          </ListItem>
+        ) : (
+          <ListItemButton
+            to={`/profile/${participant.Username}`}
+            className={`${styles.listing} ${
+              withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
+            }`}
+          >
+            <ListItemAvatar>
+              <Avatar
+                src={`data:image/jpg;base64,${avatar}`}
+                className={minimal ? styles.avatarSmall : styles.avatar}
+                variant="rounded"
+              ></Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={name} secondary={participant.Role} />
+          </ListItemButton>
+        )}
         {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
             {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (

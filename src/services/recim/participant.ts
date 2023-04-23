@@ -2,26 +2,30 @@ import http from '../http';
 import { Team } from './team';
 import { Lookup } from './recim';
 
-export type Participant = {
+export type Participant = CustomParticipant & {
   Username: string;
-  Email: string;
   Role: string;
-  AllowEmails: boolean;
-  SpecifiedGender: string;
   GamesAttended: number;
   Status: string;
   Notification: ParticipantNotification[];
   IsAdmin: boolean;
   IsCustom: boolean;
-  FirstName: string;
-  LastName: string;
 };
 
 type CustomParticipant = {
   AllowEmails: boolean;
+  Email: string;
   SpecifiedGender: string;
   FirstName: string;
   LastName: string;
+};
+
+type BasicInfo = {
+  FirstName: string;
+  LastName: string;
+  UserName: string;
+  Nickname: string;
+  MaidenName: string;
 };
 
 type PatchParticipantActivity = {
@@ -103,6 +107,16 @@ const getParticipantStatusTypes = (): Promise<Lookup[]> =>
 const getParticipantActivityPrivTypes = (): Promise<Lookup[]> =>
   http.get(`recim/participants/lookup?type=activitypriv`);
 
+const getAccountsBasicInfo = async (
+  query: string,
+): Promise<[searchTime: number, searchResults: BasicInfo[]]> => {
+  const searchStartTime = Date.now();
+  // Replace period or space with a slash: 'first.last' or 'first last' become 'first/last'
+  const searchQuery = query.toLowerCase().trim().replace(/\.|\s/g, '/');
+  const searchResults: BasicInfo[] = await http.get(`recim/participants/search/${searchQuery}`);
+  return [searchStartTime, searchResults];
+};
+
 const sendNotification = (
   username: string,
   notification: UploadParticipantNotification,
@@ -141,6 +155,7 @@ export {
   getParticipantStatusHistory,
   getParticipantStatusTypes,
   getParticipantActivityPrivTypes,
+  getAccountsBasicInfo,
   sendNotification,
   editCustomParticipant,
   editParticipantAdmin,

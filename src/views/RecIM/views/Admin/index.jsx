@@ -216,7 +216,7 @@ const Admin = () => {
                   className={styles.addResourceButton}
                   onClick={handleOpenCreateParticipant}
                 >
-                  add a participant
+                  add a non-Gordon participant
                 </Button>
                 <ParticipantList
                   participants={participants}
