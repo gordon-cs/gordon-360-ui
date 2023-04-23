@@ -1,12 +1,13 @@
-import { Card, CardContent, CardMedia, Divider, Typography } from '@mui/material';
-import EmailIcon from '@mui/icons-material/Email';
+import { Card, CardActionArea, CardContent, CardMedia, Divider, Typography } from '@mui/material';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Class, SearchResult } from 'services/peopleSearch';
 import { useWindowSize } from 'hooks';
 import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
+import { BorderAll } from '@mui/icons-material';
 
 /*Const string was created with https://png-pixel.com/ .
  *It is a 1 x 1 pixel with the same color as gordonColors.neutral.lightGray (7/9/21)
@@ -39,6 +40,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
   );
   const [hasBeenRun, setHasBeenRun] = useState(false);
   const [width] = useWindowSize();
+  const navigate = useNavigate();
   const isMobileView = width < breakpointWidth;
 
   const loadAvatar = useCallback(async () => {
@@ -89,9 +91,17 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
   const emailIcon = isMobileView ? (
     <></>
   ) : (
-    <a href={`mailto:${person.Email}`} className={styles.mailingIconContainer}>
-      <div>
-        <EmailIcon />
+    <a href={`mailto:${person.Email}`}>
+      <div style={{ justifyContent: 'center' }}>
+        <MailOutlineIcon
+          sx={{
+            fontSize: 30,
+            color: 'white',
+            height: '100%',
+            backgroundColor: 'blue',
+            borderRadius: 4,
+          }}
+        />
       </div>
     </a>
   );
@@ -100,7 +110,14 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
     <>
       <VisibilitySensor onChange={handleVisibilityChange}>
         <Card className={styles.resultContainer} elevation={0}>
-          <Link style={{ flex: 7 }} className="gc360_link" to={`/profile/${person.AD_Username}`}>
+          <CardActionArea
+            style={{ flex: 9 }}
+            className="gc360_link"
+            onClick={() => {
+              navigate(`/profile/${person.AD_Username}`);
+            }}
+          >
+            {/* <Link style={{ flex: 7 }} className="gc360_link" to={`/profile/${person.AD_Username}`}> */}
             <Card className={styles.result} elevation={0}>
               {avatar && (
                 <CardMedia
@@ -137,8 +154,9 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
                 <SecondaryText className={styles.secondary_text}>{mailLocation}</SecondaryText>
               </CardContent>
             </Card>
-          </Link>
-          {emailIcon}
+            {/* </Link> */}
+          </CardActionArea>
+          <CardActionArea className={styles.mailingIconContainer}>{emailIcon}</CardActionArea>
         </Card>
       </VisibilitySensor>
       <Divider />
