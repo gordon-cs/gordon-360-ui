@@ -1,5 +1,5 @@
-import { Class } from './peopleSearch';
 import http from './http';
+import { Class } from './peopleSearch';
 import { StudentProfileInfo, UnformattedStudentProfileInfo } from './user';
 import { map } from './utils';
 
@@ -56,7 +56,7 @@ type ApplicationDetails = UnformattedApplicationDetails & {
 };
 
 const getApartmentSelectionDate = async (): Promise<string> => {
-  return 'Apr. 11';
+  return 'Apr. 14';
   // return await http.get('housing/apartment/selection-date); // Not yet implemented in the API
 };
 

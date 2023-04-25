@@ -1,8 +1,9 @@
 import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
-import { Class } from './peopleSearch';
 import http from './http';
+import { Participation } from './membership';
+import { Class } from './peopleSearch';
 import { Override } from './utils';
 
 type CLWCredits = {
@@ -249,7 +250,7 @@ const getBirthdate = async (): Promise<DateTime> =>
 
 const isBirthdayToday = async () => {
   const birthday = await getBirthdate();
-  return birthday?.toISODate() === DateTime.now().toISODate();
+  return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
 };
 
 // TODO: Add type info
@@ -264,11 +265,16 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
   const fullName = `${profile?.FirstName} ${profile?.LastName}`;
   const cliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username);
 
+  let advisors: StudentAdvisorInfo[] = [];
+  try {
+    advisors = await getAdvisors(profile.AD_Username);
+  } catch {}
+
   if (isStudent(profile)) {
     return {
       ...profile,
       fullName,
-      Advisors: await getAdvisors(profile.AD_Username),
+      Advisors: advisors,
       CliftonStrengths: cliftonStrengths,
       Majors: [
         profile.Major1Description,
