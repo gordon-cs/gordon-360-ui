@@ -91,19 +91,23 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
   const emailIcon = isMobileView ? (
     <></>
   ) : (
-    <a href={`mailto:${person.Email}`}>
-      <div style={{ justifyContent: 'center' }}>
-        <MailOutlineIcon
-          sx={{
-            fontSize: 30,
-            color: 'white',
-            height: '100%',
-            backgroundColor: 'blue',
-            borderRadius: 4,
-          }}
-        />
-      </div>
-    </a>
+    <Card className={styles.mailingIconContainer}>
+      <CardActionArea className={styles.mailAction}>
+        <a href={`mailto:${person.Email}`}>
+          <div>
+            <MailOutlineIcon
+              sx={{
+                fontSize: 30,
+                color: 'white',
+                height: '100%',
+                backgroundColor: 'blue',
+                // borderRadius: 4,
+              }}
+            />
+          </div>
+        </a>
+      </CardActionArea>
+    </Card>
   );
 
   return (
@@ -111,7 +115,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
       <VisibilitySensor onChange={handleVisibilityChange}>
         <Card className={styles.resultContainer} elevation={0}>
           <CardActionArea
-            style={{ flex: 9 }}
+            style={{ flex: 7 }}
             className="gc360_link"
             onClick={() => {
               navigate(`/profile/${person.AD_Username}`);
@@ -156,7 +160,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
             </Card>
             {/* </Link> */}
           </CardActionArea>
-          <CardActionArea className={styles.mailingIconContainer}>{emailIcon}</CardActionArea>
+          {emailIcon}
         </Card>
       </VisibilitySensor>
       <Divider />
