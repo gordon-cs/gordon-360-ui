@@ -455,6 +455,7 @@ const StudentNews = () => {
                       zoom={onCropperZoom}
                       zoomable={false}
                       dragMode={'none'}
+                      checkCrossOrigin={false}
                     />
                   </div>
                 )}
