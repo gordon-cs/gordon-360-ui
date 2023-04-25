@@ -47,16 +47,19 @@ const CoCurricularTranscript = () => {
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={10} xl={8}>
+        <Grid marginBottom={3}>
+          <Card>
+            <CardHeader
+              title={
+                <Typography component="h1" variant="h4">
+                  Gordon College Experience Transcript
+                </Typography>
+              }
+            />
+          </Card>
+        </Grid>
         <Card elevation={10}>
-          <CardHeader
-            title={
-              <Typography component="h1" variant="h4">
-                Gordon College Experience Transcript
-              </Typography>
-            }
-            subheader={<SubHeader profile={profile} />}
-            disableTypography
-          />
+          <CardHeader subheader={<SubHeader profile={profile} />} disableTypography />
           <CardContent>
             {transcriptItems &&
               Object.entries(transcriptItems).map(
