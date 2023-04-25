@@ -58,7 +58,7 @@ const CoCurricularTranscript = () => {
             />
           </Card>
         </Grid>
-        <Card elevation={10}>
+        <Card>
           <CardHeader subheader={<SubHeader profile={profile} />} disableTypography />
           <CardContent>
             {transcriptItems &&

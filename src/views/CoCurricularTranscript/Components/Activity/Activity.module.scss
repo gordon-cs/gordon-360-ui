@@ -16,6 +16,7 @@
   grid-template-columns: 5% 70% 25%;
   grid-template-rows: auto auto;
   justify-items: stretch;
+  margin-bottom: 20px;
 
   .organization_role {
     grid-column: 2;
@@ -29,13 +30,13 @@
     text-align: left;
   }
 
-  .leadership_line {
+  .participation_line {
     grid-column: 2;
     display: grid;
     grid-template-columns: 5% 10% 25%;
     grid-template-rows: auto auto;
     justify-items: stretch;
-    grid-row-gap: 20px;
+    grid-row-gap: 5px;
   }
 
   @media print {
