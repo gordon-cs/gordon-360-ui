@@ -53,6 +53,10 @@ const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverFor
 
   let waiverContent = (
     <Typography margin={4}>
+      <Typography variant="h5">
+        Note: This form is currently not legally binding, a paper form will be provided in the
+        meantime. Please contact a Rec-IM staff to sign up
+      </Typography>
       <Typography variant="h5">PHYSICAL ACTIVITY READINESS CONFIRMATION</Typography>
 
       <Typography variant="body1" paragraph>
