@@ -9,9 +9,12 @@ import {
   Button,
   Tabs,
   Tab,
+  Menu,
+  MenuItem,
   Badge,
   Box,
   IconButton,
+  Checkbox,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ActivityForm from '../../components/Forms/ActivityForm';
@@ -25,7 +28,11 @@ import Header from '../../components/Header';
 import styles from './Home.module.css';
 import { ActivityList, TeamList } from './../../components/List';
 import { getActivities } from 'services/recim/activity';
-import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
+import {
+  getParticipantTeams,
+  getParticipantByUsername,
+  editParticipantAllowEmails,
+} from 'services/recim/participant';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from 'views/RecIM/recim_logo.png';
 import { isFuture } from 'date-fns';
@@ -45,6 +52,9 @@ const Home = () => {
   const [registrableActivities, setRegistrableActivities] = useState([]);
   const [participantTeams, setParticipantTeams] = useState([]);
   const [invites, setInvites] = useState([]);
+  const [homeMenuAnchorEl, setHomeMenuAnchorEl] = useState();
+  const openHomeSettings = Boolean(homeMenuAnchorEl);
+  const [allowEmails, setAllowEmails] = useState(true);
   const [participant, setParticipant] = useState([]);
   const [openWaiver, setOpenWaiver] = useState(false);
   const [createdActivity, setCreatedActivity] = useState({ ID: null });
@@ -78,6 +88,7 @@ const Home = () => {
       setLoading(true);
       setInvites(await getTeamInvites());
       setParticipantTeams(await getParticipantTeams(profile.AD_Username));
+      setAllowEmails(participant.AllowEmails);
       setLoading(false);
     };
 
@@ -102,6 +113,20 @@ const Home = () => {
     setRegistrableActivities(open);
   }, [activities]);
 
+  const handleHomeSettings = (e) => {
+    setHomeMenuAnchorEl(e.currentTarget);
+    //navigate(`/recim/admin`);
+  };
+
+  const handleMenuClose = () => {
+    setHomeMenuAnchorEl(null);
+  };
+
+  const handleAllowEmails = async (value) => {
+    setAllowEmails(value);
+    await editParticipantAllowEmails(participant.Username, value);
+  };
+
   let headerContents = (
     <Grid container alignItems="center" columnSpacing={4} className={styles.header}>
       <Grid item container xs={9} alignItems="center" columnSpacing={2}>
@@ -120,13 +145,27 @@ const Home = () => {
           </Typography>
         </Grid>
       </Grid>
-      {participant?.IsAdmin && (
-        <Grid item xs={3} textAlign={'right'}>
-          <IconButton onClick={() => navigate(`/recim/admin`)} sx={{ mr: '1rem' }}>
-            <SettingsIcon fontSize="large" />
-          </IconButton>
-        </Grid>
-      )}
+
+      <Grid item xs={3} textAlign={'right'}>
+        <IconButton onClick={handleHomeSettings} sx={{ mr: '1rem' }}>
+          <SettingsIcon
+            fontSize="large"
+            sx={
+              openHomeSettings && {
+                animation: 'spin 0.2s linear ',
+                '@keyframes spin': {
+                  '0%': {
+                    transform: 'rotate(0deg)',
+                  },
+                  '100%': {
+                    transform: 'rotate(120deg)',
+                  },
+                },
+              }
+            }
+          />
+        </IconButton>
+      </Grid>
     </Grid>
   );
 
@@ -216,6 +255,7 @@ const Home = () => {
       </CardContent>
     </Card>
   );
+
   let myTeamsCard = (
     <Card>
       <CardHeader title="Teams" className={styles.cardHeader} />
@@ -290,6 +330,45 @@ const Home = () => {
             />
           </Grid>
         )}
+        <Menu
+          open={openHomeSettings}
+          onClose={handleMenuClose}
+          anchorEl={homeMenuAnchorEl}
+          className={styles.menu}
+        >
+          <Typography className={styles.menuTitle}>Options</Typography>
+          <MenuItem sx={[{ '&:hover': { backgroundColor: 'transparent' }, fontSize: '0.875rem' }]}>
+            <Checkbox
+              color="secondary"
+              inputProps={{ 'aria-label': 'toggle' }}
+              defaultChecked={participant?.AllowEmails}
+              onChange={(e) => handleAllowEmails(e.target.checked)}
+            />
+            Allow Emails
+          </MenuItem>
+
+          {/* <MenuItem
+            dense
+            onClick={() => {
+              handleMenuClose();
+            }}
+            className={styles.menuButton}
+          >
+            Edit Activity Details
+          </MenuItem> */}
+          {participant?.IsAdmin && <Typography className={styles.menuTitle}>Admin</Typography>}
+          {participant?.IsAdmin && (
+            <MenuItem
+              dense
+              onClick={() => {
+                navigate('/recim/admin');
+              }}
+              className={styles.menuButton}
+            >
+              Admin Command Center
+            </MenuItem>
+          )}
+        </Menu>
         <GordonSnackbar
           open={snackbar.open}
           text={snackbar.message}

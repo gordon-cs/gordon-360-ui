@@ -80,3 +80,27 @@
 .cardHeader :global(.MuiCardHeader-title) {
   font-size: 1em;
 }
+
+.grayIcon {
+  color: $neutral-gray;
+}
+
+.menuTitle {
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+  color: $neutral-gray;
+  text-align: center;
+}
+
+.editIconButton {
+  background-color: $secondary-yellow;
+  color: $neutral-black;
+}
+
+.editIconButton:hover {
+  background-color: rgb(177, 129, 13);
+}
+
+.menuButton:hover {
+  background-color: $neutral-black-opacity10;
+}
