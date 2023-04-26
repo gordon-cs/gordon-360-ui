@@ -87,7 +87,7 @@ const Home = () => {
     const loadParticipantData = async () => {
       setLoading(true);
       setInvites(await getTeamInvites());
-      setParticipantTeams(await getParticipantTeams(profile.AD_Username));
+      setParticipantTeams(await getParticipantTeams(participant.Username));
       setAllowEmails(participant.AllowEmails);
       setLoading(false);
     };
@@ -97,7 +97,7 @@ const Home = () => {
       setHasPermissions(participant.IsAdmin);
       loadParticipantData();
     }
-  }, [participant, profile]);
+  }, [participant]);
 
   useEffect(() => {
     let open = [];
@@ -115,7 +115,6 @@ const Home = () => {
 
   const handleHomeSettings = (e) => {
     setHomeMenuAnchorEl(e.currentTarget);
-    //navigate(`/recim/admin`);
   };
 
   const handleMenuClose = () => {
@@ -346,16 +345,6 @@ const Home = () => {
             />
             Allow Emails
           </MenuItem>
-
-          {/* <MenuItem
-            dense
-            onClick={() => {
-              handleMenuClose();
-            }}
-            className={styles.menuButton}
-          >
-            Edit Activity Details
-          </MenuItem> */}
           {participant?.IsAdmin && <Typography className={styles.menuTitle}>Admin</Typography>}
           {participant?.IsAdmin && (
             <MenuItem
