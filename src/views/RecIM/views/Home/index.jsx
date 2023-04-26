@@ -92,7 +92,6 @@ const Home = () => {
       setLoading(false);
     };
 
-    setOpenWaiver(participant == null);
     if (participant) {
       setHasPermissions(participant.IsAdmin);
       loadParticipantData();
@@ -214,7 +213,13 @@ const Home = () => {
   let myInvites = (
     <CardContent>
       {invites.length > 0 ? (
-        <TeamList teams={invites} invite setInvites={setInvites} />
+        <TeamList
+          participant={participant}
+          teams={invites}
+          invite
+          setInvites={setInvites}
+          setOpenWaiver={setOpenWaiver}
+        />
       ) : (
         <Typography className={styles.secondaryText}>No pending invites</Typography>
       )}

@@ -191,10 +191,8 @@ const TeamList = ({
   const handleInviteResponse = async (response, activityID, teamID) => {
     if (response === 'accepted') {
       if (participant?.Status == 'Pending' || participant == null) {
-        console.log('open waiver');
         setOpenWaiver(true);
       } else {
-        debugger;
         await respondToTeamInvite(teamID, response);
         navigate(`activity/${activityID}/team/${teamID}`);
       }

@@ -58,7 +58,6 @@ const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverFor
         meantime. Please contact a Rec-IM staff to sign up
       </Typography>
       <Typography variant="h5">PHYSICAL ACTIVITY READINESS CONFIRMATION</Typography>
-
       <Typography variant="body1" paragraph>
         Are you ready for physical activity? Your willingness to use the Bennett Center indicates
         that you have received medical approval and you must provide a completed Physicians
