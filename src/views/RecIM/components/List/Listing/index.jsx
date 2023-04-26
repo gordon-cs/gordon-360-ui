@@ -116,17 +116,14 @@ const ActivityListing = ({ activity }) => {
 const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
 
-  const handleAcceptInvite = async () => {
-    let response = 'accepted';
-    await respondToTeamInvite(team.ID, response);
-    callbackFunction(response, team.Activity.ID, team.ID);
+  const handleAcceptInvite = () => {
+    callbackFunction('accepted', team.Activity.ID, team.ID);
   };
 
-  const handleRejectInvite = async () => {
-    let response = 'rejected';
-    await respondToTeamInvite(team.ID, response);
-    callbackFunction(response, team.Activity.ID, team.ID);
+  const handleRejectInvite = () => {
+    callbackFunction('rejected', team.Activity.ID, team.ID);
   };
+
   let content;
   if (match) {
     let targetTeamStats = match.Scores.find((score) => score.TeamID === team.ID);

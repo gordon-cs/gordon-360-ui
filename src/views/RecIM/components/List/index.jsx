@@ -13,6 +13,7 @@ import styles from './List.module.css';
 import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
 import { addDays } from 'date-fns';
+import { respondToTeamInvite } from 'services/recim/team';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -172,16 +173,33 @@ const MatchList = ({ matches, activityID }) => {
 };
 
 // setTargetTeamID is used for edit Match teams
-const TeamList = ({ teams, match, series, invite, setInvites, setTargetTeamID }) => {
+const TeamList = ({
+  participant,
+  teams,
+  match,
+  series,
+  invite,
+  setInvites,
+  setTargetTeamID,
+  setOpenWaiver,
+}) => {
   const navigate = useNavigate();
 
   if (!teams?.length && !match && !series)
     return <Typography className={styles.secondaryText}>No teams to show.</Typography>;
 
-  const handleInviteResponse = (response, activityID, teamID) => {
+  const handleInviteResponse = async (response, activityID, teamID) => {
     if (response === 'accepted') {
-      navigate(`activity/${activityID}/team/${teamID}`);
+      if (participant?.Status == 'Pending' || participant == null) {
+        console.log('open waiver');
+        setOpenWaiver(true);
+      } else {
+        debugger;
+        await respondToTeamInvite(teamID, response);
+        navigate(`activity/${activityID}/team/${teamID}`);
+      }
     } else if (response === 'rejected') {
+      await respondToTeamInvite(teamID, response);
       setInvites(teams.filter((team) => team.ID !== teamID));
     }
   };
