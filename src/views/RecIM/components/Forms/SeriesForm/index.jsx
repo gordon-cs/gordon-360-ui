@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { Grid } from '@mui/material';
 import Form from '../Form';
 import {
   createSeries,
@@ -6,6 +7,7 @@ import {
   getSeriesStatusTypes,
   getSeriesTypes,
 } from 'services/recim/series';
+import { Typography } from '@mui/material';
 
 const commonFields = [
   {
@@ -180,10 +182,19 @@ const SeriesForm = ({
     }
   };
 
+  const seriesDefinition = (
+    <Grid item xs={12}>
+      <Typography variant="body2" color="gray" paragraph>
+        * A Series is a set of matches under a given activity
+      </Typography>
+    </Grid>
+  );
+
   return (
     <Form
       formTitles={{ name: 'Series', formType: series ? 'Edit' : 'Create' }}
       fields={[commonFields.concat(additionalFields)]}
+      additionalContent={seriesDefinition}
       currentInfo={currentInfo}
       loading={loading}
       isSaving={isSaving}
