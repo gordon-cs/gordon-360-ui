@@ -32,25 +32,26 @@ import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 
+const activityTypeIconPair = [
+  {
+    type: 'League',
+    icon: <SportsFootballIcon />,
+  },
+  {
+    type: 'Tournament',
+    icon: <SportsCricketIcon />,
+  },
+  {
+    type: 'One Off',
+    icon: <LocalActivityIcon />,
+  },
+];
+
 const ActivityListing = ({ activity }) => {
   let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
   let activeSeriesMessage =
     activeSeries && activeSeries.Name + ' until ' + standardDate(activeSeries.EndDate);
 
-  const activityTypeIconPair = [
-    {
-      type: 'League',
-      icon: <SportsFootballIcon />,
-    },
-    {
-      type: 'Tournament',
-      icon: <SportsCricketIcon />,
-    },
-    {
-      type: 'One Off',
-      icon: <LocalActivityIcon />,
-    },
-  ];
   if (!activity) return null;
   return (
     <ListItem key={activity.ID} className={styles.listingWrapper}>
@@ -73,7 +74,7 @@ const ActivityListing = ({ activity }) => {
                   styles['activityType_' + activity?.Type.toLowerCase().replace(/\s+/g, '')]
                 }
                 size="small"
-              ></Chip>
+              />
             </Grid>
           </Grid>
           <Grid item container xs={12} sm={7} direction="column" spacing={1}>
@@ -87,16 +88,18 @@ const ActivityListing = ({ activity }) => {
               </Grid>
             )}
             <Grid item container columnSpacing={2}>
+              {activity.RegistrationOpen && (
+                <Grid item>
+                  <Chip
+                    icon={<EventAvailableIcon />}
+                    label={'Registration Open'}
+                    color={'success'}
+                    size="small"
+                  />
+                </Grid>
+              )}
               <Grid item>
-                <Chip
-                  icon={<EventAvailableIcon />}
-                  label={activity.RegistrationOpen ? 'Registration Open' : 'Registration Closed'}
-                  color={activity.RegistrationOpen ? 'success' : 'info'}
-                  size="small"
-                ></Chip>
-              </Grid>
-              <Grid item>
-                <Typography>
+                <Typography className={styles.listingSubtitle}>
                   {activity.RegistrationOpen
                     ? 'Registration closes ' + standardDate(activity.RegistrationEnd)
                     : activeSeriesMessage}
@@ -478,8 +481,11 @@ const MatchListing = ({ match, activityID }) => {
                     <Grid item xs={2}>
                       <Typography>{':'}</Typography>{' '}
                     </Grid>
+
                     <Grid item xs={5} textAlign="left">
-                      <Typography>{team1Score ?? 'TBD'}</Typography>
+                      <Typography sx={team1Score > team0Score && { fontWeight: 'bold' }}>
+                        {team1Score ?? 'TBD'}
+                      </Typography>
                     </Grid>
                   </Grid>
                 ) : match.Status === 'Forfeited' ? (

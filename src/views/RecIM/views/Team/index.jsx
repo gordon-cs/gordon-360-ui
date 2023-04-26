@@ -66,15 +66,13 @@ const Team = () => {
   //checks if the team is modifiable by the current user
   useEffect(() => {
     let hasCaptainPermissions = false;
-    if (user) {
-      if (team) {
-        let role =
-          team.Participant.find((teamParticipant) => teamParticipant.Username === user.Username)
-            ?.Role ?? 'Invalid';
-        hasCaptainPermissions =
-          team.Activity.RegistrationOpen &&
-          (role === 'Co-Captain' || role === 'Team-captain/Creator');
-      }
+    if (user && team) {
+      let role = team.Participant.find(
+        (teamParticipant) => teamParticipant.Username === user.Username,
+      )?.Role;
+      hasCaptainPermissions =
+        team.Activity.RegistrationOpen &&
+        (role === 'Co-Captain' || role === 'Team-captain/Creator');
     }
     setHasPermissions(hasCaptainPermissions || user?.IsAdmin);
   }, [team, user]);
@@ -128,7 +126,13 @@ const Team = () => {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
-      <Grid container direction="row" alignItems="center" columnSpacing={4}>
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        columnSpacing={4}
+        className={styles.header}
+      >
         <Grid item container xs={9} columnSpacing={4} direction="row" alignItems="center">
           <Grid item>
             <Button
@@ -146,8 +150,8 @@ const Team = () => {
               )}
             </Button>
           </Grid>
-          <Grid item>
-            <Typography variant="h5" className={styles.title}>
+          <Grid item xs={8}>
+            <Typography className={styles.title}>
               {team?.Name ?? <GordonLoader size={15} inline />}
             </Typography>
             {teamRecord()}
@@ -188,7 +192,7 @@ const Team = () => {
                 <Grid container justifyContent="center">
                   <Button
                     variant="contained"
-                    color="warning"
+                    color="secondary"
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
                     onClick={() => {

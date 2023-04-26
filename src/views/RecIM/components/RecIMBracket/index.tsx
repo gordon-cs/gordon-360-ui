@@ -11,7 +11,10 @@ const CustomSeed = ({ seed, breakpoint, roundIndex, seedIndex }: IRenderSeedProp
   // mobileBreakpoint is required to be passed down to a seed
   return (
     <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 12 }}>
-      <Link to={`match/${seed.id}`} className={styles.bracketMatchLink}>
+      <Link
+        to={+seed.id >= 0 ? `match/${seed.id}` : ''}
+        className={`${styles.bracketMatchLink} ${+seed.id < 0 && styles.disableLink}`}
+      >
         <SeedItem>
           <div>
             <SeedTeam>

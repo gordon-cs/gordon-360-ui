@@ -56,10 +56,10 @@ const Header = ({ match, team, activity, admin, children }) => {
           {match && (
             <RecIMBreadcrumb>
               {largeWidth
-                ? `Match: ${match?.Team[0]?.Name ?? 'TBD'} vs 
-              ${match?.Team[1]?.Name ?? 'TBD'}`
-                : `Match: ${truncate(match?.Team[0]?.Name ?? 'TBD')} vs ${truncate(
-                    match?.Team[1]?.Name ?? 'TBD',
+                ? `Match: ${match.Team?.[0]?.Name ?? 'TBD'} vs 
+              ${match.Team?.[1]?.Name ?? 'TBD'}`
+                : `Match: ${truncate(match.Team?.[0]?.Name ?? 'TBD')} vs ${truncate(
+                    match.Team?.[1]?.Name ?? 'TBD',
                   )}`}
             </RecIMBreadcrumb>
           )}

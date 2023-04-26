@@ -102,15 +102,15 @@
 }
 
 .activityType_league {
-  background-color: #edb1ad;
+  background-color: rgba($secondary-orange, 0.35);
 }
 
 .activityType_tournament {
-  background-color: #d2cb5c;
+  background-color: rgba($secondary-green, 0.35);
 }
 
 .activityType_oneoff {
-  background-color: #ffd040;
+  background-color: rgba($secondary-yellow, 0.4);
 }
 
 .teamLogo {

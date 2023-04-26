@@ -10,6 +10,11 @@
 
 .actionButton {
   text-transform: none;
+  background-color: $primary-cyan;
+}
+
+.actionButton:hover {
+  background-color: $primary-cyan-600;
 }
 
 .seriesHeader {
@@ -66,17 +71,22 @@
   color: $neutral-gray;
 }
 
+.header {
+  font-size: 0.9rem;
+}
+
 .title {
   font-weight: bold;
   color: $neutral-dark-gray2;
+  font-size: 1.5em;
 }
 
 .subtitle {
   color: $neutral-gray;
+  font-size: 1em;
 }
 
 .secondaryText {
-  margin-top: 1em;
   color: $neutral-gray;
   text-align: center;
 }
@@ -116,7 +126,6 @@
   border-radius: 50%;
   width: 6em;
   height: 6em;
-  //box-shadow: 0 2px 4px $neutral-black-opacity40;
   overflow: hidden;
 }
 
@@ -151,7 +160,6 @@
   transition: 0.6s ease;
   display: block;
   width: 6em;
-  height: 6em;
   object-fit: cover;
 }
 
@@ -193,5 +201,19 @@
     font-weight: bold;
     margin: 1em;
     text-align: center;
+  }
+}
+
+.teamListFilterSelect {
+  width: 10rem;
+  text-align: center;
+  :global(.MuiSelect-filled) {
+    padding: 0.6em 1em;
+  }
+}
+
+@media (min-width: $break-sm) {
+  .header {
+    font-size: 1rem;
   }
 }

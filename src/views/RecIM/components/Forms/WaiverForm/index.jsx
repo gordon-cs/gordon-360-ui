@@ -102,7 +102,6 @@ const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverFor
         application in its entirety and that by signing below I agree to be bound by all of its
         terms and conditions. My signature below provides permission and waives/release claims for
         any minor participating because of my membership.
-        {''}
       </Typography>
     </Typography>
   );

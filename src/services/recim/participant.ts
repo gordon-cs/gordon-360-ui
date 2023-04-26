@@ -78,7 +78,7 @@ const getParticipantTeams = (username: string): Promise<Team[]> =>
   http.get(`recim/participants/${username}/teams`);
 
 const getParticipantStatusHistory = (username: string): Promise<ParticipantStatus[]> =>
-  http.get(`recim/participants/${username}/StatusHistory`);
+  http.get(`recim/participants/${username}/statushistory`);
 
 const getParticipantStatusTypes = (): Promise<Lookup[]> =>
   http.get(`recim/participants/lookup?type=status`);

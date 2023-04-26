@@ -123,6 +123,13 @@ const updateMatch = (ID: number, updatedMatch: PatchMatch): Promise<CreatedMatch
 const deleteMatchCascade = async (matchID: number): Promise<CreatedMatch> =>
   http.del(`recim/matches/${matchID}`);
 
+// shortcut service to delete a list of matches
+const deleteMatchList = async (matches: Match[]) => {
+  for (let i = 0; i < matches.length; i++) {
+    await http.del(`recim/matches/${matches[i].ID}`);
+  }
+};
+
 const getSurfaces = (): Promise<Surface[]> => http.get(`recim/matches/surfaces`);
 
 const createSurface = (newSurface: UploadSurface): Promise<Surface> =>
@@ -145,6 +152,7 @@ export {
   removeAttendance,
   getMatchAttendance,
   deleteMatchCascade,
+  deleteMatchList,
   getSurfaces,
   createSurface,
   editSurface,

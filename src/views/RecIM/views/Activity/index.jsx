@@ -13,6 +13,9 @@ import {
   Tooltip,
   tooltipClasses,
   ClickAwayListener,
+  FormControl,
+  InputLabel,
+  Select,
 } from '@mui/material';
 import { gordonColors } from 'theme';
 import { styled } from '@mui/material/styles';
@@ -39,8 +42,6 @@ import ScheduleList from './components/ScheduleList';
 import { formatDateTimeRange } from '../../components/Helpers';
 import GordonDialogBox from 'components/GordonDialogBox';
 import defaultLogo from 'views/RecIM/recim_logo.png';
-import { TabPanel } from 'views/RecIM/components/TabPanel';
-import { Box } from '@mui/system';
 import { createTeam } from 'services/recim/team';
 import InviteParticipantForm from 'views/RecIM/components/Forms/InviteParticipantForm';
 
@@ -78,12 +79,12 @@ const Activity = () => {
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
   const [canCreateTeam, setCanCreateTeam] = useState(true);
-  const [selectedSeriesTab, setSelectedSeriesTab] = useState(0);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminAnchorEl, setAdminAnchorEl] = useState();
   const openAdminMenu = Boolean(adminAnchorEl);
   const [openTooltip, setOpenTooltip] = useState(false);
+  const [teamListFilter, setTeamListFilter] = useState(false);
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -123,16 +124,15 @@ const Activity = () => {
     }
   }, [activity, user, userTeams]);
 
-  // autofocus on active series
+  // auto select active series for filtering team list
   useEffect(() => {
-    if (activity)
-      if (activity.Series.length > 0) {
-        let now = new Date().toJSON();
-        let index = activity.Series.findIndex(
-          (series) => series.StartDate < now && now < series.EndDate,
-        );
-        if (index !== -1) setSelectedSeriesTab(index);
-      }
+    if (activity?.Series.length > 0) {
+      let now = new Date().toJSON();
+      let activeSeries = activity.Series.find(
+        (series) => series.StartDate < now && now < series.EndDate,
+      );
+      if (activeSeries) setTeamListFilter(activeSeries.ID);
+    }
   }, [activity]);
 
   const handleDelete = () => {
@@ -178,7 +178,7 @@ const Activity = () => {
     return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
-      <Grid container alignItems="center" columnSpacing={4}>
+      <Grid container alignItems="center" columnSpacing={4} className={styles.header}>
         <Grid item container xs={9} columnSpacing={4} alignItems="center">
           <Grid item>
             <Button
@@ -201,10 +201,10 @@ const Activity = () => {
             </Button>
           </Grid>
           <Grid item>
-            <Typography variant="h5" className={styles.title}>
+            <Typography className={styles.title}>
               {activity?.Name ?? <GordonLoader size={15} inline />}
             </Typography>
-            <Typography variant="h6" className={styles.subtitle}>
+            <Typography className={styles.subtitle}>
               <i>
                 {activity?.StartDate
                   ? formatDateTimeRange(activity.StartDate, activity.EndDate)
@@ -270,7 +270,6 @@ const Activity = () => {
                 <Grid container justifyContent="center">
                   <Button
                     variant="contained"
-                    color="warning"
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
                     onClick={() => {
@@ -298,7 +297,9 @@ const Activity = () => {
               );
             })
           ) : (
-            <Typography className={styles.secondaryText}>No series scheduled yet!</Typography>
+            <Typography sx={{ mt: '1em' }} className={styles.secondaryText}>
+              No series scheduled yet!
+            </Typography>
           )}
         </CardContent>
       </Card>
@@ -314,7 +315,6 @@ const Activity = () => {
                 <Grid container justifyContent="space-around">
                   <Button
                     variant="contained"
-                    color="warning"
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
                     onClick={() => {
@@ -326,7 +326,6 @@ const Activity = () => {
                   {activity.SoloRegistration && isAdmin && (
                     <Button
                       variant="contained"
-                      color="warning"
                       startIcon={<AddCircleRoundedIcon />}
                       className={styles.actionButton}
                       onClick={() => {
@@ -342,33 +341,41 @@ const Activity = () => {
           )}{' '}
           {activity.Series.length > 0 ? (
             <>
-              <Box className={styles.scrollableCenteredTabs}>
-                <Tabs
-                  value={selectedSeriesTab}
-                  onChange={(event, tabIndex) => setSelectedSeriesTab(tabIndex)}
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="admin control center tabs"
-                >
-                  {activity.Series.map((series) => {
-                    return <Tab label={series.Name} />;
-                  })}
-                </Tabs>
-              </Box>
-              {activity.Series.map((series, index) => {
-                return (
-                  <TabPanel value={selectedSeriesTab} index={index}>
-                    <TeamList series={series} />
-                  </TabPanel>
-                );
-              })}
+              <Grid container justifyContent="center" alignItems="center" columnSpacing={2}>
+                <Grid item>
+                  <Typography className={styles.secondaryText}>Filter by series: </Typography>
+                </Grid>
+                <Grid item>
+                  <FormControl variant="filled">
+                    <Select
+                      value={teamListFilter}
+                      onChange={(e) => setTeamListFilter(e.target.value)}
+                      className={styles.teamListFilterSelect}
+                      displayEmpty
+                    >
+                      <MenuItem value={false}>
+                        <em>All Teams</em>
+                      </MenuItem>
+                      {activity.Series.map((series) => {
+                        return <MenuItem value={series.ID}>{series.Name}</MenuItem>;
+                      })}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <TeamList
+                series={
+                  teamListFilter && activity.Series.find((series) => series.ID === teamListFilter)
+                }
+                teams={!teamListFilter && activity.Team}
+              />
             </>
           ) : (
             <>
               {activity.Team?.length ? (
                 <TeamList teams={activity.Team} />
               ) : (
-                <Typography className={styles.secondaryText}>
+                <Typography sx={{ mt: '1em' }} className={styles.secondaryText}>
                   Be the first to create a team!
                 </Typography>
               )}
@@ -434,7 +441,7 @@ const Activity = () => {
               onClose={() => setReload((prev) => !prev)}
               openInviteParticipantForm={openAddSoloTeam}
               setOpenInviteParticipantForm={(bool) => setOpenAddSoloTeam(bool)}
-              soloTeam
+              individualSport
               activityID={activityID}
             />
             <Menu

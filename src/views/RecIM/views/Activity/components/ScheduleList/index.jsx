@@ -1,6 +1,6 @@
 import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Divider, Switch } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
-import TuneIcon from '@mui/icons-material/Tune';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { ContentCard } from 'views/RecIM/components/Forms/Form/components/ContentCard';
 import { MatchList } from 'views/RecIM/components/List';
 import UpdateIcon from '@mui/icons-material/Update';
@@ -26,6 +26,8 @@ import RecIMBracket from 'views/RecIM/components/RecIMBracket/index';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
+import { deleteMatchList } from 'services/recim/match';
+import GordonLoader from 'components/Loader';
 
 const ScheduleList = ({
   isAdmin,
@@ -36,12 +38,14 @@ const ScheduleList = ({
   activityTeams,
   createSnackbar,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState();
   const [width] = useWindowSize();
   const [showAdminTools, setShowAdminTools] = useState(false);
   const [showDetailsMenu, setShowDetailsMenu] = useState(false);
   const [openAutoSchedulerDisclaimer, setOpenAutoSchedulerDisclaimer] = useState(false);
-  const [openDeleteDisclaimer, setOpenDeleteDisclaimer] = useState(false);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+  const [openConfirmDeleteMatches, setOpenConfirmDeleteMatches] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
@@ -131,30 +135,72 @@ const ScheduleList = ({
     });
   };
 
-  // delete button
   const handleDelete = () => {
     setDisclaimerContent(
       <Typography margin={4}>
         <Typography variant="body1" paragraph>
-          <b>{`Be advised, this process is irreversible.`}</b>
+          You are attempting to delete:{' '}
+          <i>
+            Series #{series.ID}, {series.Name}
+          </i>
+          .
         </Typography>
         <Typography variant="body1" paragraph>
-          {`You are attempting to delete: Series #${series.ID}, ${series.Name}.`}
+          This includes the series itself along with:{' '}
+          <i>
+            {series.Match.length} match
+            {series.Match.length !== 1 && `es`}
+          </i>
+          .
         </Typography>
         <Typography variant="body1" paragraph>
-          {`This includes the Series itself along with: `}
-          <b>{series.Match.length}</b>
-          {` number of Matches. `}
+          <b>Are you sure you want to delete? This process is irreversible.</b>
         </Typography>
       </Typography>,
     );
-    setOpenDeleteDisclaimer(true);
+    setOpenConfirmDelete(true);
+    closeMenusAndForms();
+  };
+
+  const handleDeleteMatches = () => {
+    setDisclaimerContent(
+      <Typography margin={2}>
+        <Typography variant="body1" paragraph>
+          You are attempting to delete all matches in:{' '}
+          <i>
+            Series #{series.ID}, {series.Name}
+          </i>
+          .
+        </Typography>
+        <Typography variant="body1" paragraph>
+          This includes:{' '}
+          <i>
+            {series.Match.length} match
+            {series.Match.length !== 1 && `es`}
+          </i>
+          .
+        </Typography>
+        <Typography variant="body1" paragraph>
+          <b>Are you sure you want to delete? This process is irreversible.</b>
+        </Typography>
+      </Typography>,
+    );
+    setOpenConfirmDeleteMatches(true);
     closeMenusAndForms();
   };
 
   const handleConfirmDelete = () => {
     deleteSeriesCascade(series.ID).then((res) => {
-      setOpenDeleteDisclaimer(false);
+      setOpenConfirmDelete(false);
+      setReload(!reload);
+    });
+  };
+
+  const handleConfirmDeleteMatches = async () => {
+    setLoading(true);
+    deleteMatchList(series.Match).then(() => {
+      setOpenConfirmDeleteMatches(false);
+      setLoading(false);
       setReload(!reload);
     });
   };
@@ -261,7 +307,7 @@ const ScheduleList = ({
         {isAdmin && (
           <Grid container item xs={5} sm={1} justifyContent="right">
             <IconButton onClick={handleOpenAdminTools}>
-              <TuneIcon inline />
+              <MoreHorizIcon inline />
             </IconButton>{' '}
           </Grid>
         )}
@@ -297,7 +343,7 @@ const ScheduleList = ({
             onClick={handleAutoSchedule}
             className={styles.menuButton}
           >
-            Auto-schedule Series
+            Auto-schedule series
           </MenuItem>
           <MenuItem
             dense
@@ -305,14 +351,17 @@ const ScheduleList = ({
             className={styles.menuButton}
             divider
           >
-            Edit Schedule
+            Edit schedule
+          </MenuItem>
+          <MenuItem dense onClick={handleDeleteMatches} className={styles.redButton}>
+            Delete matches
           </MenuItem>
           <Typography className={styles.menuTitle}>Series</Typography>
           <MenuItem dense onClick={handleEditSeriesMenuClick} className={styles.menuButton}>
-            Edit Series Info
+            Edit series info
           </MenuItem>
           <MenuItem dense onClick={handleCreateMatch} className={styles.menuButton}>
-            Create a Match
+            Create a match
           </MenuItem>
           <MenuItem dense onClick={handleDelete} className={styles.redButton}>
             Delete
@@ -354,18 +403,25 @@ const ScheduleList = ({
         </ContentCard>
       </GordonDialogBox>
       <GordonDialogBox
-        open={openDeleteDisclaimer}
-        title="Delete Disclaimer"
-        fullWidth
-        maxWidth="sm"
+        title="Confirm Delete"
+        open={openConfirmDelete}
+        cancelButtonClicked={() => setOpenConfirmDelete(false)}
+        buttonName="Delete series"
         buttonClicked={() => handleConfirmDelete()}
-        buttonName="I Understand"
-        cancelButtonClicked={() => setOpenDeleteDisclaimer(false)}
-        cancelButtonName="Cancel"
+        severity="error"
       >
-        <ContentCard title={`You are attempting DELETE '${series.Name}'`}>
-          {disclaimerContent}
-        </ContentCard>
+        {disclaimerContent}
+      </GordonDialogBox>
+      <GordonDialogBox
+        title="Confirm Delete Matches"
+        open={openConfirmDeleteMatches}
+        cancelButtonClicked={() => setOpenConfirmDeleteMatches(false)}
+        isButtonDisabled={loading}
+        buttonName={loading ? 'Deleting...' : 'Delete matches'}
+        buttonClicked={() => handleConfirmDeleteMatches()}
+        severity="error"
+      >
+        {disclaimerContent}
       </GordonDialogBox>
       <SeriesForm
         createSnackbar={createSnackbar}

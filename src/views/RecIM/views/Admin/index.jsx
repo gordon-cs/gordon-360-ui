@@ -1,4 +1,4 @@
-import { Card, CardContent, Tabs, Tab, Button, Grid } from '@mui/material';
+import { Card, CardContent, Tabs, Tab, Button, Grid, Box } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -14,16 +14,16 @@ import {
   SurfaceList,
   SportList,
 } from '../../components/List';
-import { getActivities } from '../../../../services/recim/activity';
-import { getTeams } from '../../../../services/recim/team';
-import { getParticipants } from '../../../../services/recim/participant';
-import { deleteSurface, getSurfaces } from '../../../../services/recim/match';
+import { getActivities } from 'services/recim/activity';
+import { getTeams } from 'services/recim/team';
+import { getParticipants } from 'services/recim/participant';
+import { deleteSurface, getSurfaces } from 'services/recim/match';
 import AddIcon from '@mui/icons-material/Add';
 import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
 import SportForm from 'views/RecIM/components/Forms/SportForm';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { Typography } from '@mui/material';
-import recimLogo from './../../recim_logo.png';
+import recimLogo from 'views/RecIM/recim_logo.png';
 import { useNavigate } from 'react-router';
 import { deleteSport, getAllSports } from 'services/recim/sport';
 
@@ -148,15 +148,18 @@ const Admin = () => {
   };
 
   let headerContents = (
-    <Grid container direction="row" alignItems="center" columnSpacing={4}>
+    <Grid container direction="row" alignItems="center" columnSpacing={{ xs: 2, sm: 4 }}>
       <Grid item>
-        <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+        <img src={recimLogo} alt="Rec-IM Logo" className={styles.headerImg}></img>
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="h5" className={styles.title}>
-          <b className="accentText">Gordon</b> Rec-IM
+        <Typography className={styles.title}>
+          <Box component="span" sx={{ color: 'secondary.main' }}>
+            Gordon
+          </Box>{' '}
+          Rec-IM
         </Typography>
-        <Typography variant="h6" className={styles.subtitle}>
+        <Typography className={styles.subtitle}>
           <i>"Competition reveals character"</i>
         </Typography>
       </Grid>

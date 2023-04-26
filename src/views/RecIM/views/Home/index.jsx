@@ -10,6 +10,7 @@ import {
   Tabs,
   Tab,
   Badge,
+  Box,
   IconButton,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -26,7 +27,7 @@ import { ActivityList, TeamList } from './../../components/List';
 import { getActivities } from 'services/recim/activity';
 import { getParticipantTeams, getParticipantByUsername } from 'services/recim/participant';
 import { getTeamInvites } from 'services/recim/team';
-import recimLogo from './../../recim_logo.png';
+import recimLogo from 'views/RecIM/recim_logo.png';
 import { isFuture } from 'date-fns';
 import { TabPanel } from 'views/RecIM/components/TabPanel';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -62,8 +63,8 @@ const Home = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      // Get all active activities where registration has not closed
-      setActivities(await getActivities());
+      // Get all active activities
+      setActivities(await getActivities(true));
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
       }
@@ -102,16 +103,19 @@ const Home = () => {
   }, [activities]);
 
   let headerContents = (
-    <Grid container direction="row" alignItems="center" columnSpacing={4}>
+    <Grid container alignItems="center" columnSpacing={4} className={styles.header}>
       <Grid item container xs={9} alignItems="center" columnSpacing={2}>
         <Grid item>
-          <img src={recimLogo} alt="Rec-IM Logo" width="85em"></img>
+          <img src={recimLogo} alt="Rec-IM Logo" className={styles.headerImg}></img>
         </Grid>
         <Grid item xs={8}>
-          <Typography variant="h5" className={styles.title}>
-            <b className="accentText">Gordon</b> Rec-IM
+          <Typography className={styles.title}>
+            <Box component="span" sx={{ color: 'secondary.main' }}>
+              Gordon
+            </Box>{' '}
+            Rec-IM
           </Typography>
-          <Typography variant="h6" className={styles.subtitle}>
+          <Typography className={styles.subtitle}>
             <i>"Competition reveals character"</i>
           </Typography>
         </Grid>
@@ -132,14 +136,13 @@ const Home = () => {
         <Grid container justifyContent="center">
           <Button
             variant="contained"
-            color="warning"
             startIcon={<AddCircleRoundedIcon />}
             className={styles.actionButton}
             onClick={() => {
               setOpenActivityForm(true);
             }}
           >
-            Create a Activity
+            Create an Activity
           </Button>
         </Grid>
       </Grid>
