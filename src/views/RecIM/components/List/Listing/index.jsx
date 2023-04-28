@@ -232,7 +232,7 @@ const ParticipantListing = ({
   callbackFunction,
   showParticipantOptions,
   isAdminPage,
-  editDetails,
+  editParticipantInfo,
   withAttendance,
   isAdmin,
   initialAttendance,
@@ -241,22 +241,21 @@ const ParticipantListing = ({
 }) => {
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
-  const [name, setName] = useState();
   const [anchorEl, setAnchorEl] = useState();
-  const [anchorCustomEl, setAnchorCustomEl] = useState();
+  const [anchorCustomParticipantEl, setAnchorCustomParticipantEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
-  const moreOptionsCustomOpen = Boolean(anchorCustomEl);
+  const moreOptionsCustomParticipantOpen = Boolean(anchorCustomParticipantEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
   const [attendanceCount, setAttendanceCount] = useState();
 
   const handleClickOff = () => {
     setAnchorEl(null);
-    setAnchorCustomEl(null);
+    setAnchorCustomParticipantEl(null);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    setAnchorCustomEl(null);
+    setAnchorCustomParticipantEl(null);
     callbackFunction((val) => !val);
   };
 
@@ -273,16 +272,10 @@ const ParticipantListing = ({
         // TODO - Depdens on how we want to store custom participants' Pics
       }
     };
-    const loadUserInfo = async () => {
-      if (participant.Username) {
-        setName(`${participant.FirstName} ${participant.LastName}`);
-      }
-    };
 
     const loadAttendanceCount = async () => {
       setAttendanceCount(await getParticipantAttendanceCountForTeam(teamID, participant.Username));
     };
-    loadUserInfo();
     loadAvatar();
     if (teamID && withAttendance) loadAttendanceCount();
   }, [
@@ -295,7 +288,7 @@ const ParticipantListing = ({
   ]);
 
   const handleCustomParticipantOptions = (event) => {
-    setAnchorCustomEl(event.currentTarget);
+    setAnchorCustomParticipantEl(event.currentTarget);
   };
 
   const handleParticipantOptions = (event) => {
@@ -354,6 +347,24 @@ const ParticipantListing = ({
     attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
   };
 
+  const participantItem = (participant) => {
+    return (
+      <>
+        <ListItemAvatar>
+          <Avatar
+            src={`data:image/jpg;base64,${avatar}`}
+            className={minimal ? styles.avatarSmall : styles.avatar}
+            variant="rounded"
+          ></Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={`${participant.FirstName} ${participant.LastName}`}
+          secondary={participant.Role}
+        />
+      </>
+    );
+  };
+
   if (!participant) return null;
   return (
     // first ListItem is used only for paddings/margins
@@ -410,14 +421,7 @@ const ParticipantListing = ({
               withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
             }`}
           >
-            <ListItemAvatar>
-              <Avatar
-                src={`data:image/jpg;base64,${avatar}`}
-                className={minimal ? styles.avatarSmall : styles.avatar}
-                variant="rounded"
-              ></Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={name} secondary={participant.Role} />
+            {participantItem(participant)}
           </ListItem>
         ) : (
           <ListItemButton
@@ -426,14 +430,7 @@ const ParticipantListing = ({
               withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
             }`}
           >
-            <ListItemAvatar>
-              <Avatar
-                src={`data:image/jpg;base64,${avatar}`}
-                className={minimal ? styles.avatarSmall : styles.avatar}
-                variant="rounded"
-              ></Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={name} secondary={participant.Role} />
+            {participantItem(participant)}
           </ListItemButton>
         )}
         {showParticipantOptions && (
@@ -457,9 +454,9 @@ const ParticipantListing = ({
         )}
         {isAdminPage && participant.IsCustom && (
           <Menu
-            open={moreOptionsCustomOpen}
+            open={moreOptionsCustomParticipantOpen}
             onClose={handleClickOff}
-            anchorEl={anchorCustomEl}
+            anchorEl={anchorCustomParticipantEl}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'right',
@@ -472,8 +469,8 @@ const ParticipantListing = ({
             <MenuItem
               dense
               onClick={() => {
-                editDetails(participant);
-                setAnchorCustomEl(null);
+                editParticipantInfo(participant);
+                setAnchorCustomParticipantEl(null);
               }}
               divider
             >

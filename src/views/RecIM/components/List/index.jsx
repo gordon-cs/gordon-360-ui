@@ -49,7 +49,7 @@ const ParticipantList = ({
         participant={participant}
         minimal={minimal}
         isAdminPage={isAdminPage}
-        editDetails={editDetails}
+        editParticipantInfo={editDetails}
         withAttendance={withAttendance}
         initialAttendance={
           withAttendance && attendance?.find((att) => att.Username === participant.Username)
