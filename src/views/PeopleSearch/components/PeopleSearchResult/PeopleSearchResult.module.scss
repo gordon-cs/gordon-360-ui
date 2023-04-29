@@ -37,12 +37,11 @@
 }
 
 .mailingIconContainer {
-  flex: 0.3;
-  height: 30px;
-  background-color: blue;
-}
-
-.mailAction {
   display: flex;
   justify-content: center;
+  flex: 0.5;
+}
+
+.mailCardAction {
+  width: fit-content;
 }

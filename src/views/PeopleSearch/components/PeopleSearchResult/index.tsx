@@ -7,7 +7,6 @@ import { Class, SearchResult } from 'services/peopleSearch';
 import { useWindowSize } from 'hooks';
 import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
-import { BorderAll } from '@mui/icons-material';
 
 /*Const string was created with https://png-pixel.com/ .
  *It is a 1 x 1 pixel with the same color as gordonColors.neutral.lightGray (7/9/21)
@@ -91,23 +90,22 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
   const emailIcon = isMobileView ? (
     <></>
   ) : (
-    <Card className={styles.mailingIconContainer}>
-      <CardActionArea className={styles.mailAction}>
+    <div className={styles.mailingIconContainer}>
+      <CardActionArea className={styles.mailCardAction}>
         <a href={`mailto:${person.Email}`}>
-          <div>
-            <MailOutlineIcon
-              sx={{
-                fontSize: 30,
-                color: 'white',
-                height: '100%',
-                backgroundColor: 'blue',
-                // borderRadius: 4,
-              }}
-            />
-          </div>
+          <MailOutlineIcon
+            sx={{
+              fontSize: 35,
+              color: 'white',
+              height: '100%',
+              width: 40,
+              backgroundColor: '#23c3ff',
+              borderRadius: 4,
+            }}
+          />
         </a>
       </CardActionArea>
-    </Card>
+    </div>
   );
 
   return (
@@ -115,7 +113,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
       <VisibilitySensor onChange={handleVisibilityChange}>
         <Card className={styles.resultContainer} elevation={0}>
           <CardActionArea
-            style={{ flex: 7 }}
+            style={{ flex: 6 }}
             className="gc360_link"
             onClick={() => {
               navigate(`/profile/${person.AD_Username}`);
