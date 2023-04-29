@@ -21,20 +21,22 @@ const Activity = ({ description, sessions }: Props) => {
       <div className={styles.date}> {formatFinalDuration(sessions)} </div>
       {advisorSessions.length > 0 && (
         <div className={styles.participation_line}>
-          <div className={styles.organization_role}>Advisor</div>
-          <div className={styles.date}>({formatDuration(advisorSessions)})</div>
+          <div className={styles.organization_role}>
+            Advisor ({formatDuration(advisorSessions)})
+          </div>
+          {/* <div className={styles.date}>({formatDuration(advisorSessions)})</div> */}
         </div>
       )}
       {leaderSessions.length > 0 && (
         <div className={styles.participation_line}>
-          <div className={styles.organization_role}>Leader</div>
-          <div className={styles.date}>({formatDuration(leaderSessions)})</div>
+          <div className={styles.organization_role}>Leader ({formatDuration(leaderSessions)})</div>
+          {/* <div className={styles.date}>({formatDuration(leaderSessions)})</div> */}
         </div>
       )}
       {memberSessions.length > 0 && (
         <div className={styles.participation_line}>
-          <div className={styles.organization_role}>Member</div>
-          <div className={styles.date}>({formatDuration(memberSessions)})</div>
+          <div className={styles.organization_role}>Member ({formatDuration(memberSessions)})</div>
+          {/* <div className={styles.date}>({formatDuration(memberSessions)})</div> */}
         </div>
       )}
     </div>
@@ -95,7 +97,7 @@ const formatFinalDuration = (sessionRecords: MembershipHistorySession[]) => {
       // If this is the first session, initialize interval.
       interval = new MembershipInterval(session);
     } else {
-      // If the current session is consecutive with the current interval, extend the interval.
+      // Extend the interval.
       interval.extendTo(session);
     }
   });
