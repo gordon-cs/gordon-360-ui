@@ -24,19 +24,16 @@ const Activity = ({ description, sessions }: Props) => {
           <div className={styles.organization_role}>
             Advisor ({formatDuration(advisorSessions)})
           </div>
-          {/* <div className={styles.date}>({formatDuration(advisorSessions)})</div> */}
         </div>
       )}
       {leaderSessions.length > 0 && (
         <div className={styles.participation_line}>
           <div className={styles.organization_role}>Leader ({formatDuration(leaderSessions)})</div>
-          {/* <div className={styles.date}>({formatDuration(leaderSessions)})</div> */}
         </div>
       )}
       {memberSessions.length > 0 && (
         <div className={styles.participation_line}>
           <div className={styles.organization_role}>Member ({formatDuration(memberSessions)})</div>
-          {/* <div className={styles.date}>({formatDuration(memberSessions)})</div> */}
         </div>
       )}
     </div>
