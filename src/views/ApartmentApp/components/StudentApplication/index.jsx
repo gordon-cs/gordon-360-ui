@@ -623,10 +623,7 @@ const StudentApplication = ({ userProfile }) => {
           // Quick fix since the API is trying
           //  to validate the public profile object but there is no Hall property
           let applicationDetailsNoProfiles = applicationDetails;
-          applicationDetailsNoProfiles.Applicants = applicationDetails.Applicants.map((a) => {
-            a.Profile.Hall = '';
-            return a;
-          });
+          applicationDetailsNoProfiles.Applicants.forEach((a) => a.Profile.Hall = '');
           const saveResult = await housing.saveApartmentApplication(applicationDetailsNoProfiles);
           if (saveResult) {
             setApplicationDetails((prevApplicationDetails) => ({
