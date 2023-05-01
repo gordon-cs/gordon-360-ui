@@ -428,7 +428,9 @@ const StudentNews = () => {
                   <Dropzone
                     onDropAccepted={onDropAccepted}
                     onDropRejected={onDropRejected}
-                    accept="image/jpeg, image/jpg, image/png"
+                    accept={{
+                      'image/*': ['.jpeg', ',jpg', '.png'],
+                    }}
                   >
                     {({ getRootProps, getInputProps }) => (
                       <section>
