@@ -27,7 +27,7 @@
     "prop-types": ">=15.7.2",
     "re2": "^1.18.0",
     "react": "^17.0.2",
-    "react-big-calendar": "^0.38.1",
+    "react-big-calendar": "^1.6.9",
     "react-chartjs-2": "^2.11.2",
     "react-cropper": "^2.1.7",
     "react-csv": "^2.0.3",
