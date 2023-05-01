@@ -40,7 +40,7 @@
     "react-image-gallery": "^1.2.7",
     "react-imask": "^6.4.2",
     "react-media": ">=1.10.0",
-    "react-router": "^6.4.2",
+    "react-router": "^6.11.0",
     "react-router-dom": "^6.11.0",
     "react-to-print": "^2.14.1",
     "react-visibility-sensor": "^5.1.1",
