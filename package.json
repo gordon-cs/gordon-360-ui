@@ -17,7 +17,7 @@
     "cropperjs": "^1.5.11",
     "date-fns": "^2.27.0",
     "downshift": "^6.1.7",
-    "history": "^4.10.1",
+    "history": "^5.3.0",
     "http-proxy-middleware": "^2.0.0",
     "interweave": "^12.9.0",
     "jwt-decode": "^3.1.2",
