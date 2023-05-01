@@ -55,6 +55,37 @@ const RosterCard = ({
   </Card>
 );
 
+const TeamInfo = ({ team, activityID, sportsmanshipScore, isWinner, isLeft, isAdmin }) => {
+  return (
+    <Grid
+      item
+      container
+      xs={5}
+      columnSpacing={2}
+      justifyContent="space-around"
+      className={`${styles.teamInfo} ${isLeft ? styles.teamInfoLeft : styles.teamInfoRight}`}
+    >
+      <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
+        <img src={team.Logo ?? defaultLogo} alt="Team Icon" className={styles.headerImg}></img>
+      </Grid>
+      <Grid item sm={8} lg="auto">
+        <LinkRouter to={`/recim/activity/${activityID}/team/${team.ID}`}>
+          <Typography
+            variant="h5"
+            className={`${styles.teamName} gc360_text_link ${isWinner && styles.matchWinner}`}
+          >
+            {team.Name ?? 'No team yet...'}
+          </Typography>
+        </LinkRouter>
+        <Typography className={styles.subtitle}>
+          {team.TeamRecord.WinCount ?? 0}W : {team.TeamRecord.LossCount ?? 0}L
+        </Typography>
+        {isAdmin && <i className={styles.subtitle}>Sportsmanship: {sportsmanshipScore}</i>}
+      </Grid>
+    </Grid>
+  );
+};
+
 const Match = () => {
   const navigate = useNavigate();
   const { matchID } = useParams();
@@ -63,14 +94,13 @@ const Match = () => {
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [team0Score, setTeam0Score] = useState(0);
-  const [team1Score, setTeam1Score] = useState(0);
+  const [scores, setScores] = useState([]);
+  const [sportsmanshipScores, setSportsmanshipScores] = useState([]);
   const [openMatchInformationForm, setOpenMatchInformationForm] = useState(false);
   const [openEditMatchStatsForm, setOpenEditMatchStatsForm] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [user, setUser] = useState();
   const [matchAttendance, setMatchAttendance] = useState();
-  const [matchName, setMatchName] = useState();
   const [anchorEl, setAnchorEl] = useState();
   const openMenu = Boolean(anchorEl);
 
@@ -89,18 +119,18 @@ const Match = () => {
 
   useEffect(() => {
     if (match) {
-      const assignMatchScores = async () => {
-        setTeam0Score(
-          match.Scores.find((team) => team.TeamID === match.Team[0]?.ID)?.TeamScore ?? 0,
-        );
-        setTeam1Score(
-          match.Scores.find((team) => team.TeamID === match.Team[1]?.ID)?.TeamScore ?? 0,
-        );
-      };
-      setMatchName(`${match?.Team[0]?.Name ?? 'TBD'} vs ${match?.Team[1]?.Name ?? 'TBD'}`);
-      assignMatchScores();
+      setScores(
+        match.Team.map((matchTeam) => {
+          return match.Scores.find((team) => team.TeamID === matchTeam.ID)?.TeamScore ?? 0;
+        }),
+      );
+      setSportsmanshipScores(
+        match.Team.map((matchTeam) => {
+          return match.Scores.find((team) => team.TeamID === matchTeam.ID)?.SportsmanshipScore ?? 5;
+        }),
+      );
     }
-  }, [match]);
+  }, [match, reload]);
 
   useEffect(() => {
     const loadMatch = async () => {
@@ -124,7 +154,6 @@ const Match = () => {
     await deleteMatchCascade(matchID);
     setOpenConfirmDelete(false);
     navigate(`/recim/activity/${match.Activity.ID}`);
-    // @TODO add snackbar
   };
 
   const handleMatchCompletedShortcut = async () => {
@@ -163,46 +192,17 @@ const Match = () => {
           alignItems="center"
           justifyContent="space-around"
           spacing={1}
-          flexWrap="nowrap"
+          flexWrap="wrap"
         >
           {/* left team info */}
-          <Grid
-            item
-            container
-            xs={5}
-            columnSpacing={2}
-            justifyContent="space-around"
-            className={`${styles.teamInfo} ${styles.teamInfoLeft}`}
-          >
-            <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
-              <img
-                src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID)?.Logo ?? defaultLogo}
-                alt="Team Icon"
-                className={styles.headerImg}
-              ></img>
-            </Grid>
-            <Grid item sm={8} lg="auto">
-              <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
-                <Typography
-                  variant="h5"
-                  className={`${styles.teamName} gc360_text_link ${
-                    team0Score > team1Score && match?.Status === 'Completed' && styles.matchWinner
-                  }`}
-                >
-                  {match?.Team[0]?.Name ?? 'No team yet...'}
-                </Typography>
-              </LinkRouter>
-              <Typography className={styles.subtitle}>
-                {match?.Team[0]?.TeamRecord.WinCount ?? 0}W :{' '}
-                {match?.Team[0]?.TeamRecord.LossCount ?? 0}L
-              </Typography>
-              {user?.IsAdmin && (
-                <i className={styles.subtitle}>
-                  Sportsmanship: {match?.Scores[0]?.SportsmanshipScore}
-                </i>
-              )}
-            </Grid>
-          </Grid>
+          <TeamInfo
+            team={match?.Team[0]}
+            activityID={match?.Activity.ID}
+            sportsmanshipScore={sportsmanshipScores[0]}
+            isWinner={scores.every((score) => score > scores[0]) && match?.Status === 'Completed'}
+            isLeft={true}
+            isAdmin={user?.IsAdmin}
+          />
 
           <Grid item container xs={2} alignItems="center" direction="column" sx={{ mt: 3 }}>
             {match?.Status === 'Completed' && (
@@ -212,7 +212,7 @@ const Match = () => {
             )}
             <Grid item>
               <Typography variant="h5" className={styles.matchScore}>
-                {team0Score} : {team1Score}
+                {scores[0]} : {scores[1]}
               </Typography>
             </Grid>
             {/* admin controls */}
@@ -241,43 +241,32 @@ const Match = () => {
           </Grid>
 
           {/* right team info */}
-          <Grid
-            item
-            container
-            xs={5}
-            columnSpacing={2}
-            justifyContent="space-around"
-            className={`${styles.teamInfo} ${styles.teamInfoRight}`}
-          >
-            <Grid item sm={8} lg="auto">
-              <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
-                <Typography
-                  variant="h5"
-                  className={`${styles.teamName} gc360_text_link ${
-                    team1Score > team0Score && match?.Status === 'Completed' && styles.matchWinner
-                  }`}
-                >
-                  {match?.Team[1]?.Name ?? 'No team yet...'}
-                </Typography>
-              </LinkRouter>
-              <Typography className={styles.subtitle}>
-                {match?.Team[1]?.TeamRecord.WinCount ?? 0}W :{' '}
-                {match?.Team[1]?.TeamRecord.LossCount ?? 0}L
-              </Typography>
-              {user?.IsAdmin && (
-                <i className={styles.subtitle}>
-                  Sportsmanship: {match?.Scores[1]?.SportsmanshipScore}
-                </i>
-              )}
-            </Grid>
-            <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
-              <img
-                src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID)?.Logo ?? defaultLogo}
-                alt="Team Icon"
-                className={styles.headerImg}
-              ></img>
-            </Grid>
-          </Grid>
+          <TeamInfo
+            team={match?.Team[1]}
+            activityID={match?.Activity.ID}
+            sportsmanshipScore={sportsmanshipScores[1]}
+            isWinner={scores.every((score) => score > scores[1]) && match?.Status === 'Completed'}
+            isLeft={false}
+            isAdmin={user?.IsAdmin}
+          />
+
+          {match.Team.slice(2, match.Team.length).map((team, index) => {
+            return (
+              <>
+                <TeamInfo
+                  team={team}
+                  activityID={match?.Activity.ID}
+                  sportsmanshipScore={sportsmanshipScores[index]}
+                  isWinner={
+                    scores.every((score) => score > scores[index]) && match?.Status === 'Completed'
+                  }
+                  isLeft={index % 2 === 0}
+                  isAdmin={user?.IsAdmin}
+                />
+                {index % 2 === 0 ? <Grid item xs={2}></Grid> : null}
+              </>
+            );
+          })}
         </Grid>
       </Grid>
     );
@@ -289,33 +278,19 @@ const Match = () => {
           <GordonLoader />
         ) : (
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <RosterCard
-                participants={match.Team[0]?.Participant}
-                teamName={match.Team[0]?.Name}
-                withAttendance
-                attendance={
-                  matchAttendance?.find((item) => item.TeamID === match.Team[0]?.ID)?.Attendance
-                }
-                isAdmin={user?.IsAdmin}
-                matchID={match.ID}
-                teamID={match.Team[0]?.ID}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <RosterCard
-                participants={match.Team[1]?.Participant}
-                teamName={match.Team[1]?.Name}
-                withAttendance
-                attendance={
-                  matchAttendance?.find((item) => item.TeamID === match.Team[1]?.ID)?.Attendance
-                }
-                isAdmin={user?.IsAdmin}
-                matchID={match.ID}
-                teamID={match.Team[1]?.ID}
-              />
-            </Grid>
-
+            {match.Team?.map((team) => (
+              <Grid item xs={12} md={6}>
+                <RosterCard
+                  participants={team.Participant}
+                  teamName={team.Name}
+                  withAttendance
+                  attendance={matchAttendance?.find((item) => item.TeamID === team.ID)?.Attendance}
+                  isAdmin={user?.IsAdmin}
+                  matchID={match.ID}
+                  teamID={team.ID}
+                />
+              </Grid>
+            ))}
             {/* forms and dialogs */}
             <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
               <Typography className={styles.menuTitle}>Admin Settings</Typography>
@@ -388,12 +363,17 @@ const Match = () => {
             >
               <br />
               <Typography variant="body1">
-                Are you sure you want to permanently delete this match: '{matchName}'?
+                Are you sure you want to permanently delete this match: '
+                {match.Team.length > 2
+                  ? `Ladder Match`
+                  : `${match?.Team[0]?.Name ?? 'TBD'} vs ${match?.Team[1]?.Name ?? 'TBD'}`}
+                '?
               </Typography>
               <Typography variant="body1">This action cannot be undone.</Typography>
             </GordonDialogBox>
           </Grid>
         )}
+
         <GordonSnackbar
           open={snackbar.open}
           text={snackbar.message}

@@ -109,7 +109,6 @@ const Team = () => {
     await deleteTeam(teamID);
     setOpenConfirmDelete(false);
     navigate(`/recim/activity/${team.Activity.ID}`);
-    // @TODO add snackbar
   };
 
   // default closure

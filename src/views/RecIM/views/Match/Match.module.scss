@@ -35,14 +35,15 @@
       border-radius: 50%;
     }
     .teamInfo {
-      flex-direction: row;
       align-items: center;
     }
     .teamInfoLeft {
       text-align: right;
+      flex-direction: row;
     }
     .teamInfoRight {
       text-align: left;
+      flex-direction: row-reverse;
     }
     .headerImgContainer {
       order: 0;

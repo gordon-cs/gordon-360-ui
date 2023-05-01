@@ -55,7 +55,9 @@ const Header = ({ match, team, activity, admin, children }) => {
           {/* Match breadcrumb */}
           {match && (
             <RecIMBreadcrumb>
-              {largeWidth
+              {match.Team.length > 2
+                ? `Ladder Match`
+                : largeWidth
                 ? `Match: ${match.Team?.[0]?.Name ?? 'TBD'} vs 
               ${match.Team?.[1]?.Name ?? 'TBD'}`
                 : `Match: ${truncate(match.Team?.[0]?.Name ?? 'TBD')} vs ${truncate(
