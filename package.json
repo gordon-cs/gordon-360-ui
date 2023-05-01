@@ -25,6 +25,7 @@
     "luxon": "^1.28.1",
     "moment": "^2.29.4",
     "prop-types": ">=15.7.2",
+    "re2": "^1.18.0",
     "react": "^17.0.2",
     "react-big-calendar": "^0.38.1",
     "react-chartjs-2": "^2.11.2",
@@ -43,7 +44,7 @@
     "react-router-dom": "^6.11.0",
     "react-to-print": "^2.14.1",
     "react-visibility-sensor": "^5.1.1",
-    "url-regex-safe": "^2.1.0",
+    "url-regex-safe": "^3.0.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz"
   },
   "devDependencies": {
