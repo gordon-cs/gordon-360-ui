@@ -7,6 +7,7 @@ import { Class, SearchResult } from 'services/peopleSearch';
 import { useWindowSize } from 'hooks';
 import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
+import { gordonColors } from 'theme';
 
 /*Const string was created with https://png-pixel.com/ .
  *It is a 1 x 1 pixel with the same color as gordonColors.neutral.lightGray (7/9/21)
@@ -95,12 +96,10 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
         <a href={`mailto:${person.Email}`}>
           <MailOutlineIcon
             sx={{
-              fontSize: 35,
-              color: 'white',
+              color: gordonColors.neutral.grayShades[50],
               height: '100%',
               width: 40,
-              backgroundColor: '#23c3ff',
-              borderRadius: 4,
+              borderRadius: 2,
             }}
           />
         </a>
@@ -112,14 +111,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
     <>
       <VisibilitySensor onChange={handleVisibilityChange}>
         <Card className={styles.resultContainer} elevation={0}>
-          <CardActionArea
-            style={{ flex: 6 }}
-            className="gc360_link"
-            onClick={() => {
-              navigate(`/profile/${person.AD_Username}`);
-            }}
-          >
-            {/* <Link style={{ flex: 7 }} className="gc360_link" to={`/profile/${person.AD_Username}`}> */}
+          <Link style={{ flex: 6 }} className="gc360_link" to={`/profile/${person.AD_Username}`}>
             <Card className={styles.result} elevation={0}>
               {avatar && (
                 <CardMedia
@@ -156,8 +148,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
                 <SecondaryText className={styles.secondary_text}>{mailLocation}</SecondaryText>
               </CardContent>
             </Card>
-            {/* </Link> */}
-          </CardActionArea>
+          </Link>
           {emailIcon}
         </Card>
       </VisibilitySensor>
