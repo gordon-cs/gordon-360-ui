@@ -64,7 +64,7 @@ const CoCurricularTranscript = () => {
             />
           </Card>
         </Grid>
-        <Card>
+        <Card className={styles.transcript_card}>
           <CardHeader subheader={<SubHeader profile={profile} />} disableTypography />
           <CardContent>
             {transcriptItems &&
@@ -122,12 +122,12 @@ const SubHeader = ({ profile }: { profile: Profile }) => (
         )}
         {profile.Majors.length > 0 && (
           <Typography component="p" variant="h6">
-            Major{profile.Majors.length > 1 ? 's' : ''}: {profile.Majors.join(', ')}
+            <b>Major{profile.Majors.length > 1 ? 's' : ''}:</b> {profile.Majors.join(', ')}
           </Typography>
         )}
         {profile.Minors.length > 0 && (
           <Typography component="p" variant="h6">
-            Minor{profile.Minors.length > 1 ? 's' : ''}: {profile.Minors.join(', ')}
+            <b>Minor{profile.Minors.length > 1 ? 's' : ''}:</b> {profile.Minors.join(', ')}
           </Typography>
         )}
       </>
