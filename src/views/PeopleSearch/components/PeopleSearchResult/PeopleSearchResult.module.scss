@@ -36,6 +36,10 @@
   font-size: clamp(0.75rem, 0.6429rem + 0.5357vw, 1.5rem);
 }
 
+.profileLinkContainer {
+  flex: 6;
+}
+
 .mailingIconContainer {
   display: flex;
   justify-content: center;
