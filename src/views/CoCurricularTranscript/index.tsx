@@ -49,18 +49,13 @@ const CoCurricularTranscript = () => {
     <Grid container justifyContent="center" marginBottom={3}>
       <Grid item xs={12} lg={10} xl={8}>
         <Grid>
-          <Card>
+          <Card className={styles.transcript_title}>
             <CardHeader
               title={
                 <Typography component="h1" variant="h5">
                   Gordon College Experience Transcript
                 </Typography>
               }
-              style={{
-                backgroundColor: gordonColors.primary.blue,
-                color: gordonColors.neutral.grayShades[50],
-                textAlign: 'center',
-              }}
             />
           </Card>
         </Grid>
