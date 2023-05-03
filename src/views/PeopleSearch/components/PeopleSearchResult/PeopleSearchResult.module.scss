@@ -1,6 +1,6 @@
 @import '../../../../vars';
 
-.resultContainer {
+.result_container {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -36,17 +36,17 @@
   font-size: clamp(0.75rem, 0.6429rem + 0.5357vw, 1.5rem);
 }
 
-.profileLinkContainer {
+.profile_link_container {
   flex: 6;
 }
 
-.mailingIconContainer {
+.mailing_icon_container {
   display: flex;
   justify-content: center;
   flex: 0.5;
 }
 
-.mailCardAction {
+.mail_card_action {
   width: fit-content;
   background-color: $primary-blue;
   border-radius: 6px;
