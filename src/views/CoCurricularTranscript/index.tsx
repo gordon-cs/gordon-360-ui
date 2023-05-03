@@ -48,7 +48,7 @@ const CoCurricularTranscript = () => {
   return (
     <Grid container justifyContent="center" marginBottom={3}>
       <Grid item xs={12} lg={10} xl={8}>
-        <Grid marginBottom={2}>
+        <Grid>
           <Card>
             <CardHeader
               title={
