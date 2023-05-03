@@ -89,8 +89,8 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
   }
 
   const emailIcon = !isMobileView && (
-    <div className={styles.mailingIconContainer}>
-      <CardActionArea className={styles.mailCardAction}>
+    <div className={styles.mailing_icon_container}>
+      <CardActionArea className={styles.mail_card_action}>
         <a href={`mailto:${person.Email}`}>
           <MailOutlineIcon
             sx={{
