@@ -24,7 +24,7 @@ const NewsItem = ({
   handleNewsItemEdit,
   handleNewsImageEdit,
   handleNewsItemDelete,
-  handleNewsApprovalStatus,
+  handleChangeNewsApprovalStatus,
   isAdmin,
 }) => {
   const [open, setOpen] = useState(false);
@@ -103,7 +103,7 @@ const NewsItem = ({
       <FormControlLabel
         control={
           <Switch
-            onChange={() => handleNewsApprovalStatus(posting.SNID, isUnapproved)}
+            onChange={() => handleChangeNewsApprovalStatus(posting.SNID, isUnapproved)}
             checked={!isUnapproved}
           />
         }
@@ -241,7 +241,7 @@ NewsItem.propTypes = {
   size: PropTypes.string.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,
-  handleNewsApprovalStatus: PropTypes.func.isRequired,
+  handleChangeNewsApprovalStatus: PropTypes.func.isRequired,
   isAdmin: PropTypes.bool.isRequired,
 };
 

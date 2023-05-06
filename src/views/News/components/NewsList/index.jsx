@@ -17,31 +17,43 @@ import styles from './NewsList.module.css';
 
 const BREAKPOINT_WIDTH = 540;
 
+const fullHeader = (
+  <Grid container direction="row" className={styles.header}>
+    <Grid item xs={2}>
+      <Typography variant="body2" className={styles.header}>
+        CATEGORY
+      </Typography>
+    </Grid>
+    <Grid item xs={5}>
+      <Typography variant="body2" className={styles.header}>
+        SUBJECT
+      </Typography>
+    </Grid>
+    <Grid item xs={3}>
+      <Typography variant="body2" className={styles.header}>
+        POSTED BY
+      </Typography>
+    </Grid>
+    <Grid item xs={2}>
+      <Typography variant="body2" className={styles.header}>
+        POSTED
+      </Typography>
+    </Grid>
+  </Grid>
+);
+
 const NewsList = ({
   news,
   header,
   handleNewsItemEdit,
   handleNewsImageEdit,
   handleNewsItemDelete,
-  handleNewsApprovalStatus,
+  handleChangeNewsApprovalStatus,
   isUnapproved,
   isAdmin,
   tabBreakpointWidth,
 }) => {
   const [width, setWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    function handleResize() {
-      setWidth(window.innerWidth);
-    }
-    window.addEventListener('resize', handleResize);
-    return (_) => {
-      window.removeEventListener('resize', handleResize);
-    };
-  });
-
-  //https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
-  //Excellent resource for handling rerender on resize -Josh
 
   const singleHeader = (
     <div className={styles.header}>
@@ -55,30 +67,15 @@ const NewsList = ({
     </div>
   );
 
-  const fullHeader = (
-    <Grid container direction="row" className={styles.header}>
-      <Grid item xs={2}>
-        <Typography variant="body2" className={styles.header}>
-          CATEGORY
-        </Typography>
-      </Grid>
-      <Grid item xs={5}>
-        <Typography variant="body2" className={styles.header}>
-          SUBJECT
-        </Typography>
-      </Grid>
-      <Grid item xs={3}>
-        <Typography variant="body2" className={styles.header}>
-          POSTED BY
-        </Typography>
-      </Grid>
-      <Grid item xs={2}>
-        <Typography variant="body2" className={styles.header}>
-          POSTED
-        </Typography>
-      </Grid>
-    </Grid>
-  );
+  useEffect(() => {
+    function handleResize() {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener('resize', handleResize);
+    return (_) => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
 
   return (
     <Card className={width >= tabBreakpointWidth ? styles.full_news_list : styles.news_list}>
@@ -95,7 +92,7 @@ const NewsList = ({
                   handleNewsItemEdit={handleNewsItemEdit}
                   handleNewsImageEdit={handleNewsImageEdit}
                   handleNewsItemDelete={handleNewsItemDelete}
-                  handleNewsApprovalStatus={handleNewsApprovalStatus}
+                  handleChangeNewsApprovalStatus={handleChangeNewsApprovalStatus}
                   key={posting.SNID}
                   isAdmin={isAdmin}
                 />
@@ -126,7 +123,7 @@ NewsList.propTypes = {
   ).isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,
-  handleNewsApprovalStatus: PropTypes.func.isRequired,
+  handleChangeNewsApprovalStatus: PropTypes.func.isRequired,
   isUnapproved: PropTypes.any,
   isAdmin: PropTypes.bool.isRequired,
 };

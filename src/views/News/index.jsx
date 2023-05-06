@@ -340,7 +340,7 @@ const StudentNews = () => {
     loadNews();
   }
 
-  async function handleNewsApprovalStatus(snid, newsStatusAccepted) {
+  async function handleChangeNewsApprovalStatus(snid, newsStatusAccepted) {
     // update the news item accepted status and give feedback
     let result = await newsService.updateAcceptedStatus(snid, newsStatusAccepted);
     let statusAction = newsStatusAccepted ? 'approve' : 'unapprove';
@@ -402,7 +402,7 @@ const StudentNews = () => {
               handleNewsItemEdit={handleNewsItemEdit}
               handleNewsImageEdit={handleNewsImageEdit}
               handleNewsItemDelete={handleNewsItemDelete}
-              handleNewsApprovalStatus={handleNewsApprovalStatus}
+              handleChangeNewsApprovalStatus={handleChangeNewsApprovalStatus}
               isUnapproved={false}
               isAdmin={isAdmin}
             />
@@ -413,7 +413,7 @@ const StudentNews = () => {
                 handleNewsItemEdit={handleNewsItemEdit}
                 handleNewsImageEdit={handleNewsImageEdit}
                 handleNewsItemDelete={handleNewsItemDelete}
-                handleNewsApprovalStatus={handleNewsApprovalStatus}
+                handleChangeNewsApprovalStatus={handleChangeNewsApprovalStatus}
                 isAdmin={false}
               />
             )}
@@ -425,7 +425,7 @@ const StudentNews = () => {
                 handleNewsItemEdit={handleNewsItemEdit}
                 handleNewsImageEdit={handleNewsImageEdit}
                 handleNewsItemDelete={handleNewsItemDelete}
-                handleNewsApprovalStatus={handleNewsApprovalStatus}
+                handleChangeNewsApprovalStatus={handleChangeNewsApprovalStatus}
                 isAdmin={isAdmin}
               />
             )}
@@ -490,7 +490,7 @@ const StudentNews = () => {
                   handleNewsItemEdit={handleNewsItemEdit}
                   handleNewsImageEdit={handleNewsImageEdit}
                   handleNewsItemDelete={handleNewsItemDelete}
-                  handleNewsApprovalStatus={handleNewsApprovalStatus}
+                  handleChangeNewsApprovalStatus={handleChangeNewsApprovalStatus}
                   isUnapproved={false}
                   isAdmin={isAdmin}
                   tabBreakpointWidth={TAB_BREAKPOINT_WIDTH}
@@ -503,7 +503,7 @@ const StudentNews = () => {
                   handleNewsItemEdit={handleNewsItemEdit}
                   handleNewsImageEdit={handleNewsImageEdit}
                   handleNewsItemDelete={handleNewsItemDelete}
-                  handleNewsApprovalStatus={handleNewsApprovalStatus}
+                  handleChangeNewsApprovalStatus={handleChangeNewsApprovalStatus}
                   isAdmin={false}
                   tabBreakpointWidth={TAB_BREAKPOINT_WIDTH}
                 />
@@ -517,7 +517,7 @@ const StudentNews = () => {
                       handleNewsItemEdit={handleNewsItemEdit}
                       handleNewsImageEdit={handleNewsImageEdit}
                       handleNewsItemDelete={handleNewsItemDelete}
-                      handleNewsApprovalStatus={handleNewsApprovalStatus}
+                      handleChangeNewsApprovalStatus={handleChangeNewsApprovalStatus}
                       isAdmin={isAdmin}
                       tabBreakpointWidth={TAB_BREAKPOINT_WIDTH}
                     />
