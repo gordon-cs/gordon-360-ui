@@ -66,6 +66,7 @@ type BaseProfileInfo = {
   Instagram: string;
   Handshake: string;
   LinkedIn: string;
+  Calendar: string;
   PersonType: string;
   fullName?: string;
   CliftonStrengths?: CliftonStrengths | null;
