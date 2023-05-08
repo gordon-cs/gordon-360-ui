@@ -8,7 +8,7 @@ import {
   Work as WorkIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@mui/material';
-import GordonDialogBox from 'components/GordonDialogBox/index';
+import GordonDialogBox from 'components/GordonDialogBox';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
