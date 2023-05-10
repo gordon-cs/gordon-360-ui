@@ -1,10 +1,10 @@
 import {
   AlertColor,
-  Breakpoint,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogProps,
   DialogTitle,
 } from '@mui/material';
 import { Alert, AlertTitle } from '@mui/material';
@@ -12,17 +12,14 @@ import { PropsWithChildren } from 'react';
 
 type Props = {
   open: boolean;
-  onClose?: (event: {}) => void;
   title: string;
   buttonClicked: (event: {}) => void;
   buttonName?: string;
-  fullWidth?: boolean;
-  maxWidth?: false | Breakpoint;
   isButtonDisabled?: boolean;
   cancelButtonClicked?: (event: {}) => void;
   cancelButtonName?: string;
   severity?: AlertColor;
-};
+} & Partial<DialogProps>;
 
 const GordonDialogBox = ({
   title,
