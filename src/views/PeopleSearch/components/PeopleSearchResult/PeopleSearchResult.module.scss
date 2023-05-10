@@ -1,5 +1,11 @@
 @import '../../../../vars';
 
+.result_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .result {
   display: flex;
   align-items: center;
@@ -28,4 +34,21 @@
 
 .secondary_text {
   font-size: clamp(0.75rem, 0.6429rem + 0.5357vw, 1.5rem);
+}
+
+.profile_link_container {
+  flex: 6;
+}
+
+.mailing_icon_container {
+  display: flex;
+  justify-content: center;
+  flex: 0.5;
+}
+
+.mail_card_action {
+  width: fit-content;
+  background-color: $primary-blue;
+  border-radius: 6px;
+  padding: 0 0.2rem;
 }
