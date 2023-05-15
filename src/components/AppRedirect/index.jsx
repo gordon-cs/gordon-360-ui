@@ -10,7 +10,13 @@ const AppRedirect = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      checkInService.getStatus().then((status) => setEnrollmentCheckinComplete(status ?? true));
+      checkInService
+        .getStatus()
+        .then(setEnrollmentCheckinComplete)
+        .catch((error) => {
+          console.error(error);
+          setEnrollmentCheckinComplete(true);
+        });
     }
   }, [isAuthenticated, location]);
 

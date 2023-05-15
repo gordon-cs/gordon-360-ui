@@ -1,3 +1,4 @@
+import GetAppIcon from '@mui/icons-material/GetApp';
 import {
   Button,
   Card,
@@ -10,11 +11,10 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import GetAppIcon from '@mui/icons-material/GetApp';
 import PWAInstructions from 'components/PWAInstructions/index';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
-import { ga } from 'react-ga';
+import { ga } from 'react-ga4';
 import { authenticate } from 'services/auth';
 import styles from './GuestWelcome.module.css';
 import GordonLogoVerticalWhite from './images/gordon-logo-vertical-white.svg';
