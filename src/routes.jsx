@@ -1,3 +1,4 @@
+import ChapelQR from 'views/ChapelQR';
 import About from './views/About';
 import Admin from './views/Admin';
 import ApartmentApp from './views/ApartmentApp';
@@ -127,6 +128,11 @@ const routes = [
     name: 'News',
     path: '/news',
     element: <News />,
+  },
+  {
+    name: 'Chapel QR',
+    path: '/chapelqr',
+    element: <ChapelQR />,
   },
   {
     name: 'Page Not Found',

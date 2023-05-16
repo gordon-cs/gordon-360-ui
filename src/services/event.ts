@@ -189,6 +189,9 @@ const makeMatchesFilters =
     return false;
   };
 
+const getChapelCipher = (eventId: number): Promise<string> =>
+  http.get<string>(`events/chapel/${eventId}/cipher`);
+
 const eventService = {
   getAllEvents,
   getFutureEvents,
@@ -196,6 +199,7 @@ const eventService = {
   getFilteredEvents,
   getAllGuestEvents,
   getAttendedChapelEvents,
+  getChapelCipher,
 };
 
 export default eventService;
