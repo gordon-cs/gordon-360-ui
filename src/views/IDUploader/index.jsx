@@ -74,7 +74,10 @@ const IDUploader = () => {
 
       setIsSubmitDialogOpen(true);
     } catch (error) {
-      createSnackbar('There was a problem submitting your photo. Please try again.', 'error');
+      createSnackbar(
+        'There was a problem submitting your photo. Please try again or contact CTS@gordon.edu for help.',
+        'error',
+      );
     } finally {
       setIsPhotoOpen(false);
     }
