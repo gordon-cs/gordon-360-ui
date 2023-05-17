@@ -18,7 +18,7 @@ import { Component, createRef } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { authenticate } from 'services/auth';
-import errorLog from 'services/errorLog';
+import logging from 'services/logging';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from './IDUploader.module.css';
@@ -85,10 +85,10 @@ class IDUploader extends Component {
         this.setState({ submitDialogOpen: true });
         postedSuccessfully = true;
       } catch (error) {
-        const userAgentData = errorLog.parseUserAgentData();
+        const userAgentData = logging.parseUserAgentData();
         const errorDetails = JSON.stringify(error);
         const logMessage = `ID photo submission #${attemptNumber} for ${profile.AD_Username} from ${userAgentData} failed: ${errorDetails}`;
-        errorLog.postErrorMessage(logMessage);
+        logging.postLogMessage(logMessage);
         attemptNumber++;
       }
     }
