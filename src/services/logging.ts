@@ -16,7 +16,7 @@ declare global {
   }
 }
 
-const postLogMessage = (message: string) => http.post('log', message);
+const post = (message: string) => http.post('log', message);
 
 // @TODO: Make this a strcutured component of all logs, e.g. with new columns for OS, Version, etc.
 const parseUserAgentData = () => {
@@ -29,7 +29,7 @@ const parseUserAgentData = () => {
 };
 
 const errorLogService = {
-  postLogMessage,
+  post,
   parseUserAgentData,
 };
 
