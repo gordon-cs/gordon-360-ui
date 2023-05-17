@@ -23,6 +23,7 @@ import IdCardTop from './image-top.png';
 import PhotoCropper from 'components/PhotoCropper';
 import GordonDialogBox from 'components/GordonDialogBox';
 import SimpleSnackbar from 'components/Snackbar';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 
 const postCroppedImage = async (croppedImage, username) => {
   let attemptNumber = 0;
@@ -60,7 +61,7 @@ const IDUploader = () => {
   }, []);
 
   if (!isAuthenticated) {
-    return LoginCard;
+    return <GordonUnauthenticated feature="the ID Upload page" />;
   }
 
   const handleSubmit = async (croppedImage) => {
@@ -173,24 +174,5 @@ const IDUploader = () => {
     </Grid>
   );
 };
-
-const LoginCard = (
-  <Grid container justifyContent="center">
-    <Grid item xs={12} md={8}>
-      <Card>
-        <CardHeader title="You are not logged in" />
-        <CardContent>
-          Please log in to upload an ID photo. You can press the back button or follow the URL
-          "360.gordon.edu/id" to return to this page.
-        </CardContent>
-        <CardActions>
-          <Button variant="contained" onClick={authenticate}>
-            Login
-          </Button>
-        </CardActions>
-      </Card>
-    </Grid>
-  </Grid>
-);
 
 export default IDUploader;
