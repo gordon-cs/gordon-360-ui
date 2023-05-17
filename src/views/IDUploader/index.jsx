@@ -61,7 +61,7 @@ class IDUploader extends Component {
       var croppedImage = this.cropperRef.current.cropper
         .getCroppedCanvas({ width: CROP_DIM })
         .toDataURL();
-      this.postCroppedImage(croppedImage, 0);
+      this.postCroppedImage(croppedImage);
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({
         image: imageNoHeader,
@@ -74,23 +74,24 @@ class IDUploader extends Component {
     }
   };
 
-  async postCroppedImage(croppedImage, attemptNumber) {
+  async postCroppedImage(croppedImage) {
     let profile = await user.getProfileInfo();
-    let logMessage = `ID photo submission #${attemptNumber} for ${
-      profile.fullName
-    } from ${errorLog.parseNavigator(navigator)}`;
-    try {
-      await user.postIDImage(croppedImage);
-      this.setState({ submitDialogOpen: true });
-    } catch (error) {
-      logMessage += `, but image failed to post with error: ${error}`;
-      if (attemptNumber < 5) {
-        this.postCroppedImage(croppedImage, attemptNumber + 1);
-      } else {
-        this.setState({ errorDialogOpen: true });
+    let postedSuccessfully = false;
+    let attemptNumber = 0;
+
+    while (!postedSuccessfully && attemptNumber < 5) {
+      try {
+        await user.postIDImage(croppedImage);
+        this.setState({ submitDialogOpen: true });
+        postedSuccessfully = true;
+      } catch (error) {
+        const userAgentData = errorLog.parseUserAgentData();
+        const errorDetails = JSON.stringify(error);
+        const logMessage = `ID photo submission #${attemptNumber} for ${profile.AD_Username} from ${userAgentData} failed: ${errorDetails}`;
+        errorLog.postErrorMessage(logMessage);
+        attemptNumber++;
       }
     }
-    errorLog.postErrorMessage(logMessage);
   }
 
   handleCloseCancel = () => {
