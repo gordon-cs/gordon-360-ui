@@ -12,7 +12,7 @@ import { useWindowSize } from 'hooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Cropper, { ReactCropperElement } from 'react-cropper';
 import Dropzone from 'react-dropzone';
-import styles from './IDUploader.module.css';
+import styles from './PhotoCropper.module.css';
 import SimpleSnackbar from 'components/Snackbar';
 
 type PropTypes = {
