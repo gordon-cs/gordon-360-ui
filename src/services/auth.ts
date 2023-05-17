@@ -25,7 +25,7 @@ const acquireAccessToken = async () => {
 
   const authResult = await msalInstance.acquireTokenSilent(request).catch((error) => {
     if (error instanceof InteractionRequiredAuthError) {
-      return msalInstance.acquireTokenPopup(apiRequest);
+      return msalInstance.acquireTokenRedirect(apiRequest);
     } else {
       throw error;
     }
