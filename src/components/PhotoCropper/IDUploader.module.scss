@@ -1,56 +1,25 @@
 @import '../../vars';
 
-.gc360_id_dialog {
-  &_title {
-    grid-row: 1;
-  }
-  &_content {
-    display: grid;
-    grid-row: 2;
-    grid-template-rows: auto auto auto;
-    grid-row-gap: 10px;
-    justify-items: center;
-    &_text {
-      grid-row: 1;
-    }
-    &_dropzone {
-      transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
-      width: 18rem;
-      height: 18rem;
-      display: flex;
-      border-style: dashed;
-      border-width: 0.2rem;
-      border-radius: 1rem;
-      border-color: darkgray;
-      justify-content: center;
-      align-items: center;
-      &:hover {
-        background-color: $neutral-light-gray2;
-        box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
-      }
-      &_img {
-        border-radius: 0.5rem;
-      }
-    }
-    &_cropper {
-      grid-row: 2;
-    }
-    &_button {
-      grid-row: 3;
-    }
+.dropzone {
+  transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+  height: 18rem;
+  border-style: dashed;
+  border-radius: 1rem;
+  border-color: $neutral-gray3;
+  &:hover {
+    background-color: $neutral-light-gray2;
+    box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
   }
 }
 
+.dialog_content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 @media (max-width: $break-sm) {
-  .gc360_id_dialog {
-    &_content {
-      &_dropzone {
-        width: 10rem;
-        height: 10rem;
-      }
-      &_cropper {
-        padding-right: 20px;
-      }
-    }
+  .dropzone {
+    height: 10rem;
   }
 }

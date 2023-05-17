@@ -1,4 +1,5 @@
 import {
+  AlertColor,
   Button,
   Dialog,
   DialogActions,
@@ -8,10 +9,11 @@ import {
 } from '@mui/material';
 import 'cropperjs/dist/cropper.css';
 import { useWindowSize } from 'hooks';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Cropper, { ReactCropperElement } from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import styles from './IDUploader.module.css';
+import SimpleSnackbar from 'components/Snackbar';
 
 type PropTypes = {
   open: boolean;
@@ -24,16 +26,25 @@ const enum UploadStep {
   Crop,
 }
 
-const CROP_DIM = 1200; // pixels
+const CROP_DIM = 1200; // Minimum dimensions of cropped image in pixels
 
 const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
   const [preview, setPreview] = useState<string | null>(null);
+  const [snackbar, setSnackbar] = useState<{
+    message: string;
+    severity: AlertColor | null;
+    open: boolean;
+  }>({ message: '', severity: null, open: false });
   const [cropperData, setCropperData] = useState<{
     cropBoxDim: number | undefined;
     aspectRatio: number;
   }>({ cropBoxDim: undefined, aspectRatio: 1 });
   const cropperRef = useRef<ReactCropperElement | null>(null);
   const [width, height] = useWindowSize();
+
+  const createSnackbar = useCallback((message: string, severity: AlertColor) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   const step = preview ? UploadStep.Crop : UploadStep.Upload;
 
@@ -56,26 +67,12 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
     const largeScreenRatio = 0.525;
     const maxHeightRatio = 0.5;
 
-    /* this logic was probably great but I did not have time to learn it and fix it.
-       The fix it needs is replacing use of innerWidth with this.props.width (converted
-       from a string like 'xs' to a numerical size like 360
-       If you have time, please: make this function better */
-
     const aspect = cropperData.aspectRatio;
-    console.log('Cropper data aspect ratio is', aspect);
 
     var maxWidth = width * (width < breakpointWidth ? smallScreenRatio : largeScreenRatio);
     var correspondingHeight = maxWidth / aspect;
     var maxHeight = height * maxHeightRatio;
     var correspondingWidth = maxHeight * aspect;
-    console.log(
-      'Corresponding Width',
-      correspondingWidth,
-      'corresponding height',
-      correspondingHeight,
-    );
-    console.log('max width', maxWidth, 'with max height', maxHeight);
-
     if (correspondingHeight > maxHeight) {
       return correspondingWidth;
     } else {
@@ -91,8 +88,9 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
       const newImage = new Image();
       newImage.onload = () => {
         if (newImage.width < CROP_DIM || newImage.height < CROP_DIM) {
-          alert(
-            'Sorry, your image is too small! Image dimensions must be at least 1200 x 1200 pixels.',
+          createSnackbar(
+            'Image is too small. Image dimensions must be at least 1200 x 1200 pixels.',
+            'info',
           );
         } else {
           const maxWidth = maxCropPreviewWidth();
@@ -110,7 +108,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
   };
 
   const onDropRejected = () => {
-    alert('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
+    createSnackbar('Invalid image file. Only PNG and JPEG images are accepted.', 'info');
   };
 
   useEffect(() => {
@@ -144,44 +142,41 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
   }, []);
 
   return (
-    <Dialog
-      open={open}
-      keepMounted
-      aria-labelledby="alert-dialog-slide-title"
-      aria-describedby="alert-dialog-slide-description"
-    >
-      <DialogTitle className={styles.gc360_id_dialog_title} id="simple-dialog-title">
-        Choose Photo to Upload
-      </DialogTitle>
-      <DialogContent className={styles.gc360_id_dialog_content}>
-        <DialogContentText className={styles.gc360_id_dialog_content_text}>
-          {step === UploadStep.Upload ? (
-            'Drag & Drop a picutre, or Click to Browse Files'
+    <>
+      <Dialog
+        open={open}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="simple-dialog-title">Choose Photo to Upload</DialogTitle>
+        <DialogContent className={styles.dialog_content}>
+          <DialogContentText>
+            {step === UploadStep.Upload ? (
+              'Drag & Drop a picutre, or Click to Browse Files'
+            ) : (
+              <>
+                Use the arrow keys to move the crop box.
+                <br />
+                Use <code>+</code> or <code>-</code> to resize.
+              </>
+            )}
+          </DialogContentText>
+          {!preview ? (
+            <Dropzone
+              onDropAccepted={onDropAccepted}
+              onDropRejected={onDropRejected}
+              accept={{
+                'image/*': ['.jpeg', ',jpg', '.png'],
+              }}
+            >
+              {({ getRootProps, getInputProps }) => (
+                <section className={styles.dropzone} {...getRootProps()}>
+                  <input {...getInputProps()} />
+                </section>
+              )}
+            </Dropzone>
           ) : (
             <>
-              Use the arrow keys to move the crop box.
-              <br />
-              Use <code>+</code> or <code>-</code> to resize.
-            </>
-          )}
-        </DialogContentText>
-        {!preview ? (
-          <Dropzone
-            onDropAccepted={onDropAccepted}
-            onDropRejected={onDropRejected}
-            accept={{
-              'image/*': ['.jpeg', ',jpg', '.png'],
-            }}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <section className={styles.gc360_id_dialog_content_dropzone} {...getRootProps()}>
-                <input {...getInputProps()} />
-              </section>
-            )}
-          </Dropzone>
-        ) : (
-          <>
-            <div className={styles.gc360_id_dialog_content_cropper}>
               <Cropper
                 ref={cropperRef}
                 src={preview}
@@ -199,26 +194,28 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
                 minCropBoxWidth={cropperData.cropBoxDim}
                 minCropBoxHeight={cropperData.cropBoxDim}
               />
-            </div>
-            <Button
-              variant="contained"
-              onClick={() => setPreview(null)}
-              className={styles.gc360_id_dialog_content_button}
-            >
-              Choose Another Image
-            </Button>
-          </>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button variant="contained" color="neutral" onClick={handleClosePreview}>
-          Cancel
-        </Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!preview}>
-          Submit
-        </Button>
-      </DialogActions>
-    </Dialog>
+              <Button variant="contained" onClick={() => setPreview(null)}>
+                Choose Another Image
+              </Button>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" color="neutral" onClick={handleClosePreview}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleSubmit} disabled={!preview}>
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <SimpleSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
+    </>
   );
 };
 
