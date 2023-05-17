@@ -75,20 +75,21 @@ class IDUploader extends Component {
   };
 
   async postCroppedImage(croppedImage) {
-    let profile = await user.getProfileInfo();
-    let postedSuccessfully = false;
+    const profile = await user.getProfileInfo();
+    const userAgentData = logging.parseUserAgentData();
     let attemptNumber = 0;
+    let logIntro = `ID photo submission for ${profile.AD_Username} from ${userAgentData}`;
+    let postedSuccessfully = false;
 
     while (!postedSuccessfully && attemptNumber < 5) {
       try {
         await user.postIDImage(croppedImage);
         this.setState({ submitDialogOpen: true });
+        logging.post(logIntro + ` succeeded on #${attemptNumber}`);
         postedSuccessfully = true;
       } catch (error) {
-        const userAgentData = logging.parseUserAgentData();
         const errorDetails = JSON.stringify(error);
-        const logMessage = `ID photo submission #${attemptNumber} for ${profile.AD_Username} from ${userAgentData} failed: ${errorDetails}`;
-        logging.postLogMessage(logMessage);
+        logging.post(logIntro + ` failed #${attemptNumber} with error: ${errorDetails}`);
         attemptNumber++;
       }
     }
