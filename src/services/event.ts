@@ -34,6 +34,15 @@ type EventDisplayProperties = {
   location: string;
 };
 
+type ChapelEventInfo = {
+  EventNumber: number;
+  EventHash: string;
+  EventTitle: string;
+  StartDate: DateTime;
+  EndDate: DateTime;
+  EventLocation: string;
+};
+
 type Event = UnformattedEvent & EventDisplayProperties;
 type AttendedEvent = UnformattedAttendedEvent & EventDisplayProperties;
 
@@ -189,8 +198,8 @@ const makeMatchesFilters =
     return false;
   };
 
-const getChapelCipher = (eventId: number): Promise<string> =>
-  http.get<string>(`events/chapel/${eventId}/cipher`);
+const getChapelEventInfo = (eventId: number): Promise<ChapelEventInfo> =>
+  http.get<ChapelEventInfo>(`events/chapel/${eventId}`);
 
 const eventService = {
   getAllEvents,
@@ -199,7 +208,7 @@ const eventService = {
   getFilteredEvents,
   getAllGuestEvents,
   getAttendedChapelEvents,
-  getChapelCipher,
+  getChapelEventInfo,
 };
 
 export default eventService;
