@@ -76,9 +76,8 @@ class IDUploader extends Component {
 
   async postCroppedImage(croppedImage) {
     const profile = await user.getProfileInfo();
-    const userAgentData = logging.parseUserAgentData();
     let attemptNumber = 0;
-    let logIntro = `ID photo submission for ${profile.AD_Username} from ${userAgentData}`;
+    let logIntro = `ID photo submission for ${profile.AD_Username}`;
     let postedSuccessfully = false;
 
     while (!postedSuccessfully && attemptNumber < 5) {
