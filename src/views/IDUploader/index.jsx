@@ -13,7 +13,6 @@ import {
 import 'cropperjs/dist/cropper.css';
 import { useUser, useUserActions } from 'hooks';
 import { useCallback, useState } from 'react';
-import { authenticate } from 'services/auth';
 import logging from 'services/logging';
 import user from 'services/user';
 import styles from './IDUploader.module.css';
@@ -86,91 +85,88 @@ const IDUploader = () => {
 
   return (
     <Grid container justifyContent="center" spacing={2}>
-      <>
-        <Grid item xs={12} md={6} lg={8}>
-          <Card>
-            <CardHeader title="ID Photo Guidelines" titleTypographyProps={{ align: 'center' }} />
-            <CardContent>
-              <Grid container justifyContent="center" direction="column">
-                <Grid item>
-                  <List
-                    component="ol"
-                    sx={{
-                      listStyleType: 'decimal',
-                      pl: 2,
-                      '& .MuiListItem-root': {
-                        display: 'list-item',
-                        pl: 0,
-                        fontSize: '1.25rem',
-                      },
-                    }}
-                  >
-                    <ListItem>Facial features must be identifiable.</ListItem>
-                    <ListItem>No sunglasses or hats.</ListItem>
-                    <ListItem>Photo must include your shoulders to the top of your head.</ListItem>
-                    <ListItem>
-                      While this does not need to be a professional photo, it does need to be a
-                      reasonable representation of your face for an official campus ID card. As long
-                      as it meets the criteria, most cameras on a phone will work fine.
-                    </ListItem>
-                  </List>
-                </Grid>
-                <Grid item align="center">
-                  <Button variant="contained" onClick={() => setIsPhotoOpen(true)}>
-                    Upload
-                  </Button>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Grid>
+      <Grid item xs={12} md={6} lg={8}>
+        <Card>
+          <CardHeader title="ID Photo Guidelines" titleTypographyProps={{ align: 'center' }} />
+          <CardContent>
+            <List
+              component="ol"
+              sx={{
+                listStyleType: 'decimal',
+                pl: 2,
+                '& .MuiListItem-root': {
+                  display: 'list-item',
+                  pl: 0,
+                  fontSize: '1.25rem',
+                },
+              }}
+            >
+              <ListItem>Facial features must be identifiable.</ListItem>
+              <ListItem>No sunglasses or hats.</ListItem>
+              <ListItem>Photo must include your shoulders to the top of your head.</ListItem>
+              <ListItem>
+                While this does not need to be a professional photo, it does need to be a reasonable
+                representation of your face for an official campus ID card. As long as it meets the
+                criteria, most cameras on a phone will work fine.
+              </ListItem>
+            </List>
+          </CardContent>
+          <CardActions sx={{ justifyContent: 'flex-end' }}>
+            <Button variant="contained" onClick={() => setIsPhotoOpen(true)}>
+              Upload
+            </Button>
+          </CardActions>
+        </Card>
+      </Grid>
 
-        <Grid item xs={12} md={6} lg={4} container justifyContent="center">
-          <Card>
-            <CardHeader title="Preview your ID Card" />
-            <CardContent className={styles.ID_card}>
-              <img
-                className={styles.ID_card_header}
-                src={IdCardTop}
-                alt="ID card top with Gordon College logo."
-              />
-              <img className={styles.ID_card_photo} src={cardImage} alt="Placeholder ID." />
-              <img
-                className={styles.ID_card_sidebar}
-                src={IdCardGreen}
-                alt="Colored bar with text 'student'."
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-        <PhotoCropper
-          open={isPhotoOpen}
-          onClose={() => setIsPhotoOpen(false)}
-          onSubmit={handleSubmit}
-        />
-        <GordonDialogBox
-          open={isSubmitDialogOpen}
-          title="Photo Submitted"
-          buttonClicked={() => setIsSubmitDialogOpen(false)}
-          severity="success"
-        >
-          <DialogContentText>
-            We got your photo!
-            <br />
-            You should now see it on your MyProfile page, but it may
-            <br />
-            take a couple of days for it to be approved for public view.
-            <br />
-            CTS will contact you if there's an issue.
-          </DialogContentText>
-        </GordonDialogBox>
-        <SimpleSnackbar
-          open={snackbar.open}
-          text={snackbar.message}
-          severity={snackbar.severity}
-          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-        />
-      </>
+      <Grid item xs={12} md={6} lg={4} container justifyContent="center">
+        <Card>
+          <CardHeader title="Preview your ID Card" />
+          <CardContent className={styles.ID_card}>
+            <img
+              className={styles.ID_card_header}
+              src={IdCardTop}
+              alt="ID card top with Gordon College logo."
+            />
+            <img className={styles.ID_card_photo} src={cardImage} alt="Placeholder ID." />
+            <img
+              className={styles.ID_card_sidebar}
+              src={IdCardGreen}
+              alt="Colored bar with text 'student'."
+            />
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <PhotoCropper
+        open={isPhotoOpen}
+        onClose={() => setIsPhotoOpen(false)}
+        onSubmit={handleSubmit}
+      />
+
+      <GordonDialogBox
+        open={isSubmitDialogOpen}
+        title="Photo Submitted"
+        buttonClicked={() => setIsSubmitDialogOpen(false)}
+        severity="success"
+      >
+        <DialogContentText>
+          We got your photo!
+          <br />
+          You should now see it on your MyProfile page, but it may
+          <br />
+          take a couple of days for it to be approved for public view.
+          <br />
+          CTS will contact you if there's an issue.
+        </DialogContentText>
+      </GordonDialogBox>
+
+      <SimpleSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </Grid>
   );
 };
