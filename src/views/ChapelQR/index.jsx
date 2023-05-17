@@ -26,14 +26,18 @@ const ChapelQR = () => {
       } finally {
         setLoading(false);
       }
-      const nowMilliseconds = parseInt(new Date().getTime());
-      const timeToSwitch = (nowMilliseconds / 30000 + 1) * 30000;
 
-      return setTimeout(() => setCurrentTimer(startFetchChapel), timeToSwitch - nowMilliseconds);
+      //return setTimeout(() => setCurrentTimer(startFetchChapel), timeToSwitch - nowMilliseconds);
     };
-    setCurrentTimer(startFetchChapel());
+    startFetchChapel();
 
-    return () => clearTimeout(currentTimer);
+    const nowMilliseconds = parseInt(new Date().getTime());
+    const timeToSwitch = (nowMilliseconds / 30000 + 1) * 30000;
+    setTimeout(() => {
+      setInterval(startFetchChapel, 30000);
+    }, timeToSwitch - nowMilliseconds);
+
+    //return () => clearTimeout(currentTimer);
   }, []);
 
   if (loading) return <div>Loading...</div>;
