@@ -89,7 +89,7 @@ class IDUploader extends Component {
         postedSuccessfully = true;
       } catch (error) {
         const errorDetails = JSON.stringify(error);
-        logging.post(logIntro + ` failed #${attemptNumber} with error: ${errorDetails}`);
+        logging.post(logIntro + ` failed on #${attemptNumber} with error: ${errorDetails}`);
         attemptNumber++;
       }
     }
