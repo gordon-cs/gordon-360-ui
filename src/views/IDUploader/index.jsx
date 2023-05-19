@@ -18,7 +18,7 @@ import { Component, createRef } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { authenticate } from 'services/auth';
-import errorLog from 'services/errorLog';
+import logging from 'services/logging';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from './IDUploader.module.css';
@@ -61,7 +61,7 @@ class IDUploader extends Component {
       var croppedImage = this.cropperRef.current.cropper
         .getCroppedCanvas({ width: CROP_DIM })
         .toDataURL();
-      this.postCroppedImage(croppedImage, 0);
+      this.postCroppedImage(croppedImage);
       var imageNoHeader = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       this.setState({
         image: imageNoHeader,
@@ -74,23 +74,24 @@ class IDUploader extends Component {
     }
   };
 
-  async postCroppedImage(croppedImage, attemptNumber) {
-    let profile = await user.getProfileInfo();
-    let logMessage = `ID photo submission #${attemptNumber} for ${
-      profile.fullName
-    } from ${errorLog.parseNavigator(navigator)}`;
-    try {
-      await user.postIDImage(croppedImage);
-      this.setState({ submitDialogOpen: true });
-    } catch (error) {
-      logMessage += `, but image failed to post with error: ${error}`;
-      if (attemptNumber < 5) {
-        this.postCroppedImage(croppedImage, attemptNumber + 1);
-      } else {
-        this.setState({ errorDialogOpen: true });
+  async postCroppedImage(croppedImage) {
+    const profile = await user.getProfileInfo();
+    let attemptNumber = 0;
+    let logIntro = `ID photo submission for ${profile.AD_Username}`;
+    let postedSuccessfully = false;
+
+    while (!postedSuccessfully && attemptNumber < 5) {
+      try {
+        await user.postIDImage(croppedImage);
+        this.setState({ submitDialogOpen: true });
+        logging.post(logIntro + ` succeeded on #${attemptNumber}`);
+        postedSuccessfully = true;
+      } catch (error) {
+        const errorDetails = JSON.stringify(error);
+        logging.post(logIntro + ` failed on #${attemptNumber} with error: ${errorDetails}`);
+        attemptNumber++;
       }
     }
-    errorLog.postErrorMessage(logMessage);
   }
 
   handleCloseCancel = () => {
