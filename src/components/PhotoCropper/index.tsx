@@ -116,20 +116,27 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
       if (cropperRef.current?.cropper) {
         const data = cropperRef.current.cropper.getCropBoxData();
 
-        if (e.code === 'ArrowUp') {
-          data.top -= 5;
-        } else if (e.code === 'ArrowDown') {
-          data.top += 5;
-        } else if (e.code === 'ArrowRight') {
-          data.left += 5;
-        } else if (e.code === 'ArrowLeft') {
-          data.left -= 5;
-        } else if (e.code === 'Equal') {
-          data.height += 5;
-          data.width += 5;
-        } else if (e.code === 'Minus') {
-          data.height -= 5;
-          data.width -= 5;
+        switch (e.code) {
+          case 'ArrowUp':
+            data.top -= 5;
+            break;
+          case 'ArrowDown':
+            data.top += 5;
+            break;
+          case 'ArrowRight':
+            data.left += 5;
+            break;
+          case 'ArrowLeft':
+            data.left -= 5;
+            break;
+          case 'Equal':
+            data.height += 5;
+            data.width += 5;
+            break;
+          case 'Minus':
+            data.height -= 5;
+            data.width -= 5;
+            break;
         }
 
         cropperRef.current.cropper.setCropBoxData(data);
