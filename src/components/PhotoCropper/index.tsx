@@ -164,7 +164,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
               <>
                 Use the arrow keys to move the crop box.
                 <br />
-                Use <code>+</code> or <code>-</code> to resize.
+                Use <code>+</code> or <code>-</code> to resize the image.
               </>
             )}
           </DialogContentText>
