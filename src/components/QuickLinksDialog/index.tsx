@@ -13,22 +13,30 @@ type ListItemProps = {
   icon?: { src: string; alt: string };
 };
 
-const customIconLinks: ListItemProps[] = [
+const academicLinks: ListItemProps[] = [
   {
     href: 'https://www.gordon.edu',
     name: 'Gordon College',
     icon: {
       src: GordonIcon,
-      alt: 'gordon',
+      alt: 'Gordon Logo',
     },
   },
   {
     href: 'https://my.gordon.edu',
     name: 'My Gordon',
-    icon: { src: MyGordonIcon, alt: 'my gordon' },
+    icon: { src: MyGordonIcon, alt: 'My Gordon Logo' },
   },
-  { href: 'https://go.gordon.edu', name: 'Go Gordon', icon: { src: GOIcon, alt: 'go gordon' } },
-  { href: 'https://canvas.gordon.edu', name: 'Canvas', icon: { src: CanvasIcon, alt: 'canvas' } },
+  {
+    href: 'https://go.gordon.edu',
+    name: 'Go Gordon',
+    icon: { src: GOIcon, alt: 'Go Gordon Logo' },
+  },
+  {
+    href: 'https://canvas.gordon.edu',
+    name: 'Canvas',
+    icon: { src: CanvasIcon, alt: 'Canvas Logo' },
+  },
 ];
 
 const otherLinks: ListItemProps[] = [
@@ -64,7 +72,7 @@ const GordonQuickLinksDialog = ({ linkopen, handleLinkClose }: Props) => {
           </ListSubheader>
         }
       >
-        {customIconLinks.map((link) => (
+        {academicLinks.map((link) => (
           <ListItemLink {...link} />
         ))}
       </List>
@@ -76,7 +84,6 @@ const GordonQuickLinksDialog = ({ linkopen, handleLinkClose }: Props) => {
     </GordonDialogBox>
   );
 };
-
 
 const iconStyle = { width: '1.5rem' };
 
