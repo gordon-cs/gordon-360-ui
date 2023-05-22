@@ -39,6 +39,7 @@ const otherLinks: ListItemProps[] = [
   { href: 'https://stories.gordon.edu/', name: 'The Bell' },
   { href: 'https://www.gordon.edu/titleix', name: 'Sexual Discrimination and Harassment' },
   { href: 'https://www.gordon.edu/map', name: 'Gordon College Maps' },
+  { href: 'https://outlook.office.com/mail/', name: 'Gordon Email' },
 ];
 
 type Props = {
