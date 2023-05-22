@@ -7,9 +7,10 @@ import GOIcon from './images/GoGordonFavicon.ico';
 import MyGordonIcon from './images/MyGordonFavicon.ico';
 import { PropsWithChildren } from 'react';
 
-type Props = {
-  handleLinkClose: () => void;
-  linkopen: boolean;
+type ListItemProps = {
+  name: string;
+  href: string;
+  icon?: { src: string; alt: string };
 };
 
 const customIconLinks: ListItemProps[] = [
@@ -30,7 +31,7 @@ const customIconLinks: ListItemProps[] = [
   { href: 'https://canvas.gordon.edu', name: 'Canvas', icon: { src: CanvasIcon, alt: 'canvas' } },
 ];
 
-const otherLinks = [
+const otherLinks: ListItemProps[] = [
   {
     href: 'http://athletics.gordon.edu/',
     name: 'Fighting Scots',
@@ -39,6 +40,11 @@ const otherLinks = [
   { href: 'https://www.gordon.edu/titleix', name: 'Sexual Discrimination and Harassment' },
   { href: 'https://www.gordon.edu/map', name: 'Gordon College Maps' },
 ];
+
+type Props = {
+  handleLinkClose: () => void;
+  linkopen: boolean;
+};
 
 const GordonQuickLinksDialog = ({ linkopen, handleLinkClose }: Props) => {
   return (
@@ -70,13 +76,6 @@ const GordonQuickLinksDialog = ({ linkopen, handleLinkClose }: Props) => {
   );
 };
 
-type ListItemProps = {
-  name: string;
-  href: string;
-  icon?: CustomIcon;
-};
-
-type CustomIcon = { src: string; alt: string };
 
 const iconStyle = { width: '1.5rem' };
 
