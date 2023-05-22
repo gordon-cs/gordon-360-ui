@@ -26,18 +26,30 @@ const GordonNavLinks = ({ onLinkClick }) => {
   };
 
   const dialogBox = () => {
-    const isOffline = dialog === 'offline';
+    let message, title;
+    switch (dialog) {
+      case 'offline':
+        message = 'That page is not available offline. Please reconnect to internet to access it.';
+        title = 'Unavailable Offline';
+        break;
+      case 'unauthorized':
+        message = 'That page is only available to authenticated users. Please log in to access it.';
+        title = 'Unavailable Offline';
+        break;
+      default: 
+        message = 'Something went wrong. Try reloading the page, or contact CTS@gordon.edu for help.'
+        title = 'Unknown Error'
+        break;
+      }
     return (
       <GordonDialogBox
         open={dialog}
         onClose={() => setDialog(null)}
-        title={isOffline ? 'Unavailabile Offline' : 'Login Required'}
+        title={title}
         buttonClicked={() => setDialog(null)}
         buttonName={'Okay'}
       >
-        {isOffline
-          ? 'That page is not available offline. Please reconnect to internet to access this feature.'
-          : 'That page is only available to authenticated users. Please log in to access it.'}
+        {message}
       </GordonDialogBox>
     );
   };
