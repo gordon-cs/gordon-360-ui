@@ -33,10 +33,10 @@ const customIconLinks: ListItemProps[] = [
 
 const otherLinks: ListItemProps[] = [
   {
-    href: 'http://athletics.gordon.edu/',
+    href: 'https://athletics.gordon.edu/',
     name: 'Fighting Scots',
   },
-  { href: 'http://stories.gordon.edu/', name: 'The Bell' },
+  { href: 'https://stories.gordon.edu/', name: 'The Bell' },
   { href: 'https://www.gordon.edu/titleix', name: 'Sexual Discrimination and Harassment' },
   { href: 'https://www.gordon.edu/map', name: 'Gordon College Maps' },
 ];
