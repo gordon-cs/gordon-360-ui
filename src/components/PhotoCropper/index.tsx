@@ -108,7 +108,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
   };
 
   const onDropRejected = () => {
-    createSnackbar('Invalid image file. Only PNG and JPEG images are accepted.', 'info');
+    createSnackbar('This image is invalid. Only PNG and JPEG images are allowed.', 'info');
   };
 
   useEffect(() => {
