@@ -155,7 +155,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="simple-dialog-title">Choose Photo to Upload</DialogTitle>
+        <DialogTitle id="simple-dialog-title">Choose a Photo to Upload</DialogTitle>
         <DialogContent className={styles.dialog_content}>
           <DialogContentText>
             {step === UploadStep.Upload ? (
