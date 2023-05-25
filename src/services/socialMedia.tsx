@@ -1,4 +1,11 @@
-import { FaFacebookF, FaHandshake, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import {
+  FaFacebookF,
+  FaHandshake,
+  FaInstagram,
+  FaLinkedin,
+  FaTwitter,
+  FaCalendar,
+} from 'react-icons/fa';
 
 export enum Platform {
   Facebook = 'Facebook',
@@ -6,12 +13,13 @@ export enum Platform {
   LinkedIn = 'LinkedIn',
   Instagram = 'Instagram',
   Handshake = 'Handshake',
+  Calendar = 'Calendar',
 }
 
 export const platforms = Object.values(Platform);
 
 export type SocialMediaInfo = {
-    Icon: JSX.Element;
+  Icon: JSX.Element;
   prefix: string;
   prefix2?: string;
 };
@@ -22,6 +30,7 @@ export const socialMediaInfo: {
   [Platform.LinkedIn]: SocialMediaInfo;
   [Platform.Instagram]: SocialMediaInfo;
   [Platform.Handshake]: SocialMediaInfo;
+  [Platform.Calendar]: SocialMediaInfo;
 } = {
   Facebook: {
     Icon: <FaFacebookF />,
@@ -43,5 +52,11 @@ export const socialMediaInfo: {
     Icon: <FaHandshake />,
     prefix: 'https://gordon.joinhandshake.com/users/',
     prefix2: 'https://app.joinhandshake.com/users/',
+  },
+  // TODO - Validation
+  // Maybe exclusively a certain URL
+  Calendar: {
+    Icon: <FaCalendar />,
+    prefix: 'https://',
   },
 };

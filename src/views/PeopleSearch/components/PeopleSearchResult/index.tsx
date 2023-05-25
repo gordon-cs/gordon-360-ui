@@ -1,10 +1,13 @@
-import { Card, CardContent, CardMedia, Divider, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, CardMedia, Divider, Typography } from '@mui/material';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Class, SearchResult } from 'services/peopleSearch';
+import { useWindowSize } from 'hooks';
 import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
+import { gordonColors } from 'theme';
 
 /*Const string was created with https://png-pixel.com/ .
  *It is a 1 x 1 pixel with the same color as gordonColors.neutral.lightGray (7/9/21)
@@ -12,6 +15,7 @@ import styles from './PeopleSearchResult.module.css';
 const GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/erVfwAJRwPA/3pinwAAAABJRU5ErkJggg==';
 const JPG_BASE64_HEADER = 'data:image/jpg;base64,';
+const breakpointWidth = 810;
 
 const SecondaryText = ({
   children,
@@ -35,6 +39,9 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
     person.AD_Username ? GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 : null,
   );
   const [hasBeenRun, setHasBeenRun] = useState(false);
+  const [width] = useWindowSize();
+  const navigate = useNavigate();
+  const isMobileView = width < breakpointWidth;
 
   const loadAvatar = useCallback(async () => {
     if (person.AD_Username) {
@@ -81,42 +88,70 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
       break;
   }
 
+  const emailIcon = !isMobileView && (
+    <div className={styles.mailing_icon_container}>
+      <CardActionArea className={styles.mail_card_action}>
+        <a href={`mailto:${person.Email}`}>
+          <MailOutlineIcon
+            sx={{
+              color: gordonColors.neutral.grayShades[50],
+              height: '100%',
+              width: 40,
+              borderRadius: 2,
+            }}
+          />
+        </a>
+      </CardActionArea>
+    </div>
+  );
+
   return (
     <>
       <VisibilitySensor onChange={handleVisibilityChange}>
-        <Link className="gc360_link" to={`/profile/${person.AD_Username}`}>
-          <Card className={styles.result} elevation={0}>
-            {avatar && (
-              <CardMedia src={avatar} title={fullName} component="img" className={styles.avatar} />
-            )}
-            <CardContent>
-              <Typography variant="h5" className={styles.name}>
-                {person.FirstName} {nickname} {person.LastName} {maidenName}
-              </Typography>
-              <Typography className={styles.subtitle}>
-                {classOrJobTitle ?? person.Type}
-                {person.Type === 'Alumni' && person.PreferredClassYear
-                  ? ' ' + person.PreferredClassYear
-                  : null}
-              </Typography>
-              <SecondaryText className={styles.secondary_text}>
-                {(person.Type === 'Student' || person.Type === 'Alumni') && (
-                  <>
-                    {person.Major1Description}
-                    {person.Major2Description
-                      ? (person.Major1Description ? ', ' : '') + `${person.Major2Description}`
-                      : null}
-                    {person.Type === 'Student' && person.Major3Description
-                      ? `, ${person.Major3Description}`
-                      : null}
-                  </>
-                )}
-              </SecondaryText>
-              <SecondaryText className={styles.secondary_text}>{person.Email}</SecondaryText>
-              <SecondaryText className={styles.secondary_text}>{mailLocation}</SecondaryText>
-            </CardContent>
-          </Card>
-        </Link>
+        <Card className={styles.result_container} elevation={0}>
+          <Link
+            className={`gc360_link ${styles.profile_link_container}`}
+            to={`/profile/${person.AD_Username}`}
+          >
+            <Card className={styles.result} elevation={0}>
+              {avatar && (
+                <CardMedia
+                  src={avatar}
+                  title={fullName}
+                  component="img"
+                  className={styles.avatar}
+                />
+              )}
+              <CardContent>
+                <Typography variant="h5" className={styles.name}>
+                  {person.FirstName} {nickname} {person.LastName} {maidenName}
+                </Typography>
+                <Typography className={styles.subtitle}>
+                  {classOrJobTitle ?? person.Type}
+                  {person.Type === 'Alumni' && person.PreferredClassYear
+                    ? ' ' + person.PreferredClassYear
+                    : null}
+                </Typography>
+                <SecondaryText className={styles.secondary_text}>
+                  {(person.Type === 'Student' || person.Type === 'Alumni') && (
+                    <>
+                      {person.Major1Description}
+                      {person.Major2Description
+                        ? (person.Major1Description ? ', ' : '') + `${person.Major2Description}`
+                        : null}
+                      {person.Type === 'Student' && person.Major3Description
+                        ? `, ${person.Major3Description}`
+                        : null}
+                    </>
+                  )}
+                </SecondaryText>
+                <SecondaryText className={styles.secondary_text}>{person.Email}</SecondaryText>
+                <SecondaryText className={styles.secondary_text}>{mailLocation}</SecondaryText>
+              </CardContent>
+            </Card>
+          </Link>
+          {emailIcon}
+        </Card>
       </VisibilitySensor>
       <Divider />
     </>
