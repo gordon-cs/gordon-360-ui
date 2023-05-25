@@ -1,58 +1,12 @@
-import {
-  AuthenticationResult,
-  EventMessage,
-  EventType,
-  InteractionRequiredAuthError,
-  PublicClientApplication,
-  SilentRequest,
-} from '@azure/msal-browser';
-import { msalInstance } from 'index';
+import { InteractionRequiredAuthError, SilentRequest } from '@azure/msal-browser';
+import { msalInstance } from 'components/Providers/components/AuthProvider';
 import storage from './storage';
-
-export const msalConfig = {
-  auth: {
-    clientId: import.meta.env.VITE_AZURE_AD_CLIENT as string,
-    authority: `https://login.microsoftonline.com/${import.meta.env.VITE_AZURE_AD_TENANT}`,
-    postLogoutRedirectUri: window.location.origin,
-    redirectUri: window.location.origin,
-    validateAuthority: true,
-    // After being redirected to the "redirectUri" page, should user
-    // be redirected back to the Url where their login originated from?
-    navigateToLoginRequestUrl: true,
-  },
-  cache: {
-    cacheLocation: 'localStorage', // This configures where your cache will be stored
-    storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
-  },
-};
 
 const apiRequest = {
   scopes: ['api://b19c300a-00dc-4adc-bcd1-b678b25d7ad1/access_as_user'],
 };
 
-export const configureMSAL = (msalInstance: PublicClientApplication) => {
-  if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
-    msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
-  }
-
-  // this will update account state if a user signs in from another tab or window
-  msalInstance.enableAccountStorageEvents();
-
-  msalInstance.addEventCallback((event: EventMessage) => {
-    if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
-      const payload = event.payload as AuthenticationResult;
-      const account = payload.account;
-      msalInstance.setActiveAccount(account);
-    } else if (event.eventType === EventType.ACQUIRE_TOKEN_SUCCESS && event.payload) {
-    }
-  });
-
-  return msalInstance;
-};
-
-const authenticate = async () => {
-  await msalInstance.loginRedirect(apiRequest);
-};
+const authenticate = () => msalInstance.loginRedirect(apiRequest);
 
 const acquireAccessToken = async () => {
   const activeAccount = msalInstance.getActiveAccount();
@@ -69,9 +23,11 @@ const acquireAccessToken = async () => {
     account: activeAccount || accounts[0],
   };
 
-  const authResult = await msalInstance.acquireTokenSilent(request).catch(async (error) => {
+  const authResult = await msalInstance.acquireTokenSilent(request).catch((error) => {
     if (error instanceof InteractionRequiredAuthError) {
-      return await msalInstance.acquireTokenRedirect(apiRequest);
+      return msalInstance.acquireTokenRedirect(apiRequest);
+    } else {
+      throw error;
     }
   });
 

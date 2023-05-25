@@ -6,7 +6,8 @@ This guide walks you through the basics of developing the Gordon 360 frontend, a
 
 - [Getting Started](#getting-started)
 - [Connecting to the Backend](#connecting-to-the-backend)
-  - [Connecting to Remote Backend via SSH](#connecting-to-remote-backend-via-ssh)
+  - [Connecting to a Remote Backend via HTTP](#connecting-to-a-remote-backend-via-http)
+  - [Connecting to a Remote Backend via SSH](#connecting-to-a-remote-backend-via-ssh)
 - [Code Style](#code-style)
 - [Project File Organization](#file-organization)
   - [Components](#components)
@@ -72,9 +73,23 @@ After following [the instructions to start the backend](https://github.com/gordo
 
 You do **not** need to change `.env.production`.
 
-## Connecting to Remote Backend via SSH
+Sometimes, you would like to connect the frontend on your local computer to the backend on a remote server. For example, if you are running the backend on a CPS Server virtual machine but you want to run the frontend from your own machine. There are two ways to do this: via HTTP/s or via SSH
 
-Sometimes, you would like to connect the frontend on your local computer to the backend on a remote server. For example, if you are running the backend on a CPS Server virtual machine but you want to run the frontend from your own machine. In these cases, you can use a Secure Shell (SSH) Tunnel.
+## Connecting to a Remote Backend via HTTP
+
+### How it works
+
+- CTS has opened the firewall between campus internet (wifi, building ethernets, etc) and the RD-CPS servers to allow web traffic over a range of ports.
+
+### Steps:
+
+1. Update `Gordon360/Properties/launchSettings.json` with the name of the server you are on (`RD-CPS-01.gordon.edu` or `RD-CPS-02.gordon.edu`) wherever you see `localhost`. Also pick two new (unique to you) ports within the range `51620-51660` to use instead of `51627` and `51626`. Replace the ports as well.
+2. Update `Gordon360/appsettings.Development.json` with your hostname (see above) in the AllowedHosts field, separating multiple entries with a `;`. It will then look something like `"AllowedHosts": "localhost;RD-CPS-01.gordon.edu"`.
+3. Run the API.
+4. On your local UI repository, change `.env.development` to use the hostname of the server from above and your _non-SSL_ port chosen above. Please note that SSL (https://) will not work as the certificate is not trusted.
+5. Run the UI and confirm that it does not have any proxy errors.
+
+## Connecting to a Remote Backend via SSH
 
 ### How it works
 
@@ -86,18 +101,18 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 1. Your local machine must be configured as an SSH host
 
    [Windows Installation](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui).
-   
+
    - If you are on Windows 11+, you may need to update the firewall to allow inbound connections on a public network.
-      - Search for `Check Firewall Status` in the start menu
-      - Click `Turn Windows Defender Firewall on or off`
-      - Uncheck `Block all incoming connections, including...` under the `Public network settings` header
-      - Click Ok
+     - Search for `Check Firewall Status` in the start menu
+     - Click `Turn Windows Defender Firewall on or off`
+     - Uncheck `Block all incoming connections, including...` under the `Public network settings` header
+     - Click Ok
    - Also on Windows, if you are a local administrator, you will not be able to use SSH key authentication unless you add the public SSH key to `C:\Program Data\ssh\administrators_authorized_keys` rather than to `C:\Users\[your username]\.ssh\authorized_keys`. Create the file if it does not exist.
 
    [Ubuntu Installation](ubuntu.com/server/docs/service-openssh)
 
    MacOS & other Linux distributions should already have an SSH server installed.
-   
+
    On MacOS, you may have to enable the SSH server in System Preferences. Follow [these instructions](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) to do so.
 
 2. Create the SSH tunnel

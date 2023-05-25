@@ -62,10 +62,7 @@ type EnrollmentCheckin = {
   MinorHolds &
   Demographic;
 
-const getStatus = (): Promise<boolean> =>
-  http
-    .get<boolean>(`checkIn/status`)
-    .catch((err) => err instanceof NotFoundError || err instanceof AuthError);
+const getStatus = (): Promise<boolean> => http.get<boolean>(`checkIn/status`);
 
 const markCompleted = (): Promise<void> => http.put(`checkIn/status`);
 
