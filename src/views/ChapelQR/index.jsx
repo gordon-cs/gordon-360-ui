@@ -1,7 +1,6 @@
 import { Card, CardContent, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import CryptoJS from 'crypto-js';
-import Base64 from 'crypto-js/enc-base64';
 import QRCode from 'qrcode';
 import { useEffect, useState } from 'react';
 import _eventService from '../../services/event';
@@ -9,10 +8,23 @@ import _eventService from '../../services/event';
 const getQRUrl = (eventInfo) => {
   let url = window.location;
   let baseUrl = url.protocol + '//' + url.host + '/';
-  let cipher = Base64.stringify(
-    CryptoJS.HmacSHA1(eventInfo.Title + '|' + Date.now().toString(), eventInfo.EventHash),
-  );
-  return baseUrl + 'chapelqr/attend?id=' + eventInfo.EventNumber + '&code=' + cipher;
+  try {
+    let key = CryptoJS.enc.Hex.parse(eventInfo.EventHash);
+    let iv = CryptoJS.enc.Hex.parse(eventInfo.EventHash.substring(0, 16));
+    console.log(key);
+    let plain = CryptoJS.enc.Utf8.parse(eventInfo.Title + '|' + Date.now().toString());
+
+    let cipher = CryptoJS.AES.encrypt(plain, key, {
+      keySize: 256 / 8,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+      iv: iv,
+    }).toString();
+    console.log(cipher);
+    return baseUrl + 'chapelqr/attend?id=' + eventInfo.EventNumber + '&code=' + cipher;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const createQR = async (eventInfo) => {
@@ -28,36 +40,40 @@ const ChapelQR = () => {
   const [error, setError] = useState(null);
   const [qrURL, setQRURL] = useState('');
 
+  const loadQR = async () => {
+    try {
+      _eventService
+        .getChapelEventInfo(2999140)
+        .then(async (eventInfo) => {
+          setQR(await createQR(eventInfo));
+          setQRURL(getQRUrl(eventInfo));
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    } catch (error) {
+      alert(error.message);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadQR = async (eventInfo) => {
-      try {
-        setQR(await createQR(eventInfo));
-        setQRURL(getQRUrl(eventInfo));
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    console.log('useEffect called');
+    if (!qr) {
+      loadQR();
+    }
 
-    _eventService
-      .getChapelEventInfo(2999140)
-      .then((eventInfo) => {
-        loadQR(eventInfo);
+    const nowMilliseconds = parseInt(new Date().getTime());
+    const timeToSwitch = parseInt(nowMilliseconds / 30000 + 1) * 30000;
 
-        const nowMilliseconds = parseInt(new Date().getTime());
-        const timeToSwitch = parseInt(nowMilliseconds / 30000 + 1) * 30000;
-        setTimeout(() => {
-          loadQR(eventInfo);
-          setInterval(() => loadQR(eventInfo), 30000);
-        }, timeToSwitch - nowMilliseconds);
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+    let timer = setTimeout(() => {
+      loadQR();
+    }, timeToSwitch - nowMilliseconds);
 
-    //return () => clearTimeout(currentTimer);
-  }, []);
+    return () => clearTimeout(timer);
+  }, [qr]);
 
   return loading ? (
     <GordonLoader />
