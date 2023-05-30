@@ -21,7 +21,16 @@ This guide walks you through the basics of developing the Gordon 360 frontend, a
 
 Here are the steps to setup the frontend for development:
 
-1. Clone this repository to the machine that you will develop on.
+1. Make sure the SSH key for your account is installed on Github.  To check this:
+
+   - Log into [Github](https://github.com).  Click on the user menu in the upper right corner and select "Settings".
+   - Click on "SSH and GPG keys" and determine if the key for the account you are using is already installed.
+
+   If the key is not yet installed, [create a SSH public-private keypair](https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key) and [add the public key to your GitHub account](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).
+
+   More info, if needed: https://help.github.com/articles/connecting-to-github-with-ssh/ 
+
+1. Using the SSH cloning method (as opposed to HTTPS), clone this repository to the machine that you will develop on.
 
 1. Ensure that [NodeJS](https://nodejs.org/en/) is installed on that machine.
 
