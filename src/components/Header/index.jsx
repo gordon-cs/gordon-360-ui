@@ -8,7 +8,6 @@ import {
   Work as WorkIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@mui/material';
-import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
@@ -49,7 +48,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
       /^\/events\/?$/,
       /^\/people$/,
       /^\/timesheets$/,
-      /^\/recim$/,
     ];
     setTabIndex(false);
     for (let i = 0; i < urls.length; i++) {
@@ -213,7 +211,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
               />
               {requiresAuthTab('People', <PeopleIcon />)}
               {requiresAuthTab('Timesheets', <WorkIcon />)}
-              {requiresAuthTab('Rec-IM', <RecIMIcon />)}
             </Tabs>
           </div>
 
