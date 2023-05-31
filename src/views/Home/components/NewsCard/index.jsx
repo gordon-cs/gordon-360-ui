@@ -2,6 +2,7 @@ import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/ma
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import newsService from 'services/news';
+import { gordonColors } from 'theme';
 import NewsItem from 'views/News/components/NewsItem';
 
 const NewsCard = () => {
@@ -12,8 +13,8 @@ const NewsCard = () => {
   }, []);
 
   return (
-    <Card>
-      <CardHeader
+    <Card sx={{ bgcolor: gordonColors.neutral.cardColor }}>
+      <CardHeader style={{ color: gordonColors.neutral.contrastText}}
         title={
           <Grid container direction="row" alignItems="center">
             <Grid item xs={7} align="left">

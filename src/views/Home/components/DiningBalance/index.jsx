@@ -14,7 +14,7 @@ let daysColor = gordonColors.primary.blue;
 let swipesColor = gordonColors.secondary.green;
 let dollarsColor = gordonColors.secondary.yellow;
 let guestColor = gordonColors.secondary.orange;
-let emptyColor = gordonColors.neutral.lightGray;
+let emptyColor = gordonColors.neutral.main;
 
 const DiningBalance = () => {
   const [loading, setLoading] = useState(true);
@@ -195,11 +195,11 @@ const DiningBalance = () => {
   }
 
   return (
-    <Card>
+    <Card sx={{ bgcolor: gordonColors.neutral.cardColor }}>
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
-            <CardHeader title="Dining Balance" />
+            <CardHeader title="Dining Balance" style={{ color: gordonColors.neutral.contrastText}}/>
           </Grid>
           <Grid item xs={5} align="right">
             <Button

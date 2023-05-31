@@ -7,6 +7,8 @@
 
 // For use in a .js file, see `src/theme.js`.
 
+$dark: true;
+
 $primary-blue: #014983;
 $primary-cyan: #00aeef;
 $secondary-green: #b2bb1c;
@@ -17,17 +19,76 @@ $secondary-red: #b53228;
 $alternative-red: #ff0000;
 
 $neutral-white: #ffffff;
-$neutral-white-opacity80: #ffffffcd;
-$neutral-white-opacity50: #ffffff80;
-$neutral-white-opacity30: #ffffff4d;
-$neutral-light-gray: #ebeaea;
-$neutral-light-gray2: #dddddd;
+
+//if-else evaluated at runtime, so variables must be defined first, leads to some weird loading
+//behavior in dark mode currently.
+$neutral-white-opacity80: #000000cd;
+$neutral-white-opacity50: #00000080;
+$neutral-white-opacity30: #0000004d;
+$neutral-light-gray: #1e1e1e;
+$neutral-light-gray2: #353535;
+$neutral-gray2: #484848;
+$neutral-gray3: #606060;
+$neutral-dark-gray: #d1d8c4;
+$neutral-dark-gray2: #c3c3c3;
+$neutral-dark-gray3: #b3b3b3;
+
+@if $dark {
+    $neutral-white-opacity80: #000000cd;
+    $neutral-white-opacity50: #00000080;
+    $neutral-white-opacity30: #0000004d;
+    $neutral-light-gray: #1e1e1e;
+    $neutral-light-gray2: #353535;
+    $neutral-gray2: #484848;
+    $neutral-gray3: #606060;
+    $neutral-dark-gray: #d1d8c4;
+    $neutral-dark-gray2: #c3c3c3;
+    $neutral-dark-gray3: #b3b3b3;
+} @else {
+    $neutral-white-opacity80: #ffffffcd;
+    $neutral-white-opacity50: #ffffff80;
+    $neutral-white-opacity30: #ffffff4d;
+    $neutral-light-gray: #ebeaea;
+    $neutral-light-gray2: #dddddd;
+    $neutral-gray2: #cccccb;
+    $neutral-gray3: #adadad;
+    $neutral-dark-gray: #31342b;
+    $neutral-dark-gray2: #444444;
+    $neutral-dark-gray3: #555555;
+}
+
+
+//attempted to switch to dark mode dynamically using a media query, but this doesn't work since
+//sass scripts are precompiled into css.  Need to figure out an alternate solution to doing this
+//dynamically.
+
+// $neutral-white-opacity80: #ffffffcd;
+// $neutral-white-opacity50: #ffffff80;
+// $neutral-white-opacity30: #ffffff4d;
+// $neutral-light-gray: #ebeaea;
+// $neutral-light-gray2: #dddddd;
+// $neutral-gray2: #cccccb;
+// $neutral-gray3: #adadad;
+// $neutral-dark-gray: #31342b;
+// $neutral-dark-gray2: #444444;
+// $neutral-dark-gray3: #555555;
+
+
+// @media (prefers-color-scheme: dark) {
+//     $neutral-white-opacity80: #000000cd;
+//     $neutral-white-opacity50: #00000080;
+//     $neutral-white-opacity30: #0000004d;
+//     $neutral-light-gray: #1e1e1e;
+//     $neutral-light-gray2: #353535;
+//     $neutral-gray2: #484848;
+//     $neutral-gray3: #606060;
+//     $neutral-dark-gray: #d1d8c4;
+//     $neutral-dark-gray2: #c3c3c3;
+//     $neutral-dark-gray3: #b3b3b3;
+// }
+
 $neutral-gray: #808080;
-$neutral-gray2: #cccccb;
-$neutral-gray3: #adadad;
-$neutral-dark-gray: #31342b;
-$neutral-dark-gray2: #444444;
-$neutral-dark-gray3: #555555;
+
 
 $neutral-black: #000000;
 $neutral-black-opacity90: #000000e6;

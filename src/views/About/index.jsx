@@ -18,21 +18,23 @@ const About = () => {
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
-        <Card className={styles.about}>
+        <Card className={styles.about} sx={{ bgcolor: gordonColors.neutral.cardColor}}>
           <CardHeader
             className={styles.about_title}
             title="Conceived and Built at Gordon College"
             subheader="By Students for Students"
             titleTypographyProps={{ variant: 'h4' }}
+            subheaderTypographyProps={{ color: gordonColors.neutral.contrastText}}
+            style={{ color: gordonColors.neutral.contrastText}}
           />
           <CardContent>
-            <Card>
+            <Card sx={{ bgcolor: gordonColors.neutral.cardColor }}>
               <CardHeader
                 className={styles.about_header}
                 title={`${projectName}: For Students by Students`}
               />
               <CardContent>
-                <Typography variant="body1" component="ul" style={{ textAlign: 'start' }}>
+                <Typography variant="body1" component="ul" style={{ textAlign: 'start', color: gordonColors.neutral.contrastText}}>
                   <li>Mobile-friendly, responsive web portal</li>
                   <li>Promotional access to student Involvement and leadership</li>
                   <li>Academic session-based Campus Involvements and Leadership Experiences</li>
@@ -45,10 +47,10 @@ const About = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card sx={{ bgcolor: gordonColors.neutral.cardColor }}>
               <CardHeader className={styles.about_header} title="Institutional Benefits" />
               <CardContent>
-                <Typography variant="body1" component="ul">
+                <Typography variant="body1" component="ul" style={{ color: gordonColors.neutral.contrastText}}>
                   <li>In-house Student Record relationship</li>
                   <li>
                     Official &ldquo;Gordon Co-Curricular Transcript&rdquo; with unofficial portal
@@ -61,16 +63,16 @@ const About = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card sx={{ bgcolor: gordonColors.neutral.cardColor }}>
               <CardHeader className={styles.about_header} title="Origins" />
               <CardContent>
                 {origins.map((section) => {
                   return (
                     <Fragment key={section.title}>
-                      <Typography variant="subtitle1" gutterBottom>
+                      <Typography variant="subtitle1" gutterBottom  style={{ color: gordonColors.neutral.contrastText}}>
                         <strong>{section.title}</strong>
                       </Typography>
-                      <Typography variant="body2" paragraph className={styles.about_Origins}>
+                      <Typography variant="body2" paragraph className={styles.about_Origins}  style={{ color: gordonColors.neutral.contrastText}}>
                         {section.body}
                       </Typography>
                     </Fragment>
@@ -79,16 +81,16 @@ const About = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card sx={{ bgcolor: gordonColors.neutral.cardColor }}>
               <CardHeader className={styles.about_header} title="GoCo Tech Lab Developers" />
               <CardContent>
                 {contributors.map((section) => {
                   return (
                     <Fragment key={section.title}>
-                      <Typography variant="subtitle1" gutterBottom>
+                      <Typography variant="subtitle1" gutterBottom style={{ color: gordonColors.neutral.contrastText}}>
                         <strong>{section.title}</strong>
                       </Typography>
-                      <Typography variant="body2" paragraph className={styles.about_contributors}>
+                      <Typography variant="body2" paragraph className={styles.about_contributors} style={{ color: gordonColors.neutral.contrastText}}>
                         {section.body}
                       </Typography>
                     </Fragment>
@@ -98,14 +100,14 @@ const About = () => {
             </Card>
           </CardContent>
         </Card>
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" style={{ color: gordonColors.neutral.darkGray}}>
           Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
             <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
           </a>
         </Typography>
         <hr />
-        <Typography variant="body2" paragraph>
+        <Typography variant="body2" paragraph style={{ color: gordonColors.neutral.darkGray}}>
           Api Version - {version} UTC
         </Typography>
       </Grid>
