@@ -226,7 +226,7 @@ const Home = () => {
       {participantTeams.length > 0 ? (
         <TeamList teams={participantTeams} />
       ) : (
-        <Typography className={styles.secondaryText}>You're not yet apart of any teams</Typography>
+        <Typography className={styles.secondaryText}>You're not yet a part of any teams</Typography>
       )}
     </CardContent>
   );
