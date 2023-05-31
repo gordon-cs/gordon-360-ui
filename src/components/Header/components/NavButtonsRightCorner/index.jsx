@@ -80,7 +80,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     isAuthenticated && isSiteAdmin ? (
       <GordonNavButton
         unavailable={!isOnline ? 'offline' : null}
-        onLinkClick={onClose}
+        zonLinkClick={onClose}
         openUnavailableDialog={openDialogBox}
         linkName={'Admin'}
         linkPath={'/admin'}
@@ -95,6 +95,8 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     <>
       <div id="right-side-menu">
         <Popover
+          elevation={4}
+          marginThreshold={-35}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
