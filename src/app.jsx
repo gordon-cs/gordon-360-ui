@@ -10,6 +10,14 @@ import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import routes from './routes';
 import analytics from './services/analytics';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { DarkMode } from '@mui/icons-material';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState();
@@ -30,25 +38,28 @@ const App = () => {
   }, []);
 
   return (
-    <ErrorBoundary>
-      <Router historyRef={historyRef.current}>
-        <section className={styles.app_wrapper}>
-          <GordonHeader onDrawerToggle={onDrawerToggle} />
-          <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
-          <main className={styles.app_main}>
-            <>
-              <BirthdayMessage />
-              <AppRedirect />
-              <Routes>
-                {routes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-              </Routes>
-            </>
-          </main>
-        </section>
-      </Router>
-    </ErrorBoundary>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <ErrorBoundary>
+        <Router historyRef={historyRef.current}>
+          <section className={styles.app_wrapper}>
+            <GordonHeader onDrawerToggle={onDrawerToggle} />
+            <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
+            <main className={styles.app_main}>
+              <>
+                <BirthdayMessage />
+                <AppRedirect />
+                <Routes>
+                  {routes.map((route) => (
+                    <Route key={route.path} path={route.path} element={route.element} />
+                  ))}
+                </Routes>
+              </>
+            </main>
+          </section>
+        </Router>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 };
 

@@ -195,11 +195,11 @@ const DiningBalance = () => {
   }
 
   return (
-    <Card sx={{ bgcolor: gordonColors.neutral.cardColor }}>
+    <Card>
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
-            <CardHeader title="Dining Balance" style={{ color: gordonColors.neutral.contrastText}}/>
+            <CardHeader title="Dining Balance" />
           </Grid>
           <Grid item xs={5} align="right">
             <Button
