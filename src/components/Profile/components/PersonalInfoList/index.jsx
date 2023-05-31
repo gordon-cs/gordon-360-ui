@@ -8,8 +8,11 @@ import {
   List,
   ListItem,
   Switch,
+  Tooltip,
   Typography,
 } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Link } from 'react-router-dom';
 import { IconButton, Button } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
@@ -17,7 +20,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import GordonTooltip from 'components/GordonTooltip';
 import { useAuthGroups } from 'hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
@@ -26,8 +29,28 @@ import UpdatePhone from './components/UpdatePhoneDialog';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
+import SLock from './Salsbury.png';
+import DPLock from './DandP.png';
+import DDLock from './DandD.png';
+import useWindowSize from 'hooks/useWindowSize';
 
 const PRIVATE_INFO = 'Private as requested.';
+
+// const Lock1 = width >= 200 ? : SLock;
+
+// const Lock2 = width >= 200 ? : DPLock;
+
+// const Lock3 = width >= 200 ? DDLock;
+
+const CustomTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.black,
+    color: 'rgba(255, 255, 255, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 12,
+    maxWidth: 600,
+  },
+}))(Tooltip);
 
 const formatPhone = (phone) => {
   if (phone?.length === 10) {
@@ -55,6 +78,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     AuthGroup.SensitiveInfoView,
     AuthGroup.AcademicInfoView,
   );
+
+  const tooltipRef = useRef();
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -354,6 +379,135 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   <Typography className={styles.private}>
                     {showMailCombo ? mailCombo : '****'}
                   </Typography>
+                </Grid>
+                <Grid item md={3}>
+                  <div className={styles.header_tooltip_container}>
+                    <CustomTooltip
+                      disableFocusListener
+                      disableTouchListener
+                      title={
+                        // eslint-disable-next-line no-multi-str
+                        <Grid container>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '1.0rem' }}>
+                              {
+                                'Salsbury Mailbox (Combinations that have three numbers ex: 21 32 18)'
+                              }
+                            </Typography>
+                            <img src={SLock} alt="SLock" />
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.8rem' }}>
+                              {
+                                '1) To openturn LEFT at least four turns stopping at the first number of\
+                               the combination.'
+                              }
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.8rem' }}>
+                              {
+                                '2) Turn RIGHT passing the first number of the combination once and stop at\
+                                 the second number of the combination.'
+                              }
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.8rem' }}>
+                              {'3) Turn LEFT stopping at the third number of the combination.'}
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.8rem' }}>
+                              {'4) Turn knob to the RIGHT to open.'}
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '1.0rem' }}>
+                              {
+                                'Dial and Pointer Mailbox (Combinations that have two letters ex: H B)'
+                              }
+                            </Typography>
+                            <img src={DPLock} alt="DPLock" />
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.8rem' }}>
+                              {
+                                '1) Turn the large letter wheel until the first letter of the two-letter\
+                                combination is lined up with the indication notch located just\
+                                above the letter wheel in a 12 o’clock position. Line up the small\
+                                line that is exactly above each letter with this indication notch.'
+                              }
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.8rem' }}>
+                              {
+                                '2) Leave the letter wheel where you just put it. Now turn the\
+                                pointer only until it points to the second letter of the\
+                                combination. The first letter of the combination will always be at\
+                                the 12 o’clock position; the pointer will always point to the second\
+                                letter of the combination. Example, in the picture above, it is\
+                                showing the combination of A G.'
+                              }
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.8rem' }}>
+                              {'3) Twist the latch knob clockwise to open the box.'}
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '1.0rem' }}>
+                              {
+                                'Double Dial Mailbox (Combinations that have two letter/number pairs\
+                                ex: A3 H5)'
+                              }
+                            </Typography>
+                            <img src={DDLock} alt="DDLock" />
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.8rem' }}>
+                              {
+                                '1) Each letter (A-K on left dial, L-V on right dial) has been assigned\
+                                four white or silver lines on your mailbox. The SHORTEST line is #1 and\
+                                the LONGEST line is #3. For example, in the picture above, the\
+                                combination A1 L1 is shown.'
+                              }
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.8rem' }}>
+                              {
+                                '2) Move the LEFT dial to the line indicated by the FIRST letter/number\
+                                code given; the RIGHT dial to the line indicated by the SECOND\
+                                letter/number code. Align those lines with the “indication notch”\
+                                located at the 12 o’clock position directly above each dial.'
+                              }
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: '0.8rem' }}>
+                              {
+                                '3) When the dials are correctly positioned, move the latch lever to\
+                                the right to open box.'
+                              }
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      }
+                      placement="left"
+                    >
+                      <div ref={tooltipRef}>
+                        <InfoOutlinedIcon
+                          className={styles.tooltip_icon}
+                          style={{
+                            fontSize: 18,
+                          }}
+                        />
+                      </div>
+                    </CustomTooltip>
+                  </div>
                 </Grid>
                 <Grid
                   container

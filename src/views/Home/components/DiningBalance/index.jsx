@@ -172,7 +172,7 @@ const DiningBalance = () => {
             }}
           >
             <div className={styles.value} style={{ color: dollarsColor }}>
-              ${dollarCurr}
+              ${'100M'}
             </div>
             <div className={styles.label}>Dining Dollars</div>
           </div>

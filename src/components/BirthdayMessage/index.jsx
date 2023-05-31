@@ -33,7 +33,7 @@ const BirthdayMessage = ({ open, setOpen, name }) => {
 
   const Banner = width >= 1200 ? BannerLarge : BannerSmall;
 
-  return isAuthenticated && isBirthday ? (
+  return isAuthenticated && !isBirthday ? (
     <Card
       style={{
         cursor: 'pointer',
