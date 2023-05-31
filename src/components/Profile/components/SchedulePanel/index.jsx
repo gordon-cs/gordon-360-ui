@@ -1,31 +1,28 @@
-import { Component, Fragment } from 'react';
-import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import withStyles from '@mui/styles/withStyles';
-import { gordonColors } from 'theme';
-import MyScheduleDialog from './components/myScheduleDialog';
-import RemoveScheduleDialog from './components/RemoveScheduleDialog';
-import EditDescriptionDialog from './components/EditDescriptionDialog';
-import TimeAgo from 'react-timeago';
-import schedulecontrol from 'services/schedulecontrol';
-import urlRegex from 'url-regex-safe';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { Markup } from 'interweave';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-
-import myschedule from 'services/myschedule';
-
-import GordonLoader from 'components/Loader';
-
 import {
-  Grid,
-  Button,
-  Switch,
   Accordion,
-  AccordionSummary,
   AccordionDetails,
+  AccordionSummary,
+  Button,
+  Grid,
+  Switch,
   Typography,
 } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import GordonLoader from 'components/Loader';
+import { Markup } from 'interweave';
+import { Component, Fragment } from 'react';
+import myschedule from 'services/myschedule';
+import schedulecontrol from 'services/schedulecontrol';
+import { formatTimeAgo } from 'services/utils';
+import { gordonColors } from 'theme';
+import urlRegex from 'url-regex-safe';
+import EditDescriptionDialog from './components/EditDescriptionDialog';
+import RemoveScheduleDialog from './components/RemoveScheduleDialog';
+import GordonScheduleCalendar from './components/ScheduleCalendar';
+import MyScheduleDialog from './components/myScheduleDialog';
 
 // Default values
 const STARTHOUR = '08:00';
@@ -270,7 +267,9 @@ class GordonSchedulePanel extends Component {
     lastUpdate = (
       <div style={{ color: gordonColors.primary.cyan }}>
         <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
-        <TimeAgo date={this.scheduleControlInfo ? this.state.modifiedTimeStamp : null} />
+        {Boolean(this.scheduleControlInfo) && (
+          <Typography>{formatTimeAgo(this.state.modifiedTimeStamp)}</Typography>
+        )}
       </div>
     );
 

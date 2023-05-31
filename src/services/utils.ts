@@ -173,3 +173,50 @@ export const stripDomain = (input: string, domain: string = '@gordon.edu') => {
   // return input until domain
   return input.substring(0, domainIndex);
 };
+
+const formatter = new Intl.RelativeTimeFormat(undefined, {
+  numeric: 'auto',
+});
+
+const DIVISIONS = [
+  { amount: 60, name: 'seconds' },
+  { amount: 60, name: 'minutes' },
+  { amount: 24, name: 'hours' },
+  { amount: 7, name: 'days' },
+  { amount: 4.34524, name: 'weeks' },
+  { amount: 12, name: 'months' },
+  { amount: Number.POSITIVE_INFINITY, name: 'years' },
+] as const;
+
+/**
+ * Format a date as a sentence describing how long ago it was relative to now.
+ *
+ * @param date Date to format
+ * @returns Sentence describing how long ago `date` was relative to now.
+ */
+export function formatTimeAgo(date: string): string;
+export function formatTimeAgo(date: number): string;
+export function formatTimeAgo(date: Date): string;
+export function formatTimeAgo(date: string | number | Date): string {
+  if (typeof date === 'string') {
+    date = Date.parse(date);
+    if (isNaN(date)) {
+      return 'Invalid date string';
+    }
+  }
+
+  if (date instanceof Date) {
+    date = date.valueOf();
+  }
+
+  let duration = (date - new Date().valueOf()) / 1000;
+
+  for (const division of DIVISIONS) {
+    if (Math.abs(duration) < division.amount) {
+      return formatter.format(Math.round(duration), division.name);
+    }
+    duration /= division.amount;
+  }
+
+  return 'Unkown duration';
+}
