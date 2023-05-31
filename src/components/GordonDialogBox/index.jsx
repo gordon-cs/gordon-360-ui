@@ -31,7 +31,7 @@ const GordonDialogBox = ({
   children,
   ...otherProps
 }) => {
-  function handleClick(event) {
+  const handleKeyPress = (event) => {
     if (
       !isButtonDisabled &&
       event.key === 'Enter' &&
@@ -39,17 +39,15 @@ const GordonDialogBox = ({
         'MuiDialog-container MuiDialog-scrollPaper css-hz1bth-MuiDialog-container'
     ) {
       buttonClicked();
-      console.log(document.activeElement);
-      console.log(document.activeElement.className);
     }
-  }
+  };
   return (
     <Dialog
       className={styles.gc360_gordondialogbox}
       {...otherProps}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      onKeyDown={(event) => handleClick(event)}
+      onKeyDown={(event) => handleKeyPress(event)}
     >
       <DialogTitle
         className={titleClass ? titleClass : styles.gc360_gordondialogbox_title}
