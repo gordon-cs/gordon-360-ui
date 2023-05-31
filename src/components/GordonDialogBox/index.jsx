@@ -31,12 +31,23 @@ const GordonDialogBox = ({
   children,
   ...otherProps
 }) => {
+  const handleKeyPress = (event) => {
+    if (
+      !isButtonDisabled &&
+      event.key === 'Enter' &&
+      document.activeElement.className ===
+        'MuiDialog-container MuiDialog-scrollPaper css-hz1bth-MuiDialog-container'
+    ) {
+      buttonClicked();
+    }
+  };
   return (
     <Dialog
       className={styles.gc360_gordondialogbox}
       {...otherProps}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
+      onKeyDown={(event) => handleKeyPress(event)}
     >
       <DialogTitle
         className={titleClass ? titleClass : styles.gc360_gordondialogbox_title}
