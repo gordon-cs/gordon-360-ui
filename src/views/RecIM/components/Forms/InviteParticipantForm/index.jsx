@@ -2,7 +2,7 @@ import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ParticipantList } from './../../List';
-import GordonQuickSearch from 'components/Header/components/QuickSearch';
+import RecIMQuickSearch from 'views/RecIM/components/QuickSearch';
 import { addParticipantToTeam, createTeam, deleteTeamParticipant } from 'services/recim/team';
 import GordonLoader from 'components/Loader';
 import styles from './InviteParticipantForm.module.css';
@@ -27,7 +27,7 @@ const InviteParticipantForm = ({
     setDisableUpdateButton(!inviteList || !inviteList.length);
   }, [inviteList]);
 
-  const onSearchSubmit = (username) => {
+  const onSearchSubmit = (username, firstName, lastName) => {
     // Check if participant exists in invite list
     for (let index = 0; index < inviteList.length; index++) {
       if (inviteList[index].Username === username) {
@@ -36,7 +36,15 @@ const InviteParticipantForm = ({
       }
     }
 
-    setInviteList([...inviteList, { Username: username }]);
+    setInviteList([
+      ...inviteList,
+      {
+        Username: username,
+        FirstName: firstName,
+        LastName: lastName,
+        IsCustom: username.split('.').at(-1) === 'custom',
+      },
+    ]);
   };
 
   const removeInvite = (username) => {
@@ -128,10 +136,12 @@ const InviteParticipantForm = ({
           </Grid>
           {!saving && (
             <Grid item>
-              <GordonQuickSearch
+              <RecIMQuickSearch
                 customPlaceholderText={'Search for people'}
                 disableLink
-                onSearchSubmit={(selectedUsername) => onSearchSubmit(selectedUsername)}
+                onSearchSubmit={(selectedUsername, firstName, lastName) =>
+                  onSearchSubmit(selectedUsername, firstName, lastName)
+                }
               />
             </Grid>
           )}

@@ -254,6 +254,8 @@ const ParticipantListing = ({
   minimal,
   callbackFunction,
   showParticipantOptions,
+  isAdminPage,
+  editParticipantInfo,
   withAttendance,
   isAdmin,
   initialAttendance,
@@ -262,43 +264,55 @@ const ParticipantListing = ({
 }) => {
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
-  const [name, setName] = useState();
   const [anchorEl, setAnchorEl] = useState();
+  const [anchorCustomParticipantEl, setAnchorCustomParticipantEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
+  const moreOptionsCustomParticipantOpen = Boolean(anchorCustomParticipantEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
   const [attendanceCount, setAttendanceCount] = useState();
 
   const handleClickOff = () => {
     setAnchorEl(null);
+    setAnchorCustomParticipantEl(null);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setAnchorCustomParticipantEl(null);
     callbackFunction((val) => !val);
   };
 
   useEffect(() => {
     const loadAvatar = async () => {
-      if (participant.Username) {
-        const { def: defaultImage, pref: preferredImage } = await user.getImage(
-          participant.Username,
-        );
-        setAvatar(preferredImage || defaultImage);
+      if (!participant.IsCustom) {
+        if (participant.Username) {
+          const { def: defaultImage, pref: preferredImage } = await user.getImage(
+            participant.Username,
+          );
+          setAvatar(preferredImage || defaultImage);
+        }
+      } else {
+        // TODO - Depdens on how we want to store custom participants' Pics
       }
     };
-    const loadUserInfo = async () => {
-      if (participant.Username) {
-        const profileInfo = await user.getProfileInfo(participant.Username);
-        setName(profileInfo.fullName);
-      }
-    };
+
     const loadAttendanceCount = async () => {
       setAttendanceCount(await getParticipantAttendanceCountForTeam(teamID, participant.Username));
     };
-    loadUserInfo();
     loadAvatar();
     if (teamID && withAttendance) loadAttendanceCount();
-  }, [participant.Username, teamID, withAttendance]);
+  }, [
+    participant.Username,
+    participant.LastName,
+    participant.FirstName,
+    participant.IsCustom,
+    teamID,
+    withAttendance,
+  ]);
+
+  const handleCustomParticipantOptions = (event) => {
+    setAnchorCustomParticipantEl(event.currentTarget);
+  };
 
   const handleParticipantOptions = (event) => {
     setAnchorEl(event.currentTarget);
@@ -356,6 +370,24 @@ const ParticipantListing = ({
     attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
   };
 
+  const participantItem = (participant) => {
+    return (
+      <>
+        <ListItemAvatar>
+          <Avatar
+            src={`data:image/jpg;base64,${avatar}`}
+            className={minimal ? styles.avatarSmall : styles.avatar}
+            variant="rounded"
+          ></Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={`${participant.FirstName} ${participant.LastName}`}
+          secondary={participant.Role}
+        />
+      </>
+    );
+  };
+
   if (!participant) return null;
   return (
     // first ListItem is used only for paddings/margins
@@ -364,6 +396,11 @@ const ParticipantListing = ({
       <ListItem
         secondaryAction={
           <>
+            {isAdminPage && participant.IsCustom && (
+              <IconButton edge="end" onClick={handleCustomParticipantOptions}>
+                <MoreHorizIcon />
+              </IconButton>
+            )}
             {minimal && (
               <IconButton edge="end" onClick={() => callbackFunction(participant.Username)}>
                 <ClearIcon />
@@ -401,21 +438,24 @@ const ParticipantListing = ({
         }
         disablePadding
       >
-        <ListItemButton
-          to={`/profile/${participant.Username}`}
-          className={`${styles.listing} ${
-            withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
-          }`}
-        >
-          <ListItemAvatar>
-            <Avatar
-              src={`data:image/jpg;base64,${avatar}`}
-              className={minimal ? styles.avatarSmall : styles.avatar}
-              variant="rounded"
-            ></Avatar>
-          </ListItemAvatar>
-          <ListItemText primary={name} secondary={participant.Role} />
-        </ListItemButton>
+        {participant.IsCustom ? (
+          <ListItem
+            className={`${styles.listing} ${
+              withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
+            }`}
+          >
+            {participantItem(participant)}
+          </ListItem>
+        ) : (
+          <ListItemButton
+            to={`/profile/${participant.Username}`}
+            className={`${styles.listing} ${
+              withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
+            }`}
+          >
+            {participantItem(participant)}
+          </ListItemButton>
+        )}
         {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
             {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (
@@ -433,6 +473,32 @@ const ParticipantListing = ({
                 Remove from team
               </MenuItem>
             )}
+          </Menu>
+        )}
+        {isAdminPage && participant.IsCustom && (
+          <Menu
+            open={moreOptionsCustomParticipantOpen}
+            onClose={handleClickOff}
+            anchorEl={anchorCustomParticipantEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <MenuItem
+              dense
+              onClick={() => {
+                editParticipantInfo(participant);
+                setAnchorCustomParticipantEl(null);
+              }}
+              divider
+            >
+              Edit Participant Information
+            </MenuItem>
           </Menu>
         )}
       </ListItem>

@@ -2,14 +2,30 @@ import http from '../http';
 import { Team } from './team';
 import { Lookup } from './recim';
 
-export type Participant = {
+export type Participant = CustomParticipant & {
   Username: string;
-  Email: string;
   Role: string;
   GamesAttended: number;
   Status: string;
   Notification: ParticipantNotification[];
   IsAdmin: boolean;
+  IsCustom: boolean;
+};
+
+type CustomParticipant = {
+  AllowEmails: boolean;
+  Email: string;
+  SpecifiedGender: string;
+  FirstName: string;
+  LastName: string;
+};
+
+type BasicInfo = {
+  FirstName: string;
+  LastName: string;
+  UserName: string;
+  Nickname: string;
+  MaidenName: string;
 };
 
 type PatchParticipantActivity = {
@@ -69,7 +85,12 @@ type CreatedParticipantActivity = {
 const createParticipant = (username: string): Promise<Participant> =>
   http.put(`recim/participants/${username}`);
 
-const getParticipants = (): Promise<Participant[]> => http.get(`recim/participants`);
+const createCustomParticipant = (
+  username: string,
+  newcustomParticipant: CustomParticipant,
+): Promise<Participant> => http.put(`recim/participants/${username}/custom`, newcustomParticipant);
+
+const getParticipants = async (): Promise<Participant[]> => http.get(`recim/participants`);
 
 const getParticipantByUsername = (username: string): Promise<Participant> =>
   http.get(`recim/participants/${username}`);
@@ -86,11 +107,27 @@ const getParticipantStatusTypes = (): Promise<Lookup[]> =>
 const getParticipantActivityPrivTypes = (): Promise<Lookup[]> =>
   http.get(`recim/participants/lookup?type=activitypriv`);
 
+const getAccountsBasicInfo = async (
+  query: string,
+): Promise<[searchTime: number, searchResults: BasicInfo[]]> => {
+  const searchStartTime = Date.now();
+  // Replace period or space with a slash: 'first.last' or 'first last' become 'first/last'
+  const searchQuery = query.toLowerCase().trim().replace(/\.|\s/g, '/');
+  const searchResults: BasicInfo[] = await http.get(`recim/participants/search/${searchQuery}`);
+  return [searchStartTime, searchResults];
+};
+
 const sendNotification = (
   username: string,
   notification: UploadParticipantNotification,
 ): Promise<CreatedParticipantNotification> =>
   http.post(`participants/${username}/notifications`, notification);
+
+const editCustomParticipant = (
+  username: string,
+  updatedCustomParticipant: CustomParticipant,
+): Promise<Participant> =>
+  http.patch(`recim/participants/${username}/custom/update`, updatedCustomParticipant);
 
 const editParticipantAdmin = (username: string, isAdmin: boolean): Promise<Participant> =>
   http.patch(`recim/participants/${username}/admin`, isAdmin);
@@ -111,13 +148,16 @@ const editParticipantStatus = (
 
 export {
   createParticipant,
+  createCustomParticipant,
   getParticipants,
   getParticipantByUsername,
   getParticipantTeams,
   getParticipantStatusHistory,
   getParticipantStatusTypes,
   getParticipantActivityPrivTypes,
+  getAccountsBasicInfo,
   sendNotification,
+  editCustomParticipant,
   editParticipantAdmin,
   editParticipantAllowEmails,
   editParticipantActivity,
