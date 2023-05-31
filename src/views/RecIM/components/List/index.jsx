@@ -13,6 +13,7 @@ import styles from './List.module.css';
 import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
 import { addDays } from 'date-fns';
+import { timePickerValueManager } from '@mui/x-date-pickers/TimePicker/shared';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -38,12 +39,36 @@ const ParticipantList = ({
   teamID,
   showInactive,
   callbackFunction,
+  adminPage,
 }) => {
   if (!participants?.length)
     return <Typography className={styles.secondaryText}>No participants to show.</Typography>;
   let content = participants.map((participant) => {
     if (!showInactive && participant.Role === 'Inactive') {
       return null;
+    }
+    if (adminPage) {
+      return (
+        <ParticipantListing
+          key={participant.username}
+          participant={participant}
+          minimal={minimal}
+          withAttendance={withAttendance}
+          adminPage={true}
+          initialAttendance={
+            withAttendance && attendance?.find((att) => att.Username === participant.Username)
+          }
+          isAdmin={isAdmin}
+          matchID={matchID}
+          teamID={teamID}
+          callbackFunction={(bool) => callbackFunction(bool)}
+          showParticipantOptions={
+            showParticipantOptions &&
+            participant.Role !== 'Team-captain/Creator' &&
+            participant.Role !== 'Requested Join' // don't promote people who haven't joined
+          }
+        />
+      );
     }
     return (
       <ParticipantListing

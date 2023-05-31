@@ -31,6 +31,7 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import { editParticipantStatus } from 'services/recim/participant';
 
 const activityTypeIconPair = [
   {
@@ -259,6 +260,7 @@ const ParticipantListing = ({
   initialAttendance,
   teamID,
   matchID,
+  adminPage,
 }) => {
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
@@ -267,6 +269,8 @@ const ParticipantListing = ({
   const moreOptionsOpen = Boolean(anchorEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
   const [attendanceCount, setAttendanceCount] = useState();
+  //const [status, setStatus] = useState();
+  console.log(participant);
 
   const handleClickOff = () => {
     setAnchorEl(null);
@@ -356,6 +360,23 @@ const ParticipantListing = ({
     attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
   };
 
+  const handleChangeParticipantStatus = async () => {
+    if (participant.Status === 'Pending') {
+      let patchedStatus = {
+        StatusID: 4,
+        EndDate: null,
+      };
+      await editParticipantStatus(participant.Username, patchedStatus);
+    } else {
+      let patchedStatus = {
+        StatusID: 1,
+        EndDate: null,
+      };
+      await editParticipantStatus(participant.Username, patchedStatus);
+    }
+    handleClose();
+  };
+
   if (!participant) return null;
   return (
     // first ListItem is used only for paddings/margins
@@ -369,7 +390,7 @@ const ParticipantListing = ({
                 <ClearIcon />
               </IconButton>
             )}
-            {showParticipantOptions && (
+            {(showParticipantOptions || adminPage) && (
               <IconButton edge="end" onClick={handleParticipantOptions}>
                 <MoreHorizIcon />
               </IconButton>
@@ -416,6 +437,32 @@ const ParticipantListing = ({
           </ListItemAvatar>
           <ListItemText primary={name} secondary={participant.Role} />
         </ListItemButton>
+        {adminPage && (
+          <Menu
+            open={moreOptionsOpen}
+            onClose={() => setAnchorEl()}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <MenuItem
+              dense
+              onClick={async () => {
+                await handleChangeParticipantStatus();
+                setAnchorEl(null);
+              }}
+              divider
+            >
+              change status
+            </MenuItem>
+          </Menu>
+        )}
         {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
             {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (

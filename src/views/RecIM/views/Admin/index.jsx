@@ -6,7 +6,7 @@ import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Admin.module.css';
-import { getParticipantByUsername } from 'services/recim/participant';
+import { editParticipantStatus, getParticipantByUsername } from 'services/recim/participant';
 import {
   ActivityList,
   TeamList,
@@ -54,6 +54,7 @@ const Admin = () => {
   const [openConfirmDeleteSurface, setOpenConfirmDeleteSurface] = useState();
   const [openConfirmDeleteSport, setOpenConfirmDeleteSport] = useState();
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [status, setParticipantStatus] = useState(true);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -198,7 +199,11 @@ const Admin = () => {
             {teams ? <TeamList teams={teams} /> : <GordonLoader />}
           </TabPanel>
           <TabPanel value={tab} index={2}>
-            {participants ? <ParticipantList participants={participants} /> : <GordonLoader />}
+            {participants ? (
+              <ParticipantList participants={participants} adminPage />
+            ) : (
+              <GordonLoader />
+            )}
           </TabPanel>
           <TabPanel value={tab} index={3}>
             {surfaces ? (
