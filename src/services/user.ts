@@ -254,6 +254,9 @@ const getBirthdate = async (): Promise<DateTime> =>
 
 const isBirthdayToday = async () => {
   const birthday = await getBirthdate();
+  if (birthday === null) {
+    return null;
+  }
   return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
 };
 
