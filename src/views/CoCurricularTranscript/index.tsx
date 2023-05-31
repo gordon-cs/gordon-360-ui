@@ -36,14 +36,66 @@ const CoCurricularTranscript = () => {
     loadTranscript();
   }, [profile]);
 
-  if (loading || loadingProfile) {
+  if (loadingProfile) {
     return <GordonLoader />;
   }
 
   if (!profile) {
-    return <GordonUnauthorized feature={'your experience transcript'} />;
+    return (
+      <Grid container justifyContent="center">
+        <Grid item xs={12} lg={10} xl={8}>
+          <Card elevation={10}>
+            <CardHeader
+              title={
+                <Typography component="h1" variant="h4">
+                  Gordon College Experience Transcript
+                </Typography>
+              }
+              subheader={
+                <Typography component="p" variant="h6">
+                  Adoniram Judson Gordon
+                  <br />
+                  Majors: Christian Ministries, Biblical Studies
+                  <br />
+                  Minor: Theology
+                </Typography>
+              }
+              disableTypography
+            />
+            <CardContent>
+              {transcriptItems &&
+                Object.entries(transcriptItems).map(
+                  ([key, items]) =>
+                    items.length > 0 && (
+                      <>
+                        {' '}
+                        <Typography variant="h6" component="h2">
+                          <b>Activities</b>
+                        </Typography>
+                        {items.map((activity) =>
+                          'Sessions' in activity ? (
+                            <Activity
+                              key={activity.ActivityCode}
+                              sessions={activity.Sessions}
+                              description={activity.ActivityDescription}
+                            />
+                          ) : (
+                            <Experience
+                              Experience={activity}
+                              key={activity.Job_Title + activity.Job_Start_Date}
+                            />
+                          ),
+                        )}
+                      </>
+                    ),
+                )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    );
   }
-
+  console.log(transcriptItems);
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={10} xl={8}>

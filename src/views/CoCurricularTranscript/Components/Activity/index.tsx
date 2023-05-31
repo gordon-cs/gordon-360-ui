@@ -12,6 +12,15 @@ type Props = {
 
 const Activity = ({ description, sessions }: Props) => {
   const leaderSessions = sessions.filter((s) => s.Participation === Participation.Leader);
+  console.log(sessions);
+  if (sessions[0] == null) {
+    return (
+      <div className={styles.experience_transcript_activities}>
+        <div className={styles.organization_role}>role</div>
+        <div className={styles.date}> date </div>
+      </div>
+    );
+  }
   return (
     <div className={styles.experience_transcript_activities}>
       <div className={styles.organization_role}>{description}</div>
