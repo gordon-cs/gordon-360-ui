@@ -12,6 +12,9 @@ import {
   MenuItem,
   Checkbox,
   FormControlLabel,
+  FormControl,
+  InputLabel,
+  Select,
 } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
@@ -31,7 +34,7 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
-import { editParticipantStatus } from 'services/recim/participant';
+import { editParticipantStatus, getParticipantStatusTypes } from 'services/recim/participant';
 
 const activityTypeIconPair = [
   {
@@ -269,8 +272,7 @@ const ParticipantListing = ({
   const moreOptionsOpen = Boolean(anchorEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
   const [attendanceCount, setAttendanceCount] = useState();
-  //const [status, setStatus] = useState();
-  console.log(participant);
+  const [statusTypes, setStatusTypes] = useState([]);
 
   const handleClickOff = () => {
     setAnchorEl(null);
@@ -299,11 +301,14 @@ const ParticipantListing = ({
     const loadAttendanceCount = async () => {
       setAttendanceCount(await getParticipantAttendanceCountForTeam(teamID, participant.Username));
     };
+    const loadStatusType = async () => {
+      setStatusTypes(await getParticipantStatusTypes());
+    };
+    loadStatusType();
     loadUserInfo();
     loadAvatar();
     if (teamID && withAttendance) loadAttendanceCount();
   }, [participant.Username, teamID, withAttendance]);
-
   const handleParticipantOptions = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -359,24 +364,41 @@ const ParticipantListing = ({
     };
     attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
   };
+  ////////////////////////////////////////////
+  const handleChangeParticipantStatus = async (statusID) => {
+    // if (participant.Status === 'Pending') {
+    //   let patchedStatus = {
+    //     StatusID: 4,
+    //     EndDate: null,
+    //   };
+    //   await editParticipantStatus(participant.Username, patchedStatus);
+    // } else {
+    //   let patchedStatus = {
+    //     StatusID: 1,
+    //     EndDate: null,
+    //   };
+    //   editStatusOptions;
+    //   await editParticipantStatus(participant.Username, patchedStatus);
+    // }
 
-  const handleChangeParticipantStatus = async () => {
-    if (participant.Status === 'Pending') {
-      let patchedStatus = {
-        StatusID: 4,
-        EndDate: null,
-      };
-      await editParticipantStatus(participant.Username, patchedStatus);
-    } else {
-      let patchedStatus = {
-        StatusID: 1,
-        EndDate: null,
-      };
-      await editParticipantStatus(participant.Username, patchedStatus);
-    }
+    // <ListItem>
+    //   <Menu>
+    //     <MenuItem>deleted</MenuItem>
+    //     <MenuItem>pending</MenuItem>
+    //     <MenuItem>suspension</MenuItem>
+    //     <MenuItem>banned</MenuItem>
+    //     <MenuItem>cleared</MenuItem>
+    //   </Menu>
+    // </ListItem>;
+
+    let patchedStatus = {
+      StatusID: statusID,
+      EndDate: null,
+    };
+    await editParticipantStatus(participant.Username, patchedStatus);
     handleClose();
   };
-
+  console.log(statusTypes);
   if (!participant) return null;
   return (
     // first ListItem is used only for paddings/margins
@@ -451,16 +473,45 @@ const ParticipantListing = ({
               horizontal: 'right',
             }}
           >
-            <MenuItem
-              dense
-              onClick={async () => {
-                await handleChangeParticipantStatus();
-                setAnchorEl(null);
-              }}
-              divider
-            >
+            <FormControl variant="filled" className={`${styles.select_text} ${styles.field}`}>
+              <InputLabel>change status</InputLabel>
+              <Select
+                //label={label}
+                //name={name}
+                //multiple
+                //value={value}
+                //required={required}
+                onChange={(event) => onChange(event)}
+                //style={{ maxWidth: `${width * 0.65}px` }}
+              >
+                {statusTypes.map((item) => (
+                  <MenuItem
+                    id={item.ID}
+                    onClick={async () => {
+                      await handleChangeParticipantStatus(item.ID);
+                      setAnchorEl(null);
+                    }}
+                  >
+                    {item.Description}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            {/* <MenuItem dense divider>
               change status
-            </MenuItem>
+              {statusTypes.map((item) => (
+                <MenuItem
+                  id={item.ID}
+                  onClick={async () => {
+                    await handleChangeParticipantStatus(item.ID);
+                    setAnchorEl(null);
+                  }}
+                >
+                  {item.Description}
+                </MenuItem>
+              ))}
+            </MenuItem> */}
           </Menu>
         )}
         {showParticipantOptions && (

@@ -54,7 +54,6 @@ const Admin = () => {
   const [openConfirmDeleteSurface, setOpenConfirmDeleteSurface] = useState();
   const [openConfirmDeleteSport, setOpenConfirmDeleteSport] = useState();
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [status, setParticipantStatus] = useState(true);
 
   useEffect(() => {
     const loadProfile = async () => {
