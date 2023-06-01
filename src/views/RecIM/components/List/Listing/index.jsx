@@ -380,14 +380,15 @@ const ParticipantListing = ({
     };
     attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
   };
-  ////////////////////////////////////////////
+
   const handleChangeParticipantStatus = async (statusID) => {
     let patchedStatus = {
       StatusID: statusID,
       EndDate: null,
     };
     await editParticipantStatus(participant.Username, patchedStatus);
-    handleClose();
+    setAnchorEl(null);
+    setAnchorCustomParticipantEl(null);
   };
 
   const participantItem = (participant) => {
@@ -472,15 +473,16 @@ const ParticipantListing = ({
               horizontal: 'right',
             }}
           >
-            <FormControl variant="filled" className={`${styles.select_text} ${styles.field}`}>
-              <InputLabel size="100px">change status</InputLabel>
-              <Select
-                onChange={(event) => onChange(event)}
-                //style={{ maxWidth: `${width * 0.65}px` }}
-              >
+            <FormControl
+              variant="filled"
+              className={`${styles.select_text} ${styles.field}`}
+              sx={{ m: 1, minWidth: 150 }}
+            >
+              <InputLabel>change status</InputLabel>
+              <Select label="Change status" onChange={(event) => onChange(event)}>
                 {statusTypes.map((item) => (
                   <MenuItem
-                    id={item.ID}
+                    value={item.ID}
                     onClick={async () => {
                       await handleChangeParticipantStatus(item.ID);
                       setAnchorEl(null);

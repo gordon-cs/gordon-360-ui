@@ -49,28 +49,6 @@ const ParticipantList = ({
     if (!showInactive && participant.Role === 'Inactive') {
       return null;
     }
-    if (adminPage) {
-      return (
-        <ParticipantListing
-          key={participant.username}
-          participant={participant}
-          minimal={minimal}
-          withAttendance={withAttendance}
-          initialAttendance={
-            withAttendance && attendance?.find((att) => att.Username === participant.Username)
-          }
-          isAdmin={isAdmin}
-          matchID={matchID}
-          teamID={teamID}
-          callbackFunction={(bool) => callbackFunction(bool)}
-          showParticipantOptions={
-            showParticipantOptions &&
-            participant.Role !== 'Team-captain/Creator' &&
-            participant.Role !== 'Requested Join' // don't promote people who haven't joined
-          }
-        />
-      );
-    }
     return (
       <ParticipantListing
         key={participant.username}
