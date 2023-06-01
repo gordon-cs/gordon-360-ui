@@ -80,7 +80,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     isAuthenticated && isSiteAdmin ? (
       <GordonNavButton
         unavailable={!isOnline ? 'offline' : null}
-        zonLinkClick={onClose}
+        onLinkClick={onClose}
         openUnavailableDialog={openDialogBox}
         linkName={'Admin'}
         linkPath={'/admin'}
