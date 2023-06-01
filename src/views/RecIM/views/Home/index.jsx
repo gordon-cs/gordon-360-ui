@@ -33,6 +33,7 @@ import {
   getParticipantByUsername,
   editParticipantAllowEmails,
 } from 'services/recim/participant';
+import { getAllMatches } from 'services/recim/match';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from 'views/RecIM/recim_logo.png';
 import { isFuture } from 'date-fns';
@@ -61,6 +62,7 @@ const Home = () => {
   const [hasPermissions, setHasPermissions] = useState(false);
   const [activityTab, setActivityTab] = useState(0);
   const [teamTab, setTeamTab] = useState(0);
+  const [matches, setMatches] = useState([]);
 
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -75,6 +77,7 @@ const Home = () => {
       setLoading(true);
       // Get all active activities
       setActivities(await getActivities(true));
+      setMatches(await getAllMatches());
       if (profile) {
         setParticipant(await getParticipantByUsername(profile.AD_Username));
       }
@@ -82,7 +85,7 @@ const Home = () => {
     };
     loadData();
   }, [profile, reload]);
-
+  console.log(matches);
   useEffect(() => {
     const loadParticipantData = async () => {
       setLoading(true);

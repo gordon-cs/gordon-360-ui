@@ -88,6 +88,8 @@ type Attendance = {
 };
 
 //Match Routes
+const getAllMatches = (): Promise<Match[]> => http.get(`recim/matches`);
+
 const createMatch = (newMatch: UploadMatch): Promise<CreatedMatch> =>
   http.post('recim/matches', newMatch);
 
@@ -141,6 +143,7 @@ const editSurface = (surfaceID: number, updatedSurface: UploadSurface): Promise<
 const deleteSurface = (surfaceID: number) => http.del(`recim/matches/surfaces/${surfaceID}`);
 
 export {
+  getAllMatches,
   createMatch,
   getMatchByID,
   getMatchStatusTypes,
