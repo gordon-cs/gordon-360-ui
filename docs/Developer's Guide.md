@@ -21,7 +21,7 @@ This guide walks you through the basics of developing the Gordon 360 frontend, a
 
 Here are the steps to setup the frontend for development:
 
-1. Clone this repository to the machine that you will develop on.
+1. Clone this repository to the machine that you will develop on.  This can be done via HTTPS or SSH.  Summer Practicum developers typically use the SSH method; use these instructions to [create a SSH public-private keypair](https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key) and [add the public key to your GitHub account](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).  (For more info, check out https://help.github.com/articles/connecting-to-github-with-ssh/)
 
 1. Ensure that [NodeJS](https://nodejs.org/en/) is installed on that machine.
 
