@@ -47,6 +47,7 @@ const EventItem = ({ event }) => {
           startTime="10:15"
           endTime="23:30"
           timeZone="America/Indiana/Indianapolis"
+          Description = {event.Description}
         ></AddToCalendarButton>
         </CardContent>
       </Collapse>
