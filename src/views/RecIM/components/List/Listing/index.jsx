@@ -265,7 +265,6 @@ const ParticipantListing = ({
   initialAttendance,
   teamID,
   matchID,
-  adminPage,
 }) => {
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
@@ -310,7 +309,7 @@ const ParticipantListing = ({
       setStatusTypes(await getParticipantStatusTypes());
     };
     loadStatusType();
-    loadUserInfo();
+    //loadUserInfo();
     loadAvatar();
     if (teamID && withAttendance) loadAttendanceCount();
   }, [
@@ -383,31 +382,6 @@ const ParticipantListing = ({
   };
   ////////////////////////////////////////////
   const handleChangeParticipantStatus = async (statusID) => {
-    // if (participant.Status === 'Pending') {
-    //   let patchedStatus = {
-    //     StatusID: 4,
-    //     EndDate: null,
-    //   };
-    //   await editParticipantStatus(participant.Username, patchedStatus);
-    // } else {
-    //   let patchedStatus = {
-    //     StatusID: 1,
-    //     EndDate: null,
-    //   };
-    //   editStatusOptions;
-    //   await editParticipantStatus(participant.Username, patchedStatus);
-    // }
-
-    // <ListItem>
-    //   <Menu>
-    //     <MenuItem>deleted</MenuItem>
-    //     <MenuItem>pending</MenuItem>
-    //     <MenuItem>suspension</MenuItem>
-    //     <MenuItem>banned</MenuItem>
-    //     <MenuItem>cleared</MenuItem>
-    //   </Menu>
-    // </ListItem>;
-
     let patchedStatus = {
       StatusID: statusID,
       EndDate: null,
@@ -415,7 +389,6 @@ const ParticipantListing = ({
     await editParticipantStatus(participant.Username, patchedStatus);
     handleClose();
   };
-  console.log(statusTypes);
 
   const participantItem = (participant) => {
     return (
@@ -453,7 +426,7 @@ const ParticipantListing = ({
                 <ClearIcon />
               </IconButton>
             )}
-            {(showParticipantOptions || adminPage) && (
+            {(showParticipantOptions || isAdminPage) && (
               <IconButton edge="end" onClick={handleParticipantOptions}>
                 <MoreHorizIcon />
               </IconButton>
@@ -485,6 +458,41 @@ const ParticipantListing = ({
         }
         disablePadding
       >
+        {isAdminPage && (
+          <Menu
+            open={moreOptionsOpen}
+            onClose={() => setAnchorEl()}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <FormControl variant="filled" className={`${styles.select_text} ${styles.field}`}>
+              <InputLabel size="100px">change status</InputLabel>
+              <Select
+                onChange={(event) => onChange(event)}
+                //style={{ maxWidth: `${width * 0.65}px` }}
+              >
+                {statusTypes.map((item) => (
+                  <MenuItem
+                    id={item.ID}
+                    onClick={async () => {
+                      await handleChangeParticipantStatus(item.ID);
+                      setAnchorEl(null);
+                    }}
+                  >
+                    {item.Description}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Menu>
+        )}
         {participant.IsCustom ? (
           <ListItem
             className={`${styles.listing} ${
@@ -502,61 +510,6 @@ const ParticipantListing = ({
           >
             {participantItem(participant)}
           </ListItemButton>
-        )}
-        {adminPage && (
-          <Menu
-            open={moreOptionsOpen}
-            onClose={() => setAnchorEl()}
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-          >
-            <FormControl variant="filled" className={`${styles.select_text} ${styles.field}`}>
-              <InputLabel>change status</InputLabel>
-              <Select
-                //label={label}
-                //name={name}
-                //multiple
-                //value={value}
-                //required={required}
-                onChange={(event) => onChange(event)}
-                //style={{ maxWidth: `${width * 0.65}px` }}
-              >
-                {statusTypes.map((item) => (
-                  <MenuItem
-                    id={item.ID}
-                    onClick={async () => {
-                      await handleChangeParticipantStatus(item.ID);
-                      setAnchorEl(null);
-                    }}
-                  >
-                    {item.Description}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {/* <MenuItem dense divider>
-              change status
-              {statusTypes.map((item) => (
-                <MenuItem
-                  id={item.ID}
-                  onClick={async () => {
-                    await handleChangeParticipantStatus(item.ID);
-                    setAnchorEl(null);
-                  }}
-                >
-                  {item.Description}
-                </MenuItem>
-              ))}
-            </MenuItem> */}
-          </Menu>
         )}
         {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>

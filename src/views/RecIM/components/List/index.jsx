@@ -56,7 +56,6 @@ const ParticipantList = ({
           participant={participant}
           minimal={minimal}
           withAttendance={withAttendance}
-          adminPage={true}
           initialAttendance={
             withAttendance && attendance?.find((att) => att.Username === participant.Username)
           }
