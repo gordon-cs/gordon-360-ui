@@ -11,13 +11,25 @@ import GordonNav from './components/Nav';
 import routes from './routes';
 import analytics from './services/analytics';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-import { DarkMode } from '@mui/icons-material';
 
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
   },
 });
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
+
+let theme;
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  theme = darkTheme;
+} else {
+  theme = lightTheme;
+}
 
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState();
@@ -38,7 +50,7 @@ const App = () => {
   }, []);
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <ErrorBoundary>
         <Router historyRef={historyRef.current}>
