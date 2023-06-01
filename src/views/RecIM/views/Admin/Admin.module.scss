@@ -41,3 +41,14 @@
   color: $neutral-gray;
   font-size: 1em;
 }
+
+.menuTitle {
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+  color: $neutral-gray;
+  text-align: center;
+}
+
+.menuButton:hover {
+  background-color: $neutral-black-opacity10;
+}

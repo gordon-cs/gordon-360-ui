@@ -1,4 +1,16 @@
-import { Card, CardContent, Tabs, Tab, Button, Grid, Box } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Tabs,
+  Tab,
+  Button,
+  Grid,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -26,6 +38,9 @@ import { Typography } from '@mui/material';
 import recimLogo from 'views/RecIM/recim_logo.png';
 import { useNavigate } from 'react-router';
 import { deleteSport, getAllSports } from 'services/recim/sport';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -54,6 +69,10 @@ const Admin = () => {
   const [openConfirmDeleteSurface, setOpenConfirmDeleteSurface] = useState();
   const [openConfirmDeleteSport, setOpenConfirmDeleteSport] = useState();
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [adminMenuAnchorEl, setAdminMenuAnchorEl] = useState();
+  const openAdminMenu = Boolean(adminMenuAnchorEl);
+  const [selectedDateIn, setSelectedDateIn] = useState(null);
+  const [selectedDateOut, setSelectedDateOut] = useState(null);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -82,6 +101,14 @@ const Admin = () => {
     }
     setLoading(false);
   }, [user?.IsAdmin]);
+
+  const handleAdminMenuOpen = (e) => {
+    setAdminMenuAnchorEl(e.currentTarget);
+  };
+
+  const handleAdminMenuClose = () => {
+    setAdminMenuAnchorEl(null);
+  };
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -162,6 +189,26 @@ const Admin = () => {
         <Typography className={styles.subtitle}>
           <i>"Competition reveals character"</i>
         </Typography>
+      </Grid>
+      <Grid item xs={3} textAlign={'right'}>
+        <IconButton onClick={handleAdminMenuOpen} sx={{ mr: '1rem' }}>
+          <SettingsIcon
+            fontSize="large"
+            sx={
+              openAdminMenu && {
+                animation: 'spin 0.2s linear ',
+                '@keyframes spin': {
+                  '0%': {
+                    transform: 'rotate(0deg)',
+                  },
+                  '100%': {
+                    transform: 'rotate(120deg)',
+                  },
+                },
+              }
+            }
+          />
+        </IconButton>
       </Grid>
     </Grid>
   );
@@ -273,6 +320,47 @@ const Admin = () => {
         </Typography>
         <Typography variant="body1">This action cannot be undone.</Typography>
       </GordonDialogBox>
+      <Menu
+        open={openAdminMenu}
+        onClose={handleAdminMenuClose}
+        anchorEl={adminMenuAnchorEl}
+        className={styles.menu}
+      >
+        <Typography className={styles.menuTitle}>Generate Admin Reports</Typography>
+        <MenuItem>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DateTimePicker
+              renderInput={(props) => <TextField {...props} />}
+              label="Start Time"
+              value={selectedDateIn}
+              onChange={setSelectedDateIn}
+              className="disable_select"
+              disableFuture={false}
+            />
+            <DateTimePicker
+              renderInput={(props) => <TextField {...props} />}
+              label="End Time"
+              value={selectedDateOut ?? selectedDateIn}
+              onChange={setSelectedDateOut}
+              className="disable_select"
+              disableFuture={false}
+              showToolbar={true}
+              disabled={selectedDateIn === null}
+              minDateTime={selectedDateIn}
+              openTo="hours"
+            />
+          </LocalizationProvider>
+        </MenuItem>
+        <MenuItem
+          dense
+          onClick={() => {
+            navigate('/recim/admin');
+          }}
+          className={styles.menuButton}
+        >
+          Generate Reports
+        </MenuItem>
+      </Menu>
       <GordonSnackbar
         open={snackbar.open}
         text={snackbar.message}
