@@ -50,16 +50,6 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     />
   );
 
-  const timesheetsButton = (
-    <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
-      onLinkClick={onClose}
-      openUnavailableDialog={openDialogBox}
-      linkName={'Timesheets'}
-      linkPath={'/timesheets'}
-    />
-  );
-
   const helpButton = <GordonNavButton onLinkClick={onClose} linkName={'Help'} linkPath={'/help'} />;
 
   const aboutButton = (
@@ -112,7 +102,6 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             <div class={styles.right_menu_triangle} />
             {myProfileButton}
             {linksButton}
-            {timesheetsButton}
             {helpButton}
             {aboutButton}
             {feedbackButton}
