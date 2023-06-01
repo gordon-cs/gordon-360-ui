@@ -37,9 +37,14 @@ Here are the steps to setup the frontend for development:
 
    1. Download and run the installer from [the NodeJS Website](https://nodejs.org/en/download/)
    1. Use a tool that manages Node installations, such as
-      - For any OS: [Fast Node Manager](https://github.com/Schniz/fnm)
-      - For MacOS/Linux: [Node Version Manager](https://github.com/nvm-sh/nvm)
-      - For Windows: [NVM for Windows](https://github.com/coreybutler/nvm-windows)
+      - Node Version Manager (NVM):
+        [MacOS/Linux](https://github.com/nvm-sh/nvm),
+        [Windows](https://github.com/coreybutler/nvm-windows).
+        After installing, run these commands to use the
+        latest stable version (long term support):
+         - `nvm install --lts`
+         - `nvm use --lts`
+      - [Fast Node Manager](https://github.com/Schniz/fnm)
 
 1. Install dependencies
 
@@ -98,7 +103,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 1. Your local machine must be configured as an SSH host
 
    [Windows Installation](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui).
-   
+
    - If you are on Windows 11+, you may need to update the firewall to allow inbound connections on a public network.
       - Search for `Check Firewall Status` in the start menu
       - Click `Turn Windows Defender Firewall on or off`
@@ -109,7 +114,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
    [Ubuntu Installation](ubuntu.com/server/docs/service-openssh)
 
    MacOS & other Linux distributions should already have an SSH server installed.
-   
+
    On MacOS, you may have to enable the SSH server in System Preferences. Follow [these instructions](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) to do so.
 
 2. Create the SSH tunnel
