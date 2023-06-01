@@ -36,16 +36,10 @@ import useWindowSize from 'hooks/useWindowSize';
 
 const PRIVATE_INFO = 'Private as requested.';
 
-// const Lock1 = width >= 200 ? : SLock;
-
-// const Lock2 = width >= 200 ? : DPLock;
-
-// const Lock3 = width >= 200 ? DDLock;
-
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.black,
-    color: 'rgba(255, 255, 255, 0.87)',
+    color: 'dark',
     boxShadow: theme.shadows[1],
     fontSize: 12,
     maxWidth: 600,
@@ -387,113 +381,63 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       disableTouchListener
                       title={
                         // eslint-disable-next-line no-multi-str
-                        <Grid container>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '1.0rem' }}>
-                              {
-                                'Salsbury Mailbox (Combinations that have three numbers ex: 21 32 18)'
-                              }
-                            </Typography>
+                        <Grid>
+                          <Typography sx={{ fontSize: '0.8rem' }}>
+                            <u>
+                              Salsbury Mailbox (Combinations that have three numbers ex: 21 32 18)
+                            </u>
+                            <br />
                             <img src={SLock} alt="SLock" />
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '0.8rem' }}>
-                              {
-                                '1) To openturn LEFT at least four turns stopping at the first number of\
-                               the combination.'
-                              }
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '0.8rem' }}>
-                              {
-                                '2) Turn RIGHT passing the first number of the combination once and stop at\
-                                 the second number of the combination.'
-                              }
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '0.8rem' }}>
-                              {'3) Turn LEFT stopping at the third number of the combination.'}
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '0.8rem' }}>
-                              {'4) Turn knob to the RIGHT to open.'}
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '1.0rem' }}>
-                              {
-                                'Dial and Pointer Mailbox (Combinations that have two letters ex: H B)'
-                              }
-                            </Typography>
+                            <br />
+                            1. To openturn LEFT at least four turns stopping at the first number of
+                            the combination.
+                            <br />
+                            2. Turn RIGHT passing the first number of the combination once and stop
+                            at the second number of the combination.
+                            <br />
+                            3. Turn LEFT stopping at the third number of the combination.
+                            <br />
+                            4. Turn knob to the RIGHT to open.
+                            <br />
+                            <u>
+                              Dial and Pointer Mailbox (Combinations that have two letters ex: H B)
+                            </u>
+                            <br />
                             <img src={DPLock} alt="DPLock" />
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '0.8rem' }}>
-                              {
-                                '1) Turn the large letter wheel until the first letter of the two-letter\
-                                combination is lined up with the indication notch located just\
-                                above the letter wheel in a 12 o’clock position. Line up the small\
-                                line that is exactly above each letter with this indication notch.'
-                              }
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '0.8rem' }}>
-                              {
-                                '2) Leave the letter wheel where you just put it. Now turn the\
-                                pointer only until it points to the second letter of the\
-                                combination. The first letter of the combination will always be at\
-                                the 12 o’clock position; the pointer will always point to the second\
-                                letter of the combination. Example, in the picture above, it is\
-                                showing the combination of A G.'
-                              }
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '0.8rem' }}>
-                              {'3) Twist the latch knob clockwise to open the box.'}
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '1.0rem' }}>
-                              {
-                                'Double Dial Mailbox (Combinations that have two letter/number pairs\
-                                ex: A3 H5)'
-                              }
-                            </Typography>
+                            <br />
+                            1. Turn the large letter wheel until the first letter of the two-letter
+                            combination is lined up with the indication notch located just above the
+                            letter wheel in a 12 o’clock position. Line up the small line that is
+                            exactly above each letter with this indication notch.
+                            <br />
+                            2. Leave the letter wheel where you just put it. Now turn the pointer
+                            only until it points to the second letter of the combination. The first
+                            letter of the combination will always be at the 12 o’clock position; the
+                            pointer will always point to the second letter of the combination.
+                            Example, in the picture above, it is showing the combination of A G.
+                            <br />
+                            3. Twist the latch knob clockwise to open the box.
+                            <br />
+                            <u>
+                              Double Dial Mailbox (Combinations that have two letter/number pairs
+                              ex: A3 H5)
+                            </u>
+                            <br />
                             <img src={DDLock} alt="DDLock" />
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '0.8rem' }}>
-                              {
-                                '1) Each letter (A-K on left dial, L-V on right dial) has been assigned\
-                                four white or silver lines on your mailbox. The SHORTEST line is #1 and\
-                                the LONGEST line is #3. For example, in the picture above, the\
-                                combination A1 L1 is shown.'
-                              }
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '0.8rem' }}>
-                              {
-                                '2) Move the LEFT dial to the line indicated by the FIRST letter/number\
-                                code given; the RIGHT dial to the line indicated by the SECOND\
-                                letter/number code. Align those lines with the “indication notch”\
-                                located at the 12 o’clock position directly above each dial.'
-                              }
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ fontSize: '0.8rem' }}>
-                              {
-                                '3) When the dials are correctly positioned, move the latch lever to\
-                                the right to open box.'
-                              }
-                            </Typography>
-                          </Grid>
+                            <br />
+                            1. Each letter (A-K on left dial, L-V on right dial) has been assigned
+                            four white or silver lines on your mailbox. The SHORTEST line is #1 and
+                            the LONGEST line is #3. For example, in the picture above, the
+                            combination A1 L1 is shown.
+                            <br />
+                            2. Move the LEFT dial to the line indicated by the FIRST letter/number
+                            code given; the RIGHT dial to the line indicated by the SECOND
+                            letter/number code. Align those lines with the “indication notch”
+                            located at the 12 o’clock position directly above each dial.
+                            <br />
+                            3. When the dials are correctly positioned, move the latch lever to the
+                            right to open box.
+                          </Typography>
                         </Grid>
                       }
                       placement="left"

@@ -501,24 +501,6 @@ const Timesheets = (props) => {
                       </Link>
                     </Typography>
                   </Grid>
-                  <Grid item xs={12}>
-                    <Typography>
-                      <Link
-                        className="disable_select"
-                        style={{
-                          borderBottom: '1px solid currentColor',
-                          textDecoration: 'none',
-                          color: gordonColors.primary.blueShades.A700,
-                        }}
-                        href="https://www.timeanddate.com/worldclock/"
-                        underline="always"
-                        target="_blank"
-                        rel="noopener"
-                      >
-                        View time
-                      </Link>
-                    </Typography>
-                  </Grid>
                 </Grid>
               </CardContent>
             </Card>
