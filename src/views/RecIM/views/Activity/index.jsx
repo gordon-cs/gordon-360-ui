@@ -33,6 +33,7 @@ import TeamForm from '../../components/Forms/TeamForm';
 import { deleteActivity, getActivityByID } from 'services/recim/activity';
 import ActivityForm from 'views/RecIM/components/Forms/ActivityForm';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
+import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import ImageOptions from 'views/RecIM/components/Forms/ImageOptions';
 import userService from 'services/user';
 import { getParticipantByUsername, getParticipantTeams } from 'services/recim/participant';
@@ -85,6 +86,7 @@ const Activity = () => {
   const openAdminMenu = Boolean(adminAnchorEl);
   const [openTooltip, setOpenTooltip] = useState(false);
   const [teamListFilter, setTeamListFilter] = useState(false);
+  const [openWaiver, setOpenWaiver] = useState(false);
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -159,17 +161,25 @@ const Activity = () => {
     setAdminAnchorEl(e.currentTarget);
   };
 
-  const handleJoinActivity = async () => {
-    setLoading(true);
-    const profileInfo = await userService.getProfileInfo(profile.AD_Username);
-    const request = {
-      Name: profileInfo.fullName,
-      ActivityID: activityID,
-    };
-    await createTeam(profile.AD_Username, request);
-    setReload(!reload);
-    createSnackbar(`Activity ${activity.Name} has been joined successfully`, 'success');
-    setLoading(false);
+  let handleJoinActivity = async () => {
+    if (user?.Status == 'Pending' || user == null) {
+      setOpenWaiver(true);
+      return;
+    }
+    if (activity.SoloRegistration) {
+      setLoading(true);
+      const profileInfo = await userService.getProfileInfo(profile.AD_Username);
+      const request = {
+        Name: profileInfo.fullName,
+        ActivityID: activityID,
+      };
+      await createTeam(profile.AD_Username, request);
+      setReload(!reload);
+      createSnackbar(`Activity ${activity.Name} has been joined successfully`, 'success');
+      setLoading(false);
+    } else {
+      setOpenTeamForm(true);
+    }
   };
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
@@ -317,9 +327,7 @@ const Activity = () => {
                     variant="contained"
                     startIcon={<AddCircleRoundedIcon />}
                     className={styles.actionButton}
-                    onClick={() => {
-                      activity.SoloRegistration ? handleJoinActivity() : setOpenTeamForm(true);
-                    }}
+                    onClick={() => handleJoinActivity()}
                   >
                     {activity.SoloRegistration ? 'Join Activity' : 'Create a Team'}
                   </Button>
@@ -443,6 +451,15 @@ const Activity = () => {
               setOpenInviteParticipantForm={(bool) => setOpenAddSoloTeam(bool)}
               individualSport
               activityID={activityID}
+            />
+            <WaiverForm
+              username={profile.AD_Username}
+              createSnackbar={createSnackbar}
+              onClose={() => {
+                setReload((prev) => !prev);
+              }}
+              openWaiverForm={openWaiver}
+              setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
             />
             <Menu
               open={openAdminMenu}
