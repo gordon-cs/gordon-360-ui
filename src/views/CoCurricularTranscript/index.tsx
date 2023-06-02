@@ -82,9 +82,7 @@ const CoCurricularTranscript = () => {
       activities: [activity1, activity2],
     };
     console.log(transcriptItems1);
-    useEffect(() => {
-      setTranscriptItems(transcriptItems1);
-    }, []);
+    if (transcriptItems == null) setTranscriptItems(transcriptItems1);
     const student1: StudentProfileInfo = {
       fullName: 'Emmanuel Obrien',
       Majors: ['Computer Science'],
