@@ -166,45 +166,6 @@ const CoCurricularTranscript = () => {
       ChapelAttended: 0,
     };
     profile = student1;
-    // const participation1: OnOffCampusStatus = OnOffCampusStatus.Remote;
-    // const unformattedStudentProfileInfo: UnformattedStudentProfileInfo = {
-    //   OnOffCampus: '',
-    //   OffCampusStreet1: string;
-    //   OffCampusStreet2: string;
-    //   OffCampusCity: string;
-    //   OffCampusState: string;
-    //   OffCampusPostalCode: string;
-    //   OffCampusCountry: string;
-    //   OffCampusPhone: string;
-    //   OffCampusFax: string;
-    //   Cohort: string;
-    //   Class: Class;
-    //   Major: string;
-    //   AdvisorIDs: string;
-    //   /** Whether student is married or not ('Y' or 'N') */
-    //   Married: string;
-    //   /** Whether student ia commuter or not ('Y' or 'N') */
-    //   Commuter: string;
-    //   Major2: string;
-    //   /** Whether student is a graduate student or not ('Y' or 'N') */
-    //   grad_student: string;
-    //   GradDate: string;
-    //   Major3: string;
-    //   Minor1: string;
-    //   Minor2: string;
-    //   Minor3: string;
-    //   MobilePhone: string;
-    //   IsMobilePhonePrivate: number;
-    //   Major1Description: string;
-    //   Major2Description: string;
-    //   Major3Description: string;
-    //   Minor1Description: string;
-    //   Minor2Description: string;
-    //   Minor3Description: string;
-    //   ChapelRequired: number;
-    //   ChapelAttended: number;
-    // }
-    //return null;
   }
 
   console.log(profile);
