@@ -81,9 +81,6 @@ const EventItem = ({ event }) => {
           <Typography type="caption" className={styles.descriptionText}>
             {event.Description || 'No description available'}
           </Typography>
-          <Button onClick={() => alert(convertDate(event.date) +" " 
-          +convertTime(event.timeRange).split('-')[0])}
-          >name</Button>
         <AddToCalendarButton
           name= {event.title}
           options={['Apple','Google']}
