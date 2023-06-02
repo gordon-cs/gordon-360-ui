@@ -6,9 +6,54 @@ import { AddToCalendarButton } from 'add-to-calendar-button-react';
 const EventItem = ({ event }) => {
   const [expanded, setExpanded] = useState(false);
 
+  const convertDate = (dateString) => {
+    const dateParts = dateString.split(' ');
+    const month = dateParts[0];
+    const day = dateParts[1].slice(0, -1); // Remove the comma at the end
+    const year = dateParts[2];
+  
+    // Convert month abbreviation to month number
+    const monthIndex = new Date(Date.parse(`${month} 1, ${year}`)).getMonth() + 1;
+    const monthString = monthIndex.toString().padStart(2, '0');
+    const dayString = day.padStart(2, '0');
+  
+    return `${year}-${monthString}-${dayString}`;
+  };
+  const convertTime = (timeString) => {
+    const times = timeString.split(' - ');
+    const startTime = times[0];
+    const endTime = times[1];
+  
+    const convertSingleTime = (singleTime) => {
+      const [time, period] = singleTime.split(' ');
+      const [hours, minutes] = time.split(':');
+      let convertedHours = parseInt(hours, 10);
+      
+      if (period.toLowerCase() === 'pm' && convertedHours !== 12) {
+        convertedHours += 12;
+      } else if (period.toLowerCase() === 'am' && convertedHours === 12) {
+        convertedHours = 0;
+      }
+      
+      return `${convertedHours.toString().padStart(2, '0')}:${minutes}`;
+    };
+  
+    const convertedStartTime = convertSingleTime(startTime);
+    const convertedEndTime = convertSingleTime(endTime);
+  
+    return {
+      startHour: convertedStartTime.split(':')[0],
+      startMinute: convertedStartTime.split(':')[1],
+      endHour: convertedEndTime.split(':')[0],
+      endMinute: convertedEndTime.split(':')[1],
+    };
+  };
+  
+  const { startHour, startMinute, endHour, endMinute } = convertTime(event.timeRange);
   
 
   
+
   return (
     <Grid
       component="section"
@@ -36,18 +81,19 @@ const EventItem = ({ event }) => {
           <Typography type="caption" className={styles.descriptionText}>
             {event.Description || 'No description available'}
           </Typography>
-          <Button onClick={() => alert(event.date +" " +event.timeRange)}
+          <Button onClick={() => alert(convertDate(event.date) +" " 
+          +convertTime(event.timeRange).split('-')[0])}
           >name</Button>
         <AddToCalendarButton
           name= {event.title}
           options={['Apple','Google']}
           location= {event.location}
-          startDate="2023-06-04"
-          endDate="2023-06-04"
-          startTime="10:15"
-          endTime="23:30"
-          timeZone="America/Indiana/Indianapolis"
-          Description = {event.Description}
+          startDate={convertDate(event.date)}
+          endDate= {convertDate(event.date)}
+          startTime={startHour + ':' + startMinute}
+          endTime={endHour + ':' + endMinute}
+          timeZone="America/New_York"
+          description = {event.Description}
         ></AddToCalendarButton>
         </CardContent>
       </Collapse>
