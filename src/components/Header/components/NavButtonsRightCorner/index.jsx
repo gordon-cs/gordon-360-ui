@@ -56,7 +56,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
       onLinkClick={onClose}
       openUnavailableDialog={openDialogBox}
       linkName={'Experience Transcript'}
-      linkPath={'/experiencetranscript'}
+      linkPath={'/transcript'}
     />
   );
 

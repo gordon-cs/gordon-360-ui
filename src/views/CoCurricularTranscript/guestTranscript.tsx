@@ -5,9 +5,10 @@ import { Participation } from 'services/membership';
 import { TranscriptItems } from 'services/transcript';
 
 const participation1: Participation = Participation.Member;
+const currentYear: string = new Date().getFullYear().toString();
 const session1: MembershipHistorySession = {
   MembershipID: 2904,
-  SessionCode: '202301',
+  SessionCode: currentYear + '01',
   Participation: participation1,
 };
 const activity1: MembershipHistory = {
@@ -15,12 +16,12 @@ const activity1: MembershipHistory = {
   ActivityDescription: 'International Student Organization',
   ActivityImagePath: '',
   Sessions: [session1],
-  LatestDate: '2023-05-10T00:00:00',
+  LatestDate: currentYear + '-05-10T00:00:00',
 };
 const participation2: Participation = Participation.Member;
 const session2: MembershipHistorySession = {
   MembershipID: 6547,
-  SessionCode: '202309',
+  SessionCode: currentYear + '09',
   Participation: participation2,
 };
 const activity2: MembershipHistory = {
@@ -28,7 +29,7 @@ const activity2: MembershipHistory = {
   ActivityDescription: '360.gordon.edu',
   ActivityImagePath: '',
   Sessions: [session2],
-  LatestDate: '2023-12-15T00:00:00',
+  LatestDate: currentYear + '-12-15T00:00:00',
 };
 export const transcriptItems1: TranscriptItems = {
   honors: [],
@@ -37,8 +38,8 @@ export const transcriptItems1: TranscriptItems = {
   activities: [activity1, activity2],
 };
 export const student1: StudentProfileInfo = {
-  fullName: 'Emmanuel Obrien',
-  Majors: ['Computer Science'],
+  fullName: 'First M Last',
+  Majors: ['Undesided'],
   Minors: [],
   Advisors: [],
   ID: '50232456',
@@ -89,9 +90,9 @@ export const student1: StudentProfileInfo = {
   OffCampusCountry: '',
   OffCampusPhone: '',
   OffCampusFax: '',
-  Cohort: '2023',
-  Class: Class['First Year'],
-  Major: 'CPSC',
+  Cohort: currentYear,
+  Class: Class['Sophomore'],
+  Major: 'U',
   AdvisorIDs: '',
   Married: 'N',
   Commuter: 'N',
@@ -104,7 +105,7 @@ export const student1: StudentProfileInfo = {
   Minor3: '',
   MobilePhone: '123-456-7890',
   IsMobilePhonePrivate: 0,
-  Major1Description: 'Computer Science',
+  Major1Description: 'Undecided',
   Major2Description: '',
   Major3Description: '',
   Minor1Description: '',
