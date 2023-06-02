@@ -47,37 +47,53 @@ const CoCurricularTranscript = () => {
   if (loadingProfile) {
     return <GordonLoader />;
   }
-
+  console.log(new Date('2023-05-07T00:00:00').getTime());
   if (!profile) {
     const participation1: Participation = Participation.Member;
     const session1: MembershipHistorySession = {
-      MembershipID: 6547,
-      SessionCode: '202306',
+      MembershipID: 2904,
+      SessionCode: '202301',
       Participation: participation1,
     };
     const activity1: MembershipHistory = {
+      ActivityCode: 'ISO',
+      ActivityDescription: 'International Student Organization',
+      ActivityImagePath: '',
+      Sessions: [session1],
+      LatestDate: '2023-05-10T00:00:00',
+    };
+    const participation2: Participation = Participation.Member;
+    const session2: MembershipHistorySession = {
+      MembershipID: 6547,
+      SessionCode: '202309',
+      Participation: participation2,
+    };
+    const activity2: MembershipHistory = {
       ActivityCode: '360',
       ActivityDescription: '360.gordon.edu',
       ActivityImagePath: '',
-      Sessions: [session1],
-      LatestDate: '2023-06-07T00:00:00',
+      Sessions: [session2],
+      LatestDate: '2023-12-15T00:00:00',
     };
     const transcriptItems1: TranscriptItems = {
-      honors: [activity1],
-      experiences: [activity1],
-      service: [activity1],
-      activities: [activity1],
+      honors: [],
+      experiences: [],
+      service: [],
+      activities: [activity1, activity2],
     };
-    // setTranscriptItems(transcriptItems1);
+    console.log(transcriptItems1);
+    useEffect(() => {
+      setTranscriptItems(transcriptItems1);
+    }, []);
     const student1: StudentProfileInfo = {
-      fullName: 'First M Last',
+      fullName: 'Emmanuel Obrien',
       Majors: ['Computer Science'],
       Minors: [],
       Advisors: [],
       ID: '50232456',
       Title: '',
       FirstName: 'First',
-      MiddleName: 'M',
+      MiddleName: '',
       LastName: 'Last',
       Suffix: '',
       MaidenName: '',
@@ -192,7 +208,6 @@ const CoCurricularTranscript = () => {
   }
 
   console.log(profile);
-  console.log(transcriptItems);
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={10} xl={8}>

@@ -70,6 +70,7 @@ const formatDuration = (sessionRecords: MembershipHistorySession[]) => {
 
   // If there was at least 1 session, the last interval will not be descrbied, so push it's description now
   if (interval) {
+    // debugger;
     intervalDescriptions.push(interval.toString());
   }
 
