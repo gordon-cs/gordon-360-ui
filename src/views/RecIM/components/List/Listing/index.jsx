@@ -261,6 +261,8 @@ const ParticipantListing = ({
   initialAttendance,
   teamID,
   matchID,
+  //setNewCaptain, // I am adding this
+  callbackFunctionCaptain, // I am adding this
 }) => {
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
@@ -329,6 +331,20 @@ const ParticipantListing = ({
       Username: participant.Username,
       RoleTypeID: 4,
     }; // Role 4 is co-captain
+
+    await editTeamParticipant(teamIDParam, editedParticipant); // Role 4 is co-captain
+    handleClose();
+  };
+
+  // I am adding this
+  const handlePromoteToCaptain = async () => {
+    let editedParticipant = {
+      Username: participant.Username,
+      RoleTypeID: 5,
+    }; // Role 5 is captain
+    // still needs to changee past captain into member
+    callbackFunctionCaptain(editedParticipant);
+    //setNewCaptain(editedParticipant);
 
     await editTeamParticipant(teamIDParam, editedParticipant); // Role 4 is co-captain
     handleClose();
@@ -458,11 +474,17 @@ const ParticipantListing = ({
         )}
         {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
-            {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (
+            {/* {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (
               <MenuItem dense onClick={handleMakeCoCaptain} divider>
                 Make co-captain
               </MenuItem>
-            )}
+            )} */}
+            {participant.Role !== 'Inactive' &&
+              participant.Role !== 'Captain' && ( // I am adding this
+                <MenuItem dense onClick={handlePromoteToCaptain} divider>
+                  Promote to captain
+                </MenuItem>
+              )}
             {(participant.Role === 'Inactive' || participant.Role === 'Co-Captain') && (
               <MenuItem dense onClick={reinstateMember}>
                 {participant.Role === 'Inactive' ? `Reinstate Member` : `Demote to Member`}
