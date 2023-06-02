@@ -129,9 +129,11 @@ const ScheduleList = ({
   };
 
   const handleConfirmAutoSchedule = () => {
+    setLoading(true);
     scheduleSeriesMatches(series.ID).then((res) => {
       setOpenAutoSchedulerDisclaimer(false);
       setReload((prev) => !prev);
+      setLoading(false);
     });
   };
 
@@ -190,9 +192,11 @@ const ScheduleList = ({
   };
 
   const handleConfirmDelete = () => {
+    setLoading(true);
     deleteSeriesCascade(series.ID).then((res) => {
       setOpenConfirmDelete(false);
       setReload(!reload);
+      setLoading(false);
     });
   };
 
@@ -394,7 +398,8 @@ const ScheduleList = ({
         fullWidth
         maxWidth="sm"
         buttonClicked={() => handleConfirmAutoSchedule()}
-        buttonName="I Understand"
+        buttonName={loading ? 'Scheduling...' : 'I Understand'}
+        isButtonDisabled={loading}
         cancelButtonClicked={() => setOpenAutoSchedulerDisclaimer(false)}
         cancelButtonName="Cancel"
       >
@@ -406,7 +411,8 @@ const ScheduleList = ({
         title="Confirm Delete"
         open={openConfirmDelete}
         cancelButtonClicked={() => setOpenConfirmDelete(false)}
-        buttonName="Delete series"
+        buttonName={loading ? 'Deleting...' : 'Delete series'}
+        isButtonDisabled={loading}
         buttonClicked={() => handleConfirmDelete()}
         severity="error"
       >
