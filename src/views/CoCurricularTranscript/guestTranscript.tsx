@@ -5,10 +5,10 @@ import { Participation } from 'services/membership';
 import { TranscriptItems } from 'services/transcript';
 
 const participation1: Participation = Participation.Member;
-const currentYear: string = new Date().getFullYear().toString();
+const currentYear: number = new Date().getFullYear();
 const session1: MembershipHistorySession = {
   MembershipID: 2904,
-  SessionCode: currentYear + '01',
+  SessionCode: currentYear - 1 + '09',
   Participation: participation1,
 };
 const activity1: MembershipHistory = {
@@ -16,12 +16,12 @@ const activity1: MembershipHistory = {
   ActivityDescription: 'International Student Organization',
   ActivityImagePath: '',
   Sessions: [session1],
-  LatestDate: currentYear + '-05-10T00:00:00',
+  LatestDate: currentYear - 1 + '-12-15T00:00:00',
 };
 const participation2: Participation = Participation.Member;
 const session2: MembershipHistorySession = {
   MembershipID: 6547,
-  SessionCode: currentYear + '09',
+  SessionCode: currentYear + '01',
   Participation: participation2,
 };
 const activity2: MembershipHistory = {
@@ -29,7 +29,7 @@ const activity2: MembershipHistory = {
   ActivityDescription: '360.gordon.edu',
   ActivityImagePath: '',
   Sessions: [session2],
-  LatestDate: currentYear + '-12-15T00:00:00',
+  LatestDate: currentYear + '-05-10T00:00:00',
 };
 export const transcriptItems1: TranscriptItems = {
   honors: [],
@@ -39,10 +39,10 @@ export const transcriptItems1: TranscriptItems = {
 };
 export const student1: StudentProfileInfo = {
   fullName: 'First M Last',
-  Majors: ['Undesided'],
+  Majors: ['Undecided'],
   Minors: [],
   Advisors: [],
-  ID: '50232456',
+  ID: '12345678',
   Title: '',
   FirstName: 'First',
   MiddleName: '',
@@ -61,17 +61,17 @@ export const student1: StudentProfileInfo = {
   HomeCity: 'Wenham',
   HomeState: 'MA',
   HomePostalCode: '',
-  HomeCountry: 'AM',
+  HomeCountry: 'US',
   HomePhone: '',
   HomeFax: '',
   KeepPrivate: '',
-  Barcode: '72639526863451',
+  Barcode: '12312312312312',
   Email: 'first.last@gordon.edu',
   Gender: 'F',
   AD_Username: 'first.last',
   show_pic: 0,
   preferred_photo: 0,
-  Country: 'America',
+  Country: 'United States of America',
   BuildingDescription: 'Wilson Hall',
   Facebook: '',
   Twitter: '',
@@ -90,7 +90,7 @@ export const student1: StudentProfileInfo = {
   OffCampusCountry: '',
   OffCampusPhone: '',
   OffCampusFax: '',
-  Cohort: currentYear,
+  Cohort: currentYear.toString(),
   Class: Class['Sophomore'],
   Major: 'U',
   AdvisorIDs: '',
