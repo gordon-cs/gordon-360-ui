@@ -401,7 +401,6 @@ const ParticipantListing = ({
       </>
     );
   };
-
   if (!participant) return null;
   return (
     // first ListItem is used only for paddings/margins
