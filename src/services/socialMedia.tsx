@@ -20,8 +20,7 @@ export const platforms = Object.values(Platform);
 
 export type SocialMediaInfo = {
   Icon: JSX.Element;
-  prefix: string;
-  prefix2?: string;
+  prefix: string[];
 };
 
 export const socialMediaInfo: {
@@ -34,29 +33,34 @@ export const socialMediaInfo: {
 } = {
   Facebook: {
     Icon: <FaFacebookF />,
-    prefix: 'https://www.facebook.com/',
+    prefix: ['https://www.', 'facebook.com/', 'www.', 'https://'],
   },
   Twitter: {
     Icon: <FaTwitter />,
-    prefix: 'https://twitter.com/',
+    prefix: ['https://www.', 'twitter.com/', 'www.', 'https://'],
   },
   LinkedIn: {
     Icon: <FaLinkedin />,
-    prefix: 'https://www.linkedin.com/in/',
+    prefix: ['https://www.', 'linkedin.com/in/', 'www.', 'https://'],
   },
   Instagram: {
     Icon: <FaInstagram />,
-    prefix: 'https://www.instagram.com/',
+    prefix: ['https://www.', 'instagram.com/', 'www.', 'https://'],
   },
   Handshake: {
     Icon: <FaHandshake />,
-    prefix: 'https://gordon.joinhandshake.com/users/',
-    prefix2: 'https://app.joinhandshake.com/users/',
+    prefix: [
+      'https://www.',
+      'gordon.joinhandshake.com/users/',
+      'app.joinhandshake.com/users/',
+      'www.',
+      'https://',
+    ],
   },
   // TODO - Validation
   // Maybe exclusively a certain URL
   Calendar: {
     Icon: <FaCalendar />,
-    prefix: 'https://',
+    prefix: ['https://'],
   },
 };

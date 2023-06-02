@@ -23,9 +23,17 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   };
 
   const validateField = (platform, value) => {
-    const { prefix, prefix2 } = socialMediaInfo[platform];
-    const isValid =
-      value === '' || value.indexOf(prefix) === 0 || (prefix2 && value.indexOf(prefix2) === 0);
+    const { prefix } = socialMediaInfo[platform];
+    let isValid = value === '';
+    console.log('isValid' + isValid);
+    if (!isValid && prefix) {
+      for (let i = 0; i < prefix.length; i++) {
+        if (value.indexOf(prefix[i]) === 0) {
+          isValid = true;
+        }
+      }
+    }
+
     if (isValid) {
       setFormErrors(formErrors.filter((error) => error !== platform));
     } else if (!formErrors.includes(platform)) {
