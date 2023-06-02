@@ -6,17 +6,10 @@ import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import transcriptService, { TranscriptItems } from 'services/transcript';
 import userService, { Profile } from 'services/user';
-import { MembershipHistory, MembershipHistorySession } from 'services/user';
-import BaseProfileInfo from 'services/user';
-import OnOffCampusStatus, {
-  StudentProfileInfo,
-  UnformattedStudentProfileInfo,
-} from 'services/user';
-import { Class } from 'services/peopleSearch';
-import { Participation } from 'services/membership';
 import styles from './CoCurricularTranscript.module.css';
 import Activity from './Components/Activity';
 import Experience from './Components/Experience';
+import { transcriptItems1, student1 } from './guestTranscript';
 
 const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
   experiences: 'Experiences',
@@ -47,126 +40,11 @@ const CoCurricularTranscript = () => {
   if (loadingProfile) {
     return <GordonLoader />;
   }
-  console.log(new Date('2023-05-07T00:00:00').getTime());
   if (!profile) {
-    const participation1: Participation = Participation.Member;
-    const session1: MembershipHistorySession = {
-      MembershipID: 2904,
-      SessionCode: '202301',
-      Participation: participation1,
-    };
-    const activity1: MembershipHistory = {
-      ActivityCode: 'ISO',
-      ActivityDescription: 'International Student Organization',
-      ActivityImagePath: '',
-      Sessions: [session1],
-      LatestDate: '2023-05-10T00:00:00',
-    };
-    const participation2: Participation = Participation.Member;
-    const session2: MembershipHistorySession = {
-      MembershipID: 6547,
-      SessionCode: '202309',
-      Participation: participation2,
-    };
-    const activity2: MembershipHistory = {
-      ActivityCode: '360',
-      ActivityDescription: '360.gordon.edu',
-      ActivityImagePath: '',
-      Sessions: [session2],
-      LatestDate: '2023-12-15T00:00:00',
-    };
-    const transcriptItems1: TranscriptItems = {
-      honors: [],
-      experiences: [],
-      service: [],
-      activities: [activity1, activity2],
-    };
-    console.log(transcriptItems1);
     if (transcriptItems == null) setTranscriptItems(transcriptItems1);
-    const student1: StudentProfileInfo = {
-      fullName: 'Emmanuel Obrien',
-      Majors: ['Computer Science'],
-      Minors: [],
-      Advisors: [],
-      ID: '50232456',
-      Title: '',
-      FirstName: 'First',
-      MiddleName: '',
-      LastName: 'Last',
-      Suffix: '',
-      MaidenName: '',
-      NickName: '',
-      OnCampusBuilding: 'WIL',
-      OnCampusRoom: '320',
-      OnCampusPhone: '',
-      OnCampusPrivatePhone: '',
-      OnCampusFax: '',
-      Mail_Location: '778',
-      HomeStreet1: '255 Grapevine Rd',
-      HomeStreet2: '',
-      HomeCity: 'Wenham',
-      HomeState: 'MA',
-      HomePostalCode: '',
-      HomeCountry: 'AM',
-      HomePhone: '',
-      HomeFax: '',
-      KeepPrivate: '',
-      Barcode: '72639526863451',
-      Email: 'first.last@gordon.edu',
-      Gender: 'F',
-      AD_Username: 'first.last',
-      show_pic: 0,
-      preferred_photo: 0,
-      Country: 'America',
-      BuildingDescription: 'Wilson Hall',
-      Facebook: '',
-      Twitter: '',
-      Instagram: '',
-      Handshake: '',
-      LinkedIn: '',
-      Calendar: '',
-      PersonType: 'stu',
-      CliftonStrengths: null,
-      OnOffCampus: 'On Campus',
-      OffCampusStreet1: '',
-      OffCampusStreet2: '',
-      OffCampusCity: '',
-      OffCampusState: '',
-      OffCampusPostalCode: '',
-      OffCampusCountry: '',
-      OffCampusPhone: '',
-      OffCampusFax: '',
-      Cohort: '2023',
-      Class: Class['First Year'],
-      Major: 'CPSC',
-      AdvisorIDs: '',
-      /** Whether student is married or not ('Y' or 'N') */
-      Married: 'N',
-      /** Whether student ia commuter or not ('Y' or 'N') */
-      Commuter: 'N',
-      Major2: '',
-      /** Whether student is a graduate student or not ('Y' or 'N') */
-      grad_student: 'N',
-      GradDate: '',
-      Major3: '',
-      Minor1: '',
-      Minor2: '',
-      Minor3: '',
-      MobilePhone: '123-456-7890',
-      IsMobilePhonePrivate: 0,
-      Major1Description: 'Computer Science',
-      Major2Description: '',
-      Major3Description: '',
-      Minor1Description: '',
-      Minor2Description: '',
-      Minor3Description: '',
-      ChapelRequired: 0,
-      ChapelAttended: 0,
-    };
     profile = student1;
   }
 
-  console.log(profile);
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={10} xl={8}>
