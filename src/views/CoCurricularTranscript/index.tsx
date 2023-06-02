@@ -1,6 +1,5 @@
 import { Print } from '@mui/icons-material';
 import { Card, CardContent, CardHeader, Fab, Grid, Typography } from '@mui/material';
-import GordonUnauthorized from 'components/GordonUnauthorized';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -40,8 +39,11 @@ const CoCurricularTranscript = () => {
   if (loadingProfile) {
     return <GordonLoader />;
   }
+
   if (!profile) {
-    if (transcriptItems == null) setTranscriptItems(transcriptItems1);
+    if (transcriptItems == null) {
+      setTranscriptItems(transcriptItems1);
+    }
     profile = student1;
   }
 
