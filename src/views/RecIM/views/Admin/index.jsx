@@ -1,6 +1,7 @@
 import {
   Card,
   CardContent,
+  CardHeader,
   Tabs,
   Tab,
   Button,
@@ -10,6 +11,8 @@ import {
   Menu,
   MenuItem,
   TextField,
+  Fab,
+  ListItemSecondaryAction,
 } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 import { useUser } from 'hooks';
@@ -41,6 +44,8 @@ import { deleteSport, getAllSports } from 'services/recim/sport';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { getRecIMReport } from 'services/recim/recim';
+import { Print } from '@mui/icons-material';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -71,8 +76,11 @@ const Admin = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [adminMenuAnchorEl, setAdminMenuAnchorEl] = useState();
   const openAdminMenu = Boolean(adminMenuAnchorEl);
-  const [selectedDateIn, setSelectedDateIn] = useState(null);
-  const [selectedDateOut, setSelectedDateOut] = useState(null);
+  const [selectedDateIn, setSelectedDateIn] = useState(new Date(2023, 4, 1, 0, 0, 0, 0));
+  const [selectedDateOut, setSelectedDateOut] = useState(new Date(2023, 5, 1, 0, 0, 0, 0));
+  const [openRecimReportBox, setOpenRecimReportBox] = useState(null);
+  const [loadingRecimReport, setLoadingRecimReport] = useState(true);
+  const [recimReport, setRecimReport] = useState(null);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -108,6 +116,25 @@ const Admin = () => {
 
   const handleAdminMenuClose = () => {
     setAdminMenuAnchorEl(null);
+  };
+
+  const generateAdminReport = () => {
+    let fStartDate = selectedDateIn.toISOString();
+    let fEndDate = selectedDateOut.toISOString();
+    getRecIMReport(fStartDate, fEndDate).then((value) => handleOpenRecimReport(value));
+  };
+
+  const handleOpenRecimReport = (report) => {
+    console.log('report: ');
+    console.log(report);
+    setRecimReport(report);
+    setOpenRecimReportBox(true);
+    setLoadingRecimReport(false);
+  };
+
+  const handleCloseRecimReport = () => {
+    setOpenRecimReportBox(null);
+    setLoadingRecimReport(true);
   };
 
   const createSnackbar = useCallback((message, severity) => {
@@ -320,47 +347,188 @@ const Admin = () => {
         </Typography>
         <Typography variant="body1">This action cannot be undone.</Typography>
       </GordonDialogBox>
-      <Menu
-        open={openAdminMenu}
-        onClose={handleAdminMenuClose}
-        anchorEl={adminMenuAnchorEl}
-        className={styles.menu}
+      <GordonDialogBox
+        title="Rec-IM Report"
+        open={openRecimReportBox}
+        buttonName="Done"
+        buttonClicked={handleCloseRecimReport}
       >
-        <Typography className={styles.menuTitle}>Generate Admin Reports</Typography>
-        <MenuItem>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Grid container justifyContent="center">
+          <Grid item xs={12} lg={10} xl={12}>
+            <Card elevation={10}>
+              <CardHeader
+                title={
+                  <>
+                    <Typography className={styles.title}>Rec-IM Admin Report</Typography>
+                  </>
+                }
+              />
+              <CardContent>
+                <Card>
+                  <CardContent>
+                    <Typography className={styles.reportSubtitle}>
+                      {'From: ' + (recimReport && new Date(recimReport.StartTime).toLocaleString())}
+                    </Typography>
+                    <Typography className={styles.reportSubtitle}>
+                      {'To: ' + (recimReport && new Date(recimReport.EndTime).toLocaleString())}
+                    </Typography>
+                  </CardContent>
+                </Card>
+                <Card className={styles.reportCard}>
+                  <CardHeader
+                    className={styles.cardHeader}
+                    title={
+                      <Typography className={styles.cardHeader}>
+                        Active Participants:{' '}
+                        {' ' + (recimReport && recimReport.NumberOfActiveParticipants)}
+                      </Typography>
+                    }
+                  />
+                  <CardContent>
+                    {recimReport &&
+                      recimReport.ActiveParticipants.map((participants) => (
+                        <>
+                          <Grid container>
+                            <Grid xl={8}>
+                              <Typography className={styles.reportText}>
+                                {'Name: ' + participants.Username}
+                              </Typography>
+                            </Grid>{' '}
+                            <Grid xl={4}>
+                              <Typography className={styles.reportText}>
+                                {' Gender: ' + participants.SpecifiedGender}
+                              </Typography>
+                              {
+                                //Combining the two typography texts fixes the print not having a space, if no other solution can be found.
+                              }
+                            </Grid>
+                          </Grid>
+                        </>
+                      ))}
+                  </CardContent>
+                </Card>
+                <Card className={styles.reportCard}>
+                  <CardHeader
+                    className={styles.cardHeader}
+                    title={
+                      <Typography className={styles.cardHeader}>
+                        New Participants:{' '}
+                        {' ' + (recimReport && recimReport.NumberOfNewParticipants)}
+                      </Typography>
+                    }
+                  />
+                  <CardContent>
+                    {recimReport &&
+                      recimReport.NewParticipants.map((participants) => (
+                        <>
+                          <Grid container>
+                            <Grid xl={8}>
+                              <Typography className={styles.reportText}>
+                                {'Name: ' +
+                                  participants.UserAccount.FirstName +
+                                  ' ' +
+                                  participants.UserAccount.LastName}
+                              </Typography>
+                            </Grid>{' '}
+                            <Grid xl={4}>
+                              <Typography className={styles.reportText}>
+                                {' Activity Count: ' + participants.NumberOfActivitiesParticipated}
+                              </Typography>
+                              {
+                                //Combining the two typography texts fixes the print not having a space, if no other solution can be found.
+                              }
+                            </Grid>
+                          </Grid>
+                        </>
+                      ))}
+                  </CardContent>
+                </Card>
+                <Card className={styles.reportCard}>
+                  <CardHeader
+                    className={styles.cardHeader}
+                    title={
+                      <Typography className={styles.cardHeader}>
+                        Activities: {' ' + (recimReport && recimReport.Activities.length)}
+                      </Typography>
+                    }
+                  />
+                  <CardContent>
+                    {recimReport &&
+                      recimReport.Activities.map((activity) => (
+                        <>
+                          <Grid container>
+                            <Grid xl={8}>
+                              <Typography className={styles.reportText}>
+                                {'Name: ' + activity.Activity.Name}
+                              </Typography>
+                            </Grid>{' '}
+                            <Grid xl={4}>
+                              <Typography className={styles.reportText}>
+                                {' Participant Count: ' + activity.NumberOfParticipants}
+                              </Typography>
+                              {
+                                //Combining the two typography texts fixes the print not having a space, if no other solution can be found.
+                              }
+                            </Grid>
+                          </Grid>
+                        </>
+                      ))}
+                  </CardContent>
+                </Card>
+              </CardContent>
+            </Card>
+            <Fab
+              color="primary"
+              variant="extended"
+              className={`${styles.fab} ${styles.no_print}`}
+              onClick={() => window.print()}
+              justifyContent="right"
+            >
+              <Print />
+              Print
+            </Fab>
+          </Grid>
+        </Grid>
+      </GordonDialogBox>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Menu
+          open={openAdminMenu}
+          onClose={handleAdminMenuClose}
+          anchorEl={adminMenuAnchorEl}
+          className={styles.menu}
+        >
+          <Typography className={styles.menuTitle}>Generate Admin Reports</Typography>
+          <MenuItem>
             <DateTimePicker
               renderInput={(props) => <TextField {...props} />}
-              label="Start Time"
+              label="Start Date/Time"
               value={selectedDateIn}
               onChange={setSelectedDateIn}
               className="disable_select"
-              disableFuture={false}
+              disableFuture={true}
             />
             <DateTimePicker
               renderInput={(props) => <TextField {...props} />}
-              label="End Time"
+              label="End Date/Time"
               value={selectedDateOut ?? selectedDateIn}
               onChange={setSelectedDateOut}
               className="disable_select"
-              disableFuture={false}
-              showToolbar={true}
               disabled={selectedDateIn === null}
               minDateTime={selectedDateIn}
-              openTo="hours"
+              disableFuture={true}
             />
-          </LocalizationProvider>
-        </MenuItem>
-        <MenuItem
-          dense
-          onClick={() => {
-            navigate('/recim/admin');
-          }}
-          className={styles.menuButton}
-        >
-          Generate Reports
-        </MenuItem>
-      </Menu>
+          </MenuItem>
+          <MenuItem
+            dense
+            onClick={() => {
+              generateAdminReport();
+            }}
+            className={styles.menuButton}
+          >
+            Generate Report
+          </MenuItem>
+        </Menu>
+      </LocalizationProvider>
       <GordonSnackbar
         open={snackbar.open}
         text={snackbar.message}

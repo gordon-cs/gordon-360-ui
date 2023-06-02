@@ -49,6 +49,22 @@
   text-align: center;
 }
 
+.reportSubtitle {
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+  color: $neutral-gray;
+  text-align: left;
+}
+
 .menuButton:hover {
   background-color: $neutral-black-opacity10;
+}
+
+.reportText {
+  color: $neutral-black;
+  font-size: 0.7em;
+}
+
+.reportCard {
+  page-break-after: always;
 }
