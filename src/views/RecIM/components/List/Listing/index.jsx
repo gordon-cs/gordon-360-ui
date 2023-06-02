@@ -331,7 +331,8 @@ const ParticipantListing = ({
     await editTeamParticipant(teamIDParam, editedParticipant); // Role 4 is co-captain
     handleClose();
   };
-
+  console.log(participant);
+  console.log(participant.RoleTypeID);
   // I am adding this
   const handlePromoteToCaptain = async () => {
     let editedParticipant = {
@@ -339,10 +340,11 @@ const ParticipantListing = ({
       RoleTypeID: 5,
     }; // Role 5 is captain
     // still needs to changee past captain into member
-    callbackFunctionCaptain(editedParticipant);
+    //callbackFunctionCaptain(editedParticipant);
     //setNewCaptain(editedParticipant);
 
     await editTeamParticipant(teamIDParam, editedParticipant); // Role 4 is co-captain
+    callbackFunctionCaptain(editedParticipant);
     handleClose();
   };
 
