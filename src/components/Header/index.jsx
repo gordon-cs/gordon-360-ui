@@ -39,7 +39,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
    * The checks use regular expressions to check for matches in the url.
    */
   const updateTabHighlight = () => {
-    let currentPath = location.pathname;
+    let currentPath = window.location.pathname;
     // Tab url regular expressions must be listed in the same order as the tabs, since the
     // indices of the elements in the array on the next line are mapped to the indices of the tabs
     let urls = [
@@ -59,7 +59,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
 
   useEffect(() => {
     updateTabHighlight();
-  }, [location.pathname]);
+  });
 
   useEffect(() => {
     if (width < windowBreakWidths.breakMD) {
