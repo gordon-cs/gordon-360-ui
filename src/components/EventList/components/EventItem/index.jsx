@@ -7,38 +7,6 @@ import { format } from 'date-fns';
 const EventItem = ({ event }) => {
   const [expanded, setExpanded] = useState(false);
 
-  const convertTime = (timeString) => {
-    const times = timeString.split(' - ');
-    const startTime = times[0];
-    const endTime = times[1];
-
-    const convertSingleTime = (singleTime) => {
-      const [time, period] = singleTime.split(' ');
-      const [hours, minutes] = time.split(':');
-      let convertedHours = parseInt(hours, 10);
-
-      if (period.toLowerCase() === 'pm' && convertedHours !== 12) {
-        convertedHours += 12;
-      } else if (period.toLowerCase() === 'am' && convertedHours === 12) {
-        convertedHours = 0;
-      }
-
-      return `${convertedHours.toString().padStart(2, '0')}:${minutes}`;
-    };
-
-    const convertedStartTime = convertSingleTime(startTime);
-    const convertedEndTime = convertSingleTime(endTime);
-
-    return {
-      startHour: convertedStartTime.split(':')[0],
-      startMinute: convertedStartTime.split(':')[1],
-      endHour: convertedEndTime.split(':')[0],
-      endMinute: convertedEndTime.split(':')[1],
-    };
-  };
-
-  const { startHour, startMinute, endHour, endMinute } = convertTime(event.timeRange);
-
   return (
     <Grid
       component="section"
@@ -70,10 +38,10 @@ const EventItem = ({ event }) => {
             name={event.title}
             options="'Apple','Google'"
             location={event.location}
-            startDate={format(new Date(event.date), 'yyyy-MM-dd')}
-            endDate={format(new Date(event.date), 'yyyy-MM-dd')}
-            startTime={startHour + ':' + startMinute}
-            endTime={endHour + ':' + endMinute}
+            startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
+            endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
+            startTime={format(new Date(event.StartDate), 'HH:mm')}
+            endTime={format(new Date(event.EndDate), 'HH:mm')}
             timeZone="America/New_York"
             description={event.Description}
           ></add-to-calendar-button>
