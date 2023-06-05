@@ -1,24 +1,12 @@
 import { Button, CardContent, Collapse, Grid, Typography } from '@mui/material';
 import { useState } from 'react';
 import styles from './EventItem.module.css';
-import { AddToCalendarButton } from 'add-to-calendar-button-react';
+import 'add-to-calendar-button';
+import { format } from 'date-fns';
 
 const EventItem = ({ event }) => {
   const [expanded, setExpanded] = useState(false);
 
-  const convertDate = (dateString) => {
-    const dateParts = dateString.split(' ');
-    const month = dateParts[0];
-    const day = dateParts[1].slice(0, -1); // Remove the comma at the end
-    const year = dateParts[2];
-
-    // Convert month abbreviation to month number
-    const monthIndex = new Date(Date.parse(`${month} 1, ${year}`)).getMonth() + 1;
-    const monthString = monthIndex.toString().padStart(2, '0');
-    const dayString = day.padStart(2, '0');
-
-    return `${year}-${monthString}-${dayString}`;
-  };
   const convertTime = (timeString) => {
     const times = timeString.split(' - ');
     const startTime = times[0];
@@ -78,18 +66,17 @@ const EventItem = ({ event }) => {
           <Typography type="caption" className={styles.descriptionText}>
             {event.Description || 'No description available'}
           </Typography>
-          <AddToCalendarButton
+          <add-to-calendar-button
             name={event.title}
-            options={['Apple', 'Google']}
+            options="'Apple','Google'"
             location={event.location}
-            startDate={convertDate(event.date)}
-            endDate={convertDate(event.date)}
+            startDate={format(new Date(event.date), 'yyyy-MM-dd')}
+            endDate={format(new Date(event.date), 'yyyy-MM-dd')}
             startTime={startHour + ':' + startMinute}
             endTime={endHour + ':' + endMinute}
             timeZone="America/New_York"
             description={event.Description}
-          ></AddToCalendarButton>
-          console.log({convertDate(event.date)});
+          ></add-to-calendar-button>
         </CardContent>
       </Collapse>
     </Grid>
