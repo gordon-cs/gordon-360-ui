@@ -126,8 +126,6 @@ const Admin = () => {
   };
 
   const handleOpenRecimReport = (report) => {
-    console.log('report: ');
-    console.log(report);
     setRecimReport(report);
     setOpenRecimReportBox(true);
   };
