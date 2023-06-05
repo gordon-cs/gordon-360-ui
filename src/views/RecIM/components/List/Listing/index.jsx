@@ -309,7 +309,6 @@ const ParticipantListing = ({
       setStatusTypes(await getParticipantStatusTypes());
     };
     loadStatusType();
-    //loadUserInfo();
     loadAvatar();
     if (teamID && withAttendance) loadAttendanceCount();
   }, [
