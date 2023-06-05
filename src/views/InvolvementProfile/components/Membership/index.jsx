@@ -20,9 +20,6 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
   const { involvementCode, sessionCode } = useParams();
   const { profile } = useUser();
 
-  //at one point I was going to include the confetti in the onSubscribe or handleSubscribe function, but I couldn't
-  //get it to work that way-the only edits made involved adding potential features for confetti that were later removed
-
   useEffect(() => {
     const loadMembershipStats = async () => {
       setLoading(true);
@@ -147,7 +144,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
       <Grid item>
         <Typography>
           <strong>Current Roster: </strong>
-          {membersNum} Member{membersNum === 1 ? '' : 's'} and {followersNum} Subscriber
+          {membersNum} Member{membersNum === 1 ? '' : 's'} and {followersNum} Subcriber
           {followersNum === 1 ? '' : 's'}
         </Typography>
       </Grid>

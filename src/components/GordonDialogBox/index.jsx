@@ -1,8 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { Alert, AlertTitle } from '@mui/material';
 import styles from './GordonDialogBox.module.css';
-import GordonConfetti from 'components/GordonConfetti'; //GordonConfetti and useState are imported for the confetti
-import { useState } from 'react';
 
 /**
  * @param {Object} props the component props
@@ -33,66 +31,48 @@ const GordonDialogBox = ({
   children,
   ...otherProps
 }) => {
-  const [confetti, setConfetti] = useState(false); //added for the confetti- this, the popConfetti function, and div tag below are the same as the ones used for the happy birthday banner, just brought into this file
-
-  const popConfetti = () => {
-    setConfetti(true);
-    setTimeout(() => setConfetti(false), 5000);
-  };
-
   return (
-    <>
-      <div style={{ position: 'fixed', zIndex: 999999, top: -60, left: '50vw' }}>
-        <GordonConfetti active={confetti} colorOption="Gordon" />
-      </div>
-      <Dialog
-        className={styles.gc360_gordondialogbox}
-        {...otherProps}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+    <Dialog
+      className={styles.gc360_gordondialogbox}
+      {...otherProps}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle
+        className={titleClass ? titleClass : styles.gc360_gordondialogbox_title}
+        id="alert-dialog-title"
       >
-        <DialogTitle
-          className={titleClass ? titleClass : styles.gc360_gordondialogbox_title}
-          id="alert-dialog-title"
-        >
-          {severity ? (
-            <Alert variant="filled" severity={severity}>
-              <AlertTitle>
-                <strong>{title}</strong>
-              </AlertTitle>
-            </Alert>
-          ) : (
-            title
-          )}
-        </DialogTitle>
-        <DialogContent
-          className={styles.gc360_gordondialogbox_content}
-          id="alert-dialog-description"
-        >
-          {children}
-        </DialogContent>
-        <DialogActions className={styles.gc360_gordondialogbox_actions}>
-          {cancelButtonClicked && (
-            <Button variant="contained" color="neutral" onClick={cancelButtonClicked}>
-              {cancelButtonName ?? 'Cancel'}
-            </Button>
-          )}
-          {buttonClicked && (
-            <Button
-              variant="contained"
-              onClick={() => {
-                popConfetti(); //calling both functions allows the confetti to appear when some clicks the 'okay' button when joining a club
-                buttonClicked();
-              }}
-              color="primary"
-              disabled={isButtonDisabled}
-            >
-              {buttonName ?? 'Okay'}
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
-    </>
+        {severity ? (
+          <Alert variant="filled" severity={severity}>
+            <AlertTitle>
+              <strong>{title}</strong>
+            </AlertTitle>
+          </Alert>
+        ) : (
+          title
+        )}
+      </DialogTitle>
+      <DialogContent className={styles.gc360_gordondialogbox_content} id="alert-dialog-description">
+        {children}
+      </DialogContent>
+      <DialogActions className={styles.gc360_gordondialogbox_actions}>
+        {cancelButtonClicked && (
+          <Button variant="contained" color="neutral" onClick={cancelButtonClicked}>
+            {cancelButtonName ?? 'Cancel'}
+          </Button>
+        )}
+        {buttonClicked && (
+          <Button
+            variant="contained"
+            onClick={buttonClicked}
+            color="primary"
+            disabled={isButtonDisabled}
+          >
+            {buttonName ?? 'Okay'}
+          </Button>
+        )}
+      </DialogActions>
+    </Dialog>
   );
 };
 

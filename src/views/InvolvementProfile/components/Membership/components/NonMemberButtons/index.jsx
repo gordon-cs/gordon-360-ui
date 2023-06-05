@@ -120,7 +120,10 @@ const NonMemberButtons = ({
         <GordonDialogBox
           open={isJoinDialogOpen}
           title={`Join ${involvementDescription}`}
-          buttonClicked={onRequest}
+          buttonClicked={() => {
+            popConfetti(); //calling both functions here allows confetti to be thrown when the 'okay' button is clicked, but shouldn't trigger it anywhere else
+            onRequest();
+          }}
           cancelButtonClicked={onClose}
         >
           <Grid container direction="column" spacing={2}>
