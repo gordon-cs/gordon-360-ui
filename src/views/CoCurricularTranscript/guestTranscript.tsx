@@ -7,7 +7,7 @@ import { TranscriptItems } from 'services/transcript';
 const participation1: Participation = Participation.Member;
 const currentYear: number = new Date().getFullYear();
 const session1: MembershipHistorySession = {
-  MembershipID: 2904,
+  MembershipID: -1,
   SessionCode: currentYear - 1 + '09',
   Participation: participation1,
 };
@@ -20,7 +20,7 @@ const activity1: MembershipHistory = {
 };
 const participation2: Participation = Participation.Member;
 const session2: MembershipHistorySession = {
-  MembershipID: 6547,
+  MembershipID: -1,
   SessionCode: currentYear + '01',
   Participation: participation2,
 };
@@ -51,7 +51,7 @@ export const student1: StudentProfileInfo = {
   MaidenName: '',
   NickName: '',
   OnCampusBuilding: 'WIL',
-  OnCampusRoom: '320',
+  OnCampusRoom: '000',
   OnCampusPhone: '',
   OnCampusPrivatePhone: '',
   OnCampusFax: '',
