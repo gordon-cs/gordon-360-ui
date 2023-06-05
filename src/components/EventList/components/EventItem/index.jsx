@@ -11,36 +11,36 @@ const EventItem = ({ event }) => {
     const month = dateParts[0];
     const day = dateParts[1].slice(0, -1); // Remove the comma at the end
     const year = dateParts[2];
-  
+
     // Convert month abbreviation to month number
     const monthIndex = new Date(Date.parse(`${month} 1, ${year}`)).getMonth() + 1;
     const monthString = monthIndex.toString().padStart(2, '0');
     const dayString = day.padStart(2, '0');
-  
+
     return `${year}-${monthString}-${dayString}`;
   };
   const convertTime = (timeString) => {
     const times = timeString.split(' - ');
     const startTime = times[0];
     const endTime = times[1];
-  
+
     const convertSingleTime = (singleTime) => {
       const [time, period] = singleTime.split(' ');
       const [hours, minutes] = time.split(':');
       let convertedHours = parseInt(hours, 10);
-      
+
       if (period.toLowerCase() === 'pm' && convertedHours !== 12) {
         convertedHours += 12;
       } else if (period.toLowerCase() === 'am' && convertedHours === 12) {
         convertedHours = 0;
       }
-      
+
       return `${convertedHours.toString().padStart(2, '0')}:${minutes}`;
     };
-  
+
     const convertedStartTime = convertSingleTime(startTime);
     const convertedEndTime = convertSingleTime(endTime);
-  
+
     return {
       startHour: convertedStartTime.split(':')[0],
       startMinute: convertedStartTime.split(':')[1],
@@ -48,11 +48,8 @@ const EventItem = ({ event }) => {
       endMinute: convertedEndTime.split(':')[1],
     };
   };
-  
-  const { startHour, startMinute, endHour, endMinute } = convertTime(event.timeRange);
-  
 
-  
+  const { startHour, startMinute, endHour, endMinute } = convertTime(event.timeRange);
 
   return (
     <Grid
@@ -81,17 +78,18 @@ const EventItem = ({ event }) => {
           <Typography type="caption" className={styles.descriptionText}>
             {event.Description || 'No description available'}
           </Typography>
-        <AddToCalendarButton
-          name= {event.title}
-          options={['Apple','Google']}
-          location= {event.location}
-          startDate={convertDate(event.date)}
-          endDate= {convertDate(event.date)}
-          startTime={startHour + ':' + startMinute}
-          endTime={endHour + ':' + endMinute}
-          timeZone="America/New_York"
-          description = {event.Description}
-        ></AddToCalendarButton>
+          <AddToCalendarButton
+            name={event.title}
+            options={['Apple', 'Google']}
+            location={event.location}
+            startDate={convertDate(event.date)}
+            endDate={convertDate(event.date)}
+            startTime={startHour + ':' + startMinute}
+            endTime={endHour + ':' + endMinute}
+            timeZone="America/New_York"
+            description={event.Description}
+          ></AddToCalendarButton>
+          console.log({convertDate(event.date)});
         </CardContent>
       </Collapse>
     </Grid>
