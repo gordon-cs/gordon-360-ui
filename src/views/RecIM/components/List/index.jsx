@@ -15,6 +15,8 @@ import { TabPanel } from '../TabPanel';
 import { addDays } from 'date-fns';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 
+//const RoleId = { 3: 'member', 4: 'co-captain', 5: 'captain' }; // I am adding this
+
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
     return <Typography className={styles.secondaryText}>No activities to show.</Typography>;
@@ -43,27 +45,38 @@ const ParticipantList = ({
   teamID,
   showInactive,
   callbackFunction,
-  //setNewCaptain, // I am adding this
-  //idea 1
-  //callbackFunctionCaptain = { setNewCaptain }, //I added this
 }) => {
-  //idea 2
-  const [newCapitain, setNewCaptain] = useState(); // I am adding this
+  const [newCaptain, setNewCaptain] = useState(); // I am adding this
+  const [teamId, setTeamID] = useState();
+  console.log('here');
   // I am adding this useEffect
   useEffect(() => {
     //go through all participants
     // rename this later
     let contents = participants.map((participant) => {
-      if (participant.RoleTypeID === 5 && participant !== newCapitain) {
+      console.log('inside use effect');
+      console.log('participant ' + participant);
+      console.log('newCaptain ' + newCaptain);
+      console.log('participant.username ' + participant.Username);
+      console.log('team id ' + teamId);
+      //debugger;
+      if (
+        participants.length > 0 &&
+        participant.Role === 'Team-captain/Creator' &&
+        participant !== newCaptain &&
+        teamId !== undefined
+      ) {
+        //if (participant.Role === 5 && participant !== newCaptain && teamId !== undefined) {
+        console.log('inside if');
         // find the old capitain
         let editedParticipant = {
           Username: participant.Username,
           RoleTypeID: 3,
         }; // Role 3 is member
-        editTeamParticipant(teamIDParam, editedParticipant);
+        editTeamParticipant(teamId, editedParticipant);
       }
     });
-  }, [newCapitain]);
+  }, [newCaptain]);
 
   if (!participants?.length)
     return <Typography className={styles.secondaryText}>No participants to show.</Typography>;
@@ -90,8 +103,8 @@ const ParticipantList = ({
         isAdminPage={isAdminPage}
         editParticipantInfo={editDetails}
         withAttendance={withAttendance}
-        // idea 2
         callbackFunctionCaptain={setNewCaptain} // I am adding this
+        callbackFunctionTeamId={setTeamID}
         initialAttendance={
           withAttendance && attendance?.find((att) => att.Username === participant.Username)
         }
@@ -100,8 +113,8 @@ const ParticipantList = ({
         teamID={teamID}
         callbackFunction={(bool) => callbackFunction(bool)}
         showParticipantOptions={
-          showParticipantOptions &&
-          participant.Role !== 'Team-captain/Creator' &&
+          showParticipantOptions || //I changed this from &&
+          participant.Role !== 'Team-captain/Creator' || //I changed this from &&
           participant.Role !== 'Requested Join' // don't promote people who haven't joined
         }
       />

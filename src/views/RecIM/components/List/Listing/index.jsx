@@ -259,6 +259,7 @@ const ParticipantListing = ({
   matchID,
   //setNewCaptain, // I am adding this
   callbackFunctionCaptain, // I am adding this
+  callbackFunctionTeamId, // I am adding this
 }) => {
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
@@ -332,19 +333,20 @@ const ParticipantListing = ({
     handleClose();
   };
   console.log(participant);
-  console.log(participant.RoleTypeID);
+  console.log(showParticipantOptions);
+  console.log('team par ' + teamIDParam);
   // I am adding this
   const handlePromoteToCaptain = async () => {
+    //debugger;
     let editedParticipant = {
       Username: participant.Username,
       RoleTypeID: 5,
     }; // Role 5 is captain
-    // still needs to changee past captain into member
-    //callbackFunctionCaptain(editedParticipant);
-    //setNewCaptain(editedParticipant);
-
-    await editTeamParticipant(teamIDParam, editedParticipant); // Role 4 is co-captain
-    callbackFunctionCaptain(editedParticipant);
+    // still needs to change past captain into member
+    await editTeamParticipant(teamIDParam, editedParticipant).then(
+      callbackFunctionCaptain(editedParticipant),
+      callbackFunctionTeamId(teamIDParam),
+    ); // Role 5 is captain
     handleClose();
   };
 
@@ -471,13 +473,13 @@ const ParticipantListing = ({
         )}
         {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
-            {/* {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (
+            {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (
               <MenuItem dense onClick={handleMakeCoCaptain} divider>
                 Make co-captain
               </MenuItem>
-            )} */}
+            )}
             {participant.Role !== 'Inactive' &&
-              participant.Role !== 'Captain' && ( // I am adding this
+              participant.Role !== 'Team-captain/Creator' && ( // I am adding this
                 <MenuItem dense onClick={handlePromoteToCaptain} divider>
                   Promote to captain
                 </MenuItem>
