@@ -49,7 +49,6 @@ const ParticipantList = ({
     // find the old capitain to demote
     participants.map(async (participant) => {
       if (
-        participants.length > 0 &&
         participant.Role === 'Team-captain/Creator' &&
         participant !== newCaptain &&
         teamId !== undefined
@@ -60,7 +59,7 @@ const ParticipantList = ({
         }; // Role 3 is member
         await editTeamParticipant(teamId, editedParticipant);
       }
-      callbackFunction((bool) => !bool);
+      callbackFunction((val) => !val);
     });
   }, [newCaptain]);
 
