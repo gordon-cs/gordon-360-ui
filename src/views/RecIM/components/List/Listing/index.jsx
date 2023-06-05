@@ -257,9 +257,8 @@ const ParticipantListing = ({
   initialAttendance,
   teamID,
   matchID,
-  //setNewCaptain, // I am adding this
-  callbackFunctionCaptain, // I am adding this
-  callbackFunctionTeamId, // I am adding this
+  callbackFunctionCaptain,
+  callbackFunctionTeamId,
 }) => {
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
@@ -323,39 +322,14 @@ const ParticipantListing = ({
     else await handleMakeInactive();
   };
 
-  const handleMakeCoCaptain = async () => {
-    let editedParticipant = {
-      Username: participant.Username,
-      RoleTypeID: 4,
-    }; // Role 4 is co-captain
-
-    await editTeamParticipant(teamIDParam, editedParticipant); // Role 4 is co-captain
-    handleClose();
-  };
-  console.log(participant);
-  console.log(showParticipantOptions);
-  console.log('team par ' + teamIDParam);
-  // I am adding this
   const handlePromoteToCaptain = async () => {
-    //debugger;
     let editedParticipant = {
       Username: participant.Username,
       RoleTypeID: 5,
     }; // Role 5 is captain
-    // still needs to change past captain into member
-    await editTeamParticipant(teamIDParam, editedParticipant).then(
-      callbackFunctionCaptain(editedParticipant),
-      callbackFunctionTeamId(teamIDParam),
-    ); // Role 5 is captain
-    handleClose();
-  };
-
-  const reinstateMember = async () => {
-    let editedParticipant = {
-      Username: participant.Username,
-      RoleTypeID: 3,
-    }; // Role 3 is member
     await editTeamParticipant(teamIDParam, editedParticipant);
+    await callbackFunctionTeamId(teamIDParam);
+    await callbackFunctionCaptain(editedParticipant);
     handleClose();
   };
 
@@ -473,20 +447,9 @@ const ParticipantListing = ({
         )}
         {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
-            {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (
-              <MenuItem dense onClick={handleMakeCoCaptain} divider>
-                Make co-captain
-              </MenuItem>
-            )}
-            {participant.Role !== 'Inactive' &&
-              participant.Role !== 'Team-captain/Creator' && ( // I am adding this
-                <MenuItem dense onClick={handlePromoteToCaptain} divider>
-                  Promote to captain
-                </MenuItem>
-              )}
-            {(participant.Role === 'Inactive' || participant.Role === 'Co-Captain') && (
-              <MenuItem dense onClick={reinstateMember}>
-                {participant.Role === 'Inactive' ? `Reinstate Member` : `Demote to Member`}
+            {participant.Role !== 'Inactive' && participant.Role !== 'Team-captain/Creator' && (
+              <MenuItem dense onClick={handlePromoteToCaptain} divider>
+                Promote to captain
               </MenuItem>
             )}
             {participant.Role !== 'Inactive' && (

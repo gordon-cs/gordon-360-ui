@@ -15,8 +15,6 @@ import { TabPanel } from '../TabPanel';
 import { addDays } from 'date-fns';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 
-//const RoleId = { 3: 'member', 4: 'co-captain', 5: 'captain' }; // I am adding this
-
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
     return <Typography className={styles.secondaryText}>No activities to show.</Typography>;
@@ -29,8 +27,6 @@ const ActivityList = ({ activities, showActivityOptions }) => {
   ));
   return <List dense>{content}</List>;
 };
-//idea 1
-//const [newCapitain, setNewCaptain] = useState(); // I am adding this
 
 const ParticipantList = ({
   participants,
@@ -46,35 +42,25 @@ const ParticipantList = ({
   showInactive,
   callbackFunction,
 }) => {
-  const [newCaptain, setNewCaptain] = useState(); // I am adding this
+  const [newCaptain, setNewCaptain] = useState();
   const [teamId, setTeamID] = useState();
-  console.log('here');
-  // I am adding this useEffect
+
   useEffect(() => {
-    //go through all participants
-    // rename this later
-    let contents = participants.map((participant) => {
-      console.log('inside use effect');
-      console.log('participant ' + participant);
-      console.log('newCaptain ' + newCaptain);
-      console.log('participant.username ' + participant.Username);
-      console.log('team id ' + teamId);
-      //debugger;
+    // find the old capitain to demote
+    participants.map(async (participant) => {
       if (
         participants.length > 0 &&
         participant.Role === 'Team-captain/Creator' &&
         participant !== newCaptain &&
         teamId !== undefined
       ) {
-        //if (participant.Role === 5 && participant !== newCaptain && teamId !== undefined) {
-        console.log('inside if');
-        // find the old capitain
         let editedParticipant = {
           Username: participant.Username,
           RoleTypeID: 3,
         }; // Role 3 is member
-        editTeamParticipant(teamId, editedParticipant);
+        await editTeamParticipant(teamId, editedParticipant);
       }
+      callbackFunction((bool) => !bool);
     });
   }, [newCaptain]);
 
@@ -84,17 +70,6 @@ const ParticipantList = ({
     if (!showInactive && participant.Role === 'Inactive') {
       return null;
     }
-    // // I added this probably will not work and will be substituted by the use effect
-    // if (participant.RoleTypeID === 5 && callbackFunctionCaptain !== participant) {
-    //   // check passed by the callback and the user is not the one changed
-    //   let editedParticipant = {
-    //     Username: participant.Username,
-    //     RoleTypeID: 3,
-    //   }; // Role 3 is member
-
-    //   callbackFunction(editedParticipant);
-    //   editTeamParticipant(teamIDParam, editedParticipant);
-    // }
     return (
       <ParticipantListing
         key={participant.username}
@@ -103,7 +78,7 @@ const ParticipantList = ({
         isAdminPage={isAdminPage}
         editParticipantInfo={editDetails}
         withAttendance={withAttendance}
-        callbackFunctionCaptain={setNewCaptain} // I am adding this
+        callbackFunctionCaptain={setNewCaptain}
         callbackFunctionTeamId={setTeamID}
         initialAttendance={
           withAttendance && attendance?.find((att) => att.Username === participant.Username)
