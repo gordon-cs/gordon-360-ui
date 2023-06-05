@@ -46,6 +46,7 @@ import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { getRecIMReport } from 'services/recim/recim';
 import { Print } from '@mui/icons-material';
+//consider using react-to-print or react-pdf to create downloadable admin report
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -76,10 +77,10 @@ const Admin = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [adminMenuAnchorEl, setAdminMenuAnchorEl] = useState();
   const openAdminMenu = Boolean(adminMenuAnchorEl);
-  const [selectedDateIn, setSelectedDateIn] = useState(new Date(2023, 4, 1, 0, 0, 0, 0));
+  //Using default dates to speed up testing, set to null for develop push!
+  const [selectedDateIn, setSelectedDateIn] = useState(new Date(2023, 1, 1, 0, 0, 0, 0));
   const [selectedDateOut, setSelectedDateOut] = useState(new Date(2023, 5, 1, 0, 0, 0, 0));
   const [openRecimReportBox, setOpenRecimReportBox] = useState(null);
-  const [loadingRecimReport, setLoadingRecimReport] = useState(true);
   const [recimReport, setRecimReport] = useState(null);
 
   useEffect(() => {
@@ -129,12 +130,10 @@ const Admin = () => {
     console.log(report);
     setRecimReport(report);
     setOpenRecimReportBox(true);
-    setLoadingRecimReport(false);
   };
 
   const handleCloseRecimReport = () => {
     setOpenRecimReportBox(null);
-    setLoadingRecimReport(true);
   };
 
   const createSnackbar = useCallback((message, severity) => {
@@ -200,6 +199,151 @@ const Admin = () => {
     setSports(await getAllSports());
     setOpenConfirmDeleteSport(false);
   };
+
+  let AdminReportBoxContent = (
+    <Grid container justifyContent="center">
+      <Grid item xs={12} lg={10} xl={12}>
+        <Card elevation={10}>
+          <CardHeader
+            title={
+              <>
+                <Typography className={styles.title}>Rec-IM Admin Report</Typography>
+              </>
+            }
+          />
+          <CardContent>
+            <Card>
+              <CardContent>
+                <Typography className={styles.reportSubtitle}>
+                  {'From: ' + (recimReport && new Date(recimReport.StartTime).toLocaleString())}
+                </Typography>
+                <Typography className={styles.reportSubtitle}>
+                  {'To: ' + (recimReport && new Date(recimReport.EndTime).toLocaleString())}
+                </Typography>
+              </CardContent>
+            </Card>
+            <Card className={styles.reportCard}>
+              <CardHeader
+                className={styles.cardHeader}
+                title={
+                  <Typography className={styles.cardHeader}>
+                    Active Participants:{' '}
+                    {' ' + (recimReport && recimReport.NumberOfActiveParticipants)}
+                  </Typography>
+                }
+              />
+              <CardContent>
+                {recimReport &&
+                  recimReport.ActiveParticipants.map((participants) => (
+                    <>
+                      <Grid container>
+                        <Grid xl={8}>
+                          <Typography className={styles.reportText}>
+                            {'Name: ' + participants.Username}
+                          </Typography>
+                        </Grid>{' '}
+                        <Grid xl={4}>
+                          <Typography className={styles.reportText}>
+                            {' Gender: ' +
+                              (participants.SpecifiedGender === 'U'
+                                ? 'N/A'
+                                : participants.SpecifiedGender)}
+                          </Typography>
+                          {
+                            //Combining the two typography texts fixes the print not having a space, if no other solution can be found.
+                          }
+                        </Grid>
+                      </Grid>
+                    </>
+                  ))}
+              </CardContent>
+            </Card>
+            <Card className={styles.reportCard}>
+              <CardHeader
+                className={styles.cardHeader}
+                title={
+                  <Typography className={styles.cardHeader}>
+                    New Participants: {' ' + (recimReport && recimReport.NumberOfNewParticipants)}
+                  </Typography>
+                }
+              />
+              <CardContent>
+                {recimReport &&
+                  recimReport.NewParticipants.map((participants) => (
+                    <>
+                      <Grid container>
+                        <Grid xl={8}>
+                          <Typography className={styles.reportText}>
+                            {'Name: ' +
+                              participants.UserAccount.FirstName +
+                              ' ' +
+                              participants.UserAccount.LastName}
+                          </Typography>
+                        </Grid>{' '}
+                        <Grid xl={4}>
+                          <Typography className={styles.reportText}>
+                            {' Activity Count: ' + participants.NumberOfActivitiesParticipated}
+                          </Typography>
+                          {
+                            //Combining the two typography texts fixes the print not having a space, if no other solution can be found.
+                          }
+                        </Grid>
+                      </Grid>
+                    </>
+                  ))}
+              </CardContent>
+            </Card>
+            <Card className={styles.reportCard}>
+              <CardHeader
+                className={styles.cardHeader}
+                title={
+                  <Typography className={styles.cardHeader}>
+                    Activities: {' ' + (recimReport && recimReport.Activities.length)}
+                  </Typography>
+                }
+              />
+              <CardContent>
+                {recimReport &&
+                  recimReport.Activities.map((activity) => (
+                    <>
+                      <Grid container>
+                        <Grid xl={8}>
+                          <Typography className={styles.reportText}>
+                            {'Name: ' + activity.Activity.Name}
+                          </Typography>
+                        </Grid>{' '}
+                        <Grid xl={4}>
+                          <Typography className={styles.reportText}>
+                            {' Participant Count: ' + activity.NumberOfParticipants}
+                          </Typography>
+                          {
+                            // Combining the two typography texts fixes the print not having a
+                            // space, if no other solution can be found.  Problem is: standard
+                            // window.print method does not inherit react components like grid!
+                          }
+                        </Grid>
+                      </Grid>
+                    </>
+                  ))}
+              </CardContent>
+            </Card>
+          </CardContent>
+        </Card>
+        <Fab
+          color="primary"
+          variant="extended"
+          className={`${styles.fab} ${styles.no_print}`}
+          onClick={() => window.print()}
+          justifyContent="right"
+        >
+          {/* Likely going to pursue another method of printing to allow for better formatting
+          such as react-pdf(would need to be added) or react-to-print(already included) */}
+          <Print />
+          Print
+        </Fab>
+      </Grid>
+    </Grid>
+  );
 
   let headerContents = (
     <Grid container direction="row" alignItems="center" columnSpacing={{ xs: 2, sm: 4 }}>
@@ -339,6 +483,7 @@ const Admin = () => {
         buttonName="Yes, delete this surface"
         buttonClicked={handleConfirmDeleteSurface}
         severity="error"
+        className={styles.reportDialog}
       >
         <br />
         <Typography variant="body1">
@@ -353,142 +498,7 @@ const Admin = () => {
         buttonName="Done"
         buttonClicked={handleCloseRecimReport}
       >
-        <Grid container justifyContent="center">
-          <Grid item xs={12} lg={10} xl={12}>
-            <Card elevation={10}>
-              <CardHeader
-                title={
-                  <>
-                    <Typography className={styles.title}>Rec-IM Admin Report</Typography>
-                  </>
-                }
-              />
-              <CardContent>
-                <Card>
-                  <CardContent>
-                    <Typography className={styles.reportSubtitle}>
-                      {'From: ' + (recimReport && new Date(recimReport.StartTime).toLocaleString())}
-                    </Typography>
-                    <Typography className={styles.reportSubtitle}>
-                      {'To: ' + (recimReport && new Date(recimReport.EndTime).toLocaleString())}
-                    </Typography>
-                  </CardContent>
-                </Card>
-                <Card className={styles.reportCard}>
-                  <CardHeader
-                    className={styles.cardHeader}
-                    title={
-                      <Typography className={styles.cardHeader}>
-                        Active Participants:{' '}
-                        {' ' + (recimReport && recimReport.NumberOfActiveParticipants)}
-                      </Typography>
-                    }
-                  />
-                  <CardContent>
-                    {recimReport &&
-                      recimReport.ActiveParticipants.map((participants) => (
-                        <>
-                          <Grid container>
-                            <Grid xl={8}>
-                              <Typography className={styles.reportText}>
-                                {'Name: ' + participants.Username}
-                              </Typography>
-                            </Grid>{' '}
-                            <Grid xl={4}>
-                              <Typography className={styles.reportText}>
-                                {' Gender: ' + participants.SpecifiedGender}
-                              </Typography>
-                              {
-                                //Combining the two typography texts fixes the print not having a space, if no other solution can be found.
-                              }
-                            </Grid>
-                          </Grid>
-                        </>
-                      ))}
-                  </CardContent>
-                </Card>
-                <Card className={styles.reportCard}>
-                  <CardHeader
-                    className={styles.cardHeader}
-                    title={
-                      <Typography className={styles.cardHeader}>
-                        New Participants:{' '}
-                        {' ' + (recimReport && recimReport.NumberOfNewParticipants)}
-                      </Typography>
-                    }
-                  />
-                  <CardContent>
-                    {recimReport &&
-                      recimReport.NewParticipants.map((participants) => (
-                        <>
-                          <Grid container>
-                            <Grid xl={8}>
-                              <Typography className={styles.reportText}>
-                                {'Name: ' +
-                                  participants.UserAccount.FirstName +
-                                  ' ' +
-                                  participants.UserAccount.LastName}
-                              </Typography>
-                            </Grid>{' '}
-                            <Grid xl={4}>
-                              <Typography className={styles.reportText}>
-                                {' Activity Count: ' + participants.NumberOfActivitiesParticipated}
-                              </Typography>
-                              {
-                                //Combining the two typography texts fixes the print not having a space, if no other solution can be found.
-                              }
-                            </Grid>
-                          </Grid>
-                        </>
-                      ))}
-                  </CardContent>
-                </Card>
-                <Card className={styles.reportCard}>
-                  <CardHeader
-                    className={styles.cardHeader}
-                    title={
-                      <Typography className={styles.cardHeader}>
-                        Activities: {' ' + (recimReport && recimReport.Activities.length)}
-                      </Typography>
-                    }
-                  />
-                  <CardContent>
-                    {recimReport &&
-                      recimReport.Activities.map((activity) => (
-                        <>
-                          <Grid container>
-                            <Grid xl={8}>
-                              <Typography className={styles.reportText}>
-                                {'Name: ' + activity.Activity.Name}
-                              </Typography>
-                            </Grid>{' '}
-                            <Grid xl={4}>
-                              <Typography className={styles.reportText}>
-                                {' Participant Count: ' + activity.NumberOfParticipants}
-                              </Typography>
-                              {
-                                //Combining the two typography texts fixes the print not having a space, if no other solution can be found.
-                              }
-                            </Grid>
-                          </Grid>
-                        </>
-                      ))}
-                  </CardContent>
-                </Card>
-              </CardContent>
-            </Card>
-            <Fab
-              color="primary"
-              variant="extended"
-              className={`${styles.fab} ${styles.no_print}`}
-              onClick={() => window.print()}
-              justifyContent="right"
-            >
-              <Print />
-              Print
-            </Fab>
-          </Grid>
-        </Grid>
+        {AdminReportBoxContent}
       </GordonDialogBox>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Menu
