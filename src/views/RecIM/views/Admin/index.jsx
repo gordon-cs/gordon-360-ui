@@ -250,7 +250,8 @@ const Admin = () => {
                                 : participants.SpecifiedGender)}
                           </Typography>
                           {
-                            //Combining the two typography texts fixes the print not having a space, if no other solution can be found.
+                            //Combining the two typography texts fixes the print not having a space,
+                            // if no other solution can be found.
                           }
                         </Grid>
                       </Grid>
@@ -285,7 +286,8 @@ const Admin = () => {
                             {' Activity Count: ' + participants.NumberOfActivitiesParticipated}
                           </Typography>
                           {
-                            //Combining the two typography texts fixes the print not having a space, if no other solution can be found.
+                            //Combining the two typography texts fixes the print not having a space,
+                            // if no other solution can be found.
                           }
                         </Grid>
                       </Grid>
