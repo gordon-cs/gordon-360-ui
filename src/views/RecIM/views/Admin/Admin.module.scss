@@ -76,18 +76,6 @@
   position: fixed;
 }
 
-// /* @media screen is css that is in effect when a certain view is on display */
-// @media screen {
-//   .print_only * {
-//     visibility: hidden;
-//     border-spacing: 0;
-//     border-collapse: collapse;
-//     height: 0;
-//     padding: 0;
-//     margin: 0;
-//   }
-// }
-
 /* @media print takes effect when in a print view (eg after hitting Print Co-Curricular Transcript).
    Allows logo to only show when printing. */
 @media print {
@@ -96,8 +84,3 @@
     visibility: hidden;
   }
 }
-
-// @page {
-//   size: A4;
-//   margin: 0;
-// }
