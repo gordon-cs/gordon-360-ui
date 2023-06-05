@@ -136,6 +136,17 @@ const Admin = () => {
     setOpenRecimReportBox(null);
   };
 
+  let genderCounts = [];
+
+  const countGenderOccurrances = () => {
+    let genders = recimReport.ActiveParticipants.map((value) => value.SpecifiedGender);
+    genderCounts[0] = countOccurrences(genders, 'M');
+    genderCounts[1] = countOccurrences(genders, 'F');
+    genderCounts[2] = countOccurrences(genders, 'U');
+  };
+
+  const countOccurrences = (array, value) => array.reduce((a, v) => (v === value ? a + 1 : a), 0);
+
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
   }, []);
@@ -226,13 +237,29 @@ const Admin = () => {
               <CardHeader
                 className={styles.cardHeader}
                 title={
-                  <Typography className={styles.cardHeader}>
-                    Active Participants:{' '}
-                    {' ' + (recimReport && recimReport.NumberOfActiveParticipants)}
-                  </Typography>
+                  <>
+                    <Typography className={styles.cardHeader}>
+                      Active Participants:{' '}
+                      {' ' + (recimReport && recimReport.NumberOfActiveParticipants)}
+                    </Typography>
+                  </>
                 }
               />
+              {recimReport ? countGenderOccurrances() : ''}
               <CardContent>
+                <Grid container>
+                  <Grid xl={3}></Grid>
+                  <Grid xl={9}>
+                    <Typography className={styles.reportText}>
+                      {'Totals - Male: '}
+                      {recimReport && genderCounts[0]}
+                      {' - Female: '}
+                      {recimReport && genderCounts[1]}
+                      {' - N/A: '}
+                      {recimReport && genderCounts[2]}
+                    </Typography>
+                  </Grid>
+                </Grid>
                 {recimReport &&
                   recimReport.ActiveParticipants.map((participants) => (
                     <>
@@ -331,18 +358,6 @@ const Admin = () => {
             </Card>
           </CardContent>
         </Card>
-        <Fab
-          color="primary"
-          variant="extended"
-          className={`${styles.fab} ${styles.no_print}`}
-          onClick={() => window.print()}
-          justifyContent="right"
-        >
-          {/* Likely going to pursue another method of printing to allow for better formatting
-          such as react-pdf(would need to be added) or react-to-print(already included) */}
-          <Print />
-          Print
-        </Fab>
       </Grid>
     </Grid>
   );
