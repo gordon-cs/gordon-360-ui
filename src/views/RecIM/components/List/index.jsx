@@ -88,8 +88,8 @@ const ParticipantList = ({
         teamID={teamID}
         callbackFunction={(bool) => callbackFunction(bool)}
         showParticipantOptions={
-          showParticipantOptions || //I changed this from &&
-          participant.Role !== 'Team-captain/Creator' || //I changed this from &&
+          showParticipantOptions ||
+          participant.Role !== 'Team-captain/Creator' ||
           participant.Role !== 'Requested Join' // don't promote people who haven't joined
         }
       />
