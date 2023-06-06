@@ -258,20 +258,20 @@ const Admin = () => {
                   </Grid>
                 </Grid>
                 {recimReport &&
-                  recimReport.ActiveParticipants.map((participants) => (
+                  recimReport.ActiveParticipants.map((participant) => (
                     <>
                       <Grid container>
                         <Grid xl={8}>
                           <Typography className={styles.reportText}>
-                            {'Name: ' + participants.Username}
+                            {'Name: ' + participant.Username}
                           </Typography>
                         </Grid>{' '}
                         <Grid xl={4}>
                           <Typography className={styles.reportText}>
                             {' Gender: ' +
-                              (participants.SpecifiedGender === 'U'
+                              (participant.SpecifiedGender === 'U'
                                 ? 'N/A'
-                                : participants.SpecifiedGender)}
+                                : participant.SpecifiedGender)}
                           </Typography>
                           {
                             //Combining the two typography texts fixes the print not having a space,
@@ -294,20 +294,20 @@ const Admin = () => {
               />
               <CardContent>
                 {recimReport &&
-                  recimReport.NewParticipants.map((participants) => (
+                  recimReport.NewParticipants.map((participant) => (
                     <>
                       <Grid container>
                         <Grid xl={8}>
                           <Typography className={styles.reportText}>
                             {'Name: ' +
-                              participants.UserAccount.FirstName +
+                              participant.UserAccount.FirstName +
                               ' ' +
-                              participants.UserAccount.LastName}
+                              participant.UserAccount.LastName}
                           </Typography>
                         </Grid>{' '}
                         <Grid xl={4}>
                           <Typography className={styles.reportText}>
-                            {' Activity Count: ' + participants.NumberOfActivitiesParticipated}
+                            {' Activity Count: ' + participant.NumberOfActivitiesParticipated}
                           </Typography>
                           {
                             //Combining the two typography texts fixes the print not having a space,
