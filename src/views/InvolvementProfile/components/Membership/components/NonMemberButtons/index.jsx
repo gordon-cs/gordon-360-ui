@@ -33,7 +33,6 @@ const NonMemberButtons = ({
   const [confetti, setConfetti] = useState(false);
 
   const popConfetti = () => {
-    //this is the same function as the one used for the happy birthday banner confetti, just moved here
     setConfetti(true);
     setTimeout(() => setConfetti(false), 5000);
   };
