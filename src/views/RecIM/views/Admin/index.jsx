@@ -77,9 +77,8 @@ const Admin = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [adminMenuAnchorEl, setAdminMenuAnchorEl] = useState();
   const openAdminMenu = Boolean(adminMenuAnchorEl);
-  //Using default dates to speed up testing, set to null for develop push!
-  const [selectedDateIn, setSelectedDateIn] = useState(new Date(2023, 1, 1, 0, 0, 0, 0));
-  const [selectedDateOut, setSelectedDateOut] = useState(new Date(2023, 5, 1, 0, 0, 0, 0));
+  const [selectedDateIn, setSelectedDateIn] = useState(null);
+  const [selectedDateOut, setSelectedDateOut] = useState(null);
   const [openRecimReportBox, setOpenRecimReportBox] = useState(null);
   const [recimReport, setRecimReport] = useState(null);
 
