@@ -13,7 +13,6 @@
     "@mui/styles": "^5.10.7",
     "@mui/x-date-pickers": "^5.0.3",
     "add-to-calendar-button": "^2.2.9",
-    "add-to-calendar-button-react": "^2.2.7",
     "caniuse-lite": "^1.0.30001283",
     "chart.js": "^2.9.4",
     "cropperjs": "^1.5.11",
