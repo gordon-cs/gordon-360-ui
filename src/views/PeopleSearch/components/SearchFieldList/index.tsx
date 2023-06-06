@@ -32,6 +32,7 @@ import {
   FaBook,
   FaBriefcase,
   FaBuilding,
+  FaCalendarTimes,
   FaGlobeAmericas,
   FaHeart,
   FaSchool,
@@ -80,13 +81,14 @@ const searchPageTitle = (
 const defaultSearchParams: PeopleSearchQuery = {
   includeStudent: true,
   includeFacStaff: true,
-  includeAlumni: false,
+  includeAlumni: true,
   first_name: '',
   last_name: '',
   major: '',
   minor: '',
   residence_hall: '',
   class_year: '',
+  preferred_class_year: '',
   home_town: '',
   state: '',
   country: '',
@@ -140,6 +142,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [departments, setDepartments] = useState<string[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
+  const [userProvidedYear, setUserProvidedYear] = useState(new Date().getFullYear());
 
   /**
    * Default search params adjusted for the user's identity.
@@ -262,7 +265,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
   if (loading) {
     return <GordonLoader />;
   }
-
   const PeopleSearchCheckbox = (
     <Grid item xs={12} md={6}>
       <FormLabel component="label">Include: &nbsp;</FormLabel>
@@ -478,6 +480,27 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     updateValue={handleUpdate}
                     options={countries.sort()}
                     Icon={FaGlobeAmericas}
+                    select
+                  />
+                </AdvancedOptionsColumn>
+
+                <AdvancedOptionsColumn>
+                  <Typography
+                    align="center"
+                    gutterBottom
+                    color={searchParams.includeAlumni ? 'primary' : 'initial'}
+                  >
+                    Alumni
+                  </Typography>
+                  <SearchField
+                    name="preferred_class_year"
+                    value={searchParams.preferred_class_year}
+                    updateValue={handleUpdate}
+                    options={Array.from({ length: userProvidedYear - 1889 + 1 }, (_, i) => ({
+                      value: (1889 + i).toString(),
+                      label: (1889 + i).toString(),
+                    }))}
+                    Icon={FaCalendarTimes}
                     select
                   />
                 </AdvancedOptionsColumn>
