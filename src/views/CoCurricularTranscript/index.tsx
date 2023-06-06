@@ -39,15 +39,10 @@ const CoCurricularTranscript = () => {
     setLoading(false);
   };
 
-  // if (!useIsAuthenticated()) {
-  //   if (transcriptItems == null) {
-  //     setTranscriptItems(transcriptItems1);
-  //   }
-  //   profile = student1;
-  // } else {
   if (loading || loadingProfile) {
     return <GordonLoader />;
   }
+
   loadTranscript();
 
   return (
