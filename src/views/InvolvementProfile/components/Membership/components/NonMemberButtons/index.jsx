@@ -82,7 +82,6 @@ const NonMemberButtons = ({
   };
 
   return (
-    //the Card tag and div section is used for the confetti-it is the same tag used for the happy birthday banner, just moved here
     <>
       <Card>
         <div style={{ position: 'fixed', zIndex: 999999, top: -60, left: '50vw' }}>
