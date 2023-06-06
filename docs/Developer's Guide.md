@@ -35,7 +35,7 @@ Here are the steps to setup the frontend for development:
 
    If it doesn't return a number, you will need to install NodeJS. There are two ways to do this:
 
-   1. Download and run the installer from [the NodeJS Website](https://nodejs.org/en/download/).  This requires admin (aka "root" or "sudoer") privileges, so if you are on a shared Linx workstation, use one of the options below.
+   1. Download and run the installer from [the NodeJS Website](https://nodejs.org/en/download/).  This requires admin (aka "root" or "sudoer") privileges, so if you are on a shared Linux workstation, use one of the options below.
    1. Use a tool that manages Node installations, and use the "lts" version
       (which means "long term support"). Options include:
       - [Node Version Manager (NVM)]
