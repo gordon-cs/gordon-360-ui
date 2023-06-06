@@ -1,3 +1,4 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import { Print } from '@mui/icons-material';
 import { Card, CardContent, CardHeader, Fab, Grid, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
@@ -36,15 +37,15 @@ const CoCurricularTranscript = () => {
     loadTranscript();
   }, [profile]);
 
-  if (loadingProfile) {
-    return <GordonLoader />;
-  }
-
   if (!profile) {
     if (transcriptItems == null) {
       setTranscriptItems(transcriptItems1);
     }
     profile = student1;
+  } else {
+    if (loading || loadingProfile) {
+      return <GordonLoader />;
+    }
   }
 
   return (
