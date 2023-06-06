@@ -95,7 +95,7 @@ const defaultSearchParams: PeopleSearchQuery = {
   minor: '',
   residence_hall: '',
   class_year: '',
-  graduation_year: '', //omit if not working for CLASS STANDING
+  graduation_year: '',
   home_town: '',
   state: '',
   country: '',
@@ -519,7 +519,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   />
                   <Box sx={{ width: 300, marginTop: 6 }}>
                     <Slider
-                      getAriaLabel={() => 'Graduation year range'} //omit all of the below if it doesn't work
+                      getAriaLabel={() => 'Graduation year range'} //work in progress for graduation year
                       value={graduationYearRange}
                       onChange={handleSliderChange}
                       valueLabelDisplay="on"
