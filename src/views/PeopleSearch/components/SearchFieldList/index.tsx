@@ -32,6 +32,7 @@ import {
   FaBook,
   FaBriefcase,
   FaBuilding,
+  FaCalendarTimes,
   FaGlobeAmericas,
   FaHeart,
   FaSchool,
@@ -47,6 +48,13 @@ import { compareByProperty, searchParamSerializerFactory } from 'services/utils'
 import { gordonColors } from 'theme';
 import SearchField, { SelectOption } from './components/SearchField';
 import addressService from 'services/address';
+import Box from '@mui/material/Box'; //omit if it doesn't work
+import Slider from '@mui/material/Slider'; //omit if it doesn't work
+import { PersonalInfoList } from 'components/Profile/components'; //omit if it doesn't work
+
+function valuetext(value: number) {
+  return '${value}';
+}
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
@@ -87,6 +95,7 @@ const defaultSearchParams: PeopleSearchQuery = {
   minor: '',
   residence_hall: '',
   class_year: '',
+  graduation_year: '', //omit if not working for CLASS STANDING
   home_town: '',
   state: '',
   country: '',
@@ -140,6 +149,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [departments, setDepartments] = useState<string[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
+  const [userProvidedYear, setUserProvidedYear] = useState(new Date().getFullYear());
+  const [graduationYearRange, setGraduationYearRange] = useState<number[]>([
+    1889,
+    userProvidedYear,
+  ]);
 
   /**
    * Default search params adjusted for the user's identity.
@@ -262,6 +276,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
   if (loading) {
     return <GordonLoader />;
   }
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setGraduationYearRange(newValue as number[]);
+  };
 
   const PeopleSearchCheckbox = (
     <Grid item xs={12} md={6}>
@@ -452,7 +470,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     disabled={!searchParams.includeFacStaff}
                   />
                 </AdvancedOptionsColumn>
-
                 {/* Advanced Search Filters: Everyone */}
                 <AdvancedOptionsColumn>
                   <Typography align="center" gutterBottom color="primary">
@@ -480,6 +497,37 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     Icon={FaGlobeAmericas}
                     select
                   />
+                </AdvancedOptionsColumn>
+                <AdvancedOptionsColumn>
+                  <Typography
+                    align="center"
+                    gutterBottom
+                    color={searchParams.includeAlumni ? 'primary' : 'initial'}
+                  >
+                    Alumni
+                  </Typography>
+                  <SearchField
+                    name="graduation_year"
+                    value={searchParams.graduation_year}
+                    updateValue={handleUpdate}
+                    options={Array.from({ length: userProvidedYear - 1889 + 1 }, (_, i) => ({
+                      value: (1889 + i).toString(),
+                      label: (1889 + i).toString(),
+                    }))}
+                    Icon={FaCalendarTimes}
+                    select
+                  />
+                  <Box sx={{ width: 300, marginTop: 6 }}>
+                    <Slider
+                      getAriaLabel={() => 'Graduation year range'} //omit all of the below if it doesn't work
+                      value={graduationYearRange}
+                      onChange={handleSliderChange}
+                      valueLabelDisplay="on"
+                      getAriaValueText={valuetext}
+                      min={1889}
+                      max={userProvidedYear}
+                    />
+                  </Box>
                 </AdvancedOptionsColumn>
               </Grid>
             </AccordionDetails>
