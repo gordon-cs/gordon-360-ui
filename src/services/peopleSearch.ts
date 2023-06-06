@@ -18,7 +18,6 @@ type SearchResultBase = {
   MaidenName: string;
   HomeCity: string;
   HomeState: string;
-  GradDate: string; //omit if not working for CLASS STANDING
   Country: string;
   Email: string;
   AD_Username: string;
@@ -67,7 +66,6 @@ export type PeopleSearchQuery = {
   minor: string;
   residence_hall: string;
   class_year: keyof typeof Class | '';
-  graduation_year: string; //omit if not working for CLASS STANDING
   home_town: string;
   state: string;
   country: string;
@@ -84,7 +82,6 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     minor: searchFields.minor,
     hall: searchFields.residence_hall,
     classType: searchFields.class_year === '' ? '' : Class[searchFields.class_year],
-    gradDate: searchFields.graduation_year, //omit if not working for CLASS STANDING
     homeCity: searchFields.home_town,
     state: searchFields.state,
     country: searchFields.country,
