@@ -30,7 +30,7 @@ const NonMemberButtons = ({
   const [titleComment, setTitleComment] = useState('');
   const { involvementCode, sessionCode } = useParams();
   const { profile } = useUser();
-  const [confetti, setConfetti] = useState(false); //added for the confetti
+  const [confetti, setConfetti] = useState(false);
 
   const popConfetti = () => {
     //this is the same function as the one used for the happy birthday banner confetti, just moved here
