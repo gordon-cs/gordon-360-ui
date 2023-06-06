@@ -21,32 +21,34 @@ const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
 const CoCurricularTranscript = () => {
   const [loading, setLoading] = useState(true);
   const [transcriptItems, setTranscriptItems] = useState<TranscriptItems | undefined>();
-  let { profile, loading: loadingProfile } = useUser();
 
-  useEffect(() => {
-    const loadTranscript = async () => {
-      if (!profile) return;
+  const isAuthenticated = useIsAuthenticated();
+  const { profile: userProfile, loading: loadingProfile } = useUser();
+  const profile = isAuthenticated ? userProfile : student1;
 
+  const loadTranscript = () => {
+    if (isAuthenticated) {
+      if (!profile) {
+        return;
+      }
       setLoading(true);
-
-      await transcriptService.getItems(profile.AD_Username).then(setTranscriptItems);
-
-      setLoading(false);
-    };
-
-    loadTranscript();
-  }, [profile]);
-
-  if (!profile) {
-    if (transcriptItems == null) {
+      transcriptService.getItems(profile.AD_Username).then(setTranscriptItems);
+    } else {
       setTranscriptItems(transcriptItems1);
     }
-    profile = student1;
-  } else {
-    if (loading || loadingProfile) {
-      return <GordonLoader />;
-    }
+    setLoading(false);
+  };
+
+  // if (!useIsAuthenticated()) {
+  //   if (transcriptItems == null) {
+  //     setTranscriptItems(transcriptItems1);
+  //   }
+  //   profile = student1;
+  // } else {
+  if (loading || loadingProfile) {
+    return <GordonLoader />;
   }
+  loadTranscript();
 
   return (
     <Grid container justifyContent="center">
@@ -58,7 +60,7 @@ const CoCurricularTranscript = () => {
                 Gordon College Experience Transcript
               </Typography>
             }
-            subheader={<SubHeader profile={profile} />}
+            subheader={<SubHeader profile={profile != null ? profile : student1} />}
             disableTypography
           />
           <CardContent>
