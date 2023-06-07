@@ -21,12 +21,11 @@ const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
 const CoCurricularTranscript = () => {
   const [loading, setLoading] = useState(true);
   const [transcriptItems, setTranscriptItems] = useState<TranscriptItems | undefined>();
-
   const isAuthenticated = useIsAuthenticated();
   const { profile: userProfile, loading: loadingProfile } = useUser();
   const profile = isAuthenticated ? userProfile : student1;
 
-  const loadTranscript = () => {
+  useEffect(() => {
     if (isAuthenticated) {
       if (!profile) {
         return;
@@ -37,13 +36,11 @@ const CoCurricularTranscript = () => {
       setTranscriptItems(transcriptItems1);
     }
     setLoading(false);
-  };
+  }, [profile]);
 
   if (loading || loadingProfile) {
     return <GordonLoader />;
   }
-
-  loadTranscript();
 
   return (
     <Grid container justifyContent="center">
