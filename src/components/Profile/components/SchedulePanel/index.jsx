@@ -26,7 +26,7 @@ import MyScheduleDialog from './components/myScheduleDialog';
 
 // Default values
 const STARTHOUR = '08:00';
-const ENDHOUR = '17:00';
+const ENDHOUR = '22:00';
 
 const styles2 = {
   colorSwitchBase: {
@@ -173,7 +173,7 @@ class GordonSchedulePanel extends Component {
       THU_CDE: mySchedule.thursday ? 'R' : null,
       FRI_CDE: mySchedule.friday ? 'F' : null,
       SAT_CDE: mySchedule.saturday ? 'S' : null,
-      SUN_CDE: mySchedule.sunday ? 'N' : null,
+      // SUN_CDE: mySchedule.sunday ? 'N' : null,
       IS_ALLDAY: mySchedule.allDay ? 1 : 0,
       BEGIN_TIME: mySchedule.startHour,
       END_TIME: mySchedule.endHour,
