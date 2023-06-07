@@ -104,6 +104,12 @@ class GordonSchedulePanel extends Component {
     this.setState({ loading: false });
   };
 
+  // handleIsExpanded() {
+  //   this.setState((prevState) => ({
+  //     isExpanded: !prevState.isExpanded,
+  //   }));
+  // }
+
   handleMyScheduleOpen = (slotInfo) => {
     if (this.props.myProf) {
       this.setState({ myScheduleOpen: true });
@@ -359,7 +365,7 @@ class GordonSchedulePanel extends Component {
       schedulePanel = <GordonLoader />;
     } else {
       schedulePanel = (
-        <Accordion TransitionProps={{ unmountOnExit: true }} onChange={this.handleIsExpanded}>
+        <Accordion defaultExpanded>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
