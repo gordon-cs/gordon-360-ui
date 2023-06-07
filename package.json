@@ -14,7 +14,7 @@
     "@mui/x-date-pickers": "^5.0.20",
     "caniuse-lite": "^1.0.30001283",
     "chart.js": "^2.9.4",
-    "cropperjs": "^1.5.11",
+    "cropperjs": "^1.5.13",
     "date-fns": "^2.27.0",
     "downshift": "^7.6.0",
     "history": "^5.3.0",
