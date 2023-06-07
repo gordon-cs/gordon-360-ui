@@ -1,86 +1,192 @@
 @import '../../../../vars';
 
-.addResourceButton {
-  text-transform: none;
-}
-
-.header {
-  font-size: 0.9rem;
-}
-
-.headerImg {
-  width: 4em;
-}
-
-@media (min-width: $break-sm) {
-  .header {
-    font-size: 1rem;
-  }
-  .headerImg {
-    width: 5em;
-  }
+@media screen {
   .addResourceButton {
-    margin-left: 16px;
+    text-transform: none;
   }
-}
 
-// if desired, this should just be a global change and
-// universally applied to all 360 cards
-.cardHeader {
-  background-color: $primary-blue;
-  color: $neutral-white;
-}
+  .header {
+    font-size: 0.9rem;
+  }
 
-.title {
-  font-weight: bold;
-  color: $neutral-dark-gray2;
-  font-size: 1.5em;
-}
+  .headerImg {
+    width: 4em;
+  }
 
-.subtitle {
-  color: $neutral-gray;
-  font-size: 1em;
-}
+  @media (min-width: $break-sm) {
+    .header {
+      font-size: 1rem;
+    }
+    .headerImg {
+      width: 5em;
+    }
+    .addResourceButton {
+      margin-left: 16px;
+    }
+  }
 
-.menuTitle {
-  margin-top: 0.5em;
-  margin-bottom: 0.2em;
-  color: $neutral-gray;
-  text-align: center;
-}
+  // if desired, this should just be a global change and
+  // universally applied to all 360 cards
+  .cardHeader {
+    background-color: $primary-blue;
+    color: $neutral-white;
+    width: 100%;
+    padding: 0.4em;
+  }
 
-.reportSubtitle {
-  margin-top: 0.5em;
-  margin-bottom: 0.2em;
-  color: $neutral-gray;
-  text-align: left;
-  font-size: 0.7em;
-}
+  .title {
+    font-weight: bold;
+    color: $neutral-dark-gray2;
+    font-size: 1.5em;
+  }
 
-.menuButton:hover {
-  background-color: $neutral-black-opacity10;
-}
+  .subtitle {
+    color: $neutral-gray;
+    font-size: 1em;
+  }
 
-.reportText {
-  color: $neutral-black;
-  font-size: 0.7em;
-}
+  .menuTitle {
+    margin-top: 0.5em;
+    margin-bottom: 0.2em;
+    color: $neutral-gray;
+    text-align: center;
+  }
 
-.reportCard {
-  page-break-after: always;
-}
+  .reportSubtitle {
+    margin-top: 0.5em;
+    margin-bottom: 0.2em;
+    color: $neutral-gray;
+    text-align: left;
+    font-size: 0.7em;
+  }
 
-.fab {
-  right: 20px;
-  bottom: 20px;
-  position: fixed;
+  .menuButton:hover {
+    background-color: $neutral-black-opacity10;
+  }
+
+  .reportTextGrid {
+    display: grid;
+    border-bottom: 1px dashed $neutral-gray;
+    grid-template-columns: 1% 45% 10% 60%;
+    grid-template-rows: auto auto;
+    justify-items: stretch;
+    color: $neutral-black;
+    font-size: 0.7em;
+    padding-top: 0.5em;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    row-gap: 0.5em;
+
+    .reportTextGridLeft {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .reportTextGridRight {
+      grid-column: 4;
+      grid-row: 1;
+    }
+  }
+
+  .reportText {
+    color: $neutral-black;
+    font-size: 0.7em;
+  }
+
+  .reportAltText {
+    color: $neutral-black;
+    font-size: 0.6em;
+    font-style: italic;
+    padding-top: 0.5em;
+  }
+
+  .fab {
+    right: 20px;
+    bottom: 20px;
+    position: fixed;
+  }
 }
 
 /* @media print takes effect when in a print view (eg after hitting Print Co-Curricular Transcript).
    Allows logo to only show when printing. */
 @media print {
-  body header,
-  .no_print {
-    visibility: hidden;
+  .fab,
+  .menu,
+  .header,
+  .headerImg {
+    display: none;
   }
+
+  .adminReportBox {
+    display: block;
+  }
+
+  .reportTextGrid {
+    display: grid;
+    border-top: 1px dashed $neutral-gray;
+    grid-template-columns: 5% 50% 5% 25%;
+    grid-template-rows: auto auto;
+    justify-items: stretch;
+    color: $neutral-black;
+    font-size: 10pt;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    .reportTextGridLeft {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .reportTextGridRight {
+      grid-column: 4;
+      grid-row: 1;
+    }
+  }
+
+  .title {
+    font-weight: bold;
+    font-size: 24pt;
+  }
+
+  .reportSubtitle {
+    margin-top: 0.5em;
+    margin-bottom: 0.2em;
+    font-size: 12pt;
+  }
+
+  .reportTextLeft {
+    color: $neutral-black;
+    font-size: 10pt;
+    position: static;
+    text-align: left;
+  }
+
+  .reportAltText {
+    color: $neutral-black;
+    font-size: 10pt;
+    position: static;
+    font-style: italic;
+  }
+
+  .cardHeader {
+    font-weight: bold;
+    text-decoration: underline !important;
+    color: $neutral-black;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .reportCard {
+    display: block;
+    overflow: visible;
+    width: 100%;
+    margin: 0;
+    page-break-inside: auto;
+  }
+}
+
+@page {
+  margin: 0.2cm;
 }
