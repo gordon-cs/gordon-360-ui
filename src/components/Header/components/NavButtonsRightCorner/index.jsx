@@ -50,7 +50,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     />
   );
 
-  const transcriptButton = (
+  const transcriptButton = !isAuthenticated ? (
     <GordonNavButton
       unavailable={!isOnline ? 'offline' : null}
       onLinkClick={onClose}
@@ -58,7 +58,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
       linkName={'Experience Transcript'}
       linkPath={'/transcript'}
     />
-  );
+  ) : null;
 
   const timesheetsButton = (
     <GordonNavButton
