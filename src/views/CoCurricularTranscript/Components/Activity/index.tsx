@@ -12,14 +12,28 @@ type Props = {
 
 const Activity = ({ description, sessions }: Props) => {
   const leaderSessions = sessions.filter((s) => s.Participation === Participation.Leader);
+  const memberSessions = sessions.filter((s) => s.Participation === Participation.Member);
+  const advisorSessions = sessions.filter((s) => s.Participation === Participation.Advisor);
+
   return (
     <div className={styles.experience_transcript_activities}>
       <div className={styles.organization_role}>{description}</div>
-      <div className={styles.date}> {formatDuration(sessions)} </div>
+      <div className={styles.date}> {formatFinalDuration(sessions)} </div>
+      {advisorSessions.length > 0 && (
+        <div className={styles.participation_line}>
+          <div className={styles.organization_role}>
+            Advisor ({formatDuration(advisorSessions)})
+          </div>
+        </div>
+      )}
       {leaderSessions.length > 0 && (
-        <div className={styles.leadership_line}>
-          <div className={styles.organization_role}>Leader</div>
-          <div className={styles.date}>{formatDuration(leaderSessions)}</div>
+        <div className={styles.participation_line}>
+          <div className={styles.organization_role}>Leader ({formatDuration(leaderSessions)})</div>
+        </div>
+      )}
+      {memberSessions.length > 0 && (
+        <div className={styles.participation_line}>
+          <div className={styles.organization_role}>Member ({formatDuration(memberSessions)})</div>
         </div>
       )}
     </div>
@@ -65,4 +79,25 @@ const formatDuration = (sessionRecords: MembershipHistorySession[]) => {
   }
 
   return intervalDescriptions.join(', ');
+};
+
+const formatFinalDuration = (sessionRecords: MembershipHistorySession[]) => {
+  const sessions = sessionRecords
+    .map((s) => sessionService.parseSessionCode(s.SessionCode))
+    .sort(compareAsc);
+
+  const intervalDescriptions: string[] = [];
+  let interval: MembershipInterval | undefined;
+
+  sessions.forEach((session) => {
+    if (interval === undefined) {
+      // If this is the first session, initialize interval.
+      interval = new MembershipInterval(session);
+    } else {
+      // Extend the interval.
+      interval.extendTo(session);
+    }
+  });
+
+  return interval?.toString();
 };

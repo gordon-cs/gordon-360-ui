@@ -9,6 +9,7 @@ import userService, { Profile } from 'services/user';
 import styles from './CoCurricularTranscript.module.css';
 import Activity from './Components/Activity';
 import Experience from './Components/Experience';
+import { gordonColors } from 'theme';
 
 const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
   experiences: 'Experiences',
@@ -45,18 +46,21 @@ const CoCurricularTranscript = () => {
   }
 
   return (
-    <Grid container justifyContent="center">
+    <Grid container justifyContent="center" marginBottom={3}>
       <Grid item xs={12} lg={10} xl={8}>
-        <Card elevation={10}>
-          <CardHeader
-            title={
-              <Typography component="h1" variant="h4">
-                Gordon College Experience Transcript
-              </Typography>
-            }
-            subheader={<SubHeader profile={profile} />}
-            disableTypography
-          />
+        <Grid>
+          <Card className={styles.transcript_title}>
+            <CardHeader
+              title={
+                <Typography component="h1" variant="h5">
+                  Gordon College Experience Transcript
+                </Typography>
+              }
+            />
+          </Card>
+        </Grid>
+        <Card className={styles.transcript_card}>
+          <CardHeader subheader={<SubHeader profile={profile} />} disableTypography />
           <CardContent>
             {transcriptItems &&
               Object.entries(transcriptItems).map(
@@ -101,7 +105,7 @@ const CoCurricularTranscript = () => {
 
 const SubHeader = ({ profile }: { profile: Profile }) => (
   <>
-    <Typography component="p" variant="h6">
+    <Typography component="p" variant="h6" fontWeight={'bold'}>
       {profile.fullName}
     </Typography>
     {userService.isStudent(profile) && (
@@ -113,12 +117,12 @@ const SubHeader = ({ profile }: { profile: Profile }) => (
         )}
         {profile.Majors.length > 0 && (
           <Typography component="p" variant="h6">
-            Major{profile.Majors.length > 1 ? 's' : ''}: {profile.Majors.join(', ')}
+            <b>Major{profile.Majors.length > 1 ? 's' : ''}:</b> {profile.Majors.join(', ')}
           </Typography>
         )}
         {profile.Minors.length > 0 && (
           <Typography component="p" variant="h6">
-            Minor{profile.Minors.length > 1 ? 's' : ''}: {profile.Minors.join(', ')}
+            <b>Minor{profile.Minors.length > 1 ? 's' : ''}:</b> {profile.Minors.join(', ')}
           </Typography>
         )}
       </>
