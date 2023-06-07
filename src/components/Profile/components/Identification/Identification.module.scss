@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 @import '../../../../vars';
 
 $image-border-radius: 50%;
@@ -60,7 +60,7 @@ $image-side-width-desktop: 90px;
               &_image {
                 width: $image-main-width-desktop;
                 height: $image-main-height-desktop;
-                object-fit: cover;
+                object-fit: none;
               }
               &_tile_bar {
                 position: absolute;

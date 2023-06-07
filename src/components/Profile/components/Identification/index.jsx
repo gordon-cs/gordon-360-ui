@@ -22,8 +22,10 @@ import { Class } from 'services/peopleSearch';
 import user from 'services/user';
 import { gordonColors, windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
-import defaultGordonImage from './defaultGordonImage';
+
 import styles from './Identification.module.css';
+import { instanceOf } from 'prop-types';
+import { NotFoundError } from 'services/error';
 
 const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   const CROP_DIM = 200; // pixels
@@ -110,11 +112,11 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
         // Sets the given user's preferred image. If a default image is given but the preferred is undefined,
         // then this could mean that the currently signed-in user is not allowed to see the preferred image or
         // a preferred image wasn't set
-        setPreferredUserImage(preferredImage);
+        setPreferredUserImage(`data:image/jpg;base64,${preferredImage}`);
         setHasPreferredImage(preferredImage ? true : false);
         // Sets the given user's default image. If a preferred image is given but the default is undefined,
         // then this, means that the currently signed-in user is not allowed to see the default picture.
-        setDefaultUserImage(defaultImage);
+        setDefaultUserImage(`data:image/jpg;base64,${defaultImage}`);
 
         const colorFrequencies = profile.CliftonStrengths?.Themes.reduce(
           (colorFrequencies, strength) => ({
@@ -131,7 +133,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
 
         setCliftonColor(cliftonColor);
       } catch (error) {
-        // Do nothing
+        if (error instanceof NotFoundError) {
+          setDefaultUserImage('/images/defaultGordonImage.png');
+        }
       }
       setUserProfile(profile);
 
@@ -254,11 +258,17 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
         // Attempts to get the user's image since it has been reset
         try {
           const { def: defaultImage } = await user.getImage(userProfile.AD_Username);
-          setDefaultUserImage(defaultImage);
+          setDefaultUserImage(`data:image/jpg;base64,${defaultImage}`);
           // Displays to the user that their photo has been restored
           createSnackbar('Original Photo Restored', 'success');
-        } catch {
-          setDefaultUserImage(defaultGordonImage);
+        } catch (error) {
+          if (error instanceof NotFoundError) {
+            setDefaultUserImage('/images/defaultGordonImage.png');
+          }
+          // catch (error) {
+          //   if (error instanceof NotFoundError) {
+          //     setDefaultUserImage('/images/defaultGordonImage.png');
+          //   }
           // Displays to the user that getting their original photo failed
           createSnackbar('Failed Retrieving Photo', 'error');
         }
@@ -457,7 +467,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                       <input {...getInputProps()} />
                       <img
                         className="gc360_photo_dialog_box_content_dropzone_img"
-                        src={`data:image/jpg;base64,${preferredUserImage || defaultUserImage}`}
+                        src={preferredUserImage || defaultUserImage}
                         alt="Profile"
                       />
                     </div>
@@ -634,7 +644,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                       className={
                         styles.identification_card_content_card_container_photo_main_container_image
                       }
-                      src={`data:image/jpg;base64,${
+                      src={
                         // Checks to see if the default and preferred photos should switch between bubbles
                         isPhotosSwitched
                           ? // Main Photo: Default
@@ -644,7 +654,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                           hasPreferredImage
                           ? preferredUserImage
                           : defaultUserImage
-                      }`}
+                      }
                       alt="Profile"
                     />
 
@@ -672,14 +682,14 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                   <div className={styles.identification_card_content_card_container_photo_side}>
                     <img
                       className={styles.identification_card_content_card_container_photo_side_image}
-                      src={`data:image/jpg;base64,${
+                      src={
                         // Checks to see if the default and preferred photos should switch between bubbles
                         isPhotosSwitched
                           ? // Side Photo: Preferred
                             preferredUserImage
                           : // Side Photo: Default
                             defaultUserImage
-                      }`}
+                      }
                       alt="Profile"
                     />
                     <div
