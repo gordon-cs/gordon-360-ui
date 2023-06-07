@@ -75,10 +75,10 @@ const Admin = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [adminMenuAnchorEl, setAdminMenuAnchorEl] = useState();
   const openAdminMenu = Boolean(adminMenuAnchorEl);
-  const [selectedDateIn, setSelectedDateIn] = useState(null);
+  const [selectedDateIn, setSelectedDateIn] = useState(null); //must be set null so dates are blank
   const [selectedDateOut, setSelectedDateOut] = useState(null);
-  const [openRecimReportBox, setOpenRecimReportBox] = useState(null);
-  const [recimReport, setRecimReport] = useState(null);
+  const [openRecimReportBox, setOpenRecimReportBox] = useState();
+  const [recimReport, setRecimReport] = useState();
 
   useEffect(() => {
     const loadProfile = async () => {
