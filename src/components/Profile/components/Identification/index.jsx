@@ -24,7 +24,6 @@ import { gordonColors, windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
 
 import styles from './Identification.module.css';
-import { instanceOf } from 'prop-types';
 import { NotFoundError } from 'services/error';
 
 const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
@@ -265,10 +264,6 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
           if (error instanceof NotFoundError) {
             setDefaultUserImage('/images/defaultGordonImage.png');
           }
-          // catch (error) {
-          //   if (error instanceof NotFoundError) {
-          //     setDefaultUserImage('/images/defaultGordonImage.png');
-          //   }
           // Displays to the user that getting their original photo failed
           createSnackbar('Failed Retrieving Photo', 'error');
         }
