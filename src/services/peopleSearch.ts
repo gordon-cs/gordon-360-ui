@@ -65,8 +65,8 @@ export type PeopleSearchQuery = {
   major: string;
   minor: string;
   residence_hall: string;
-  class_year: keyof typeof Class | '';
-  preferred_class_year: string;
+  class_standing: keyof typeof Class | '';
+  graduation_year: string;
   home_town: string;
   state: string;
   country: string;
@@ -82,8 +82,8 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     major: searchFields.major,
     minor: searchFields.minor,
     hall: searchFields.residence_hall,
-    classType: searchFields.class_year === '' ? '' : Class[searchFields.class_year],
-    preferredClassYear: searchFields.preferred_class_year,
+    classType: searchFields.class_standing === '' ? '' : Class[searchFields.class_standing],
+    preferredClassYear: searchFields.graduation_year,
     homeCity: searchFields.home_town,
     state: searchFields.state,
     country: searchFields.country,

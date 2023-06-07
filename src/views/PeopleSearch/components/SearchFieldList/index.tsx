@@ -87,8 +87,8 @@ const defaultSearchParams: PeopleSearchQuery = {
   major: '',
   minor: '',
   residence_hall: '',
-  class_year: '',
-  preferred_class_year: '',
+  class_standing: '',
+  graduation_year: '',
   home_town: '',
   state: '',
   country: '',
@@ -414,8 +414,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     disabled={!searchParams.includeStudent}
                   />
                   <SearchField
-                    name="class_year"
-                    value={searchParams.class_year}
+                    name="class_standing"
+                    value={searchParams.class_standing}
                     updateValue={handleUpdate}
                     options={
                       Object.values(Class).filter((value) => typeof value !== 'number') as string[]
@@ -493,12 +493,12 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     Alumni
                   </Typography>
                   <SearchField
-                    name="preferred_class_year"
-                    value={searchParams.preferred_class_year}
+                    name="graduation_year"
+                    value={searchParams.graduation_year}
                     updateValue={handleUpdate}
                     options={Array.from({ length: userProvidedYear - 1889 + 1 }, (_, i) => ({
-                      value: (1889 + i).toString(),
-                      label: (1889 + i).toString(),
+                      value: (userProvidedYear - i).toString(),
+                      label: (userProvidedYear - i).toString(),
                     }))}
                     Icon={FaCalendarTimes}
                     select
