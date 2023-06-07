@@ -353,7 +353,9 @@ class IDUploader extends Component {
                 <Dropzone
                   onDropAccepted={this.onDropAccepted.bind(this)}
                   onDropRejected={this.onDropRejected.bind(this)}
-                  accept="image/jpeg, image/jpg, image/png"
+                  accept={{
+                    'image/*': ['.jpeg', ',jpg', '.png'],
+                  }}
                 >
                   {({ getRootProps, getInputProps }) => (
                     <section>

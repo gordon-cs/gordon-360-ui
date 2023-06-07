@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const GordonLimitedAvailability = ({
   pageName = '',
   backToLocation = 'Home',
-  backToLink = '',
+  backToLink = '/',
   availableTo = 'students',
 }) => {
   return (

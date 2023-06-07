@@ -79,7 +79,7 @@ const ApartApp = () => {
                 </h4>
                 <br />
                 <br />
-                <Button variant="contained" component={Link} to="">
+                <Button variant="contained" component={Link} to="/">
                   Back to Home
                 </Button>
               </CardContent>
