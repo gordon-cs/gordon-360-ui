@@ -1,4 +1,17 @@
-import { Card, CardContent, Tabs, Tab, Button, Grid, Box } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Tabs,
+  Tab,
+  Button,
+  Grid,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  TextField,
+  Fab,
+} from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 import { useUser } from 'hooks';
 import GordonUnauthorized from 'components/GordonUnauthorized';
@@ -27,6 +40,12 @@ import { Typography } from '@mui/material';
 import recimLogo from 'views/RecIM/recim_logo.png';
 import { useNavigate } from 'react-router';
 import { deleteSport, getAllSports } from 'services/recim/sport';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { getRecIMReport } from 'services/recim/recim';
+import { Print } from '@mui/icons-material';
+//consider using react-to-print or react-pdf to create downloadable admin report
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -57,6 +76,12 @@ const Admin = () => {
   const [openConfirmDeleteSurface, setOpenConfirmDeleteSurface] = useState();
   const [openConfirmDeleteSport, setOpenConfirmDeleteSport] = useState();
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [adminMenuAnchorEl, setAdminMenuAnchorEl] = useState();
+  const openAdminMenu = Boolean(adminMenuAnchorEl);
+  const [selectedDateIn, setSelectedDateIn] = useState(null); //must be set null so dates are blank
+  const [selectedDateOut, setSelectedDateOut] = useState(null);
+  const [openRecimReportBox, setOpenRecimReportBox] = useState();
+  const [recimReport, setRecimReport] = useState();
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -85,6 +110,40 @@ const Admin = () => {
     }
     setLoading(false);
   }, [user?.IsAdmin]);
+
+  const handleAdminMenuOpen = (e) => {
+    setAdminMenuAnchorEl(e.currentTarget);
+  };
+
+  const handleAdminMenuClose = () => {
+    setAdminMenuAnchorEl(null);
+  };
+
+  const generateAdminReport = () => {
+    let fStartDate = selectedDateIn.toISOString();
+    let fEndDate = selectedDateOut.toISOString();
+    getRecIMReport(fStartDate, fEndDate).then((value) => handleOpenRecimReport(value));
+  };
+
+  const handleOpenRecimReport = (report) => {
+    setRecimReport(report);
+    setOpenRecimReportBox(true);
+  };
+
+  const handleCloseRecimReport = () => {
+    setOpenRecimReportBox(null);
+  };
+
+  let genderCounts = [];
+
+  const countGenderOccurrances = () => {
+    let genders = recimReport.ActiveParticipants.map((value) => value.SpecifiedGender);
+    genderCounts[0] = countOccurrences(genders, 'M');
+    genderCounts[1] = countOccurrences(genders, 'F');
+    genderCounts[2] = countOccurrences(genders, 'U');
+  };
+
+  const countOccurrences = (array, value) => array.reduce((a, v) => (v === value ? a + 1 : a), 0);
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -160,6 +219,80 @@ const Admin = () => {
     setOpenConfirmDeleteSport(false);
   };
 
+  /* Definition of the content inside the admin report dialog.
+
+  */
+  let AdminReportBoxContent = (
+    <Card className={styles.reportCard}>
+      <CardContent>
+        <>
+          <Typography className={styles.title}>Rec-IM Admin Report</Typography>
+          <Typography className={styles.reportSubtitle}>
+            {new Date(recimReport?.StartTime).toLocaleString()}{' '}
+          </Typography>{' '}
+          <Typography className={styles.reportSubtitle}>
+            {'to ' + new Date(recimReport?.EndTime).toLocaleString()}{' '}
+          </Typography>
+          <Typography className={styles.cardHeader}>
+            Active Participants: {' ' + recimReport?.NumberOfActiveParticipants}
+          </Typography>
+          {recimReport ? countGenderOccurrances() : ''}
+          <Typography className={styles.reportAltText}>
+            {'Totals - Male: '}
+            {recimReport && genderCounts[0]}
+            {' - Female: '}
+            {recimReport && genderCounts[1]}
+            {' - N/A: '}
+            {recimReport && genderCounts[2]}
+          </Typography>
+          {recimReport?.ActiveParticipants.map((participant) => (
+            <>
+              {/* Use of divs and display: "grid" in css simplifies print styling */}
+              <div className={styles.reportTextGrid}>
+                <div className={styles.reportTextGridLeft}>{'User: ' + participant.Username}</div>
+                <div className={styles.reportTextGridRight}>
+                  {'Gender: ' +
+                    (participant.SpecifiedGender === 'U' ? 'N/A' : participant.SpecifiedGender)}
+                </div>
+              </div>
+            </>
+          ))}
+          <Typography className={styles.cardHeader}>
+            New Participants: {' ' + recimReport?.NumberOfNewParticipants}
+          </Typography>
+          {recimReport?.NewParticipants.map((participant) => (
+            <>
+              <div className={styles.reportTextGrid}>
+                <div className={styles.reportTextGridLeft}>
+                  {'Name: ' +
+                    participant.UserAccount.FirstName +
+                    ' ' +
+                    participant.UserAccount.LastName}
+                </div>
+                <div className={styles.reportTextGridRight}>
+                  {'Activities: ' + participant.NumberOfActivitiesParticipated}
+                </div>
+              </div>
+            </>
+          ))}
+          <Typography className={styles.cardHeader}>
+            Activities: {' ' + recimReport?.Activities.length}
+          </Typography>
+          {recimReport?.Activities.map((activity) => (
+            <>
+              <div className={styles.reportTextGrid}>
+                <div className={styles.reportTextGridLeft}>{'Name: ' + activity.Activity.Name}</div>
+                <div className={styles.reportTextGridRight}>
+                  {'Participants: ' + activity.NumberOfParticipants}
+                </div>
+              </div>
+            </>
+          ))}
+        </>
+      </CardContent>
+    </Card>
+  );
+
   let headerContents = (
     <Grid container direction="row" alignItems="center" columnSpacing={{ xs: 2, sm: 4 }}>
       <Grid item>
@@ -175,6 +308,29 @@ const Admin = () => {
         <Typography className={styles.subtitle}>
           <i>"Competition reveals character"</i>
         </Typography>
+      </Grid>
+      <Grid item xs={3} textAlign={'right'}>
+        <IconButton onClick={handleAdminMenuOpen} sx={{ mr: '1rem' }}>
+          <SummarizeIcon
+            fontSize="large"
+            sx={
+              openAdminMenu && {
+                animation: 'grow 0.3s linear ',
+                '@keyframes grow': {
+                  '0%': {
+                    transform: 'scale(1)',
+                  },
+                  '50%': {
+                    transform: 'scale(1.3)',
+                  },
+                  '100%': {
+                    transform: 'scale(1)',
+                  },
+                },
+              }
+            }
+          />
+        </IconButton>
       </Grid>
     </Grid>
   );
@@ -303,6 +459,7 @@ const Admin = () => {
         buttonName="Yes, delete this surface"
         buttonClicked={handleConfirmDeleteSurface}
         severity="error"
+        className={styles.reportDialog}
       >
         <br />
         <Typography variant="body1">
@@ -311,6 +468,65 @@ const Admin = () => {
         </Typography>
         <Typography variant="body1">This action cannot be undone.</Typography>
       </GordonDialogBox>
+      <GordonDialogBox
+        title="Rec-IM Report"
+        open={openRecimReportBox}
+        buttonName="Done"
+        buttonClicked={handleCloseRecimReport}
+        fullWidth
+        maxWidth="md"
+        className={styles.adminReportBox}
+      >
+        {AdminReportBoxContent}
+        <Fab
+          color="primary"
+          variant="extended"
+          className={styles.fab}
+          onClick={() => window.print()}
+        >
+          <Print />
+          Print
+        </Fab>
+      </GordonDialogBox>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Menu
+          open={openAdminMenu}
+          onClose={handleAdminMenuClose}
+          anchorEl={adminMenuAnchorEl}
+          className={styles.menu}
+        >
+          <Typography className={styles.menuTitle}>Generate Admin Reports</Typography>
+          <MenuItem>
+            <DateTimePicker
+              renderInput={(props) => <TextField {...props} />}
+              label="Start Date/Time"
+              value={selectedDateIn}
+              onChange={setSelectedDateIn}
+              className="disable_select"
+              disableFuture={true}
+            />
+            <DateTimePicker
+              renderInput={(props) => <TextField {...props} />}
+              label="End Date/Time"
+              value={selectedDateOut}
+              onChange={setSelectedDateOut}
+              className="disable_select"
+              disabled={selectedDateIn === null}
+              minDateTime={selectedDateIn}
+              disableFuture={true}
+            />
+          </MenuItem>
+          <MenuItem
+            dense
+            onClick={() => {
+              generateAdminReport();
+            }}
+            className={styles.menuButton}
+          >
+            Generate Report
+          </MenuItem>
+        </Menu>
+      </LocalizationProvider>
       <GordonSnackbar
         open={snackbar.open}
         text={snackbar.message}
