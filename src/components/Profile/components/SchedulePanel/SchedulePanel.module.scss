@@ -1,0 +1,241 @@
+@use "sass:color";
+@import '../../../../vars';
+
+$image-border-radius: 50%;
+// Main Image
+$image-main-height-mobile: 200px;
+$image-main-height-desktop: 230px;
+$image-main-width-mobile: 200px;
+$image-main-width-desktop: 230px;
+// Side Image
+$image-side-height-mobile: 80px;
+$image-side-height-desktop: 90px;
+$image-side-width-mobile: 80px;
+$image-side-width-desktop: 90px;
+
+// SNACKBAR STYLES
+
+// IDENTIFICATION CARD STYLES
+.identification_card {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: $neutral-white;
+  border-radius: 4px;
+  height: 100%;
+  box-shadow: 0px 2px 1px -1px $neutral-black-opacity20, 0px 1px 1px 0px $neutral-black-opacity15,
+    0px 1px 3px 0px $neutral-black-opacity125;
+  &_header {
+    background-color: $primary-blue;
+    color: $neutral-white;
+    padding-left: 1rem;
+    hyphens: auto;
+  }
+  &_content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    &_card {
+      padding: 2rem 1rem 0rem 1rem;
+      &_container {
+        max-width: 800px;
+        margin: auto 2rem;
+        &_photo {
+          margin: 1rem 2rem 2rem 2rem !important;
+          position: relative;
+          &_main {
+            border-radius: $image-border-radius;
+            transition: width 500ms, height 500ms !important;
+            border: 4px solid $primary-blue;
+            z-index: 1 !important;
+            overflow: hidden !important;
+            width: $image-main-width-desktop;
+            height: $image-main-height-desktop;
+            position: relative;
+            &_container {
+              position: absolute;
+              &_image {
+                width: $image-main-width-desktop;
+                height: $image-main-height-desktop;
+                object-fit: cover;
+              }
+              &_tile_bar {
+                position: absolute;
+                margin: 0rem;
+                padding: 0.5rem 0rem 2rem 0rem;
+                top: 89%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 100%;
+                color: $neutral-white;
+                background: color.adjust(
+                  $primary-blue,
+                  $alpha: -0.5
+                ); // Make titles more readable over image background
+                // Make space for a two-line title
+                text-align: center;
+              }
+            }
+            &_button {
+              position: absolute;
+              background-color: transparent;
+              border-radius: $image-border-radius;
+              width: $image-main-width-desktop;
+              height: $image-main-height-desktop;
+              &:hover {
+                cursor: pointer;
+              }
+            }
+          }
+          &_side {
+            position: absolute;
+            z-index: 2;
+            border: 1px solid $primary-blue;
+            display: flex;
+            box-sizing: border-box;
+            border-radius: $image-border-radius;
+            transform: translate(-35%, -270%);
+            overflow: hidden !important;
+            &_image {
+              border-radius: $image-border-radius;
+              width: $image-side-width-desktop;
+              height: $image-side-height-desktop;
+              object-fit: cover;
+            }
+            &_button {
+              position: absolute;
+              background-color: transparent;
+              border-radius: $image-border-radius;
+              width: $image-side-width-desktop;
+              height: $image-side-height-desktop;
+              &:hover {
+                cursor: pointer;
+              }
+            }
+          }
+        }
+        &_info {
+          max-width: 600px;
+          transition: width 500ms;
+          margin: auto 1rem;
+          color: $neutral-black-opacity90;
+          overflow-wrap: anywhere;
+          overflow: hidden;
+          hyphens: auto;
+          &_social_media {
+            border-bottom: 1px solid $neutral-black-opacity55;
+            margin-bottom: 1rem !important;
+            .gc360_my_profile {
+              &_icon {
+                font-size: 36px;
+                color: $primary-blue;
+                transition: color 200ms, scale 1s;
+                &:hover {
+                  color: $primary-cyan !important;
+                  transform: scale(1.2) !important;
+                }
+              }
+              &_edit_icon {
+                margin-bottom: 0.5rem;
+              }
+            }
+          }
+          &_class {
+            color: $neutral-black-opacity55;
+          }
+          &_job_title {
+            opacity: 0.7;
+          }
+          &_email {
+            display: inline-block;
+            a:hover {
+              text-decoration: none;
+            }
+            &_container {
+              color: $primary-blue;
+              display: flex;
+              &:hover {
+                color: $primary-cyan;
+              }
+              &_icon {
+                margin-right: 0.75rem;
+              }
+            }
+          }
+        }
+      }
+    }
+    &_public_profile_link {
+      margin: 1rem auto;
+      &:hover {
+        text-decoration: none;
+      }
+      &_button {
+        font-size: 1rem !important;
+        color: $neutral-white !important;
+        background-color: $primary-cyan !important;
+        margin-bottom: 1rem !important;
+      }
+    }
+  }
+}
+
+@media (max-width: $break-sm) {
+  .identification_card {
+    &_header {
+      justify-content: center;
+      padding-left: 0rem;
+    }
+    &_content {
+      &_card {
+        &_container {
+          &_photo {
+            width: $image-main-width-mobile;
+            height: $image-main-height-mobile;
+            &_main {
+              width: $image-main-width-mobile;
+              height: $image-main-height-mobile;
+              &_container {
+                &_image {
+                  width: $image-main-width-mobile;
+                  height: $image-main-height-mobile;
+                }
+                &_tile_bar {
+                  top: 85%;
+                  padding: 0.5rem 0rem 1.5rem 0rem;
+                }
+              }
+              &_button {
+                width: $image-main-width-mobile;
+                height: $image-main-height-mobile;
+              }
+            }
+            &_side {
+              &_image {
+                // transform: translateY(-50%);
+                width: $image-side-width-mobile;
+                height: $image-side-height-mobile;
+              }
+              &:hover {
+                cursor: pointer;
+              }
+            }
+          }
+          &_info {
+            width: 90%;
+            &_email {
+              &_container {
+                &_icon {
+                  display: none !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -50,11 +50,13 @@ export default class EditDescriptionDialog extends Component {
     return (
       <Dialog open={this.props.editDescriptionOpen} keepMounted fullWidth="true" maxWidth="xs">
         <div className={styles.desc_tile}>
-          <DialogTitle className={styles.desc_title}>Edit schedule description</DialogTitle>
+          <DialogTitle className={styles.desc_title}>Edit Public Note</DialogTitle>
 
           <TextField
-            id="descInput"
-            label="Description"
+            id="outlined-multiline-static"
+            label="DESCRIPTION"
+            multiline
+            rows={3}
             defaultValue={this.state.descInput}
             value={this.state.descInput}
             onChange={this.handleChange('descInput')}

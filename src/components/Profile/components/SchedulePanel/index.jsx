@@ -1,4 +1,6 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import EditIcon from '@mui/icons-material/Edit';
+
 import {
   Accordion,
   AccordionDetails,
@@ -7,6 +9,9 @@ import {
   Grid,
   Switch,
   Typography,
+  IconButton,
+  Card,
+  CardHeader,
 } from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -23,6 +28,7 @@ import EditDescriptionDialog from './components/EditDescriptionDialog';
 import RemoveScheduleDialog from './components/RemoveScheduleDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import MyScheduleDialog from './components/myScheduleDialog';
+import styles from './ScheduleHeader.module.css';
 
 // Default values
 const STARTHOUR = '08:00';
@@ -48,7 +54,7 @@ class GordonSchedulePanel extends Component {
     this.state = {
       myProf: false, //myProf is boolean value that determines whether this is myprofile or not. this.props.profile actually contains profile data.
       isSchedulePrivate: 0,
-      isExpanded: false,
+      isExpanded: true,
       myScheduleOpen: false,
       disabled: true,
       selectedEvent: null,
@@ -305,35 +311,35 @@ class GordonSchedulePanel extends Component {
       );
     }
 
-    if (this.props.myProf && !isFaculty) {
-      privacyButton = (
-        <Fragment>
-          <Switch
-            onChange={() => {
-              this.handleChangeSchedulePrivacy();
-            }}
-            checked={!this.state.isSchedulePrivate}
-            classes={{
-              switchBase: classes.colorSwitchBase,
-              checked: classes.colorChecked,
-              bar: classes.colorBar,
-            }}
-          />
-          <Typography style={{ fontSize: '0.9rem' }}>
-            {this.state.isSchedulePrivate
-              ? 'Course Schedule : Private'
-              : 'Course Schedule : Public'}
-          </Typography>
-        </Fragment>
-      );
-    }
+    // if (this.props.myProf && !isFaculty) {
+    //   privacyButton = (
+    //     <Fragment>
+    //       <Switch
+    //         onChange={() => {
+    //           this.handleChangeSchedulePrivacy();
+    //         }}
+    //         checked={!this.state.isSchedulePrivate}
+    //         classes={{
+    //           switchBase: classes.colorSwitchBase,
+    //           checked: classes.colorChecked,
+    //           bar: classes.colorBar,
+    //         }}
+    //       />
+    //       <Typography style={{ fontSize: '0.9rem' }}>
+    //         {this.state.isSchedulePrivate
+    //           ? 'Course Schedule : Private'
+    //           : 'Course Schedule : Public'}
+    //       </Typography>
+    //     </Fragment>
+    //   );
+    // }
 
     if (this.props.myProf) {
       editDescriptionButton = (
         <Fragment>
-          <Button variant="contained" style={button} onClick={this.handleEditDescriptionOpen}>
-            EDIT DESCRIPTION
-          </Button>
+          <IconButton variant="contained" style={button} onClick={this.handleEditDescriptionOpen}>
+            <EditIcon />
+          </IconButton>
         </Fragment>
       );
     }
@@ -357,32 +363,50 @@ class GordonSchedulePanel extends Component {
     this.state.isExpanded ? (panelTitle = 'Hide') : (panelTitle = 'Show');
     if (this.state.loading) {
       schedulePanel = <GordonLoader />;
+    } else if (!this.props.myProf && !isFaculty) {
+      schedulePanel = (
+        <Grid container className={styles.memberships_header}>
+          <CardHeader title="Schedule Note:" />
+          <Grid container item xs={12} lg={8} alignItems="center" justifyContent="flex-start">
+            <Markup content={replaced} />
+          </Grid>
+        </Grid>
+      );
     } else {
       schedulePanel = (
-        <Accordion TransitionProps={{ unmountOnExit: true }} onChange={this.handleIsExpanded}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>{panelTitle} the Schedule</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid container direction="row" justifyContent="center">
-              {this.props.isOnline && (
-                <Grid container direction="row" item xs={12} lg={10}>
-                  <Grid
-                    container
-                    item
-                    xs={12}
-                    lg={8}
-                    alignItems="center"
-                    justifyContent="flex-start"
-                  >
-                    <Markup content={replaced} />
-                  </Grid>
+        <>
+          <Grid container className={styles.memberships_header}>
+            <CardHeader title="Schedule" />
+          </Grid>
+          <Card className={styles.memberships_card}>
+            <Accordion
+              TransitionProps={{ unmountOnExit: true }}
+              onChange={this.handleIsExpanded}
+              defaultExpanded
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>{panelTitle} Schedule</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container direction="row" justifyContent="center">
+                  {this.props.isOnline && (
+                    <Grid container direction="row" item xs={12} lg={10}>
+                      <Grid
+                        container
+                        item
+                        xs={12}
+                        lg={2}
+                        alignItems="center"
+                        justifyContent="flex-start"
+                      >
+                        <Markup content={replaced} />
+                      </Grid>
 
-                  <Grid
+                      {/* <Grid
                     container
                     direction="column"
                     item
@@ -392,51 +416,52 @@ class GordonSchedulePanel extends Component {
                     justifyContent="flex-end"
                   >
                     {privacyButton}
-                  </Grid>
+                  </Grid> */}
 
-                  <Grid item xs={6} lg={2}>
-                    {editDescriptionButton}
-                  </Grid>
+                      <Grid item xs={1} lg={6}>
+                        {editDescriptionButton}
+                      </Grid>
 
-                  <Grid item xs={6} lg={2}>
+                      {/* <Grid item xs={6} lg={2}>
                     {removeOfficeHourButton}
-                  </Grid>
+                  </Grid> */}
+                      <Grid
+                        container
+                        direction="column"
+                        item
+                        xs={12}
+                        lg={8}
+                        alignItems="flex-start"
+                        justifyContent="flex-start"
+                      >
+                        {lastUpdate}
+                      </Grid>
+                    </Grid>
+                  )}
 
-                  <Grid
-                    container
-                    direction="column"
-                    item
-                    xs={12}
-                    lg={8}
-                    alignItems="flex-end"
-                    justifyContent="flex-end"
-                  >
-                    {lastUpdate}
+                  <Grid item xs={12} lg={10}>
+                    <GordonScheduleCalendar
+                      profile={this.props.profile}
+                      myProf={this.props.myProf}
+                      handleRemoveButton={this.handleRemoveButton.bind(this)}
+                      handleEditDescriptionButton={this.handleEditDescriptionButton.bind(this)}
+                      handleDoubleClick={this.handleDoubleClick.bind(this)}
+                      handleMyScheduleOpen={this.handleMyScheduleOpen.bind(this)}
+                      schedulePrivacy={this.state.isSchedulePrivate}
+                      reloadHandler={this.reloadHandler}
+                      reloadCall={this.state.reloadCall}
+                      isOnline={this.props.isOnline}
+                    />
                   </Grid>
                 </Grid>
-              )}
 
-              <Grid item xs={12} lg={10}>
-                <GordonScheduleCalendar
-                  profile={this.props.profile}
-                  myProf={this.props.myProf}
-                  handleRemoveButton={this.handleRemoveButton.bind(this)}
-                  handleEditDescriptionButton={this.handleEditDescriptionButton.bind(this)}
-                  handleDoubleClick={this.handleDoubleClick.bind(this)}
-                  handleMyScheduleOpen={this.handleMyScheduleOpen.bind(this)}
-                  schedulePrivacy={this.state.isSchedulePrivate}
-                  reloadHandler={this.reloadHandler}
-                  reloadCall={this.state.reloadCall}
-                  isOnline={this.props.isOnline}
-                />
-              </Grid>
-            </Grid>
-
-            {editDialog}
-            {myScheduleDialog}
-            {removeScheduleDialog}
-          </AccordionDetails>
-        </Accordion>
+                {editDialog}
+                {myScheduleDialog}
+                {removeScheduleDialog}
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        </>
       );
     }
 
