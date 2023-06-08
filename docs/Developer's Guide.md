@@ -82,6 +82,8 @@ After following [the instructions to start the backend](https://github.com/gordo
 
 You do **not** need to change `.env.production`.
 
+Make sure to stop and restart the project with ```npm run start``` any time you change the API URL.
+
 Sometimes, you would like to connect the frontend on your local computer to the backend on a remote server. For example, if you are running the backend on a CPS Server virtual machine but you want to run the frontend from your own machine. There are two ways to do this: via HTTP/s or via SSH
 
 ## Connecting to a Remote Backend via HTTP
