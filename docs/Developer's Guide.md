@@ -108,24 +108,26 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 
 1. Your local machine must be configured as an SSH host.
 
-   [Windows Installation](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui).
+  - Windows [Instructions](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui).
 
-   - If you are on Windows 11+, you may need to update the firewall to allow inbound connections on a public network.
+    - If you are on Windows 11+, you may need to update the firewall to allow inbound connections on a public network.
       - Search for `Check Firewall Status` in the start menu
       - Click `Turn Windows Defender Firewall on or off`
       - Uncheck `Block all incoming connections, including...` under the `Public network settings` header
       - Click Ok
-   - Also on Windows, if you are a local administrator, you will not be able to use SSH key authentication unless you add the public SSH key to `C:\Program Data\ssh\administrators_authorized_keys` rather than to `C:\Users\[your username]\.ssh\authorized_keys`. Create the file if it does not exist.
+    - Also on Windows, if you are a local administrator, you will not be able to use SSH key authentication unless you add the public SSH key to `C:\Program Data\ssh\administrators_authorized_keys` rather than to `C:\Users\[your username]\.ssh\authorized_keys`. Create the file if it does not exist.
 
-   [Ubuntu Installation](ubuntu.com/server/docs/service-openssh)
-
-   MacOS & other Linux distributions should already have an SSH server installed.
-
-   On MacOS, you may have to enable the SSH server in System Preferences. Follow [these instructions](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) to do so.
+   - Ubuntu [Instructions](https://ubuntu.com/server/docs/service-openssh).  Red Hat and other Linux distributions should already have an SSH server installed.
+   
+   - MacOS: The SSH server should already be installed but you may have to enable the SSH server in System Preferences. Follow [these instructions](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) to do so.
 
 2. Create the SSH tunnel
 
-   After setting up the ssh server on your local machine, find your host IP or DNS address.  Open a command prompt or terminal window and enter `ipconfig` (Windows), `hostname` and/or `ifconfig` (MacOS), or `hostname -I` and/or `hostname -f` (Linux).  You will need to know this so you can connect to your local machine from the virtual machine.
+   After setting up the SSH server on your local machine, find your machine's DNS name or IP number:
+   
+   - Windows: Use `hostname` to get the first part of the hostname and `ipconfig` to get DNS Suffix or the IPv4 address.
+   - MacOS: use `hostname` to find the DNS name or `ifconfig` to get the IP address.
+   - Linux: Use `hostname -f` to get the DNS name or `ip a` to find the IP number.
    
    Log into the VM and open a Git Bash shell or a command prompt/powershell window. Enter the following command:
 
