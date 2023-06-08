@@ -48,6 +48,13 @@ import { compareByProperty, searchParamSerializerFactory } from 'services/utils'
 import { gordonColors } from 'theme';
 import SearchField, { SelectOption } from './components/SearchField';
 import addressService from 'services/address';
+import Box from '@mui/material/Box'; //omit if it doesn't work
+import Slider from '@mui/material/Slider'; //omit if it doesn't work
+import { PersonalInfoList } from 'components/Profile/components'; //omit if it doesn't work
+
+function valuetext(value: number) {
+  return '${value}';
+}
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
@@ -81,7 +88,7 @@ const searchPageTitle = (
 const defaultSearchParams: PeopleSearchQuery = {
   includeStudent: true,
   includeFacStaff: true,
-  includeAlumni: true,
+  includeAlumni: false,
   first_name: '',
   last_name: '',
   major: '',
@@ -94,6 +101,7 @@ const defaultSearchParams: PeopleSearchQuery = {
   country: '',
   department: '',
   building: '',
+  year_range: '',
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -143,6 +151,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
   const [userProvidedYear, setUserProvidedYear] = useState(new Date().getFullYear());
+  const [graduationYearRange, setGraduationYearRange] = useState<number[]>([
+    1889,
+    userProvidedYear,
+  ]);
 
   /**
    * Default search params adjusted for the user's identity.
@@ -265,6 +277,14 @@ const SearchFieldList = ({ onSearch }: Props) => {
   if (loading) {
     return <GordonLoader />;
   }
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setGraduationYearRange(newValue as number[]);
+    let values = graduationYearRange.toString();
+    //console.log(values);
+    searchParams.year_range = values;
+  };
+
   const PeopleSearchCheckbox = (
     <Grid item xs={12} md={6}>
       <FormLabel component="label">Include: &nbsp;</FormLabel>
@@ -503,6 +523,17 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     Icon={FaCalendarTimes}
                     select
                   />
+                  <Box sx={{ width: 300, marginTop: 6 }}>
+                    <Slider
+                      getAriaLabel={() => 'graduationYearRange'} //work in progress for graduation year
+                      value={graduationYearRange}
+                      onChange={handleSliderChange}
+                      valueLabelDisplay="on"
+                      getAriaValueText={valuetext}
+                      min={1889}
+                      max={userProvidedYear}
+                    />
+                  </Box>
                 </AdvancedOptionsColumn>
               </Grid>
             </AccordionDetails>
