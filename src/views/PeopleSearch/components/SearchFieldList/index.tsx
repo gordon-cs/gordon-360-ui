@@ -12,8 +12,10 @@ import {
   FormLabel,
   Grid,
   Typography,
+  colors,
+  makeStyles,
 } from '@mui/material';
-import { ExpandMore } from '@mui/icons-material';
+import { DisplaySettings, ExpandMore } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
 import {
@@ -48,9 +50,9 @@ import { compareByProperty, searchParamSerializerFactory } from 'services/utils'
 import { gordonColors } from 'theme';
 import SearchField, { SelectOption } from './components/SearchField';
 import addressService from 'services/address';
-import Box from '@mui/material/Box'; //omit if it doesn't work
-import Slider from '@mui/material/Slider'; //omit if it doesn't work
-import { PersonalInfoList } from 'components/Profile/components'; //omit if it doesn't work
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+import Switch from '@mui/material/Switch';
 
 function valuetext(value: number) {
   return '${value}';
@@ -155,6 +157,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
     1889,
     userProvidedYear,
   ]);
+  const [switchYearRange, setSwitchYearRange] = useState(true);
 
   /**
    * Default search params adjusted for the user's identity.
@@ -281,8 +284,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     setGraduationYearRange(newValue as number[]);
     let values = graduationYearRange.toString();
-    //console.log(values);
     searchParams.year_range = values;
+  };
+
+  const handleSwitchChange = () => {
+    setSwitchYearRange((prev) => !prev);
   };
 
   const PeopleSearchCheckbox = (
@@ -512,28 +518,44 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   >
                     Alumni
                   </Typography>
-                  <SearchField
-                    name="graduation_year"
-                    value={searchParams.graduation_year}
-                    updateValue={handleUpdate}
-                    options={Array.from({ length: userProvidedYear - 1889 + 1 }, (_, i) => ({
-                      value: (userProvidedYear - i).toString(),
-                      label: (userProvidedYear - i).toString(),
-                    }))}
-                    Icon={FaCalendarTimes}
-                    select
-                  />
-                  <Box sx={{ width: 300, marginTop: 6 }}>
-                    <Slider
-                      getAriaLabel={() => 'graduationYearRange'} //work in progress for graduation year
-                      value={graduationYearRange}
-                      onChange={handleSliderChange}
-                      valueLabelDisplay="on"
-                      getAriaValueText={valuetext}
-                      min={1889}
-                      max={userProvidedYear}
+                  {switchYearRange == true ? (
+                    <FormControlLabel
+                      control={<Switch onChange={handleSwitchChange}></Switch>}
+                      label="Switch to Search by Year Range"
+                      labelPlacement="end"
+                    ></FormControlLabel>
+                  ) : (
+                    <FormControlLabel
+                      control={<Switch onChange={handleSwitchChange}></Switch>}
+                      label="Switch to Search by Graduation Year"
+                      labelPlacement="end"
+                    ></FormControlLabel>
+                  )}
+                  {switchYearRange == true ? (
+                    <SearchField
+                      name="graduation_year"
+                      value={searchParams.graduation_year}
+                      updateValue={handleUpdate}
+                      options={Array.from({ length: userProvidedYear - 1889 + 1 }, (_, i) => ({
+                        value: (userProvidedYear - i).toString(),
+                        label: (userProvidedYear - i).toString(),
+                      }))}
+                      Icon={FaCalendarTimes}
+                      select
                     />
-                  </Box>
+                  ) : (
+                    <Box sx={{ width: 270, marginTop: 6, marginLeft: 4.5 }}>
+                      <Slider
+                        getAriaLabel={() => 'graduationYearRange'} //work in progress for graduation year
+                        value={graduationYearRange}
+                        onChange={handleSliderChange}
+                        valueLabelDisplay="on"
+                        getAriaValueText={valuetext}
+                        min={1889}
+                        max={userProvidedYear}
+                      />
+                    </Box>
+                  )}
                 </AdvancedOptionsColumn>
               </Grid>
             </AccordionDetails>
@@ -557,7 +579,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
             onClick={search}
             fullWidth
             variant="contained"
-            disabled={!canSearch}
+            disabled={canSearch == false}
           >
             SEARCH
           </Button>
