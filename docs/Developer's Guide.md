@@ -78,7 +78,7 @@ After following [the instructions to start the backend](https://github.com/gordo
 
 1. Open `.env.development`. You will see three sets of environment variables, marked `@PROD`, `@TRAIN`, and `@LOCALHOST`.
 1. Ensure that the `@PROD` and `@TRAIN` variables are commented out, and that `@LOCALHOST` is not commented out.
-1. Set `VITE_APP_API_URL` equal to `http://localhost:NNNN/`, where `NNNN` is the port your backend is listening on (e.g. `51626`).
+1. Set `VITE_APP_API_URL` equal to `http://localhost:NNNNN/`, where `NNNNN` is the port your backend is listening on (e.g. `51626`).
 
 You do **not** need to change `.env.production`.
 
@@ -106,7 +106,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 
 ### Steps:
 
-1. Your local machine must be configured as an SSH host
+1. Your local machine must be configured as an SSH host.
 
    [Windows Installation](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui).
 
@@ -125,24 +125,20 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 
 2. Create the SSH tunnel
 
-   After setting up the ssh server on your host machine, find your host IP or DNS address. Open a command prompt or terminal window and enter the following:
+   After setting up the ssh server on your local machine, find your host IP or DNS address.  Open a command prompt or terminal window and enter `ipconfig` (Windows), `hostname` and/or `ifconfig` (MacOS), or `hostname -I` and/or `hostname -f` (Linux).  You will need to know this so you can connect to your local machine from the virtual machine.
+   
+   Log into the VM and open a Git Bash shell or a command prompt/powershell window. Enter the following command:
 
    ```
-   hostname
-   ```
-
-   Log into the VM and open a command prompt/powershell window. n command prompt/terminal window enter the following command,
-
-   ```
-   ssh -R localhost:[API_VM_PORT_NUMBER]:localhost:[API_PC_PORT_NUMBER] [USERNAME]@[IP or HOSTNAME]
+   ssh -R localhost:[API_PC_PORT_NUMBER]:localhost:[API_VM_PORT_NUMBER] [USERNAME]@[IP or HOSTNAME]
    ```
 
    where:
 
-   - `API_VM_PORT_NUMBER` is the port that you selected for the API on the virtual machine like `http://localhost:[API_VM_PORT_NUMBER]`. Please make sure to use the non-HTTPS version as HTTPS does not work over the SSH tunnel.
-   - `API_PC_PORT_NUMBER` is the port that you want the API to be sent to on your personal computer. Feel free to use the same port as above for this one.
-   - `USER` is your account on the host machine.
-   - `IP or HOSTNAME` is the IP or HOSTNAME of your host machine. You can find this on Windows by typing `ipconfig`, on Linux or Mac with `ifconfig`
+   - `API_VM_PORT_NUMBER` is the port that you selected for the API on the virtual machine, i.e., `http://localhost:[API_VM_PORT_NUMBER]`. *Please make sure to use the non-HTTPS version as HTTPS does not work over the SSH tunnel.*
+   - `API_PC_PORT_NUMBER` is the port on your local machine that you want forwarded to the API. Feel free to use the same port as above for this one.
+   - `USERNAME` is your account on the local machine.
+   - `IP or HOSTNAME` is the IP or HOSTNAME of your local machine that you found above.
 
 You are now able to point your local frontend to the remote backend by setting `VITE_APP_API_URL` to `http://localhost:[API_PC_PORT_NUMBER]` in the `.env.development` file.
 
