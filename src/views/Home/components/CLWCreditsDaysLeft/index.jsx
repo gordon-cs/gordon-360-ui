@@ -59,7 +59,7 @@ const CLWCreditsDaysLeft = () => {
         // Allow different tooltips for different datasets within the same pie;
         callbacks: {
           // Code taken from https://github.com/chartjs/Chart.js/issues/1417
-          label: function(item, data) {
+          label: function (item, data) {
             return (
               data.datasets[item.datasetIndex].label[item.index] +
               ': ' +
@@ -158,7 +158,13 @@ const CLWCreditsDaysLeft = () => {
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
-            <CardHeader title={currSessionDescription} />
+            <CardHeader
+              title={currSessionDescription}
+              style={{
+                backgroundColor: gordonColors.primary.blue,
+                color: gordonColors.neutral.grayShades[50],
+              }}
+            />
           </Grid>
           <Grid item xs={5} align="right">
             <Button

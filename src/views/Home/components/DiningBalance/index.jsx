@@ -196,6 +196,42 @@ const DiningBalance = () => {
 
   return (
     <Card>
+      <CardHeader
+        title={
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={7} align="left">
+              Dining Balance
+            </Grid>
+            <Grid item xs={5} align="right">
+              <Button
+                variant="contained"
+                color="secondary"
+                style={{
+                  backgroundColor: gordonColors.primary.cyan,
+                  color: gordonColors.neutral.grayShades[50],
+                }}
+                component={Link}
+                href="https://gordon.cafebonappetit.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                TODAY'S MENU
+              </Button>
+            </Grid>
+          </Grid>
+        }
+        style={{
+          backgroundColor: gordonColors.primary.blue,
+          color: gordonColors.neutral.grayShades[50],
+        }}
+      />
+      <CardContent>{content}</CardContent>
+    </Card>
+  );
+};
+
+/*return (
+    <Card>
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
@@ -205,6 +241,10 @@ const DiningBalance = () => {
             <Button
               variant="contained"
               color="secondary"
+              style={{
+                backgroundColor: gordonColors.primary.cyan,
+                color: gordonColors.neutral.grayShades[50],
+              }}
               component={Link}
               href="https://gordon.cafebonappetit.com/"
               target="_blank"
@@ -218,6 +258,6 @@ const DiningBalance = () => {
       </CardContent>
     </Card>
   );
-};
+};*/
 
 export default DiningBalance;

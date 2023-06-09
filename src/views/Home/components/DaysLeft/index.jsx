@@ -6,6 +6,7 @@ import session from 'services/session';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
 import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import { NoBackpackSharp } from '@mui/icons-material';
 
 const DaysLeft = () => {
   const [daysRemaining, setDaysRemaining] = useState();
@@ -37,8 +38,17 @@ const DaysLeft = () => {
 
   return (
     <Card>
+      <CardHeader
+        title={currentSessionDescription}
+        style={{
+          backgroundColor: gordonColors.primary.blue,
+          color: gordonColors.neutral.grayShades[50],
+        }}
+      >
+        <br />
+      </CardHeader>
       <CardContent>
-        <CardHeader title={currentSessionDescription} />
+        <br />
         {loading ? (
           <GordonLoader />
         ) : (

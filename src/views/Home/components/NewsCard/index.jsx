@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import newsService from 'services/news';
 import NewsItem from 'views/News/components/NewsItem';
+import { gordonColors } from 'theme';
 
 const NewsCard = () => {
   const [news, setNews] = useState([]);
@@ -20,12 +21,25 @@ const NewsCard = () => {
               Today's Student News
             </Grid>
             <Grid item xs={5} align="right">
-              <Button variant="contained" color="secondary" component={Link} to="/news">
+              <Button
+                variant="contained"
+                //color="secondary"
+                style={{
+                  backgroundColor: gordonColors.primary.cyan,
+                  color: gordonColors.neutral.grayShades[50],
+                }}
+                component={Link}
+                to="/news"
+              >
                 All News
               </Button>
             </Grid>
           </Grid>
         }
+        style={{
+          backgroundColor: gordonColors.primary.blue,
+          color: gordonColors.neutral.grayShades[50],
+        }}
       />
       <CardContent>
         {news.length > 0 ? (
