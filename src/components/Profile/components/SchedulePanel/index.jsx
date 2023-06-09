@@ -12,6 +12,7 @@ import {
   IconButton,
   Card,
   CardHeader,
+  CardContent,
 } from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -54,7 +55,7 @@ class GordonSchedulePanel extends Component {
     this.state = {
       myProf: false, //myProf is boolean value that determines whether this is myprofile or not. this.props.profile actually contains profile data.
       isSchedulePrivate: 0,
-      isExpanded: true,
+      isExpanded: false,
       myScheduleOpen: false,
       disabled: true,
       selectedEvent: null,
@@ -254,10 +255,6 @@ class GordonSchedulePanel extends Component {
       }
     });
 
-    const button = {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    };
     const { classes } = this.props;
     let isFaculty = String(this.props.profile.PersonType).includes('fac');
 
@@ -337,8 +334,12 @@ class GordonSchedulePanel extends Component {
     if (this.props.myProf) {
       editDescriptionButton = (
         <Fragment>
-          <IconButton variant="contained" style={button} onClick={this.handleEditDescriptionOpen}>
-            <EditIcon />
+          <IconButton
+            style={{ marginBottom: '0.5rem' }}
+            onClick={this.handleEditDescriptionOpen}
+            size="large"
+          >
+            <EditIcon style={{ fontSize: 20 }} />
           </IconButton>
         </Fragment>
       );
@@ -360,29 +361,35 @@ class GordonSchedulePanel extends Component {
     }
 
     let panelTitle = '';
+    this.props.myProf ? (this.state.isExpanded = false) : (this.state.isExpanded = true);
     this.state.isExpanded ? (panelTitle = 'Hide') : (panelTitle = 'Show');
     if (this.state.loading) {
       schedulePanel = <GordonLoader />;
     } else if (!this.props.myProf && !isFaculty) {
       schedulePanel = (
-        <Grid container className={styles.memberships_header}>
-          <CardHeader title="Schedule Note:" />
-          <Grid container item xs={12} lg={8} alignItems="center" justifyContent="flex-start">
-            <Markup content={replaced} />
+        <>
+          <Grid item xs={12} className={styles.schedules}>
+            <Grid container className={styles.schedules_header}>
+              <CardHeader title="Profile Note" />
+            </Grid>
+            <Card className={styles.memberships_card}>
+              <CardContent align="left">{replaced}</CardContent>
+            </Card>
           </Grid>
-        </Grid>
+        </>
       );
     } else {
       schedulePanel = (
         <>
-          <Grid container className={styles.memberships_header}>
+          <Grid container className={styles.schedules_header}>
             <CardHeader title="Schedule" />
           </Grid>
-          <Card className={styles.memberships_card}>
+          <Card className={styles.schedules_card}>
             <Accordion
               TransitionProps={{ unmountOnExit: true }}
               onChange={this.handleIsExpanded}
               defaultExpanded
+              // this.props.myProf}
             >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
@@ -392,18 +399,22 @@ class GordonSchedulePanel extends Component {
                 <Typography>{panelTitle} Schedule</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Grid container direction="row" justifyContent="center">
+                <Grid container direction="row" justifyContent="center" align="left">
                   {this.props.isOnline && (
                     <Grid container direction="row" item xs={12} lg={10}>
+                      <Grid item align="center" xs={2}>
+                        <Typography>Office Hours:</Typography>
+                        <item>{editDescriptionButton}</item>
+                      </Grid>
                       <Grid
-                        container
                         item
-                        xs={12}
-                        lg={2}
-                        alignItems="center"
+                        xs={10}
                         justifyContent="flex-start"
+                        classname={styles.officeHourText}
                       >
-                        <Markup content={replaced} />
+                        <item>
+                          <Markup classname={styles.officeHourText} content={replaced} />
+                        </item>
                       </Grid>
 
                       {/* <Grid
@@ -418,14 +429,12 @@ class GordonSchedulePanel extends Component {
                     {privacyButton}
                   </Grid> */}
 
-                      <Grid item xs={1} lg={6}>
-                        {editDescriptionButton}
-                      </Grid>
-
                       {/* <Grid item xs={6} lg={2}>
                     {removeOfficeHourButton}
                   </Grid> */}
-                      <Grid
+
+                      {/* THIS IS FOR LAST UPDATED */}
+                      {/* <Grid
                         container
                         direction="column"
                         item
@@ -435,7 +444,7 @@ class GordonSchedulePanel extends Component {
                         justifyContent="flex-start"
                       >
                         {lastUpdate}
-                      </Grid>
+                      </Grid> */}
                     </Grid>
                   )}
 

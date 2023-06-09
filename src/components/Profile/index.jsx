@@ -59,11 +59,11 @@ const Profile = ({ profile, myProf }) => {
         </Grid>
       )}
 
-      {((!myProf && profileIsStudent) || canReadStudentSchedules) && (
+      {/* {((!myProf && profileIsStudent) || canReadStudentSchedules) && (
         <Grid item xs={12} lg={10} align="center">
           <SchedulePanel profile={profile} myProf={myProf} isOnline={isOnline} />
         </Grid>
-      )}
+      )} */}
 
       <Grid item xs={12} lg={5}>
         <Grid container spacing={2}>
