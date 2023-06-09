@@ -725,60 +725,18 @@ const StudentNews = () => {
               </Grid>
             </Grid>
             {!currentlyEditing && (
-            <div className="gc360_photo_dialog_box">
-              <DialogContent className="gc360_photo_dialog_box_content">
-                <DialogContentText className="gc360_photo_dialog_box_content_text">
-                  {createPhotoDialogBoxMessage()}
-                </DialogContentText>
-                {!cropperImageData && (
-                  <Dropzone
-                    onDropAccepted={onDropAccepted}
-                    onDropRejected={onDropRejected}
-                    accept={{
-                      'image/*': ['.jpeg', ',jpg', '.png'],
-                    }}
-                  >
-                    {({ getRootProps, getInputProps }) => (
-                      <section>
-                        <div
-                          className="gc360_photo_dialog_box_content_dropzone"
-                          {...getRootProps()}
-                        >
-                          <input {...getInputProps()} />
-                        </div>
-                      </section>
-                    )}
-                  </Dropzone>
-                )}
-                {cropperImageData && (
-                  <div className="gc360_photo_dialog_box_content_cropper">
-                    <Cropper
-                      ref={cropperRef}
-                      src={cropperImageData}
-                      autoCropArea={1}
-                      viewMode={3}
-                      aspectRatio={aspectRatio}
-                      highlight={false}
-                      background={false}
-                      zoom={onCropperZoom}
-                      zoomable={false}
-                      dragMode={'none'}
-                      checkCrossOrigin={false}
-                    />
-                  </div>
-                )}
-              </DialogContent>
-              <DialogActions className="gc360_photo_dialog_box_actions_top">
-                {cropperImageData && (
-                  <Tooltip
-                    classes={{ tooltip: 'tooltip' }}
-                    id="tooltip-hide"
-                    title="Remove this image from the post"
-                  >
-                    <Button
-                      variant="outlined"
-                      onClick={() => setCropperImageData(null)}
-                      className="gc360_photo_dialog_box_content_button"
+              <div className="gc360_photo_dialog_box">
+                <DialogContent className="gc360_photo_dialog_box_content">
+                  <DialogContentText className="gc360_photo_dialog_box_content_text">
+                    {createPhotoDialogBoxMessage()}
+                  </DialogContentText>
+                  {!cropperImageData && (
+                    <Dropzone
+                      onDropAccepted={onDropAccepted}
+                      onDropRejected={onDropRejected}
+                      accept={{
+                        'image/*': ['.jpeg', ',jpg', '.png'],
+                      }}
                     >
                       {({ getRootProps, getInputProps }) => (
                         <section>
@@ -792,7 +750,6 @@ const StudentNews = () => {
                       )}
                     </Dropzone>
                   )}
-
                   {cropperImageData && (
                     <div className="gc360_photo_dialog_box_content_cropper">
                       <Cropper
@@ -811,6 +768,51 @@ const StudentNews = () => {
                     </div>
                   )}
                 </DialogContent>
+                {/* <DialogActions className="gc360_photo_dialog_box_actions_top">
+                  {cropperImageData && (
+                    <Tooltip
+                      classes={{ tooltip: 'tooltip' }}
+                      id="tooltip-hide"
+                      title="Remove this image from the post"
+                    >
+                      <Button
+                        variant="outlined"
+                        onClick={() => setCropperImageData(null)}
+                        className="gc360_photo_dialog_box_content_button"
+                      >
+                        {({ getRootProps, getInputProps }) => (
+                          <section>
+                            <div
+                              className="gc360_photo_dialog_box_content_dropzone"
+                              {...getRootProps()}
+                            >
+                              <input {...getInputProps()} />
+                            </div>
+                          </section>
+                        )}
+                      </Button>
+                    </Tooltip>
+                  )}
+                </DialogActions> */}
+                {/* <DialogContent>
+                  {cropperImageData && (
+                    <div className="gc360_photo_dialog_box_content_cropper">
+                      <Cropper
+                        ref={cropperRef}
+                        src={cropperImageData}
+                        autoCropArea={1}
+                        viewMode={3}
+                        aspectRatio={aspectRatio}
+                        highlight={false}
+                        background={false}
+                        zoom={onCropperZoom}
+                        zoomable={false}
+                        dragMode={'none'}
+                        checkCrossOrigin={false}
+                      />
+                    </div>
+                  )}
+                </DialogContent> */}
                 <DialogActions className="gc360_photo_dialog_box_actions_top">
                   {cropperImageData && (
                     <Tooltip
