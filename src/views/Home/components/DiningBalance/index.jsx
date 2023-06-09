@@ -230,34 +230,4 @@ const DiningBalance = () => {
   );
 };
 
-/*return (
-    <Card>
-      <CardContent>
-        <Grid container direction="row" alignItems="center">
-          <Grid item xs={7} align="left">
-            <CardHeader title="Dining Balance" />
-          </Grid>
-          <Grid item xs={5} align="right">
-            <Button
-              variant="contained"
-              color="secondary"
-              style={{
-                backgroundColor: gordonColors.primary.cyan,
-                color: gordonColors.neutral.grayShades[50],
-              }}
-              component={Link}
-              href="https://gordon.cafebonappetit.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              TODAY'S MENU
-            </Button>
-          </Grid>
-        </Grid>
-        {content}
-      </CardContent>
-    </Card>
-  );
-};*/
-
 export default DiningBalance;
