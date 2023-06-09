@@ -1,6 +1,15 @@
-import { Button, CardContent, Collapse, Grid, Typography } from '@mui/material';
+import {
+  Button,
+  CardContent,
+  Collapse,
+  Grid,
+  FormControlLabel,
+  Switch,
+  Typography,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import AddPhotoIcon from '@mui/icons-material/AddPhotoAlternate';
 import { useUser } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import PropTypes from 'prop-types';
@@ -8,19 +17,28 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './NewsItem.module.css';
 
-const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsItemDelete }) => {
+const NewsItem = ({
+  posting,
+  isUnapproved,
+  size,
+  handleNewsItemEdit,
+  handleNewsImageEdit,
+  handleNewsItemDelete,
+  handleChangeNewsApprovalStatus,
+  isAdmin,
+}) => {
   const [open, setOpen] = useState(false);
   const isOnline = useNetworkStatus();
   const { profile } = useUser();
 
-  if (unapproved) {
+  if (isUnapproved) {
     // Shows 'pending approval' instead of the date posted
     posting.dayPosted = <i>pending approval...</i>;
   }
 
   const author = (
     <Typography className={styles.news_column}>
-      {!isOnline || unapproved ? (
+      {!isOnline || isUnapproved ? (
         posting.author
       ) : (
         <Link className={styles.news_authorProfileLink} to={`/profile/${posting.ADUN}`}>
@@ -30,12 +48,15 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
     </Typography>
   );
 
-  // Only show the edit button if the current user is the author of the posting
+  // Only show the edit button if the current user is the author of the posting OR is the Student News admin
   // AND posting is unapproved
   // null check temporarily fixes issue on home card when user has not yet been authenticated
   // it is because the home card doesn't give these properties
   let editButton;
-  if (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase() && unapproved) {
+  if (
+    (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase() || isAdmin) &&
+    isUnapproved
+  ) {
     editButton = (
       <Button
         variant="outlined"
@@ -51,10 +72,55 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
     editButton = <div></div>;
   }
 
+  // Only show the edit image button if the current user is the author of the posting OR is the Student News admin
+  // AND posting is unapproved
+  // null check temporarily fixes issue on home card when user has not yet been authenticated
+  // it is because the home card doesn't give these properties
+  let editImageButton;
+  if (
+    (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase() || isAdmin) &&
+    isUnapproved
+  ) {
+    editImageButton = (
+      <Button
+        variant="outlined"
+        color="primary"
+        startIcon={posting.Image === null ? <AddPhotoIcon /> : <EditIcon />}
+        onClick={() => handleNewsImageEdit(posting.SNID)}
+        className={styles.btn}
+      >
+        {posting.Image === null ? 'Attach Image' : 'Edit Image'}
+      </Button>
+    );
+  } else {
+    editImageButton = <div></div>;
+  }
+
+  // Only show the accepted status switch if the current user is the Student News admin
+  let acceptedStatusSwitch;
+  if (isAdmin) {
+    acceptedStatusSwitch = (
+      <FormControlLabel
+        control={
+          <Switch
+            onChange={() => handleChangeNewsApprovalStatus(posting.SNID, isUnapproved)}
+            checked={!isUnapproved}
+          />
+        }
+        label={isUnapproved ? 'Unapproved' : 'Approved'}
+        labelPlacement="bottom"
+        disabled={!isOnline}
+      />
+    );
+  } else {
+    acceptedStatusSwitch = null;
+  }
+
   // Only show the delete button if the current user is the author of the posting
+  // OR is the Student News admin
   // null check temporarily fixes issue on home card when user has not yet been authenticated
   let deleteButton;
-  if (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase()) {
+  if (profile?.AD_Username?.toLowerCase() === posting.ADUN.toLowerCase() || isAdmin) {
     deleteButton = (
       <Button
         variant="outlined"
@@ -80,7 +146,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
         onClick={() => {
           setOpen(!open);
         }}
-        className={`${styles.news_item} ${unapproved ? styles.unapproved : styles.approved}`}
+        className={`${styles.news_item} ${isUnapproved ? styles.unapproved : styles.approved}`}
         justifyContent="center"
       >
         <Grid item xs={12}>
@@ -97,7 +163,9 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
           </CardContent>
           <Grid container justifyContent="space-evenly">
             {editButton}
+            {editImageButton}
             {deleteButton}
+            {acceptedStatusSwitch}
           </Grid>
         </Collapse>
       </Grid>
@@ -112,7 +180,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
         onClick={() => {
           setOpen(!open);
         }}
-        className={`${styles.news_item} ${unapproved ? styles.unapproved : styles.approved}`}
+        className={`${styles.news_item} ${isUnapproved ? styles.unapproved : styles.approved}`}
       >
         <Grid item xs={2}>
           <Typography className={styles.news_column}>{posting.categoryName}</Typography>
@@ -145,7 +213,9 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
                 <Grid container justifyContent="space-evenly">
                   {/* these conditionally render - see respective methods */}
                   {editButton}
+                  {editImageButton}
                   {deleteButton}
+                  {acceptedStatusSwitch}
                 </Grid>
               </Grid>
             </Grid>
@@ -167,10 +237,12 @@ NewsItem.propTypes = {
     // Expiration: PropTypes.string.isRequired,
   }).isRequired,
 
-  unapproved: PropTypes.any,
+  isUnapproved: PropTypes.any,
   size: PropTypes.string.isRequired,
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,
+  handleChangeNewsApprovalStatus: PropTypes.func.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
 };
 
 export default NewsItem;

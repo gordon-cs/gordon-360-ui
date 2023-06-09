@@ -1,60 +1,71 @@
-import { Card, Grid, List, Typography } from '@mui/material';
+import {
+  Card,
+  CardHeader,
+  Grid,
+  List,
+  Typography,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+} from '@mui/material';
 import PropTypes from 'prop-types';
+import { ExpandMore } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { gordonColors } from 'theme';
 import NewsItem from '../NewsItem';
 import styles from './NewsList.module.css';
 
-//https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
-//Excellent resource for handling rerender on resize -Josh
-
 const BREAKPOINT_WIDTH = 540;
 
-const headerStyle = {
-  backgroundColor: gordonColors.primary.blue,
-  color: '#FFF',
-  padding: '10px',
-};
-
-const singleHeader = (
-  <div style={headerStyle}>
-    <Grid container direction="row">
-      <Grid item xs={12}>
-        <Typography variant="body2" style={headerStyle}>
-          NEWS
-        </Typography>
-      </Grid>
-    </Grid>
-  </div>
-);
-
 const fullHeader = (
-  <Grid container direction="row" style={headerStyle}>
+  <Grid container direction="row" className={styles.header}>
     <Grid item xs={2}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.header}>
         CATEGORY
       </Typography>
     </Grid>
     <Grid item xs={5}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.header}>
         SUBJECT
       </Typography>
     </Grid>
     <Grid item xs={3}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.header}>
         POSTED BY
       </Typography>
     </Grid>
     <Grid item xs={2}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.header}>
         POSTED
       </Typography>
     </Grid>
   </Grid>
 );
 
-const NewsList = ({ news, personalUnapprovedNews, handleNewsItemEdit, handleNewsItemDelete }) => {
+const NewsList = ({
+  news,
+  header,
+  handleNewsItemEdit,
+  handleNewsImageEdit,
+  handleNewsItemDelete,
+  handleChangeNewsApprovalStatus,
+  isUnapproved,
+  isAdmin,
+  tabBreakpointWidth,
+}) => {
   const [width, setWidth] = useState(window.innerWidth);
+
+  const singleHeader = (
+    <div className={styles.header}>
+      <Grid container direction="row">
+        <Grid item xs={12}>
+          <Typography variant="body2" className={styles.header}>
+            {header}
+          </Typography>
+        </Grid>
+      </Grid>
+    </div>
+  );
 
   useEffect(() => {
     function handleResize() {
@@ -66,42 +77,35 @@ const NewsList = ({ news, personalUnapprovedNews, handleNewsItemEdit, handleNews
     };
   });
 
-  return news.length > 0 || personalUnapprovedNews.length > 0 ? (
-    <Card>
+  return (
+    <Card className={width >= tabBreakpointWidth ? styles.full_news_list : styles.news_list}>
       {width < BREAKPOINT_WIDTH ? singleHeader : fullHeader}
-      <Grid>
-        <List className={styles.news_list} disablePadding>
-          {personalUnapprovedNews.length > 0 &&
-            personalUnapprovedNews.map((posting) => (
-              <NewsItem
-                posting={posting}
-                unapproved
-                size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-                handleNewsItemEdit={handleNewsItemEdit}
-                handleNewsItemDelete={handleNewsItemDelete}
-                key={posting.SNID}
-              />
-            ))}
-
-          {news.length > 0 &&
-            news.map((posting) => (
-              <NewsItem
-                posting={posting}
-                //approved
-                size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
-                handleNewsItemEdit={handleNewsItemEdit}
-                handleNewsItemDelete={handleNewsItemDelete}
-                key={posting.SNID}
-              />
-            ))}
-        </List>
-      </Grid>
+      {news.length > 0 ? (
+        <Grid>
+          <List className={styles.list} disablePadding>
+            {news.length > 0 &&
+              news.map((posting) => (
+                <NewsItem
+                  posting={posting}
+                  isUnapproved={isUnapproved ?? true}
+                  size={width < BREAKPOINT_WIDTH ? 'single' : 'full'}
+                  handleNewsItemEdit={handleNewsItemEdit}
+                  handleNewsImageEdit={handleNewsImageEdit}
+                  handleNewsItemDelete={handleNewsItemDelete}
+                  handleChangeNewsApprovalStatus={handleChangeNewsApprovalStatus}
+                  key={posting.SNID}
+                  isAdmin={isAdmin}
+                />
+              ))}
+          </List>
+        </Grid>
+      ) : (
+        //No news
+        <Typography variant="h4" className={styles.typography}>
+          No News To Show
+        </Typography>
+      )}
     </Card>
-  ) : (
-    //No news
-    <Typography variant="h4" align="center">
-      No News To Show
-    </Typography>
   );
 };
 
@@ -117,21 +121,11 @@ NewsList.propTypes = {
       // Expiration: PropTypes.string.isRequired,
     }),
   ).isRequired,
-
-  personalUnapprovedNews: PropTypes.arrayOf(
-    PropTypes.shape({
-      SNID: PropTypes.number.isRequired,
-      Subject: PropTypes.string.isRequired,
-      ADUN: PropTypes.string.isRequired,
-      Entered: PropTypes.string.isRequired,
-      categoryName: PropTypes.string.isRequired,
-      Body: PropTypes.string.isRequired,
-      // Expiration: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-
   handleNewsItemEdit: PropTypes.func.isRequired,
   handleNewsItemDelete: PropTypes.func.isRequired,
+  handleChangeNewsApprovalStatus: PropTypes.func.isRequired,
+  isUnapproved: PropTypes.any,
+  isAdmin: PropTypes.bool.isRequired,
 };
 
 export default NewsList;

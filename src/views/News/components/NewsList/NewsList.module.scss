@@ -1,15 +1,39 @@
 @import '../../../../vars';
 
-// Leaving for now as the aesthetic of the news page takes shape
-// Styles will be cleaned up as the news project progresses
+%news_list {
+  margin-bottom: 1rem;
 
-// Make rows alternate white and grey
-/* stylelint-disable */
-// .news_list > section:nth-child(even) {
-//     background: $neutral-light-gray;
-// }
+  .header {
+    background-color: $primary-blue;
+    color: white;
+    padding: 10px;
+  }
 
-// .news_list > section:nth-child(odd) {
-//     background: $neutral-white;
-// }
-/* stylelint-enable */
+  .card_header {
+    background-color: $primary-blue;
+    color: white;
+    padding: 0px;
+    text-align: center;
+  }
+
+  .list {
+    padding: 0px;
+  }
+
+  .typography {
+    text-align: center;
+    padding: 1rem;
+  }
+}
+
+.news_list {
+  @extend %news_list;
+}
+
+.full_news_list {
+  @extend %news_list;
+
+  &:global(.MuiPaper-root) {
+    border-radius: 0 0 4px 4px;
+  }
+}
