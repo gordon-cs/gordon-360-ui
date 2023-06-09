@@ -19,7 +19,7 @@ import { TabPanel, TabContext } from '@mui/lab';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import 'cropperjs/dist/cropper.css';
@@ -725,16 +725,60 @@ const StudentNews = () => {
               </Grid>
             </Grid>
             {!currentlyEditing && (
-              <div className="gc360_photo_dialog_box">
-                <DialogContent className="gc360_photo_dialog_box_content">
-                  <DialogContentText className="gc360_photo_dialog_box_content_text">
-                    {createPhotoDialogBoxMessage()}
-                  </DialogContentText>
-                  {!cropperImageData && (
-                    <Dropzone
-                      onDropAccepted={onDropAccepted}
-                      onDropRejected={onDropRejected}
-                      accept="image/jpeg, image/jpg, image/png"
+            <div className="gc360_photo_dialog_box">
+              <DialogContent className="gc360_photo_dialog_box_content">
+                <DialogContentText className="gc360_photo_dialog_box_content_text">
+                  {createPhotoDialogBoxMessage()}
+                </DialogContentText>
+                {!cropperImageData && (
+                  <Dropzone
+                    onDropAccepted={onDropAccepted}
+                    onDropRejected={onDropRejected}
+                    accept={{
+                      'image/*': ['.jpeg', ',jpg', '.png'],
+                    }}
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <section>
+                        <div
+                          className="gc360_photo_dialog_box_content_dropzone"
+                          {...getRootProps()}
+                        >
+                          <input {...getInputProps()} />
+                        </div>
+                      </section>
+                    )}
+                  </Dropzone>
+                )}
+                {cropperImageData && (
+                  <div className="gc360_photo_dialog_box_content_cropper">
+                    <Cropper
+                      ref={cropperRef}
+                      src={cropperImageData}
+                      autoCropArea={1}
+                      viewMode={3}
+                      aspectRatio={aspectRatio}
+                      highlight={false}
+                      background={false}
+                      zoom={onCropperZoom}
+                      zoomable={false}
+                      dragMode={'none'}
+                      checkCrossOrigin={false}
+                    />
+                  </div>
+                )}
+              </DialogContent>
+              <DialogActions className="gc360_photo_dialog_box_actions_top">
+                {cropperImageData && (
+                  <Tooltip
+                    classes={{ tooltip: 'tooltip' }}
+                    id="tooltip-hide"
+                    title="Remove this image from the post"
+                  >
+                    <Button
+                      variant="outlined"
+                      onClick={() => setCropperImageData(null)}
+                      className="gc360_photo_dialog_box_content_button"
                     >
                       {({ getRootProps, getInputProps }) => (
                         <section>
@@ -816,7 +860,7 @@ const StudentNews = () => {
       return <GordonOffline feature="Student News" />;
     }
   } else {
-    return <GordonUnauthorized feature={'the student news page'} />;
+    return <GordonUnauthenticated feature={'the student news page'} />;
   }
 };
 

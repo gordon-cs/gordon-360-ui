@@ -1,6 +1,6 @@
 import { Print } from '@mui/icons-material';
 import { Card, CardContent, CardHeader, Fab, Grid, Typography } from '@mui/material';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -41,7 +41,7 @@ const CoCurricularTranscript = () => {
   }
 
   if (!profile) {
-    return <GordonUnauthorized feature={'your experience transcript'} />;
+    return <GordonUnauthenticated feature={'your experience transcript'} />;
   }
 
   return (

@@ -35,11 +35,20 @@ Here are the steps to setup the frontend for development:
 
    If it doesn't return a number, you will need to install NodeJS. There are two ways to do this:
 
-   1. Download and run the installer from [the NodeJS Website](https://nodejs.org/en/download/)
-   1. Use a tool that manages Node installations, such as
-      - For any OS: [Fast Node Manager](https://github.com/Schniz/fnm)
-      - For MacOS/Linux: [Node Version Manager](https://github.com/nvm-sh/nvm)
-      - For Windows: [NVM for Windows](https://github.com/coreybutler/nvm-windows)
+   1. Download and run the installer from [the NodeJS Website](https://nodejs.org/en/download/).  This requires admin (aka "root" or "sudoer") privileges, so if you are on a shared Linux workstation, use one of the options below.
+   1. Use a tool that manages Node installations, and use the "lts" version
+      (which means "long term support"). Options include:
+      - [Node Version Manager (NVM)]
+        (https://github.com/nvm-sh/nvm),
+        for Linux and MacOS.  After following the
+        [installation instructions]
+        (https://github.com/nvm-sh/nvm#installing-and-updating),
+        run these commands:
+         - `nvm install --lts`
+         - `nvm use --lts`
+      - [NVM for Windows](https://github.com/coreybutler/nvm-windows#overview).
+        (This is a completely separate project from the Linux/MacOS NVM.)
+      - [Fast Node Manager](https://github.com/Schniz/fnm) for all 3 platforms.
 
 1. Install dependencies
 
@@ -73,6 +82,8 @@ After following [the instructions to start the backend](https://github.com/gordo
 
 You do **not** need to change `.env.production`.
 
+Make sure to stop and restart the project with ```npm run start``` any time you change the API URL.
+
 Sometimes, you would like to connect the frontend on your local computer to the backend on a remote server. For example, if you are running the backend on a CPS Server virtual machine but you want to run the frontend from your own machine. There are two ways to do this: via HTTP/s or via SSH
 
 ## Connecting to a Remote Backend via HTTP
@@ -98,7 +109,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 1. Your local machine must be configured as an SSH host
 
    [Windows Installation](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui).
-   
+
    - If you are on Windows 11+, you may need to update the firewall to allow inbound connections on a public network.
       - Search for `Check Firewall Status` in the start menu
       - Click `Turn Windows Defender Firewall on or off`
@@ -109,7 +120,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
    [Ubuntu Installation](ubuntu.com/server/docs/service-openssh)
 
    MacOS & other Linux distributions should already have an SSH server installed.
-   
+
    On MacOS, you may have to enable the SSH server in System Preferences. Follow [these instructions](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) to do so.
 
 2. Create the SSH tunnel

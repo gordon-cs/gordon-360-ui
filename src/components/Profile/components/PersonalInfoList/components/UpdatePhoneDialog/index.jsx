@@ -1,6 +1,6 @@
 import { FormControl, IconButton, Input, InputLabel } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import GordonDialogBox from 'components/GordonDialogBox/index';
+import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { forwardRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';

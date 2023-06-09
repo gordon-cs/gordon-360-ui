@@ -1,7 +1,7 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import { Button, Grid, List, Typography } from '@mui/material';
 import EventList from 'components/EventList';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -32,7 +32,7 @@ const EventsAttended = () => {
   if (loading === true) {
     content = <GordonLoader />;
   } else if (!isAuthenticated) {
-    content = <GordonUnauthorized feature={'your attended events'} />;
+    content = <GordonUnauthenticated feature={'your attended events'} />;
   } else if (events.length > 0) {
     content = (
       <Grid container direction="row" justifyContent="center" spacing="2">
