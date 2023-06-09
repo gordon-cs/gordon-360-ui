@@ -2,7 +2,6 @@ import GordonLoader from 'components/Loader';
 import Moment from 'moment';
 import { Component, Fragment } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import myscheduleService from 'services/myschedule';
 import scheduleService from 'services/schedule';
 import session from 'services/session';
 // @TODO CSSMODULES - Schedule Calendar needs work but left as normal for now
@@ -14,7 +13,7 @@ export default class GordonScheduleCalendar extends Component {
 
     this.state = {
       loading: true,
-      myScheduleOpen: false,
+      //myScheduleOpen: false,
       disabled: true,
       selectedEvent: null,
       isDoubleClick: false,
@@ -56,13 +55,13 @@ export default class GordonScheduleCalendar extends Component {
     } catch (e) {
       this.setState({ loading: false });
     }
-    const myschedule = await myscheduleService.getMySchedule(searchedUser.AD_Username);
-    const myscheduleInfo = myscheduleService.makeMySchedule(myschedule);
+    // const myschedule = await myscheduleService.getMySchedule(searchedUser.AD_Username);
+    // const myscheduleInfo = myscheduleService.makeMySchedule(myschedule);
 
     if (courseInfo) {
-      this.eventInfo = courseInfo.concat(myscheduleInfo);
-    } else {
-      this.eventInfo = myscheduleInfo;
+      this.eventInfo = courseInfo;
+      // } else {
+      //   this.eventInfo = myscheduleInfo;
     }
 
     let currentSession = await session.getCurrent();
@@ -88,7 +87,7 @@ export default class GordonScheduleCalendar extends Component {
     };
 
     const dayStart = new Date();
-    dayStart.setHours(6, 0, 0, 0);
+    dayStart.setHours(8, 0, 0, 0);
 
     const dayEnd = new Date();
     dayEnd.setHours(22, 0, 0, 0);
@@ -109,14 +108,8 @@ export default class GordonScheduleCalendar extends Component {
           timeslots={4}
           defaultView="day"
           view={['day']}
-          onSelectEvent={(event) => {
-            this.props.handleRemoveButton(event);
-          }}
           onDoubleClickEvent={(event) => {
             this.props.handleDoubleClick(event);
-          }}
-          onSelectSlot={(slotInfo) => {
-            this.props.handleMyScheduleOpen(slotInfo);
           }}
           defaultDate={Moment(new Date())}
           resources={resourceMap}
