@@ -4,6 +4,7 @@ interface UserAgentDataBrand {
   readonly brand: string;
   readonly version: string;
 }
+
 interface UserAgentData {
   readonly platform: string;
   readonly brands: UserAgentDataBrand[];
