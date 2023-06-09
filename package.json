@@ -79,7 +79,7 @@
     "format": "prettier --write '{**/*.md,src/**/*.{js,scss,ts,tsx}}'",
     "lint": "npm run --silent lint-js && npm run --silent lint-scss",
     "lint-js": "eslint --ext .js,.ts,.tsx src",
-    "lint-scss": "stylelint src/**/*.scss",
+    "lint-scss": "stylelint 'src/**/*.scss'",
     "prepare": "husky install",
     "lint-staged": "lint-staged",
     "serve": "vite preview"
