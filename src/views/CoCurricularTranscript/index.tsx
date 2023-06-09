@@ -52,7 +52,7 @@ const CoCurricularTranscript = () => {
                 Gordon College Experience Transcript
               </Typography>
             }
-            subheader={<SubHeader profile={profile != null ? profile : student1} />}
+            subheader={<SubHeader profile={profile ?? student1} />}
             disableTypography
           />
           <CardContent>
