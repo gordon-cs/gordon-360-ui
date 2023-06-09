@@ -12,7 +12,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import routes from 'routes';
 import { authenticate } from 'services/auth';
 import { windowBreakWidths } from 'theme';
@@ -39,27 +39,26 @@ const GordonHeader = ({ onDrawerToggle }) => {
    * The checks use regular expressions to check for matches in the url.
    */
   const updateTabHighlight = () => {
-    let currentPath = location.pathname;
     // Tab url regular expressions must be listed in the same order as the tabs, since the
     // indices of the elements in the array on the next line are mapped to the indices of the tabs
-    let urls = [
+    const urls = [
       /^\/$/,
       /^\/involvements\/?$|^\/activity/,
       /^\/events\/?$/,
-      /^\/people$/,
+      /^\/people$|^\/myprofile|^\/profile/,
       /^\/timesheets$/,
     ];
-    setTabIndex(false);
+    let currentPath = useLocation().pathname;
+    let tab = false;
     for (let i = 0; i < urls.length; i++) {
       if (urls[i].test(currentPath)) {
-        setTabIndex(i);
+        tab = i;
       }
     }
+    if (tab !== tabIndex) {
+      setTabIndex(tab);
+    }
   };
-
-  useEffect(() => {
-    updateTabHighlight();
-  }, [location.pathname]);
 
   useEffect(() => {
     if (width < windowBreakWidths.breakMD) {
@@ -139,88 +138,85 @@ const GordonHeader = ({ onDrawerToggle }) => {
   );
 
   return (
-    <section className={styles.gordon_header}>
-      <AppBar className={styles.app_bar} position="static">
-        <Toolbar>
-          <IconButton
-            className={styles.menu_button}
-            color="primary"
-            aria-label="open drawer"
-            onClick={onDrawerToggle}
-            size="large"
-          >
-            <MenuIcon className={styles.menu_button_icon} />
-          </IconButton>
-
-          <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
-            <Routes>
-              {routes.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={() => {
-                    setDocumentTitle(route.name || projectName);
-                    return <span>{route.name || projectName}</span>;
-                  }}
-                />
-              ))}
-            </Routes>
-          </Typography>
-
-          <div className={styles.center_container}>
-            <Tabs
-              textColor="inherit"
-              indicatorColor="secondary"
-              centered
-              value={tabIndex}
-              onChange={(event, value) => setTabIndex(value)}
+    <>
+      {updateTabHighlight()}
+      <section className={styles.gordon_header}>
+        <AppBar className={styles.app_bar} position="static">
+          <Toolbar>
+            <IconButton
+              className={styles.menu_button}
+              color="primary"
+              aria-label="open drawer"
+              onClick={onDrawerToggle}
+              size="large"
             >
-              <Tab
-                className={styles.tab}
-                icon={<HomeIcon />}
-                label="Home"
-                component={ForwardNavLink}
-                to="/"
-              />
-              <Tab
-                className={styles.tab}
-                icon={<LocalActivityIcon />}
-                label="Involvements"
-                component={ForwardNavLink}
-                to="/involvements"
-              />
-              <Tab
-                className={styles.tab}
-                icon={<EventIcon />}
-                label="Events"
-                component={ForwardNavLink}
-                to="/events"
-              />
-              {requiresAuthTab('People', <PeopleIcon />)}
-              {requiresAuthTab('Timesheets', <WorkIcon />)}
-            </Tabs>
-          </div>
+              <MenuIcon className={styles.menu_button_icon} />
+            </IconButton>
 
-          <div className={styles.people_search_container_container}>
-            {/* Width is dynamic */}
-            <div className={styles.people_search_container}>
-              {isAuthenticated ? <GordonQuickSearch /> : loginButton}
+            <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
+              <Routes>
+                {routes.map((route) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={() => {
+                      setDocumentTitle(route.name || projectName);
+                      return <span>{route.name || projectName}</span>;
+                    }}
+                  />
+                ))}
+              </Routes>
+            </Typography>
+
+            <div className={styles.center_container}>
+              <Tabs textColor="inherit" indicatorColor="secondary" centered value={tabIndex}>
+                <Tab
+                  className={styles.tab}
+                  icon={<HomeIcon />}
+                  label="Home"
+                  component={ForwardNavLink}
+                  to="/"
+                />
+                <Tab
+                  className={styles.tab}
+                  icon={<LocalActivityIcon />}
+                  label="Involvements"
+                  component={ForwardNavLink}
+                  to="/involvements"
+                />
+                <Tab
+                  className={styles.tab}
+                  icon={<EventIcon />}
+                  label="Events"
+                  component={ForwardNavLink}
+                  to="/events"
+                />
+                {requiresAuthTab('People', <PeopleIcon />)}
+                {requiresAuthTab('Timesheets', <WorkIcon />)}
+              </Tabs>
             </div>
-          </div>
 
-          <GordonNavAvatarRightCorner onClick={handleOpenMenu} menuOpened={isMenuOpen} />
+            <div className={styles.people_search_container_container}>
+              {/* Width is dynamic */}
+              <div className={styles.people_search_container}>
+                {isAuthenticated ? <GordonQuickSearch /> : loginButton}
+              </div>
+            </div>
 
-          <GordonNavButtonsRightCorner
-            open={isMenuOpen}
-            openDialogBox={setDialog}
-            anchorEl={anchorElement}
-            onClose={handleCloseMenu}
-          />
+            <GordonNavAvatarRightCorner onClick={handleOpenMenu} menuOpened={isMenuOpen} />
 
-          {createDialogBox()}
-        </Toolbar>
-      </AppBar>
-    </section>
+            <GordonNavButtonsRightCorner
+              open={isMenuOpen}
+              openDialogBox={setDialog}
+              anchorEl={anchorElement}
+              onClose={handleCloseMenu}
+            />
+
+            {createDialogBox()}
+          </Toolbar>
+        </AppBar>
+      </section>
+    </>
   );
 };
 
