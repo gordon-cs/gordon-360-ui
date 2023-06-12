@@ -1,4 +1,5 @@
 import { useIsAuthenticated } from '@azure/msal-react';
+import AppsIcon from '@mui/icons-material/Apps';
 import {
   Event as EventIcon,
   Home as HomeIcon,
@@ -48,6 +49,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
       /^\/events\/?$/,
       /^\/people$/,
       /^\/timesheets$/,
+      /^\/extralinks$/,
     ];
     setTabIndex(false);
     for (let i = 0; i < urls.length; i++) {
@@ -211,6 +213,13 @@ const GordonHeader = ({ onDrawerToggle }) => {
               />
               {requiresAuthTab('People', <PeopleIcon />)}
               {requiresAuthTab('Timesheets', <WorkIcon />)}
+              <Tab
+                className={styles.tab}
+                icon={<AppsIcon />}
+                label="Extra Links"
+                component={ForwardNavLink}
+                to="/extralinks"
+              />
             </Tabs>
           </div>
 

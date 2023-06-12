@@ -13,7 +13,6 @@ export default class GordonScheduleCalendar extends Component {
 
     this.state = {
       loading: true,
-      //myScheduleOpen: false,
       disabled: true,
       selectedEvent: null,
       isDoubleClick: false,
@@ -55,13 +54,9 @@ export default class GordonScheduleCalendar extends Component {
     } catch (e) {
       this.setState({ loading: false });
     }
-    // const myschedule = await myscheduleService.getMySchedule(searchedUser.AD_Username);
-    // const myscheduleInfo = myscheduleService.makeMySchedule(myschedule);
 
     if (courseInfo) {
       this.eventInfo = courseInfo;
-      // } else {
-      //   this.eventInfo = myscheduleInfo;
     }
 
     let currentSession = await session.getCurrent();

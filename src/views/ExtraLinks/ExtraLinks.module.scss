@@ -1,0 +1,80 @@
+@import '../../vars';
+
+.schedules {
+  &_header {
+    padding-left: 1rem;
+    background-color: $primary-blue;
+    color: $neutral-white;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+  &_card {
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    &_content {
+      padding: 1rem !important;
+      &_button {
+        background-color: $primary-cyan !important;
+        color: $neutral-white !important;
+        margin: 0.5rem 0.5rem 1rem 0.5rem !important;
+      }
+    }
+  }
+}
+
+@media (max-width: $break-sm) {
+  .schedules {
+    &_header {
+      padding-left: 0rem;
+      justify-content: center;
+      background-color: $primary-blue;
+      color: $neutral-white;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+    }
+  }
+}
+
+.officeHourText {
+  padding-top: 1rem;
+  font-weight: bold !important;
+}
+
+.memberships {
+  &_header {
+    padding-left: 1rem;
+    background-color: $primary-blue;
+    color: $neutral-white;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+  &_card {
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+    &_content {
+      padding: 1rem !important;
+      &_button {
+        background-color: $primary-cyan !important;
+        color: $neutral-white !important;
+        margin: 0.5rem 0.5rem 1rem 0.5rem !important;
+      }
+      .noMemberships {
+        padding-left: 16px;
+        color: $primary-cyan;
+      }
+    }
+  }
+}
+
+@media (max-width: $break-sm) {
+  .memberships {
+    &_header {
+      padding-left: 0rem;
+      justify-content: center;
+      background-color: $primary-blue;
+      color: $neutral-white;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+    }
+  }
+}

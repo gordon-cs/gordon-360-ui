@@ -20,6 +20,7 @@ import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import WellnessCheck from './views/WellnessCheck';
+import ExtraLinks from './views/ExtraLinks';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
@@ -97,6 +98,11 @@ const routes = [
     name: 'Enrollment Check-In',
     path: '/enrollmentcheckin',
     element: <EnrollmentCheckIn />,
+  },
+  {
+    name: 'Extra Links',
+    path: '/extralinks',
+    element: <ExtraLinks />,
   },
   {
     name: 'People',
