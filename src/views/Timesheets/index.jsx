@@ -60,7 +60,7 @@ const Timesheets = (props) => {
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [clockInOut, setClockInOut] = useState('Clock In');
-  const [isUserStudent, setIsUserStudent] = useState(true);
+  const [isUserStudent, setIsUserStudent] = useState(true); //see note below
   const [errorText, setErrorText] = useState(null);
   const isOnline = useNetworkStatus();
   const { profile, loading } = useUser();
@@ -295,6 +295,13 @@ const Timesheets = (props) => {
     );
   };
 
+  const resetForm = () => {
+    setClockInOut('Clock In');
+    setSelectedDateIn(null);
+    setSelectedDateOut(null);
+    setHoursWorkedInDecimal(0);
+  };
+
   const jobsMenuItems = userJobs ? (
     userJobs.map((job) => (
       <MenuItem label={job.POSTITLE} value={job} key={job.EMLID}>
@@ -321,6 +328,7 @@ const Timesheets = (props) => {
       setClockInOut('Clock In');
       setSelectedDateIn(null);
       setSelectedDateOut(null);
+      setHoursWorkedInDecimal(0);
     }
   };
 
@@ -377,12 +385,48 @@ const Timesheets = (props) => {
     </Button>
   );
 
+  const timesheetTitle = (
+    <div className={styles.header_tooltip_container}>
+      <CustomTooltip
+        disableFocusListener
+        disableTouchListener
+        title={
+          // eslint-disable-next-line no-multi-str
+          'Student employees are not permitted to work more than 20 total hours\
+                      per work week, or more than 40 hours during winter, spring, and summer breaks.\
+                      \
+                      To request permission for a special circumstance, please email\
+                      student-employment@gordon.edu before exceeding this limit.'
+        }
+        placement="bottom"
+      >
+        <div ref={tooltipRef}>
+          <CardHeader className="disable_select" title="Enter a shift" />
+          <InfoOutlinedIcon
+            className={styles.tooltip_icon}
+            style={{
+              fontSize: 18,
+              color: gordonColors.neutral.lightGray,
+            }}
+          />
+        </div>
+      </CustomTooltip>
+    </div>
+  );
+
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Grid container spacing={2} className={styles.timesheets}>
           <Grid item xs={12}>
             <Card>
+              <CardHeader
+                title={timesheetTitle}
+                style={{
+                  backgroundColor: gordonColors.primary.blue,
+                  color: gordonColors.neutral.grayShades[50],
+                }}
+              ></CardHeader>
               <CardContent
                 style={{
                   marginLeft: 8,
@@ -391,36 +435,32 @@ const Timesheets = (props) => {
               >
                 <Grid container spacing={2} alignItems="center" alignContent="center">
                   <Grid item md={2}>
-                    <Button onClick={changeState}> {clockInOut}</Button>
-                  </Grid>
-                  <Grid item md={8}>
-                    <div className={styles.header_tooltip_container}>
-                      <CustomTooltip
-                        disableFocusListener
-                        disableTouchListener
-                        title={
-                          // eslint-disable-next-line no-multi-str
-                          'Student employees are not permitted to work more than 20 total hours\
-                      per work week, or more than 40 hours during winter, spring, and summer breaks.\
-                      \
-                      To request permission for a special circumstance, please email\
-                      student-employment@gordon.edu before exceeding this limit.'
-                        }
-                        placement="bottom"
-                      >
-                        <div ref={tooltipRef}>
-                          <CardHeader className="disable_select" title="Enter a shift" />
-                          <InfoOutlinedIcon
-                            className={styles.tooltip_icon}
-                            style={{
-                              fontSize: 18,
-                            }}
-                          />
-                        </div>
-                      </CustomTooltip>
-                    </div>
+                    <Button
+                      onClick={changeState}
+                      variant="contained"
+                      style={{
+                        backgroundColor: gordonColors.primary.cyan,
+                        color: gordonColors.neutral.grayShades[50],
+                      }}
+                    >
+                      {' '}
+                      {clockInOut}
+                    </Button>
+                    &nbsp;
+                    <Button
+                      onClick={resetForm}
+                      variant="contained"
+                      style={{
+                        backgroundColor: gordonColors.primary.cyan,
+                        color: gordonColors.neutral.grayShades[50],
+                      }}
+                    >
+                      {' '}
+                      Reset{' '}
+                    </Button>{' '}
                   </Grid>
                 </Grid>
+                <br />
                 <Grid
                   container
                   spacing={2}
