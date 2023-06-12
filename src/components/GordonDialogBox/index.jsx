@@ -15,6 +15,8 @@ import styles from './GordonDialogBox.module.css';
  * @param {boolean} [props.isButtonDisabled] Whether the primary button is disabled
  * @param {(event: {}) => void} [props.cancelButtonClicked] A function called when the canceling button is clicked
  * @param {string} [props.cancelButtonName] The text of the button canceling the dialog is read/accepted
+ * @param {(event: {}) => void} [props.closeButtonClicked] A function called when the closing button is clicked
+ * @param {string} [props.closeButtonName] The text of the button closing the dialog is read/accepted
  * @param {string} [props.severity] The severity of the alert (Examples: "error", "warning", "info", etc.)
  * @param {JSX.Element} [props.children] The children of this component
  * @returns {JSX.Element} A dialog box with the passed in content
@@ -27,6 +29,8 @@ const GordonDialogBox = ({
   isButtonDisabled = false,
   cancelButtonClicked,
   cancelButtonName,
+  closeButtonClicked,
+  closeButtonName,
   severity,
   children,
   ...otherProps
@@ -59,6 +63,11 @@ const GordonDialogBox = ({
         {cancelButtonClicked && (
           <Button variant="contained" color="neutral" onClick={cancelButtonClicked}>
             {cancelButtonName ?? 'Cancel'}
+          </Button>
+        )}
+        {closeButtonClicked && (
+          <Button variant="contained" color="neutral" onClick={closeButtonClicked}>
+            {closeButtonName ?? 'Close'}
           </Button>
         )}
         {buttonClicked && (

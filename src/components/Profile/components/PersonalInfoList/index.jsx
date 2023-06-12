@@ -3,11 +3,14 @@ import {
   CardContent,
   CardHeader,
   Divider,
+  FormControl,
   FormControlLabel,
   Grid,
+  InputLabel,
   List,
   ListItem,
   Switch,
+  TextField,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -19,6 +22,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import GordonTooltip from 'components/GordonTooltip';
+import GordonDialogBox from 'components/GordonDialogBox';
 import { useAuthGroups } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import { AuthGroup } from 'services/auth';
@@ -35,16 +39,6 @@ import DDLock from './DandD.png';
 import useWindowSize from 'hooks/useWindowSize';
 
 const PRIVATE_INFO = 'Private as requested.';
-
-const CustomTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: theme.palette.common.black,
-    color: 'dark',
-    boxShadow: theme.shadows[1],
-    fontSize: 12,
-    maxWidth: 600,
-  },
-}))(Tooltip);
 
 const formatPhone = (phone) => {
   if (phone?.length === 10) {
@@ -72,8 +66,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     AuthGroup.SensitiveInfoView,
     AuthGroup.AcademicInfoView,
   );
-
-  const tooltipRef = useRef();
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
+  const onClose = () => {
+    setIsJoinDialogOpen(false);
+  };
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -360,106 +356,27 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     isStudent && profile.Mail_Location ? (
       <>
         <ListItem className={styles.profile_info_list_item}>
-          <Grid container justifyContent="center" alignItems="center">
+          <Grid container alignItems="center">
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
-            <Grid container item xs={myProf && mailCombo ? 2 : 7} alignItems="center">
+            <Grid container item xs={myProf && mailCombo ? 2.5 : 5} alignItems="center">
               <Typography>{`#${profile.Mail_Location}`}</Typography>
             </Grid>
             {myProf && mailCombo && (
               <>
-                <Grid container item xs={2} alignItems="center">
+                <Grid container item xs={1} alignItems="center">
                   <Typography className={styles.private}>
                     {showMailCombo ? mailCombo : '****'}
                   </Typography>
-                </Grid>
-                <Grid item md={3}>
-                  <div className={styles.header_tooltip_container}>
-                    <CustomTooltip
-                      disableFocusListener
-                      disableTouchListener
-                      title={
-                        // eslint-disable-next-line no-multi-str
-                        <Grid>
-                          <Typography sx={{ fontSize: '0.8rem' }}>
-                            <u>
-                              Salsbury Mailbox (Combinations that have three numbers ex: 21 32 18)
-                            </u>
-                            <br />
-                            <img src={SLock} alt="SLock" />
-                            <br />
-                            1. To openturn LEFT at least four turns stopping at the first number of
-                            the combination.
-                            <br />
-                            2. Turn RIGHT passing the first number of the combination once and stop
-                            at the second number of the combination.
-                            <br />
-                            3. Turn LEFT stopping at the third number of the combination.
-                            <br />
-                            4. Turn knob to the RIGHT to open.
-                            <br />
-                            <u>
-                              Dial and Pointer Mailbox (Combinations that have two letters ex: H B)
-                            </u>
-                            <br />
-                            <img src={DPLock} alt="DPLock" />
-                            <br />
-                            1. Turn the large letter wheel until the first letter of the two-letter
-                            combination is lined up with the indication notch located just above the
-                            letter wheel in a 12 o’clock position. Line up the small line that is
-                            exactly above each letter with this indication notch.
-                            <br />
-                            2. Leave the letter wheel where you just put it. Now turn the pointer
-                            only until it points to the second letter of the combination. The first
-                            letter of the combination will always be at the 12 o’clock position; the
-                            pointer will always point to the second letter of the combination.
-                            Example, in the picture above, it is showing the combination of A G.
-                            <br />
-                            3. Twist the latch knob clockwise to open the box.
-                            <br />
-                            <u>
-                              Double Dial Mailbox (Combinations that have two letter/number pairs
-                              ex: A3 H5)
-                            </u>
-                            <br />
-                            <img src={DDLock} alt="DDLock" />
-                            <br />
-                            1. Each letter (A-K on left dial, L-V on right dial) has been assigned
-                            four white or silver lines on your mailbox. The SHORTEST line is #1 and
-                            the LONGEST line is #3. For example, in the picture above, the
-                            combination A1 L1 is shown.
-                            <br />
-                            2. Move the LEFT dial to the line indicated by the FIRST letter/number
-                            code given; the RIGHT dial to the line indicated by the SECOND
-                            letter/number code. Align those lines with the “indication notch”
-                            located at the 12 o’clock position directly above each dial.
-                            <br />
-                            3. When the dials are correctly positioned, move the latch lever to the
-                            right to open box.
-                          </Typography>
-                        </Grid>
-                      }
-                      placement="left"
-                    >
-                      <div ref={tooltipRef}>
-                        <InfoOutlinedIcon
-                          className={styles.tooltip_icon}
-                          style={{
-                            fontSize: 18,
-                          }}
-                        />
-                      </div>
-                    </CustomTooltip>
-                  </div>
                 </Grid>
                 <Grid
                   container
                   direction="column"
                   item
-                  xs={3}
-                  md={3}
-                  lg={3}
+                  xs={1}
+                  md={1}
+                  lg={1}
                   justifyContent="center"
                   alignItems="center"
                 >
@@ -473,6 +390,76 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                     {showMailCombo ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </IconButton>
                 </Grid>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setIsJoinDialogOpen(true)}
+                >
+                  Instructions
+                </Button>
+                <GordonDialogBox
+                  open={isJoinDialogOpen}
+                  title={`Mailbox Instructions`}
+                  closeButtonClicked={onClose}
+                  maxWidth="md"
+                >
+                  <Grid container>
+                    <Typography sx={{ fontSize: '0.8rem' }}>
+                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
+                        Salsbury Mailbox (Combinations that have three numbers ex: 21 32 18)
+                      </Typography>
+                      <img src={SLock} alt="SLock" />
+                      <br />
+                      1. To openturn LEFT at least four turns stopping at the first number of the
+                      combination.
+                      <br />
+                      2. Turn RIGHT passing the first number of the combination once and stop at the
+                      second number of the combination.
+                      <br />
+                      3. Turn LEFT stopping at the third number of the combination.
+                      <br />
+                      4. Turn knob to the RIGHT to open.
+                      <br />
+                      <br />
+                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
+                        Dial and Pointer Mailbox (Combinations that have two letters ex: H B)
+                      </Typography>
+                      <img src={DPLock} alt="DPLock" />
+                      <br />
+                      1. Turn the large letter wheel until the first letter of the two-letter
+                      combination is lined up with the indication notch located just above the
+                      letter wheel in a 12 o’clock position. Line up the small line that is exactly
+                      above each letter with this indication notch.
+                      <br />
+                      2. Leave the letter wheel where you just put it. Now turn the pointer only
+                      until it points to the second letter of the combination. The first letter of
+                      the combination will always be at the 12 o’clock position; the pointer will
+                      always point to the second letter of the combination. Example, in the picture
+                      above, it is showing the combination of A G.
+                      <br />
+                      3. Twist the latch knob clockwise to open the box.
+                      <br />
+                      <br />
+                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
+                        Double Dial Mailbox (Combinations that have two letter/number pairs ex: A3
+                        H5)
+                      </Typography>
+                      <img src={DDLock} alt="DDLock" />
+                      <br />
+                      1. Each letter (A-K on left dial, L-V on right dial) has been assigned four
+                      white or silver lines on your mailbox. The SHORTEST line is #1 and the LONGEST
+                      line is #3. For example, in the picture above, the combination A1 L1 is shown.
+                      <br />
+                      2. Move the LEFT dial to the line indicated by the FIRST letter/number code
+                      given; the RIGHT dial to the line indicated by the SECOND letter/number code.
+                      Align those lines with the “indication notch” located at the 12 o’clock
+                      position directly above each dial.
+                      <br />
+                      3. When the dials are correctly positioned, move the latch lever to the right
+                      to open box.
+                    </Typography>
+                  </Grid>
+                </GordonDialogBox>
               </>
             )}
           </Grid>
