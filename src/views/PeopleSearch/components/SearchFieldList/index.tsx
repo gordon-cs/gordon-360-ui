@@ -1,3 +1,4 @@
+import { ExpandMore } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
@@ -22,13 +23,13 @@ import {
   ChangeEvent,
   Dispatch,
   KeyboardEvent,
+  ReactNode,
   SetStateAction,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  ReactNode,
 } from 'react';
 import {
   FaBook,
@@ -39,11 +40,11 @@ import {
   FaHeart,
   FaSchool,
   FaHome as Home,
-  FaUser as Person,
   FaMapMarkerAlt as LocationCity,
+  FaUser as Person,
 } from 'react-icons/fa';
-import { useLocation } from 'react-router';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';

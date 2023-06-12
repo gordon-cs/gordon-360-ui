@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import GordonOffline from 'components/GordonOffline';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 import { gordonColors } from 'theme';
@@ -31,7 +31,7 @@ const BannerSubmission = () => {
   const isAdmin = useAuthGroups(AuthGroup.SiteAdmin);
 
   if (!authenticated) {
-    return <GordonUnauthorized feature={'the banner submission'} />;
+    return <GordonUnauthenticated feature={'the banner submission'} />;
   }
 
   if (!isOnline) {

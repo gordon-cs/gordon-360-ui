@@ -1,6 +1,6 @@
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonOffline from 'components/GordonOffline';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -44,7 +44,7 @@ const ApartApp = () => {
     return <GordonLoader />;
   } else if (!profile) {
     // The user is not logged in
-    return <GordonUnauthorized feature={'the Apartment Application page'} />;
+    return <GordonUnauthenticated feature={'the Apartment Application page'} />;
   } else if (isOnline) {
     if (isHousingAdmin) {
       return (
@@ -79,7 +79,7 @@ const ApartApp = () => {
                 </h4>
                 <br />
                 <br />
-                <Button variant="contained" component={Link} to="">
+                <Button variant="contained" component={Link} to="/">
                   Back to Home
                 </Button>
               </CardContent>

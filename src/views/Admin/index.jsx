@@ -1,7 +1,7 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import { Card, CardHeader, Grid, Link, Typography } from '@mui/material';
 import GordonOffline from 'components/GordonOffline';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 // import storageService from 'services/storage';
@@ -15,7 +15,7 @@ const Admin = () => {
   const isAuthenticated = useIsAuthenticated();
 
   if (!isAuthenticated) {
-    return <GordonUnauthorized feature={'the admin page'} />;
+    return <GordonUnauthenticated feature={'the admin page'} />;
   }
 
   if (!isOnline) {
