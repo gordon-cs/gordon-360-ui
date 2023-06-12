@@ -23,7 +23,6 @@ import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
 import { gordonColors } from 'theme';
 import { useLocation, useNavigate } from 'react-router';
-import { NoBackpackSharp } from '@mui/icons-material';
 
 const Events = () => {
   const [open, setOpen] = useState(false);
