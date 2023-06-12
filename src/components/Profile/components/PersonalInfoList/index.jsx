@@ -3,20 +3,13 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  FormControl,
   FormControlLabel,
   Grid,
-  InputLabel,
   List,
   ListItem,
   Switch,
-  TextField,
-  Tooltip,
   Typography,
 } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { Link } from 'react-router-dom';
 import { IconButton, Button } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -24,7 +17,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import GordonTooltip from 'components/GordonTooltip';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useAuthGroups } from 'hooks';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import { gordonColors } from 'theme';
@@ -36,7 +29,6 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
-import useWindowSize from 'hooks/useWindowSize';
 
 const PRIVATE_INFO = 'Private as requested.';
 
