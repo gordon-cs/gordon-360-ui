@@ -53,6 +53,7 @@ import addressService from 'services/address';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
+import { bool } from 'prop-types';
 
 function valuetext(value: number) {
   return '${value}';
@@ -103,7 +104,7 @@ const defaultSearchParams: PeopleSearchQuery = {
   country: '',
   department: '',
   building: '',
-  year_range: '',
+  graduation_year_range: '',
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -158,6 +159,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
     userProvidedYear,
   ]);
   const [switchYearRange, setSwitchYearRange] = useState(true);
+  const [studentSearch, setStudentSearch] = useState(Boolean);
 
   /**
    * Default search params adjusted for the user's identity.
@@ -168,7 +170,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       // Only students and facstaff search students by default - alumni aren't allowed to search students
       includeStudent: isStudent || isFacStaff,
       // Only alumni search alumni by default
-      includeAlumni: isAlumni,
+      // includeAlumni: isAlumni,
     }),
     [isAlumni, isFacStaff, isStudent],
   );
@@ -264,12 +266,26 @@ const SearchFieldList = ({ onSearch }: Props) => {
     return () => window.removeEventListener('popstate', onNavigate);
   }, [location.search, initialSearchParams]);
 
-  const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
+  const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.name === 'graduation_year') {
+      setSearchParams((sp) => ({
+        ...sp,
+        ...{ class_standing: '' },
+      }));
+    } else if (event.target.name === 'class_standing') {
+      setSearchParams((sp) => ({
+        ...sp,
+        ...{ graduation_year_range: '' },
+        ...{ graduation_year: '' },
+      }));
+    }
+
     setSearchParams((sp) => ({
       ...sp,
       [event.target.name]:
         event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     }));
+  };
 
   const handleEnterKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
@@ -277,19 +293,36 @@ const SearchFieldList = ({ onSearch }: Props) => {
     }
   };
 
-  if (loading) {
-    return <GordonLoader />;
-  }
-
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     setGraduationYearRange(newValue as number[]);
-    let values = graduationYearRange.toString();
-    searchParams.year_range = values;
+    setSearchParams((sp) => ({
+      ...sp,
+      ...{ graduation_year_range: graduationYearRange.toString() },
+    }));
+    setSearchParams((sp) => ({
+      ...sp,
+      ...{ class_standing: '' },
+    }));
   };
 
   const handleSwitchChange = () => {
+    if (switchYearRange === true) {
+      setSearchParams((sp) => ({
+        ...sp,
+        ...{ graduation_year: '' },
+      }));
+    } else {
+      setSearchParams((sp) => ({
+        ...sp,
+        ...{ graduation_year_range: '' },
+      }));
+    }
     setSwitchYearRange((prev) => !prev);
   };
+
+  if (loading) {
+    return <GordonLoader />;
+  }
 
   const PeopleSearchCheckbox = (
     <Grid item xs={12} md={6}>
@@ -450,6 +483,49 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     select
                     disabled={!searchParams.includeStudent}
                   />
+                  {switchYearRange == true ? (
+                    <SearchField
+                      name="graduation_year"
+                      value={searchParams.graduation_year}
+                      updateValue={handleUpdate}
+                      options={Array.from({ length: userProvidedYear - 1889 + 1 }, (_, i) => ({
+                        value: (userProvidedYear - i).toString(),
+                        label: (userProvidedYear - i).toString(),
+                      }))}
+                      Icon={FaCalendarTimes}
+                      disabled={!searchParams.includeAlumni}
+                      select
+                    />
+                  ) : (
+                    <Grid item width={225}>
+                      <Slider
+                        getAriaLabel={() => 'graduationYearRange'}
+                        value={graduationYearRange}
+                        onChange={handleSliderChange}
+                        valueLabelDisplay="auto"
+                        getAriaValueText={valuetext}
+                        min={1889}
+                        max={userProvidedYear}
+                        disabled={!searchParams.includeAlumni}
+                      />
+                      <Typography fontSize={15} align="center">
+                        {graduationYearRange[0]}-{graduationYearRange[1]}
+                      </Typography>
+                    </Grid>
+                  )}
+                  {switchYearRange == true ? (
+                    <FormControlLabel
+                      control={<Switch onChange={handleSwitchChange}></Switch>}
+                      label="Search by Year Range"
+                      labelPlacement="end"
+                    ></FormControlLabel>
+                  ) : (
+                    <FormControlLabel
+                      control={<Switch onChange={handleSwitchChange}></Switch>}
+                      label="Search by Graduation Year"
+                      labelPlacement="end"
+                    ></FormControlLabel>
+                  )}
                 </AdvancedOptionsColumn>
 
                 {/* Advanced Search Filters: Faculty/Staff */}
@@ -509,54 +585,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     select
                   />
                 </AdvancedOptionsColumn>
-
-                <AdvancedOptionsColumn>
-                  <Typography
-                    align="center"
-                    gutterBottom
-                    color={searchParams.includeAlumni ? 'primary' : 'initial'}
-                  >
-                    Alumni
-                  </Typography>
-                  {switchYearRange == true ? (
-                    <FormControlLabel
-                      control={<Switch onChange={handleSwitchChange}></Switch>}
-                      label="Switch to Search by Year Range"
-                      labelPlacement="end"
-                    ></FormControlLabel>
-                  ) : (
-                    <FormControlLabel
-                      control={<Switch onChange={handleSwitchChange}></Switch>}
-                      label="Switch to Search by Graduation Year"
-                      labelPlacement="end"
-                    ></FormControlLabel>
-                  )}
-                  {switchYearRange == true ? (
-                    <SearchField
-                      name="graduation_year"
-                      value={searchParams.graduation_year}
-                      updateValue={handleUpdate}
-                      options={Array.from({ length: userProvidedYear - 1889 + 1 }, (_, i) => ({
-                        value: (userProvidedYear - i).toString(),
-                        label: (userProvidedYear - i).toString(),
-                      }))}
-                      Icon={FaCalendarTimes}
-                      select
-                    />
-                  ) : (
-                    <Box sx={{ width: 270, marginTop: 6, marginLeft: 4.5 }}>
-                      <Slider
-                        getAriaLabel={() => 'graduationYearRange'} //work in progress for graduation year
-                        value={graduationYearRange}
-                        onChange={handleSliderChange}
-                        valueLabelDisplay="on"
-                        getAriaValueText={valuetext}
-                        min={1889}
-                        max={userProvidedYear}
-                      />
-                    </Box>
-                  )}
-                </AdvancedOptionsColumn>
               </Grid>
             </AccordionDetails>
           </Accordion>
@@ -579,7 +607,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
             onClick={search}
             fullWidth
             variant="contained"
-            disabled={canSearch == false}
+            disabled={!canSearch}
           >
             SEARCH
           </Button>

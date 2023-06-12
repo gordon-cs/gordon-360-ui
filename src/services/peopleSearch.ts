@@ -73,18 +73,10 @@ export type PeopleSearchQuery = {
   department: string;
   building: string;
   relationship_status?: string;
-  year_range: string;
+  graduation_year_range: string;
 };
 
 const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
-  // console.log('here');
-  // console.log('search ' + searchFields.year_range);
-  // let temp = '';
-  // if (searchFields.year_range.indexOf(',') > -1) {
-  //   let values = searchFields.year_range.split(',');
-  //   temp += '&preferredClassYear=&gt' + values[0] + '&preferredClassYear=&lt' + values[1];
-  // }
-
   let params = Object.entries({
     firstName: searchFields.first_name,
     lastName: searchFields.last_name,
@@ -93,7 +85,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     hall: searchFields.residence_hall,
     classType: searchFields.class_standing === '' ? '' : Class[searchFields.class_standing],
     preferredClassYear: searchFields.graduation_year,
-    preferredClassYearRange: searchFields.year_range,
+    preferredClassYearRange: searchFields.graduation_year_range,
     homeCity: searchFields.home_town,
     state: searchFields.state,
     country: searchFields.country,
@@ -115,7 +107,8 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
   if (searchFields.includeAlumni) {
     params += '&accountTypes=alumni';
   }
-  //console.log(params + temp);
+
+  console.log(params);
   return http.get(`accounts/advanced-people-search?${params}`);
 };
 
