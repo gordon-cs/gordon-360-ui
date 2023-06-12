@@ -38,7 +38,7 @@ const TabUrlPatterns = [
  *
  * The checks use regular expressions to check for matches in the url.
  */
-const updateTabHighlight = () => {
+const useTabHighlight = () => {
   const location = useLocation();
   let currentPath = location.pathname;
   const [tabIndex, setTabIndex] = useState(0);
@@ -59,7 +59,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
   const isOnline = useNetworkStatus();
   const setDocumentTitle = useDocumentTitle();
   const isAuthenticated = useIsAuthenticated();
-  const tabIndex = updateTabHighlight();
+  const tabIndex = useTabHighlight();
 
   useEffect(() => {
     if (width < windowBreakWidths.breakMD) {
