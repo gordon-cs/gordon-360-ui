@@ -61,8 +61,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
   const isAuthenticated = useIsAuthenticated();
   const tabIndex = updateTabHighlight();
 
-  console.log('tabIndex: ' + tabIndex);
-
   useEffect(() => {
     if (width < windowBreakWidths.breakMD) {
       setIsMenuOpen(false);
