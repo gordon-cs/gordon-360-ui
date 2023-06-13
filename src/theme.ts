@@ -1,4 +1,3 @@
-import { createTheme } from '@mui/material/styles';
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
 
 // Colors from http://www.gordon.edu/brandstandards
@@ -181,6 +180,7 @@ export const theme = extendTheme({
     light: {
       palette: {
         primary: {
+          main: '#014983',
           50: '#8fcdfe',
           100: '#43aafe',
           200: '#0b91fd',
@@ -195,6 +195,7 @@ export const theme = extendTheme({
           A200: '#1e9bff',
           A400: '#0065b7',
           A700: '#00579d',
+          contrastText: '#ffffff',
         },
         secondary: {
           50: '#f9fdff',
@@ -277,6 +278,7 @@ export const theme = extendTheme({
     dark: {
       palette: {
         primary: {
+          main: '#014983',
           50: '#8fcdfe',
           100: '#43aafe',
           200: '#0b91fd',

@@ -34,7 +34,8 @@ const App = () => {
     historyRef.current.listen(() => analytics.onPageView());
   }, []);
 
-  useColorScheme('dark');
+  console.log(theme.vars.palette.neutral.main);
+  console.log(theme.vars);
 
   return (
     <ErrorBoundary>

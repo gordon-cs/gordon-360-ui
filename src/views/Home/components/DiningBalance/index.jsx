@@ -19,6 +19,7 @@ const DiningBalance = () => {
   const getColor = (cssVar) => getComputedStyle(document.documentElement).getPropertyValue(cssVar);
 
   //let daysColor = theme.vars.palette.primary[50];
+  //Doesn't re-render colors when using getColor!!!!!
   let daysColor = getColor('--mui-palette-primary-500');
   let swipesColor = getColor('--mui-palette-success-dark');
   let dollarsColor = getColor('--mui-palette-warning-main');
