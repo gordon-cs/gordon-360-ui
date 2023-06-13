@@ -2,7 +2,7 @@ import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './app.global.css';
 import styles from './app.module.css';
 import ErrorBoundary from './components/ErrorBoundary';

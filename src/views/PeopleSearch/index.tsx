@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, Fab, Grid, Typography, useMediaQuery } from '@mui/material';
 import GordonOffline from 'components/GordonOffline';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import { useNetworkStatus, useUser } from 'hooks';
 import { useRef, useState } from 'react';
@@ -31,7 +31,7 @@ const PeopleSearch = () => {
   }
 
   if (!profile) {
-    return <GordonUnauthorized feature="People Search" />;
+    return <GordonUnauthenticated feature="People Search" />;
   }
 
   return (

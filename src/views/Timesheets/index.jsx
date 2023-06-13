@@ -21,7 +21,7 @@ import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonOffline from 'components/GordonOffline';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import { isValid, set } from 'date-fns';
@@ -167,7 +167,7 @@ const Timesheets = (props) => {
   }
 
   if (!profile) {
-    return <GordonUnauthorized feature={'timesheets'} />;
+    return <GordonUnauthenticated feature={'timesheets'} />;
   }
 
   if (!isUserStudent) {
