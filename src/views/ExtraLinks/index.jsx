@@ -9,6 +9,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  TextField,
 } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
@@ -24,6 +25,8 @@ const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...pr
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const { profile, loading: loadingProfile } = useUser();
+  const [search, setSearch] = useState('');
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     if (profile) {
@@ -44,7 +47,7 @@ const Home = () => {
     return (
       <>
         <Grid container justifyContent="center" spacing={2}>
-          <Grid item xs={12} md={5} className={styles.memberships}>
+          <Grid item xs={12} md={10} className={styles.memberships}>
             <Grid container className={styles.memberships_header}>
               <CardHeader title="Academics" />
             </Grid>
@@ -70,7 +73,7 @@ const Home = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} md={5} className={styles.memberships}>
+          <Grid item xs={12} md={10} className={styles.memberships}>
             <Grid container className={styles.memberships_header}>
               <CardHeader title="General Information" />
             </Grid>
@@ -96,7 +99,7 @@ const Home = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} md={5} className={styles.memberships}>
+          <Grid item xs={12} md={10} className={styles.memberships}>
             <Grid container className={styles.memberships_header}>
               <CardHeader title="Other" />
             </Grid>

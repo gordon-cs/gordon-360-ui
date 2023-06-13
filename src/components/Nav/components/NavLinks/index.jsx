@@ -182,7 +182,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
     <>
       <List className={styles.gordon_nav_links}>
         {homeButton}
-        {involvementsButton}
+        {/* {involvementsButton} */}
         {eventsButton}
         {peopleButton}
         {timesheetsButton}
