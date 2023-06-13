@@ -24,7 +24,7 @@ import { gordonColors, windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
 import defaultGordonImage from './defaultGordonImage';
 import styles from './Identification.module.css';
-import theme from 'theme';
+import { theme } from 'theme';
 
 const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   const CROP_DIM = 200; // pixels

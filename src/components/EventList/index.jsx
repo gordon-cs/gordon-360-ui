@@ -6,7 +6,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import { List, Grid, Typography, Card, CardHeader } from '@mui/material';
 import styles from './EventList.module.css';
 
-import theme from 'theme';
+import { theme } from 'theme';
 
 const smallHeader = (
   <Typography variant="h5" className={styles.header_text}>

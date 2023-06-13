@@ -19,7 +19,7 @@ import sessionService from 'services/session';
 import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
-import theme from 'theme';
+import { theme } from 'theme';
 
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');

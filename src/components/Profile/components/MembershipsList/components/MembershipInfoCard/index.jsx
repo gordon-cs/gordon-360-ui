@@ -3,7 +3,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { Link } from 'react-router-dom';
 import styles from './MembershipInfoCard.module.css';
-import theme from 'theme';
+import { theme } from 'theme';
 
 const MembershipInfoCard = ({ myProf, membership, onTogglePrivacy }) => {
   const isOnline = useNetworkStatus();

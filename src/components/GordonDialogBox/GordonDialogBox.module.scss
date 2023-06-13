@@ -5,7 +5,7 @@
   grid-template-rows: auto auto auto;
   overflow-y: auto;
   &_title {
-    background-color: $primary-blue;
+    background-color: var('--mui-palette-primary-500');
     color: $neutral-white;
     text-align: center;
   }

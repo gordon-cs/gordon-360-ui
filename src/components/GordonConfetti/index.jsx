@@ -1,5 +1,5 @@
 import Confetti from 'react-dom-confetti';
-import { gordonColors } from 'theme';
+import { theme } from '../../theme';
 
 const GordonConfetti = ({ active, colorOption, colors }) => {
   let config = {
@@ -20,13 +20,13 @@ const GordonConfetti = ({ active, colorOption, colors }) => {
   } else if (colorOption === 'Gordon') {
     config.colors = [
       '#ddd',
-      gordonColors.primary.blue,
-      gordonColors.primary.cyan,
-      gordonColors.secondary.orange,
-      gordonColors.secondary.green,
+      theme.vars.palette.primary[300],
+      theme.vars.palette.secondary[300],
+      theme.vars.palette.warning.dark,
+      theme.vars.palette.success,
     ];
   } else if (colorOption === 'GordonBlue') {
-    config.colors = ['#ddd', gordonColors.primary.blue, gordonColors.primary.cyan];
+    config.colors = ['#ddd', theme.vars.palette.primary[300], theme.vars.palette.secondary[300]];
   }
 
   return <Confetti active={active} config={config} />;

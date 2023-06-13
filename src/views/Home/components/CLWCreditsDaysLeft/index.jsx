@@ -1,4 +1,12 @@
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+  useThemeProps,
+} from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { format, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -8,7 +16,7 @@ import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
-import theme from 'theme';
+import { useTheme } from '@emotion/react';
 
 const CLWCreditsDaysLeft = () => {
   const [firstDay, setFirstDay] = useState('');
@@ -17,6 +25,8 @@ const CLWCreditsDaysLeft = () => {
   const [chapelCredits, setChapelCredits] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currSessionDescription, setCurrSessionDescription] = useState('');
+
+  const getColor = (cssVar) => getComputedStyle(document.documentElement).getPropertyValue(cssVar);
 
   useEffect(() => {
     const loadData = async () => {
@@ -41,9 +51,9 @@ const CLWCreditsDaysLeft = () => {
     loadData();
   }, []);
 
-  let daysColor = theme.colorSchemes.light.palette.primary[300];
+  let daysColor = getColor('--mui-palette-primary-500');
   let chapelColor = gordonColors.primary.cyan;
-  let emptyColor = theme.colorSchemes.light.palette.neutral.grayShades[100];
+  let emptyColor = getColor('--mui-palette-neutral-main');
 
   defaults.global.legend.display = false;
 
@@ -76,7 +86,7 @@ const CLWCreditsDaysLeft = () => {
     const remaining = current > required ? 0 : required - current;
     const data = {
       legendEntries: ['Days Finished', 'CL&W Credits'],
-      legendColors: [theme.colorSchemes.light.palette.primary[300], gordonColors.primary.cyan],
+      legendColors: [getColor('--mui-palette-primary-500'), gordonColors.primary.cyan],
       datasets: [
         {
           label: ['Days Finished', 'Days Remaining'],

@@ -6,12 +6,14 @@ import session from 'services/session';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
 import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import { useTheme } from '@emotion/react';
 
 const DaysLeft = () => {
   const [daysRemaining, setDaysRemaining] = useState();
   const [daysFinished, setDaysFinished] = useState();
   const [currentSessionDescription, setCurrentSessionDescription] = useState();
   const [loading, setLoading] = useState(true);
+  const theme = useTheme();
 
   useEffect(() => {
     const load = async () => {
@@ -52,7 +54,7 @@ const DaysLeft = () => {
                   datasets: [
                     {
                       data: [daysFinished, daysRemaining],
-                      backgroundColor: [gordonColors.primary.blue],
+                      backgroundColor: [theme.vars.palette.primary[300]],
                     },
                   ],
                   labels: ['Days Finished', 'Days Remaining'],

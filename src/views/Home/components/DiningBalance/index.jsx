@@ -6,21 +6,24 @@ import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
-import theme from 'theme';
+import { useTheme } from '@emotion/react';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
-
-let daysColor = theme.colorSchemes.light.palette.primary[300];
-let swipesColor = gordonColors.secondary.green;
-let dollarsColor = gordonColors.secondary.yellow;
-let guestColor = gordonColors.secondary.orange;
-let emptyColor = gordonColors.neutral.lightGray;
 
 const DiningBalance = () => {
   const [loading, setLoading] = useState(true);
   const [diningInfo, setDiningInfo] = useState(null);
   const [[daysRemaining, daysInSession], setDaysLeft] = useState([null, null]);
+
+  const getColor = (cssVar) => getComputedStyle(document.documentElement).getPropertyValue(cssVar);
+
+  //let daysColor = theme.vars.palette.primary[50];
+  let daysColor = getColor('--mui-palette-primary-500');
+  let swipesColor = getColor('--mui-palette-success-dark');
+  let dollarsColor = getColor('--mui-palette-warning-main');
+  let guestColor = getColor('--mui-palette-warning-dark');
+  let emptyColor = getColor('--mui-palette-neutral-main');
 
   useEffect(() => {
     Promise.all([user.getDiningInfo(), session.getDaysLeft()]).then(([diningInfo, daysLeft]) => {
@@ -127,6 +130,8 @@ const DiningBalance = () => {
         },
       ],
     };
+
+    console.log('here ' + data.datasets[0].backgroundColor[0]);
 
     content = (
       <div>

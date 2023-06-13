@@ -1,10 +1,10 @@
 import { Fragment, useState, useEffect } from 'react';
-import { gordonColors } from 'theme';
 import versionService from 'services/version';
 import { projectName } from 'project-name';
 import contributors from './contributors.json';
 import origins from './origins.json';
 import styles from './About.module.css';
+import { Experimental_CssVarsProvider } from '@mui/material/styles';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
 
@@ -14,6 +14,8 @@ const About = () => {
   useEffect(() => {
     versionService.getVersion().then(setVersion);
   }, []);
+
+  const getColor = (cssVar) => getComputedStyle(document.documentElement).getPropertyValue(cssVar);
 
   return (
     <Grid container justifyContent="center">
@@ -101,7 +103,7 @@ const About = () => {
         <Typography variant="subtitle1">
           Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
-            <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
+            <Button style={{ color: getColor('--mui-palette-primary-500') }}>Report to CTS</Button>
           </a>
         </Typography>
         <hr />
