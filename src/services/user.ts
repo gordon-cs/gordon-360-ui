@@ -238,7 +238,11 @@ const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
 
 const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
+const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`); // I am adding this
+
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
+
+const setOfficeLocation = (value: string) => http.put(`profiles/office_location/${value}/`); // I am going to need to change this
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
@@ -347,6 +351,7 @@ const userService = {
   setMobilePhonePrivacy,
   setHomePhonePrivacy,
   setMobilePhoneNumber,
+  setOfficeLocation,
   setImagePrivacy,
   getChapelCredits,
   getImage,
@@ -354,6 +359,7 @@ const userService = {
   getProfileInfo,
   getMailboxCombination,
   getMembershipHistory,
+  getBuildings,
   resetImage,
   postImage,
   postIDImage,
