@@ -60,7 +60,7 @@ $image-side-width-desktop: 90px;
               &_image {
                 width: $image-main-width-desktop;
                 height: $image-main-height-desktop;
-                object-fit: none;
+                object-fit: cover;
               }
               &_tile_bar {
                 position: absolute;
