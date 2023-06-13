@@ -13,12 +13,13 @@ import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
-import {
-  Experimental_CssVarsProvider as CssVarsProvider,
-  useColorScheme,
-} from '@mui/material/styles';
+import { ModeSwitcher } from 'components/ThemeModeSwitcher';
+// import {
+//   Experimental_CssVarsProvider as CssVarsProvider,
+//   useColorScheme,
+// } from '@mui/material/styles';
 
-import { theme } from '../../theme';
+// import { theme } from '../../theme';
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -26,34 +27,6 @@ const Home = () => {
   const [hasAnswered, setHasAnswered] = useState(null);
   const isOnline = useNetworkStatus();
   const { profile, loading: loadingProfile } = useUser();
-
-  const ModeSwitcher = () => {
-    const { mode, setMode } = useColorScheme();
-    const [mounted, setMounted] = useState(false);
-
-    console.log(theme.vars);
-
-    useEffect(() => {
-      setMounted(true);
-    }, []);
-    if (!mounted) {
-      return null;
-    }
-    return (
-      <button
-        variant="outlined"
-        onClick={() => {
-          if (mode === 'light') {
-            setMode('dark');
-          } else {
-            setMode('light');
-          }
-        }}
-      >
-        {mode === 'light' ? 'Dark' : 'Light'}
-      </button>
-    );
-  };
 
   useEffect(() => {
     if (profile) {

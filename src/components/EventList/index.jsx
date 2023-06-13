@@ -6,7 +6,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import { List, Grid, Typography, Card, CardHeader } from '@mui/material';
 import styles from './EventList.module.css';
 
-import { theme } from 'theme';
+import { newTheme } from 'theme';
 
 const smallHeader = (
   <Typography variant="h5" className={styles.header_text}>
@@ -68,7 +68,7 @@ const EventList = ({ events }) => {
         title={header}
         className={styles.header}
         style={{
-          backgroundColor: theme.colorSchemes.light.palette.primary[300],
+          backgroundColor: newTheme.vars.palette.primary[300],
         }}
       />
       <Grid>

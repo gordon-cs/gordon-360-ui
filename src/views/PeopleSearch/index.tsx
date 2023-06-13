@@ -10,7 +10,7 @@ import { SearchResult } from 'services/peopleSearch';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import SearchFieldList from './components/SearchFieldList';
 import styles from './PeopleSearch.module.scss';
-import { theme } from 'theme';
+import { newTheme } from 'theme';
 
 //Configuration constants
 const NUM_NONLAZY_IMAGES = 20; //The number of results for which images will be fetched immediately

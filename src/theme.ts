@@ -175,7 +175,7 @@ declare module '@mui/material' {
   },
 }); */
 
-export const theme = extendTheme({
+export const newTheme = extendTheme({
   colorSchemes: {
     light: {
       palette: {

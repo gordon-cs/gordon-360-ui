@@ -14,7 +14,7 @@ import {
   Experimental_CssVarsProvider as CssVarsProvider,
   useColorScheme,
 } from '@mui/material/styles';
-import { theme } from './theme';
+import { newTheme } from './theme';
 
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState();
@@ -34,8 +34,8 @@ const App = () => {
     historyRef.current.listen(() => analytics.onPageView());
   }, []);
 
-  console.log(theme.vars.palette.neutral.main);
-  console.log(theme.vars);
+  // console.log(theme.vars.palette.neutral.main);
+  // console.log(theme.vars);
 
   return (
     <ErrorBoundary>
