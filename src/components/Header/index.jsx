@@ -197,13 +197,13 @@ const GordonHeader = ({ onDrawerToggle }) => {
                 component={ForwardNavLink}
                 to="/"
               />
-              <Tab
+              {/* <Tab
                 className={styles.tab}
                 icon={<LocalActivityIcon />}
                 label="Involvements"
                 component={ForwardNavLink}
                 to="/involvements"
-              />
+              /> */}
               <Tab
                 className={styles.tab}
                 icon={<EventIcon />}

@@ -16,6 +16,11 @@ import { useEffect, useState } from 'react';
 import wellness from 'services/wellness';
 import styles from './ExtraLinks.module.css';
 
+import { forwardRef } from 'react';
+import { NavLink, Route, Routes } from 'react-router-dom';
+
+const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
+
 const Home = () => {
   const [loading, setLoading] = useState(true);
   const { profile, loading: loadingProfile } = useUser();
@@ -115,6 +120,10 @@ const Home = () => {
                   <Divider light />
                   <ListItem button component="a" href="https://cts.gordon.edu/">
                     <ListItemText primary="Center for Technology Services (CTS)" />
+                  </ListItem>
+                  <Divider />
+                  <ListItem button component={ForwardNavLink} to="/involvements">
+                    <ListItemText primary="Involvements" />
                   </ListItem>
                   <Divider />
                 </List>

@@ -4,6 +4,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
+import AppsIcon from '@mui/icons-material/Apps';
 import { Divider, List } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox/index';
 import GordonNavButton from 'components/NavButton';
@@ -107,6 +108,18 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
+  const extraLinksButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      openUnavailableDialog={setDialog}
+      onLinkClick={onLinkClick}
+      linkName={'Extra Links'}
+      linkPath={'/extralinks'}
+      LinkIcon={AppsIcon}
+      divider={false}
+    />
+  );
+
   const linksButton = (
     <GordonNavButton
       unavailable={isOnline ? null : 'offline'}
@@ -173,6 +186,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {eventsButton}
         {peopleButton}
         {timesheetsButton}
+        {extraLinksButton}
       </List>
 
       <Divider />

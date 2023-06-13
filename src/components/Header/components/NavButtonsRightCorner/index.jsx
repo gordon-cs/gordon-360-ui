@@ -111,7 +111,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
           <List id="right-side-menu-list" disablePadding={true}>
             <div class={styles.right_menu_triangle} />
             {myProfileButton}
-            {linksButton}
+            {/* {linksButton} */}
             {timesheetsButton}
             {helpButton}
             {aboutButton}
