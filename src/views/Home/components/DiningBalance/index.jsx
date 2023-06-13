@@ -131,8 +131,6 @@ const DiningBalance = () => {
       ],
     };
 
-    console.log('here ' + data.datasets[0].backgroundColor[0]);
-
     content = (
       <div>
         <Grid
