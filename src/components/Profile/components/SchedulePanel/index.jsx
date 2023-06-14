@@ -52,8 +52,8 @@ const GordonSchedulePanel = (props) => {
   const [resourceId, setResourceId] = useState(0);
   const [reloadCall, setReloadCall] = useState(false);
   const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
-
-  let scheduleControlInfo = null;
+  const [scheduleControlInfo, setScheduleControlInfo] = useState(null);
+  // Remove the line: let scheduleControlInfo = null;
 
   useEffect(() => {
     loadData(props.profile);
@@ -64,20 +64,19 @@ const GordonSchedulePanel = (props) => {
       const scheduleControlInfo = await schedulecontrol.getScheduleControl(
         searchedUser.AD_Username,
       );
-      this.scheduleControlInfo = scheduleControlInfo;
+      if (scheduleControlInfo) {
+        setScheduleControlInfo({
+          isSchedulePrivate: scheduleControlInfo.IsSchedulePrivate,
+          description: scheduleControlInfo.Description
+            ? scheduleControlInfo.Description.replace(new RegExp('SlSh', 'g'), '/')
+                .replace(new RegExp('CoLn', 'g'), ':')
+                .replace(new RegExp('dOT', 'g'), '.')
+            : '',
+          modifiedTimeStamp: scheduleControlInfo.ModifiedTimeStamp,
+        });
+      }
     } catch (e) {
       setLoading(false);
-    }
-    if (this.scheduleControlInfo) {
-      setScheduleControlInfo({
-        isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate,
-        description: this.scheduleControlInfo.Description
-          ? this.scheduleControlInfo.Description.replace(new RegExp('SlSh', 'g'), '/')
-              .replace(new RegExp('CoLn', 'g'), ':')
-              .replace(new RegExp('dOT', 'g'), '.')
-          : '',
-        modifiedTimeStamp: this.scheduleControlInfo.ModifiedTimeStamp,
-      });
     }
     setLoading(false);
   };
