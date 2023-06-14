@@ -13,13 +13,6 @@ import DaysLeft from './components/DaysLeft';
 import DiningBalance from './components/DiningBalance';
 import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
-import { ModeSwitcher } from 'components/ThemeModeSwitcher';
-// import {
-//   Experimental_CssVarsProvider as CssVarsProvider,
-//   useColorScheme,
-// } from '@mui/material/styles';
-
-// import { theme } from '../../theme';
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -57,7 +50,6 @@ const Home = () => {
         <Grid item xs={12} md={10}>
           <Carousel />
         </Grid>
-        <ModeSwitcher />
         <Grid item xs={12} md={5}>
           {doughnut}
         </Grid>

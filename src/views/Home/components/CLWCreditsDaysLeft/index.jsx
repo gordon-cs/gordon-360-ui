@@ -50,7 +50,7 @@ const CLWCreditsDaysLeft = () => {
     loadData();
   }, []);
 
-  let daysColor = getColor('--mui-palette-primary-500');
+  let daysColor = getColor('--mui-palette-primary-main');
   let chapelColor = gordonColors.primary.cyan;
   let emptyColor = getColor('--mui-palette-neutral-main');
 
@@ -85,7 +85,7 @@ const CLWCreditsDaysLeft = () => {
     const remaining = current > required ? 0 : required - current;
     const data = {
       legendEntries: ['Days Finished', 'CL&W Credits'],
-      legendColors: [getColor('--mui-palette-primary-500'), gordonColors.primary.cyan],
+      legendColors: [getColor('--mui-palette-primary-main'), gordonColors.primary.cyan],
       datasets: [
         {
           label: ['Days Finished', 'Days Remaining'],

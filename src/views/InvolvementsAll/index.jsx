@@ -19,7 +19,6 @@ import sessionService from 'services/session';
 import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
-import { newTheme } from 'theme';
 
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -214,7 +213,7 @@ const InvolvementsAll = () => {
               <CardHeader
                 title={`My ${myInvolvementsHeadingText} Involvements`}
                 style={{
-                  backgroundColor: newTheme.vars.palette.primary[300],
+                  backgroundColor: 'var(--mui-palette-primary-main)',
                   color: gordonColors.neutral.grayShades[50],
                 }}
               />
@@ -240,7 +239,7 @@ const InvolvementsAll = () => {
           <CardHeader
             title={`${involvementSessionText} Involvements`}
             style={{
-              backgroundColor: newTheme.vars.palette.primary[300],
+              backgroundColor: 'var(--mui-palette-primary-main)',
               color: gordonColors.neutral.grayShades[50],
             }}
           />

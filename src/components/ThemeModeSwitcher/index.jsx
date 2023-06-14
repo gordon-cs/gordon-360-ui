@@ -3,16 +3,14 @@ import {
   //   Experimental_CssVarsProvider as CssVarsProvider,
   useColorScheme,
 } from '@mui/material/styles';
-
-import { newTheme } from '../../theme';
+import styles from './modeSwitcher.module.css';
 
 export const ModeSwitcher = () => {
   const { mode, setMode } = useColorScheme();
   const [mounted, setMounted] = useState(false);
 
+  //Need to figure out how to properly reference the theme provided by the CssVarsProvider context.
   console.log('Called mode switcher');
-  console.log(newTheme.vars.palette.neutral.main);
-  console.log(newTheme.vars);
 
   useEffect(() => {
     setMounted(true);
@@ -30,6 +28,7 @@ export const ModeSwitcher = () => {
           setMode('light');
         }
       }}
+      className={styles.ModeSwitcherButton}
     >
       {mode === 'light' ? 'Dark' : 'Light'}
     </button>

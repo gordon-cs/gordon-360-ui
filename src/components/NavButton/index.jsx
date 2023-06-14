@@ -25,7 +25,13 @@ const GordonNavButton = ({
 }) => {
   const link =
     unavailable !== null || linkPath === null ? (
-      <ListItem divider={divider} button onClick={onLinkClick} disabled={unavailable !== null}>
+      <ListItem
+        divider={divider}
+        button
+        onClick={onLinkClick}
+        disabled={unavailable !== null}
+        className="gc360_link"
+      >
         {LinkIcon && (
           <ListItemIcon>
             <LinkIcon />

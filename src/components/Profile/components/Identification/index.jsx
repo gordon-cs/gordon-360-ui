@@ -50,11 +50,11 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   // Styles used throughout this component
   const style = {
     button: {
-      background: newTheme.vars.palette.primary[300],
+      background: 'var(--mui-palette-primary-main)',
       color: 'white',
 
       changeImageButton: {
-        background: newTheme.vars.light.palette.primary[300],
+        background: 'var(--mui-palette-primary-main)',
         color: 'white',
       },
 
@@ -64,8 +64,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
       },
       cancelButton: {
         backgroundColor: 'white',
-        color: newTheme.vars.palette.primary[300],
-        border: `1px solid ${newTheme.vars.palette.primary[300]}`,
+        color: 'var(--mui-palette-primary-main)',
+        border: `1px solid var(--mui-palette-primary-main)`,
         width: showCropper ? '38%' : '86%',
       },
       hidden: {

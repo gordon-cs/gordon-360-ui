@@ -20,10 +20,10 @@ const DiningBalance = () => {
 
   //let daysColor = theme.vars.palette.primary[50];
   //Doesn't re-render colors when using getColor!!!!!
-  let daysColor = getColor('--mui-palette-primary-500');
+  let daysColor = getColor('--mui-palette-primary-main');
   let swipesColor = getColor('--mui-palette-success-dark');
   let dollarsColor = getColor('--mui-palette-warning-main');
-  let guestColor = getColor('--mui-palette-warning-dark');
+  let guestColor = getColor('--mui-palette-error-light');
   let emptyColor = getColor('--mui-palette-neutral-main');
 
   useEffect(() => {
@@ -209,7 +209,10 @@ const DiningBalance = () => {
           <Grid item xs={5} align="right">
             <Button
               variant="contained"
-              color="secondary"
+              style={{
+                backgroundColor: 'var(--mui-palette-secondary-main)',
+                color: 'var(--mui-palette-secondary-contrastText',
+              }}
               component={Link}
               href="https://gordon.cafebonappetit.com/"
               target="_blank"

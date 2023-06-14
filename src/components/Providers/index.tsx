@@ -7,15 +7,15 @@ import AuthProvider from './components/AuthProvider';
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles';
 
 const Providers = ({ children }: { children: JSX.Element }) => (
-  <CssVarsProvider theme={newTheme} defaultMode="dark">
-    <AuthProvider>
-      <StyledEngineProvider injectFirst>
-        <NetworkContextProvider>
+  <AuthProvider>
+    <StyledEngineProvider injectFirst>
+      <NetworkContextProvider>
+        <CssVarsProvider theme={newTheme}>
           <UserContextProvider>{children}</UserContextProvider>
-        </NetworkContextProvider>
-      </StyledEngineProvider>
-    </AuthProvider>
-  </CssVarsProvider>
+        </CssVarsProvider>
+      </NetworkContextProvider>
+    </StyledEngineProvider>
+  </AuthProvider>
 );
 
 export default Providers;

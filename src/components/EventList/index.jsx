@@ -6,8 +6,6 @@ import useWindowSize from 'hooks/useWindowSize';
 import { List, Grid, Typography, Card, CardHeader } from '@mui/material';
 import styles from './EventList.module.css';
 
-import { newTheme } from 'theme';
-
 const smallHeader = (
   <Typography variant="h5" className={styles.header_text}>
     Events
@@ -64,13 +62,7 @@ const EventList = ({ events }) => {
 
   return (
     <Card>
-      <CardHeader
-        title={header}
-        className={styles.header}
-        style={{
-          backgroundColor: newTheme.vars.palette.primary[300],
-        }}
-      />
+      <CardHeader title={header} className={styles.header} />
       <Grid>
         <List className="gc360_event_list" disablePadding>
           {events?.length < 1
