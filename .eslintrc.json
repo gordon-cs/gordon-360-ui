@@ -1,6 +1,12 @@
 {
-  "extends": ["react-app", "plugin:jsdoc/recommended"],
-  "plugins": ["jsdoc"],
+  "extends": [
+    "react-app",
+    "plugin:jsdoc/recommended",
+    "plugin:storybook/recommended"
+  ],
+  "plugins": [
+    "jsdoc"
+  ],
   "rules": {
     "react/react-in-jsx-scope": "off",
     "react/jsx-uses-react": "off",
