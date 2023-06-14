@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button } from './Button';
-import './header.css';
+import './example_header.css';
 
 type User = {
   name: string;
@@ -14,9 +14,9 @@ interface HeaderProps {
   onCreateAccount: () => void;
 }
 
-export const Header = ({ user, onLogin, onLogout, onCreateAccount }: HeaderProps) => (
+export const ExampleHeader = ({ user, onLogin, onLogout, onCreateAccount }: ExampleHeaderProps) => (
   <header>
-    <div className="storybook-header">
+    <div className="storybook-example-header">
       <div>
         <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
           <g fill="none" fillRule="evenodd">
