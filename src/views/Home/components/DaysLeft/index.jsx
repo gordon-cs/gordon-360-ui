@@ -12,6 +12,8 @@ const DaysLeft = () => {
   const [currentSessionDescription, setCurrentSessionDescription] = useState();
   const [loading, setLoading] = useState(true);
 
+  const getColor = (cssVar) => getComputedStyle(document.documentElement).getPropertyValue(cssVar);
+
   useEffect(() => {
     const load = async () => {
       setLoading(true);
@@ -37,7 +39,7 @@ const DaysLeft = () => {
   return (
     <Card>
       <CardContent>
-        <CardHeader title={currentSessionDescription} />
+        <CardHeader title={currentSessionDescription} className={styles.cardHeader} />
         {loading ? (
           <GordonLoader />
         ) : (
@@ -51,7 +53,7 @@ const DaysLeft = () => {
                   datasets: [
                     {
                       data: [daysFinished, daysRemaining],
-                      backgroundColor: [theme.vars.palette.primary[300]],
+                      backgroundColor: getColor('--mui-palette-primary-main'),
                     },
                   ],
                   labels: ['Days Finished', 'Days Remaining'],

@@ -29,9 +29,6 @@ const App = () => {
     historyRef.current.listen(() => analytics.onPageView());
   }, []);
 
-  // console.log(theme.vars.palette.neutral.main);
-  // console.log(theme.vars);
-
   return (
     <ErrorBoundary>
       <Router historyRef={historyRef.current}>

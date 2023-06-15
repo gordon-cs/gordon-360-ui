@@ -1,8 +1,8 @@
 @import '../../../../vars';
 
 div.gw_card {
-  background-color: $primary-blue;
-  color: $neutral-white;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-neutral-contrastText);
   opacity: 0.92;
   max-width: 25rem;
   padding: 1rem;
