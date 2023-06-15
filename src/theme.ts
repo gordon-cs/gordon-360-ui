@@ -202,7 +202,7 @@ export const newTheme = extendTheme({
         },
         secondary: {
           main: '#00AEEF' /* Scottie Cyan */,
-          contrastText: '#FFFFFFF' /* white */,
+          contrastText: '#FFFFFF' /* white */,
           50: '#E0F4FD',
           100: '#B0E2F9',
           200: '#7BD0F5',
@@ -217,7 +217,7 @@ export const newTheme = extendTheme({
         error: {
           main: '#B53228' /* old scheme red, good error color */,
           light: '#ff5d53', //Nautical Red
-          contrastText: '#FFFFFFF' /* white */,
+          contrastText: '#FFFFFF' /* white */,
         },
         success: {
           dark: '#006d22' /*La Vida Green*/,
