@@ -16,15 +16,14 @@ const DiningBalance = () => {
   const [diningInfo, setDiningInfo] = useState(null);
   const [[daysRemaining, daysInSession], setDaysLeft] = useState([null, null]);
 
-  const getColor = (cssVar) => getComputedStyle(document.documentElement).getPropertyValue(cssVar);
-
   //Doesn't re-render colors when using getColor!!!!!
-  let daysColor = getColor('--mui-palette-primary-main');
-  let swipesColor = getColor('--mui-palette-success-main');
-  let dollarsColor = getColor('--mui-palette-warning-main');
-  let guestColor = getColor('--mui-palette-error-main');
-  let emptyColor = getColor('--mui-palette-neutral-main');
-  let balanceColor = getColor('--mui-palette-success-main');
+  let daysColor = gordonColors.primary.blue;
+  let swipesColor = gordonColors.secondary.green;
+  let dollarsColor = gordonColors.secondary.yellow;
+  let guestColor = gordonColors.secondary.orange;
+  let emptyColor = gordonColors.neutral.lightGray;
+
+  let balanceColor = gordonColors.secondary.green;
 
   useEffect(() => {
     Promise.all([user.getDiningInfo(), session.getDaysLeft()]).then(([diningInfo, daysLeft]) => {
