@@ -60,7 +60,6 @@ const UpdateOffice = () => {
         <FormControl sx={{ m: 2, minWidth: 200 }}>
           <InputLabel htmlFor="formatted-text-mask-input">Room Number</InputLabel>
           <Input
-            type="tel"
             id="room-number-input"
             name="room"
             value={room}
