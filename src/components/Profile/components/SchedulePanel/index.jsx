@@ -29,6 +29,7 @@ import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import styles from './ScheduleHeader.module.css';
+import scheduleService from 'services/schedule';
 
 import { useNetworkStatus, useUser } from 'hooks';
 import sessionService from 'services/session';
@@ -62,6 +63,7 @@ const GordonSchedulePanel = (props) => {
   const [scheduleControlInfo, setScheduleControlInfo] = useState(null);
   // Remove the line: let scheduleControlInfo = null;
   const [sessions, setSessions] = useState([]);
+  const [eventInfo, setEventInfo] = useState([]);
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -77,28 +79,6 @@ const GordonSchedulePanel = (props) => {
       } else {
         const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
         setCurrentAcademicSession(currentSessionCode);
-
-        const [involvements, sessions] = await Promise.all([
-          involvementService.getAll(currentSessionCode),
-          sessionService.getAll(),
-        ]);
-
-        if (involvements.length === 0) {
-          let IndexOfCurrentSession = sessions.findIndex(
-            (session) => session.SessionCode === currentSessionCode,
-          );
-
-          for (let k = IndexOfCurrentSession + 1; k < sessions.length; k++) {
-            const newInvolvements = await involvementService.getAll(sessions[k].SessionCode);
-            if (newInvolvements.length !== 0) {
-              setSelectedSession(sessions[k].SessionCode);
-
-              break;
-            }
-          }
-        } else {
-          setSelectedSession(currentSessionCode);
-        }
       }
     };
     loadPage();
@@ -107,8 +87,9 @@ const GordonSchedulePanel = (props) => {
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
     value = sessionService.decodeSessionCode(value);
-    navigate(`?session=${value}`);
+    reloadHandler();
   };
+
   useEffect(() => {
     loadData(props.profile);
   }, [props.profile]);
@@ -167,7 +148,7 @@ const GordonSchedulePanel = (props) => {
   };
 
   const reloadHandler = () => {
-    setReloadCall(false);
+    setReloadCall((val) => !val);
   };
 
   const replaced = description;
@@ -175,7 +156,7 @@ const GordonSchedulePanel = (props) => {
   const { classes } = props;
   const isFaculty = String(props.profile.PersonType).includes('fac');
 
-  let editDescriptionButton, schedulePanel, editDialog, lastUpdate;
+  let editDescriptionButton, editDialog, lastUpdate;
 
   lastUpdate = (
     <div style={{ color: gordonColors.primary.cyan }}>
@@ -208,118 +189,106 @@ const GordonSchedulePanel = (props) => {
       </Fragment>
     );
   }
-
-  let panelTitle = isExpanded ? 'Hide' : 'Show';
-  if (loading) {
-    schedulePanel = <GordonLoader />;
-  } else if (!props.myProf && !isFaculty) {
-    schedulePanel = (
-      <>
-        <Grid item xs={12} className={styles.schedules}>
+  console.log(selectedSession);
+  return loading ? (
+    <GordonLoader />
+  ) : (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      {
+        <>
           <Grid container className={styles.schedules_header}>
-            <CardHeader title="Profile Note" />
+            <CardHeader title="Schedule" />
           </Grid>
-          <Card className={styles.memberships_card}>
-            <CardContent align="left">{replaced}</CardContent>
-          </Card>
-        </Grid>
-      </>
-    );
-  } else {
-    schedulePanel = (
-      <>
-        <Grid container className={styles.schedules_header}>
-          <CardHeader title="Schedule" />
-        </Grid>
-        <Card className={styles.schedules_card}>
-          <Accordion
-            TransitionProps={{ unmountOnExit: true }}
-            onChange={handleIsExpanded}
-            defaultExpanded={props.myProf}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
+          <Card className={styles.schedules_card}>
+            <Accordion
+              TransitionProps={{ unmountOnExit: true }}
+              onChange={handleIsExpanded}
+              defaultExpanded={props.myProf}
             >
-              <Typography>{panelTitle} Schedule</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container direction="row" justifyContent="center" align="left">
-                {props.isOnline && (
-                  <Grid container direction="row" item xs={12} lg={10}>
-                    <Grid item align="center" xs={2}>
-                      <Typography>Office Hours:</Typography>
-                      <item>{editDescriptionButton}</item>
-                    </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      justifyContent="flex-start"
-                      classname={styles.officeHourText}
-                    >
-                      <item>
-                        <Markup classname={styles.officeHourText} content={replaced} />
-                      </item>
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={3}>
-                      <FormControl variant="filled" fullWidth>
-                        <InputLabel id="activity-session">Term</InputLabel>
-                        <Select
-                          labelId="activity-session"
-                          id="activity-session"
-                          value={selectedSession}
-                          onChange={(e) => handleSelectSession(e.target.value)}
-                        >
-                          {(isOnline
-                            ? sessions
-                            : sessions.filter((item) => item.SessionCode === selectedSession)
-                          ).map(({ SessionDescription: description, SessionCode: code }) => (
-                            <MenuItem label={description} value={code} key={code}>
-                              {description}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>{isExpanded ? 'Hide' : 'Show'} Schedule</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container direction="row" justifyContent="center" align="left">
+                  {props.isOnline && (
+                    <Grid container direction="row" item xs={12} lg={10}>
+                      <Grid item align="center" xs={2}>
+                        <Typography>Office Hours:</Typography>
+                        <item>{editDescriptionButton}</item>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={10}
+                        justifyContent="flex-start"
+                        classname={styles.officeHourText}
+                      >
+                        <item>
+                          <Markup classname={styles.officeHourText} content={replaced} />
+                        </item>
+                      </Grid>
+                      <Grid item xs={12} md={6} lg={3}>
+                        <FormControl variant="filled" fullWidth>
+                          <InputLabel id="schedule session">Term</InputLabel>
+                          <Select
+                            labelId="schedule-session"
+                            id="schedule-session"
+                            value={selectedSession}
+                            onChange={(e) => handleSelectSession(e.target.value)}
+                          >
+                            {(isOnline
+                              ? sessions
+                              : sessions.filter((item) => item.SessionCode === selectedSession)
+                            ).map(({ SessionDescription: description, SessionCode: code }) => (
+                              <MenuItem label={description} value={code} key={code}>
+                                {description}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
 
-                    {/* THIS IS FOR LAST UPDATED */}
-                    {/* <Grid
-                      container
-                      direction="column"
-                      item
-                      xs={12}
-                      lg={8}
-                      alignItems="flex-start"
-                      justifyContent="flex-start"
-                    >
-                      {lastUpdate}
-                    </Grid> */}
+                      {/* THIS IS FOR LAST UPDATED */}
+                      {/* <Grid
+              container
+              direction="column"
+              item
+              xs={12}
+              lg={8}
+              alignItems="flex-start"
+              justifyContent="flex-start"
+            >
+              {lastUpdate}
+            </Grid> */}
+                    </Grid>
+                  )}
+
+                  <Grid item xs={12} lg={10}>
+                    <GordonScheduleCalendar
+                      profile={props.profile}
+                      term={selectedSession}
+                      myProf={props.myProf}
+                      handleEditDescriptionButton={handleEditDescriptionButton}
+                      handleDoubleClick={handleDoubleClick}
+                      reloadCall={reloadCall}
+                      isOnline={props.isOnline}
+                    />
                   </Grid>
-                )}
-
-                <Grid item xs={12} lg={10}>
-                  <GordonScheduleCalendar
-                    profile={props.profile}
-                    myProf={props.myProf}
-                    handleEditDescriptionButton={handleEditDescriptionButton}
-                    handleDoubleClick={handleDoubleClick}
-                    reloadHandler={reloadHandler}
-                    reloadCall={reloadCall}
-                    isOnline={props.isOnline}
-                  />
                 </Grid>
-              </Grid>
 
-              {editDialog}
-            </AccordionDetails>
-          </Accordion>
-        </Card>
-      </>
-    );
-  }
-
-  return <LocalizationProvider dateAdapter={AdapterDateFns}>{schedulePanel}</LocalizationProvider>;
+                {editDialog}
+              </AccordionDetails>
+            </Accordion>
+          </Card>
+        </>
+      }
+    </LocalizationProvider>
+  );
 };
+
+// You are
 
 export default withStyles(styles2)(GordonSchedulePanel);

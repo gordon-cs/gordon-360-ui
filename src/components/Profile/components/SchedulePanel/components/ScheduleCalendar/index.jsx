@@ -27,16 +27,13 @@ const GordonScheduleCalendar = (props) => {
 
   useEffect(() => {
     loadData(props.profile);
-  }, [props.profile]);
+  }, [props.profile, props.reloadCall]);
 
   const loadData = async (searchedUser) => {
     setLoading(true);
     let courseInfo = null;
     try {
-      const schedule = await scheduleService.getSchedule(
-        props.myProf ? '' : searchedUser.AD_Username,
-        '202209',
-      );
+      const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       courseInfo = scheduleService.makeScheduleCourses(schedule);
     } catch (e) {
       setLoading(false);
