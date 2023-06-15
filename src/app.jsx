@@ -10,11 +10,6 @@ import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import routes from './routes';
 import analytics from './services/analytics';
-import {
-  Experimental_CssVarsProvider as CssVarsProvider,
-  useColorScheme,
-} from '@mui/material/styles';
-import { newTheme } from './theme';
 
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState();

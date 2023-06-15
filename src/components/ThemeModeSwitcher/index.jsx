@@ -1,3 +1,8 @@
+/* Temporary component for testing theme implementation and dark mode.  Used in the right side
+nav menu currently.
+
+@TODO convert to 
+*/
 import { useEffect, useState } from 'react';
 import {
   //   Experimental_CssVarsProvider as CssVarsProvider,

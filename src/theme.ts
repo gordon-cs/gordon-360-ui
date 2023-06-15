@@ -229,7 +229,7 @@ export const newTheme = extendTheme({
         neutral: {
           main: '#EBEAEA' /* page background and contrast light grey */, //currently $neutral-light-gray in _vars
           dark: '#CCCCCB' /* not used */, //currently $neutral-gray2 (not used)
-          light: '#FFFFFFF' /* white */, //currently $neutral-white
+          light: '#FFFFFF' /* white */, //currently $neutral-white
           contrastText: '#000000' /* black */,
         },
       },
@@ -240,31 +240,32 @@ export const newTheme = extendTheme({
         //   // Testing with adding extra colors to the palette!
         //   main: '#014983',
         // },
+        // All current dark mode values are test colors!
         primary: {
-          main: '#FF52F6' /* Gordon blue */,
-          contrastText: '#223780' /* white */,
+          main: '#FF52F6',
+          contrastText: '#223780',
         },
         secondary: {
-          main: '#FFF700' /* Scottie Cyan */,
-          contrastText: '#00f7ff' /* white */,
+          main: '#FFF700',
+          contrastText: '#00f7ff',
         },
         error: {
-          main: '#58148F' /* old scheme red, good error color */,
-          light: '#A78FBA', //Nautical Red
-          contrastText: '#37E660' /* white */,
+          main: '#58148F',
+          light: '#A78FBA',
+          contrastText: '#37E660',
         },
         success: {
-          dark: '#033870' /*La Vida Green*/,
-          main: '#398BE3' /* old scheme green */,
-          light: '#93B6DB' /* Sea Spray */,
+          dark: '#033870',
+          main: '#398BE3',
+          light: '#93B6DB',
         },
-        warning: { main: '#ED6328' /*Barrington Gold */, dark: '#8C3611' /* old scheme red */ },
-        info: { main: '#DB0F13' /* Snow Day */ },
+        warning: { main: '#ED6328', dark: '#8C3611' },
+        info: { main: '#DB0F13' },
         neutral: {
-          main: '#023947' /* page background and contrast light grey */, //currently $neutral-light-gray in _vars
-          dark: '#000000' /* not used */, //currently $neutral-gray2 (not used)
-          light: '#20B1D6' /* white */, //currently $neutral-white
-          contrastText: '#ffffff' /* black */,
+          main: '#023947',
+          dark: '#000000',
+          light: '#20B1D6',
+          contrastText: '#ffffff',
         },
       },
     },
