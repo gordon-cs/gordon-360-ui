@@ -128,7 +128,7 @@ const InvolvementsAll = () => {
   const searchPageTitle = (
     <div align="center">
       Search
-      <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+      <b style={{ color: 'var(--mui-palette-secondary-main)' }}> Gordon </b>
       Involvements
     </div>
   );

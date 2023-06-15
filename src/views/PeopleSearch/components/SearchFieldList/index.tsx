@@ -71,7 +71,7 @@ const relationship_statuses = [
 const searchPageTitle = (
   <>
     Search the
-    <b style={{ color: gordonColors.primary.blue }}> Gordon </b>
+    <b style={{ color: 'var(--mui-palette-secondary-main)' }}> Gordon </b>
     Community
   </>
 );

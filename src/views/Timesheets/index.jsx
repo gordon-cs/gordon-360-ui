@@ -65,11 +65,11 @@ const Timesheets = (props) => {
   const isOnline = useNetworkStatus();
   const { profile, loading } = useUser();
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (profile) {
       setIsUserStudent(profile.PersonType.includes('stu'));
     }
-  }, [profile]);
+  }, [profile]);*/
 
   useEffect(() => {
     async function getClockInOutStatus() {
@@ -490,7 +490,7 @@ const Timesheets = (props) => {
                         style={{
                           borderBottom: '1px solid currentColor',
                           textDecoration: 'none',
-                          color: gordonColors.primary.blueShades.A700,
+                          color: 'var(--mui-palette-secondary-main)',
                         }}
                         href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
                         underline="always"
