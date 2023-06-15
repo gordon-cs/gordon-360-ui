@@ -61,7 +61,7 @@ a {
 
 @media (max-width: $break-md) {
   .gc360_a_link {
-    color: var(--mui-palette-secondary-train) !important;
+    color: var(--mui-palette-secondary-main) !important;
   }
 }
 
@@ -85,6 +85,7 @@ strong {
 
 .gc360_photo_dialog {
   &_box {
+    background-color: var(--mui-palette-neutral-main);
     display: grid;
     grid-template-rows: auto auto auto auto auto auto;
     padding-bottom: 1rem;
@@ -95,7 +96,7 @@ strong {
       grid-row: 2;
       background-color: var(--mui-palette-primary-main);
       text-align: center;
-      color: var(--mui-palette-neutral-light);
+      color: var(--mui-palette-primary-contrastText);
     }
     &_content {
       display: grid;
@@ -104,6 +105,7 @@ strong {
       grid-row-gap: 10px;
       justify-items: center;
       &_text {
+        color: var(--mui-palette-neutral-contrastText);
         grid-row: 1;
         text-align: center;
         max-width: 285px;
