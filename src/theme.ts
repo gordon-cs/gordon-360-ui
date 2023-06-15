@@ -189,7 +189,7 @@ export const newTheme = extendTheme({
         primary: {
           main: '#014983' /* Gordon blue */,
           contrastText: '#ffffff' /* white */,
-          50: '#E3F1F8',
+          50: '#01498382', // 50% opacity
           100: '#BBDDF0',
           200: '#92C8E6',
           300: '#6BB2DC',
@@ -231,7 +231,7 @@ export const newTheme = extendTheme({
           dark: '#CCCCCB' /* light gray */, //currently $neutral-gray2 (not used)
           light: '#FFFFFF' /* white */, //currently $neutral-white
           contrastText: '#000000' /* black */,
-          50: '#FAF9F9',
+          50: '#FAF9F9', //Hues must be flipped in dark mode
           100: '#F4F3F3',
           200: '#EBEAEA',
           300: '#DCDBDB',
@@ -253,8 +253,8 @@ export const newTheme = extendTheme({
         // },
         // All current dark mode values are test colors!
         primary: {
-          main: '#FF52F6',
-          contrastText: '#223780',
+          main: '#FFFF00',
+          contrastText: '#FFFF00',
           50: '#FFFF00',
           100: '#FFFF00',
           200: '#FFFF00',
@@ -267,8 +267,8 @@ export const newTheme = extendTheme({
           900: '#FFFF00',
         },
         secondary: {
-          main: '#FFF700',
-          contrastText: '#00f7ff',
+          main: '#FFFF00',
+          contrastText: '#FFFF00',
           50: '#FFFF00',
           100: '#FFFF00',
           200: '#FFFF00',
@@ -281,22 +281,22 @@ export const newTheme = extendTheme({
           900: '#FFFF00',
         },
         error: {
-          main: '#58148F',
-          light: '#A78FBA',
-          contrastText: '#37E660',
+          main: '#FFFF00',
+          light: '#FFFF00',
+          contrastText: '#FFFF00',
         },
         success: {
-          dark: '#033870',
-          main: '#398BE3',
-          light: '#93B6DB',
+          dark: '#FFFF00',
+          main: '#FFFF00',
+          light: '#FFFF00',
         },
-        warning: { main: '#ED6328', dark: '#8C3611' },
-        info: { main: '#DB0F13' },
+        warning: { main: '#FFFF00', dark: '#FFFF00' },
+        info: { main: '#FFFF00' },
         neutral: {
-          main: '#023947',
-          dark: '#000000',
-          light: '#20B1D6',
-          contrastText: '#ffff00',
+          main: '#FFFF00',
+          dark: '#FFFF00',
+          light: '#FFFF00',
+          contrastText: '#FF0000',
           50: '#FFFF00',
           100: '#FFFF00',
           200: '#FFFF00',
