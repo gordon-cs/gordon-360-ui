@@ -52,27 +52,18 @@ const OfficeInfoList = ({
       <ProfileInfoListItem
         title="Room:"
         contentText={
-          // myProf ? (
-          //   <Grid container spacing={0} alignItems="center">
-          //     <Grid item>
-          //       {BuildingDescription}, {OnCampusRoom}
-          //     </Grid>
-          //     <Grid item>
-          //       <UpdateOffice />
-          //     </Grid>
-          //   </Grid>
-          // ) : (
-          //   `${BuildingDescription}, ${OnCampusRoom}`
-          // )
-
-          <Grid container spacing={0} alignItems="center">
-            <Grid item>
-              {BuildingDescription}, {OnCampusRoom}
+          myProf ? (
+            <Grid container spacing={0} alignItems="center">
+              <Grid item>
+                {BuildingDescription}, {OnCampusRoom}
+              </Grid>
+              <Grid item>
+                <UpdateOffice />
+              </Grid>
             </Grid>
-            <Grid item>
-              <UpdateOffice />
-            </Grid>
-          </Grid>
+          ) : (
+            `${BuildingDescription}, ${OnCampusRoom}`
+          )
         }
       />
     ) : null;

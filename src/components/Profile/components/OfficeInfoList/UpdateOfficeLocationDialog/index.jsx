@@ -2,8 +2,7 @@ import { FormControl, IconButton, Input, InputLabel, Select, MenuItem } from '@m
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
-import { forwardRef, useState, useEffect } from 'react';
-import { IMaskInput } from 'react-imask';
+import { useState, useEffect } from 'react';
 import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
@@ -18,9 +17,9 @@ const UpdateOffice = () => {
     const values = building + ',' + room;
     try {
       await userService.setOfficeLocation(values.toString());
-      createSnackbar('Your phone number will update within a couple hours.', 'success');
+      createSnackbar('Your office location will update within a couple hours.', 'success');
     } catch {
-      createSnackbar('Phone number failed to update. Please contact CTS.', 'error');
+      createSnackbar('Office location failed to update. Please contact CTS.', 'error');
     }
     setOpen(false);
   };
@@ -28,13 +27,11 @@ const UpdateOffice = () => {
   const createSnackbar = (message, severity) => {
     setSnackbar({ message, severity, open: true });
   };
-  //console.log(userService.getBuildings()); // I am adding this not working yet
 
   useEffect(() => {
     userService.getBuildings().then(setBuildings);
   }, []);
 
-  console.log(building);
   return (
     <div>
       <IconButton style={{ marginBottom: '0.5rem' }} onClick={() => setOpen(true)} size="large">
@@ -51,23 +48,6 @@ const UpdateOffice = () => {
         handleSubmit
       >
         <FormControl sx={{ m: 1, minWidth: 200 }}>
-          {/* <InputLabel htmlFor="formatted-text-mask-input">Building</InputLabel> */}
-          {/* <Select
-            type="tel"
-            id="building-input"
-            name="building"
-            value={building}
-            onChange={(event) => setBuilding(event.target.value)}
-            required="required"
-            autoFocus
-          >
-            Building
-            {buildings.map((item) => (
-              <MenuItem value={item.ID} onChange={(event) => setBuilding(event.target.value)}>
-                {item}
-              </MenuItem>
-            ))}
-          </Select> */}
           <SearchField
             name="building"
             value={building}
@@ -76,17 +56,8 @@ const UpdateOffice = () => {
             select
             size={200}
           />
-          {/* <Input
-            type="tel"
-            id="building-input"
-            name="building"
-            value={building}
-            onChange={(event) => setBuilding(event.target.value)}
-            required="required"
-            autoFocus
-          /> */}
         </FormControl>
-        <FormControl>
+        <FormControl sx={{ m: 2, minWidth: 200 }}>
           <InputLabel htmlFor="formatted-text-mask-input">Room Number</InputLabel>
           <Input
             type="tel"
