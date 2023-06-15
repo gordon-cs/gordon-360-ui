@@ -240,6 +240,8 @@ const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
+const setOfficeHours = (value: string) => http.put(`profiles/office_hours/${value}/`);
+
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
@@ -347,6 +349,7 @@ const userService = {
   setMobilePhonePrivacy,
   setHomePhonePrivacy,
   setMobilePhoneNumber,
+  setOfficeHours,
   setImagePrivacy,
   getChapelCredits,
   getImage,
