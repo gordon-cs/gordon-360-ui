@@ -10,7 +10,11 @@ import {
   IconButton,
   Card,
   CardHeader,
+  FormControl,
+  InputLabel,
+  Select,
   CardContent,
+  MenuItem,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
@@ -25,6 +29,9 @@ import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import styles from './ScheduleHeader.module.css';
+
+import { useNetworkStatus, useUser } from 'hooks';
+import sessionService from 'services/session';
 
 const styles2 = {
   colorSwitchBase: {
@@ -54,7 +61,54 @@ const GordonSchedulePanel = (props) => {
   const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
   const [scheduleControlInfo, setScheduleControlInfo] = useState(null);
   // Remove the line: let scheduleControlInfo = null;
+  const [sessions, setSessions] = useState([]);
 
+  const [selectedSession, setSelectedSession] = useState('');
+  const isOnline = useNetworkStatus();
+
+  const sessionFromURL = new URLSearchParams(location.search).get('session');
+
+  useEffect(() => {
+    const loadPage = async () => {
+      setSessions(await sessionService.getAll());
+
+      if (sessionFromURL) {
+        setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
+      } else {
+        const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
+        setCurrentAcademicSession(currentSessionCode);
+
+        const [involvements, sessions] = await Promise.all([
+          involvementService.getAll(currentSessionCode),
+          sessionService.getAll(),
+        ]);
+
+        if (involvements.length === 0) {
+          let IndexOfCurrentSession = sessions.findIndex(
+            (session) => session.SessionCode === currentSessionCode,
+          );
+
+          for (let k = IndexOfCurrentSession + 1; k < sessions.length; k++) {
+            const newInvolvements = await involvementService.getAll(sessions[k].SessionCode);
+            if (newInvolvements.length !== 0) {
+              setSelectedSession(sessions[k].SessionCode);
+
+              break;
+            }
+          }
+        } else {
+          setSelectedSession(currentSessionCode);
+        }
+      }
+    };
+    loadPage();
+  }, [sessionFromURL]);
+
+  const handleSelectSession = async (value) => {
+    setSelectedSession(value);
+    value = sessionService.decodeSessionCode(value);
+    navigate(`?session=${value}`);
+  };
   useEffect(() => {
     loadData(props.profile);
   }, [props.profile]);
@@ -207,6 +261,26 @@ const GordonSchedulePanel = (props) => {
                       <item>
                         <Markup classname={styles.officeHourText} content={replaced} />
                       </item>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3}>
+                      <FormControl variant="filled" fullWidth>
+                        <InputLabel id="activity-session">Term</InputLabel>
+                        <Select
+                          labelId="activity-session"
+                          id="activity-session"
+                          value={selectedSession}
+                          onChange={(e) => handleSelectSession(e.target.value)}
+                        >
+                          {(isOnline
+                            ? sessions
+                            : sessions.filter((item) => item.SessionCode === selectedSession)
+                          ).map(({ SessionDescription: description, SessionCode: code }) => (
+                            <MenuItem label={description} value={code} key={code}>
+                              {description}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                     </Grid>
 
                     {/* THIS IS FOR LAST UPDATED */}
