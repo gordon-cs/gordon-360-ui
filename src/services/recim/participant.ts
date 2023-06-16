@@ -90,7 +90,7 @@ const createCustomParticipant = (
   newcustomParticipant: CustomParticipant,
 ): Promise<Participant> => http.put(`recim/participants/${username}/custom`, newcustomParticipant);
 
-const getParticipants = async (): Promise<Participant[]> => http.get(`recim/participants`);
+const getParticipants = (): Promise<Participant[]> => http.get(`recim/participants`);
 
 const getParticipantByUsername = (username: string): Promise<Participant> =>
   http.get(`recim/participants/${username}`);
