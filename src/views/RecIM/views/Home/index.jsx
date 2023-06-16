@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import {
   Grid,
   Typography,
@@ -288,7 +288,7 @@ const Home = () => {
   );
 
   if (!profile) {
-    return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
+    return loading ? <GordonLoader /> : <GordonUnauthenticated feature={'the Rec-IM page'} />;
   } else {
     return (
       <>

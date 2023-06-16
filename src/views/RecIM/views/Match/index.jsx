@@ -12,7 +12,7 @@ import { useNavigate, useParams, Link as LinkRouter } from 'react-router-dom';
 import { useUser } from 'hooks';
 import { useState, useEffect, useCallback } from 'react';
 import GordonLoader from 'components/Loader';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Match.module.css';
@@ -140,7 +140,7 @@ const Match = () => {
     return <GordonLoader />;
   } else if (!profile) {
     // The user is not logged in
-    return <GordonUnauthorized feature={'the Rec-IM page'} />;
+    return <GordonUnauthenticated feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
       <Grid container direction="column" className={styles.header}>

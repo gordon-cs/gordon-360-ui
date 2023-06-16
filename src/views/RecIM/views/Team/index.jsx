@@ -13,7 +13,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import TeamForm from 'views/RecIM/components/Forms/TeamForm';
@@ -123,7 +123,7 @@ const Team = () => {
   };
 
   if (!profile) {
-    return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
+    return loading ? <GordonLoader /> : <GordonUnauthenticated feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
       <Grid
