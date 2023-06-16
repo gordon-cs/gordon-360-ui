@@ -46,6 +46,14 @@ const post = <TResponse>(
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'post', JSON.stringify(body), setContentTypeJSON(headers));
 
+const patch = <TResponse>(
+  endpoint: string,
+  body: Object = '',
+  headers = new Headers(),
+): Promise<TResponse> =>
+  makeRequest(endpoint, 'PATCH', JSON.stringify(body), setContentTypeJSON(headers));
+
+
 const del = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'delete');
 
 const apiBaseURL = import.meta.env.DEV ? '/' : (import.meta.env.VITE_API_URL as string);
@@ -174,6 +182,7 @@ const httpUtils = {
   del,
   get,
   post,
+  patch,
   postImage,
   put,
   toQueryString,
