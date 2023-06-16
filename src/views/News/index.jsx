@@ -14,7 +14,7 @@ import {
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import 'cropperjs/dist/cropper.css';
@@ -428,7 +428,9 @@ const StudentNews = () => {
                   <Dropzone
                     onDropAccepted={onDropAccepted}
                     onDropRejected={onDropRejected}
-                    accept="image/jpeg, image/jpg, image/png"
+                    accept={{
+                      'image/*': ['.jpeg', ',jpg', '.png'],
+                    }}
                   >
                     {({ getRootProps, getInputProps }) => (
                       <section>
@@ -508,7 +510,7 @@ const StudentNews = () => {
       return <GordonOffline feature="Student News" />;
     }
   } else {
-    return <GordonUnauthorized feature={'the student news page'} />;
+    return <GordonUnauthenticated feature={'the student news page'} />;
   }
 };
 
