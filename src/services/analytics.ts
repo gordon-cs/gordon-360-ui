@@ -1,7 +1,10 @@
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 
 const onError = (description: string) => {
-  ReactGA.exception({ description });
+  ReactGA.send({
+    hitType: 'exception',
+    exDescription: description,
+  });
 };
 
 /**
@@ -21,10 +24,15 @@ const onEvent = (category: string, action: string, label?: string, value?: numbe
     value,
   });
 
-const onPageView = () => ReactGA.pageview(window.location.pathname + window.location.search);
+const onPageView = (title?: string) =>
+  ReactGA.send({
+    hitType: 'pageview',
+    page: window.location.pathname + window.location.search,
+    title: title ?? null,
+  });
 
 const initialize = () => {
-  ReactGA.initialize(import.meta.env.VITE_ANALYTICS_ID ?? 'UA-101865570-1');
+  ReactGA.initialize(import.meta.env.VITE_ANALYTICS_ID ?? 'G-2FE78G0CBN');
   // Set user role
   // TODO get user role from JWT
   ReactGA.set({ dimension1: 'god' });

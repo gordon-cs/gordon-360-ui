@@ -1,3 +1,4 @@
+import GetAppIcon from '@mui/icons-material/GetApp';
 import {
   Button,
   Card,
@@ -10,11 +11,10 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import GetAppIcon from '@mui/icons-material/GetApp';
 import PWAInstructions from 'components/PWAInstructions/index';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
-import { ga } from 'react-ga';
+import ReactGA from 'react-ga4';
 import { authenticate } from 'services/auth';
 import styles from './GuestWelcome.module.css';
 import GordonLogoVerticalWhite from './images/gordon-logo-vertical-white.svg';
@@ -52,7 +52,7 @@ const GuestWelcome = () => {
       setShowPWALink(true);
     }
     // Google Analytics to track PWA usage
-    ga('set', 'dimension1', displayMode);
+    ReactGA.set({ dimension1: displayMode });
 
     // Removes all events listeners that were invoked in this component
     return function cleanupListener() {

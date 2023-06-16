@@ -1,5 +1,5 @@
-import { AuthError, NotFoundError } from './error';
-import http from './http';
+import { AuthError, NotFoundError } from "./error";
+import http from "./http";
 
 /**
  * these holds prevent a student from checking in
@@ -47,11 +47,11 @@ type Demographic = {
 };
 
 export enum Race {
-  NativeAmerican = 'Native American or Alaskan Native',
-  Asian = 'Asian',
-  Black = 'Black or African American',
-  Hawaiian = 'Native Hawaiian or Other Pacific Islander',
-  White = 'White',
+  NativeAmerican = "Native American or Alaskan Native",
+  Asian = "Asian",
+  Black = "Black or African American",
+  Hawaiian = "Native Hawaiian or Other Pacific Islander",
+  White = "White",
 }
 
 type EnrollmentCheckin = {
@@ -62,16 +62,15 @@ type EnrollmentCheckin = {
   MinorHolds &
   Demographic;
 
-const getStatus = (): Promise<boolean> =>
-  http
-    .get<boolean>(`checkIn/status`)
-    .catch((err) => err instanceof NotFoundError || err instanceof AuthError);
+const getStatus = (): Promise<boolean> => http.get<boolean>(`checkIn/status`);
 
 const markCompleted = (): Promise<void> => http.put(`checkIn/status`);
 
 const getHolds = (): Promise<EnrollmentCheckin> => http.get(`checkIn/holds`);
 
-const getEmergencyContacts = (username: string): Promise<EmergencyContact[] | void> =>
+const getEmergencyContacts = (
+  username: string
+): Promise<EmergencyContact[] | void> =>
   http.get(`profiles/emergency-contact/${username}/`);
 
 const submitPhone = (data: EnrollmentCheckin): Promise<EnrollmentCheckin> =>
@@ -80,8 +79,9 @@ const submitPhone = (data: EnrollmentCheckin): Promise<EnrollmentCheckin> =>
 const submitContact = (data: EmergencyContact): Promise<EmergencyContact> =>
   http.post(`checkIn/emergencycontact`, data);
 
-const submitDemographic = (data: EnrollmentCheckin): Promise<EnrollmentCheckin> =>
-  http.put(`checkIn/demographic`, data);
+const submitDemographic = (
+  data: EnrollmentCheckin
+): Promise<EnrollmentCheckin> => http.put(`checkIn/demographic`, data);
 
 const checkInService = {
   getStatus,
