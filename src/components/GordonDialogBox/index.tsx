@@ -14,7 +14,7 @@ import styles from './GordonDialogBox.module.css';
 type Props = {
   open: boolean;
   title: string;
-  titleClass: string | null;
+  titleClass: any;
   buttonClicked: (event: {}) => void;
   buttonName?: string;
   isButtonDisabled?: boolean;
