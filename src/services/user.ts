@@ -176,6 +176,11 @@ type MealPlanComponent = {
 
 export type ProfileImages = { def: string; pref?: string };
 
+export type OfficeLocationQuery = {
+  BuildingDescription: string;
+  RoomNumber: string;
+};
+
 function isStudent(profile: Profile): profile is StudentProfileInfo;
 function isStudent(profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo;
 function isStudent(
@@ -242,7 +247,7 @@ const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
-const setOfficeLocation = (value: string) => http.put(`profiles/office_location/${value}/`);
+const setOfficeLocation = (value: string) => http.patch(`profiles/office_location/${value}/`); // I am changing this
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public

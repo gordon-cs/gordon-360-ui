@@ -1,10 +1,11 @@
-import { FormControl, IconButton, Input, InputLabel, Select, MenuItem } from '@mui/material';
+import { FormControl, IconButton, Input, InputLabel } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { useState, useEffect } from 'react';
-import userService from 'services/user';
+import { userService, OfficeLocationQuery } from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
+import { number } from 'prop-types';
 
 const UpdateOffice = () => {
   const [open, setOpen] = useState(false);
@@ -14,9 +15,8 @@ const UpdateOffice = () => {
   const [buildings, setBuildings] = useState([]);
 
   const handleSubmit = async () => {
-    const values = building + ',' + room;
     try {
-      await userService.setOfficeLocation(values.toString());
+      await userService.setOfficeLocation({ BuildingDescription: building, RoomNumber: room });
       createSnackbar('Your office location will update within a couple hours.', 'success');
     } catch {
       createSnackbar('Office location failed to update. Please contact CTS.', 'error');
