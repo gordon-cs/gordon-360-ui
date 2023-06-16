@@ -55,8 +55,13 @@ const patch = <TResponse>(
   makeRequest(endpoint, 'PATCH', JSON.stringify(body), setContentTypeJSON(headers));
 
 
-const del = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'delete');
-
+const del = <TResponse>(
+  endpoint: string,
+  body: Object = '',
+  headers = new Headers(),
+): Promise<TResponse> =>
+  makeRequest(endpoint, 'delete', JSON.stringify(body), setContentTypeJSON(headers));
+  
 const apiBaseURL = import.meta.env.DEV ? '/' : (import.meta.env.VITE_API_URL as string);
 
 /**
