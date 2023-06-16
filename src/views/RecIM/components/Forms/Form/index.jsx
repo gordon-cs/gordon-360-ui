@@ -90,14 +90,7 @@ const Form = ({
       title={`${formTitles.formType} ${formTitles.name}`}
       fullWidth
       maxWidth="lg"
-      buttonClicked={() => {
-        // This will submit the data and close the window if we do not allow open confirm
-        if (showConfirmationWindow) {
-          setOpenConfirmWindow(true);
-        } else {
-          handleConfirm(newInfo, handleWindowClose);
-        }
-      }}
+      buttonClicked={() => handleConfirm(newInfo, handleWindowClose)}
       isButtonDisabled={errors?.length > 0}
       buttonName="Submit"
       cancelButtonClicked={handleCancelClick}
@@ -122,35 +115,6 @@ const Form = ({
             ))}
           </ContentCard>
         ))
-      )}
-
-      {!loading && (
-        <GordonDialogBox
-          open={openConfirmWindow}
-          title={`Confirm Your ${formTitles.name}`}
-          buttonClicked={() => {
-            !isSaving && handleConfirm(newInfo, handleWindowClose);
-          }}
-          buttonName="Confirm"
-          // in case you want to authenticate something change isButtonDisabled
-          isButtonDisabled={false}
-          cancelButtonClicked={() => {
-            if (!isSaving) setOpenConfirmWindow(false);
-          }}
-          cancelButtonName="Cancel"
-        >
-          <ConfirmationWindowHeader />
-          <Grid container>
-            {updatedFields.map(([key, value]) => (
-              <ConfirmationRow
-                key={key}
-                value={value}
-                label={allFields.find((field) => field.name === key)?.label}
-              />
-            ))}
-          </Grid>
-          {isSaving && <GordonLoader size={32} />}
-        </GordonDialogBox>
       )}
     </GordonDialogBox>
   );

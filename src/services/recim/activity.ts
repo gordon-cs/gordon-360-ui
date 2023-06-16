@@ -58,7 +58,7 @@ const getActivityByID = (ID: number): Promise<Activity> => http.get(`recim/activ
 
 const getActivities = (active: boolean, time: String): Promise<Activity[]> => {
   if (time) return http.get(`recim/activities?active=${active}&time=${time}`);
-  if (typeof active !== 'undefined') return http.get(`recim/activities?active=${active}`);
+  if (active !== undefined) return http.get(`recim/activities?active=${active}`);
   return http.get(`recim/activities`);
 };
 
