@@ -200,7 +200,7 @@ export const newTheme = extendTheme({
         //   // Testing with adding extra colors to the palette!
         //   main: '#014983',
         // },
-        // All current dark mode values are test colors!
+        // All current dark mode values are test colors for visually seeing theme variable changes!
         primary: {
           main: '#FFFF00',
           contrastText: '#FFFF00',
