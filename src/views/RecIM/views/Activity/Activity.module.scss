@@ -3,6 +3,7 @@
 .buttonArea {
   background-color: $neutral-light-gray;
   padding: 16px;
+  margin-top: -1em;
   margin-bottom: 0.2em;
   border-bottom-left-radius: 0.5em;
   border-bottom-right-radius: 0.5em;
@@ -47,20 +48,9 @@
 
 // All below should eventually be refactored to global styles
 
-// if desired, this should just be a global change and
-// universally applied to all 360 cards
 .cardHeader {
   background-color: $primary-blue;
   color: $neutral-white;
-}
-
-:global(.MuiCardHeader-root).cardHeader {
-  padding: 0.7em 16px;
-}
-
-:global(.MuiCardContent-root) {
-  padding: 16px;
-  padding-top: 0px;
 }
 
 .cardHeader :global(.MuiCardHeader-title) {

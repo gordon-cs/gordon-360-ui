@@ -6,15 +6,12 @@ import {
   CardContent,
   Button,
   IconButton,
-  Tabs,
-  Tab,
   Menu,
   MenuItem,
   Tooltip,
   tooltipClasses,
   ClickAwayListener,
   FormControl,
-  InputLabel,
   Select,
 } from '@mui/material';
 import { gordonColors } from 'theme';

@@ -46,6 +46,7 @@
 .buttonArea {
   background-color: $neutral-light-gray;
   padding: 16px;
+  margin-top: -1em;
   margin-bottom: 0.2em;
   border-bottom-left-radius: 0.5em;
   border-bottom-right-radius: 0.5em;
@@ -71,10 +72,6 @@
 
 .actionButton:hover {
   background-color: $primary-cyan-600;
-}
-
-:global(.MuiCardHeader-root).cardHeader {
-  padding: 0.7em 16px;
 }
 
 .cardHeader :global(.MuiCardHeader-title) {
