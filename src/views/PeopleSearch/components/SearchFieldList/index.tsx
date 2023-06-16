@@ -12,10 +12,8 @@ import {
   FormLabel,
   Grid,
   Typography,
-  colors,
-  makeStyles,
 } from '@mui/material';
-import { DisplaySettings, ExpandMore } from '@mui/icons-material';
+import { ExpandMore } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
 import {
@@ -50,10 +48,8 @@ import { compareByProperty, searchParamSerializerFactory } from 'services/utils'
 import { gordonColors } from 'theme';
 import SearchField, { SelectOption } from './components/SearchField';
 import addressService from 'services/address';
-import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
-import { bool } from 'prop-types';
 
 function valuetext(value: number) {
   return '${value}';
