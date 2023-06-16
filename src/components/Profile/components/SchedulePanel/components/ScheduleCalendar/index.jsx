@@ -43,8 +43,13 @@ const GordonScheduleCalendar = (props) => {
       setEventInfo(courseInfo);
     }
 
-    let currentSession = await session.getCurrent();
-    setCurrentSession(currentSession);
+    if (props.term === '') {
+      let currentSession = await session.getCurrent();
+      setCurrentSession(currentSession);
+    } else {
+      let currentSession = await session.get(props.term);
+      setCurrentSession(currentSession);
+    }
     setLoading(false);
   };
 
