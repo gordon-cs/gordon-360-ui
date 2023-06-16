@@ -176,6 +176,11 @@ type MealPlanComponent = {
 
 export type ProfileImages = { def: string; pref?: string };
 
+export type OfficeLocationQuery = {
+  BuildingDescription: string;
+  RoomNumber: string;
+};
+
 function isStudent(profile: Profile): profile is StudentProfileInfo;
 function isStudent(profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo;
 function isStudent(
@@ -238,9 +243,14 @@ const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
 
 const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
+const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
+
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
-const setOfficeHours = (value: string) => http.put(`profiles/office_hours/${value}/`);
+const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) => {
+  return http.patch(`profiles/office_location`, OfficeLocation);
+};
+const updateOfficeHours = (value: string) => http.patch(`profiles/office_hours/${value}/`);
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
@@ -349,7 +359,8 @@ const userService = {
   setMobilePhonePrivacy,
   setHomePhonePrivacy,
   setMobilePhoneNumber,
-  setOfficeHours,
+  updateOfficeLocation,
+  updateOfficeHours,
   setImagePrivacy,
   getChapelCredits,
   getImage,
@@ -357,6 +368,7 @@ const userService = {
   getProfileInfo,
   getMailboxCombination,
   getMembershipHistory,
+  getBuildings,
   resetImage,
   postImage,
   postIDImage,
