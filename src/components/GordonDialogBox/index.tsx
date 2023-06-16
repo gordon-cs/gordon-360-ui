@@ -14,7 +14,6 @@ import styles from './GordonDialogBox.module.css';
 type Props = {
   open: boolean;
   title: string;
-  titleClass: any;
   buttonClicked: (event: {}) => void;
   buttonName?: string;
   isButtonDisabled?: boolean;
@@ -25,7 +24,6 @@ type Props = {
 
 const GordonDialogBox = ({
   title,
-  titleClass,
   buttonClicked,
   buttonName,
   isButtonDisabled = false,
@@ -55,7 +53,7 @@ const GordonDialogBox = ({
       onKeyDown={(event) => handleKeyPress(event)}
     >
       <DialogTitle
-        className={titleClass ?? styles.gc360_gordondialogbox_title}
+        className={styles.gc360_gordondialogbox_title}
         id="alert-dialog-title"
         sx={severity ? { bgcolor: `${severity}.main`, pb: '0' } : { bgcolor: 'primary.main' }}
       >
