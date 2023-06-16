@@ -111,13 +111,10 @@ export const windowBreakWidths = {
 declare module '@mui/material/styles' {
   interface Palette {
     neutral: Palette['primary'];
-    //gordonBlue: PaletteOptions['primary'];
   }
   // allow configuration using `createTheme`
   interface PaletteOptions {
     neutral: PaletteOptions['primary'];
-    //gordonBlue: PaletteOptions['primary'];
-    // Testing with adding extra colors to the palette, need to learn more about how to use this!
   }
 }
 
@@ -131,10 +128,6 @@ export const newTheme = extendTheme({
   colorSchemes: {
     light: {
       palette: {
-        // gordonBlue: {
-        //   // Testing with adding extra colors to the palette!
-        //   main: '#014983',
-        // },
         primary: {
           main: '#014983' /* Gordon blue */,
           contrastText: '#FFFFFF' /* white */,
@@ -196,10 +189,6 @@ export const newTheme = extendTheme({
     },
     dark: {
       palette: {
-        // gordonBlue: {
-        //   // Testing with adding extra colors to the palette!
-        //   main: '#014983',
-        // },
         // All current dark mode values are test colors for visually seeing theme variable changes!
         primary: {
           main: '#FFFF00',

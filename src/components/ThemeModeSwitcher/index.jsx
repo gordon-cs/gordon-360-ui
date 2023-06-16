@@ -1,7 +1,7 @@
 /* Temporary component for testing theme implementation and dark mode.  Used in the right side
 nav menu currently.
 
-@TODO convert to 
+@TODO convert to some final implementation
 */
 import { useEffect, useState } from 'react';
 import {
