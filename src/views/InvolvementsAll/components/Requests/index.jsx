@@ -53,14 +53,14 @@ const Requests = ({ profile, session }) => {
             <AccordionSummary
               aria-controls="received-requests-content"
               expandIcon={<ExpandMore style={{ color: 'white' }} />}
-              className={styles.requests_header}
+              className={styles.requests}
             >
               <Typography variant="h6">Requests Received</Typography>
             </AccordionSummary>
             <AccordionDetails style={{ flexDirection: 'column' }}>
               {involvementsLeading.map((involvement) => (
                 <RequestReceived
-                  key={involvement.ActivityCode + involvement.SessioinCode}
+                  key={involvement.ActivityCode + involvement.SessionCode}
                   involvement={involvement}
                 />
               ))}
@@ -99,7 +99,7 @@ const Requests = ({ profile, session }) => {
   } else {
     content = (
       <>
-        <Accordion defaultExpanded>
+        <Accordion defaultExpanded className={styles.requests}>
           <AccordionSummary
             aria-controls="received-requests-content"
             expandIcon={<ExpandMore style={{ color: 'white' }} />}

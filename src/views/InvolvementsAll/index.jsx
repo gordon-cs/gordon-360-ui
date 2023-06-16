@@ -19,6 +19,7 @@ import sessionService from 'services/session';
 import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
+import styles from './InvolvementsAll.module.css';
 
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -136,7 +137,7 @@ const InvolvementsAll = () => {
   return (
     <Grid container justifyContent="center" spacing={4}>
       <Grid item xs={12} lg={8}>
-        <Card>
+        <Card className={styles.involvements_header}>
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -209,7 +210,7 @@ const InvolvementsAll = () => {
       ) : (
         profile && (
           <Grid item xs={12} lg={8}>
-            <Card>
+            <Card className={styles.involvements_header}>
               <CardHeader
                 title={`My ${myInvolvementsHeadingText} Involvements`}
                 style={{
@@ -235,7 +236,7 @@ const InvolvementsAll = () => {
 
       {/* All Involvements (public) */}
       <Grid item xs={12} lg={8}>
-        <Card>
+        <Card className={styles.involvements_header}>
           <CardHeader
             title={`${involvementSessionText} Involvements`}
             style={{

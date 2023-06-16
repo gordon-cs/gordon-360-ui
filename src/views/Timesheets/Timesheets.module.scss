@@ -1,6 +1,9 @@
 .timesheets {
-  :global(.MuiGrid-item) {
-    text-align: center;
+  text-align: center;
+  background-color: var(--mui-palette-neutral-main);
+
+  &_card {
+    background-color: var(--mui-palette-neutral-light);
   }
 
   .header_tooltip_container {

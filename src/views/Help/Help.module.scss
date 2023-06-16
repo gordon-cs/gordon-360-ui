@@ -2,6 +2,7 @@
 
 .help {
   margin: 1rem;
+  background-color: var(--mui-palette-neutral-light);
 
   li {
     list-style-type: '• ';
@@ -14,14 +15,16 @@
   &_title {
     text-align: center;
     padding: 1rem;
+    color: var(--mui-palette-neutral-contrastText);
   }
 
   &_header {
-    background-color: $primary-blue;
-    color: $neutral-white;
+    color: var(--mui-palette-primary-contrastText);
+    background-color: var(--mui-palette-primary-main);
   }
 
   &_section:global(.MuiCard-root) {
     box-shadow: none;
+    background-color: var(--mui-palette-neutral-light);
   }
 }
