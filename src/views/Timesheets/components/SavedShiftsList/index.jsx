@@ -19,7 +19,6 @@ import {
 import GordonLoader from 'components/Loader';
 import { Component } from 'react';
 import jobs from 'services/jobs';
-import { gordonColors } from 'theme';
 import ShiftItem from '../ShiftItem';
 import styles from './SavedShiftsList.module.css';
 
@@ -149,7 +148,11 @@ export default class SavedShiftsList extends Component {
             <DialogContent>
               <Grid container>
                 <Grid item xs={6} sm={6} md={6} lg={6}>
-                  <Button style={styles2.redButton} onClick={this.onClose} variant="contained">
+                  <Button
+                    className={styles.timesheets_RButton}
+                    onClick={this.onClose}
+                    variant="contained"
+                  >
                     Cancel
                   </Button>
                 </Grid>
@@ -175,7 +178,7 @@ export default class SavedShiftsList extends Component {
     );
 
     let header = (
-      <Grid item xs={12} style={styles2.headerStyle}>
+      <Grid item xs={12} style={styles2.headerStyle} className={styles.timesheets_headerStyle}>
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
@@ -326,13 +329,7 @@ export default class SavedShiftsList extends Component {
 }
 
 const styles2 = {
-  redButton: {
-    background: gordonColors.secondary.red,
-    color: 'white',
-  },
   headerStyle: {
-    backgroundColor: gordonColors.primary.blue,
-    color: '#FFF',
     padding: '10px',
   },
   headerItem: {

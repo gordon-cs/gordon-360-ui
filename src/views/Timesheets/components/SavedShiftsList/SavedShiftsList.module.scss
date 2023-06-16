@@ -15,4 +15,14 @@
       background-color: $primary-cyan;
     }
   }
+
+  &_RButton {
+    background-color: var(--mui-palette-error-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
+
+  &_headerStyle {
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
 }

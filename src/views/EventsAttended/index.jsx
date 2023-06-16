@@ -6,14 +6,7 @@ import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import event from 'services/event';
-import { gordonColors } from 'theme';
-
-const style = {
-  button: {
-    background: gordonColors.primary.cyan,
-    color: 'white',
-  },
-};
+import styles from './EventsAttended.module.css';
 
 const EventsAttended = () => {
   const [events, setEvents] = useState([]);
@@ -61,7 +54,7 @@ const EventsAttended = () => {
         <br />
         <Button
           variant="contained"
-          style={style.button}
+          className={styles.eventsAttended_buttons_need_more_clw}
           component={Link}
           to="/events?CLW%20Credits"
         >
