@@ -50,7 +50,7 @@ export default class EditDescriptionDialog extends Component {
     return (
       <Dialog open={this.props.editDescriptionOpen} keepMounted fullWidth="true" maxWidth="xs">
         <div className={styles.desc_tile}>
-          <DialogTitle className={styles.desc_title}>Edit Public Note</DialogTitle>
+          <DialogTitle className={styles.desc_title}>Edit Public Office Hours Note</DialogTitle>
 
           <TextField
             id="outlined-multiline-static"

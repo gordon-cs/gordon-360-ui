@@ -171,19 +171,6 @@ class GordonSchedulePanel extends Component {
     this.state.isExpanded ? (panelTitle = 'Hide') : (panelTitle = 'Show');
     if (this.state.loading) {
       schedulePanel = <GordonLoader />;
-    } else if (!this.props.myProf && !isFaculty) {
-      schedulePanel = (
-        <>
-          <Grid item xs={12} className={styles.schedules}>
-            <Grid container className={styles.schedules_header}>
-              <CardHeader title="Profile Note" />
-            </Grid>
-            <Card className={styles.memberships_card}>
-              <CardContent align="left">{replaced}</CardContent>
-            </Card>
-          </Grid>
-        </>
-      );
     } else {
       schedulePanel = (
         <>

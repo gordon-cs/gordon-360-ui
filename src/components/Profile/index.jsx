@@ -14,7 +14,6 @@ import {
   SchedulePanel,
   VictoryPromise,
 } from './components';
-import { Markup } from 'interweave';
 
 const Profile = ({ profile, myProf }) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
@@ -58,12 +57,6 @@ const Profile = ({ profile, myProf }) => {
           <SchedulePanel profile={profile} myProf={myProf} isOnline={isOnline} />
         </Grid>
       )}
-
-      {/* {((!myProf && profileIsStudent) || canReadStudentSchedules) && (
-        <Grid item xs={12} lg={10} align="center">
-          <SchedulePanel profile={profile} myProf={myProf} isOnline={isOnline} />
-        </Grid>
-      )} */}
 
       <Grid item xs={12} lg={5}>
         <Grid container spacing={2}>
