@@ -90,18 +90,17 @@ const getTeamStatusTypes = (ID: number): Promise<Lookup[]> =>
 const getTeamParticipantRoleTypes = (ID: number): Promise<Lookup[]> =>
   http.get(`recim/Teams/lookup?type=role`);
 
-const addParticipantToTeam = async (
+const addParticipantToTeam = (
   teamID: number,
   teamParticipant: UploadTeamParticipant,
-): Promise<CreatedTeamParticipant> => {
-  return await http.post(`recim/Teams/${teamID}/participants`, teamParticipant);
-};
+): Promise<CreatedTeamParticipant> =>
+  http.post(`recim/Teams/${teamID}/participants`, teamParticipant);
 
-const editTeamParticipant = async (
+const editTeamParticipant = (
   teamID: number,
   editedParticipant: UploadTeamParticipant,
 ): Promise<CreatedTeamParticipant> =>
-  await http.patch(`recim/Teams/${teamID}/participants`, editedParticipant);
+  http.patch(`recim/Teams/${teamID}/participants`, editedParticipant);
 
 const deleteTeamParticipant = async (teamID: number, username: string) =>
   await http.del(`recim/Teams/${teamID}/participants?username=${username}`);
@@ -109,12 +108,10 @@ const deleteTeamParticipant = async (teamID: number, username: string) =>
 const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>
   http.patch(`recim/Teams/${ID}`, updatedTeam);
 
-const getTeamInvites = async (): Promise<Team[]> => http.get(`recim/Teams/invites`);
+const getTeamInvites = (): Promise<Team[]> => http.get(`recim/Teams/invites`);
 
-const respondToTeamInvite = async (
-  teamID: number,
-  response: string,
-): Promise<CreatedTeamParticipant> => http.patch(`recim/Teams/${teamID}/invite/status`, response);
+const respondToTeamInvite = (teamID: number, response: string): Promise<CreatedTeamParticipant> =>
+  http.patch(`recim/Teams/${teamID}/invite/status`, response);
 
 //temporary solution, may need a cleaner route implementation or have attendance count return in team
 const getParticipantAttendanceCountForTeam = (teamID: number, username: string): Promise<number> =>
