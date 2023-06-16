@@ -121,7 +121,6 @@ const Team = () => {
   const handleButtonClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
-
   if (!profile) {
     return loading ? <GordonLoader /> : <GordonUnauthenticated feature={'the Rec-IM page'} />;
   } else {

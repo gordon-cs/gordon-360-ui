@@ -266,7 +266,7 @@ const ParticipantListing = ({
   const moreOptionsCustomParticipantOpen = Boolean(anchorCustomParticipantEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
   const [attendanceCount, setAttendanceCount] = useState();
-
+  console.log(participant);
   const handleClickOff = () => {
     setAnchorEl(null);
     setAnchorCustomParticipantEl(null);
