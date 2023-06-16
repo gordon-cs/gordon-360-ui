@@ -186,7 +186,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {feedbackButton}
         {adminButton}
         {signOutButton}
-        <ModeSwitcher />
+        {/* <ModeSwitcher /> */}
       </List>
 
       <GordonQuickLinksDialog
