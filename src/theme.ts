@@ -202,7 +202,7 @@ export const newTheme = extendTheme({
         },
         secondary: {
           main: '#00AEEF' /* Scottie Cyan */,
-          contrastText: '#FFFFFFF' /* white */,
+          contrastText: '#FFFFFF' /* white */,
           50: '#E0F4FD',
           100: '#B0E2F9',
           200: '#7BD0F5',
@@ -217,7 +217,7 @@ export const newTheme = extendTheme({
         error: {
           main: '#B53228' /* old scheme red, good error color */,
           light: '#ff5d53', //Nautical Red
-          contrastText: '#FFFFFFF' /* white */,
+          contrastText: '#FFFFFF' /* white */,
         },
         success: {
           dark: '#006d22' /*La Vida Green*/,
@@ -231,6 +231,20 @@ export const newTheme = extendTheme({
           dark: '#CCCCCB' /* not used */, //currently $neutral-gray2 (not used)
           light: '#FFFFFFF' /* white */, //currently $neutral-white
           contrastText: '#000000' /* black */,
+          50: '#ffffff',
+          100: '#ffffff',
+          200: '#ffffff',
+          300: '#eaeaea',
+          400: '#dbdbda',
+          500: '#cccccb',
+          600: '#bdbdbc',
+          700: '#aeaeac',
+          800: '#9f9f9d',
+          900: '#8f8f8d',
+          A100: '#ffffff',
+          A200: '#ffffff',
+          A400: '#e9e9e1',
+          A700: '#dbdbd6',
         },
       },
     },
@@ -265,6 +279,20 @@ export const newTheme = extendTheme({
           dark: '#000000' /* not used */, //currently $neutral-gray2 (not used)
           light: '#20B1D6' /* white */, //currently $neutral-white
           contrastText: '#ffffff' /* black */,
+          50: '#ffffff',
+          100: '#ffffff',
+          200: '#ffffff',
+          300: '#eaeaea',
+          400: '#dbdbda',
+          500: '#cccccb',
+          600: '#bdbdbc',
+          700: '#aeaeac',
+          800: '#9f9f9d',
+          900: '#8f8f8d',
+          A100: '#ffffff',
+          A200: '#ffffff',
+          A400: '#e9e9e1',
+          A700: '#dbdbd6',
         },
       },
     },

@@ -121,7 +121,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             {feedbackButton}
             {adminButton}
             {signOutButton}
-            <ModeSwitcher />
+            {/* <ModeSwitcher /> */}
           </List>
         </Popover>
       </div>
