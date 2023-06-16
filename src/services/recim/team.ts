@@ -103,7 +103,7 @@ const editTeamParticipant = (
   http.patch(`recim/Teams/${teamID}/participants`, editedParticipant);
 
 const deleteTeamParticipant = async (teamID: number, username: string) =>
-  await http.del(`recim/Teams/${teamID}/participants?username=${username}`);
+  await http.del(`recim/Teams/${teamID}/participants/${username}`);
 
 const editTeam = (ID: number, updatedTeam: PatchTeam): Promise<CreatedTeam> =>
   http.patch(`recim/Teams/${ID}`, updatedTeam);
@@ -115,7 +115,7 @@ const respondToTeamInvite = (teamID: number, response: string): Promise<CreatedT
 
 //temporary solution, may need a cleaner route implementation or have attendance count return in team
 const getParticipantAttendanceCountForTeam = (teamID: number, username: string): Promise<number> =>
-  http.get(`recim/Teams/${teamID}/attendance?username=${username}`);
+  http.get(`recim/Teams/${teamID}/participants/${username}/attendance`);
 
 const deleteTeam = (ID: number): Promise<Team> => http.del(`recim/Teams/${ID}`);
 
