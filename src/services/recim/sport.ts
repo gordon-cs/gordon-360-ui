@@ -25,16 +25,15 @@ type PatchSport = {
 };
 
 //Sport Routes
-const createSport = async (newSport: UploadSport): Promise<Sport> =>
-  http.post(`recim/sports`, newSport);
+const createSport = (newSport: UploadSport): Promise<Sport> => http.post(`recim/sports`, newSport);
 
-const getAllSports = async (): Promise<Sport[]> => http.get(`recim/sports`);
+const getAllSports = (): Promise<Sport[]> => http.get(`recim/sports`);
 
-const getSportByID = async (ID: number): Promise<Sport> => http.get(`recim/sports/${ID}`);
+const getSportByID = (ID: number): Promise<Sport> => http.get(`recim/sports/${ID}`);
 
-const editSport = async (ID: number, updatedSport: PatchSport): Promise<Sport> =>
+const editSport = (ID: number, updatedSport: PatchSport): Promise<Sport> =>
   http.patch(`recim/sports/${ID}`, updatedSport);
 
-const deleteSport = async (ID: number) => http.del(`recim/sports/${ID}`);
+const deleteSport = (ID: number) => http.del(`recim/sports/${ID}`);
 
 export { createSport, getSportByID, editSport, getAllSports, deleteSport };
