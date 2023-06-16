@@ -140,7 +140,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
 
   return (
     <section className={styles.gordon_header}>
-      <AppBar className={styles.app_bar} position="static" color="primary">
+      <AppBar className={styles.app_bar} position="static">
         <Toolbar>
           <IconButton
             className={styles.menu_button}

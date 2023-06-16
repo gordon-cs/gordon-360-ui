@@ -4,15 +4,15 @@
   display: grid;
   grid-template-rows: auto auto auto;
   overflow-y: auto;
-  &_title {
+  .title {
     background-color: var(--mui-palette-primary-main);
     color: $neutral-white;
     text-align: center;
   }
-  &_content :global(.MuiDialogTitle-root) {
+  .content :global(.MuiDialogTitle-root) {
     padding: 8px 20px 8px 16px;
   }
-  &_actions {
+  .actions {
     justify-content: space-evenly;
   }
 }

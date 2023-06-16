@@ -43,10 +43,10 @@ a {
 }
 // style for links that are menu items or buttons (not just text)
 .gc360_link {
-  color: $neutral-black;
+  color: var(--mui-palette-neutral-contrastText);
   background-color: var(--mui-palette-neutral-main);
   &:hover {
-    color: $neutral-black !important;
+    color: var(--mui-palette-neutral-contrastText) !important;
     text-decoration: none !important;
   }
 }
@@ -55,13 +55,13 @@ a {
   color: var(--mui-palette-primary-main);
   transition: color 200ms;
   &:hover {
-    color: $primary-cyan !important;
+    color: var(--mui-palette-secondary-main) !important;
   }
 }
 
 @media (max-width: $break-md) {
   .gc360_a_link {
-    color: $primary-cyan !important;
+    color: var(--mui-palette-secondary-main) !important;
   }
 }
 
@@ -85,6 +85,7 @@ strong {
 
 .gc360_photo_dialog {
   &_box {
+    background-color: var(--mui-palette-neutral-main);
     display: grid;
     grid-template-rows: auto auto auto auto auto auto;
     padding-bottom: 1rem;
@@ -95,7 +96,7 @@ strong {
       grid-row: 2;
       background-color: var(--mui-palette-primary-main);
       text-align: center;
-      color: $neutral-white; //white;
+      color: var(--mui-palette-primary-contrastText);
     }
     &_content {
       display: grid;
@@ -104,6 +105,7 @@ strong {
       grid-row-gap: 10px;
       justify-items: center;
       &_text {
+        color: var(--mui-palette-neutral-contrastText);
         grid-row: 1;
         text-align: center;
         max-width: 285px;
@@ -116,13 +118,13 @@ strong {
         border-style: dashed;
         border-width: 0.2rem;
         border-radius: 1rem;
-        border-color: darkgray;
+        border-color: var(--mui-palette-neutral-dark);
         justify-content: center;
         align-items: center;
         outline: none;
         &:hover {
-          background-color: $neutral-light-gray2;
-          box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
+          background-color: var(--mui-palette-neutral-dark);
+          box-shadow: 0 0 0 0.25rem var(--mui-palette-neutral-dark);
         }
         &_img {
           border-radius: 0.5rem;
