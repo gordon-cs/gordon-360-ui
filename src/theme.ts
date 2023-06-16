@@ -40,23 +40,6 @@ export const gordonColors = {
       A700: '#09bcff',
       contrastDefaultColor: 'light',
     },
-    pinkShades: {
-      50: '#FFE6F5',
-      100: '#FFCDEA',
-      200: '#FFB6E1',
-      300: '#FFA3D9',
-      400: '#FF91D2',
-      500: '#FF85CD',
-      600: '#FF79C7',
-      700: '#FF6EC3',
-      800: '#FF5CBB',
-      900: '#FF4BB4',
-      A100: '#FF47B3',
-      A200: '#FF31AA',
-      A400: '#FF189F',
-      A700: '#F1008D',
-      contrastDefaultColor: 'light',
-    },
   },
   secondary: {
     green: '#B2BB1C',
@@ -144,40 +127,6 @@ declare module '@mui/material' {
   }
 }
 
-/*const theme = createTheme({
-  palette: {
-    primary: gordonColors.primary.blueShades,
-    secondary: gordonColors.primary.cyanShades,
-    error: gordonColors.secondary.redShades,
-    success: gordonColors.secondary.greenShades,
-    warning: gordonColors.secondary.yellowShades,
-    info: gordonColors.primary.cyanShades,
-    neutral: gordonColors.neutral,
-  },
-  typography: {
-    fontFamily: ['Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', 'sans-serif'].join(','),
-  },
-  components: {
-    MuiTooltip: {
-      styleOverrides: {
-        tooltip: {
-          backgroundColor: gordonColors.neutral.darkGray,
-        },
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        containedPrimary: {
-          color: gordonColors.neutral.grayShades.A100,
-        },<ModeSwitcher />
-        containedSecondary: {
-          color: gordonColors.neutral.grayShades.A100,
-        },
-      },
-    },
-  },
-}); */
-
 export const newTheme = extendTheme({
   colorSchemes: {
     light: {
@@ -188,7 +137,7 @@ export const newTheme = extendTheme({
         // },
         primary: {
           main: '#014983' /* Gordon blue */,
-          contrastText: '#ffffff' /* white */,
+          contrastText: '#FFFFFF' /* white */,
           50: '#01498382', // 50% opacity
           100: '#BBDDF0',
           200: '#92C8E6',
@@ -251,7 +200,7 @@ export const newTheme = extendTheme({
         //   // Testing with adding extra colors to the palette!
         //   main: '#014983',
         // },
-        // All current dark mode values are test colors!
+        // All current dark mode values are test colors for visually seeing theme variable changes!
         primary: {
           main: '#FFFF00',
           contrastText: '#FFFF00',
