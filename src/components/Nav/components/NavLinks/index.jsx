@@ -12,7 +12,6 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavLinks.module.css';
-import { ModeSwitcher } from 'components/ThemeModeSwitcher';
 
 const GordonNavLinks = ({ onLinkClick }) => {
   const [areLinksOpen, setAreLinksOpen] = useState(false);
@@ -37,12 +36,11 @@ const GordonNavLinks = ({ onLinkClick }) => {
         message = 'That page is only available to authenticated users. Please log in to access it.';
         title = 'Unavailable Offline';
         break;
-      default:
-        message =
-          'Something went wrong. Try reloading the page, or contact CTS@gordon.edu for help.';
-        title = 'Unknown Error';
+      default: 
+        message = 'Something went wrong. Try reloading the page, or contact CTS@gordon.edu for help.'
+        title = 'Unknown Error'
         break;
-    }
+      }
     return (
       <GordonDialogBox
         open={dialog}
@@ -187,7 +185,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {feedbackButton}
         {adminButton}
         {signOutButton}
-        {/* <ModeSwitcher /> */}
       </List>
 
       <GordonQuickLinksDialog
