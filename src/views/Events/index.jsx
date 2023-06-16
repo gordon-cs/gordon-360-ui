@@ -238,7 +238,7 @@ const Events = () => {
                             value.map((option, index) => (
                               <Chip
                                 label={option}
-                                styke={{
+                                style={{
                                   backgroundColor: gordonColors.primary.cyan,
                                   color: gordonColors.neutral.grayShades[50],
                                 }}
@@ -389,11 +389,11 @@ const Events = () => {
                           value.map((option, index) => (
                             <Chip
                               label={option}
-                              {...getTagProps({ index })}
                               style={{
                                 backgroundColor: gordonColors.primary.cyan,
                                 color: gordonColors.neutral.grayShades[50],
                               }}
+                              {...getTagProps({ index })}
                             />
                           ))
                         }
