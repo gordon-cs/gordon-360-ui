@@ -54,8 +54,10 @@ const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverFor
   let waiverContent = (
     <Typography margin={4}>
       <Typography variant="h5">
-        Note: This form is currently not legally binding, a paper form will be provided in the
-        meantime. Please contact a Rec-IM staff to sign up
+        Please note: This acknowledgement is just a formality, you will need to sign a physical
+        waiver before competing in Rec-IM. Please contact
+        <a href="mailto:recim@gordon.edu"> RecIM@gordon.edu </a>
+        or in person staff to sign up.
       </Typography>
       <Typography variant="h5">PHYSICAL ACTIVITY READINESS CONFIRMATION</Typography>
       <Typography variant="body1" paragraph>
