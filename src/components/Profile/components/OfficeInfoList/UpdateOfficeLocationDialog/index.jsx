@@ -3,9 +3,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { useState, useEffect } from 'react';
-import { userService, OfficeLocationQuery } from 'services/user';
+import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
-import { number } from 'prop-types';
 
 const UpdateOffice = () => {
   const [open, setOpen] = useState(false);
@@ -16,7 +15,7 @@ const UpdateOffice = () => {
 
   const handleSubmit = async () => {
     try {
-      await userService.setOfficeLocation({ BuildingDescription: building, RoomNumber: room });
+      await userService.updateOfficeLocation({ BuildingDescription: building, RoomNumber: room });
       createSnackbar('Your office location will update within a couple hours.', 'success');
     } catch {
       createSnackbar('Office location failed to update. Please contact CTS.', 'error');

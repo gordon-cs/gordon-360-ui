@@ -247,7 +247,9 @@ const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
-const setOfficeLocation = (value: string) => http.patch(`profiles/office_location/${value}/`); // I am changing this
+const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) => {
+  return http.patch(`profiles/office_location`, OfficeLocation);
+};
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
@@ -356,7 +358,7 @@ const userService = {
   setMobilePhonePrivacy,
   setHomePhonePrivacy,
   setMobilePhoneNumber,
-  setOfficeLocation,
+  updateOfficeLocation,
   setImagePrivacy,
   getChapelCredits,
   getImage,
