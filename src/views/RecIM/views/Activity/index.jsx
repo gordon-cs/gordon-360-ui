@@ -159,10 +159,28 @@ const Activity = () => {
   };
 
   let handleJoinActivity = async () => {
-    if (user?.Status == 'Pending' || user == null) {
+    // participant not found
+    if (user == null) {
       setOpenWaiver(true);
       return;
     }
+
+    // redundant check for status management
+    if (user) {
+      switch (user.Status) {
+        case 'Deleted':
+        // fallthrough
+        case 'Pending':
+          setOpenWaiver(true);
+        case 'Suspension':
+        // fallthrough
+        case 'Banned':
+          return;
+        default:
+        // continue
+      }
+    }
+
     if (activity.SoloRegistration) {
       setLoading(true);
       const profileInfo = await userService.getProfileInfo(profile.AD_Username);
