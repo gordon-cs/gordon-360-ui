@@ -2,6 +2,14 @@ import http from '../http';
 import { Team } from './team';
 import { Lookup } from './recim';
 
+type CustomParticipant = {
+  AllowEmails: boolean;
+  Email: string;
+  SpecifiedGender: string;
+  FirstName: string;
+  LastName: string;
+};
+
 export type Participant = CustomParticipant & {
   Username: string;
   Role: string;
@@ -10,14 +18,6 @@ export type Participant = CustomParticipant & {
   Notification: ParticipantNotification[];
   IsAdmin: boolean;
   IsCustom: boolean;
-};
-
-type CustomParticipant = {
-  AllowEmails: boolean;
-  Email: string;
-  SpecifiedGender: string;
-  FirstName: string;
-  LastName: string;
 };
 
 type BasicInfo = {

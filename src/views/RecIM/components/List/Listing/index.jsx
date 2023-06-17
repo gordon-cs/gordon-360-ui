@@ -266,6 +266,7 @@ const ParticipantListing = ({
   const moreOptionsCustomParticipantOpen = Boolean(anchorCustomParticipantEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
   const [attendanceCount, setAttendanceCount] = useState();
+  const [fullName, setFullName] = useState('');
 
   const handleClickOff = () => {
     setAnchorEl(null);
@@ -279,32 +280,29 @@ const ParticipantListing = ({
   };
 
   useEffect(() => {
-    const loadAvatar = async () => {
-      if (!participant.IsCustom) {
-        if (participant.Username) {
+    const loadData = async () => {
+      if (participant.Username) {
+        if (!participant.IsCustom) {
+          //gordon participant
           const { def: defaultImage, pref: preferredImage } = await user.getImage(
             participant.Username,
           );
           setAvatar(preferredImage || defaultImage);
+          const userInfo = await user.getProfileInfo(participant.Username);
+          setFullName(userInfo.fullName);
+        } else {
+          //non-gordon participant
+          setFullName(`${participant.FirstName} ${participant.LastName}`);
         }
-      } else {
-        // TODO - Depdens on how we want to store custom participants' Pics
       }
     };
 
     const loadAttendanceCount = async () => {
       setAttendanceCount(await getParticipantAttendanceCountForTeam(teamID, participant.Username));
     };
-    loadAvatar();
+    loadData();
     if (teamID && withAttendance) loadAttendanceCount();
-  }, [
-    participant.Username,
-    participant.LastName,
-    participant.FirstName,
-    participant.IsCustom,
-    teamID,
-    withAttendance,
-  ]);
+  }, [participant, teamID, withAttendance]);
 
   const handleCustomParticipantOptions = (event) => {
     setAnchorCustomParticipantEl(event.currentTarget);
@@ -366,7 +364,7 @@ const ParticipantListing = ({
     attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
   };
 
-  const participantItem = (participant) => {
+  const participantDetails = () => {
     return (
       <>
         <ListItemAvatar>
@@ -376,10 +374,7 @@ const ParticipantListing = ({
             variant="rounded"
           ></Avatar>
         </ListItemAvatar>
-        <ListItemText
-          primary={`${participant.FirstName} ${participant.LastName}`}
-          secondary={participant.Role}
-        />
+        <ListItemText primary={fullName} secondary={participant.Role} />
       </>
     );
   };
@@ -440,7 +435,7 @@ const ParticipantListing = ({
               withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
             }`}
           >
-            {participantItem(participant)}
+            {participantDetails()}
           </ListItem>
         ) : (
           <ListItemButton
@@ -449,7 +444,7 @@ const ParticipantListing = ({
               withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
             }`}
           >
-            {participantItem(participant)}
+            {participantDetails(participant)}
           </ListItemButton>
         )}
         {showParticipantOptions && (

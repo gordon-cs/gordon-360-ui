@@ -24,7 +24,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Activity.module.css';
@@ -185,7 +185,7 @@ const Activity = () => {
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner
   if (!profile) {
-    return loading ? <GordonLoader /> : <GordonUnauthorized feature={'the Rec-IM page'} />;
+    return loading ? <GordonLoader /> : <GordonUnauthenticated feature={'the Rec-IM page'} />;
   } else {
     let headerContents = (
       <Grid container alignItems="center" columnSpacing={4} className={styles.header}>

@@ -46,6 +46,7 @@ const post = <TResponse>(
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'post', JSON.stringify(body), setContentTypeJSON(headers));
 
+// PATCH is required to be in all caps.  http services automatically capitalizes headers for post,put,get,del... but not patch.
 const patch = <TResponse>(
   endpoint: string,
   body: Object = '',
@@ -53,13 +54,14 @@ const patch = <TResponse>(
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'PATCH', JSON.stringify(body), setContentTypeJSON(headers));
 
+
 const del = <TResponse>(
   endpoint: string,
   body: Object = '',
   headers = new Headers(),
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'delete', JSON.stringify(body), setContentTypeJSON(headers));
-
+  
 const apiBaseURL = import.meta.env.DEV ? '/' : (import.meta.env.VITE_API_URL as string);
 
 /**
@@ -130,7 +132,8 @@ const dataURItoBlob = (dataURI: string) => {
   // convert base64/URLEncoded data component to raw binary data held in a string
   let byteString;
   if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
-  else byteString = unescape(dataURI.split(',')[1]);
+  // this may be unused. Can't find a place where this else is called.
+  else byteString = decodeURIComponent(dataURI.split(',')[1]);
 
   // separate out the mime component
   let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
@@ -184,8 +187,8 @@ const toQueryString = (
 const httpUtils = {
   del,
   get,
-  post,
   patch,
+  post,
   postImage,
   put,
   toQueryString,

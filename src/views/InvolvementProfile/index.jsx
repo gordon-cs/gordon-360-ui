@@ -281,17 +281,22 @@ const InvolvementProfile = () => {
             isButtonDisabled={!preview}
             cancelButtonClicked={handleCloseCancel}
           >
-            <DialogContentText id="edit-involvement-image-dialog-description">
-              {window.innerWidth < 600
-                ? 'Tap Image to Browse Files'
-                : 'Drag & Drop Picture, or Click to Browse Files'}
-            </DialogContentText>
-            <Grid container justifyContent="center" spacing={2}>
-              {!preview && (
+            {!preview && (
+              <>
+                <DialogContentText
+                  id="edit-involvement-image-dialog-description"
+                  style={{ textAlign: 'center' }}
+                >
+                  {window.innerWidth < 600
+                    ? 'Tap Image to Browse Files'
+                    : 'Drag & Drop Picture, or Click to Browse Files'}
+                </DialogContentText>
                 <Dropzone
                   onDropAccepted={onDropAccepted.bind(this)}
                   onDropRejected={onDropRejected.bind(this)}
-                  accept="image/jpeg, image/jpg, image/png"
+                  accept={{
+                    'image/*': ['.jpeg', ',jpg', '.png'],
+                  }}
                 >
                   {({ getRootProps, getInputProps }) => (
                     <section>
@@ -307,38 +312,43 @@ const InvolvementProfile = () => {
                     </section>
                   )}
                 </Dropzone>
-              )}
-              {preview && (
-                <>
-                  <Grid item>
-                    <Cropper
-                      ref={cropperRef}
-                      src={preview}
-                      style={{
-                        maxWidth: maxCropPreviewWidth(),
-                        maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
-                      }}
-                      autoCropArea={1}
-                      viewMode={3}
-                      aspectRatio={1}
-                      highlight={false}
-                      background={false}
-                      zoom={onCropperZoom.bind(this)}
-                      zoomable={false}
-                      dragMode={'none'}
-                      minCropBoxWidth={cropperData.cropBoxDim}
-                      minCropBoxHeight={cropperData.cropBoxDim}
-                    />
-                  </Grid>
+              </>
+            )}
+            {preview && (
+              <Grid
+                container
+                justifyContent="center"
+                spacing={2}
+                className={styles.update_image_components}
+              >
+                <Grid item>
+                  <Cropper
+                    ref={cropperRef}
+                    src={preview}
+                    style={{
+                      maxWidth: maxCropPreviewWidth(),
+                      maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
+                    }}
+                    autoCropArea={1}
+                    viewMode={3}
+                    aspectRatio={1}
+                    highlight={false}
+                    background={false}
+                    zoom={onCropperZoom.bind(this)}
+                    zoomable={false}
+                    dragMode={'none'}
+                    minCropBoxWidth={cropperData.cropBoxDim}
+                    minCropBoxHeight={cropperData.cropBoxDim}
+                  />
+                </Grid>
 
-                  <Grid item>
-                    <Button variant="contained" onClick={() => setPreview(null)}>
-                      Choose Another Image
-                    </Button>
-                  </Grid>
-                </>
-              )}
-            </Grid>
+                <Grid item>
+                  <Button variant="contained" onClick={() => setPreview(null)}>
+                    Choose Another Image
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
           </GordonDialogBox>
 
           <GordonDialogBox

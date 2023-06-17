@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 import { useUser } from 'hooks';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
@@ -337,7 +337,7 @@ const Admin = () => {
 
   if (loading) return <GordonLoader />;
   // The user is not logged in
-  if (!profile || !user) return <GordonUnauthorized feature={'the Rec-IM page'} />;
+  if (!profile || !user) return <GordonUnauthenticated feature={'the Rec-IM page'} />;
 
   // Navigate away from admin page if user is not an admin
   if (!user?.IsAdmin) {

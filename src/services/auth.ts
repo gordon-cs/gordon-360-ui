@@ -6,9 +6,7 @@ const apiRequest = {
   scopes: ['api://b19c300a-00dc-4adc-bcd1-b678b25d7ad1/access_as_user'],
 };
 
-const authenticate = async () => {
-  await msalInstance.loginRedirect(apiRequest);
-};
+const authenticate = () => msalInstance.loginRedirect(apiRequest);
 
 const acquireAccessToken = async () => {
   const activeAccount = msalInstance.getActiveAccount();
@@ -25,9 +23,11 @@ const acquireAccessToken = async () => {
     account: activeAccount || accounts[0],
   };
 
-  const authResult = await msalInstance.acquireTokenSilent(request).catch(async (error) => {
+  const authResult = await msalInstance.acquireTokenSilent(request).catch((error) => {
     if (error instanceof InteractionRequiredAuthError) {
-      return await msalInstance.acquireTokenRedirect(apiRequest);
+      return msalInstance.acquireTokenRedirect(apiRequest);
+    } else {
+      throw error;
     }
   });
 
