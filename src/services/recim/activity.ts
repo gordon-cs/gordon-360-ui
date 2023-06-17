@@ -49,17 +49,16 @@ type PatchActivity = BaseActivity & {
 };
 
 //Activity Routes
-const createActivity = async (newActivity: UploadActivity): Promise<CreatedActivity> =>
+const createActivity = (newActivity: UploadActivity): Promise<CreatedActivity> =>
   http.post('recim/activities', newActivity);
 
-const deleteActivity = async (ID: number): Promise<CreatedActivity> =>
-  http.del(`recim/activities/${ID}`);
+const deleteActivity = (ID: number): Promise<CreatedActivity> => http.del(`recim/activities/${ID}`);
 
 const getActivityByID = (ID: number): Promise<Activity> => http.get(`recim/activities/${ID}`);
 
 const getActivities = (active: boolean, time: String): Promise<Activity[]> => {
   if (time) return http.get(`recim/activities?active=${active}&time=${time}`);
-  if (typeof active !== 'undefined') return http.get(`recim/activities?active=${active}`);
+  if (active !== undefined) return http.get(`recim/activities?active=${active}`);
   return http.get(`recim/activities`);
 };
 
@@ -71,12 +70,8 @@ const getActivityStatusTypes = (): Promise<Lookup[]> =>
 
 const getActivityTypes = (): Promise<Lookup[]> => http.get(`recim/activities/lookup?type=activity`);
 
-const editActivity = async (
-  ID: number,
-  updatedActivity: PatchActivity,
-): Promise<CreatedActivity[]> => {
-  return http.patch(`recim/activities/${ID}`, updatedActivity);
-};
+const editActivity = (ID: number, updatedActivity: PatchActivity): Promise<CreatedActivity[]> =>
+  http.patch(`recim/activities/${ID}`, updatedActivity);
 
 export {
   createActivity,

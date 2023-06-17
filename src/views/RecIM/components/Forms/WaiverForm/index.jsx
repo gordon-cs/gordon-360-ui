@@ -1,8 +1,9 @@
 import { Typography } from '@mui/material';
 import Form from '../Form';
-import { useState, useMemo } from 'react';
-import { createParticipant } from 'services/recim/participant';
+import { useState, useMemo, useEffect } from 'react';
+import { createParticipant, editParticipantStatus } from 'services/recim/participant';
 import { useNavigate } from 'react-router-dom';
+import { getParticipantByUsername } from 'services/recim/participant';
 
 const waiverFields = [
   {
@@ -24,6 +25,17 @@ const waiverFields = [
 const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverForm, onClose }) => {
   const navigate = useNavigate();
   const [isSaving, setSaving] = useState(false);
+  // check if we're updating a pending status or
+  const [isParticipant, setIsParticipant] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      let participant = await getParticipantByUsername(username);
+      setIsParticipant(Boolean(participant));
+    };
+    loadData();
+  }, [username]);
+  console.log(isParticipant);
 
   const currentInfo = useMemo(() => {
     return {
@@ -38,24 +50,41 @@ const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverFor
 
   const handleConfirm = (newInfo, handleWindowClose) => {
     setSaving(true);
-    createParticipant(username)
-      .then(() => {
-        setSaving(false);
-        createSnackbar('You have successfully signed the waiver form', 'success');
-        onClose();
-        handleWindowClose();
-      })
-      .catch((reason) => {
-        setSaving(false);
-        createSnackbar(`There was an error signing the waiver form: ${reason.title}`, 'error');
-      });
+    if (isParticipant) {
+      // patch cleared status
+      debugger;
+      editParticipantStatus(username, { StatusID: 4 })
+        .then(() => {
+          setSaving(false);
+          createSnackbar('You have successfully signed the waiver form', 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(`There was an error signing the waiver form: ${reason.title}`, 'error');
+        });
+    } else
+      createParticipant(username)
+        .then(() => {
+          setSaving(false);
+          createSnackbar('You have successfully signed the waiver form', 'success');
+          onClose();
+          handleWindowClose();
+        })
+        .catch((reason) => {
+          setSaving(false);
+          createSnackbar(`There was an error signing the waiver form: ${reason.title}`, 'error');
+        });
   };
 
   let waiverContent = (
     <Typography margin={4}>
       <Typography variant="h5">
-        Note: This form is currently not legally binding, a paper form will be provided in the
-        meantime. Please contact a Rec-IM staff to sign up
+        Please note: This acknowledgement is just a formality, you will need to sign a physical
+        waiver before competing in Rec-IM. Please contact
+        <a href="mailto:recim@gordon.edu"> RecIM@gordon.edu </a>
+        or in person staff to sign up.
       </Typography>
       <Typography variant="h5">PHYSICAL ACTIVITY READINESS CONFIRMATION</Typography>
       <Typography variant="body1" paragraph>

@@ -88,9 +88,9 @@ const createParticipant = (username: string): Promise<Participant> =>
 const createCustomParticipant = (
   username: string,
   newcustomParticipant: CustomParticipant,
-): Promise<Participant> => http.put(`recim/participants/${username}/custom`, newcustomParticipant);
+): Promise<Participant> => http.post(`recim/participants/${username}/custom`, newcustomParticipant);
 
-const getParticipants = async (): Promise<Participant[]> => http.get(`recim/participants`);
+const getParticipants = (): Promise<Participant[]> => http.get(`recim/participants`);
 
 const getParticipantByUsername = (username: string): Promise<Participant> =>
   http.get(`recim/participants/${username}`);
@@ -127,7 +127,7 @@ const editCustomParticipant = (
   username: string,
   updatedCustomParticipant: CustomParticipant,
 ): Promise<Participant> =>
-  http.patch(`recim/participants/${username}/custom/update`, updatedCustomParticipant);
+  http.patch(`recim/participants/${username}/custom`, updatedCustomParticipant);
 
 const editParticipantAdmin = (username: string, isAdmin: boolean): Promise<Participant> =>
   http.patch(`recim/participants/${username}/admin`, isAdmin);

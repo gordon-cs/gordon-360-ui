@@ -211,6 +211,7 @@ const Team = () => {
               showParticipantOptions
               showInactive
               isAdmin={true}
+              teamID={teamID}
             />
           ) : (
             <ParticipantList participants={team.Participant} />

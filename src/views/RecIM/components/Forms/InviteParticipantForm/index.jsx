@@ -2,7 +2,7 @@ import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ParticipantList } from './../../List';
-import RecIMQuickSearch from 'views/RecIM/components/QuickSearch';
+import RecIMQuickSearch from 'views/RecIM/components/RecIMQuickSearch';
 import { addParticipantToTeam, createTeam, deleteTeamParticipant } from 'services/recim/team';
 import GordonLoader from 'components/Loader';
 import styles from './InviteParticipantForm.module.css';

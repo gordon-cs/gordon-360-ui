@@ -6,15 +6,12 @@ import {
   CardContent,
   Button,
   IconButton,
-  Tabs,
-  Tab,
   Menu,
   MenuItem,
   Tooltip,
   tooltipClasses,
   ClickAwayListener,
   FormControl,
-  InputLabel,
   Select,
 } from '@mui/material';
 import { gordonColors } from 'theme';
@@ -162,10 +159,28 @@ const Activity = () => {
   };
 
   let handleJoinActivity = async () => {
-    if (user?.Status == 'Pending' || user == null) {
+    // participant not found
+    if (user == null) {
       setOpenWaiver(true);
       return;
     }
+
+    // redundant check for status management
+    if (user) {
+      switch (user.Status) {
+        case 'Deleted':
+        // fallthrough
+        case 'Pending':
+          setOpenWaiver(true);
+        case 'Suspension':
+        // fallthrough
+        case 'Banned':
+          return;
+        default:
+        // continue
+      }
+    }
+
     if (activity.SoloRegistration) {
       setLoading(true);
       const profileInfo = await userService.getProfileInfo(profile.AD_Username);
@@ -174,7 +189,7 @@ const Activity = () => {
         ActivityID: activityID,
       };
       await createTeam(profile.AD_Username, request);
-      setReload(!reload);
+      setReload((r) => !r);
       createSnackbar(`Activity ${activity.Name} has been joined successfully`, 'success');
       setLoading(false);
     } else {

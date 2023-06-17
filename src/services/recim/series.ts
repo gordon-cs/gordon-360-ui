@@ -104,16 +104,16 @@ const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<Creat
 const getSeriesSchedule = (seriesID: number): Promise<SeriesSchedule> =>
   http.get(`recim/series/${seriesID}/schedule`);
 
-const putSeriesSchedule = async (schedule: UploadSeriesSchedule): Promise<SeriesSchedule> =>
+const putSeriesSchedule = (schedule: UploadSeriesSchedule): Promise<SeriesSchedule> =>
   http.put(`recim/series/schedule`, schedule);
 
-const scheduleSeriesMatches = async (seriesID: number): Promise<Match[]> =>
+const scheduleSeriesMatches = (seriesID: number): Promise<Match[]> =>
   http.post(`recim/series/${seriesID}/autoschedule`, {});
 
-const deleteSeriesCascade = async (seriesID: number): Promise<CreatedSeries> =>
+const deleteSeriesCascade = (seriesID: number): Promise<CreatedSeries> =>
   http.del(`recim/series/${seriesID}`);
 
-const getBracketInfo = async (seriesID: number): Promise<BracketInfo[]> =>
+const getBracketInfo = (seriesID: number): Promise<BracketInfo[]> =>
   http.get(`recim/series/${seriesID}/bracket`);
 
 export {
