@@ -189,7 +189,7 @@ const Activity = () => {
         ActivityID: activityID,
       };
       await createTeam(profile.AD_Username, request);
-      setReload(!reload);
+      setReload((r) => !r);
       createSnackbar(`Activity ${activity.Name} has been joined successfully`, 'success');
       setLoading(false);
     } else {
