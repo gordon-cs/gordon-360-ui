@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getAccountsBasicInfo } from 'services/recim/participant';
-import styles from './QuickSearch.module.css';
+import styles from './RecIMQuickSearch.module.css';
 
 const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 450;
@@ -34,7 +34,7 @@ const renderInput = ({ autoFocus, value, ref, ...other }) => (
   />
 );
 
-const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit }) => {
+const RecIMQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit }) => {
   // Search time is never used via variable name, but it is used via index
   // to ensure that earlier searches which took longer to run don't overwrite later searches
   // eslint-disable-next-line no-unused-vars
@@ -285,10 +285,10 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
   );
 };
 
-GordonQuickSearch.propTypes = {
+RecIMQuickSearch.propTypes = {
   customPlaceholderText: PropTypes.string,
   disableLink: PropTypes.any,
   onSearchSubmit: PropTypes.func,
 };
 
-export default GordonQuickSearch;
+export default RecIMQuickSearch;
