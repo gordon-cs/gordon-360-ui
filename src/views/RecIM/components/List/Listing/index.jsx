@@ -257,6 +257,7 @@ const ParticipantListing = ({
   initialAttendance,
   teamID,
   matchID,
+  makeNewCaptain,
 }) => {
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
@@ -318,13 +319,8 @@ const ParticipantListing = ({
     else await handleMakeInactive();
   };
 
-  const handleMakeCoCaptain = async () => {
-    let editedParticipant = {
-      Username: participant.Username,
-      RoleTypeID: 4,
-    }; // Role 4 is co-captain
-
-    await editTeamParticipant(teamIDParam, editedParticipant); // Role 4 is co-captain
+  const handleMakeCaptain = () => {
+    makeNewCaptain(participant.Username);
     handleClose();
   };
 
@@ -450,8 +446,8 @@ const ParticipantListing = ({
         {showParticipantOptions && (
           <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
             {participant.Role !== 'Inactive' && participant.Role !== 'Co-Captain' && (
-              <MenuItem dense onClick={handleMakeCoCaptain} divider>
-                Make co-captain
+              <MenuItem dense onClick={handleMakeCaptain} divider>
+                Make new Captain
               </MenuItem>
             )}
             {(participant.Role === 'Inactive' || participant.Role === 'Co-Captain') && (

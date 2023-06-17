@@ -13,7 +13,7 @@ import styles from './List.module.css';
 import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
 import { addDays } from 'date-fns';
-import { respondToTeamInvite } from 'services/recim/team';
+import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -42,6 +42,15 @@ const ParticipantList = ({
   showInactive,
   callbackFunction,
 }) => {
+  // callback to remove current captain
+  const promoteNewCaptain = async (newCaptainUsername) => {
+    let currentCaptain = participants.find((p) => p.Role === 'Team-captain/Creator').Username;
+    console.log(currentCaptain, newCaptainUsername);
+    await editTeamParticipant(teamID, { Username: newCaptainUsername, RoleTypeID: 5 }); //captain
+    await editTeamParticipant(teamID, { Username: currentCaptain, RoleTypeID: 3 }); //member
+    callbackFunction((r) => !r);
+  };
+
   if (!participants?.length)
     return <Typography className={styles.secondaryText}>No participants to show.</Typography>;
   let content = participants.map((participant) => {
@@ -62,7 +71,7 @@ const ParticipantList = ({
         isAdmin={isAdmin}
         matchID={matchID}
         teamID={teamID}
-        callbackFunction={(bool) => callbackFunction(bool)}
+        makeNewCaptain={(username) => promoteNewCaptain(username)}
         showParticipantOptions={
           showParticipantOptions &&
           participant.Role !== 'Team-captain/Creator' &&
