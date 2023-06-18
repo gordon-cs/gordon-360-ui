@@ -7,7 +7,7 @@ export type Lookup = {
 };
 
 export type PatchLogo = {
-  image: string;
+  Image: string;
 };
 
 type Account = {

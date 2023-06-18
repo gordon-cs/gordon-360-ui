@@ -76,15 +76,13 @@ const ImageOptions = ({
    * rather it set the Logo to null
    */
   const handleResetImage = async () => {
+    let resetRequest = {
+      Logo: { Image: null },
+    };
     switch (category) {
       // reset Logo on Rec-IM Activity page
       case 'Activity': {
-        let activityRequest = {
-          Logo: null,
-          IsLogoUpdate: true,
-        };
-
-        editActivity(component.ID, activityRequest)
+        editActivity(component.ID, resetRequest)
           .then(() => {
             createSnackbar('Activity logo set to default successfully', 'success');
             onClose();
@@ -100,12 +98,7 @@ const ImageOptions = ({
       }
       // reset Logo on Rec-IM Team page
       case 'Team': {
-        let teamRequest = {
-          Logo: null,
-          IsLogoUpdate: true,
-        };
-
-        editTeam(component.ID, teamRequest)
+        editTeam(component.ID, resetRequest)
           .then(() => {
             createSnackbar('Team Logo set to default successfully', 'success');
             onClose();
@@ -130,15 +123,15 @@ const ImageOptions = ({
    * rather it set the Logo to null
    */
   const handleCloseSubmit = async () => {
+    let request = {
+      Logo: {
+        Image: cropperRef.current.cropper.getCroppedCanvas({ width: CROPPER_WIDTH }).toDataURL(),
+      },
+    };
     switch (category) {
       // update Logo on Rec-IM Activity page
       case 'Activity': {
-        let activityRequest = {
-          Logo: cropperRef.current.cropper.getCroppedCanvas({ width: CROPPER_WIDTH }).toDataURL(),
-          IsLogoUpdate: true,
-        };
-
-        editActivity(component.ID, activityRequest)
+        editActivity(component.ID, request)
           .then(() => {
             createSnackbar('Activity logo edited successfully', 'success');
             onClose();
@@ -154,12 +147,7 @@ const ImageOptions = ({
       }
       // update Logo on Rec-IM Team page
       case 'Team': {
-        let teamRequest = {
-          Logo: cropperRef.current.cropper.getCroppedCanvas({ width: CROPPER_WIDTH }).toDataURL(),
-          IsLogoUpdate: true,
-        };
-
-        editTeam(component.ID, teamRequest)
+        editTeam(component.ID, request)
           .then(() => {
             createSnackbar('Team logo edited successfully', 'success');
             onClose();
@@ -180,14 +168,14 @@ const ImageOptions = ({
   /*Following functions are solely related to photo submission via Cropper*
   /***********************************************************************/
 
-  function onCropperZoom(event) {
+  const onCropperZoom = (event) => {
     if (event.detail.ratio > 1) {
       event.preventDefault();
       cropperRef.current.cropper.zoomTo(1);
     }
-  }
+  };
 
-  function imageOnLoadHelper(reader) {
+  const imageOnLoadHelper = (reader) => {
     var dataURL = reader.result.toString();
     var i = new Image();
     i.onload = async () => {
@@ -195,7 +183,7 @@ const ImageOptions = ({
       setCropperImageData(dataURL);
     };
     i.src = dataURL;
-  }
+  };
 
   const clearPhotoDialogErrorTimeout = async () => {
     clearTimeout(photoDialogErrorTimeout);
