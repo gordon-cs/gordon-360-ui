@@ -1,7 +1,7 @@
 import http from '../http';
 import { Match } from './match';
 import { Participant } from './participant';
-import { Lookup } from './recim';
+import { Lookup, PatchLogo } from './recim';
 import { Activity } from './activity';
 
 export type Team = {
@@ -69,7 +69,7 @@ type UploadTeam = {
 type PatchTeam = {
   Name: string;
   StatusID: number;
-  Logo: string;
+  Logo: PatchLogo;
   IsLogoUpdate: boolean;
 };
 

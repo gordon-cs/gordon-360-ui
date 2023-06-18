@@ -1,4 +1,5 @@
 import http from '../http';
+import { PatchLogo } from './recim';
 
 //created sport and sport are the same
 export type Sport = {
@@ -20,7 +21,7 @@ type PatchSport = {
   Name: string;
   Description: string;
   Rules: string;
-  Logo: string;
+  Logo: PatchLogo;
   IsLogoUpdate: boolean;
 };
 
