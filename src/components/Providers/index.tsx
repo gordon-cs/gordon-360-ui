@@ -2,17 +2,18 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import UserContextProvider from 'contexts/UserContext';
 import 'app.global.css';
 import NetworkContextProvider from 'contexts/NetworkContext';
-import theme from 'theme';
+import { newTheme } from '../../theme';
 import AuthProvider from './components/AuthProvider';
+import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles';
 
 const Providers = ({ children }: { children: JSX.Element }) => (
   <AuthProvider>
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <NetworkContextProvider>
+      <NetworkContextProvider>
+        <CssVarsProvider theme={newTheme}>
           <UserContextProvider>{children}</UserContextProvider>
-        </NetworkContextProvider>
-      </ThemeProvider>
+        </CssVarsProvider>
+      </NetworkContextProvider>
     </StyledEngineProvider>
   </AuthProvider>
 );

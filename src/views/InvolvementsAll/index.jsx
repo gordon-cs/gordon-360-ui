@@ -213,7 +213,7 @@ const InvolvementsAll = () => {
               <CardHeader
                 title={`My ${myInvolvementsHeadingText} Involvements`}
                 style={{
-                  backgroundColor: gordonColors.primary.blue,
+                  backgroundColor: 'var(--mui-palette-primary-main)',
                   color: gordonColors.neutral.grayShades[50],
                 }}
               />
@@ -239,7 +239,7 @@ const InvolvementsAll = () => {
           <CardHeader
             title={`${involvementSessionText} Involvements`}
             style={{
-              backgroundColor: gordonColors.primary.blue,
+              backgroundColor: 'var(--mui-palette-primary-main)',
               color: gordonColors.neutral.grayShades[50],
             }}
           />
