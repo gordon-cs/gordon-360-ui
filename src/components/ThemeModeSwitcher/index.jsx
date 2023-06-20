@@ -3,7 +3,6 @@ nav menu currently.
 
 @TODO convert to some final implementation
 */
-import { useEffect, useState } from 'react';
 import {
   //   Experimental_CssVarsProvider as CssVarsProvider,
   useColorScheme,
