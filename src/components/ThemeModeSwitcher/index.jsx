@@ -3,6 +3,7 @@ nav menu currently.
 
 @TODO convert to some final implementation
 */
+import { useEffect, useState } from 'react';
 import {
   //   Experimental_CssVarsProvider as CssVarsProvider,
   useColorScheme,
@@ -15,13 +16,7 @@ export const ModeSwitcher = () => {
   return (
     <button
       variant="outlined"
-      onClick={() => {
-        if (mode === 'light') {
-          setMode('dark');
-        } else {
-          setMode('light');
-        }
-      }}
+      onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
       className={styles.ModeSwitcherButton}
     >
       {mode === 'light' ? 'Dark' : 'Light'}
