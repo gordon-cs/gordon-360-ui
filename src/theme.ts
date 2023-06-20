@@ -289,3 +289,18 @@ export const newTheme = extendTheme({
     },
   },
 });
+
+console.log(newTheme.components);
+
+extendTheme({
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          backgroundColor: White,
+          [theme.getColorSchemeSelector('dark')]: { backgroundColor: TestTool },
+        }),
+      },
+    },
+  },
+});
