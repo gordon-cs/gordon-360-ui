@@ -162,11 +162,9 @@ const ActivityForm = ({
     ).ID;
 
     if (activity) {
-      activity.isLogoUpdate = false;
       activityRequest.statusID = activityStatusTypes.find(
         (type) => type.Description === activityRequest.statusID,
       ).ID;
-      activity.isLogoUpdate = false;
       editActivity(activity.ID, activityRequest)
         .then((res) => {
           setSaving(false);

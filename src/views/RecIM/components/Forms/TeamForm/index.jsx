@@ -73,7 +73,6 @@ const TeamForm = ({
       teamRequest.StatusID = teamStatus.find(
         (type) => type.Description === teamRequest.StatusID,
       ).ID;
-      teamRequest.IsLogoUpdate = false;
 
       editTeam(team.ID, teamRequest)
         .then(() => {

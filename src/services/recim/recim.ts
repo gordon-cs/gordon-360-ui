@@ -6,6 +6,10 @@ export type Lookup = {
   Description: string;
 };
 
+export type PatchLogo = {
+  Image: string;
+};
+
 type Account = {
   FirstName: string;
   LastName: string;

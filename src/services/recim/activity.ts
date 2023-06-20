@@ -2,7 +2,7 @@ import http from '../http';
 import { Sport } from './sport';
 import { Team } from './team';
 import { Series } from './series';
-import { Lookup } from './recim';
+import { Lookup, PatchLogo } from './recim';
 
 type BaseActivity = {
   Name: string;
@@ -43,8 +43,7 @@ type PatchActivity = BaseActivity & {
   SportID: number;
   TypeID: number;
   StatusID: number;
-  Logo: string;
-  IsLogoUpdate: boolean;
+  Logo: PatchLogo;
   Completed: boolean;
 };
 
