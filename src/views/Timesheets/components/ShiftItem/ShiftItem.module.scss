@@ -19,4 +19,21 @@
     margin-right: -16px;
     margin-top: -8px;
   }
+
+  &_dButton {
+    color: var(--mui-palette-error-main);
+  }
+
+  &_iButton {
+    color: var(--mui-palette-error-main);
+  }
+
+  &_errorText {
+    color: var(--mui-palette-error-main);
+  }
+
+  &_rButton {
+    background-color: var(--mui-palette-error-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
 }
