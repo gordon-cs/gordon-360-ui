@@ -5,6 +5,7 @@ import {
   Divider,
   FormControlLabel,
   Grid,
+  Link,
   List,
   ListItem,
   Switch,
@@ -397,12 +398,28 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 >
                   <Grid container>
                     <Typography sx={{ fontSize: '0.8rem' }}>
+                      <Link
+                        className="disable_select"
+                        style={{
+                          borderBottom: '1px solid currentColor',
+                          textDecoration: 'none',
+                          color: gordonColors.primary.blueShades.A700,
+                          fontSize: '1.1rem',
+                          fontWeight: 'bold',
+                        }}
+                        href="https://m.youtube.com/shorts/FxE5PPS94sc"
+                        underline="always"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Salsbury Mailbox
+                      </Link>
                       <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
-                        Salsbury Mailbox (Combinations that have three numbers ex: 21 32 18)
+                        (Combinations that have three numbers ex: 21 32 18)
                       </Typography>
                       <img src={SLock} alt="SLock" />
                       <br />
-                      1. To openturn LEFT at least four turns stopping at the first number of the
+                      1. To open, turn LEFT at least four turns stopping at the first number of the
                       combination.
                       <br />
                       2. Turn RIGHT passing the first number of the combination once and stop at the
@@ -413,8 +430,24 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       4. Turn knob to the RIGHT to open.
                       <br />
                       <br />
+                      <Link
+                        className="disable_select"
+                        style={{
+                          borderBottom: '1px solid currentColor',
+                          textDecoration: 'none',
+                          color: gordonColors.primary.blueShades.A700,
+                          fontSize: '1.1rem',
+                          fontWeight: 'bold',
+                        }}
+                        href="https://m.youtube.com/shorts/47402r3FqSs"
+                        underline="always"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Dial and Pointer Mailbox
+                      </Link>
                       <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
-                        Dial and Pointer Mailbox (Combinations that have two letters ex: H B)
+                        (Combinations that have two letters ex: H B)
                       </Typography>
                       <img src={DPLock} alt="DPLock" />
                       <br />
@@ -432,9 +465,24 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       3. Twist the latch knob clockwise to open the box.
                       <br />
                       <br />
+                      <Link
+                        className="disable_select"
+                        style={{
+                          borderBottom: '1px solid currentColor',
+                          textDecoration: 'none',
+                          color: gordonColors.primary.blueShades.A700,
+                          fontSize: '1.1rem',
+                          fontWeight: 'bold',
+                        }}
+                        href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
+                        underline="always"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Double Dial Mailbox
+                      </Link>
                       <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
-                        Double Dial Mailbox (Combinations that have two letter/number pairs ex: A3
-                        H5)
+                        (Combinations that have two letter/number pairs ex: A3 H5)
                       </Typography>
                       <img src={DDLock} alt="DDLock" />
                       <br />
