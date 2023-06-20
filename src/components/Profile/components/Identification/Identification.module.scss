@@ -13,7 +13,36 @@ $image-side-height-desktop: 90px;
 $image-side-width-mobile: 80px;
 $image-side-width-desktop: 90px;
 
-// SNACKBAR STYLES
+.photo_buttons {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-neutral-light);
+  &_changeImageButton {
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-neutral-light);
+  }
+  &_resetButton {
+    background-color: var(--mui-palette-error-light);
+    color: var(--mui-palette-neutral-light);
+  }
+  &_cancelButton {
+    background-color: var(--mui-palette-neutral-light);
+    color: var(--mui-palette-primary-main);
+    border: 1px solid var(--mui-palette-primary-main);
+    width: 86%;
+  }
+  &_hidden {
+    display: 'none';
+  }
+}
+
+.socialmediabutton {
+  color: var(--mui-palette-secondary-main);
+  font-size: 1rem;
+}
+
+.photoDialogError {
+  color: var(--mui-palette-error-main);
+}
 
 // IDENTIFICATION CARD STYLES
 .identification_card {
@@ -21,14 +50,14 @@ $image-side-width-desktop: 90px;
   display: flex;
   align-items: center;
   flex-direction: column;
-  background-color: $neutral-white;
+  background-color: var(--mui-palette-neutral-light);
   border-radius: 4px;
   height: 100%;
-  box-shadow: 0px 2px 1px -1px $neutral-black-opacity20, 0px 1px 1px 0px $neutral-black-opacity15,
-    0px 1px 3px 0px $neutral-black-opacity125;
+  box-shadow: 0px 2px 1px -1px var(--mui-palette-neutral-500),
+    0px 1px 1px 0px var(--mui-palette-neutral-300), 0px 1px 3px 0px var(--mui-palette-neutral-300);
   &_header {
-    background-color: var(--mui-palette-primary-300);
-    color: $neutral-white;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
     padding-left: 1rem;
     hyphens: auto;
   }
@@ -49,7 +78,7 @@ $image-side-width-desktop: 90px;
           &_main {
             border-radius: $image-border-radius;
             transition: width 500ms, height 500ms !important;
-            border: 4px solid $primary-blue;
+            border: 4px solid var(--mui-palette-primary-main);
             z-index: 1 !important;
             overflow: hidden !important;
             width: $image-main-width-desktop;
@@ -70,10 +99,9 @@ $image-side-width-desktop: 90px;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 width: 100%;
-                color: $neutral-white;
-                background: color.adjust(
-                  $primary-blue,
-                  $alpha: -0.5
+                color: var(--mui-palette-primary-contrastText);
+                background-color: var(
+                  --mui-palette-primary-50
                 ); // Make titles more readable over image background
                 // Make space for a two-line title
                 text-align: center;
@@ -93,7 +121,7 @@ $image-side-width-desktop: 90px;
           &_side {
             position: absolute;
             z-index: 2;
-            border: 1px solid $primary-blue;
+            border: 1px solid var(--mui-palette-primary-main);
             display: flex;
             box-sizing: border-box;
             border-radius: $image-border-radius;
@@ -121,20 +149,20 @@ $image-side-width-desktop: 90px;
           max-width: 600px;
           transition: width 500ms;
           margin: auto 1rem;
-          color: $neutral-black-opacity90;
+          color: var(--mui-palette-neutral-900);
           overflow-wrap: anywhere;
           overflow: hidden;
           hyphens: auto;
           &_social_media {
-            border-bottom: 1px solid $neutral-black-opacity55;
+            border-bottom: 1px solid var(--mui-palette-neutral-500);
             margin-bottom: 1rem !important;
             .gc360_my_profile {
               &_icon {
                 font-size: 36px;
-                color: $primary-blue;
+                color: var(--mui-palette-primary-main);
                 transition: color 200ms, scale 1s;
                 &:hover {
-                  color: $primary-cyan !important;
+                  color: var(--mui-palette-secondary-main) !important;
                   transform: scale(1.2) !important;
                 }
               }
@@ -144,7 +172,7 @@ $image-side-width-desktop: 90px;
             }
           }
           &_class {
-            color: $neutral-black-opacity55;
+            color: var(--mui-palette-neutral-500);
           }
           &_job_title {
             opacity: 0.7;
@@ -155,10 +183,10 @@ $image-side-width-desktop: 90px;
               text-decoration: none;
             }
             &_container {
-              color: var(--mui-palette-primary-300);
+              color: var(--mui-palette-primary-main);
               display: flex;
               &:hover {
-                color: $primary-cyan;
+                color: var(--mui-palette-secondary-main);
               }
               &_icon {
                 margin-right: 0.75rem;
@@ -175,8 +203,8 @@ $image-side-width-desktop: 90px;
       }
       &_button {
         font-size: 1rem !important;
-        color: $neutral-white !important;
-        background-color: $primary-cyan !important;
+        color: var(--mui-palette-neutral-light) !important;
+        background-color: var(--mui-palette-secondary-main) !important;
         margin-bottom: 1rem !important;
       }
     }
