@@ -18,10 +18,10 @@ import withStyles from '@mui/styles/withStyles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
+import { formatDistanceToNow } from 'date-fns';
 import { Markup } from 'interweave';
 import { Component, Fragment } from 'react';
 import schedulecontrol from 'services/schedulecontrol';
-import { formatTimeAgo } from 'services/utils';
 import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
@@ -136,7 +136,9 @@ class GordonSchedulePanel extends Component {
       <div style={{ color: gordonColors.primary.cyan }}>
         <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
         {Boolean(this.scheduleControlInfo) && (
-          <Typography>{formatTimeAgo(this.state.modifiedTimeStamp)}</Typography>
+          <Typography>
+            {formatDistanceToNow(new Date(this.state.modifiedTimeStamp), { addSuffix: true })}
+          </Typography>
         )}
       </div>
     );

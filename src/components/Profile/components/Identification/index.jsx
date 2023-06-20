@@ -449,7 +449,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
               <Dropzone
                 onDropAccepted={onDropAccepted}
                 onDropRejected={onDropRejected}
-                accept="image/jpeg, image/jpg, image/png"
+                accept={{
+                  'image/*': ['.jpeg', ',jpg', '.png'],
+                }}
               >
                 {({ getRootProps, getInputProps }) => (
                   <section>
