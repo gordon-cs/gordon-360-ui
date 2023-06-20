@@ -13,7 +13,6 @@ export default class GordonScheduleCalendar extends Component {
 
     this.state = {
       loading: true,
-      //myScheduleOpen: false,
       disabled: true,
       selectedEvent: null,
       isDoubleClick: false,
@@ -55,13 +54,9 @@ export default class GordonScheduleCalendar extends Component {
     } catch (e) {
       this.setState({ loading: false });
     }
-    // const myschedule = await myscheduleService.getMySchedule(searchedUser.AD_Username);
-    // const myscheduleInfo = myscheduleService.makeMySchedule(myschedule);
 
     if (courseInfo) {
       this.eventInfo = courseInfo;
-      // } else {
-      //   this.eventInfo = myscheduleInfo;
     }
 
     let currentSession = await session.getCurrent();
@@ -83,7 +78,8 @@ export default class GordonScheduleCalendar extends Component {
     // Localizer is always required for react-big-calendar initialization
     let formats = {
       dayHeaderFormat: (date, localizer = momentLocalizer(Moment)) =>
-        localizer.format(date, '[' + this.state.currentSession.SessionDescription + ']'), // [] makes string to escape from parser (use this for session display)
+        // [] makes string to escape from parser (use this for session display)
+        localizer.format(date, '[' + this.state.currentSession.SessionDescription + ']'),
     };
 
     const dayStart = new Date();

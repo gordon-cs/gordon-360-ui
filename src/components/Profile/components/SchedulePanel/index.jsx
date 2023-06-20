@@ -1,18 +1,15 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
-
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
   Grid,
   Switch,
   Typography,
   IconButton,
   Card,
   CardHeader,
-  CardContent,
 } from '@mui/material';
 import withStyles from '@mui/styles/withStyles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -209,8 +206,7 @@ class GordonSchedulePanel extends Component {
                         </item>
                       </Grid>
 
-                      {/* THIS IS FOR LAST UPDATED */}
-                      {/* <Grid
+                      <Grid
                         container
                         direction="column"
                         item
@@ -220,7 +216,7 @@ class GordonSchedulePanel extends Component {
                         justifyContent="flex-start"
                       >
                         {lastUpdate}
-                      </Grid> */}
+                      </Grid>
                     </Grid>
                   )}
 
