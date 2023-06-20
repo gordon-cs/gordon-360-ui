@@ -99,7 +99,9 @@ const defaultSearchParams: PeopleSearchQuery = {
   country: '',
   department: '',
   building: '',
-  graduation_year_range: '',
+  //graduation_year_range: '',
+  initial_year: '',
+  final_year: '',
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -270,7 +272,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
     } else if (event.target.name === 'class_standing') {
       setSearchParams((sp) => ({
         ...sp,
-        ...{ graduation_year_range: '' },
+        ...{ initial_year: '', final_year: '' },
         ...{ graduation_year: '' },
       }));
     }
@@ -290,9 +292,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     setGraduationYearRange(newValue as number[]);
+    var values = graduationYearRange.toString().split(',');
     setSearchParams((sp) => ({
       ...sp,
-      ...{ graduation_year_range: graduationYearRange.toString() },
+      ...{ initial_year: values[0], final_year: values[1] },
     }));
     setSearchParams((sp) => ({
       ...sp,
@@ -304,12 +307,12 @@ const SearchFieldList = ({ onSearch }: Props) => {
     if (switchYearRange === true) {
       setSearchParams((sp) => ({
         ...sp,
-        ...{ graduation_year: '' },
+        ...{ initial_year: '', final_year: '' },
       }));
     } else {
       setSearchParams((sp) => ({
         ...sp,
-        ...{ graduation_year_range: '' },
+        ...{ initial_year: '', final_year: '' },
       }));
     }
     setSwitchYearRange((prev) => !prev);

@@ -73,7 +73,8 @@ export type PeopleSearchQuery = {
   department: string;
   building: string;
   relationship_status?: string;
-  graduation_year_range: string;
+  initial_year: string;
+  final_year: string;
 };
 
 const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
@@ -85,7 +86,8 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     hall: searchFields.residence_hall,
     classType: searchFields.class_standing === '' ? '' : Class[searchFields.class_standing],
     preferredClassYear: searchFields.graduation_year,
-    preferredClassYearRange: searchFields.graduation_year_range,
+    initialYear: searchFields.initial_year,
+    finalYear: searchFields.final_year,
     homeCity: searchFields.home_town,
     state: searchFields.state,
     country: searchFields.country,
@@ -108,7 +110,6 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     params += '&accountTypes=alumni';
   }
 
-  console.log(params);
   return http.get(`accounts/advanced-people-search?${params}`);
 };
 
