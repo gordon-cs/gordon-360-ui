@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardHeader, Grid } from '@mui/material';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -262,7 +262,7 @@ const EnrollmentCheckIn = (props) => {
   if (loading || loadingProfile) {
     return <GordonLoader />;
   } else if (!profile) {
-    return <GordonUnauthorized feature={'Enrollment Check-in'} />;
+    return <GordonUnauthenticated feature={'Enrollment Check-in'} />;
   } else {
     return (
       <Grid container justifyContent="center" spacing={2}>
