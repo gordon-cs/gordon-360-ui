@@ -36,7 +36,7 @@ const EventItem = ({ event }) => {
           </Typography>
           <add-to-calendar-button
             name={event.title}
-            options="'Apple','Google'"
+            options="'Apple','Google','Outlook.com','MicrosoftTeams'"
             location={event.location}
             startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
             endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
