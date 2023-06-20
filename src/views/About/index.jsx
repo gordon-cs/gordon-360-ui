@@ -100,7 +100,7 @@ const About = () => {
         <Typography variant="subtitle1">
           Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
-            <Button style={{ color: 'var(--mui-palette-primary-main)' }}>Report to CTS</Button>
+            <Button color="secondary">Report to CTS</Button>
           </a>
         </Typography>
         <hr />

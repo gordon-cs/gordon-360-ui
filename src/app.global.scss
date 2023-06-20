@@ -44,9 +44,10 @@ a {
 // style for links that are menu items or buttons (not just text)
 .gc360_link {
   color: var(--mui-palette-neutral-contrastText);
-  background-color: var(--mui-palette-neutral-main);
+  background-color: var(--mui-palette-neutral-light);
   &:hover {
     color: var(--mui-palette-neutral-contrastText) !important;
+    background-color: var(--mui-palette-neutral-main);
     text-decoration: none !important;
   }
 }
