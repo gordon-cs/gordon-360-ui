@@ -4,40 +4,38 @@ import { Class } from 'services/peopleSearch';
 import { Participation } from 'services/membership';
 import { TranscriptItems } from 'services/transcript';
 
-const participation1: Participation = Participation.Member;
 const currentYear: number = new Date().getFullYear();
-const session1: MembershipHistorySession = {
+const sessionFall: MembershipHistorySession = {
   MembershipID: -1,
   SessionCode: currentYear - 1 + '09',
-  Participation: participation1,
+  Participation: Participation.Member,
 };
-const activity1: MembershipHistory = {
+const activityISO: MembershipHistory = {
   ActivityCode: 'ISO',
   ActivityDescription: 'International Student Organization',
   ActivityImagePath: '',
-  Sessions: [session1],
+  Sessions: [sessionFall],
   LatestDate: currentYear - 1 + '-12-15T00:00:00',
 };
-const participation2: Participation = Participation.Member;
-const session2: MembershipHistorySession = {
+const sessionSpring: MembershipHistorySession = {
   MembershipID: -1,
   SessionCode: currentYear + '01',
-  Participation: participation2,
+  Participation: Participation.Member,
 };
-const activity2: MembershipHistory = {
+const activity360: MembershipHistory = {
   ActivityCode: '360',
   ActivityDescription: '360.gordon.edu',
   ActivityImagePath: '',
-  Sessions: [session2],
+  Sessions: [sessionSpring],
   LatestDate: currentYear + '-05-10T00:00:00',
 };
-export const transcriptItems1: TranscriptItems = {
+export const exampleTranscriptItems: TranscriptItems = {
   honors: [],
   experiences: [],
   service: [],
-  activities: [activity1, activity2],
+  activities: [activityISO, activity360],
 };
-export const student1: StudentProfileInfo = {
+export const exampleStudentProfile: StudentProfileInfo = {
   fullName: 'Example Student',
   Majors: ['Undecided'],
   Minors: [],

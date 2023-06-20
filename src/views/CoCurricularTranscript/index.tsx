@@ -9,7 +9,7 @@ import userService, { Profile } from 'services/user';
 import styles from './CoCurricularTranscript.module.css';
 import Activity from './Components/Activity';
 import Experience from './Components/Experience';
-import { transcriptItems1, student1 } from './guestTranscript';
+import { exampleTranscriptItems, exampleStudentProfile } from './guestTranscript';
 
 const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
   experiences: 'Experiences',
@@ -23,7 +23,12 @@ const CoCurricularTranscript = () => {
   const [transcriptItems, setTranscriptItems] = useState<TranscriptItems | undefined>();
   const isAuthenticated = useIsAuthenticated();
   const { profile: userProfile, loading: loadingProfile } = useUser();
-  const profile = isAuthenticated ? userProfile : student1;
+  const profile = isAuthenticated ? userProfile : exampleStudentProfile;
+  async function loadTranscript() {
+    if (profile) {
+      transcriptService.getItems(profile.AD_Username).then(setTranscriptItems);
+    }
+  }
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -31,9 +36,9 @@ const CoCurricularTranscript = () => {
         return;
       }
       setLoading(true);
-      transcriptService.getItems(profile.AD_Username).then(setTranscriptItems);
+      loadTranscript();
     } else {
-      setTranscriptItems(transcriptItems1);
+      setTranscriptItems(exampleTranscriptItems);
     }
     setLoading(false);
   }, [profile]);
@@ -52,7 +57,7 @@ const CoCurricularTranscript = () => {
                 Gordon College Experience Transcript
               </Typography>
             }
-            subheader={<SubHeader profile={profile ?? student1} />}
+            subheader={<SubHeader profile={profile ?? exampleStudentProfile} />}
             disableTypography
           />
           <CardContent>
