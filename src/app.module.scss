@@ -14,7 +14,11 @@
   -webkit-overflow-scrolling: touch;
   padding: 1rem 0.5rem;
   width: 100%;
-  background-color: $neutral-light-gray;
+
+  background-color: var(--mui-palette-neutral-main);
+  &_container {
+    height: 100%;
+  }
 }
 
 @media (min-width: $break-sm) {
