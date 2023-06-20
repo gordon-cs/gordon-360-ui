@@ -33,14 +33,12 @@ const SportForm = ({ sport, createSnackbar, onClose, openSportForm, setOpenSport
         Name: sport.Name,
         Description: sport.Description,
         Rules: sport.Rules,
-        isLogoUpdate: false,
       };
     }
     return {
       Name: '',
       Description: '',
       Rules: '',
-      isLogoUpdate: false,
     };
   }, [sport]);
 
