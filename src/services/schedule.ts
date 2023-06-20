@@ -56,29 +56,47 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
   const today = moment();
   const eventArray = [];
   let eventId = 0;
+  let summerMeetingDays = [1, 2, 3, 4, 5];
   for (let course of schedule) {
     course.CRS_CDE = course.CRS_CDE.trim();
     course.CRS_TITLE = course.CRS_TITLE.trim();
-    const beginTime = moment(course.BEGIN_TIME, 'HH:mm:ss')
-      .set('y', today.year())
-      .set('M', today.month())
-      .set('d', today.day());
-    const endTime = moment(course.END_TIME, 'HH:mm:ss')
-      .set('y', today.year())
-      .set('M', today.month())
-      .set('d', today.day());
-    for (const day of getMeetingDays(course)) {
-      const courseEvent = {
-        id: eventId,
-        title: course.CRS_CDE + ' in ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
-        start: beginTime.toDate(),
-        end: endTime.toDate(),
-        resourceId: day,
-      };
-      eventArray.push(courseEvent);
+    // Added a if statement for classes that do not have a start and end time
+    if (course.ROOM_CDE === 'ASY') {
+      for (const day of summerMeetingDays) {
+        const summerEvent = {
+          id: eventId,
+          title: course.CRS_CDE + ': ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
+          start: today.toDate(),
+          end: today.toDate(),
+          resourceId: day,
+          allDay: true,
+        };
+        eventArray.push(summerEvent);
+        eventId++;
+      }
+      eventId++;
+    } else {
+      const beginTime = moment(course.BEGIN_TIME, 'HH:mm:ss')
+        .set('y', today.year())
+        .set('M', today.month())
+        .set('d', today.day());
+      const endTime = moment(course.END_TIME, 'HH:mm:ss')
+        .set('y', today.year())
+        .set('M', today.month())
+        .set('d', today.day());
+      for (const day of getMeetingDays(course)) {
+        const courseEvent = {
+          id: eventId,
+          title: course.CRS_CDE + ' in ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
+          start: beginTime.toDate(),
+          end: endTime.toDate(),
+          resourceId: day,
+        };
+        eventArray.push(courseEvent);
+        eventId++;
+      }
       eventId++;
     }
-    eventId++;
   }
   return eventArray;
 }

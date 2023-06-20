@@ -64,6 +64,7 @@ const GordonSchedulePanel = (props) => {
   // Remove the line: let scheduleControlInfo = null;
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
+  const [currentAcademicSession, setCurrentAcademicSession] = useState('');
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -99,6 +100,8 @@ const GordonSchedulePanel = (props) => {
       const scheduleControlInfo = await schedulecontrol.getScheduleControl(
         searchedUser.AD_Username,
       );
+      const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
+      setEventInfo(scheduleService.makeScheduleCourses(schedule));
       if (scheduleControlInfo) {
         setScheduleControlInfo({
           isSchedulePrivate: scheduleControlInfo.IsSchedulePrivate,
@@ -115,7 +118,6 @@ const GordonSchedulePanel = (props) => {
     }
     setLoading(false);
   };
-
   const handleEditDescriptionOpen = () => {
     setEditDescriptionOpen(true);
   };
@@ -189,7 +191,6 @@ const GordonSchedulePanel = (props) => {
       </Fragment>
     );
   }
-  console.log(selectedSession);
   return loading ? (
     <GordonLoader />
   ) : (
@@ -251,21 +252,19 @@ const GordonSchedulePanel = (props) => {
                         </FormControl>
                       </Grid>
 
-                      {/* THIS IS FOR LAST UPDATED */}
-                      {/* <Grid
-              container
-              direction="column"
-              item
-              xs={12}
-              lg={8}
-              alignItems="flex-start"
-              justifyContent="flex-start"
-            >
-              {lastUpdate}
-            </Grid> */}
+                      <Grid
+                        container
+                        direction="column"
+                        item
+                        xs={12}
+                        lg={8}
+                        alignItems="flex-start"
+                        justifyContent="flex-start"
+                      >
+                        {lastUpdate}
+                      </Grid>
                     </Grid>
                   )}
-
                   <Grid item xs={12} lg={10}>
                     <GordonScheduleCalendar
                       profile={props.profile}
