@@ -12,7 +12,6 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavLinks.module.css';
-import { ModeSwitcher } from 'components/ThemeModeSwitcher';
 
 const GordonNavLinks = ({ onLinkClick }) => {
   const [areLinksOpen, setAreLinksOpen] = useState(false);
@@ -187,7 +186,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {feedbackButton}
         {adminButton}
         {signOutButton}
-        {/* <ModeSwitcher /> */}
       </List>
 
       <GordonQuickLinksDialog

@@ -124,14 +124,52 @@ declare module '@mui/material' {
   }
 }
 
+// Color declarations:
+// Primary
+let GordonBlue = '#014983';
+let GordonBlueHalfOpacity = '#01498382';
+
+// Secondary
+let ScottieCyan = '#00AEEF';
+
+// Error
+//Not an official gordon color anymore, we can consider changing this, it is a good error color
+let OldSchemeRed = '#B53228';
+let NauticalRed = '#ff5d53';
+
+// Success
+let LaVidaGreen = '#006d22';
+let OldSchemeGreen = '#B2BB1C';
+let SeaSpray = '#C7EFCF';
+
+// Warning
+let BarringtonGold = '#FDB913';
+
+// Info
+let SnowDay = '#D5F0FE';
+let NightMarsh = '#023947';
+
+// Neutral
+let BackgroundLightGray = '#EBEAEA';
+let LightGray = '#CCCCCB';
+
+// Contrast
+let Black = '#000000';
+let White = '#FFFFFF';
+
+// Dev Tool coloring - Colors for development and testing purposes
+let TestTool = '#FF8400';
+let TestToolContrast = '#FF0000';
+
+// Theme to use in the CSS vars provider, allowing multiple theme modes
 export const newTheme = extendTheme({
   colorSchemes: {
     light: {
       palette: {
         primary: {
-          main: '#014983' /* Gordon blue */,
-          contrastText: '#FFFFFF' /* white */,
-          50: '#01498382', // 50% opacity
+          main: GordonBlue,
+          contrastText: White,
+          50: GordonBlueHalfOpacity,
           100: '#BBDDF0',
           200: '#92C8E6',
           300: '#6BB2DC',
@@ -143,8 +181,8 @@ export const newTheme = extendTheme({
           900: '#014883',
         },
         secondary: {
-          main: '#00AEEF' /* Scottie Cyan */,
-          contrastText: '#FFFFFF' /* white */,
+          main: ScottieCyan,
+          contrastText: White,
           50: '#E0F4FD',
           100: '#B0E2F9',
           200: '#7BD0F5',
@@ -157,23 +195,23 @@ export const newTheme = extendTheme({
           900: '#005195',
         },
         error: {
-          main: '#B53228' /* old scheme red, good error color */,
-          light: '#ff5d53', //Nautical Red
-          contrastText: '#FFFFFF' /* white */,
+          main: OldSchemeRed,
+          light: NauticalRed,
+          contrastText: White,
         },
         success: {
-          dark: '#006d22' /*La Vida Green*/,
-          main: '#B2BB1C' /* old scheme green */,
-          light: '#C7EFCF' /* Sea Spray */,
+          dark: LaVidaGreen,
+          main: OldSchemeGreen,
+          light: SeaSpray,
         },
-        warning: { main: '#FDB913' /*Barrington Gold */, dark: '#DE571F' /* old scheme red */ },
-        info: { main: '#D5F0FE' /* Snow Day */, dark: '#023947' /* Night Marsh */ },
+        warning: { main: BarringtonGold, dark: OldSchemeRed },
+        info: { main: SnowDay, dark: NightMarsh },
         neutral: {
-          main: '#EBEAEA' /* page background and contrast light grey */, //currently $neutral-light-gray in _vars
-          dark: '#CCCCCB' /* light gray */, //currently $neutral-gray2 (not used)
-          light: '#FFFFFF' /* white */, //currently $neutral-white
-          contrastText: '#000000' /* black */,
-          50: '#FAF9F9', //Hues must be flipped in dark mode
+          main: BackgroundLightGray /* page background and contrast light grey */, //currently $neutral-light-gray in _vars
+          dark: LightGray /* light gray */, //currently $neutral-gray2
+          light: White, //currently $neutral-white
+          contrastText: Black /* black */,
+          50: '#FAF9F9', //Hues need to be flipped in dark mode for contrasting text to look right
           100: '#F4F3F3',
           200: '#EBEAEA',
           300: '#DCDBDB',
@@ -188,64 +226,64 @@ export const newTheme = extendTheme({
       },
     },
     dark: {
+      // Palette for dark theme mode -------------------------------------------------------
       palette: {
-        // All current dark mode values are test colors for visually seeing theme variable changes!
         primary: {
-          main: '#FFFF00',
-          contrastText: '#FFFF00',
-          50: '#FFFF00',
-          100: '#FFFF00',
-          200: '#FFFF00',
-          300: '#FFFF00',
-          400: '#FFFF00',
-          500: '#FFFF00',
-          600: '#FFFF00',
-          700: '#FFFF00',
-          800: '#FFFF00',
-          900: '#FFFF00',
+          main: TestTool,
+          contrastText: TestTool,
+          50: TestTool,
+          100: TestTool,
+          200: TestTool,
+          300: TestTool,
+          400: TestTool,
+          500: TestTool,
+          600: TestTool,
+          700: TestTool,
+          800: TestTool,
+          900: TestTool,
         },
         secondary: {
-          main: '#FFFF00',
-          contrastText: '#FFFF00',
-          50: '#FFFF00',
-          100: '#FFFF00',
-          200: '#FFFF00',
-          300: '#FFFF00',
-          400: '#FFFF00',
-          500: '#FFFF00',
-          600: '#FFFF00',
-          700: '#FFFF00',
-          800: '#FFFF00',
-          900: '#FFFF00',
+          main: TestTool,
+          contrastText: TestTool,
+          50: TestTool,
+          100: TestTool,
+          200: TestTool,
+          300: TestTool,
+          400: TestTool,
+          500: TestTool,
+          600: TestTool,
+          700: TestTool,
+          800: TestTool,
+          900: TestTool,
         },
         error: {
-          main: '#FFFF00',
-          light: '#FFFF00',
-          contrastText: '#FFFF00',
+          main: TestTool,
+          light: TestTool,
+          contrastText: TestTool,
         },
         success: {
-          dark: '#FFFF00',
-          main: '#FFFF00',
-          light: '#FFFF00',
+          dark: TestTool,
+          main: TestTool,
+          light: TestTool,
         },
-        warning: { main: '#FFFF00', dark: '#FFFF00' },
-        info: { main: '#FFFF00' },
+        warning: { main: TestTool, dark: TestTool },
+        info: { main: TestTool },
         neutral: {
-          main: '#FFFF00',
-          dark: '#FFFF00',
-          light: '#FFFF00',
-          contrastText: '#FF0000',
-          50: '#FFFF00',
-          100: '#FFFF00',
-          200: '#FFFF00',
-          300: '#FFFF00',
-          400: '#FFFF00',
-          500: '#FFFF00',
-          600: '#FFFF00',
-          700: '#FFFF00',
-          800: '#FFFF00',
-          900: '#FFFF00',
-          A100: '#FFFF00',
+          main: TestTool,
+          dark: TestTool,
+          light: TestTool,
+          contrastText: TestToolContrast,
+          50: TestTool,
+          100: TestTool,
+          200: TestTool,
+          300: TestTool,
+          400: TestTool,
+          500: TestTool,
+          600: TestTool,
+          700: TestTool,
+          800: TestTool,
+          900: TestTool,
+          A100: TestTool,
         },
       },
     },
