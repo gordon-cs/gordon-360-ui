@@ -10,11 +10,6 @@ import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import routes from './routes';
 import analytics from './services/analytics';
-import {
-  Experimental_CssVarsProvider as CssVarsProvider,
-  useColorScheme,
-} from '@mui/material/styles';
-import { newTheme } from './theme';
 
 const App = () => {
   const [drawerOpen, setDrawerOpen] = useState();
@@ -33,9 +28,6 @@ const App = () => {
 
     historyRef.current.listen(() => analytics.onPageView());
   }, []);
-
-  // console.log(theme.vars.palette.neutral.main);
-  // console.log(theme.vars);
 
   return (
     <ErrorBoundary>

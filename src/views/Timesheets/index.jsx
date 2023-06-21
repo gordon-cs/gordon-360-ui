@@ -39,7 +39,7 @@ const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
-    backgroundColor: theme.colorSchemes.light.palette.common.black,
+    backgroundColor: theme.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
     boxShadow: theme.shadows[1],
     fontSize: 12,

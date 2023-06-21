@@ -40,23 +40,6 @@ export const gordonColors = {
       A700: '#09bcff',
       contrastDefaultColor: 'light',
     },
-    pinkShades: {
-      50: '#FFE6F5',
-      100: '#FFCDEA',
-      200: '#FFB6E1',
-      300: '#FFA3D9',
-      400: '#FF91D2',
-      500: '#FF85CD',
-      600: '#FF79C7',
-      700: '#FF6EC3',
-      800: '#FF5CBB',
-      900: '#FF4BB4',
-      A100: '#FF47B3',
-      A200: '#FF31AA',
-      A400: '#FF189F',
-      A700: '#F1008D',
-      contrastDefaultColor: 'light',
-    },
   },
   secondary: {
     green: '#B2BB1C',
@@ -128,13 +111,10 @@ export const windowBreakWidths = {
 declare module '@mui/material/styles' {
   interface Palette {
     neutral: Palette['primary'];
-    //gordonBlue: PaletteOptions['primary'];
   }
   // allow configuration using `createTheme`
   interface PaletteOptions {
     neutral: PaletteOptions['primary'];
-    //gordonBlue: PaletteOptions['primary'];
-    // Testing with adding extra colors to the palette, need to learn more about how to use this!
   }
 }
 
@@ -144,52 +124,52 @@ declare module '@mui/material' {
   }
 }
 
-/*const theme = createTheme({
-  palette: {
-    primary: gordonColors.primary.blueShades,
-    secondary: gordonColors.primary.cyanShades,
-    error: gordonColors.secondary.redShades,
-    success: gordonColors.secondary.greenShades,
-    warning: gordonColors.secondary.yellowShades,
-    info: gordonColors.primary.cyanShades,
-    neutral: gordonColors.neutral,
-  },
-  typography: {
-    fontFamily: ['Gotham SSm 7r', 'Gotham SSm A', 'Gotham SSm B', 'sans-serif'].join(','),
-  },
-  components: {
-    MuiTooltip: {
-      styleOverrides: {
-        tooltip: {
-          backgroundColor: gordonColors.neutral.darkGray,
-        },
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        containedPrimary: {
-          color: gordonColors.neutral.grayShades.A100,
-        },<ModeSwitcher />
-        containedSecondary: {
-          color: gordonColors.neutral.grayShades.A100,
-        },
-      },
-    },
-  },
-}); */
+// Color declarations:
+// Primary
+let GordonBlue = '#014983';
+let GordonBlueHalfOpacity = '#01498382';
 
+// Secondary
+let ScottieCyan = '#00AEEF';
+
+// Error
+//Not an official gordon color anymore, we can consider changing this, it is a good error color
+let OldSchemeRed = '#B53228';
+let NauticalRed = '#ff5d53';
+
+// Success
+let LaVidaGreen = '#006d22';
+let OldSchemeGreen = '#B2BB1C';
+let SeaSpray = '#C7EFCF';
+
+// Warning
+let BarringtonGold = '#FDB913';
+
+// Info
+let SnowDay = '#D5F0FE';
+let NightMarsh = '#023947';
+
+// Neutral
+let BackgroundLightGray = '#EBEAEA';
+let LightGray = '#CCCCCB';
+
+// Contrast
+let Black = '#000000';
+let White = '#FFFFFF';
+
+// Dev Tool coloring - Colors for development and testing purposes
+let TestTool = '#FF8400';
+let TestToolContrast = '#FF0000';
+
+// Theme to use in the CSS vars provider, allowing multiple theme modes
 export const newTheme = extendTheme({
   colorSchemes: {
     light: {
       palette: {
-        // gordonBlue: {
-        //   // Testing with adding extra colors to the palette!
-        //   main: '#014983',
-        // },
         primary: {
-          main: '#014983' /* Gordon blue */,
-          contrastText: '#ffffff' /* white */,
-          50: '#E3F1F8',
+          main: GordonBlue,
+          contrastText: White,
+          50: GordonBlueHalfOpacity,
           100: '#BBDDF0',
           200: '#92C8E6',
           300: '#6BB2DC',
@@ -201,8 +181,8 @@ export const newTheme = extendTheme({
           900: '#014883',
         },
         secondary: {
-          main: '#00AEEF' /* Scottie Cyan */,
-          contrastText: '#FFFFFFF' /* white */,
+          main: ScottieCyan,
+          contrastText: White,
           50: '#E0F4FD',
           100: '#B0E2F9',
           200: '#7BD0F5',
@@ -215,56 +195,95 @@ export const newTheme = extendTheme({
           900: '#005195',
         },
         error: {
-          main: '#B53228' /* old scheme red, good error color */,
-          light: '#ff5d53', //Nautical Red
-          contrastText: '#FFFFFFF' /* white */,
+          main: OldSchemeRed,
+          light: NauticalRed,
+          contrastText: White,
         },
         success: {
-          dark: '#006d22' /*La Vida Green*/,
-          main: '#B2BB1C' /* old scheme green */,
-          light: '#C7EFCF' /* Sea Spray */,
+          dark: LaVidaGreen,
+          main: OldSchemeGreen,
+          light: SeaSpray,
         },
-        warning: { main: '#FDB913' /*Barrington Gold */, dark: '#DE571F' /* old scheme red */ },
-        info: { main: '#D5F0FE' /* Snow Day */ },
+        warning: { main: BarringtonGold, dark: OldSchemeRed },
+        info: { main: SnowDay, dark: NightMarsh },
         neutral: {
-          main: '#EBEAEA' /* page background and contrast light grey */, //currently $neutral-light-gray in _vars
-          dark: '#CCCCCB' /* not used */, //currently $neutral-gray2 (not used)
-          light: '#FFFFFFF' /* white */, //currently $neutral-white
-          contrastText: '#000000' /* black */,
+          main: BackgroundLightGray /* page background and contrast light grey */, //currently $neutral-light-gray in _vars
+          dark: LightGray /* light gray */, //currently $neutral-gray2
+          light: White, //currently $neutral-white
+          contrastText: Black /* black */,
+          50: '#FAF9F9', //Hues need to be flipped in dark mode for contrasting text to look right
+          100: '#F4F3F3',
+          200: '#EBEAEA',
+          300: '#DCDBDB',
+          400: '#B8B7B7',
+          500: '#989797',
+          600: '#706F6F',
+          700: '#5C5B5B',
+          800: '#3D3D3D',
+          900: '#1D1C1C',
+          A100: '#000000',
         },
       },
     },
     dark: {
+      // Palette for dark theme mode -------------------------------------------------------
       palette: {
-        // gordonBlue: {
-        //   // Testing with adding extra colors to the palette!
-        //   main: '#014983',
-        // },
         primary: {
-          main: '#FF52F6' /* Gordon blue */,
-          contrastText: '#223780' /* white */,
+          main: TestTool,
+          contrastText: TestTool,
+          50: TestTool,
+          100: TestTool,
+          200: TestTool,
+          300: TestTool,
+          400: TestTool,
+          500: TestTool,
+          600: TestTool,
+          700: TestTool,
+          800: TestTool,
+          900: TestTool,
         },
         secondary: {
-          main: '#FFF700' /* Scottie Cyan */,
-          contrastText: '#00f7ff' /* white */,
+          main: TestTool,
+          contrastText: TestTool,
+          50: TestTool,
+          100: TestTool,
+          200: TestTool,
+          300: TestTool,
+          400: TestTool,
+          500: TestTool,
+          600: TestTool,
+          700: TestTool,
+          800: TestTool,
+          900: TestTool,
         },
         error: {
-          main: '#58148F' /* old scheme red, good error color */,
-          light: '#A78FBA', //Nautical Red
-          contrastText: '#37E660' /* white */,
+          main: TestTool,
+          light: TestTool,
+          contrastText: TestTool,
         },
         success: {
-          dark: '#033870' /*La Vida Green*/,
-          main: '#398BE3' /* old scheme green */,
-          light: '#93B6DB' /* Sea Spray */,
+          dark: TestTool,
+          main: TestTool,
+          light: TestTool,
         },
-        warning: { main: '#ED6328' /*Barrington Gold */, dark: '#8C3611' /* old scheme red */ },
-        info: { main: '#DB0F13' /* Snow Day */ },
+        warning: { main: TestTool, dark: TestTool },
+        info: { main: TestTool },
         neutral: {
-          main: '#023947' /* page background and contrast light grey */, //currently $neutral-light-gray in _vars
-          dark: '#000000' /* not used */, //currently $neutral-gray2 (not used)
-          light: '#20B1D6' /* white */, //currently $neutral-white
-          contrastText: '#ffffff' /* black */,
+          main: TestTool,
+          dark: TestTool,
+          light: TestTool,
+          contrastText: TestToolContrast,
+          50: TestTool,
+          100: TestTool,
+          200: TestTool,
+          300: TestTool,
+          400: TestTool,
+          500: TestTool,
+          600: TestTool,
+          700: TestTool,
+          800: TestTool,
+          900: TestTool,
+          A100: TestTool,
         },
       },
     },

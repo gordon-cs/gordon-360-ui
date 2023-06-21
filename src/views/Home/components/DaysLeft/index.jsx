@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-
 import GordonLoader from 'components/Loader';
 import session from 'services/session';
 import styles from '../Doughnut.module.css';
@@ -38,7 +37,7 @@ const DaysLeft = () => {
   return (
     <Card>
       <CardContent>
-        <CardHeader title={currentSessionDescription} />
+        <CardHeader title={currentSessionDescription} className={styles.cardHeader} />
         {loading ? (
           <GordonLoader />
         ) : (

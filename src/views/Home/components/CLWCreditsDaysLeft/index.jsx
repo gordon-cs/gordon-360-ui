@@ -25,8 +25,6 @@ const CLWCreditsDaysLeft = () => {
   const [loading, setLoading] = useState(true);
   const [currSessionDescription, setCurrSessionDescription] = useState('');
 
-  const getColor = (cssVar) => getComputedStyle(document.documentElement).getPropertyValue(cssVar);
-
   useEffect(() => {
     const loadData = async () => {
       const daysLeft = await session.getDaysLeft();
@@ -50,9 +48,9 @@ const CLWCreditsDaysLeft = () => {
     loadData();
   }, []);
 
-  let daysColor = getColor('--mui-palette-primary-main');
+  let daysColor = gordonColors.primary.blue;
   let chapelColor = gordonColors.primary.cyan;
-  let emptyColor = getColor('--mui-palette-neutral-main');
+  let emptyColor = gordonColors.neutral.lightGray;
 
   defaults.global.legend.display = false;
 
@@ -85,7 +83,7 @@ const CLWCreditsDaysLeft = () => {
     const remaining = current > required ? 0 : required - current;
     const data = {
       legendEntries: ['Days Finished', 'CL&W Credits'],
-      legendColors: [getColor('--mui-palette-primary-main'), gordonColors.primary.cyan],
+      legendColors: [gordonColors.primary.blue, gordonColors.primary.cyan],
       datasets: [
         {
           label: ['Days Finished', 'Days Remaining'],
@@ -109,13 +107,13 @@ const CLWCreditsDaysLeft = () => {
           style={{ paddingTop: 5, paddingBottom: 10 }}
         >
           <Grid item>
-            <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
+            <Typography variant="body2" className={styles.label2}>
               {`${daysRemaining} Days Left`}
             </Typography>
           </Grid>
           {required ? (
             <Grid item>
-              <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
+              <Typography variant="body2" className={styles.label2}>
                 {`${remaining} CL&W Credit${remaining === 1 ? '' : 's'} Left`}
               </Typography>
             </Grid>
@@ -138,7 +136,7 @@ const CLWCreditsDaysLeft = () => {
             <div className={styles.label}>
               {'Day' + (daysFinished === 1 ? '' : 's') + ' Finished'}
             </div>
-            <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
+            <Typography variant="body2" className={styles.label2}>
               {`Current Term: ${firstDay} - ${lastDay}`}
             </Typography>
           </Grid>
@@ -164,7 +162,7 @@ const CLWCreditsDaysLeft = () => {
   }
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
