@@ -22,7 +22,7 @@ import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import membership from 'services/membership';
 import userService from 'services/user';
-import { gordonColors } from 'theme';
+import styles from './MemberListItem.module.css';
 
 const rowComponentStyle = {
   margin: '10px 0px',
@@ -30,13 +30,6 @@ const rowComponentStyle = {
 };
 const rowStyle = {
   marginLeft: '0px',
-};
-const redButton = {
-  background: gordonColors.secondary.red,
-  color: 'white',
-};
-const outlinedRedButton = {
-  color: gordonColors.secondary.red,
 };
 
 const PARTICIPATION_LEVELS = {
@@ -174,7 +167,7 @@ const MemberListItem = ({
 
             <Grid item>
               <Button
-                style={outlinedRedButton}
+                className={styles.memberListItem_page_removeButton}
                 onClick={handleRemove}
                 variant="outlined"
                 size="small"
@@ -353,7 +346,11 @@ const MemberListItem = ({
   } else {
     if (member.IDNumber?.toString() === profile.ID) {
       options = (
-        <Button variant="contained" style={redButton} onClick={() => setIsLeaveAlertOpen(true)}>
+        <Button
+          variant="contained"
+          className={styles.memberListItem_page_leaveButton}
+          onClick={() => setIsLeaveAlertOpen(true)}
+        >
           LEAVE
         </Button>
       );

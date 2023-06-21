@@ -23,7 +23,6 @@ import { AuthGroup } from 'services/auth';
 import emailsService from 'services/emails';
 import membershipService from 'services/membership';
 import sessionService from 'services/session';
-import { gordonColors } from 'theme';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import styles from './InvolvementProfile.module.css';
@@ -215,11 +214,6 @@ const InvolvementProfile = () => {
     const { ActivityBlurb, ActivityDescription, ActivityURL, ActivityImagePath, ActivityJoinInfo } =
       involvementInfo;
 
-    const redButton = {
-      background: gordonColors.secondary.red,
-      color: 'white',
-    };
-
     const editInvolvement = loadingProfile ? (
       <GordonLoader />
     ) : isAdmin || isSiteAdmin ? (
@@ -261,7 +255,7 @@ const InvolvementProfile = () => {
               <Button
                 variant="contained"
                 onClick={() => setIsRemoveImageDialogOpen(true)}
-                style={redButton}
+                className={styles.involvementProfile_buttons_removeImage}
               >
                 Remove image
               </Button>

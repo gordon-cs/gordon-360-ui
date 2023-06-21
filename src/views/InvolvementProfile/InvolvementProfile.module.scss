@@ -11,3 +11,10 @@
 .update_image_components {
   margin-top: 15px;
 }
+
+.involvementProfile_buttons {
+  &_removeImage {
+    background-color: var(--mui-palette-error-main);
+    color: var(--mui-palette-secondary-contrastText);
+  }
+}

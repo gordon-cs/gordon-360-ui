@@ -1,0 +1,10 @@
+.memberListItem_page {
+  &_leaveButton {
+    color: var(--mui-palette-error-main);
+  }
+
+  &_removeButton {
+    background-color: var(--mui-palette-error-main);
+    color: var(--mui-palette-secondary-contrastText);
+  }
+}

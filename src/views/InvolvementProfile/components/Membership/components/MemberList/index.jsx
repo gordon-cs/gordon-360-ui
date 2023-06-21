@@ -1,16 +1,13 @@
 import { Card, CardContent, CardHeader, Grid } from '@mui/material';
 import { useWindowSize } from 'hooks';
-import { gordonColors } from 'theme';
 import MemberListItem from './components/MemberListItem';
+import styles from './MemberList.module.css';
 
 const breakpointWidth = 810;
 
 const headerStyle = {
-  backgroundColor: gordonColors.primary.blue,
-  color: '#FFF',
   padding: '10px',
 };
-
 const MemberList = ({
   members,
   isAdmin,
@@ -58,7 +55,7 @@ const MemberList = ({
   };
 
   const header = isMobileView ? (
-    <CardHeader title="Members" style={headerStyle} />
+    <CardHeader title="Members" style={headerStyle} className={styles.MemberList_headerStyle} />
   ) : isAdmin || isSiteAdmin ? (
     <CardHeader
       title={
@@ -78,6 +75,7 @@ const MemberList = ({
       }
       titleTypographyProps={{ variant: 'h6' }}
       style={headerStyle}
+      className={styles.MemberList_headerStyle}
     />
   ) : (
     <CardHeader
@@ -93,6 +91,7 @@ const MemberList = ({
         </Grid>
       }
       style={headerStyle}
+      className={styles.MemberList_headerStyle}
     />
   );
   return (
