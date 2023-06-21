@@ -39,7 +39,7 @@ const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: 'var(--mui-palette-neutral-dark)',
     color: 'rgba(255, 255, 255, 0.87)',
     boxShadow: theme.shadows[1],
     fontSize: 12,
@@ -406,7 +406,8 @@ const Timesheets = (props) => {
             className={styles.tooltip_icon}
             style={{
               fontSize: 18,
-              color: gordonColors.neutral.lightGray,
+
+              color: 'var(--mui-palette-neutral-lightGray)',
             }}
           />
         </div>
@@ -420,13 +421,7 @@ const Timesheets = (props) => {
         <Grid container spacing={2} className={styles.timesheets}>
           <Grid item xs={12}>
             <Card>
-              <CardHeader
-                title={timesheetTitle}
-                style={{
-                  backgroundColor: gordonColors.primary.blue,
-                  color: gordonColors.neutral.grayShades[50],
-                }}
-              ></CardHeader>
+              <CardHeader title={timesheetTitle} className={styles.header_card}></CardHeader>
               <CardContent
                 style={{
                   marginLeft: 8,
