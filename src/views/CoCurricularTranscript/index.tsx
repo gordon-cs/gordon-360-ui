@@ -24,24 +24,23 @@ const CoCurricularTranscript = () => {
   const isAuthenticated = useIsAuthenticated();
   const { profile: userProfile, loading: loadingProfile } = useUser();
   const profile = isAuthenticated ? userProfile : exampleStudentProfile;
-  async function loadTranscript() {
-    if (profile) {
-      transcriptService.getItems(profile.AD_Username).then(setTranscriptItems);
-    }
-  }
 
   useEffect(() => {
-    if (isAuthenticated) {
-      if (!profile) {
-        return;
+    const loadTranscript = async () => {
+      if (isAuthenticated) {
+        if (!profile) {
+          return;
+        }
+        const transcriptItems = await transcriptService.getItems(profile.AD_Username);
+        setTranscriptItems(transcriptItems);
+        setLoading(true);
+      } else {
+        setTranscriptItems(exampleTranscriptItems);
       }
-      setLoading(true);
-      loadTranscript();
-    } else {
-      setTranscriptItems(exampleTranscriptItems);
-    }
-    setLoading(false);
-  }, [profile]);
+      setLoading(false);
+    };
+    loadTranscript();
+  }, [isAuthenticated, profile]);
 
   if (loading || loadingProfile) {
     return <GordonLoader />;
