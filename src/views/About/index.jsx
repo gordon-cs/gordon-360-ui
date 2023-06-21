@@ -1,5 +1,4 @@
 import { Fragment, useState, useEffect } from 'react';
-import { gordonColors } from 'theme';
 import versionService from 'services/version';
 import { projectName } from 'project-name';
 import contributors from './contributors.json';
@@ -101,7 +100,7 @@ const About = () => {
         <Typography variant="subtitle1">
           Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
-            <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
+            <Button color="secondary">Report to CTS</Button>
           </a>
         </Typography>
         <hr />

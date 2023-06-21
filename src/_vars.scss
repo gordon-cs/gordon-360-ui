@@ -7,6 +7,8 @@
 
 // For use in a .js file, see `src/theme.js`.
 
+// DEPRECATED by theme palette update S23
+// All the below colors should be removed eventually in the future!
 $primary-blue: #014983;
 $primary-cyan: #00aeef;
 $secondary-green: #b2bb1c;
@@ -43,6 +45,11 @@ $dark-text-color: rgba(0, 0, 0, 0.87);
 $wellness-red: #a30000;
 $wellness-green: #005500;
 $wellness-yellow: #ffcc00;
+
+// NOT DEPRECATED
+// Theme palette update does not deprecate everything following this comment-----------------------
+// - BREAKPOINTS WILL STILL BE USED FROM THIS FILE,
+// do not delete fully even after theme variables are fully implemented
 
 // Material-UI breakpoints as Sass variables for use in custom styles
 $break-xs: 360px;

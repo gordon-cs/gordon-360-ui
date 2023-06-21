@@ -61,7 +61,6 @@ const GordonSchedulePanel = (props) => {
   const [reloadCall, setReloadCall] = useState(false);
   const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
   const [scheduleControlInfo, setScheduleControlInfo] = useState(null);
-  // Remove the line: let scheduleControlInfo = null;
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -163,7 +162,11 @@ const GordonSchedulePanel = (props) => {
   lastUpdate = (
     <div style={{ color: gordonColors.primary.cyan }}>
       <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
-      {Boolean(scheduleControlInfo) && <Typography>{formatTimeAgo(modifiedTimeStamp)}</Typography>}
+      {Boolean(scheduleControlInfo) && (
+        <Typography>
+          {formatDistanceToNow(new Date(modifiedTimeStamp), { addSuffix: true })}
+        </Typography>
+      )}
     </div>
   );
 
@@ -287,7 +290,5 @@ const GordonSchedulePanel = (props) => {
     </LocalizationProvider>
   );
 };
-
-// You are
 
 export default withStyles(styles2)(GordonSchedulePanel);
