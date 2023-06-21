@@ -234,10 +234,10 @@ export const newTheme = extendTheme({
       // Palette for dark theme mode -------------------------------------------------------
       palette: {
         background: {
-          paper: TestTool,
+          paper: TestTool, // Card Colors
         },
         text: {
-          primary: TestToolContrast,
+          primary: TestToolContrast, // Various MUI components and text
         },
         primary: {
           main: TestTool,

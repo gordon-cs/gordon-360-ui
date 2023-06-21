@@ -16,23 +16,37 @@ $image-side-width-desktop: 90px;
 .photo_buttons {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-neutral-light);
-  &_changeImageButton {
-    background-color: var(--mui-palette-primary-main);
-    color: var(--mui-palette-neutral-light);
+  &:hover {
+    background-color: var(--mui-palette-primary-800);
   }
-  &_resetButton {
+}
+.backButton {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-neutral-light);
+  &:hover {
+    background-color: var(--mui-palette-primary-800);
+  }
+}
+.resetButton {
+  background-color: var(--mui-palette-error-light);
+  color: var(--mui-palette-error-contrastText);
+  border: 1px solid var(--mui-palette-primary-main);
+  &:hover {
     background-color: var(--mui-palette-error-light);
-    color: var(--mui-palette-neutral-light);
+    opacity: 0.8;
   }
-  &_cancelButton {
-    background-color: var(--mui-palette-neutral-light);
-    color: var(--mui-palette-primary-main);
-    border: 1px solid var(--mui-palette-primary-main);
-    width: 86%;
+}
+.cancelButton {
+  background-color: var(--mui-palette-neutral-light);
+  color: var(--mui-palette-primary-main);
+  border: 1px solid var(--mui-palette-primary-main);
+  width: 86%;
+  &:hover {
+    background-color: var(--mui-palette-neutral-dark);
   }
-  &_hidden {
-    display: 'none';
-  }
+}
+.hiddenButton {
+  display: 'none';
 }
 
 .socialmediabutton {

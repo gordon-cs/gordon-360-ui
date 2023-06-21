@@ -465,7 +465,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
               <Button
                 variant="contained"
                 onClick={() => setShowCropper(null)}
-                className={styles.photo_buttons_changeImageButton}
+                className={styles.backButton}
               >
                 Go Back
               </Button>
@@ -498,7 +498,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                 <Button
                   variant="contained"
                   onClick={handleResetImage}
-                  className={styles.photo_buttons_resetButton}
+                  className={styles.resetButton}
                 >
                   Reset
                 </Button>
@@ -506,11 +506,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
             </DialogActions>
           )}
           <DialogActions className="gc360_photo_dialog_box_actions_bottom">
-            <Button
-              variant="contained"
-              onClick={handleCloseCancel}
-              className={styles.photo_buttons_cancelButton}
-            >
+            <Button variant="contained" onClick={handleCloseCancel} className={styles.cancelButton}>
               Cancel
             </Button>
             {showCropper && (
@@ -523,7 +519,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                   variant="contained"
                   onClick={handleCloseSubmit}
                   disabled={!showCropper}
-                  className={showCropper ? styles.photo_buttons : styles.photo_buttons_hidden}
+                  className={showCropper ? styles.photo_buttons : styles.hiddenButton}
                 >
                   Submit
                 </Button>
