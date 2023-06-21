@@ -22,7 +22,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
 import { gordonColors } from 'theme';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Events = () => {
   const [open, setOpen] = useState(false);
