@@ -190,33 +190,27 @@ class GordonSchedulePanel extends Component {
                 <Typography>{panelTitle} Schedule</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Grid container direction="row" justifyContent="center" align="left">
+                <Grid container direction="row" justifyContent="center">
                   {this.props.isOnline && (
-                    <Grid container direction="row" item xs={12} lg={10}>
-                      <Grid item align="center" xs={2}>
-                        <Typography>Office Hours:</Typography>
-                        <item>{editDescriptionButton}</item>
-                      </Grid>
+                    <Grid container direction="row" item xs={12} lg={12}>
                       <Grid
                         item
-                        xs={10}
+                        xs={3}
+                        lg={3}
                         justifyContent="flex-start"
                         classname={styles.officeHourText}
                       >
+                        <Typography>Office Hours:</Typography>
+                        <item>{editDescriptionButton}</item>
+                      </Grid>
+
+                      <Grid item xs={9} lg={9} align="left" classname={styles.officeHourText}>
                         <item>
                           <Markup classname={styles.officeHourText} content={replaced} />
                         </item>
                       </Grid>
 
-                      <Grid
-                        container
-                        direction="column"
-                        item
-                        xs={12}
-                        lg={8}
-                        alignItems="flex-start"
-                        justifyContent="flex-start"
-                      >
+                      <Grid item xs={12} lg={12} align="flex-start">
                         {lastUpdate}
                       </Grid>
                     </Grid>
