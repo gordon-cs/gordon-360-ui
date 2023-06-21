@@ -10,7 +10,6 @@ import {
   Switch,
   Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { IconButton, Button } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -46,6 +45,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   );
   const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
   const [mailCombo, setMailCombo] = useState();
+  const [advisorsList, setAdvisorsList] = useState([]);
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
@@ -87,12 +87,16 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   // FacStaff spouses are private for private users
   const isSpousePrivate = isFacStaff && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
-
   useEffect(() => {
     async function loadMailboxCombination() {
-      if (myProf && isStudent) {
-        const info = await userService.getMailboxCombination();
-        setMailCombo(info.Combination);
+      if (isStudent) {
+        if (myProf) {
+          const info = await userService.getMailboxCombination();
+          setMailCombo(info.Combination);
+        }
+        if (canViewAcademicInfo || myProf) {
+          userService.getAdvisors(profile.AD_Username).then(setAdvisorsList);
+        }
       }
     }
     loadMailboxCombination();
@@ -326,11 +330,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const advisors =
     (myProf || canViewAcademicInfo) && isStudent ? (
       <ProfileInfoListItem
-        title={profile.Advisors?.length > 1 ? 'Advisors:' : 'Advisor:'}
+        title={advisorsList?.length > 1 ? 'Advisors:' : 'Advisor:'}
         contentText={
-          profile.Advisors?.length < 1
+          advisorsList.length < 1
             ? 'None Assigned'
-            : profile.Advisors?.map((a) => `${a.Firstname} ${a.Lastname}`)?.join(', ')
+            : advisorsList.map((a) => `${a.Firstname} ${a.Lastname}`)?.join(', ')
         }
         privateInfo
         myProf={myProf}
