@@ -1,0 +1,25 @@
+.event_page {
+  &_searchPageTitle {
+    color: var(--mui-palette-secondary-main);
+  }
+  &_eventEIcon {
+    color: var(--mui-palette-neutral-900);
+  }
+  &_eventFLIcon {
+    color: var(--mui-palette-neutral-900);
+  }
+  &_eventIcon {
+    color: var(--mui-palette-neutral-900);
+  }
+}
+
+.event_buttons {
+  &_attended_clw {
+    background-color: var(--mui-palette-secondary-main);
+    color: var(--mui-palette-secondary-contrastText);
+  }
+  &_filters {
+    background-color: var(--mui-palette-secondary-main);
+    color: var(--mui-palette-neutral-50);
+  }
+}
