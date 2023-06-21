@@ -39,7 +39,6 @@ export const exampleStudentProfile: StudentProfileInfo = {
   fullName: 'Example Student',
   Majors: ['Undecided'],
   Minors: [],
-  Advisors: [],
   ID: '12345678',
   Title: '',
   FirstName: 'Example',
