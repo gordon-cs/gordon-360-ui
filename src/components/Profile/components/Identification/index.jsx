@@ -20,11 +20,10 @@ import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Class } from 'services/peopleSearch';
 import user from 'services/user';
-import { gordonColors, windowBreakWidths } from 'theme';
+import { windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
 import defaultGordonImage from './defaultGordonImage';
 import styles from './Identification.module.css';
-import { newTheme } from 'theme';
 
 const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   const CROP_DIM = 200; // pixels
@@ -46,37 +45,6 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   const cropperRef = useRef();
   const isStudent = profile.PersonType?.includes('stu');
   let photoDialogErrorTimeout;
-
-  // Styles used throughout this component
-  const style = {
-    button: {
-      background: 'var(--mui-palette-primary-main)',
-      color: 'white',
-
-      changeImageButton: {
-        background: 'var(--mui-palette-primary-main)',
-        color: 'white',
-      },
-
-      resetButton: {
-        backgroundColor: '#f44336',
-        color: 'white',
-      },
-      cancelButton: {
-        backgroundColor: 'white',
-        color: 'var(--mui-palette-primary-main)',
-        border: `1px solid var(--mui-palette-primary-main)`,
-        width: showCropper ? '38%' : '86%',
-      },
-      hidden: {
-        display: 'none',
-      },
-    },
-    socialMediaButton: {
-      color: gordonColors.primary.cyan,
-      fontSize: '1rem',
-    },
-  };
 
   /**
    * Loads the given user's profile info
@@ -329,7 +297,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
     // If an error occured and there's no currently running timeout, the error is displayed
     // and a timeout for that error message is created
     if (photoDialogError !== null) {
-      message = <span style={{ color: '#B63228' }}>{photoDialogError}</span>;
+      message = <span className={styles.photoDialogError}>{photoDialogError}</span>;
       if (photoDialogErrorTimeout === null) {
         // Shows the error message for 6 seconds and then returns back to normal text
         photoDialogErrorTimeout = setTimeout(() => {
@@ -473,6 +441,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                 <Cropper
                   ref={cropperRef}
                   src={showCropper}
+                  //Possibly @TODO convert in-line style to CSS
                   style={{
                     maxWidth: maxCropPreviewWidth(),
                     maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
@@ -496,8 +465,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
               <Button
                 variant="contained"
                 onClick={() => setShowCropper(null)}
-                style={style.button.changeImageButton}
-                className="gc360_photo_dialog_box_content_button"
+                className={styles.backButton}
               >
                 Go Back
               </Button>
@@ -514,7 +482,11 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                     : 'Make photo visible to other students'
                 }
               >
-                <Button variant="contained" onClick={toggleImagePrivacy} style={style.button}>
+                <Button
+                  variant="contained"
+                  onClick={toggleImagePrivacy}
+                  classname={styles.photo_buttons}
+                >
                   {isImagePublic ? 'Hide' : 'Show'}
                 </Button>
               </Tooltip>
@@ -526,7 +498,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                 <Button
                   variant="contained"
                   onClick={handleResetImage}
-                  style={style.button.resetButton}
+                  className={styles.resetButton}
                 >
                   Reset
                 </Button>
@@ -534,11 +506,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
             </DialogActions>
           )}
           <DialogActions className="gc360_photo_dialog_box_actions_bottom">
-            <Button
-              variant="contained"
-              onClick={handleCloseCancel}
-              style={style.button.cancelButton}
-            >
+            <Button variant="contained" onClick={handleCloseCancel} className={styles.cancelButton}>
               Cancel
             </Button>
             {showCropper && (
@@ -551,7 +519,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                   variant="contained"
                   onClick={handleCloseSubmit}
                   disabled={!showCropper}
-                  style={showCropper ? style.button : style.button.hidden}
+                  className={showCropper ? styles.photo_buttons : styles.hiddenButton}
                 >
                   Submit
                 </Button>
@@ -613,6 +581,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
               <Grid item className={styles.identification_card_content_card_container_photo}>
                 <div
                   className={styles.identification_card_content_card_container_photo_main}
+                  //@TODO convert in-line style to CSS
                   style={
                     cliftonColor
                       ? {
