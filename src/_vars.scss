@@ -7,7 +7,8 @@
 
 // For use in a .js file, see `src/theme.js`.
 
-// DEPRECATED by theme palette update, colors here should be removed eventually in the future!
+// DEPRECATED by theme palette update S23
+// All the below colors should be removed eventually in the future!
 $primary-blue: #014983;
 $primary-cyan: #00aeef;
 $secondary-green: #b2bb1c;
@@ -17,15 +18,15 @@ $secondary-red: #b53228;
 
 $alternative-red: #ff0000;
 
-$neutral-white: #ffffff; //Setting: header buttons, light event cards, person profile(both pub and priv), about and help card header text, people search icon,
-$neutral-white-opacity80: #ffffffcd; //apart apps :global.MuiTypography-colorTextSecondary color
-$neutral-white-opacity50: #ffffff80; //PWAInstructions
-$neutral-white-opacity30: #ffffff4d; //Header disabled tab
-$neutral-light-gray: #ebeaea; //main app background,dark event cards, staff privacy msg, student privacy, calendar background,
-$neutral-light-gray2: #dddddd; //Calendar border
-$neutral-gray: #808080; //nothing found
-$neutral-gray2: #cccccb; //nothing found
-$neutral-gray3: #adadad; //nothing found
+$neutral-white: #ffffff;
+$neutral-white-opacity80: #ffffffcd;
+$neutral-white-opacity50: #ffffff80;
+$neutral-white-opacity30: #ffffff4d;
+$neutral-light-gray: #ebeaea;
+$neutral-light-gray2: #dddddd;
+$neutral-gray: #808080;
+$neutral-gray2: #cccccb;
+$neutral-gray3: #adadad;
 $neutral-dark-gray: #31342b;
 $neutral-dark-gray2: #444444;
 $neutral-dark-gray3: #555555;
@@ -46,8 +47,10 @@ $wellness-green: #005500;
 $wellness-yellow: #ffcc00;
 
 // NOT DEPRECATED
-// Theme palette update not - BREAKPOINTS STILL USED FROM THIS FILE, do not delete fully even after
-//theme variables are fully implemented
+// Theme palette update does not deprecate the following variables-----------------------
+// - BREAKPOINTS WILL STILL BE USED FROM THIS FILE,
+// do not delete this file fully even after theme palette is fully implemented
+
 // Material-UI breakpoints as Sass variables for use in custom styles
 $break-xs: 360px;
 $break-sm: 600px;
