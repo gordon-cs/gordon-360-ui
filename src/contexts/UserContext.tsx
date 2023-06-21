@@ -17,8 +17,8 @@ const initialUserState = {
 };
 
 type UserActions = {
-  updateProfile: () => void;
-  updateImage: () => void;
+  updateProfile: () => Promise<void>;
+  updateImage: () => Promise<void>;
 };
 
 export const UserContext = createContext<User>(initialUserState);
