@@ -12,11 +12,11 @@ import withStyles from '@mui/styles/withStyles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
+import { formatDistanceToNow } from 'date-fns';
 import { Markup } from 'interweave';
 import { Component, Fragment } from 'react';
 import myschedule from 'services/myschedule';
 import schedulecontrol from 'services/schedulecontrol';
-import { formatTimeAgo } from 'services/utils';
 import { gordonColors } from 'theme';
 import urlRegex from 'url-regex-safe';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
@@ -26,7 +26,7 @@ import MyScheduleDialog from './components/myScheduleDialog';
 
 // Default values
 const STARTHOUR = '08:00';
-const ENDHOUR = '17:00';
+const ENDHOUR = '22:00';
 
 const styles2 = {
   colorSwitchBase: {
@@ -173,7 +173,7 @@ class GordonSchedulePanel extends Component {
       THU_CDE: mySchedule.thursday ? 'R' : null,
       FRI_CDE: mySchedule.friday ? 'F' : null,
       SAT_CDE: mySchedule.saturday ? 'S' : null,
-      SUN_CDE: mySchedule.sunday ? 'N' : null,
+      // SUN_CDE: mySchedule.sunday ? 'N' : null,
       IS_ALLDAY: mySchedule.allDay ? 1 : 0,
       BEGIN_TIME: mySchedule.startHour,
       END_TIME: mySchedule.endHour,
@@ -268,7 +268,9 @@ class GordonSchedulePanel extends Component {
       <div style={{ color: gordonColors.primary.cyan }}>
         <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
         {Boolean(this.scheduleControlInfo) && (
-          <Typography>{formatTimeAgo(this.state.modifiedTimeStamp)}</Typography>
+          <Typography>
+            {formatDistanceToNow(new Date(this.state.modifiedTimeStamp), { addSuffix: true })}
+          </Typography>
         )}
       </div>
     );
