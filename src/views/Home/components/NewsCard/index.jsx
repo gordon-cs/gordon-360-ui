@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import newsService from 'services/news';
 import NewsItem from 'views/News/components/NewsItem';
+import styles from './NewsCard.module.css';
 
 const NewsCard = () => {
   const [news, setNews] = useState([]);
@@ -12,7 +13,7 @@ const NewsCard = () => {
   }, []);
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardHeader
         title={
           <Grid container direction="row" alignItems="center">

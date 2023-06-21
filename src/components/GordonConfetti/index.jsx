@@ -1,4 +1,5 @@
 import Confetti from 'react-dom-confetti';
+//Deprecated use of gordon colors, will need to be updated
 import { gordonColors } from 'theme';
 
 const GordonConfetti = ({ active, colorOption, colors }) => {
