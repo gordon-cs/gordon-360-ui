@@ -88,7 +88,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   // FacStaff spouses are private for private users
   const isSpousePrivate = isFacStaff && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
   useEffect(() => {
-    async function loadMailboxCombination() {
+    async function loadPersonalInfo() {
       if (isStudent) {
         if (myProf) {
           const info = await userService.getMailboxCombination();
@@ -99,7 +99,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         }
       }
     }
-    loadMailboxCombination();
+    loadPersonalInfo();
   }, [myProf, profile.Mail_Location, isStudent]);
 
   const handleChangeMobilePhonePrivacy = async () => {
