@@ -401,13 +401,16 @@ const Timesheets = (props) => {
         placement="bottom"
       >
         <div ref={tooltipRef}>
-          <CardHeader className="disable_select" title="Enter a shift" />
+          <CardHeader
+            className="disable_select"
+            style={{ color: 'var(--mui-palette-neutral-main' }}
+            title="Enter a shift"
+          />
           <InfoOutlinedIcon
             className={styles.tooltip_icon}
             style={{
               fontSize: 18,
-
-              color: 'var(--mui-palette-neutral-lightGray)',
+              color: 'var(--mui-palette-neutral-main)',
             }}
           />
         </div>
@@ -511,7 +514,7 @@ const Timesheets = (props) => {
                         style={{
                           borderBottom: '1px solid currentColor',
                           textDecoration: 'none',
-                          color: gordonColors.primary.blueShades.A700,
+                          color: 'var(--mui-palette-primary-main',
                         }}
                         href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
                         underline="always"
