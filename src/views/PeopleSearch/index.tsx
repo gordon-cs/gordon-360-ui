@@ -10,12 +10,32 @@ import { SearchResult } from 'services/peopleSearch';
 import PeopleSearchResult from './components/PeopleSearchResult';
 import SearchFieldList from './components/SearchFieldList';
 import styles from './PeopleSearch.module.scss';
+import { useNavigate, useLocation, Search } from 'react-router-dom'; //I am adding this
+import { Dispatch, SetStateAction } from 'react'; //I am adding this
 
 //Configuration constants
 const NUM_NONLAZY_IMAGES = 20; //The number of results for which images will be fetched immediately
 
 const PeopleSearch = () => {
-  const [searchResults, setSearchResults] = useState<SearchResult[] | null>(null);
+  const navigate = useNavigate(); //I am adding this
+  const location = useLocation(); //I am adding this
+  //I am add the content inside the below
+  const [searchResults, setSearchResults] = useState<SearchResult[] | null>(() => {
+    if (location.state?.searchResults) {
+      return location.state.searchResults;
+    }
+    return null;
+  });
+
+  //I am adding the below
+  const handleSearch: Dispatch<SetStateAction<SearchResult[] | null>> = (results) => {
+    setSearchResults(results);
+    navigate(location.pathname, {
+      replace: true,
+      state: { searchResults: results },
+    });
+  };
+
   const { profile, loading: loadingProfile } = useUser();
   const isOnline = useNetworkStatus();
   const printRef = useRef(null);
@@ -36,7 +56,7 @@ const PeopleSearch = () => {
   return (
     <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={12} lg={10} xl={8}>
-        <SearchFieldList onSearch={setSearchResults} />
+        <SearchFieldList onSearch={handleSearch} />
       </Grid>
       {searchResults !== null && (
         <Grid item xs={12} lg={10} xl={8}>
