@@ -122,12 +122,11 @@ declare module '@mui/material/styles' {
   }
 }
 
-// Seems to be unused with theme palette update, 6/21/2023
-// declare module '@mui/material' {
-//   interface ButtonPropsColorOverrides {
-//     neutral: any;
-//   }
-// }
+declare module '@mui/material' {
+  interface ButtonPropsColorOverrides {
+    neutral: any;
+  }
+}
 
 // Color declarations:
 // Primary
