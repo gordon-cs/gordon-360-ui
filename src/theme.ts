@@ -139,10 +139,10 @@ let ScottieCyan = '#00AEEF';
 // Error
 //Not an official gordon color anymore, we can consider changing this, it is a good error color
 let OldSchemeRed = '#B53228';
-let NauticalRed = '#ff5d53';
+let NauticalRed = '#FF5D53';
 
 // Success
-let LaVidaGreen = '#006d22';
+let LaVidaGreen = '#006D22';
 let OldSchemeGreen = '#B2BB1C';
 let SeaSpray = '#C7EFCF';
 
