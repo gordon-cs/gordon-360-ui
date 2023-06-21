@@ -2,6 +2,9 @@ import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
 
 // Colors from http://www.gordon.edu/brandstandards
 // Shades from https://goo.gl/AF45tZ
+
+// Deprecated GordonColors, deprecated by Theme Palette update
+// Delete once no longer used!
 export const gordonColors = {
   primary: {
     blue: '#014983',
@@ -108,6 +111,7 @@ export const windowBreakWidths = {
   breakXL: 1536,
 } as const;
 
+// Extend the interface, add neutral color with same color options as the primary palette.
 declare module '@mui/material/styles' {
   interface Palette {
     neutral: Palette['primary'];
@@ -118,11 +122,12 @@ declare module '@mui/material/styles' {
   }
 }
 
-declare module '@mui/material' {
-  interface ButtonPropsColorOverrides {
-    neutral: any;
-  }
-}
+// Seems to be unused with theme palette update, 6/21/2023
+// declare module '@mui/material' {
+//   interface ButtonPropsColorOverrides {
+//     neutral: any;
+//   }
+// }
 
 // Color declarations:
 // Primary
@@ -228,6 +233,12 @@ export const newTheme = extendTheme({
     dark: {
       // Palette for dark theme mode -------------------------------------------------------
       palette: {
+        background: {
+          paper: TestTool,
+        },
+        text: {
+          primary: TestToolContrast,
+        },
         primary: {
           main: TestTool,
           contrastText: TestTool,
@@ -285,21 +296,6 @@ export const newTheme = extendTheme({
           900: TestTool,
           A100: TestTool,
         },
-      },
-    },
-  },
-});
-
-console.log(newTheme.components);
-
-extendTheme({
-  components: {
-    MuiCard: {
-      styleOverrides: {
-        root: ({ theme }) => ({
-          backgroundColor: White,
-          [theme.getColorSchemeSelector('dark')]: { backgroundColor: TestTool },
-        }),
       },
     },
   },
