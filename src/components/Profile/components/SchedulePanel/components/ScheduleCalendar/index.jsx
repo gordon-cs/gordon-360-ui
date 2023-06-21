@@ -66,7 +66,7 @@ export default class GordonScheduleCalendar extends Component {
 
   render() {
     const resourceMap = [
-      { resourceId: 1, resourceTitle: 'Sunday' },
+      // { resourceId: 1, resourceTitle: 'Sunday' },
       { resourceId: 2, resourceTitle: 'Monday' },
       { resourceId: 3, resourceTitle: 'Tuesday' },
       { resourceId: 4, resourceTitle: 'Wednesday' },
