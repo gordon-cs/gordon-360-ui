@@ -1,0 +1,28 @@
+// Header.stories.js
+// Storybook testing stories for top header component
+
+import { Meta, StoryObj } from '@storybook/react';
+
+//import { GordonHeader } from '../components/Header';
+
+export const Header = () => {
+
+}
+
+// This default export determines where this story goes in the story list
+const meta = {
+  component: Header,
+};
+export default meta;
+
+let Story = StoryObj<typeof Header>;
+
+const onDrawerToggle = () => {
+  setDrawerOpen((o) => !o);
+};
+
+export const FirstStory: Story = {
+  args: {
+      onDrawerToggle: 'onDrawerToggle',
+  },
+};// Header.stories.js
