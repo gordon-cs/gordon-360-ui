@@ -430,26 +430,12 @@ const Timesheets = (props) => {
               >
                 <Grid container spacing={2} alignItems="center" alignContent="center">
                   <Grid item md={2}>
-                    <Button
-                      onClick={changeState}
-                      variant="contained"
-                      style={{
-                        backgroundColor: gordonColors.primary.cyan,
-                        color: gordonColors.neutral.grayShades[50],
-                      }}
-                    >
+                    <Button onClick={changeState} variant="contained" className={styles.button}>
                       {' '}
                       {clockInOut}
                     </Button>
                     &nbsp;
-                    <Button
-                      onClick={resetForm}
-                      variant="contained"
-                      style={{
-                        backgroundColor: gordonColors.primary.cyan,
-                        color: gordonColors.neutral.grayShades[50],
-                      }}
-                    >
+                    <Button onClick={resetForm} variant="contained" className={styles.button}>
                       {' '}
                       Reset{' '}
                     </Button>{' '}
