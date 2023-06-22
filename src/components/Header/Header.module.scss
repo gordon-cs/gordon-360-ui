@@ -9,7 +9,7 @@
   .app_bar {
     position: absolute;
     background-repeat: no-repeat;
-    background-image: url('./gc_seal_top_56.png');
+    background-image: url('./gc_new_logo_white_yellow_56.png');
     height: $header-height-xs;
   }
 
@@ -63,8 +63,9 @@
 
   @media (min-width: $break-sm) {
     .app_bar {
-      background-image: url('./gc_seal_top_64.png');
+      background-image: url('./gc_new_logo_white_yellow_64.png');
       height: $header-height-sm;
+      background-color: var(--mui-palette-primary-main);
     }
     .people_search_container {
       width: 13rem;
@@ -79,7 +80,7 @@
       display: none;
     }
     .app_bar {
-      background-image: url('./gc_seal_top_72.png');
+      background-image: url('./gc_new_logo_white_yellow_72.png');
       height: $header-height-md;
     }
 

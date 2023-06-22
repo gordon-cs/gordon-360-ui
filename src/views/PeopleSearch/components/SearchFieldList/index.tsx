@@ -1,3 +1,4 @@
+import { ExpandMore } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
@@ -13,20 +14,19 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import { ExpandMore } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
 import {
   ChangeEvent,
   Dispatch,
   KeyboardEvent,
+  ReactNode,
   SetStateAction,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  ReactNode,
 } from 'react';
 import {
   FaBook,
@@ -36,17 +36,16 @@ import {
   FaHeart,
   FaSchool,
   FaHome as Home,
-  FaUser as Person,
   FaMapMarkerAlt as LocationCity,
+  FaUser as Person,
 } from 'react-icons/fa';
-import { useLocation } from 'react-router';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
 import SearchField, { SelectOption } from './components/SearchField';
-import addressService from 'services/address';
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.

@@ -7,7 +7,7 @@
 .gordon_header .app_bar {
   position: absolute;
   background-repeat: no-repeat;
-  background-image: url('./gc_new_logo_white_yellow_56.png');
+  background-image: url("./gc_new_logo_white_yellow_56.png");
   height: 56px;
 }
 .gordon_header .tab {
@@ -51,8 +51,9 @@
 }
 @media (min-width: 600px) {
   .gordon_header .app_bar {
-    background-image: url('./gc_new_logo_white_yellow_64.png');
+    background-image: url("./gc_new_logo_white_yellow_64.png");
     height: 64px;
+    background-color: var(--mui-palette-primary-main);
   }
   .gordon_header .people_search_container {
     width: 13rem;
@@ -66,7 +67,7 @@
     display: none;
   }
   .gordon_header .app_bar {
-    background-image: url('./gc_new_logo_white_yellow_72.png');
+    background-image: url("./gc_new_logo_white_yellow_72.png");
     height: 72px;
   }
   .gordon_header .center_container {

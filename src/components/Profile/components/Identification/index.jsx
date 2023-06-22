@@ -24,6 +24,7 @@ import { gordonColors, windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
 import defaultGordonImage from './defaultGordonImage';
 import styles from './Identification.module.css';
+import { newTheme } from 'theme';
 
 const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   const CROP_DIM = 200; // pixels
@@ -49,11 +50,11 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   // Styles used throughout this component
   const style = {
     button: {
-      background: gordonColors.primary.blue,
+      background: 'var(--mui-palette-primary-main)',
       color: 'white',
 
       changeImageButton: {
-        background: gordonColors.primary.blue,
+        background: 'var(--mui-palette-primary-main)',
         color: 'white',
       },
 
@@ -63,8 +64,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
       },
       cancelButton: {
         backgroundColor: 'white',
-        color: gordonColors.primary.blue,
-        border: `1px solid ${gordonColors.primary.blue}`,
+        color: 'var(--mui-palette-primary-main)',
+        border: `1px solid var(--mui-palette-primary-main)`,
         width: showCropper ? '38%' : '86%',
       },
       hidden: {
@@ -449,7 +450,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
               <Dropzone
                 onDropAccepted={onDropAccepted}
                 onDropRejected={onDropRejected}
-                accept="image/jpeg, image/jpg, image/png"
+                accept={{
+                  'image/*': ['.jpeg', ',jpg', '.png'],
+                }}
               >
                 {({ getRootProps, getInputProps }) => (
                   <section>

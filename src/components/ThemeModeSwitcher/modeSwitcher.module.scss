@@ -1,0 +1,13 @@
+.ModeSwitcherButton {
+  background-color: var(--mui-palette-neutral-main);
+  color: var(--mui-palette-neutral-light);
+  width: 10em;
+  height: 4em;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 0.5px solid;
+  &:hover {
+    background-color: var(--mui-palette-neutral-dark);
+  }
+}
