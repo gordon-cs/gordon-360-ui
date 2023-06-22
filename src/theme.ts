@@ -250,6 +250,9 @@ export const newTheme = extendTheme({
         action: {
           active: TestTool, // Various icons, especially in PersonalInfo
         },
+
+        // May be used later, gives us the flexibility to change tooltip colors if needed for dark
+        // mode.
         // Tooltip: {
         //   bg: TestTool, // Tooltip background color
         // },

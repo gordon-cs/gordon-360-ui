@@ -1,4 +1,3 @@
-import { gordonColors } from 'theme';
 import { Tooltip } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import withStyles from '@mui/styles/withStyles';
