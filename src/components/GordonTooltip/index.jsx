@@ -2,7 +2,9 @@ import { gordonColors } from 'theme';
 import { Tooltip } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import withStyles from '@mui/styles/withStyles';
+import styles from './GordonTooltip.module.css';
 
+// TODO convert to inline styles (currently will not switch to dark mode!)
 const StyledTooltip = withStyles({
   tooltip: {
     color: '#555',
@@ -13,15 +15,8 @@ const StyledTooltip = withStyles({
 
 const GordonTooltip = ({ content, ...OtherProps }) => {
   return (
-    <StyledTooltip title={<span style={{ fontSize: '0.8rem' }}>{content}</span>} {...OtherProps}>
-      <HelpIcon
-        style={{
-          cursor: 'pointer',
-          margin: '0 1rem',
-          fontSize: '1.2rem',
-          color: gordonColors.primary.blue,
-        }}
-      />
+    <StyledTooltip title={<span className={styles.tooltipTitle}>{content}</span>} {...OtherProps}>
+      <HelpIcon className={styles.helpIcon} />
     </StyledTooltip>
   );
 };
