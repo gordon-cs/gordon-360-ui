@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import newsService from 'services/news';
 import NewsItem from 'views/News/components/NewsItem';
-import { gordonColors } from 'theme';
+import styles from './NewsCard.module.css';
 
 const NewsCard = () => {
   const [news, setNews] = useState([]);
@@ -13,7 +13,7 @@ const NewsCard = () => {
   }, []);
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardHeader
         title={
           <Grid container direction="row" alignItems="center">
@@ -25,8 +25,8 @@ const NewsCard = () => {
                 variant="contained"
                 //color="secondary"
                 style={{
-                  backgroundColor: gordonColors.primary.cyan,
-                  color: gordonColors.neutral.grayShades[50],
+                  backgroundColor: 'var(--mui-palette-primary-main)',
+                  color: 'var(--mui-palette-secondary-contrastText',
                 }}
                 component={Link}
                 to="/news"
@@ -37,8 +37,8 @@ const NewsCard = () => {
           </Grid>
         }
         style={{
-          backgroundColor: gordonColors.primary.blue,
-          color: gordonColors.neutral.grayShades[50],
+          backgroundColor: 'var(--mui-palette-primary-main)',
+          color: 'var(--mui-palette-secondary-contrastText',
         }}
       />
       <CardContent>
