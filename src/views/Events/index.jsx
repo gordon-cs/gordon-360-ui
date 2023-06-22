@@ -111,27 +111,27 @@ const Events = () => {
 
   function searchBarLength() {
     if (width >= 1800 && width <= 1920) {
-      return 7.19;
+      return 6.85;
     } else if (width >= 1700 && width < 1800) {
-      return 6.89;
+      return 6.5;
     } else if (width >= 1600 && width < 1700) {
-      return 6.55;
+      return 6.23;
     } else if (width >= 1500 && width < 1600) {
-      return 6.31;
+      return 5.9;
     } else if (width >= 1400 && width < 1500) {
-      return 7.15;
+      return 6.85;
     } else if (width >= 1300 && width < 1400) {
-      return 6.76;
+      return 6.45;
     } else if (width >= 1200 && width < 1300) {
-      return 6.3;
+      return 5.96;
     } else if (width >= 1100 && width < 1200) {
-      return 6.93;
+      return 6.6;
     } else if (width >= 1000 && width < 1100) {
-      return 6.39;
+      return 6.05;
     } else if (width >= 920 && width < 1000) {
-      return 5.87;
+      return 5.5;
     } else {
-      return 5.87;
+      return 5.5;
     }
   }
 
