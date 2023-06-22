@@ -5,13 +5,13 @@ import {
   AccordionDetails,
   AccordionSummary,
   Grid,
-  Switch,
   Typography,
   IconButton,
   Card,
   CardHeader,
+  Divider,
+  ListItem,
 } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
@@ -24,20 +24,6 @@ import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import styles from './ScheduleHeader.module.css';
 
-const styles2 = {
-  colorSwitchBase: {
-    color: gordonColors.neutral.lightGray,
-    '&$colorChecked': {
-      color: gordonColors.primary.cyan,
-      '& + $colorBar': {
-        backgroundColor: gordonColors.primary.cyan,
-      },
-    },
-  },
-  colorBar: {},
-  colorChecked: {},
-};
-
 class GordonSchedulePanel extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +31,7 @@ class GordonSchedulePanel extends Component {
       myProf: false, //myProf is boolean value that determines whether this is myprofile or not. this.props.profile actually contains profile data.
       isExpanded: false,
       disabled: true,
-      selectedEvent: null, //see if we actually need this later
+      selectedEvent: null,
       isDoubleClick: false,
       description: '',
       modifiedTimeStamp: null,
@@ -122,8 +108,6 @@ class GordonSchedulePanel extends Component {
   }
 
   render() {
-    const replaced = this.state.description;
-
     const { classes } = this.props;
     let isFaculty = String(this.props.profile.PersonType).includes('fac');
 
@@ -131,7 +115,7 @@ class GordonSchedulePanel extends Component {
 
     lastUpdate = (
       <div style={{ color: gordonColors.primary.cyan }}>
-        <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
+        <Typography style={{ fontSize: '1rem' }}>Last Updated</Typography>
         {Boolean(this.scheduleControlInfo) && (
           <Typography>
             {formatDistanceToNow(new Date(this.state.modifiedTimeStamp), { addSuffix: true })}
@@ -188,32 +172,30 @@ class GordonSchedulePanel extends Component {
                 id="panel1a-header"
               >
                 <Typography>{panelTitle} Schedule</Typography>
+                <Grid item xs={11} align="right">
+                  {lastUpdate}
+                </Grid>
               </AccordionSummary>
               <AccordionDetails>
-                <Grid container direction="row" justifyContent="center">
+                <Grid container direction="row" justifyContent="center" spacing={1}>
                   {this.props.isOnline && (
-                    <Grid container direction="row" item xs={12} lg={12}>
-                      <Grid
-                        item
-                        xs={3}
-                        lg={3}
-                        justifyContent="flex-start"
-                        classname={styles.officeHourText}
-                      >
-                        <Typography>Office Hours:</Typography>
-                        <item>{editDescriptionButton}</item>
-                      </Grid>
+                    <>
+                      <Grid container direction="row" item xs={12} lg={12} spacing={2}>
+                        <Grid item lg={1}></Grid>
+                        <Grid item xs={4} lg={1} align="left" classname={styles.officeHourText}>
+                          <Markup content="Office Hours: " />
 
-                      <Grid item xs={9} lg={9} align="left" classname={styles.officeHourText}>
-                        <item>
-                          <Markup classname={styles.officeHourText} content={replaced} />
-                        </item>
+                          <item>{editDescriptionButton}</item>
+                        </Grid>
+                        <Grid item xs={7} lg={9} align="left" classname={styles.officeHourText}>
+                          <Divider />
+                          <item>
+                            <Markup content={this.state.description} />
+                          </item>
+                          <Divider />
+                        </Grid>
                       </Grid>
-
-                      <Grid item xs={12} lg={12} align="flex-start">
-                        {lastUpdate}
-                      </Grid>
-                    </Grid>
+                    </>
                   )}
 
                   <Grid item xs={12} lg={10}>
@@ -243,4 +225,4 @@ class GordonSchedulePanel extends Component {
   }
 }
 
-export default withStyles(styles2)(GordonSchedulePanel);
+export default GordonSchedulePanel;
