@@ -231,8 +231,10 @@ export const newTheme = extendTheme({
       },
     },
     dark: {
-      // Palette for dark theme mode -------------------------------------------------------
+      // Palette for dark theme mode ------------------------TEMPORARY-COLORS---------------
       palette: {
+        // Variables to set various MUI components, may or may not use, but good to have the
+        // customizeability
         background: {
           paper: TestTool, // Card Colors
         },
