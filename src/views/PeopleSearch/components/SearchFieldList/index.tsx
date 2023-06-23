@@ -504,19 +504,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
                       </Typography>
                     </Grid>
                   )}
-                  {switchYearRange == true ? (
-                    <FormControlLabel
-                      control={<Switch onChange={handleSwitchChange}></Switch>}
-                      label="Search by Year Range"
-                      labelPlacement="end"
-                    ></FormControlLabel>
-                  ) : (
-                    <FormControlLabel
-                      control={<Switch onChange={handleSwitchChange}></Switch>}
-                      label="Search by Graduation Year"
-                      labelPlacement="end"
-                    ></FormControlLabel>
-                  )}
+                  <FormControlLabel
+                    control={<Switch onChange={handleSwitchChange} />}
+                    label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
+                    labelPlacement="end"
+                  />
                 </AdvancedOptionsColumn>
 
                 {/* Advanced Search Filters: Faculty/Staff */}
