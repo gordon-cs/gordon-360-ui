@@ -92,8 +92,9 @@ files for you which convert SASS to CSS. Then, within your component's index fil
 following line:
 
 ```
-import styles from ./componentName.module.css //IMPORTANT - import module.css NOT module.scss
+import styles from ./componentName.module.css // import module.css NOT module.scss
 ```
+(Note: Must import the css since react components only understand CSS syntax, not SASS syntax)
 
 ### Project Contributors
 
