@@ -400,8 +400,8 @@ const InvolvementProfile = () => {
             <Grid item align="center">
               {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
               {ActivityURL?.length !== 0 && (
-                <Typography>
-                  <a href={ActivityURL} className={styles.activityURL}>
+                <Typography className={styles.activityURL}>
+                  <a href={ActivityURL} className="gc360_text_link">
                     {ActivityURL}
                   </a>
                 </Typography>

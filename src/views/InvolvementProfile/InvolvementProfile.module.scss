@@ -29,9 +29,4 @@
 
 .activityURL {
   font-weight: bold;
-  color: var(--mui-palette-primary-main);
-  transition: color 200ms;
-  &:hover {
-    color: var(--mui-palette-secondary-main) !important;
-  }
 }
