@@ -149,13 +149,9 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [departments, setDepartments] = useState<string[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
-  const [userProvidedYear, setUserProvidedYear] = useState(new Date().getFullYear());
-  const [graduationYearRange, setGraduationYearRange] = useState<number[]>([
-    1889,
-    userProvidedYear,
-  ]);
+  const currentYear = new Date().getFullYear();
+  const [graduationYearRange, setGraduationYearRange] = useState<number[]>([1889, currentYear]);
   const [switchYearRange, setSwitchYearRange] = useState(true);
-  const [studentSearch, setStudentSearch] = useState(Boolean);
 
   /**
    * Default search params adjusted for the user's identity.
@@ -483,9 +479,9 @@ const SearchFieldList = ({ onSearch }: Props) => {
                       name="graduation_year"
                       value={searchParams.graduation_year}
                       updateValue={handleUpdate}
-                      options={Array.from({ length: userProvidedYear - 1889 + 1 }, (_, i) => ({
-                        value: (userProvidedYear - i).toString(),
-                        label: (userProvidedYear - i).toString(),
+                      options={Array.from({ length: currentYear - 1889 + 1 }, (_, i) => ({
+                        value: (currentYear - i).toString(),
+                        label: (currentYear - i).toString(),
                       }))}
                       Icon={FaCalendarTimes}
                       disabled={!searchParams.includeAlumni}
@@ -500,7 +496,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                         valueLabelDisplay="auto"
                         getAriaValueText={valuetext}
                         min={1889}
-                        max={userProvidedYear}
+                        max={currentYear}
                         disabled={!searchParams.includeAlumni}
                       />
                       <Typography fontSize={15} align="center">
