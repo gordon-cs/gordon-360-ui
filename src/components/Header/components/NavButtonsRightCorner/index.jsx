@@ -50,6 +50,16 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     />
   );
 
+  const transcriptButton = !isAuthenticated && (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : null}
+      onLinkClick={onClose}
+      openUnavailableDialog={openDialogBox}
+      linkName={'Experience Transcript'}
+      linkPath={'/transcript'}
+    />
+  );
+
   const timesheetsButton = (
     <GordonNavButton
       unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
@@ -114,6 +124,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             <div class={styles.right_menu_triangle} />
             {myProfileButton}
             {linksButton}
+            {transcriptButton}
             {timesheetsButton}
             {helpButton}
             {aboutButton}

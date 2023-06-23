@@ -20,7 +20,7 @@ import { TimePicker } from '@mui/x-date-pickers';
 
 // Default values
 const STARTHOUR = '08:00';
-const ENDHOUR = '17:00';
+const ENDHOUR = '22:00';
 
 export default class MyScheduleDialog extends Component {
   constructor(props) {
@@ -38,7 +38,7 @@ export default class MyScheduleDialog extends Component {
         checkedTh: false,
         checkedFr: false,
         checkedSa: false,
-        checkedSu: false,
+        // checkedSu: false,
       },
       selectedEvent: null,
       descriptionInput: '',
@@ -92,7 +92,7 @@ export default class MyScheduleDialog extends Component {
       this.handleReset();
       this.setState({
         checkedDayofWeek: {
-          checkedSu: nextProps.resourceId === 1 ? true : false,
+          // checkedSu: nextProps.resourceId === 1 ? true : false,
           checkedMo: nextProps.resourceId === 2 ? true : false,
           checkedTu: nextProps.resourceId === 3 ? true : false,
           checkedWe: nextProps.resourceId === 4 ? true : false,
@@ -282,7 +282,7 @@ export default class MyScheduleDialog extends Component {
         checkedTh: false,
         checkedFr: false,
         checkedSa: false,
-        checkedSu: false,
+        // checkedSu: false,
       },
       selectedEvent: null,
       descriptionInput: '',
@@ -308,7 +308,7 @@ export default class MyScheduleDialog extends Component {
       this.setState({
         checkedC: event.IS_ALLDAY === 1 ? true : false,
         checkedDayofWeek: {
-          checkedSu: event.SUN_CDE === 'N' ? true : false,
+          // checkedSu: event.SUN_CDE === 'N' ? true : false,
           checkedMo: event.MON_CDE === 'M' ? true : false,
           checkedTu: event.TUE_CDE === 'T' ? true : false,
           checkedWe: event.WED_CDE === 'W' ? true : false,

@@ -72,7 +72,7 @@ export default class GordonScheduleCalendar extends Component {
 
   render() {
     const resourceMap = [
-      { resourceId: 1, resourceTitle: 'Sunday' },
+      // { resourceId: 1, resourceTitle: 'Sunday' },
       { resourceId: 2, resourceTitle: 'Monday' },
       { resourceId: 3, resourceTitle: 'Tuesday' },
       { resourceId: 4, resourceTitle: 'Wednesday' },
@@ -88,7 +88,7 @@ export default class GordonScheduleCalendar extends Component {
     };
 
     const dayStart = new Date();
-    dayStart.setHours(6, 0, 0, 0);
+    dayStart.setHours(8, 0, 0, 0);
 
     const dayEnd = new Date();
     dayEnd.setHours(22, 0, 0, 0);
