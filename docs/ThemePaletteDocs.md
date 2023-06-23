@@ -118,6 +118,12 @@ If you need a new color, on top of those that already exist, you can add it to t
 open space (for example info.light is unused currently).  You should also name every color with 
 a variable name in theme.ts to enhance readability.
 
+Some components can reference the palette colors without the use of CSS.  For example, MUI buttons
+have a `color` prop.  A button with the prop `color='primary'` will have a GordonBlue background
+and White text color based on the main and contrast text colors defined in the primary colors.  In
+the case of buttons, it is recommended to use the color prop instead of external CSS unless further
+customization is needed.
+
 ### Project Contributors
 
 - _Jack Hammond_
