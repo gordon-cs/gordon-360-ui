@@ -250,7 +250,7 @@ const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_
 const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) => {
   return http.patch(`profiles/office_location`, OfficeLocation);
 };
-const updateOfficeHours = (value: string) => http.patch(`profiles/office_hours/${value}/`);
+const updateOfficeHours = (value: string) => http.patch(`profiles/office_hours/`);
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
