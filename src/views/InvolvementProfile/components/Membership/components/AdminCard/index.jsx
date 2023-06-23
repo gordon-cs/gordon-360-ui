@@ -84,7 +84,7 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   return (
     <>
       <Card>
-        <CardHeader title="Manage Roster" className={styles._cardHeader} />
+        <CardHeader title="Manage Roster" className={styles.cardHeader} />
         <CardContent>
           <Grid container spacing={2} direction="column">
             <Grid item>

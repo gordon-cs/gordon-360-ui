@@ -148,7 +148,7 @@ export default class SavedShiftsList extends Component {
             <DialogContent>
               <Grid container>
                 <Grid item xs={6} sm={6} md={6} lg={6}>
-                  <Button className={styles._RButton} onClick={this.onClose} variant="contained">
+                  <Button className={styles.RButton} onClick={this.onClose} variant="contained">
                     Cancel
                   </Button>
                 </Grid>
@@ -174,31 +174,31 @@ export default class SavedShiftsList extends Component {
     );
 
     let header = (
-      <Grid item xs={12} className={styles._headerStyle}>
+      <Grid item xs={12} className={styles.headerStyle}>
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
-              <Typography className={'disable_select' + styles.headerItem} variant="body2">
+              <Typography className={styles.headerItem} variant="body2">
                 JOB
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={'disable_select' + styles.headerItem} variant="body2">
+              <Typography className={styles.headerItem} variant="body2">
                 IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={'disable_select' + styles.headerItem} variant="body2">
+              <Typography className={styles.headerItem} variant="body2">
                 OUT
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={'disable_select' + styles.headerItem} variant="body2">
+              <Typography className={styles.headerItem} variant="body2">
                 RATE
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={'disable_select' + styles.headerItem} variant="body2">
+              <Typography className={styles.headerItem} variant="body2">
                 HOURS
               </Typography>
             </Grid>
@@ -218,7 +218,7 @@ export default class SavedShiftsList extends Component {
     ));
 
     const supervisorDropdown = (
-      <FormControl className={styles._formControl} fullWidth>
+      <FormControl className={styles.formControl} fullWidth>
         <InputLabel className="disable_select">Submit To</InputLabel>
         <Select
           value={this.state.selectedSupervisor}
@@ -260,7 +260,7 @@ export default class SavedShiftsList extends Component {
             <CardContent>
               <CardHeader className="disable_select" title={cardTitle} />
               <Grid
-                className={styles.shift_list + styles.boxShadow}
+                className={styles.shift_list}
                 container
                 spacing={2}
                 justifyContent="space-around"
@@ -293,7 +293,7 @@ export default class SavedShiftsList extends Component {
               {cardTitle === 'Saved Shifts' && (
                 <Grid container>
                   <Grid container>
-                    <Grid item xs={6} className={styles._supervisorDropdown}>
+                    <Grid item xs={6} className={styles.supervisorDropdown}>
                       {supervisorDropdown}
                     </Grid>
                     <Grid item xs={6}>

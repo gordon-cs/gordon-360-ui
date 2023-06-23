@@ -159,7 +159,7 @@ const MemberListItem = ({
 
             <Grid item>
               <Button
-                className={styles._removeButton}
+                className={styles.removeButton}
                 onClick={handleRemove}
                 variant="outlined"
                 size="small"
@@ -235,13 +235,13 @@ const MemberListItem = ({
 
     content = (
       <>
-        <Grid container alignItems="center" spacing={2} className={styles._rowStyle}>
+        <Grid container alignItems="center" spacing={2} className={styles.rowStyle}>
           <Grid item xs={1} className={styles.rowComponentStyle}>
             <Avatar
               src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
-              className={styles._avatarStyle}
+              className={styles.avatarStyle}
             >
               {!avatar && <PlaceHolderAvatar />}
             </Avatar>
@@ -301,7 +301,7 @@ const MemberListItem = ({
                       src={avatar}
                       alt={`${member.FirstName} ${member.LastName}`}
                       variant="rounded"
-                      className={styles._avatarStyle}
+                      className={styles.avatarStyle}
                     >
                       {!avatar && <PlaceHolderAvatar />}
                     </Avatar>
@@ -340,7 +340,7 @@ const MemberListItem = ({
       options = (
         <Button
           variant="contained"
-          className={styles._leaveButton}
+          className={styles.leaveButton}
           onClick={() => setIsLeaveAlertOpen(true)}
         >
           LEAVE
@@ -352,17 +352,17 @@ const MemberListItem = ({
       <>
         <Divider />
         <Grid container alignItems="center" spacing={2} wrap="nowrap">
-          <Grid item md={1} className={styles._rowStyle}>
+          <Grid item md={1} className={styles.rowStyle}>
             <Avatar
               src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
-              className={styles._avatarStyle}
+              className={styles.avatarStyle}
             >
               {!avatar && <PlaceHolderAvatar />}
             </Avatar>
           </Grid>
-          <Grid item xs={5} className={styles._rowStyle}>
+          <Grid item xs={5} className={styles.rowStyle}>
             {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
               <Typography>
                 {member.FirstName} {member.LastName}
@@ -375,10 +375,10 @@ const MemberListItem = ({
               </Link>
             )}
           </Grid>
-          <Grid item xs={4} className={styles._rowStyle}>
+          <Grid item xs={4} className={styles.rowStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
-          <Grid item xs={2} className={styles._rowStyle}>
+          <Grid item xs={2} className={styles.rowStyle}>
             {options}
           </Grid>
         </Grid>

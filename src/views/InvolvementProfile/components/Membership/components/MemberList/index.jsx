@@ -52,7 +52,7 @@ const MemberList = ({
   };
 
   const header = isMobileView ? (
-    <CardHeader title="Members" className={styles._headerStyle} />
+    <CardHeader title="Members" className={styles.headerStyle} />
   ) : isAdmin || isSiteAdmin ? (
     <CardHeader
       title={
@@ -71,7 +71,7 @@ const MemberList = ({
         </Grid>
       }
       titleTypographyProps={{ variant: 'h6' }}
-      className={styles._headerStyle}
+      className={styles.headerStyle}
     />
   ) : (
     <CardHeader
@@ -86,7 +86,7 @@ const MemberList = ({
           </Grid>
         </Grid>
       }
-      className={styles._headerStyle}
+      className={styles.headerStyle}
     />
   );
   return (

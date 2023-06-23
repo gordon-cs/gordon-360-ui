@@ -2,8 +2,7 @@ import { Button, Divider, Grid, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { formatDistanceToNow } from 'date-fns';
 import requestService from 'services/request';
-// @TODO CSSMODULES - outside directory
-import styles from './RequestSent.module.css';
+import styles from '../../Requests.module.css';
 
 const RequestSent = ({ member, onCancel }) => {
   const handleCancel = () => {
@@ -14,12 +13,7 @@ const RequestSent = ({ member, onCancel }) => {
   let cancel;
   if (member.Status === 'Pending') {
     cancel = (
-      <Button
-        variant="outlined"
-        size="small"
-        className={styles._cancel_button}
-        onClick={handleCancel}
-      >
+      <Button variant="outlined" size="small" color="error" onClick={handleCancel}>
         Cancel
       </Button>
     );

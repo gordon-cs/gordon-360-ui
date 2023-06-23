@@ -401,7 +401,7 @@ export default class ShiftItem extends Component {
                       });
                       this.onClose();
                     }}
-                    className={styles._yes_button}
+                    className={styles.yes_button}
                   >
                     Yes
                   </Button>
@@ -420,7 +420,7 @@ export default class ShiftItem extends Component {
     );
     let deleteButton = (
       <IconButton onClick={this.handleDeleteButtonClick} size="large">
-        <DeleteForeverOutlinedIcon className={styles._delete_button} />
+        <DeleteForeverOutlinedIcon className={styles.delete_button} />
       </IconButton>
     );
     if (this.state.deleting) {
@@ -429,7 +429,7 @@ export default class ShiftItem extends Component {
 
     let checkButton = (
       <IconButton disabled={errorText !== ''} onClick={this.onCheckButtonClick} size="large">
-        <CheckOutlinedIcon className={styles._checkButton} />
+        <CheckOutlinedIcon className={styles.checkButton} />
       </IconButton>
     );
     if (this.state.updating) {
@@ -446,7 +446,7 @@ export default class ShiftItem extends Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <IconButton onClick={this.toggleEditing} size="large">
-                <ClearOutlinedIcon className={styles._icon_button} />
+                <ClearOutlinedIcon className={styles.icon_button} />
               </IconButton>
             </Grid>
           </Grid>
@@ -477,7 +477,7 @@ export default class ShiftItem extends Component {
       }
     } else {
       shiftItemIcons = (
-        <IconButton className={styles._shiftItemIcons} size="large">
+        <IconButton className={styles.shiftItemIcons} size="large">
           <DeleteForeverOutlinedIcon />
         </IconButton>
       );
@@ -493,7 +493,7 @@ export default class ShiftItem extends Component {
           title={'Shift note: ' + SHIFT_NOTES}
           placement="top"
         >
-          <MessageOutlinedIcon className={styles._shiftNotesTooltip} />
+          <MessageOutlinedIcon className={styles.shiftNotesTooltip} />
         </CustomTooltip>
       );
     }
@@ -508,7 +508,7 @@ export default class ShiftItem extends Component {
           title={COMMENTS}
           placement="top"
         >
-          <InfoOutlinedIcon className={styles._shiftCommentTooltip} />
+          <InfoOutlinedIcon className={styles.shiftCommentTooltip} />
         </CustomTooltip>
       );
     }
@@ -517,7 +517,7 @@ export default class ShiftItem extends Component {
       errorText === '' ? (
         <Typography variant="body2">{EML_DESCRIPTION}</Typography>
       ) : (
-        <Typography className={styles._errorText} variant="body2">
+        <Typography className={styles.errorText} variant="body2">
           {errorText}
         </Typography>
       );

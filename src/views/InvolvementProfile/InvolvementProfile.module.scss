@@ -12,25 +12,26 @@
   margin-top: 15px;
 }
 
-_removeImage {
+.removeImage {
   background-color: var(--mui-palette-error-main);
   color: var(--mui-palette-secondary-contrastText);
 }
 
-_dialogContentText {
+.dialogContentText {
   text-align: 'center';
 }
 
-_imageDrop {
-  max-width: '320px';
-  max-height: '320px';
+.imageDrop {
+  max-width: 320px;
+  max-height: 320px;
+  border-radius: 0.5rem;
 }
 
-_cropper {
-  max-width: maxCropPreviewWidth();
-  max-height: maxCropPreviewWidth();
-}
-
-_activityURL {
+.activityURL {
   font-weight: 'bold';
+  color: var(--mui-palette-primary-main);
+  transition: color 200ms;
+  &:hover {
+    color: var(--mui-palette-secondary-main) !important;
+  }
 }

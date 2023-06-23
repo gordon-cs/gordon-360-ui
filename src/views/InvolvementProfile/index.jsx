@@ -255,7 +255,7 @@ const InvolvementProfile = () => {
               <Button
                 variant="contained"
                 onClick={() => setIsRemoveImageDialogOpen(true)}
-                className={styles._removeImage}
+                className={styles.removeImage}
               >
                 Remove image
               </Button>
@@ -279,7 +279,7 @@ const InvolvementProfile = () => {
               <>
                 <DialogContentText
                   id="edit-involvement-image-dialog-description"
-                  className={styles._dialogContentText}
+                  className={styles.dialogContentText}
                 >
                   {window.innerWidth < 600
                     ? 'Tap Image to Browse Files'
@@ -296,11 +296,7 @@ const InvolvementProfile = () => {
                     <section>
                       <div className={styles.photoUploader} {...getRootProps()}>
                         <input {...getInputProps()} />
-                        <img
-                          className={'rounded_corners' + styles._imageDrop}
-                          src={ActivityImagePath}
-                          alt=""
-                        />
+                        <img className={styles.imageDrop} src={ActivityImagePath} alt="" />
                       </div>
                     </section>
                   )}
@@ -318,7 +314,10 @@ const InvolvementProfile = () => {
                   <Cropper
                     ref={cropperRef}
                     src={preview}
-                    className={styles._cropper / cropperData.aspectRatio}
+                    style={{
+                      maxWidth: maxCropPreviewWidth(),
+                      maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
+                    }}
                     autoCropArea={1}
                     viewMode={3}
                     aspectRatio={1}
@@ -402,7 +401,7 @@ const InvolvementProfile = () => {
               {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
               {ActivityURL?.length !== 0 && (
                 <Typography>
-                  <a href={ActivityURL} className={'gc360_text_link' + styles._activityURL}>
+                  <a href={ActivityURL} className={styles.activityURL}>
                     {ActivityURL}
                   </a>
                 </Typography>

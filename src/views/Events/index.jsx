@@ -132,7 +132,7 @@ const Events = () => {
   const searchPageTitle = (
     <div align="center">
       Search
-      <b className={styles._searchPageTitle}> Gordon </b>
+      <b className={styles.searchPageTitle}> Gordon </b>
       Events
     </div>
   );
@@ -141,7 +141,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <Card className={styles._card_style}>
+          <Card className={styles.card_style}>
             <CardContent>
               <Grid container direction="row" alignItems="center">
                 <Grid item xs={4} />
@@ -151,7 +151,7 @@ const Events = () => {
                 <Grid item xs={4} align="right">
                   {isAuthenticated && (
                     <Button
-                      className={styles._attended_clw}
+                      className={styles.attended_clw}
                       variant="contained"
                       onClick={() => navigate('/attended')}
                     >
@@ -169,7 +169,7 @@ const Events = () => {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <EventIcon className={styles._search_filter_icon} />
+                          <EventIcon className={styles.event_filter_icon} />
                         </Grid>
                       )}
                     />
@@ -212,7 +212,7 @@ const Events = () => {
                         query="(min-width: 600px)"
                         render={() => (
                           <Grid item>
-                            <FilterListIcon className={styles._event_filter_list_icon} />
+                            <FilterListIcon className={styles.event_filter_list_icon} />
                           </Grid>
                         )}
                       />
@@ -231,7 +231,7 @@ const Events = () => {
                               <Chip
                                 label={option}
                                 {...getTagProps({ index })}
-                                className={styles._filters}
+                                className={styles.filters}
                               />
                             ))
                           }
@@ -269,7 +269,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <Card className={styles._card_style}>
+          <Card className={styles.card_style}>
             <CardContent>
               <Grid container item xs={12} justifyContent="center">
                 <CardHeader title={searchPageTitle} />
@@ -282,7 +282,7 @@ const Events = () => {
                     query="(min-width: 600px)"
                     render={() => (
                       <Grid item>
-                        <EventIcon className={styles._eventIcon} />
+                        <EventIcon className={styles.eventIcon} />
                       </Grid>
                     )}
                   />
@@ -326,7 +326,7 @@ const Events = () => {
                   <Grid item>
                     {isAuthenticated && (
                       <Button
-                        className={styles._attended_clw}
+                        className={styles.attended_clw}
                         variant="contained"
                         onClick={() => navigate('/attended')}
                       >
@@ -352,7 +352,7 @@ const Events = () => {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <FilterListIcon className={styles._event_filter_list_icon} />
+                          <FilterListIcon className={styles.event_filter_list_icon} />
                         </Grid>
                       )}
                     />
@@ -371,7 +371,7 @@ const Events = () => {
                             <Chip
                               label={option}
                               {...getTagProps({ index })}
-                              className={styles._filters}
+                              className={styles.filters}
                             />
                           ))
                         }

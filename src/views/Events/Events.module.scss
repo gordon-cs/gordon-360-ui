@@ -1,26 +1,26 @@
-_searchPageTitle {
+.searchPageTitle {
   color: var(--mui-palette-secondary-main);
 }
-_event_filter_icon {
-  color: var(--mui-palette-neutral-900);
+.event_filter_icon {
+  color: var(--mui-palette-neutral-500);
   font-size: 20;
 }
-_event_filter_list_icon {
-  color: var(--mui-palette-neutral-900);
+.event_filter_list_icon {
+  color: var(--mui-palette-neutral-500);
   font-size: 20;
 }
-_eventIcon {
-  color: var(--mui-palette-neutral-900);
+.eventIcon {
+  color: var(--mui-palette-neutral-500);
   font-size: 20;
 }
-_attended_clw {
+.attended_clw {
   background-color: var(--mui-palette-secondary-main);
   color: var(--mui-palette-secondary-contrastText);
 }
-_filters {
+.filters {
   background-color: var(--mui-palette-secondary-main);
-  color: var(--mui-palette-neutral-50);
+  color: var(--mui-palette-secondary-contrastText);
 }
-_card_style {
+.card_style {
   padding: '0 3vw';
 }
