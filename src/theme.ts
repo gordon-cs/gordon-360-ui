@@ -135,6 +135,7 @@ let GordonBlueHalfOpacity = '#01498382';
 
 // Secondary
 let ScottieCyan = '#00AEEF';
+let ScottieCyan10PercentOpacity = '#00AEEF1A';
 
 // Error
 //Not an official gordon color anymore, we can consider changing this, it is a good error color
@@ -188,7 +189,7 @@ export const newTheme = extendTheme({
         secondary: {
           main: ScottieCyan,
           contrastText: White,
-          50: '#E0F4FD',
+          50: ScottieCyan10PercentOpacity,
           100: '#B0E2F9',
           200: '#7BD0F5',
           300: '#43BDF1',
