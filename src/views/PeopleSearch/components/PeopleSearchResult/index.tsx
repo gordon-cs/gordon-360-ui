@@ -92,7 +92,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
         <a href={`mailto:${person.Email}`}>
           <MailOutlineIcon
             sx={{
-              color: 'var(--mui-palette-primary-main)',
+              color: 'var(--mui-palette-primary-contrastText)',
               height: '100%',
               width: 40,
               borderRadius: 2,

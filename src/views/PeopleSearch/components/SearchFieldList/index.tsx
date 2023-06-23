@@ -372,12 +372,16 @@ const SearchFieldList = ({ onSearch }: Props) => {
           <Accordion style={{ flexGrow: 1 }} elevation={3}>
             <AccordionSummary
               expandIcon={
-                <ExpandMore style={{ color: 'var(--mui-palette-primary-contrastText)' }} />
+                <ExpandMore style={{ color: 'var(--mui-palette-neutral-contrastText)' }} />
               }
               id="more-search-options-header"
               aria-controls="more-search-options-controls"
             >
-              <Typography variant="h6" align="center" color={'var(--mui-palette-primary-main)'}>
+              <Typography
+                variant="h6"
+                align="center"
+                color={'var(--mui-palette-main-contrastText)'}
+              >
                 More Search Options
               </Typography>
             </AccordionSummary>
@@ -493,7 +497,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       <CardActions>
         <Button
           variant="contained"
-          color="primary"
+          color="secondary"
           onClick={() => setSearchParams(initialSearchParams)}
         >
           RESET
