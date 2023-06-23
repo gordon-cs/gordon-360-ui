@@ -50,10 +50,6 @@ import addressService from 'services/address';
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
 
-function valuetext(value: number) {
-  return '${value}';
-}
-
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
  * See [RegExp Character Classes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes#types) for more info.
@@ -151,6 +147,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [halls, setHalls] = useState<string[]>([]);
   const currentYear = new Date().getFullYear();
   const [graduationYearRange, setGraduationYearRange] = useState<number[]>([1889, currentYear]);
+  // 1889 is the establish date of Gordon
   const [switchYearRange, setSwitchYearRange] = useState(true);
 
   /**
@@ -162,7 +159,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       // Only students and facstaff search students by default - alumni aren't allowed to search students
       includeStudent: isStudent || isFacStaff,
       // Only alumni search alumni by default
-      // includeAlumni: isAlumni,
+      includeAlumni: isAlumni,
     }),
     [isAlumni, isFacStaff, isStudent],
   );
@@ -494,7 +491,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                         value={graduationYearRange}
                         onChange={handleSliderChange}
                         valueLabelDisplay="auto"
-                        getAriaValueText={valuetext}
+                        getAriaValueText={toString}
                         min={1889}
                         max={currentYear}
                         disabled={!searchParams.includeAlumni}
