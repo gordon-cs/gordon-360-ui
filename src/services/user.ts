@@ -149,7 +149,6 @@ export type StudentProfileInfo = {
   fullName: string;
   Majors: string[];
   Minors: string[];
-  Advisors: StudentAdvisorInfo[];
 } & Override<UnformattedStudentProfileInfo, { OnOffCampus: OnOffCampusDescription }>;
 
 export type Profile = FacStaffProfileInfo | StudentProfileInfo | AlumniProfileInfo;
@@ -277,16 +276,10 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
   const fullName = `${profile?.FirstName} ${profile?.LastName}`;
   const cliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username);
 
-  let advisors: StudentAdvisorInfo[] = [];
-  try {
-    advisors = await getAdvisors(profile.AD_Username);
-  } catch {}
-
   if (isStudent(profile)) {
     return {
       ...profile,
       fullName,
-      Advisors: advisors,
       CliftonStrengths: cliftonStrengths,
       Majors: [
         profile.Major1Description,
@@ -366,6 +359,7 @@ const userService = {
   getImage,
   getDiningInfo,
   getProfileInfo,
+  getAdvisors,
   getMailboxCombination,
   getMembershipHistory,
   getBuildings,
