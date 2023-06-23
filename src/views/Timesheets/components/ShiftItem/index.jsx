@@ -401,7 +401,7 @@ export default class ShiftItem extends Component {
                       });
                       this.onClose();
                     }}
-                    className={styles.timesheets_rButton}
+                    className={styles._yes_button}
                   >
                     Yes
                   </Button>
@@ -420,7 +420,7 @@ export default class ShiftItem extends Component {
     );
     let deleteButton = (
       <IconButton onClick={this.handleDeleteButtonClick} size="large">
-        <DeleteForeverOutlinedIcon className={styles.timeshifts_dButton} />
+        <DeleteForeverOutlinedIcon className={styles._delete_button} />
       </IconButton>
     );
     if (this.state.deleting) {
@@ -429,7 +429,7 @@ export default class ShiftItem extends Component {
 
     let checkButton = (
       <IconButton disabled={errorText !== ''} onClick={this.onCheckButtonClick} size="large">
-        <CheckOutlinedIcon style={{ color: 'green' }} />
+        <CheckOutlinedIcon className={styles._checkButton} />
       </IconButton>
     );
     if (this.state.updating) {
@@ -446,7 +446,7 @@ export default class ShiftItem extends Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <IconButton onClick={this.toggleEditing} size="large">
-                <ClearOutlinedIcon className={styles.timesheets_iButton} />
+                <ClearOutlinedIcon className={styles._icon_button} />
               </IconButton>
             </Grid>
           </Grid>
@@ -477,7 +477,7 @@ export default class ShiftItem extends Component {
       }
     } else {
       shiftItemIcons = (
-        <IconButton style={{ visibility: 'hidden' }} size="large">
+        <IconButton className={styles._shiftItemIcons} size="large">
           <DeleteForeverOutlinedIcon />
         </IconButton>
       );
@@ -493,11 +493,7 @@ export default class ShiftItem extends Component {
           title={'Shift note: ' + SHIFT_NOTES}
           placement="top"
         >
-          <MessageOutlinedIcon
-            style={{
-              fontSize: 16,
-            }}
-          />
+          <MessageOutlinedIcon className={styles._shiftNotesTooltip} />
         </CustomTooltip>
       );
     }
@@ -512,7 +508,7 @@ export default class ShiftItem extends Component {
           title={COMMENTS}
           placement="top"
         >
-          <InfoOutlinedIcon style={{ fontSize: 16 }} />
+          <InfoOutlinedIcon className={styles._shiftCommentTooltip} />
         </CustomTooltip>
       );
     }
@@ -521,7 +517,7 @@ export default class ShiftItem extends Component {
       errorText === '' ? (
         <Typography variant="body2">{EML_DESCRIPTION}</Typography>
       ) : (
-        <Typography className={styles.timesheets_errorText} variant="body2">
+        <Typography className={styles._errorText} variant="body2">
           {errorText}
         </Typography>
       );

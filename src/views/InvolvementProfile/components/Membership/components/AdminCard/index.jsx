@@ -23,10 +23,6 @@ import RequestsReceived from './components/RequestsReceived';
 import { ConflictError, NotFoundError } from 'services/error';
 import styles from './AdminCard.module.css';
 
-const headerStyle = {
-  padding: '10px',
-};
-
 const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddMember }) => {
   const [isRosterClosed, setIsRosterClosed] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -88,11 +84,7 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   return (
     <>
       <Card>
-        <CardHeader
-          title="Manage Roster"
-          style={headerStyle}
-          className={styles.AdminCard_page_cardHeader}
-        />
+        <CardHeader title="Manage Roster" className={styles._cardHeader} />
         <CardContent>
           <Grid container spacing={2} direction="column">
             <Grid item>

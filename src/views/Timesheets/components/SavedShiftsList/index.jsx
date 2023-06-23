@@ -148,11 +148,7 @@ export default class SavedShiftsList extends Component {
             <DialogContent>
               <Grid container>
                 <Grid item xs={6} sm={6} md={6} lg={6}>
-                  <Button
-                    className={styles.timesheets_RButton}
-                    onClick={this.onClose}
-                    variant="contained"
-                  >
+                  <Button className={styles._RButton} onClick={this.onClose} variant="contained">
                     Cancel
                   </Button>
                 </Grid>
@@ -178,31 +174,31 @@ export default class SavedShiftsList extends Component {
     );
 
     let header = (
-      <Grid item xs={12} style={styles2.headerStyle} className={styles.timesheets_headerStyle}>
+      <Grid item xs={12} className={styles._headerStyle}>
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
-              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
+              <Typography className="disable_select" {...styles.headerItem} variant="body2">
                 JOB
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
+              <Typography className="disable_select" {...styles.headerItem} variant="body2">
                 IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
+              <Typography className="disable_select" {...styles.headerItem} variant="body2">
                 OUT
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
+              <Typography className="disable_select" {...styles.headerItem} variant="body2">
                 RATE
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
+              <Typography className="disable_select" {...styles.headerItem} variant="body2">
                 HOURS
               </Typography>
             </Grid>
@@ -222,12 +218,7 @@ export default class SavedShiftsList extends Component {
     ));
 
     const supervisorDropdown = (
-      <FormControl
-        style={{
-          maxWidth: 252,
-        }}
-        fullWidth
-      >
+      <FormControl className={styles._formControl} fullWidth>
         <InputLabel className="disable_select">Submit To</InputLabel>
         <Select
           value={this.state.selectedSupervisor}
@@ -270,12 +261,12 @@ export default class SavedShiftsList extends Component {
               <CardHeader className="disable_select" title={cardTitle} />
               <Grid
                 className={styles.shift_list}
+                {...styles.boxShadow}
                 container
                 spacing={2}
                 justifyContent="space-around"
                 alignItems="center"
                 alignContent="center"
-                style={styles2.boxShadow}
               >
                 {header}
                 {shiftsList}
@@ -303,7 +294,7 @@ export default class SavedShiftsList extends Component {
               {cardTitle === 'Saved Shifts' && (
                 <Grid container>
                   <Grid container>
-                    <Grid item xs={6} style={{ paddingLeft: 4, paddingRight: 4 }}>
+                    <Grid item xs={6} className={styles._supervisorDropdown}>
                       {supervisorDropdown}
                     </Grid>
                     <Grid item xs={6}>
@@ -327,16 +318,3 @@ export default class SavedShiftsList extends Component {
     return <>{content}</>;
   }
 }
-
-const styles2 = {
-  headerStyle: {
-    padding: '10px',
-  },
-  headerItem: {
-    marginTop: '10px',
-    marginBottom: '10px',
-  },
-  boxShadow: {
-    boxShadow: '0px 1px 2px 1px rgba(0, 0, 0, .2)',
-  },
-};

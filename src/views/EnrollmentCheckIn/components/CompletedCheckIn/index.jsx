@@ -15,12 +15,7 @@ const CompletedCheckIn = () => {
       className={styles.button_container}
     >
       <Grid item xs={8}>
-        <Typography
-          variant="h5"
-          gutterBottom
-          align="center"
-          className={styles.completed_checkIn_congrats_note}
-        >
+        <Typography variant="h5" gutterBottom align="center" className={styles._congrats_note}>
           Congratulations {profile.FirstName} on completing Enrollment Checkin!
         </Typography>
         <br />

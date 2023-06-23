@@ -17,7 +17,7 @@ const RequestSent = ({ member, onCancel }) => {
       <Button
         variant="outlined"
         size="small"
-        className={styles.requestSent_cancel_button}
+        className={styles._cancel_button}
         onClick={handleCancel}
       >
         Cancel

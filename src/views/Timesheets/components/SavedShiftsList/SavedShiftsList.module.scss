@@ -15,14 +15,27 @@
       background-color: $primary-cyan;
     }
   }
-
-  &_RButton {
-    background-color: var(--mui-palette-error-main);
-    color: var(--mui-palette-primary-contrastText);
-  }
-
-  &_headerStyle {
-    background-color: var(--mui-palette-primary-main);
-    color: var(--mui-palette-primary-contrastText);
-  }
+}
+_RButton {
+  background-color: var(--mui-palette-error-main);
+  color: var(--mui-palette-primary-contrastText);
+}
+_headerStyle {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  padding: '10px';
+}
+_headerItem {
+  margin-top: '10px';
+  margin-bottom: '10px';
+}
+_boxShadow {
+  box-shadow: '0px 1px 2px 1px rgba(0, 0, 0, .2)';
+}
+_formControl {
+  max-width: 252;
+}
+_supervisorDropdown {
+  padding-left: 4;
+  padding-right: 4;
 }

@@ -1,10 +1,23 @@
-.memberListItem_page {
-  &_leaveButton {
-    color: var(--mui-palette-error-main);
-  }
+_leaveButton {
+  color: var(--mui-palette-error-main);
+}
 
-  &_removeButton {
-    background-color: var(--mui-palette-error-main);
-    color: var(--mui-palette-secondary-contrastText);
-  }
+_removeButton {
+  background-color: var(--mui-palette-error-main);
+  color: var(--mui-palette-secondary-contrastText);
+}
+
+_rowComponentStyle {
+  margin: '10px 0px';
+  padding: '10px 0px';
+}
+
+_rowStyle {
+  margin-left: '0px';
+}
+
+_avatarStyle {
+  width: '64px';
+  height: '64px';
+  margin: '0 16px 0 0';
 }

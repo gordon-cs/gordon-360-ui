@@ -19,21 +19,32 @@
     margin-right: -16px;
     margin-top: -8px;
   }
+}
+_delete_button {
+  color: var(--mui-palette-error-main);
+}
 
-  &_dButton {
-    color: var(--mui-palette-error-main);
-  }
+_icon_button {
+  color: var(--mui-palette-error-main);
+}
 
-  &_iButton {
-    color: var(--mui-palette-error-main);
-  }
+_errorText {
+  color: var(--mui-palette-error-main);
+}
 
-  &_errorText {
-    color: var(--mui-palette-error-main);
-  }
-
-  &_rButton {
-    background-color: var(--mui-palette-error-main);
-    color: var(--mui-palette-primary-contrastText);
-  }
+_yes_button {
+  background-color: var(--mui-palette-error-main);
+  color: var(--mui-palette-primary-contrastText);
+}
+_checkButton {
+  color: var(--mui-palette-success-dark);
+}
+_shiftItemIcons {
+  visibility: 'hidden';
+}
+_shiftNotesTooltip {
+  font-size: 16;
+}
+_shiftCommentTooltip {
+  font-size: 16;
 }

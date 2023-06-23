@@ -255,7 +255,7 @@ const InvolvementProfile = () => {
               <Button
                 variant="contained"
                 onClick={() => setIsRemoveImageDialogOpen(true)}
-                className={styles.involvementProfile_buttons_removeImage}
+                className={styles._removeImage}
               >
                 Remove image
               </Button>
@@ -279,7 +279,7 @@ const InvolvementProfile = () => {
               <>
                 <DialogContentText
                   id="edit-involvement-image-dialog-description"
-                  style={{ textAlign: 'center' }}
+                  className={styles._dialogContentText}
                 >
                   {window.innerWidth < 600
                     ? 'Tap Image to Browse Files'
@@ -298,9 +298,9 @@ const InvolvementProfile = () => {
                         <input {...getInputProps()} />
                         <img
                           className="rounded_corners"
+                          {...styles._imageDrop}
                           src={ActivityImagePath}
                           alt=""
-                          style={{ maxWidth: '320px', maxHeight: '320px' }}
                         />
                       </div>
                     </section>
@@ -319,10 +319,7 @@ const InvolvementProfile = () => {
                   <Cropper
                     ref={cropperRef}
                     src={preview}
-                    style={{
-                      maxWidth: maxCropPreviewWidth(),
-                      maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
-                    }}
+                    className={styles._cropper / cropperData.aspectRatio}
                     autoCropArea={1}
                     viewMode={3}
                     aspectRatio={1}
@@ -406,7 +403,7 @@ const InvolvementProfile = () => {
               {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
               {ActivityURL?.length !== 0 && (
                 <Typography>
-                  <a href={ActivityURL} className="gc360_text_link" style={{ fontWeight: 'bold' }}>
+                  <a href={ActivityURL} className="gc360_text_link" {...styles._activityURL}>
                     {ActivityURL}
                   </a>
                 </Typography>

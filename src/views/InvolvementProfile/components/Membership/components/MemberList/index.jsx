@@ -5,9 +5,6 @@ import styles from './MemberList.module.css';
 
 const breakpointWidth = 810;
 
-const headerStyle = {
-  padding: '10px',
-};
 const MemberList = ({
   members,
   isAdmin,
@@ -55,7 +52,7 @@ const MemberList = ({
   };
 
   const header = isMobileView ? (
-    <CardHeader title="Members" style={headerStyle} className={styles.MemberList_headerStyle} />
+    <CardHeader title="Members" className={styles._headerStyle} />
   ) : isAdmin || isSiteAdmin ? (
     <CardHeader
       title={
@@ -74,8 +71,7 @@ const MemberList = ({
         </Grid>
       }
       titleTypographyProps={{ variant: 'h6' }}
-      style={headerStyle}
-      className={styles.MemberList_headerStyle}
+      className={styles._headerStyle}
     />
   ) : (
     <CardHeader
@@ -90,8 +86,7 @@ const MemberList = ({
           </Grid>
         </Grid>
       }
-      style={headerStyle}
-      className={styles.MemberList_headerStyle}
+      className={styles._headerStyle}
     />
   );
   return (

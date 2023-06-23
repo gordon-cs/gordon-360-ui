@@ -21,7 +21,6 @@ import { useWindowSize } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
 import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
-import { gordonColors } from 'theme';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Events.module.css';
 
@@ -133,7 +132,7 @@ const Events = () => {
   const searchPageTitle = (
     <div align="center">
       Search
-      <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+      <b className={styles._searchPageTitle}> Gordon </b>
       Events
     </div>
   );
@@ -142,7 +141,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <Card style={{ padding: '0 3vw' }}>
+          <Card className={styles._card_style}>
             <CardContent>
               <Grid container direction="row" alignItems="center">
                 <Grid item xs={4} />
@@ -152,11 +151,7 @@ const Events = () => {
                 <Grid item xs={4} align="right">
                   {isAuthenticated && (
                     <Button
-                      color="primary"
-                      style={{
-                        backgroundColor: gordonColors.primary.cyan,
-                        color: gordonColors.neutral.grayShades[50],
-                      }}
+                      className={styles._attended_clw}
                       variant="contained"
                       onClick={() => navigate('/attended')}
                     >
@@ -174,9 +169,7 @@ const Events = () => {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <EventIcon
-                            style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                          />
+                          <EventIcon className={styles._search_filter_icon} />
                         </Grid>
                       )}
                     />
@@ -219,9 +212,7 @@ const Events = () => {
                         query="(min-width: 600px)"
                         render={() => (
                           <Grid item>
-                            <FilterListIcon
-                              style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                            />
+                            <FilterListIcon className={styles._event_filter_list_icon} />
                           </Grid>
                         )}
                       />
@@ -239,11 +230,8 @@ const Events = () => {
                             value.map((option, index) => (
                               <Chip
                                 label={option}
-                                style={{
-                                  backgroundColor: gordonColors.primary.cyan,
-                                  color: gordonColors.neutral.grayShades[50],
-                                }}
                                 {...getTagProps({ index })}
+                                className={styles._filters}
                               />
                             ))
                           }
@@ -281,7 +269,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <Card style={{ padding: '0 3vw' }}>
+          <Card className={styles._card_style}>
             <CardContent>
               <Grid container item xs={12} justifyContent="center">
                 <CardHeader title={searchPageTitle} />
@@ -294,9 +282,7 @@ const Events = () => {
                     query="(min-width: 600px)"
                     render={() => (
                       <Grid item>
-                        <EventIcon
-                          style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                        />
+                        <EventIcon className={styles._eventIcon} />
                       </Grid>
                     )}
                   />
@@ -340,11 +326,7 @@ const Events = () => {
                   <Grid item>
                     {isAuthenticated && (
                       <Button
-                        color="primary"
-                        style={{
-                          backgroundColor: gordonColors.primary.cyan,
-                          color: gordonColors.neutral.grayShades[50],
-                        }}
+                        className={styles._attended_clw}
                         variant="contained"
                         onClick={() => navigate('/attended')}
                       >
@@ -370,9 +352,7 @@ const Events = () => {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <FilterListIcon
-                            style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                          />
+                          <FilterListIcon className={styles._event_filter_list_icon} />
                         </Grid>
                       )}
                     />
@@ -390,11 +370,8 @@ const Events = () => {
                           value.map((option, index) => (
                             <Chip
                               label={option}
-                              style={{
-                                backgroundColor: gordonColors.primary.cyan,
-                                color: gordonColors.neutral.grayShades[50],
-                              }}
                               {...getTagProps({ index })}
+                              className={styles._filters}
                             />
                           ))
                         }

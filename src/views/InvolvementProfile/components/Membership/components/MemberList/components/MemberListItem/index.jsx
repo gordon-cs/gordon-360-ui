@@ -24,14 +24,6 @@ import membership from 'services/membership';
 import userService from 'services/user';
 import styles from './MemberListItem.module.css';
 
-const rowComponentStyle = {
-  margin: '10px 0px',
-  padding: '10px 0px',
-};
-const rowStyle = {
-  marginLeft: '0px',
-};
-
 const PARTICIPATION_LEVELS = {
   Member: 'MEMBR',
   Leader: 'LEAD',
@@ -167,7 +159,7 @@ const MemberListItem = ({
 
             <Grid item>
               <Button
-                className={styles.memberListItem_page_removeButton}
+                className={styles._removeButton}
                 onClick={handleRemove}
                 variant="outlined"
                 size="small"
@@ -243,18 +235,18 @@ const MemberListItem = ({
 
     content = (
       <>
-        <Grid container alignItems="center" spacing={2} style={rowStyle}>
-          <Grid item xs={1} style={rowComponentStyle}>
+        <Grid container alignItems="center" spacing={2} className={styles._rowStyle}>
+          <Grid item xs={1} className={styles.rowComponentStyle}>
             <Avatar
               src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
-              style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+              className={styles._avatarStyle}
             >
               {!avatar && <PlaceHolderAvatar />}
             </Avatar>
           </Grid>
-          <Grid item xs={3} style={rowComponentStyle}>
+          <Grid item xs={3} className={styles.rowComponentStyle}>
             {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
               <Typography>
                 {member.FirstName} {member.LastName}
@@ -267,10 +259,10 @@ const MemberListItem = ({
               </Link>
             )}
           </Grid>
-          <Grid item xs={4} style={rowComponentStyle}>
+          <Grid item xs={4} className={styles.rowComponentStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
-          <Grid item xs={4} style={rowComponentStyle}>
+          <Grid item xs={4} className={styles.rowComponentStyle}>
             {options}
           </Grid>
         </Grid>
@@ -309,7 +301,7 @@ const MemberListItem = ({
                       src={avatar}
                       alt={`${member.FirstName} ${member.LastName}`}
                       variant="rounded"
-                      style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+                      className={styles._avatarStyle}
                     >
                       {!avatar && <PlaceHolderAvatar />}
                     </Avatar>
@@ -348,7 +340,7 @@ const MemberListItem = ({
       options = (
         <Button
           variant="contained"
-          className={styles.memberListItem_page_leaveButton}
+          className={styles._leaveButton}
           onClick={() => setIsLeaveAlertOpen(true)}
         >
           LEAVE
@@ -360,17 +352,17 @@ const MemberListItem = ({
       <>
         <Divider />
         <Grid container alignItems="center" spacing={2} wrap="nowrap">
-          <Grid item md={1} style={rowStyle}>
+          <Grid item md={1} className={styles._rowStyle}>
             <Avatar
               src={avatar}
               alt={`${member.FirstName} ${member.LastName}`}
               variant="rounded"
-              style={{ width: '4rem', height: '4rem', margin: '0 1rem 0 0' }}
+              className={styles._avatarStyle}
             >
               {!avatar && <PlaceHolderAvatar />}
             </Avatar>
           </Grid>
-          <Grid item xs={5} style={rowStyle}>
+          <Grid item xs={5} className={styles._rowStyle}>
             {profile.PersonType?.includes?.('stu') && member.IsAlumni ? (
               <Typography>
                 {member.FirstName} {member.LastName}
@@ -383,10 +375,10 @@ const MemberListItem = ({
               </Link>
             )}
           </Grid>
-          <Grid item xs={4} style={rowStyle}>
+          <Grid item xs={4} className={styles._rowStyle}>
             <Typography>{title ? title : participationDescription}</Typography>
           </Grid>
-          <Grid item xs={2} style={rowStyle}>
+          <Grid item xs={2} className={styles._rowStyle}>
             {options}
           </Grid>
         </Grid>

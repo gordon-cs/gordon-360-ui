@@ -12,9 +12,25 @@
   margin-top: 15px;
 }
 
-.involvementProfile_buttons {
-  &_removeImage {
-    background-color: var(--mui-palette-error-main);
-    color: var(--mui-palette-secondary-contrastText);
-  }
+_removeImage {
+  background-color: var(--mui-palette-error-main);
+  color: var(--mui-palette-secondary-contrastText);
+}
+
+_dialogContentText {
+  text-align: 'center';
+}
+
+_imageDrop {
+  max-width: '320px';
+  max-height: '320px';
+}
+
+_cropper {
+  max-width: maxCropPreviewWidth();
+  max-height: maxCropPreviewWidth();
+}
+
+_activityURL {
+  font-weight: 'bold';
 }
