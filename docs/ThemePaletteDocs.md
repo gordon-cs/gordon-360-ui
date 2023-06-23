@@ -100,8 +100,8 @@ import styles from ./componentName.module.css // import module.css NOT module.sc
 
 ###### After this project is completed, there are a few notes and best practices that future developers should follow.
 
-(Once dark mode is implemented) The most important thing for UI development is testing how every
-component appears in dark mode, with proper contrast, colors, etc....
+The most important thing for UI development is testing how every
+component appears in dark mode, with proper contrast, colors, etc.
 
 All styling should be done in seperate CSS classes if possible/practical.  In general, this 
 means that colors, padding, and related properties should be defined in a CSS class and used 
