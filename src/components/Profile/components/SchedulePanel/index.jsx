@@ -16,7 +16,6 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
-import withStyles from '@mui/styles/withStyles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
@@ -31,20 +30,6 @@ import scheduleService from 'services/schedule';
 
 import { useNetworkStatus, useUser } from 'hooks';
 import sessionService from 'services/session';
-
-const styles2 = {
-  colorSwitchBase: {
-    color: gordonColors.neutral.lightGray,
-    '&$colorChecked': {
-      color: gordonColors.primary.cyan,
-      '& + $colorBar': {
-        backgroundColor: gordonColors.primary.cyan,
-      },
-    },
-  },
-  colorBar: {},
-  colorChecked: {},
-};
 
 const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
@@ -110,9 +95,7 @@ const GordonSchedulePanel = (props) => {
           modifiedTimeStamp: scheduleControlInfo.ModifiedTimeStamp,
         });
       }
-    } catch (e) {
-      setLoading(false);
-    }
+    } catch (e) {}
     setLoading(false);
   };
   const handleEditDescriptionOpen = () => {
@@ -142,9 +125,7 @@ const GordonSchedulePanel = (props) => {
     }
   };
 
-  const handleIsExpanded = () => {
-    setIsExpanded((prevExpanded) => !prevExpanded);
-  };
+  const handleIsExpanded = () => setIsExpanded((prevExpanded) => !prevExpanded);
 
   const reloadHandler = () => {
     setReloadCall((val) => !val);
@@ -153,7 +134,6 @@ const GordonSchedulePanel = (props) => {
   const replaced = description;
 
   const { classes } = props;
-  const isFaculty = String(props.profile.PersonType).includes('fac');
 
   let editDescriptionButton, editDialog, lastUpdate;
 
