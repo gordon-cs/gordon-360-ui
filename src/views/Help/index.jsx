@@ -1,4 +1,3 @@
-import { gordonColors } from 'theme';
 import styles from './Help.module.css';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
@@ -15,11 +14,7 @@ const Help = () => {
           />
           <CardContent>
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="Login Instructions"
-                //titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="Login Instructions" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>Username: 'firstname.lastname' or your Gordon email address</li>
@@ -29,11 +24,7 @@ const Help = () => {
             </Card>
 
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="Site Navigation"
-                //titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="Site Navigation" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
@@ -88,8 +79,11 @@ const Help = () => {
                     photo on your My Profile view. For students, some key institutional contact
                     information will remain visible to faculty and staff even if you make it private
                     for student viewers. If you have a situation that requires additional privacy or
-                    security, please contact CTS,
-                    <a href="mailto:360@gordon.edu" style={{ color: gordonColors.primary.cyan }}>
+                    security, please contact CTS,&nbsp;
+                    <a
+                      href="mailto:360@gordon.edu"
+                      style={{ color: 'var(--mui-palette-primary-main)' }}
+                    >
                       360@gordon.edu
                     </a>
                     , or the Registrar.
@@ -99,11 +93,7 @@ const Help = () => {
             </Card>
 
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="Involvement User Levels"
-                //titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="Involvement User Levels" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
@@ -146,7 +136,6 @@ const Help = () => {
               <CardHeader
                 className={styles.help_header}
                 title="Management & Editing Involvements"
-                //titleTypographyProps={{ variant: 'body1' }}
               />
               <CardContent>
                 <Typography variant="body1" component="ul">
@@ -193,17 +182,13 @@ const Help = () => {
             </Card>
 
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="Issues & Troubleshooting"
-                //titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="Issues & Troubleshooting" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
                     <a
                       href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug"
-                      style={{ color: gordonColors.primary.cyan }}
+                      style={{ color: 'var(--mui-palette-primary-main)' }}
                     >
                       Contact CTS
                     </a>
@@ -215,11 +200,7 @@ const Help = () => {
             </Card>
 
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="Supported Platforms"
-                //titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="Supported Platforms" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
@@ -232,11 +213,7 @@ const Help = () => {
             </Card>
 
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="FAQ"
-                //titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="FAQ" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
@@ -282,7 +259,7 @@ const Help = () => {
         <Typography variant="subtitle1" gutterBottom>
           <br /> Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
-            <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
+            <Button style={{ color: 'var(--mui-palette-primary-main)' }}>Report to CTS</Button>
           </a>
         </Typography>
       </Grid>

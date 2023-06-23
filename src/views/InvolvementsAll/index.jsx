@@ -16,7 +16,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import involvementService from 'services/activity';
 import membershipService, { NonGuestParticipations } from 'services/membership';
 import sessionService from 'services/session';
-import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
 
@@ -214,7 +213,7 @@ const InvolvementsAll = () => {
                 title={`My ${myInvolvementsHeadingText} Involvements`}
                 style={{
                   backgroundColor: 'var(--mui-palette-primary-main)',
-                  color: gordonColors.neutral.grayShades[50],
+                  color: 'var(--mui-palette-primary-contrastText)',
                 }}
               />
               <CardContent>
@@ -240,7 +239,7 @@ const InvolvementsAll = () => {
             title={`${involvementSessionText} Involvements`}
             style={{
               backgroundColor: 'var(--mui-palette-primary-main)',
-              color: gordonColors.neutral.grayShades[50],
+              color: 'var(--mui-palette-primary-contrastText)',
             }}
           />
           <CardContent>

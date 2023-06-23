@@ -34,6 +34,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
       unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
       onLinkClick={onClose}
       openUnavailableDialog={openDialogBox}
+      color={'var(--mui-palette-primary-main)'}
       linkName={'My Profile'}
       linkPath={'/myprofile'}
     />

@@ -406,6 +406,7 @@ const Timesheets = (props) => {
                       To request permission for a special circumstance, please email\
                       student-employment@gordon.edu before exceeding this limit.'
                         }
+                        //color={'var(--mui-palette-primary-main)'}
                         placement="bottom"
                       >
                         <div ref={tooltipRef}>
