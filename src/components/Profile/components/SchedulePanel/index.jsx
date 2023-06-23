@@ -10,7 +10,6 @@ import {
   Card,
   CardHeader,
   Divider,
-  ListItem,
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -108,9 +107,6 @@ class GordonSchedulePanel extends Component {
   }
 
   render() {
-    const { classes } = this.props;
-    let isFaculty = String(this.props.profile.PersonType).includes('fac');
-
     let editDescriptionButton, schedulePanel, editDialog, lastUpdate;
 
     lastUpdate = (
@@ -149,72 +145,59 @@ class GordonSchedulePanel extends Component {
       );
     }
 
-    let panelTitle = '';
-    this.props.myProf ? (this.state.isExpanded = false) : (this.state.isExpanded = true);
-    this.state.isExpanded ? (panelTitle = 'Hide') : (panelTitle = 'Show');
     if (this.state.loading) {
       schedulePanel = <GordonLoader />;
     } else {
       schedulePanel = (
         <>
-          <Grid container className={styles.schedules_header}>
-            <CardHeader title="Schedule" />
-          </Grid>
-          <Card className={styles.schedules_card}>
-            <Accordion
-              TransitionProps={{ unmountOnExit: true }}
-              onChange={this.handleIsExpanded}
-              defaultExpanded={this.props.myProf}
+          <Accordion
+            TransitionProps={{ unmountOnExit: true }}
+            onChange={this.handleIsExpanded}
+            defaultExpanded={this.props.myProf}
+          >
+            <AccordionSummary
+              className={styles.header}
+              expandIcon={<ExpandMoreIcon color="secondary" />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
             >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>{panelTitle} Schedule</Typography>
-                <Grid item xs={11} align="right">
-                  {lastUpdate}
-                </Grid>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Grid container direction="row" justifyContent="center" spacing={1}>
-                  {this.props.isOnline && (
-                    <>
-                      <Grid container direction="row" item xs={12} lg={12} spacing={2}>
-                        <Grid item lg={1}></Grid>
-                        <Grid item xs={4} lg={1} align="left" classname={styles.officeHourText}>
-                          <Markup content="Office Hours: " />
+              <Typography fontSize={24}>Schedule</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {this.props.isOnline && (
+                <>
+                  <Grid container direction="row" item xs={12} lg={12} spacing={2}>
+                    <Grid item lg={1}></Grid>
+                    <Grid item xs={4} lg={1} align="left" classname={styles.officeHourText}>
+                      <Markup content="Office Hours: " />
 
-                          <item>{editDescriptionButton}</item>
-                        </Grid>
-                        <Grid item xs={7} lg={9} align="left" classname={styles.officeHourText}>
-                          <Divider />
-                          <item>
-                            <Markup content={this.state.description} />
-                          </item>
-                          <Divider />
-                        </Grid>
-                      </Grid>
-                    </>
-                  )}
-
-                  <Grid item xs={12} lg={10}>
-                    <GordonScheduleCalendar
-                      profile={this.props.profile}
-                      myProf={this.props.myProf}
-                      handleEditDescriptionButton={this.handleEditDescriptionButton.bind(this)}
-                      handleDoubleClick={this.handleDoubleClick.bind(this)}
-                      reloadHandler={this.reloadHandler}
-                      reloadCall={this.state.reloadCall}
-                      isOnline={this.props.isOnline}
-                    />
+                      <item>{editDescriptionButton}</item>
+                    </Grid>
+                    <Grid item xs={7} lg={9} align="left" classname={styles.officeHourText}>
+                      <Divider />
+                      <item>
+                        <Markup content={this.state.description} />
+                      </item>
+                      <Divider />
+                    </Grid>
                   </Grid>
-                </Grid>
+                </>
+              )}
+              <Grid item xs={12} lg={10}>
+                <GordonScheduleCalendar
+                  profile={this.props.profile}
+                  myProf={this.props.myProf}
+                  handleEditDescriptionButton={this.handleEditDescriptionButton.bind(this)}
+                  handleDoubleClick={this.handleDoubleClick.bind(this)}
+                  reloadHandler={this.reloadHandler}
+                  reloadCall={this.state.reloadCall}
+                  isOnline={this.props.isOnline}
+                />
+              </Grid>
 
-                {editDialog}
-              </AccordionDetails>
-            </Accordion>
-          </Card>
+              {editDialog}
+            </AccordionDetails>
+          </Accordion>
         </>
       );
     }

@@ -54,7 +54,7 @@ export default class EditDescriptionDialog extends Component {
 
           <TextField
             id="outlined-multiline-static"
-            label="DESCRIPTION"
+            label="Description"
             multiline
             rows={3}
             defaultValue={this.state.descInput}
