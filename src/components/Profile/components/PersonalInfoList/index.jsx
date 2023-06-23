@@ -20,7 +20,6 @@ import { useAuthGroups } from 'hooks';
 import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
-import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog';
 import styles from './PersonalInfoList.module.css';
@@ -524,7 +523,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
         NOTE: To update your data, please contact{' '}
-        <a style={{ color: gordonColors.primary.blue }} href="mailto: hr@gordon.edu">
+        <a className={styles.note_link} href="mailto: hr@gordon.edu">
           Human Resources
         </a>{' '}
         (x4828).
@@ -539,13 +538,20 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <li>
             <Typography>
               To update your On Campus Address, please contact{' '}
-              <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
+              <a href="mailto: housing@gordon.edu" className={styles.note_link}>
+                Housing
+              </a>{' '}
+              (x4263).
             </Typography>
           </li>
           <li>
             <Typography>
               For all other changes or to partially/fully prevent your data from displaying, please
-              contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+              contact the{' '}
+              <a href="mailto: registrar@gordon.edu" className={styles.note_link}>
+                Registrar's Office
+              </a>{' '}
+              (x4242).
             </Typography>
           </li>
         </ul>

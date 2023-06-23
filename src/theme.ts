@@ -135,6 +135,7 @@ let GordonBlueHalfOpacity = '#01498382';
 
 // Secondary
 let ScottieCyan = '#00AEEF';
+let ScottieCyan10PercentOpacity = '#00AEEF1A';
 
 // Error
 //Not an official gordon color anymore, we can consider changing this, it is a good error color
@@ -164,6 +165,7 @@ let White = '#FFFFFF';
 // Dev Tool coloring - Colors for development and testing purposes
 let TestTool = '#FF8400';
 let TestToolContrast = '#FF0000';
+let TestToolHalfOpacity = '#FF840082';
 
 // Theme to use in the CSS vars provider, allowing multiple theme modes
 export const newTheme = extendTheme({
@@ -187,7 +189,7 @@ export const newTheme = extendTheme({
         secondary: {
           main: ScottieCyan,
           contrastText: White,
-          50: '#E0F4FD',
+          50: ScottieCyan10PercentOpacity,
           100: '#B0E2F9',
           200: '#7BD0F5',
           300: '#43BDF1',
@@ -230,18 +232,35 @@ export const newTheme = extendTheme({
       },
     },
     dark: {
-      // Palette for dark theme mode -------------------------------------------------------
+      // Palette for dark theme mode ------------------------TEMPORARY-COLORS---------------
       palette: {
+        // Variables to set various MUI components, may or may not use, but good to have the
+        // customizeability
         background: {
           paper: TestTool, // Card Colors
         },
         text: {
           primary: TestToolContrast, // Various MUI components and text
         },
+        Switch: {
+          defaultColor: TestTool, // switch ball color
+        },
+        common: {
+          onBackground: TestTool, // switch track color
+        },
+        action: {
+          active: TestTool, // Various icons, especially in PersonalInfo
+        },
+
+        // May be used later, gives us the flexibility to change tooltip colors if needed for dark
+        // mode.
+        // Tooltip: {
+        //   bg: TestTool, // Tooltip background color
+        // },
         primary: {
           main: TestTool,
           contrastText: TestTool,
-          50: TestTool,
+          50: TestToolHalfOpacity, //should be half opacity of main
           100: TestTool,
           200: TestTool,
           300: TestTool,
