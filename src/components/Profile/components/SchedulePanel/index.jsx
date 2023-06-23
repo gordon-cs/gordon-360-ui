@@ -3,42 +3,23 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
   Grid,
-  Switch,
   Typography,
   IconButton,
-  Card,
-  CardHeader,
-  CardContent,
+  Divider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
-import withStyles from '@mui/styles/withStyles';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
+import { formatDistanceToNow } from 'date-fns';
 import { Markup } from 'interweave';
 import schedulecontrol from 'services/schedulecontrol';
-import { formatTimeAgo } from 'services/utils';
 import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import styles from './ScheduleHeader.module.css';
-
-const styles2 = {
-  colorSwitchBase: {
-    color: gordonColors.neutral.lightGray,
-    '&$colorChecked': {
-      color: gordonColors.primary.cyan,
-      '& + $colorBar': {
-        backgroundColor: gordonColors.primary.cyan,
-      },
-    },
-  },
-  colorBar: {},
-  colorChecked: {},
-};
 
 const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
@@ -119,14 +100,17 @@ const GordonSchedulePanel = (props) => {
   const replaced = description;
 
   const { classes } = props;
-  const isFaculty = String(props.profile.PersonType).includes('fac');
 
   let editDescriptionButton, schedulePanel, editDialog, lastUpdate;
 
   lastUpdate = (
     <div style={{ color: gordonColors.primary.cyan }}>
-      <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
-      {Boolean(scheduleControlInfo) && <Typography>{formatTimeAgo(modifiedTimeStamp)}</Typography>}
+      <Typography style={{ fontSize: '1rem' }}>Last Updated</Typography>
+      {Boolean(scheduleControlInfo) && (
+        <Typography>
+          {formatDistanceToNow(new Date(modifiedTimeStamp), { addSuffix: true })}
+        </Typography>
+      )}
     </div>
   );
 
@@ -155,92 +139,59 @@ const GordonSchedulePanel = (props) => {
     );
   }
 
-  let panelTitle = isExpanded ? 'Hide' : 'Show';
   if (loading) {
     schedulePanel = <GordonLoader />;
-  } else if (!props.myProf && !isFaculty) {
-    schedulePanel = (
-      <>
-        <Grid item xs={12} className={styles.schedules}>
-          <Grid container className={styles.schedules_header}>
-            <CardHeader title="Profile Note" />
-          </Grid>
-          <Card className={styles.memberships_card}>
-            <CardContent align="left">{replaced}</CardContent>
-          </Card>
-        </Grid>
-      </>
-    );
   } else {
     schedulePanel = (
       <>
-        <Grid container className={styles.schedules_header}>
-          <CardHeader title="Schedule" />
-        </Grid>
-        <Card className={styles.schedules_card}>
-          <Accordion
-            TransitionProps={{ unmountOnExit: true }}
-            onChange={handleIsExpanded}
-            defaultExpanded={props.myProf}
+        <Accordion
+          TransitionProps={{ unmountOnExit: true }}
+          onChange={handleIsExpanded}
+          defaultExpanded={props.myProf}
+        >
+          <AccordionSummary
+            className={styles.header}
+            expandIcon={<ExpandMoreIcon color="secondary" />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
           >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>{panelTitle} Schedule</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container direction="row" justifyContent="center" align="left">
-                {props.isOnline && (
-                  <Grid container direction="row" item xs={12} lg={10}>
-                    <Grid item align="center" xs={2}>
-                      <Typography>Office Hours:</Typography>
-                      <item>{editDescriptionButton}</item>
-                    </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      justifyContent="flex-start"
-                      classname={styles.officeHourText}
-                    >
-                      <item>
-                        <Markup classname={styles.officeHourText} content={replaced} />
-                      </item>
-                    </Grid>
+            <Typography fontSize={24}>Schedule</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {props.isOnline && (
+              <>
+                <Grid container direction="row" item xs={12} lg={12} spacing={2}>
+                  <Grid item lg={1}></Grid>
+                  <Grid item xs={4} lg={1} align="left" classname={styles.officeHourText}>
+                    <Markup content="Office Hours: " />
 
-                    {/* THIS IS FOR LAST UPDATED */}
-                    {/* <Grid
-                      container
-                      direction="column"
-                      item
-                      xs={12}
-                      lg={8}
-                      alignItems="flex-start"
-                      justifyContent="flex-start"
-                    >
-                      {lastUpdate}
-                    </Grid> */}
+                    <item>{editDescriptionButton}</item>
                   </Grid>
-                )}
-
-                <Grid item xs={12} lg={10}>
-                  <GordonScheduleCalendar
-                    profile={props.profile}
-                    myProf={props.myProf}
-                    handleEditDescriptionButton={handleEditDescriptionButton}
-                    handleDoubleClick={handleDoubleClick}
-                    reloadHandler={reloadHandler}
-                    reloadCall={reloadCall}
-                    isOnline={props.isOnline}
-                  />
+                  <Grid item xs={7} lg={9} align="left" classname={styles.officeHourText}>
+                    <Divider />
+                    <item>
+                      <Markup content={description} />
+                    </item>
+                    <Divider />
+                  </Grid>
                 </Grid>
-              </Grid>
+              </>
+            )}
+            <Grid item xs={12} lg={10}>
+              <GordonScheduleCalendar
+                profile={props.profile}
+                myProf={props.myProf}
+                handleEditDescriptionButton={handleEditDescriptionButton}
+                handleDoubleClick={handleDoubleClick}
+                reloadHandler={reloadHandler}
+                reloadCall={reloadCall}
+                isOnline={props.isOnline}
+              />
+            </Grid>
 
-              {editDialog}
-            </AccordionDetails>
-          </Accordion>
-        </Card>
+            {editDialog}
+          </AccordionDetails>
+        </Accordion>
       </>
     );
   }
@@ -248,4 +199,4 @@ const GordonSchedulePanel = (props) => {
   return <LocalizationProvider dateAdapter={AdapterDateFns}>{schedulePanel}</LocalizationProvider>;
 };
 
-export default withStyles(styles2)(GordonSchedulePanel);
+export default GordonSchedulePanel;

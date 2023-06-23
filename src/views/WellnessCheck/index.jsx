@@ -1,4 +1,4 @@
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import WellnessQuestion from 'components/WellnessQuestion';
 import { useUser } from 'hooks';
@@ -30,7 +30,7 @@ const WellnessCheck = () => {
   if (loading || loadingProfile) {
     return <GordonLoader />;
   } else if (!profile) {
-    return <GordonUnauthorized feature="the wellness check in" />;
+    return <GordonUnauthenticated feature="the wellness check in" />;
   } else if (currentStatus === null) {
     return <WellnessQuestion setStatus={setCurrentStatus} />;
   } else {
