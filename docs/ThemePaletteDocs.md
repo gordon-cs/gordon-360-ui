@@ -96,6 +96,28 @@ import styles from ./componentName.module.css // import module.css NOT module.sc
 ```
 (Note: Must import the css since react components only understand CSS syntax, not SASS syntax)
 
+#### Guide for Future Developers
+
+###### After this project is completed, there are a few notes and best practices that future developers should follow.
+
+(Once dark mode is implemented) The most important thing for UI development is testing how every
+component appears in dark mode, with proper contrast, colors, etc....
+
+All styling should be done in seperate CSS classes if possible/practical.  In general, this 
+means that colors, padding, and related properties should be defined in a CSS class and used 
+in a component using the className prop (See MUI documentation).  The only exceptions to this 
+is if styling is done dynamically with some computation.  For example the Clifton Strengths 
+colored ring around the profile photo, or the sizing of the photo cropper for involvements and 
+profile photo.
+
+All colors should reference a color from the palette, and consideration should be given for a 
+switch to dark mode.  You can find examples of usage of the --mui theme variable throughout the 
+code.
+
+If you need a new color, on top of those that already exist, you can add it to the palette in an 
+open space (for example info.light is unused currently).  You should also name every color with 
+a variable name in theme.ts to enhance readability.
+
 ### Project Contributors
 
 - _Jack Hammond_
