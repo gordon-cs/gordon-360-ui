@@ -4,6 +4,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 }
 
 .result {
@@ -11,9 +13,13 @@
   align-items: center;
   justify-content: flex-start;
   gap: min(1rem, 1vw);
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 
   & :global(.MuiCardContent-root) {
     padding: min(1rem, 2vw);
+    color: var(--mui-palette-primary-main);
+    background-color: var(--mui-palette-primary-main);
   }
 }
 
@@ -22,28 +28,40 @@
   height: clamp(6.5rem, 8vw, 10rem);
   width: clamp(6.5rem, 8vw, 10rem);
   margin: min(1rem, 2vw);
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 }
 
 .name {
   font-size: clamp(1rem, 0.6429rem + 1.7857vw, 3rem);
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 }
 
 .subtitle {
   font-size: clamp(0.8rem, 0.6286rem + 0.8571vw, 2rem);
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 }
 
 .secondary_text {
   font-size: clamp(0.75rem, 0.6429rem + 0.5357vw, 1.5rem);
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 }
 
 .profile_link_container {
   flex: 6;
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 }
 
 .mailing_icon_container {
   display: flex;
   justify-content: center;
   flex: 0.5;
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 }
 
 .mail_card_action {
@@ -51,4 +69,6 @@
   background-color: $primary-blue;
   border-radius: 6px;
   padding: 0 0.2rem;
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 }

@@ -7,7 +7,6 @@ import { Class, SearchResult } from 'services/peopleSearch';
 import { useWindowSize } from 'hooks';
 import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
-import { gordonColors } from 'theme';
 
 /*Const string was created with https://png-pixel.com/ .
  *It is a 1 x 1 pixel with the same color as gordonColors.neutral.lightGray (7/9/21)
@@ -48,7 +47,6 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
       const { def: defaultImage, pref: preferredImage } = await userService.getImage(
         person.AD_Username,
       );
-
       setAvatar(JPG_BASE64_HEADER + (preferredImage || defaultImage));
     }
     setHasBeenRun(true);
@@ -94,7 +92,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
         <a href={`mailto:${person.Email}`}>
           <MailOutlineIcon
             sx={{
-              color: gordonColors.neutral.grayShades[50],
+              color: 'var(--mui-palette-primary-main)',
               height: '100%',
               width: 40,
               borderRadius: 2,

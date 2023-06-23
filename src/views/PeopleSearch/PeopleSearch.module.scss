@@ -4,6 +4,8 @@
   background-color: $primary-blue;
   color: $neutral-white;
   text-align: center;
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 }
 
 .print_button {
@@ -12,4 +14,6 @@
   bottom: min(5vw, 4rem);
   right: max(2rem, 5vw);
   z-index: 1;
+  color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-primary-main);
 }

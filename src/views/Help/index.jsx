@@ -256,7 +256,7 @@ const Help = () => {
             </Card>
           </CardContent>
         </Card>
-        <Typography variant="subtitle1" gutterBottom>
+        <Typography variant="subtitle1" color={'var(--mui-palette-primary-main)'} gutterBottom>
           <br /> Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
             <Button style={{ color: 'var(--mui-palette-primary-main)' }}>Report to CTS</Button>

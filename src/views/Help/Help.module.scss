@@ -14,6 +14,7 @@
   &_title {
     text-align: center;
     padding: 1rem;
+    color: var(--mui-palette-primary-main);
   }
 
   &_header {
@@ -23,5 +24,6 @@
 
   &_section:global(.MuiCard-root) {
     box-shadow: none;
+    color: var(--mui-palette-primary-main);
   }
 }

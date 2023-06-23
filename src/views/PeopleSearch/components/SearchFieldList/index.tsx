@@ -44,7 +44,7 @@ import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
-import { gordonColors } from 'theme';
+import styles from './SearchFieldList.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
 
 /**
@@ -263,8 +263,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }
 
   const PeopleSearchCheckbox = (
-    <Grid item xs={12} md={6}>
-      <FormLabel component="label">Include: &nbsp;</FormLabel>
+    <Grid item xs={12} md={6} className={styles.people_section}>
+      <FormLabel component="label" color="primary">
+        Include: &nbsp;
+      </FormLabel>
       {loading ? (
         <GordonLoader size={20} />
       ) : (
@@ -315,7 +317,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   );
 
   return (
-    <Card style={{ padding: '1rem' }}>
+    <Card style={{ padding: '1rem' }} className={styles.people_section}>
       <CardContent>
         <CardHeader title={searchPageTitle} titleTypographyProps={{ align: 'center' }} />
 
@@ -369,11 +371,13 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <Grid container alignItems="center">
           <Accordion style={{ flexGrow: 1 }} elevation={3}>
             <AccordionSummary
-              expandIcon={<ExpandMore />}
+              expandIcon={
+                <ExpandMore style={{ color: 'var(--mui-palette-primary-contrastText)' }} />
+              }
               id="more-search-options-header"
               aria-controls="more-search-options-controls"
             >
-              <Typography variant="h6" align="center">
+              <Typography variant="h6" align="center" color={'var(--mui-palette-primary-main)'}>
                 More Search Options
               </Typography>
             </AccordionSummary>
@@ -489,7 +493,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       <CardActions>
         <Button
           variant="contained"
-          color="neutral"
+          color="primary"
           onClick={() => setSearchParams(initialSearchParams)}
         >
           RESET
