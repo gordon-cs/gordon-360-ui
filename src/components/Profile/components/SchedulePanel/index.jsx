@@ -198,87 +198,70 @@ const GordonSchedulePanel = (props) => {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       {
         <>
-          <Grid container className={styles.schedules_header}>
-            <CardHeader title="Schedule" />
-          </Grid>
-          <Card className={styles.schedules_card}>
-            <Accordion
-              TransitionProps={{ unmountOnExit: true }}
-              onChange={handleIsExpanded}
-              defaultExpanded={props.myProf}
+          <Accordion
+            TransitionProps={{ unmountOnExit: true }}
+            onChange={handleIsExpanded}
+            defaultExpanded={props.myProf}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
             >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>{isExpanded ? 'Hide' : 'Show'} Schedule</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Grid container direction="row" justifyContent="center" align="left">
-                  {props.isOnline && (
-                    <Grid container direction="row" item xs={12} lg={10}>
-                      <Grid item align="center" xs={2}>
-                        <Typography>Office Hours:</Typography>
-                        <item>{editDescriptionButton}</item>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={10}
-                        justifyContent="flex-start"
-                        classname={styles.officeHourText}
-                      >
-                        <item>
-                          <Markup classname={styles.officeHourText} content={replaced} />
-                        </item>
-                      </Grid>
-                      <Grid item xs={12} md={6} lg={3}>
-                        <FormControl variant="filled" fullWidth>
-                          <InputLabel id="schedule session">Term</InputLabel>
-                          <Select
-                            labelId="schedule-session"
-                            id="schedule-session"
-                            value={selectedSession}
-                            onChange={(e) => handleSelectSession(e.target.value)}
-                          >
-                            {(isOnline
-                              ? sessions
-                              : sessions.filter((item) => item.SessionCode === selectedSession)
-                            ).map(({ SessionDescription: description, SessionCode: code }) => (
-                              <MenuItem label={description} value={code} key={code}>
-                                {description}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-
-                      <Grid
-                        container
-                        direction="column"
-                        item
-                        xs={12}
-                        lg={8}
-                        alignItems="flex-start"
-                        justifyContent="flex-start"
-                      >
-                        {lastUpdate}
-                      </Grid>
+              <Typography>{isExpanded ? 'Hide' : 'Show'} Schedule</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container direction="row" justifyContent="center" align="left">
+                {props.isOnline && (
+                  <Grid container direction="row" item xs={12} lg={10}>
+                    <Grid item align="center" xs={2}>
+                      <Typography>Office Hours:</Typography>
+                      <item>{editDescriptionButton}</item>
                     </Grid>
-                  )}
-                  <Grid item xs={12} lg={10}>
-                    <GordonScheduleCalendar
-                      profile={props.profile}
-                      term={selectedSession}
-                      myProf={props.myProf}
-                      handleEditDescriptionButton={handleEditDescriptionButton}
-                      handleDoubleClick={handleDoubleClick}
-                      reloadCall={reloadCall}
-                      isOnline={props.isOnline}
-                    />
+                    <Grid
+                      item
+                      xs={10}
+                      justifyContent="flex-start"
+                      classname={styles.officeHourText}
+                    >
+                      <item>
+                        <Markup classname={styles.officeHourText} content={replaced} />
+                      </item>
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={3}>
+                      <FormControl variant="filled" fullWidth>
+                        <InputLabel id="schedule session">Term</InputLabel>
+                        <Select
+                          labelId="schedule-session"
+                          id="schedule-session"
+                          value={selectedSession}
+                          onChange={(e) => handleSelectSession(e.target.value)}
+                        >
+                          {(isOnline
+                            ? sessions
+                            : sessions.filter((item) => item.SessionCode === selectedSession)
+                          ).map(({ SessionDescription: description, SessionCode: code }) => (
+                            <MenuItem label={description} value={code} key={code}>
+                              {description}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
+                )}
+                <Grid item xs={12} lg={10}>
+                  <GordonScheduleCalendar
+                    profile={props.profile}
+                    term={selectedSession}
+                    myProf={props.myProf}
+                    handleEditDescriptionButton={handleEditDescriptionButton}
+                    handleDoubleClick={handleDoubleClick}
+                    reloadCall={reloadCall}
+                    isOnline={props.isOnline}
+                  />
                 </Grid>
-
+              </Grid>
               {editDialog}
             </AccordionDetails>
           </Accordion>
