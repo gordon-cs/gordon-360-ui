@@ -7,7 +7,6 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavButtonsRightCorner.module.css';
-import { ModeSwitcher } from 'components/ThemeModeSwitcher';
 
 /**
  *
@@ -122,7 +121,6 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             {feedbackButton}
             {adminButton}
             {signOutButton}
-            <ModeSwitcher />
           </List>
         </Popover>
       </div>
