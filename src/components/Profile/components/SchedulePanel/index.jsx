@@ -56,9 +56,7 @@ const GordonSchedulePanel = (props) => {
           modifiedTimeStamp: scheduleControlInfo.ModifiedTimeStamp,
         });
       }
-    } catch (e) {
-      setLoading(false);
-    }
+    } catch (e) {}
     setLoading(false);
   };
 
@@ -89,9 +87,7 @@ const GordonSchedulePanel = (props) => {
     }
   };
 
-  const handleIsExpanded = () => {
-    setIsExpanded((prevExpanded) => !prevExpanded);
-  };
+  const handleIsExpanded = () => setIsExpanded((prevExpanded) => !prevExpanded);
 
   const reloadHandler = () => {
     setReloadCall(false);
@@ -170,7 +166,7 @@ const GordonSchedulePanel = (props) => {
                   <Grid item xs={7} lg={9} align="left" classname={styles.officeHourText}>
                     <Divider />
                     <item>
-                      <Markup content={description} />
+                      <Markup content={replaced} />
                     </item>
                     <Divider />
                   </Grid>
