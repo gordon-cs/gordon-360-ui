@@ -178,27 +178,27 @@ export default class SavedShiftsList extends Component {
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
-              <Typography className="disable_select" {...styles.headerItem} variant="body2">
+              <Typography className={'disable_select' + styles.headerItem} variant="body2">
                 JOB
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable_select" {...styles.headerItem} variant="body2">
+              <Typography className={'disable_select' + styles.headerItem} variant="body2">
                 IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable_select" {...styles.headerItem} variant="body2">
+              <Typography className={'disable_select' + styles.headerItem} variant="body2">
                 OUT
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable_select" {...styles.headerItem} variant="body2">
+              <Typography className={'disable_select' + styles.headerItem} variant="body2">
                 RATE
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className="disable_select" {...styles.headerItem} variant="body2">
+              <Typography className={'disable_select' + styles.headerItem} variant="body2">
                 HOURS
               </Typography>
             </Grid>
@@ -260,8 +260,7 @@ export default class SavedShiftsList extends Component {
             <CardContent>
               <CardHeader className="disable_select" title={cardTitle} />
               <Grid
-                className={styles.shift_list}
-                {...styles.boxShadow}
+                className={styles.shift_list + styles.boxShadow}
                 container
                 spacing={2}
                 justifyContent="space-around"

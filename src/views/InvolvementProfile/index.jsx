@@ -297,8 +297,7 @@ const InvolvementProfile = () => {
                       <div className={styles.photoUploader} {...getRootProps()}>
                         <input {...getInputProps()} />
                         <img
-                          className="rounded_corners"
-                          {...styles._imageDrop}
+                          className={'rounded_corners' + styles._imageDrop}
                           src={ActivityImagePath}
                           alt=""
                         />
@@ -403,7 +402,7 @@ const InvolvementProfile = () => {
               {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
               {ActivityURL?.length !== 0 && (
                 <Typography>
-                  <a href={ActivityURL} className="gc360_text_link" {...styles._activityURL}>
+                  <a href={ActivityURL} className={'gc360_text_link' + styles._activityURL}>
                     {ActivityURL}
                   </a>
                 </Typography>
