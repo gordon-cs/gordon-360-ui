@@ -3,9 +3,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
   Grid,
-  Switch,
   Typography,
   IconButton,
   Card,
@@ -281,14 +279,13 @@ const GordonSchedulePanel = (props) => {
                   </Grid>
                 </Grid>
 
-                {editDialog}
-              </AccordionDetails>
-            </Accordion>
-          </Card>
+              {editDialog}
+            </AccordionDetails>
+          </Accordion>
         </>
       }
     </LocalizationProvider>
   );
 };
 
-export default withStyles(styles2)(GordonSchedulePanel);
+export default GordonSchedulePanel;
