@@ -245,6 +245,19 @@ const SearchFieldList = ({ onSearch }: Props) => {
     return () => window.removeEventListener('popstate', onNavigate);
   }, [location.search, initialSearchParams]);
 
+  const MIN_QUERY_LENGTH = 20; //I am adding this
+  const NO_SEARCH_RESULTS = [0, []]; //I am adding this
+  const [searchResults, setSearchResults] = useState<SearchResult[] | null>(null); //I am adding this
+  //CONTINUE FROM HERE
+  useEffect(() => {
+    if (searchParams.first_name?.length + searchParams.last_name?.length >= MIN_QUERY_LENGTH) {
+      search();
+      // peopleSearchService.search(searchParams).then(onSearch);
+    } else {
+      setSearchResults(null);
+    }
+  }, [searchParams, search]);
+
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
     setSearchParams((sp) => ({
       ...sp,
