@@ -155,9 +155,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
   );
   const [searchParams, setSearchParams] = useState(initialSearchParams);
 
-  // Used to only read search params from URL on first load (and on back/forward navigate via event listener)
-  const shouldReadSearchParamsFromURL = useRef(true);
-
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
@@ -219,9 +216,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }, [isAlumni]);
 
   useEffect(() => {
-    // Read search params from URL on navigate (including first load)
-    if (shouldReadSearchParamsFromURL.current) {
-      const newSearchParams = deserializeSearchParams(new URLSearchParams(location.search));
+    const readSearchParamsFromURL = () => {
+      const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
 
       setSearchParams((oldSearchParams) => {
         // If there are no search params in the URL, reset to initialSearchParams
@@ -235,17 +231,15 @@ const SearchFieldList = ({ onSearch }: Props) => {
           ...newSearchParams,
         };
       });
+    };
 
-      shouldReadSearchParamsFromURL.current = false;
-    }
-  }, [location, initialSearchParams]);
+    // Read search params from URL when SearchFieldList mounts (or initialSearchParams changes)
+    readSearchParamsFromURL();
 
-  // Read search params from URL on 'popstate' (back/forward navigation) events
-  useEffect(() => {
-    const onNavigate = () => (shouldReadSearchParamsFromURL.current = true);
-    window.addEventListener('popstate', onNavigate);
-    return () => window.removeEventListener('popstate', onNavigate);
-  }, []);
+    // Read search params from URL on 'popstate' (back/forward navigation) events
+    window.addEventListener('popstate', readSearchParamsFromURL );
+    return () => window.removeEventListener('popstate', readSearchParamsFromURL );
+  }, [initialSearchParams]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
     setSearchParams((sp) => ({
