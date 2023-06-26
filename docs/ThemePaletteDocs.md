@@ -1,4 +1,5 @@
-# Project Overview
+Project Overview
+--
 
 As part of an ongoing effort to consolidate the code base, and centralize the way we do styling, we
 are tackling this project to respond to several problems.
@@ -104,11 +105,12 @@ The most important thing for UI development is testing how every
 component appears in dark mode, with proper contrast, colors, etc.
 
 All styling should be done in seperate CSS classes if possible/practical.  In general, this 
-means that colors, padding, and related properties should be defined in a CSS class and used 
-in a component using the className prop (See MUI documentation).  The only exceptions to this 
-is if styling is done dynamically with some computation.  For example the Clifton Strengths 
-colored ring around the profile photo, or the sizing of the photo cropper for involvements and 
-profile photo.
+means that colors, padding, and other styling properties should be defined in a CSS class and used 
+in a component using the className prop (See MUI documentation).  This should be done instead of 
+using `style=...` or `sx=...` props inside of components (replace with the `className=...` prop).  
+The only exceptions to this is if styling is done dynamically with some computation.  For example 
+the Clifton Strengths colored ring around the profile photo, or the sizing of the photo cropper 
+for involvements and profile photos.
 
 All colors should reference a color from the palette, and consideration should be given for a 
 switch to dark mode.  You can find examples of usage of the --mui theme variable throughout the 
