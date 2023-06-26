@@ -238,14 +238,12 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
       shouldReadSearchParamsFromURL.current = false;
     }
-  }, [location, initialSearchParams]);
 
-  // Read search params from URL on 'popstate' (back/forward navigation) events
-  useEffect(() => {
+    // Read search params from URL on 'popstate' (back/forward navigation) events
     const onNavigate = () => (shouldReadSearchParamsFromURL.current = true);
     window.addEventListener('popstate', onNavigate);
     return () => window.removeEventListener('popstate', onNavigate);
-  }, []);
+  }, [location.search, initialSearchParams]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
     setSearchParams((sp) => ({

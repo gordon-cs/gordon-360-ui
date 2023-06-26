@@ -40,12 +40,13 @@ const TabUrlPatterns = [
  */
 const useTabHighlight = () => {
   const location = useLocation();
+  let currentPath = location.pathname;
   const [tabIndex, setTabIndex] = useState(0);
 
   useEffect(() => {
-    const matchedIndex = TabUrlPatterns.findIndex((pattern) => pattern.test(location.pathname));
+    const matchedIndex = TabUrlPatterns.findIndex((pattern) => pattern.test(currentPath));
     setTabIndex(matchedIndex); // This won't cause an update if the new value is the same as the old value
-  }, [location.pathname]);
+  }, [currentPath]);
 
   return tabIndex;
 };
