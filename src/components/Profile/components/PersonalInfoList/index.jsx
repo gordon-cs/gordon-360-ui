@@ -61,9 +61,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     AuthGroup.AcademicInfoView,
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
-  const onClose = () => {
-    setIsJoinDialogOpen(false);
-  };
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -398,20 +395,13 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 <GordonDialogBox
                   open={isJoinDialogOpen}
                   title={`Mailbox Instructions`}
-                  closeButtonClicked={onClose}
+                  closeButtonClicked={() => setIsJoinDialogOpen(false)}
                   maxWidth="md"
                 >
                   <Grid container>
                     <Typography sx={{ fontSize: '0.8rem' }}>
                       <Link
-                        className="disable_select"
-                        style={{
-                          borderBottom: '1px solid currentColor',
-                          textDecoration: 'none',
-                          color: gordonColors.primary.blueShades.A700,
-                          fontSize: '1.1rem',
-                          fontWeight: 'bold',
-                        }}
+                        className={styles.salsbury_link}
                         href="https://m.youtube.com/shorts/FxE5PPS94sc"
                         underline="always"
                         target="_blank"
@@ -419,7 +409,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       >
                         Salsbury Mailbox
                       </Link>
-                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
+                      <Typography className={styles.salsbury_typography}>
                         (Combinations that have three numbers ex: 21 32 18)
                       </Typography>
                       <img src={SLock} alt="SLock" />
@@ -436,14 +426,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       <br />
                       <br />
                       <Link
-                        className="disable_select"
-                        style={{
-                          borderBottom: '1px solid currentColor',
-                          textDecoration: 'none',
-                          color: gordonColors.primary.blueShades.A700,
-                          fontSize: '1.1rem',
-                          fontWeight: 'bold',
-                        }}
+                        className={styles.dp_link}
                         href="https://m.youtube.com/shorts/47402r3FqSs"
                         underline="always"
                         target="_blank"
@@ -451,7 +434,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       >
                         Dial and Pointer Mailbox
                       </Link>
-                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
+                      <Typography className={styles.dp_typography}>
                         (Combinations that have two letters ex: H B)
                       </Typography>
                       <img src={DPLock} alt="DPLock" />
@@ -471,14 +454,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       <br />
                       <br />
                       <Link
-                        className="disable_select"
-                        style={{
-                          borderBottom: '1px solid currentColor',
-                          textDecoration: 'none',
-                          color: gordonColors.primary.blueShades.A700,
-                          fontSize: '1.1rem',
-                          fontWeight: 'bold',
-                        }}
+                        className={styles.dd_link}
                         href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
                         underline="always"
                         target="_blank"
@@ -486,7 +462,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       >
                         Double Dial Mailbox
                       </Link>
-                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
+                      <Typography className={styles.dd_typography}>
                         (Combinations that have two letter/number pairs ex: A3 H5)
                       </Typography>
                       <img src={DDLock} alt="DDLock" />
