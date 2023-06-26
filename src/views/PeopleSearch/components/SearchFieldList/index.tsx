@@ -91,6 +91,7 @@ const defaultSearchParams: PeopleSearchQuery = {
   country: '',
   department: '',
   building: '',
+  involvement: '', //I am adding this
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -139,6 +140,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [departments, setDepartments] = useState<string[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
+  const [involvements, setInvolvements] = useState<string[]>([]); // I am adding this
 
   /**
    * Default search params adjusted for the user's identity.
@@ -195,15 +197,17 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   useEffect(() => {
     const loadPage = async () => {
-      const [majors, minors, halls, states, countries, departments, buildings] = await Promise.all([
-        peopleSearchService.getMajors(),
-        peopleSearchService.getMinors(),
-        peopleSearchService.getHalls(),
-        addressService.getStates(),
-        addressService.getCountries(),
-        peopleSearchService.getDepartments(),
-        peopleSearchService.getBuildings(),
-      ]);
+      const [majors, minors, halls, states, countries, departments, buildings, involvements] =
+        await Promise.all([
+          peopleSearchService.getMajors(),
+          peopleSearchService.getMinors(),
+          peopleSearchService.getHalls(),
+          addressService.getStates(),
+          addressService.getCountries(),
+          peopleSearchService.getDepartments(),
+          peopleSearchService.getBuildings(),
+          peopleSearchService.getInvolvements(), // I am adding this
+        ]);
       setMajors(majors);
       setMinors(minors);
       setHalls(halls);
@@ -211,6 +215,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setCountries(countries.map((c) => c.Name));
       setDepartments(departments);
       setBuildings(buildings);
+      setInvolvements(involvements); // I am adding this
 
       setLoading(false);
     };
@@ -417,6 +422,15 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     options={
                       Object.values(Class).filter((value) => typeof value !== 'number') as string[]
                     }
+                    Icon={FaSchool}
+                    select
+                    disabled={!searchParams.includeStudent}
+                  />
+                  <SearchField
+                    name="involvement" // I am adding  all this SearchField
+                    value={searchParams.involvement}
+                    updateValue={handleUpdate}
+                    options={involvements.sort()}
                     Icon={FaSchool}
                     select
                     disabled={!searchParams.includeStudent}
