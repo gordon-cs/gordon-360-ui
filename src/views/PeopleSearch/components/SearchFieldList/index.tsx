@@ -34,6 +34,7 @@ import {
   FaBuilding,
   FaGlobeAmericas,
   FaHeart,
+  FaPaperPlane,
   FaSchool,
   FaHome as Home,
   FaMapMarkerAlt as LocationCity,
@@ -91,7 +92,7 @@ const defaultSearchParams: PeopleSearchQuery = {
   country: '',
   department: '',
   building: '',
-  involvement: '', //I am adding this
+  involvement: '',
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -140,7 +141,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [departments, setDepartments] = useState<string[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
-  const [involvements, setInvolvements] = useState<string[]>([]); // I am adding this
+  const [involvements, setInvolvements] = useState<string[]>([]);
 
   /**
    * Default search params adjusted for the user's identity.
@@ -206,7 +207,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
           addressService.getCountries(),
           peopleSearchService.getDepartments(),
           peopleSearchService.getBuildings(),
-          peopleSearchService.getInvolvements(), // I am adding this
+          peopleSearchService.getInvolvements(),
         ]);
       setMajors(majors);
       setMinors(minors);
@@ -215,7 +216,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setCountries(countries.map((c) => c.Name));
       setDepartments(departments);
       setBuildings(buildings);
-      setInvolvements(involvements); // I am adding this
+      setInvolvements(involvements);
 
       setLoading(false);
     };
@@ -427,11 +428,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     disabled={!searchParams.includeStudent}
                   />
                   <SearchField
-                    name="involvement" // I am adding  all this SearchField
+                    name="involvement"
                     value={searchParams.involvement}
                     updateValue={handleUpdate}
                     options={involvements.sort()}
-                    Icon={FaSchool}
+                    Icon={FaPaperPlane}
                     select
                     disabled={!searchParams.includeStudent}
                   />
