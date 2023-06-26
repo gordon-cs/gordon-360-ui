@@ -27,7 +27,6 @@ import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import styles from './ScheduleHeader.module.css';
 import scheduleService from 'services/schedule';
-
 import { useNetworkStatus, useUser } from 'hooks';
 import sessionService from 'services/session';
 
@@ -69,7 +68,6 @@ const GordonSchedulePanel = (props) => {
 
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
-    value = sessionService.decodeSessionCode(value);
     reloadHandler();
   };
 

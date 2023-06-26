@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import GordonLoader from 'components/Loader';
 import Moment from 'moment';
-import { Fragment } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import scheduleService from 'services/schedule';
 import session from 'services/session';
@@ -84,9 +83,7 @@ const GordonScheduleCalendar = (props) => {
         timeslots={4}
         defaultView="day"
         view={['day']}
-        onDoubleClickEvent={(event) => {
-          props.handleDoubleClick(event);
-        }}
+        onDoubleClickEvent={(event) => props.handleDoubleClick(event)}
         defaultDate={Moment(new Date())}
         resources={resourceMap}
         resourceIdAccessor="resourceId"
@@ -98,7 +95,7 @@ const GordonScheduleCalendar = (props) => {
     content = Resource(momentLocalizer(Moment));
   }
 
-  return <Fragment>{content}</Fragment>;
+  return <>{content}</>;
 };
 
 export default GordonScheduleCalendar;
