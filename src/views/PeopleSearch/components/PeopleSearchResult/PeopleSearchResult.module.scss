@@ -4,8 +4,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: var(--mui-palette-primary-main);
-  background-color: var(--mui-palette-neutral-light);
 }
 
 .result {
@@ -13,13 +11,9 @@
   align-items: center;
   justify-content: flex-start;
   gap: min(1rem, 1vw);
-  color: var(--mui-palette-primary-main);
-  background-color: var(--mui-palette-neutral-light);
 
   & :global(.MuiCardContent-root) {
     padding: min(1rem, 2vw);
-    color: var(--mui-palette-primary-main);
-    background-color: var(--mui-palette-neutral-light);
   }
 }
 
@@ -64,4 +58,10 @@
   padding: 0 0.2rem;
   color: var(--mui-palette-neutral-main);
   background-color: var(--mui-palette-primary-main);
+}
+
+.mail_outline {
+  color: var(--mui-palette-primary-contrastText);
+  height: 100%;
+  width: clamp(2.5rem, 2vw, 4rem);
 }

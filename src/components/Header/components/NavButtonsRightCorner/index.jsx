@@ -7,7 +7,6 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavButtonsRightCorner.module.css';
-import { ModeSwitcher } from 'components/ThemeModeSwitcher';
 
 /**
  *
@@ -34,7 +33,6 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
       unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
       onLinkClick={onClose}
       openUnavailableDialog={openDialogBox}
-      color={'var(--mui-palette-primary-main)'}
       linkName={'My Profile'}
       linkPath={'/myprofile'}
     />
@@ -122,7 +120,6 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             {feedbackButton}
             {adminButton}
             {signOutButton}
-            <ModeSwitcher />
           </List>
         </Popover>
       </div>

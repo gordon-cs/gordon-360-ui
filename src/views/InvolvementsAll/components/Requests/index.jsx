@@ -51,9 +51,7 @@ const Requests = ({ profile, session }) => {
           <Accordion>
             <AccordionSummary
               aria-controls="received-requests-content"
-              expandIcon={
-                <ExpandMore style={{ color: 'var(--mui-palette-primary-contrastText)' }} />
-              }
+              expandIcon={<ExpandMore className={styles.requests_expand_icon} />}
               className={styles.requests_header}
             >
               <Typography variant="h6">Requests Received</Typography>
@@ -61,7 +59,7 @@ const Requests = ({ profile, session }) => {
             <AccordionDetails style={{ flexDirection: 'column' }}>
               {involvementsLeading.map((involvement) => (
                 <RequestReceived
-                  key={involvement.ActivityCode + involvement.SessioinCode}
+                  key={involvement.ActivityCode + involvement.SessionCode}
                   involvement={involvement}
                 />
               ))}
@@ -71,9 +69,7 @@ const Requests = ({ profile, session }) => {
           <Accordion>
             <AccordionSummary
               aria-controls="sent-requests-content"
-              expandIcon={
-                <ExpandMore style={{ color: 'var(--mui-palette-primary-contrastText)' }} />
-              }
+              expandIcon={<ExpandMore className={styles.requests_expand_icon} />}
               className={styles.requests_header}
             >
               <Typography variant="h6">Requests Sent</Typography>
@@ -105,7 +101,7 @@ const Requests = ({ profile, session }) => {
         <Accordion defaultExpanded>
           <AccordionSummary
             aria-controls="received-requests-content"
-            expandIcon={<ExpandMore style={{ color: 'var(--mui-palette-primary-contrastText)' }} />}
+            expandIcon={<ExpandMore className={styles.requests_expand_icon} />}
             className={styles.requests_header}
           >
             <CardHeader

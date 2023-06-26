@@ -90,14 +90,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
     <div className={styles.mailing_icon_container}>
       <CardActionArea className={styles.mail_card_action}>
         <a href={`mailto:${person.Email}`}>
-          <MailOutlineIcon
-            sx={{
-              color: 'var(--mui-palette-primary-contrastText)',
-              height: '100%',
-              width: 40,
-              borderRadius: 2,
-            }}
-          />
+          <MailOutlineIcon className={styles.mail_outline} />
         </a>
       </CardActionArea>
     </div>

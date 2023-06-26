@@ -28,7 +28,6 @@ import { isValid, set } from 'date-fns';
 import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
-import { gordonColors } from 'theme';
 import ShiftDisplay from './components/ShiftDisplay';
 import styles from './Timesheets.module.css';
 
@@ -65,11 +64,11 @@ const Timesheets = (props) => {
   const isOnline = useNetworkStatus();
   const { profile, loading } = useUser();
 
-  /*useEffect(() => {
+  useEffect(() => {
     if (profile) {
       setIsUserStudent(profile.PersonType.includes('stu'));
     }
-  }, [profile]);*/
+  }, [profile]);
 
   useEffect(() => {
     async function getClockInOutStatus() {
@@ -406,7 +405,6 @@ const Timesheets = (props) => {
                       To request permission for a special circumstance, please email\
                       student-employment@gordon.edu before exceeding this limit.'
                         }
-                        //color={'var(--mui-palette-primary-main)'}
                         placement="bottom"
                       >
                         <div ref={tooltipRef}>
@@ -485,14 +483,9 @@ const Timesheets = (props) => {
                     {saveButton}
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography>
+                    <Typography className={'disable_select'}>
                       <Link
-                        className="disable_select"
-                        style={{
-                          borderBottom: '1px solid currentColor',
-                          textDecoration: 'none',
-                          color: 'var(--mui-palette-secondary-main)',
-                        }}
+                        className={styles.timesheets_link}
                         href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
                         underline="always"
                         target="_blank"

@@ -18,6 +18,7 @@ import membershipService, { NonGuestParticipations } from 'services/membership';
 import sessionService from 'services/session';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
+import styles from './InvolvementsAll.module.css';
 
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -127,7 +128,7 @@ const InvolvementsAll = () => {
   const searchPageTitle = (
     <div align="center">
       Search
-      <b style={{ color: 'var(--mui-palette-secondary-main)' }}> Gordon </b>
+      <b className={styles.involvements_gordon_text}> Gordon </b>
       Involvements
     </div>
   );
@@ -211,10 +212,7 @@ const InvolvementsAll = () => {
             <Card>
               <CardHeader
                 title={`My ${myInvolvementsHeadingText} Involvements`}
-                style={{
-                  backgroundColor: 'var(--mui-palette-primary-main)',
-                  color: 'var(--mui-palette-primary-contrastText)',
-                }}
+                className={styles.involvements_header}
               />
               <CardContent>
                 {loading ? (
@@ -237,10 +235,7 @@ const InvolvementsAll = () => {
         <Card>
           <CardHeader
             title={`${involvementSessionText} Involvements`}
-            style={{
-              backgroundColor: 'var(--mui-palette-primary-main)',
-              color: 'var(--mui-palette-primary-contrastText)',
-            }}
+            className={styles.involvements_header}
           />
           <CardContent>
             {loading ? (

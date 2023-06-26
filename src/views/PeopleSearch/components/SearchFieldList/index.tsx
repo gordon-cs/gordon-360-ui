@@ -71,7 +71,7 @@ const relationship_statuses = [
 const searchPageTitle = (
   <>
     Search the
-    <b style={{ color: 'var(--mui-palette-secondary-main)' }}> Gordon </b>
+    <b className={styles.people_gordon_text}> Gordon </b>
     Community
   </>
 );
@@ -317,7 +317,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   );
 
   return (
-    <Card style={{ padding: '1rem' }} className={styles.people_section}>
+    <Card className={styles.people_section}>
       <CardContent>
         <CardHeader title={searchPageTitle} titleTypographyProps={{ align: 'center' }} />
 
@@ -371,17 +371,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <Grid container alignItems="center">
           <Accordion style={{ flexGrow: 1 }} elevation={3}>
             <AccordionSummary
-              expandIcon={
-                <ExpandMore style={{ color: 'var(--mui-palette-neutral-contrastText)' }} />
-              }
+              expandIcon={<ExpandMore className={styles.people_expand_icon} />}
               id="more-search-options-header"
               aria-controls="more-search-options-controls"
             >
-              <Typography
-                variant="h6"
-                align="center"
-                color={'var(--mui-palette-main-contrastText)'}
-              >
+              <Typography variant="h6" align="center" className={styles.people_search_title}>
                 More Search Options
               </Typography>
             </AccordionSummary>

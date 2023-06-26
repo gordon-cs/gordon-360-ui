@@ -80,10 +80,7 @@ const Help = () => {
                     information will remain visible to faculty and staff even if you make it private
                     for student viewers. If you have a situation that requires additional privacy or
                     security, please contact CTS,&nbsp;
-                    <a
-                      href="mailto:360@gordon.edu"
-                      style={{ color: 'var(--mui-palette-primary-main)' }}
-                    >
+                    <a href="mailto:360@gordon.edu" className={styles.help_link}>
                       360@gordon.edu
                     </a>
                     , or the Registrar.
@@ -188,7 +185,7 @@ const Help = () => {
                   <li>
                     <a
                       href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug"
-                      style={{ color: 'var(--mui-palette-primary-main)' }}
+                      className={styles.help_link}
                     >
                       Contact CTS
                     </a>
@@ -256,10 +253,10 @@ const Help = () => {
             </Card>
           </CardContent>
         </Card>
-        <Typography variant="subtitle1" color={'var(--mui-palette-primary-main)'} gutterBottom>
+        <Typography variant="subtitle1" className={styles.help_section} gutterBottom>
           <br /> Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
-            <Button style={{ color: 'var(--mui-palette-primary-main)' }}>Report to CTS</Button>
+            <Button color="primary">Report to CTS</Button>
           </a>
         </Typography>
       </Grid>
