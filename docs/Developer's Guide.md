@@ -87,18 +87,21 @@ Make sure to stop and restart the project with ```npm run start``` any time you 
 Sometimes, you would like to connect the frontend on your local computer to the backend on a remote server. For example, if you are running the backend on a CPS Server virtual machine but you want to run the frontend from your own machine. There are two ways to do this: via HTTP/s or via SSH
 
 ## Connecting to a Remote Backend via HTTP
+
 ### How it works
+
 - CTS has opened the firewall between campus internet (wifi, building ethernets, etc) and the RD-CPS servers to allow web traffic over a range of ports.
 
 ### Steps:
+
 1. Update `Gordon360/Properties/launchSettings.json` with the name of the server you are on (`RD-CPS-01.gordon.edu` or `RD-CPS-02.gordon.edu`) wherever you see `localhost`. Also pick two new (unique to you) ports within the range `51620-51660` to use instead of `51627` and `51626`. Replace the ports as well.
 2. Update `Gordon360/appsettings.Development.json` with your hostname (see above) in the AllowedHosts field, separating multiple entries with a `;`. It will then look something like `"AllowedHosts": "localhost;RD-CPS-01.gordon.edu"`.
 3. Run the API.
-4. On your local UI repository, change `.env.development` to use the hostname of the server from above and your *non-SSL* port chosen above. Please note that SSL (https://) will not work as the certificate is not trusted.
+4. On your local UI repository, change `.env.development` to use the hostname of the server from above and your _non-SSL_ port chosen above. Please note that SSL (https://) will not work as the certificate is not trusted.
 5. Run the UI and confirm that it does not have any proxy errors.
 
-
 ## Connecting to a Remote Backend via SSH
+
 ### How it works
 
 - SSH Tunneling opens a connection between two machines and uses the open connection to pass packets back and forth. As long as the connection (or tunnel) is open, traffic can flow through it where it may not have been able to before.
@@ -118,17 +121,17 @@ Sometimes, you would like to connect the frontend on your local computer to the 
     - Also on Windows, if you are a local administrator, you will not be able to use SSH key authentication unless you add the public SSH key to `C:\Program Data\ssh\administrators_authorized_keys` rather than to `C:\Users\[your username]\.ssh\authorized_keys`. Create the file if it does not exist.
 
    - Ubuntu [Instructions](https://ubuntu.com/server/docs/service-openssh).  Red Hat and other Linux distributions should already have an SSH server installed.
-   
+
    - MacOS: The SSH server should already be installed but you may have to enable the SSH server in System Preferences. Follow [these instructions](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) to do so.
 
 2. Create the SSH tunnel
 
    After setting up the SSH server on your local machine, find your machine's DNS name or IP number:
-   
+
    - Windows: Use `hostname` to get the first part of the hostname and `ipconfig` to get DNS Suffix or the IPv4 address.
    - MacOS: use `hostname` to find the DNS name or `ifconfig` to get the IP address.
    - Linux: Use `hostname -f` to get the DNS name or `ip a` to find the IP number.
-   
+
    Log into the VM and open a Git Bash shell or a command prompt/powershell window. Enter the following command:
 
    ```
