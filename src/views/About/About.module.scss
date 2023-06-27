@@ -1,5 +1,3 @@
-@import '../../vars';
-
 .about {
   margin: 1rem;
 
@@ -14,6 +12,7 @@
   &_title {
     text-align: center;
     padding: 1rem;
+    color: var(--mui-palette-neutral-contrastText);
   }
 
   &_contributors:global(.MuiTypography-root) {
@@ -23,6 +22,6 @@
 
   &_header {
     background-color: var(--mui-palette-primary-main);
-    color: $neutral-white;
+    color: var(--mui-palette-primary-contrastText);
   }
 }

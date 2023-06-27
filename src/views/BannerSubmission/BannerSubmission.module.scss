@@ -1,0 +1,10 @@
+.bannerSubmission {
+  &_header {
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
+  &_button {
+    background-color: var(--mui-palette-secondary-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
+}

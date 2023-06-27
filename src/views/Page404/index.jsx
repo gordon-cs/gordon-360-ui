@@ -1,7 +1,7 @@
 import { Typography, Grid } from '@mui/material';
 import mascot from './mascot.svg';
 import ScottieDog from './components/ScottieDog';
-
+import styles from './Page404.module.css';
 const message = "Hmmm... We're not quite sure what you're looking for";
 
 const styles2 = {
@@ -38,9 +38,9 @@ const Page404 = () => {
         <Typography
           variant="h4"
           align="center"
+          className={styles.page404_title}
           style={{
             fontSize: 'calc(0.2vw + 0.8em)',
-            color: 'rgba(0, 0, 0, 0.54)',
             fontWeight: 'bold',
           }}
         >

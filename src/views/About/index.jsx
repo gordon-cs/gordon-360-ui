@@ -21,7 +21,6 @@ const About = () => {
           <CardHeader
             className={styles.about_title}
             title="Conceived and Built at Gordon College"
-            subheader="By Students for Students"
             titleTypographyProps={{ variant: 'h4' }}
           />
           <CardContent>
