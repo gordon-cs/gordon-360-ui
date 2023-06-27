@@ -28,7 +28,6 @@ import { isValid, set } from 'date-fns';
 import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
-import { gordonColors } from 'theme';
 import ShiftDisplay from './components/ShiftDisplay';
 import styles from './Timesheets.module.css';
 
@@ -39,7 +38,7 @@ const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
 
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.colorSchemes.light.palette.common.black,
     color: 'rgba(255, 255, 255, 0.87)',
     boxShadow: theme.shadows[1],
     fontSize: 12,
@@ -484,14 +483,9 @@ const Timesheets = (props) => {
                     {saveButton}
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography>
+                    <Typography className={'disable_select'}>
                       <Link
-                        className="disable_select"
-                        style={{
-                          borderBottom: '1px solid currentColor',
-                          textDecoration: 'none',
-                          color: gordonColors.primary.blueShades.A700,
-                        }}
+                        className={styles.timesheets_link}
                         href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
                         underline="always"
                         target="_blank"
