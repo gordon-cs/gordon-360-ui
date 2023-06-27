@@ -44,7 +44,7 @@ import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
-import { gordonColors } from 'theme';
+import styles from './SearchFieldList.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
 
 /**
@@ -71,7 +71,7 @@ const relationship_statuses = [
 const searchPageTitle = (
   <>
     Search the
-    <b style={{ color: gordonColors.primary.blue }}> Gordon </b>
+    <b className={styles.people_gordon_text}> Gordon </b>
     Community
   </>
 );
@@ -263,8 +263,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }
 
   const PeopleSearchCheckbox = (
-    <Grid item xs={12} md={6}>
-      <FormLabel component="label">Include: &nbsp;</FormLabel>
+    <Grid item xs={12} md={6} className={styles.people_section}>
+      <FormLabel component="label" color="primary">
+        Include: &nbsp;
+      </FormLabel>
       {loading ? (
         <GordonLoader size={20} />
       ) : (
@@ -315,7 +317,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   );
 
   return (
-    <Card style={{ padding: '1rem' }}>
+    <Card className={styles.people_section}>
       <CardContent>
         <CardHeader title={searchPageTitle} titleTypographyProps={{ align: 'center' }} />
 
@@ -369,11 +371,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <Grid container alignItems="center">
           <Accordion style={{ flexGrow: 1 }} elevation={3}>
             <AccordionSummary
-              expandIcon={<ExpandMore />}
+              expandIcon={<ExpandMore className={styles.people_expand_icon} />}
               id="more-search-options-header"
               aria-controls="more-search-options-controls"
             >
-              <Typography variant="h6" align="center">
+              <Typography variant="h6" align="center" className={styles.people_search_title}>
                 More Search Options
               </Typography>
             </AccordionSummary>
@@ -489,7 +491,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       <CardActions>
         <Button
           variant="contained"
-          color="neutral"
+          color="secondary"
           onClick={() => setSearchParams(initialSearchParams)}
         >
           RESET
