@@ -3,30 +3,21 @@
 .personal_info_list {
   &_header {
     background-color: var(--mui-palette-primary-main);
-    color: var(--mui-palette-primary-contrastText);
+    color: $neutral-white;
     padding-left: 1rem;
   }
 
   .note {
-    color: var(--mui-palette-neutral-700);
-    background-color: var(--mui-palette-neutral-main);
+    color: $neutral-black-opacity55;
+    background-color: $neutral-light-gray;
     padding: 0.3rem 1rem;
     margin-top: 1rem;
     border-radius: 5px;
   }
 
-  .note_link {
-    font-weight: bold;
-    color: var(--mui-palette-primary-main);
-    &:hover {
-      color: var(--mui-palette-secondary-main);
-      transition: 0.3s;
-    }
-  }
-
   .disclaimer {
-    color: var(--mui-palette-error-main);
-    background-color: var(--mui-palette-neutral-main);
+    color: $secondary-red;
+    background-color: $neutral-light-gray;
     padding: 0.3rem 1rem;
     margin-top: 1rem;
     border-radius: 5px;
@@ -35,12 +26,12 @@
 
 // Needed for mail implementation, should be refactored into PersonalInfoListItem
 .private {
-  color: var(--mui-palette-neutral-500);
+  color: $neutral-black-opacity40;
 }
 
 .not_private {
   opacity: 1;
-  color: var(--mui-palette-neutral-contrastText);
+  color: $dark-text-color;
 }
 
 @media (max-width: $break-sm) {

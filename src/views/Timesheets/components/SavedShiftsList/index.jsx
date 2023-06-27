@@ -19,6 +19,7 @@ import {
 import GordonLoader from 'components/Loader';
 import { Component } from 'react';
 import jobs from 'services/jobs';
+import { gordonColors } from 'theme';
 import ShiftItem from '../ShiftItem';
 import styles from './SavedShiftsList.module.css';
 
@@ -148,7 +149,7 @@ export default class SavedShiftsList extends Component {
             <DialogContent>
               <Grid container>
                 <Grid item xs={6} sm={6} md={6} lg={6}>
-                  <Button className={styles.RButton} onClick={this.onClose} variant="contained">
+                  <Button style={styles2.redButton} onClick={this.onClose} variant="contained">
                     Cancel
                   </Button>
                 </Grid>
@@ -174,31 +175,31 @@ export default class SavedShiftsList extends Component {
     );
 
     let header = (
-      <Grid item xs={12} className={styles.headerStyle}>
+      <Grid item xs={12} style={styles2.headerStyle}>
         <div>
           <Grid container direction="row">
             <Grid item xs={3}>
-              <Typography className={styles.headerItem} variant="body2">
+              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
                 JOB
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.headerItem} variant="body2">
+              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
                 IN
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.headerItem} variant="body2">
+              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
                 OUT
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.headerItem} variant="body2">
+              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
                 RATE
               </Typography>
             </Grid>
             <Grid item xs={2}>
-              <Typography className={styles.headerItem} variant="body2">
+              <Typography className="disable_select" variant="body2" style={styles2.headerItem}>
                 HOURS
               </Typography>
             </Grid>
@@ -218,7 +219,12 @@ export default class SavedShiftsList extends Component {
     ));
 
     const supervisorDropdown = (
-      <FormControl className={styles.formControl} fullWidth align="left">
+      <FormControl
+        style={{
+          maxWidth: 252,
+        }}
+        fullWidth
+      >
         <InputLabel className="disable_select">Submit To</InputLabel>
         <Select
           value={this.state.selectedSupervisor}
@@ -266,6 +272,7 @@ export default class SavedShiftsList extends Component {
                 justifyContent="space-around"
                 alignItems="center"
                 alignContent="center"
+                style={styles2.boxShadow}
               >
                 {header}
                 {shiftsList}
@@ -293,7 +300,7 @@ export default class SavedShiftsList extends Component {
               {cardTitle === 'Saved Shifts' && (
                 <Grid container>
                   <Grid container>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} style={{ paddingLeft: 4, paddingRight: 4 }}>
                       {supervisorDropdown}
                     </Grid>
                     <Grid item xs={6}>
@@ -317,3 +324,22 @@ export default class SavedShiftsList extends Component {
     return <>{content}</>;
   }
 }
+
+const styles2 = {
+  redButton: {
+    background: gordonColors.secondary.red,
+    color: 'white',
+  },
+  headerStyle: {
+    backgroundColor: gordonColors.primary.blue,
+    color: '#FFF',
+    padding: '10px',
+  },
+  headerItem: {
+    marginTop: '10px',
+    marginBottom: '10px',
+  },
+  boxShadow: {
+    boxShadow: '0px 1px 2px 1px rgba(0, 0, 0, .2)',
+  },
+};

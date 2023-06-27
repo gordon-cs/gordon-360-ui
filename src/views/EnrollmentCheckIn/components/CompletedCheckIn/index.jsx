@@ -1,10 +1,13 @@
 import { Button, Grid, Typography } from '@mui/material';
 import { useUser } from 'hooks';
 import { Link } from 'react-router-dom';
-import styles from './CompletedCheckIn.module.css';
+import { gordonColors } from 'theme';
+// @TODO CSSMODULES - outside directory
+import styles from '../../EnrollmentCheckIn.module.css';
 
 const CompletedCheckIn = () => {
   const { profile } = useUser();
+  const cyan = gordonColors.primary.cyan;
   return (
     <Grid
       container
@@ -14,7 +17,7 @@ const CompletedCheckIn = () => {
       className={styles.button_container}
     >
       <Grid item xs={8}>
-        <Typography variant="h5" gutterBottom align="center" className={styles.congrats_note}>
+        <Typography variant="h5" gutterBottom align="center" style={{ color: cyan }}>
           Congratulations {profile.FirstName} on completing Enrollment Checkin!
         </Typography>
         <br />

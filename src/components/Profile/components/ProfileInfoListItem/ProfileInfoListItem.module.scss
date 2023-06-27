@@ -13,40 +13,40 @@
 }
 
 .private {
-  color: var(--mui-palette-neutral-500);
+  color: $neutral-black-opacity40;
 }
 
 .privateNotMine,
 .privateNotMine a {
-  color: var(--mui-palette-error-main);
+  color: $secondary-red;
 }
 
 .not_private {
   opacity: 1;
-  color: var(--mui-palette-neutral-contrastText);
+  color: $dark-text-color;
 }
 
 .my_personal_info {
   & .private {
-    color: var(--mui-palette-neutral-500);
+    color: $neutral-black-opacity40;
 
     & .not_private {
       opacity: 1;
-      color: var(--mui-palette-neutral-contrastText);
+      color: $dark-text-color;
     }
   }
 }
 
 .public_personal_info {
   & .private {
-    color: var(--mui-palette-error-main);
+    color: $secondary-red;
 
     & a.gc360_text_link {
       color: inherit;
     }
 
     & .not_private {
-      color: var(--mui-palette-neutral-contrastText);
+      color: $dark-text-color;
     }
   }
 }

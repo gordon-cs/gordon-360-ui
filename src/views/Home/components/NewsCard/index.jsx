@@ -13,7 +13,7 @@ const NewsCard = () => {
   }, []);
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardHeader
         title={
           <Grid container direction="row" alignItems="center">

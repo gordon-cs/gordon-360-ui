@@ -19,9 +19,15 @@ import { useParams } from 'react-router';
 import involvementService from 'services/activity';
 import membershipService from 'services/membership';
 import { stripDomain } from 'services/utils';
+import { gordonColors } from 'theme';
 import RequestsReceived from './components/RequestsReceived';
 import { ConflictError, NotFoundError } from 'services/error';
-import styles from './AdminCard.module.css';
+
+const headerStyle = {
+  backgroundColor: gordonColors.primary.blue,
+  color: '#FFF',
+  padding: '10px',
+};
 
 const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddMember }) => {
   const [isRosterClosed, setIsRosterClosed] = useState(false);
@@ -84,7 +90,7 @@ const AdminCard = ({ createSnackbar, isSiteAdmin, involvementDescription, onAddM
   return (
     <>
       <Card>
-        <CardHeader title="Manage Roster" className={styles.cardHeader} />
+        <CardHeader title="Manage Roster" style={headerStyle} />
         <CardContent>
           <Grid container spacing={2} direction="column">
             <Grid item>

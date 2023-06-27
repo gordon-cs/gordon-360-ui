@@ -8,9 +8,9 @@
     -webkit-hyphens: auto;
     word-break: break-word;
     a {
-      color: var(--mui-palette-primary-main);
+      color: $primary-blue;
       &:hover {
-        color: var(--mui-palette-secondary-main) !important;
+        color: $primary-cyan !important;
       }
     }
   }
@@ -51,7 +51,7 @@
       padding: 0.5rem;
       &_text {
         // padding-right: 0rem !important;
-        border-left: 2px solid var(--mui-palette-primary-main);
+        border-left: 2px solid $primary-blue;
       }
     }
     &_image {

@@ -162,7 +162,7 @@ const CLWCreditsDaysLeft = () => {
   }
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
