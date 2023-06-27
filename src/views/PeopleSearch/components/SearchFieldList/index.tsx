@@ -212,7 +212,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
     };
 
     loadPage();
-  }, [isAlumni]);
+  }, []);
 
   useEffect(() => {
     const readSearchParamsFromURL = () => {
