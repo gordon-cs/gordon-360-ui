@@ -21,6 +21,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const PrivacyToggle = ({ element, createSnackbar }) => {
   useEffect(() => {
+    console.log('HERE');
     async function loadPrivacy() {
       const involvement = await activity.get(element.ActivityCode);
       element.IsInvolvementPrivate = involvement.Privacy;
@@ -34,15 +35,20 @@ const PrivacyToggle = ({ element, createSnackbar }) => {
 
   const toggleMembershipPrivacy = async (element) => {
     try {
-      let updated = await membershipService.setMembershipPrivacy(
+      console.log('before');
+      console.log('Privacy:', element.Privacy);
+      const update = await membershipService.setMembershipPrivacy(
         element.MembershipID,
         !element.Privacy,
       );
-      if (updated.Privacy !== element.Privacy) {
-        createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
+      //rerender();
+      console.log('after');
+      console.log('Privacy:', element.Privacy);
+      if (update.Privacy !== element.Privacy) {
+        createSnackbar(element.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
       } else {
         createSnackbar(
-          membership.Privacy ? 'Failed to Show Membership' : 'Failed to Hide Membership',
+          element.Privacy ? 'Failed to Show Membership' : 'Failed to Hide Membership',
           'error',
         );
       }
@@ -54,7 +60,6 @@ const PrivacyToggle = ({ element, createSnackbar }) => {
   return (
     <Grid container item xs={4} alignItems="center">
       <Grid item xs={12} align="center">
-        {isOnline && element.IsInvolvementPrivate && <LockIcon />}
         <Switch
           onChange={() => {
             toggleMembershipPrivacy(element);
@@ -64,9 +69,7 @@ const PrivacyToggle = ({ element, createSnackbar }) => {
         />
       </Grid>
       <Grid item xs={12} align="center">
-        <Typography>
-          {element.Privacy || element.IsInvolvementPrivate ? 'Private' : 'Public'}
-        </Typography>
+        <Typography>{element.Privacy ? 'Private' : 'Public'}</Typography>
       </Grid>
     </Grid>
   );
@@ -95,9 +98,12 @@ const OnlineOnlyLink = ({ element, children }) => {
   }
 };
 
-const MembershipInfoCard = ({ myProf = true, membershipHistory, createSnackbar }) => {
+const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }) => {
   //the whole list refreshes when privacy changes here
   const isOnline = useNetworkStatus();
+  // useEffect(() => {
+  //   console.log('HERE 2');
+  // }, [membershipHistory]);
 
   return (
     <>
@@ -129,7 +135,9 @@ const MembershipInfoCard = ({ myProf = true, membershipHistory, createSnackbar }
                       <Typography>{membership.SessionDescription}</Typography>
                       <Typography>{membership.ParticipationDescription}</Typography>
                     </OnlineOnlyLink>
-                    {true && <PrivacyToggle element={membership} createSnackbar={createSnackbar} />}
+                    {myProf && (
+                      <PrivacyToggle element={membership} createSnackbar={createSnackbar} />
+                    )}
                   </ListItem>
                 ))}
               </List>

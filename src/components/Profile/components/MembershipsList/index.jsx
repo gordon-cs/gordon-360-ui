@@ -67,7 +67,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
           myProf={myProf}
           membershipHistory={membership}
           key={membership.ActivityCode}
-          onTogglePrivacy={toggleMembershipPrivacy}
+          //onTogglePrivacy={toggleMembershipPrivacy}
           createSnackbar={createSnackbar}
         />
       ));
