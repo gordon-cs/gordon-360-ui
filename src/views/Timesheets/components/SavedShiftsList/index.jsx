@@ -218,7 +218,7 @@ export default class SavedShiftsList extends Component {
     ));
 
     const supervisorDropdown = (
-      <FormControl className={styles.formControl} fullWidth>
+      <FormControl className={styles.formControl} fullWidth align="left">
         <InputLabel className="disable_select">Submit To</InputLabel>
         <Select
           value={this.state.selectedSupervisor}
@@ -293,7 +293,7 @@ export default class SavedShiftsList extends Component {
               {cardTitle === 'Saved Shifts' && (
                 <Grid container>
                   <Grid container>
-                    <Grid item xs={6} className={styles.supervisorDropdown}>
+                    <Grid item xs={6}>
                       {supervisorDropdown}
                     </Grid>
                     <Grid item xs={6}>
