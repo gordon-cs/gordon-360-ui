@@ -71,7 +71,7 @@ const relationship_statuses = [
 const searchPageTitle = (
   <>
     Search the
-    <b className={styles.people_gordon_text}> Gordon </b>
+    <b className={styles.people_text}> Gordon </b>
     Community
   </>
 );
