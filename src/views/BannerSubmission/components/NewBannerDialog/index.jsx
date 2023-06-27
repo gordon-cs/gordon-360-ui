@@ -94,7 +94,9 @@ const NewBannerDialog = ({ open, setOpen, createSnackbar, addBanner }) => {
           onDropRejected={() =>
             createSnackbar('Invalid image file. Only PNG and JPEG images are accepted.', 'error')
           }
-          accept="image/jpeg, image/jpg, image/png"
+          accept={{
+            'image/*': ['.jpeg', ',jpg', '.png'],
+          }}
           maxFiles={1}
         >
           {({ getRootProps, getInputProps }) => (
