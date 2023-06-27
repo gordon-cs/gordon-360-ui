@@ -19,6 +19,7 @@ import styles from './MembershipsList.module.css';
 const MembershipsList = ({ username, myProf, createSnackbar }) => {
   const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [membershipHistories, setMembershipHistories] = useState([]);
 
   useEffect(() => {
     async function loadMemberships() {
@@ -27,22 +28,28 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
       const memberships = await membershipService.get({ username, sessionCode: '*' });
 
       if (myProf) {
-        await Promise.all(
-          memberships.map(async (membership) => {
-            const involvement = await activity.get(membership.ActivityCode);
-            membership.IsInvolvementPrivate = involvement.Privacy;
-          }),
-        );
+        // await Promise.all(
+        //   memberships.map(async (membership) => {
+        //     const involvement = await activity.get(membership.ActivityCode);
+        //     membership.IsInvolvementPrivate = involvement.Privacy;
+        //   }),
+        // );
+        const myMemberships = await membershipService.groupByActivityCode(username);
+        setMembershipHistories(myMemberships);
+      } else {
+        const publicMemberships = await membershipService.getPublicMemberships(username);
+        setMembershipHistories(publicMemberships);
       }
 
-      setMemberships(memberships);
+      //setMemberships(memberships);
       setLoading(false);
     }
     loadMemberships();
   }, [myProf, username]);
 
   const MembershipsList = () => {
-    if (memberships.length === 0) {
+    //if (memberships.length === 0) {
+    if (membershipHistories.length === 0) {
       return (
         <Link to={`/involvements`}>
           <Typography variant="body2" className={styles.noMemberships}>
@@ -51,12 +58,18 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
         </Link>
       );
     } else {
-      return memberships.map((membership) => (
+      console.log(membershipHistories);
+      return membershipHistories.map((membership) => (
         <MembershipInfoCard
+          // myProf={myProf}
+          // membership={membership}
+          // key={membership.MembershipID}
+          // onTogglePrivacy={toggleMembershipPrivacy}
           myProf={myProf}
-          membership={membership}
-          key={membership.MembershipID}
+          membershipHistory={membership}
+          key={membership.ActivityCode}
           onTogglePrivacy={toggleMembershipPrivacy}
+          createSnackbar={createSnackbar}
         />
       ));
     }
@@ -76,8 +89,8 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
           'error',
         );
       }
-      setMemberships(
-        memberships.map((m) => {
+      setMembershipHistories(
+        membershipHistories.map((m) => {
           if (m.MembershipID === membership.MembershipID) {
             m.Privacy = !m.Privacy;
           }
