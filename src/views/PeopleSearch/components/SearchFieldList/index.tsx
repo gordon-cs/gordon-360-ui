@@ -25,7 +25,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import {
@@ -237,8 +236,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
     readSearchParamsFromURL();
 
     // Read search params from URL on 'popstate' (back/forward navigation) events
-    window.addEventListener('popstate', readSearchParamsFromURL );
-    return () => window.removeEventListener('popstate', readSearchParamsFromURL );
+    window.addEventListener('popstate', readSearchParamsFromURL);
+    return () => window.removeEventListener('popstate', readSearchParamsFromURL);
   }, [initialSearchParams]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
