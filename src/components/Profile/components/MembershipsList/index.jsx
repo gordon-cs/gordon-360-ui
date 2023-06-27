@@ -58,7 +58,6 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
         </Link>
       );
     } else {
-      console.log(membershipHistories);
       return membershipHistories.map((membership) => (
         <MembershipInfoCard
           // myProf={myProf}

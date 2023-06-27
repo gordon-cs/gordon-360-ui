@@ -34,9 +34,18 @@ const PrivacyToggle = ({ element, createSnackbar }) => {
 
   const toggleMembershipPrivacy = async (element) => {
     try {
-      await membershipService.toggleMembershipPrivacy(element);
-      createSnackbar(element.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
-      element.Privacy = !element.Privacy;
+      let updated = await membershipService.setMembershipPrivacy(
+        element.MembershipID,
+        !element.Privacy,
+      );
+      if (updated.Privacy !== element.Privacy) {
+        createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
+      } else {
+        createSnackbar(
+          membership.Privacy ? 'Failed to Show Membership' : 'Failed to Hide Membership',
+          'error',
+        );
+      }
     } catch {
       createSnackbar('Privacy Change Failed', 'error');
     }
@@ -45,19 +54,14 @@ const PrivacyToggle = ({ element, createSnackbar }) => {
   return (
     <Grid container item xs={4} alignItems="center">
       <Grid item xs={12} align="center">
-        {isOnline &&
-          (element.IsInvolvementPrivate ? (
-            <LockIcon />
-          ) : (
-            //<HomeIcon></HomeIcon>
-            <Switch
-              onChange={() => {
-                toggleMembershipPrivacy(element);
-              }}
-              checked={!checked}
-              key={element.ActivityDescription + element.ActivityCode}
-            />
-          ))}
+        {isOnline && element.IsInvolvementPrivate && <LockIcon />}
+        <Switch
+          onChange={() => {
+            toggleMembershipPrivacy(element);
+          }}
+          checked={!checked}
+          key={element.ActivityDescription + element.ActivityCode}
+        />
       </Grid>
       <Grid item xs={12} align="center">
         <Typography>
@@ -91,7 +95,7 @@ const OnlineOnlyLink = ({ element, children }) => {
   }
 };
 
-const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }) => {
+const MembershipInfoCard = ({ myProf = true, membershipHistory, createSnackbar }) => {
   //the whole list refreshes when privacy changes here
   const isOnline = useNetworkStatus();
 
@@ -125,9 +129,7 @@ const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }) => {
                       <Typography>{membership.SessionDescription}</Typography>
                       <Typography>{membership.ParticipationDescription}</Typography>
                     </OnlineOnlyLink>
-                    {myProf && (
-                      <PrivacyToggle element={membership} createSnackbar={createSnackbar} />
-                    )}
+                    {true && <PrivacyToggle element={membership} createSnackbar={createSnackbar} />}
                   </ListItem>
                 ))}
               </List>
