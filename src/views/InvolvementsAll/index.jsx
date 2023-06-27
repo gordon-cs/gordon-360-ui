@@ -16,9 +16,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import involvementService from 'services/activity';
 import membershipService, { NonGuestParticipations } from 'services/membership';
 import sessionService from 'services/session';
+import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
-import styles from './InvolvementsAll.module.css';
 
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -128,7 +128,7 @@ const InvolvementsAll = () => {
   const searchPageTitle = (
     <div align="center">
       Search
-      <b className={styles.involvements_gordon_text}> Gordon </b>
+      <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
       Involvements
     </div>
   );
@@ -212,7 +212,10 @@ const InvolvementsAll = () => {
             <Card>
               <CardHeader
                 title={`My ${myInvolvementsHeadingText} Involvements`}
-                className={styles.involvements_header}
+                style={{
+                  backgroundColor: 'var(--mui-palette-primary-main)',
+                  color: gordonColors.neutral.grayShades[50],
+                }}
               />
               <CardContent>
                 {loading ? (
@@ -235,7 +238,10 @@ const InvolvementsAll = () => {
         <Card>
           <CardHeader
             title={`${involvementSessionText} Involvements`}
-            className={styles.involvements_header}
+            style={{
+              backgroundColor: 'var(--mui-palette-primary-main)',
+              color: gordonColors.neutral.grayShades[50],
+            }}
           />
           <CardContent>
             {loading ? (

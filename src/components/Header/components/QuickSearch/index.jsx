@@ -26,7 +26,7 @@ const renderInput = ({ autoFocus, value, ref, ...other }) => (
       },
       startAdornment: (
         <InputAdornment position="start">
-          <SearchIcon className={styles.searchIcon} />
+          <SearchIcon />
         </InputAdornment>
       ),
       ...other,
@@ -264,7 +264,7 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
                   }),
                 )
               ) : (
-                <MenuItem className={styles.suggestion_no_results}>
+                <MenuItem className={styles.suggestion} style={{ paddingBottom: '5px' }}>
                   <Typography className={styles.no_results} variant="body2">
                     No results
                   </Typography>

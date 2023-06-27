@@ -95,7 +95,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
 
   const transcriptButton = myProf && (
     <Grid container justifyContent="center">
-      <Link to="/transcript">
+      <Link className="gc360_link" to="/transcript">
         <Button variant="contained" className={styles.memberships_card_content_button}>
           Experience Transcript
         </Button>

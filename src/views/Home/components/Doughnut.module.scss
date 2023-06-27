@@ -10,6 +10,11 @@
   text-align: 'center';
 }
 
+.card {
+  background-color: var(--mui-palette-neutral-light);
+  color: var(--mui-palette-neutral-contrastText);
+}
+
 .value {
   font-size: 8.5vw;
   font-weight: bold;

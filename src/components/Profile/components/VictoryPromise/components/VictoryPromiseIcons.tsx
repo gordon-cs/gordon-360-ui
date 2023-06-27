@@ -45,9 +45,7 @@ const VictoryPromiseIcon = ({
 };
 
 type PrimaryColor = VictoryPromiseColor | typeof gordonColors.primary.blue;
-type SecondaryColor =
-  | typeof gordonColors.neutral.gray
-  | (typeof gordonColors.neutral.grayShades)[50];
+type SecondaryColor = typeof gordonColors.neutral.gray | typeof gordonColors.neutral.grayShades[50];
 
 type IconProps = {
   primary: PrimaryColor;

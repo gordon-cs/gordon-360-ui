@@ -21,6 +21,7 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import { Component } from 'react';
+import { gordonColors } from 'theme';
 import styles from './ShiftItem.module.css';
 
 const CustomTooltip = withStyles((theme) => ({
@@ -401,7 +402,7 @@ export default class ShiftItem extends Component {
                       });
                       this.onClose();
                     }}
-                    className={styles.yes_button}
+                    style={styles2.redButton}
                   >
                     Yes
                   </Button>
@@ -420,7 +421,7 @@ export default class ShiftItem extends Component {
     );
     let deleteButton = (
       <IconButton onClick={this.handleDeleteButtonClick} size="large">
-        <DeleteForeverOutlinedIcon className={styles.delete_button} />
+        <DeleteForeverOutlinedIcon style={{ color: gordonColors.secondary.red }} />
       </IconButton>
     );
     if (this.state.deleting) {
@@ -429,7 +430,7 @@ export default class ShiftItem extends Component {
 
     let checkButton = (
       <IconButton disabled={errorText !== ''} onClick={this.onCheckButtonClick} size="large">
-        <CheckOutlinedIcon className={styles.checkButton} />
+        <CheckOutlinedIcon style={{ color: 'green' }} />
       </IconButton>
     );
     if (this.state.updating) {
@@ -446,7 +447,7 @@ export default class ShiftItem extends Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <IconButton onClick={this.toggleEditing} size="large">
-                <ClearOutlinedIcon className={styles.icon_button} />
+                <ClearOutlinedIcon style={{ color: gordonColors.secondary.red }} />
               </IconButton>
             </Grid>
           </Grid>
@@ -477,7 +478,7 @@ export default class ShiftItem extends Component {
       }
     } else {
       shiftItemIcons = (
-        <IconButton className={styles.shiftItemIcons} size="large">
+        <IconButton style={{ visibility: 'hidden' }} size="large">
           <DeleteForeverOutlinedIcon />
         </IconButton>
       );
@@ -493,7 +494,11 @@ export default class ShiftItem extends Component {
           title={'Shift note: ' + SHIFT_NOTES}
           placement="top"
         >
-          <MessageOutlinedIcon className={styles.shiftNotesTooltip} />
+          <MessageOutlinedIcon
+            style={{
+              fontSize: 16,
+            }}
+          />
         </CustomTooltip>
       );
     }
@@ -508,7 +513,7 @@ export default class ShiftItem extends Component {
           title={COMMENTS}
           placement="top"
         >
-          <InfoOutlinedIcon className={styles.shiftCommentTooltip} />
+          <InfoOutlinedIcon style={{ fontSize: 16 }} />
         </CustomTooltip>
       );
     }
@@ -517,7 +522,7 @@ export default class ShiftItem extends Component {
       errorText === '' ? (
         <Typography variant="body2">{EML_DESCRIPTION}</Typography>
       ) : (
-        <Typography className={styles.errorText} variant="body2">
+        <Typography style={{ color: gordonColors.secondary.red }} variant="body2">
           {errorText}
         </Typography>
       );
@@ -575,3 +580,10 @@ export default class ShiftItem extends Component {
     );
   }
 }
+
+const styles2 = {
+  redButton: {
+    background: gordonColors.secondary.red,
+    color: 'white',
+  },
+};

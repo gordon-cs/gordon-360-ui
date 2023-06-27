@@ -6,6 +6,7 @@ import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import { useTheme } from '@emotion/react';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
@@ -197,7 +198,7 @@ const DiningBalance = () => {
   }
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
@@ -206,7 +207,10 @@ const DiningBalance = () => {
           <Grid item xs={5} align="right">
             <Button
               variant="contained"
-              color="secondary"
+              style={{
+                backgroundColor: 'var(--mui-palette-secondary-main)',
+                color: 'var(--mui-palette-secondary-contrastText',
+              }}
               component={Link}
               href="https://gordon.cafebonappetit.com/"
               target="_blank"

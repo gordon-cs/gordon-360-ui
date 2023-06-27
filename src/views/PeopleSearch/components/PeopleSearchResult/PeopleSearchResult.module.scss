@@ -26,42 +26,29 @@
 
 .name {
   font-size: clamp(1rem, 0.6429rem + 1.7857vw, 3rem);
-  color: var(--mui-palette-neutral-contrastText);
 }
 
 .subtitle {
   font-size: clamp(0.8rem, 0.6286rem + 0.8571vw, 2rem);
-  color: var(--mui-palette-neutral-contrastText);
 }
 
 .secondary_text {
   font-size: clamp(0.75rem, 0.6429rem + 0.5357vw, 1.5rem);
-  color: var(--mui-palette-neutral-600);
 }
 
 .profile_link_container {
   flex: 6;
-  color: var(--mui-palette-primary-main);
 }
 
 .mailing_icon_container {
   display: flex;
   justify-content: center;
   flex: 0.5;
-  color: var(--mui-palette-primary-main);
-  background-color: var(--mui-palette-neutral-light);
 }
 
 .mail_card_action {
   width: fit-content;
+  background-color: $primary-blue;
   border-radius: 6px;
   padding: 0 0.2rem;
-  color: var(--mui-palette-neutral-main);
-  background-color: var(--mui-palette-primary-main);
-}
-
-.mail_outline {
-  color: var(--mui-palette-primary-contrastText);
-  height: 100%;
-  width: clamp(2.5rem, 2vw, 4rem);
 }

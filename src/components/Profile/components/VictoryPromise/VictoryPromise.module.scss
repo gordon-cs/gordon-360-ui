@@ -2,12 +2,12 @@
 
 .header {
   background: var(--mui-palette-primary-main);
-  color: var(--mui-palette-primary-contrastText);
+  color: $neutral-white;
   padding-left: 2rem;
 }
 
 .content {
-  background-color: var(--mui-palette-primary-main);
+  background-color: $primary-blue;
   border-radius: 0.5rem;
   padding: 2rem 1rem;
   position: relative;
