@@ -27,21 +27,21 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
     <GordonLoader size={68} color="secondary" />
   ) : user.profile ? (
     image ? (
-      <Avatar className={styles.avatar} src={`data:image/jpg;base64,${image}`} sizes="70px" />
+      <Avatar className={styles.root} src={`data:image/jpg;base64,${image}`} sizes="70px" />
     ) : (
-      <Avatar className={styles.avatar}>
+      <Avatar className={styles.root}>
         {user.profile?.FirstName?.[0]} {user.profile?.LastName?.[0]}
       </Avatar>
     )
   ) : (
-    <Avatar className={styles.avatar}>Guest</Avatar>
+    <Avatar className={styles.root}>Guest</Avatar>
   );
 
   return (
     <section className={styles.right_side_container}>
       <Tooltip className={styles.tooltip} id="tooltip_avatar" title={name ? name : 'Nav Avatar'}>
         <IconButton
-          className={styles.avatar}
+          className={styles.root}
           aria-label="More"
           aria-owns={'global-menu'}
           aria-haspopup="true"

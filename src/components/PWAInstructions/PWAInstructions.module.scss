@@ -1,4 +1,5 @@
 @import '../../vars';
+// @import '../../theme.ts';
 
 .pwa_instructions {
   &_title {
@@ -71,6 +72,38 @@
         }
       }
     }
+  }
+}
+
+.button {
+  &_cancel {
+    border: 1px solid $primary-blue;
+    color: $primary-blue;
+  }
+  &_install {
+    border: 1px solid $primary-blue;
+    background-color: $primary-blue;
+    color: white;
+  }
+}
+
+.toggleButton {
+  background-color: var(--mui-palette-primary-main);
+  border-radius: 10px;
+  color: white;
+  height: 48px;
+  padding: 0 30px;
+
+  &:global(.Mui-selected) {
+    background-color: #012746;
+    color: white;
+    &:hover {
+      background-color: var(--mui-palette-secondary-900);
+    }
+  }
+
+  &:hover {
+    background-color: var(--mui-palette-secondary-900);
   }
 }
 
