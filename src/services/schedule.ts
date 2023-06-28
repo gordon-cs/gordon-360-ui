@@ -11,6 +11,7 @@ type CourseSchedule = {
   WEDNESDAY_CDE: string;
   THURSDAY_CDE: string;
   FRIDAY_CDE: string;
+  SATURDAY_CDE: string;
   /** A timespan of the format HH:mm:ss, stringified */
   BEGIN_TIME: string;
   /** A timespan of the format HH:mm:ss, stringified */
@@ -38,18 +39,21 @@ function getMeetingDays(course: CourseSchedule): number[] {
   let dayArray = [];
 
   if (course.MONDAY_CDE === 'M') {
-    dayArray.push(2);
+    dayArray.push(1);
   }
   if (course.TUESDAY_CDE === 'T') {
-    dayArray.push(3);
+    dayArray.push(2);
   }
   if (course.WEDNESDAY_CDE === 'W') {
-    dayArray.push(4);
+    dayArray.push(3);
   }
   if (course.THURSDAY_CDE === 'R') {
-    dayArray.push(5);
+    dayArray.push(4);
   }
   if (course.FRIDAY_CDE === 'F') {
+    dayArray.push(5);
+  }
+  if (course.SATURDAY_CDE === 'S') {
     dayArray.push(6);
   }
 
