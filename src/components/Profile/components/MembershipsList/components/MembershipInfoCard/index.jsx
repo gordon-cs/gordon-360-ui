@@ -18,10 +18,10 @@ import activity from 'services/activity';
 import { useEffect, useState } from 'react';
 // import { ArrowDropDown } from '@material-ui/icons';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { element } from 'prop-types';
 
 const PrivacyToggle = ({ element, createSnackbar, changeStatus }) => {
   useEffect(() => {
-    console.log('HERE');
     async function loadPrivacy() {
       const involvement = await activity.get(element.ActivityCode);
       element.IsInvolvementPrivate = involvement.Privacy;
@@ -41,10 +41,8 @@ const PrivacyToggle = ({ element, createSnackbar, changeStatus }) => {
 
   // const isOnline = useNetworkStatus();
 
-  const [checked] = useState(element.Privacy);
-
   const toggleMembershipPrivacy = async (element) => {
-    // debugger;
+    debugger;
     try {
       console.log('before');
       console.log('Privacy:', element.Privacy);
@@ -53,24 +51,19 @@ const PrivacyToggle = ({ element, createSnackbar, changeStatus }) => {
         !element.Privacy,
       );
 
-      changeStatus(element);
-      // changePrivacy(!element.Privacy);
-      // setReload(!reload);
-      //rerender();
       element.Privacy = !element.Privacy;
-      // useEffect(() => {
-      //   changeStatus((val) => !val);
-      // }, []);
-      // changeStatus(element);
 
       console.log('after');
       console.log('Privacy:', element.Privacy);
 
-      //changeStatus(element.MembershipID);
-
       if (update.Privacy === element.Privacy) {
         createSnackbar(element.Privacy ? 'Membership Hidden' : 'Membership Shown', 'success');
-        setReload(!reload);
+        // try {
+        //   changeStatus(element);
+        // } catch (e) {
+        //   console.error(e);
+        //   createSnackbar('callback not right', 'error');
+        // }
       } else {
         createSnackbar(
           element.Privacy ? 'Failed to Show Membership' : 'Failed to Hide Membership',
@@ -89,7 +82,7 @@ const PrivacyToggle = ({ element, createSnackbar, changeStatus }) => {
           onChange={() => {
             toggleMembershipPrivacy(element);
           }}
-          checked={!checked}
+          checked={!element.Privacy}
           key={element.ActivityDescription + element.ActivityCode}
         />
       </Grid>
@@ -124,28 +117,49 @@ const OnlineOnlyLink = ({ element, children }) => {
   }
 };
 
-const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }) => {
+const MembershipInfoCard = ({
+  myProf,
+  membershipHistory,
+  createSnackbar,
+  changeState,
+  state,
+  firstIndex,
+}) => {
   //the whole list refreshes when privacy changes here
   const isOnline = useNetworkStatus();
-  const [reload, setReload] = useState(false);
   const [localMembershipHistory, setMembershipHistory] = useState(membershipHistory);
-  // console.log(membershipHistory);
 
-  const callBackFunction = ({ change }) => {
-    console.log('before LMH ', localMembershipHistory.change.Privacy);
-
-    setMembershipHistory(
-      ...localMembershipHistory,
-      change,
-      // localMembershipHistory.find((m) => m.MembershipID === change.MembershipID)
-      // localMembershipHistory.map((mem) => {
-      //   if ((mem.MembershipID = change.MembershipID)) {
-      //     mem.Privacy = change.Privacy;
-      //   }
-      // }),
+  const callBackFunction = (change) => {
+    debugger;
+    console.log('change', change);
+    console.log('localMembershipHisory ', localMembershipHistory);
+    let index;
+    localMembershipHistory.Memberships.map((mem, i) => {
+      if (mem.MembershipID === change.MembershipID) {
+        index = i;
+        mem.Privacy = change.Privacy;
+        console.log('after LMH mem', localMembershipHistory.mem);
+      }
+    });
+    console.log('index ', index);
+    console.log(
+      'localMembershipHistory.Memberships[index] ',
+      localMembershipHistory.Memberships[index],
     );
-    //localMembershipHistory.change.Privacy = !localMembershipHistory.change.Privacy;
-    console.log('after LMH ', localMembershipHistory.change.Privacy);
+
+    // setMembershipHistory(
+    //   // ...membershipHistory,
+    //   // // (membershipHistory.Memberships = change),
+    //   // (membershipHistory.Memberships = change),
+    //   (membershipHistory.Memberships[index] = change),
+    //   //   membershipHistory.Memberships.map((mem, i) => {
+    //   //     if (mem.MembershipID === change.MembershipID) {
+    //   //       mem.Privacy = change.Privacy;
+    //   //     }
+    //   //   }),
+    // );
+
+    // changeState(...state, (state[firstIndex].Memberships[index] = change));
   };
 
   return (
@@ -172,35 +186,20 @@ const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }) => {
             </AccordionSummary>
             <AccordionDetails>
               <List>
-                {membershipHistory.Memberships.map((membership) => (
+                {membershipHistory.Memberships.map((session) => (
                   <ListItem key={membershipHistory.ActivityCode}>
-                    <OnlineOnlyLink element={membership}>
-                      <Typography>{membership.SessionDescription}</Typography>
-                      <Typography>{membership.ParticipationDescription}</Typography>
+                    <OnlineOnlyLink element={session}>
+                      <Typography>{session.SessionDescription}</Typography>
+                      <Typography>{session.ParticipationDescription}</Typography>
                     </OnlineOnlyLink>
                     {myProf && (
                       <PrivacyToggle
-                        element={membership}
+                        element={session}
                         createSnackbar={createSnackbar}
+                        //changeStatus={callBackFunction}
                         changeStatus={callBackFunction}
                       />
                     )}
-                    {/* {myProf && (
-                      <Grid container item xs={4} alignItems="center">
-                        <Grid item xs={12} align="center">
-                          <Switch
-                            onChange={() => {
-                              toggleMembershipPrivacy(membership);
-                            }}
-                            checked={!checked}
-                            key={membership.ActivityDescription + membership.ActivityCode}
-                          />
-                        </Grid>
-                        <Grid item xs={12} align="center">
-                          <Typography>{membership.Privacy ? 'Private' : 'Public'}</Typography>
-                        </Grid>
-                      </Grid>
-                    )} */}
                   </ListItem>
                 ))}
               </List>

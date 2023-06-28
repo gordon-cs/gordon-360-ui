@@ -48,8 +48,36 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
   }, [myProf, username]);
 
   const MembershipsList = () => {
-    // console.log(membershipHistories);
+    console.log(membershipHistories);
     //if (memberships.length === 0) {
+    // const [localMembershipHistories, setMembershipHistories] = useState(membershipHistories);
+
+    // const callBackFunction = (change) => {
+    //   debugger;
+    //   //element = localMembershipHistory.find((m) => m.MembershipID === change.MembershipID);
+    //   console.log('change', change);
+    //   console.log('localMembershipHisory ', localMembershipHistories);
+    //   let firstIndex = 0;
+    //   let index = 0;
+    //   // localMembershipHistory.Memberships.map((mem, i) => {
+    //   //   if (mem.MembershipID === change.MembershipID) {
+    //   //     index = i;
+    //   //     mem.Privacy = change.Privacy;
+    //   //     console.log('after LMH mem', localMembershipHistory.mem);
+    //   //   }
+    //   // });
+    //   console.log('index ', index);
+    //   // console.log(
+    //   //   'localMembershipHistory.Memberships[index] ',
+    //   //   localMembershipHistory.Memberships[index],
+    //   // );
+
+    //   setMembershipHistories(
+    //     ...membershipHistories,
+    //     (membershipHistories[firstIndex].Memberships[index] = change),
+    //   );
+    // };
+
     if (membershipHistories.length === 0) {
       return (
         <Link to={`/involvements`}>
@@ -59,7 +87,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
         </Link>
       );
     } else {
-      return membershipHistories.map((membership) => (
+      return membershipHistories.map((membership, i) => (
         <MembershipInfoCard
           // myProf={myProf}
           // membership={membership}
@@ -70,6 +98,9 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
           key={membership.ActivityCode}
           //onTogglePrivacy={toggleMembershipPrivacy}
           createSnackbar={createSnackbar}
+          // changeState={setMembershipHistories} //not sure
+          // state={membershipHistories} // not sure
+          // firstIndex={i}
         />
       ));
     }
