@@ -48,6 +48,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
   }, [myProf, username]);
 
   const MembershipsList = () => {
+    // console.log(membershipHistories);
     //if (memberships.length === 0) {
     if (membershipHistories.length === 0) {
       return (

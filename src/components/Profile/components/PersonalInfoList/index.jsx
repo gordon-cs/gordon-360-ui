@@ -349,122 +349,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       />
     ) : null;
 
-  const mail =
-    isStudent && profile.Mail_Location ? (
-      <>
-        <ListItem className={styles.profile_info_list_item}>
-          <Grid container alignItems="center">
-            <Grid container item xs={5} alignItems="center">
-              <Typography>{'Mailbox:'}</Typography>
-            </Grid>
-            <Grid container item xs={myProf && mailCombo ? 2.5 : 5} alignItems="center">
-              <Typography>{`#${profile.Mail_Location}`}</Typography>
-            </Grid>
-            {myProf && mailCombo && (
-              <>
-                <Grid container item xs={1} alignItems="center">
-                  <Typography className={styles.private}>
-                    {showMailCombo ? mailCombo : '****'}
-                  </Typography>
-                </Grid>
-                <Grid
-                  container
-                  direction="column"
-                  item
-                  xs={1}
-                  md={1}
-                  lg={1}
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <IconButton
-                    onClick={() => {
-                      setShowMailCombo(!showMailCombo);
-                    }}
-                    aria-label={showMailCombo ? 'Hide Mail Combo' : 'Show Mail Combo'}
-                    size="large"
-                  >
-                    {showMailCombo ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </IconButton>
-                </Grid>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => setIsJoinDialogOpen(true)}
-                >
-                  Instructions
-                </Button>
-                <GordonDialogBox
-                  open={isJoinDialogOpen}
-                  title={`Mailbox Instructions`}
-                  closeButtonClicked={onClose}
-                  maxWidth="md"
-                >
-                  <Grid container>
-                    <Typography sx={{ fontSize: '0.8rem' }}>
-                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
-                        Salsbury Mailbox (Combinations that have three numbers ex: 21 32 18)
-                      </Typography>
-                      <img src={SLock} alt="SLock" />
-                      <br />
-                      1. To openturn LEFT at least four turns stopping at the first number of the
-                      combination.
-                      <br />
-                      2. Turn RIGHT passing the first number of the combination once and stop at the
-                      second number of the combination.
-                      <br />
-                      3. Turn LEFT stopping at the third number of the combination.
-                      <br />
-                      4. Turn knob to the RIGHT to open.
-                      <br />
-                      <br />
-                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
-                        Dial and Pointer Mailbox (Combinations that have two letters ex: H B)
-                      </Typography>
-                      <img src={DPLock} alt="DPLock" />
-                      <br />
-                      1. Turn the large letter wheel until the first letter of the two-letter
-                      combination is lined up with the indication notch located just above the
-                      letter wheel in a 12 o’clock position. Line up the small line that is exactly
-                      above each letter with this indication notch.
-                      <br />
-                      2. Leave the letter wheel where you just put it. Now turn the pointer only
-                      until it points to the second letter of the combination. The first letter of
-                      the combination will always be at the 12 o’clock position; the pointer will
-                      always point to the second letter of the combination. Example, in the picture
-                      above, it is showing the combination of A G.
-                      <br />
-                      3. Twist the latch knob clockwise to open the box.
-                      <br />
-                      <br />
-                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
-                        Double Dial Mailbox (Combinations that have two letter/number pairs ex: A3
-                        H5)
-                      </Typography>
-                      <img src={DDLock} alt="DDLock" />
-                      <br />
-                      1. Each letter (A-K on left dial, L-V on right dial) has been assigned four
-                      white or silver lines on your mailbox. The SHORTEST line is #1 and the LONGEST
-                      line is #3. For example, in the picture above, the combination A1 L1 is shown.
-                      <br />
-                      2. Move the LEFT dial to the line indicated by the FIRST letter/number code
-                      given; the RIGHT dial to the line indicated by the SECOND letter/number code.
-                      Align those lines with the “indication notch” located at the 12 o’clock
-                      position directly above each dial.
-                      <br />
-                      3. When the dials are correctly positioned, move the latch lever to the right
-                      to open box.
-                    </Typography>
-                  </Grid>
-                </GordonDialogBox>
-              </>
-            )}
-          </Grid>
-        </ListItem>
-        <Divider />
-      </>
-    ) : null;
-
   const campusDormInfo =
     isStudent && profile.OnOffCampus && !(profile.BuildingDescription || profile.Hall) ? (
       <ProfileInfoListItem
@@ -608,7 +492,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             {cliftonStrengths}
             {advisors}
             {campusDormInfo}
-            {mail}
             {mobilePhoneListItem}
             {homePhoneListItem}
             {gordonID}

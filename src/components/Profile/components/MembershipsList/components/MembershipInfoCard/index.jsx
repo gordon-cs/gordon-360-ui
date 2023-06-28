@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 // import { ArrowDropDown } from '@material-ui/icons';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-const PrivacyToggle = ({ element, createSnackbar }) => {
+const PrivacyToggle = ({ element, createSnackbar, changeStatus }) => {
   useEffect(() => {
     console.log('HERE');
     async function loadPrivacy() {
@@ -29,11 +29,22 @@ const PrivacyToggle = ({ element, createSnackbar }) => {
     loadPrivacy();
   }, [element]);
 
-  const isOnline = useNetworkStatus();
+  // const [reload, setReload] = useState(false);
+
+  // useEffect(() => {
+  //   if ()
+  // }, [reload])
+
+  // useEffect(() => {
+  //   changeStatus((val) => !val);
+  // }, [element.Privacy]);
+
+  // const isOnline = useNetworkStatus();
 
   const [checked] = useState(element.Privacy);
 
   const toggleMembershipPrivacy = async (element) => {
+    // debugger;
     try {
       console.log('before');
       console.log('Privacy:', element.Privacy);
@@ -41,11 +52,25 @@ const PrivacyToggle = ({ element, createSnackbar }) => {
         element.MembershipID,
         !element.Privacy,
       );
+
+      changeStatus(element);
+      // changePrivacy(!element.Privacy);
+      // setReload(!reload);
       //rerender();
+      element.Privacy = !element.Privacy;
+      // useEffect(() => {
+      //   changeStatus((val) => !val);
+      // }, []);
+      // changeStatus(element);
+
       console.log('after');
       console.log('Privacy:', element.Privacy);
-      if (update.Privacy !== element.Privacy) {
-        createSnackbar(element.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
+
+      //changeStatus(element.MembershipID);
+
+      if (update.Privacy === element.Privacy) {
+        createSnackbar(element.Privacy ? 'Membership Hidden' : 'Membership Shown', 'success');
+        setReload(!reload);
       } else {
         createSnackbar(
           element.Privacy ? 'Failed to Show Membership' : 'Failed to Hide Membership',
@@ -78,6 +103,7 @@ const PrivacyToggle = ({ element, createSnackbar }) => {
 const OnlineOnlyLink = ({ element, children }) => {
   const isOnline = useNetworkStatus();
   const showPrivate = element.IsInvolvementPrivate || element.Privacy;
+  // const [showPrivate, setShowPrivacy] = useState(element.IsInvolvementPrivate || element.Privacy);
   if (isOnline) {
     return (
       <Link
@@ -101,9 +127,26 @@ const OnlineOnlyLink = ({ element, children }) => {
 const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }) => {
   //the whole list refreshes when privacy changes here
   const isOnline = useNetworkStatus();
-  // useEffect(() => {
-  //   console.log('HERE 2');
-  // }, [membershipHistory]);
+  const [reload, setReload] = useState(false);
+  const [localMembershipHistory, setMembershipHistory] = useState(membershipHistory);
+  // console.log(membershipHistory);
+
+  const callBackFunction = ({ change }) => {
+    console.log('before LMH ', localMembershipHistory.change.Privacy);
+
+    setMembershipHistory(
+      ...localMembershipHistory,
+      change,
+      // localMembershipHistory.find((m) => m.MembershipID === change.MembershipID)
+      // localMembershipHistory.map((mem) => {
+      //   if ((mem.MembershipID = change.MembershipID)) {
+      //     mem.Privacy = change.Privacy;
+      //   }
+      // }),
+    );
+    //localMembershipHistory.change.Privacy = !localMembershipHistory.change.Privacy;
+    console.log('after LMH ', localMembershipHistory.change.Privacy);
+  };
 
   return (
     <>
@@ -136,8 +179,28 @@ const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }) => {
                       <Typography>{membership.ParticipationDescription}</Typography>
                     </OnlineOnlyLink>
                     {myProf && (
-                      <PrivacyToggle element={membership} createSnackbar={createSnackbar} />
+                      <PrivacyToggle
+                        element={membership}
+                        createSnackbar={createSnackbar}
+                        changeStatus={callBackFunction}
+                      />
                     )}
+                    {/* {myProf && (
+                      <Grid container item xs={4} alignItems="center">
+                        <Grid item xs={12} align="center">
+                          <Switch
+                            onChange={() => {
+                              toggleMembershipPrivacy(membership);
+                            }}
+                            checked={!checked}
+                            key={membership.ActivityDescription + membership.ActivityCode}
+                          />
+                        </Grid>
+                        <Grid item xs={12} align="center">
+                          <Typography>{membership.Privacy ? 'Private' : 'Public'}</Typography>
+                        </Grid>
+                      </Grid>
+                    )} */}
                   </ListItem>
                 ))}
               </List>
