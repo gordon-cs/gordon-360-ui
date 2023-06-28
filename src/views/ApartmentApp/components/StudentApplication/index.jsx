@@ -477,6 +477,19 @@ const StudentApplication = ({ userProfile }) => {
             ['HallRank', 'HallName'], // Sort halls by rank and name
           ),
         }));
+      }
+      if (hallRankValue !== applicationDetails.ApartmentChoices[index].HallRank) {
+        // Display an error if the selected rank is already in the list
+        createSnackbar(`Rank ${String(hallRankValue)} is already in the list.`, 'info');
+
+        // Leave the ApartmentChoice array unchanged, but refresh the sorting.
+        setApplicationDetails((prevApplicationDetails) => ({
+          ...prevApplicationDetails,
+          ApartmentChoices: sortBy(
+            prevApplicationDetails.ApartmentChoices,
+            ['HallRank', 'HallName'], // Sort halls by rank and name
+          ),
+        }));
       } else {
         const newApartmentChoice = {
           ApplicationID: applicationDetails.ApplicationID,
@@ -623,7 +636,7 @@ const StudentApplication = ({ userProfile }) => {
           // Quick fix since the API is trying
           //  to validate the public profile object but there is no Hall property
           let applicationDetailsNoProfiles = applicationDetails;
-          applicationDetailsNoProfiles.Applicants.forEach((a) => a.Profile.Hall = '');
+          applicationDetailsNoProfiles.Applicants.forEach((a) => (a.Profile.Hall = ''));
           const saveResult = await housing.saveApartmentApplication(applicationDetailsNoProfiles);
           if (saveResult) {
             setApplicationDetails((prevApplicationDetails) => ({
