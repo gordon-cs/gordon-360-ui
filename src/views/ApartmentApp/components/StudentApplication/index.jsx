@@ -477,19 +477,6 @@ const StudentApplication = ({ userProfile }) => {
             ['HallRank', 'HallName'], // Sort halls by rank and name
           ),
         }));
-      }
-      if (hallRankValue !== applicationDetails.ApartmentChoices[index].HallRank) {
-        // Display an error if the selected rank is already in the list
-        createSnackbar(`Rank ${String(hallRankValue)} is already in the list.`, 'info');
-
-        // Leave the ApartmentChoice array unchanged, but refresh the sorting.
-        setApplicationDetails((prevApplicationDetails) => ({
-          ...prevApplicationDetails,
-          ApartmentChoices: sortBy(
-            prevApplicationDetails.ApartmentChoices,
-            ['HallRank', 'HallName'], // Sort halls by rank and name
-          ),
-        }));
       } else {
         const newApartmentChoice = {
           ApplicationID: applicationDetails.ApplicationID,
@@ -523,17 +510,26 @@ const StudentApplication = ({ userProfile }) => {
    */
   const handleHallRemove = (indexToRemove) => {
     if (indexToRemove >= 0) {
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        ApartmentChoices: prevApplicationDetails.ApartmentChoices.filter(
+      setApplicationDetails((prevApplicationDetails) => {
+        const newApartmentChoices = prevApplicationDetails.ApartmentChoices.filter(
           (_hall, index) => index !== indexToRemove,
-        ).map((apartmentChoice, _index, apartmentChoices) =>
-          // If any rank value is greater than the new maximum, then set it to that new max rank
-          apartmentChoice.HallRank > apartmentChoices.length
-            ? { ...apartmentChoice, HallRank: apartmentChoices.length }
-            : apartmentChoice,
-        ),
-      }));
+        );
+
+        const removedHallRank = prevApplicationDetails.ApartmentChoices[indexToRemove].HallRank;
+
+        const updatedApartmentChoices = newApartmentChoices.map((apartmentChoice) => {
+          if (apartmentChoice.HallRank > removedHallRank) {
+            // If the current hall's rank is greater than the removed hall's rank, decrease it by one
+            return { ...apartmentChoice, HallRank: apartmentChoice.HallRank - 1 };
+          }
+          return apartmentChoice;
+        });
+
+        return {
+          ...prevApplicationDetails,
+          ApartmentChoices: updatedApartmentChoices,
+        };
+      });
       setUnsavedChanges(true);
     }
   };

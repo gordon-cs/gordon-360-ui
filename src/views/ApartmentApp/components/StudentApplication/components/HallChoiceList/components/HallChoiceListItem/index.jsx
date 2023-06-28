@@ -1,6 +1,7 @@
 import {
   Divider,
   FormControl,
+  FormLabel,
   FormHelperText,
   Grid,
   IconButton,
@@ -64,54 +65,57 @@ const HallChoiceListItem = ({
     </MenuItem>
   ));
 
-  return <>
-    <ListItem key={index} className={styles.list_item}>
-      <Grid container alignItems="center" spacing={3}>
-        <Grid item xs={4} sm={2}>
-          <FormControl fullWidth>
-            <InputLabel>Rank</InputLabel>
-            <Select
-              disabled={disabled}
-              value={hallRank}
-              onChange={(event) => onHallInputChange(String(event.target.value), hallName, index)}
-              input={<Input id={'rank' + index} />}
-            >
-              {rankOptions}
-            </Select>
-          </FormControl>
+  return (
+    <>
+      <ListItem key={index} className={styles.list_item}>
+        <Grid container alignItems="center" spacing={3}>
+          <Grid item xs={4} sm={2}>
+            <FormControl fullWidth>
+              <FormLabel>Rank</FormLabel>
+              <Select
+                disabled={false}
+                value={hallRank}
+                onChange={(event) => onHallInputChange(String(event.target.value), hallName, index)}
+                input={<Input id={'rank' + index} />}
+              >
+                {rankOptions}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={8} sm={10}>
+            <FormControl fullWidth error={!isHallNameValid}>
+              <FormLabel>Hall</FormLabel>
+              <Select
+                disabled={disabled}
+                value={isHallNameValid ? hallName : ''}
+                onChange={(event) => onHallInputChange(hallRank, String(event.target.value), index)}
+                input={<Input id={'hall' + index} />}
+              >
+                {hallOptions}
+              </Select>
+              {!isHallNameValid && (
+                <FormHelperText>
+                  An error occurred while loading the application data
+                </FormHelperText>
+              )}
+            </FormControl>
+          </Grid>
         </Grid>
-        <Grid item xs={8} sm={10}>
-          <FormControl fullWidth error={!isHallNameValid}>
-            <InputLabel>Hall</InputLabel>
-            <Select
-              disabled={disabled}
-              value={isHallNameValid ? hallName : ''}
-              onChange={(event) => onHallInputChange(hallRank, String(event.target.value), index)}
-              input={<Input id={'hall' + index} />}
-            >
-              {hallOptions}
-            </Select>
-            {!isHallNameValid && (
-              <FormHelperText>
-                An error occurred while loading the application data
-              </FormHelperText>
-            )}
-          </FormControl>
-        </Grid>
-      </Grid>
-      <ListItemSecondaryAction>
-        <IconButton
-          edge="end"
-          aria-label="delete"
-          disabled={disabled}
-          onClick={() => onHallRemove(index)}
-          size="large">
-          <ClearIcon />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
-    <Divider />
-  </>;
+        <ListItemSecondaryAction>
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            disabled={disabled}
+            onClick={() => onHallRemove(index)}
+            size="large"
+          >
+            <ClearIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+      <Divider />
+    </>
+  );
 };
 
 export default HallChoiceListItem;
