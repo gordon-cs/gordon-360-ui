@@ -39,10 +39,7 @@ const RequestsReceived = ({ onAddMember }) => {
       <List>
         {requests.map((request) => (
           <Fragment key={request.RequestID}>
-            <ListItem
-              key={request.RequestID}
-              classes={{ secondaryAction: styles.secondary_action }}
-            >
+            <ListItem key={request.RequestID} classes={{ secondaryAction: styles.secondaryAction }}>
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
                 secondary={`${formatDistanceToNow(new Date(request.DateSent))} - ${
