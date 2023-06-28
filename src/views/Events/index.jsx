@@ -282,7 +282,7 @@ const Events = () => {
                     query="(min-width: 600px)"
                     render={() => (
                       <Grid item>
-                        <EventIcon className={styles.eventIcon} />
+                        <EventIcon className={styles.event_icon} />
                       </Grid>
                     )}
                   />
