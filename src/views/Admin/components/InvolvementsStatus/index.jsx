@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { gordonColors } from 'theme';
 import GordonLoader from 'components/Loader';
 import activity from 'services/activity';
 import session from 'services/session';
@@ -41,14 +40,9 @@ const InvolvementStatusList = ({ status }) => {
     loadInvolvements();
   }, [status]);
 
-  const headerStyle = {
-    backgroundColor: gordonColors.primary.blue,
-    color: '#FFF',
-  };
-
   return (
     <Card>
-      <CardHeader style={headerStyle} align="center" title={`${status} Involvements`} />
+      <CardHeader color="primary" align="center" title={`${status} Involvements`} />
       {loading ? (
         <GordonLoader />
       ) : involvements.length > 0 ? (

@@ -1,4 +1,3 @@
-import { gordonColors } from 'theme';
 import {
   FormControl,
   FormLabel,
@@ -11,10 +10,9 @@ import {
 } from '@mui/material';
 
 const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemographic }) => {
-  const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
-      <Grid item style={{ color: cyan }}>
+      <Grid item color="secondary">
         <Typography variant="h5" gutterBottom>
           Step 4: Provide Your Race and Ethnicity
         </Typography>
