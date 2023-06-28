@@ -59,6 +59,7 @@ function getMeetingDays(course: CourseSchedule): number[] {
 function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
   const today = moment();
   let eventId = 0;
+  let summerMeetingDays = [1, 2, 3, 4, 5];
 
   const eventArray = schedule.flatMap((course) => {
     course.CRS_CDE = course.CRS_CDE.trim();
@@ -75,13 +76,24 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
 
     const meetingDays = getMeetingDays(course);
 
-    return meetingDays.map((day) => ({
-      id: eventId++,
-      title: course.CRS_CDE + ' in ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
-      start: beginTime.toDate(),
-      end: endTime.toDate(),
-      resourceId: day,
-    }));
+    if (course.ROOM_CDE === 'ASY') {
+      return summerMeetingDays.map((day) => ({
+        id: eventId++,
+        title: course.CRS_CDE + ' in ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
+        start: today.toDate(),
+        end: today.toDate(),
+        resourceId: day,
+        allDay: true,
+      }));
+    } else {
+      return meetingDays.map((day) => ({
+        id: eventId++,
+        title: course.CRS_CDE + ' in ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
+        start: beginTime.toDate(),
+        end: endTime.toDate(),
+        resourceId: day,
+      }));
+    }
   });
 
   return eventArray;
