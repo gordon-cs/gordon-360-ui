@@ -162,10 +162,10 @@ let LightGray = '#CCCCCB';
 let Black = '#000000';
 let White = '#FFFFFF';
 
-// Dev Tool coloring - Colors for development and testing purposes
-let TestTool = '#FF8400';
-let TestToolContrast = '#FF0000';
-let TestToolHalfOpacity = '#FF840082';
+// Dev Tool coloring - Colors for development and testing purposes only
+let TestTool = '#FF8400'; // devTool orange
+let TestToolContrast = '#FF0000'; // devTool red
+let TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
 
 // Dark Mode Colors!:
 let Gray = '#303233';
