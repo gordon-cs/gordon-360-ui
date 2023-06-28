@@ -7,28 +7,16 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { formatDistanceToNow } from 'date-fns';
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import requestService from 'services/request';
-import { gordonColors } from 'theme';
 import styles from './RequestsReceived.module.css';
 
-const useStyles = makeStyles(
-  {
-    secondaryAction: {
-      paddingRight: 155,
-    },
-  },
-  { name: 'MuiListItem' },
-);
-
 const RequestsReceived = ({ onAddMember }) => {
-  const classes = useStyles();
   const [requests, setRequests] = useState([]);
   const { involvementCode, sessionCode } = useParams();
-
+  secondaryAction;
   useEffect(() => {
     requestService.getPendingRequests(involvementCode, sessionCode).then(setRequests);
   }, [involvementCode, sessionCode]);
@@ -53,7 +41,7 @@ const RequestsReceived = ({ onAddMember }) => {
           <Fragment key={request.RequestID}>
             <ListItem
               key={request.RequestID}
-              classes={{ secondaryAction: classes.secondaryAction }}
+              classes={{ secondaryAction: styles.secondary_action }}
             >
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
