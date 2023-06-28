@@ -94,16 +94,16 @@
   height: 48px;
   padding: 0 30px;
 
+  &:hover {
+    background-color: var(--mui-palette-secondary-900);
+  }
+
   &:global(.Mui-selected) {
     background-color: #012746;
     color: white;
     &:hover {
       background-color: var(--mui-palette-secondary-900);
     }
-  }
-
-  &:hover {
-    background-color: var(--mui-palette-secondary-900);
   }
 }
 
