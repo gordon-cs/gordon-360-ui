@@ -395,7 +395,8 @@ const Timesheets = (props) => {
                   </Grid>
                   <Grid item md={8}>
                     <div className={styles.header_tooltip_container}>
-                      <CustomTooltip
+                      <Tooltip
+                        classes={{ popper: 'tooltip' }}
                         disableFocusListener
                         disableTouchListener
                         title={
@@ -417,7 +418,7 @@ const Timesheets = (props) => {
                             }}
                           />
                         </div>
-                      </CustomTooltip>
+                      </Tooltip>
                     </div>
                   </Grid>
                 </Grid>
