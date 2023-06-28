@@ -16,7 +16,7 @@ import styles from './RequestsReceived.module.css';
 const RequestsReceived = ({ onAddMember }) => {
   const [requests, setRequests] = useState([]);
   const { involvementCode, sessionCode } = useParams();
-  secondaryAction;
+
   useEffect(() => {
     requestService.getPendingRequests(involvementCode, sessionCode).then(setRequests);
   }, [involvementCode, sessionCode]);
