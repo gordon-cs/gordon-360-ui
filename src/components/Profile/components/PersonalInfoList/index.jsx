@@ -130,12 +130,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       await userService.setHomePhonePrivacy(!isHomePhonePrivate);
       setIsHomePhonePrivate(!isHomePhonePrivate);
 
-      createSnackbar(
-        isHomePhonePrivate
-          ? 'Personal Info Visible (This change may take several minutes)'
-          : 'Personal Info Hidden (This change may take several minutes)',
-        'success',
-      );
+      createSnackbar(isHomePhonePrivate ? 'Home Phone Visible' : 'Home Phone Hidden', 'success');
     } catch {
       createSnackbar('Privacy Change Failed', 'error');
     }
@@ -165,6 +160,18 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <a href={`tel:${profile.HomePhone}`} className="gc360_text_link">
             {formatPhone(profile.HomePhone)}
           </a>
+        )
+      }
+      ContentIcon={
+        myProf && (
+          <FormControlLabel
+            control={
+              <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
+            }
+            label={isHomePhonePrivate ? 'Private' : 'Public'}
+            labelPlacement="bottom"
+            disabled={!isOnline}
+          />
         )
       }
       privateInfo={isHomePhonePrivate}
@@ -577,26 +584,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           alignItems="center"
           className={styles.personal_info_list_header}
         >
-          <Grid item xs={8}>
+          <Grid item xs={12}>
             <CardHeader title="Personal Information" />
-          </Grid>
-          <Grid item xs={4} align="right">
-            {/* visible only for fac/staff on their profile */}
-            {/* isHomePhonePrivate is a misleading name for determining if personal information should be shown */}
-            {isFacStaff && myProf ? (
-              <FormControlLabel
-                control={
-                  <Switch
-                    onChange={handleChangeHomePhonePrivacy}
-                    color="secondary"
-                    checked={!isHomePhonePrivate}
-                  />
-                }
-                label={isHomePhonePrivate ? 'Private' : 'Public'}
-                labelPlacement="right"
-                disabled={!isOnline}
-              />
-            ) : null}
           </Grid>
         </Grid>
         <CardContent>
