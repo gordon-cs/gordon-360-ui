@@ -10,7 +10,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
@@ -23,15 +22,6 @@ import SimpleSnackbar from 'components/Snackbar';
 import { Component } from 'react';
 import { gordonColors } from 'theme';
 import styles from './ShiftItem.module.css';
-
-const CustomTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: theme.palette.common.black,
-    color: 'rgba(255, 255, 255, 0.87)',
-    boxShadow: theme.shadows[1],
-    fontSize: 11,
-  },
-}))(Tooltip);
 
 const PickerInput = (props) => {
   return (
@@ -487,9 +477,10 @@ export default class ShiftItem extends Component {
     let shiftNotesTooltip = <></>;
     if (SHIFT_NOTES !== '') {
       shiftNotesTooltip = (
-        <CustomTooltip
+        <Tooltip
           disableFocusListener
           disableTouchListener
+          classes={{ tooltip: styles.tooltip }}
           className={styles.tooltip_icon}
           title={'Shift note: ' + SHIFT_NOTES}
           placement="top"
@@ -499,22 +490,23 @@ export default class ShiftItem extends Component {
               fontSize: 16,
             }}
           />
-        </CustomTooltip>
+        </Tooltip>
       );
     }
 
     let shiftCommentTooltip = <></>;
     if (COMMENTS) {
       shiftCommentTooltip = (
-        <CustomTooltip
+        <Tooltip
           disableFocusListener
           disableTouchListener
+          classes={{ tooltip: styles.tooltip }}
           className={styles.tooltip_icon}
           title={COMMENTS}
           placement="top"
         >
           <InfoOutlinedIcon style={{ fontSize: 16 }} />
-        </CustomTooltip>
+        </Tooltip>
       );
     }
 
