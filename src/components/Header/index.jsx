@@ -12,7 +12,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
-import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { NavLink, Route, Routes } from 'react-router-dom';
 import routes from 'routes';
 import { authenticate } from 'services/auth';
 import { windowBreakWidths } from 'theme';
@@ -23,35 +23,8 @@ import styles from './Header.module.css';
 
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
-// Tab url regular expressions must be listed in the same order as the tabs, since the
-// indices of the elements in the array on the next line are mapped to the indices of the tabs
-const TabUrlPatterns = [
-  /^\/$/,
-  /^\/involvements\/?$|^\/activity/,
-  /^\/events\/?$/,
-  /^\/people$|^\/myprofile|^\/profile/,
-  /^\/timesheets$/,
-];
-
-/**
- * Update the tab highlight indicator based on the url
- *
- * The checks use regular expressions to check for matches in the url.
- */
-const useTabHighlight = () => {
-  const location = useLocation();
-  let currentPath = location.pathname;
-  const [tabIndex, setTabIndex] = useState(0);
-
-  useEffect(() => {
-    const matchedIndex = TabUrlPatterns.findIndex((pattern) => pattern.test(currentPath));
-    setTabIndex(matchedIndex); // This won't cause an update if the new value is the same as the old value
-  }, [currentPath]);
-
-  return tabIndex;
-};
-
 const GordonHeader = ({ onDrawerToggle }) => {
+  const [tabIndex, setTabIndex] = useState(0);
   const [dialog, setDialog] = useState('');
   const [width] = useWindowSize();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -59,7 +32,34 @@ const GordonHeader = ({ onDrawerToggle }) => {
   const isOnline = useNetworkStatus();
   const setDocumentTitle = useDocumentTitle();
   const isAuthenticated = useIsAuthenticated();
-  const tabIndex = useTabHighlight();
+
+  /**
+   * Update the tab highlight indicator based on the url
+   *
+   * The checks use regular expressions to check for matches in the url.
+   */
+  const updateTabHighlight = () => {
+    let currentPath = window.location.pathname;
+    // Tab url regular expressions must be listed in the same order as the tabs, since the
+    // indices of the elements in the array on the next line are mapped to the indices of the tabs
+    let urls = [
+      /^\/$/,
+      /^\/involvements\/?$|^\/activity/,
+      /^\/events\/?$/,
+      /^\/people$/,
+      /^\/timesheets$/,
+    ];
+    setTabIndex(false);
+    for (let i = 0; i < urls.length; i++) {
+      if (urls[i].test(currentPath)) {
+        setTabIndex(i);
+      }
+    }
+  };
+
+  useEffect(() => {
+    updateTabHighlight();
+  });
 
   useEffect(() => {
     if (width < windowBreakWidths.breakMD) {
@@ -168,7 +168,13 @@ const GordonHeader = ({ onDrawerToggle }) => {
           </Typography>
 
           <div className={styles.center_container}>
-            <Tabs textColor="inherit" indicatorColor="secondary" centered value={tabIndex}>
+            <Tabs
+              textColor="inherit"
+              indicatorColor="secondary"
+              centered
+              value={tabIndex}
+              onChange={(event, value) => setTabIndex(value)}
+            >
               <Tab
                 className={styles.tab}
                 icon={<HomeIcon />}
