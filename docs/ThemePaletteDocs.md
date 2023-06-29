@@ -1,6 +1,8 @@
 Project Overview
 --
 
+- [Changes](#Changes)
+
 As part of an ongoing effort to consolidate the code base, and centralize the way we do styling, we
 are tackling this project to respond to several problems.
 
@@ -31,7 +33,7 @@ are tackling this project to respond to several problems.
 Throughout this project, we were loosely followed the steps described in the MUI
 [migration guide](https://mui.com/material-ui/experimental-api/css-theme-variables/migration/).
 
-### Changes
+# Changes
 
 #### Theme variables
 
