@@ -3,8 +3,8 @@
 
 .pwa_instructions {
   &_title {
-    background-color: $primary-blue !important;
-    color: $neutral-white;
+    background-color: var(--mui-palette-primary-main) !important;
+    color: var(--mui-palette-neutral-light);
     padding: 1rem;
   }
   &_content {
@@ -28,27 +28,27 @@
           margin-bottom: 1rem;
           &_toggles {
             :global(.MuiToggleButtonGroup-grouped:not(:first-child)) {
-              border-left: 1px solid $neutral-white-opacity50;
+              border-left: 1px solid var(--mui-palette-neutral-light);
             }
           }
         }
         &_instructions {
           &_choice {
-            color: $secondary-red;
+            color: var(--mui-palette-error-main);
             padding: 1rem 0rem;
           }
           &_text {
             padding-bottom: 0.5rem;
             &_step {
-              color: $primary-blue;
+              color: var(--mui-palette-primary-main);
             }
             &_instruction {
-              color: $neutral-dark-gray;
+              color: var(--mui-palette-neutral-800);
               a {
                 text-decoration: none;
-                color: $primary-blue;
+                color: var(--mui-palette-primary-main);
                 &:hover {
-                  color: $primary-cyan;
+                  color: var(--mui-palette-secondary-main);
                 }
               }
             }
@@ -77,20 +77,20 @@
 
 .button {
   &_cancel {
-    border: 1px solid $primary-blue;
-    color: $primary-blue;
+    border: 1px solid var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-main);
   }
   &_install {
-    border: 1px solid $primary-blue;
-    background-color: $primary-blue;
-    color: white;
+    border: 1px solid var(--mui-palette-primary-main);
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-neutral-light);
   }
 }
 
 .toggleButton {
   background-color: var(--mui-palette-primary-main);
   border-radius: 10px;
-  color: white;
+  color: var(--mui-palette-neutral-light);
   height: 48px;
   padding: 0 30px;
 
@@ -99,8 +99,8 @@
   }
 
   &:global(.Mui-selected) {
-    background-color: #012746;
-    color: white;
+    background-color: var(--mui-palette-secondary-main);
+    color: var(--mui-palette-neutral-light);
     &:hover {
       background-color: var(--mui-palette-secondary-900);
     }

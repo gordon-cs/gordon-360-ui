@@ -1,10 +1,10 @@
 .tooltip {
-  color: #555;
-  background-color: #fff;
+  color: var(--mui-palette-neutral-700);
+  background-color: var(--mui-palette-neutral-light);
   box-shadow: 0 3px 6px #00000029, 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
-.help_icon {
+.helpIcon {
   cursor: pointer;
   margin: 0 1rem;
   font-size: 1.2rem;

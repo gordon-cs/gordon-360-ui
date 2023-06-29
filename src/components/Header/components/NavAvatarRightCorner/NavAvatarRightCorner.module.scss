@@ -16,7 +16,7 @@
   }
 
   &._placeholder {
-    background-color: $primary-cyan;
+    background-color: var(--mui-palette-secondary-main);
   }
 }
 

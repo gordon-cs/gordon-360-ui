@@ -9,7 +9,7 @@ const GordonTooltip = ({ content, ...OtherProps }) => {
       title={<span style={{ fontSize: '0.8rem' }}>{content}</span>}
       {...OtherProps}
     >
-      <HelpIcon className={styles.help_icon} />
+      <HelpIcon className={styles.helpIcon} />
     </Tooltip>
   );
 };
