@@ -99,8 +99,8 @@
   }
 
   &:global(.Mui-selected) {
-    background-color: var(--mui-palette-secondary-main);
-    color: var(--mui-palette-neutral-light);
+    background-color: var(--mui-palette-primary-600);
+    color: var(--mui-palette-primary-contrastText);
     &:hover {
       background-color: var(--mui-palette-secondary-900);
     }
