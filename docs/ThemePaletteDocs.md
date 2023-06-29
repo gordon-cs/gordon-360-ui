@@ -104,13 +104,19 @@ import styles from ./componentName.module.css // import module.css NOT module.sc
 The most important thing for UI development is testing how every
 component appears in dark mode, with proper contrast, colors, etc.
 
-All styling should be done in seperate CSS classes if possible/practical.  In general, this 
-means that colors, padding, and other styling properties should be defined in a CSS class and used 
+Many MUI components can reference the palette colors without the use of CSS.  For example, buttons, 
+headers, typography and others have a `color` prop.  A button with the prop `color='primary'` will 
+have a GordonBlue backgroundand White text color based on the main and contrast text colors defined 
+in the primary colors.  Where possible, you should use the color prop instead of external CSS unless 
+further customization is needed.
+
+All other styling and style overrides should be done in seperate CSS classes if possible/practical.  In general, 
+this means that colors, padding, and other styling properties should be defined in a CSS class and used 
 in a component using the className prop (See MUI/CSS/SCSS documentation).  This should be done instead of 
 using `style=...` or `sx=...` props inside of components (replace with the `className=...` prop).  
 The only exceptions to this is if styling is done dynamically with some computation.  For example 
 the Clifton Strengths colored ring around the profile photo, or the sizing of the photo cropper 
-for involvements and profile photos.
+for involvements and profile photos, or in specific cases where the color isn't meant to change.
 
 All colors should reference a color from the palette, and consideration should be given for a 
 switch to dark mode.  Usage of theme variables in CSS looks something like this: 
@@ -123,12 +129,6 @@ throughout the code.
 If you need a new color, on top of those that already exist, you can add it to the palette in an 
 open space (for example info.light is unused currently).  You should also name every color with 
 a variable name in theme.ts to enhance readability.
-
-Some components can reference the palette colors without the use of CSS.  For example, MUI buttons
-have a `color` prop.  A button with the prop `color='primary'` will have a GordonBlue background
-and White text color based on the main and contrast text colors defined in the primary colors.  In
-the case of buttons, it is recommended to use the color prop instead of external CSS unless further
-customization is needed.
 
 ### Project Contributors
 
