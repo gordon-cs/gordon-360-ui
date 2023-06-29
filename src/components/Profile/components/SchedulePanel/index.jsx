@@ -10,6 +10,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CardHeader,
   Divider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -169,11 +170,15 @@ const GordonSchedulePanel = (props) => {
             defaultExpanded={props.myProf}
           >
             <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
+              expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
               aria-controls="panel1a-content"
               id="panel1a-header"
+              className={styles.header}
             >
-              <Typography>{isExpanded ? 'Hide' : 'Show'} Schedule</Typography>
+              <CardHeader
+                className={styles.accordionHeader}
+                title={isExpanded ? 'Hide Schedule' : 'Show Schedule'}
+              />
             </AccordionSummary>
             <AccordionDetails>
               <Grid container direction="row" justifyContent="center" align="left" spacing={4}>
@@ -213,6 +218,7 @@ const GordonSchedulePanel = (props) => {
                     </Select>
                   </FormControl>
                 </Grid>
+                <Grid lg={7}></Grid>
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar
                     profile={props.profile}
