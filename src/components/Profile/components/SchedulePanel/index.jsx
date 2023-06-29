@@ -348,7 +348,7 @@ class GordonSchedulePanel extends Component {
             variant="contained"
             className={styles.schedule_panel_remove_button}
             onClick={this.handleRemoveMyScheduleOpen}
-            //disabled={this.state.disabled} //disabled
+            disabled={this.state.disabled} //disabled
           >
             REMOVE EVENT
           </Button>
