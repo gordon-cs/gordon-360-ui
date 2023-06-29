@@ -3,7 +3,7 @@ Contents
 
 - [Overview](#Project-Overview)
   - [Reasons for Project](#Project-Overview)
-  - [What we Did](#For-these-reasons-we-decided-to-tackle-a-couple-of-related-projects:)
+  - [What we Did](#For-these-reasons-we-decided-to-tackle-a-couple-of-related-projects)
 - [Changes Made](#Changes)
   - [What are Theme Variables?](#Theme-Variables)
   - [Setting the Theme (light, dark, more?)](#Setting-the-Theme)
