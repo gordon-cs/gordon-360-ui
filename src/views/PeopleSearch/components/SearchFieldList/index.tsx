@@ -1,3 +1,4 @@
+import { ExpandMore } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
@@ -13,20 +14,18 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import { ExpandMore } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
 import {
   ChangeEvent,
   Dispatch,
   KeyboardEvent,
+  ReactNode,
   SetStateAction,
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
-  ReactNode,
 } from 'react';
 import {
   FaBook,
@@ -36,17 +35,16 @@ import {
   FaHeart,
   FaSchool,
   FaHome as Home,
-  FaUser as Person,
   FaMapMarkerAlt as LocationCity,
+  FaUser as Person,
 } from 'react-icons/fa';
-import { useLocation } from 'react-router';
 import { useNavigate } from 'react-router-dom';
+import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
 import SearchField, { SelectOption } from './components/SearchField';
-import addressService from 'services/address';
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
@@ -125,7 +123,6 @@ const AdvancedOptionsColumn = ({ children, ...otherProps }: { children: ReactNod
 const SearchFieldList = ({ onSearch }: Props) => {
   const { profile } = useUser();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [isStudent, isFacStaff, isAlumni] = useAuthGroups(
     AuthGroup.Student,
@@ -156,9 +153,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
   );
   const [searchParams, setSearchParams] = useState(initialSearchParams);
 
-  // Used to only read search params from URL on first load (and on back/forward navigate via event listener)
-  const shouldReadSearchParamsFromURL = useRef(true);
-
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
@@ -185,14 +179,14 @@ const SearchFieldList = ({ onSearch }: Props) => {
       await peopleSearchService.search(searchParams).then(onSearch);
 
       const newQueryString = serializeSearchParams(searchParams);
-      // If search params are new since last search, add search to navigate
-      if (location.search !== newQueryString) {
+      // If search params are new since last search, add search to history
+      if (window.location.search !== newQueryString) {
         navigate(newQueryString);
       }
 
       setLoadingSearch(false);
     }
-  }, [canSearch, searchParams, onSearch, location.search, navigate]);
+  }, [canSearch, searchParams, onSearch, navigate]);
 
   useEffect(() => {
     const loadPage = async () => {
@@ -217,12 +211,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
     };
 
     loadPage();
-  }, [isAlumni]);
+  }, []);
 
   useEffect(() => {
-    // Read search params from URL on navigate (including first load)
-    if (shouldReadSearchParamsFromURL.current) {
-      const newSearchParams = deserializeSearchParams(new URLSearchParams(location.search));
+    const readSearchParamsFromURL = () => {
+      const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
 
       setSearchParams((oldSearchParams) => {
         // If there are no search params in the URL, reset to initialSearchParams
@@ -236,15 +229,15 @@ const SearchFieldList = ({ onSearch }: Props) => {
           ...newSearchParams,
         };
       });
+    };
 
-      shouldReadSearchParamsFromURL.current = false;
-    }
+    // Read search params from URL when SearchFieldList mounts (or initialSearchParams changes)
+    readSearchParamsFromURL();
 
     // Read search params from URL on 'popstate' (back/forward navigation) events
-    const onNavigate = () => (shouldReadSearchParamsFromURL.current = true);
-    window.addEventListener('popstate', onNavigate);
-    return () => window.removeEventListener('popstate', onNavigate);
-  }, [location.search, initialSearchParams]);
+    window.addEventListener('popstate', readSearchParamsFromURL);
+    return () => window.removeEventListener('popstate', readSearchParamsFromURL);
+  }, [initialSearchParams]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
     setSearchParams((sp) => ({

@@ -65,6 +65,7 @@
     .app_bar {
       background-image: url('./gc_seal_top_64.png');
       height: $header-height-sm;
+      background-color: var(--mui-palette-primary-main);
     }
     .people_search_container {
       width: 13rem;
