@@ -33,15 +33,15 @@ export const socialMediaInfo: {
 } = {
   Facebook: {
     Icon: <FaFacebookF />,
-    prefix: ['https://www.', 'facebook.com/', 'www.', 'https://'],
+    prefix: ['https://www.facebook.com/', 'facebook.com/', 'www.facebook.com/'],
   },
   Twitter: {
     Icon: <FaTwitter />,
-    prefix: ['https://www.', 'twitter.com/', 'www.', 'https://'],
+    prefix: ['https://www.twitter.com/', 'twitter.com/', 'www.twitter.com/'],
   },
   LinkedIn: {
     Icon: <FaLinkedin />,
-    prefix: ['https://www.', 'linkedin.com/in/', 'www.', 'https://'],
+    prefix: ['https://www.linkedin.com/in/', 'linkedin.com/in/', 'www.linkedin/in/'],
   },
   Instagram: {
     Icon: <FaInstagram />,
@@ -50,11 +50,12 @@ export const socialMediaInfo: {
   Handshake: {
     Icon: <FaHandshake />,
     prefix: [
-      'https://www.',
+      'https://www.gordon.joinhandshake.com/users/',
       'gordon.joinhandshake.com/users/',
+      'www.gordon.joinhandshake.com/users/',
+      'https://www.app.joinhandshake.com/users/',
       'app.joinhandshake.com/users/',
-      'www.',
-      'https://',
+      'www.app.joinhandshake.com/users/',
     ],
   },
   // TODO - Validation
