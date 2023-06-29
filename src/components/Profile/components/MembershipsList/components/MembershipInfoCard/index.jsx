@@ -41,9 +41,9 @@ const PrivacyToggle = ({ element, createSnackbar }) => {
     <Grid container item xs={4} alignItems="center">
       <Grid item xs={12} align="center">
         <Switch
-          onChange={() => {
+          onChange={() => 
             toggleMembershipPrivacy(element);
-          }}
+          }
           checked={!element.Privacy}
           key={element.ActivityDescription + element.ActivityCode}
         />
