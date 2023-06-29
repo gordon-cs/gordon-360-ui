@@ -239,12 +239,27 @@ const SearchFieldList = ({ onSearch }: Props) => {
     return () => window.removeEventListener('popstate', readSearchParamsFromURL);
   }, [initialSearchParams]);
 
-  const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
+  const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchParams((sp) => ({
       ...sp,
       [event.target.name]:
         event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     }));
+    if (event.target.name === 'includeFacStaff' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        building: '',
+        department: '',
+      }));
+    } else if (event.target.name === 'includeStudent' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        major: '',
+        minor: '',
+        class_year: '',
+      }));
+    }
+  };
 
   const handleEnterKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
