@@ -45,7 +45,7 @@ export const socialMediaInfo: {
   },
   Instagram: {
     Icon: <FaInstagram />,
-    prefix: ['https://www.', 'instagram.com/', 'www.', 'https://'],
+    prefix: ['https://www.instagram.com/', 'instagram.com/', 'www.instagram.com/'],
   },
   Handshake: {
     Icon: <FaHandshake />,
