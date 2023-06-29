@@ -121,7 +121,7 @@ All colors should reference a color from the palette, and consideration should b
 switch to dark mode.  Usage of theme variables in CSS looks something like this: 
 `color: var(--mui-palette-primary-main)` or `background-color: var(--mui-palette-neutral-300)`.  
 If you do need in-line styling within javascript, you can reference the --mui var, but you must wrap the 
-whole color in quotes, ex: `style = { background: 'var(--mui-palette-success-dark) }`, but again, 
+whole color in quotes, ex: `style = { background: 'var(--mui-palette-success-dark)' }`, but again, 
 this is undesirable if CSS is possible.  You can find examples of usage of these --mui theme variables
 throughout the code.
 
