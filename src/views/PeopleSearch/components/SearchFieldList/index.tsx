@@ -465,7 +465,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     select
                     disabled={!searchParams.includeStudent}
                   />
-                  {switchYearRange == true ? (
+                  {switchYearRange ? (
                     <SearchField
                       name="graduation_year"
                       value={searchParams.graduation_year}
