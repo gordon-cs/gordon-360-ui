@@ -13,6 +13,7 @@ Contents
   - [How we define Colors](#Adding-new-CSS-Files)
   - [Styling with CSS, when to do it](#Styling-with-CSS)
   - [Adding new CSS Files](#Adding-new-CSS-Files)
+- [Project Credits](#Project-Contributors)
 
 Project Overview
 --
@@ -161,3 +162,7 @@ import styles from ./componentName.module.css // import module.css NOT module.sc
 - _Jack Hammond_
 - _Matt Jones_
 - _Eric Mo_
+
+=
+
+- Special thanks to _Evan Platzer_ for all the help planning and getting started on this project!
