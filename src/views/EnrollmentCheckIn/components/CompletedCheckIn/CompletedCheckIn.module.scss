@@ -1,9 +1,3 @@
-.completed_check_in {
-  &_gutter {
-    color: var(--mui-palette-secondary-main);
-  }
-}
-
 .button_container {
   Button:disabled {
     background-color: var(--mui-palette-neutral-dark);
@@ -12,4 +6,8 @@
     background-color: var(--mui-palette-primary-main);
     color: var(--mui-palette-primary-contrastText);
   }
+}
+
+.congrats_note {
+  color: var(--mui-palette-secondary-main);
 }

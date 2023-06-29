@@ -2,8 +2,6 @@ import { Button, Divider, Grid, Typography } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { formatDistanceToNow } from 'date-fns';
 import requestService from 'services/request';
-import { gordonColors } from 'theme';
-// @TODO CSSMODULES - outside directory
 import styles from '../../Requests.module.css';
 
 const RequestSent = ({ member, onCancel }) => {
@@ -12,14 +10,10 @@ const RequestSent = ({ member, onCancel }) => {
     onCancel(member); // Updates state of parent component to cause rerender
   };
 
-  const button = {
-    color: gordonColors.secondary.red,
-  };
-
   let cancel;
   if (member.Status === 'Pending') {
     cancel = (
-      <Button variant="outlined" size="small" style={button} onClick={handleCancel}>
+      <Button variant="outlined" size="small" color="error" onClick={handleCancel}>
         Cancel
       </Button>
     );

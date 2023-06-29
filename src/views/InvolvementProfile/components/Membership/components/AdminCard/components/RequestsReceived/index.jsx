@@ -12,11 +12,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import requestService from 'services/request';
-import { gordonColors } from 'theme';
-
-const redButton = {
-  color: gordonColors.secondary.red,
-};
 
 const useStyles = makeStyles(
   {
@@ -66,7 +61,7 @@ const RequestsReceived = ({ onAddMember }) => {
               />
 
               <ListItemSecondaryAction>
-                <Button style={redButton} onClick={() => onDeny(request.RequestID)} size="small">
+                <Button color="error" onClick={() => onDeny(request.RequestID)} size="small">
                   Deny
                 </Button>
                 &emsp;
