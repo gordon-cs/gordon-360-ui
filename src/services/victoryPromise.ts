@@ -1,4 +1,3 @@
-import { gordonColors } from 'theme';
 import http from './http';
 
 export type VictoryPromiseCategory =
@@ -8,13 +7,13 @@ export type VictoryPromiseCategory =
   | 'leadership_worldwide';
 
 export const Colors = {
-  christian_character: gordonColors.secondary.red,
-  intellectual_maturity: gordonColors.secondary.green,
-  lives_of_service: gordonColors.secondary.yellow,
-  leadership_worldwide: gordonColors.primary.cyan,
+  christian_character: '#B53228',
+  intellectual_maturity: '#B2BB1C',
+  lives_of_service: '#FDB913',
+  leadership_worldwide: '#00AEEF',
 } as const;
 
-export type VictoryPromiseColor = typeof Colors[VictoryPromiseCategory];
+export type VictoryPromiseColor = (typeof Colors)[VictoryPromiseCategory];
 
 type VPScores = {
   /** Intellectual Maturity score */
