@@ -39,14 +39,13 @@ import {
   FaMapMarkerAlt as LocationCity,
   FaUser as Person,
 } from 'react-icons/fa';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
 import SearchField, { SelectOption } from './components/SearchField';
-import addressService from 'services/address';
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
 
