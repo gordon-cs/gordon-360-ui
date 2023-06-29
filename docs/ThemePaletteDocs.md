@@ -1,14 +1,17 @@
 Contents
 --
 
-- [Changes](#Changes)
-  - [Theme Variables](#Theme-Variables)
-  - [Setting the Theme](#Setting-the-Theme)
+- [Overview](#Project-Overview)
+  - [Reasons for Project](#Project-Overview)
+  - [What we Did](#For-these-reasons-we-decided-to-tackle-a-couple-of-related-projects:)
+- [Changes Made](#Changes)
+  - [What are Theme Variables?](#Theme-Variables)
+  - [Setting the Theme (light, dark, more?)](#Setting-the-Theme)
 - [Guide for Future Developers](#Guide-for-Future-Developers)
-  - [Dark Mode](#Adding-new-CSS-Files)
-  - [In-Line Coloring](#In-Line-Coloring)
-  - [Colors](#Adding-new-CSS-Files)
-  - [Styling with CSS](#Styling-with-CSS)
+  - [Dark Mode Considerations](#Adding-new-CSS-Files)
+  - [Importance of In-Line Coloring](#In-Line-Coloring)
+  - [How we define Colors](#Adding-new-CSS-Files)
+  - [Styling with CSS, when to do it](#Styling-with-CSS)
   - [Adding new CSS Files](#Adding-new-CSS-Files)
 
 Project Overview
