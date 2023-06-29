@@ -33,7 +33,7 @@ are tackling this project to respond to several problems.
 Throughout this project, we were loosely followed the steps described in the MUI
 [migration guide](https://mui.com/material-ui/experimental-api/css-theme-variables/migration/).
 
-# Changes
+### Changes
 
 #### Theme variables
 
