@@ -16,15 +16,19 @@ const UpdateOffice = () => {
   const handleSubmit = async () => {
     try {
       await userService.updateOfficeLocation({ BuildingDescription: building, RoomNumber: room });
-      createSnackbar('Your office location will update within a couple hours.', 'success');
+      setSnackbar({
+        message: 'Your office location will update within a couple hours.',
+        severity: 'success',
+        open: true,
+      });
     } catch {
-      createSnackbar('Office location failed to update. Please contact CTS.', 'error');
+      setSnackbar({
+        message: 'Office location failed to update. Please contact CTS.',
+        severity: 'error',
+        open: true,
+      });
     }
     setOpen(false);
-  };
-
-  const createSnackbar = (message, severity) => {
-    setSnackbar({ message, severity, open: true });
   };
 
   useEffect(() => {
