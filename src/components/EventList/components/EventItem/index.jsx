@@ -34,17 +34,19 @@ const EventItem = ({ event }) => {
           <Typography type="caption" className={styles.descriptionText}>
             {event.Description || 'No description available'}
           </Typography>
-          <add-to-calendar-button
-            name={event.title}
-            options="'Apple','Google','Outlook.com','MicrosoftTeams'"
-            location={event.location}
-            startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
-            endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
-            startTime={format(new Date(event.StartDate), 'HH:mm')}
-            endTime={format(new Date(event.EndDate), 'HH:mm')}
-            timeZone="America/New_York"
-            description={event.Description}
-          ></add-to-calendar-button>
+          {event.StartDate !== '' && event.EndDate !== '' && (
+            <add-to-calendar-button
+              name={event.title}
+              options="'Apple','Google','Outlook.com','MicrosoftTeams'"
+              location={event.location}
+              startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
+              endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
+              startTime={format(new Date(event.StartDate), 'HH:mm')}
+              endTime={format(new Date(event.EndDate), 'HH:mm')}
+              timeZone="America/New_York"
+              description={event.Description}
+            ></add-to-calendar-button>
+          )}
         </CardContent>
       </Collapse>
     </Grid>
