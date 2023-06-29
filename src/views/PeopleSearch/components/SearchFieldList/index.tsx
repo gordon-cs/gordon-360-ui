@@ -292,7 +292,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   };
 
   const handleSwitchChange = () => {
-    if (switchYearRange === true) {
+    if (switchYearRange) {
       setSearchParams((sp) => ({
         ...sp,
         initial_year: '',
