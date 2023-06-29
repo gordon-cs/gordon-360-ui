@@ -13,15 +13,19 @@ const UpdateOfficeHours = () => {
   const handleSubmit = async () => {
     try {
       await userService.updateOfficeHours(hours);
-      createSnackbar('Your office hours will update within a couple hours.', 'success');
+      setSnackbar({
+        message: 'Your office hours will update within a couple hours.',
+        severity: 'success',
+        open: true,
+      });
     } catch {
-      createSnackbar('Office hours failed to update. Please contact CTS.', 'error');
+      setSnackbar({
+        message: 'Office hours failed to update. Please contact CTS.',
+        severity: 'error',
+        open: true,
+      });
     }
     setOpen(false);
-  };
-
-  const createSnackbar = (message, severity) => {
-    setSnackbar({ message, severity, open: true });
   };
 
   return (
