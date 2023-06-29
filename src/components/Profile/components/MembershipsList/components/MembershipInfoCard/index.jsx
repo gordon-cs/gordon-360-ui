@@ -78,14 +78,7 @@ const OnlineOnlyLink = ({ element, children }) => {
   }
 };
 
-const MembershipInfoCard = ({
-  myProf,
-  membershipHistory,
-  createSnackbar,
-  changeState,
-  state,
-  firstIndex,
-}) => {
+const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }) => {
   const isOnline = useNetworkStatus();
   return (
     <>
@@ -113,11 +106,19 @@ const MembershipInfoCard = ({
               <List>
                 {membershipHistory.Memberships.map((session) => (
                   <ListItem key={membershipHistory.ActivityCode}>
-                    <OnlineOnlyLink element={session}>
-                      <Typography>{session.SessionDescription}</Typography>
-                      <Typography>{session.ParticipationDescription}</Typography>
-                    </OnlineOnlyLink>
-                    {myProf && <PrivacyToggle element={session} createSnackbar={createSnackbar} />}
+                    <Grid container xs={12} className={styles.membership_info_card_description}>
+                      <Grid item xs={7}>
+                        <OnlineOnlyLink element={session}>
+                          <Typography>{session.SessionDescription}</Typography>
+                          <Typography>{session.ParticipationDescription}</Typography>
+                        </OnlineOnlyLink>
+                      </Grid>
+                      <Grid item xs={4}>
+                        {myProf && (
+                          <PrivacyToggle element={session} createSnackbar={createSnackbar} />
+                        )}
+                      </Grid>
+                    </Grid>
                   </ListItem>
                 ))}
               </List>
