@@ -9,61 +9,23 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material/';
-import LockIcon from '@mui/icons-material/Lock';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { Link } from 'react-router-dom';
 import styles from './MembershipInfoCard.module.css';
 import membershipService from 'services/membership';
-import activity from 'services/activity';
-import { useEffect, useState } from 'react';
-// import { ArrowDropDown } from '@material-ui/icons';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { element } from 'prop-types';
 
-const PrivacyToggle = ({ element, createSnackbar, changeStatus }) => {
-  useEffect(() => {
-    async function loadPrivacy() {
-      const involvement = await activity.get(element.ActivityCode);
-      element.IsInvolvementPrivate = involvement.Privacy;
-    }
-    loadPrivacy();
-  }, [element]);
-
-  // const [reload, setReload] = useState(false);
-
-  // useEffect(() => {
-  //   if ()
-  // }, [reload])
-
-  // useEffect(() => {
-  //   changeStatus((val) => !val);
-  // }, [element.Privacy]);
-
-  // const isOnline = useNetworkStatus();
-
+const PrivacyToggle = ({ element, createSnackbar }) => {
   const toggleMembershipPrivacy = async (element) => {
-    debugger;
     try {
-      console.log('before');
-      console.log('Privacy:', element.Privacy);
       const update = await membershipService.setMembershipPrivacy(
         element.MembershipID,
         !element.Privacy,
       );
-
       element.Privacy = !element.Privacy;
-
-      console.log('after');
-      console.log('Privacy:', element.Privacy);
 
       if (update.Privacy === element.Privacy) {
         createSnackbar(element.Privacy ? 'Membership Hidden' : 'Membership Shown', 'success');
-        // try {
-        //   changeStatus(element);
-        // } catch (e) {
-        //   console.error(e);
-        //   createSnackbar('callback not right', 'error');
-        // }
       } else {
         createSnackbar(
           element.Privacy ? 'Failed to Show Membership' : 'Failed to Hide Membership',
@@ -96,7 +58,6 @@ const PrivacyToggle = ({ element, createSnackbar, changeStatus }) => {
 const OnlineOnlyLink = ({ element, children }) => {
   const isOnline = useNetworkStatus();
   const showPrivate = element.IsInvolvementPrivate || element.Privacy;
-  // const [showPrivate, setShowPrivacy] = useState(element.IsInvolvementPrivate || element.Privacy);
   if (isOnline) {
     return (
       <Link
@@ -125,43 +86,7 @@ const MembershipInfoCard = ({
   state,
   firstIndex,
 }) => {
-  //the whole list refreshes when privacy changes here
   const isOnline = useNetworkStatus();
-  const [localMembershipHistory, setMembershipHistory] = useState(membershipHistory);
-
-  const callBackFunction = (change) => {
-    debugger;
-    console.log('change', change);
-    console.log('localMembershipHisory ', localMembershipHistory);
-    let index;
-    localMembershipHistory.Memberships.map((mem, i) => {
-      if (mem.MembershipID === change.MembershipID) {
-        index = i;
-        mem.Privacy = change.Privacy;
-        console.log('after LMH mem', localMembershipHistory.mem);
-      }
-    });
-    console.log('index ', index);
-    console.log(
-      'localMembershipHistory.Memberships[index] ',
-      localMembershipHistory.Memberships[index],
-    );
-
-    // setMembershipHistory(
-    //   // ...membershipHistory,
-    //   // // (membershipHistory.Memberships = change),
-    //   // (membershipHistory.Memberships = change),
-    //   (membershipHistory.Memberships[index] = change),
-    //   //   membershipHistory.Memberships.map((mem, i) => {
-    //   //     if (mem.MembershipID === change.MembershipID) {
-    //   //       mem.Privacy = change.Privacy;
-    //   //     }
-    //   //   }),
-    // );
-
-    // changeState(...state, (state[firstIndex].Memberships[index] = change));
-  };
-
   return (
     <>
       <Grid
@@ -192,14 +117,7 @@ const MembershipInfoCard = ({
                       <Typography>{session.SessionDescription}</Typography>
                       <Typography>{session.ParticipationDescription}</Typography>
                     </OnlineOnlyLink>
-                    {myProf && (
-                      <PrivacyToggle
-                        element={session}
-                        createSnackbar={createSnackbar}
-                        //changeStatus={callBackFunction}
-                        changeStatus={callBackFunction}
-                      />
-                    )}
+                    {myProf && <PrivacyToggle element={session} createSnackbar={createSnackbar} />}
                   </ListItem>
                 ))}
               </List>

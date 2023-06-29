@@ -2,7 +2,6 @@ import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import activity from 'services/activity';
 import membershipService from 'services/membership';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import styles from './MembershipsList.module.css';
@@ -28,56 +27,18 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
       const memberships = await membershipService.get({ username, sessionCode: '*' });
 
       if (myProf) {
-        // await Promise.all(
-        //   memberships.map(async (membership) => {
-        //     const involvement = await activity.get(membership.ActivityCode);
-        //     membership.IsInvolvementPrivate = involvement.Privacy;
-        //   }),
-        // );
         const myMemberships = await membershipService.groupByActivityCode(username);
         setMembershipHistories(myMemberships);
       } else {
         const publicMemberships = await membershipService.getPublicMemberships(username);
         setMembershipHistories(publicMemberships);
       }
-
-      //setMemberships(memberships);
       setLoading(false);
     }
     loadMemberships();
   }, [myProf, username]);
 
   const MembershipsList = () => {
-    console.log(membershipHistories);
-    //if (memberships.length === 0) {
-    // const [localMembershipHistories, setMembershipHistories] = useState(membershipHistories);
-
-    // const callBackFunction = (change) => {
-    //   debugger;
-    //   //element = localMembershipHistory.find((m) => m.MembershipID === change.MembershipID);
-    //   console.log('change', change);
-    //   console.log('localMembershipHisory ', localMembershipHistories);
-    //   let firstIndex = 0;
-    //   let index = 0;
-    //   // localMembershipHistory.Memberships.map((mem, i) => {
-    //   //   if (mem.MembershipID === change.MembershipID) {
-    //   //     index = i;
-    //   //     mem.Privacy = change.Privacy;
-    //   //     console.log('after LMH mem', localMembershipHistory.mem);
-    //   //   }
-    //   // });
-    //   console.log('index ', index);
-    //   // console.log(
-    //   //   'localMembershipHistory.Memberships[index] ',
-    //   //   localMembershipHistory.Memberships[index],
-    //   // );
-
-    //   setMembershipHistories(
-    //     ...membershipHistories,
-    //     (membershipHistories[firstIndex].Memberships[index] = change),
-    //   );
-    // };
-
     if (membershipHistories.length === 0) {
       return (
         <Link to={`/involvements`}>
@@ -87,49 +48,14 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
         </Link>
       );
     } else {
-      return membershipHistories.map((membership, i) => (
+      return membershipHistories.map((membership) => (
         <MembershipInfoCard
-          // myProf={myProf}
-          // membership={membership}
-          // key={membership.MembershipID}
-          // onTogglePrivacy={toggleMembershipPrivacy}
           myProf={myProf}
           membershipHistory={membership}
           key={membership.ActivityCode}
-          //onTogglePrivacy={toggleMembershipPrivacy}
           createSnackbar={createSnackbar}
-          // changeState={setMembershipHistories} //not sure
-          // state={membershipHistories} // not sure
-          // firstIndex={i}
         />
       ));
-    }
-  };
-
-  const toggleMembershipPrivacy = async (membership) => {
-    try {
-      let updated = await membershipService.setMembershipPrivacy(
-        membership.MembershipID,
-        !membership.Privacy,
-      );
-      if (updated.Privacy !== membership.Privacy) {
-        createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
-      } else {
-        createSnackbar(
-          membership.Privacy ? 'Failed to Show Membership' : 'Failed to Hide Membership',
-          'error',
-        );
-      }
-      setMembershipHistories(
-        membershipHistories.map((m) => {
-          if (m.MembershipID === membership.MembershipID) {
-            m.Privacy = !m.Privacy;
-          }
-          return m;
-        }),
-      );
-    } catch {
-      createSnackbar('Privacy Change Failed', 'error');
     }
   };
 
