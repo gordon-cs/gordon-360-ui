@@ -142,10 +142,10 @@ for involvements and profile photos, or in specific cases where the color isn't 
 
 #### Adding new CSS Files
 
-Gordon 360 uses CSS modules, which are specific to the folder they are in. As part of our project
-to remove in-line styling where possible, we created many new CSS files.
+Gordon 360 uses CSS modules, written in SASS, which are specific to the folder they are in. As part 
+of our project to remove in-line styling where possible, we created many new CSS files.
 
-To create a new CSS for a component, create a new file in the enclosing folder called
+To create a new CSS for a component, create a new file in the enclosing folder called something like
 `componentName.module.scss`, and create whatever CSS classes you want. This will create a SASS
 file, (so you can make use of the extra functionality SASS includes), and will also generate two
 files for you which convert SASS to CSS. Then, within your component's index file, add the
