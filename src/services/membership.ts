@@ -1,4 +1,5 @@
 import http from './http';
+import { compareByProperty, sort } from './utils';
 
 export type MembershipView = {
   ActivityType: 'LEA' | 'MIN' | 'RES';
@@ -71,7 +72,7 @@ const editMembership = (membershipID: string, data: MembershipUpload): Promise<M
   http.put(`memberships/${membershipID}`, data);
 
 const setMembershipPrivacy = (membershipID: number, isPrivate: boolean): Promise<MembershipView> =>
-  http.put(`memberships/${membershipID}/privacy`, isPrivate);
+  http.patch(`memberships/${membershipID}/privacy`, isPrivate);
 
 const remove = (membershipID: string): Promise<MembershipView> =>
   http.del(`memberships/${membershipID}`);
@@ -117,6 +118,42 @@ const getFollowersNum = (involvementCode: string, sessionCode: string): Promise<
     participationTypes: Participation.Guest,
   });
 
+const getMembershipsForUser = (username: string): Promise<MembershipView[]> =>
+  http.get(`memberships/student/${username}`);
+
+const getPublicMemberships = (username: string): Promise<MembershipHistory[]> =>
+  groupByActivityCode(username).then(sort(compareByProperty('ActivityDescription')));
+
+interface MembershipHistory {
+  ActivityCode: string;
+  ActivityDescription: string;
+  ActivityImagePath: string;
+  Memberships: MembershipView[];
+}
+
+const groupByActivityCode = async (username: string) => {
+  const memberships = await getMembershipsForUser(username);
+  const grouped: MembershipHistory[] = [];
+  memberships.forEach((curMembership) => {
+    const existingMembership = grouped.find(
+      (item) => item.ActivityCode === curMembership.ActivityCode,
+    );
+    if (existingMembership) {
+      existingMembership.Memberships.push(curMembership);
+    } else {
+      const newMembershipHistory: MembershipHistory = {
+        ActivityCode: curMembership.ActivityCode,
+        ActivityDescription: curMembership.ActivityDescription,
+        //ActivityImage: curMembership.ActivityImage,
+        ActivityImagePath: curMembership.ActivityImagePath,
+        Memberships: [curMembership],
+      };
+      grouped.push(newMembershipHistory);
+    }
+  });
+  return grouped;
+};
+
 const membershipService = {
   addMembership,
   checkAdmin,
@@ -127,6 +164,8 @@ const membershipService = {
   remove,
   setGroupAdmin,
   setMembershipPrivacy,
+  groupByActivityCode,
+  getPublicMemberships,
 };
 
 export default membershipService;
