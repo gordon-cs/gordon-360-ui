@@ -9,20 +9,8 @@ import './ScheduleCalendar.css';
 const GordonScheduleCalendar = (props) => {
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [isDoubleClick, setIsDoubleClick] = useState(false);
   const [currentSession, setCurrentSession] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
-
-  const customEventPropGetter = (event, start, end, isSelected) => {
-    if (event.id > 1000) {
-      return {
-        className: 'custom-event',
-        style: {
-          backgroundColor: isSelected ? '#8d4987' : '#9b5094',
-        },
-      };
-    } else return {};
-  };
 
   useEffect(() => {
     loadData(props.profile);
@@ -88,7 +76,6 @@ const GordonScheduleCalendar = (props) => {
         resources={resourceMap}
         resourceIdAccessor="resourceId"
         resourceTitleAccessor="resourceTitle"
-        eventPropGetter={customEventPropGetter}
         formats={formats}
       />
     );

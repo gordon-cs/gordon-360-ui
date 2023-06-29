@@ -63,7 +63,7 @@ function getMeetingDays(course: CourseSchedule): number[] {
 function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
   const today = moment();
   let eventId = 0;
-  let summerMeetingDays = [1, 2, 3, 4, 5];
+  let asyncMeetingDays = [1, 2, 3, 4, 5];
 
   const eventArray = schedule.flatMap((course) => {
     course.CRS_CDE = course.CRS_CDE.trim();
@@ -81,7 +81,7 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
     const meetingDays = getMeetingDays(course);
 
     if (course.ROOM_CDE === 'ASY') {
-      return summerMeetingDays.map((day) => ({
+      return asyncMeetingDays.map((day) => ({
         id: eventId++,
         title: course.CRS_CDE + ' in ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
         start: today.toDate(),

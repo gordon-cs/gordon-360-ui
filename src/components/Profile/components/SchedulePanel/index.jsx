@@ -32,15 +32,15 @@ const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
   const [isExpanded, setIsExpanded] = useState(props, myProf ? false : true);
   const [disabled, setDisabled] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState();
   const [isDoubleClick, setIsDoubleClick] = useState(false);
   const [description, setDescription] = useState('');
-  const [modifiedTimeStamp, setModifiedTimeStamp] = useState(null);
+  const [modifiedTimeStamp, setModifiedTimeStamp] = useState();
   const [loading, setLoading] = useState(true);
   const [resourceId, setResourceId] = useState(0);
   const [reloadCall, setReloadCall] = useState(false);
   const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
-  const [scheduleControlInfo, setScheduleControlInfo] = useState(null);
+  const [scheduleControlInfo, setScheduleControlInfo] = useState();
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -108,16 +108,6 @@ const GordonSchedulePanel = (props) => {
   const handleDescriptionSubmit = async (descValue) => {
     await schedulecontrol.setScheduleDescription(descValue);
     loadData(props.profile);
-  };
-
-  const handleDoubleClick = (event) => {
-    if (props.myProf && event.id > 1000) {
-      setState({
-        myScheduleOpen: true,
-        selectedEvent: event,
-        isDoubleClick: true,
-      });
-    }
   };
 
   const handleIsExpanded = () => setIsExpanded((prevExpanded) => !prevExpanded);
@@ -229,7 +219,6 @@ const GordonSchedulePanel = (props) => {
                     term={selectedSession}
                     myProf={props.myProf}
                     handleEditDescriptionButton={handleEditDescriptionButton}
-                    handleDoubleClick={handleDoubleClick}
                     reloadCall={reloadCall}
                     isOnline={props.isOnline}
                   />
