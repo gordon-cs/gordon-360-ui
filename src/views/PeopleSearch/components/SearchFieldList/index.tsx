@@ -34,6 +34,7 @@ import {
   FaCalendarTimes,
   FaGlobeAmericas,
   FaHeart,
+  FaPaperPlane,
   FaSchool,
   FaHome as Home,
   FaMapMarkerAlt as LocationCity,
@@ -96,6 +97,7 @@ const defaultSearchParams: PeopleSearchQuery = {
   building: '',
   initial_year: '',
   final_year: '',
+  involvement: '',
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -147,6 +149,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [graduationYearRange, setGraduationYearRange] = useState<number[]>([1889, currentYear]);
   // 1889 is the establish date of Gordon
   const [switchYearRange, setSwitchYearRange] = useState(true);
+  const [involvements, setInvolvements] = useState<string[]>([]);
 
   /**
    * Default search params adjusted for the user's identity.
@@ -200,15 +203,17 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   useEffect(() => {
     const loadPage = async () => {
-      const [majors, minors, halls, states, countries, departments, buildings] = await Promise.all([
-        peopleSearchService.getMajors(),
-        peopleSearchService.getMinors(),
-        peopleSearchService.getHalls(),
-        addressService.getStates(),
-        addressService.getCountries(),
-        peopleSearchService.getDepartments(),
-        peopleSearchService.getBuildings(),
-      ]);
+      const [majors, minors, halls, states, countries, departments, buildings, involvements] =
+        await Promise.all([
+          peopleSearchService.getMajors(),
+          peopleSearchService.getMinors(),
+          peopleSearchService.getHalls(),
+          addressService.getStates(),
+          addressService.getCountries(),
+          peopleSearchService.getDepartments(),
+          peopleSearchService.getBuildings(),
+          peopleSearchService.getInvolvements(),
+        ]);
       setMajors(majors);
       setMinors(minors);
       setHalls(halls);
@@ -216,6 +221,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setCountries(countries.map((c) => c.Name));
       setDepartments(departments);
       setBuildings(buildings);
+      setInvolvements(involvements);
 
       setLoading(false);
     };
@@ -269,6 +275,20 @@ const SearchFieldList = ({ onSearch }: Props) => {
       [event.target.name]:
         event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     }));
+    if (event.target.name === 'includeFacStaff' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        building: '',
+        department: '',
+      }));
+    } else if (event.target.name === 'includeStudent' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        major: '',
+        minor: '',
+        class_year: '',
+      }));
+    }
   };
 
   const handleEnterKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -465,6 +485,16 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     select
                     disabled={!searchParams.includeStudent}
                   />
+                  <SearchField
+                    name="involvement"
+                    value={searchParams.involvement}
+                    updateValue={handleUpdate}
+                    options={involvements.sort()}
+                    Icon={FaPaperPlane}
+                    select
+                    disabled={!searchParams.includeStudent}
+                  />
+
                   {switchYearRange ? (
                     <SearchField
                       name="graduation_year"

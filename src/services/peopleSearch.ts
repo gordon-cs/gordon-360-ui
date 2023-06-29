@@ -75,6 +75,7 @@ export type PeopleSearchQuery = {
   relationship_status?: string;
   initial_year: string;
   final_year: string;
+  involvement: string;
 };
 
 const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
@@ -93,6 +94,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     country: searchFields.country,
     department: searchFields.department,
     building: searchFields.building,
+    involvement: searchFields.involvement,
   })
     .filter(([_key, value]) => Boolean(value))
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
@@ -123,6 +125,8 @@ const getDepartments = (): Promise<string[]> => http.get(`advancedsearch/departm
 
 const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
+const getInvolvements = (): Promise<string[]> => http.get(`advancedsearch/involvements`);
+
 const peopleSearchService = {
   search,
   getMajors,
@@ -130,6 +134,7 @@ const peopleSearchService = {
   getHalls,
   getDepartments,
   getBuildings,
+  getInvolvements,
 };
 
 export default peopleSearchService;
