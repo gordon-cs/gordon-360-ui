@@ -127,22 +127,8 @@ const getPublicMemberships = (username: string): Promise<MembershipHistory[]> =>
 interface MembershipHistory {
   ActivityCode: string;
   ActivityDescription: string;
-  //ActivityImage: string;
   ActivityImagePath: string;
   Memberships: MembershipView[];
-  // Description: string;
-  // EndDate: string;
-  // FirstName: string;
-  // GroupAdmin: boolean;
-  // IDNumber: number;
-  // LastName: string;
-  // MembershipID: number;
-  // Participation: Participation;
-  // ParticipationDescription: ParticipationDesc;
-  // Privacy: boolean | null;
-  // SessionCode: string;
-  // SessionDescription: string;
-  // StartDate: string;
 }
 
 const groupByActivityCode = async (username: string) => {

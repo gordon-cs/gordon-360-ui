@@ -41,7 +41,7 @@
   margin-right: 0.5rem;
 }
 
-@media (max-width: 700px) {
+@media (max-width: $break-sm) {
   .membership_info_card {
     padding: 1.5rem 0rem;
     flex-direction: column-reverse;
