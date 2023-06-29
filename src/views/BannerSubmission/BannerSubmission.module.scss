@@ -7,4 +7,7 @@
     background-color: var(--mui-palette-secondary-main);
     color: var(--mui-palette-primary-contrastText);
   }
+  &_card {
+    justify-content: center;
+  }
 }

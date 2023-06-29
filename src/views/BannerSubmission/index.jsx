@@ -15,12 +15,6 @@ import { AuthGroup } from 'services/auth';
 import BannerAdmin from './components/BannerAdmin';
 import styles from './BannerSubmission.module.css';
 
-const style = {
-  cardAction: {
-    justifyContent: 'center',
-  },
-};
-
 const BannerSubmission = () => {
   const authenticated = useIsAuthenticated();
   const isOnline = useNetworkStatus();
@@ -60,7 +54,7 @@ const BannerSubmission = () => {
               accepted.
             </Typography>
           </CardContent>
-          <CardActions style={style.cardAction}>
+          <CardActions className={styles.bannerSubmission_card}>
             <Button
               variant="contained"
               className={styles.bannerSubmission_button}

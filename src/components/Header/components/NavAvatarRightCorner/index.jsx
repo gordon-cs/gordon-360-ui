@@ -3,6 +3,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
+import { gordonColors } from 'theme';
 import styles from '../../Header.module.css';
 
 const useStyles = makeStyles({
@@ -19,7 +20,7 @@ const useStyles = makeStyles({
       boxShadow: '0px 1px 2px 0px rgba(0, 0, 0, 0.5)',
     },
     '&_placeholder': {
-      className: 'styles.gordon_header_placeholder',
+      backgroundColor: gordonColors.primary.cyan,
     },
   },
 });

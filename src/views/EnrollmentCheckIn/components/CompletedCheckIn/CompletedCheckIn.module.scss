@@ -1,13 +1,15 @@
-.button_container {
-  Button:disabled {
-    background-color: var(--mui-palette-neutral-dark);
+.completed_check_in {
+  &_button_container {
+    Button:disabled {
+      background-color: var(--mui-palette-neutral-dark);
+    }
+    :global(.MuiButton-contained) {
+      background-color: var(--mui-palette-primary-main);
+      color: var(--mui-palette-primary-contrastText);
+    }
   }
-  :global(.MuiButton-contained) {
-    background-color: var(--mui-palette-primary-main);
-    color: var(--mui-palette-primary-contrastText);
-  }
-}
 
-.congrats_note {
-  color: var(--mui-palette-secondary-main);
+  .congrats_note {
+    color: var(--mui-palette-secondary-main);
+  }
 }

@@ -1,7 +1,7 @@
 @import '../../../../../../vars';
 
 .icon {
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-dark);
   height: 1.5em;
   width: 1.5em;
 }

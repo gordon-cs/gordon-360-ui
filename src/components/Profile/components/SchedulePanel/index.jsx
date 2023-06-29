@@ -17,12 +17,12 @@ import { Markup } from 'interweave';
 import { Component, Fragment } from 'react';
 import myschedule from 'services/myschedule';
 import schedulecontrol from 'services/schedulecontrol';
+import { gordonColors } from 'theme';
 import urlRegex from 'url-regex-safe';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import RemoveScheduleDialog from './components/RemoveScheduleDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import MyScheduleDialog from './components/myScheduleDialog';
-import styles from './SchedulePanel.module.css';
 
 // Default values
 const STARTHOUR = '08:00';
@@ -30,12 +30,11 @@ const ENDHOUR = '22:00';
 
 const styles2 = {
   colorSwitchBase: {
-    //not sure if these call the css classes right-I can't see this part
-    color: styles.schedule_panel_color_switch_base,
+    color: gordonColors.neutral.lightGray,
     '&$colorChecked': {
-      color: styles.schedule_panel_color_checked,
+      color: gordonColors.primary.cyan,
       '& + $colorBar': {
-        backgroundColor: styles.schedule_panel_color_bar,
+        backgroundColor: gordonColors.primary.cyan,
       },
     },
   },
@@ -249,6 +248,10 @@ class GordonSchedulePanel extends Component {
       }
     });
 
+    const button = {
+      background: gordonColors.primary.cyan,
+      color: 'white',
+    };
     const { classes } = this.props;
     let isFaculty = String(this.props.profile.PersonType).includes('fac');
 
@@ -262,7 +265,7 @@ class GordonSchedulePanel extends Component {
       lastUpdate;
 
     lastUpdate = (
-      <div className={styles.schedule_panel_text}>
+      <div style={{ color: gordonColors.primary.cyan }}>
         <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
         {Boolean(this.scheduleControlInfo) && (
           <Typography>
@@ -330,11 +333,7 @@ class GordonSchedulePanel extends Component {
     if (this.props.myProf) {
       editDescriptionButton = (
         <Fragment>
-          <Button
-            variant="contained"
-            className={styles.schedule_panel_edit_button}
-            onClick={this.handleEditDescriptionOpen}
-          >
+          <Button variant="contained" style={button} onClick={this.handleEditDescriptionOpen}>
             EDIT DESCRIPTION
           </Button>
         </Fragment>
@@ -346,7 +345,7 @@ class GordonSchedulePanel extends Component {
         <Fragment>
           <Button
             variant="contained"
-            className={styles.schedule_panel_remove_button}
+            style={{ backgroundColor: gordonColors.secondary.red, color: 'white' }}
             onClick={this.handleRemoveMyScheduleOpen}
             disabled={this.state.disabled} //disabled
           >

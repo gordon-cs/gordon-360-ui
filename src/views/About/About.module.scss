@@ -11,7 +11,7 @@
 
   &_title {
     text-align: center;
-    padding: 1rem;
+    padding-top: 2rem;
     color: var(--mui-palette-neutral-contrastText);
   }
 
@@ -23,5 +23,11 @@
   &_header {
     background-color: var(--mui-palette-primary-main);
     color: var(--mui-palette-primary-contrastText);
+  }
+
+  &_subheader {
+    color: var(--mui-palette-neutral-contrastText);
+    text-align: center;
+    padding-bottom: 0.5rem;
   }
 }
