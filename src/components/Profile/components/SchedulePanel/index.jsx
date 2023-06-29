@@ -203,7 +203,7 @@ const GordonSchedulePanel = (props) => {
                     </Grid>
                   </Grid>
                 )}
-                <Grid item xs={12} md={6} lg={3} spacing={2}>
+                <Grid item xs={12} lg={3} spacing={2}>
                   <FormControl variant="filled" fullWidth>
                     <InputLabel id="schedule session">Term</InputLabel>
                     <Select
