@@ -162,9 +162,6 @@ let LightGray = '#CCCCCB';
 let Black = '#000000';
 let White = '#FFFFFF';
 
-//Other
-let Orange = '#DE571F';
-
 // Dev Tool coloring - Colors for development and testing purposes
 let TestTool = '#FF8400';
 let TestToolContrast = '#FF0000';
@@ -192,8 +189,6 @@ export const newTheme = extendTheme({
         secondary: {
           main: ScottieCyan,
           contrastText: White,
-          light: Orange,
-          dark: OldSchemeGreen,
           50: ScottieCyan10PercentOpacity,
           100: '#B0E2F9',
           200: '#7BD0F5',
@@ -279,8 +274,6 @@ export const newTheme = extendTheme({
         secondary: {
           main: TestTool,
           contrastText: TestTool,
-          light: TestTool,
-          dark: TestTool,
           50: TestTool,
           100: TestTool,
           200: TestTool,
