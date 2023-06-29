@@ -76,9 +76,6 @@
   }
 
   @media (min-width: $break-md) {
-    .menu_button {
-      display: none;
-    }
     .app_bar {
       background-image: url('./gc_seal_top_72.png');
       height: $header-height-md;

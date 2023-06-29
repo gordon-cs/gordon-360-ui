@@ -4,6 +4,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
+import RememberMeIcon from '@mui/icons-material/RememberMe';
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import { Divider, List } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonNavButton from 'components/NavButton';
@@ -109,6 +111,30 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
+  const idButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      openUnavailableDialog={setDialog}
+      onLinkClick={onLinkClick}
+      linkName={'ID Cards'}
+      linkPath={'/id'}
+      LinkIcon={RememberMeIcon}
+      divider={false}
+    />
+  );
+
+  const apartAppsButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      openUnavailableDialog={setDialog}
+      onLinkClick={onLinkClick}
+      linkName={'Apartment Applications'}
+      linkPath={'/apartapp'}
+      LinkIcon={MapsHomeWorkIcon}
+      divider={false}
+    />
+  );
+
   const linksButton = (
     <GordonNavButton
       unavailable={isOnline ? null : 'offline'}
@@ -175,6 +201,8 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {eventsButton}
         {peopleButton}
         {timesheetsButton}
+        {idButton}
+        {apartAppsButton}
       </List>
 
       <Divider />

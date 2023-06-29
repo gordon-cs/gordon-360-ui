@@ -12,6 +12,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { NavLink, Route, Routes } from 'react-router-dom';
 import routes from 'routes';
 import { authenticate } from 'services/auth';
@@ -24,6 +25,7 @@ import styles from './Header.module.css';
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
 const GordonHeader = ({ onDrawerToggle }) => {
+  const navigate = useNavigate();
   const [tabIndex, setTabIndex] = useState(0);
   const [dialog, setDialog] = useState('');
   const [width] = useWindowSize();
@@ -32,6 +34,10 @@ const GordonHeader = ({ onDrawerToggle }) => {
   const isOnline = useNetworkStatus();
   const setDocumentTitle = useDocumentTitle();
   const isAuthenticated = useIsAuthenticated();
+
+  const handleOpenProfile = () => {
+    navigate('/myprofile');
+  };
 
   /**
    * Update the tab highlight indicator based on the url
@@ -208,7 +214,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
             </div>
           </div>
 
-          <GordonNavAvatarRightCorner onClick={handleOpenMenu} menuOpened={isMenuOpen} />
+          <GordonNavAvatarRightCorner onClick={handleOpenProfile} />
 
           <GordonNavButtonsRightCorner
             open={isMenuOpen}
