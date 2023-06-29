@@ -6,13 +6,11 @@ import {
   Grid,
   Typography,
   IconButton,
-  Card,
-  CardHeader,
   FormControl,
   InputLabel,
   Select,
-  CardContent,
   MenuItem,
+  Divider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
@@ -83,15 +81,14 @@ const GordonSchedulePanel = (props) => {
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
       if (scheduleControlInfo) {
-        setScheduleControlInfo({
-          isSchedulePrivate: scheduleControlInfo.IsSchedulePrivate,
-          description: scheduleControlInfo.Description
+        setDescription(
+          scheduleControlInfo.Description
             ? scheduleControlInfo.Description.replace(new RegExp('SlSh', 'g'), '/')
                 .replace(new RegExp('CoLn', 'g'), ':')
                 .replace(new RegExp('dOT', 'g'), '.')
             : '',
-          modifiedTimeStamp: scheduleControlInfo.ModifiedTimeStamp,
-        });
+        );
+        setModifiedTimeStamp(scheduleControlInfo.ModifiedTimeStamp);
       }
     } catch (e) {}
     setLoading(false);
@@ -189,45 +186,43 @@ const GordonSchedulePanel = (props) => {
               <Typography>{isExpanded ? 'Hide' : 'Show'} Schedule</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Grid container direction="row" justifyContent="center" align="left">
+              <Grid container direction="row" justifyContent="center" align="left" spacing={4}>
                 {props.isOnline && (
-                  <Grid container direction="row" item xs={12} lg={10}>
-                    <Grid item align="center" xs={2}>
-                      <Typography>Office Hours:</Typography>
+                  <Grid container direction="row" item xs={12} lg={12} spacing={2}>
+                    <Grid item lg={1}></Grid>
+                    <Grid item xs={4} lg={1} align="left" className={styles.officeHourText}>
+                      <Markup content="Office Hours: " />
                       <item>{editDescriptionButton}</item>
                     </Grid>
-                    <Grid
-                      item
-                      xs={10}
-                      justifyContent="flex-start"
-                      classname={styles.officeHourText}
-                    >
+                    <Grid item xs={7} lg={9} align="left" classname={styles.officeHourText}>
+                      <Divider />
                       <item>
-                        <Markup classname={styles.officeHourText} content={replaced} />
+                        <Markup content={replaced} />
                       </item>
-                    </Grid>
-                    <Grid item xs={12} md={6} lg={3}>
-                      <FormControl variant="filled" fullWidth>
-                        <InputLabel id="schedule session">Term</InputLabel>
-                        <Select
-                          labelId="schedule-session"
-                          id="schedule-session"
-                          value={selectedSession}
-                          onChange={(e) => handleSelectSession(e.target.value)}
-                        >
-                          {(isOnline
-                            ? sessions
-                            : sessions.filter((item) => item.SessionCode === selectedSession)
-                          ).map(({ SessionDescription: description, SessionCode: code }) => (
-                            <MenuItem label={description} value={code} key={code}>
-                              {description}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
+                      <Divider />
                     </Grid>
                   </Grid>
                 )}
+                <Grid item xs={12} md={6} lg={3} spacing={2}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel id="schedule session">Term</InputLabel>
+                    <Select
+                      labelId="schedule-session"
+                      id="schedule-session"
+                      value={selectedSession}
+                      onChange={(e) => handleSelectSession(e.target.value)}
+                    >
+                      {(isOnline
+                        ? sessions
+                        : sessions.filter((item) => item.SessionCode === selectedSession)
+                      ).map(({ SessionDescription: description, SessionCode: code }) => (
+                        <MenuItem label={description} value={code} key={code}>
+                          {description}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar
                     profile={props.profile}
