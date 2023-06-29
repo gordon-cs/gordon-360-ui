@@ -111,7 +111,7 @@ with proper contrast, colors, etc.
 
 Many MUI components can reference the palette colors without the use of CSS.  For example, buttons, 
 headers, typography and others have a `color` prop.  A button with the prop `color='primary'` will 
-have a GordonBlue backgroundand White text color based on the main and contrast text colors defined 
+have a GordonBlue background and White text color based on the main and contrast text colors defined 
 in the primary colors.  Where possible, you should use the color prop instead of external CSS unless 
 further customization is needed.
 
