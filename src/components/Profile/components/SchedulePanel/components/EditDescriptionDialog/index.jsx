@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import { gordonColors } from 'theme';
 import styles from './EditDescriptionDialog.module.css';
 
 import { Dialog, DialogTitle, DialogActions, Button, TextField } from '@mui/material';
@@ -42,11 +41,6 @@ export default class EditDescriptionDialog extends Component {
   };
 
   render() {
-    const button = {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    };
-
     return (
       <Dialog open={this.props.editDescriptionOpen} keepMounted fullWidth="true" maxWidth="xs">
         <div className={styles.desc_tile}>
@@ -65,11 +59,15 @@ export default class EditDescriptionDialog extends Component {
             <Button
               onClick={this.props.handleEditDescriptionClose}
               variant="contained"
-              style={button}
+              className={styles.edit_description_dialog_button}
             >
               Cancel
             </Button>
-            <Button variant="contained" onClick={this.handleSubmit} style={button}>
+            <Button
+              variant="contained"
+              onClick={this.handleSubmit}
+              className={styles.edit_description_dialog_button}
+            >
               Submit
             </Button>
           </DialogActions>

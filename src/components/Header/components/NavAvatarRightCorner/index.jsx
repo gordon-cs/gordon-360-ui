@@ -3,7 +3,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
-import { gordonColors } from 'theme';
 import styles from '../../Header.module.css';
 
 const useStyles = makeStyles({
@@ -20,7 +19,7 @@ const useStyles = makeStyles({
       boxShadow: '0px 1px 2px 0px rgba(0, 0, 0, 0.5)',
     },
     '&_placeholder': {
-      backgroundColor: gordonColors.primary.cyan,
+      className: 'styles.gordon_header_placeholder',
     },
   },
 });
@@ -68,7 +67,8 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
           aria-owns={'global-menu'}
           aria-haspopup="true"
           onClick={onClick}
-          size="large">
+          size="large"
+        >
           {avatar}
         </IconButton>
       </Tooltip>

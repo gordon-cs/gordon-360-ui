@@ -1,0 +1,14 @@
+.gordon_confetti {
+  &_blue {
+    color: var(--mui-palette-primary-main);
+  }
+  &_cyan {
+    color: var(--mui-palette-secondary-main);
+  }
+  &_orange {
+    color: var(--mui-palette-secondary-light);
+  }
+  &_green {
+    color: var(--mui-palette-secondary-dark);
+  }
+}

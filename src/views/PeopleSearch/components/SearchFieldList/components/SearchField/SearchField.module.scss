@@ -5,3 +5,12 @@
   height: 1.5em;
   width: 1.5em;
 }
+
+.search_field {
+  &_light_gray_icon {
+    color: var(--mui-palette-neutral-dark);
+  }
+  &_gray_shade_icon {
+    color: var(--mui-palette-neutral-900);
+  }
+}

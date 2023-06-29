@@ -1,6 +1,4 @@
 import { Component, Fragment } from 'react';
-
-import { gordonColors } from 'theme';
 import myschedule from 'services/myschedule';
 import {
   FormHelperText,
@@ -17,6 +15,7 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import { TimePicker } from '@mui/x-date-pickers';
+import styles from './MyScheduleDialog.module.css';
 
 // Default values
 const STARTHOUR = '08:00';
@@ -336,10 +335,6 @@ export default class MyScheduleDialog extends Component {
   };
 
   render() {
-    const button = {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    };
     let dialogTitle = 'Add a';
 
     if (this.props.isDoubleClick) {
@@ -502,10 +497,18 @@ export default class MyScheduleDialog extends Component {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.handleMyScheduleClose} variant="contained" style={button}>
+          <Button
+            onClick={this.props.handleMyScheduleClose}
+            variant="contained"
+            className={styles.my_schedule_dialog_button}
+          >
             Cancel
           </Button>
-          <Button onClick={this.handleReset} variant="contained" style={button}>
+          <Button
+            onClick={this.handleReset}
+            variant="contained"
+            className={styles.my_schedule_dialog_button}
+          >
             Reset
           </Button>
           <Button
@@ -513,7 +516,7 @@ export default class MyScheduleDialog extends Component {
             type="submit"
             disabled={!this.state.formValid}
             variant="contained"
-            style={button}
+            className={styles.my_schedule_dialog_button}
           >
             Submit
           </Button>

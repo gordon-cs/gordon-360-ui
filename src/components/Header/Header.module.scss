@@ -46,6 +46,10 @@
     display: none;
   }
 
+  &_placeholder {
+    background-color: var(--mui-palette-secondary-main);
+  }
+
   .people_search_container_container {
     width: 15rem;
     text-align: right;

@@ -1,5 +1,5 @@
 import { Component, Fragment } from 'react';
-import { gordonColors } from 'theme';
+import styles from './RemoveScheduleDialog.module.css';
 
 import { Dialog, DialogTitle, DialogActions, Button } from '@mui/material';
 
@@ -19,11 +19,6 @@ export default class RemoveScheduleDialog extends Component {
   };
 
   render() {
-    const button = {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    };
-
     return (
       <Fragment>
         <Dialog
@@ -38,11 +33,15 @@ export default class RemoveScheduleDialog extends Component {
             <Button
               onClick={this.props.handleRemoveMyScheduleClose}
               variant="contained"
-              style={button}
+              className={styles.remove_schedule_dialog_button}
             >
               No
             </Button>
-            <Button variant="contained" onClick={this.handleSubmit} style={button}>
+            <Button
+              variant="contained"
+              onClick={this.handleSubmit}
+              className={styles.remove_schedule_dialog_button}
+            >
               Yes
             </Button>
           </DialogActions>
