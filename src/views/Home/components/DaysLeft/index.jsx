@@ -35,18 +35,11 @@ const DaysLeft = () => {
   }, []);
 
   return (
-    <Card>
-      <CardHeader
-        title={currentSessionDescription}
-        style={{
-          backgroundColor: gordonColors.primary.blue,
-          color: gordonColors.neutral.grayShades[50],
-        }}
-      >
+    <Card className={styles.card}>
+      <CardHeader title={currentSessionDescription} className={styles.header}>
         <br />
       </CardHeader>
       <CardContent>
-        <CardHeader title={currentSessionDescription} className={styles.cardHeader} />
         {loading ? (
           <GordonLoader />
         ) : (

@@ -23,11 +23,7 @@ const NewsCard = () => {
             <Grid item xs={5} align="right">
               <Button
                 variant="contained"
-                //color="secondary"
-                style={{
-                  backgroundColor: 'var(--mui-palette-primary-main)',
-                  color: 'var(--mui-palette-secondary-contrastText',
-                }}
+                className={styles.card_button}
                 component={Link}
                 to="/news"
               >
@@ -36,10 +32,7 @@ const NewsCard = () => {
             </Grid>
           </Grid>
         }
-        style={{
-          backgroundColor: 'var(--mui-palette-primary-main)',
-          color: 'var(--mui-palette-secondary-contrastText',
-        }}
+        className={styles.card_header}
       />
       <CardContent>
         {news.length > 0 ? (

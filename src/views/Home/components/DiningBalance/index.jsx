@@ -199,29 +199,29 @@ const DiningBalance = () => {
 
   return (
     <Card className={styles.card}>
-      <CardContent>
-        <Grid container direction="row" alignItems="center">
-          <Grid item xs={7} align="left">
-            <CardHeader title="Dining Balance" />
+      <CardHeader
+        title={
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={7} align="left">
+              Dining Balance
+            </Grid>
+            <Grid item xs={5} align="right">
+              <Button
+                variant="contained"
+                className={styles.button}
+                component={Link}
+                href="https://gordon.cafebonappetit.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                TODAY'S MENU
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={5} align="right">
-            <Button
-              variant="contained"
-              style={{
-                backgroundColor: 'var(--mui-palette-secondary-main)',
-                color: 'var(--mui-palette-secondary-contrastText',
-              }}
-              component={Link}
-              href="https://gordon.cafebonappetit.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              TODAY'S MENU
-            </Button>
-          </Grid>
-        </Grid>
-        {content}
-      </CardContent>
+        }
+        className={styles.header}
+      />
+      <CardContent>{content}</CardContent>
     </Card>
   );
 };
