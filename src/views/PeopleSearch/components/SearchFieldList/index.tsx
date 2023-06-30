@@ -260,6 +260,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setSearchParams((sp) => ({
         ...sp,
         class_standing: '',
+        minor: '',
       }));
     } else if (event.target.name === 'class_standing') {
       setSearchParams((sp) => ({
@@ -497,7 +498,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     options={involvements.sort()}
                     Icon={FaPaperPlane}
                     select
-                    disabled={!searchParams.includeStudent}
+                    disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
                   />
 
                   {(isAlumni || isFacStaff) && switchYearRange ? (
