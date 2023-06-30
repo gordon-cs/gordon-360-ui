@@ -26,4 +26,25 @@
     margin-right: -16px;
     margin-top: -8px;
   }
+
+  .checkOutlinedIcon {
+    color: var(--mui-palette-success-main);
+  }
+
+  .outlinedIconText {
+    font-size: 16;
+  }
+
+  .iconButton {
+    visibility: hidden;
+  }
+
+  .red {
+    color: var(--mui-palette-error-main);
+  }
+
+  .redButton {
+    background: var(--mui-palette-error-main);
+    color: var(--mui-palette-neutral-light);
+  }
 }
