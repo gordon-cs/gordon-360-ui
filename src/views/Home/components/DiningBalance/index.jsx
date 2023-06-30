@@ -216,7 +216,7 @@ const DiningBalance = () => {
           <Grid item xs={6} align="left">
             <CardHeader title="Dining Balance" />
           </Grid>
-          <Grid item xs={1} align="right">
+          <Grid item xs={5} align="right">
             <IconButton
               title="Change Meal Plan"
               className={styles.gc360_my_profile_edit_icon}
@@ -226,8 +226,6 @@ const DiningBalance = () => {
             >
               <EditIcon />
             </IconButton>
-          </Grid>
-          <Grid item xs={5} align="right">
             <Button
               variant="contained"
               style={{
