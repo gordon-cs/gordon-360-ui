@@ -1,5 +1,4 @@
 @import '../../vars';
-// @import '../../theme.ts';
 
 .pwa_instructions {
   &_title {
@@ -107,7 +106,7 @@
   }
 }
 
-@media (max-width: 599px) {
+@media (max-width: $break-sm) {
   .pwa_instructions {
     &_title {
       text-align: center;

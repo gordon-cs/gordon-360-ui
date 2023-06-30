@@ -6,7 +6,7 @@ const GordonTooltip = ({ content, ...OtherProps }) => {
   return (
     <Tooltip
       classes={{ tooltip: styles.tooltip }}
-      title={<span style={{ fontSize: '0.8rem' }}>{content}</span>}
+      title={<span className={styles.tooltipTitle}>{content}</span>}
       {...OtherProps}
     >
       <HelpIcon className={styles.helpIcon} />
