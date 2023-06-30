@@ -150,7 +150,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       // Only students and facstaff search students by default - alumni aren't allowed to search students
       includeStudent: isStudent || isFacStaff,
       // Only alumni search alumni by default
-      includeAlumni: isAlumni,
+      includeAlumni: isAlumni && !isStudent && !isFacStaff,
     }),
     [isAlumni, isFacStaff, isStudent],
   );
