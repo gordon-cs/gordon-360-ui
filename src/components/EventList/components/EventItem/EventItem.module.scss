@@ -16,7 +16,7 @@
 }
 
 :global(.gc360_event_list) > section {
-  background-color: var(--mui-palette-primary-contrastText);
+  background-color: var(--mui-palette-neutral-light);
   transition: background-color 200ms ease;
   &:hover {
     background-color: var(--mui-palette-secondary-main);

@@ -4,6 +4,12 @@ import { toTitleCase } from 'services/utils';
 import { Colors, VictoryPromiseCategory, VictoryPromiseColor } from 'services/victoryPromise';
 import styles from './VictoryPromiseIcon.module.css';
 
+const colors = {
+  primary1: '#014983',
+  secondary1: '#CCCCCB',
+  secondary2: '#ffffff',
+};
+
 const CategoryDescription = {
   christian_character:
     'Opportunities encouraging faith formation and its connection to living, learning and leading with others',
@@ -43,8 +49,8 @@ const VictoryPromiseIcon = ({
   );
 };
 
-type PrimaryColor = VictoryPromiseColor | '#014983';
-type SecondaryColor = '#CCCCCB' | '#ffffff';
+type PrimaryColor = VictoryPromiseColor | typeof colors.primary1;
+type SecondaryColor = typeof colors.secondary1 | typeof colors.secondary2;
 
 type IconProps = {
   primary: PrimaryColor;
