@@ -21,8 +21,8 @@ import { useWindowSize } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
 import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
-import { gordonColors } from 'theme';
 import { useLocation, useNavigate } from 'react-router-dom';
+import styles from './Events.module.css';
 
 const Events = () => {
   const [open, setOpen] = useState(false);
@@ -109,32 +109,6 @@ const Events = () => {
     setURLParams(!includePast, filters);
   };
 
-  function searchBarLength() {
-    if (width >= 1800 && width <= 1920) {
-      return 6.85;
-    } else if (width >= 1700 && width < 1800) {
-      return 6.5;
-    } else if (width >= 1600 && width < 1700) {
-      return 6.23;
-    } else if (width >= 1500 && width < 1600) {
-      return 5.9;
-    } else if (width >= 1400 && width < 1500) {
-      return 6.85;
-    } else if (width >= 1300 && width < 1400) {
-      return 6.45;
-    } else if (width >= 1200 && width < 1300) {
-      return 5.96;
-    } else if (width >= 1100 && width < 1200) {
-      return 6.6;
-    } else if (width >= 1000 && width < 1100) {
-      return 6.05;
-    } else if (width >= 920 && width < 1000) {
-      return 5.5;
-    } else {
-      return 5.5;
-    }
-  }
-
   const setURLParams = (includePast, filters) => {
     if (includePast || filters.length > 0) {
       let url = '?';
@@ -158,7 +132,7 @@ const Events = () => {
   const searchPageTitle = (
     <div align="center">
       Search
-      <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+      <b className={styles.events_gordon_text}> Gordon </b>
       Events
     </div>
   );
@@ -168,21 +142,9 @@ const Events = () => {
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
           <Card style={{ padding: '0 0vw' }}>
-            <CardHeader
-              title={searchPageTitle}
-              style={{
-                backgroundColor: gordonColors.primary.blue,
-                color: gordonColors.neutral.grayShades[50],
-              }}
-            />
+            <CardHeader title={searchPageTitle} className={styles.events_header} />
             <Card style={{ padding: '0 3vw' }}>
               <CardContent>
-                <Grid container direction="row" alignItems="center">
-                  <Grid item xs={4} />
-                  <Grid item xs={4} align="center"></Grid>
-                  <Grid item xs={4} align="right"></Grid>
-                </Grid>
-
                 {/* Search Bar and Filters */}
                 <Grid container spacing={2} direction="row">
                   <Grid item xs={12}>
@@ -191,13 +153,11 @@ const Events = () => {
                         query="(min-width: 600px)"
                         render={() => (
                           <Grid item>
-                            <EventIcon
-                              style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                            />
+                            <EventIcon className={styles.events_icon} />
                           </Grid>
                         )}
                       />
-                      <Grid item xs={searchBarLength()}>
+                      <Grid item xs={true}>
                         <TextField
                           id="search"
                           label="Search"
@@ -229,11 +189,7 @@ const Events = () => {
                       <Grid item>
                         {isAuthenticated && (
                           <Button
-                            color="primary"
-                            style={{
-                              backgroundColor: gordonColors.primary.cyan,
-                              color: gordonColors.neutral.grayShades[50],
-                            }}
+                            className={styles.events_button}
                             variant="contained"
                             onClick={() => navigate('/attended')}
                           >
@@ -251,12 +207,7 @@ const Events = () => {
                           query="(min-width: 600px)"
                           render={() => (
                             <Grid item>
-                              <FilterListIcon
-                                style={{
-                                  color: gordonColors.neutral.grayShades[900],
-                                  fontSize: 20,
-                                }}
-                              />
+                              <FilterListIcon className={styles.events_icon} />
                             </Grid>
                           )}
                         />
@@ -274,10 +225,7 @@ const Events = () => {
                               value.map((option, index) => (
                                 <Chip
                                   label={option}
-                                  style={{
-                                    backgroundColor: gordonColors.primary.cyan,
-                                    color: gordonColors.neutral.grayShades[50],
-                                  }}
+                                  className={styles.events_chip} //check this out, it acts funky
                                   {...getTagProps({ index })}
                                 />
                               ))
@@ -318,13 +266,7 @@ const Events = () => {
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
           <Card style={{ padding: '0 0vw' }}>
-            <CardHeader
-              title={searchPageTitle}
-              style={{
-                backgroundColor: gordonColors.primary.blue,
-                color: gordonColors.neutral.grayShades[50],
-              }}
-            />
+            <CardHeader title={searchPageTitle} className={styles.events_header} />
             <Card style={{ padding: '0 3vw' }}>
               <CardContent>
                 <Grid container direction="row" alignItems="center">
@@ -340,9 +282,7 @@ const Events = () => {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <EventIcon
-                            style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                          />
+                          <EventIcon className={styles.events_icon} />
                         </Grid>
                       )}
                     />
@@ -387,10 +327,7 @@ const Events = () => {
                       {isAuthenticated && (
                         <Button
                           color="primary"
-                          style={{
-                            backgroundColor: gordonColors.primary.cyan,
-                            color: gordonColors.neutral.grayShades[50],
-                          }}
+                          className={styles.events_button}
                           variant="contained"
                           onClick={() => navigate('/attended')}
                         >
@@ -415,9 +352,7 @@ const Events = () => {
                         query="(min-width: 600px)"
                         render={() => (
                           <Grid item>
-                            <FilterListIcon
-                              style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                            />
+                            <FilterListIcon className={styles.events_icon} />
                           </Grid>
                         )}
                       />
@@ -435,10 +370,7 @@ const Events = () => {
                             value.map((option, index) => (
                               <Chip
                                 label={option}
-                                style={{
-                                  backgroundColor: gordonColors.primary.cyan,
-                                  color: gordonColors.neutral.grayShades[50],
-                                }}
+                                className={styles.events_chip}
                                 {...getTagProps({ index })}
                               />
                             ))
