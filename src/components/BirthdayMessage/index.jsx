@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import userService from 'services/user';
 import BannerSmall from './HBDBanner.png';
 import BannerLarge from './HBDBannerLarge.png';
+import styles from './BirthdayMessage.module.css';
 
 const BirthdayMessage = ({ open, setOpen, name }) => {
   const [confetti, setConfetti] = useState(false);
@@ -33,20 +34,12 @@ const BirthdayMessage = ({ open, setOpen, name }) => {
 
   const Banner = width >= 1200 ? BannerLarge : BannerSmall;
 
-  return isAuthenticated && isBirthday ? (
-    <Card
-      style={{
-        cursor: 'pointer',
-        backgroundColor: 'transparent',
-        boxShadow: 'none',
-        marginBottom: '40px',
-      }}
-      onClick={popConfetti}
-    >
-      <div style={{ position: 'fixed', zIndex: 999999, top: -60, left: '50vw' }}>
+  return isAuthenticated && !isBirthday ? (
+    <Card className={styles.message_card} onClick={popConfetti}>
+      <div className={styles.confetti}>
         <GordonConfetti active={confetti} colorOption="Gordon" />
       </div>
-      <img src={Banner} alt="Happy Birthday Banner" style={{ width: '100%' }} />
+      <img src={Banner} alt="Happy Birthday Banner" className={styles.banner} />
     </Card>
   ) : null;
 };
