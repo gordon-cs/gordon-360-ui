@@ -6,6 +6,7 @@ import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import event from 'services/event';
+import styles from './EventsAttended.module.css';
 
 const EventsAttended = () => {
   const [events, setEvents] = useState([]);
@@ -42,7 +43,7 @@ const EventsAttended = () => {
     content = (
       <Grid item align="center">
         <br /> <br />
-        <Typography variant="h4" align="center">
+        <Typography variant="h4" align="center" className={styles.eventsAttended_title}>
           No Events To Show
         </Typography>
         <br />

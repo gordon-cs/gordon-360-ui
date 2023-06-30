@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
-import { gordonColors } from 'theme';
 import GordonTooltip from 'components/GordonTooltip';
 
 const OfficeInfoList = ({
@@ -71,7 +70,7 @@ const OfficeInfoList = ({
           href="https://go.gordon.edu/general/myaccount.cfm"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: gordonColors.primary.blue }}
+          className={styles.office_info_list_link}
         >
           here
         </a>

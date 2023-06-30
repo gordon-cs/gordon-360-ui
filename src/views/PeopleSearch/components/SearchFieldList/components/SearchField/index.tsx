@@ -2,7 +2,6 @@ import { Grid, MenuItem, TextField, useMediaQuery } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { IconContext, IconType } from 'react-icons';
 import { toTitleCase } from 'services/utils';
-import { gordonColors } from 'theme';
 import styles from './SearchField.module.scss';
 
 export interface SelectOption {
@@ -69,8 +68,8 @@ const SearchField = ({
           <IconContext.Provider
             value={{
               color: disabled
-                ? gordonColors.neutral.lightGray
-                : gordonColors.neutral.grayShades[900],
+                ? styles.search_field_light_gray_icon
+                : styles.search_field_gray_shade_icon,
             }}
           >
             <Icon className={styles.icon} />

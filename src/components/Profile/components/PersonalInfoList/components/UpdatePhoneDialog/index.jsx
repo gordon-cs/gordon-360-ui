@@ -5,6 +5,7 @@ import GordonSnackbar from 'components/Snackbar';
 import { forwardRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 import userService from 'services/user';
+import styles from './UpdatePhone.module.css';
 
 const UpdatePhone = () => {
   const [open, setOpen] = useState(false);
@@ -27,8 +28,8 @@ const UpdatePhone = () => {
 
   return (
     <div>
-      <IconButton style={{ marginBottom: '0.5rem' }} onClick={() => setOpen(true)} size="large">
-        <EditIcon style={{ fontSize: 20 }} />
+      <IconButton className={styles.edit_button} onClick={() => setOpen(true)} size="large">
+        <EditIcon fontSize="small" />
       </IconButton>
       <GordonDialogBox
         open={open}
@@ -40,19 +41,21 @@ const UpdatePhone = () => {
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
       >
-        <FormControl>
-          <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
-          <Input
-            type="tel"
-            id="mobile-phone-number-input"
-            name="mobilePhoneNumber"
-            value={mobilePhoneNumber}
-            onChange={(event) => setMobilePhoneNumber(event.target.value)}
-            inputComponent={phoneMaskUS}
-            required="required"
-            autoFocus
-          />
-        </FormControl>
+        <div className={styles.form}>
+          <FormControl>
+            <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
+            <Input
+              type="tel"
+              id="mobile-phone-number-input"
+              name="mobilePhoneNumber"
+              value={mobilePhoneNumber}
+              onChange={(event) => setMobilePhoneNumber(event.target.value)}
+              inputComponent={phoneMaskUS}
+              required="required"
+              autoFocus
+            />
+          </FormControl>
+        </div>
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}

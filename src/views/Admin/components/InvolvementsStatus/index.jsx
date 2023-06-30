@@ -5,6 +5,7 @@ import session from 'services/session';
 import InvolvementStatusListItem from './components/InvolvementStatusList/index';
 import { Typography, Card, CardHeader } from '@mui/material';
 import { NotFoundError } from 'services/error';
+import styles from './InvolvementsStatus.module.css';
 
 const InvolvementStatusList = ({ status }) => {
   const [loading, setLoading] = useState(true);
@@ -42,7 +43,12 @@ const InvolvementStatusList = ({ status }) => {
 
   return (
     <Card>
-      <CardHeader color="primary" align="center" title={`${status} Involvements`} />
+
+      <CardHeader
+        className={styles.involvements_status_header}
+        align="center"
+        title={`${status} Involvements`}
+      />
       {loading ? (
         <GordonLoader />
       ) : involvements.length > 0 ? (
