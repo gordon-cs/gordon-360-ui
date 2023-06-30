@@ -1,10 +1,6 @@
-.news {
-  &_title {
-    color: var(--mui-palette-neutral-contrastText);
-  }
-  &_header {
+.remove_schedule_dialog {
+  &_button {
     background-color: var(--mui-palette-primary-main);
     color: var(--mui-palette-primary-contrastText);
-    padding: 10px;
   }
 }

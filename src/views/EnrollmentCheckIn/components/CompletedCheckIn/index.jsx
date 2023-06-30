@@ -1,6 +1,7 @@
 import { Button, Grid, Typography } from '@mui/material';
 import { useUser } from 'hooks';
 import { Link } from 'react-router-dom';
+// @TODO CSSMODULES - outside directory
 import styles from './CompletedCheckIn.module.css';
 
 const CompletedCheckIn = () => {
@@ -11,10 +12,15 @@ const CompletedCheckIn = () => {
       alignItems="center"
       justifyContent="center"
       direction="column"
-      className={styles.button_container}
+      className={styles.completed_check_in_button_container}
     >
       <Grid item xs={8}>
-        <Typography variant="h5" gutterBottom align="center" className={styles.congrats_note}>
+        <Typography
+          variant="h5"
+          gutterBottom
+          align="center"
+          className={styles.completed_check_in_congrats_note}
+        >
           Congratulations {profile.FirstName} on completing Enrollment Checkin!
         </Typography>
         <br />
