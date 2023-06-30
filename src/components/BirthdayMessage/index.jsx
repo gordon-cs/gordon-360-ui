@@ -34,7 +34,7 @@ const BirthdayMessage = ({ open, setOpen, name }) => {
 
   const Banner = width >= 1200 ? BannerLarge : BannerSmall;
 
-  return isAuthenticated && !isBirthday ? (
+  return isAuthenticated && isBirthday ? (
     <Card className={styles.message_card} onClick={popConfetti}>
       <div className={styles.confetti}>
         <GordonConfetti active={confetti} colorOption="Gordon" />
