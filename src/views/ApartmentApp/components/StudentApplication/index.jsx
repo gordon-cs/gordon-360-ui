@@ -110,6 +110,7 @@ const StudentApplication = ({ userProfile }) => {
   const [deleteButtonAlertTimeout, setDeleteButtonAlertTimeout] = useState(null);
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
   const [submitButtonAlertTimeout, setSubmitButtonAlertTimeout] = useState(null);
+  const [applicationExists, setApplicationExists] = useState(false);
 
   /**
    * Load the user's saved apartment application, if one exists
@@ -137,6 +138,7 @@ const StudentApplication = ({ userProfile }) => {
       // Check if the current user is on an application. Returns the application ID number if found
       const newApplicationID = await housing.getCurrentApplicationID();
       if (newApplicationID > 0) {
+        setApplicationExists(true);
         const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
         setApplicationDetails(newApplicationDetails);
         setUnsavedChanges(false);
@@ -570,6 +572,11 @@ const StudentApplication = ({ userProfile }) => {
   const deleteApartmentApplication = async () => {
     setDeleting(true);
     setDeleteButtonAlertTimeout(null);
+    if (!applicationExists) {
+      setApplicationDetails(loadApplication);
+      setDeleting(false);
+      return;
+    }
     try {
       const result = await housing.deleteApartmentApplication(applicationDetails.ApplicationID);
       if (result) {

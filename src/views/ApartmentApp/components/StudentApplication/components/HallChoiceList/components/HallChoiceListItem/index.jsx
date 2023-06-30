@@ -6,7 +6,6 @@ import {
   Grid,
   IconButton,
   Input,
-  InputLabel,
   ListItem,
   ListItemSecondaryAction,
   MenuItem,
