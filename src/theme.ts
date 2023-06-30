@@ -291,9 +291,9 @@ export const newTheme = extendTheme({
           900: TestTool,
         },
         error: {
-          main: TestTool,
-          light: TestTool,
-          contrastText: TestTool,
+          main: OldSchemeRed,
+          light: NauticalRed,
+          contrastText: White,
         },
         success: {
           dark: TestTool,
@@ -304,7 +304,7 @@ export const newTheme = extendTheme({
         info: { main: TestTool },
         neutral: {
           main: DarkGray,
-          dark: TestTool,
+          dark: Athletics,
           light: Gray,
           contrastText: White,
           50: '#000000',

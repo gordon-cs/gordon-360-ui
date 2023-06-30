@@ -39,7 +39,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
     editButton = (
       <Button
         variant="outlined"
-        color="primary"
+        color="secondary"
         startIcon={<EditIcon />}
         onClick={() => handleNewsItemEdit(posting.SNID)}
         className={styles.btn}
