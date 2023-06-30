@@ -225,7 +225,7 @@ const Events = () => {
                               value.map((option, index) => (
                                 <Chip
                                   label={option}
-                                  className={styles.events_chip} //check this out, it acts funky
+                                  className={styles.events_chip}
                                   {...getTagProps({ index })}
                                 />
                               ))
