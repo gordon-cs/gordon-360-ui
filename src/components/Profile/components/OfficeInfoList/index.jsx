@@ -71,7 +71,7 @@ const OfficeInfoList = ({
           href="https://go.gordon.edu/general/myaccount.cfm"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: gordonColors.primary.blue }}
+          color="primary"
         >
           here
         </a>
