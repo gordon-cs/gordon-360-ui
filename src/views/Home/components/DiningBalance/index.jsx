@@ -1,4 +1,14 @@
-import { Button, Card, CardContent, CardHeader, Grid, Link, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Link,
+  Tooltip,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
@@ -6,7 +16,9 @@ import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import EditIcon from '@mui/icons-material/Edit';
 import { useTheme } from '@emotion/react';
+import { FaPen } from 'react-icons/fa';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
@@ -201,8 +213,19 @@ const DiningBalance = () => {
     <Card className={styles.card}>
       <CardContent>
         <Grid container direction="row" alignItems="center">
-          <Grid item xs={7} align="left">
+          <Grid item xs={6} align="left">
             <CardHeader title="Dining Balance" />
+          </Grid>
+          <Grid item xs={1} align="right">
+            <IconButton
+              title="Change Meal Plan"
+              className={styles.gc360_my_profile_edit_icon}
+              component={Link}
+              href="https://www.gordon.edu/mealplan"
+              size="small"
+            >
+              <EditIcon />
+            </IconButton>
           </Grid>
           <Grid item xs={5} align="right">
             <Button
