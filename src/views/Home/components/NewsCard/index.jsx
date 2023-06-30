@@ -21,12 +21,7 @@ const NewsCard = () => {
               Today's Student News
             </Grid>
             <Grid item xs={5} align="right">
-              <Button
-                variant="contained"
-                className={styles.card_button}
-                component={Link}
-                to="/news"
-              >
+              <Button variant="contained" color="secondary" component={Link} to="/news">
                 All News
               </Button>
             </Grid>
