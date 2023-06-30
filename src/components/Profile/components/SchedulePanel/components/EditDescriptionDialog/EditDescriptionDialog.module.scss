@@ -19,3 +19,8 @@
   grid-row: 3;
   grid-column: 4;
 }
+
+.edit_description_dialog_button {
+  background-color: var(--mui-palette-secondary-main);
+  color: var(--mui-palette-primary-contrastText);
+}

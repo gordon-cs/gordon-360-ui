@@ -1,9 +1,8 @@
 import { Polar } from 'react-chartjs-2';
 import { toTitleCase } from 'services/utils';
 import { Colors, VictoryPromiseCategory, VictoryPromiseColor } from 'services/victoryPromise';
-import { gordonColors } from 'theme';
 
-const colors = new Array<VictoryPromiseColor | typeof gordonColors.neutral.lightGray>(4);
+const colors = new Array<VictoryPromiseColor | '#dbdbda'>(4);
 const data = new Array<number>(4);
 const labels = new Array<string>(4);
 
@@ -25,7 +24,7 @@ const GraphDisplay = ({ scores }: Props) => {
       colors[index] = Colors[key];
       data[index] = value;
     } else {
-      colors[index] = gordonColors.neutral.lightGray;
+      colors[index] = '#dbdbda';
       data[index] = emptySliceValue;
     }
   });

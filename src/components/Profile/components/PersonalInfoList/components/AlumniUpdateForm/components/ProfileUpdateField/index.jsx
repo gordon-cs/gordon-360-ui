@@ -49,11 +49,7 @@ const ProfileUpdateField = ({
       break;
     case 'select':
       field = (
-        <FormControl
-          variant="filled"
-          className={`${styles.select_text} ${styles.field}`}
-          style={{ width: '100%' }}
-        >
+        <FormControl variant="filled" className={`${styles.select_text} ${styles.field}`}>
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={onChange}>
             {menuItems.map((item) => (
