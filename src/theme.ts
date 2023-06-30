@@ -153,6 +153,7 @@ let BarringtonGold = '#FDB913';
 // Info
 let SnowDay = '#D5F0FE';
 let NightMarsh = '#023947';
+let Athletics = '#081F2C';
 
 // Neutral
 let BackgroundLightGray = '#EBEAEA';
@@ -211,7 +212,7 @@ export const newTheme = extendTheme({
           light: SeaSpray,
         },
         warning: { main: BarringtonGold, dark: OldSchemeRed },
-        info: { main: SnowDay, dark: NightMarsh },
+        info: { main: NightMarsh, light: SnowDay, dark: Athletics },
         neutral: {
           main: BackgroundLightGray /* page background and contrast light grey */, //currently $neutral-light-gray in _vars
           dark: LightGray /* light gray */, //currently $neutral-gray2

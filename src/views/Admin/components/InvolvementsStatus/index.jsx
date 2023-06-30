@@ -43,6 +43,7 @@ const InvolvementStatusList = ({ status }) => {
 
   return (
     <Card>
+
       <CardHeader
         className={styles.involvements_status_header}
         align="center"

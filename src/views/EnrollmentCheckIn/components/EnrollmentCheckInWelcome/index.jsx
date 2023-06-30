@@ -1,6 +1,5 @@
 import { Grid, Typography } from '@mui/material';
 import { useUser } from 'hooks';
-import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory
 import styles from '../../EnrollmentCheckIn.module.css';
 import MajorHolds from './components/MajorHolds';
@@ -13,7 +12,7 @@ const EnrollmentCheckInWelcome = ({ hasMajorHold, holds }) => {
   return (
     <Grid container justifyContent="center" alignItems="center" direction="column">
       <Grid item>
-        <Typography align="center" variant="h5" style={{ color: gordonColors.primary.blue }}>
+        <Typography align="center" variant="h5" color="primary">
           <b>Enrollment Check-In</b>
         </Typography>
         <Typography justify="center" className={styles.checkIn}>
@@ -27,7 +26,7 @@ const EnrollmentCheckInWelcome = ({ hasMajorHold, holds }) => {
         {hasMajorHold && <MajorHolds holds={holds} />}
         {holds?.MustRegisterForClasses && ( // If a student is not registered for courses they cannot check in
           <Grid item>
-            <Typography variant="h6" align="center" style={{ color: gordonColors.primary.blue }}>
+            <Typography variant="h6" align="center" color="primary">
               <b>Register for Courses</b>
             </Typography>
             <Typography align="center" gutterBottom>
@@ -65,7 +64,7 @@ const EnrollmentCheckInWelcome = ({ hasMajorHold, holds }) => {
         <br />
       </Grid>
       <Grid item>
-        <Typography align="center" variant="h6" style={{ color: gordonColors.primary.blue }}>
+        <Typography align="center" variant="h6" color="primary">
           <b>Begin the Check-In Process</b>
         </Typography>
         {hasMajorHold ? ( // If the student has a major hold, display this prompt to resolve them

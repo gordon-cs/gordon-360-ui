@@ -9,14 +9,12 @@ import {
 } from '@mui/material';
 import { forwardRef } from 'react';
 import { IMaskInput } from 'react-imask';
-import { gordonColors } from 'theme';
 
 const UpdatePhone = ({ phoneInfo, handleChangePhoneInfo, handleCheckPhoneInfo }) => {
-  const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
       <Grid item>
-        <Typography variant="h5" style={{ color: cyan }} gutterBottom>
+        <Typography variant="h5" color="secondary" gutterBottom>
           Step 2: Enter your Cell Phone Number
         </Typography>
       </Grid>
