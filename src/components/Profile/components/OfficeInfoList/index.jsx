@@ -4,6 +4,7 @@ import styles from './OfficeInfoList.module.css';
 import { gordonColors } from 'theme';
 import UpdateOffice from './UpdateOfficeLocationDialog';
 import GordonTooltip from 'components/GordonTooltip';
+import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 
 const OfficeInfoList = ({
   myProf,
@@ -44,7 +45,21 @@ const OfficeInfoList = ({
   ) : null;
 
   const officeHours = office_hours ? (
-    <ProfileInfoListItem title="Office Hours:" contentText={office_hours} />
+    <ProfileInfoListItem
+      title="Office Hours:"
+      contentText={
+        myProf ? (
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>{office_hours}</Grid>
+            <Grid item>
+              <UpdateOfficeHours />
+            </Grid>
+          </Grid>
+        ) : (
+          `${office_hours}`
+        )
+      }
+    />
   ) : null;
 
   const room =
