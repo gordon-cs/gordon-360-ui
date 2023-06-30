@@ -346,9 +346,8 @@ const PWAInstructions = (props) => {
                       <ToggleButton
                         value={item}
                         aria-label={item}
-                        //classes={classes}
                         className={styles.toggleButton}
-                        selected={device === item ? true : false}
+                        selected={device === item}
                       >
                         <Typography>{item}</Typography>
                       </ToggleButton>
@@ -397,7 +396,7 @@ const PWAInstructions = (props) => {
                             value={item}
                             aria-label={item}
                             className={styles.toggleButton}
-                            selected={platform === item ? true : false}
+                            selected={platform === item}
                             onClick={() => {
                               window.scroll({
                                 top: 100,

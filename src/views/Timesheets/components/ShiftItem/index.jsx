@@ -501,7 +501,6 @@ export default class ShiftItem extends Component {
           disableFocusListener
           disableTouchListener
           classes={{ tooltip: styles.tooltip }}
-          className={styles.tooltip_icon}
           title={COMMENTS}
           placement="top"
         >
