@@ -2,65 +2,27 @@ import { Typography, Grid } from '@mui/material';
 import mascot from './mascot.svg';
 import ScottieDog from './components/ScottieDog';
 import styles from './Page404.module.css';
-const message = "Hmmm... We're not quite sure what you're looking for";
-
-const styles2 = {
-  main: {
-    height: 'calc(100vh - 72px)',
-    margin: '-16px 0px',
-    position: 'relative',
-  },
-  message: {
-    padding: '20px',
-    maxWidth: '700px',
-    fontSize: 'calc(1vw + 1.5em)',
-  },
-  image: {
-    height: '60%',
-  },
-  mascot: {
-    height: '100%',
-    maxWidth: '90vw',
-  },
-};
+const message_line_1 = "Hmmm... We're not quite sure";
+const message_line_2 = "what you're looking for";
 
 const Page404 = () => {
   return (
-    <Grid
-      container
-      justifyContent="center"
-      alignContent="center"
-      direction="column"
-      style={styles2.main}
-    >
+    <Grid container className={styles.page404_main}>
       {/* 404 message */}
-      <Grid item style={styles2.message}>
-        <Typography
-          variant="h4"
-          align="center"
-          className={styles.page404_title}
-          style={{
-            fontSize: 'calc(0.2vw + 0.8em)',
-            fontWeight: 'bold',
-          }}
-        >
-          {message}
+      <Grid item className={styles.page404_message}>
+        <Typography variant="h4" className={styles.page404_title}>
+          {message_line_1}
+        </Typography>
+        <Typography variant="h4" className={styles.page404_title}>
+          {message_line_2}
         </Typography>
       </Grid>
       {/* Gordon mascot image */}
-      <Grid item align="center" style={styles2.image}>
-        <img src={mascot} alt="Gordon Mascot" style={styles2.mascot}></img>
+      <Grid item align="center" className={styles.page404_image}>
+        <img src={mascot} alt="Gordon Mascot" className={styles.page404_mascot}></img>
       </Grid>
       {/* Scottie dog walking across bottom animation */}
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '0px',
-          height: '100px',
-          width: '100%',
-          fontSize: '15px',
-        }}
-      >
+      <div className={styles.page404_walk_animation}>
         <ScottieDog></ScottieDog>
       </div>
     </Grid>

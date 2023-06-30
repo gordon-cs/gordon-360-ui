@@ -1,5 +1,35 @@
 .page404 {
   &_title {
     color: var(--mui-palette-neutral-600);
+    text-align: center;
+    font-size: calc(0.2vw + 0.8em);
+    font-weight: bold;
+  }
+  &_main {
+    height: calc(100vh - 72px);
+    margin: -16px 0px;
+    position: relative;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+  }
+  &_message {
+    padding: 20px;
+    max-width: 700px;
+    font-size: calc(1vw + 1.5em);
+  }
+  &_image {
+    height: 60%;
+  }
+  &_mascot {
+    height: 100%;
+    max-width: 90vw;
+  }
+  &_walk_animation {
+    position: fixed;
+    bottom: 0px;
+    height: 100px;
+    width: 100%;
+    font-size: 15px;
   }
 }
