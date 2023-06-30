@@ -288,6 +288,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
         minor: '',
         class_year: '',
       }));
+    } else if (event.target.name === 'includeAlumni' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        graduation_year: '',
+      }));
     }
   };
 
@@ -495,7 +500,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     disabled={!searchParams.includeStudent}
                   />
 
-                  {switchYearRange ? (
+                  {(isAlumni || isFacStaff) && switchYearRange ? (
                     <SearchField
                       name="graduation_year"
                       value={searchParams.graduation_year}
@@ -525,11 +530,13 @@ const SearchFieldList = ({ onSearch }: Props) => {
                       </Typography>
                     </Grid>
                   )}
-                  <FormControlLabel
-                    control={<Switch onChange={handleSwitchChange} />}
-                    label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
-                    labelPlacement="end"
-                  />
+                  {(isAlumni || isFacStaff) && (
+                    <FormControlLabel
+                      control={<Switch onChange={handleSwitchChange} />}
+                      label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
+                      labelPlacement="end"
+                    />
+                  )}
                 </AdvancedOptionsColumn>
 
                 {/* Advanced Search Filters: Faculty/Staff */}
