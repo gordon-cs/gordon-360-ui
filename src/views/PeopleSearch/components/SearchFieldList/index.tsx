@@ -137,6 +137,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [states, setStates] = useState<SelectOption[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
   const [departments, setDepartments] = useState<string[]>([]);
+  const [departmentsOptions, setDepartmentsOptions] = useState<string[]>([]); // I am adding this
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
   const [involvements, setInvolvements] = useState<string[]>([]);
@@ -212,12 +213,16 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setDepartments(departments);
       setBuildings(buildings);
       setInvolvements(involvements);
-
       setLoading(false);
     };
 
     loadPage();
   }, []);
+
+  // for getting the correct names to be displayed in the departments search field
+  useEffect(() => {
+    setDepartmentsOptions(rename());
+  }, [departments]);
 
   useEffect(() => {
     const readSearchParamsFromURL = () => {
@@ -244,6 +249,21 @@ const SearchFieldList = ({ onSearch }: Props) => {
     window.addEventListener('popstate', readSearchParamsFromURL);
     return () => window.removeEventListener('popstate', readSearchParamsFromURL);
   }, [initialSearchParams]);
+
+  const rename = () => {
+    let dep = departments;
+    dep.map((d, i) => {
+      if (/^Office of /.test(d)) {
+        dep[i] = dep[i].replace(/^Office of /, '') + ' (Office of)';
+      } else if (/^Center for /.test(d)) {
+        dep[i] = dep[i].replace(/^Center for /, '') + ' (Center for)';
+      } else if (/^Department of /.test(d)) {
+        dep[i] = dep[i].replace(/^Department of /, '') + ' (Department of)';
+      }
+    });
+    console.log(dep);
+    return dep;
+  };
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchParams((sp) => ({
@@ -460,7 +480,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="department"
                     value={searchParams.department}
                     updateValue={handleUpdate}
-                    options={departments.sort()}
+                    options={departmentsOptions.sort()}
                     Icon={FaBriefcase}
                     select
                     disabled={!searchParams.includeFacStaff}

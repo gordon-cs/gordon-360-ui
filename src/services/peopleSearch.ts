@@ -75,6 +75,20 @@ export type PeopleSearchQuery = {
   involvement: string;
 };
 
+const getOldName = (dep: string) => {
+  if (dep.endsWith('(Office of)')) {
+    dep = 'Office of ' + dep.replace(/ \(Office of\)/, '');
+    console.log(dep);
+  } else if (dep.endsWith('(Center for)')) {
+    dep = 'Center for ' + dep.replace(/ \(Center for\)/, '');
+    console.log(dep);
+  } else if (dep.endsWith('(Department of)')) {
+    dep = 'Department of ' + dep.replace(/ \(Department of\)/, '');
+    console.log(dep);
+  }
+  return dep;
+};
+
 const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
   let params = Object.entries({
     firstName: searchFields.first_name,
@@ -86,7 +100,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     homeCity: searchFields.home_town,
     state: searchFields.state,
     country: searchFields.country,
-    department: searchFields.department,
+    department: getOldName(searchFields.department),
     building: searchFields.building,
     involvement: searchFields.involvement,
   })
@@ -105,7 +119,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
   if (searchFields.includeAlumni) {
     params += '&accountTypes=alumni';
   }
-
+  console.log(params);
   return http.get(`accounts/advanced-people-search?${params}`);
 };
 
