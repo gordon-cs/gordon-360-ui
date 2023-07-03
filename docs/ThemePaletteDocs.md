@@ -133,7 +133,7 @@ existing color from the palette.
 
 #### Styling with CSS
 
-All other styling and style overrides should be done in seperate CSS classes if possible/practical.  In general, 
+All other styling and style overrides should be done in separate CSS classes if possible/practical.  In general, 
 this means that colors, padding, and other styling properties should be defined in a CSS class and used 
 in a component using the className prop (See MUI/CSS/SCSS documentation).  This should be done instead of 
 using `style=...` or `sx=...` props inside of components (replace with the `className=...` prop).  
