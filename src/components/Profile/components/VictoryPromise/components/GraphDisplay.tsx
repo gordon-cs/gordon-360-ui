@@ -2,7 +2,7 @@ import { Polar } from 'react-chartjs-2';
 import { toTitleCase } from 'services/utils';
 import { Colors, VictoryPromiseCategory, VictoryPromiseColor } from 'services/victoryPromise';
 
-let light_gray = '#EBEAEA';
+const light_gray = '#EBEAEA';
 
 const colors = new Array<VictoryPromiseColor | typeof light_gray>(4);
 const data = new Array<number>(4);
