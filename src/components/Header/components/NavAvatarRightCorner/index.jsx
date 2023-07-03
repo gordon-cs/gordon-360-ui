@@ -39,7 +39,7 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
 
   return (
     <section className={styles.right_side_container}>
-      <Tooltip className={styles.tooltip} id="tooltip_avatar" title={name ? name : 'Nav Avatar'}>
+      <Tooltip className={styles.tooltip} id="tooltip_avatar" title={name ?? 'Nav Avatar'}>
         <IconButton
           className={styles.root}
           aria-label="More"
