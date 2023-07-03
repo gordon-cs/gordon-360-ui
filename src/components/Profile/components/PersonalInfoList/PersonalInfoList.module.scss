@@ -46,3 +46,45 @@
     }
   }
 }
+
+.salsbury_link {
+  border-bottom: 1px solid currentColor;
+  text-decoration: none;
+  color: var(--mui-palette-primary-main);
+  font-size: 1.1rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+.salsbury_typography {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.dp_link {
+  border-bottom: 1px solid currentColor;
+  text-decoration: none;
+  color: var(--mui-palette-primary-main);
+  font-size: 1.1rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+.dp_typography {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.dd_link {
+  border-bottom: 1px solid currentColor;
+  text-decoration: none;
+  color: var(--mui-palette-primary-main);
+  font-size: 1.1rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+.dd_typography {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
