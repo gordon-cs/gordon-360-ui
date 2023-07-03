@@ -44,6 +44,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
   );
+  const [isPlannedGraduationYearPrivate, setIsPlannedGraduationYearPrivate] = useState(
+    Boolean(
+      profile.IsPlannedGraduationYearPrivate && profile.PlannedGraduationYear !== PRIVATE_INFO,
+    ),
+  ); // I am adding this
   const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
     profile.CliftonStrengths?.Private,
   );
@@ -134,6 +139,21 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         isHomePhonePrivate
           ? 'Personal Info Visible (This change may take several minutes)'
           : 'Personal Info Hidden (This change may take several minutes)',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
+
+  //I am adding this
+  const handleChangePlannedGraduationYearPrivate = async () => {
+    try {
+      await userService.setPlannedGraduationYearPrivate(!isPlannedGraduationYearPrivate);
+      setIsPlannedGraduationYearPrivate(!isPlannedGraduationYearPrivate);
+
+      createSnackbar(
+        isPlannedGraduationYearPrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
         'success',
       );
     } catch {
@@ -243,6 +263,50 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       <ProfileInfoListItem
         title={profile.Majors?.length > 1 ? 'Majors:' : 'Major:'}
         contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
+      />
+    );
+
+  // I am adding this
+  // I need to change later for !isAlumni in the if statement
+  const plannedGraduationYear =
+    isFacStaff || (isAlumni && !profile.PlannedGraduationYear?.length) ? null : (
+      <ProfileInfoListItem
+        title={'Planned Graduation Year:'}
+        contentText={
+          myProf ? (
+            <Grid container spacing={0} alignItems="center">
+              <Grid item>
+                {!profile.PlannedGraduationYear?.length
+                  ? 'Deciding'
+                  : profile.PlannedGraduationYear}
+              </Grid>
+              <Grid item>
+                <UpdatePhone />
+              </Grid>
+            </Grid>
+          ) : profile.PlannedGraduationYear === PRIVATE_INFO ? (
+            PRIVATE_INFO
+          ) : (
+            profile.PlannedGraduationYear
+          )
+        }
+        ContentIcon={
+          myProf && (
+            <FormControlLabel
+              control={
+                <Switch
+                  onChange={handleChangePlannedGraduationYearPrivate}
+                  checked={!isPlannedGraduationYearPrivate}
+                />
+              }
+              label={isPlannedGraduationYearPrivate ? 'Private' : 'Public'}
+              labelPlacement="bottom"
+              disabled={!isOnline}
+            />
+          )
+        }
+        privateInfo={isPlannedGraduationYearPrivate}
+        myProf={myProf}
       />
     );
 
@@ -604,6 +668,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <List>
             {majors}
             {minors}
+            {plannedGraduationYear}
             {graduationYear}
             {cliftonStrengths}
             {advisors}

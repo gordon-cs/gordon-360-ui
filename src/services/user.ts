@@ -246,7 +246,8 @@ const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
-const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) => http.patch(`profiles/office_location`, OfficeLocation);
+const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
+  http.patch(`profiles/office_location`, OfficeLocation);
 
 const updateOfficeHours = (value: string) => http.patch(`profiles/office_hours/`);
 
@@ -255,6 +256,10 @@ const setMobilePhonePrivacy = (makePrivate: boolean) =>
 
 const setHomePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
+
+const setPlannedGraduationYearPrivate = (
+  makePrivate: boolean, // I am adding this
+) => http.put('profiles/planned_graduation_year_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
