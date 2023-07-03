@@ -60,7 +60,7 @@ const Timesheets = (props) => {
   const [snackbarText, setSnackbarText] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('');
   const [clockInOut, setClockInOut] = useState('Clock In');
-  const [isUserStudent, setIsUserStudent] = useState(true); //see note below
+  const [isUserStudent, setIsUserStudent] = useState(true);
   const [errorText, setErrorText] = useState(null);
   const isOnline = useNetworkStatus();
   const { profile, loading } = useUser();

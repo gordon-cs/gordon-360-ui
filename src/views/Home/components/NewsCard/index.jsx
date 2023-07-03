@@ -21,16 +21,7 @@ const NewsCard = () => {
               Today's Student News
             </Grid>
             <Grid item xs={5} align="right">
-              <Button
-                variant="contained"
-                //color="secondary"
-                style={{
-                  backgroundColor: 'var(--mui-palette-primary-main)',
-                  color: 'var(--mui-palette-secondary-contrastText',
-                }}
-                component={Link}
-                to="/news"
-              >
+              <Button variant="contained" color="secondary" component={Link} to="/news">
                 All News
               </Button>
             </Grid>
