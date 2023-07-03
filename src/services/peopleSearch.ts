@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import http from './http';
+import { forEach } from 'lodash';
 
 export enum Class {
   'Unassigned',
@@ -77,8 +78,8 @@ export type PeopleSearchQuery = {
 };
 
 const getRenamedDepartments = async () => {
-  const [dep] = await Promise.all([getDepartments()]);
-  dep.map((d, i) => {
+  const dep = await getDepartments();
+  dep.forEach((d, i) => {
     if (/^Office of /.test(d)) {
       dep[i] = dep[i].replace(/^Office of /, '') + ' (Office of)';
     } else if (/^Center for /.test(d)) {
@@ -87,6 +88,7 @@ const getRenamedDepartments = async () => {
       dep[i] = dep[i].replace(/^Department of /, '') + ' (Department of)';
     }
   });
+  console.log(dep);
   return dep;
 };
 
