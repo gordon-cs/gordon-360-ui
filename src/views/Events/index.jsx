@@ -151,7 +151,7 @@ const Events = () => {
                 <Grid item xs={4} align="right">
                   {isAuthenticated && (
                     <Button
-                      className={styles.attended_clw}
+                      color="secondary"
                       variant="contained"
                       onClick={() => navigate('/attended')}
                     >
@@ -228,11 +228,7 @@ const Events = () => {
                           filterSelectedOptions
                           renderTags={(value, getTagProps) =>
                             value.map((option, index) => (
-                              <Chip
-                                label={option}
-                                {...getTagProps({ index })}
-                                className={styles.filters}
-                              />
+                              <Chip label={option} {...getTagProps({ index })} color="secondary" />
                             ))
                           }
                           value={filters}
@@ -282,7 +278,7 @@ const Events = () => {
                     query="(min-width: 600px)"
                     render={() => (
                       <Grid item>
-                        <EventIcon className={styles.eventIcon} />
+                        <EventIcon className={styles.event_icon} />
                       </Grid>
                     )}
                   />
@@ -326,7 +322,7 @@ const Events = () => {
                   <Grid item>
                     {isAuthenticated && (
                       <Button
-                        className={styles.attended_clw}
+                        color="secondary"
                         variant="contained"
                         onClick={() => navigate('/attended')}
                       >
@@ -368,11 +364,7 @@ const Events = () => {
                         filterSelectedOptions
                         renderTags={(value, getTagProps) =>
                           value.map((option, index) => (
-                            <Chip
-                              label={option}
-                              {...getTagProps({ index })}
-                              className={styles.filters}
-                            />
+                            <Chip label={option} {...getTagProps({ index })} color="secondary" />
                           ))
                         }
                         renderInput={(param) => (

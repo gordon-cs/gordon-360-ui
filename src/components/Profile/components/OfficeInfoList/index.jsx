@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
+import UpdateOffice from './UpdateOfficeLocationDialog';
 import GordonTooltip from 'components/GordonTooltip';
+import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 
 const OfficeInfoList = ({
   myProf,
@@ -42,12 +44,42 @@ const OfficeInfoList = ({
   ) : null;
 
   const officeHours = office_hours ? (
-    <ProfileInfoListItem title="Office Hours:" contentText={office_hours} />
+    <ProfileInfoListItem
+      title="Office Hours:"
+      contentText={
+        myProf ? (
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>{office_hours}</Grid>
+            <Grid item>
+              <UpdateOfficeHours />
+            </Grid>
+          </Grid>
+        ) : (
+          `${office_hours}`
+        )
+      }
+    />
   ) : null;
 
   const room =
     BuildingDescription || OnCampusRoom ? (
-      <ProfileInfoListItem title="Room:" contentText={`${BuildingDescription}, ${OnCampusRoom}`} />
+      <ProfileInfoListItem
+        title="Room:"
+        contentText={
+          myProf ? (
+            <Grid container spacing={0} alignItems="center">
+              <Grid item>
+                {BuildingDescription}, {OnCampusRoom}
+              </Grid>
+              <Grid item>
+                <UpdateOffice />
+              </Grid>
+            </Grid>
+          ) : (
+            `${BuildingDescription}, ${OnCampusRoom}`
+          )
+        }
+      />
     ) : null;
 
   const mailstop = Mail_Location ? (
@@ -70,7 +102,7 @@ const OfficeInfoList = ({
           href="https://go.gordon.edu/general/myaccount.cfm"
           target="_blank"
           rel="noopener noreferrer"
-          className={styles.office_info_list_link}
+          className="gc360_text_link"
         >
           here
         </a>
@@ -90,7 +122,6 @@ const OfficeInfoList = ({
             {mailstop}
             {officePhone}
             {officeHours}
-            {updateOfficeInfo}
           </List>
         </CardContent>
       </Card>

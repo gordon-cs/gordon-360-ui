@@ -6,7 +6,8 @@
     -ms-hyphens: auto;
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
-    word-break: break-word;
+    word-break: keep-all;
+    flex-wrap: wrap;
     a {
       color: var(--mui-palette-primary-main);
       &:hover {
@@ -40,7 +41,7 @@
   margin-right: 0.5rem;
 }
 
-@media (max-width: 500px) {
+@media (max-width: $break-sm) {
   .membership_info_card {
     padding: 1.5rem 0rem;
     flex-direction: column-reverse;

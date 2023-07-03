@@ -158,12 +158,7 @@ const MemberListItem = ({
             </Grid>
 
             <Grid item>
-              <Button
-                className={styles.removeButton}
-                onClick={handleRemove}
-                variant="outlined"
-                size="small"
-              >
+              <Button color="error" onClick={handleRemove} variant="outlined" size="small">
                 Remove
               </Button>
             </Grid>
@@ -338,11 +333,7 @@ const MemberListItem = ({
   } else {
     if (member.IDNumber?.toString() === profile.ID) {
       options = (
-        <Button
-          variant="contained"
-          className={styles.leaveButton}
-          onClick={() => setIsLeaveAlertOpen(true)}
-        >
+        <Button variant="contained" color="error" onClick={() => setIsLeaveAlertOpen(true)}>
           LEAVE
         </Button>
       );

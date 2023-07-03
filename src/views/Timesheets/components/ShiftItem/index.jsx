@@ -10,7 +10,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
@@ -22,15 +21,6 @@ import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import { Component } from 'react';
 import styles from './ShiftItem.module.css';
-
-const CustomTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: theme.palette.common.black,
-    color: 'rgba(255, 255, 255, 0.87)',
-    boxShadow: theme.shadows[1],
-    fontSize: 11,
-  },
-}))(Tooltip);
 
 const PickerInput = (props) => {
   return (
@@ -401,7 +391,7 @@ export default class ShiftItem extends Component {
                       });
                       this.onClose();
                     }}
-                    className={styles.yes_button}
+                    className={styles.redButton}
                   >
                     Yes
                   </Button>
@@ -420,7 +410,7 @@ export default class ShiftItem extends Component {
     );
     let deleteButton = (
       <IconButton onClick={this.handleDeleteButtonClick} size="large">
-        <DeleteForeverOutlinedIcon className={styles.delete_button} />
+        <DeleteForeverOutlinedIcon className={styles.redIconText} />
       </IconButton>
     );
     if (this.state.deleting) {
@@ -429,7 +419,7 @@ export default class ShiftItem extends Component {
 
     let checkButton = (
       <IconButton disabled={errorText !== ''} onClick={this.onCheckButtonClick} size="large">
-        <CheckOutlinedIcon className={styles.checkButton} />
+        <CheckOutlinedIcon className={styles.checkOutlinedIcon} />
       </IconButton>
     );
     if (this.state.updating) {
@@ -446,7 +436,7 @@ export default class ShiftItem extends Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <IconButton onClick={this.toggleEditing} size="large">
-                <ClearOutlinedIcon className={styles.icon_button} />
+                <ClearOutlinedIcon className={styles.redIconText} />
               </IconButton>
             </Grid>
           </Grid>
@@ -477,7 +467,7 @@ export default class ShiftItem extends Component {
       }
     } else {
       shiftItemIcons = (
-        <IconButton className={styles.shiftItemIcons} size="large">
+        <IconButton className={styles.iconButton} size="large">
           <DeleteForeverOutlinedIcon />
         </IconButton>
       );
@@ -486,30 +476,31 @@ export default class ShiftItem extends Component {
     let shiftNotesTooltip = <></>;
     if (SHIFT_NOTES !== '') {
       shiftNotesTooltip = (
-        <CustomTooltip
+        <Tooltip
           disableFocusListener
           disableTouchListener
+          classes={{ tooltip: styles.tooltip }}
           className={styles.tooltip_icon}
           title={'Shift note: ' + SHIFT_NOTES}
           placement="top"
         >
-          <MessageOutlinedIcon className={styles.shiftNotesTooltip} />
-        </CustomTooltip>
+          <MessageOutlinedIcon className={styles.outlinedIconText} />
+        </Tooltip>
       );
     }
 
     let shiftCommentTooltip = <></>;
     if (COMMENTS) {
       shiftCommentTooltip = (
-        <CustomTooltip
+        <Tooltip
           disableFocusListener
           disableTouchListener
-          className={styles.tooltip_icon}
+          classes={{ tooltip: styles.tooltip }}
           title={COMMENTS}
           placement="top"
         >
-          <InfoOutlinedIcon className={styles.shiftCommentTooltip} />
-        </CustomTooltip>
+          <InfoOutlinedIcon className={styles.outlinedIconText} />
+        </Tooltip>
       );
     }
 
@@ -517,7 +508,7 @@ export default class ShiftItem extends Component {
       errorText === '' ? (
         <Typography variant="body2">{EML_DESCRIPTION}</Typography>
       ) : (
-        <Typography className={styles.errorText} variant="body2">
+        <Typography className={styles.redIconText} variant="body2">
           {errorText}
         </Typography>
       );

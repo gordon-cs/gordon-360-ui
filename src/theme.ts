@@ -163,10 +163,14 @@ let LightGray = '#CCCCCB';
 let Black = '#000000';
 let White = '#FFFFFF';
 
-// Dev Tool coloring - Colors for development and testing purposes
-let TestTool = '#FF8400';
-let TestToolContrast = '#FF0000';
-let TestToolHalfOpacity = '#FF840082';
+// Dev Tool coloring - Colors for development and testing purposes only
+let TestTool = '#FF8400'; // devTool orange
+let TestToolContrast = '#FF0000'; // devTool red
+let TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
+
+// Dark Mode Colors!:
+let Gray = '#303233';
+let DarkGray = '#232424';
 
 // Theme to use in the CSS vars provider, allowing multiple theme modes
 export const newTheme = extendTheme({
@@ -238,19 +242,19 @@ export const newTheme = extendTheme({
         // Variables to set various MUI components, may or may not use, but good to have the
         // customizeability
         background: {
-          paper: TestTool, // Card Colors
+          paper: DarkGray, // Card Colors
         },
         text: {
-          primary: TestToolContrast, // Various MUI components and text
+          primary: White, // Various MUI components and text
         },
         Switch: {
-          defaultColor: TestTool, // switch ball color
+          defaultColor: TestTool, // switch ball off color
         },
         common: {
-          onBackground: TestTool, // switch track color
+          onBackground: TestTool, // switch track off color
         },
         action: {
-          active: TestTool, // Various icons, especially in PersonalInfo
+          active: White, // Various icons, especially in PersonalInfo
         },
 
         // May be used later, gives us the flexibility to change tooltip colors if needed for dark
@@ -259,9 +263,9 @@ export const newTheme = extendTheme({
         //   bg: TestTool, // Tooltip background color
         // },
         primary: {
-          main: TestTool,
-          contrastText: TestTool,
-          50: TestToolHalfOpacity, //should be half opacity of main
+          main: NightMarsh,
+          contrastText: White,
+          50: GordonBlueHalfOpacity, //should be half opacity of main
           100: TestTool,
           200: TestTool,
           300: TestTool,
@@ -273,8 +277,8 @@ export const newTheme = extendTheme({
           900: TestTool,
         },
         secondary: {
-          main: TestTool,
-          contrastText: TestTool,
+          main: GordonBlue,
+          contrastText: White,
           50: TestTool,
           100: TestTool,
           200: TestTool,
@@ -299,21 +303,21 @@ export const newTheme = extendTheme({
         warning: { main: TestTool, dark: TestTool },
         info: { main: TestTool },
         neutral: {
-          main: TestTool,
+          main: DarkGray,
           dark: TestTool,
-          light: TestTool,
-          contrastText: TestToolContrast,
-          50: TestTool,
-          100: TestTool,
-          200: TestTool,
-          300: TestTool,
-          400: TestTool,
-          500: TestTool,
-          600: TestTool,
-          700: TestTool,
-          800: TestTool,
-          900: TestTool,
-          A100: TestTool,
+          light: Gray,
+          contrastText: White,
+          50: '#000000',
+          100: '#1D1C1C',
+          200: '#3D3D3D',
+          300: '#5C5B5B',
+          400: '#706F6F',
+          500: '#989797',
+          600: '#B8B7B7',
+          700: '#DCDBDB',
+          800: '#EBEAEA',
+          900: '#F4F3F3',
+          A100: '#FAF9F9',
         },
       },
     },

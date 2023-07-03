@@ -3,12 +3,7 @@ import { Tooltip } from '@mui/material';
 import { toTitleCase } from 'services/utils';
 import { Colors, VictoryPromiseCategory, VictoryPromiseColor } from 'services/victoryPromise';
 import styles from './VictoryPromiseIcon.module.css';
-
-const colors = {
-  primary1: '#014983',
-  secondary1: '#CCCCCB',
-  secondary2: '#ffffff',
-};
+import { newTheme } from 'theme';
 
 const CategoryDescription = {
   christian_character:
@@ -28,8 +23,10 @@ const VictoryPromiseIcon = ({
   category: VictoryPromiseCategory;
   active: boolean;
 }) => {
-  const primary = active ? Colors[category] : '#014983';
-  const secondary = active ? '#ffffff' : '#CCCCCB';
+  const primary = active ? Colors[category] : newTheme.vars.palette.primary.main;
+  const secondary = active
+    ? newTheme.vars.palette.neutral.light
+    : newTheme.vars.palette.neutral.dark;
   const IconComponent = CategoryIcon[category];
   return (
     <Tooltip
@@ -49,8 +46,10 @@ const VictoryPromiseIcon = ({
   );
 };
 
-type PrimaryColor = VictoryPromiseColor | typeof colors.primary1;
-type SecondaryColor = typeof colors.secondary1 | typeof colors.secondary2;
+type PrimaryColor = VictoryPromiseColor | typeof newTheme.vars.palette.primary.main;
+type SecondaryColor =
+  | typeof newTheme.vars.palette.neutral.dark
+  | typeof newTheme.vars.palette.neutral.light;
 
 type IconProps = {
   primary: PrimaryColor;
