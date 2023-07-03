@@ -45,6 +45,7 @@ const EventItem = ({ event }) => {
               endTime={format(new Date(event.EndDate), 'HH:mm')}
               timeZone="America/New_York"
               description={event.Description}
+              onClick={() => setExpanded((e) => !e)}
             ></add-to-calendar-button>
           )}
         </CardContent>
