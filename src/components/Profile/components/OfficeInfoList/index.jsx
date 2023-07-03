@@ -80,6 +80,21 @@ const OfficeInfoList = ({
     />
   ) : null;
 
+  const updateOfficeInfo =
+    myProf && PersonType?.includes('fac') ? (
+      <Typography align="left" className={styles.note}>
+        NOTE: Update your office info{' '}
+        <a
+          href="https://go.gordon.edu/general/myaccount.cfm"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: gordonColors.primary.blue }}
+        >
+          here
+        </a>
+      </Typography>
+    ) : null;
+
   return (
     <Grid item xs={12}>
       <Card className={styles.office_info_list}>
@@ -93,6 +108,7 @@ const OfficeInfoList = ({
             {mailstop}
             {officePhone}
             {officeHours}
+            {updateOfficeInfo}
           </List>
         </CardContent>
       </Card>
