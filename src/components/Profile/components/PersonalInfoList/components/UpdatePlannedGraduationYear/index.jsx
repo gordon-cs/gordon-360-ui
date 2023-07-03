@@ -5,11 +5,13 @@ import GordonSnackbar from 'components/Snackbar';
 import { forwardRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 import userService from 'services/user';
+import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
 const UpdatePlannedGraduationYear = () => {
   const [open, setOpen] = useState(false);
   const [plannedGraduationYear, setPlannedGraduationYear] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const currentYear = new Date().getFullYear();
 
   const handleSubmit = async () => {
     try {
@@ -38,13 +40,19 @@ const UpdatePlannedGraduationYear = () => {
         buttonClicked={handleSubmit}
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
+        sx={12}
       >
-        <FormControl>
-          <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
-          <Input
-            name="plannedGraduationYear"
+        <FormControl sx={{ m: 1, minWidth: 300 }}>
+          <SearchField
+            name="Planned Graduation Year"
             value={plannedGraduationYear}
-            onChange={(event) => setPlannedGraduationYear(event.target.value)}
+            updateValue={(event) => setPlannedGraduationYear(event.target.value)}
+            options={Array.from({ length: 6 }, (_, i) => ({
+              value: (currentYear + i).toString(),
+              label: (currentYear + i).toString(),
+            }))}
+            select
+            size={500}
             required="required"
             autoFocus
           />
