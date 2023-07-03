@@ -12,8 +12,8 @@ import {
 const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemographic }) => {
   return (
     <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
-      <Grid item color="secondary">
-        <Typography variant="h5" gutterBottom>
+      <Grid item>
+        <Typography variant="h5" color="secondary" gutterBottom>
           Step 4: Provide Your Race and Ethnicity
         </Typography>
       </Grid>

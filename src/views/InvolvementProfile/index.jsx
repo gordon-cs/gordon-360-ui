@@ -255,7 +255,7 @@ const InvolvementProfile = () => {
               <Button
                 variant="contained"
                 onClick={() => setIsRemoveImageDialogOpen(true)}
-                className={styles.removeImage}
+                color="error"
               >
                 Remove image
               </Button>

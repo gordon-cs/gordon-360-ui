@@ -1,13 +1,9 @@
 .people {
-  background-color: var(--mui-palette-neutral-light);
-  color: var(--mui-palette-primary-main);
-
   &_searchbar {
-    background-color: var(--mui-palette-neutral-light);
     color: var(--mui-palette-primary-main);
   }
 
-  &_gordon_text {
+  &_text {
     color: var(--mui-palette-secondary-main);
   }
 

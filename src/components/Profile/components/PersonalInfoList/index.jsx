@@ -523,7 +523,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
         NOTE: To update your data, please contact{' '}
-        <a className={styles.note_link} href="mailto: hr@gordon.edu">
+        <a className={`${'gc360_text_link'} ${styles.note_link}`} href="mailto: hr@gordon.edu">
           Human Resources
         </a>{' '}
         (x4828).
@@ -538,7 +538,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <li>
             <Typography>
               To update your On Campus Address, please contact{' '}
-              <a href="mailto: housing@gordon.edu" className={styles.note_link}>
+              <a
+                href="mailto: housing@gordon.edu"
+                className={`${'gc360_text_link'} ${styles.note_link}`}
+              >
                 Housing
               </a>{' '}
               (x4263).
@@ -548,7 +551,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             <Typography>
               For all other changes or to partially/fully prevent your data from displaying, please
               contact the{' '}
-              <a href="mailto: registrar@gordon.edu" className={styles.note_link}>
+              <a
+                href="mailto: registrar@gordon.edu"
+                className={`${'gc360_text_link'} ${styles.note_link}`}
+              >
                 Registrar's Office
               </a>{' '}
               (x4242).

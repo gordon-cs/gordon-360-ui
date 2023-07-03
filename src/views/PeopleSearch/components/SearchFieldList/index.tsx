@@ -386,11 +386,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <Grid container alignItems="center">
           <Accordion style={{ flexGrow: 1 }} elevation={3}>
             <AccordionSummary
-              expandIcon={<ExpandMore className={styles.people_expand_icon} />}
+              expandIcon={<ExpandMore className={styles.people} />}
               id="more-search-options-header"
               aria-controls="more-search-options-controls"
             >
-              <Typography variant="h6" align="center" className={styles.people_search_title}>
+              <Typography variant="h6" align="center" className={styles.people_searchbar}>
                 More Search Options
               </Typography>
             </AccordionSummary>

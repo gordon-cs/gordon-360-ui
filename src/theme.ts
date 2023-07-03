@@ -248,10 +248,10 @@ export const newTheme = extendTheme({
           primary: White, // Various MUI components and text
         },
         Switch: {
-          defaultColor: TestTool, // switch ball color
+          defaultColor: TestTool, // switch ball off color
         },
         common: {
-          onBackground: TestTool, // switch track color
+          onBackground: TestTool, // switch track off color
         },
         action: {
           active: White, // Various icons, especially in PersonalInfo

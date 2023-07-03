@@ -401,7 +401,7 @@ export default class ShiftItem extends Component {
                       });
                       this.onClose();
                     }}
-                    className={styles.yes_button}
+                    color="error"
                   >
                     Yes
                   </Button>
@@ -420,7 +420,7 @@ export default class ShiftItem extends Component {
     );
     let deleteButton = (
       <IconButton onClick={this.handleDeleteButtonClick} size="large">
-        <DeleteForeverOutlinedIcon className={styles.delete_button} />
+        <DeleteForeverOutlinedIcon color="error" />
       </IconButton>
     );
     if (this.state.deleting) {
@@ -429,7 +429,7 @@ export default class ShiftItem extends Component {
 
     let checkButton = (
       <IconButton disabled={errorText !== ''} onClick={this.onCheckButtonClick} size="large">
-        <CheckOutlinedIcon className={styles.checkButton} />
+        <CheckOutlinedIcon color="success" />
       </IconButton>
     );
     if (this.state.updating) {
@@ -446,7 +446,7 @@ export default class ShiftItem extends Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <IconButton onClick={this.toggleEditing} size="large">
-                <ClearOutlinedIcon className={styles.icon_button} />
+                <ClearOutlinedIcon color="error" />
               </IconButton>
             </Grid>
           </Grid>
@@ -517,7 +517,7 @@ export default class ShiftItem extends Component {
       errorText === '' ? (
         <Typography variant="body2">{EML_DESCRIPTION}</Typography>
       ) : (
-        <Typography className={styles.errorText} variant="body2">
+        <Typography color="error" variant="body2">
           {errorText}
         </Typography>
       );

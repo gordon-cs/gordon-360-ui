@@ -148,7 +148,7 @@ export default class SavedShiftsList extends Component {
             <DialogContent>
               <Grid container>
                 <Grid item xs={6} sm={6} md={6} lg={6}>
-                  <Button className={styles.RButton} onClick={this.onClose} variant="contained">
+                  <Button color="error" onClick={this.onClose} variant="contained">
                     Cancel
                   </Button>
                 </Grid>
@@ -252,7 +252,7 @@ export default class SavedShiftsList extends Component {
           </CardContent>
         </Card>
       );
-    } else if (this.props.shifts.length > 0) {
+    } else if (this.props.shifts.length > -1) {
       content = (
         <>
           {confirmationBox}

@@ -102,7 +102,7 @@ const OfficeInfoList = ({
           href="https://go.gordon.edu/general/myaccount.cfm"
           target="_blank"
           rel="noopener noreferrer"
-          className={styles.office_info_list_link}
+          className="gc360_text_link"
         >
           here
         </a>

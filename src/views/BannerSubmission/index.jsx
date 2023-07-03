@@ -57,7 +57,7 @@ const BannerSubmission = () => {
           <CardActions className={styles.bannerSubmission_card}>
             <Button
               variant="contained"
-              className={styles.bannerSubmission_button}
+              color="secondary"
               href="mailto:360@gordon.edu?Subject=Banner Image Submission"
             >
               Email the 360 Team

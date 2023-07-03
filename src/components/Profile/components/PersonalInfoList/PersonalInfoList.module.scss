@@ -17,11 +17,6 @@
 
   .note_link {
     font-weight: bold;
-    color: var(--mui-palette-primary-main);
-    &:hover {
-      color: var(--mui-palette-secondary-main);
-      transition: 0.3s;
-    }
   }
 
   .disclaimer {
