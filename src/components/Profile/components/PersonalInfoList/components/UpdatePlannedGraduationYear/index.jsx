@@ -1,9 +1,8 @@
-import { FormControl, IconButton, Input, InputLabel } from '@mui/material';
+import { FormControl, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
-import { forwardRef, useState } from 'react';
-import { IMaskInput } from 'react-imask';
+import { useState } from 'react';
 import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
