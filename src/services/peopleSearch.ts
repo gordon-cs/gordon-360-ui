@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import http from './http';
 
 export enum Class {
@@ -75,16 +76,27 @@ export type PeopleSearchQuery = {
   involvement: string;
 };
 
+const getRenamedDepartments = async () => {
+  const [dep] = await Promise.all([getDepartments()]);
+  dep.map((d, i) => {
+    if (/^Office of /.test(d)) {
+      dep[i] = dep[i].replace(/^Office of /, '') + ' (Office of)';
+    } else if (/^Center for /.test(d)) {
+      dep[i] = dep[i].replace(/^Center for /, '') + ' (Center for)';
+    } else if (/^Department of /.test(d)) {
+      dep[i] = dep[i].replace(/^Department of /, '') + ' (Department of)';
+    }
+  });
+  return dep;
+};
+
 const getOldName = (dep: string) => {
   if (dep.endsWith('(Office of)')) {
     dep = 'Office of ' + dep.replace(/ \(Office of\)/, '');
-    console.log(dep);
   } else if (dep.endsWith('(Center for)')) {
     dep = 'Center for ' + dep.replace(/ \(Center for\)/, '');
-    console.log(dep);
   } else if (dep.endsWith('(Department of)')) {
     dep = 'Department of ' + dep.replace(/ \(Department of\)/, '');
-    console.log(dep);
   }
   return dep;
 };
@@ -119,7 +131,6 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
   if (searchFields.includeAlumni) {
     params += '&accountTypes=alumni';
   }
-  console.log(params);
   return http.get(`accounts/advanced-people-search?${params}`);
 };
 
@@ -137,10 +148,10 @@ const getInvolvements = (): Promise<string[]> => http.get(`advancedsearch/involv
 
 const peopleSearchService = {
   search,
+  getRenamedDepartments,
   getMajors,
   getMinors,
   getHalls,
-  getDepartments,
   getBuildings,
   getInvolvements,
 };
