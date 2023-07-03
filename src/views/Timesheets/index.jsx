@@ -28,7 +28,6 @@ import { isValid, set } from 'date-fns';
 import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
-import { gordonColors } from 'theme';
 import ShiftDisplay from './components/ShiftDisplay';
 import styles from './Timesheets.module.css';
 
@@ -40,7 +39,7 @@ const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
 const CustomTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: 'var(--mui-palette-neutral-dark)',
-    color: 'rgba(255, 255, 255, 0.87)',
+    color: 'var(--mui-palette-neutral-contrastText)',
     boxShadow: theme.shadows[1],
     fontSize: 12,
     maxWidth: 500,
