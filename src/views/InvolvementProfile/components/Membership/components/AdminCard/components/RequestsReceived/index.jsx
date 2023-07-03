@@ -7,28 +7,13 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { formatDistanceToNow } from 'date-fns';
 import { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import requestService from 'services/request';
-import { gordonColors } from 'theme';
-
-const redButton = {
-  color: gordonColors.secondary.red,
-};
-
-const useStyles = makeStyles(
-  {
-    secondaryAction: {
-      paddingRight: 155,
-    },
-  },
-  { name: 'MuiListItem' },
-);
+import styles from './RequestsReceived.module.css';
 
 const RequestsReceived = ({ onAddMember }) => {
-  const classes = useStyles();
   const [requests, setRequests] = useState([]);
   const { involvementCode, sessionCode } = useParams();
 
@@ -54,10 +39,7 @@ const RequestsReceived = ({ onAddMember }) => {
       <List>
         {requests.map((request) => (
           <Fragment key={request.RequestID}>
-            <ListItem
-              key={request.RequestID}
-              classes={{ secondaryAction: classes.secondaryAction }}
-            >
+            <ListItem key={request.RequestID} classes={{ secondaryAction: styles.secondaryAction }}>
               <ListItemText
                 primary={`${request.FirstName} ${request.LastName} - ${request.ParticipationDescription}`}
                 secondary={`${formatDistanceToNow(new Date(request.DateSent))} - ${
@@ -66,7 +48,11 @@ const RequestsReceived = ({ onAddMember }) => {
               />
 
               <ListItemSecondaryAction>
-                <Button style={redButton} onClick={() => onDeny(request.RequestID)} size="small">
+                <Button
+                  className={styles.redButton}
+                  onClick={() => onDeny(request.RequestID)}
+                  size="small"
+                >
                   Deny
                 </Button>
                 &emsp;

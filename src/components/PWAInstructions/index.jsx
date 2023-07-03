@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { gordonColors } from 'theme';
 import styles from './PWAInstructions.module.css';
 
 import DesktopChromeInstall from './images/Desktop/Desktop-Chrome-Install-360.png';
@@ -25,41 +23,6 @@ import AppleOpenSafari from './images/Mobile/Apple/iPhone-Open-Safari.png';
 import AppleShareButton from './images/Mobile/Apple/iPhone-Share-Button.png';
 
 import { Button, Dialog, DialogContent, Typography, Grid } from '@mui/material';
-
-// Button styles
-const styles2 = {
-  button: {
-    cancel: {
-      border: `1px solid ${gordonColors.primary.blue}`,
-      color: gordonColors.primary.blue,
-    },
-    install: {
-      border: `1px solid ${gordonColors.primary.blue}`,
-      backgroundColor: gordonColors.primary.blue,
-      color: 'white',
-    },
-  },
-};
-
-// Styles that are applied to the toggles of the device type and device platform
-const toggleStyles = makeStyles({
-  root: {
-    backgroundColor: gordonColors.primary.blue,
-    borderRadius: 10,
-    color: 'white',
-    height: 48,
-    padding: '0 30px',
-    '&:hover': {
-      backgroundColor: `${gordonColors.primary.blueShades[400]} !important`,
-    },
-  },
-  // stylelint does not know this selector type, perhaps because of this being part of Mui lab
-  // stylelint-disable-next-line
-  selected: {
-    backgroundColor: `${gordonColors.primary.blueShades[700]} !important`,
-    color: 'white !important',
-  },
-});
 
 // Holds the instructions for every device with its corresponding pictures
 const devices = {
@@ -158,7 +121,6 @@ const devices = {
 const PWAInstructions = (props) => {
   const [device, setDevice] = useState(null);
   const [platform, setPlatform] = useState(null);
-  const classes = toggleStyles();
 
   // Handles which device is selected
   const handleDeviceChange = (event, selectedDevice) => {
@@ -326,7 +288,7 @@ const PWAInstructions = (props) => {
                 // Exits out the dialog box
                 props.handleDisplay();
               }}
-              style={styles2.button.cancel}
+              className={styles.button_cancel}
             >
               Cancel
             </Button>
@@ -335,7 +297,7 @@ const PWAInstructions = (props) => {
                 // Calls the browser's default prompt to do a quick installation of the PWA
                 props.deferredPWAPrompt.prompt();
               }}
-              style={styles2.button.install}
+              className={styles.button_install}
             >
               Install
             </Button>
@@ -384,8 +346,8 @@ const PWAInstructions = (props) => {
                       <ToggleButton
                         value={item}
                         aria-label={item}
-                        classes={classes}
-                        selected={device === item ? true : false}
+                        className={styles.toggleButton}
+                        selected={device === item}
                       >
                         <Typography>{item}</Typography>
                       </ToggleButton>
@@ -433,8 +395,8 @@ const PWAInstructions = (props) => {
                           <ToggleButton
                             value={item}
                             aria-label={item}
-                            classes={classes}
-                            selected={platform === item ? true : false}
+                            className={styles.toggleButton}
+                            selected={platform === item}
                             onClick={() => {
                               window.scroll({
                                 top: 100,
@@ -463,7 +425,7 @@ const PWAInstructions = (props) => {
                 // Exits out the dialog box
                 props.handleDisplay();
               }}
-              style={styles2.button.cancel}
+              className={styles.button_cancel}
             >
               Cancel
             </Button>
