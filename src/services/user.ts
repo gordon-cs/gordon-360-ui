@@ -246,10 +246,9 @@ const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
-const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
-  http.patch(`profiles/office_location`, OfficeLocation);
-
-const updateOfficeHours = (value: string) => http.patch(`profiles/office_hours/`);
+const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) => {
+  return http.patch(`profiles/office_location`, OfficeLocation);
+};
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
@@ -357,7 +356,6 @@ const userService = {
   setHomePhonePrivacy,
   setMobilePhoneNumber,
   updateOfficeLocation,
-  updateOfficeHours,
   setImagePrivacy,
   getChapelCredits,
   getImage,
