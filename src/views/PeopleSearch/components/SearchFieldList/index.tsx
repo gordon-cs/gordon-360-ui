@@ -44,9 +44,9 @@ import { useNavigate } from 'react-router-dom';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
-import { gordonColors } from 'theme';
 import SearchField, { SelectOption } from './components/SearchField';
 import addressService from 'services/address';
+import styles from './SearchFieldList.module.css';
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
@@ -72,7 +72,7 @@ const relationship_statuses = [
 const searchPageTitle = (
   <>
     Search the
-    <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+    <b className={styles.search_field_list_gordon_text}> Gordon </b>
     Community
   </>
 );
@@ -322,10 +322,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       <CardHeader
         title={searchPageTitle}
         titleTypographyProps={{ align: 'center' }}
-        style={{
-          backgroundColor: gordonColors.primary.blue,
-          color: gordonColors.neutral.grayShades[50],
-        }}
+        className={styles.search_field_list_header}
       />
       <Card style={{ padding: '2rem' }}>
         <CardContent>

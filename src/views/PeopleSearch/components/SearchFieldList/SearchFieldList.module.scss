@@ -1,0 +1,9 @@
+.search_field_list {
+  &_gordon_text {
+    color: var(--mui-palette-secondary-main);
+  }
+  &_header {
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-neutral-50);
+  }
+}

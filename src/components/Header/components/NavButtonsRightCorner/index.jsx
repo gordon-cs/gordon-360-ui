@@ -7,7 +7,6 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavButtonsRightCorner.module.css';
-import { ModeSwitcher } from 'components/ThemeModeSwitcher'; //For theme palette testing!
 
 /**
  *
@@ -96,8 +95,6 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     <>
       <div id="right-side-menu">
         <Popover
-          elevation={4}
-          marginThreshold={-35}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -121,7 +118,6 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             {feedbackButton}
             {adminButton}
             {signOutButton}
-            {<ModeSwitcher />} {/* Uncomment to test theme palette with test colors */}
           </List>
         </Popover>
       </div>
