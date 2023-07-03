@@ -252,7 +252,7 @@ export default class SavedShiftsList extends Component {
           </CardContent>
         </Card>
       );
-    } else if (this.props.shifts.length > -1) {
+    } else if (this.props.shifts.length > 0) {
       content = (
         <>
           {confirmationBox}
