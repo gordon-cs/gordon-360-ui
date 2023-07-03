@@ -40,7 +40,7 @@ are tackling this project to respond to several problems.
   `src/components/providers`
 - Go through all components and convert in-line style to CSS where possible to centralize and clean
   up styling
-- Modify CSS to reverence the new theme CSS variables provided by the `CssVarsProvider`, replacing
+- Modify CSS to reference the new theme CSS variables provided by the `CssVarsProvider`, replacing
   the old SASS variables defined within `src/_vars.scss`
 - Deprecate the GordonColors defined in `src/theme.ts`, which will be replaced by the new theme
   palettes.
