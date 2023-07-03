@@ -64,11 +64,11 @@ const Timesheets = (props) => {
   const isOnline = useNetworkStatus();
   const { profile, loading } = useUser();
 
-  /*useEffect(() => {
+  useEffect(() => {
     if (profile) {
       setIsUserStudent(profile.PersonType.includes('stu'));
     }
-  }, [profile]);*/
+  }, [profile]);
 
   useEffect(() => {
     async function getClockInOutStatus() {

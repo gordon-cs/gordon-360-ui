@@ -40,8 +40,9 @@ const Home = () => {
     return <GordonLoader />;
   } else if (!profile) {
     return <GuestWelcome />;
-    /*} else if (isOnline && !hasAnswered) {    //disables wellness check
-    return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;*/
+  } else if (isOnline && !hasAnswered) {
+    //disables wellness check
+    return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else {
     const doughnut = profile?.PersonType?.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 
