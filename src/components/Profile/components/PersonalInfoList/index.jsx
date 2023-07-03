@@ -23,6 +23,7 @@ import userService from 'services/user';
 import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog';
+import UpdatePlannedGraduationYear from './components/UpdatePlannedGraduationYear';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
@@ -281,7 +282,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   : profile.PlannedGraduationYear}
               </Grid>
               <Grid item>
-                <UpdatePhone />
+                <UpdatePlannedGraduationYear />
               </Grid>
             </Grid>
           ) : profile.PlannedGraduationYear === PRIVATE_INFO ? (
