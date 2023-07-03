@@ -80,7 +80,7 @@ const Help = () => {
                     information will remain visible to faculty and staff even if you make it private
                     for student viewers. If you have a situation that requires additional privacy or
                     security, please contact CTS,&nbsp;
-                    <a href="mailto:360@gordon.edu" className={styles.help_link}>
+                    <a href="mailto:360@gordon.edu" className="gc360_text_link">
                       360@gordon.edu
                     </a>
                     , or the Registrar.
@@ -185,7 +185,7 @@ const Help = () => {
                   <li>
                     <a
                       href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug"
-                      className={styles.help_link}
+                      className="gc360_text_link"
                     >
                       Contact CTS
                     </a>
