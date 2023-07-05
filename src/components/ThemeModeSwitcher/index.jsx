@@ -1,21 +1,30 @@
 /* Temporary component for testing theme implementation and dark mode.  Used in the right side
-nav menu currently.
+nav menu currently.*/
 
-@TODO convert to some final implementation
-*/
-import {
-  //   Experimental_CssVarsProvider as CssVarsProvider,
-  useColorScheme,
-} from '@mui/material/styles';
+import { useEffect, useState } from 'react';
+import { useColorScheme } from '@mui/material/styles';
 import styles from './modeSwitcher.module.css';
 
 export const ModeSwitcher = () => {
   const { mode, setMode } = useColorScheme();
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  if (!mounted) {
+    return null;
+  }
   return (
     <button
       variant="outlined"
-      onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
+      onClick={() => {
+        if (mode === 'light') {
+          setMode('dark');
+        } else {
+          setMode('light');
+        }
+      }}
       className={styles.ModeSwitcherButton}
     >
       {mode === 'light' ? 'Dark' : 'Light'}

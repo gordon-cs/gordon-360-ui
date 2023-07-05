@@ -11,9 +11,8 @@ const NewsCard = () => {
   useEffect(() => {
     newsService.getTodaysNews().then(setNews);
   }, []);
-
   return (
-    <Card className={styles.card}>
+    <Card>
       <CardHeader
         title={
           <Grid container direction="row" alignItems="center">
@@ -27,6 +26,7 @@ const NewsCard = () => {
             </Grid>
           </Grid>
         }
+        className={styles.header}
       />
       <CardContent>
         {news.length > 0 ? (
@@ -40,5 +40,4 @@ const NewsCard = () => {
     </Card>
   );
 };
-
 export default NewsCard;
