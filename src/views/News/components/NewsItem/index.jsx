@@ -84,7 +84,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
         justifyContent="center"
       >
         <Grid item xs={12}>
-          <Typography variant="h6" className={styles.news_heading} style={{ fontWeight: 'bold' }}>
+          <Typography variant="h6" className={styles.news_heading_bold}>
             {posting.Subject}
           </Typography>
           {author}
@@ -118,9 +118,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
           <Typography className={styles.news_column}>{posting.categoryName}</Typography>
         </Grid>
         <Grid item xs={5}>
-          <Typography className={styles.news_column} style={{ fontWeight: 'bold' }}>
-            {posting.Subject}
-          </Typography>
+          <Typography className={styles.news_column_bold}>{posting.Subject}</Typography>
         </Grid>
         <Grid item xs={3}>
           {author}
@@ -130,10 +128,10 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
         </Grid>
 
         {/* Collapsable details */}
-        <Collapse in={open} timeout="auto" unmountOnExit style={{ width: '100%' }}>
+        <Collapse in={open} timeout="auto" unmountOnExit className={styles.collapsable}>
           <CardContent>
             <Grid container direction="row" alignItems="center" justifyContent="space-around">
-              <Grid item xs={8} style={{ textAlign: 'left' }}>
+              <Grid item xs={8} alignContent="left">
                 <Typography className={styles.descriptionText}>Description:</Typography>
                 <Typography type="caption" className={styles.descriptionText}>
                   {posting.Body}

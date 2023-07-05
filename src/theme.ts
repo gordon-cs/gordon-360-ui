@@ -115,10 +115,12 @@ export const windowBreakWidths = {
 declare module '@mui/material/styles' {
   interface Palette {
     neutral: Palette['primary'];
+    link: Palette['primary'];
   }
   // allow configuration using `createTheme`
   interface PaletteOptions {
     neutral: PaletteOptions['primary'];
+    link: Palette['primary'];
   }
 }
 
@@ -174,6 +176,8 @@ let TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
 // Dark Mode Colors!:
 let Gray = '#303233';
 let DarkGray = '#232424';
+
+let Placeholder = '#00ff00';
 
 // Theme to use in the CSS vars provider, allowing multiple theme modes
 export const newTheme = extendTheme({
@@ -239,6 +243,12 @@ export const newTheme = extendTheme({
           A200: Black_opacity50,
           A400: Black_opacity20,
           A700: Black_opacity10,
+        },
+        link: {
+          main: GordonBlue,
+          light: ScottieCyan,
+          dark: Placeholder,
+          contrastText: Placeholder,
         },
       },
     },
@@ -324,6 +334,12 @@ export const newTheme = extendTheme({
           800: '#EBEAEA',
           900: '#F4F3F3',
           A100: '#FAF9F9',
+        },
+        link: {
+          main: GordonBlue,
+          light: ScottieCyan,
+          dark: Placeholder,
+          contrastText: Placeholder,
         },
       },
     },

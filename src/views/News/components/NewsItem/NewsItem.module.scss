@@ -32,6 +32,9 @@
     .news_content,
     .news_heading {
       color: var(--mui-palette-secondary-contrastText);
+      &_bold {
+        font-weight: bold;
+      }
     }
   }
 
@@ -47,6 +50,9 @@
     .news_content,
     .news_heading {
       color: var(--mui-palette-neutral-contrastText);
+      &_bold {
+        font-weight: bold;
+      }
     }
   }
 
@@ -58,4 +64,8 @@
     border-color: var(--mui-palette-error-main);
     color: var(--mui-palette-error-main);
   }
+}
+
+.collapsable {
+  width: 100%;
 }

@@ -44,6 +44,7 @@ const VictoryPromise = () => {
             onClick={() =>
               setDisplayMode((m) => (m === DisplayMode.Icon ? DisplayMode.Graph : DisplayMode.Icon))
             }
+            color="primary"
           >
             Show {displayMode === DisplayMode.Icon ? 'Graph' : 'Icons'}
           </Button>

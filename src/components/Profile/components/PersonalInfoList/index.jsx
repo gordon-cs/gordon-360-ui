@@ -386,7 +386,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 </Grid>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   onClick={() => setIsJoinDialogOpen(true)}
                 >
                   Instructions

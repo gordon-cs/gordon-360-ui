@@ -169,6 +169,8 @@ $image-side-width-desktop: 90px;
               display: flex;
               &:hover {
                 color: var(--mui-palette-secondary-main);
+                transition: 0.3s;
+                // gc360_text_link not used because email icon needs to change color simultaneously
               }
               &_icon {
                 margin-right: 0.75rem;
