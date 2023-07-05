@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import newsService from 'services/news';
 import NewsItem from 'views/News/components/NewsItem';
 import styles from './NewsCard.module.css';
+import { gordonColors } from 'theme';
 
 const NewsCard = () => {
   const [news, setNews] = useState([]);
