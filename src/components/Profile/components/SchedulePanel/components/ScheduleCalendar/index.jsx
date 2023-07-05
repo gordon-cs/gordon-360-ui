@@ -8,7 +8,7 @@ import './ScheduleCalendar.css';
 
 const GordonScheduleCalendar = (props) => {
   const [loading, setLoading] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState();
   const [currentSession, setCurrentSession] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
 

@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { gordonColors } from 'theme';
 import styles from './EditDescriptionDialog.module.css';
 import { Dialog, DialogTitle, DialogActions, Button, TextField } from '@mui/material';
 
 const EditDescriptionDialog = (props) => {
-  const [descInput, setDescInput] = useState('');
+  const [descInput, setDescInput] = useState(props.descriptiontext ?? '');
   const [formValid, setFormValid] = useState(true);
+
+  var maxCharacter = 4096;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const desc = descInput;
+    var desc = descInput;
     props.onDialogSubmit(desc);
     handleClose();
   };
@@ -34,7 +36,7 @@ const EditDescriptionDialog = (props) => {
         <DialogTitle className={styles.desc_title}>Edit Public Office Hours Note</DialogTitle>
 
         <TextField
-          id="outlined-multiline-static"
+          id="descInput"
           label="Description"
           multiline
           rows={3}
@@ -42,6 +44,7 @@ const EditDescriptionDialog = (props) => {
           value={descInput}
           onChange={handleChange}
           className={styles.desc_description}
+          inputProps={{ maxLength: maxCharacter - 1 }}
         />
 
         <DialogActions className={styles.desc_buttons}>
