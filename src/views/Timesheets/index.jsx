@@ -376,7 +376,7 @@ const Timesheets = (props) => {
 
   const timesheetTitle = (
     <div className={styles.header_tooltip_container}>
-      <CustomTooltip
+      <Tooltip
         disableFocusListener
         disableTouchListener
         title={
@@ -399,7 +399,7 @@ const Timesheets = (props) => {
             }}
           />
         </div>
-      </CustomTooltip>
+      </Tooltip>
     </div>
   );
 
