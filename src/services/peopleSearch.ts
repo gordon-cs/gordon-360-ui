@@ -80,7 +80,9 @@ export type PeopleSearchQuery = {
 const getRenamedDepartments = async () => {
   const dep = await getDepartments();
   dep.forEach((d, i) => {
-    if (/^Office of /.test(d)) {
+    if (/^Office of the /.test(d)) {
+      dep[i] = dep[i].replace(/^Office of the /, '') + ' (Office of the)';
+    } else if (/^Office of /.test(d)) {
       dep[i] = dep[i].replace(/^Office of /, '') + ' (Office of)';
     } else if (/^Center for /.test(d)) {
       dep[i] = dep[i].replace(/^Center for /, '') + ' (Center for)';
