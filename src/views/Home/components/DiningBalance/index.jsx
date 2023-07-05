@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import session from 'services/session';
 import user from 'services/user';
-import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import { newTheme } from 'theme';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
@@ -15,14 +15,16 @@ const DiningBalance = () => {
   const [diningInfo, setDiningInfo] = useState(null);
   const [[daysRemaining, daysInSession], setDaysLeft] = useState([null, null]);
 
-  //Doesn't re-render colors when using getColor!!!!!
-  let daysColor = gordonColors.primary.blue;
-  let swipesColor = gordonColors.secondary.green;
-  let dollarsColor = gordonColors.secondary.yellow;
-  let guestColor = gordonColors.secondary.orange;
-  let emptyColor = gordonColors.neutral.lightGray;
+  //other than the transparent background, colors don't need to change to dark mode
+  const colors = newTheme.colorSchemes.light.palette;
 
-  let balanceColor = gordonColors.secondary.green;
+  let daysColor = colors.primary.main;
+  let swipesColor = colors.success.main;
+  let dollarsColor = colors.warning.main;
+  let guestColor = colors.error.main;
+  let emptyColor = colors.neutral.A400;
+
+  let balanceColor = colors.success.main;
 
   useEffect(() => {
     Promise.all([user.getDiningInfo(), session.getDaysLeft()]).then(([diningInfo, daysLeft]) => {
@@ -40,11 +42,11 @@ const DiningBalance = () => {
     //Set color to use when displaying balance based on how low it is...
     const diningBalance = parseInt(diningInfo);
     if (lowBalance >= diningBalance && diningBalance > reallyLowBalance) {
-      balanceColor = gordonColors.secondary.yellow;
+      balanceColor = colors.warning.main;
     } else if (reallyLowBalance >= diningBalance && diningBalance > 0) {
-      balanceColor = gordonColors.secondary.orange;
+      balanceColor = colors.error.main;
     } else if (diningBalance === 0) {
-      balanceColor = gordonColors.neutral.lightGray;
+      balanceColor = colors.neutral.dark;
     }
 
     content = (
