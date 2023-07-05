@@ -131,11 +131,11 @@ declare module '@mui/material' {
 // Color declarations:
 // Primary
 let GordonBlue = '#014983';
-let GordonBlueHalfOpacity = '#01498382';
+let GordonBlue_opacity50 = '#01498382';
 
 // Secondary
 let ScottieCyan = '#00AEEF';
-let ScottieCyan10PercentOpacity = '#00AEEF1A';
+let ScottieCyan_opacity10 = '#00AEEF1A';
 
 // Error
 //Not an official gordon color anymore, we can consider changing this, it is a good error color
@@ -162,6 +162,9 @@ let LightGray = '#CCCCCB';
 // Contrast
 let Black = '#000000';
 let White = '#FFFFFF';
+let Black_opacity50 = '#00000080';
+let Black_opacity20 = '#00000033';
+let Black_opacity10 = '#0000001a';
 
 // Dev Tool coloring - Colors for development and testing purposes only
 let TestTool = '#FF8400'; // devTool orange
@@ -180,7 +183,7 @@ export const newTheme = extendTheme({
         primary: {
           main: GordonBlue,
           contrastText: White,
-          50: GordonBlueHalfOpacity,
+          50: GordonBlue_opacity50,
           100: '#BBDDF0',
           200: '#92C8E6',
           300: '#6BB2DC',
@@ -194,7 +197,7 @@ export const newTheme = extendTheme({
         secondary: {
           main: ScottieCyan,
           contrastText: White,
-          50: ScottieCyan10PercentOpacity,
+          50: ScottieCyan_opacity10,
           100: '#B0E2F9',
           200: '#7BD0F5',
           300: '#43BDF1',
@@ -232,7 +235,10 @@ export const newTheme = extendTheme({
           700: '#5C5B5B',
           800: '#3D3D3D',
           900: '#1D1C1C',
-          A100: '#000000',
+          A100: Black,
+          A200: Black_opacity50,
+          A400: Black_opacity20,
+          A700: Black_opacity10,
         },
       },
     },
@@ -248,10 +254,10 @@ export const newTheme = extendTheme({
           primary: White, // Various MUI components and text
         },
         Switch: {
-          defaultColor: TestTool, // switch ball color
+          defaultColor: TestTool, // switch ball off color
         },
         common: {
-          onBackground: TestTool, // switch track color
+          onBackground: TestTool, // switch track off color
         },
         action: {
           active: White, // Various icons, especially in PersonalInfo
@@ -265,7 +271,7 @@ export const newTheme = extendTheme({
         primary: {
           main: NightMarsh,
           contrastText: White,
-          50: GordonBlueHalfOpacity, //should be half opacity of main
+          50: GordonBlue_opacity50, //should be half opacity of main
           100: TestTool,
           200: TestTool,
           300: TestTool,

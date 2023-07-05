@@ -43,12 +43,7 @@ const InvolvementStatusList = ({ status }) => {
 
   return (
     <Card>
-
-      <CardHeader
-        className={styles.involvements_status_header}
-        align="center"
-        title={`${status} Involvements`}
-      />
+      <CardHeader className={styles.header} align="center" title={`${status} Involvements`} />
       {loading ? (
         <GordonLoader />
       ) : involvements.length > 0 ? (

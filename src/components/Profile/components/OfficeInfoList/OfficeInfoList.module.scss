@@ -3,18 +3,15 @@
 .office_info_list {
   &_header {
     background-color: var(--mui-palette-primary-main);
-    color: $neutral-white;
+    color: var(--mui-palette-primary-contrastText);
     padding-left: 1rem;
   }
   .note {
-    color: $neutral-black-opacity55;
-    background-color: $neutral-light-gray;
+    color: var(--mui-palette-neutral-A200);
+    background-color: var(--mui-palette-neutral-600);
     padding: 0.3rem 1rem;
     margin-top: 1rem;
     border-radius: 5px;
-  }
-  &_link {
-    color: var(--mui-palette-primary-main);
   }
 }
 

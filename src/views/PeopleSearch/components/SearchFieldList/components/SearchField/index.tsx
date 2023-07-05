@@ -1,6 +1,6 @@
 import { Grid, MenuItem, TextField, useMediaQuery } from '@mui/material';
 import { ChangeEvent } from 'react';
-import { IconContext, IconType } from 'react-icons';
+import { IconType } from 'react-icons';
 import { toTitleCase } from 'services/utils';
 import styles from './SearchField.module.scss';
 
@@ -65,15 +65,7 @@ const SearchField = ({
     <Grid item container spacing={2} alignItems="center">
       {isLargeScreen && Icon && (
         <Grid item>
-          <IconContext.Provider
-            value={{
-              color: disabled
-                ? styles.search_field_light_gray_icon
-                : styles.search_field_gray_shade_icon,
-            }}
-          >
-            <Icon className={styles.icon} />
-          </IconContext.Provider>
+          <Icon className={styles.icon} />
         </Grid>
       )}
       <Grid item xs>

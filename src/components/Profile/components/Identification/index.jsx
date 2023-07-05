@@ -462,11 +462,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
           </DialogContent>
           <DialogActions className="gc360_photo_dialog_box_actions_top">
             {showCropper && (
-              <Button
-                variant="contained"
-                onClick={() => setShowCropper(null)}
-                className={styles.backButton}
-              >
+              <Button variant="contained" onClick={() => setShowCropper(null)} color="primary">
                 Go Back
               </Button>
             )}
@@ -482,11 +478,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                     : 'Make photo visible to other students'
                 }
               >
-                <Button
-                  variant="contained"
-                  onClick={toggleImagePrivacy}
-                  classname={styles.photo_buttons}
-                >
+                <Button variant="contained" onClick={toggleImagePrivacy} color="primary">
                   {isImagePublic ? 'Hide' : 'Show'}
                 </Button>
               </Tooltip>
@@ -495,18 +487,14 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                 id="tooltip-reset"
                 title="Restore your original ID photo"
               >
-                <Button
-                  variant="contained"
-                  onClick={handleResetImage}
-                  className={styles.resetButton}
-                >
+                <Button variant="contained" onClick={handleResetImage} color="error">
                   Reset
                 </Button>
               </Tooltip>
             </DialogActions>
           )}
           <DialogActions className="gc360_photo_dialog_box_actions_bottom">
-            <Button variant="contained" onClick={handleCloseCancel} className={styles.cancelButton}>
+            <Button variant="outlined" onClick={handleCloseCancel} color="primary">
               Cancel
             </Button>
             {showCropper && (
@@ -519,7 +507,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                   variant="contained"
                   onClick={handleCloseSubmit}
                   disabled={!showCropper}
-                  className={showCropper ? styles.photo_buttons : styles.hiddenButton}
+                  color="primary"
+                  className={!showCropper ? styles.hiddenButton : null}
                 >
                   Submit
                 </Button>

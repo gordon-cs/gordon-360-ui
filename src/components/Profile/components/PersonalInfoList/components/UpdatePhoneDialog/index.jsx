@@ -41,21 +41,19 @@ const UpdatePhone = () => {
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
       >
-        <div className={styles.form}>
-          <FormControl>
-            <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
-            <Input
-              type="tel"
-              id="mobile-phone-number-input"
-              name="mobilePhoneNumber"
-              value={mobilePhoneNumber}
-              onChange={(event) => setMobilePhoneNumber(event.target.value)}
-              inputComponent={phoneMaskUS}
-              required="required"
-              autoFocus
-            />
-          </FormControl>
-        </div>
+        <FormControl className={styles.form}>
+          <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
+          <Input
+            type="tel"
+            id="mobile-phone-number-input"
+            name="mobilePhoneNumber"
+            value={mobilePhoneNumber}
+            onChange={(event) => setMobilePhoneNumber(event.target.value)}
+            inputComponent={phoneMaskUS}
+            required="required"
+            autoFocus
+          />
+        </FormControl>
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}

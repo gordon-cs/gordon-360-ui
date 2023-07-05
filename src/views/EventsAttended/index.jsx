@@ -43,7 +43,7 @@ const EventsAttended = () => {
     content = (
       <Grid item align="center">
         <br /> <br />
-        <Typography variant="h4" align="center" className={styles.eventsAttended_title}>
+        <Typography variant="h4" align="center" className={styles.title}>
           No Events To Show
         </Typography>
         <br />
