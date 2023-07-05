@@ -690,6 +690,19 @@ const StudentApplication = ({ userProfile }) => {
   const submitApplication = async () => {
     setSubmitStatus(true);
     setSubmitButtonAlertTimeout(null);
+    //if (applicationDetails.HallRank has a duplicate hallrank) then setSubmitStatus(false) and createSnackBar
+    // Check for duplicate hall ranks
+    const hallRanks = applicationDetails.ApartmentChoices.map((choice) => choice.HallRank);
+    const uniqueHallRanks = new Set(hallRanks);
+
+    if (hallRanks.length !== uniqueHallRanks.size) {
+      createSnackbar(
+        'Error: There are duplicate hall rankings. Please ensure each hall has a unique ranking.',
+        'error',
+      );
+      setSubmitStatus(false);
+      return;
+    }
     try {
       if (applicationDetails.Applicants.length < 1) {
         createSnackbar(
