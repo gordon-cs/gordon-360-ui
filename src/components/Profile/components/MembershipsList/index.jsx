@@ -31,7 +31,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
   }, [myProf, username]);
 
   const MembershipsList = () => {
-    if (membershipHistories === null || membershipHistories.length === 0) {
+    if (membershipHistories.length === 0) {
       return (
         <Link to={`/involvements`}>
           <Typography variant="body2" className={styles.noMemberships}>
