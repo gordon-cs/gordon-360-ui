@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import GordonLoader from 'components/Loader';
 import Moment from 'moment';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -62,7 +62,7 @@ const GordonScheduleCalendar = (props) => {
   } else {
     let Resource = ({ localizer = momentLocalizer(Moment) }) => (
       <Calendar
-        selectable={props.isOnline}
+        selectable={true}
         events={eventInfo}
         localizer={localizer}
         min={dayStart}
@@ -71,12 +71,13 @@ const GordonScheduleCalendar = (props) => {
         timeslots={4}
         defaultView="day"
         view={['day']}
-        onDoubleClickEvent={(event) => props.handleDoubleClick(event)}
+        //onDoubleClickEvent={(event) => props.handleDoubleClick(event)}
         defaultDate={Moment(new Date())}
         resources={resourceMap}
         resourceIdAccessor="resourceId"
         resourceTitleAccessor="resourceTitle"
         formats={formats}
+        onSelectEvent={props.onSelectEvent}
       />
     );
     content = Resource(momentLocalizer(Moment));

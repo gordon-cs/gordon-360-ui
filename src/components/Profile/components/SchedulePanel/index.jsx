@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useCallback } from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -24,6 +24,7 @@ import schedulecontrol from 'services/schedulecontrol';
 import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
+import GordonScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
 import scheduleService from 'services/schedule';
 import { useNetworkStatus, useUser } from 'hooks';
@@ -45,6 +46,7 @@ const GordonSchedulePanel = (props) => {
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(true);
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -102,6 +104,17 @@ const GordonSchedulePanel = (props) => {
     setEditDescriptionOpen(false);
   };
 
+  const handleScheduleDialogOpen = () => {
+    if (props.myProf) {
+      setScheduleDialogOpen(true);
+      console.log('hi');
+    }
+  };
+
+  const handleScheduleDialogClose = () => {
+    setScheduleDialogOpen(false);
+  };
+
   const handleEditDescriptionButton = () => {
     setDisabled(false);
   };
@@ -117,11 +130,16 @@ const GordonSchedulePanel = (props) => {
     setReloadCall((val) => !val);
   };
 
+  const onSelectEvent = useCallback((calEvent) => {
+    const eventId = calEvent.end;
+    console.log({ eventId });
+  }, []);
+
   const replaced = description;
 
   const { classes } = props;
 
-  let editDescriptionButton, editDialog, lastUpdate;
+  let editDescriptionButton, editDialog, lastUpdate, scheduleDialog;
 
   lastUpdate = (
     <div style={{ color: gordonColors.primary.cyan }}>
@@ -141,6 +159,13 @@ const GordonSchedulePanel = (props) => {
         handleEditDescriptionClose={handleEditDescriptionClose}
         editDescriptionOpen={editDescriptionOpen}
         descriptiontext={description}
+      />
+    );
+
+    scheduleDialog = (
+      <GordonScheduleDialog
+        handleMyScheduleClose={handleScheduleDialogClose}
+        myScheduleOpen={scheduleDialogOpen}
       />
     );
   }
@@ -227,10 +252,12 @@ const GordonSchedulePanel = (props) => {
                     handleEditDescriptionButton={handleEditDescriptionButton}
                     reloadCall={reloadCall}
                     isOnline={props.isOnline}
+                    onSelectEvent={handleScheduleDialogOpen}
                   />
                 </Grid>
               </Grid>
               {editDialog}
+              {scheduleDialog}
             </AccordionDetails>
           </Accordion>
         </>
