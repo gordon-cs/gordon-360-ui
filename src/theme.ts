@@ -132,52 +132,54 @@ declare module '@mui/material' {
 
 // Color declarations:
 // Primary
-let GordonBlue = '#014983';
-let GordonBlue_opacity50 = '#01498382';
+const GordonBlue = '#014983';
+const GordonBlue_opacity50 = '#01498382';
 
 // Secondary
-let ScottieCyan = '#00AEEF';
-let ScottieCyan_opacity10 = '#00AEEF1A';
+const ScottieCyan = '#00AEEF';
+const ScottieCyan_opacity75 = '#00AEEFBF';
+const ScottieCyan_opacity10 = '#00AEEF1A';
 
 // Error
 //Not an official gordon color anymore, we can consider changing this, it is a good error color
-let OldSchemeRed = '#B53228';
-let NauticalRed = '#FF5D53';
+const OldSchemeRed = '#B53228';
+const NauticalRed = '#FF5D53';
 
 // Success
-let LaVidaGreen = '#006D22';
-let OldSchemeGreen = '#B2BB1C';
-let SeaSpray = '#C7EFCF';
+const LaVidaGreen = '#006D22';
+const OldSchemeGreen = '#B2BB1C';
+const SeaSpray = '#C7EFCF';
 
 // Warning
-let BarringtonGold = '#FDB913';
+const BarringtonGold = '#FDB913';
 
 // Info
-let SnowDay = '#D5F0FE';
-let NightMarsh = '#023947';
-let Athletics = '#081F2C';
+const SnowDay = '#D5F0FE';
+const NightMarsh = '#023947';
+const NightMarsh_opacity50 = '#02394782';
+const Athletics = '#081F2C';
 
 // Neutral
-let BackgroundLightGray = '#EBEAEA';
-let LightGray = '#CCCCCB';
+const BackgroundLightGray = '#EBEAEA';
+const LightGray = '#CCCCCB';
 
 // Contrast
-let Black = '#000000';
-let White = '#FFFFFF';
-let Black_opacity50 = '#00000080';
-let Black_opacity20 = '#00000033';
-let Black_opacity10 = '#0000001a';
+const Black = '#000000';
+const White = '#FFFFFF';
+const Black_opacity50 = '#00000080';
+const Black_opacity20 = '#00000033';
+const Black_opacity10 = '#0000001a';
 
 // Dev Tool coloring - Colors for development and testing purposes only
-let TestTool = '#FF8400'; // devTool orange
-let TestToolContrast = '#FF0000'; // devTool red
-let TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
+const TestTool = '#FF8400'; // devTool orange
+const TestToolContrast = '#FF0000'; // devTool red
+const TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
+const Placeholder = '#00ff00'; // For unused slots that can be filled with new colors
 
 // Dark Mode Colors!:
-let Gray = '#303233';
-let DarkGray = '#232424';
-
-let Placeholder = '#00ff00';
+const Gray = '#303233';
+const DarkGray = '#232424';
+const LinkBlue = '#0260ad';
 
 // Theme to use in the CSS vars provider, allowing multiple theme modes
 export const newTheme = extendTheme({
@@ -200,6 +202,7 @@ export const newTheme = extendTheme({
         },
         secondary: {
           main: ScottieCyan,
+          dark: ScottieCyan_opacity75,
           contrastText: White,
           50: ScottieCyan_opacity10,
           100: '#B0E2F9',
@@ -225,11 +228,11 @@ export const newTheme = extendTheme({
         warning: { main: BarringtonGold, dark: OldSchemeRed },
         info: { main: NightMarsh, light: SnowDay, dark: Athletics },
         neutral: {
-          main: BackgroundLightGray /* page background and contrast light grey */, //currently $neutral-light-gray in _vars
-          dark: LightGray /* light gray */, //currently $neutral-gray2
+          main: BackgroundLightGray, //currently $neutral-light-gray in _vars
+          dark: LightGray, //currently $neutral-gray2
           light: White, //currently $neutral-white
-          contrastText: Black /* black */,
-          50: '#FAF9F9', //Hues need to be flipped in dark mode for contrasting text to look right
+          contrastText: Black,
+          50: '#FAF9F9', //Neutral hues must be flipped in dark mode for proper contrast text
           100: '#F4F3F3',
           200: '#EBEAEA',
           300: '#DCDBDB',
@@ -280,6 +283,7 @@ export const newTheme = extendTheme({
         // },
         primary: {
           main: NightMarsh,
+          dark: NightMarsh_opacity50,
           contrastText: White,
           50: GordonBlue_opacity50, //should be half opacity of main
           100: TestTool,
@@ -336,7 +340,7 @@ export const newTheme = extendTheme({
           A100: '#FAF9F9',
         },
         link: {
-          main: GordonBlue,
+          main: LinkBlue,
           light: ScottieCyan,
           dark: Placeholder,
           contrastText: Placeholder,
@@ -345,3 +349,5 @@ export const newTheme = extendTheme({
     },
   },
 });
+
+console.log(newTheme);

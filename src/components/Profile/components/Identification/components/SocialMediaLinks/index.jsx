@@ -56,7 +56,10 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
                 </Grid>
               ) : (
                 <Grid container justifyContent="center">
-                  <Button onClick={() => setSocialLinksOpen(true)} color="secondary">
+                  <Button
+                    onClick={() => setSocialLinksOpen(true)}
+                    className={styles.socialmediabutton}
+                  >
                     EDIT SOCIAL MEDIA LINKS
                   </Button>
                 </Grid>

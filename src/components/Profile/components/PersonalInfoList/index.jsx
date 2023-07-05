@@ -192,7 +192,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         myProf && (
           <FormControlLabel
             control={
-              <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
+              <Switch
+                onChange={handleChangeMobilePhonePrivacy}
+                color="secondary"
+                checked={!isMobilePhonePrivate}
+              />
             }
             label={isMobilePhonePrivate ? 'Private' : 'Public'}
             labelPlacement="bottom"
@@ -318,6 +322,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             control={
               <Switch
                 onChange={handleChangeCliftonStrengthsPrivacy}
+                color="secondary"
                 checked={!isCliftonStrengthsPrivate}
               />
             }

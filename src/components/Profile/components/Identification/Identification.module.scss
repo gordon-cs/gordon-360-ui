@@ -18,8 +18,12 @@ $image-side-width-desktop: 90px;
 }
 
 .socialmediabutton {
-  color: var(--mui-palette-secondary-main);
+  color: var(--mui-palette-link-light);
   font-size: 1rem;
+  transition: color 0.7s;
+  &:hover {
+    color: var(--mui-palette-link-main);
+  }
 }
 
 .photoDialogError {
@@ -95,7 +99,9 @@ $image-side-width-desktop: 90px;
               border-radius: $image-border-radius;
               width: $image-main-width-desktop;
               height: $image-main-height-desktop;
+              transition: background-color 0.3s;
               &:hover {
+                background-color: var(--mui-palette-neutral-A700);
                 cursor: pointer;
               }
             }
@@ -165,10 +171,10 @@ $image-side-width-desktop: 90px;
               text-decoration: none;
             }
             &_container {
-              color: var(--mui-palette-primary-main);
+              color: var(--mui-palette-link-main);
               display: flex;
               &:hover {
-                color: var(--mui-palette-secondary-main);
+                color: var(--mui-palette-link-light);
                 transition: 0.3s;
                 // gc360_text_link not used because email icon needs to change color simultaneously
               }
