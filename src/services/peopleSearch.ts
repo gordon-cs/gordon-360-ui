@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import http from './http';
 import { forEach } from 'lodash';
+import { string } from 'prop-types';
 
 export enum Class {
   'Unassigned',
@@ -76,34 +77,28 @@ export type PeopleSearchQuery = {
   relationship_status?: string;
   involvement: string;
 };
+export interface SelectOption {
+  label: string;
+  value: string;
+}
 
 const getRenamedDepartments = async () => {
   const dep = await getDepartments();
-  dep.forEach((d, i) => {
+  const mappedResults = <SelectOption[]>[];
+  dep.forEach((d) => {
+    let departmentName = { value: d, label: d };
     if (/^Office of the /.test(d)) {
-      dep[i] = dep[i].replace(/^Office of the /, '') + ' (Office of the)';
+      departmentName.label = d.replace(/^Office of the /, '') + ' (Office of the)';
     } else if (/^Office of /.test(d)) {
-      dep[i] = dep[i].replace(/^Office of /, '') + ' (Office of)';
+      departmentName.label = d.replace(/^Office of /, '') + ' (Office of)';
     } else if (/^Center for /.test(d)) {
-      dep[i] = dep[i].replace(/^Center for /, '') + ' (Center for)';
+      departmentName.label = d.replace(/^Center for /, '') + ' (Center for)';
     } else if (/^Department of /.test(d)) {
-      dep[i] = dep[i].replace(/^Department of /, '') + ' (Department of)';
+      departmentName.label = d.replace(/^Department of /, '') + ' (Department of)';
     }
+    mappedResults.push(departmentName);
   });
-  return dep;
-};
-
-const getOldName = (dep: string) => {
-  if (dep.endsWith('(Office of the)')) {
-    dep = 'Office of the ' + dep.replace(/ \(Office of the\)/, '');
-  } else if (dep.endsWith('(Office of)')) {
-    dep = 'Office of ' + dep.replace(/ \(Office of\)/, '');
-  } else if (dep.endsWith('(Center for)')) {
-    dep = 'Center for ' + dep.replace(/ \(Center for\)/, '');
-  } else if (dep.endsWith('(Department of)')) {
-    dep = 'Department of ' + dep.replace(/ \(Department of\)/, '');
-  }
-  return dep;
+  return mappedResults;
 };
 
 const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
@@ -117,7 +112,8 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     homeCity: searchFields.home_town,
     state: searchFields.state,
     country: searchFields.country,
-    department: getOldName(searchFields.department),
+    department: searchFields.department,
+    // department: getOldName(searchFields.department),
     building: searchFields.building,
     involvement: searchFields.involvement,
   })
