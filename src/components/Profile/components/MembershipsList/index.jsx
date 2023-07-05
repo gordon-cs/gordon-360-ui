@@ -48,13 +48,6 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
           createSnackbar={createSnackbar}
         />
       ));
-      // return (
-      //   <MembershipInfoCard
-      //     myProf={myProf}
-      //     membershipHistory={membershipHistories}
-      //     createSnackbar={createSnackbar}
-      //   />
-      // );
     }
   };
 
