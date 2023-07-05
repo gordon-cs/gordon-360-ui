@@ -113,7 +113,6 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     state: searchFields.state,
     country: searchFields.country,
     department: searchFields.department,
-    // department: getOldName(searchFields.department),
     building: searchFields.building,
     involvement: searchFields.involvement,
   })
