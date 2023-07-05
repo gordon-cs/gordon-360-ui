@@ -15,11 +15,11 @@
   padding: 2px 10px;
   max-width: 15rem;
   &:focus-within {
-    box-shadow: 0 3px 10px 0 $neutral-black-opacity20;
+    box-shadow: 0 4px 10px 2px var(--mui-palette-neutral-A400);
     max-width: 15rem;
   }
   &:hover:not(:focus-within) {
-    box-shadow: 0 3px 5px 0 $neutral-black-opacity20;
+    box-shadow: 0 3px 10px 2px var(--mui-palette-neutral-A400);
   }
 
   & :global(.MuiInputBase-input) {
