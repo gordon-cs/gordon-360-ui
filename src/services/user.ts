@@ -250,9 +250,10 @@ const setPlannedGraduationYear = (
   value: number, // I am adding this
 ) => http.put(`profiles/planned_graduation_year/${value}/`);
 
-const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) => {
-  return http.patch(`profiles/office_location`, OfficeLocation);
-};
+const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
+  http.patch(`profiles/office_location`, OfficeLocation);
+
+const updateOfficeHours = (value: string) => http.patch(`profiles/office_hours`, value);
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
@@ -362,6 +363,7 @@ const userService = {
   setHomePhonePrivacy,
   setMobilePhoneNumber,
   updateOfficeLocation,
+  updateOfficeHours,
   setImagePrivacy,
   getChapelCredits,
   getImage,
