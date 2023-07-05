@@ -109,7 +109,6 @@ const GordonSchedulePanel = (props) => {
   const handleScheduleDialogOpen = () => {
     if (props.myProf) {
       setScheduleDialogOpen(true);
-      console.log('hi');
     }
   };
 
@@ -131,11 +130,6 @@ const GordonSchedulePanel = (props) => {
   const reloadHandler = () => {
     setReloadCall((val) => !val);
   };
-
-  const onSelectEvent = useCallback((calEvent) => {
-    const eventId = calEvent.end;
-    console.log({ eventId });
-  }, []);
 
   const replaced = description;
 
@@ -185,7 +179,6 @@ const GordonSchedulePanel = (props) => {
       </Fragment>
     );
   }
-  // console.log({ replaced });
   return loading ? (
     <GordonLoader />
   ) : (
@@ -195,7 +188,8 @@ const GordonSchedulePanel = (props) => {
           <Accordion
             TransitionProps={{ unmountOnExit: true }}
             onChange={handleIsExpanded}
-            defaultExpanded={!props.myProf}
+            //change this later
+            defaultExpanded={props.myProf}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
