@@ -24,7 +24,7 @@ import schedulecontrol from 'services/schedulecontrol';
 import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
-import GordonScheduleDialog from './components/ScheduleDialog';
+import ScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
 import scheduleService from 'services/schedule';
 import { useNetworkStatus, useUser } from 'hooks';
@@ -46,7 +46,7 @@ const GordonSchedulePanel = (props) => {
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
-  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(true);
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -81,7 +81,6 @@ const GordonSchedulePanel = (props) => {
       const scheduleControlInfo = await schedulecontrol.getScheduleControl(
         searchedUser.AD_Username,
       );
-      console.log({ scheduleControlInfo });
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
       if (scheduleControlInfo) {
@@ -99,7 +98,6 @@ const GordonSchedulePanel = (props) => {
     } catch (e) {}
     setLoading(false);
   };
-  console.log({ description });
   const handleEditDescriptionOpen = () => {
     setEditDescriptionOpen(true);
   };
@@ -167,9 +165,9 @@ const GordonSchedulePanel = (props) => {
     );
 
     scheduleDialog = (
-      <GordonScheduleDialog
+      <ScheduleDialog
+        scheduleDialogOpen={scheduleDialogOpen}
         handleMyScheduleClose={handleScheduleDialogClose}
-        myScheduleOpen={scheduleDialogOpen}
       />
     );
   }
