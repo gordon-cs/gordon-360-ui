@@ -52,6 +52,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
           [response.platform]: updatedLinks[response.platform],
         }));
         setFailedUpdates((prevState) => prevState.filter((link) => link !== response.platform));
+        localStorage.setItem(response.platform, updatedLinks[response.platform]);
       }
     });
 
