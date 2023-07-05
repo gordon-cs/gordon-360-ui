@@ -78,6 +78,7 @@ const GordonScheduleCalendar = (props) => {
         resourceTitleAccessor="resourceTitle"
         formats={formats}
         onSelectEvent={props.onSelectEvent}
+        onSelecting={(slot) => false}
       />
     );
     content = Resource(momentLocalizer(Moment));
