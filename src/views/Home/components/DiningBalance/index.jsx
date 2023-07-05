@@ -6,20 +6,24 @@ import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import { useTheme } from '@emotion/react';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
-
-let daysColor = gordonColors.primary.blue;
-let swipesColor = gordonColors.secondary.green;
-let dollarsColor = gordonColors.secondary.yellow;
-let guestColor = gordonColors.secondary.orange;
-let emptyColor = gordonColors.neutral.lightGray;
 
 const DiningBalance = () => {
   const [loading, setLoading] = useState(true);
   const [diningInfo, setDiningInfo] = useState(null);
   const [[daysRemaining, daysInSession], setDaysLeft] = useState([null, null]);
+
+  //Doesn't re-render colors when using getColor!!!!!
+  let daysColor = gordonColors.primary.blue;
+  let swipesColor = gordonColors.secondary.green;
+  let dollarsColor = gordonColors.secondary.yellow;
+  let guestColor = gordonColors.secondary.orange;
+  let emptyColor = gordonColors.neutral.lightGray;
+
+  let balanceColor = gordonColors.secondary.green;
 
   useEffect(() => {
     Promise.all([user.getDiningInfo(), session.getDaysLeft()]).then(([diningInfo, daysLeft]) => {
@@ -36,7 +40,6 @@ const DiningBalance = () => {
   } else if (typeof diningInfo !== 'object') {
     //Set color to use when displaying balance based on how low it is...
     const diningBalance = parseInt(diningInfo);
-    let balanceColor = gordonColors.secondary.green;
     if (lowBalance >= diningBalance && diningBalance > reallyLowBalance) {
       balanceColor = gordonColors.secondary.yellow;
     } else if (reallyLowBalance >= diningBalance && diningBalance > 0) {
@@ -136,7 +139,7 @@ const DiningBalance = () => {
           style={{ paddingTop: 5, paddingBottom: 10 }}
         >
           <Grid item>
-            <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
+            <Typography variant="body2" className={styles.label2}>
               {diningInfo.ChoiceDescription}
             </Typography>
           </Grid>
@@ -195,37 +198,30 @@ const DiningBalance = () => {
   }
 
   return (
-    <Card>
-      <CardHeader
-        title={
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={7} align="left">
-              Dining Balance
-            </Grid>
-            <Grid item xs={5} align="right">
-              <Button
-                variant="contained"
-                color="secondary"
-                style={{
-                  backgroundColor: gordonColors.primary.cyan,
-                  color: gordonColors.neutral.grayShades[50],
-                }}
-                component={Link}
-                href="https://gordon.cafebonappetit.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                TODAY'S MENU
-              </Button>
-            </Grid>
+    <Card className={styles.card}>
+      <CardContent>
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={7} align="left">
+            <CardHeader title="Dining Balance" />
           </Grid>
-        }
-        style={{
-          backgroundColor: gordonColors.primary.blue,
-          color: gordonColors.neutral.grayShades[50],
-        }}
-      />
-      <CardContent>{content}</CardContent>
+          <Grid item xs={5} align="right">
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: 'var(--mui-palette-secondary-main)',
+                color: 'var(--mui-palette-secondary-contrastText',
+              }}
+              component={Link}
+              href="https://gordon.cafebonappetit.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              TODAY'S MENU
+            </Button>
+          </Grid>
+        </Grid>
+        {content}
+      </CardContent>
     </Card>
   );
 };

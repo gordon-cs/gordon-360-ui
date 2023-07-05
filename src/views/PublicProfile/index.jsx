@@ -1,6 +1,6 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import GordonOffline from 'components/GordonOffline';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import Profile from 'components/Profile';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -33,7 +33,7 @@ const PublicProfile = () => {
   }, [isAuthenticated, username]);
 
   if (!isAuthenticated) {
-    return <GordonUnauthorized feature={'this profile'} />;
+    return <GordonUnauthenticated feature={'this profile'} />;
   }
 
   if (!isOnline) {

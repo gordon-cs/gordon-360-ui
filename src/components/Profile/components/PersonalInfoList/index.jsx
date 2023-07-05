@@ -5,17 +5,18 @@ import {
   Divider,
   FormControlLabel,
   Grid,
+  Link,
   List,
   ListItem,
   Switch,
   Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { IconButton, Button } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import GordonTooltip from 'components/GordonTooltip';
+import GordonDialogBox from 'components/GordonDialogBox';
 import { useAuthGroups } from 'hooks';
 import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
@@ -26,6 +27,9 @@ import UpdatePhone from './components/UpdatePhoneDialog';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
+import SLock from './Salsbury.png';
+import DPLock from './DandP.png';
+import DDLock from './DandD.png';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -46,6 +50,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   );
   const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
   const [mailCombo, setMailCombo] = useState();
+  const [advisorsList, setAdvisorsList] = useState([]);
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
@@ -55,6 +60,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     AuthGroup.SensitiveInfoView,
     AuthGroup.AcademicInfoView,
   );
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -87,15 +93,19 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   // FacStaff spouses are private for private users
   const isSpousePrivate = isFacStaff && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
-
   useEffect(() => {
-    async function loadMailboxCombination() {
-      if (myProf && isStudent) {
-        const info = await userService.getMailboxCombination();
-        setMailCombo(info.Combination);
+    async function loadPersonalInfo() {
+      if (isStudent) {
+        if (myProf) {
+          const info = await userService.getMailboxCombination();
+          setMailCombo(info.Combination);
+        }
+        if (canViewAcademicInfo || myProf) {
+          userService.getAdvisors(profile.AD_Username).then(setAdvisorsList);
+        }
       }
     }
-    loadMailboxCombination();
+    loadPersonalInfo();
   }, [myProf, profile.Mail_Location, isStudent]);
 
   const handleChangeMobilePhonePrivacy = async () => {
@@ -326,11 +336,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const advisors =
     (myProf || canViewAcademicInfo) && isStudent ? (
       <ProfileInfoListItem
-        title={profile.Advisors?.length > 1 ? 'Advisors:' : 'Advisor:'}
+        title={advisorsList?.length > 1 ? 'Advisors:' : 'Advisor:'}
         contentText={
-          profile.Advisors?.length < 1
+          advisorsList.length < 1
             ? 'None Assigned'
-            : profile.Advisors?.map((a) => `${a.Firstname} ${a.Lastname}`)?.join(', ')
+            : advisorsList.map((a) => `${a.Firstname} ${a.Lastname}`)?.join(', ')
         }
         privateInfo
         myProf={myProf}
@@ -341,16 +351,16 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     isStudent && profile.Mail_Location ? (
       <>
         <ListItem className={styles.profile_info_list_item}>
-          <Grid container justifyContent="center" alignItems="center">
+          <Grid container alignItems="center">
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
-            <Grid container item xs={myProf && mailCombo ? 2 : 7} alignItems="center">
+            <Grid container item xs={myProf && mailCombo ? 2.5 : 5} alignItems="center">
               <Typography>{`#${profile.Mail_Location}`}</Typography>
             </Grid>
             {myProf && mailCombo && (
               <>
-                <Grid container item xs={2} alignItems="center">
+                <Grid container item xs={1} alignItems="center">
                   <Typography className={styles.private}>
                     {showMailCombo ? mailCombo : '****'}
                   </Typography>
@@ -359,9 +369,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   container
                   direction="column"
                   item
-                  xs={3}
-                  md={3}
-                  lg={3}
+                  xs={1}
+                  md={1}
+                  lg={1}
                   justifyContent="center"
                   alignItems="center"
                 >
@@ -375,6 +385,102 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                     {showMailCombo ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </IconButton>
                 </Grid>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setIsJoinDialogOpen(true)}
+                >
+                  Instructions
+                </Button>
+                <GordonDialogBox
+                  open={isJoinDialogOpen}
+                  title={`Mailbox Instructions`}
+                  closeButtonClicked={() => setIsJoinDialogOpen(false)}
+                  maxWidth="md"
+                >
+                  <Grid container>
+                    <Typography sx={{ fontSize: '0.8rem' }}>
+                      <Link
+                        className={styles.salsbury_link}
+                        href="https://m.youtube.com/shorts/FxE5PPS94sc"
+                        underline="always"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Salsbury Mailbox
+                      </Link>
+                      <Typography className={styles.salsbury_typography}>
+                        (Combinations that have three numbers ex: 21 32 18)
+                      </Typography>
+                      <img src={SLock} alt="SLock" />
+                      <br />
+                      1. To open, turn LEFT at least four turns stopping at the first number of the
+                      combination.
+                      <br />
+                      2. Turn RIGHT passing the first number of the combination once and stop at the
+                      second number of the combination.
+                      <br />
+                      3. Turn LEFT stopping at the third number of the combination.
+                      <br />
+                      4. Turn knob to the RIGHT to open.
+                      <br />
+                      <br />
+                      <Link
+                        className={styles.dp_link}
+                        href="https://m.youtube.com/shorts/47402r3FqSs"
+                        underline="always"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Dial and Pointer Mailbox
+                      </Link>
+                      <Typography className={styles.dp_typography}>
+                        (Combinations that have two letters ex: H B)
+                      </Typography>
+                      <img src={DPLock} alt="DPLock" />
+                      <br />
+                      1. Turn the large letter wheel until the first letter of the two-letter
+                      combination is lined up with the indication notch located just above the
+                      letter wheel in a 12 o’clock position. Line up the small line that is exactly
+                      above each letter with this indication notch.
+                      <br />
+                      2. Leave the letter wheel where you just put it. Now turn the pointer only
+                      until it points to the second letter of the combination. The first letter of
+                      the combination will always be at the 12 o’clock position; the pointer will
+                      always point to the second letter of the combination. Example, in the picture
+                      above, it is showing the combination of A G.
+                      <br />
+                      3. Twist the latch knob clockwise to open the box.
+                      <br />
+                      <br />
+                      <Link
+                        className={styles.dd_link}
+                        href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
+                        underline="always"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Double Dial Mailbox
+                      </Link>
+                      <Typography className={styles.dd_typography}>
+                        (Combinations that have two letter/number pairs ex: A3 H5)
+                      </Typography>
+                      <img src={DDLock} alt="DDLock" />
+                      <br />
+                      1. Each letter (A-K on left dial, L-V on right dial) has been assigned four
+                      white or silver lines on your mailbox. The SHORTEST line is #1 and the LONGEST
+                      line is #3. For example, in the picture above, the combination A1 L1 is shown.
+                      <br />
+                      2. Move the LEFT dial to the line indicated by the FIRST letter/number code
+                      given; the RIGHT dial to the line indicated by the SECOND letter/number code.
+                      Align those lines with the “indication notch” located at the 12 o’clock
+                      position directly above each dial.
+                      <br />
+                      3. When the dials are correctly positioned, move the latch lever to the right
+                      to open box.
+                    </Typography>
+                  </Grid>
+                </GordonDialogBox>
               </>
             )}
           </Grid>

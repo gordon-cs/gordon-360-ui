@@ -5,7 +5,7 @@ import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
 import { Divider, List } from '@mui/material';
-import GordonDialogBox from 'components/GordonDialogBox/index';
+import GordonDialogBox from 'components/GordonDialogBox';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import { useAuthGroups, useNetworkStatus } from 'hooks';

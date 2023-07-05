@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 @import '../../../../vars';
 
 $image-border-radius: 50%;
@@ -27,7 +27,7 @@ $image-side-width-desktop: 90px;
   box-shadow: 0px 2px 1px -1px $neutral-black-opacity20, 0px 1px 1px 0px $neutral-black-opacity15,
     0px 1px 3px 0px $neutral-black-opacity125;
   &_header {
-    background-color: $primary-blue;
+    background-color: var(--mui-palette-primary-main);
     color: $neutral-white;
     padding-left: 1rem;
     hyphens: auto;
@@ -155,7 +155,7 @@ $image-side-width-desktop: 90px;
               text-decoration: none;
             }
             &_container {
-              color: $primary-blue;
+              color: var(--mui-palette-primary-main);
               display: flex;
               &:hover {
                 color: $primary-cyan;
