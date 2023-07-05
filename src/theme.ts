@@ -266,12 +266,12 @@ export const newTheme = extendTheme({
         text: {
           primary: White, // Various MUI components and text
         },
-        Switch: {
-          defaultColor: TestTool, // switch ball off color
-        },
-        common: {
-          onBackground: TestTool, // switch track off color
-        },
+        // Switch: {
+        //   defaultColor: TestTool, // switch ball off color
+        // },
+        // common: {
+        //   onBackground: TestTool, // switch track off color
+        // },
         action: {
           active: White, // Various icons, especially in PersonalInfo
         },
@@ -316,9 +316,9 @@ export const newTheme = extendTheme({
           contrastText: White,
         },
         success: {
-          dark: TestTool,
-          main: TestTool,
-          light: TestTool,
+          dark: LaVidaGreen,
+          main: OldSchemeGreen,
+          light: SeaSpray,
         },
         warning: { main: TestTool, dark: TestTool },
         info: { main: TestTool },
