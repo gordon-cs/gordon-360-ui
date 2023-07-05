@@ -95,7 +95,9 @@ const getRenamedDepartments = async () => {
 };
 
 const getOldName = (dep: string) => {
-  if (dep.endsWith('(Office of)')) {
+  if (dep.endsWith('(Office of the)')) {
+    dep = 'Office of the ' + dep.replace(/ \(Office of the\)/, '');
+  } else if (dep.endsWith('(Office of)')) {
     dep = 'Office of ' + dep.replace(/ \(Office of\)/, '');
   } else if (dep.endsWith('(Center for)')) {
     dep = 'Center for ' + dep.replace(/ \(Center for\)/, '');
