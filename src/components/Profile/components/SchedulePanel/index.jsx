@@ -81,12 +81,15 @@ const GordonSchedulePanel = (props) => {
       const scheduleControlInfo = await schedulecontrol.getScheduleControl(
         searchedUser.AD_Username,
       );
+      console.log({ scheduleControlInfo });
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
       if (scheduleControlInfo) {
         setDescription(
           scheduleControlInfo.Description
-            ? scheduleControlInfo.Description.replace(new RegExp('SlSh', 'g'), '/')
+            ? // We decided to leave the regex code for now because the data stored in the database
+              // before changing the api is still in the regex form.
+              scheduleControlInfo.Description.replace(new RegExp('SlSh', 'g'), '/')
                 .replace(new RegExp('CoLn', 'g'), ':')
                 .replace(new RegExp('dOT', 'g'), '.')
             : '',
@@ -96,6 +99,7 @@ const GordonSchedulePanel = (props) => {
     } catch (e) {}
     setLoading(false);
   };
+  console.log({ description });
   const handleEditDescriptionOpen = () => {
     setEditDescriptionOpen(true);
   };
@@ -183,6 +187,7 @@ const GordonSchedulePanel = (props) => {
       </Fragment>
     );
   }
+  // console.log({ replaced });
   return loading ? (
     <GordonLoader />
   ) : (
@@ -192,7 +197,7 @@ const GordonSchedulePanel = (props) => {
           <Accordion
             TransitionProps={{ unmountOnExit: true }}
             onChange={handleIsExpanded}
-            defaultExpanded={props.myProf}
+            defaultExpanded={!props.myProf}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
@@ -200,10 +205,7 @@ const GordonSchedulePanel = (props) => {
               id="panel1a-header"
               className={styles.header}
             >
-              <CardHeader
-                className={styles.accordionHeader}
-                title={isExpanded ? 'Hide Schedule' : 'Show Schedule'}
-              />
+              <CardHeader className={styles.accordionHeader} title={'Course Schedule'} />
             </AccordionSummary>
             <AccordionDetails>
               <Grid container direction="row" justifyContent="center" align="left" spacing={4}>
@@ -211,14 +213,12 @@ const GordonSchedulePanel = (props) => {
                   <Grid container direction="row" item xs={12} lg={12} spacing={2}>
                     <Grid item lg={1}></Grid>
                     <Grid item xs={4} lg={1} align="left" className={styles.officeHourText}>
-                      <Markup content="Office Hours: " />
-                      <item>{editDescriptionButton}</item>
+                      <Markup content="Public Office Hours Note: " />
+                      {editDescriptionButton}
                     </Grid>
-                    <Grid item xs={7} lg={9} align="left" classname={styles.officeHourText}>
+                    <Grid item xs={7} lg={9} align="left">
                       <Divider />
-                      <item>
-                        <Markup content={replaced} />
-                      </item>
+                      <Markup content={replaced} />
                       <Divider />
                     </Grid>
                   </Grid>
