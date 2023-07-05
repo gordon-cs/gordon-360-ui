@@ -46,7 +46,7 @@ const ScheduleDialog = (props) => {
         />
 
         <DialogActions>
-          <Button onClick={props.handleEditDescriptionClose} variant="contained">
+          <Button onClick={props.handleScheduleDialogClose} variant="contained">
             Cancel
           </Button>
           <Button variant="contained" onClick={handleSubmit}>

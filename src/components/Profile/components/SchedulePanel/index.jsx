@@ -167,7 +167,7 @@ const GordonSchedulePanel = (props) => {
     scheduleDialog = (
       <ScheduleDialog
         scheduleDialogOpen={scheduleDialogOpen}
-        handleMyScheduleClose={handleScheduleDialogClose}
+        handleScheduleDialogClose={handleScheduleDialogClose}
       />
     );
   }
