@@ -90,7 +90,6 @@ const getRenamedDepartments = async () => {
       dep[i] = dep[i].replace(/^Department of /, '') + ' (Department of)';
     }
   });
-  console.log(dep);
   return dep;
 };
 
