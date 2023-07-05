@@ -48,7 +48,7 @@ const OfficeInfoList = ({
     <ProfileInfoListItem
       title="Office Hours:"
       contentText={
-        myProf ? (
+        !myProf ? (
           <Grid container spacing={0} alignItems="center">
             <Grid item>{office_hours}</Grid>
             <Grid item>
