@@ -23,13 +23,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
   useEffect(() => {
     async function loadMemberships() {
       setLoading(true);
-      // if (myProf) {
-      //   const memberships = await membershipService.groupByActivityCode(username);
-      //   setMembershipHistories(memberships);
-      // } else {
-      //   const memberships = await membershipService.groupByActivityCode(true, username);
-      //   setMembershipHistories(memberships);
-      // }
+
       const memberships = await membershipService.groupByActivityCode(username, myProf);
       setMembershipHistories(memberships);
 
