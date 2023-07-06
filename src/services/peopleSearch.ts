@@ -7,7 +7,7 @@ export enum Class {
   'Junior',
   'Senior',
   'Graduate Student',
-  'Undegraduate Conferred',
+  'Undergraduate Conferred',
   'Graduate Conferred',
 }
 
