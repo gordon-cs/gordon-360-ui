@@ -47,6 +47,7 @@ const GordonSchedulePanel = (props) => {
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
+  const [selectedCourseInfo, setSelectedCourseInfo] = useState();
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -106,11 +107,14 @@ const GordonSchedulePanel = (props) => {
     setEditDescriptionOpen(false);
   };
 
-  const handleScheduleDialogOpen = () => {
+  const handleScheduleDialogOpen = useCallback((calEvent) => {
     if (props.myProf) {
       setScheduleDialogOpen(true);
+      setSelectedCourseInfo(calEvent);
     }
-  };
+  }, []);
+
+  console.log({ selectedCourseInfo });
 
   const handleScheduleDialogClose = () => {
     setScheduleDialogOpen(false);
@@ -162,6 +166,7 @@ const GordonSchedulePanel = (props) => {
       <ScheduleDialog
         scheduleDialogOpen={scheduleDialogOpen}
         handleScheduleDialogClose={handleScheduleDialogClose}
+        selectedCourseInfo={selectedCourseInfo}
       />
     );
   }

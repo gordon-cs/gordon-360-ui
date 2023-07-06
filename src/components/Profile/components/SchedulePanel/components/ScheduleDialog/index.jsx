@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { gordonColors } from 'theme';
-import { Dialog, DialogTitle, DialogActions, Button, TextField } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  Button,
+  Typography,
+} from '@mui/material';
 
 const ScheduleDialog = (props) => {
   const button = {
@@ -12,6 +19,9 @@ const ScheduleDialog = (props) => {
     <Dialog open={props.scheduleDialogOpen} keepMounted fullWidth={true} maxWidth="xs">
       <div>
         <DialogTitle>Add Course Schedule to Calendar</DialogTitle>
+        <DialogContent>
+          <Typography>Course Title: {props.selectedCourseInfo?.title}</Typography>
+        </DialogContent>
         <DialogActions>
           <add-to-calendar-button
             label="Add Course"
