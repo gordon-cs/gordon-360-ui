@@ -189,12 +189,13 @@ const SearchFieldList = ({ onSearch }: Props) => {
     if (canSearch) {
       setLoadingSearch(true);
 
-      await peopleSearchService.search(searchParams).then(onSearch);
+      const results = await peopleSearchService.search(searchParams);
+      onSearch(results);
 
       const newQueryString = serializeSearchParams(searchParams);
       // If search params are new since last search, add search to history
       if (window.location.search !== newQueryString) {
-        navigate(newQueryString);
+        navigate(newQueryString, { state: results });
       }
 
       setLoadingSearch(false);
@@ -229,7 +230,9 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }, []);
 
   useEffect(() => {
-    const readSearchParamsFromURL = () => {
+    const readSearchParamsFromURL = (event: PopStateEvent | undefined) => {
+      onSearch(event?.state?.usr ?? null);
+
       const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
 
       setSearchParams((oldSearchParams) => {
@@ -247,12 +250,12 @@ const SearchFieldList = ({ onSearch }: Props) => {
     };
 
     // Read search params from URL when SearchFieldList mounts (or initialSearchParams changes)
-    readSearchParamsFromURL();
+    readSearchParamsFromURL(undefined);
 
     // Read search params from URL on 'popstate' (back/forward navigation) events
     window.addEventListener('popstate', readSearchParamsFromURL);
     return () => window.removeEventListener('popstate', readSearchParamsFromURL);
-  }, [initialSearchParams]);
+  }, [initialSearchParams, onSearch]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === 'graduation_year') {
