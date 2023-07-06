@@ -162,7 +162,6 @@ const toQueryString = (
 
   // Add each property of `queryParams` object to the `urlSearchParams`
   Object.entries(queryParams).forEach(([key, value]) => {
-    debugger;
     if (Array.isArray(value)) {
       // If `value` is an array, append each element of the array to the searchParams
       // This is *most* standard way of encoding arrays in a query string, and the only way
