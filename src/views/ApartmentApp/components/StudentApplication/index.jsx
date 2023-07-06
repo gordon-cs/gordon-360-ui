@@ -572,6 +572,7 @@ const StudentApplication = ({ userProfile }) => {
   const deleteApartmentApplication = async () => {
     setDeleting(true);
     setDeleteButtonAlertTimeout(null);
+    //If there is no existing application, we clear the application by loading the application again
     if (!applicationExists) {
       setApplicationDetails(loadApplication);
       setDeleting(false);
@@ -690,7 +691,7 @@ const StudentApplication = ({ userProfile }) => {
   const submitApplication = async () => {
     setSubmitStatus(true);
     setSubmitButtonAlertTimeout(null);
-    //if (applicationDetails.HallRank has a duplicate hallrank) then setSubmitStatus(false) and createSnackBar
+
     // Check for duplicate hall ranks
     const hallRanks = applicationDetails.ApartmentChoices.map((choice) => choice.HallRank);
     const uniqueHallRanks = new Set(hallRanks);

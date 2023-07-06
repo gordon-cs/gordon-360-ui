@@ -57,9 +57,8 @@ const HallChoiceList = ({
 
   const handleAddHallClick = () => {
     // Only continue if click count is less than 5
-    if (clickCount < 5) {
+    if (apartmentChoices?.length < 5) {
       onHallAdd();
-      setClickCount((prevClickCount) => prevClickCount + 1);
     }
   };
 
@@ -92,7 +91,7 @@ const HallChoiceList = ({
           </Grid>
           <Grid item xs={12}>
             <Button
-              disabled={disabled || clickCount >= 5}
+              disabled={disabled || apartmentChoices?.length >= 5}
               variant="outlined"
               color="primary"
               startIcon={<AddIcon fontSize="inherit" />}
