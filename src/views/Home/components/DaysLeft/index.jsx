@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-
 import GordonLoader from 'components/Loader';
 import session from 'services/session';
 import { gordonColors } from 'theme';
@@ -36,18 +35,11 @@ const DaysLeft = () => {
   }, []);
 
   return (
-    <Card>
-      <CardHeader
-        title={currentSessionDescription}
-        style={{
-          backgroundColor: gordonColors.primary.blue,
-          color: gordonColors.neutral.grayShades[50],
-        }}
-      >
+    <Card className={styles.card}>
+      <CardHeader title={currentSessionDescription} className={styles.header}>
         <br />
       </CardHeader>
       <CardContent>
-        <br />
         {loading ? (
           <GordonLoader />
         ) : (

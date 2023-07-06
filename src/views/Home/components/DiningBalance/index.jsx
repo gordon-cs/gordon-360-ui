@@ -10,16 +10,16 @@ import styles from '../Doughnut.module.css';
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
 
-let daysColor = gordonColors.primary.blue;
-let swipesColor = gordonColors.secondary.green;
-let dollarsColor = gordonColors.secondary.yellow;
-let guestColor = gordonColors.secondary.orange;
-let emptyColor = gordonColors.neutral.lightGray;
-
 const DiningBalance = () => {
   const [loading, setLoading] = useState(true);
   const [diningInfo, setDiningInfo] = useState(null);
   const [[daysRemaining, daysInSession], setDaysLeft] = useState([null, null]);
+
+  let daysColor = gordonColors.primary.blue;
+  let swipesColor = gordonColors.secondary.green;
+  let dollarsColor = gordonColors.secondary.yellow;
+  let guestColor = gordonColors.secondary.orange;
+  let emptyColor = gordonColors.neutral.lightGray;
 
   useEffect(() => {
     Promise.all([user.getDiningInfo(), session.getDaysLeft()]).then(([diningInfo, daysLeft]) => {
@@ -195,7 +195,7 @@ const DiningBalance = () => {
   }
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardHeader
         title={
           <Grid container direction="row" alignItems="center">
@@ -205,11 +205,7 @@ const DiningBalance = () => {
             <Grid item xs={5} align="right">
               <Button
                 variant="contained"
-                color="secondary"
-                style={{
-                  backgroundColor: gordonColors.primary.cyan,
-                  color: gordonColors.neutral.grayShades[50],
-                }}
+                className={styles.button}
                 component={Link}
                 href="https://gordon.cafebonappetit.com/"
                 target="_blank"
@@ -220,10 +216,7 @@ const DiningBalance = () => {
             </Grid>
           </Grid>
         }
-        style={{
-          backgroundColor: gordonColors.primary.blue,
-          color: gordonColors.neutral.grayShades[50],
-        }}
+        className={styles.header}
       />
       <CardContent>{content}</CardContent>
     </Card>
