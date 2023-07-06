@@ -209,7 +209,7 @@ const GordonSchedulePanel = (props) => {
                 {props.isOnline && (
                   <Grid container direction="row" item xs={12} lg={12} spacing={2}>
                     <Grid item lg={1}></Grid>
-                    <Grid item xs={4} lg={1} align="left" className={styles.officeHourT}>
+                    <Grid item xs={4} lg={1} align="left" className={styles.officeHourTitle}>
                       <Markup content="Public Office Hours Note: " />
                       {editDescriptionButton}
                     </Grid>
@@ -241,8 +241,8 @@ const GordonSchedulePanel = (props) => {
                   </FormControl>
                 </Grid>
                 <Grid lg={7}></Grid>
-                <Grid>
-                  <Typography>click course to display button for adding to calendar</Typography>
+                <Grid item align="center" className={styles.addCalendarInfoText}>
+                  <Markup content="Click on Course to add Schedule to Personal Calendar" />
                 </Grid>
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar
