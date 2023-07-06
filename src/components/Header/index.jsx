@@ -8,7 +8,7 @@ import {
   Work as WorkIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@mui/material';
-import GordonDialogBox from 'components/GordonDialogBox/index';
+import GordonDialogBox from 'components/GordonDialogBox';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
 import { forwardRef, useEffect, useState } from 'react';
@@ -68,33 +68,20 @@ const GordonHeader = ({ onDrawerToggle }) => {
   }, [width]);
 
   const createDialogBox = () => {
-    if (dialog === 'offline') {
-      return (
-        <GordonDialogBox
-          open={dialog}
-          onClose={() => setDialog(null)}
-          title={'Offline Mode'}
-          buttonClicked={() => setDialog(null)}
-          buttonName={'Okay'}
-        >
-          This feature is unavailable offline. Please reconnect to internet to access this feature.
-        </GordonDialogBox>
-      );
-    } else if (dialog === 'unauthorized') {
-      return (
-        <GordonDialogBox
-          open={dialog}
-          onClose={() => setDialog(null)}
-          title={'Credentials Needed'}
-          buttonClicked={() => setDialog(null)}
-          buttonName={'Okay'}
-        >
-          This feature is unavailable while not logged in. Please log in to access it.
-        </GordonDialogBox>
-      );
-    } else {
-      return null;
-    }
+    const isOffline = dialog === 'offline';
+    return (
+      <GordonDialogBox
+        open={dialog}
+        onClose={() => setDialog(null)}
+        title={isOffline ? 'Unavailabile Offline' : 'Login Required'}
+        buttonClicked={() => setDialog(null)}
+        buttonName={'Okay'}
+      >
+        {isOffline
+          ? 'That page is not available offline. Please reconnect to internet to access this feature.'
+          : 'That page is only available to authenticated users. Please log in to access it.'}
+      </GordonDialogBox>
+    );
   };
 
   const requiresAuthTab = (name, icon) => {
