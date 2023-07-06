@@ -21,6 +21,7 @@ export type MembershipView = {
   SessionCode: string;
   SessionDescription: string;
   StartDate: string;
+  myProf: boolean;
 };
 
 enum Privacy {
@@ -59,6 +60,7 @@ export type MembershipUpload = {
 };
 
 const get = async (queryParams: {
+  myProf?: boolean;
   involvementCode?: string;
   username?: string;
   sessionCode?: string;
@@ -128,8 +130,8 @@ interface MembershipHistory {
   Memberships: MembershipView[];
 }
 
-const groupByActivityCode = async (username: string) => {
-  const memberships = await get({ username, sessionCode: '*' });
+const groupByActivityCode = async (username: string, myProfile?: boolean) => {
+  const memberships = await get({ myProf: myProfile, username: username, sessionCode: '*' });
   const grouped: MembershipHistory[] = [];
   memberships.forEach((curMembership) => {
     const existingMembership = grouped.find(

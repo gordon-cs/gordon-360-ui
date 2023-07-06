@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import membershipService from 'services/membership';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import styles from './MembershipsList.module.css';
+import MyProfile from 'views/MyProfile';
 
 /**
  * A List of memberships for display on the Profile and MyProfile views.
@@ -22,7 +23,14 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
   useEffect(() => {
     async function loadMemberships() {
       setLoading(true);
-      const memberships = await membershipService.groupByActivityCode(username);
+      // if (myProf) {
+      //   const memberships = await membershipService.groupByActivityCode(username);
+      //   setMembershipHistories(memberships);
+      // } else {
+      //   const memberships = await membershipService.groupByActivityCode(true, username);
+      //   setMembershipHistories(memberships);
+      // }
+      const memberships = await membershipService.groupByActivityCode(username, myProf);
       setMembershipHistories(memberships);
 
       setLoading(false);

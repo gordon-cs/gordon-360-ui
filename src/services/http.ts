@@ -54,7 +54,6 @@ const patch = <TResponse>(
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'PATCH', JSON.stringify(body), setContentTypeJSON(headers));
 
-
 const del = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'delete');
 
 const apiBaseURL = import.meta.env.DEV ? '/' : (import.meta.env.VITE_API_URL as string);
@@ -163,6 +162,7 @@ const toQueryString = (
 
   // Add each property of `queryParams` object to the `urlSearchParams`
   Object.entries(queryParams).forEach(([key, value]) => {
+    debugger;
     if (Array.isArray(value)) {
       // If `value` is an array, append each element of the array to the searchParams
       // This is *most* standard way of encoding arrays in a query string, and the only way
