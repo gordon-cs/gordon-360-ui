@@ -1,0 +1,25 @@
+.events {
+  &_header {
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
+
+  &_gordon_text {
+    color: var(--mui-palette-secondary-main);
+  }
+
+  &_icon {
+    color: var(--mui-palette-neutral-700);
+    font-size: 20;
+  }
+
+  &_button {
+    background-color: var(--mui-palette-secondary-main);
+    color: var(--mui-palette-secondary-contrastText);
+  }
+
+  &_chip {
+    //background-color: var(--mui-palette-secondary-main);
+    background-color: var(--mui-palette-secondary-main);
+  }
+}

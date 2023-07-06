@@ -21,11 +21,12 @@ import { useWindowSize } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
 import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
-import { gordonColors } from 'theme';
 import { useLocation, useNavigate } from 'react-router-dom';
+import styles from './Events.module.css';
 
 const Events = () => {
   const [open, setOpen] = useState(false);
+
   const [search, setSearch] = useState('');
   const [allEvents, setAllEvents] = useState([]);
   const [events, setEvents] = useState([]);
@@ -39,7 +40,6 @@ const Events = () => {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const location = useLocation();
-
   useEffect(() => {
     const loadEvents = async () => {
       setLoading(true);
@@ -51,13 +51,11 @@ const Events = () => {
       }
       setAllEvents(allEvents);
       setHasInitializedEvents(true);
-
       // Load filters from UrlParams if they exist
       if (location.search) {
         const urlParams = new URLSearchParams(location.search);
         let willIncludePast = false;
         const filtersFromURL = [];
-
         for (const key of urlParams.keys()) {
           if (key === 'Past') {
             willIncludePast = true;
@@ -65,37 +63,29 @@ const Events = () => {
             filtersFromURL.push(key);
           }
         }
-
         setFilters(filtersFromURL);
         setIncludePast(willIncludePast);
         setOpen(willIncludePast || filtersFromURL.length > 0);
       }
-
       setLoading(false);
     };
-
     loadEvents();
   }, [isAuthenticated, location.search]);
-
   useEffect(() => {
     setLoading(true);
     setEvents(includePast ? allEvents : futureEvents);
     setLoading(false);
   }, [includePast, allEvents, futureEvents]);
-
   useEffect(() => {
     setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
   }, [events, filters, search]);
-
   const handleChangeFilters = async (value) => {
     setFilters(value);
     setURLParams(includePast, value);
   };
-
   const handleExpandClick = () => {
     setOpen(!open);
   };
-
   const clearAll = () => {
     setIncludePast(false);
     setFilters([]);
@@ -103,12 +93,10 @@ const Events = () => {
     setSearch('');
     setOpen(false);
   };
-
   const handleChangeIncludePast = () => {
     setIncludePast(!includePast);
     setURLParams(!includePast, filters);
   };
-
   const setURLParams = (includePast, filters) => {
     if (includePast || filters.length > 0) {
       let url = '?';
@@ -120,19 +108,16 @@ const Events = () => {
       navigate();
     }
   };
-
   let content;
-
   if (loading || !hasInitializedEvents) {
     content = <GordonLoader />;
   } else {
     content = <EventList events={filteredEvents} loading={loading} />;
   }
-
   const searchPageTitle = (
     <div align="center">
       Search
-      <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+      <b className={styles.events_gordon_text}> Gordon </b>
       Events
     </div>
   );
@@ -141,45 +126,22 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
+          <CardHeader title={searchPageTitle} className={styles.events_header} />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
-              <Grid container direction="row" alignItems="center">
-                <Grid item xs={4} />
-                <Grid item xs={4} align="center">
-                  <CardHeader title={searchPageTitle} />
-                </Grid>
-                <Grid item xs={4} align="right">
-                  {isAuthenticated && (
-                    <Button
-                      color="primary"
-                      style={{
-                        backgroundColor: gordonColors.primary.cyan,
-                        color: gordonColors.neutral.grayShades[50],
-                      }}
-                      variant="contained"
-                      onClick={() => navigate('/attended')}
-                    >
-                      ATTENDED CL&amp;W
-                    </Button>
-                  )}
-                </Grid>
-              </Grid>
-
               {/* Search Bar and Filters */}
               <Grid container spacing={2} direction="row">
                 <Grid item xs={12}>
-                  <Grid container spacing={2} alignItems="center">
+                  <Grid container spacing={1.5} alignItems="center">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <EventIcon
-                            style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                          />
+                          <EventIcon className={styles.events_icon} />
                         </Grid>
                       )}
                     />
-                    <Grid item xs={8}>
+                    <Grid item xs={true}>
                       <TextField
                         id="search"
                         label="Search"
@@ -190,13 +152,11 @@ const Events = () => {
                         onChange={(event) => setSearch(event.target.value)}
                       />
                     </Grid>
-
                     <Grid item>
                       <Button color="neutral" fullWidth variant="contained" onClick={clearAll}>
                         CLEAR ALL
                       </Button>
                     </Grid>
-
                     <Grid item>
                       <Button
                         color={filters.length === 0 ? 'primary' : 'secondary'}
@@ -207,8 +167,19 @@ const Events = () => {
                         Filters
                       </Button>
                     </Grid>
+
+                    <Grid item>
+                      {isAuthenticated && (
+                        <Button
+                          className={styles.events_button}
+                          variant="contained"
+                          onClick={() => navigate('/attended')}
+                        >
+                          ATTENDED CL&amp;W
+                        </Button>
+                      )}
+                    </Grid>
                   </Grid>
-                  <br />
                 </Grid>
 
                 <Grid item xs={12}>
@@ -218,12 +189,11 @@ const Events = () => {
                         query="(min-width: 600px)"
                         render={() => (
                           <Grid item>
-                            <FilterListIcon
-                              style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                            />
+                            <FilterListIcon className={styles.events_icon} />
                           </Grid>
                         )}
                       />
+
                       <Grid item xs={8}>
                         <Autocomplete
                           id="event-filters"
@@ -238,10 +208,7 @@ const Events = () => {
                             value.map((option, index) => (
                               <Chip
                                 label={option}
-                                style={{
-                                  backgroundColor: gordonColors.primary.cyan,
-                                  color: gordonColors.neutral.grayShades[50],
-                                }}
+                                className={styles.events_chip}
                                 {...getTagProps({ index })}
                               />
                             ))
@@ -266,9 +233,7 @@ const Events = () => {
               </Grid>
             </CardContent>
           </Card>
-
           <br />
-
           {/* List of Events */}
           <Grid item xs={12}>
             {content}
@@ -280,12 +245,9 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
+          <CardHeader title={searchPageTitle} className={styles.events_header} />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
-              <Grid container item xs={12} justifyContent="center">
-                <CardHeader title={searchPageTitle} />
-              </Grid>
-
               {/* Search Bar and Filters */}
               <Grid container spacing={2} direction="row">
                 <Grid item xs={12} container spacing={2} alignItems="center">
@@ -293,12 +255,11 @@ const Events = () => {
                     query="(min-width: 600px)"
                     render={() => (
                       <Grid item>
-                        <EventIcon
-                          style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                        />
+                        <EventIcon className={styles.events_icon} />
                       </Grid>
                     )}
                   />
+
                   <Grid item xs={11}>
                     <TextField
                       id="search"
@@ -324,7 +285,6 @@ const Events = () => {
                       CLEAR ALL
                     </Button>
                   </Grid>
-
                   <Grid item>
                     <Button
                       color={filters.length === 0 ? 'primary' : 'secondary'}
@@ -335,15 +295,11 @@ const Events = () => {
                       Filters
                     </Button>
                   </Grid>
-
                   <Grid item>
                     {isAuthenticated && (
                       <Button
                         color="primary"
-                        style={{
-                          backgroundColor: gordonColors.primary.cyan,
-                          color: gordonColors.neutral.grayShades[50],
-                        }}
+                        className={styles.events_button}
                         variant="contained"
                         onClick={() => navigate('/attended')}
                       >
@@ -353,7 +309,6 @@ const Events = () => {
                   </Grid>
                 </Grid>
               </Grid>
-
               <Grid item xs={12}>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                   <Grid container item justifyContent="center">
@@ -369,12 +324,11 @@ const Events = () => {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <FilterListIcon
-                            style={{ color: gordonColors.neutral.grayShades[900], fontSize: 20 }}
-                          />
+                          <FilterListIcon className={styles.events_icon} />
                         </Grid>
                       )}
                     />
+
                     <Grid item xs={11}>
                       <Autocomplete
                         id="event-filters"
@@ -389,10 +343,7 @@ const Events = () => {
                           value.map((option, index) => (
                             <Chip
                               label={option}
-                              style={{
-                                backgroundColor: gordonColors.primary.cyan,
-                                color: gordonColors.neutral.grayShades[50],
-                              }}
+                              className={styles.events_chip}
                               {...getTagProps({ index })}
                             />
                           ))
@@ -407,7 +358,7 @@ const Events = () => {
               </Grid>
             </CardContent>
           </Card>
-
+          <br />
           {/* List of Events */}
           <Grid item xs={12}>
             {content}
@@ -417,5 +368,4 @@ const Events = () => {
     );
   }
 };
-
 export default Events;
