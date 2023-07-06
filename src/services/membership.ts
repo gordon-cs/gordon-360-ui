@@ -74,7 +74,7 @@ const editMembership = (membershipID: string, data: MembershipUpload): Promise<M
   http.put(`memberships/${membershipID}`, data);
 
 const setMembershipPrivacy = (membershipID: number, isPrivate: boolean): Promise<MembershipView> =>
-  http.patch(`memberships/${membershipID}/privacy`, isPrivate);
+  http.put(`memberships/${membershipID}/privacy`, isPrivate);
 
 const remove = (membershipID: string): Promise<MembershipView> =>
   http.del(`memberships/${membershipID}`);
