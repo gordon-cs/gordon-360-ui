@@ -26,21 +26,34 @@ const ScheduleDialog = (props) => {
           <Typography>Course Title: {props.selectedCourseInfo?.title}</Typography>
         </DialogContent>
         <DialogActions style={{ overflow: 'hidden' }}>
-          {props.selectedCourseInfo !== '' && (
-            <add-to-calendar-button
-              name="[Reminder] Test the Add to Calendar Button"
-              startDate="2023-07-09"
-              startTime={format(new Date(props.selectedCourseInfo?.start ?? '10:15'), 'HH:mm')}
-              endTime={format(new Date(props.selectedCourseInfo?.end ?? '23:30'), 'HH:mm')}
-              timeZone="America/Los_Angeles"
-              description="Check out the maybe easiest way to include Add to Calendar Buttons to your web projects:[br]→ [url]https://add-to-calendar-button.com/"
-              options="'Apple','Google','Outlook.com','MicrosoftTeams'"
-              buttonsList
-              hideTextLabelButton
-              buttonStyle="round"
-              lightMode="bodyScheme"
-            ></add-to-calendar-button>
-          )}
+          {props.selectedCourseInfo ? (
+            props.selectedCourseInfo.allDay ? (
+              <add-to-calendar-button
+                name={props.selectedCourseInfo.title}
+                startDate="2023-07-09"
+                description="ASYNC Courses"
+                options="'Apple','Google','Outlook.com','MicrosoftTeams'"
+                buttonsList
+                hideTextLabelButton
+                buttonStyle="round"
+                lightMode="bodyScheme"
+              ></add-to-calendar-button>
+            ) : (
+              <add-to-calendar-button
+                name={props.selectedCourseInfo.title}
+                startDate="2023-07-09"
+                startTime={format(new Date(props.selectedCourseInfo.start), 'HH:mm')}
+                endTime={format(new Date(props.selectedCourseInfo.end), 'HH:mm')}
+                timeZone="America/Los_Angeles"
+                description="SYNC Courses"
+                options="'Apple','Google','Outlook.com','MicrosoftTeams'"
+                buttonsList
+                hideTextLabelButton
+                buttonStyle="round"
+                lightMode="bodyScheme"
+              ></add-to-calendar-button>
+            )
+          ) : null}
           <Button onClick={props.handleScheduleDialogClose} variant="contained">
             Cancel
           </Button>
