@@ -4,6 +4,7 @@ import {
   CardHeader,
   Divider,
   FormControlLabel,
+  FormControl,
   Grid,
   List,
   ListItem,
@@ -29,6 +30,7 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
+import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -115,26 +117,23 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
       setIsMobilePhonePrivate(!isMobilePhonePrivate);
 
-      createSnackbar(
-        isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
-        'success',
-      );
+      setSnackbar({
+        message: 'Your privacy setting will update within a couple hours.',
+        severity: 'success',
+        open: true,
+      });
     } catch {
-      createSnackbar('Privacy Change Failed', 'error');
+      setSnackbar({
+        message: 'Your privacy setting failed to update. Please contact CTS.',
+        severity: 'error',
+        open: true,
+      });
     }
   };
 
-  const handleChangeHomePhonePrivacy = async () => {
-    try {
-      // this user service currently sets mobile_privacy to true or false - same as setMobilePhonePrivacy, which is NOT optimal or sensical. See user.ts
-      await userService.setHomePhonePrivacy(!isHomePhonePrivate);
-      setIsHomePhonePrivate(!isHomePhonePrivate);
-
-      createSnackbar(isHomePhonePrivate ? 'Home Phone Visible' : 'Home Phone Hidden', 'success');
-    } catch {
-      createSnackbar('Privacy Change Failed', 'error');
-    }
-  };
+  useEffect(() => {
+    userService.getBuildings().then(setBuildings);
+  }, []);
 
   const handleChangeCliftonStrengthsPrivacy = async () => {
     try {
@@ -164,14 +163,16 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       }
       ContentIcon={
         myProf && (
-          <FormControlLabel
-            control={
-              <Switch onChange={handleChangeHomePhonePrivacy} checked={!isHomePhonePrivate} />
-            }
-            label={isHomePhonePrivate ? 'Private' : 'Public'}
-            labelPlacement="bottom"
-            disabled={!isOnline}
-          />
+          <FormControl sx={{ m: 1, minWidth: 200 }}>
+            <SearchField
+              name="Privacy"
+              // value={building}
+              // updateValue={(event) => setBuilding(event.target.value)}
+              // options={buildings}
+              select
+              size={200}
+            />
+          </FormControl>
         )
       }
       privateInfo={isHomePhonePrivate}
@@ -198,16 +199,31 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
+      // ContentIcon={
+      //   myProf && (
+      //     <FormControlLabel
+      //       control={
+      //         <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
+      //       }
+      //       label={isMobilePhonePrivate ? 'Private' : 'Public'}
+      //       labelPlacement="bottom"
+      //       disabled={!isOnline}
+      //     />
+      //   )
+      // }
       ContentIcon={
         myProf && (
-          <FormControlLabel
-            control={
-              <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
-            }
-            label={isMobilePhonePrivate ? 'Private' : 'Public'}
-            labelPlacement="bottom"
-            disabled={!isOnline}
-          />
+          <FormControl sx={{ m: 1, minWidth: 200 }}>
+            <SearchField
+              name="Privacy"
+              // value={building}
+              // updateValue={(event) => setBuilding(event.target.value)}
+              // options={buildings}
+              onChange={handleChangeMobilePhonePrivacy}
+              select
+              size={200}
+            />
+          </FormControl>
         )
       }
       privateInfo={isMobilePhonePrivate}
