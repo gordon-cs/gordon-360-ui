@@ -230,9 +230,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }, []);
 
   useEffect(() => {
-    const readSearchParamsFromURL = (event: PopStateEvent | undefined) => {
+    const onTraverseHistory = (event: PopStateEvent | undefined) => {
+      // Display search results saved in history entry, if any
       onSearch(event?.state?.usr ?? null);
 
+      // Load search params from URL
       const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
 
       setSearchParams((oldSearchParams) => {
@@ -250,11 +252,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
     };
 
     // Read search params from URL when SearchFieldList mounts (or initialSearchParams changes)
-    readSearchParamsFromURL(undefined);
+    onTraverseHistory(undefined);
 
     // Read search params from URL on 'popstate' (back/forward navigation) events
-    window.addEventListener('popstate', readSearchParamsFromURL);
-    return () => window.removeEventListener('popstate', readSearchParamsFromURL);
+    window.addEventListener('popstate', onTraverseHistory);
+    return () => window.removeEventListener('popstate', onTraverseHistory);
   }, [initialSearchParams, onSearch]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
