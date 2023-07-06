@@ -1,4 +1,5 @@
 import http from './http';
+import { SelectOption } from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
 export enum Class {
   'Unassigned',
@@ -74,28 +75,20 @@ export type PeopleSearchQuery = {
   relationship_status?: string;
   involvement: string;
 };
-export interface SelectOption {
-  label: string;
-  value: string;
-}
 
-const getRenamedDepartments = async () => {
-  const dep = await getDepartments();
-  const mappedResults = <SelectOption[]>[];
-  dep.forEach((d) => {
-    let departmentName = { value: d, label: d };
-    if (/^Office of the /.test(d)) {
-      departmentName.label = d.replace(/^Office of the /, '') + ' (Office of the)';
-    } else if (/^Office of /.test(d)) {
-      departmentName.label = d.replace(/^Office of /, '') + ' (Office of)';
-    } else if (/^Center for /.test(d)) {
-      departmentName.label = d.replace(/^Center for /, '') + ' (Center for)';
-    } else if (/^Department of /.test(d)) {
-      departmentName.label = d.replace(/^Department of /, '') + ' (Department of)';
-    }
-    mappedResults.push(departmentName);
-  });
-  return mappedResults;
+/**
+ * Match any department whose name starts with one of these prefixes:
+ *  - "Office of (the) "
+ *  - "Department of "
+ *  - "Center for "
+ */
+const DepartmentPrefixRegex = /^(Office of(?: the)?|Department of|Center for) (.*)$/;
+const getDepartmentDropdownOptions = async (): Promise<SelectOption[]> => {
+  const departmentNames = await getDepartments();
+  return departmentNames.map<SelectOption>((departmentName) => ({
+    value: departmentName,
+    label: departmentName.replace(DepartmentPrefixRegex, '$2 ($1)'),
+  }));
 };
 
 const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
@@ -145,7 +138,8 @@ const getInvolvements = (): Promise<string[]> => http.get(`advancedsearch/involv
 
 const peopleSearchService = {
   search,
-  getRenamedDepartments,
+  getDepartmentDropdownOptions,
+  getDepartments,
   getMajors,
   getMinors,
   getHalls,

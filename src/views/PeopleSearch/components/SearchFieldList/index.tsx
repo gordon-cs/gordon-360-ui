@@ -200,7 +200,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
           peopleSearchService.getHalls(),
           addressService.getStates(),
           addressService.getCountries(),
-          peopleSearchService.getRenamedDepartments(),
+          peopleSearchService.getDepartmentDropdownOptions(),
           peopleSearchService.getBuildings(),
           peopleSearchService.getInvolvements(),
         ]);
