@@ -30,7 +30,8 @@ const ScheduleDialog = (props) => {
             props.selectedCourseInfo.allDay ? (
               <add-to-calendar-button
                 name={props.selectedCourseInfo.title}
-                startDate="2023-07-09"
+                startDate={format(new Date(props.selectedCourseInfo.start), 'yyyy-MM-dd')}
+                endDate={format(new Date(props.selectedCourseInfo.end), 'yyyy-MM-dd')}
                 description="ASYNC Courses"
                 options="'Apple','Google','Outlook.com','MicrosoftTeams'"
                 buttonsList
@@ -41,10 +42,11 @@ const ScheduleDialog = (props) => {
             ) : (
               <add-to-calendar-button
                 name={props.selectedCourseInfo.title}
-                startDate="2023-07-09"
+                startDate={format(new Date(props.selectedCourseInfo.start), 'yyyy-MM-dd')}
+                endDate={format(new Date(props.selectedCourseInfo.end), 'yyyy-MM-dd')}
                 startTime={format(new Date(props.selectedCourseInfo.start), 'HH:mm')}
                 endTime={format(new Date(props.selectedCourseInfo.end), 'HH:mm')}
-                timeZone="America/Los_Angeles"
+                timeZone="currentBrowser"
                 description="SYNC Courses"
                 options="'Apple','Google','Outlook.com','MicrosoftTeams'"
                 buttonsList
