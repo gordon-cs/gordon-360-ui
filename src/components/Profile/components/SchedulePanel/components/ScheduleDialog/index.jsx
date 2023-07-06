@@ -8,6 +8,9 @@ import {
   Button,
   Typography,
 } from '@mui/material';
+import styles from './ScheduleDialog.module.css';
+import 'add-to-calendar-button';
+import { format } from 'date-fns';
 
 const ScheduleDialog = (props) => {
   const button = {
@@ -22,24 +25,22 @@ const ScheduleDialog = (props) => {
         <DialogContent>
           <Typography>Course Title: {props.selectedCourseInfo?.title}</Typography>
         </DialogContent>
-        <DialogActions>
-          <add-to-calendar-button
-            label="Add Course"
-            name="[Reminder] Test the Add to Calendar Button"
-            startDate="2023-07-08"
-            startTime="10:15"
-            endTime="23:30"
-            timeZone="America/Los_Angeles"
-            location="World Wide Web"
-            description="Check out the maybe easiest way to include Add to Calendar Buttons to your web projects:[br]→ [url]https://add-to-calendar-button.com/"
-            options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-            recurrence="weekly"
-            recurrence_interval="1"
-            recurrence_count="6"
-            recurrence_byDay="WE,FR"
-            lightMode="system"
-            onClick={() => setExpanded((e) => !e)}
-          ></add-to-calendar-button>
+        <DialogActions style={{ overflow: 'hidden' }}>
+          {props.selectedCourseInfo !== '' && (
+            <add-to-calendar-button
+              name="[Reminder] Test the Add to Calendar Button"
+              startDate="2023-07-09"
+              startTime={format(new Date(props.selectedCourseInfo?.start ?? '10:15'), 'HH:mm')}
+              endTime={format(new Date(props.selectedCourseInfo?.end ?? '23:30'), 'HH:mm')}
+              timeZone="America/Los_Angeles"
+              description="Check out the maybe easiest way to include Add to Calendar Buttons to your web projects:[br]→ [url]https://add-to-calendar-button.com/"
+              options="'Apple','Google','Outlook.com','MicrosoftTeams'"
+              buttonsList
+              hideTextLabelButton
+              buttonStyle="round"
+              lightMode="bodyScheme"
+            ></add-to-calendar-button>
+          )}
           <Button onClick={props.handleScheduleDialogClose} variant="contained">
             Cancel
           </Button>
