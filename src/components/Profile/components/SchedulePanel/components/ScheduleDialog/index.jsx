@@ -7,6 +7,7 @@ import {
   DialogContent,
   Button,
   Typography,
+  Grid,
 } from '@mui/material';
 import styles from './ScheduleDialog.module.css';
 import 'add-to-calendar-button';
@@ -21,9 +22,13 @@ const ScheduleDialog = (props) => {
   return (
     <Dialog open={props.scheduleDialogOpen} keepMounted fullWidth={true} maxWidth="xs">
       <div>
-        <DialogTitle>Add Course Schedule to Calendar</DialogTitle>
+        <DialogTitle sx={{ fontWeight: 'regular' }} align="center">
+          Add Course Schedule to Calendar
+        </DialogTitle>
         <DialogContent>
-          <Typography>Course Title: {props.selectedCourseInfo?.title}</Typography>
+          <Typography sx={{ fontWeight: 'bold' }} align="center">
+            Course Title: {props.selectedCourseInfo?.title}
+          </Typography>
         </DialogContent>
         <DialogActions style={{ overflow: 'hidden' }}>
           {props.selectedCourseInfo && (
@@ -46,12 +51,15 @@ const ScheduleDialog = (props) => {
               buttonsList
               hideTextLabelButton
               buttonStyle="round"
+              timeZone="currentBrowser"
               lightMode="bodyScheme"
             ></add-to-calendar-button>
           )}
-          <Button onClick={props.handleScheduleDialogClose} variant="contained">
-            Cancel
-          </Button>
+          <Grid>
+            <Button onClick={props.handleScheduleDialogClose} variant="contained" size="medium">
+              Cancel
+            </Button>
+          </Grid>
         </DialogActions>
       </div>
     </Dialog>
