@@ -166,13 +166,7 @@ const CLWCreditsDaysLeft = () => {
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
-            <CardHeader
-              title={currSessionDescription}
-              style={{
-                backgroundColor: gordonColors.primary.blue,
-                color: gordonColors.neutral.grayShades[50],
-              }}
-            />
+            <CardHeader title={currSessionDescription} />
           </Grid>
           <Grid item xs={5} align="right">
             <Button

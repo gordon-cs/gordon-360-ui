@@ -27,10 +27,6 @@ const NewsCard = () => {
             </Grid>
           </Grid>
         }
-        style={{
-          backgroundColor: 'var(--mui-palette-primary-main)',
-          color: 'var(--mui-palette-secondary-contrastText',
-        }}
       />
       <CardContent>
         {news.length > 0 ? (

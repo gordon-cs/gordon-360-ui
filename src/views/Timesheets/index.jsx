@@ -284,13 +284,6 @@ const Timesheets = (props) => {
     );
   };
 
-  const resetForm = () => {
-    setClockInOut('Clock In');
-    setSelectedDateIn(null);
-    setSelectedDateOut(null);
-    setHoursWorkedInDecimal(0);
-  };
-
   const jobsMenuItems = userJobs ? (
     userJobs.map((job) => (
       <MenuItem label={job.POSTITLE} value={job} key={job.EMLID}>
@@ -317,7 +310,6 @@ const Timesheets = (props) => {
       setClockInOut('Clock In');
       setSelectedDateIn(null);
       setSelectedDateOut(null);
-      setHoursWorkedInDecimal(0);
     }
   };
 
@@ -374,48 +366,12 @@ const Timesheets = (props) => {
     </Button>
   );
 
-  const timesheetTitle = (
-    <div className={styles.header_tooltip_container}>
-      <Tooltip
-        disableFocusListener
-        disableTouchListener
-        title={
-          // eslint-disable-next-line no-multi-str
-          'Student employees are not permitted to work more than 20 total hours\
-                      per work week, or more than 40 hours during winter, spring, and summer breaks.\
-                      \
-                      To request permission for a special circumstance, please email\
-                      student-employment@gordon.edu before exceeding this limit.'
-        }
-        placement="bottom"
-      >
-        <div ref={tooltipRef}>
-          <CardHeader className="disable_select" title="Enter a shift" />
-          <InfoOutlinedIcon
-            className={styles.tooltip_icon}
-            style={{
-              fontSize: 18,
-              color: gordonColors.neutral.lightGray,
-            }}
-          />
-        </div>
-      </Tooltip>
-    </div>
-  );
-
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Grid container spacing={2} className={styles.timesheets}>
           <Grid item xs={12}>
             <Card>
-              <CardHeader
-                title={timesheetTitle}
-                style={{
-                  backgroundColor: gordonColors.primary.blue,
-                  color: gordonColors.neutral.grayShades[50],
-                }}
-              ></CardHeader>
               <CardContent
                 style={{
                   marginLeft: 8,
@@ -455,7 +411,6 @@ const Timesheets = (props) => {
                     </div>
                   </Grid>
                 </Grid>
-                <br />
                 <Grid
                   container
                   spacing={2}
