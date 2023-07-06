@@ -249,6 +249,8 @@ const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
 const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
+const getUserPrivacy = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
+
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
 const updateOfficeLocation = (officeLocation: OfficeLocationQuery) =>
