@@ -14,8 +14,8 @@ import { defaults, Doughnut } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import session from 'services/session';
 import user from 'services/user';
-import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import { newTheme } from 'theme';
 
 const CLWCreditsDaysLeft = () => {
   const [firstDay, setFirstDay] = useState('');
@@ -48,9 +48,11 @@ const CLWCreditsDaysLeft = () => {
     loadData();
   }, []);
 
-  let daysColor = gordonColors.primary.blue;
-  let chapelColor = gordonColors.primary.cyan;
-  let emptyColor = gordonColors.neutral.lightGray;
+  const colors = newTheme.colorSchemes.light.palette;
+
+  let daysColor = colors.primary.main;
+  let chapelColor = colors.secondary.main;
+  let emptyColor = colors.neutral.A700;
 
   defaults.global.legend.display = false;
 
@@ -83,7 +85,7 @@ const CLWCreditsDaysLeft = () => {
     const remaining = current > required ? 0 : required - current;
     const data = {
       legendEntries: ['Days Finished', 'CL&W Credits'],
-      legendColors: [gordonColors.primary.blue, gordonColors.primary.cyan],
+      legendColors: [daysColor, chapelColor],
       datasets: [
         {
           label: ['Days Finished', 'Days Remaining'],

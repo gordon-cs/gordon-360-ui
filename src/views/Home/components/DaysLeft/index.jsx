@@ -5,6 +5,7 @@ import session from 'services/session';
 import styles from '../Doughnut.module.css';
 import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import { gordonColors } from 'theme';
+import { newTheme } from 'theme';
 
 const DaysLeft = () => {
   const [daysRemaining, setDaysRemaining] = useState();
@@ -34,6 +35,8 @@ const DaysLeft = () => {
     load();
   }, []);
 
+  const colors = newTheme.colorSchemes.light.palette;
+
   return (
     <Card>
       <CardContent>
@@ -51,7 +54,7 @@ const DaysLeft = () => {
                   datasets: [
                     {
                       data: [daysFinished, daysRemaining],
-                      backgroundColor: gordonColors.primary.blue,
+                      backgroundColor: colors.primary.main,
                     },
                   ],
                   labels: ['Days Finished', 'Days Remaining'],

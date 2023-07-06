@@ -22,7 +22,7 @@ const DiningBalance = () => {
   let swipesColor = colors.success.main;
   let dollarsColor = colors.warning.main;
   let guestColor = colors.error.main;
-  let emptyColor = colors.neutral.A400;
+  let emptyColor = colors.neutral.A700;
 
   let balanceColor = colors.success.main;
 
