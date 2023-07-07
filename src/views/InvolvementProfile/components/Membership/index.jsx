@@ -37,7 +37,7 @@ const Membership = ({ isAdmin, isSiteAdmin, isAdvisor, involvementDescription, t
         setShouldShowMemberships(
           (membership && membership.Participation !== Participation.Guest) ||
             isSiteAdmin ||
-            isAdvisor, // I am changing here
+            isAdvisor,
         );
 
         setLoading(false);
