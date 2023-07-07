@@ -10,6 +10,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import withStyles from '@mui/styles/withStyles';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
@@ -20,7 +21,17 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import { Component } from 'react';
+import { gordonColors } from 'theme';
 import styles from './ShiftItem.module.css';
+
+const CustomTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.black,
+    color: 'rgba(255, 255, 255, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}))(Tooltip);
 
 const PickerInput = (props) => {
   return (
@@ -391,7 +402,7 @@ export default class ShiftItem extends Component {
                       });
                       this.onClose();
                     }}
-                    className={styles.redButton}
+                    style={styles2.redButton}
                   >
                     Yes
                   </Button>
@@ -410,7 +421,7 @@ export default class ShiftItem extends Component {
     );
     let deleteButton = (
       <IconButton onClick={this.handleDeleteButtonClick} size="large">
-        <DeleteForeverOutlinedIcon className={styles.redIconText} />
+        <DeleteForeverOutlinedIcon style={{ color: gordonColors.secondary.red }} />
       </IconButton>
     );
     if (this.state.deleting) {
@@ -419,7 +430,7 @@ export default class ShiftItem extends Component {
 
     let checkButton = (
       <IconButton disabled={errorText !== ''} onClick={this.onCheckButtonClick} size="large">
-        <CheckOutlinedIcon className={styles.checkOutlinedIcon} />
+        <CheckOutlinedIcon style={{ color: 'green' }} />
       </IconButton>
     );
     if (this.state.updating) {
@@ -436,7 +447,7 @@ export default class ShiftItem extends Component {
             </Grid>
             <Grid item xs={12} md={6}>
               <IconButton onClick={this.toggleEditing} size="large">
-                <ClearOutlinedIcon className={styles.redIconText} />
+                <ClearOutlinedIcon style={{ color: gordonColors.secondary.red }} />
               </IconButton>
             </Grid>
           </Grid>
@@ -467,7 +478,7 @@ export default class ShiftItem extends Component {
       }
     } else {
       shiftItemIcons = (
-        <IconButton className={styles.iconButton} size="large">
+        <IconButton style={{ visibility: 'hidden' }} size="large">
           <DeleteForeverOutlinedIcon />
         </IconButton>
       );
@@ -476,31 +487,34 @@ export default class ShiftItem extends Component {
     let shiftNotesTooltip = <></>;
     if (SHIFT_NOTES !== '') {
       shiftNotesTooltip = (
-        <Tooltip
+        <CustomTooltip
           disableFocusListener
           disableTouchListener
-          classes={{ tooltip: styles.tooltip }}
           className={styles.tooltip_icon}
           title={'Shift note: ' + SHIFT_NOTES}
           placement="top"
         >
-          <MessageOutlinedIcon className={styles.outlinedIconText} />
-        </Tooltip>
+          <MessageOutlinedIcon
+            style={{
+              fontSize: 16,
+            }}
+          />
+        </CustomTooltip>
       );
     }
 
     let shiftCommentTooltip = <></>;
     if (COMMENTS) {
       shiftCommentTooltip = (
-        <Tooltip
+        <CustomTooltip
           disableFocusListener
           disableTouchListener
-          classes={{ tooltip: styles.tooltip }}
+          className={styles.tooltip_icon}
           title={COMMENTS}
           placement="top"
         >
-          <InfoOutlinedIcon className={styles.outlinedIconText} />
-        </Tooltip>
+          <InfoOutlinedIcon style={{ fontSize: 16 }} />
+        </CustomTooltip>
       );
     }
 
@@ -508,7 +522,7 @@ export default class ShiftItem extends Component {
       errorText === '' ? (
         <Typography variant="body2">{EML_DESCRIPTION}</Typography>
       ) : (
-        <Typography className={styles.redIconText} variant="body2">
+        <Typography style={{ color: gordonColors.secondary.red }} variant="body2">
           {errorText}
         </Typography>
       );
@@ -566,3 +580,10 @@ export default class ShiftItem extends Component {
     );
   }
 }
+
+const styles2 = {
+  redButton: {
+    background: gordonColors.secondary.red,
+    color: 'white',
+  },
+};

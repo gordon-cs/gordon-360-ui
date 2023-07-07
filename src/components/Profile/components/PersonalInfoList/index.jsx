@@ -5,7 +5,6 @@ import {
   Divider,
   FormControlLabel,
   Grid,
-  Link,
   List,
   ListItem,
   Switch,
@@ -61,6 +60,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     AuthGroup.AcademicInfoView,
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
+  const onClose = () => {
+    setIsJoinDialogOpen(false);
+  };
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -395,26 +397,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 <GordonDialogBox
                   open={isJoinDialogOpen}
                   title={`Mailbox Instructions`}
-                  closeButtonClicked={() => setIsJoinDialogOpen(false)}
+                  closeButtonClicked={onClose}
                   maxWidth="md"
                 >
                   <Grid container>
                     <Typography sx={{ fontSize: '0.8rem' }}>
-                      <Link
-                        className={styles.salsbury_link}
-                        href="https://m.youtube.com/shorts/FxE5PPS94sc"
-                        underline="always"
-                        target="_blank"
-                        rel="noopener"
-                      >
-                        Salsbury Mailbox
-                      </Link>
-                      <Typography className={styles.salsbury_typography}>
-                        (Combinations that have three numbers ex: 21 32 18)
+                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
+                        Salsbury Mailbox (Combinations that have three numbers ex: 21 32 18)
                       </Typography>
                       <img src={SLock} alt="SLock" />
                       <br />
-                      1. To open, turn LEFT at least four turns stopping at the first number of the
+                      1. To openturn LEFT at least four turns stopping at the first number of the
                       combination.
                       <br />
                       2. Turn RIGHT passing the first number of the combination once and stop at the
@@ -425,17 +418,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       4. Turn knob to the RIGHT to open.
                       <br />
                       <br />
-                      <Link
-                        className={styles.dp_link}
-                        href="https://m.youtube.com/shorts/47402r3FqSs"
-                        underline="always"
-                        target="_blank"
-                        rel="noopener"
-                      >
-                        Dial and Pointer Mailbox
-                      </Link>
-                      <Typography className={styles.dp_typography}>
-                        (Combinations that have two letters ex: H B)
+                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
+                        Dial and Pointer Mailbox (Combinations that have two letters ex: H B)
                       </Typography>
                       <img src={DPLock} alt="DPLock" />
                       <br />
@@ -453,17 +437,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       3. Twist the latch knob clockwise to open the box.
                       <br />
                       <br />
-                      <Link
-                        className={styles.dd_link}
-                        href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
-                        underline="always"
-                        target="_blank"
-                        rel="noopener"
-                      >
-                        Double Dial Mailbox
-                      </Link>
-                      <Typography className={styles.dd_typography}>
-                        (Combinations that have two letter/number pairs ex: A3 H5)
+                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
+                        Double Dial Mailbox (Combinations that have two letter/number pairs ex: A3
+                        H5)
                       </Typography>
                       <img src={DDLock} alt="DDLock" />
                       <br />
