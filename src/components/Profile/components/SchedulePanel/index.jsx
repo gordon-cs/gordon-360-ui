@@ -45,6 +45,7 @@ const GordonSchedulePanel = (props) => {
   const [scheduleControlInfo, setScheduleControlInfo] = useState();
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
+  const [courseInfo, setCourseInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
   const [selectedCourseInfo, setSelectedCourseInfo] = useState();
@@ -84,6 +85,7 @@ const GordonSchedulePanel = (props) => {
       );
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
+      setCourseInfo(schedule);
       if (scheduleControlInfo) {
         setDescription(
           scheduleControlInfo.Description
@@ -114,7 +116,10 @@ const GordonSchedulePanel = (props) => {
     }
   }, []);
 
-  console.log({ selectedCourseInfo });
+  //const test = courseInfo;
+  const meetingDayTest = selectedCourseInfo;
+  console.log({ meetingDayTest });
+  // console.log({ test });
 
   const handleScheduleDialogClose = () => {
     setScheduleDialogOpen(false);
@@ -167,6 +172,7 @@ const GordonSchedulePanel = (props) => {
         scheduleDialogOpen={scheduleDialogOpen}
         handleScheduleDialogClose={handleScheduleDialogClose}
         selectedCourseInfo={selectedCourseInfo}
+        courseInfo={courseInfo}
       />
     );
   }

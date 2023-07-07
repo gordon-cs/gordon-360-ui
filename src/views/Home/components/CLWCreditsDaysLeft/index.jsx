@@ -48,6 +48,8 @@ const CLWCreditsDaysLeft = () => {
     loadData();
   }, []);
 
+  console.log(firstDay);
+
   let daysColor = gordonColors.primary.blue;
   let chapelColor = gordonColors.primary.cyan;
   let emptyColor = gordonColors.neutral.lightGray;
