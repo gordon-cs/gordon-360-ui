@@ -193,7 +193,9 @@ const Events = () => {
 
                     <Grid item>
                       <Button
-                        color={filters.length === 0 ? 'primary' : 'secondary'}
+                        color={
+                          open ? (filters.length === 0 ? 'primary' : 'secondary') : 'secondary'
+                        }
                         variant={open ? 'contained' : 'outlined'}
                         onClick={handleExpandClick}
                       >

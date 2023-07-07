@@ -21,10 +21,16 @@ const EventItem = ({ event }) => {
         </Typography>
       </Grid>
       <Grid item xs={6} sm={2}>
-        <Typography className={styles.event_column}>{event.date}</Typography>
+        <Typography className={styles.event_column}>
+          {event.date === 'Invalid DateTime' ? 'No Date Listed' : event.date}
+        </Typography>
       </Grid>
       <Grid item xs={6} sm={2}>
-        <Typography className={styles.event_column}>{event.timeRange}</Typography>
+        <Typography className={styles.event_column}>
+          {event.timeRange === 'Invalid DateTime - Invalid DateTime'
+            ? 'No Time Listed'
+            : event.timeRange}
+        </Typography>
       </Grid>
       <Grid item xs={12} sm={4}>
         <Typography className={styles.event_column}>{event.location}</Typography>
@@ -46,6 +52,7 @@ const EventItem = ({ event }) => {
               timeZone="America/New_York"
               description={event.Description}
               onClick={() => setExpanded((e) => !e)}
+              lightMode="system" // Set to system, if we give users
             ></add-to-calendar-button>
           )}
         </CardContent>

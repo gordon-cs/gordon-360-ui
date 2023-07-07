@@ -299,16 +299,16 @@ export const newTheme = extendTheme({
         secondary: {
           main: GordonBlue,
           contrastText: White,
-          50: TestTool,
-          100: TestTool,
-          200: TestTool,
-          300: TestTool,
-          400: TestTool,
-          500: TestTool,
-          600: TestTool,
-          700: TestTool,
-          800: TestTool,
-          900: TestTool,
+          50: GordonBlue_opacity50,
+          100: '#BBDDF0',
+          200: '#92C8E6',
+          300: '#6BB2DC',
+          400: '#4EA2D7',
+          500: '#3394D1',
+          600: '#2886C5',
+          700: '#1C75B3',
+          800: '#1365A2',
+          900: '#014883',
         },
         error: {
           main: OldSchemeRed,
@@ -320,8 +320,8 @@ export const newTheme = extendTheme({
           main: OldSchemeGreen,
           light: SeaSpray,
         },
-        warning: { main: TestTool, dark: TestTool },
-        info: { main: TestTool },
+        warning: { main: BarringtonGold, dark: OldSchemeRed },
+        info: { main: NightMarsh, light: SnowDay, dark: Athletics },
         neutral: {
           main: DarkGray,
           dark: Athletics,
@@ -349,5 +349,3 @@ export const newTheme = extendTheme({
     },
   },
 });
-
-console.log(newTheme);
