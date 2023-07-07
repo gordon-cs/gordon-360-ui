@@ -14,7 +14,6 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 import { gordonColors } from 'theme';
 import BannerAdmin from './components/BannerAdmin';
-import { StylesContext } from '@mui/styles';
 import styles from './BannerSubmission.module.css';
 
 const style = {

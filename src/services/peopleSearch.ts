@@ -58,6 +58,7 @@ export type SearchResult = SearchResultBase &
   );
 
 export type PeopleSearchQuery = {
+  class_year: string;
   includeStudent: boolean;
   includeFacStaff: boolean;
   includeAlumni: boolean;

@@ -96,10 +96,10 @@ const defaultSearchParams: PeopleSearchQuery = {
   country: '',
   department: '',
   building: '',
-
   initial_year: '',
   final_year: '',
   involvement: '',
+  class_year: '',
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -208,7 +208,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   useEffect(() => {
     const loadPage = async () => {
-
       const [majors, minors, halls, states, countries, departments, buildings, involvements] =
         await Promise.all([
           peopleSearchService.getMajors(),
@@ -261,7 +260,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
     window.addEventListener('popstate', onNavigate);
     return () => window.removeEventListener('popstate', onNavigate);
   }, [location.search, initialSearchParams]);
-
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === 'graduation_year') {
@@ -444,7 +442,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   Icon={FaHeart}
                   select
                 />
-
               </Grid>
             ) : null}
 
