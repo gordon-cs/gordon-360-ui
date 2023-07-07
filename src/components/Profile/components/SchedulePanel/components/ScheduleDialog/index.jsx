@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import styles from './ScheduleDialog.module.css';
 import 'add-to-calendar-button';
-import { format } from 'date-fns';
+import { format, setDay } from 'date-fns';
 
 const recurSchedule =
   'RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=' + 'MO,WE,FR' + ';UNTIL=20231019T000000Z';
@@ -21,7 +21,6 @@ const ScheduleDialog = (props) => {
     background: gordonColors.primary.cyan,
     color: 'white',
   };
-
   return (
     <Dialog open={props.scheduleDialogOpen} keepMounted fullWidth={true} maxWidth="xs">
       <div>
@@ -38,8 +37,11 @@ const ScheduleDialog = (props) => {
             <>
               <add-to-calendar-button
                 name={props.selectedCourseInfo.title}
-                startDate={format(new Date(props.selectedCourseInfo.start), 'yyyy-MM-dd')}
-                //endDate={format(new Date(props.selectedCourseInfo.end), 'yyyy-MM-dd')}
+                startDate={format(
+                  setDay(new Date(props.selectedCourseInfo.start), 4),
+                  'yyyy-MM-dd',
+                )}
+                endDate={format(new Date(props.selectedCourseInfo.end), 'yyyy-MM-dd')}
                 startTime={
                   props.selectedCourseInfo.allDay
                     ? null
@@ -62,7 +64,7 @@ const ScheduleDialog = (props) => {
               <add-to-calendar-button
                 name={props.selectedCourseInfo.title}
                 startDate={format(new Date(props.selectedCourseInfo.start), 'yyyy-MM-dd')}
-                //endDate={format(new Date(props.selectedCourseInfo.end), 'yyyy-MM-dd')}
+                endDate={format(new Date(props.selectedCourseInfo.end), 'yyyy-MM-dd')}
                 startTime={
                   props.selectedCourseInfo.allDay
                     ? null
@@ -79,6 +81,7 @@ const ScheduleDialog = (props) => {
                 hideTextLabelButton
                 buttonStyle="round"
                 lightMode="bodyScheme"
+                Timezone="currentBrowser"
               ></add-to-calendar-button>
             </>
           )}

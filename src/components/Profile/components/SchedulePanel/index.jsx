@@ -30,6 +30,8 @@ import scheduleService from 'services/schedule';
 import { useNetworkStatus, useUser } from 'hooks';
 import sessionService from 'services/session';
 
+import { format, setDay } from 'date-fns';
+
 const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
   const [isExpanded, setIsExpanded] = useState(props, myProf ? false : true);
@@ -49,6 +51,8 @@ const GordonSchedulePanel = (props) => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
   const [selectedCourseInfo, setSelectedCourseInfo] = useState();
+  const [firstDay, setFirstDay] = useState('');
+  const [lastDay, setLastDay] = useState('');
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -58,7 +62,6 @@ const GordonSchedulePanel = (props) => {
   useEffect(() => {
     const loadPage = async () => {
       setSessions(await sessionService.getAll());
-
       if (sessionFromURL) {
         setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
       } else {
@@ -72,6 +75,12 @@ const GordonSchedulePanel = (props) => {
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
     reloadHandler();
+    const currSession = await sessionService.get(value);
+    const firstDay = currSession.SessionBeginDate;
+    const lastDay = currSession.SessionEndDate;
+
+    setFirstDay(firstDay);
+    setLastDay(lastDay);
   };
 
   useEffect(() => {
@@ -153,8 +162,10 @@ const GordonSchedulePanel = (props) => {
   );
 
   const meetingDayArray = selectedCourseInfo?.meetingDays;
-  const recurringDays = meetingDayArray.map((day) => `${day}`).join(',');
-  console.log({ recurringDays });
+  const asdf = selectedCourseInfo;
+  const recurringDays = meetingDayArray?.map((day) => `${day}`).join(',');
+  console.log({ firstDay });
+  console.log({ lastDay });
 
   if (props.myProf) {
     editDialog = (
