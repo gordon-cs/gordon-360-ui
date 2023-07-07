@@ -29,10 +29,11 @@ const ScheduleDialog = (props) => {
           Add Course Schedule to Calendar
         </DialogTitle>
         <DialogContent>
-          <Typography>Course Title: {props.selectedCourseInfo?.title}</Typography>
-          <Typography>Are we meeting on Friday: {props.courseInfo[0]?.CRS_TITLE}</Typography>
+          <Typography sx={{ fontWeight: 'bold', fontSize: 'large' }} align="center">
+            Course Title: {props.selectedCourseInfo?.title}
+          </Typography>
         </DialogContent>
-        <DialogActions style={{ overflow: 'hidden' }}>
+        <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
           {props.selectedCourseInfo && (
             <>
               <add-to-calendar-button
@@ -80,7 +81,7 @@ const ScheduleDialog = (props) => {
               ></add-to-calendar-button>
             </>
           )}
-          <Grid>
+          <Grid style={{ marginTop: '20px' }}>
             <Button onClick={props.handleScheduleDialogClose} variant="contained" size="medium">
               Cancel
             </Button>
