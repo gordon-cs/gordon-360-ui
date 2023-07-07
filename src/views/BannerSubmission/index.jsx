@@ -14,6 +14,8 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 import { gordonColors } from 'theme';
 import BannerAdmin from './components/BannerAdmin';
+import { StylesContext } from '@mui/styles';
+import styles from './BannerSubmission.module.css';
 
 const style = {
   uploadButton: {
@@ -49,10 +51,7 @@ const BannerSubmission = () => {
           <CardHeader
             title="Advertise your club or event on the 360 Homepage!"
             titleTypographyProps={{ variant: 'h4', align: 'center' }}
-            style={{
-              backgroundColor: gordonColors.primary.blue,
-              color: 'white',
-            }}
+            className={styles.banner_submission_header}
           />
           <CardContent>
             <Typography variant="h6">Banner Image Guidelines</Typography>
