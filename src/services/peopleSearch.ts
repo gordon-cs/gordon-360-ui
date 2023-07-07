@@ -1,4 +1,5 @@
 import http from './http';
+import { SelectOption } from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
 export enum Class {
   'Unassigned',
@@ -78,6 +79,21 @@ export type PeopleSearchQuery = {
   involvement: string;
 };
 
+/**
+ * Match any department whose name starts with one of these prefixes:
+ *  - "Office of (the) "
+ *  - "Department of "
+ *  - "Center for "
+ */
+const DepartmentPrefixRegex = /^(Office of(?: the)?|Department of|Center for) (.*)$/;
+const getDepartmentDropdownOptions = async (): Promise<SelectOption[]> => {
+  const departmentNames = await getDepartments();
+  return departmentNames.map<SelectOption>((departmentName) => ({
+    value: departmentName,
+    label: departmentName.replace(DepartmentPrefixRegex, '$2 ($1)'),
+  }));
+};
+
 const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
   let params = Object.entries({
     firstName: searchFields.first_name,
@@ -111,7 +127,6 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
   if (searchFields.includeAlumni) {
     params += '&accountTypes=alumni';
   }
-
   return http.get(`accounts/advanced-people-search?${params}`);
 };
 
@@ -129,10 +144,11 @@ const getInvolvements = (): Promise<string[]> => http.get(`advancedsearch/involv
 
 const peopleSearchService = {
   search,
+  getDepartmentDropdownOptions,
+  getDepartments,
   getMajors,
   getMinors,
   getHalls,
-  getDepartments,
   getBuildings,
   getInvolvements,
 };
