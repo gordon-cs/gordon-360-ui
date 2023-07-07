@@ -136,7 +136,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [minors, setMinors] = useState<string[]>([]);
   const [states, setStates] = useState<SelectOption[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
-  const [departments, setDepartments] = useState<string[]>([]);
+  const [departments, setDepartments] = useState<SelectOption[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
   const [involvements, setInvolvements] = useState<string[]>([]);
@@ -200,7 +200,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
           peopleSearchService.getHalls(),
           addressService.getStates(),
           addressService.getCountries(),
-          peopleSearchService.getDepartments(),
+          peopleSearchService.getDepartmentDropdownOptions(),
           peopleSearchService.getBuildings(),
           peopleSearchService.getInvolvements(),
         ]);
@@ -212,7 +212,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setDepartments(departments);
       setBuildings(buildings);
       setInvolvements(involvements);
-
       setLoading(false);
     };
 
@@ -460,7 +459,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="department"
                     value={searchParams.department}
                     updateValue={handleUpdate}
-                    options={departments.sort()}
+                    options={departments.sort(compareByProperty('label'))}
                     Icon={FaBriefcase}
                     select
                     disabled={!searchParams.includeFacStaff}
