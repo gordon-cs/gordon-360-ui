@@ -2,6 +2,7 @@ import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import activity from 'services/activity';
 import membershipService from 'services/membership';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import styles from './MembershipsList.module.css';
@@ -16,22 +17,32 @@ import styles from './MembershipsList.module.css';
  * @returns {JSX} A list of the user's memberships
  */
 const MembershipsList = ({ username, myProf, createSnackbar }) => {
+  const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [membershipHistories, setMembershipHistories] = useState([]);
 
   useEffect(() => {
     async function loadMemberships() {
       setLoading(true);
-      const memberships = await membershipService.groupByActivityCode(username);
-      setMembershipHistories(memberships);
 
+      const memberships = await membershipService.get({ username, sessionCode: '*' });
+
+      if (myProf) {
+        await Promise.all(
+          memberships.map(async (membership) => {
+            const involvement = await activity.get(membership.ActivityCode);
+            membership.IsInvolvementPrivate = involvement.Privacy;
+          }),
+        );
+      }
+
+      setMemberships(memberships);
       setLoading(false);
     }
     loadMemberships();
   }, [myProf, username]);
 
   const MembershipsList = () => {
-    if (membershipHistories.length === 0) {
+    if (memberships.length === 0) {
       return (
         <Link to={`/involvements`}>
           <Typography variant="body2" className={styles.noMemberships}>
@@ -40,14 +51,41 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
         </Link>
       );
     } else {
-      return membershipHistories.map((membership) => (
+      return memberships.map((membership) => (
         <MembershipInfoCard
           myProf={myProf}
-          membershipHistory={membership}
-          key={membership.ActivityCode}
-          createSnackbar={createSnackbar}
+          membership={membership}
+          key={membership.MembershipID}
+          onTogglePrivacy={toggleMembershipPrivacy}
         />
       ));
+    }
+  };
+
+  const toggleMembershipPrivacy = async (membership) => {
+    try {
+      let updated = await membershipService.setMembershipPrivacy(
+        membership.MembershipID,
+        !membership.Privacy,
+      );
+      if (updated.Privacy !== membership.Privacy) {
+        createSnackbar(membership.Privacy ? 'Membership Shown' : 'Membership Hidden', 'success');
+      } else {
+        createSnackbar(
+          membership.Privacy ? 'Failed to Show Membership' : 'Failed to Hide Membership',
+          'error',
+        );
+      }
+      setMemberships(
+        memberships.map((m) => {
+          if (m.MembershipID === membership.MembershipID) {
+            m.Privacy = !m.Privacy;
+          }
+          return m;
+        }),
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
     }
   };
 
