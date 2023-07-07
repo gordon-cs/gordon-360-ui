@@ -32,6 +32,7 @@ import {
   FaBook,
   FaBriefcase,
   FaBuilding,
+  FaCalendarTimes,
   FaGlobeAmericas,
   FaHeart,
   FaSchool,
@@ -47,6 +48,8 @@ import { compareByProperty, searchParamSerializerFactory } from 'services/utils'
 import SearchField, { SelectOption } from './components/SearchField';
 import addressService from 'services/address';
 import styles from './SearchFieldList.module.css';
+import Slider from '@mui/material/Slider';
+import Switch from '@mui/material/Switch';
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
@@ -86,13 +89,17 @@ const defaultSearchParams: PeopleSearchQuery = {
   major: '',
   minor: '',
   residence_hall: '',
-  class_year: '',
+  class_standing: '',
+  graduation_year: '',
   home_town: '',
   state: '',
   country: '',
   department: '',
   building: '',
-  involvement: ' ',
+
+  initial_year: '',
+  final_year: '',
+  involvement: '',
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -138,9 +145,15 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [minors, setMinors] = useState<string[]>([]);
   const [states, setStates] = useState<SelectOption[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
-  const [departments, setDepartments] = useState<string[]>([]);
+  const [departments, setDepartments] = useState<SelectOption[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
+
+  const currentYear = new Date().getFullYear();
+  const [graduationYearRange, setGraduationYearRange] = useState<number[]>([1889, currentYear]);
+  // 1889 is the establish date of Gordon
+  const [switchYearRange, setSwitchYearRange] = useState(true);
+  const [involvements, setInvolvements] = useState<string[]>([]);
 
   /**
    * Default search params adjusted for the user's identity.
@@ -195,15 +208,18 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   useEffect(() => {
     const loadPage = async () => {
-      const [majors, minors, halls, states, countries, departments, buildings] = await Promise.all([
-        peopleSearchService.getMajors(),
-        peopleSearchService.getMinors(),
-        peopleSearchService.getHalls(),
-        addressService.getStates(),
-        addressService.getCountries(),
-        peopleSearchService.getDepartments(),
-        peopleSearchService.getBuildings(),
-      ]);
+
+      const [majors, minors, halls, states, countries, departments, buildings, involvements] =
+        await Promise.all([
+          peopleSearchService.getMajors(),
+          peopleSearchService.getMinors(),
+          peopleSearchService.getHalls(),
+          addressService.getStates(),
+          addressService.getCountries(),
+          peopleSearchService.getDepartmentDropdownOptions(),
+          peopleSearchService.getBuildings(),
+          peopleSearchService.getInvolvements(),
+        ]);
       setMajors(majors);
       setMinors(minors);
       setHalls(halls);
@@ -212,6 +228,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setDepartments(departments);
       setBuildings(buildings);
 
+      setInvolvements(involvements);
       setLoading(false);
     };
 
@@ -245,17 +262,79 @@ const SearchFieldList = ({ onSearch }: Props) => {
     return () => window.removeEventListener('popstate', onNavigate);
   }, [location.search, initialSearchParams]);
 
-  const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
+
+  const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.name === 'graduation_year') {
+      setSearchParams((sp) => ({
+        ...sp,
+        class_standing: '',
+        minor: '',
+      }));
+    } else if (event.target.name === 'class_standing') {
+      setSearchParams((sp) => ({
+        ...sp,
+        initial_year: '',
+        final_year: '',
+        graduation_year: '',
+      }));
+    }
+
     setSearchParams((sp) => ({
       ...sp,
       [event.target.name]:
         event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     }));
 
+    if (event.target.name === 'includeFacStaff' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        building: '',
+        department: '',
+      }));
+    } else if (event.target.name === 'includeStudent' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        major: '',
+        minor: '',
+        class_year: '',
+      }));
+    } else if (event.target.name === 'includeAlumni' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        graduation_year: '',
+      }));
+    }
+  };
+
   const handleEnterKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       search();
     }
+  };
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setGraduationYearRange(newValue as number[]);
+    let values = graduationYearRange.toString().split(',');
+    setSearchParams((sp) => ({
+      ...sp,
+      initial_year: values[0],
+      final_year: values[1],
+    }));
+    setSearchParams((sp) => ({
+      ...sp,
+      class_standing: '',
+    }));
+  };
+
+  const handleSwitchChange = () => {
+    if (switchYearRange) {
+      setSearchParams((sp) => ({
+        ...sp,
+        initial_year: '',
+        final_year: '',
+      }));
+    }
+    setSwitchYearRange((prev) => !prev);
   };
 
   if (loading) {
@@ -365,6 +444,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   Icon={FaHeart}
                   select
                 />
+
               </Grid>
             ) : null}
 
