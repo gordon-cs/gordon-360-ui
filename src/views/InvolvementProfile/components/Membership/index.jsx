@@ -9,7 +9,7 @@ import AdminCard from './components/AdminCard';
 import MemberList from './components/MemberList';
 import NonMemberButtons from './components/NonMemberButtons';
 
-const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmin }) => {
+const Membership = ({ isAdmin, isSiteAdmin, isAdvisor, involvementDescription, toggleIsAdmin }) => {
   const [members, setMembers] = useState([]);
   const [followersNum, setFollowersNum] = useState(0);
   const [membersNum, setMembersNum] = useState(0);
@@ -35,7 +35,9 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
         setMembersNum(membersNum);
 
         setShouldShowMemberships(
-          (membership && membership.Participation !== Participation.Guest) || isSiteAdmin,
+          (membership && membership.Participation !== Participation.Guest) ||
+            isSiteAdmin ||
+            isAdvisor, // I am changing here
         );
 
         setLoading(false);

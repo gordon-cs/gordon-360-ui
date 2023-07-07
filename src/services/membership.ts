@@ -91,6 +91,20 @@ const checkAdmin = async (
   return admins.length > 0;
 };
 
+const checkAdvisor = async (
+  username: string,
+  sessionCode: string,
+  involvementCode: string,
+): Promise<boolean> => {
+  const advisors = await get({
+    involvementCode,
+    username,
+    sessionCode,
+    participationTypes: Participation.Advisor,
+  });
+  return advisors.length > 0;
+};
+
 const setGroupAdmin = async (
   membershipID: number,
   isGroupAdmin: boolean,
@@ -153,6 +167,7 @@ const groupByActivityCode = async (username: string) => {
 const membershipService = {
   addMembership,
   checkAdmin,
+  checkAdvisor,
   editMembership,
   get,
   getFollowersNum,

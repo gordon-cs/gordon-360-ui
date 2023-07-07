@@ -43,6 +43,7 @@ const InvolvementProfile = () => {
   const [tempJoinInfo, setTempJoinInfo] = useState('');
   const [tempURL, setTempURL] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdvisor, setIsAdvisor] = useState(false);
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isRemoveImageDialogOpen, setIsRemoveImageDialogOpen] = useState(false);
@@ -56,17 +57,19 @@ const InvolvementProfile = () => {
   useEffect(() => {
     const loadPage = async () => {
       if (profile) {
-        const [involvementInfo, contacts, sessionInfo, isAdmin] = await Promise.all([
+        const [involvementInfo, contacts, sessionInfo, isAdmin, isAdvisor] = await Promise.all([
           involvementService.get(involvementCode),
           involvementService.getContacts(involvementCode, sessionCode),
           sessionService.get(sessionCode),
           membershipService.checkAdmin(profile.AD_Username, sessionCode, involvementCode),
+          membershipService.checkAdvisor(profile.AD_Username, sessionCode, involvementCode),
         ]);
 
         setInvolvementInfo(involvementInfo);
         setContacts(contacts);
         setSessionInfo(sessionInfo);
         setIsAdmin(isAdmin);
+        setIsAdvisor(isAdvisor);
         setTempBlurb(involvementInfo.ActivityBlurb);
         setTempJoinInfo(involvementInfo.ActivityJoinInfo);
         setTempURL(involvementInfo.ActivityURL);
@@ -445,6 +448,7 @@ const InvolvementProfile = () => {
                   involvementDescription={ActivityDescription}
                   isAdmin={isAdmin}
                   isSiteAdmin={isSiteAdmin}
+                  isAdvisor={isAdvisor}
                   toggleIsAdmin={() => setIsAdmin((a) => !a)}
                 />
               </>
