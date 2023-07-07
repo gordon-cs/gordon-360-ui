@@ -17,6 +17,7 @@ import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
 import EditIcon from '@mui/icons-material/Edit';
+//import styles from './DiningBalance.module.scss';
 import { useTheme } from '@emotion/react';
 import { FaPen } from 'react-icons/fa';
 
@@ -208,37 +209,42 @@ const DiningBalance = () => {
       </div>
     );
   }
-
+  //className={styles.dining_grid}
+  //<Grid item xs={5} align="right">
   return (
     <Card className={styles.card}>
       <CardContent>
-        <Grid container direction="row" alignItems="center">
-          <Grid item xs={6} align="left">
+        <Grid container direction="row" alignItems="center" spacing={0.1}>
+          <Grid item xs={7} align="left">
             <CardHeader title="Dining Balance" />
           </Grid>
-          <Grid item xs={5} align="right">
-            <IconButton
-              title="Change Meal Plan"
-              className={styles.gc360_my_profile_edit_icon}
-              component={Link}
-              href="https://www.gordon.edu/mealplan"
-              size="small"
-            >
-              <EditIcon />
-            </IconButton>
-            <Button
-              variant="contained"
-              style={{
-                backgroundColor: 'var(--mui-palette-secondary-main)',
-                color: 'var(--mui-palette-secondary-contrastText',
-              }}
-              component={Link}
-              href="https://gordon.cafebonappetit.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              TODAY'S MENU
-            </Button>
+          <Grid container sx={3} direction="row" alignItems="center" className={styles.dining_grid}>
+            <Grid item xs={1} align="right">
+              <IconButton
+                title="Change Meal Plan"
+                className={styles.gc360_my_profile_edit_icon}
+                component={Link}
+                href="https://www.gordon.edu/mealplan"
+                size="small"
+              >
+                <EditIcon />
+              </IconButton>
+            </Grid>
+            <Grid item xs={5} align="right">
+              <Button
+                variant="contained"
+                style={{
+                  backgroundColor: 'var(--mui-palette-secondary-main)',
+                  color: 'var(--mui-palette-secondary-contrastText',
+                }}
+                component={Link}
+                href="https://gordon.cafebonappetit.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                TODAY'S MENU
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
         {content}
