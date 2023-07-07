@@ -120,6 +120,7 @@ const Membership = ({ isAdmin, isSiteAdmin, isAdvisor, involvementDescription, t
               members={members}
               isAdmin={isAdmin}
               isSiteAdmin={isSiteAdmin}
+              isAdvisor={isAdvisor}
               createSnackbar={createSnackbar}
               onLeave={handleLeave}
               onToggleIsAdmin={toggleIsAdmin}

@@ -56,6 +56,7 @@ const MemberListItem = ({
   member,
   isAdmin,
   isSiteAdmin,
+  isAdvisor,
   createSnackbar,
   isMobileView,
   onLeave,
@@ -306,7 +307,7 @@ const MemberListItem = ({
       );
 
       content = (
-        <Accordion defaultExpanded={(isAdmin || isSiteAdmin) && !isMobileView}>
+        <Accordion defaultExpanded={(isAdmin || isSiteAdmin || isAdvisor) && !isMobileView}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Grid container alignItems="center" spacing={2}>
               <Grid item xs={9} sm={10}>

@@ -246,8 +246,10 @@ const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
-const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
+const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) => {
+  // debugger;
   http.put(`profiles/office_location`, OfficeLocation);
+};
 
 const updateOfficeHours = (value: string) => http.put(`profiles/office_hours`, value);
 

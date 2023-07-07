@@ -52,7 +52,7 @@ const OfficeInfoList = ({
       <ProfileInfoListItem
         title="Room:"
         contentText={
-          myProf ? (
+          !myProf ? (
             <Grid container spacing={0} alignItems="center">
               <Grid item>
                 {BuildingDescription}, {OnCampusRoom}
