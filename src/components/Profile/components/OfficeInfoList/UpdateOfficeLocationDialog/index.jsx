@@ -58,6 +58,7 @@ const UpdateOffice = () => {
             options={buildings}
             select
             size={200}
+            required="required"
           />
         </FormControl>
         <FormControl sx={{ m: 2, minWidth: 200 }}>
