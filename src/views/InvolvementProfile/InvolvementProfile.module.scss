@@ -11,3 +11,19 @@
 .update_image_components {
   margin-top: 15px;
 }
+
+.involvement_profile {
+  & :global {
+    .MuiCard-root {
+      box-shadow: none;
+    }
+    .MuiCardHeader-subheader {
+      color: var(--mui-palette-primary-contrastText);
+    }
+  }
+
+  &_header {
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
+}

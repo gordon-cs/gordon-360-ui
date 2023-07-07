@@ -15,11 +15,7 @@ const Help = () => {
           />
           <CardContent>
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="LOGIN INSTRUCTIONS"
-                titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="Login Instructions" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>Username: 'firstname.lastname' or your Gordon email address</li>
@@ -29,11 +25,7 @@ const Help = () => {
             </Card>
 
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="SITE NAVIGATION"
-                titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="Site Navigation" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
@@ -99,11 +91,7 @@ const Help = () => {
             </Card>
 
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="INVOLVEMENT USER LEVELS"
-                titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="Involvement User Levels" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
@@ -145,8 +133,7 @@ const Help = () => {
             <Card className={styles.help_section}>
               <CardHeader
                 className={styles.help_header}
-                title="MANAGEMENT & EDITING INVOLVEMENTS"
-                titleTypographyProps={{ variant: 'body1' }}
+                title="Management & Editing Involvements"
               />
               <CardContent>
                 <Typography variant="body1" component="ul">
@@ -193,11 +180,7 @@ const Help = () => {
             </Card>
 
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="ISSUES & TROUBLESHOOTING"
-                titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="Issues & Troubleshooting" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
@@ -215,11 +198,7 @@ const Help = () => {
             </Card>
 
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="SUPPORTED PLATFORMS"
-                titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="Supported Platforms" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
@@ -232,11 +211,7 @@ const Help = () => {
             </Card>
 
             <Card className={styles.help_section}>
-              <CardHeader
-                className={styles.help_header}
-                title="FAQ"
-                titleTypographyProps={{ variant: 'body1' }}
-              />
+              <CardHeader className={styles.help_header} title="FAQ" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
