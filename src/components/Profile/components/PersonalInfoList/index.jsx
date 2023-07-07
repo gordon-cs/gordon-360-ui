@@ -31,6 +31,7 @@ import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
+import UpdateUserPrivacy from './UpdateUserPrivacyDialog';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -131,9 +132,22 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     }
   };
 
-  useEffect(() => {
-    userService.getBuildings().then(setBuildings);
-  }, []);
+  const handleChangeHomePhonePrivacy = async () => {
+    try {
+      // this user service currently sets mobile_privacy to true or false - same as setMobilePhonePrivacy, which is NOT optimal or sensical. See user.ts
+      await userService.setHomePhonePrivacy(!isHomePhonePrivate);
+      setIsHomePhonePrivate(!isHomePhonePrivate);
+
+      createSnackbar(
+        isHomePhonePrivate
+          ? 'Personal Info Visible (This change may take several minutes)'
+          : 'Personal Info Hidden (This change may take several minutes)',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
 
   const handleChangeCliftonStrengthsPrivacy = async () => {
     try {
@@ -161,20 +175,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={
-        myProf && (
-          <FormControl sx={{ m: 1, minWidth: 200 }}>
-            <SearchField
-              name="Privacy"
-              // value={building}
-              // updateValue={(event) => setBuilding(event.target.value)}
-              // options={buildings}
-              select
-              size={200}
-            />
-          </FormControl>
-        )
-      }
+      ContentIcon={myProf && UpdateUserPrivacy('HomePhone')}
       privateInfo={isHomePhonePrivate}
       myProf={myProf}
     />
@@ -199,33 +200,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      // ContentIcon={
-      //   myProf && (
-      //     <FormControlLabel
-      //       control={
-      //         <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
-      //       }
-      //       label={isMobilePhonePrivate ? 'Private' : 'Public'}
-      //       labelPlacement="bottom"
-      //       disabled={!isOnline}
-      //     />
-      //   )
-      // }
-      ContentIcon={
-        myProf && (
-          <FormControl sx={{ m: 1, minWidth: 200 }}>
-            <SearchField
-              name="Privacy"
-              // value={building}
-              // updateValue={(event) => setBuilding(event.target.value)}
-              // options={buildings}
-              onChange={handleChangeMobilePhonePrivacy}
-              select
-              size={200}
-            />
-          </FormControl>
-        )
-      }
+      ContentIcon={myProf && UpdateUserPrivacy('MobilePhone')}
       privateInfo={isMobilePhonePrivate}
       myProf={myProf}
     />

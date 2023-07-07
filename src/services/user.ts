@@ -249,7 +249,7 @@ const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
 const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
-const getUserPrivacy = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
+const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_group`);
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
@@ -370,6 +370,7 @@ const userService = {
   getMailboxCombination,
   getMembershipHistory,
   getBuildings,
+  getVisibilityGroups,
   resetImage,
   postImage,
   postIDImage,
