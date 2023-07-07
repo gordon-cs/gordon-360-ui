@@ -116,11 +116,6 @@ const GordonSchedulePanel = (props) => {
     }
   }, []);
 
-  //const test = courseInfo;
-  const meetingDayTest = selectedCourseInfo;
-  console.log({ meetingDayTest });
-  // console.log({ test });
-
   const handleScheduleDialogClose = () => {
     setScheduleDialogOpen(false);
   };
@@ -157,6 +152,10 @@ const GordonSchedulePanel = (props) => {
     </div>
   );
 
+  const meetingDayArray = selectedCourseInfo?.meetingDays;
+  const recurringDays = meetingDayArray.map((day) => `${day}`).join(',');
+  console.log({ recurringDays });
+
   if (props.myProf) {
     editDialog = (
       <EditDescriptionDialog
@@ -173,6 +172,7 @@ const GordonSchedulePanel = (props) => {
         handleScheduleDialogClose={handleScheduleDialogClose}
         selectedCourseInfo={selectedCourseInfo}
         courseInfo={courseInfo}
+        recurringDays={recurringDays}
       />
     );
   }

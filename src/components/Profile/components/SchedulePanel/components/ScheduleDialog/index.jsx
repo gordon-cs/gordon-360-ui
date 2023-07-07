@@ -51,12 +51,13 @@ const ScheduleDialog = (props) => {
                     : format(new Date(props.selectedCourseInfo.end), 'HH:mm')
                 }
                 description={props.selectedCourseInfo.allDay ? 'ASYNC Courses' : 'SYNC Courses'}
-                options="'Apple','Google','Outlook.com','MicrosoftTeams'"
+                options="'Google'"
                 buttonsList
                 hideTextLabelButton
                 buttonStyle="round"
-                recurrence={recurSchedule}
+                recurrence={'RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=' + props.recurringDays}
                 lightMode="bodyScheme"
+                Timezone="currentBrowser"
               ></add-to-calendar-button>
               <add-to-calendar-button
                 name={props.selectedCourseInfo.title}
