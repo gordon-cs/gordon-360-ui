@@ -262,7 +262,7 @@ const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
 const setUserPrivacy = (userPrivacy: UserPrivacyQuery) =>
-  http.put('profiles/user_privacy/' + userPrivacy);
+  http.put(`profiles/user_privacy`, userPrivacy);
 
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image

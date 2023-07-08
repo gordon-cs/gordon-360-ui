@@ -5,12 +5,12 @@ import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
 const UpdateUserPrivacy = (field) => {
-  const [open, setOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [group, setGroup] = useState('');
-  const [VisibilityGroups, setVisibilityGroups] = useState([]);
+  const [groups, setGroups] = useState([]);
 
   const handleSubmit = async () => {
+    debugger;
     try {
       await userService.setUserPrivacy({ Field: field, VisibilityGroup: group });
       setSnackbar({
@@ -25,24 +25,27 @@ const UpdateUserPrivacy = (field) => {
         open: true,
       });
     }
-    setOpen(false);
+  };
+
+  const handlePrivacy = async (event) => {
+    setGroup(event.target.value);
+    handleSubmit();
   };
 
   useEffect(() => {
-    userService.getVisibilityGroups().then(setVisibilityGroups);
+    userService.getVisibilityGroups().then(setGroups);
   }, []);
 
   return (
     <div>
-      <FormControl sx={{ m: 1, minWidth: 200 }}>
+      <FormControl sx={{ m: 1, minWidth: 120 }}>
         <SearchField
           name="privacy"
           value={group}
-          updateValue={(event) => setGroup(event.target.value)}
-          options={VisibilityGroups}
+          updateValue={handlePrivacy}
+          options={groups}
           select
-          size={200}
-          onclick={handleSubmit}
+          size={120}
         />
       </FormControl>
       <GordonSnackbar
