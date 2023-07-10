@@ -64,6 +64,18 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
       </Link>
     </Grid>
   );
+  const noteInfo = myProf && (
+    <div align="left" className={styles.note}>
+      <Typography>NOTE:</Typography>
+      <ul>
+        <li>
+          <Typography>
+            Shaded areas are visible only to you and other members of the same club session.
+          </Typography>
+        </li>
+      </ul>
+    </div>
+  );
 
   return (
     <>
@@ -76,6 +88,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
             {transcriptButton}
             <List>
               <MembershipsList />
+              {noteInfo}
             </List>
           </CardContent>
         </Card>
