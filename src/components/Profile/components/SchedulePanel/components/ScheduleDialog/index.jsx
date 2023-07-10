@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import 'add-to-calendar-button';
 import { format, setDay } from 'date-fns';
+import styles from './ScheduleDialog.module.css';
 
 const dayArr = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
@@ -16,51 +17,38 @@ const ScheduleDialog = (props) => {
   return (
     <Dialog open={props.scheduleDialogOpen} keepMounted fullWidth={true} maxWidth="xs">
       <div>
-        <DialogTitle sx={{ fontWeight: 'bold' }} align="center">
+        <DialogTitle className={styles.dialogTitle} align="center">
           Add Course Schedule to Calendar
         </DialogTitle>
         <DialogContent>
-          <Typography sx={{ fontSize: 'large' }} align="left">
+          <Typography className={styles.dialogTextLarge} align="left">
             Course Title: {props.selectedCourseInfo?.title.split('in')[0]}
           </Typography>
-          <Typography sx={{ fontSize: 'large' }} align="left">
+          <Typography className={styles.dialogTextMedium} align="left">
             Room: {props.selectedCourseInfo?.title.split('in')[1]}
           </Typography>
-          <Typography sx={{ fontSize: 'large' }} align="left">
-            Time Range:
+          <Typography className={styles.dialogTextMedium} align="left">
+            Time:
             {format(
               new Date(props.selectedCourseInfo ? props.selectedCourseInfo.start : null),
               " hh:mm aaaaa'm' ",
             )}
+            -
             {format(
               new Date(props.selectedCourseInfo ? props.selectedCourseInfo.end : null),
-              " - hh:mm aaaaa'm' ",
+              " hh:mm aaaaa'm' ",
             )}
           </Typography>
-          <Typography sx={{ fontSize: 'large' }} align="left">
-            Meeting Days: {props.recurringDays}
+          <Typography className={styles.dialogTextMedium} align="left">
+            Week Days: {props.recurringDays}
           </Typography>
-          <Typography sx={{ fontSize: 'large' }} align="left">
-            Term:{' '}
-            {format(
-              setDay(
-                new Date(props.firstDay),
-                dayArr.indexOf(props.selectedCourseInfo?.resourceId) + 1,
-              ),
-              'yyyy-MM-dd',
-            )}
-            {'--'}
-            {format(
-              setDay(
-                new Date(props.lastDay),
-                dayArr.indexOf(props.selectedCourseInfo?.resourceId) + 1,
-              ),
-              'yyyy-MM-dd',
-            )}
+          <Typography className={styles.dialogTextMedium} align="left">
+            Term Date: {format(new Date(props.firstDay), 'yyyy-MM-dd')} to
+            {format(new Date(props.lastDay), ' yyyy-MM-dd')}
           </Typography>
         </DialogContent>
         <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
-          {/* There are two separate add-to-calendar buttons because Google calendar is the only
+          {/* There are two separate add-to-calendar button elements because Google calendar is the only
           calendar that supports recurring events, the other add-to-calendar button is for the other
           options that users can choose and manually set the course as recurring */}
           <Grid container lg={12} alignContent="center">
