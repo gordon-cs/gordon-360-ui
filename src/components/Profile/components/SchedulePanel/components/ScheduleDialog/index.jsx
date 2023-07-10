@@ -55,28 +55,28 @@ const ScheduleDialog = (props) => {
           {/* There are two separate add-to-calendar buttons because Google calendar is the only
           calendar that supports recurring events, the other add-to-calendar button is for the other
           options that users can choose and manually set the course as recurring */}
-          <Grid container lg={12}>
+          <Grid container lg={12} alignContent="center">
             {props.selectedCourseInfo && (
               <>
-                <Grid item lg={6}>
+                <Grid item lg={6} align="right">
                   <add-to-calendar-button
                     name={props.selectedCourseInfo.title}
                     startDate={format(
                       setDay(
                         new Date(props.firstDay),
-                        dayArr.indexOf(props.selectedCourseInfo.resourceId) + 1,
+                        dayArr.indexOf(props.selectedCourseInfo?.resourceId) + 1,
                       ),
                       'yyyy-MM-dd',
                     )}
                     startTime={
                       props.selectedCourseInfo.allDay
                         ? null
-                        : format(new Date(props.selectedCourseInfo.start), 'HH:mm')
+                        : format(new Date(props.selectedCourseInfo?.start), 'HH:mm')
                     }
                     endTime={
                       props.selectedCourseInfo.allDay
                         ? null
-                        : format(new Date(props.selectedCourseInfo.end), 'HH:mm')
+                        : format(new Date(props.selectedCourseInfo?.end), 'HH:mm')
                     }
                     description={
                       props.selectedCourseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
@@ -96,7 +96,7 @@ const ScheduleDialog = (props) => {
                     Timezone="currentBrowser"
                   ></add-to-calendar-button>
                 </Grid>
-                <Grid item lg={6}>
+                <Grid item lg={6} align="left">
                   <add-to-calendar-button
                     name={props.selectedCourseInfo.title}
                     startDate={format(
