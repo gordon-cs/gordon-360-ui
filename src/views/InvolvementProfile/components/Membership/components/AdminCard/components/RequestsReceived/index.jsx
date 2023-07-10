@@ -48,11 +48,7 @@ const RequestsReceived = ({ onAddMember }) => {
               />
 
               <ListItemSecondaryAction>
-                <Button
-                  className={styles.redButton}
-                  onClick={() => onDeny(request.RequestID)}
-                  size="small"
-                >
+                <Button color="error" onClick={() => onDeny(request.RequestID)} size="small">
                   Deny
                 </Button>
                 &emsp;

@@ -1,9 +1,8 @@
 import { Grid, Typography } from '@mui/material';
-import { gordonColors } from 'theme';
 
 const MajorHolds = ({ holds }) => (
   <Grid item>
-    <Typography style={{ color: gordonColors.primary.blue }} align="center" variant="h6">
+    <Typography color="primary" align="center" variant="h6">
       <b>Review Your Holds</b>
     </Typography>
     <Typography align="center">
