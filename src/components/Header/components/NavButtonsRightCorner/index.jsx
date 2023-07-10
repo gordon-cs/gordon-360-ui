@@ -51,25 +51,6 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     />
   );
 
-  const transcriptButton = !isAuthenticated && (
-    <GordonNavButton
-      unavailable={!isOnline ? 'offline' : null}
-      onLinkClick={onClose}
-      openUnavailableDialog={openDialogBox}
-      linkName={'Experience Transcript'}
-      linkPath={'/transcript'}
-    />
-  );
-
-  const timesheetsButton = (
-    <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
-      onLinkClick={onClose}
-      openUnavailableDialog={openDialogBox}
-      linkName={'Timesheets'}
-      linkPath={'/timesheets'}
-    />
-  );
 
   const helpButton = <GordonNavButton onLinkClick={onClose} linkName={'Help'} linkPath={'/help'} />;
 
@@ -125,8 +106,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             <div class={styles.right_menu_triangle} />
             {myProfileButton}
             {linksButton}
-            {transcriptButton}
-            {timesheetsButton}
+
             {helpButton}
             {aboutButton}
             {feedbackButton}
