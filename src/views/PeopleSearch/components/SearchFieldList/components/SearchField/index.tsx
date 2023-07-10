@@ -1,8 +1,7 @@
 import { Grid, MenuItem, TextField, useMediaQuery } from '@mui/material';
 import { ChangeEvent } from 'react';
-import { IconContext, IconType } from 'react-icons';
+import { IconType } from 'react-icons';
 import { toTitleCase } from 'services/utils';
-import { gordonColors } from 'theme';
 import styles from './SearchField.module.scss';
 
 export interface SelectOption {
@@ -66,15 +65,7 @@ const SearchField = ({
     <Grid item container spacing={2} alignItems="center">
       {isLargeScreen && Icon && (
         <Grid item>
-          <IconContext.Provider
-            value={{
-              color: disabled
-                ? gordonColors.neutral.lightGray
-                : gordonColors.neutral.grayShades[900],
-            }}
-          >
-            <Icon className={styles.icon} />
-          </IconContext.Provider>
+          <Icon className={styles.icon} />
         </Grid>
       )}
       <Grid item xs>
