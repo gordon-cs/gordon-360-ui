@@ -16,19 +16,36 @@ const ScheduleDialog = (props) => {
   return (
     <Dialog open={props.scheduleDialogOpen} keepMounted fullWidth={true} maxWidth="xs">
       <div>
-        <DialogTitle sx={{ fontWeight: 'regular' }} align="center">
+        <DialogTitle sx={{ fontWeight: 'bold' }} align="center">
           Add Course Schedule to Calendar
         </DialogTitle>
         <DialogContent>
-          <Typography sx={{ fontWeight: 'bold', fontSize: 'large' }} align="center">
-            Course Title: {props.selectedCourseInfo?.title}
+          <Typography sx={{ fontSize: 'large' }} align="center">
+            Course Title: {props.selectedCourseInfo?.title.split('in')[0]}
           </Typography>
-          <Typography sx={{ fontWeight: 'bold', fontSize: 'large' }} align="center">
-            Time Range: {format(new Date(props.selectedCourseInfo.start), 'HH:mm')} -{' '}
-            {format(new Date(props.selectedCourseInfo.end), 'HH:mm')}
+          <Typography sx={{ fontSize: 'large' }} align="center">
+            Room: {props.selectedCourseInfo?.title.split('in')[1]}
+          </Typography>
+          <Typography sx={{ fontSize: 'large' }} align="center">
+            Time Range:
+            {format(
+              new Date(props.selectedCourseInfo ? props.selectedCourseInfo.start : null),
+              " hh:mm aaaaa'm' ",
+            )}
+            {format(
+              new Date(props.selectedCourseInfo ? props.selectedCourseInfo.end : null),
+              " - hh:mm aaaaa'm' ",
+            )}
+          </Typography>
+          <Typography sx={{ fontSize: 'large' }} align="center">
+            Meeting Days: {props.recurringDays}
           </Typography>
         </DialogContent>
         <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
+          {/* There are two separate add-to-calendar buttons because Google calendar is the only
+          calendar that supports recurring events, the other add-to-calendar button is for the other
+          options that users can choose and manually set the course as recurring */}
+
           {props.selectedCourseInfo && (
             <>
               <add-to-calendar-button
@@ -40,7 +57,6 @@ const ScheduleDialog = (props) => {
                   ),
                   'yyyy-MM-dd',
                 )}
-                // endDate={format(new Date(props.lastDay), 'yyyy-MM-dd')}
                 startTime={
                   props.selectedCourseInfo.allDay
                     ? null
@@ -51,7 +67,10 @@ const ScheduleDialog = (props) => {
                     ? null
                     : format(new Date(props.selectedCourseInfo.end), 'HH:mm')
                 }
-                description={props.selectedCourseInfo.allDay ? 'ASYNC Courses' : 'SYNC Courses'}
+                description={
+                  props.selectedCourseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
+                }
+                Location={props.selectedCourseInfo.title.split('in')[1]}
                 options="'Google'"
                 buttonsList
                 hideTextLabelButton
@@ -67,8 +86,13 @@ const ScheduleDialog = (props) => {
               ></add-to-calendar-button>
               <add-to-calendar-button
                 name={props.selectedCourseInfo.title}
-                startDate={format(new Date(props.selectedCourseInfo.start), 'yyyy-MM-dd')}
-                endDate={format(new Date(props.selectedCourseInfo.end), 'yyyy-MM-dd')}
+                startDate={format(
+                  setDay(
+                    new Date(props.firstDay),
+                    dayArr.indexOf(props.selectedCourseInfo.resourceId) + 1,
+                  ),
+                  'yyyy-MM-dd',
+                )}
                 startTime={
                   props.selectedCourseInfo.allDay
                     ? null
@@ -79,7 +103,10 @@ const ScheduleDialog = (props) => {
                     ? null
                     : format(new Date(props.selectedCourseInfo.end), 'HH:mm')
                 }
-                description={props.selectedCourseInfo.allDay ? 'ASYNC Courses' : 'SYNC Courses'}
+                description={
+                  props.selectedCourseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
+                }
+                Location={props.selectedCourseInfo.title.split('in')[1]}
                 options="'Outlook.com','MicrosoftTeams','Apple'"
                 buttonsList
                 hideTextLabelButton

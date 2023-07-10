@@ -47,7 +47,6 @@ const GordonSchedulePanel = (props) => {
   const [scheduleControlInfo, setScheduleControlInfo] = useState();
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
-  const [courseInfo, setCourseInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
   const [selectedCourseInfo, setSelectedCourseInfo] = useState();
@@ -100,7 +99,6 @@ const GordonSchedulePanel = (props) => {
       );
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
-      setCourseInfo(schedule);
       if (scheduleControlInfo) {
         setDescription(
           scheduleControlInfo.Description
@@ -167,9 +165,11 @@ const GordonSchedulePanel = (props) => {
     </div>
   );
 
+  // We had to make the meeting day array in to a string with commas because the add-to-calendar
+  // required a string of weekdays for setting the recurring days
+
   const meetingDayArray = selectedCourseInfo?.meetingDays;
-  const recurringDays = meetingDayArray?.map((day) => `${day}`).join(',');
-  console.log(courseInfo);
+  const recurringDays = meetingDayArray?.map((day) => `${day}`).join(', ');
 
   if (props.myProf) {
     editDialog = (
@@ -186,7 +186,6 @@ const GordonSchedulePanel = (props) => {
         scheduleDialogOpen={scheduleDialogOpen}
         handleScheduleDialogClose={handleScheduleDialogClose}
         selectedCourseInfo={selectedCourseInfo}
-        courseInfo={courseInfo}
         recurringDays={recurringDays}
         firstDay={firstDay}
         lastDay={lastDay}
