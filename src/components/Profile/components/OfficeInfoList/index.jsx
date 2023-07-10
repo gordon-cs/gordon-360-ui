@@ -1,10 +1,8 @@
 import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
-import { gordonColors } from 'theme';
 import UpdateOffice from './UpdateOfficeLocationDialog';
 import GordonTooltip from 'components/GordonTooltip';
-import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 
 const OfficeInfoList = ({
   myProf,
@@ -45,21 +43,7 @@ const OfficeInfoList = ({
   ) : null;
 
   const officeHours = office_hours ? (
-    <ProfileInfoListItem
-      title="Office Hours:"
-      contentText={
-        myProf ? (
-          <Grid container spacing={0} alignItems="center">
-            <Grid item>{office_hours}</Grid>
-            <Grid item>
-              <UpdateOfficeHours />
-            </Grid>
-          </Grid>
-        ) : (
-          `${office_hours}`
-        )
-      }
-    />
+    <ProfileInfoListItem title="Office Hours:" contentText={office_hours} />
   ) : null;
 
   const room =
@@ -95,6 +79,21 @@ const OfficeInfoList = ({
     />
   ) : null;
 
+  const updateOfficeInfo =
+    myProf && PersonType?.includes('fac') ? (
+      <Typography align="left" className={styles.note}>
+        NOTE: Update your office info{' '}
+        <a
+          href="https://go.gordon.edu/general/myaccount.cfm"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="gc360_text_link"
+        >
+          here
+        </a>
+      </Typography>
+    ) : null;
+
   return (
     <Grid item xs={12}>
       <Card className={styles.office_info_list}>
@@ -108,6 +107,7 @@ const OfficeInfoList = ({
             {mailstop}
             {officePhone}
             {officeHours}
+            {updateOfficeInfo}
           </List>
         </CardContent>
       </Card>
