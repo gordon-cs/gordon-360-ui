@@ -1,4 +1,3 @@
-import { ExpandMore } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
@@ -14,6 +13,7 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
 import {
@@ -31,6 +31,7 @@ import {
   FaBook,
   FaBriefcase,
   FaBuilding,
+  FaCalendarTimes,
   FaGlobeAmericas,
   FaHeart,
   FaPaperPlane,
@@ -46,6 +47,8 @@ import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'ser
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
 import styles from './SearchFieldList.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
+import Slider from '@mui/material/Slider';
+import Switch from '@mui/material/Switch';
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
@@ -85,12 +88,15 @@ const defaultSearchParams: PeopleSearchQuery = {
   major: '',
   minor: '',
   residence_hall: '',
-  class_year: '',
+  class_standing: '',
+  graduation_year: '',
   home_town: '',
   state: '',
   country: '',
   department: '',
   building: '',
+  initial_year: '',
+  final_year: '',
   involvement: '',
 };
 
@@ -136,9 +142,13 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [minors, setMinors] = useState<string[]>([]);
   const [states, setStates] = useState<SelectOption[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
-  const [departments, setDepartments] = useState<string[]>([]);
+  const [departments, setDepartments] = useState<SelectOption[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
+  const currentYear = new Date().getFullYear();
+  const [graduationYearRange, setGraduationYearRange] = useState<number[]>([1889, currentYear]);
+  // 1889 is the establish date of Gordon
+  const [switchYearRange, setSwitchYearRange] = useState(true);
   const [involvements, setInvolvements] = useState<string[]>([]);
 
   /**
@@ -200,7 +210,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
           peopleSearchService.getHalls(),
           addressService.getStates(),
           addressService.getCountries(),
-          peopleSearchService.getDepartments(),
+          peopleSearchService.getDepartmentDropdownOptions(),
           peopleSearchService.getBuildings(),
           peopleSearchService.getInvolvements(),
         ]);
@@ -212,7 +222,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setDepartments(departments);
       setBuildings(buildings);
       setInvolvements(involvements);
-
       setLoading(false);
     };
 
@@ -246,6 +255,21 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }, [initialSearchParams]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.name === 'graduation_year') {
+      setSearchParams((sp) => ({
+        ...sp,
+        class_standing: '',
+        minor: '',
+      }));
+    } else if (event.target.name === 'class_standing') {
+      setSearchParams((sp) => ({
+        ...sp,
+        initial_year: '',
+        final_year: '',
+        graduation_year: '',
+      }));
+    }
+
     setSearchParams((sp) => ({
       ...sp,
       [event.target.name]:
@@ -264,6 +288,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
         minor: '',
         class_year: '',
       }));
+    } else if (event.target.name === 'includeAlumni' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        graduation_year: '',
+      }));
     }
   };
 
@@ -271,6 +300,31 @@ const SearchFieldList = ({ onSearch }: Props) => {
     if (event.key === 'Enter') {
       search();
     }
+  };
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setGraduationYearRange(newValue as number[]);
+    let values = graduationYearRange.toString().split(',');
+    setSearchParams((sp) => ({
+      ...sp,
+      initial_year: values[0],
+      final_year: values[1],
+    }));
+    setSearchParams((sp) => ({
+      ...sp,
+      class_standing: '',
+    }));
+  };
+
+  const handleSwitchChange = () => {
+    if (switchYearRange) {
+      setSearchParams((sp) => ({
+        ...sp,
+        initial_year: '',
+        final_year: '',
+      }));
+    }
+    setSwitchYearRange((prev) => !prev);
   };
 
   if (loading) {
@@ -420,8 +474,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     disabled={!searchParams.includeStudent}
                   />
                   <SearchField
-                    name="class_year"
-                    value={searchParams.class_year}
+                    name="class_standing"
+                    value={searchParams.class_standing}
                     updateValue={handleUpdate}
                     options={
                       Object.values(Class).filter((value) => typeof value !== 'number') as string[]
@@ -437,8 +491,46 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     options={involvements.sort()}
                     Icon={FaPaperPlane}
                     select
-                    disabled={!searchParams.includeStudent}
+                    disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
                   />
+
+                  {(isAlumni || isFacStaff) && switchYearRange ? (
+                    <SearchField
+                      name="graduation_year"
+                      value={searchParams.graduation_year}
+                      updateValue={handleUpdate}
+                      options={Array.from({ length: currentYear - 1889 + 1 }, (_, i) => ({
+                        value: (currentYear - i).toString(),
+                        label: (currentYear - i).toString(),
+                      }))}
+                      Icon={FaCalendarTimes}
+                      disabled={!searchParams.includeAlumni}
+                      select
+                    />
+                  ) : (
+                    <Grid item width={225}>
+                      <Slider
+                        getAriaLabel={() => 'graduationYearRange'}
+                        value={graduationYearRange}
+                        onChange={handleSliderChange}
+                        valueLabelDisplay="auto"
+                        getAriaValueText={toString}
+                        min={1889}
+                        max={currentYear}
+                        disabled={!searchParams.includeAlumni}
+                      />
+                      <Typography fontSize={15} align="center">
+                        {graduationYearRange[0]}-{graduationYearRange[1]}
+                      </Typography>
+                    </Grid>
+                  )}
+                  {(isAlumni || isFacStaff) && (
+                    <FormControlLabel
+                      control={<Switch onChange={handleSwitchChange} />}
+                      label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
+                      labelPlacement="end"
+                    />
+                  )}
                 </AdvancedOptionsColumn>
 
                 {/* Advanced Search Filters: Faculty/Staff */}
@@ -450,7 +542,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="department"
                     value={searchParams.department}
                     updateValue={handleUpdate}
-                    options={departments.sort()}
+                    options={departments.sort(compareByProperty('label'))}
                     Icon={FaBriefcase}
                     select
                     disabled={!searchParams.includeFacStaff}
