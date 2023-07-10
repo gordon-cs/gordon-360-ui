@@ -14,7 +14,7 @@ import {
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import 'cropperjs/dist/cropper.css';
@@ -25,6 +25,7 @@ import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import newsService from 'services/news';
 import NewsList from './components/NewsList';
+import styles from './StudentNews.module.css';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -131,7 +132,7 @@ const StudentNews = () => {
     // If an error occured and there's no currently running timeout, the error is displayed
     // and a timeout for that error message is created
     if (photoDialogError !== null) {
-      message = <span style={{ color: '#B63228' }}>{photoDialogError}</span>;
+      message = <span className={styles.photo_dialog_error}>{photoDialogError}</span>;
       if (photoDialogErrorTimeout === null) {
         // Shows the error message for 6 seconds and then returns back to normal text
         setPhotoDialogErrorTimeout(
@@ -428,7 +429,9 @@ const StudentNews = () => {
                   <Dropzone
                     onDropAccepted={onDropAccepted}
                     onDropRejected={onDropRejected}
-                    accept="image/jpeg, image/jpg, image/png"
+                    accept={{
+                      'image/*': ['.jpeg', ',jpg', '.png'],
+                    }}
                   >
                     {({ getRootProps, getInputProps }) => (
                       <section>
@@ -508,7 +511,7 @@ const StudentNews = () => {
       return <GordonOffline feature="Student News" />;
     }
   } else {
-    return <GordonUnauthorized feature={'the student news page'} />;
+    return <GordonUnauthenticated feature={'the student news page'} />;
   }
 };
 

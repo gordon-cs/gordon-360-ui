@@ -1,4 +1,4 @@
-import GordonUnauthorized from 'components/GordonUnauthorized';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import Profile from 'components/Profile';
 import { useUser } from 'hooks';
@@ -14,7 +14,7 @@ const MyProfile = () => {
     return <Profile profile={profile} myProf />;
   }
 
-  return <GordonUnauthorized feature={'your profile'} />;
+  return <GordonUnauthenticated feature={'your profile'} />;
 };
 
 export default MyProfile;

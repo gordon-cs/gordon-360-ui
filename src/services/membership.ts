@@ -1,4 +1,5 @@
 import http from './http';
+import { compareByProperty, sort } from './utils';
 
 export type MembershipView = {
   ActivityType: 'LEA' | 'MIN' | 'RES';
@@ -117,6 +118,38 @@ const getFollowersNum = (involvementCode: string, sessionCode: string): Promise<
     participationTypes: Participation.Guest,
   });
 
+const getPublicMemberships = (username: string): Promise<MembershipHistory[]> =>
+  groupByActivityCode(username).then(sort(compareByProperty('ActivityDescription')));
+
+interface MembershipHistory {
+  ActivityCode: string;
+  ActivityDescription: string;
+  ActivityImagePath: string;
+  Memberships: MembershipView[];
+}
+
+const groupByActivityCode = async (username: string) => {
+  const memberships = await get({ username, sessionCode: '*' });
+  const grouped: MembershipHistory[] = [];
+  memberships.forEach((curMembership) => {
+    const existingMembership = grouped.find(
+      (item) => item.ActivityCode === curMembership.ActivityCode,
+    );
+    if (existingMembership) {
+      existingMembership.Memberships.push(curMembership);
+    } else {
+      const newMembershipHistory: MembershipHistory = {
+        ActivityCode: curMembership.ActivityCode,
+        ActivityDescription: curMembership.ActivityDescription,
+        ActivityImagePath: curMembership.ActivityImagePath,
+        Memberships: [curMembership],
+      };
+      grouped.push(newMembershipHistory);
+    }
+  });
+  return grouped;
+};
+
 const membershipService = {
   addMembership,
   checkAdmin,
@@ -127,6 +160,8 @@ const membershipService = {
   remove,
   setGroupAdmin,
   setMembershipPrivacy,
+  groupByActivityCode,
+  getPublicMemberships,
 };
 
 export default membershipService;

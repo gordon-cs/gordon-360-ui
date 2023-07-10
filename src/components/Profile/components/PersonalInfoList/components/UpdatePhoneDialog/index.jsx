@@ -1,10 +1,11 @@
 import { FormControl, IconButton, Input, InputLabel } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import GordonDialogBox from 'components/GordonDialogBox/index';
+import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { forwardRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 import userService from 'services/user';
+import styles from './UpdatePhone.module.css';
 
 const UpdatePhone = () => {
   const [open, setOpen] = useState(false);
@@ -27,8 +28,8 @@ const UpdatePhone = () => {
 
   return (
     <div>
-      <IconButton style={{ marginBottom: '0.5rem' }} onClick={() => setOpen(true)} size="large">
-        <EditIcon style={{ fontSize: 20 }} />
+      <IconButton className={styles.edit_button} onClick={() => setOpen(true)} size="large">
+        <EditIcon fontSize="small" />
       </IconButton>
       <GordonDialogBox
         open={open}
@@ -40,7 +41,7 @@ const UpdatePhone = () => {
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
       >
-        <FormControl>
+        <FormControl className={styles.form}>
           <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
           <Input
             type="tel"

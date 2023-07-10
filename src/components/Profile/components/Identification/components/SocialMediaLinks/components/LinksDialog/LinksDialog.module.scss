@@ -4,8 +4,8 @@
   display: grid;
   grid-template-rows: auto auto auto;
   &_title {
-    background-color: $primary-blue;
-    color: $neutral-white;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
     text-align: center;
     grid-row: 1;
   }
@@ -18,7 +18,7 @@
     &_text {
       grid-row: 1;
       grid-column: 1;
-      color: $neutral-gray;
+      color: var(--mui-palette-neutral-600);
       text-align: center;
     }
     &_facebook {
@@ -45,7 +45,7 @@
       grid-column: 1;
       padding-top: 20px;
       font-size: 26px;
-      color: $primary-blue;
+      color: var(--mui-palette-primary-main);
     }
     &_field {
       grid-column: 2;
