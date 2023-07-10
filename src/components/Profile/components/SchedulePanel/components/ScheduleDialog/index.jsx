@@ -18,11 +18,11 @@ const ScheduleDialog = (props) => {
     <Dialog open={props.scheduleDialogOpen} keepMounted fullWidth={true} maxWidth="xs">
       <div>
         <DialogTitle className={styles.dialogTitle} align="center">
-          Add Course Schedule to Calendar
+          Course Information
         </DialogTitle>
         <DialogContent>
           <Typography className={styles.dialogTextLarge} align="left">
-            Course Title: {props.selectedCourseInfo?.title.split('in')[0]}
+            Title: {props.selectedCourseInfo?.title.split('in')[0]}
           </Typography>
           <Typography className={styles.dialogTextMedium} align="left">
             Room: {props.selectedCourseInfo?.title.split('in')[1]}
@@ -40,7 +40,7 @@ const ScheduleDialog = (props) => {
             )}
           </Typography>
           <Typography className={styles.dialogTextMedium} align="left">
-            Week Days: {props.recurringDays}
+            Week Day(s): {props.recurringDays}
           </Typography>
           <Typography className={styles.dialogTextMedium} align="left">
             Term Date: {format(new Date(props.firstDay), 'yyyy-MM-dd')} to
@@ -51,13 +51,16 @@ const ScheduleDialog = (props) => {
           {/* There are two separate add-to-calendar button elements because Google calendar is the only
           calendar that supports recurring events, the other add-to-calendar button is for the other
           options that users can choose and manually set the course as recurring */}
-          <Grid container lg={12} alignContent="center">
+
+          <Grid container lg={12} xs={12}>
             {props.selectedCourseInfo && (
               <>
-                <Grid item lg={2}></Grid>
+                <Grid item xs={1} lg={2}></Grid>
                 <Grid item lg={2} align="right">
                   <add-to-calendar-button
                     name={props.selectedCourseInfo.title}
+                    // We had to add 1 to the index for the resourceId because the setDay function
+                    // starts at 0 for Sunday which we don't include in the course schedule
                     startDate={format(
                       setDay(
                         new Date(props.firstDay),
@@ -65,6 +68,8 @@ const ScheduleDialog = (props) => {
                       ),
                       'yyyy-MM-dd',
                     )}
+                    // By the nature of the add-to-calendar package, we have to set the startTime
+                    // and endTime as null if they are all day events.
                     startTime={
                       props.selectedCourseInfo.allDay
                         ? null
@@ -79,7 +84,7 @@ const ScheduleDialog = (props) => {
                       props.selectedCourseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
                     }
                     Location={props.selectedCourseInfo.title.split('in')[1]}
-                    options="'Google'"
+                    options="'Google', 'Apple'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
@@ -117,7 +122,7 @@ const ScheduleDialog = (props) => {
                       props.selectedCourseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
                     }
                     Location={props.selectedCourseInfo.title.split('in')[1]}
-                    options="'Outlook.com','MicrosoftTeams','Apple'"
+                    options="'Apple', 'Outlook.com','MicrosoftTeams'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
@@ -128,8 +133,8 @@ const ScheduleDialog = (props) => {
               </>
             )}
           </Grid>
-          <Grid style={{ marginTop: '20px' }}>
-            <Button onClick={props.handleScheduleDialogClose} variant="contained" size="medium">
+          <Grid className={styles.cancelButton}>
+            <Button onClick={props.handleScheduleDialogClose} variant="contained">
               Cancel
             </Button>
           </Grid>
