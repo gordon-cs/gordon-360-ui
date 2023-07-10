@@ -495,7 +495,7 @@ const Timesheets = (props) => {
                     {saveButton}
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography>
+                    <Typography className={'disable_select'}>
                       <Link
                         className="disable_select"
                         style={{
@@ -503,6 +503,7 @@ const Timesheets = (props) => {
                           textDecoration: 'none',
                           color: 'var(--mui-palette-primary-main)',
                         }}
+
                         href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
                         underline="always"
                         target="_blank"

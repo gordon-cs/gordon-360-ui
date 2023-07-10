@@ -21,6 +21,7 @@ import Requests from './components/Requests';
 import styles from './Involvements.module.css';
 import styles2 from 'app.module.css';
 
+
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [involvements, setInvolvements] = useState([]);
@@ -234,6 +235,7 @@ const InvolvementsAll = () => {
           <CardHeader
             title={`${involvementSessionText} Involvements`}
             className={styles2.gc360_header}
+
           />
           <CardContent>
             {loading ? (

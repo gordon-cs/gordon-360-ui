@@ -1,13 +1,11 @@
-import { gordonColors } from 'theme';
 import { FormControl, FormControlLabel, Checkbox, Grid, Typography } from '@mui/material';
 import privacy from './privacy.json';
 
 const PrivacyAgreement = ({ privacyAgreements, handleCheckPrivacyAgreements }) => {
-  const cyan = gordonColors.primary.cyan;
   return (
     <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
       <Grid item>
-        <Typography variant="h5" gutterBottom style={{ color: cyan }}>
+        <Typography variant="h5" gutterBottom color="secondary">
           Step 3: Review Privacy Policies
         </Typography>
       </Grid>

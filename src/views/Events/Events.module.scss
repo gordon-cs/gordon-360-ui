@@ -12,8 +12,9 @@
     background-color: var(--mui-palette-secondary-main);
     color: var(--mui-palette-secondary-contrastText);
   }
+}
 
-  &_chip {
-    background-color: var(--mui-palette-secondary-main);
-  }
+
+.card_style {
+  padding: 0 3vw;
 }
