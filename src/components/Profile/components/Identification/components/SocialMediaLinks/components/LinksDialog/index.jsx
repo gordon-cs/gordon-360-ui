@@ -23,16 +23,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   };
 
   const validateField = (platform, value) => {
-    const { prefix } = socialMediaInfo[platform];
-    let isValid = value === '';
-    console.log('isValid' + isValid);
-    if (!isValid && prefix) {
-      for (let i = 0; i < prefix.length; i++) {
-        if (value.indexOf(prefix[i]) === 0) {
-          isValid = true;
-        }
-      }
-    }
+    value === '' || value.indexOf(prefix) === 0 || (prefix2 && value.indexOf(prefix2) === 0);
 
     if (isValid) {
       setFormErrors(formErrors.filter((error) => error !== platform));
