@@ -34,8 +34,6 @@ const DaysLeft = () => {
     load();
   }, []);
 
-  console.log(currentSessionDescription);
-
   return (
     <Card>
       <CardContent>
