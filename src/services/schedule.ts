@@ -63,10 +63,6 @@ function getMeetingDays(course: CourseSchedule): string[] {
   return dayArray;
 }
 
-const asdf = moment('2022-06-10T00:00:00');
-const month = asdf.month();
-console.log(month);
-
 function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
   const today = moment();
   let eventId = 0;

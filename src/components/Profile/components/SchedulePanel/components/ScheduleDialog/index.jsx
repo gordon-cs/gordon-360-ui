@@ -13,18 +13,10 @@ import styles from './ScheduleDialog.module.css';
 import 'add-to-calendar-button';
 import { format, setDay } from 'date-fns';
 
-const recurSchedule =
-  'RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=' + 'MO,WE,FR' + ';UNTIL=20231019T000000Z';
-
 const dayArr = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 [];
 
 const ScheduleDialog = (props) => {
-  const button = {
-    background: gordonColors.primary.cyan,
-    color: 'white',
-  };
-
   return (
     <Dialog open={props.scheduleDialogOpen} keepMounted fullWidth={true} maxWidth="xs">
       <div>
@@ -42,7 +34,10 @@ const ScheduleDialog = (props) => {
               <add-to-calendar-button
                 name={props.selectedCourseInfo.title}
                 startDate={format(
-                  setDay(new Date(props.firstDay), dayArr.indexOf('WE')),
+                  setDay(
+                    new Date(props.firstDay),
+                    dayArr.indexOf(props.selectedCourseInfo.resourceId) + 1,
+                  ),
                   'yyyy-MM-dd',
                 )}
                 endDate={format(new Date(props.lastDay), 'yyyy-MM-dd')}
