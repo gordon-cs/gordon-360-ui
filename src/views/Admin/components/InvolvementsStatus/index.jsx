@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { gordonColors } from 'theme';
 import GordonLoader from 'components/Loader';
 import activity from 'services/activity';
 import session from 'services/session';
 import InvolvementStatusListItem from './components/InvolvementStatusList/index';
 import { Typography, Card, CardHeader } from '@mui/material';
 import { NotFoundError } from 'services/error';
+import styles from './InvolvementsStatus.module.css';
 
 const InvolvementStatusList = ({ status }) => {
   const [loading, setLoading] = useState(true);
@@ -41,14 +41,9 @@ const InvolvementStatusList = ({ status }) => {
     loadInvolvements();
   }, [status]);
 
-  const headerStyle = {
-    backgroundColor: gordonColors.primary.blue,
-    color: '#FFF',
-  };
-
   return (
     <Card>
-      <CardHeader style={headerStyle} align="center" title={`${status} Involvements`} />
+      <CardHeader className={styles.header} align="center" title={`${status} Involvements`} />
       {loading ? (
         <GordonLoader />
       ) : involvements.length > 0 ? (

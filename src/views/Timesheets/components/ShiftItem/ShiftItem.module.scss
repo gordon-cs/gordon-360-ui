@@ -1,3 +1,10 @@
+.tooltip {
+  background-color: var(--mui-palette-neutral-contrastText);
+  color: rgba(255, 255, 255, 0.87);
+  box-shadow: 0 3px 6px #00000029, 0 3px 6px rgba(0, 0, 0, 0.23);
+  font-size: 11px;
+}
+
 .timesheets {
   .shift_edit_picker :global(.MuiOutlinedInput-input) {
     text-align: center;
@@ -19,4 +26,29 @@
     margin-right: -16px;
     margin-top: -8px;
   }
+
+  .checkOutlinedIcon {
+    color: var(--mui-palette-success-main);
+  }
+
+  .outlinedIconText {
+    font-size: 16;
+  }
+
+  .iconButton {
+    visibility: hidden;
+  }
+
+  .redIconText {
+    color: var(--mui-palette-error-main);
+  }
+}
+.shiftItemIcons {
+  visibility: 'hidden';
+}
+.shiftNotesTooltip {
+  font-size: 16;
+}
+.shiftCommentTooltip {
+  font-size: 16;
 }

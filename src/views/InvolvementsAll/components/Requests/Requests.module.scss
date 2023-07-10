@@ -2,12 +2,12 @@
 
 .requests {
   &_header.requests_header {
-    background-color: $primary-blue;
-    color: $neutral-white;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
   }
 
   & .weak {
-    color: $neutral-gray;
+    color: var(--mui-palette-primary-50);
     font-size: 85%;
   }
 }

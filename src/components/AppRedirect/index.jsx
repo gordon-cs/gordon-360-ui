@@ -1,6 +1,6 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import { useEffect, useState } from 'react';
-import { Navigate, useLocation } from 'react-router';
+import { Navigate, useLocation } from 'react-router-dom';
 import checkInService from 'services/checkIn';
 
 const AppRedirect = () => {

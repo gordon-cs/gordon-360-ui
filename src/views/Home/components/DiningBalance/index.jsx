@@ -10,16 +10,19 @@ import styles from '../Doughnut.module.css';
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
 
-let daysColor = gordonColors.primary.blue;
-let swipesColor = gordonColors.secondary.green;
-let dollarsColor = gordonColors.secondary.yellow;
-let guestColor = gordonColors.secondary.orange;
-let emptyColor = gordonColors.neutral.lightGray;
-
 const DiningBalance = () => {
   const [loading, setLoading] = useState(true);
   const [diningInfo, setDiningInfo] = useState(null);
   const [[daysRemaining, daysInSession], setDaysLeft] = useState([null, null]);
+
+  //Doesn't re-render colors when using getColor!!!!!
+  let daysColor = gordonColors.primary.blue;
+  let swipesColor = gordonColors.secondary.green;
+  let dollarsColor = gordonColors.secondary.yellow;
+  let guestColor = gordonColors.secondary.orange;
+  let emptyColor = gordonColors.neutral.lightGray;
+
+  let balanceColor = gordonColors.secondary.green;
 
   useEffect(() => {
     Promise.all([user.getDiningInfo(), session.getDaysLeft()]).then(([diningInfo, daysLeft]) => {
@@ -36,7 +39,6 @@ const DiningBalance = () => {
   } else if (typeof diningInfo !== 'object') {
     //Set color to use when displaying balance based on how low it is...
     const diningBalance = parseInt(diningInfo);
-    let balanceColor = gordonColors.secondary.green;
     if (lowBalance >= diningBalance && diningBalance > reallyLowBalance) {
       balanceColor = gordonColors.secondary.yellow;
     } else if (reallyLowBalance >= diningBalance && diningBalance > 0) {
@@ -136,7 +138,7 @@ const DiningBalance = () => {
           style={{ paddingTop: 5, paddingBottom: 10 }}
         >
           <Grid item>
-            <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
+            <Typography variant="body2" className={styles.label2}>
               {diningInfo.ChoiceDescription}
             </Typography>
           </Grid>

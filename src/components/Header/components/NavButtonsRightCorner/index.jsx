@@ -7,6 +7,7 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavButtonsRightCorner.module.css';
+// import { ModeSwitcher } from 'components/ThemeModeSwitcher'; //Uncomment to test dark mode
 
 /**
  *
@@ -50,6 +51,7 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     />
   );
 
+
   const helpButton = <GordonNavButton onLinkClick={onClose} linkName={'Help'} linkPath={'/help'} />;
 
   const aboutButton = (
@@ -85,6 +87,8 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     <>
       <div id="right-side-menu">
         <Popover
+          elevation={4}
+          marginThreshold={-35}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -102,11 +106,14 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             <div class={styles.right_menu_triangle} />
             {myProfileButton}
             {linksButton}
+
             {helpButton}
             {aboutButton}
             {feedbackButton}
             {adminButton}
             {signOutButton}
+            {/* <ModeSwitcher /> */}
+            {/* Uncomment above button to test dark mode */}
           </List>
         </Popover>
       </div>
