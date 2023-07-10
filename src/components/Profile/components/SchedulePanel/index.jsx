@@ -67,6 +67,12 @@ const GordonSchedulePanel = (props) => {
       } else {
         const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
         setCurrentAcademicSession(currentSessionCode);
+        const currSession = await sessionService.getCurrent();
+        const firstDay = currSession.SessionBeginDate;
+        const lastDay = currSession.SessionEndDate;
+
+        setFirstDay(firstDay);
+        setLastDay(lastDay);
       }
     };
     loadPage();
@@ -184,6 +190,8 @@ const GordonSchedulePanel = (props) => {
         selectedCourseInfo={selectedCourseInfo}
         courseInfo={courseInfo}
         recurringDays={recurringDays}
+        firstDay={firstDay}
+        lastDay={lastDay}
       />
     );
   }
