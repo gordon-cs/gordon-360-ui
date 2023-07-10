@@ -115,7 +115,7 @@ const GordonSchedulePanel = (props) => {
   };
 
   const handleDescriptionSubmit = async (descValue) => {
-    await user.updateOfficeLocation(descValue);
+    await user.updateOfficeHours(descValue);
     loadData(props.profile);
   };
 
