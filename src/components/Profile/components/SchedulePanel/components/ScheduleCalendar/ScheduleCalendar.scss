@@ -123,6 +123,14 @@ button.rbc-input::-moz-focus-inner {
   min-height: 0px;
 }
 
+.rbc-time-header-content {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  border-left: 1px solid var(--mui-palette-neutral-dark);
+}
+
 .rbc-time-view-resources .rbc-time-header-content {
   min-width: 140px;
   flex: 1 0 0;
@@ -256,11 +264,4 @@ button.rbc-input::-moz-focus-inner {
 .rbc-time-header-content > .rbc-row.rbc-row-resource {
   border-bottom: 1px solid var(--mui-palette-neutral-dark);
   flex-shrink: 0;
-}
-.rbc-time-header-content {
-  flex: 1;
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  border-left: 1px solid var(--mui-palette-neutral-dark);
 }
