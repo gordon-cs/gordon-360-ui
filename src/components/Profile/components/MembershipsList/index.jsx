@@ -16,23 +16,15 @@ import styles from './MembershipsList.module.css';
  * @returns {JSX} A list of the user's memberships
  */
 const MembershipsList = ({ username, myProf, createSnackbar }) => {
-  const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [membershipHistories, setMembershipHistories] = useState([]);
 
   useEffect(() => {
     async function loadMemberships() {
       setLoading(true);
+      const memberships = await membershipService.groupByActivityCode(username);
+      setMembershipHistories(memberships);
 
-      const memberships = await membershipService.get({ username, sessionCode: '*' });
-
-      if (myProf) {
-        const myMemberships = await membershipService.groupByActivityCode(username);
-        setMembershipHistories(myMemberships);
-      } else {
-        const publicMemberships = await membershipService.getPublicMemberships(username);
-        setMembershipHistories(publicMemberships);
-      }
       setLoading(false);
     }
     loadMemberships();
