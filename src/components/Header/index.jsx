@@ -151,15 +151,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
           >
             <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
-          &nbsp;&nbsp; &nbsp;&nbsp;
-          <Tab //this is an "invisible" button behind the new logo that links back to the home page
-            className={styles.tab}
-            label=" "
-            component={ForwardNavLink}
-            disableRipple={true}
-            to="/"
-            onChange={(event, value) => setTabIndex(value)}
-          />
+
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
             <Routes>
               {routes.map((route) => (
@@ -174,6 +166,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
               ))}
             </Routes>
           </Typography>
+
           <div className={styles.center_container}>
             <Tabs
               textColor="inherit"
@@ -207,19 +200,23 @@ const GordonHeader = ({ onDrawerToggle }) => {
               {requiresAuthTab('Timesheets', <WorkIcon />)}
             </Tabs>
           </div>
+
           <div className={styles.people_search_container_container}>
             {/* Width is dynamic */}
             <div className={styles.people_search_container}>
               {isAuthenticated ? <GordonQuickSearch /> : loginButton}
             </div>
           </div>
+
           <GordonNavAvatarRightCorner onClick={handleOpenMenu} menuOpened={isMenuOpen} />
+
           <GordonNavButtonsRightCorner
             open={isMenuOpen}
             openDialogBox={setDialog}
             anchorEl={anchorElement}
             onClose={handleCloseMenu}
           />
+
           {createDialogBox()}
         </Toolbar>
       </AppBar>
