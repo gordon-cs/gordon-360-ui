@@ -1,4 +1,3 @@
-import { ExpandMore } from '@mui/icons-material';
 import {
   Accordion,
   AccordionDetails,
@@ -14,6 +13,7 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
+import { ExpandMore } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
 import {
@@ -25,27 +25,30 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import {
   FaBook,
   FaBriefcase,
   FaBuilding,
+  FaCalendarTimes,
   FaGlobeAmericas,
   FaHeart,
+  FaPaperPlane,
   FaSchool,
   FaHome as Home,
   FaMapMarkerAlt as LocationCity,
   FaUser as Person,
 } from 'react-icons/fa';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
 import { gordonColors } from 'theme';
 import SearchField, { SelectOption } from './components/SearchField';
+import Slider from '@mui/material/Slider';
+import Switch from '@mui/material/Switch';
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
@@ -85,12 +88,16 @@ const defaultSearchParams: PeopleSearchQuery = {
   major: '',
   minor: '',
   residence_hall: '',
-  class_year: '',
+  class_standing: '',
+  graduation_year: '',
   home_town: '',
   state: '',
   country: '',
   department: '',
   building: '',
+  initial_year: '',
+  final_year: '',
+  involvement: '',
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -124,7 +131,6 @@ const AdvancedOptionsColumn = ({ children, ...otherProps }: { children: ReactNod
 const SearchFieldList = ({ onSearch }: Props) => {
   const { profile } = useUser();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [isStudent, isFacStaff, isAlumni] = useAuthGroups(
     AuthGroup.Student,
@@ -136,9 +142,14 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [minors, setMinors] = useState<string[]>([]);
   const [states, setStates] = useState<SelectOption[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
-  const [departments, setDepartments] = useState<string[]>([]);
+  const [departments, setDepartments] = useState<SelectOption[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
+  const currentYear = new Date().getFullYear();
+  const [graduationYearRange, setGraduationYearRange] = useState<number[]>([1889, currentYear]);
+  // 1889 is the establish date of Gordon
+  const [switchYearRange, setSwitchYearRange] = useState(true);
+  const [involvements, setInvolvements] = useState<string[]>([]);
 
   /**
    * Default search params adjusted for the user's identity.
@@ -154,9 +165,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
     [isAlumni, isFacStaff, isStudent],
   );
   const [searchParams, setSearchParams] = useState(initialSearchParams);
-
-  // Used to only read search params from URL on first load (and on back/forward navigate via event listener)
-  const shouldReadSearchParamsFromURL = useRef(true);
 
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
@@ -184,26 +192,28 @@ const SearchFieldList = ({ onSearch }: Props) => {
       await peopleSearchService.search(searchParams).then(onSearch);
 
       const newQueryString = serializeSearchParams(searchParams);
-      // If search params are new since last search, add search to navigate
-      if (location.search !== newQueryString) {
+      // If search params are new since last search, add search to history
+      if (window.location.search !== newQueryString) {
         navigate(newQueryString);
       }
 
       setLoadingSearch(false);
     }
-  }, [canSearch, searchParams, onSearch, location.search, navigate]);
+  }, [canSearch, searchParams, onSearch, navigate]);
 
   useEffect(() => {
     const loadPage = async () => {
-      const [majors, minors, halls, states, countries, departments, buildings] = await Promise.all([
-        peopleSearchService.getMajors(),
-        peopleSearchService.getMinors(),
-        peopleSearchService.getHalls(),
-        addressService.getStates(),
-        addressService.getCountries(),
-        peopleSearchService.getDepartments(),
-        peopleSearchService.getBuildings(),
-      ]);
+      const [majors, minors, halls, states, countries, departments, buildings, involvements] =
+        await Promise.all([
+          peopleSearchService.getMajors(),
+          peopleSearchService.getMinors(),
+          peopleSearchService.getHalls(),
+          addressService.getStates(),
+          addressService.getCountries(),
+          peopleSearchService.getDepartmentDropdownOptions(),
+          peopleSearchService.getBuildings(),
+          peopleSearchService.getInvolvements(),
+        ]);
       setMajors(majors);
       setMinors(minors);
       setHalls(halls);
@@ -211,17 +221,16 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setCountries(countries.map((c) => c.Name));
       setDepartments(departments);
       setBuildings(buildings);
-
+      setInvolvements(involvements);
       setLoading(false);
     };
 
     loadPage();
-  }, [isAlumni]);
+  }, []);
 
   useEffect(() => {
-    // Read search params from URL on navigate (including first load)
-    if (shouldReadSearchParamsFromURL.current) {
-      const newSearchParams = deserializeSearchParams(new URLSearchParams(location.search));
+    const readSearchParamsFromURL = () => {
+      const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
 
       setSearchParams((oldSearchParams) => {
         // If there are no search params in the URL, reset to initialSearchParams
@@ -235,27 +244,87 @@ const SearchFieldList = ({ onSearch }: Props) => {
           ...newSearchParams,
         };
       });
+    };
 
-      shouldReadSearchParamsFromURL.current = false;
-    }
+    // Read search params from URL when SearchFieldList mounts (or initialSearchParams changes)
+    readSearchParamsFromURL();
 
     // Read search params from URL on 'popstate' (back/forward navigation) events
-    const onNavigate = () => (shouldReadSearchParamsFromURL.current = true);
-    window.addEventListener('popstate', onNavigate);
-    return () => window.removeEventListener('popstate', onNavigate);
-  }, [location.search, initialSearchParams]);
+    window.addEventListener('popstate', readSearchParamsFromURL);
+    return () => window.removeEventListener('popstate', readSearchParamsFromURL);
+  }, [initialSearchParams]);
 
-  const handleUpdate = (event: ChangeEvent<HTMLInputElement>) =>
+  const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.name === 'graduation_year') {
+      setSearchParams((sp) => ({
+        ...sp,
+        class_standing: '',
+        minor: '',
+      }));
+    } else if (event.target.name === 'class_standing') {
+      setSearchParams((sp) => ({
+        ...sp,
+        initial_year: '',
+        final_year: '',
+        graduation_year: '',
+      }));
+    }
+
     setSearchParams((sp) => ({
       ...sp,
       [event.target.name]:
         event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     }));
+    if (event.target.name === 'includeFacStaff' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        building: '',
+        department: '',
+      }));
+    } else if (event.target.name === 'includeStudent' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        major: '',
+        minor: '',
+        class_year: '',
+      }));
+    } else if (event.target.name === 'includeAlumni' && !event.target.checked) {
+      setSearchParams((sp) => ({
+        ...sp,
+        graduation_year: '',
+      }));
+    }
+  };
 
   const handleEnterKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
       search();
     }
+  };
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setGraduationYearRange(newValue as number[]);
+    let values = graduationYearRange.toString().split(',');
+    setSearchParams((sp) => ({
+      ...sp,
+      initial_year: values[0],
+      final_year: values[1],
+    }));
+    setSearchParams((sp) => ({
+      ...sp,
+      class_standing: '',
+    }));
+  };
+
+  const handleSwitchChange = () => {
+    if (switchYearRange) {
+      setSearchParams((sp) => ({
+        ...sp,
+        initial_year: '',
+        final_year: '',
+      }));
+    }
+    setSwitchYearRange((prev) => !prev);
   };
 
   if (loading) {
@@ -411,8 +480,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     disabled={!searchParams.includeStudent}
                   />
                   <SearchField
-                    name="class_year"
-                    value={searchParams.class_year}
+                    name="class_standing"
+                    value={searchParams.class_standing}
                     updateValue={handleUpdate}
                     options={
                       Object.values(Class).filter((value) => typeof value !== 'number') as string[]
@@ -421,6 +490,53 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     select
                     disabled={!searchParams.includeStudent}
                   />
+                  <SearchField
+                    name="involvement"
+                    value={searchParams.involvement}
+                    updateValue={handleUpdate}
+                    options={involvements.sort()}
+                    Icon={FaPaperPlane}
+                    select
+                    disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
+                  />
+
+                  {(isAlumni || isFacStaff) && switchYearRange ? (
+                    <SearchField
+                      name="graduation_year"
+                      value={searchParams.graduation_year}
+                      updateValue={handleUpdate}
+                      options={Array.from({ length: currentYear - 1889 + 1 }, (_, i) => ({
+                        value: (currentYear - i).toString(),
+                        label: (currentYear - i).toString(),
+                      }))}
+                      Icon={FaCalendarTimes}
+                      disabled={!searchParams.includeAlumni}
+                      select
+                    />
+                  ) : (
+                    <Grid item width={225}>
+                      <Slider
+                        getAriaLabel={() => 'graduationYearRange'}
+                        value={graduationYearRange}
+                        onChange={handleSliderChange}
+                        valueLabelDisplay="auto"
+                        getAriaValueText={toString}
+                        min={1889}
+                        max={currentYear}
+                        disabled={!searchParams.includeAlumni}
+                      />
+                      <Typography fontSize={15} align="center">
+                        {graduationYearRange[0]}-{graduationYearRange[1]}
+                      </Typography>
+                    </Grid>
+                  )}
+                  {(isAlumni || isFacStaff) && (
+                    <FormControlLabel
+                      control={<Switch onChange={handleSwitchChange} />}
+                      label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
+                      labelPlacement="end"
+                    />
+                  )}
                 </AdvancedOptionsColumn>
 
                 {/* Advanced Search Filters: Faculty/Staff */}
@@ -436,7 +552,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="department"
                     value={searchParams.department}
                     updateValue={handleUpdate}
-                    options={departments.sort()}
+                    options={departments.sort(compareByProperty('label'))}
                     Icon={FaBriefcase}
                     select
                     disabled={!searchParams.includeFacStaff}

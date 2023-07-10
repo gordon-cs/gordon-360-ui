@@ -1,80 +1,63 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { gordonColors } from 'theme';
 import styles from './EditDescriptionDialog.module.css';
-
 import { Dialog, DialogTitle, DialogActions, Button, TextField } from '@mui/material';
 
-export default class EditDescriptionDialog extends Component {
-  constructor(props) {
-    super(props);
+const EditDescriptionDialog = (props) => {
+  const [descInput, setDescInput] = useState(props.descriptiontext ?? '');
+  const [formValid, setFormValid] = useState(true);
 
-    this.state = {
-      descInput: '',
-      formErrors: {
-        descInput: '',
-      },
-      editDescriptionOpen: false,
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+  var maxCharacter = 4096;
 
-  componentWillReceiveProps(nextProps) {
-    if (this.descInput !== nextProps.descriptiontext) {
-      this.setState({ descInput: nextProps.descriptiontext });
-    }
-  }
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    var desc = this.state.descInput;
-    this.props.onDialogSubmit(desc);
-    this.handleClose();
+    var desc = descInput;
+    props.onDialogSubmit(desc);
+    handleClose();
   };
 
-  handleChange = (name) => (e) => {
-    this.setState({ [name]: e.target.value }, () => {});
+  const handleChange = (e) => {
+    setDescInput(e.target.value);
   };
 
-  handleClose = () => {
-    this.props.handleEditDescriptionClose();
-
-    this.setState({ formValid: true });
+  const handleClose = () => {
+    props.handleEditDescriptionClose();
+    setFormValid(true);
   };
 
-  render() {
-    const button = {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    };
+  const button = {
+    background: gordonColors.primary.cyan,
+    color: 'white',
+  };
 
-    return (
-      <Dialog open={this.props.editDescriptionOpen} keepMounted fullWidth="true" maxWidth="xs">
-        <div className={styles.desc_tile}>
-          <DialogTitle className={styles.desc_title}>Edit schedule description</DialogTitle>
+  return (
+    <Dialog open={props.editDescriptionOpen} keepMounted fullWidth={true} maxWidth="xs">
+      <div className={styles.desc_tile}>
+        <DialogTitle className={styles.desc_title}>Edit Public Office Hours Note</DialogTitle>
 
-          <TextField
-            id="descInput"
-            label="Description"
-            defaultValue={this.state.descInput}
-            value={this.state.descInput}
-            onChange={this.handleChange('descInput')}
-            className={styles.desc_description}
-          />
+        <TextField
+          id="descInput"
+          label="Description"
+          multiline
+          rows={3}
+          defaultValue={descInput}
+          value={descInput}
+          onChange={handleChange}
+          className={styles.desc_description}
+          inputProps={{ maxLength: maxCharacter - 1 }}
+        />
 
-          <DialogActions className={styles.desc_buttons}>
-            <Button
-              onClick={this.props.handleEditDescriptionClose}
-              variant="contained"
-              style={button}
-            >
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={this.handleSubmit} style={button}>
-              Submit
-            </Button>
-          </DialogActions>
-        </div>
-      </Dialog>
-    );
-  }
-}
+        <DialogActions className={styles.desc_buttons}>
+          <Button onClick={props.handleEditDescriptionClose} variant="contained" style={button}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleSubmit} style={button}>
+            Submit
+          </Button>
+        </DialogActions>
+      </div>
+    </Dialog>
+  );
+};
+
+export default EditDescriptionDialog;

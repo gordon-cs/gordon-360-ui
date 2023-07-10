@@ -269,6 +269,7 @@ export default class SavedShiftsList extends Component {
                 className={styles.shift_list}
                 container
                 spacing={2}
+                margin="-0.5em"
                 justifyContent="space-around"
                 alignItems="center"
                 alignContent="center"
