@@ -149,7 +149,6 @@ export type StudentProfileInfo = {
   fullName: string;
   Majors: string[];
   Minors: string[];
-  Advisors: StudentAdvisorInfo[];
 } & Override<UnformattedStudentProfileInfo, { OnOffCampus: OnOffCampusDescription }>;
 
 export type Profile = FacStaffProfileInfo | StudentProfileInfo | AlumniProfileInfo;
@@ -175,6 +174,11 @@ type MealPlanComponent = {
 };
 
 export type ProfileImages = { def: string; pref?: string };
+
+export type OfficeLocationQuery = {
+  BuildingDescription: string;
+  RoomNumber: string;
+};
 
 function isStudent(profile: Profile): profile is StudentProfileInfo;
 function isStudent(profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo;
@@ -238,7 +242,14 @@ const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
 
 const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
+const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
+
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
+
+const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
+  http.put(`profiles/office_location`, OfficeLocation);
+
+const updateOfficeHours = (value: string) => http.put(`profiles/office_hours`, value);
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
@@ -265,16 +276,10 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
   const fullName = `${profile?.FirstName} ${profile?.LastName}`;
   const cliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username);
 
-  let advisors: StudentAdvisorInfo[] = [];
-  try {
-    advisors = await getAdvisors(profile.AD_Username);
-  } catch {}
-
   if (isStudent(profile)) {
     return {
       ...profile,
       fullName,
-      Advisors: advisors,
       CliftonStrengths: cliftonStrengths,
       Majors: [
         profile.Major1Description,
@@ -347,13 +352,17 @@ const userService = {
   setMobilePhonePrivacy,
   setHomePhonePrivacy,
   setMobilePhoneNumber,
+  updateOfficeLocation,
+  updateOfficeHours,
   setImagePrivacy,
   getChapelCredits,
   getImage,
   getDiningInfo,
   getProfileInfo,
+  getAdvisors,
   getMailboxCombination,
   getMembershipHistory,
+  getBuildings,
   resetImage,
   postImage,
   postIDImage,
