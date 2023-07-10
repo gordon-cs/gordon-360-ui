@@ -223,6 +223,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </span>
         </>
       }
+      ContentIcon={myProf && UpdateUserPrivacy('Country')}
       privateInfo={isAddressPrivate}
       myProf={myProf}
     />

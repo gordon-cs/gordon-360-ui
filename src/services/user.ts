@@ -251,6 +251,9 @@ const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings
 
 const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_group`);
 
+const getPrivacySetting = (username: string): Promise<string> =>
+  http.get(`profiles/privacy_setting/${username}/`);
+
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
 const updateOfficeLocation = (officeLocation: OfficeLocationQuery) =>
@@ -371,6 +374,7 @@ const userService = {
   getMembershipHistory,
   getBuildings,
   getVisibilityGroups,
+  getPrivacySetting,
   resetImage,
   postImage,
   postIDImage,
