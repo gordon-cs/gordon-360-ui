@@ -1,3 +1,7 @@
+.searchIcon {
+  color: var(--mui-palette-primary-contrastText);
+}
+
 .gordon_header {
   position: absolute;
   width: 100%;
@@ -12,11 +16,11 @@
 }
 .gordon_header .tab {
   transition: min-width 0.2s;
-  color: #ffffff;
+  color: var(--mui-palette-primary-contrastText);
   text-transform: capitalize;
 }
 .gordon_header .tab.disabled_tab {
-  color: rgba(255, 255, 255, 0.3019607843);
+  color: var(--mui-palette-neutral-900);
 }
 .gordon_header .tab.tab:hover {
   text-decoration: none;
@@ -102,10 +106,10 @@
   font-weight: bold;
 }
 .gordon_header .menu_button_icon {
-  color: #ffffff;
+  color: var(--mui-palette-primary-contrastText);
 }
 .gordon_header .login_button {
-  color: #ffffff;
+  color: var(--mui-palette-secondary-contrastText);
 }
 
 /*# sourceMappingURL=Header.module.css.map */
