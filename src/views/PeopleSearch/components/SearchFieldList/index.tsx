@@ -45,7 +45,7 @@ import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
-import { gordonColors } from 'theme';
+import styles from './SearchFieldList.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
@@ -74,7 +74,7 @@ const relationship_statuses = [
 const searchPageTitle = (
   <>
     Search the
-    <b style={{ color: gordonColors.primary.blue }}> Gordon </b>
+    <b className={styles.people_text}> Gordon </b>
     Community
   </>
 );
@@ -160,7 +160,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       // Only students and facstaff search students by default - alumni aren't allowed to search students
       includeStudent: isStudent || isFacStaff,
       // Only alumni search alumni by default
-      includeAlumni: isAlumni,
+      includeAlumni: isAlumni && !isStudent && !isFacStaff,
     }),
     [isAlumni, isFacStaff, isStudent],
   );
@@ -332,8 +332,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }
 
   const PeopleSearchCheckbox = (
-    <Grid item xs={12} md={6}>
-      <FormLabel component="label">Include: &nbsp;</FormLabel>
+    <Grid item xs={12} md={6} className={styles.people_section}>
+      <FormLabel component="label" color="primary">
+        Include: &nbsp;
+      </FormLabel>
       {loading ? (
         <GordonLoader size={20} />
       ) : (
@@ -384,7 +386,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   );
 
   return (
-    <Card style={{ padding: '1rem' }}>
+    <Card className={styles.people_section}>
       <CardContent>
         <CardHeader title={searchPageTitle} titleTypographyProps={{ align: 'center' }} />
 
@@ -438,11 +440,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <Grid container alignItems="center">
           <Accordion style={{ flexGrow: 1 }} elevation={3}>
             <AccordionSummary
-              expandIcon={<ExpandMore />}
+              expandIcon={<ExpandMore className={styles.people} />}
               id="more-search-options-header"
               aria-controls="more-search-options-controls"
             >
-              <Typography variant="h6" align="center">
+              <Typography variant="h6" align="center" className={styles.people_searchbar}>
                 More Search Options
               </Typography>
             </AccordionSummary>
@@ -605,7 +607,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       <CardActions>
         <Button
           variant="contained"
-          color="neutral"
+          color="secondary"
           onClick={() => setSearchParams(initialSearchParams)}
         >
           RESET

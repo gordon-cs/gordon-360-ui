@@ -76,7 +76,14 @@ const GordonQuickLinksDialog = ({ linkopen, handleLinkClose }: Props) => {
           <ListItemLink {...link} />
         ))}
       </List>
-      <List component="nav" subheader={<ListSubheader component="div">Information</ListSubheader>}>
+      <List
+        component="nav"
+        subheader={
+          <ListSubheader component="div" disableSticky>
+            Information
+          </ListSubheader>
+        }
+      >
         {otherLinks.map((link) => (
           <ListItemLink {...link} />
         ))}
