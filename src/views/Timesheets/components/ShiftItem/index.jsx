@@ -391,7 +391,7 @@ export default class ShiftItem extends Component {
                       });
                       this.onClose();
                     }}
-                    className={styles.redButton}
+                    color="error"
                   >
                     Yes
                   </Button>

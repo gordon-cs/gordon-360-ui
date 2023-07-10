@@ -21,15 +21,12 @@ const About = () => {
           <CardHeader
             className={styles.about_title}
             title="Conceived and Built at Gordon College"
-            subheader="By Students for Students"
             titleTypographyProps={{ variant: 'h4' }}
           />
+          <Typography className={styles.about_subheader}>By Students for Students</Typography>
           <CardContent>
             <Card>
-              <CardHeader
-                className={styles.about_header}
-                title={`${projectName}: For Students by Students`}
-              />
+              <CardHeader className={styles.about_header} title={`${projectName}`} />
               <CardContent>
                 <Typography variant="body1" component="ul" style={{ textAlign: 'start' }}>
                   <li>Mobile-friendly, responsive web portal</li>
@@ -43,7 +40,6 @@ const About = () => {
                 </Typography>
               </CardContent>
             </Card>
-
             <Card>
               <CardHeader className={styles.about_header} title="Institutional Benefits" />
               <CardContent>
@@ -59,7 +55,6 @@ const About = () => {
                 </Typography>
               </CardContent>
             </Card>
-
             <Card>
               <CardHeader className={styles.about_header} title="Origins" />
               <CardContent>
@@ -77,7 +72,6 @@ const About = () => {
                 })}
               </CardContent>
             </Card>
-
             <Card>
               <CardHeader className={styles.about_header} title="GoCo Tech Lab Developers" />
               <CardContent>

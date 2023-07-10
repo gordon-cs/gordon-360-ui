@@ -1,3 +1,5 @@
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+
 /* Temporary component for testing theme implementation and dark mode.  Used in the right side
 nav menu currently.
 
@@ -13,12 +15,14 @@ export const ModeSwitcher = () => {
   const { mode, setMode } = useColorScheme();
 
   return (
-    <button
-      variant="outlined"
-      onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
-      className={styles.ModeSwitcherButton}
-    >
-      {mode === 'light' ? 'Dark' : 'Light'}
-    </button>
+    <>
+      <button
+        onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
+        className={styles.ModeSwitcherButton}
+      >
+        {mode === 'light' ? 'Dark Mode' : 'Light Mode'}
+      </button>
+      <LightbulbIcon />
+    </>
   );
 };
