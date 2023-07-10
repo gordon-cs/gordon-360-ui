@@ -27,6 +27,7 @@ import { gordonColors } from 'theme';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import styles from './InvolvementProfile.module.css';
+import styles2 from 'app.module.css';
 
 const CROP_DIM = 320; // pixels
 
@@ -405,7 +406,7 @@ const InvolvementProfile = () => {
           align="center"
           title={ActivityDescription}
           subheader={SessionDescription}
-          className={styles.involvement_profile_header}
+          className={styles2.gc360_header}
         />
         <CardContent>
           <Grid container direction="column" spacing={2}>

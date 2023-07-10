@@ -23,10 +23,10 @@ import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Events.module.css';
+import styles2 from 'app.module.css';
 
 const Events = () => {
   const [open, setOpen] = useState(false);
-
   const [search, setSearch] = useState('');
   const [allEvents, setAllEvents] = useState([]);
   const [events, setEvents] = useState([]);
@@ -40,6 +40,7 @@ const Events = () => {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const location = useLocation();
+
   useEffect(() => {
     const loadEvents = async () => {
       setLoading(true);
@@ -51,11 +52,13 @@ const Events = () => {
       }
       setAllEvents(allEvents);
       setHasInitializedEvents(true);
+
       // Load filters from UrlParams if they exist
       if (location.search) {
         const urlParams = new URLSearchParams(location.search);
         let willIncludePast = false;
         const filtersFromURL = [];
+
         for (const key of urlParams.keys()) {
           if (key === 'Past') {
             willIncludePast = true;
@@ -63,29 +66,37 @@ const Events = () => {
             filtersFromURL.push(key);
           }
         }
+
         setFilters(filtersFromURL);
         setIncludePast(willIncludePast);
         setOpen(willIncludePast || filtersFromURL.length > 0);
       }
+
       setLoading(false);
     };
+
     loadEvents();
   }, [isAuthenticated, location.search]);
+
   useEffect(() => {
     setLoading(true);
     setEvents(includePast ? allEvents : futureEvents);
     setLoading(false);
   }, [includePast, allEvents, futureEvents]);
+
   useEffect(() => {
     setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
   }, [events, filters, search]);
+
   const handleChangeFilters = async (value) => {
     setFilters(value);
     setURLParams(includePast, value);
   };
+
   const handleExpandClick = () => {
     setOpen(!open);
   };
+
   const clearAll = () => {
     setIncludePast(false);
     setFilters([]);
@@ -93,10 +104,12 @@ const Events = () => {
     setSearch('');
     setOpen(false);
   };
+
   const handleChangeIncludePast = () => {
     setIncludePast(!includePast);
     setURLParams(!includePast, filters);
   };
+
   const setURLParams = (includePast, filters) => {
     if (includePast || filters.length > 0) {
       let url = '?';
@@ -108,12 +121,15 @@ const Events = () => {
       navigate();
     }
   };
+
   let content;
+
   if (loading || !hasInitializedEvents) {
     content = <GordonLoader />;
   } else {
     content = <EventList events={filteredEvents} loading={loading} />;
   }
+
   const searchPageTitle = (
     <div align="center">
       Search
@@ -126,7 +142,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <CardHeader title={searchPageTitle} className={styles.events_header} />
+          <CardHeader title={searchPageTitle} className={styles2.gc360_header} />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
               {/* Search Bar and Filters */}
@@ -152,11 +168,13 @@ const Events = () => {
                         onChange={(event) => setSearch(event.target.value)}
                       />
                     </Grid>
+
                     <Grid item>
                       <Button color="neutral" fullWidth variant="contained" onClick={clearAll}>
                         CLEAR ALL
                       </Button>
                     </Grid>
+
                     <Grid item>
                       <Button
                         color={filters.length === 0 ? 'primary' : 'secondary'}
@@ -233,7 +251,9 @@ const Events = () => {
               </Grid>
             </CardContent>
           </Card>
+
           <br />
+
           {/* List of Events */}
           <Grid item xs={12}>
             {content}
@@ -245,7 +265,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <CardHeader title={searchPageTitle} className={styles.events_header} />
+          <CardHeader title={searchPageTitle} className={styles2.gc360_header} />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
               {/* Search Bar and Filters */}
@@ -259,7 +279,6 @@ const Events = () => {
                       </Grid>
                     )}
                   />
-
                   <Grid item xs={11}>
                     <TextField
                       id="search"
@@ -285,6 +304,7 @@ const Events = () => {
                       CLEAR ALL
                     </Button>
                   </Grid>
+
                   <Grid item>
                     <Button
                       color={filters.length === 0 ? 'primary' : 'secondary'}
@@ -295,6 +315,7 @@ const Events = () => {
                       Filters
                     </Button>
                   </Grid>
+
                   <Grid item>
                     {isAuthenticated && (
                       <Button
@@ -309,6 +330,7 @@ const Events = () => {
                   </Grid>
                 </Grid>
               </Grid>
+
               <Grid item xs={12}>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                   <Grid container item justifyContent="center">
@@ -328,7 +350,6 @@ const Events = () => {
                         </Grid>
                       )}
                     />
-
                     <Grid item xs={11}>
                       <Autocomplete
                         id="event-filters"

@@ -4,6 +4,7 @@ import GordonLoader from 'components/Loader';
 import session from 'services/session';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import styles2 from 'app.module.css';
 import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 
 const DaysLeft = () => {
@@ -36,7 +37,7 @@ const DaysLeft = () => {
 
   return (
     <Card className={styles.card}>
-      <CardHeader title={currentSessionDescription} className={styles.header}>
+      <CardHeader title={currentSessionDescription} className={styles2.gc360_header}>
         <br />
       </CardHeader>
       <CardContent>

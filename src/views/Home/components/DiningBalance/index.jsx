@@ -6,6 +6,7 @@ import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import styles2 from 'app.module.css';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
@@ -216,7 +217,7 @@ const DiningBalance = () => {
             </Grid>
           </Grid>
         }
-        className={styles.header}
+        className={styles2.gc360_header}
       />
       <CardContent>{content}</CardContent>
     </Card>

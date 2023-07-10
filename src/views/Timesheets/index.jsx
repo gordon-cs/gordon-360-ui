@@ -29,6 +29,7 @@ import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
 import ShiftDisplay from './components/ShiftDisplay';
 import styles from './Timesheets.module.css';
+import styles2 from 'app.module.css';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
@@ -63,11 +64,11 @@ const Timesheets = (props) => {
   const isOnline = useNetworkStatus();
   const { profile, loading } = useUser();
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (profile) {
       setIsUserStudent(profile.PersonType.includes('stu'));
     }
-  }, [profile]);
+  }, [profile]);*/
 
   useEffect(() => {
     async function getClockInOutStatus() {
@@ -414,7 +415,7 @@ const Timesheets = (props) => {
         <Grid container spacing={2} className={styles.timesheets}>
           <Grid item xs={12}>
             <Card>
-              <CardHeader title={timesheetTitle} className={styles.header_card}></CardHeader>
+              <CardHeader title={timesheetTitle} className={styles2.gc360_header}></CardHeader>
               <CardContent
                 style={{
                   marginLeft: 8,

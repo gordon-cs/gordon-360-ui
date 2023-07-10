@@ -13,7 +13,7 @@ import GordonIcon from './images/favicon.ico';
 import GOIcon from './images/GoGordonFavicon.ico';
 import MyGordonIcon from './images/MyGordonFavicon.ico';
 import { PropsWithChildren } from 'react';
-import styles from './QuickLinksDialog.module.css';
+import styles from 'app.module.css';
 
 type ListItemProps = {
   name: string;
@@ -72,7 +72,7 @@ const GordonQuickLinksDialog = ({ linkopen, handleLinkClose }: Props) => {
       buttonClicked={handleLinkClose}
       buttonName="Close"
     >
-      <CardHeader title="Useful Links" className={styles.quick_links_dialog_header} />
+      <CardHeader title="Useful Links" className={styles.gc360_header} />
       <List
         component="nav"
         subheader={

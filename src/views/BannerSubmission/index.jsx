@@ -14,7 +14,7 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 import { gordonColors } from 'theme';
 import BannerAdmin from './components/BannerAdmin';
-import styles from './BannerSubmission.module.css';
+import styles from 'app.module.css';
 
 const style = {
   uploadButton: {
@@ -50,7 +50,7 @@ const BannerSubmission = () => {
           <CardHeader
             title="Advertise your club or event on the 360 Homepage!"
             titleTypographyProps={{ variant: 'h4', align: 'center' }}
-            className={styles.banner_submission_header}
+            className={styles.gc360_header}
           />
           <CardContent>
             <Typography variant="h6">Banner Image Guidelines</Typography>

@@ -4,6 +4,7 @@ import { projectName } from 'project-name';
 import contributors from './contributors.json';
 import origins from './origins.json';
 import styles from './About.module.css';
+import styles2 from 'app.module.css';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
 
@@ -27,7 +28,7 @@ const About = () => {
           <CardContent>
             <Card>
               <CardHeader
-                className={styles.about_header}
+                className={styles2.gc360_header}
                 title={`${projectName}: For Students by Students`}
               />
               <CardContent>

@@ -19,6 +19,7 @@ import sessionService from 'services/session';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
 import styles from './Involvements.module.css';
+import styles2 from 'app.module.css';
 
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -148,7 +149,7 @@ const InvolvementsAll = () => {
             <Card>
               <CardHeader
                 title={`My ${myInvolvementsHeadingText} Involvements`}
-                className={styles.involvements_header}
+                className={styles2.gc360_header}
               />
               <CardContent>
                 {loading ? (
@@ -168,7 +169,7 @@ const InvolvementsAll = () => {
 
       <Grid item xs={12} lg={8}>
         <Card>
-          <CardHeader title={searchPageTitle} className={styles.involvements_header} />
+          <CardHeader title={searchPageTitle} className={styles2.gc360_header} />
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={12} lg={6}>
@@ -232,7 +233,7 @@ const InvolvementsAll = () => {
         <Card>
           <CardHeader
             title={`${involvementSessionText} Involvements`}
-            className={styles.involvements_header}
+            className={styles2.gc360_header}
           />
           <CardContent>
             {loading ? (

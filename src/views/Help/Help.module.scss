@@ -18,11 +18,6 @@
     color: var(--mui-palette-primary-contrastText);
   }
 
-  &_header {
-    background-color: var(--mui-palette-primary-main);
-    color: var(--mui-palette-primary-contrastText);
-  }
-
   &_section:global(.MuiCard-root) {
     box-shadow: none;
   }

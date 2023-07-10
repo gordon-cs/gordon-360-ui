@@ -48,6 +48,7 @@ import { compareByProperty, searchParamSerializerFactory } from 'services/utils'
 import SearchField, { SelectOption } from './components/SearchField';
 import addressService from 'services/address';
 import styles from './SearchFieldList.module.css';
+import styles2 from 'app.module.css';
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
 
@@ -148,7 +149,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [departments, setDepartments] = useState<SelectOption[]>([]);
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
-
   const currentYear = new Date().getFullYear();
   const [graduationYearRange, setGraduationYearRange] = useState<number[]>([1889, currentYear]);
   // 1889 is the establish date of Gordon
@@ -182,8 +182,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
    */
   const canSearch = useMemo(() => {
     const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = searchParams;
+
     // Must search some cohort of people
     const includesSomeone = includeStudent || includeFacStaff || includeAlumni;
+
     // Must search for some non-empty criteria
     const anySearchCriteria = Object.values(criteria).some((c) => containsLetterRegExp.test(c));
 
@@ -398,7 +400,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       <CardHeader
         title={searchPageTitle}
         titleTypographyProps={{ align: 'center' }}
-        className={styles.search_field_list_header}
+        className={styles2.gc360_header}
       />
       <Card style={{ padding: '2rem' }}>
         <CardContent>
