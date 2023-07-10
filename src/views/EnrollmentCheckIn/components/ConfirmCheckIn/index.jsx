@@ -1,5 +1,4 @@
 import { Grid, Typography } from '@mui/material';
-import { gordonColors } from 'theme';
 
 const ConfirmCheckIn = ({
   emergencyContact1,
@@ -8,8 +7,6 @@ const ConfirmCheckIn = ({
   phoneInfo,
   // demographic,
 }) => {
-  const cyan = gordonColors.primary.cyan;
-
   // const { ethnicity, ...raceValues } = demographic;
 
   // const races = {
@@ -28,7 +25,7 @@ const ConfirmCheckIn = ({
   return (
     <Grid container alignItems="center" justifyContent="center" direction="column">
       <Grid item>
-        <Typography variant="h5" gutterBottom align="center" style={{ color: cyan }}>
+        <Typography variant="h5" gutterBottom align="center" color="secondary">
           Check-In Confirmation
         </Typography>
         <br />

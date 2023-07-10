@@ -1,5 +1,9 @@
 @import '../../vars';
 
+.searchIcon {
+  color: var(--mui-palette-primary-contrastText);
+}
+
 .gordon_header {
   position: absolute;
   width: 100%;
@@ -15,11 +19,11 @@
 
   .tab {
     transition: min-width 0.2s;
-    color: $neutral-white;
+    color: var(--mui-palette-primary-contrastText);
     text-transform: capitalize;
 
     &.disabled_tab {
-      color: $neutral-white-opacity30;
+      color: var(--mui-palette-neutral-900);
     }
   }
 
@@ -121,10 +125,10 @@
   }
 
   .menu_button_icon {
-    color: $neutral-white;
+    color: var(--mui-palette-primary-contrastText);
   }
 
   .login_button {
-    color: $neutral-white;
+    color: var(--mui-palette-secondary-contrastText);
   }
 }

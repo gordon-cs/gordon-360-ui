@@ -1,0 +1,9 @@
+.bannerSubmission {
+  &_header {
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
+  &_card {
+    justify-content: center;
+  }
+}

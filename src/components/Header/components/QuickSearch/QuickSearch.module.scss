@@ -10,23 +10,23 @@
   color: inherit;
   transition: box-shadow 0.3s, width 0.3s;
   border-radius: 4px;
-  border: 1px solid $neutral-white;
+  border: 1px solid var(--mui-palette-neutral-light);
   border-color: inherit;
   padding: 2px 10px;
   max-width: 15rem;
   &:focus-within {
-    box-shadow: 0 3px 10px 0 $neutral-black-opacity20;
+    box-shadow: 0 4px 10px 2px var(--mui-palette-neutral-A400);
     max-width: 15rem;
   }
   &:hover:not(:focus-within) {
-    box-shadow: 0 3px 5px 0 $neutral-black-opacity20;
+    box-shadow: 0 3px 10px 2px var(--mui-palette-neutral-A400);
   }
 
   & :global(.MuiInputBase-input) {
     padding: 7px 0px;
   }
   & :global(.MuiSvgIcon-root) {
-    color: $neutral-white;
+    color: var(--mui-palette-neutral-light);
   }
 }
 
@@ -45,12 +45,12 @@
 .matched_text {
   text-decoration: none;
   padding-bottom: 1px;
-  border-bottom: 2px solid $primary-cyan;
-  background-color: color.adjust($color: $primary-cyan, $alpha: -0.9);
+  border-bottom: 2px solid var(--mui-palette-secondary-main);
+  background-color: var(--mui-palette-secondary-50);
 }
 
 .suggestion_selected {
-  background-color: $neutral-light-gray;
+  background-color: var(--mui-palette-neutral-main);
 }
 
 .suggestion,
@@ -60,19 +60,26 @@
   white-space: normal; // wrap long names
 }
 
+.suggestion_no_results {
+  display: block;
+  text-align: start;
+  white-space: normal; // wrap long names
+  padding-bottom: '5px';
+}
+
 .suggestion_selected:hover {
-  background-color: $neutral-light-gray !important;
+  background-color: var(--mui-palette-neutral-main) !important;
 }
 
 .dropdown:hover .suggestion_selected {
-  background-color: $neutral-white;
+  background-color: var(--mui-palette-neutral-light);
 }
 
 // .loading is shown first. After 350ms, .loading opacity and font-size go to 0. This is done
 // to give space for .no-results to increase in font size and change to normal opacity.
 .no_results {
   font-style: italic;
-  color: gray;
+  color: var(--mui-palette-neutral-500);
   animation: show-no-results 1500ms;
 }
 
@@ -95,7 +102,7 @@
   font-size: 0;
   opacity: 0;
   font-style: italic;
-  color: gray;
+  color: var(--mui-palette-neutral-500);
   animation: show-loading 1500ms;
 }
 
