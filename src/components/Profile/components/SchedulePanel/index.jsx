@@ -21,7 +21,6 @@ import GordonLoader from 'components/Loader';
 import { formatDistanceToNow } from 'date-fns';
 import { Markup } from 'interweave';
 import schedulecontrol from 'services/schedulecontrol';
-import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import styles from './ScheduleHeader.module.css';
@@ -125,18 +124,7 @@ const GordonSchedulePanel = (props) => {
 
   const { classes } = props;
 
-  let editDescriptionButton, editDialog, lastUpdate;
-
-  lastUpdate = (
-    <div style={{ color: gordonColors.primary.cyan }}>
-      <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
-      {Boolean(scheduleControlInfo) && (
-        <Typography>
-          {formatDistanceToNow(new Date(modifiedTimeStamp), { addSuffix: true })}
-        </Typography>
-      )}
-    </div>
-  );
+  let editDescriptionButton, editDialog;
 
   if (props.myProf) {
     editDialog = (
@@ -152,12 +140,8 @@ const GordonSchedulePanel = (props) => {
   if (props.myProf) {
     editDescriptionButton = (
       <Fragment>
-        <IconButton
-          style={{ marginBottom: '0.5rem' }}
-          onClick={handleEditDescriptionOpen}
-          size="large"
-        >
-          <EditIcon style={{ fontSize: 20 }} />
+        <IconButton onClick={handleEditDescriptionOpen} size="large">
+          <EditIcon fontSize="small" />
         </IconButton>
       </Fragment>
     );
