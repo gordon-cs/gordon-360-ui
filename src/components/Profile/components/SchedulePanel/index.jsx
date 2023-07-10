@@ -29,6 +29,8 @@ import scheduleService from 'services/schedule';
 import { useNetworkStatus, useUser } from 'hooks';
 import sessionService from 'services/session';
 
+import user from 'services/user';
+
 const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
   const [isExpanded, setIsExpanded] = useState(props, myProf ? false : true);
@@ -45,6 +47,7 @@ const GordonSchedulePanel = (props) => {
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
+  const [asdf, setAsdf] = useState();
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -76,18 +79,18 @@ const GordonSchedulePanel = (props) => {
 
   const loadData = async (searchedUser) => {
     try {
-      const scheduleControlInfo = await schedulecontrol.getScheduleControl(
-        searchedUser.AD_Username,
-      );
-      console.log({ scheduleControlInfo });
+      const scheduleControlInfo = await user.getProfileInfo(searchedUser.AD_Username);
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
+      const de = await user.getProfileInfo(searchedUser.AD_Username);
+      setAsdf(de);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
       if (scheduleControlInfo) {
         setDescription(
-          scheduleControlInfo.Description
+          scheduleControlInfo.office_hours
             ? // We decided to leave the regex code for now because the data stored in the database
               // before changing the api is still in the regex form.
-              scheduleControlInfo.Description.replace(new RegExp('SlSh', 'g'), '/')
+              scheduleControlInfo.office_hours
+                .replace(new RegExp('SlSh', 'g'), '/')
                 .replace(new RegExp('CoLn', 'g'), ':')
                 .replace(new RegExp('dOT', 'g'), '.')
             : '',
@@ -97,7 +100,8 @@ const GordonSchedulePanel = (props) => {
     } catch (e) {}
     setLoading(false);
   };
-  console.log({ description });
+  // const asdf = user.getProfileInfo;
+  console.log({ asdf });
   const handleEditDescriptionOpen = () => {
     setEditDescriptionOpen(true);
   };
@@ -111,7 +115,7 @@ const GordonSchedulePanel = (props) => {
   };
 
   const handleDescriptionSubmit = async (descValue) => {
-    await schedulecontrol.setScheduleDescription(descValue);
+    await user.updateOfficeLocation(descValue);
     loadData(props.profile);
   };
 
@@ -162,18 +166,14 @@ const GordonSchedulePanel = (props) => {
       </Fragment>
     );
   }
-  // console.log({ replaced });
+
   return loading ? (
     <GordonLoader />
   ) : (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       {
         <>
-          <Accordion
-            TransitionProps={{ unmountOnExit: true }}
-            onChange={handleIsExpanded}
-            defaultExpanded={!props.myProf}
-          >
+          <Accordion TransitionProps={{ unmountOnExit: true }} onChange={handleIsExpanded}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
               aria-controls="panel1a-content"
@@ -188,7 +188,7 @@ const GordonSchedulePanel = (props) => {
                   <Grid container direction="row" item xs={12} lg={12} spacing={2}>
                     <Grid item lg={1}></Grid>
                     <Grid item xs={4} lg={1} align="left" className={styles.officeHourText}>
-                      <Markup content="Public Office Hours Note: " />
+                      <Markup content="Office Hours: " />
                       {editDescriptionButton}
                     </Grid>
                     <Grid item xs={7} lg={9} align="left">
