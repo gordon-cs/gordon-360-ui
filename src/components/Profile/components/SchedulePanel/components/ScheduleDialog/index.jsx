@@ -41,10 +41,18 @@ const ScheduleDialog = (props) => {
             Meeting Days: {props.recurringDays}
           </Typography>
           <Typography sx={{ fontSize: 'large' }} align="left">
-            Course Term:{' '}
+            Term:{' '}
             {format(
               setDay(
                 new Date(props.firstDay),
+                dayArr.indexOf(props.selectedCourseInfo?.resourceId) + 1,
+              ),
+              'yyyy-MM-dd',
+            )}
+            {'--'}
+            {format(
+              setDay(
+                new Date(props.lastDay),
                 dayArr.indexOf(props.selectedCourseInfo?.resourceId) + 1,
               ),
               'yyyy-MM-dd',
@@ -58,7 +66,8 @@ const ScheduleDialog = (props) => {
           <Grid container lg={12} alignContent="center">
             {props.selectedCourseInfo && (
               <>
-                <Grid item lg={6} align="right">
+                <Grid item lg={2}></Grid>
+                <Grid item lg={2} align="right">
                   <add-to-calendar-button
                     name={props.selectedCourseInfo.title}
                     startDate={format(
