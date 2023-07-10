@@ -22,10 +22,10 @@ const ScheduleDialog = (props) => {
         </DialogTitle>
         <DialogContent>
           <Typography className={styles.dialogTextLarge} align="left">
-            Title: {props.selectedCourseInfo?.title.split('in')[0]}
+            Title: {props.courseTitle}
           </Typography>
           <Typography className={styles.dialogTextMedium} align="left">
-            Room: {props.selectedCourseInfo?.title.split('in')[1]}
+            Room: {props.courseLocation}
           </Typography>
           <Typography className={styles.dialogTextMedium} align="left">
             Time:
@@ -58,7 +58,7 @@ const ScheduleDialog = (props) => {
                 <Grid item xs={1} lg={2}></Grid>
                 <Grid item lg={2} align="right">
                   <add-to-calendar-button
-                    name={props.selectedCourseInfo.title}
+                    name={props.courseTitle}
                     // We had to add 1 to the index for the resourceId because the setDay function
                     // starts at 0 for Sunday which we don't include in the course schedule
                     startDate={format(
@@ -83,7 +83,7 @@ const ScheduleDialog = (props) => {
                     description={
                       props.selectedCourseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
                     }
-                    Location={props.selectedCourseInfo.title.split('in')[1]}
+                    Location={props.courseLocation}
                     options="'Google', 'Apple'"
                     buttonsList
                     hideTextLabelButton
@@ -100,7 +100,7 @@ const ScheduleDialog = (props) => {
                 </Grid>
                 <Grid item lg={6} align="left">
                   <add-to-calendar-button
-                    name={props.selectedCourseInfo.title}
+                    name={props.courseTitle}
                     startDate={format(
                       setDay(
                         new Date(props.firstDay),
@@ -121,7 +121,7 @@ const ScheduleDialog = (props) => {
                     description={
                       props.selectedCourseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
                     }
-                    Location={props.selectedCourseInfo.title.split('in')[1]}
+                    Location={props.courseLocation}
                     options="'Apple', 'Outlook.com','MicrosoftTeams'"
                     buttonsList
                     hideTextLabelButton
