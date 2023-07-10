@@ -9,7 +9,6 @@ import {
   InputLabel,
   Typography,
 } from '@mui/material';
-import { gordonColors } from 'theme';
 // @TODO CSSMODULES - outside directory
 import styles from '../../EnrollmentCheckIn.module.css';
 import { phoneMaskINTL, phoneMaskUS } from '../UpdatePhone';
@@ -28,11 +27,9 @@ const EmergencyContactUpdate = ({
   handleCheckEmergContact2,
   handleCheckEmergContact3,
 }) => {
-  let cyan = gordonColors.primary.cyan;
-
   return (
     <Grid container justifyContent="center" alignItems="center" direction="column">
-      <Typography align="center" variant="h5" gutterBottom style={{ color: cyan }}>
+      <Typography align="center" variant="h5" gutterBottom color="secondary">
         Step 1: Enter your Emergency Contact Information
       </Typography>
       <Typography variant="h6" gutterBottom>
