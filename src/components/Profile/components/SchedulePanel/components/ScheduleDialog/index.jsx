@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { gordonColors } from 'theme';
 import {
   Dialog,
   DialogTitle,
@@ -9,12 +7,10 @@ import {
   Typography,
   Grid,
 } from '@mui/material';
-import styles from './ScheduleDialog.module.css';
 import 'add-to-calendar-button';
 import { format, setDay } from 'date-fns';
 
 const dayArr = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-[];
 
 const ScheduleDialog = (props) => {
   return (
@@ -26,6 +22,10 @@ const ScheduleDialog = (props) => {
         <DialogContent>
           <Typography sx={{ fontWeight: 'bold', fontSize: 'large' }} align="center">
             Course Title: {props.selectedCourseInfo?.title}
+          </Typography>
+          <Typography sx={{ fontWeight: 'bold', fontSize: 'large' }} align="center">
+            Time Range: {format(new Date(props.selectedCourseInfo.start), 'HH:mm')} -{' '}
+            {format(new Date(props.selectedCourseInfo.end), 'HH:mm')}
           </Typography>
         </DialogContent>
         <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
@@ -40,7 +40,7 @@ const ScheduleDialog = (props) => {
                   ),
                   'yyyy-MM-dd',
                 )}
-                endDate={format(new Date(props.lastDay), 'yyyy-MM-dd')}
+                // endDate={format(new Date(props.lastDay), 'yyyy-MM-dd')}
                 startTime={
                   props.selectedCourseInfo.allDay
                     ? null
@@ -56,7 +56,12 @@ const ScheduleDialog = (props) => {
                 buttonsList
                 hideTextLabelButton
                 buttonStyle="round"
-                recurrence={'RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=' + props.recurringDays}
+                recurrence={
+                  'RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=' +
+                  props.recurringDays +
+                  ';UNTIL=' +
+                  format(new Date(props.lastDay), 'yyyyMMdd')
+                }
                 lightMode="bodyScheme"
                 Timezone="currentBrowser"
               ></add-to-calendar-button>

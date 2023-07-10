@@ -169,6 +169,7 @@ const GordonSchedulePanel = (props) => {
 
   const meetingDayArray = selectedCourseInfo?.meetingDays;
   const recurringDays = meetingDayArray?.map((day) => `${day}`).join(',');
+  console.log(courseInfo);
 
   if (props.myProf) {
     editDialog = (
