@@ -1,15 +1,10 @@
-@import '../../../../vars';
-
-// Leaving for now as the aesthetic of the news page takes shape
-// Styles will be cleaned up as the news project progresses
-
-// Make rows alternate white and grey
-/* stylelint-disable */
-// .news_list > section:nth-child(even) {
-//     background: $neutral-light-gray;
-// }
-
-// .news_list > section:nth-child(odd) {
-//     background: $neutral-white;
-// }
-/* stylelint-enable */
+.news {
+  &_title {
+    color: var(--mui-palette-neutral-contrastText);
+  }
+  &_header {
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+    padding: 10px;
+  }
+}
