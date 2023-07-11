@@ -78,7 +78,7 @@ const OfficeInfoList = ({
   const updateOfficeInfo =
     myProf && PersonType?.includes('fac') ? (
       <Typography align="left" className={styles.note}>
-        NOTE: Update your office hours in the Office Hours/Course Schedule Panel above.
+        NOTE: Update your office hours in the Schedule Panel above.
       </Typography>
     ) : null;
 

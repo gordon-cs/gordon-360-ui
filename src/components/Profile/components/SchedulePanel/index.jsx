@@ -20,7 +20,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
 import { formatDistanceToNow } from 'date-fns';
 import { Markup } from 'interweave';
-import schedulecontrol from 'services/schedulecontrol';
 import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
@@ -35,8 +34,6 @@ const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
   const [isExpanded, setIsExpanded] = useState(props, myProf ? false : true);
   const [disabled, setDisabled] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState();
-  const [isDoubleClick, setIsDoubleClick] = useState(false);
   const [description, setDescription] = useState('');
   const [modifiedTimeStamp, setModifiedTimeStamp] = useState();
   const [loading, setLoading] = useState(true);
@@ -83,8 +80,10 @@ const GordonSchedulePanel = (props) => {
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       setProfile(profileInfo);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
-      if (profileInfo) {
+      if (!profileInfo.PersonType?.includes('stu')) {
         setDescription(profileInfo.office_hours);
+      } else {
+        setDescription('');
       }
     } catch (e) {}
     setLoading(false);
@@ -139,7 +138,7 @@ const GordonSchedulePanel = (props) => {
       />
     );
   }
-
+  console.log(profile);
   if (props.myProf) {
     editDescriptionButton = (
       <Fragment>
@@ -169,11 +168,7 @@ const GordonSchedulePanel = (props) => {
             >
               <CardHeader
                 className={styles.accordionHeader}
-                title={
-                  profile.PersonType?.includes('stu')
-                    ? 'Course Schedule'
-                    : 'Office Hours/Course Schedule'
-                }
+                title={description === '' ? 'Schedule' : 'Office Hours & Course Schedule'}
               />
             </AccordionSummary>
             <AccordionDetails>
