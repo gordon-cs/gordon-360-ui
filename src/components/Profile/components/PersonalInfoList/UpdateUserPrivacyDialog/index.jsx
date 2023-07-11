@@ -8,6 +8,7 @@ const UpdateUserPrivacy = (username, field) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [group, setGroup] = useState('');
   const [groupList, setGroupList] = useState([]);
+  let viewer = '';
 
   // const handleSubmit = async () => {
   //   debugger;
@@ -52,12 +53,31 @@ const UpdateUserPrivacy = (username, field) => {
     userService.getPrivacySetting(username).then(setGroup);
   }, []);
 
+  // var json1 = JSON.parse(group);
+  // console.log(JSON.stringify(group));
+  // console.log(group.length);
+  // console.log(group.map((a) => `${a.Field} ${a.VisibilityGroup}`)?.join(', '));
+  // console.log('newline');
+  // console.log(group[0]['Field']);
+
+  /*if (group.length == 2) {
+    console.log(group[0].Field);
+  }*/
+  for (let i = 0; i < group.length; i++) {
+    if (group.length == 2) {
+      console.log(group[0].Field);
+      if (group[i].Field === field) {
+        viewer = group[i].VisibilityGroup;
+      }
+    }
+  }
+
   return (
     <div>
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         <SearchField
           name="privacy"
-          value={group}
+          value={viewer}
           updateValue={handlePrivacy}
           options={groupList}
           select
