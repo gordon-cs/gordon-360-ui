@@ -26,6 +26,7 @@ import sessionService from 'services/session';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import styles from './InvolvementProfile.module.css';
+import session from 'services/session';
 
 const CROP_DIM = 320; // pixels
 
@@ -424,12 +425,14 @@ const InvolvementProfile = () => {
                     ))}
                   </List>
                 </Grid>
-                <Grid item>
-                  <Typography>
-                    <strong>To join: </strong>
-                    {ActivityJoinInfo}
-                  </Typography>
-                </Grid>
+                {sessionCode == session.getCurrent() && (
+                  <Grid item>
+                    <Typography>
+                      <strong>To join: </strong>
+                      {ActivityJoinInfo}
+                    </Typography>
+                  </Grid>
+                )}
                 <Membership
                   involvementDescription={ActivityDescription}
                   isAdmin={isAdmin}

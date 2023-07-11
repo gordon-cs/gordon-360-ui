@@ -8,6 +8,7 @@ import membershipService, { Participation } from 'services/membership';
 import AdminCard from './components/AdminCard';
 import MemberList from './components/MemberList';
 import NonMemberButtons from './components/NonMemberButtons';
+import session from 'services/session';
 
 const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmin }) => {
   const [members, setMembers] = useState([]);
@@ -125,7 +126,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
           </Grid>
         </>
       );
-    } else {
+    } else if (sessionCode == session.getCurrent()) {
       content = (
         <Grid item>
           <NonMemberButtons
