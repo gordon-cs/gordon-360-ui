@@ -8,7 +8,6 @@ const EditDescriptionDialog = (props) => {
   const [formValid, setFormValid] = useState(true);
 
   var maxCharacter = 4096;
-
   const handleSubmit = (e) => {
     e.preventDefault();
     var desc = descInput;

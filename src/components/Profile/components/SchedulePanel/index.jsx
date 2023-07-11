@@ -88,8 +88,6 @@ const GordonSchedulePanel = (props) => {
     setLoading(false);
   };
 
-  console.log(description);
-
   const handleEditDescriptionOpen = () => {
     setEditDescriptionOpen(true);
   };
@@ -102,8 +100,8 @@ const GordonSchedulePanel = (props) => {
     setDisabled(false);
   };
 
-  const handleDescriptionSubmit = async () => {
-    await user.updateOfficeHours(descInput);
+  const handleDescriptionSubmit = async (descValue) => {
+    await user.updateOfficeHours(descValue);
     loadData(props.profile);
   };
 
@@ -175,11 +173,11 @@ const GordonSchedulePanel = (props) => {
                 {props.isOnline && (
                   <Grid container direction="row" item xs={12} lg={12} spacing={2}>
                     <Grid item lg={1}></Grid>
-                    <Grid item xs={4} lg={1} align="left" className={styles.officeHourText}>
+                    <Grid item xs={4} lg={1} align="left" className={styles.officeHourTitle}>
                       <Markup content="Office Hours: " />
                       {editDescriptionButton}
                     </Grid>
-                    <Grid item xs={7} lg={9} align="left">
+                    <Grid item xs={7} lg={9} align="left" className={styles.officeHourText}>
                       <Divider />
                       <Markup content={replaced} />
                       <Divider />
