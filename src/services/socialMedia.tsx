@@ -31,32 +31,30 @@ export const socialMediaInfo: {
   Facebook: {
     Icon: <FaFacebookF />,
     prefix: 'https://facebook.com/',
-    validationRegex: /^(?:https?:\/\/)?(?:www\.)?facebook\.com\/[A-Za-z0-9.]{1,}$/,
+    prefix2: 'https://www.facebook.com',
   },
   Twitter: {
     Icon: <FaTwitter />,
     prefix: 'https://twitter.com/',
-    validationRegex: /^(?:https?:\/\/)?(?:www\.)?twitter\.com\/[A-Za-z0-9.]{1,}$/,
+    prefix2: 'https://www.twitter.com',
   },
   LinkedIn: {
     Icon: <FaLinkedin />,
     prefix: 'https://linkedin.com/in/',
-    validationRegex: /^(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[A-Za-z0-9.]{1,}$/,
+    prefix2: 'https://www.linkedin.com/in/',
   },
   Instagram: {
     Icon: <FaInstagram />,
     prefix: 'https://www.instagram.com/',
-    validationRegex: /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/[A-Za-z0-9.]{1,}$/,
+    prefix2: 'https://instagram.com',
   },
   Handshake: {
     Icon: <FaHandshake />,
-    prefix: 'https://gordon.joinhandshake.com/users/',
-    prefix2: 'https://app.joinhandshake.com/users/',
-    validationRegex: /^(?:http?:\/\/)?(?:[a-zA-Z0-9-]+\.)?handshake\.com\/[A-Za-z0-9,]{1,}$/,
+    prefix: 'https://gordon.joinhandshake.com/',
+    prefix2: 'https://app.joinhandshake.com/',
   },
   Calendar: {
     Icon: <FaCalendar />,
     prefix: 'https://',
-    validationRegex: /^(?:https?:\/\/)[^\s/$.?#].[^\s]*$/,
   },
 };

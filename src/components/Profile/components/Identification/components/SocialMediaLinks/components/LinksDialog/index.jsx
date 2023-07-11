@@ -23,9 +23,9 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   };
 
   const validateField = (platform, value) => {
-    const urlPattern = /^(https?:\/\/)?([^\s/$.?#].[^\s]*)?$/i;
-    // Regular expression pattern for URL validation
-    const isValid = urlPattern.test(value);
+    const { prefix, prefix2 } = socialMediaInfo[platform];
+    const isValid =
+      value === '' || value.indexOf(prefix) === 0 || (prefix2 && value.indexOf(prefix2) === 0);
 
     if (isValid) {
       setFormErrors(formErrors.filter((error) => error !== platform));
