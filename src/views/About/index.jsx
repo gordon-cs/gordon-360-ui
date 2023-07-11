@@ -3,12 +3,13 @@ import versionService from 'services/version';
 import { projectName } from 'project-name';
 import contributors from './contributors.json';
 import origins from './origins.json';
+import versionUI from './version.json';
 import styles from './About.module.css';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
 
 const About = () => {
-  const [version, setVersion] = useState(null);
+  const [versionAPI, setVersion] = useState(null);
 
   useEffect(() => {
     versionService.getVersion().then(setVersion);
@@ -98,9 +99,31 @@ const About = () => {
           </a>
         </Typography>
         <hr />
-        <Typography variant="body2" paragraph>
-          Api Version - {version} UTC
-        </Typography>
+        {versionUI.map((section) => {
+          return (
+            <Fragment key={section.commit}>
+              <Grid container xs={6}>
+                <Grid item xs={1}>
+                  <Typography variant="body2">UI</Typography>
+                </Grid>
+                <Grid item xs={11}>
+                  <Typography variant="body2">
+                    {section.date} (Git SHA: {section.commit})
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={1}>
+                  <Typography variant="body2">API</Typography>
+                </Grid>
+                <Grid item xs={11}>
+                  <Typography variant="body2">
+                    {versionAPI?.BuildTime} (Git SHA: {versionAPI?.GitHash})
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Fragment>
+          );
+        })}
       </Grid>
     </Grid>
   );

@@ -52,6 +52,14 @@ const Profile = ({ profile, myProf }) => {
         </Grid>
       )}
 
+      <Grid item xs={12} lg={10}>
+        <Grid container spacing={2}>
+          <OfficeInfoList profile={profile} myProf={myProf} />
+
+          {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
+        </Grid>
+      </Grid>
+
       {(myProf || !profileIsStudent || canReadStudentSchedules) && (
         <Grid item xs={12} lg={10} align="center">
           <SchedulePanel profile={profile} myProf={myProf} isOnline={isOnline} />
@@ -60,7 +68,6 @@ const Profile = ({ profile, myProf }) => {
 
       <Grid item xs={12} lg={5}>
         <Grid container spacing={2}>
-          <OfficeInfoList profile={profile} myProf={myProf} />
           <PersonalInfoList
             profile={profile}
             myProf={myProf}
