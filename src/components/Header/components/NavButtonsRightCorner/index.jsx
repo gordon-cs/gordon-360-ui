@@ -3,11 +3,11 @@ import List from '@mui/material/List';
 import Popover from '@mui/material/Popover';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
+import PaletteSwitcherDialog from 'components/PaletteSwitcherDialog';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavButtonsRightCorner.module.css';
-// import { ModeSwitcher } from 'components/ThemeModeSwitcher'; //Uncomment to test dark mode
 
 /**
  *
@@ -20,6 +20,7 @@ import styles from './NavButtonsRightCorner.module.css';
  */
 const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl }) => {
   const [linkOpen, setLinkOpen] = useState(false);
+  const [paletteOptionsOpen, setPaletteOptionsOpen] = useState(false);
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
@@ -51,6 +52,16 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     />
   );
 
+  const paletteOptionsButton = (
+    <GordonNavButton
+      onLinkClick={() => {
+        onClose();
+        setPaletteOptionsOpen(true);
+      }}
+      openUnavailableDialog={openDialogBox}
+      linkName={'Appearance'}
+    />
+  );
 
   const helpButton = <GordonNavButton onLinkClick={onClose} linkName={'Help'} linkPath={'/help'} />;
 
@@ -109,11 +120,10 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
 
             {helpButton}
             {aboutButton}
+            {paletteOptionsButton}
             {feedbackButton}
             {adminButton}
             {signOutButton}
-            {/* <ModeSwitcher /> */}
-            {/* Uncomment above button to test dark mode */}
           </List>
         </Popover>
       </div>
@@ -122,6 +132,11 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
         handleLinkClickOpen={() => setLinkOpen(true)}
         handleLinkClose={() => setLinkOpen(false)}
         linkopen={linkOpen}
+      />
+      <PaletteSwitcherDialog
+        handleOpen={() => setPaletteOptionsOpen(true)}
+        handleClose={() => setPaletteOptionsOpen(false)}
+        dialogOpen={paletteOptionsOpen}
       />
     </>
   );
