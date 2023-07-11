@@ -10,28 +10,7 @@ const UpdateUserPrivacy = (username, field) => {
   const [groupList, setGroupList] = useState([]);
   let viewer = '';
 
-  // const handleSubmit = async () => {
-  //   debugger;
-  //   try {
-  //     await userService.setUserPrivacy({ Field: field, VisibilityGroup: group });
-  //     setSnackbar({
-  //       message: 'Your office location will update within a couple hours.',
-  //       severity: 'success',
-  //       open: true,
-  //     });
-  //   } catch {
-  //     setSnackbar({
-  //       message: 'Office location failed to update. Please contact CTS.',
-  //       severity: 'error',
-  //       open: true,
-  //     });
-  //   }
-  // };
-
   const handlePrivacy = async (event) => {
-    // setGroup(event.target.value);
-    // handleSubmit();
-    debugger;
     try {
       await userService.setUserPrivacy({ Field: field, VisibilityGroup: event.target.value });
       setSnackbar({
@@ -50,21 +29,14 @@ const UpdateUserPrivacy = (username, field) => {
 
   useEffect(() => {
     userService.getVisibilityGroups().then(setGroupList);
-    userService.getPrivacySetting(username).then(setGroup);
   }, []);
 
-  // var json1 = JSON.parse(group);
-  // console.log(JSON.stringify(group));
-  // console.log(group.length);
-  // console.log(group.map((a) => `${a.Field} ${a.VisibilityGroup}`)?.join(', '));
-  // console.log('newline');
-  // console.log(group[0]['Field']);
+  useEffect(() => {
+    userService.getPrivacySetting(username).then(setGroup);
+  }, [group]);
 
-  /*if (group.length == 2) {
-    console.log(group[0].Field);
-  }*/
-  for (let i = 0; i < group.length; i++) {
-    if (group.length == 2) {
+  if (group.length != 0) {
+    for (let i = 0; i < group.length; i++) {
       console.log(group[0].Field);
       if (group[i].Field === field) {
         viewer = group[i].VisibilityGroup;
