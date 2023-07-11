@@ -138,7 +138,7 @@ const GordonSchedulePanel = (props) => {
       />
     );
   }
-  console.log(profile);
+
   if (props.myProf) {
     editDescriptionButton = (
       <Fragment>
