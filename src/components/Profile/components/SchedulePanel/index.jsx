@@ -47,6 +47,7 @@ const GordonSchedulePanel = (props) => {
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
+  const [profile, setProfile] = useState();
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -80,6 +81,7 @@ const GordonSchedulePanel = (props) => {
     try {
       const profileInfo = await user.getProfileInfo(searchedUser.AD_Username);
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
+      setProfile(profileInfo);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
       if (profileInfo) {
         setDescription(profileInfo.office_hours);
@@ -110,7 +112,6 @@ const GordonSchedulePanel = (props) => {
   const reloadHandler = () => {
     setReloadCall((val) => !val);
   };
-
   const replaced = description;
 
   const { classes } = props;
@@ -166,11 +167,18 @@ const GordonSchedulePanel = (props) => {
               id="panel1a-header"
               className={styles.header}
             >
-              <CardHeader className={styles.accordionHeader} title={'Course Schedule'} />
+              <CardHeader
+                className={styles.accordionHeader}
+                title={
+                  profile.PersonType?.includes('stu')
+                    ? 'Course Schedule'
+                    : 'Office Hours/Course Schedule'
+                }
+              />
             </AccordionSummary>
             <AccordionDetails>
               <Grid container direction="row" justifyContent="center" align="left" spacing={4}>
-                {props.isOnline && (
+                {props.isOnline && !profile.PersonType?.includes('stu') && (
                   <Grid container direction="row" item xs={12} lg={12} spacing={2}>
                     <Grid item lg={1}></Grid>
                     <Grid item xs={4} lg={1} align="left" className={styles.officeHourTitle}>

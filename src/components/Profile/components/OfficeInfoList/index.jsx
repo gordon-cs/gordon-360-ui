@@ -42,10 +42,6 @@ const OfficeInfoList = ({
     />
   ) : null;
 
-  const officeHours = office_hours ? (
-    <ProfileInfoListItem title="Office Hours:" contentText={office_hours} />
-  ) : null;
-
   const room =
     BuildingDescription || OnCampusRoom ? (
       <ProfileInfoListItem
@@ -82,15 +78,7 @@ const OfficeInfoList = ({
   const updateOfficeInfo =
     myProf && PersonType?.includes('fac') ? (
       <Typography align="left" className={styles.note}>
-        NOTE: Update your office info{' '}
-        <a
-          href="https://go.gordon.edu/general/myaccount.cfm"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="gc360_text_link"
-        >
-          here
-        </a>
+        NOTE: Update your office hours in the Office Hours/Course Schedule Panel above.
       </Typography>
     ) : null;
 
@@ -106,7 +94,6 @@ const OfficeInfoList = ({
             {room}
             {mailstop}
             {officePhone}
-            {officeHours}
             {updateOfficeInfo}
           </List>
         </CardContent>
