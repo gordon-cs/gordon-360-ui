@@ -213,10 +213,10 @@ const DiningBalance = () => {
     <Card>
       <CardContent>
         <Grid container direction="row" alignItems="center" spacing={0}>
-          {/* <Grid item xs={7} align="left">
+          <Grid item xs={7} align="left">
             <CardHeader title="Dining Balance" />
-          </Grid> */}
-          {/* <Grid item xs={5} align="right">
+          </Grid>
+          <Grid item xs={5} align="right">
             <Button
               variant="contained"
               style={{
@@ -243,8 +243,8 @@ const DiningBalance = () => {
                 <EditIcon />
               </IconButton>
             </Grid>
-          </Grid> */}
-          {/* <Grid container direction="row" alignSelf="right" className={styles.value}>
+          </Grid>
+          {/* <Grid container direction="row" alignSelf="right">
             <Grid item xs={1} align="right">
               <IconButton
                 title="Change Meal Plan"
@@ -272,21 +272,10 @@ const DiningBalance = () => {
               </Button>
             </Grid>
           </Grid> */}
-          <Grid item xs={7} align="left">
+          {/* <Grid item xs={7} align="left">
             <CardHeader title="Dining Balance" />
           </Grid>
           <Grid item xs={5} align="right" className={styles.value}>
-            <Grid item>
-              <IconButton
-                title="Change Meal Plan"
-                className={styles.gc360_my_profile_edit_icon}
-                component={Link}
-                href="https://www.gordon.edu/mealplan"
-                size="small"
-              >
-                <EditIcon />
-              </IconButton>
-            </Grid>
             <Grid item>
               <Button
                 variant="contained"
@@ -302,7 +291,18 @@ const DiningBalance = () => {
                 TODAY'S MENU
               </Button>
             </Grid>
-          </Grid>
+            <Grid item>
+              <IconButton
+                title="Change Meal Plan"
+                className={styles.gc360_my_profile_edit_icon}
+                component={Link}
+                href="https://www.gordon.edu/mealplan"
+                size="small"
+              >
+                <EditIcon />
+              </IconButton>
+            </Grid>
+          </Grid> */}
         </Grid>
         {content}
       </CardContent>
