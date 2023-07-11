@@ -175,7 +175,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, 'HomePhone')}
+      ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, 'HomePhone')}
       privateInfo={isHomePhonePrivate}
       myProf={myProf}
     />
