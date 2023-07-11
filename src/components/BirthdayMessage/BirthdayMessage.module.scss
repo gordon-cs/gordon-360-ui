@@ -1,0 +1,17 @@
+.message_card {
+  cursor: pointer;
+  background-color: transparent;
+  box-shadow: none;
+  margin-bottom: 40px;
+}
+
+.confetti {
+  position: fixed;
+  z-index: 999999;
+  top: 0;
+  left: 50vw;
+}
+
+.banner {
+  width: 100%;
+}

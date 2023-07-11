@@ -77,6 +77,7 @@ const searchPageTitle = (
   <>
     Search the
     <b className={styles.search_field_list_gordon_text}> Gordon </b>
+
     Community
   </>
 );
@@ -164,7 +165,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       // Only students and facstaff search students by default - alumni aren't allowed to search students
       includeStudent: isStudent || isFacStaff,
       // Only alumni search alumni by default
-      includeAlumni: isAlumni,
+      includeAlumni: isAlumni && !isStudent && !isFacStaff,
     }),
     [isAlumni, isFacStaff, isStudent],
   );
@@ -344,6 +345,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const PeopleSearchCheckbox = (
     <Grid item xs={8} md={6}>
       <FormLabel component="label" text-align="center">
+
         Include: &nbsp;
       </FormLabel>
       {loading ? (
@@ -414,6 +416,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 Icon={Person}
               />
             </Grid>
+
 
             <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
               <SearchField
@@ -574,6 +577,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
         </CardContent>
 
         <CardActions>
+
           <Button
             variant="contained"
             color="neutral"
