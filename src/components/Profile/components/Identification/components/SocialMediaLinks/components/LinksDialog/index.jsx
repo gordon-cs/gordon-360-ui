@@ -23,7 +23,9 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   };
 
   const validateField = (platform, value) => {
-    value === '' || value.indexOf(prefix) === 0 || (prefix2 && value.indexOf(prefix2) === 0);
+    const urlPattern = /^(https?:\/\/)?([^\s/$.?#].[^\s]*)?$/i;
+    // Regular expression pattern for URL validation
+    const isValid = urlPattern.test(value);
 
     if (isValid) {
       setFormErrors(formErrors.filter((error) => error !== platform));
