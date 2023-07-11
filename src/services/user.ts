@@ -250,9 +250,9 @@ const setPlannedGraduationYear = (value: number) =>
   http.put(`profiles/planned_graduation_year`, value);
 
 const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
-  http.patch(`profiles/office_location`, OfficeLocation);
+  http.put(`profiles/office_location`, OfficeLocation);
 
-const updateOfficeHours = (value: string) => http.patch(`profiles/office_hours`, value);
+const updateOfficeHours = (value: string) => http.put(`profiles/office_hours`, value);
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public

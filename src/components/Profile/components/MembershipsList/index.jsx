@@ -57,12 +57,24 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
 
   const transcriptButton = myProf && (
     <Grid container justifyContent="center">
-      <Link className="gc360_link" to="/transcript">
+      <Link to="/transcript">
         <Button variant="contained" className={styles.memberships_card_content_button}>
           Experience Transcript
         </Button>
       </Link>
     </Grid>
+  );
+  const noteInfo = myProf && (
+    <div align="left" className={styles.note}>
+      <Typography>NOTE:</Typography>
+      <ul>
+        <li>
+          <Typography>
+            Shaded areas are visible only to you and other members of the same club session.
+          </Typography>
+        </li>
+      </ul>
+    </div>
   );
 
   return (
@@ -76,6 +88,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
             {transcriptButton}
             <List>
               <MembershipsList />
+              {noteInfo}
             </List>
           </CardContent>
         </Card>
