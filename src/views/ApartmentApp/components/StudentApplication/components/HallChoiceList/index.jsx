@@ -32,7 +32,6 @@ const HallChoiceList = ({
 }) => {
   /** @type {[ApartmentHall[], Dispatch<SetStateAction<ApartmentHall[]>>]} Array of apartment halls */
   const [halls, setHalls] = useState([]); // array of hall names from backend
-  const [clickCount, setClickCount] = useState(0);
 
   useEffect(() => {
     /**
@@ -47,20 +46,7 @@ const HallChoiceList = ({
     };
 
     loadApartmentHalls();
-
-    if (apartmentChoices?.length >= 5) {
-      setClickCount(5);
-    } else {
-      setClickCount(apartmentChoices?.length);
-    }
-  }, [apartmentChoices]);
-
-  const handleAddHallClick = () => {
-    // Only continue if click count is less than 5
-    if (apartmentChoices?.length < 5) {
-      onHallAdd();
-    }
-  };
+  }, []);
 
   return (
     <Card>
@@ -95,7 +81,7 @@ const HallChoiceList = ({
               variant="outlined"
               color="primary"
               startIcon={<AddIcon fontSize="inherit" />}
-              onClick={handleAddHallClick}
+              onClick={onHallAdd}
             >
               Add a Hall
             </Button>

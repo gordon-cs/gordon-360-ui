@@ -72,7 +72,7 @@ const HallChoiceListItem = ({
             <FormControl fullWidth>
               <FormLabel>Rank</FormLabel>
               <Select
-                disabled={false}
+                disabled={disabled}
                 value={hallRank}
                 onChange={(event) => onHallInputChange(String(event.target.value), hallName, index)}
                 input={<Input id={'rank' + index} />}

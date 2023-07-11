@@ -443,15 +443,17 @@ const StudentApplication = ({ userProfile }) => {
    * Callback for hall list add button
    */
   const handleHallAdd = () => {
-    const newPlaceholderHall = {
-      ApplicationID: applicationDetails.ApplicationID,
-      HallRank: (applicationDetails.ApartmentChoices?.length ?? 0) + 1,
-      HallName: '',
-    };
-    setApplicationDetails((prevApplicationDetails) => ({
-      ...prevApplicationDetails,
-      ApartmentChoices: [...(prevApplicationDetails.ApartmentChoices ?? []), newPlaceholderHall],
-    }));
+    if ((applicationDetails.ApartmentChoices?.length ?? 0) < 5) {
+      const newPlaceholderHall = {
+        ApplicationID: applicationDetails.ApplicationID,
+        HallRank: (applicationDetails.ApartmentChoices?.length ?? 0) + 1,
+        HallName: '',
+      };
+      setApplicationDetails((prevApplicationDetails) => ({
+        ...prevApplicationDetails,
+        ApartmentChoices: [...(prevApplicationDetails.ApartmentChoices ?? []), newPlaceholderHall],
+      }));
+    }
   };
 
   /**
