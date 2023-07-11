@@ -175,7 +175,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={myProf && UpdateUserPrivacy('HomePhone')}
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, 'HomePhone')}
       privateInfo={isHomePhonePrivate}
       myProf={myProf}
     />
@@ -200,7 +200,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={myProf && UpdateUserPrivacy('MobilePhone')}
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, 'MobilePhone')}
       privateInfo={isMobilePhonePrivate}
       myProf={myProf}
     />
@@ -223,7 +223,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </span>
         </>
       }
-      ContentIcon={myProf && UpdateUserPrivacy('Country')}
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, 'Country')}
       privateInfo={isAddressPrivate}
       myProf={myProf}
     />

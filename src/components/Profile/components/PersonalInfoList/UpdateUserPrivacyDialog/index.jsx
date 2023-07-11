@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
-const UpdateUserPrivacy = (field) => {
+const UpdateUserPrivacy = (username, field) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  // const [group, setGroup] = useState('');
-  const [groups, setGroups] = useState([]);
+  const [group, setGroup] = useState('');
+  const [groupList, setGroupList] = useState([]);
 
   // const handleSubmit = async () => {
   //   debugger;
@@ -48,7 +48,8 @@ const UpdateUserPrivacy = (field) => {
   };
 
   useEffect(() => {
-    userService.getVisibilityGroups().then(setGroups);
+    userService.getVisibilityGroups().then(setGroupList);
+    userService.getPrivacySetting(username).then(setGroup);
   }, []);
 
   return (
@@ -56,9 +57,9 @@ const UpdateUserPrivacy = (field) => {
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         <SearchField
           name="privacy"
-          // value={group}
+          value={group}
           updateValue={handlePrivacy}
-          options={groups}
+          options={groupList}
           select
           size={120}
         />
