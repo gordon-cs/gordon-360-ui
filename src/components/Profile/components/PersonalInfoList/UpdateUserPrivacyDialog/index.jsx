@@ -35,12 +35,10 @@ const UpdateUserPrivacy = (username, field) => {
     userService.getPrivacySetting(username).then(setGroup);
   }, [group]);
 
-  if (group.length != 0) {
-    for (let i = 0; i < group.length; i++) {
-      console.log(group[0].Field);
-      if (group[i].Field === field) {
-        viewer = group[i].VisibilityGroup;
-      }
+  for (let i = 0; i < group.length; i++) {
+    console.log(group[0].Field);
+    if (group[i].Field === field) {
+      viewer = group[i].VisibilityGroup;
     }
   }
 
