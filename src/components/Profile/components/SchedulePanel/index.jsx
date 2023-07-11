@@ -47,7 +47,6 @@ const GordonSchedulePanel = (props) => {
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
-  const [asdf, setAsdf] = useState();
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -79,29 +78,18 @@ const GordonSchedulePanel = (props) => {
 
   const loadData = async (searchedUser) => {
     try {
-      const scheduleControlInfo = await user.getProfileInfo(searchedUser.AD_Username);
+      const profileInfo = await user.getProfileInfo(searchedUser.AD_Username);
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
-      const de = await user.getProfileInfo(searchedUser.AD_Username);
-      setAsdf(de);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
-      if (scheduleControlInfo) {
-        setDescription(
-          scheduleControlInfo.office_hours
-            ? // We decided to leave the regex code for now because the data stored in the database
-              // before changing the api is still in the regex form.
-              scheduleControlInfo.office_hours
-                .replace(new RegExp('SlSh', 'g'), '/')
-                .replace(new RegExp('CoLn', 'g'), ':')
-                .replace(new RegExp('dOT', 'g'), '.')
-            : '',
-        );
-        setModifiedTimeStamp(scheduleControlInfo.ModifiedTimeStamp);
+      if (profileInfo) {
+        setDescription(profileInfo.office_hours);
       }
     } catch (e) {}
     setLoading(false);
   };
-  // const asdf = user.getProfileInfo;
-  console.log({ asdf });
+
+  console.log(description);
+
   const handleEditDescriptionOpen = () => {
     setEditDescriptionOpen(true);
   };
@@ -114,8 +102,8 @@ const GordonSchedulePanel = (props) => {
     setDisabled(false);
   };
 
-  const handleDescriptionSubmit = async (descValue) => {
-    await user.updateOfficeHours(descValue);
+  const handleDescriptionSubmit = async () => {
+    await user.updateOfficeHours(descInput);
     loadData(props.profile);
   };
 
