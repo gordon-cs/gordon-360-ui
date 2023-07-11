@@ -12,19 +12,9 @@ import GordonOffline from 'components/GordonOffline';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
-import { gordonColors } from 'theme';
 import BannerAdmin from './components/BannerAdmin';
-import styles from 'app.module.css';
-
-const style = {
-  uploadButton: {
-    background: gordonColors.primary.cyan,
-    color: 'white',
-  },
-  cardAction: {
-    justifyContent: 'center',
-  },
-};
+import styles from './BannerSubmission.module.css';
+import styles2 from 'app.module.css';
 
 const BannerSubmission = () => {
   const authenticated = useIsAuthenticated();
@@ -50,7 +40,7 @@ const BannerSubmission = () => {
           <CardHeader
             title="Advertise your club or event on the 360 Homepage!"
             titleTypographyProps={{ variant: 'h4', align: 'center' }}
-            className={styles.gc360_header}
+            className={styles2.gc360_header}
           />
           <CardContent>
             <Typography variant="h6">Banner Image Guidelines</Typography>
@@ -65,10 +55,10 @@ const BannerSubmission = () => {
               accepted.
             </Typography>
           </CardContent>
-          <CardActions style={style.cardAction}>
+          <CardActions className={styles.banner_submission_card_action}>
             <Button
               variant="contained"
-              style={style.uploadButton}
+              className={styles.banner_submission_upload_button}
               href="mailto:360@gordon.edu?Subject=Banner Image Submission"
             >
               Email the 360 Team
