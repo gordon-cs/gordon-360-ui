@@ -80,7 +80,7 @@ const GordonSchedulePanel = (props) => {
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       setProfile(profileInfo);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
-      if (!profileInfo.PersonType?.includes('stu')) {
+      if (profileInfo.PersonType?.includes('fac')) {
         setDescription(profileInfo.office_hours);
       } else {
         setDescription('');
@@ -173,7 +173,7 @@ const GordonSchedulePanel = (props) => {
             </AccordionSummary>
             <AccordionDetails>
               <Grid container direction="row" justifyContent="center" align="left" spacing={4}>
-                {props.isOnline && !profile.PersonType?.includes('stu') && (
+                {props.isOnline && profile.PersonType?.includes('fac') && (
                   <Grid container direction="row" item xs={12} lg={12} spacing={2}>
                     <Grid item lg={1}></Grid>
                     <Grid item xs={4} lg={1} align="left" className={styles.officeHourTitle}>
