@@ -17,36 +17,33 @@ const ScheduleDialog = (props) => {
   return (
     <Dialog open={props.scheduleDialogOpen} keepMounted fullWidth={true} maxWidth="xs">
       <div>
-        <DialogTitle className={styles.dialogTitle} align="center">
-          Course Information
-        </DialogTitle>
-        <DialogContent>
-          <Typography className={styles.dialogTextLarge} align="left">
-            Title: {props.courseTitle}
-          </Typography>
-          <Typography className={styles.dialogTextMedium} align="left">
-            Room: {props.courseLocation}
-          </Typography>
-          <Typography className={styles.dialogTextMedium} align="left">
-            Time:
-            {format(
-              new Date(props.selectedCourseInfo ? props.selectedCourseInfo.start : null),
-              " hh:mm aaaaa'm' ",
-            )}
-            -
-            {format(
-              new Date(props.selectedCourseInfo ? props.selectedCourseInfo.end : null),
-              " hh:mm aaaaa'm' ",
-            )}
-          </Typography>
-          <Typography className={styles.dialogTextMedium} align="left">
-            Week Day(s): {props.recurringDays}
-          </Typography>
-          <Typography className={styles.dialogTextMedium} align="left">
-            Term Date: {format(new Date(props.firstDay), 'yyyy-MM-dd')} to
-            {format(new Date(props.lastDay), ' yyyy-MM-dd')}
-          </Typography>
-        </DialogContent>
+        {props.selectedCourseInfo && (
+          <>
+            <DialogTitle className={styles.dialogTitle} align="center">
+              Course Information
+            </DialogTitle>
+            <DialogContent>
+              <Typography className={styles.dialogTextLarge} align="left">
+                Title: {props.courseTitle}
+              </Typography>
+              <Typography className={styles.dialogTextMedium} align="left">
+                Room: {props.courseLocation}
+              </Typography>
+              <Typography className={styles.dialogTextMedium} align="left">
+                Time:
+                {format(new Date(props.selectedCourseInfo.start), " hh:mm aaaaa'm' ")}-
+                {format(new Date(props.selectedCourseInfo.end), " hh:mm aaaaa'm' ")}
+              </Typography>
+              <Typography className={styles.dialogTextMedium} align="left">
+                Week Day(s): {props.recurringDays}
+              </Typography>
+              <Typography className={styles.dialogTextMedium} align="left">
+                Term Date: {format(new Date(props.firstDay), 'yyyy-MM-dd')} to
+                {format(new Date(props.lastDay), ' yyyy-MM-dd')}
+              </Typography>
+            </DialogContent>
+          </>
+        )}
         <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
           {/* There are two separate add-to-calendar button elements because Google calendar is the only
           calendar that supports recurring events, the other add-to-calendar button is for the other

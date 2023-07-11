@@ -52,6 +52,9 @@ const GordonSchedulePanel = (props) => {
   const [selectedCourseInfo, setSelectedCourseInfo] = useState();
   const [firstDay, setFirstDay] = useState('');
   const [lastDay, setLastDay] = useState('');
+  const [recurringDays, setRecurringDays] = useState([]);
+  const [courseTitle, setCourseTitle] = useState('');
+  const [courseLocation, setCourseLocation] = useState('');
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -125,6 +128,9 @@ const GordonSchedulePanel = (props) => {
   const handleScheduleDialogOpen = useCallback((calEvent) => {
     if (props.myProf) {
       setScheduleDialogOpen(true);
+      setRecurringDays(calEvent.meetingDays.map((day) => `${day}`).join(', '));
+      setCourseTitle(calEvent.title.split('in')[0]);
+      setCourseLocation(calEvent.title.split('in')[1]);
       setSelectedCourseInfo(calEvent);
     }
   }, []);
@@ -164,14 +170,6 @@ const GordonSchedulePanel = (props) => {
       )}
     </div>
   );
-
-  // We had to make the meeting day array in to a string with commas because the add-to-calendar
-  // required a string of weekdays for setting the recurring days
-
-  const meetingDayArray = selectedCourseInfo?.meetingDays;
-  const recurringDays = meetingDayArray?.map((day) => `${day}`).join(', ');
-  const courseTitle = selectedCourseInfo?.title.split('in')[0];
-  const courseLocation = selectedCourseInfo?.title.split('in')[1];
 
   if (props.myProf) {
     editDialog = (
