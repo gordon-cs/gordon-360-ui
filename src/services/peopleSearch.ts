@@ -1,4 +1,5 @@
 import http from './http';
+import { SelectOption } from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
 export enum Class {
   'Unassigned',
@@ -7,7 +8,7 @@ export enum Class {
   'Junior',
   'Senior',
   'Graduate Student',
-  'Undegraduate Conferred',
+  'Undergraduate Conferred',
   'Graduate Conferred',
 }
 
@@ -65,13 +66,32 @@ export type PeopleSearchQuery = {
   major: string;
   minor: string;
   residence_hall: string;
-  class_year: keyof typeof Class | '';
+  class_standing: keyof typeof Class | '';
+  graduation_year: string;
   home_town: string;
   state: string;
   country: string;
   department: string;
   building: string;
   relationship_status?: string;
+  initial_year: string;
+  final_year: string;
+  involvement: string;
+};
+
+/**
+ * Match any department whose name starts with one of these prefixes:
+ *  - "Office of (the) "
+ *  - "Department of "
+ *  - "Center for "
+ */
+const DepartmentPrefixRegex = /^(Office of(?: the)?|Department of|Center for) (.*)$/;
+const getDepartmentDropdownOptions = async (): Promise<SelectOption[]> => {
+  const departmentNames = await getDepartments();
+  return departmentNames.map<SelectOption>((departmentName) => ({
+    value: departmentName,
+    label: departmentName.replace(DepartmentPrefixRegex, '$2 ($1)'),
+  }));
 };
 
 const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
@@ -81,12 +101,16 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     major: searchFields.major,
     minor: searchFields.minor,
     hall: searchFields.residence_hall,
-    classType: searchFields.class_year === '' ? '' : Class[searchFields.class_year],
+    classType: searchFields.class_standing === '' ? '' : Class[searchFields.class_standing],
+    preferredClassYear: searchFields.graduation_year,
+    initialYear: searchFields.initial_year,
+    finalYear: searchFields.final_year,
     homeCity: searchFields.home_town,
     state: searchFields.state,
     country: searchFields.country,
     department: searchFields.department,
     building: searchFields.building,
+    involvement: searchFields.involvement,
   })
     .filter(([_key, value]) => Boolean(value))
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
@@ -103,7 +127,6 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
   if (searchFields.includeAlumni) {
     params += '&accountTypes=alumni';
   }
-
   return http.get(`accounts/advanced-people-search?${params}`);
 };
 
@@ -117,13 +140,17 @@ const getDepartments = (): Promise<string[]> => http.get(`advancedsearch/departm
 
 const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
+const getInvolvements = (): Promise<string[]> => http.get(`advancedsearch/involvements`);
+
 const peopleSearchService = {
   search,
+  getDepartmentDropdownOptions,
+  getDepartments,
   getMajors,
   getMinors,
   getHalls,
-  getDepartments,
   getBuildings,
+  getInvolvements,
 };
 
 export default peopleSearchService;

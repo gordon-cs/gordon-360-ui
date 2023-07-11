@@ -1,15 +1,15 @@
 import { Fragment, useState, useEffect } from 'react';
-import { gordonColors } from 'theme';
 import versionService from 'services/version';
 import { projectName } from 'project-name';
 import contributors from './contributors.json';
 import origins from './origins.json';
+import versionUI from './version.json';
 import styles from './About.module.css';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
 
 const About = () => {
-  const [version, setVersion] = useState(null);
+  const [versionAPI, setVersion] = useState(null);
 
   useEffect(() => {
     versionService.getVersion().then(setVersion);
@@ -22,15 +22,12 @@ const About = () => {
           <CardHeader
             className={styles.about_title}
             title="Conceived and Built at Gordon College"
-            subheader="By Students for Students"
             titleTypographyProps={{ variant: 'h4' }}
           />
+          <Typography className={styles.about_subheader}>By Students for Students</Typography>
           <CardContent>
             <Card>
-              <CardHeader
-                className={styles.about_header}
-                title={`${projectName}: For Students by Students`}
-              />
+              <CardHeader className={styles.about_header} title={`${projectName}`} />
               <CardContent>
                 <Typography variant="body1" component="ul" style={{ textAlign: 'start' }}>
                   <li>Mobile-friendly, responsive web portal</li>
@@ -44,7 +41,6 @@ const About = () => {
                 </Typography>
               </CardContent>
             </Card>
-
             <Card>
               <CardHeader className={styles.about_header} title="Institutional Benefits" />
               <CardContent>
@@ -60,7 +56,6 @@ const About = () => {
                 </Typography>
               </CardContent>
             </Card>
-
             <Card>
               <CardHeader className={styles.about_header} title="Origins" />
               <CardContent>
@@ -78,7 +73,6 @@ const About = () => {
                 })}
               </CardContent>
             </Card>
-
             <Card>
               <CardHeader className={styles.about_header} title="GoCo Tech Lab Developers" />
               <CardContent>
@@ -101,13 +95,35 @@ const About = () => {
         <Typography variant="subtitle1">
           Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
-            <Button style={{ color: gordonColors.primary.cyan }}>Report to CTS</Button>
+            <Button color="secondary">Report to CTS</Button>
           </a>
         </Typography>
         <hr />
-        <Typography variant="body2" paragraph>
-          Api Version - {version} UTC
-        </Typography>
+        {versionUI.map((section) => {
+          return (
+            <Fragment key={section.commit}>
+              <Grid container xs={6}>
+                <Grid item xs={1}>
+                  <Typography variant="body2">UI</Typography>
+                </Grid>
+                <Grid item xs={11}>
+                  <Typography variant="body2">
+                    {section.date} (Git SHA: {section.commit})
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={1}>
+                  <Typography variant="body2">API</Typography>
+                </Grid>
+                <Grid item xs={11}>
+                  <Typography variant="body2">
+                    {versionAPI?.BuildTime} (Git SHA: {versionAPI?.GitHash})
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Fragment>
+          );
+        })}
       </Grid>
     </Grid>
   );

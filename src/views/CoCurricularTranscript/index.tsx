@@ -1,6 +1,6 @@
+import { useIsAuthenticated } from '@azure/msal-react';
 import { Print } from '@mui/icons-material';
 import { Card, CardContent, CardHeader, Fab, Grid, Typography } from '@mui/material';
-import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import userService, { Profile } from 'services/user';
 import styles from './CoCurricularTranscript.module.css';
 import Activity from './Components/Activity';
 import Experience from './Components/Experience';
+import { exampleTranscriptItems, exampleStudentProfile } from './guestTranscript';
 
 const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
   experiences: 'Experiences',
@@ -20,28 +21,29 @@ const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
 const CoCurricularTranscript = () => {
   const [loading, setLoading] = useState(true);
   const [transcriptItems, setTranscriptItems] = useState<TranscriptItems | undefined>();
-  const { profile, loading: loadingProfile } = useUser();
+  const isAuthenticated = useIsAuthenticated();
+  const { profile: userProfile, loading: loadingProfile } = useUser();
+  const profile = isAuthenticated ? userProfile : exampleStudentProfile;
 
   useEffect(() => {
     const loadTranscript = async () => {
-      if (!profile) return;
-
-      setLoading(true);
-
-      await transcriptService.getItems(profile.AD_Username).then(setTranscriptItems);
-
+      if (isAuthenticated) {
+        if (!profile) {
+          return;
+        }
+        setLoading(true);
+        const transcriptItems = await transcriptService.getItems(profile.AD_Username);
+        setTranscriptItems(transcriptItems);
+      } else {
+        setTranscriptItems(exampleTranscriptItems);
+      }
       setLoading(false);
     };
-
     loadTranscript();
-  }, [profile]);
+  }, [isAuthenticated, profile]);
 
   if (loading || loadingProfile) {
     return <GordonLoader />;
-  }
-
-  if (!profile) {
-    return <GordonUnauthenticated feature={'your experience transcript'} />;
   }
 
   return (
@@ -54,7 +56,7 @@ const CoCurricularTranscript = () => {
                 Gordon College Experience Transcript
               </Typography>
             }
-            subheader={<SubHeader profile={profile} />}
+            subheader={<SubHeader profile={profile ?? exampleStudentProfile} />}
             disableTypography
           />
           <CardContent>

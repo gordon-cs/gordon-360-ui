@@ -1,6 +1,8 @@
-import { CardContent, Collapse, Grid, Typography } from '@mui/material';
+import { Button, CardContent, Collapse, Grid, Typography } from '@mui/material';
 import { useState } from 'react';
 import styles from './EventItem.module.css';
+import 'add-to-calendar-button';
+import { format } from 'date-fns';
 
 const EventItem = ({ event }) => {
   const [expanded, setExpanded] = useState(false);
@@ -32,6 +34,21 @@ const EventItem = ({ event }) => {
           <Typography type="caption" className={styles.descriptionText}>
             {event.Description || 'No description available'}
           </Typography>
+          {event.StartDate !== '' && event.EndDate !== '' && (
+            <add-to-calendar-button
+              name={event.title}
+              options="'Apple','Google','Outlook.com','MicrosoftTeams'"
+              location={event.location}
+              startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
+              endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
+              startTime={format(new Date(event.StartDate), 'HH:mm')}
+              endTime={format(new Date(event.EndDate), 'HH:mm')}
+              //default timeZone setting is "currentBrowser", and saved setting "America/New_York" if needed in case
+              timeZone="currentBrowser"
+              description={event.Description}
+              onClick={() => setExpanded((e) => !e)}
+            ></add-to-calendar-button>
+          )}
         </CardContent>
       </Collapse>
     </Grid>

@@ -46,6 +46,15 @@ const post = <TResponse>(
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'post', JSON.stringify(body), setContentTypeJSON(headers));
 
+// PATCH is required to be in all caps.  http services automatically capitalizes headers for post,put,get,del... but not patch.
+const patch = <TResponse>(
+  endpoint: string,
+  body: Object = '',
+  headers = new Headers(),
+): Promise<TResponse> =>
+  makeRequest(endpoint, 'PATCH', JSON.stringify(body), setContentTypeJSON(headers));
+
+
 const del = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'delete');
 
 const apiBaseURL = import.meta.env.DEV ? '/' : (import.meta.env.VITE_API_URL as string);
@@ -173,6 +182,7 @@ const toQueryString = (
 const httpUtils = {
   del,
   get,
+  patch,
   post,
   postImage,
   put,
