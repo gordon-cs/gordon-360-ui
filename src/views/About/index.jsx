@@ -23,7 +23,7 @@ const About = () => {
             className={styles.about_title}
             title="Conceived and Built at Gordon College"
             titleTypographyProps={{ variant: 'h4' }}
-            subheader={'By Students for Students'}
+            subheader={'For Students, By Students'}
           />
           <br />
           <CardContent>
