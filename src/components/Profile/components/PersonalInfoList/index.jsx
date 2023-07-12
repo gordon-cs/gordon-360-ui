@@ -405,7 +405,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   <Grid container>
                     <Typography sx={{ fontSize: '0.8rem' }}>
                       <Link
-                        className={styles.salsbury_link}
+                        className={`gc360_text_link ${styles.salsbury_link}`}
                         href="https://m.youtube.com/shorts/FxE5PPS94sc"
                         underline="always"
                         target="_blank"
@@ -430,7 +430,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       <br />
                       <br />
                       <Link
-                        className={styles.dp_link}
+                        className={`gc360_text_link ${styles.dp_link}`}
                         href="https://m.youtube.com/shorts/47402r3FqSs"
                         underline="always"
                         target="_blank"
@@ -458,7 +458,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       <br />
                       <br />
                       <Link
-                        className={styles.dd_link}
+                        className={`gc360_text_link ${styles.dd_link}`}
                         href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
                         underline="always"
                         target="_blank"
