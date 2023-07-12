@@ -6,8 +6,7 @@ const EditDescriptionDialog = (props) => {
   const [descInput, setDescInput] = useState(props.descriptiontext ?? '');
   const [formValid, setFormValid] = useState(true);
 
-  var maxCharacter = 4096;
-
+  var maxCharacter = 4000;
   const handleSubmit = (e) => {
     e.preventDefault();
     var desc = descInput;
@@ -27,7 +26,7 @@ const EditDescriptionDialog = (props) => {
   return (
     <Dialog open={props.editDescriptionOpen} keepMounted fullWidth={true} maxWidth="xs">
       <div className={styles.desc_tile}>
-        <DialogTitle className={styles.desc_title}>Edit Public Office Hours Note</DialogTitle>
+        <DialogTitle className={styles.desc_title}>Edit Office Hours</DialogTitle>
 
         <TextField
           id="descInput"
