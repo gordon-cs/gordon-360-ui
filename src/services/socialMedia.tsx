@@ -29,12 +29,12 @@ export const socialMediaInfo: {
 } = {
   Facebook: {
     Icon: <FaFacebookF />,
-    prefix: 'https://facebook.com/',
+    prefix: 'https://facebook.com',
     prefix2: 'https://www.facebook.com',
   },
   Twitter: {
     Icon: <FaTwitter />,
-    prefix: 'https://twitter.com/',
+    prefix: 'https://twitter.com',
     prefix2: 'https://www.twitter.com',
   },
   LinkedIn: {
@@ -44,7 +44,7 @@ export const socialMediaInfo: {
   },
   Instagram: {
     Icon: <FaInstagram />,
-    prefix: 'https://www.instagram.com/',
+    prefix: 'https://www.instagram.com',
     prefix2: 'https://instagram.com',
   },
   Handshake: {

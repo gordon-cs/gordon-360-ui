@@ -307,13 +307,16 @@ const getEmergencyInfo = async (username: string) => {
 };
 
 function updateSocialLink(platform: Platform, link: string) {
-  const { prefix } = socialMediaInfo[platform];
-  const linkToSend = link.substring(prefix.length);
+  const { prefix, prefix2 } = socialMediaInfo[platform];
+  const linkToSend =
+    prefix2 && link.indexOf(prefix2) === 0
+      ? link.substring(prefix2.length)
+      : link.substring(prefix.length);
 
   const body = {
     [platform]: encodeURIComponent(linkToSend),
   };
-
+  console.log('test', body);
   return http.put('profiles/' + platform.toLowerCase(), body);
 }
 
