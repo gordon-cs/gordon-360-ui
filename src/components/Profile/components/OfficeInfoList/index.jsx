@@ -42,6 +42,10 @@ const OfficeInfoList = ({
     />
   ) : null;
 
+  const officeHours = office_hours ? (
+    <ProfileInfoListItem title="Office Hours:" contentText={office_hours} />
+  ) : null;
+
   const room =
     BuildingDescription || OnCampusRoom ? (
       <ProfileInfoListItem
@@ -94,6 +98,7 @@ const OfficeInfoList = ({
             {room}
             {mailstop}
             {officePhone}
+            {officeHours}
             {updateOfficeInfo}
           </List>
         </CardContent>
