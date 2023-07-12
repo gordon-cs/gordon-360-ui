@@ -22,7 +22,6 @@ export type SocialMediaInfo = {
   Icon: JSX.Element;
   prefix: string;
   prefix2?: string;
-  validationRegex?: RegExp; // Add validationRegex property for URL validation
 };
 
 export const socialMediaInfo: {
