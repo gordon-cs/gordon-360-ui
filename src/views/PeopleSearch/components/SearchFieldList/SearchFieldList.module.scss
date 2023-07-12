@@ -1,0 +1,14 @@
+.people {
+  &_searchbar {
+    color: var(--mui-palette-primary-main);
+  }
+
+  &_text {
+    color: var(--mui-palette-secondary-main);
+  }
+
+  &_section:global(.MuiCard-root) {
+    box-shadow: none;
+    color: var(--mui-palette-neutral-contrastText);
+  }
+}

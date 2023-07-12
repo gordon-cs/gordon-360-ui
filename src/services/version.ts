@@ -1,6 +1,11 @@
 import http from './http';
 
-const getVersion = (): Promise<string> => http.get('version');
+type Version = {
+  GitHash: string;
+  BuildTime: string;
+};
+
+const getVersion = (): Promise<Version> => http.get('version');
 
 const versionService = {
   getVersion,

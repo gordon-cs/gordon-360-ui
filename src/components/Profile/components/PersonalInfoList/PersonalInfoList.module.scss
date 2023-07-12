@@ -3,21 +3,25 @@
 .personal_info_list {
   &_header {
     background-color: var(--mui-palette-primary-main);
-    color: $neutral-white;
+    color: var(--mui-palette-primary-contrastText);
     padding-left: 1rem;
   }
 
   .note {
-    color: $neutral-black-opacity55;
-    background-color: $neutral-light-gray;
+    color: var(--mui-palette-neutral-700);
+    background-color: var(--mui-palette-neutral-main);
     padding: 0.3rem 1rem;
     margin-top: 1rem;
     border-radius: 5px;
   }
 
+  .note_link {
+    font-weight: bold;
+  }
+
   .disclaimer {
-    color: $secondary-red;
-    background-color: $neutral-light-gray;
+    color: var(--mui-palette-error-main);
+    background-color: var(--mui-palette-neutral-main);
     padding: 0.3rem 1rem;
     margin-top: 1rem;
     border-radius: 5px;
@@ -26,12 +30,12 @@
 
 // Needed for mail implementation, should be refactored into PersonalInfoListItem
 .private {
-  color: $neutral-black-opacity40;
+  color: var(--mui-palette-neutral-500);
 }
 
 .not_private {
   opacity: 1;
-  color: $dark-text-color;
+  color: var(--mui-palette-neutral-contrastText);
 }
 
 @media (max-width: $break-sm) {
@@ -41,4 +45,46 @@
       justify-content: center;
     }
   }
+}
+
+.salsbury_link {
+  border-bottom: 1px solid currentColor;
+  text-decoration: none;
+  color: var(--mui-palette-primary-main);
+  font-size: 1.1rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+.salsbury_typography {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.dp_link {
+  border-bottom: 1px solid currentColor;
+  text-decoration: none;
+  color: var(--mui-palette-primary-main);
+  font-size: 1.1rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+.dp_typography {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.dd_link {
+  border-bottom: 1px solid currentColor;
+  text-decoration: none;
+  color: var(--mui-palette-primary-main);
+  font-size: 1.1rem;
+  font-weight: bold;
+  user-select: none;
+}
+
+.dd_typography {
+  font-size: 0.9rem;
+  font-weight: bold;
 }
