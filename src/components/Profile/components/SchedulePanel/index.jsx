@@ -36,12 +36,9 @@ const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
   const [isExpanded, setIsExpanded] = useState(props, myProf ? false : true);
   const [disabled, setDisabled] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState();
-  const [isDoubleClick, setIsDoubleClick] = useState(false);
   const [description, setDescription] = useState('');
   const [modifiedTimeStamp, setModifiedTimeStamp] = useState();
   const [loading, setLoading] = useState(true);
-  const [resourceId, setResourceId] = useState(0);
   const [reloadCall, setReloadCall] = useState(false);
   const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
   const [scheduleControlInfo, setScheduleControlInfo] = useState();
@@ -55,6 +52,8 @@ const GordonSchedulePanel = (props) => {
   const [recurringDays, setRecurringDays] = useState([]);
   const [courseTitle, setCourseTitle] = useState('');
   const [courseLocation, setCourseLocation] = useState('');
+  const [courseStart, setCourseStart] = useState('');
+  const [courseEnd, setCourseEnd] = useState('');
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -131,6 +130,8 @@ const GordonSchedulePanel = (props) => {
       setRecurringDays(calEvent.meetingDays.map((day) => `${day}`).join(', '));
       setCourseTitle(calEvent.title.split('in')[0]);
       setCourseLocation(calEvent.title.split('in')[1]);
+      setCourseStart(calEvent.start);
+      setCourseEnd(calEvent.end);
       setSelectedCourseInfo(calEvent);
     }
   }, []);
@@ -157,6 +158,10 @@ const GordonSchedulePanel = (props) => {
   const replaced = description;
 
   const { classes } = props;
+
+  const dateFormatter = (date, format) => {
+    format(new Date(date), format);
+  };
 
   let editDescriptionButton, editDialog, lastUpdate, scheduleDialog;
 
@@ -185,12 +190,14 @@ const GordonSchedulePanel = (props) => {
       <ScheduleDialog
         scheduleDialogOpen={scheduleDialogOpen}
         handleScheduleDialogClose={handleScheduleDialogClose}
-        selectedCourseInfo={selectedCourseInfo}
+        courseInfo={selectedCourseInfo}
         recurringDays={recurringDays}
         courseTitle={courseTitle}
         courseLocation={courseLocation}
         firstDay={firstDay}
         lastDay={lastDay}
+        courseStart={courseStart}
+        courseEnd={courseEnd}
       />
     );
   }

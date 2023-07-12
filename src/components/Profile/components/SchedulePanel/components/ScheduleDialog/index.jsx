@@ -13,11 +13,19 @@ import styles from './ScheduleDialog.module.css';
 
 const dayArr = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
+const formatter = (date, display, isAllDay) => {
+  if (isAllDay) {
+    return null;
+  } else {
+    return format(new Date(date), display);
+  }
+};
+
 const ScheduleDialog = (props) => {
   return (
     <Dialog open={props.scheduleDialogOpen} keepMounted fullWidth={true} maxWidth="xs">
       <div>
-        {props.selectedCourseInfo && (
+        {props.courseInfo && (
           <>
             <DialogTitle className={styles.dialogTitle} align="center">
               Course Information
@@ -31,15 +39,15 @@ const ScheduleDialog = (props) => {
               </Typography>
               <Typography className={styles.dialogTextMedium} align="left">
                 Time:
-                {format(new Date(props.selectedCourseInfo.start), " hh:mm aaaaa'm' ")}-
-                {format(new Date(props.selectedCourseInfo.end), " hh:mm aaaaa'm' ")}
+                {formatter(props.courseStart, " hh:mm aaaaa'm' ")}-
+                {formatter(props.courseEnd, " hh:mm aaaaa'm' ")}
               </Typography>
               <Typography className={styles.dialogTextMedium} align="left">
                 Week Day(s): {props.recurringDays}
               </Typography>
               <Typography className={styles.dialogTextMedium} align="left">
-                Term Date: {format(new Date(props.firstDay), 'yyyy-MM-dd')} to
-                {format(new Date(props.lastDay), ' yyyy-MM-dd')}
+                Term Date: {formatter(props.firstDay, 'yyyy-MM-dd')} to
+                {formatter(props.lastDay, ' yyyy-MM-dd')}
               </Typography>
             </DialogContent>
           </>
@@ -50,7 +58,7 @@ const ScheduleDialog = (props) => {
           options that users can choose and manually set the course as recurring */}
 
           <Grid container lg={12} xs={12}>
-            {props.selectedCourseInfo && (
+            {props.courseInfo && (
               <>
                 <Grid item xs={1} lg={2}></Grid>
                 <Grid item lg={2} align="right">
@@ -58,27 +66,19 @@ const ScheduleDialog = (props) => {
                     name={props.courseTitle}
                     // We had to add 1 to the index for the resourceId because the setDay function
                     // starts at 0 for Sunday which we don't include in the course schedule
-                    startDate={format(
+                    startDate={formatter(
                       setDay(
                         new Date(props.firstDay),
-                        dayArr.indexOf(props.selectedCourseInfo?.resourceId) + 1,
+                        dayArr.indexOf(props.courseInfo?.resourceId) + 1,
                       ),
                       'yyyy-MM-dd',
                     )}
                     // By the nature of the add-to-calendar package, we have to set the startTime
                     // and endTime as null if they are all day events.
-                    startTime={
-                      props.selectedCourseInfo.allDay
-                        ? null
-                        : format(new Date(props.selectedCourseInfo?.start), 'HH:mm')
-                    }
-                    endTime={
-                      props.selectedCourseInfo.allDay
-                        ? null
-                        : format(new Date(props.selectedCourseInfo?.end), 'HH:mm')
-                    }
+                    startTime={formatter(props.courseStart, 'HH:mm', props.courseInfo.allDay)}
+                    endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
                     description={
-                      props.selectedCourseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
+                      props.courseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
                     }
                     Location={props.courseLocation}
                     options="'Google', 'Apple'"
@@ -89,7 +89,7 @@ const ScheduleDialog = (props) => {
                       'RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=' +
                       props.recurringDays +
                       ';UNTIL=' +
-                      format(new Date(props.lastDay), 'yyyyMMdd')
+                      formatter(props.lastDay, 'yyyyMMdd')
                     }
                     lightMode="bodyScheme"
                     Timezone="currentBrowser"
@@ -101,22 +101,14 @@ const ScheduleDialog = (props) => {
                     startDate={format(
                       setDay(
                         new Date(props.firstDay),
-                        dayArr.indexOf(props.selectedCourseInfo.resourceId) + 1,
+                        dayArr.indexOf(props.courseInfo.resourceId) + 1,
                       ),
                       'yyyy-MM-dd',
                     )}
-                    startTime={
-                      props.selectedCourseInfo.allDay
-                        ? null
-                        : format(new Date(props.selectedCourseInfo.start), 'HH:mm')
-                    }
-                    endTime={
-                      props.selectedCourseInfo.allDay
-                        ? null
-                        : format(new Date(props.selectedCourseInfo.end), 'HH:mm')
-                    }
+                    startTime={formatter(props.courseStart, 'HH:mm', props.courseInfo.allDay)}
+                    endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
                     description={
-                      props.selectedCourseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
+                      props.courseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
                     }
                     Location={props.courseLocation}
                     options="'Apple', 'Outlook.com','MicrosoftTeams'"
