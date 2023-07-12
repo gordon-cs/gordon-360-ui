@@ -244,12 +244,11 @@ const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
 const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
-const getMailDestinations = (): Promise<string[]> => http.get(`advancedsearch/buildings`); // I am going to need to change this later
+const getMailDestinations = (): Promise<string[]> => http.get(`profiles/mail_destinations`);
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
 const updateMailDestination = (value: string) => http.put(`profiles/mail_location`, value);
-
 const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
   http.put(`profiles/office_location`, OfficeLocation);
 
