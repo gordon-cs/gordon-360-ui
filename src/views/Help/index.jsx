@@ -13,10 +13,10 @@ const Help = () => {
             title="Gordon 360 Help"
             titleTypographyProps={{ variant: 'h4' }}
           />
+          <br />
           <CardContent>
             <Card className={styles.help_section}>
               <CardHeader className={styles2.gc360_header} title="Login Instructions" />
-
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>Username: 'firstname.lastname' or your Gordon email address</li>
@@ -136,7 +136,6 @@ const Help = () => {
             <Card className={styles.help_section}>
               <CardHeader
                 className={styles2.gc360_header}
-
                 title="Management & Editing Involvements"
               />
               <CardContent>
