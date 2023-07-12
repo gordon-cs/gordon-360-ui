@@ -5,6 +5,7 @@ import {
   Divider,
   FormControlLabel,
   Grid,
+  Link,
   List,
   ListItem,
   Switch,
@@ -20,7 +21,6 @@ import { useAuthGroups } from 'hooks';
 import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
-import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog';
 import styles from './PersonalInfoList.module.css';
@@ -60,9 +60,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     AuthGroup.AcademicInfoView,
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
-  const onClose = () => {
-    setIsJoinDialogOpen(false);
-  };
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -397,17 +394,26 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 <GordonDialogBox
                   open={isJoinDialogOpen}
                   title={`Mailbox Instructions`}
-                  closeButtonClicked={onClose}
+                  closeButtonClicked={() => setIsJoinDialogOpen(false)}
                   maxWidth="md"
                 >
                   <Grid container>
                     <Typography sx={{ fontSize: '0.8rem' }}>
-                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
-                        Salsbury Mailbox (Combinations that have three numbers ex: 21 32 18)
+                      <Link
+                        className={styles.salsbury_link}
+                        href="https://m.youtube.com/shorts/FxE5PPS94sc"
+                        underline="always"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Salsbury Mailbox
+                      </Link>
+                      <Typography className={styles.salsbury_typography}>
+                        (Combinations that have three numbers ex: 21 32 18)
                       </Typography>
                       <img src={SLock} alt="SLock" />
                       <br />
-                      1. To openturn LEFT at least four turns stopping at the first number of the
+                      1. To open, turn LEFT at least four turns stopping at the first number of the
                       combination.
                       <br />
                       2. Turn RIGHT passing the first number of the combination once and stop at the
@@ -418,8 +424,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       4. Turn knob to the RIGHT to open.
                       <br />
                       <br />
-                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
-                        Dial and Pointer Mailbox (Combinations that have two letters ex: H B)
+                      <Link
+                        className={styles.dp_link}
+                        href="https://m.youtube.com/shorts/47402r3FqSs"
+                        underline="always"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Dial and Pointer Mailbox
+                      </Link>
+                      <Typography className={styles.dp_typography}>
+                        (Combinations that have two letters ex: H B)
                       </Typography>
                       <img src={DPLock} alt="DPLock" />
                       <br />
@@ -437,9 +452,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       3. Twist the latch knob clockwise to open the box.
                       <br />
                       <br />
-                      <Typography sx={{ fontSize: '0.9rem', fontWeight: 'bold' }}>
-                        Double Dial Mailbox (Combinations that have two letter/number pairs ex: A3
-                        H5)
+                      <Link
+                        className={styles.dd_link}
+                        href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
+                        underline="always"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        Double Dial Mailbox
+                      </Link>
+                      <Typography className={styles.dd_typography}>
+                        (Combinations that have two letter/number pairs ex: A3 H5)
                       </Typography>
                       <img src={DDLock} alt="DDLock" />
                       <br />
@@ -524,7 +547,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
         NOTE: To update your data, please contact{' '}
-        <a style={{ color: gordonColors.primary.blue }} href="mailto: hr@gordon.edu">
+        <a className={`gc360_text_link ${styles.note_link}`} href="mailto: hr@gordon.edu">
           Human Resources
         </a>{' '}
         (x4828).
@@ -539,13 +562,26 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <li>
             <Typography>
               To update your On Campus Address, please contact{' '}
-              <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
+              <a
+                href="mailto: housing@gordon.edu"
+                className={`gc360_text_link ${styles.note_link}`}
+              >
+                Housing
+              </a>{' '}
+              (x4263).
             </Typography>
           </li>
           <li>
             <Typography>
               For all other changes or to partially/fully prevent your data from displaying, please
-              contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+              contact the{' '}
+              <a
+                href="mailto: registrar@gordon.edu"
+                className={`gc360_text_link ${styles.note_link}`}
+              >
+                Registrar's Office
+              </a>{' '}
+              (x4242).
             </Typography>
           </li>
         </ul>
