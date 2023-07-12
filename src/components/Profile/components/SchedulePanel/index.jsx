@@ -20,7 +20,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
 import { formatDistanceToNow } from 'date-fns';
 import { Markup } from 'interweave';
-import schedulecontrol from 'services/schedulecontrol';
 import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
@@ -29,8 +28,6 @@ import styles from './ScheduleHeader.module.css';
 import scheduleService from 'services/schedule';
 import { useNetworkStatus, useUser } from 'hooks';
 import sessionService from 'services/session';
-
-import { format, setDay } from 'date-fns';
 
 const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
@@ -100,18 +97,12 @@ const GordonSchedulePanel = (props) => {
         searchedUser.AD_Username,
       );
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
+      setProfile(profileInfo);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
-      if (scheduleControlInfo) {
-        setDescription(
-          scheduleControlInfo.Description
-            ? // We decided to leave the regex code for now because the data stored in the database
-              // before changing the api is still in the regex form.
-              scheduleControlInfo.Description.replace(new RegExp('SlSh', 'g'), '/')
-                .replace(new RegExp('CoLn', 'g'), ':')
-                .replace(new RegExp('dOT', 'g'), '.')
-            : '',
-        );
-        setModifiedTimeStamp(scheduleControlInfo.ModifiedTimeStamp);
+      if (profileInfo.PersonType?.includes('fac')) {
+        setDescription(profileInfo.office_hours);
+      } else {
+        setDescription('');
       }
     } catch (e) {}
     setLoading(false);
@@ -145,7 +136,7 @@ const GordonSchedulePanel = (props) => {
   };
 
   const handleDescriptionSubmit = async (descValue) => {
-    await schedulecontrol.setScheduleDescription(descValue);
+    await user.updateOfficeHours(descValue);
     loadData(props.profile);
   };
 
@@ -154,14 +145,9 @@ const GordonSchedulePanel = (props) => {
   const reloadHandler = () => {
     setReloadCall((val) => !val);
   };
-
   const replaced = description;
 
   const { classes } = props;
-
-  const dateFormatter = (date, format) => {
-    format(new Date(date), format);
-  };
 
   let editDescriptionButton, editDialog, lastUpdate, scheduleDialog;
 
@@ -233,11 +219,14 @@ const GordonSchedulePanel = (props) => {
               id="panel1a-header"
               className={styles.header}
             >
-              <CardHeader className={styles.accordionHeader} title={'Course Schedule'} />
+              <CardHeader
+                className={styles.accordionHeader}
+                title={description === '' ? 'Schedule' : 'Office Hours & Course Schedule'}
+              />
             </AccordionSummary>
             <AccordionDetails>
               <Grid container direction="row" justifyContent="center" align="left" spacing={4}>
-                {props.isOnline && (
+                {props.isOnline && profile.PersonType?.includes('fac') && (
                   <Grid container direction="row" item xs={12} lg={12} spacing={2}>
                     <Grid item lg={1}></Grid>
                     <Grid item xs={4} lg={1} align="left" className={styles.officeHourTitle}>
