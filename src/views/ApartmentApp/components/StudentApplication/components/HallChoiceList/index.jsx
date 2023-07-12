@@ -77,7 +77,7 @@ const HallChoiceList = ({
           </Grid>
           <Grid item xs={12}>
             <Button
-              disabled={disabled}
+              disabled={disabled || apartmentChoices?.length >= 5}
               variant="outlined"
               color="primary"
               startIcon={<AddIcon fontSize="inherit" />}
