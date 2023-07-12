@@ -226,7 +226,7 @@ export const newTheme = extendTheme({
           light: SeaSpray,
         },
         warning: { main: BarringtonGold, dark: OldSchemeRed },
-        info: { main: NightMarsh, light: SnowDay, dark: Athletics },
+        info: { main: NightMarsh, light: SnowDay, dark: Athletics, contrastText: White },
         neutral: {
           main: BackgroundLightGray, //currently $neutral-light-gray in _vars
           dark: LightGray, //currently $neutral-gray2
@@ -321,7 +321,7 @@ export const newTheme = extendTheme({
           light: SeaSpray,
         },
         warning: { main: BarringtonGold, dark: OldSchemeRed },
-        info: { main: NightMarsh, light: SnowDay, dark: Athletics },
+        info: { main: NightMarsh, light: SnowDay, dark: Athletics, contrastText: White },
         neutral: {
           main: DarkGray,
           dark: Athletics,

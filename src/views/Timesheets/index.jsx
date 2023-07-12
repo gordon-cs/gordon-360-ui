@@ -475,7 +475,7 @@ const Timesheets = (props) => {
                   <Grid item xs={12}>
                     <Typography className={'disable_select'}>
                       <Link
-                        className={styles.timesheets_link}
+                        className="gc360_text_link"
                         href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
                         underline="always"
                         target="_blank"
