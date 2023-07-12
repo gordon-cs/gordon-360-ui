@@ -29,6 +29,8 @@ import scheduleService from 'services/schedule';
 import { useNetworkStatus, useUser } from 'hooks';
 import sessionService from 'services/session';
 
+import user from 'services/user';
+
 const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
   const [isExpanded, setIsExpanded] = useState(props, myProf ? false : true);
