@@ -134,7 +134,6 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
         linkopen={linkOpen}
       />
       <PaletteSwitcherDialog
-        handleOpen={() => setPaletteOptionsOpen(true)}
         handleClose={() => setPaletteOptionsOpen(false)}
         dialogOpen={paletteOptionsOpen}
       />

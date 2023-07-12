@@ -1,10 +1,18 @@
 // import LightbulbIcon from '@mui/icons-material/Lightbulb';
-// import ComputerIcon from '@mui/icons-material/Computer';
+import ComputerIcon from '@mui/icons-material/Computer';
 import ModeNightIcon from '@mui/icons-material/ModeNight';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { useState } from 'react';
-import { Button, Grid, Switch, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  RadioGroup,
+  Radio,
+  Divider,
+} from '@mui/material';
 import styles from './PaletteSwitcherDialog.module.css';
 
 /* Button to choose which color setting the user wantes
@@ -53,6 +61,10 @@ type Props = {
 const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
   const [mode, setMode] = useState(localStorage.getItem('colorMode') ?? 'system');
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setColorMode(event.target.value);
+  };
+
   const setColorMode = (colorMode: string) => {
     localStorage.setItem('colorMode', colorMode);
 
@@ -71,24 +83,21 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
       buttonClicked={handleClose}
       buttonName="Close"
     >
-      <Grid container>
-        <Grid xs={8}>
-          <Button variant="outlined" color="secondary">
-            Use System Setting
-          </Button>
-        </Grid>
-        <Grid xs={12}>
-          <Switch
-            checked={mode === 'dark'}
-            color="secondary"
-            sx={{
-              '& .MuiSwitch-thumb': {
-                borderRadius: '40%',
-              },
-            }}
-          ></Switch>
-        </Grid>
-      </Grid>
+      <FormControl>
+        <FormLabel id="palette-mode-group-label">Color Mode</FormLabel>
+        <RadioGroup
+          name="palette-mode-group"
+          aria-labelledby="palette-mode-group-label"
+          row={true}
+          value={mode}
+          onChange={handleChange}
+        >
+          <FormControlLabel value="system" control={<Radio />} label="System Setting" />
+          <FormControlLabel value="light" control={<Radio />} label="Light Mode" />
+          <FormControlLabel value="dark" control={<Radio />} label="Dark Mode" />
+        </RadioGroup>
+      </FormControl>
+      <Divider />
     </GordonDialogBox>
   );
 };
