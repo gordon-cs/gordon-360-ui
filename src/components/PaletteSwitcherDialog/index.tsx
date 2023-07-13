@@ -10,32 +10,25 @@ import {
 } from '@mui/material';
 import { useColorScheme } from '@mui/material/styles';
 
+// Watches for system setting changes, and updates the color accordingly
 const useWatchUsersColorScheme = () => {
   const { setMode } = useColorScheme();
 
-  console.log('in hook');
-
   useEffect(() => {
-    console.log('in useEffect');
-    const prefersDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
     const onSystemColorSchemeChange = (e: any) => {
-      console.log('System color scheme changed');
-      const colorSchemeSource = localStorage.getItem('colorMode') ?? 'system';
-      console.log('Stored color scheme ' + colorSchemeSource);
+      const storedColorScheme = localStorage.getItem('colorMode') ?? 'system';
 
-      if (colorSchemeSource === 'system') {
-        console.log('Color scheme system, ');
+      if (storedColorScheme === 'system') {
         setMode(e.matches ? 'dark' : 'light');
       }
     };
 
-    console.log('adding event listener');
-    prefersDarkQuery.addEventListener('change', onSystemColorSchemeChange);
+    systemPrefersDark.addEventListener('change', onSystemColorSchemeChange);
 
     return () => {
-      console.log('removing event listener');
-      prefersDarkQuery.removeEventListener('change', onSystemColorSchemeChange);
+      systemPrefersDark.removeEventListener('change', onSystemColorSchemeChange);
     };
   }, [setMode]);
 };
@@ -46,11 +39,12 @@ type Props = {
 };
 
 const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
-  console.log('in palette switcher dialog');
   useWatchUsersColorScheme();
-  const [scheme, setScheme] = useState(localStorage.getItem('colorMode') ?? 'system');
+  // defaults to system setting if no user setting is stored
+  const [localScheme, setLocalScheme] = useState(localStorage.getItem('colorMode') ?? 'system');
   const { setMode } = useColorScheme();
 
+  // sets the site color scheme based on the setting string passed to it, defaults to light
   const SetModeFromSetting = (scheme: string) => {
     setMode(
       scheme === 'system'
@@ -63,9 +57,9 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
     );
   };
 
-  SetModeFromSetting(scheme); // This line ensures the color scheme is always correct,
-  // Previously when the system scheme was changed while the page was closed, the page would load
-  // still on the old scheme
+  SetModeFromSetting(localScheme);
+  /* ensures the color scheme is always correct, previously when the system setting was 
+  changed while the page was closed, the page would render still on the old scheme */
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setColorMode(event.target.value);
@@ -74,12 +68,8 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
   const setColorMode = (colorMode: string) => {
     localStorage.setItem('colorMode', colorMode);
 
-    // The storage event listener wouldn't trigger without this line, but I wonder if there is a
-    // better way to do this...
-    // dispatchEvent(new Event('storage'));
-
     //Save the current mode to the use state to update button text.
-    setScheme(colorMode);
+    setLocalScheme(colorMode);
     SetModeFromSetting(colorMode);
   };
 
@@ -96,7 +86,7 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
           name="palette-mode-group"
           aria-labelledby="palette-mode-group-label"
           row={true}
-          value={scheme}
+          value={localScheme}
           onChange={handleChange}
         >
           <FormControlLabel value="system" control={<Radio />} label="System Setting" />

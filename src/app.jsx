@@ -3,7 +3,6 @@ import BirthdayMessage from 'components/BirthdayMessage';
 import { createBrowserHistory } from 'history';
 import { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { useColorScheme } from '@mui/material/styles';
 import './app.global.css';
 import styles from './app.module.css';
 import ErrorBoundary from './components/ErrorBoundary';
