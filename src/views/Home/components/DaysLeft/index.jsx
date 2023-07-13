@@ -4,7 +4,6 @@ import GordonLoader from 'components/Loader';
 import session from 'services/session';
 import styles from '../Doughnut.module.css';
 import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
-import { gordonColors } from 'theme';
 import { newTheme } from 'theme';
 
 const DaysLeft = () => {

@@ -1,12 +1,4 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Typography,
-  useThemeProps,
-} from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { format, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -48,6 +40,7 @@ const CLWCreditsDaysLeft = () => {
     loadData();
   }, []);
 
+  // variable colors do not work in chartjs, so fixed colors from the light palette are used
   const colors = newTheme.colorSchemes.light.palette;
 
   let daysColor = colors.primary.main;
@@ -132,7 +125,10 @@ const CLWCreditsDaysLeft = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <div className={styles.value} style={{ color: daysColor }}>
+            <div
+              className={styles.value}
+              style={{ color: newTheme.vars.palette.link.contrastText }}
+            >
               {daysFinished}
             </div>
             <div className={styles.label}>
