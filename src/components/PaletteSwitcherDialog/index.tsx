@@ -1,11 +1,6 @@
-// import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import ComputerIcon from '@mui/icons-material/Computer';
-import ModeNightIcon from '@mui/icons-material/ModeNight';
-import LightModeIcon from '@mui/icons-material/LightMode';
 import GordonDialogBox from 'components/GordonDialogBox';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Button,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -13,45 +8,37 @@ import {
   Radio,
   Divider,
 } from '@mui/material';
-import styles from './PaletteSwitcherDialog.module.css';
+import { useColorScheme } from '@mui/material/styles';
 
-/* Button to choose which color setting the user wantes
-choose between the system setting, light mode, and dark mode.
-*/
+const useWatchUsersColorScheme = () => {
+  const { setMode } = useColorScheme();
 
-// export const ModeSwitcher = () => {
-//   //Mode defaults to system if localstorage hasn't been set, or the value is system
-//   const [mode, setMode] = useState(localStorage.getItem('colorMode') ?? 'system');
+  console.log('in hook');
 
-//   const setColorMode = (colorMode) => {
-//     localStorage.setItem('colorMode', colorMode);
+  useEffect(() => {
+    console.log('in useEffect');
+    const prefersDarkQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-//     // The storage event listener wouldn't trigger without this line, but I wonder if there is a
-//     // better way to do this...
-//     dispatchEvent(new Event('storage'));
+    const onSystemColorSchemeChange = (e: any) => {
+      console.log('System color scheme changed');
+      const colorSchemeSource = localStorage.getItem('colorMode') ?? 'system';
+      console.log('Stored color scheme ' + colorSchemeSource);
 
-//     //Save the current mode to the use state to update button text.
-//     setMode(colorMode);
-//   };
+      if (colorSchemeSource === 'system') {
+        console.log('Color scheme system, ');
+        setMode(e.matches ? 'dark' : 'light');
+      }
+    };
 
-//   return (
-//     <>
-//       <button
-//         onClick={() => {
-//           setColorMode(mode === 'system' ? 'light' : mode === 'light' ? 'dark' : 'system');
-//         }}
-//         className={styles.ModeSwitcherButton}
-//       >
-//         {mode === 'system'
-//           ? 'Switch to Light Mode'
-//           : mode === 'light'
-//           ? 'Switch to Dark Mode'
-//           : 'Use System Setting'}
-//       </button>
-//       {/* {mode === 'dark' ? <ComputerIcon /> : <LightbulbIcon />} */}
-//     </>
-//   );
-// };
+    console.log('adding event listener');
+    prefersDarkQuery.addEventListener('change', onSystemColorSchemeChange);
+
+    return () => {
+      console.log('removing event listener');
+      prefersDarkQuery.removeEventListener('change', onSystemColorSchemeChange);
+    };
+  }, [setMode]);
+};
 
 type Props = {
   handleClose: () => void;
@@ -59,7 +46,26 @@ type Props = {
 };
 
 const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
-  const [mode, setMode] = useState(localStorage.getItem('colorMode') ?? 'system');
+  console.log('in palette switcher dialog');
+  useWatchUsersColorScheme();
+  const [scheme, setScheme] = useState(localStorage.getItem('colorMode') ?? 'system');
+  const { setMode } = useColorScheme();
+
+  const SetModeFromSetting = (scheme: string) => {
+    setMode(
+      scheme === 'system'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+        : scheme === 'dark'
+        ? 'dark'
+        : 'light',
+    );
+  };
+
+  SetModeFromSetting(scheme); // This line ensures the color scheme is always correct,
+  // Previously when the system scheme was changed while the page was closed, the page would load
+  // still on the old scheme
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setColorMode(event.target.value);
@@ -70,10 +76,11 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
 
     // The storage event listener wouldn't trigger without this line, but I wonder if there is a
     // better way to do this...
-    dispatchEvent(new Event('storage'));
+    // dispatchEvent(new Event('storage'));
 
     //Save the current mode to the use state to update button text.
-    setMode(colorMode);
+    setScheme(colorMode);
+    SetModeFromSetting(colorMode);
   };
 
   return (
@@ -89,7 +96,7 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
           name="palette-mode-group"
           aria-labelledby="palette-mode-group-label"
           row={true}
-          value={mode}
+          value={scheme}
           onChange={handleChange}
         >
           <FormControlLabel value="system" control={<Radio />} label="System Setting" />
