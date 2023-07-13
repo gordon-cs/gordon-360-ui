@@ -29,6 +29,7 @@ import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
 import ShiftDisplay from './components/ShiftDisplay';
 import styles from './Timesheets.module.css';
+import { newTheme } from 'theme';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
@@ -424,6 +425,27 @@ const Timesheets = (props) => {
                       value={selectedDateIn}
                       onChange={setSelectedDateIn}
                       className="disable_select"
+                      PopperProps={{
+                        //Style overrides for the dateTimePicker, fixes dark mode
+                        sx: {
+                          '& .MuiDayPicker-weekDayLabel': {
+                            color: newTheme.vars.palette.neutral.contrastText,
+                          },
+                          '& .MuiPickersDay-root': {
+                            backgroundColor: newTheme.vars.palette.neutral.light,
+                            color: newTheme.vars.palette.neutral.contrastText,
+                          },
+                          '& .MuiPickersDay-root:hover': {
+                            backgroundColor: newTheme.vars.palette.neutral.main,
+                          },
+                          '& .MuiPickersDay-root:disabled': {
+                            backgroundColor: newTheme.vars.palette.neutral.main,
+                          },
+                          '& .MuiClockNumber-root': {
+                            color: newTheme.vars.palette.neutral.contrastText,
+                          },
+                        },
+                      }}
                       disableFuture
                     />
                   </Grid>
@@ -434,6 +456,30 @@ const Timesheets = (props) => {
                       value={selectedDateOut ?? selectedDateIn}
                       onChange={setSelectedDateOut}
                       className="disable_select"
+                      PopperProps={{
+                        //Style overrides for the dateTimePicker, fixes dark mode
+                        sx: {
+                          '& .MuiDayPicker-weekDayLabel': {
+                            color: newTheme.vars.palette.neutral.contrastText,
+                          },
+                          '& .MuiPickersDay-root': {
+                            backgroundColor: newTheme.vars.palette.neutral.light,
+                            color: newTheme.vars.palette.neutral.contrastText,
+                          },
+                          '& .MuiPickersDay-root:hover': {
+                            backgroundColor: newTheme.vars.palette.neutral.main,
+                          },
+                          '& .MuiPickersDay-root:disabled': {
+                            backgroundColor: newTheme.vars.palette.neutral.main,
+                          },
+                          '& .MuiClockNumber-root': {
+                            color: newTheme.vars.palette.neutral.contrastText,
+                          },
+                          '& .PrivatePickersToolbarText-root': {
+                            color: newTheme.vars.palette.neutral.contrastText,
+                          },
+                        },
+                      }}
                       disableFuture
                       showToolbar={true}
                       disabled={selectedDateIn === null}
