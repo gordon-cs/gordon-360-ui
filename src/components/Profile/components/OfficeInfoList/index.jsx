@@ -69,7 +69,7 @@ const OfficeInfoList = ({
     <ProfileInfoListItem
       title="Mailstop:"
       contentText={
-        !myProf ? (
+        myProf ? (
           <Grid container spacing={0} alignItems="center">
             <Grid item>
               <Typography>
