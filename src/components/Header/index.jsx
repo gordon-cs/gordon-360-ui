@@ -20,9 +20,9 @@ import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
 import styles from './Header.module.css';
-import gc_logo_56 from './gc_new_logo_56.png';
-import gc_logo_64 from './gc_new_logo_64.png';
-import gc_logo_72 from './gc_new_logo_72.png';
+import gc_360_yellow_logo_72 from './gc_360_yellow_logo_72.png';
+import gc_360_yellow_logo_64 from './gc_360_yellow_logo_64.png';
+import gc_360_yellow_logo_56 from './gc_360_yellow_logo_56.png';
 
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
@@ -142,11 +142,11 @@ const GordonHeader = ({ onDrawerToggle }) => {
 
   function logoSizedForHeader() {
     if (width >= 900) {
-      return gc_logo_72;
+      return gc_360_yellow_logo_72;
     } else if (width >= 600) {
-      return gc_logo_64;
+      return gc_360_yellow_logo_64;
     } else {
-      return gc_logo_56;
+      return gc_360_yellow_logo_56;
     }
   }
 
@@ -165,7 +165,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
           </IconButton>
           <Link
             to="/"
-            className={styles.tab}
             component={ForwardNavLink}
             value={tabIndex}
             onClick={(event, value) => setTabIndex(value)}
