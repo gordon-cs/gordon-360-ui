@@ -66,8 +66,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
 
-  console.log(profile);
-
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
   //    or 'P' for Private (not visible to other students)
