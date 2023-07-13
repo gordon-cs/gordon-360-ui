@@ -19,8 +19,8 @@
 }
 
 .teamHeader {
-  color: $neutral-black-opacity70;
-  background-color: $neutral-black-opacity15;
+  color: var(--mui-palette-neutral-A200);
+  background-color: var(--mui-palette-neutral-A700);
   border-radius: 0.5rem;
   margin-top: 1rem;
   width: 100%;
@@ -34,17 +34,17 @@
 
 .title {
   font-weight: bold;
-  color: $neutral-dark-gray2;
+  color: var(--mui-palette-neutral-800);
   font-size: 1.5em;
 }
 
 .subtitle {
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-600);
   font-size: 1em;
 }
 
 .buttonArea {
-  background-color: $neutral-light-gray;
+  background-color: var(--mui-palette-neutral-200);
   padding: 16px;
   margin-top: -1em;
   margin-bottom: 0.2em;
@@ -54,24 +54,24 @@
 
 .secondaryText {
   margin-top: 1em;
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-600);
   text-align: center;
 }
 
 // if desired, this should just be a global change and
 // universally applied to all 360 cards
 .cardHeader {
-  background-color: $primary-blue;
-  color: $neutral-white;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
 }
 
 .actionButton {
   text-transform: none;
-  background-color: $primary-cyan;
+  background-color: var(--mui-palette-secondary-main);
 }
 
 .actionButton:hover {
-  background-color: $primary-cyan-600;
+  background-color: var(--mui-palette-secondary-600);
 }
 
 .cardHeader :global(.MuiCardHeader-title) {
@@ -79,25 +79,25 @@
 }
 
 .grayIcon {
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-600);
 }
 
 .menuTitle {
   margin-top: 0.5em;
   margin-bottom: 0.2em;
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-600);
   text-align: center;
 }
 
 .editIconButton {
-  background-color: $secondary-yellow;
-  color: $neutral-black;
+  background-color: var(--mui-palette-warning-main);
+  color: var(--mui-palette-neutral-A100);
 }
 
 .editIconButton:hover {
-  background-color: rgb(177, 129, 13);
+  background-color: var(--mui-palette-warning-A100);
 }
 
 .menuButton:hover {
-  background-color: $neutral-black-opacity10;
+  background-color: var(--mui-palette-neutral-A700);
 }
