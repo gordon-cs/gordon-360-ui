@@ -58,7 +58,7 @@ const ScheduleDialog = (props) => {
           <Grid container lg={12} xs={12}>
             {props.courseInfo && (
               <>
-                <Grid item xs={1} lg={2}></Grid>
+                <Grid item xs={0} lg={1}></Grid>
                 <Grid item lg={2} align="right">
                   <add-to-calendar-button
                     name={props.courseTitle}
@@ -79,7 +79,7 @@ const ScheduleDialog = (props) => {
                       props.courseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
                     }
                     Location={props.courseLocation}
-                    options="'Google', 'Apple'"
+                    options="'Google'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
@@ -93,7 +93,7 @@ const ScheduleDialog = (props) => {
                     Timezone="currentBrowser"
                   ></add-to-calendar-button>
                 </Grid>
-                <Grid item lg={6} align="left">
+                <Grid item lg={8} align="left">
                   <add-to-calendar-button
                     name={props.courseTitle}
                     startDate={format(
@@ -109,7 +109,7 @@ const ScheduleDialog = (props) => {
                       props.courseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
                     }
                     Location={props.courseLocation}
-                    options="'Apple', 'Outlook.com','MicrosoftTeams'"
+                    options="'Microsoft 365','Apple', 'Outlook.com','MicrosoftTeams'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
