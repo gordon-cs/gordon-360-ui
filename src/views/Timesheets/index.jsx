@@ -366,8 +366,6 @@ const Timesheets = (props) => {
     </Button>
   );
 
-  console.log(newTheme);
-
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
