@@ -37,7 +37,7 @@ const EventItem = ({ event }) => {
           {event.StartDate !== '' && event.EndDate !== '' && (
             <add-to-calendar-button
               name={event.title}
-              options="'Apple|Apple Cal','Google|Google Cal','Microsoft365|Gordon 360','MicrosoftTeams'"
+              options="'Microsoft365|Gordon Outlook','Google','Apple','MicrosoftTeams'"
               location={event.location}
               startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
               endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
