@@ -11,7 +11,7 @@ import {
 import { useColorScheme } from '@mui/material/styles';
 
 // Watches for system setting changes, and updates the color accordingly
-const useWatchUsersColorScheme = () => {
+export const useWatchUsersColorScheme = () => {
   const { setMode } = useColorScheme();
 
   useEffect(() => {
@@ -39,10 +39,15 @@ type Props = {
 };
 
 const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
-  useWatchUsersColorScheme();
   // defaults to system setting if no user setting is stored
   const [localScheme, setLocalScheme] = useState(localStorage.getItem('colorMode') ?? 'system');
   const { setMode } = useColorScheme();
+
+  useEffect(() => {
+    SetModeFromSetting(localScheme);
+    /* ensures the color scheme is always correct, previously when the system setting was 
+    changed while the page was closed, the page would render still on the old scheme */
+  }, []);
 
   // sets the site color scheme based on the setting string passed to it, defaults to light
   const SetModeFromSetting = (scheme: string) => {
@@ -56,10 +61,6 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
         : 'light',
     );
   };
-
-  SetModeFromSetting(localScheme);
-  /* ensures the color scheme is always correct, previously when the system setting was 
-  changed while the page was closed, the page would render still on the old scheme */
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setColorMode(event.target.value);

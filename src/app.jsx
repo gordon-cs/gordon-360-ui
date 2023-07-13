@@ -10,8 +10,11 @@ import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import routes from './routes';
 import analytics from './services/analytics';
+import { useWatchUsersColorScheme } from './components/PaletteSwitcherDialog';
 
 const App = () => {
+  useWatchUsersColorScheme();
+
   const [drawerOpen, setDrawerOpen] = useState();
 
   const historyRef = useRef(createBrowserHistory());
