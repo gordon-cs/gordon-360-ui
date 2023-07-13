@@ -316,7 +316,7 @@ function updateSocialLink(platform: Platform, link: string) {
   const body = {
     [platform]: encodeURIComponent(linkToSend),
   };
-  console.log('test', body);
+
   return http.put('profiles/' + platform.toLowerCase(), body);
 }
 
