@@ -144,7 +144,7 @@ const Membership = ({ isAdmin, isSiteAdmin, involvementDescription, toggleIsAdmi
       <Grid item>
         <Typography>
           <strong>Current Roster: </strong>
-          {membersNum} Member{membersNum === 1 ? '' : 's'} and {followersNum} Subcriber
+          {membersNum} Member{membersNum === 1 ? '' : 's'} and {followersNum} Subscriber
           {followersNum === 1 ? '' : 's'}
         </Typography>
       </Grid>
