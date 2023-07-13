@@ -46,10 +46,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
   );
   const [isPlannedGraduationYearPrivate, setIsPlannedGraduationYearPrivate] = useState(
-    Boolean(
-      profile.IsPlannedGraduationYearPrivate && profile.PlannedGraduationYear !== PRIVATE_INFO,
-    ),
-  ); // I am adding this
+    Boolean(profile.IsPlannedGradYearPrivate),
+  );
   const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
     profile.CliftonStrengths?.Private,
   );
@@ -146,7 +144,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     }
   };
 
-  //I am adding this
   const handleChangePlannedGraduationYearPrivate = async () => {
     try {
       await userService.setPlannedGraduationYearPrivate(!isPlannedGraduationYearPrivate);
@@ -266,30 +263,28 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       />
     );
 
-  // I am adding this
-  // I need to change later for !isAlumni in the if statement
+  console.log(profile);
+
   const plannedGraduationYear =
-    isFacStaff || (isAlumni && !profile.PlannedGraduationYear?.length) ? null : (
+    isFacStaff || (isAlumni && !profile.PlannedGradYear?.length) ? null : (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
         contentText={
-          myProf && isStudent ? (
+          myProf && isStudent && !isAlumni ? (
             <Grid container spacing={0} alignItems="center">
               <Grid item>
-                {!profile.PlannedGraduationYear?.length
-                  ? 'Deciding'
-                  : profile.PlannedGraduationYear}
+                {!profile.PlannedGradYear?.length ? 'Deciding' : profile.PlannedGradYear}
               </Grid>
               <Grid item>
                 <UpdatePlannedGraduationYear />
               </Grid>
             </Grid>
-          ) : profile.PlannedGraduationYear === PRIVATE_INFO ? (
+          ) : profile.IsPlannedGradYearPrivate ? (
             PRIVATE_INFO
-          ) : !profile.PlannedGraduationYear?.length ? (
+          ) : !profile.PlannedGradYear?.length ? (
             'Deciding'
           ) : (
-            profile.PlannedGraduationYear
+            profile.PlannedGradYear
           )
         }
         ContentIcon={
