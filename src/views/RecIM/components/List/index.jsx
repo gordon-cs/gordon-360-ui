@@ -86,6 +86,20 @@ const ParticipantList = ({
 const MatchList = ({ matches, activityID }) => {
   const [selectedDay, setSelectedDay] = useState(0);
 
+  if (!matches?.length || !matches[0])
+    return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
+
+  let firstDate = standardDate(matches[0].StartTime, false, true);
+  let firstFullDate = getFullDate(matches[0].StartTime);
+  let organizedMatches = [
+    {
+      FullDate: firstFullDate,
+      DayOfWeek: firstDate.slice(0, 3),
+      DayOnly: firstDate.slice(4),
+      Matches: [],
+    },
+  ];
+
   useEffect(() => {
     let now = new Date();
     let today = getFullDate(now.toJSON());
@@ -102,20 +116,6 @@ const MatchList = ({ matches, activityID }) => {
       }
     else setSelectedDay(index);
   }, []);
-
-  if (!matches?.length || !matches[0])
-    return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
-
-  let firstDate = standardDate(matches[0].StartTime, false, true);
-  let firstFullDate = getFullDate(matches[0].StartTime);
-  let organizedMatches = [
-    {
-      FullDate: firstFullDate,
-      DayOfWeek: firstDate.slice(0, 3),
-      DayOnly: firstDate.slice(4),
-      Matches: [],
-    },
-  ];
 
   let j = 0;
   matches.forEach((m) => {
