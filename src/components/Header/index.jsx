@@ -140,7 +140,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
     </Button>
   );
 
-  function logoSize() {
+  function logoSizedForHeader() {
     if (width >= 900) {
       return gc_logo_72;
     } else if (width >= 600) {
@@ -170,7 +170,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
             value={tabIndex}
             onClick={(event, value) => setTabIndex(value)}
           >
-            <img src={logoSize()}></img>
+            <img src={logoSizedForHeader()}></img>
           </Link>
 
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
