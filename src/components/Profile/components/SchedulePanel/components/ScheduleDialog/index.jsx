@@ -14,11 +14,9 @@ import styles from './ScheduleDialog.module.css';
 const dayArr = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
 const formatter = (date, display, isAllDay) => {
-  if (isAllDay) {
-    return null;
-  } else {
-    return format(new Date(date), display);
-  }
+  if (isAllDay) return null;
+
+  return format(new Date(date), display);
 };
 
 const ScheduleDialog = (props) => {
@@ -31,21 +29,21 @@ const ScheduleDialog = (props) => {
               Course Information
             </DialogTitle>
             <DialogContent>
-              <Typography className={styles.dialogTextLarge} align="left">
+              <Typography className={styles.courseTitle} align="left">
                 Title: {props.courseTitle}
               </Typography>
-              <Typography className={styles.dialogTextMedium} align="left">
+              <Typography className={styles.courseInfo} align="left">
                 Room: {props.courseLocation}
               </Typography>
-              <Typography className={styles.dialogTextMedium} align="left">
+              <Typography className={styles.courseInfo} align="left">
                 Time:
                 {formatter(props.courseStart, " hh:mm aaaaa'm' ")}-
                 {formatter(props.courseEnd, " hh:mm aaaaa'm' ")}
               </Typography>
-              <Typography className={styles.dialogTextMedium} align="left">
+              <Typography className={styles.courseInfo} align="left">
                 Week Day(s): {props.recurringDays}
               </Typography>
-              <Typography className={styles.dialogTextMedium} align="left">
+              <Typography className={styles.courseInfo} align="left">
                 Term Date: {formatter(props.firstDay, 'yyyy-MM-dd')} to
                 {formatter(props.lastDay, ' yyyy-MM-dd')}
               </Typography>

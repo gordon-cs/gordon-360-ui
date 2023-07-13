@@ -209,12 +209,7 @@ const GordonSchedulePanel = (props) => {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       {
         <>
-          <Accordion
-            TransitionProps={{ unmountOnExit: true }}
-            onChange={handleIsExpanded}
-            //change this later
-            defaultExpanded={props.myProf}
-          >
+          <Accordion TransitionProps={{ unmountOnExit: true }} onChange={handleIsExpanded}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
               aria-controls="panel1a-content"
