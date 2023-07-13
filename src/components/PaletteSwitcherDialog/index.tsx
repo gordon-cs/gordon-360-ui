@@ -1,3 +1,12 @@
+/*
+  Logic for saving and updating the site color scheme.
+  Contains:
+  useWatchUsersColorScheme - method for setting up event listeners to detect changes to user color 
+  preferences
+  PaletteSwitcherDialog - component with a dialog box to allow users to choose their color
+  preferences in the site, and save their preference in localStorage
+*/
+
 import GordonDialogBox from 'components/GordonDialogBox';
 import React, { useEffect, useState } from 'react';
 import {
@@ -8,6 +17,7 @@ import {
   Radio,
   Divider,
 } from '@mui/material';
+import { storageColorPreferenceKey } from 'theme';
 import { useColorScheme } from '@mui/material/styles';
 
 // Watches for system setting changes, and updates the color accordingly
@@ -18,7 +28,7 @@ export const useWatchUsersColorScheme = () => {
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
     const onSystemColorSchemeChange = (e: any) => {
-      const storedColorScheme = localStorage.getItem('colorMode') ?? 'system';
+      const storedColorScheme = localStorage.getItem(storageColorPreferenceKey) ?? 'system';
 
       if (storedColorScheme === 'system') {
         setMode(e.matches ? 'dark' : 'light');
@@ -40,7 +50,9 @@ type Props = {
 
 const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
   // defaults to system setting if no user setting is stored
-  const [localScheme, setLocalScheme] = useState(localStorage.getItem('colorMode') ?? 'system');
+  const [localScheme, setLocalScheme] = useState(
+    localStorage.getItem(storageColorPreferenceKey) ?? 'system',
+  );
   const { setMode } = useColorScheme();
 
   useEffect(() => {
@@ -67,7 +79,7 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
   };
 
   const setColorMode = (colorMode: string) => {
-    localStorage.setItem('colorMode', colorMode);
+    localStorage.setItem(storageColorPreferenceKey, colorMode);
 
     //Save the current mode to the use state to update button text.
     setLocalScheme(colorMode);

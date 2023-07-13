@@ -111,6 +111,9 @@ export const windowBreakWidths = {
   breakXL: 1536,
 } as const;
 
+// key for caching user color preference in localStorage
+export const storageColorPreferenceKey = 'colorMode';
+
 // Extend the interface, add neutral color with same color options as the primary palette.
 declare module '@mui/material/styles' {
   interface Palette {
