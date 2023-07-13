@@ -173,20 +173,6 @@ const GordonSchedulePanel = (props) => {
             </AccordionSummary>
             <AccordionDetails>
               <Grid container direction="row" justifyContent="center" align="left" spacing={4}>
-                {props.isOnline && profile.PersonType?.includes('fac') && (
-                  <Grid container direction="row" item xs={12} lg={12} spacing={2}>
-                    <Grid item lg={1}></Grid>
-                    <Grid item xs={4} lg={1} align="left" className={styles.officeHourTitle}>
-                      <Markup content="Office Hours: " />
-                      {editDescriptionButton}
-                    </Grid>
-                    <Grid item xs={7} lg={9} align="left" className={styles.officeHourText}>
-                      <Divider />
-                      <Markup content={replaced} />
-                      <Divider />
-                    </Grid>
-                  </Grid>
-                )}
                 <Grid item xs={12} lg={3} spacing={2}>
                   <FormControl variant="filled" fullWidth>
                     <InputLabel id="schedule session">Term</InputLabel>

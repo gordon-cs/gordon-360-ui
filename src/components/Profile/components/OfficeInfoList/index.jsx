@@ -87,11 +87,12 @@ const OfficeInfoList = ({
     ) : null;
 
   return (
-    <Grid item xs={12}>
+    <Grid item xs={12} lg={12}>
       <Card className={styles.office_info_list}>
         <Grid container className={styles.office_info_list_header}>
           <CardHeader title="Office Information" />
         </Grid>
+
         <CardContent>
           <List>
             {department}
