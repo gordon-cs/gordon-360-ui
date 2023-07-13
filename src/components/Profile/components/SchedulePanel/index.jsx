@@ -11,7 +11,6 @@ import {
   Select,
   MenuItem,
   CardHeader,
-  Divider,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,7 +18,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
 import { formatDistanceToNow } from 'date-fns';
-import { Markup } from 'interweave';
 import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
@@ -37,7 +35,6 @@ const GordonSchedulePanel = (props) => {
   const [description, setDescription] = useState('');
   const [modifiedTimeStamp, setModifiedTimeStamp] = useState();
   const [loading, setLoading] = useState(true);
-  const [resourceId, setResourceId] = useState(0);
   const [reloadCall, setReloadCall] = useState(false);
   const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
   const [scheduleControlInfo, setScheduleControlInfo] = useState();

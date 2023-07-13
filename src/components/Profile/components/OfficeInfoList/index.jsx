@@ -25,7 +25,7 @@ const OfficeInfoList = ({
 }) => {
   const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
   const [profile, setProfile] = useState();
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(office_hours);
 
   const loadData = async (searchedUser) => {
     try {
