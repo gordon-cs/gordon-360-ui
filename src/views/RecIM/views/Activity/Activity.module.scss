@@ -1,7 +1,7 @@
 @import '../../../../vars';
 
 .buttonArea {
-  background-color: $neutral-light-gray;
+  background-color: var(--mui-palette-neutral-200);
   padding: 16px;
   margin-top: -1em;
   margin-bottom: 0.2em;
@@ -11,16 +11,16 @@
 
 .actionButton {
   text-transform: none;
-  background-color: $primary-cyan;
+  background-color: var(--mui-palette-secondary-main);
 }
 
 .actionButton:hover {
-  background-color: $primary-cyan-600;
+  background-color: var(--mui-palette-secondary-600);
 }
 
 .seriesHeader {
-  color: $neutral-black-opacity70;
-  background-color: $neutral-black-opacity15;
+  color: var(--mui-palette-neutral-800);
+  background-color: var(--mui-palette-neutral-300);
   border-radius: 0.5rem;
   margin-top: 1rem;
   width: 100%;
