@@ -248,11 +248,9 @@ const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
-// const setPlannedGraduationYear = (value: number) =>
-//   http.put(`profiles/planned_graduation_year`, value);
-
 const setPlannedGraduationYear = (value: number) => {
-  http.put(`profiles/plannedGradYear`, value);
+  const body = { ['plannedGradYear']: value };
+  http.put(`profiles/plannedGradYear`, body);
 };
 
 const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>

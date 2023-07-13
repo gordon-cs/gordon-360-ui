@@ -263,8 +263,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       />
     );
 
-  console.log(profile);
-
   const plannedGraduationYear =
     isFacStaff || (isAlumni && !profile.PlannedGradYear?.length) ? null : (
       <ProfileInfoListItem
