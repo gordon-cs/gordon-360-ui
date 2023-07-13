@@ -20,7 +20,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
 import { formatDistanceToNow } from 'date-fns';
 import { Markup } from 'interweave';
-import schedulecontrol from 'services/schedulecontrol';
 import { gordonColors } from 'theme';
 import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
@@ -29,12 +28,12 @@ import scheduleService from 'services/schedule';
 import { useNetworkStatus, useUser } from 'hooks';
 import sessionService from 'services/session';
 
+import user from 'services/user';
+
 const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
   const [isExpanded, setIsExpanded] = useState(props, myProf ? false : true);
   const [disabled, setDisabled] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState();
-  const [isDoubleClick, setIsDoubleClick] = useState(false);
   const [description, setDescription] = useState('');
   const [modifiedTimeStamp, setModifiedTimeStamp] = useState();
   const [loading, setLoading] = useState(true);
@@ -45,6 +44,7 @@ const GordonSchedulePanel = (props) => {
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
+  const [profile, setProfile] = useState();
 
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
@@ -76,28 +76,19 @@ const GordonSchedulePanel = (props) => {
 
   const loadData = async (searchedUser) => {
     try {
-      const scheduleControlInfo = await schedulecontrol.getScheduleControl(
-        searchedUser.AD_Username,
-      );
-      console.log({ scheduleControlInfo });
+      const profileInfo = await user.getProfileInfo(searchedUser.AD_Username);
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
+      setProfile(profileInfo);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
-      if (scheduleControlInfo) {
-        setDescription(
-          scheduleControlInfo.Description
-            ? // We decided to leave the regex code for now because the data stored in the database
-              // before changing the api is still in the regex form.
-              scheduleControlInfo.Description.replace(new RegExp('SlSh', 'g'), '/')
-                .replace(new RegExp('CoLn', 'g'), ':')
-                .replace(new RegExp('dOT', 'g'), '.')
-            : '',
-        );
-        setModifiedTimeStamp(scheduleControlInfo.ModifiedTimeStamp);
+      if (profileInfo.PersonType?.includes('fac')) {
+        setDescription(profileInfo.office_hours);
+      } else {
+        setDescription('');
       }
     } catch (e) {}
     setLoading(false);
   };
-  console.log({ description });
+
   const handleEditDescriptionOpen = () => {
     setEditDescriptionOpen(true);
   };
@@ -111,7 +102,7 @@ const GordonSchedulePanel = (props) => {
   };
 
   const handleDescriptionSubmit = async (descValue) => {
-    await schedulecontrol.setScheduleDescription(descValue);
+    await user.updateOfficeHours(descValue);
     loadData(props.profile);
   };
 
@@ -120,7 +111,6 @@ const GordonSchedulePanel = (props) => {
   const reloadHandler = () => {
     setReloadCall((val) => !val);
   };
-
   const replaced = description;
 
   const { classes } = props;
@@ -162,36 +152,35 @@ const GordonSchedulePanel = (props) => {
       </Fragment>
     );
   }
-  // console.log({ replaced });
+
   return loading ? (
     <GordonLoader />
   ) : (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       {
         <>
-          <Accordion
-            TransitionProps={{ unmountOnExit: true }}
-            onChange={handleIsExpanded}
-            defaultExpanded={!props.myProf}
-          >
+          <Accordion TransitionProps={{ unmountOnExit: true }} onChange={handleIsExpanded}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
               aria-controls="panel1a-content"
               id="panel1a-header"
               className={styles.header}
             >
-              <CardHeader className={styles.accordionHeader} title={'Course Schedule'} />
+              <CardHeader
+                className={styles.accordionHeader}
+                title={description === '' ? 'Schedule' : 'Office Hours & Course Schedule'}
+              />
             </AccordionSummary>
             <AccordionDetails>
               <Grid container direction="row" justifyContent="center" align="left" spacing={4}>
-                {props.isOnline && (
+                {props.isOnline && profile.PersonType?.includes('fac') && (
                   <Grid container direction="row" item xs={12} lg={12} spacing={2}>
                     <Grid item lg={1}></Grid>
-                    <Grid item xs={4} lg={1} align="left" className={styles.officeHourText}>
-                      <Markup content="Public Office Hours Note: " />
+                    <Grid item xs={4} lg={1} align="left" className={styles.officeHourTitle}>
+                      <Markup content="Office Hours: " />
                       {editDescriptionButton}
                     </Grid>
-                    <Grid item xs={7} lg={9} align="left">
+                    <Grid item xs={7} lg={9} align="left" className={styles.officeHourText}>
                       <Divider />
                       <Markup content={replaced} />
                       <Divider />
