@@ -4,7 +4,7 @@
   &_header {
     padding-left: 1rem;
     background-color: var(--mui-palette-primary-main);
-    color: $neutral-white;
+    color: var(--mui-palette-primary-contrastText);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
   }
@@ -14,13 +14,20 @@
     &_content {
       padding: 1rem !important;
       &_button {
-        background-color: $primary-cyan !important;
-        color: $neutral-white !important;
+        background-color: var(--mui-palette-secondary-main) !important;
+        color: var(--mui-palette-secondary-contrastText) !important;
         margin: 0.5rem 0.5rem 1rem 0.5rem !important;
+      }
+      &_note {
+        color: var(--mui-palette-neutral-700);
+        background-color: var(--mui-palette-neutral-main);
+        padding: 0.3rem 1rem;
+        margin-top: 1rem;
+        border-radius: 5px;
       }
       .noMemberships {
         padding-left: 16px;
-        color: $primary-cyan;
+        color: var(--mui-palette-secondary-main);
       }
     }
   }
@@ -31,8 +38,8 @@
     &_header {
       padding-left: 0rem;
       justify-content: center;
-      background-color: $primary-blue;
-      color: $neutral-white;
+      background-color: var(--mui-palette-primary-main);
+      color: var(--mui-palette-neutral-light);
       border-top-left-radius: 4px;
       border-top-right-radius: 4px;
     }
