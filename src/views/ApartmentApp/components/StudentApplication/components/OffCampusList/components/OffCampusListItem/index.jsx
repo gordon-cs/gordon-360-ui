@@ -2,6 +2,7 @@ import {
   Divider,
   FormControl,
   FormHelperText,
+  FormLabel,
   Grid,
   Input,
   InputLabel,
@@ -77,7 +78,7 @@ const OffCampusListItem = ({
           </Grid>
           <Grid item xs={12} sm={8}>
             <FormControl fullWidth error={!isSelectionValid}>
-              <InputLabel shrink>Department</InputLabel>
+              <FormLabel>Department</FormLabel>
               <Select
                 disabled={disabled}
                 value={isSelectionValid ? offCampusProgram : ''}

@@ -110,6 +110,7 @@ const StudentApplication = ({ userProfile }) => {
   const [deleteButtonAlertTimeout, setDeleteButtonAlertTimeout] = useState(null);
   const [saveButtonAlertTimeout, setSaveButtonAlertTimeout] = useState(null);
   const [submitButtonAlertTimeout, setSubmitButtonAlertTimeout] = useState(null);
+  const [applicationExists, setApplicationExists] = useState(false);
 
   /**
    * Load the user's saved apartment application, if one exists
@@ -137,6 +138,7 @@ const StudentApplication = ({ userProfile }) => {
       // Check if the current user is on an application. Returns the application ID number if found
       const newApplicationID = await housing.getCurrentApplicationID();
       if (newApplicationID > 0) {
+        setApplicationExists(true);
         const newApplicationDetails = await housing.getApartmentApplication(newApplicationID);
         setApplicationDetails(newApplicationDetails);
         setUnsavedChanges(false);
@@ -441,15 +443,17 @@ const StudentApplication = ({ userProfile }) => {
    * Callback for hall list add button
    */
   const handleHallAdd = () => {
-    const newPlaceholderHall = {
-      ApplicationID: applicationDetails.ApplicationID,
-      HallRank: (applicationDetails.ApartmentChoices?.length ?? 0) + 1,
-      HallName: '',
-    };
-    setApplicationDetails((prevApplicationDetails) => ({
-      ...prevApplicationDetails,
-      ApartmentChoices: [...(prevApplicationDetails.ApartmentChoices ?? []), newPlaceholderHall],
-    }));
+    if ((applicationDetails.ApartmentChoices?.length ?? 0) < 5) {
+      const newPlaceholderHall = {
+        ApplicationID: applicationDetails.ApplicationID,
+        HallRank: (applicationDetails.ApartmentChoices?.length ?? 0) + 1,
+        HallName: '',
+      };
+      setApplicationDetails((prevApplicationDetails) => ({
+        ...prevApplicationDetails,
+        ApartmentChoices: [...(prevApplicationDetails.ApartmentChoices ?? []), newPlaceholderHall],
+      }));
+    }
   };
 
   /**
@@ -510,17 +514,26 @@ const StudentApplication = ({ userProfile }) => {
    */
   const handleHallRemove = (indexToRemove) => {
     if (indexToRemove >= 0) {
-      setApplicationDetails((prevApplicationDetails) => ({
-        ...prevApplicationDetails,
-        ApartmentChoices: prevApplicationDetails.ApartmentChoices.filter(
+      setApplicationDetails((prevApplicationDetails) => {
+        const newApartmentChoices = prevApplicationDetails.ApartmentChoices.filter(
           (_hall, index) => index !== indexToRemove,
-        ).map((apartmentChoice, _index, apartmentChoices) =>
-          // If any rank value is greater than the new maximum, then set it to that new max rank
-          apartmentChoice.HallRank > apartmentChoices.length
-            ? { ...apartmentChoice, HallRank: apartmentChoices.length }
-            : apartmentChoice,
-        ),
-      }));
+        );
+
+        const removedHallRank = prevApplicationDetails.ApartmentChoices[indexToRemove].HallRank;
+
+        const updatedApartmentChoices = newApartmentChoices.map((apartmentChoice) => {
+          if (apartmentChoice.HallRank > removedHallRank) {
+            // If the current hall's rank is greater than the removed hall's rank, decrease it by one
+            return { ...apartmentChoice, HallRank: apartmentChoice.HallRank - 1 };
+          }
+          return apartmentChoice;
+        });
+
+        return {
+          ...prevApplicationDetails,
+          ApartmentChoices: updatedApartmentChoices,
+        };
+      });
       setUnsavedChanges(true);
     }
   };
@@ -561,6 +574,12 @@ const StudentApplication = ({ userProfile }) => {
   const deleteApartmentApplication = async () => {
     setDeleting(true);
     setDeleteButtonAlertTimeout(null);
+    //If there is no existing application, we clear the application by loading the application again
+    if (!applicationExists) {
+      setApplicationDetails(loadApplication);
+      setDeleting(false);
+      return;
+    }
     try {
       const result = await housing.deleteApartmentApplication(applicationDetails.ApplicationID);
       if (result) {
@@ -623,7 +642,7 @@ const StudentApplication = ({ userProfile }) => {
           // Quick fix since the API is trying
           //  to validate the public profile object but there is no Hall property
           let applicationDetailsNoProfiles = applicationDetails;
-          applicationDetailsNoProfiles.Applicants.forEach((a) => a.Profile.Hall = '');
+          applicationDetailsNoProfiles.Applicants.forEach((a) => (a.Profile.Hall = ''));
           const saveResult = await housing.saveApartmentApplication(applicationDetailsNoProfiles);
           if (saveResult) {
             setApplicationDetails((prevApplicationDetails) => ({
@@ -674,6 +693,19 @@ const StudentApplication = ({ userProfile }) => {
   const submitApplication = async () => {
     setSubmitStatus(true);
     setSubmitButtonAlertTimeout(null);
+
+    // Check for duplicate hall ranks
+    const hallRanks = applicationDetails.ApartmentChoices.map((choice) => choice.HallRank);
+    const uniqueHallRanks = new Set(hallRanks);
+
+    if (hallRanks.length !== uniqueHallRanks.size) {
+      createSnackbar(
+        'Error: There are duplicate hall rankings. Please ensure each hall has a unique ranking.',
+        'error',
+      );
+      setSubmitStatus(false);
+      return;
+    }
     try {
       if (applicationDetails.Applicants.length < 1) {
         createSnackbar(
