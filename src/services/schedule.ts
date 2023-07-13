@@ -27,8 +27,6 @@ type ScheduleEvent = {
   meetingDays: string[];
 };
 
-type dayMap = {};
-
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
 
 const getSchedule = (username: string = '', sessionID: string = ''): Promise<CourseSchedule[]> => {

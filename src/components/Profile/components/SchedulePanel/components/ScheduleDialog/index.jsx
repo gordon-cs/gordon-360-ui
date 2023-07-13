@@ -52,7 +52,7 @@ const ScheduleDialog = (props) => {
             </DialogContent>
           </>
         )}
-        <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
+        <DialogActions className={styles.DialogActions}>
           {/* There are two separate add-to-calendar button elements because Google calendar is the only
           calendar that supports recurring events, the other add-to-calendar button is for the other
           options that users can choose and manually set the course as recurring */}
