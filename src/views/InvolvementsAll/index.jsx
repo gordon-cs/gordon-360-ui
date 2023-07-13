@@ -21,7 +21,6 @@ import Requests from './components/Requests';
 import styles from './Involvements.module.css';
 import styles2 from 'app.module.css';
 
-
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [involvements, setInvolvements] = useState([]);
@@ -137,11 +136,6 @@ const InvolvementsAll = () => {
 
   return (
     <Grid container justifyContent="center" spacing={4}>
-      {!isOnline ? null : loadingProfile ? (
-        <GordonLoader />
-      ) : (
-        profile && <Requests profile={profile} session={selectedSession} />
-      )}
       {loadingProfile ? (
         <GordonLoader />
       ) : (
@@ -167,7 +161,11 @@ const InvolvementsAll = () => {
           </Grid>
         )
       )}
-
+      {!isOnline ? null : loadingProfile ? (
+        <GordonLoader />
+      ) : (
+        profile && <Requests profile={profile} session={selectedSession} />
+      )}
       <Grid item xs={12} lg={8}>
         <Card>
           <CardHeader title={searchPageTitle} className={styles2.gc360_header} />
@@ -235,7 +233,6 @@ const InvolvementsAll = () => {
           <CardHeader
             title={`${involvementSessionText} Involvements`}
             className={styles2.gc360_header}
-
           />
           <CardContent>
             {loading ? (
