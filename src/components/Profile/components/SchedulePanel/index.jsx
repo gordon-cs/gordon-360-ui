@@ -4,8 +4,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Grid,
-  Typography,
-  IconButton,
   FormControl,
   InputLabel,
   Select,
@@ -13,13 +11,9 @@ import {
   CardHeader,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import EditIcon from '@mui/icons-material/Edit';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
-import { formatDistanceToNow } from 'date-fns';
-import { gordonColors } from 'theme';
-import EditDescriptionDialog from './components/EditDescriptionDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import styles from './ScheduleHeader.module.css';
 import scheduleService from 'services/schedule';
@@ -31,21 +25,14 @@ import user from 'services/user';
 const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
   const [isExpanded, setIsExpanded] = useState(props, myProf ? false : true);
-  const [disabled, setDisabled] = useState(true);
-  const [description, setDescription] = useState('');
-  const [modifiedTimeStamp, setModifiedTimeStamp] = useState();
   const [loading, setLoading] = useState(true);
   const [reloadCall, setReloadCall] = useState(false);
-  const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
-  const [scheduleControlInfo, setScheduleControlInfo] = useState();
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [profile, setProfile] = useState();
-
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
-
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
   useEffect(() => {
@@ -77,30 +64,8 @@ const GordonSchedulePanel = (props) => {
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       setProfile(profileInfo);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
-      if (profileInfo.PersonType?.includes('fac')) {
-        setDescription(profileInfo.office_hours);
-      } else {
-        setDescription('');
-      }
     } catch (e) {}
     setLoading(false);
-  };
-
-  const handleEditDescriptionOpen = () => {
-    setEditDescriptionOpen(true);
-  };
-
-  const handleEditDescriptionClose = () => {
-    setEditDescriptionOpen(false);
-  };
-
-  const handleEditDescriptionButton = () => {
-    setDisabled(false);
-  };
-
-  const handleDescriptionSubmit = async (descValue) => {
-    await user.updateOfficeHours(descValue);
-    loadData(props.profile);
   };
 
   const handleIsExpanded = () => setIsExpanded((prevExpanded) => !prevExpanded);
@@ -108,47 +73,8 @@ const GordonSchedulePanel = (props) => {
   const reloadHandler = () => {
     setReloadCall((val) => !val);
   };
-  const replaced = description;
 
   const { classes } = props;
-
-  let editDescriptionButton, editDialog, lastUpdate;
-
-  lastUpdate = (
-    <div style={{ color: gordonColors.primary.cyan }}>
-      <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
-      {Boolean(scheduleControlInfo) && (
-        <Typography>
-          {formatDistanceToNow(new Date(modifiedTimeStamp), { addSuffix: true })}
-        </Typography>
-      )}
-    </div>
-  );
-
-  if (props.myProf) {
-    editDialog = (
-      <EditDescriptionDialog
-        onDialogSubmit={handleDescriptionSubmit}
-        handleEditDescriptionClose={handleEditDescriptionClose}
-        editDescriptionOpen={editDescriptionOpen}
-        descriptiontext={description}
-      />
-    );
-  }
-
-  if (props.myProf) {
-    editDescriptionButton = (
-      <Fragment>
-        <IconButton
-          style={{ marginBottom: '0.5rem' }}
-          onClick={handleEditDescriptionOpen}
-          size="large"
-        >
-          <EditIcon style={{ fontSize: 20 }} />
-        </IconButton>
-      </Fragment>
-    );
-  }
 
   return loading ? (
     <GordonLoader />
@@ -163,10 +89,7 @@ const GordonSchedulePanel = (props) => {
               id="panel1a-header"
               className={styles.header}
             >
-              <CardHeader
-                className={styles.accordionHeader}
-                title={description === '' ? 'Schedule' : 'Office Hours & Course Schedule'}
-              />
+              <CardHeader className={styles.accordionHeader} title={'Schedule'} />
             </AccordionSummary>
             <AccordionDetails>
               <Grid container direction="row" justifyContent="center" align="left" spacing={4}>
@@ -196,13 +119,11 @@ const GordonSchedulePanel = (props) => {
                     profile={props.profile}
                     term={selectedSession}
                     myProf={props.myProf}
-                    handleEditDescriptionButton={handleEditDescriptionButton}
                     reloadCall={reloadCall}
                     isOnline={props.isOnline}
                   />
                 </Grid>
               </Grid>
-              {editDialog}
             </AccordionDetails>
           </Accordion>
         </>

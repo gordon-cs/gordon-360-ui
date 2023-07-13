@@ -86,9 +86,9 @@ const OfficeInfoList = ({
   }
 
   // Only display if there is some info to show
-  // if (!BuildingDescription && !OnCampusRoom && !OnCampusPhone && !office_hours) {
-  //   return null;
-  // }
+  if (!myProf && !BuildingDescription && !OnCampusRoom && !OnCampusPhone && !office_hours) {
+    return null;
+  }
 
   const department = OnCampusDepartment ? (
     <ProfileInfoListItem title="Department:" contentText={OnCampusDepartment} />
@@ -105,17 +105,18 @@ const OfficeInfoList = ({
     />
   ) : null;
 
-  const officeHours = (
-    <ProfileInfoListItem
-      title="Office Hours:"
-      contentText={
-        <Grid>
-          <Markup content={description} />
-          {editDescriptionButton}
-        </Grid>
-      }
-    />
-  );
+  const officeHours =
+    myProf || description ? (
+      <ProfileInfoListItem
+        title="Office Hours:"
+        contentText={
+          <Grid>
+            <Markup content={description} />
+            {editDescriptionButton}
+          </Grid>
+        }
+      />
+    ) : null;
 
   const room =
     BuildingDescription || OnCampusRoom ? (
@@ -171,7 +172,7 @@ const OfficeInfoList = ({
             {mailstop}
             {officePhone}
             {officeHours}
-            {updateOfficeInfo}
+            {/* {updateOfficeInfo} */}
           </List>
         </CardContent>
       </Card>
