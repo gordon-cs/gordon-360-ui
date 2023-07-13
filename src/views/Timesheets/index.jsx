@@ -366,6 +366,8 @@ const Timesheets = (props) => {
     </Button>
   );
 
+  console.log(newTheme);
+
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -380,7 +382,10 @@ const Timesheets = (props) => {
               >
                 <Grid container spacing={2} alignItems="center" alignContent="center">
                   <Grid item md={2}>
-                    <Button onClick={changeState}> {clockInOut}</Button>
+                    <Button variant="outlined" color="link" onClick={changeState}>
+                      {' '}
+                      {clockInOut}
+                    </Button>
                   </Grid>
                   <Grid item md={8}>
                     <div className={styles.header_tooltip_container}>
