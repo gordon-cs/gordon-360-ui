@@ -37,7 +37,7 @@ const EventItem = ({ event }) => {
           {event.StartDate !== '' && event.EndDate !== '' && (
             <add-to-calendar-button
               name={event.title}
-              options="'Apple','Google','Outlook.com','MicrosoftTeams'"
+              options="'Apple|Apple Cal','Google|Google Cal','Microsoft365|Gordon 360','MicrosoftTeams'"
               location={event.location}
               startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
               endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
@@ -45,6 +45,7 @@ const EventItem = ({ event }) => {
               endTime={format(new Date(event.EndDate), 'HH:mm')}
               //default timeZone setting is "currentBrowser", and saved setting "America/New_York" if needed in case
               timeZone="currentBrowser"
+              label="Add to Calendar"
               description={event.Description}
               onClick={() => setExpanded((e) => !e)}
             ></add-to-calendar-button>
