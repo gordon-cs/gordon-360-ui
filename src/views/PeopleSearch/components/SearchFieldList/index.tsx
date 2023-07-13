@@ -189,12 +189,13 @@ const SearchFieldList = ({ onSearch }: Props) => {
     if (canSearch) {
       setLoadingSearch(true);
 
-      await peopleSearchService.search(searchParams).then(onSearch);
+      const results = await peopleSearchService.search(searchParams);
+      onSearch(results);
 
       const newQueryString = serializeSearchParams(searchParams);
       // If search params are new since last search, add search to history
       if (window.location.search !== newQueryString) {
-        navigate(newQueryString);
+        navigate(newQueryString, { state: results });
       }
 
       setLoadingSearch(false);
@@ -229,7 +230,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }, []);
 
   useEffect(() => {
-    const readSearchParamsFromURL = () => {
+    const onTraverseHistory = (event: PopStateEvent | undefined) => {
+      // Display search results saved in history entry, if any
+      onSearch(event?.state?.usr ?? null);
+
+      // Load search params from URL
       const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
 
       setSearchParams((oldSearchParams) => {
@@ -247,12 +252,12 @@ const SearchFieldList = ({ onSearch }: Props) => {
     };
 
     // Read search params from URL when SearchFieldList mounts (or initialSearchParams changes)
-    readSearchParamsFromURL();
+    onTraverseHistory(undefined);
 
     // Read search params from URL on 'popstate' (back/forward navigation) events
-    window.addEventListener('popstate', readSearchParamsFromURL);
-    return () => window.removeEventListener('popstate', readSearchParamsFromURL);
-  }, [initialSearchParams]);
+    window.addEventListener('popstate', onTraverseHistory);
+    return () => window.removeEventListener('popstate', onTraverseHistory);
+  }, [initialSearchParams, onSearch]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === 'graduation_year') {
