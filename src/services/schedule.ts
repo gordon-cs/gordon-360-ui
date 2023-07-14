@@ -23,7 +23,8 @@ type ScheduleEvent = {
   title: string;
   start: Date;
   end: Date;
-  resourceId: number;
+  resourceId: string;
+  meetingDays: string[];
 };
 
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
@@ -35,26 +36,26 @@ const getSchedule = (username: string = '', sessionID: string = ''): Promise<Cou
   return http.get(`schedule/${username}?sessionID=${sessionID}`);
 };
 
-function getMeetingDays(course: CourseSchedule): number[] {
+function getMeetingDays(course: CourseSchedule): string[] {
   let dayArray = [];
 
   if (course.MONDAY_CDE === 'M') {
-    dayArray.push(1);
+    dayArray.push('MO');
   }
   if (course.TUESDAY_CDE === 'T') {
-    dayArray.push(2);
+    dayArray.push('TU');
   }
   if (course.WEDNESDAY_CDE === 'W') {
-    dayArray.push(3);
+    dayArray.push('WE');
   }
   if (course.THURSDAY_CDE === 'R') {
-    dayArray.push(4);
+    dayArray.push('TH');
   }
   if (course.FRIDAY_CDE === 'F') {
-    dayArray.push(5);
+    dayArray.push('FR');
   }
   if (course.SATURDAY_CDE === 'S') {
-    dayArray.push(6);
+    dayArray.push('SA');
   }
 
   return dayArray;
@@ -63,7 +64,7 @@ function getMeetingDays(course: CourseSchedule): number[] {
 function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
   const today = moment();
   let eventId = 0;
-  let asyncMeetingDays = [1, 2, 3, 4, 5];
+  let asyncMeetingDays = ['MO', 'TU', 'WE', 'TH', 'FR'];
 
   const eventArray = schedule.flatMap((course) => {
     course.CRS_CDE = course.CRS_CDE.trim();
@@ -88,6 +89,7 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
         end: today.toDate(),
         resourceId: day,
         allDay: true,
+        meetingDays: ['MO', 'TU', 'WE', 'TH', 'FR'],
       }));
     } else {
       return meetingDays.map((day) => ({
@@ -96,6 +98,7 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
         start: beginTime.toDate(),
         end: endTime.toDate(),
         resourceId: day,
+        meetingDays: meetingDays,
       }));
     }
   });
