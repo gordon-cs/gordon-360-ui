@@ -36,9 +36,15 @@ const ScheduleDialog = (props) => {
                 Room: {props.courseLocation}
               </Typography>
               <Typography className={styles.courseInfo} align="left">
-                Time:
-                {formatter(props.courseStart, " hh:mm aaaaa'm' ")}-
-                {formatter(props.courseEnd, " hh:mm aaaaa'm' ")}
+                {props.courseInfo.allDay ? (
+                  'Time: ASYNC'
+                ) : (
+                  <>
+                    Time:
+                    {formatter(props.courseStart, " hh:mm aaaaa'm' ")}-
+                    {formatter(props.courseEnd, " hh:mm aaaaa'm' ")}
+                  </>
+                )}
               </Typography>
               <Typography className={styles.courseInfo} align="left">
                 Week Day(s): {props.recurringDays}
