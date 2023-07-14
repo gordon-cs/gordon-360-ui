@@ -52,7 +52,7 @@ const OfficeInfoList = ({
     await user.updateOfficeHours(descValue);
     loadData(profile);
   };
-  console.log(description);
+
   let editDescriptionButton, editDialog;
 
   if (myProf) {
@@ -172,7 +172,6 @@ const OfficeInfoList = ({
             {mailstop}
             {officePhone}
             {officeHours}
-            {/* {updateOfficeInfo} */}
           </List>
         </CardContent>
       </Card>
