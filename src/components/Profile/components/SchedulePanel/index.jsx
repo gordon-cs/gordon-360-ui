@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useCallback } from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -9,18 +9,18 @@ import {
   Select,
   MenuItem,
   CardHeader,
+  Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
+import ScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
 import scheduleService from 'services/schedule';
 import { useNetworkStatus, useUser } from 'hooks';
 import sessionService from 'services/session';
-
-import user from 'services/user';
 
 const GordonSchedulePanel = (props) => {
   const [myProf, setMyProf] = useState(false);
@@ -30,7 +30,15 @@ const GordonSchedulePanel = (props) => {
   const [sessions, setSessions] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
-  const [profile, setProfile] = useState();
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
+  const [selectedCourseInfo, setSelectedCourseInfo] = useState();
+  const [firstDay, setFirstDay] = useState('');
+  const [lastDay, setLastDay] = useState('');
+  const [recurringDays, setRecurringDays] = useState([]);
+  const [courseTitle, setCourseTitle] = useState('');
+  const [courseLocation, setCourseLocation] = useState('');
+  const [courseStart, setCourseStart] = useState('');
+  const [courseEnd, setCourseEnd] = useState('');
   const [selectedSession, setSelectedSession] = useState('');
   const isOnline = useNetworkStatus();
   const sessionFromURL = new URLSearchParams(location.search).get('session');
@@ -38,12 +46,17 @@ const GordonSchedulePanel = (props) => {
   useEffect(() => {
     const loadPage = async () => {
       setSessions(await sessionService.getAll());
-
       if (sessionFromURL) {
         setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
       } else {
         const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
         setCurrentAcademicSession(currentSessionCode);
+        const currSession = await sessionService.getCurrent();
+        const firstDay = currSession.SessionBeginDate;
+        const lastDay = currSession.SessionEndDate;
+
+        setFirstDay(firstDay);
+        setLastDay(lastDay);
       }
     };
     loadPage();
@@ -52,6 +65,12 @@ const GordonSchedulePanel = (props) => {
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
     reloadHandler();
+    const currSession = await sessionService.get(value);
+    const firstDay = currSession.SessionBeginDate;
+    const lastDay = currSession.SessionEndDate;
+
+    setFirstDay(firstDay);
+    setLastDay(lastDay);
   };
 
   useEffect(() => {
@@ -60,12 +79,27 @@ const GordonSchedulePanel = (props) => {
 
   const loadData = async (searchedUser) => {
     try {
-      const profileInfo = await user.getProfileInfo(searchedUser.AD_Username);
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       setProfile(profileInfo);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
     } catch (e) {}
     setLoading(false);
+  };
+
+  const handleScheduleDialogOpen = useCallback((calEvent) => {
+    if (props.myProf) {
+      setScheduleDialogOpen(true);
+      setRecurringDays(calEvent.meetingDays.map((day) => `${day}`).join(', '));
+      setCourseTitle(calEvent.title.split('in')[0]);
+      setCourseLocation(calEvent.title.split('in')[1]);
+      setCourseStart(calEvent.start);
+      setCourseEnd(calEvent.end);
+      setSelectedCourseInfo(calEvent);
+    }
+  }, []);
+
+  const handleScheduleDialogClose = () => {
+    setScheduleDialogOpen(false);
   };
 
   const handleIsExpanded = () => setIsExpanded((prevExpanded) => !prevExpanded);
@@ -75,6 +109,25 @@ const GordonSchedulePanel = (props) => {
   };
 
   const { classes } = props;
+
+  let scheduleDialog;
+
+  if (props.myProf) {
+    scheduleDialog = (
+      <ScheduleDialog
+        scheduleDialogOpen={scheduleDialogOpen}
+        handleScheduleDialogClose={handleScheduleDialogClose}
+        courseInfo={selectedCourseInfo}
+        recurringDays={recurringDays}
+        courseTitle={courseTitle}
+        courseLocation={courseLocation}
+        firstDay={firstDay}
+        lastDay={lastDay}
+        courseStart={courseStart}
+        courseEnd={courseEnd}
+      />
+    );
+  }
 
   return loading ? (
     <GordonLoader />
@@ -114,6 +167,11 @@ const GordonSchedulePanel = (props) => {
                   </FormControl>
                 </Grid>
                 <Grid lg={7}></Grid>
+                <Grid item align="center" className={styles.addCalendarInfoText}>
+                  <Typography className={styles.addCalendarInfoText}>
+                    Click on Course to add Schedule to Personal Calendar
+                  </Typography>
+                </Grid>
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar
                     profile={props.profile}
@@ -121,9 +179,11 @@ const GordonSchedulePanel = (props) => {
                     myProf={props.myProf}
                     reloadCall={reloadCall}
                     isOnline={props.isOnline}
+                    onSelectEvent={handleScheduleDialogOpen}
                   />
                 </Grid>
               </Grid>
+              {scheduleDialog}
             </AccordionDetails>
           </Accordion>
         </>
