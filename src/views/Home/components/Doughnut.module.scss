@@ -17,8 +17,21 @@
   text-shadow: 0px 1px 6px var(--mui-palette-neutral-400);
 }
 
+.card {
+  height: auto;
+  .item {
+    grid-row-start: 2;
+  }
+}
+
 @media (min-width: $break-md) {
   .value {
     font-size: 3.3vw;
+  }
+  .card {
+    height: 700px;
+    .item {
+      grid-row-start: 2;
+    }
   }
 }

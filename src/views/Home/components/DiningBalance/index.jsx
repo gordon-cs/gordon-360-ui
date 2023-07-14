@@ -210,7 +210,7 @@ const DiningBalance = () => {
     );
   }
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardContent>
         <Grid container direction="row" alignItems="center" spacing={0}>
           <Grid item xs={7} align="left">
