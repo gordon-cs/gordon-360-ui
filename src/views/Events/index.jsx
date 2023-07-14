@@ -25,7 +25,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Events.module.css';
 import styles2 from 'app.module.css';
 
-
 const Events = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -135,7 +134,6 @@ const Events = () => {
     <div align="center">
       Search
       <b className={styles.events_gordon_text}> Gordon </b>
-
       Events
     </div>
   );
@@ -147,7 +145,6 @@ const Events = () => {
           <CardHeader title={searchPageTitle} className={styles2.gc360_header} />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
-
               {/* Search Bar and Filters */}
               <Grid container spacing={2} direction="row">
                 <Grid item xs={12}>
@@ -157,7 +154,6 @@ const Events = () => {
                       render={() => (
                         <Grid item>
                           <EventIcon className={styles.events_icon} />
-
                         </Grid>
                       )}
                     />
@@ -212,7 +208,6 @@ const Events = () => {
                         render={() => (
                           <Grid item>
                             <FilterListIcon className={styles.events_icon} />
-
                           </Grid>
                         )}
                       />
@@ -229,7 +224,6 @@ const Events = () => {
                           filterSelectedOptions
                           renderTags={(value, getTagProps) =>
                             value.map((option, index) => (
-
                               <Chip label={option} {...getTagProps({ index })} color="secondary" />
                             ))
                           }
@@ -269,7 +263,6 @@ const Events = () => {
         <Grid item xs={12} lg={10} xl={8}>
           <CardHeader title={searchPageTitle} className={styles2.gc360_header} />
           <Card style={{ padding: '0 3vw' }}>
-
             <CardContent>
               {/* Search Bar and Filters */}
               <Grid container spacing={2} direction="row">
@@ -279,7 +272,6 @@ const Events = () => {
                     render={() => (
                       <Grid item>
                         <EventIcon className={styles.events_icon} />
-
                       </Grid>
                     )}
                   />
@@ -325,7 +317,6 @@ const Events = () => {
                       <Button
                         color="primary"
                         className={styles.events_button}
-
                         variant="contained"
                         onClick={() => navigate('/attended')}
                       >
@@ -352,7 +343,6 @@ const Events = () => {
                       render={() => (
                         <Grid item>
                           <FilterListIcon className={styles.events_icon} />
-
                         </Grid>
                       )}
                     />
@@ -368,7 +358,6 @@ const Events = () => {
                         filterSelectedOptions
                         renderTags={(value, getTagProps) =>
                           value.map((option, index) => (
-
                             <Chip label={option} {...getTagProps({ index })} color="secondary" />
                           ))
                         }

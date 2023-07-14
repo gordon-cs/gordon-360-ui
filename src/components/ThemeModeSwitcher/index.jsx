@@ -18,7 +18,6 @@ export const ModeSwitcher = () => {
     return null;
   }
   return (
-
     <>
       <button
         onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}

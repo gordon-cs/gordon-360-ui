@@ -13,7 +13,7 @@ const About = () => {
   const [versionAPI, setVersion] = useState(null);
 
   useEffect(() => {
-    //versionService.getVersion().then(setVersion);
+    versionService.getVersion().then(setVersion);
   }, []);
 
   return (

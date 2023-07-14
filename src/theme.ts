@@ -252,7 +252,6 @@ export const newTheme = extendTheme({
         },
         text: {
           primary: White, // Various MUI components and text
-          secondary: White,
         },
         Switch: {
           defaultColor: TestTool, // switch ball off color

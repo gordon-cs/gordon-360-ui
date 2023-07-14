@@ -8,7 +8,6 @@ import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
 import styles2 from 'app.module.css';
 
-
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
 
@@ -138,7 +137,7 @@ const DiningBalance = () => {
           style={{ paddingTop: 5, paddingBottom: 10 }}
         >
           <Grid item>
-            <Typography variant="body2" style={{ color: 'gray', textAlign: 'center' }}>
+            <Typography variant="body2" className={styles.label2}>
               {diningInfo.ChoiceDescription}
             </Typography>
           </Grid>
@@ -216,7 +215,6 @@ const DiningBalance = () => {
                 TODAY'S MENU
               </Button>
             </Grid>
-
           </Grid>
         }
         className={styles2.gc360_header}
