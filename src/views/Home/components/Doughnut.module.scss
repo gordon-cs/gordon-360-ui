@@ -19,9 +19,6 @@
 
 .card {
   height: auto;
-  .item {
-    grid-row-start: 2;
-  }
 }
 
 @media (min-width: $break-md) {
@@ -33,8 +30,5 @@
 @media (min-width: 1632px) {
   .card {
     height: 100%;
-    .item {
-      grid-row-start: 2;
-    }
   }
 }
