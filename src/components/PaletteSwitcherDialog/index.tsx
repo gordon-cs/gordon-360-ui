@@ -17,18 +17,18 @@ import {
   Radio,
   Divider,
 } from '@mui/material';
-import { storageColorPreferenceKey } from 'theme';
+import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 import { useColorScheme } from '@mui/material/styles';
+
+const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
 // Watches for system setting changes, and updates the color accordingly
 export const useWatchUsersColorScheme = () => {
   const { setMode } = useColorScheme();
 
   useEffect(() => {
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-
     const onSystemColorSchemeChange = (e: any) => {
-      const storedColorScheme = localStorage.getItem(storageColorPreferenceKey) ?? 'system';
+      const storedColorScheme = localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system';
 
       if (storedColorScheme === 'system') {
         setMode(e.matches ? 'dark' : 'light');
@@ -51,27 +51,30 @@ type Props = {
 const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
   // defaults to system setting if no user setting is stored
   const [localScheme, setLocalScheme] = useState(
-    localStorage.getItem(storageColorPreferenceKey) ?? 'system',
+    localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system',
   );
   const { setMode } = useColorScheme();
 
   useEffect(() => {
     SetModeFromSetting(localScheme);
-    /* ensures the color scheme is always correct, previously when the system setting was 
-    changed while the page was closed, the page would render still on the old scheme */
+    /* ensures the color scheme is correct when the component first mounts.
+    without this when the system setting was changed while the page was closed, the page would 
+    render still on the old scheme */
   }, []);
 
   // sets the site color scheme based on the setting string passed to it, defaults to light
   const SetModeFromSetting = (scheme: string) => {
-    setMode(
-      scheme === 'system'
-        ? window.matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'dark'
-          : 'light'
-        : scheme === 'dark'
-        ? 'dark'
-        : 'light',
-    );
+    if (scheme === 'system') {
+      if (systemPrefersDark) {
+        setMode('dark');
+      } else {
+        setMode('light');
+      }
+    } else if (scheme === 'light') {
+      setMode('light');
+    } else {
+      setMode('dark');
+    }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,7 +82,7 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
   };
 
   const setColorMode = (colorMode: string) => {
-    localStorage.setItem(storageColorPreferenceKey, colorMode);
+    localStorage.setItem(STORAGE_COLOR_PREFERENCE_KEY, colorMode);
 
     //Save the current mode to the use state to update button text.
     setLocalScheme(colorMode);
@@ -96,9 +99,9 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
       <FormControl>
         <FormLabel id="palette-mode-group-label">Color Mode</FormLabel>
         <RadioGroup
+          row
           name="palette-mode-group"
           aria-labelledby="palette-mode-group-label"
-          row={true}
           value={localScheme}
           onChange={handleChange}
         >
