@@ -28,8 +28,11 @@
   .value {
     font-size: 3.3vw;
   }
+}
+
+@media (min-width: 1632px) {
   .card {
-    height: 700px;
+    height: 100%;
     .item {
       grid-row-start: 2;
     }

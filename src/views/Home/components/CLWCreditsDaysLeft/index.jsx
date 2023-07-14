@@ -179,6 +179,8 @@ const CLWCreditsDaysLeft = () => {
             </Button>
           </Grid>
         </Grid>
+        <br />
+        <br />
         {content}
       </CardContent>
     </Card>
