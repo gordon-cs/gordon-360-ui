@@ -181,8 +181,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
    * Whether the user can search for the current params.
    * This prevents a search with empty params, which freezes the client by trying to render thousands of results
    */
-  const canSearch = useMemo(() => {
-    const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = searchParams;
+  const canSearch = (params: PeopleSearchQuery) => {
+    const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = params;
 
     // Must search some cohort of people
     const includesSomeone = includeStudent || includeFacStaff || includeAlumni;
@@ -191,23 +191,27 @@ const SearchFieldList = ({ onSearch }: Props) => {
     const anySearchCriteria = Object.values(criteria).some((c) => containsLetterRegExp.test(c));
 
     return includesSomeone && anySearchCriteria;
-  }, [searchParams]);
+  };
 
-  const search = useCallback(async () => {
-    if (canSearch) {
-      setLoadingSearch(true);
+  const search = useCallback(
+    async (params: PeopleSearchQuery) => {
+      if (canSearch(params)) {
+        setLoadingSearch(true);
 
-      await peopleSearchService.search(searchParams).then(onSearch);
+        await peopleSearchService.search(params).then(onSearch);
 
-      const newQueryString = serializeSearchParams(searchParams);
-      // If search params are new since last search, add search to navigate
-      if (location.search !== newQueryString) {
-        navigate(newQueryString);
+
+        const newQueryString = serializeSearchParams(params);
+        // If search params are new since last search, add search to history
+        if (window.location.search !== newQueryString) {
+          navigate(newQueryString);
+        }
+
+        setLoadingSearch(false);
       }
-
-      setLoadingSearch(false);
-    }
-  }, [canSearch, searchParams, onSearch, location.search, navigate]);
+    },
+    [canSearch, searchParams, onSearch, navigate],
+  );
 
   useEffect(() => {
     const loadPage = async () => {
@@ -235,14 +239,14 @@ const SearchFieldList = ({ onSearch }: Props) => {
     };
 
     loadPage();
-  }, [isAlumni]);
 
+  }, []);
   useEffect(() => {
     // Read search params from URL on navigate (including first load)
     if (shouldReadSearchParamsFromURL.current) {
       const newSearchParams = deserializeSearchParams(new URLSearchParams(location.search));
 
-      setSearchParams((oldSearchParams) => {
+      const recalculate = (oldSearchParams: PeopleSearchQuery) => {
         // If there are no search params in the URL, reset to initialSearchParams
         if (newSearchParams === null) {
           return initialSearchParams;
@@ -253,16 +257,19 @@ const SearchFieldList = ({ onSearch }: Props) => {
           ...oldSearchParams,
           ...newSearchParams,
         };
-      });
 
-      shouldReadSearchParamsFromURL.current = false;
-    }
+      };
+      const params = recalculate(searchParams);
+      setSearchParams(params);
+      search(params);
+    };
+    // Read search params from URL when SearchFieldList mounts (or initialSearchParams changes)
+    readSearchParamsFromURL();
 
     // Read search params from URL on 'popstate' (back/forward navigation) events
-    const onNavigate = () => (shouldReadSearchParamsFromURL.current = true);
-    window.addEventListener('popstate', onNavigate);
-    return () => window.removeEventListener('popstate', onNavigate);
-  }, [location.search, initialSearchParams]);
+    window.addEventListener('popstate', readSearchParamsFromURL);
+    return () => window.removeEventListener('popstate', readSearchParamsFromURL);
+  }, []);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === 'graduation_year') {
@@ -309,7 +316,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   const handleEnterKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
-      search();
+      search(searchParams);
     }
   };
 
@@ -579,6 +586,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <CardActions>
 
           <Button
+
+            color="primary"
+            onClick={() => search(searchParams)}
+            fullWidth
             variant="contained"
             color="neutral"
             onClick={() => setSearchParams(initialSearchParams)}
