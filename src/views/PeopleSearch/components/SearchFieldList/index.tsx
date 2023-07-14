@@ -349,6 +349,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     checked={searchParams.includeStudent}
                     name="includeStudent"
                     onChange={handleUpdate}
+                    color="secondary"
                   />
                 }
                 label="Student"
@@ -361,6 +362,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 checked={searchParams.includeFacStaff}
                 name="includeFacStaff"
                 onChange={handleUpdate}
+                color="secondary"
               />
             }
             label="Faculty/Staff"
@@ -374,6 +376,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     checked={searchParams.includeAlumni}
                     name="includeAlumni"
                     onChange={handleUpdate}
+                    color="secondary"
                   />
                 }
                 label="Alumni"
@@ -518,6 +521,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                         min={1889}
                         max={currentYear}
                         disabled={!searchParams.includeAlumni}
+                        color="secondary"
                       />
                       <Typography fontSize={15} align="center">
                         {graduationYearRange[0]}-{graduationYearRange[1]}
@@ -526,7 +530,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   )}
                   {(isAlumni || isFacStaff) && (
                     <FormControlLabel
-                      control={<Switch onChange={handleSwitchChange} />}
+                      control={<Switch onChange={handleSwitchChange} color="secondary" />}
                       label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
                       labelPlacement="end"
                     />

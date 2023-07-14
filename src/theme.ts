@@ -177,8 +177,8 @@ const TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
 const Placeholder = '#00ff00'; // For unused slots that can be filled with new colors
 
 // Dark Mode Colors!:
-const Gray = '#303233';
-const DarkGray = '#232424';
+const Gray = '#282828';
+const DarkGray = '#151515';
 const LinkBlue = '#0260ad';
 
 // Theme to use in the CSS vars provider, allowing multiple theme modes
@@ -329,7 +329,7 @@ export const newTheme = extendTheme({
           contrastText: White,
           50: '#000000',
           100: '#1D1C1C',
-          200: '#3D3D3D',
+          200: '#353535',
           300: '#5C5B5B',
           400: '#706F6F',
           500: '#989797',

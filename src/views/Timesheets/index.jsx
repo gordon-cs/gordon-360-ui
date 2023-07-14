@@ -380,7 +380,12 @@ const Timesheets = (props) => {
               >
                 <Grid container spacing={2} alignItems="center" alignContent="center">
                   <Grid item md={2}>
-                    <Button variant="outlined" color="link" onClick={changeState}>
+                    <Button
+                      variant="outlined"
+                      color="link"
+                      onClick={changeState}
+                      className={styles.clockInOutButton}
+                    >
                       {' '}
                       {clockInOut}
                     </Button>

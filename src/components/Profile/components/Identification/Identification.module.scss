@@ -39,6 +39,7 @@ $image-side-width-desktop: 90px;
   border-radius: 4px;
   height: 100%;
   background-color: var(--mui-palette-background-paper);
+  background-image: var(--mui-overlays-1); //Make identification look the same as MUI cards
   box-shadow: 0px 2px 1px -1px var(--mui-palette-neutral-A700),
     0px 1px 1px 0px var(--mui-palette-neutral-A700), 0px 1px 3px 0px var(--mui-palette-neutral-A700);
   &_header {

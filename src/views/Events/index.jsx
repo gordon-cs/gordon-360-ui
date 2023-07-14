@@ -193,11 +193,10 @@ const Events = () => {
 
                     <Grid item>
                       <Button
-                        color={
-                          open ? (filters.length === 0 ? 'primary' : 'secondary') : 'secondary'
-                        }
+                        color={open ? (filters.length === 0 ? 'primary' : 'secondary') : 'link'}
                         variant={open ? 'contained' : 'outlined'}
                         onClick={handleExpandClick}
+                        className={open ? null : styles.event_filter_button}
                       >
                         <AddIcon fontSize="inherit" />
                         Filters
