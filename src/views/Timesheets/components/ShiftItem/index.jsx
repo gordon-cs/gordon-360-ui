@@ -21,6 +21,7 @@ import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import { Component } from 'react';
 import styles from './ShiftItem.module.css';
+import EditShiftNotesDialog from './EditShiftNotesDialog';
 
 const PickerInput = (props) => {
   return (
@@ -490,8 +491,10 @@ export default class ShiftItem extends Component {
         >
           <MessageOutlinedIcon className={styles.outlinedIconText} />
         </Tooltip>
-        // <EditShiftNotesDialog/>
       );
+      if (editing) {
+        <EditShiftNotesDialog />;
+      }
     }
 
     let shiftCommentTooltip = <></>;

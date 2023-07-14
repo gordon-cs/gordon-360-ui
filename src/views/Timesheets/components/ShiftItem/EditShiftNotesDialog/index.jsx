@@ -1,69 +1,62 @@
-import { FormControl, IconButton, Input, InputLabel } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import GordonDialogBox from 'components/GordonDialogBox';
-import GordonSnackbar from 'components/Snackbar';
-import { useState, useEffect } from 'react';
-import userService from 'services/user';
-import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
+import { useState } from 'react';
+import { gordonColors } from 'theme';
+import styles from './EditShiftNotesDialog.module.css';
+import { Dialog, DialogTitle, DialogActions, Button, TextField } from '@mui/material';
 
-const UpdateMail = () => {
-  const [open, setOpen] = useState(false);
-  const [shitNote, setShiftNote] = useState('');
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+const EditShiftNotesDialog = (props) => {
+  const [shiftNoteInput, setShiftNoteInput] = useState(props.descriptiontext ?? '');
+  const [formValid, setFormValid] = useState(true);
 
-  const handleSubmit = async () => {
-    try {
-      await userService.updateMailStop(mailStop);
-      setSnackbar({
-        message: 'Your mail destination will update within a couple hours.',
-        severity: 'success',
-        open: true,
-      });
-    } catch {
-      setSnackbar({
-        message: 'Mail destination failed to update. Please contact CTS.',
-        severity: 'error',
-        open: true,
-      });
-    }
-    setOpen(false);
+  var maxCharacter = 4000;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    var shiftNote = shiftNoteInput;
+    props.onDialogSubmit(shiftNote);
+    handleClose();
+  };
+
+  const handleChange = (e) => {
+    setShiftNoteInput(e.target.value);
+  };
+
+  const handleClose = () => {
+    props.handleShiftNotesClose();
+    setFormValid(true);
+  };
+
+  const button = {
+    background: gordonColors.primary.cyan,
+    color: 'white',
   };
 
   return (
-    <div>
-      <IconButton style={{ marginBottom: '0.5rem' }} onClick={() => setOpen(true)} size="large">
-        <EditIcon style={{ fontSize: 20 }} />
-      </IconButton>
-      <GordonDialogBox
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Edit Shift Notes"
-        buttonName="UPDATE"
-        buttonClicked={handleSubmit}
-        cancelButtonName="CANCEL"
-        cancelButtonClicked={() => setOpen(false)}
-        handleSubmit
-      >
-        <FormControl sx={{ m: 1, minWidth: 200 }}>
-          <SearchField
-            name="shift notes"
-            value={shitNote}
-            updateValue={(event) => setMailStop(event.target.value)}
-            options={mailStops}
-            select
-            size={200}
-            required="required"
-          />
-        </FormControl>
-      </GordonDialogBox>
-      <GordonSnackbar
-        open={snackbar.open}
-        severity={snackbar.severity}
-        text={snackbar.message}
-        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-      />
-    </div>
+    <Dialog open={props.editDescriptionOpen} keepMounted fullWidth={true} maxWidth="xs">
+      <div className={styles.shift_tile}>
+        <DialogTitle className={styles.shift_title}>Edit Office Hours</DialogTitle>
+
+        <TextField
+          id="shiftNoteInput"
+          label="Description"
+          multiline
+          rows={3}
+          defaultValue={shiftNoteInput}
+          value={shiftNoteInput}
+          onChange={handleChange}
+          className={styles.desc_description}
+          inputProps={{ maxLength: maxCharacter - 1 }}
+        />
+
+        <DialogActions className={styles.shift_notes_buttons}>
+          <Button onClick={props.handleShiftNotesClose} variant="contained" style={button}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleSubmit} style={button}>
+            Submit
+          </Button>
+        </DialogActions>
+      </div>
+    </Dialog>
   );
 };
 
-export default UpdateMail;
+export default EditShiftNotesDialog;
