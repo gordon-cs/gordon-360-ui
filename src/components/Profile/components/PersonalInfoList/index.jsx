@@ -208,6 +208,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   let streetAddr = profile.HomeStreet2 ? <span>{profile.HomeStreet2},&nbsp;</span> : null;
 
+  let combineHomeLocation =
+    profile.Country === 'United States of America' || !profile.Country
+      ? 'HomeCity HomeState'
+      : 'Country HomeCountry';
+
   const home = (
     <ProfileInfoListItem
       title="Home:"
@@ -215,7 +220,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         <>
           {streetAddr}
           <span className={keepPrivate ? null : styles.not_private}>
-            {profile.HomeCity === PRIVATE_INFO
+            {profile.HomeCity === PRIVATE_INFO || profile.Country === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
               ? `${profile.HomeCity}, ${profile.HomeState}`
@@ -223,7 +228,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </span>
         </>
       }
-      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, 'Country')}
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, combineHomeLocation)}
       privateInfo={isAddressPrivate}
       myProf={myProf}
     />

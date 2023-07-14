@@ -8,7 +8,7 @@ const UpdateUserPrivacy = (username, field) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [group, setGroup] = useState('');
   const [groupList, setGroupList] = useState([]);
-  let viewer = '';
+  let visibleTo = '';
 
   const handlePrivacy = async (event) => {
     try {
@@ -35,18 +35,32 @@ const UpdateUserPrivacy = (username, field) => {
     userService.getPrivacySetting(username).then(setGroup);
   }, [group]);
 
+  let tempField = field;
+  if (field == 'HomeCity HomeState') {
+    field = 'HomeCity';
+  } else if (field == 'Country HomeCountry') {
+    field = 'Country';
+  }
+
+  // get user's privacy setting (Public, Privacy, FacStaff) for this field
   for (let i = 0; i < group.length; i++) {
     if (group[i].Field === field) {
-      viewer = group[i].VisibilityGroup;
+      visibleTo = group[i].VisibilityGroup;
     }
+  }
+
+  field = tempField;
+
+  if (field == 'HomeCity HomeState') {
+    visibleTo = group[i].VisibilityGroup;
   }
 
   return (
     <div>
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         <SearchField
-          name="privacy"
-          value={viewer}
+          name="visible to"
+          value={visibleTo}
           updateValue={handlePrivacy}
           options={groupList}
           select
