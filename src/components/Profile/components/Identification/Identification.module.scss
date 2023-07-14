@@ -36,11 +36,11 @@ $image-side-width-desktop: 90px;
   display: flex;
   align-items: center;
   flex-direction: column;
-  background-color: var(--mui-palette-neutral-light);
   border-radius: 4px;
   height: 100%;
-  box-shadow: 0px 2px 1px -1px var(--mui-palette-neutral-500),
-    0px 1px 1px 0px var(--mui-palette-neutral-300), 0px 1px 3px 0px var(--mui-palette-neutral-300);
+  background-color: var(--mui-palette-background-paper);
+  box-shadow: 0px 2px 1px -1px var(--mui-palette-neutral-A700),
+    0px 1px 1px 0px var(--mui-palette-neutral-A700), 0px 1px 3px 0px var(--mui-palette-neutral-A700);
   &_header {
     background-color: var(--mui-palette-primary-main);
     color: var(--mui-palette-primary-contrastText);
@@ -147,11 +147,9 @@ $image-side-width-desktop: 90px;
             .gc360_my_profile {
               &_icon {
                 font-size: 36px;
-                color: var(--mui-palette-primary-main);
-                transition: color 200ms, scale 1s;
                 &:hover {
-                  color: var(--mui-palette-secondary-main) !important;
-                  transform: scale(1.2) !important;
+                  transition: font-size 0.5s;
+                  font-size: 38px;
                 }
               }
               &_edit_icon {

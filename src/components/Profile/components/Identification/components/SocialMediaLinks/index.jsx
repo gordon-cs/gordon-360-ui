@@ -30,7 +30,7 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
                   <Grid item key={platform}>
                     <a
                       href={links[platform]}
-                      className={styles.gc360_my_profile_icon}
+                      className={`gc360_text_link ${styles.gc360_my_profile_icon}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
