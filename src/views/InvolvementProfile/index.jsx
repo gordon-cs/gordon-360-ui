@@ -26,7 +26,6 @@ import sessionService from 'services/session';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import styles from './InvolvementProfile.module.css';
-import styles2 from 'app.module.css';
 
 const CROP_DIM = 320; // pixels
 
@@ -391,12 +390,7 @@ const InvolvementProfile = () => {
 
     content = (
       <Card>
-        <CardHeader
-          align="center"
-          title={ActivityDescription}
-          subheader={SessionDescription}
-          className={styles2.gc360_header}
-        />
+        <CardHeader align="center" title={ActivityDescription} subheader={SessionDescription} />
         <CardContent>
           <Grid container direction="column" spacing={2}>
             <Grid align="center" item>
@@ -418,7 +412,7 @@ const InvolvementProfile = () => {
               <GordonLoader />
             ) : profile ? (
               <>
-                <hr width="70%"></hr>
+                <hr width="101.5%"></hr>
 
                 <Grid item>
                   <Typography>

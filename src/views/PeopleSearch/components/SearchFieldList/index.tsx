@@ -20,13 +20,12 @@ import {
   ChangeEvent,
   Dispatch,
   KeyboardEvent,
+  ReactNode,
   SetStateAction,
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
-  ReactNode,
 } from 'react';
 import {
   FaBook,
@@ -35,20 +34,20 @@ import {
   FaCalendarTimes,
   FaGlobeAmericas,
   FaHeart,
+  FaPaperPlane,
   FaSchool,
   FaHome as Home,
-  FaUser as Person,
   FaMapMarkerAlt as LocationCity,
+  FaUser as Person,
 } from 'react-icons/fa';
-import { useLocation } from 'react-router';
 import { useNavigate } from 'react-router-dom';
+import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
-import SearchField, { SelectOption } from './components/SearchField';
-import addressService from 'services/address';
 import styles from './SearchFieldList.module.css';
 import styles2 from 'app.module.css';
+import SearchField, { SelectOption } from './components/SearchField';
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
 
@@ -77,7 +76,6 @@ const searchPageTitle = (
   <>
     Search the
     <b className={styles.search_field_list_gordon_text}> Gordon </b>
-
     Community
   </>
 );
@@ -101,7 +99,6 @@ const defaultSearchParams: PeopleSearchQuery = {
   initial_year: '',
   final_year: '',
   involvement: '',
-  class_year: '',
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -135,7 +132,6 @@ const AdvancedOptionsColumn = ({ children, ...otherProps }: { children: ReactNod
 const SearchFieldList = ({ onSearch }: Props) => {
   const { profile } = useUser();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [isStudent, isFacStaff, isAlumni] = useAuthGroups(
     AuthGroup.Student,
@@ -171,9 +167,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
   );
   const [searchParams, setSearchParams] = useState(initialSearchParams);
 
-  // Used to only read search params from URL on first load (and on back/forward navigate via event listener)
-  const shouldReadSearchParamsFromURL = useRef(true);
-
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
@@ -199,7 +192,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
         setLoadingSearch(true);
 
         await peopleSearchService.search(params).then(onSearch);
-
 
         const newQueryString = serializeSearchParams(params);
         // If search params are new since last search, add search to history
@@ -233,18 +225,15 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setCountries(countries.map((c) => c.Name));
       setDepartments(departments);
       setBuildings(buildings);
-
       setInvolvements(involvements);
       setLoading(false);
     };
 
     loadPage();
-
   }, []);
   useEffect(() => {
-    // Read search params from URL on navigate (including first load)
-    if (shouldReadSearchParamsFromURL.current) {
-      const newSearchParams = deserializeSearchParams(new URLSearchParams(location.search));
+    const readSearchParamsFromURL = () => {
+      const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
 
       const recalculate = (oldSearchParams: PeopleSearchQuery) => {
         // If there are no search params in the URL, reset to initialSearchParams
@@ -257,7 +246,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
           ...oldSearchParams,
           ...newSearchParams,
         };
-
       };
       const params = recalculate(searchParams);
       setSearchParams(params);
@@ -292,7 +280,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
       [event.target.name]:
         event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     }));
-
     if (event.target.name === 'includeFacStaff' && !event.target.checked) {
       setSearchParams((sp) => ({
         ...sp,
@@ -350,9 +337,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }
 
   const PeopleSearchCheckbox = (
-    <Grid item xs={8} md={6}>
-      <FormLabel component="label" text-align="center">
-
+    <Grid item xs={12} md={6} className={styles.search_field_list_people_text}>
+      <FormLabel component="label" color="primary">
         Include: &nbsp;
       </FormLabel>
       {loading ? (
@@ -405,212 +391,253 @@ const SearchFieldList = ({ onSearch }: Props) => {
   );
 
   return (
-    <Card>
+    <Card className={styles.search_field_list_gordon_text}>
       <CardHeader
         title={searchPageTitle}
         titleTypographyProps={{ align: 'center' }}
         className={styles2.gc360_header}
       />
-      <Card style={{ padding: '2rem' }}>
-        <CardContent>
-          {/* Search Section 1: General Info */}
-          <Grid container spacing={2} direction="row" alignItems="center" justifyContent="center">
-            <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
-              <SearchField
-                name="first_name"
-                value={searchParams.first_name}
-                updateValue={handleUpdate}
-                Icon={Person}
-              />
-            </Grid>
+      <CardContent>
+        {/* Search Section 1: General Info */}
+        <Grid container spacing={2} direction="row" alignItems="center" justifyContent="center">
+          <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
+            <SearchField
+              name="first_name"
+              value={searchParams.first_name}
+              updateValue={handleUpdate}
+              Icon={Person}
+            />
+          </Grid>
 
+          <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
+            <SearchField
+              name="last_name"
+              value={searchParams.last_name}
+              updateValue={handleUpdate}
+            />
+          </Grid>
 
-            <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
-              <SearchField
-                name="last_name"
-                value={searchParams.last_name}
-                updateValue={handleUpdate}
-              />
-            </Grid>
+          <Grid item xs={12}>
+            <SearchField
+              name="residence_hall"
+              value={searchParams.residence_hall}
+              updateValue={handleUpdate}
+              options={halls.sort()}
+              Icon={FaBuilding}
+              select
+            />
+          </Grid>
 
+          {isTodayAprilFools() ? (
             <Grid item xs={12}>
               <SearchField
-                name="residence_hall"
-                value={searchParams.residence_hall}
+                name="relationship_status"
+                value={searchParams.relationship_status ?? ''}
                 updateValue={handleUpdate}
-                options={halls.sort()}
-                Icon={FaBuilding}
+                options={relationship_statuses.sort()}
+                Icon={FaHeart}
                 select
               />
             </Grid>
+          ) : null}
 
-            {isTodayAprilFools() ? (
-              <Grid item xs={12}>
-                <SearchField
-                  name="relationship_status"
-                  value={searchParams.relationship_status ?? ''}
-                  updateValue={handleUpdate}
-                  options={relationship_statuses.sort()}
-                  Icon={FaHeart}
-                  select
-                />
-              </Grid>
-            ) : null}
+          {PeopleSearchCheckbox}
+        </Grid>
 
-            {PeopleSearchCheckbox}
-          </Grid>
-
-          {/* Advanced Filtering */}
-          <Grid container alignItems="center">
-            <Accordion style={{ flexGrow: 1 }} elevation={3}>
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                id="more-search-options-header"
-                aria-controls="more-search-options-controls"
+        {/* Advanced Filtering */}
+        <Grid container alignItems="center">
+          <Accordion style={{ flexGrow: 1 }} elevation={3}>
+            <AccordionSummary
+              expandIcon={<ExpandMore className={styles.search_field_list_accordion_arrow} />}
+              id="more-search-options-header"
+              aria-controls="more-search-options-controls"
+            >
+              <Typography
+                variant="h6"
+                align="center"
+                className={styles.search_field_list_people_text}
               >
-                <Typography variant="h6" align="center">
-                  More Search Options
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Grid container spacing={4} direction="row">
-                  {/* Advanced Search Filters: Student/Alumni */}
-                  <AdvancedOptionsColumn>
-                    <Typography
-                      align="center"
-                      gutterBottom
-                      color={
-                        searchParams.includeStudent || searchParams.includeAlumni
-                          ? 'primary'
-                          : 'initial'
-                      }
-                    >
-                      {profile?.PersonType === 'stu' ? 'Student' : 'Student/Alumni'}
-                    </Typography>
-                    <SearchField
-                      name="major"
-                      value={searchParams.major}
-                      updateValue={handleUpdate}
-                      options={majors.sort()}
-                      Icon={FaBook}
-                      select
-                      disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
-                    />
-                    <SearchField
-                      name="minor"
-                      value={searchParams.minor}
-                      updateValue={handleUpdate}
-                      options={minors.sort()}
-                      Icon={FaBook}
-                      select
-                      disabled={!searchParams.includeStudent}
-                    />
-                    <SearchField
-                      name="class_year"
-                      value={searchParams.class_year}
-                      updateValue={handleUpdate}
-                      options={
-                        Object.values(Class).filter(
-                          (value) => typeof value !== 'number',
-                        ) as string[]
-                      }
-                      Icon={FaSchool}
-                      select
-                      disabled={!searchParams.includeStudent}
-                    />
-                  </AdvancedOptionsColumn>
+                More Search Options
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container spacing={4} direction="row">
+                {/* Advanced Search Filters: Student/Alumni */}
+                <AdvancedOptionsColumn>
+                  <Typography
+                    align="center"
+                    gutterBottom
+                    color={
+                      searchParams.includeStudent || searchParams.includeAlumni
+                        ? 'primary'
+                        : 'initial'
+                    }
+                  >
+                    {profile?.PersonType === 'stu' ? 'Student' : 'Student/Alumni'}
+                  </Typography>
+                  <SearchField
+                    name="major"
+                    value={searchParams.major}
+                    updateValue={handleUpdate}
+                    options={majors.sort()}
+                    Icon={FaBook}
+                    select
+                    disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
+                  />
+                  <SearchField
+                    name="minor"
+                    value={searchParams.minor}
+                    updateValue={handleUpdate}
+                    options={minors.sort()}
+                    Icon={FaBook}
+                    select
+                    disabled={!searchParams.includeStudent}
+                  />
+                  <SearchField
+                    name="class_standing"
+                    value={searchParams.class_standing}
+                    updateValue={handleUpdate}
+                    options={
+                      Object.values(Class).filter((value) => typeof value !== 'number') as string[]
+                    }
+                    Icon={FaSchool}
+                    select
+                    disabled={!searchParams.includeStudent}
+                  />
+                  <SearchField
+                    name="involvement"
+                    value={searchParams.involvement}
+                    updateValue={handleUpdate}
+                    options={involvements.sort()}
+                    Icon={FaPaperPlane}
+                    select
+                    disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
+                  />
 
-                  {/* Advanced Search Filters: Faculty/Staff */}
-                  <AdvancedOptionsColumn>
-                    <Typography
-                      align="center"
-                      gutterBottom
-                      color={searchParams.includeFacStaff ? 'primary' : 'initial'}
-                    >
-                      Faculty/Staff
-                    </Typography>
+                  {(isAlumni || isFacStaff) && switchYearRange ? (
                     <SearchField
-                      name="department"
-                      value={searchParams.department}
+                      name="graduation_year"
+                      value={searchParams.graduation_year}
                       updateValue={handleUpdate}
-                      options={departments.sort()}
-                      Icon={FaBriefcase}
+                      options={Array.from({ length: currentYear - 1889 + 1 }, (_, i) => ({
+                        value: (currentYear - i).toString(),
+                        label: (currentYear - i).toString(),
+                      }))}
+                      Icon={FaCalendarTimes}
+                      disabled={!searchParams.includeAlumni}
                       select
-                      disabled={!searchParams.includeFacStaff}
                     />
-                    <SearchField
-                      name="building"
-                      value={searchParams.building}
-                      updateValue={handleUpdate}
-                      options={buildings.sort()}
-                      Icon={FaBuilding}
-                      select
-                      disabled={!searchParams.includeFacStaff}
+                  ) : (
+                    <Grid item width={225}>
+                      <Slider
+                        getAriaLabel={() => 'graduationYearRange'}
+                        value={graduationYearRange}
+                        onChange={handleSliderChange}
+                        valueLabelDisplay="auto"
+                        getAriaValueText={toString}
+                        min={1889}
+                        max={currentYear}
+                        disabled={!searchParams.includeAlumni}
+                      />
+                      <Typography fontSize={15} align="center">
+                        {graduationYearRange[0]}-{graduationYearRange[1]}
+                      </Typography>
+                    </Grid>
+                  )}
+                  {(isAlumni || isFacStaff) && (
+                    <FormControlLabel
+                      control={<Switch onChange={handleSwitchChange} />}
+                      label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
+                      labelPlacement="end"
                     />
-                  </AdvancedOptionsColumn>
+                  )}
+                </AdvancedOptionsColumn>
 
-                  {/* Advanced Search Filters: Everyone */}
-                  <AdvancedOptionsColumn>
-                    <Typography align="center" gutterBottom color="primary">
-                      Everyone
-                    </Typography>
-                    <SearchField
-                      name="home_town"
-                      value={searchParams.home_town}
-                      updateValue={handleUpdate}
-                      Icon={Home}
-                    />
-                    <SearchField
-                      name="state"
-                      value={searchParams.state}
-                      updateValue={handleUpdate}
-                      options={states.sort(compareByProperty('label'))}
-                      Icon={LocationCity}
-                      select
-                    />
-                    <SearchField
-                      name="country"
-                      value={searchParams.country}
-                      updateValue={handleUpdate}
-                      options={countries.sort()}
-                      Icon={FaGlobeAmericas}
-                      select
-                    />
-                  </AdvancedOptionsColumn>
-                </Grid>
-              </AccordionDetails>
-            </Accordion>
-          </Grid>
-        </CardContent>
+                {/* Advanced Search Filters: Faculty/Staff */}
+                <AdvancedOptionsColumn>
+                  <Typography
+                    align="center"
+                    gutterBottom
+                    color={searchParams.includeFacStaff ? 'primary' : 'initial'}
+                  >
+                    Faculty/Staff
+                  </Typography>
+                  <SearchField
+                    name="department"
+                    value={searchParams.department}
+                    updateValue={handleUpdate}
+                    options={departments.sort(compareByProperty('label'))}
+                    Icon={FaBriefcase}
+                    select
+                    disabled={!searchParams.includeFacStaff}
+                  />
+                  <SearchField
+                    name="building"
+                    value={searchParams.building}
+                    updateValue={handleUpdate}
+                    options={buildings.sort()}
+                    Icon={FaBuilding}
+                    select
+                    disabled={!searchParams.includeFacStaff}
+                  />
+                </AdvancedOptionsColumn>
 
-        <CardActions>
+                {/* Advanced Search Filters: Everyone */}
+                <AdvancedOptionsColumn>
+                  <Typography align="center" gutterBottom color="primary">
+                    Everyone
+                  </Typography>
+                  <SearchField
+                    name="home_town"
+                    value={searchParams.home_town}
+                    updateValue={handleUpdate}
+                    Icon={Home}
+                  />
+                  <SearchField
+                    name="state"
+                    value={searchParams.state}
+                    updateValue={handleUpdate}
+                    options={states.sort(compareByProperty('label'))}
+                    Icon={LocationCity}
+                    select
+                  />
+                  <SearchField
+                    name="country"
+                    value={searchParams.country}
+                    updateValue={handleUpdate}
+                    options={countries.sort()}
+                    Icon={FaGlobeAmericas}
+                    select
+                  />
+                </AdvancedOptionsColumn>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
+        </Grid>
+      </CardContent>
 
+      <CardActions>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => setSearchParams(initialSearchParams)}
+        >
+          RESET
+        </Button>
+        {loadingSearch ? (
+          <GordonLoader />
+        ) : (
           <Button
-
             color="primary"
             onClick={() => search(searchParams)}
             fullWidth
             variant="contained"
-            color="neutral"
-            onClick={() => setSearchParams(initialSearchParams)}
+            disabled={!canSearch}
           >
-            RESET
+            SEARCH
           </Button>
-          {loadingSearch ? (
-            <GordonLoader />
-          ) : (
-            <Button
-              color="primary"
-              onClick={search}
-              fullWidth
-              variant="contained"
-              disabled={!canSearch}
-            >
-              SEARCH
-            </Button>
-          )}
-        </CardActions>
-      </Card>
+        )}
+      </CardActions>
     </Card>
   );
 };

@@ -180,9 +180,6 @@ export const newTheme = extendTheme({
   colorSchemes: {
     light: {
       palette: {
-        text: {
-          secondary: White,
-        },
         primary: {
           main: GordonBlue,
           contrastText: White,

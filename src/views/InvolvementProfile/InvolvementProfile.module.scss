@@ -11,17 +11,3 @@
 .update_image_components {
   margin-top: 15px;
 }
-
-.involvement_profile {
-  & :global {
-    .MuiCard-root {
-      box-shadow: none;
-    }
-    .MuiCardHeader-subheader {
-      color: var(--mui-palette-primary-contrastText);
-    }
-    .MuiTypography-root {
-      color: var(--mui-palette-primary-contrastText);
-    }
-  }
-}
