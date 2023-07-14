@@ -80,7 +80,6 @@ const GordonSchedulePanel = (props) => {
   const loadData = async (searchedUser) => {
     try {
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
-      setProfile(profileInfo);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
     } catch (e) {}
     setLoading(false);
