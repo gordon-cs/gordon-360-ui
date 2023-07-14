@@ -25,8 +25,17 @@
   }
 }
 
-.officeHourText {
+.officeHourTitle {
   padding-top: 1rem;
   font-weight: bold;
-  overflow-wrap: normal;
+}
+
+.officeHourText {
+  overflow-wrap: break-word;
+}
+
+.addCalendarInfoText {
+  overflow-wrap: break-word;
+  color: var(--mui-palette-primary-main);
+  font-weight: bold;
 }
