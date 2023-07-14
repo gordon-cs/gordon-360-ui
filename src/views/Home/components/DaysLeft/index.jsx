@@ -52,8 +52,8 @@ const DaysLeft = () => {
                 data={{
                   datasets: [
                     {
-                      data: [daysFinished, daysRemaining],
-                      backgroundColor: colors.primary.main,
+                      data: [5, 5],
+                      backgroundColor: [colors.primary.main, colors.neutral.A400]
                     },
                   ],
                   labels: ['Days Finished', 'Days Remaining'],
@@ -63,7 +63,7 @@ const DaysLeft = () => {
             </Grid>
 
             <Grid item container justifyContent="center" direction="column" alignItems="center">
-              <Typography className={styles.value} color="primary">
+              <Typography className={styles.value} color="secondary">
                 {daysFinished}
               </Typography>
               <Typography className={styles.label}>Days Finished</Typography>
