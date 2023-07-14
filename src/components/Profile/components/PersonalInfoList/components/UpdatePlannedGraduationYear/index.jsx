@@ -15,7 +15,10 @@ const UpdatePlannedGraduationYear = () => {
   const handleSubmit = async () => {
     try {
       await userService.setPlannedGraduationYear(plannedGraduationYear);
-      createSnackbar('Your Planned Graduation Year will update within a couple hours.', 'success');
+      createSnackbar(
+        'Your Planned Graduation Year will update within a couple minutes.',
+        'success',
+      );
     } catch {
       createSnackbar('Planned Graduation Year failed to update. Please contact CTS.', 'error');
     }
@@ -51,7 +54,6 @@ const UpdatePlannedGraduationYear = () => {
               label: (currentYear + i).toString(),
             }))}
             select
-            size={500}
             required="required"
             autoFocus
           />

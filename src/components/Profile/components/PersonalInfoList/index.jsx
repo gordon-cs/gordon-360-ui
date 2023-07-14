@@ -47,7 +47,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   );
   const [isPlannedGraduationYearPrivate, setIsPlannedGraduationYearPrivate] = useState(
     false, // Always public for now
-    //Boolean(profile.IsPlannedGradYearPrivate),
   );
   const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
     profile.CliftonStrengths?.Private,
@@ -284,22 +283,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             profile.PlannedGradYear
           )
         }
-        // Always public for now
-        // ContentIcon={
-        //   myProf && (
-        //     <FormControlLabel
-        //       control={
-        //         <Switch
-        //           onChange={handleChangePlannedGraduationYearPrivate}
-        //           checked={!isPlannedGraduationYearPrivate}
-        //         />
-        //       }
-        //       label={isPlannedGraduationYearPrivate ? 'Private' : 'Public'}
-        //       labelPlacement="bottom"
-        //       disabled={!isOnline}
-        //     />
-        //   )
-        // }
         privateInfo={isPlannedGraduationYearPrivate}
         myProf={myProf}
       />
