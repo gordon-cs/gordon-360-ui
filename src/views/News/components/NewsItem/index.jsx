@@ -128,7 +128,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
         </Grid>
 
         {/* Collapsable details */}
-        <Collapse in={open} timeout="auto" unmountOnExit className={styles.collapsable}>
+        <Collapse in={open} timeout="auto" unmountOnExit className={styles.collapsible}>
           <CardContent>
             <Grid container direction="row" alignItems="center" justifyContent="space-around">
               <Grid item xs={8} alignContent="left">
