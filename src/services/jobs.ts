@@ -61,6 +61,7 @@ const editShift = async (
   newShiftStart: Date,
   newShiftEnd: Date,
   newHoursWorked: number,
+  newShiftNotes: string, // I am adding this
   lastChangedBy: string,
 ) => {
   let newShiftDetails = {
@@ -69,7 +70,7 @@ const editShift = async (
     SHIFT_START_DATETIME: dateFormatter.format(newShiftStart),
     SHIFT_END_DATETIME: dateFormatter.format(newShiftEnd),
     HOURS_WORKED: newHoursWorked,
-    SHIFT_NOTES: '',
+    SHIFT_NOTES: newShiftNotes, // I am adding this
     LAST_CHANGED_BY: lastChangedBy,
   };
   await http.put(`jobs/editShift/`, newShiftDetails);
