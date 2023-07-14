@@ -99,31 +99,24 @@ const About = () => {
           </a>
         </Typography>
         <hr />
-        {versionUI.map((section) => {
-          return (
-            <Fragment key={section.commit}>
-              <Grid container xs={6}>
-                <Grid item xs={1}>
-                  <Typography variant="body2">UI</Typography>
-                </Grid>
-                <Grid item xs={11}>
-                  <Typography variant="body2">
-                    {section.date} (Git SHA: {section.commit})
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={1}>
-                  <Typography variant="body2">API</Typography>
-                </Grid>
-                <Grid item xs={11}>
-                  <Typography variant="body2">
-                    {versionAPI?.BuildTime} (Git SHA: {versionAPI?.GitHash})
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Fragment>
-          );
-        })}
+        <Grid container xs={12}>
+          <Grid item xs={1}>
+            <Typography variant="body2">UI</Typography>
+          </Grid>
+          <Grid item xs={11}>
+            <Typography variant="body2">
+              {versionUI.date} (Git SHA: {versionUI.commit})
+            </Typography>
+          </Grid>
+          <Grid item xs={1}>
+            <Typography variant="body2">API</Typography>
+          </Grid>
+          <Grid item xs={11}>
+            <Typography variant="body2">
+              {versionAPI?.BuildTime} (Git SHA: {versionAPI?.GitHash})
+            </Typography>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
