@@ -36,12 +36,12 @@ const GordonScheduleCalendar = (props) => {
     setLoading(false);
   };
   const resourceMap = [
-    { resourceId: 1, resourceTitle: 'Monday' },
-    { resourceId: 2, resourceTitle: 'Tuesday' },
-    { resourceId: 3, resourceTitle: 'Wednesday' },
-    { resourceId: 4, resourceTitle: 'Thursday' },
-    { resourceId: 5, resourceTitle: 'Friday' },
-    { resourceId: 6, resourceTitle: 'Saturday' },
+    { resourceId: 'MO', resourceTitle: 'Monday' },
+    { resourceId: 'TU', resourceTitle: 'Tuesday' },
+    { resourceId: 'WE', resourceTitle: 'Wednesday' },
+    { resourceId: 'TH', resourceTitle: 'Thursday' },
+    { resourceId: 'FR', resourceTitle: 'Friday' },
+    { resourceId: 'SA', resourceTitle: 'Saturday' },
   ];
 
   // Localizer is always required for react-big-calendar initialization
@@ -71,12 +71,13 @@ const GordonScheduleCalendar = (props) => {
         timeslots={4}
         defaultView="day"
         view={['day']}
-        onDoubleClickEvent={(event) => props.handleDoubleClick(event)}
         defaultDate={Moment(new Date())}
         resources={resourceMap}
         resourceIdAccessor="resourceId"
         resourceTitleAccessor="resourceTitle"
         formats={formats}
+        onSelectEvent={props.onSelectEvent}
+        onSelecting={(slot) => false}
       />
     );
     content = Resource(momentLocalizer(Moment));
