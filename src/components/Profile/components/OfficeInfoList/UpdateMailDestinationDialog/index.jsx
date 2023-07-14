@@ -10,11 +10,11 @@ const UpdateMail = () => {
   const [open, setOpen] = useState(false);
   const [mailStop, setMailStop] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [mailDestinations, setMailDestinations] = useState([]);
+  const [mailStops, setMailStops] = useState([]);
 
   const handleSubmit = async () => {
     try {
-      await userService.updateMailDestination(mailStop);
+      await userService.updateMailStop(mailStop);
       setSnackbar({
         message: 'Your mail destination will update within a couple hours.',
         severity: 'success',
@@ -31,7 +31,7 @@ const UpdateMail = () => {
   };
 
   useEffect(() => {
-    userService.getMailDestinations().then(setMailDestinations);
+    userService.getMailStops().then(setMailStops);
   }, []);
 
   return (
@@ -54,7 +54,7 @@ const UpdateMail = () => {
             name="mail stop"
             value={mailStop}
             updateValue={(event) => setMailStop(event.target.value)}
-            options={mailDestinations}
+            options={mailStops}
             select
             size={200}
             required="required"
