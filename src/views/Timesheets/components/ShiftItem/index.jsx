@@ -553,7 +553,7 @@ export default class ShiftItem extends Component {
                     {hoursWorkedDisp}
                   </Typography>
                   {shiftNotesTooltip}
-                  {editing && <EditShiftNotesDialog />}
+                  {this.state.editing && <EditShiftNotesDialog />}
                 </div>
               </Grid>
               <Grid item xs={1}>
