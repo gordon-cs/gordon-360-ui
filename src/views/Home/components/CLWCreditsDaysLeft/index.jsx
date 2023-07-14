@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import session from 'services/session';
 import user from 'services/user';
 import styles from '../Doughnut.module.css';
-import { newTheme } from 'theme';
+import { theme360 } from 'theme';
 
 const CLWCreditsDaysLeft = () => {
   const [firstDay, setFirstDay] = useState('');
@@ -41,7 +41,7 @@ const CLWCreditsDaysLeft = () => {
   }, []);
 
   // variable colors do not work in chartjs, so fixed colors from the light palette are used
-  const colors = newTheme.colorSchemes.light.palette;
+  const colors = theme360.colorSchemes.light.palette;
 
   let daysColor = colors.primary.main;
   let chapelColor = colors.secondary.main;
@@ -127,7 +127,7 @@ const CLWCreditsDaysLeft = () => {
           >
             <div
               className={styles.value}
-              style={{ color: newTheme.vars.palette.link.contrastText }}
+              style={{ color: theme360.vars.palette.link.contrastText }}
             >
               {daysFinished}
             </div>

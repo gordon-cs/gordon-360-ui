@@ -5,7 +5,7 @@ import { Doughnut } from 'react-chartjs-2';
 import session from 'services/session';
 import user from 'services/user';
 import styles from '../Doughnut.module.css';
-import { newTheme } from 'theme';
+import { theme360 } from 'theme';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
@@ -16,7 +16,7 @@ const DiningBalance = () => {
   const [[daysRemaining, daysInSession], setDaysLeft] = useState([null, null]);
 
   //other than the transparent background, colors don't need to change to dark mode
-  const colors = newTheme.colorSchemes.light.palette;
+  const colors = theme360.colorSchemes.light.palette;
 
   let daysColor = colors.primary.main;
   let swipesColor = colors.success.main;

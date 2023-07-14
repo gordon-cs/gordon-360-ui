@@ -29,7 +29,7 @@ import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
 import ShiftDisplay from './components/ShiftDisplay';
 import styles from './Timesheets.module.css';
-import { newTheme } from 'theme';
+import { theme360 } from 'theme';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
@@ -437,20 +437,20 @@ const Timesheets = (props) => {
                         //Style overrides for the dateTimePicker, fixes dark mode
                         sx: {
                           '& .MuiDayPicker-weekDayLabel': {
-                            color: newTheme.vars.palette.neutral.contrastText,
+                            color: theme360.vars.palette.neutral.contrastText,
                           },
                           '& .MuiPickersDay-root': {
-                            backgroundColor: newTheme.vars.palette.neutral.light,
-                            color: newTheme.vars.palette.neutral.contrastText,
+                            backgroundColor: theme360.vars.palette.neutral.light,
+                            color: theme360.vars.palette.neutral.contrastText,
                           },
                           '& .MuiPickersDay-root:hover': {
-                            backgroundColor: newTheme.vars.palette.neutral.main,
+                            backgroundColor: theme360.vars.palette.neutral.main,
                           },
                           '& .MuiPickersDay-root:disabled': {
-                            backgroundColor: newTheme.vars.palette.neutral.main,
+                            backgroundColor: theme360.vars.palette.neutral.main,
                           },
                           '& .MuiClockNumber-root': {
-                            color: newTheme.vars.palette.neutral.contrastText,
+                            color: theme360.vars.palette.neutral.contrastText,
                           },
                         },
                       }}
@@ -468,23 +468,23 @@ const Timesheets = (props) => {
                         //Style overrides for the dateTimePicker, fixes dark mode
                         sx: {
                           '& .MuiDayPicker-weekDayLabel': {
-                            color: newTheme.vars.palette.neutral.contrastText,
+                            color: theme360.vars.palette.neutral.contrastText,
                           },
                           '& .MuiPickersDay-root': {
-                            backgroundColor: newTheme.vars.palette.neutral.light,
-                            color: newTheme.vars.palette.neutral.contrastText,
+                            backgroundColor: theme360.vars.palette.neutral.light,
+                            color: theme360.vars.palette.neutral.contrastText,
                           },
                           '& .MuiPickersDay-root:hover': {
-                            backgroundColor: newTheme.vars.palette.neutral.main,
+                            backgroundColor: theme360.vars.palette.neutral.main,
                           },
                           '& .MuiPickersDay-root:disabled': {
-                            backgroundColor: newTheme.vars.palette.neutral.main,
+                            backgroundColor: theme360.vars.palette.neutral.main,
                           },
                           '& .MuiClockNumber-root': {
-                            color: newTheme.vars.palette.neutral.contrastText,
+                            color: theme360.vars.palette.neutral.contrastText,
                           },
                           '& .PrivatePickersToolbarText-root': {
-                            color: newTheme.vars.palette.neutral.contrastText,
+                            color: theme360.vars.palette.neutral.contrastText,
                           },
                         },
                       }}

@@ -4,7 +4,7 @@ import GordonLoader from 'components/Loader';
 import session from 'services/session';
 import styles from '../Doughnut.module.css';
 import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
-import { newTheme } from 'theme';
+import { theme360 } from 'theme';
 
 const DaysLeft = () => {
   const [daysRemaining, setDaysRemaining] = useState();
@@ -34,7 +34,7 @@ const DaysLeft = () => {
     load();
   }, []);
 
-  const colors = newTheme.colorSchemes.light.palette;
+  const colors = theme360.colorSchemes.light.palette;
 
   return (
     <Card>

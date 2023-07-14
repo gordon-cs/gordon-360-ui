@@ -171,6 +171,8 @@ const Black_opacity20 = '#00000033';
 const Black_opacity10 = '#0000001a';
 
 // Dev Tool coloring - Colors for development and testing purposes only
+// These colors can be used to test palette colors with an obvious visual indicator of which colors
+// have been updated on screen.
 const TestTool = '#FF8400'; // devTool orange
 const TestToolContrast = '#FF0000'; // devTool red
 const TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
@@ -182,7 +184,8 @@ const DarkGray = '#151515';
 const LinkBlue = '#0260ad';
 
 // Theme to use in the CSS vars provider, allowing multiple theme modes
-export const newTheme = extendTheme({
+// This theme can be imported in javascript to reference colors directly
+export const theme360 = extendTheme({
   colorSchemes: {
     light: {
       palette: {
@@ -266,11 +269,13 @@ export const newTheme = extendTheme({
         text: {
           primary: White, // Various MUI components and text
         },
+        // May be used later, gives us the flexibility to change switch colors when switched off
+        // if needed for dark mode.
         // Switch: {
-        //   defaultColor: TestTool, // switch ball off color
+        //   defaultColor: Placeholder, // switch ball off color
         // },
         // common: {
-        //   onBackground: TestTool, // switch track off color
+        //   onBackground: Placeholder, // switch track off color
         // },
         action: {
           active: White, // Various icons, especially in PersonalInfo
@@ -279,22 +284,13 @@ export const newTheme = extendTheme({
         // May be used later, gives us the flexibility to change tooltip colors if needed for dark
         // mode.
         // Tooltip: {
-        //   bg: TestTool, // Tooltip background color
+        //   bg: Placeholder, // Tooltip background color
         // },
         primary: {
           main: NightMarsh,
           dark: NightMarsh_opacity50,
           contrastText: White,
           50: GordonBlue_opacity50, //should be half opacity of main
-          100: TestTool,
-          200: TestTool,
-          300: TestTool,
-          400: TestTool,
-          500: TestTool,
-          600: TestTool,
-          700: TestTool,
-          800: TestTool,
-          900: TestTool,
         },
         secondary: {
           main: GordonBlue,
