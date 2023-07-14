@@ -4,6 +4,7 @@ import {
   CardHeader,
   Divider,
   FormControlLabel,
+  FormControl,
   Grid,
   Link,
   List,
@@ -29,6 +30,8 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
+import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
+import UpdateUserPrivacy from './UpdateUserPrivacyDialog';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -112,12 +115,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
       setIsMobilePhonePrivate(!isMobilePhonePrivate);
 
-      createSnackbar(
-        isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
-        'success',
-      );
+      setSnackbar({
+        message: 'Your privacy setting will update within a couple hours.',
+        severity: 'success',
+        open: true,
+      });
     } catch {
-      createSnackbar('Privacy Change Failed', 'error');
+      setSnackbar({
+        message: 'Your privacy setting failed to update. Please contact CTS.',
+        severity: 'error',
+        open: true,
+      });
     }
   };
 
@@ -164,6 +172,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
+      ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, 'HomePhone')}
       privateInfo={isHomePhonePrivate}
       myProf={myProf}
     />
@@ -188,24 +197,18 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={
-        myProf && (
-          <FormControlLabel
-            control={
-              <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
-            }
-            label={isMobilePhonePrivate ? 'Private' : 'Public'}
-            labelPlacement="bottom"
-            disabled={!isOnline}
-          />
-        )
-      }
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, 'MobilePhone')}
       privateInfo={isMobilePhonePrivate}
       myProf={myProf}
     />
   ) : null;
 
   let streetAddr = profile.HomeStreet2 ? <span>{profile.HomeStreet2},&nbsp;</span> : null;
+
+  let combineHomeLocation =
+    profile.Country === 'United States of America' || !profile.Country
+      ? 'HomeCity HomeState'
+      : 'Country HomeCountry';
 
   const home = (
     <ProfileInfoListItem
@@ -214,7 +217,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         <>
           {streetAddr}
           <span className={keepPrivate ? null : styles.not_private}>
-            {profile.HomeCity === PRIVATE_INFO
+            {profile.HomeCity === PRIVATE_INFO || profile.Country === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
               ? `${profile.HomeCity}, ${profile.HomeState}`
@@ -222,6 +225,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </span>
         </>
       }
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, combineHomeLocation)}
       privateInfo={isAddressPrivate}
       myProf={myProf}
     />
@@ -613,26 +617,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           alignItems="center"
           className={styles.personal_info_list_header}
         >
-          <Grid item xs={8}>
+          <Grid item xs={12}>
             <CardHeader title="Personal Information" />
-          </Grid>
-          <Grid item xs={4} align="right">
-            {/* visible only for fac/staff on their profile */}
-            {/* isHomePhonePrivate is a misleading name for determining if personal information should be shown */}
-            {isFacStaff && myProf ? (
-              <FormControlLabel
-                control={
-                  <Switch
-                    onChange={handleChangeHomePhonePrivacy}
-                    color="secondary"
-                    checked={!isHomePhonePrivate}
-                  />
-                }
-                label={isHomePhonePrivate ? 'Private' : 'Public'}
-                labelPlacement="right"
-                disabled={!isOnline}
-              />
-            ) : null}
           </Grid>
         </Grid>
         <CardContent>

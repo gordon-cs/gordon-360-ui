@@ -180,6 +180,11 @@ export type OfficeLocationQuery = {
   RoomNumber: string;
 };
 
+export type UserPrivacyQuery = {
+  Field: string;
+  VisibilityGroup: string;
+};
+
 function isStudent(profile: Profile): profile is StudentProfileInfo;
 function isStudent(profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo;
 function isStudent(
@@ -244,6 +249,11 @@ const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
 const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
+const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_group`);
+
+const getPrivacySetting = (username: string): Promise<string> =>
+  http.get(`profiles/privacy_setting/${username}/`);
+
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
 const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
@@ -254,8 +264,8 @@ const updateOfficeHours = (value: string) => http.put(`profiles/office_hours`, v
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
-const setHomePhonePrivacy = (makePrivate: boolean) =>
-  http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
+const setUserPrivacy = (userPrivacy: UserPrivacyQuery) =>
+  http.put(`profiles/user_privacy`, userPrivacy);
 
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
@@ -350,7 +360,7 @@ const getMembershipHistory = (username: string): Promise<MembershipHistory[]> =>
 
 const userService = {
   setMobilePhonePrivacy,
-  setHomePhonePrivacy,
+  setUserPrivacy,
   setMobilePhoneNumber,
   updateOfficeLocation,
   updateOfficeHours,
@@ -363,6 +373,8 @@ const userService = {
   getMailboxCombination,
   getMembershipHistory,
   getBuildings,
+  getVisibilityGroups,
+  getPrivacySetting,
   resetImage,
   postImage,
   postIDImage,
