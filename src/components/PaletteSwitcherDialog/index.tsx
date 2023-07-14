@@ -102,9 +102,17 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
           value={localScheme}
           onChange={handleChange}
         >
-          <FormControlLabel value="system" control={<Radio />} label="System Setting" />
-          <FormControlLabel value="light" control={<Radio />} label="Light Mode" />
-          <FormControlLabel value="dark" control={<Radio />} label="Dark Mode" />
+          <FormControlLabel
+            value="system"
+            control={<Radio color="secondary" />}
+            label="System Setting"
+          />
+          <FormControlLabel
+            value="light"
+            control={<Radio color="secondary" />}
+            label="Light Mode"
+          />
+          <FormControlLabel value="dark" control={<Radio color="secondary" />} label="Dark Mode" />
         </RadioGroup>
       </FormControl>
       <Divider />
