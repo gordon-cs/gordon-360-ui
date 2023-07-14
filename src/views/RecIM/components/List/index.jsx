@@ -1,4 +1,4 @@
-import { Grid, Typography, Tabs, Tab, Box, List } from '@mui/material';
+import { Grid, Typography, Tabs, Tab, Box, List, TextField, InputAdornment } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
   ActivityListing,
@@ -14,6 +14,8 @@ import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
 import { addDays } from 'date-fns';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
+import SearchIcon from '@mui/icons-material/Search';
+import GordonLoader from 'components/Loader';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -42,6 +44,25 @@ const ParticipantList = ({
   showInactive,
   callbackFunction,
 }) => {
+  const [visisbleParticipants, setVisibleParticipants] = useState(participants);
+  const [searchValue, setSearchValue] = useState('');
+
+  useEffect(() => {
+    // this is a temporary solution. Only admins will see this and thus the performance
+    // dip is not a major factor.
+    const delayDebounceFn = setTimeout(() => {
+      setVisibleParticipants(
+        participants?.map((p) =>
+          p.Username.replace(/[^A-Z0-9]+/gi, '')
+            .toLowerCase()
+            .includes(searchValue.replace(/[^A-Z0-9]+/gi, '').toLowerCase()),
+        ),
+      );
+    }, 200);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchValue]);
+
   // callback to remove current captain
   const promoteNewCaptain = async (newCaptainUsername) => {
     let currentCaptain = participants.find((p) => p.Role === 'Team-captain/Creator')?.Username;
@@ -51,9 +72,31 @@ const ParticipantList = ({
     callbackFunction((r) => !r);
   };
 
+  const participantSearchBar = () => {
+    return (
+      <Grid item>
+        <TextField
+          sx={{ padding: 2 }}
+          type="search"
+          fullWidth
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          InputProps={{
+            disableUnderline: true,
+            startAdornment: (
+              <InputAdornment position="start" sx={{ color: 'grey' }}>
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Grid>
+    );
+  };
+
   if (!participants?.length)
     return <Typography className={styles.secondaryText}>No participants to show.</Typography>;
-  let content = participants.map((participant) => {
+  let content = visisbleParticipants.map((participant) => {
     if (!showInactive && participant.Role === 'Inactive') {
       return null;
     }
@@ -80,7 +123,12 @@ const ParticipantList = ({
       />
     );
   });
-  return <List dense>{content}</List>;
+  return (
+    <>
+      {participantSearchBar()}
+      <List dense>{content}</List>
+    </>
+  );
 };
 
 const MatchList = ({ matches, activityID }) => {
