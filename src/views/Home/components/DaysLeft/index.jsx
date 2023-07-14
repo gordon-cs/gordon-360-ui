@@ -52,8 +52,8 @@ const DaysLeft = () => {
                 data={{
                   datasets: [
                     {
-                      data: [5, 5],
-                      backgroundColor: [colors.primary.main, colors.neutral.A400]
+                      data: [daysFinished, daysRemaining],
+                      backgroundColor: [colors.primary.main, colors.neutral.A400],
                     },
                   ],
                   labels: ['Days Finished', 'Days Remaining'],
