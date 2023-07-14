@@ -264,7 +264,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     createSnackbar(status.message, status.type);
   };
 
-  const gradContentText = () => {
+  const gradYearAndMajor = () => {
     var text = profile.PreferredClassYear
     if (profile.Major1Description !== "") {
       text += " | " + profile.Major1Description
@@ -275,7 +275,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     return text
   };
 
-  const graduationYear = <ProfileInfoListItem title={'Graduation Year:'} contentText={gradContentText()} />
+//  const graduationYear = <ProfileInfoListItem title={'Graduation Year:'} contentText={gradYearAndMajor()} />
+  const graduationYear =
+    <ProfileInfoListItem title={'Gordon Alum:'} contentText={gradYearAndMajor()} />
 
   const showCliftonStrengthsBlock =
     (profile.CliftonStrengths && !profile.CliftonStrengths.Private) ||
