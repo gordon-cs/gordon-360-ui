@@ -44,10 +44,10 @@ const ParticipantList = ({
 }) => {
   // callback to remove current captain
   const promoteNewCaptain = async (newCaptainUsername) => {
-    let currentCaptain = participants.find((p) => p.Role === 'Team-captain/Creator').Username;
-    console.log(currentCaptain, newCaptainUsername);
+    let currentCaptain = participants.find((p) => p.Role === 'Team-captain/Creator')?.Username;
     await editTeamParticipant(teamID, { Username: newCaptainUsername, RoleTypeID: 5 }); //captain
-    await editTeamParticipant(teamID, { Username: currentCaptain, RoleTypeID: 3 }); //member
+    if (currentCaptain)
+      await editTeamParticipant(teamID, { Username: currentCaptain, RoleTypeID: 3 }); //member
     callbackFunction((r) => !r);
   };
 
