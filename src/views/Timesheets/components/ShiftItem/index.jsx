@@ -492,9 +492,6 @@ export default class ShiftItem extends Component {
           <MessageOutlinedIcon className={styles.outlinedIconText} />
         </Tooltip>
       );
-      if (editing) {
-        <EditShiftNotesDialog />;
-      }
     }
 
     let shiftCommentTooltip = <></>;
@@ -556,6 +553,7 @@ export default class ShiftItem extends Component {
                     {hoursWorkedDisp}
                   </Typography>
                   {shiftNotesTooltip}
+                  {editing && <EditShiftNotesDialog />}
                 </div>
               </Grid>
               <Grid item xs={1}>
