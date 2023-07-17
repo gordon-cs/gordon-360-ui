@@ -616,28 +616,30 @@ const SearchFieldList = ({ onSearch }: Props) => {
         </Grid>
       </CardContent>
 
-      <CardActions>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => setSearchParams(initialSearchParams)}
-        >
-          RESET
-        </Button>
-        {loadingSearch ? (
-          <GordonLoader />
-        ) : (
+      <Grid container spacing={2} alignItems="center" justifyContent="center">
+        <CardActions>
           <Button
-            color="primary"
-            onClick={() => search(searchParams)}
-            fullWidth
             variant="contained"
-            disabled={!canSearch}
+            color="error"
+            onClick={() => setSearchParams(initialSearchParams)}
           >
-            SEARCH
+            CLEAR
           </Button>
-        )}
-      </CardActions>
+          {loadingSearch ? (
+            <GordonLoader />
+          ) : (
+            <Button
+              color="secondary"
+              onClick={() => search(searchParams)}
+              className={styles.search_field_list_search_width}
+              variant="contained"
+              disabled={!canSearch}
+            >
+              SEARCH
+            </Button>
+          )}
+        </CardActions>
+      </Grid>
     </Card>
   );
 };
