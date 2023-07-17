@@ -86,15 +86,17 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
       break;
   }
 
-  const emailIcon = !isMobileView && (
-    <div className={styles.mailing_icon_container}>
-      <CardActionArea className={styles.mail_card_action}>
-        <a href={`mailto:${person.Email}`}>
-          <MailOutlineIcon className={styles.mail_outline} />
-        </a>
-      </CardActionArea>
-    </div>
-  );
+  const emailIcon = person.Email
+    ? !isMobileView && (
+        <div className={styles.mailing_icon_container}>
+          <CardActionArea className={styles.mail_card_action}>
+            <a href={`mailto:${person.Email}`}>
+              <MailOutlineIcon className={styles.mail_outline} />
+            </a>
+          </CardActionArea>
+        </div>
+      )
+    : null;
 
   return (
     <>
