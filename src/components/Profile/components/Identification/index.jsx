@@ -555,7 +555,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
 
       <div className={styles.identification_card_content}>
         {/* SHOWS THE CARD'S CONTENT IF THE GIVEN USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
-        {userProfile && (defaultUserImage || preferredUserImage) ? (
+        {userProfile ? (
           <Grid
             container
             className={styles.identification_card_content_card}
@@ -693,26 +693,28 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                     </Typography>
                   </Grid>
                 )}
-                <Grid
-                  item
-                  xs={12}
-                  className={styles.identification_card_content_card_container_info_email}
-                >
-                  <a href={`mailto:${userProfile.Email}`}>
-                    <div
-                      className={
-                        styles.identification_card_content_card_container_info_email_container
-                      }
-                    >
-                      <EmailIcon
+                {userProfile.Email ? (
+                  <Grid
+                    item
+                    xs={12}
+                    className={styles.identification_card_content_card_container_info_email}
+                  >
+                    <a href={`mailto:${userProfile.Email}`}>
+                      <div
                         className={
-                          styles.identification_card_content_card_container_info_email_container_icon
+                          styles.identification_card_content_card_container_info_email_container
                         }
-                      />
-                      <Typography paragraph>{userProfile.Email}</Typography>
-                    </div>
-                  </a>
-                </Grid>
+                      >
+                        <EmailIcon
+                          className={
+                            styles.identification_card_content_card_container_info_email_container_icon
+                          }
+                        />
+                        <Typography paragraph>{userProfile.Email}</Typography>
+                      </div>
+                    </a>
+                  </Grid>
+                ) : null}
 
                 {isOnline && createPhotoDialogBox()}
               </Grid>
