@@ -582,7 +582,18 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </li>
           <li>
             <Typography>
-              To update your On Campus Address, please contact{' '}
+              To add/update your mail forwarding address, fill out this{' '}
+              <a
+                href="https://forms.office.com/r/98eR7TUXg6"
+                className={`gc360_text_link ${styles.note_link}`}
+              >
+                Forward Request Form.
+              </a>
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              To update your On-Campus Address, please contact{' '}
               <a
                 href="mailto: housing@gordon.edu"
                 className={`gc360_text_link ${styles.note_link}`}
