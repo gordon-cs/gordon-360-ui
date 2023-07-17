@@ -34,7 +34,11 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
     if (membershipHistories.length === 0) {
       return (
         <Link to={`/involvements`}>
-          <Typography variant="body2" className={`gc360_text_link ${styles.noMemberships}`}>
+          <Typography
+            variant="body2"
+            className={`gc360_text_link ${styles.noMemberships}`}
+            align="center"
+          >
             No Involvements to display. Click here to see Involvements around campus!
           </Typography>
         </Link>
