@@ -1,5 +1,5 @@
 import http from './http';
-import { newTheme } from 'theme';
+import { theme360 } from 'theme';
 
 export type VictoryPromiseCategory =
   | 'christian_character'
@@ -8,10 +8,10 @@ export type VictoryPromiseCategory =
   | 'leadership_worldwide';
 
 export const Colors = {
-  christian_character: newTheme.vars.palette.error.main,
-  intellectual_maturity: newTheme.vars.palette.success.main,
-  lives_of_service: newTheme.vars.palette.warning.main,
-  leadership_worldwide: newTheme.vars.palette.secondary.main,
+  christian_character: theme360.vars.palette.error.main,
+  intellectual_maturity: theme360.vars.palette.success.main,
+  lives_of_service: theme360.vars.palette.warning.main,
+  leadership_worldwide: theme360.vars.palette.secondary.main,
 } as const;
 
 export type VictoryPromiseColor = (typeof Colors)[VictoryPromiseCategory];
