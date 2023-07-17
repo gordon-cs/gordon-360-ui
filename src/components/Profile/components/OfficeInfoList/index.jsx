@@ -3,7 +3,9 @@ import { Card, CardContent, CardHeader, Grid, List, Typography, IconButton } fro
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import { Markup } from 'interweave';
 import styles from './OfficeInfoList.module.css';
+import { gordonColors } from 'theme';
 import UpdateOffice from './UpdateOfficeLocationDialog';
+import UpdateMail from './UpdateMailDestinationDialog';
 import EditDescriptionDialog from './EditDescriptionDialog';
 import GordonTooltip from 'components/GordonTooltip';
 import user from 'services/user';
@@ -143,10 +145,28 @@ const OfficeInfoList = ({
     <ProfileInfoListItem
       title="Mailstop:"
       contentText={
-        <Typography>
-          {Mail_Location}
-          {<GordonTooltip content={Mail_Description} enterTouchDelay={50} leaveTouchDelay={2000} />}
-        </Typography>
+        myProf ? (
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>
+              <Typography>
+                {Mail_Location}
+                <GordonTooltip
+                  content={Mail_Description}
+                  enterTouchDelay={50}
+                  leaveTouchDelay={2000}
+                />
+              </Typography>
+            </Grid>
+            <Grid item>
+              <UpdateMail />
+            </Grid>
+          </Grid>
+        ) : (
+          <Typography>
+            {Mail_Location}
+            <GordonTooltip content={Mail_Description} enterTouchDelay={50} leaveTouchDelay={2000} />
+          </Typography>
+        )
       }
     />
   ) : null;
@@ -154,7 +174,15 @@ const OfficeInfoList = ({
   const updateOfficeInfo =
     myProf && PersonType?.includes('fac') ? (
       <Typography align="left" className={styles.note}>
-        NOTE: Update your office hours in the Schedule Panel below.
+        NOTE: Update your office info{' '}
+        <a
+          href="https://go.gordon.edu/general/myaccount.cfm"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: gordonColors.primary.blue }}
+        >
+          here
+        </a>
       </Typography>
     ) : null;
 
