@@ -4,7 +4,7 @@ import ProfileInfoListItem from '../ProfileInfoListItem';
 import { Markup } from 'interweave';
 import styles from './OfficeInfoList.module.css';
 import UpdateOffice from './UpdateOfficeLocationDialog';
-import EditDescriptionDialog from './EditDescriptionDialog';
+import UpdateOfficeHours from './EditOfficeHoursDialog';
 import GordonTooltip from 'components/GordonTooltip';
 import user from 'services/user';
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,63 +23,6 @@ const OfficeInfoList = ({
     Mail_Description,
   },
 }) => {
-  const [editDescriptionOpen, setEditDescriptionOpen] = useState(false);
-  const [profile, setProfile] = useState();
-  const [description, setDescription] = useState(office_hours);
-
-  const loadData = async (searchedUser) => {
-    try {
-      const profileInfo = await user.getProfileInfo(AD_Username);
-
-      setProfile(profileInfo);
-      if (profileInfo.PersonType?.includes('fac')) {
-        setDescription(profileInfo.office_hours);
-      } else {
-        setDescription('');
-      }
-    } catch (e) {}
-  };
-
-  const handleEditDescriptionOpen = () => {
-    setEditDescriptionOpen(true);
-  };
-
-  const handleEditDescriptionClose = () => {
-    setEditDescriptionOpen(false);
-  };
-
-  const handleDescriptionSubmit = async (descValue) => {
-    await user.updateOfficeHours(descValue);
-    loadData(profile);
-  };
-
-  let editDescriptionButton, editDialog;
-
-  if (myProf) {
-    editDialog = (
-      <EditDescriptionDialog
-        onDialogSubmit={handleDescriptionSubmit}
-        handleEditDescriptionClose={handleEditDescriptionClose}
-        editDescriptionOpen={editDescriptionOpen}
-        descriptiontext={office_hours}
-      />
-    );
-  }
-
-  if (myProf) {
-    editDescriptionButton = (
-      <Fragment>
-        <IconButton
-          style={{ marginBottom: '0.5rem' }}
-          onClick={handleEditDescriptionOpen}
-          size="large"
-        >
-          <EditIcon style={{ fontSize: 20 }} />
-        </IconButton>
-      </Fragment>
-    );
-  }
-
   // Only display on FacStaff profiles
   if (!PersonType?.includes('fac')) {
     return null;
@@ -105,18 +48,23 @@ const OfficeInfoList = ({
     />
   ) : null;
 
-  const officeHours =
-    myProf || description ? (
-      <ProfileInfoListItem
-        title="Office Hours:"
-        contentText={
-          <Grid>
-            <Markup content={description} />
-            {editDescriptionButton}
+  const officeHours = office_hours ? (
+    <ProfileInfoListItem
+      title="Office Hours:"
+      contentText={
+        myProf ? (
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>{office_hours}</Grid>
+            <Grid item>
+              <UpdateOfficeHours officeHours={office_hours} />
+            </Grid>
           </Grid>
-        }
-      />
-    ) : null;
+        ) : (
+          `${office_hours}`
+        )
+      }
+    />
+  ) : null;
 
   const room =
     BuildingDescription || OnCampusRoom ? (
@@ -174,7 +122,6 @@ const OfficeInfoList = ({
           </List>
         </CardContent>
       </Card>
-      {editDialog}
     </Grid>
   );
 };
