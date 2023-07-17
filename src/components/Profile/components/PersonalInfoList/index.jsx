@@ -269,19 +269,19 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   };
 
   const gradYearAndMajor = () => {
-    var text = profile.PreferredClassYear
-    if (profile.Major1Description !== "") {
-      text += " | " + profile.Major1Description
+    var text = profile.PreferredClassYear;
+    if (profile.Major1Description !== '') {
+      text += ' | ' + profile.Major1Description;
     }
-    if (profile.Major2Description !== "") {
-      text += " & " + profile.Major2Description
+    if (profile.Major2Description !== '') {
+      text += ' & ' + profile.Major2Description;
     }
-    return text
+    return text;
   };
 
   const graduationYear = isAlumni && (
-      <ProfileInfoListItem title={profile.College + ' Alum:'} contentText={gradYearAndMajor()} />
-    );
+    <ProfileInfoListItem title={profile.College + ' Alum:'} contentText={gradYearAndMajor()} />
+  );
 
   const showCliftonStrengthsBlock =
     (profile.CliftonStrengths && !profile.CliftonStrengths.Private) ||
@@ -369,14 +369,20 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
-            <Grid container item xs={myProf && mailCombo ? 2.5 : 5} alignItems="center">
+            <Grid
+              container
+              item
+              xs={myProf && mailCombo ? 2.5 : 5}
+              lg={myProf && mailCombo ? 2.4 : 5}
+              alignItems="center"
+            >
               <Typography>{`#${profile.Mail_Location}`}</Typography>
             </Grid>
             {myProf && mailCombo && (
               <>
-                <Grid container item xs={1} alignItems="center">
+                <Grid container item xs={1.1} alignItems="center">
                   <Typography className={styles.private}>
-                    {showMailCombo ? mailCombo : '****'}
+                    {showMailCombo ? '12 12 12' : '****'}
                   </Typography>
                 </Grid>
                 <Grid
