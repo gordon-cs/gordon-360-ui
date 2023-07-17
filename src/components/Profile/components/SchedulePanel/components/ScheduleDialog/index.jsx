@@ -14,11 +14,9 @@ import styles from './ScheduleDialog.module.css';
 const dayArr = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
 const formatter = (date, display, isAllDay) => {
-  if (isAllDay) {
-    return null;
-  } else {
-    return format(new Date(date), display);
-  }
+  if (isAllDay) return null;
+
+  return format(new Date(date), display);
 };
 
 const ScheduleDialog = (props) => {
