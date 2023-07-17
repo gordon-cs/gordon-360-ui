@@ -54,7 +54,7 @@ const EventItem = ({ event }) => {
               description={event.Description}
               onClick={() => setExpanded((e) => !e)}
               lightMode="system" // Set to system @TODO use localstorage setting to update
-              /*currently will just be set to the users system setting, no way of knowing the
+              /* Currently will just be set to the users system setting, no way of knowing the
               360 local set mode. For users in system color scheme, and those who have 
               their system set the same as 360, the button will appear correct, but otherwise the 
               button might be light in dark mode and vice versa.
