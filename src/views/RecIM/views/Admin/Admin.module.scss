@@ -29,49 +29,49 @@
   // if desired, this should just be a global change and
   // universally applied to all 360 cards
   .cardHeader {
-    background-color: $primary-blue;
-    color: $neutral-white;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
     width: 100%;
     padding: 0.4em;
   }
 
   .title {
     font-weight: bold;
-    color: $neutral-dark-gray2;
+    color: var(--mui-palette-neutral-800);
     font-size: 1.5em;
   }
 
   .subtitle {
-    color: $neutral-gray;
+    color: var(--mui-palette-neutral-500);
     font-size: 1em;
   }
 
   .menuTitle {
     margin-top: 0.5em;
     margin-bottom: 0.2em;
-    color: $neutral-gray;
+    color: var(--mui-palette-neutral-500);
     text-align: center;
   }
 
   .reportSubtitle {
     margin-top: 0.5em;
     margin-bottom: 0.2em;
-    color: $neutral-gray;
+    color: var(--mui-palette-neutral-500);
     text-align: left;
     font-size: 0.7em;
   }
 
   .menuButton:hover {
-    background-color: $neutral-black-opacity10;
+    background-color: var(--mui-palette-neutral-A700);
   }
 
   .reportTextGrid {
     display: grid;
-    border-bottom: 1px dashed $neutral-gray;
+    border-bottom: 1px dashed var(--mui-palette-neutral-500);
     grid-template-columns: 1% 45% 10% 60%;
     grid-template-rows: auto auto;
     justify-items: stretch;
-    color: $neutral-black;
+    color: var(--mui-palette-neutral-contrastText);
     font-size: 0.7em;
     padding-top: 0.5em;
     max-width: 100%;
@@ -90,12 +90,12 @@
   }
 
   .reportText {
-    color: $neutral-black;
+    color: var(--mui-palette-neutral-contrastText);
     font-size: 0.7em;
   }
 
   .reportAltText {
-    color: $neutral-black;
+    color: var(--mui-palette-neutral-contrastText);
     font-size: 0.6em;
     font-style: italic;
     padding-top: 0.5em;
@@ -124,11 +124,11 @@
 
   .reportTextGrid {
     display: grid;
-    border-top: 1px dashed $neutral-gray;
+    border-top: 1px dashed #989797; //Hardcoded color for printing
     grid-template-columns: 5% 50% 5% 25%;
     grid-template-rows: auto auto;
     justify-items: stretch;
-    color: $neutral-black;
+    color: var(--mui-palette-neutral-contrastText);
     font-size: 10pt;
     max-width: 100%;
     overflow-wrap: break-word;
@@ -158,14 +158,14 @@
   }
 
   .reportTextLeft {
-    color: $neutral-black;
+    color: black; //Hardcoded color for printing
     font-size: 10pt;
     position: static;
     text-align: left;
   }
 
   .reportAltText {
-    color: $neutral-black;
+    color: black; //Hardcoded color for printing
     font-size: 10pt;
     position: static;
     font-style: italic;
@@ -174,7 +174,7 @@
   .cardHeader {
     font-weight: bold;
     text-decoration: underline !important;
-    color: $neutral-black;
+    color: black; //Hardcoded color for printing
     padding-top: 7px;
     padding-bottom: 7px;
   }
