@@ -1,6 +1,6 @@
 @import '../../../../vars';
 
-$dog-color: $neutral-dark-gray3;
+$dog-color: var(--mui-palette-neutral-700);
 $dog-body-width: 10em;
 $dog-body-height: 5em;
 
@@ -42,7 +42,7 @@ $dog-body-height: 5em;
   border-radius: 0.2em;
 }
 .dog_eye {
-  background-color: $neutral-light-gray2;
+  background-color: var(--mui-palette-neutral-300);
   width: 0.7em;
   height: 0.7em;
   border-radius: 50%;
@@ -50,7 +50,7 @@ $dog-body-height: 5em;
   top: 15%;
 }
 .dog_nose {
-  background-color: $neutral-black;
+  background-color: black;
   width: 0.9em;
   height: 0.9em;
   border-radius: 50%;
@@ -67,7 +67,7 @@ $dog-body-height: 5em;
   border-bottom: solid 2em $dog-color;
 }
 .dog_collar {
-  background-color: rgb(165, 0, 0);
+  background-color: var(--mui-palette-error-main);
   bottom: 0;
   right: 0;
   width: 50%;
@@ -75,7 +75,7 @@ $dog-body-height: 5em;
   transform: rotate(-8deg);
   font-size: 0.3em;
   line-height: 2.5em;
-  color: $neutral-white;
+  color: var(--mui-palette-error-contrastText);
   text-align: center;
   font-family: monospace;
 }
@@ -92,7 +92,7 @@ $dog-body-height: 5em;
 .dog_leg2 {
   transform: translateX(4em);
   height: 1.2em;
-  background-color: $neutral-dark-gray2;
+  background-color: var(--mui-palette-neutral-800);
 }
 .dog_leg3 {
   transform: translateX($dog-body-width - 3.5em);
@@ -100,7 +100,7 @@ $dog-body-height: 5em;
 .dog_leg4 {
   transform: translateX($dog-body-width - 1.5em);
   height: 1.2em;
-  background-color: $neutral-dark-gray2;
+  background-color: var(--mui-palette-neutral-800);
 }
 .dog_tail {
   transform: translateX($dog-body-width - 2em + 0.8em) translateY(-4.5em + 1em) rotate(30deg);

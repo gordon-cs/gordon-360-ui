@@ -53,10 +53,10 @@ a {
 }
 // style for links that are simply text and therefore need more of a sign that they are clickable
 .gc360_text_link {
-  color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-link-main);
   transition: color 200ms;
   &:hover {
-    color: var(--mui-palette-secondary-main) !important;
+    color: var(--mui-palette-link-light) !important;
   }
 }
 
