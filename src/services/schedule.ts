@@ -20,7 +20,7 @@ type CourseSchedule = {
 
 type ScheduleEvent = {
   id: number;
-  code: string;
+  name: string;
   title: string;
   location: string;
   start: Date;
@@ -86,8 +86,8 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
     if (course.ROOM_CDE === 'ASY') {
       return asyncMeetingDays.map((day) => ({
         id: eventId++,
-        code: course.CRS_CDE,
-        title: course.CRS_TITLE,
+        name: course.CRS_TITLE,
+        title: course.CRS_CDE,
         location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
         start: today.toDate(),
         end: today.toDate(),
@@ -98,8 +98,8 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
     } else {
       return meetingDays.map((day) => ({
         id: eventId++,
-        code: course.CRS_CDE,
-        title: course.CRS_TITLE,
+        name: course.CRS_TITLE,
+        title: course.CRS_CDE,
         location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
         start: beginTime.toDate(),
         end: endTime.toDate(),

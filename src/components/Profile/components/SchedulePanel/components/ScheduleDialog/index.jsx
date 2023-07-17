@@ -28,11 +28,11 @@ const ScheduleDialog = (props) => {
         {props.courseInfo && (
           <>
             <DialogTitle className={styles.dialogTitle} align="center">
-              {props.courseCode}
+              {props.courseTitle}
             </DialogTitle>
             <DialogContent>
               <Typography className={styles.dialogTextLarge} align="left">
-                Title: {props.courseTitle}
+                Title: {props.courseName}
               </Typography>
               <Typography className={styles.dialogTextMedium} align="left">
                 Room: {props.courseLocation}
@@ -63,7 +63,7 @@ const ScheduleDialog = (props) => {
                 <Grid item xs={1} lg={2}></Grid>
                 <Grid item lg={2} align="right">
                   <add-to-calendar-button
-                    name={props.courseCode}
+                    name={props.courseTitle}
                     // We had to add 1 to the index for the resourceId because the setDay function
                     // starts at 0 for Sunday which we don't include in the course schedule
                     startDate={formatter(
@@ -77,7 +77,7 @@ const ScheduleDialog = (props) => {
                     // and endTime as null if they are all day events.
                     startTime={formatter(props.courseStart, 'HH:mm', props.courseInfo.allDay)}
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
-                    description={props.courseTitle}
+                    description={props.courseName}
                     Location={props.courseLocation}
                     options="'Google', 'Apple'"
                     buttonsList
@@ -95,7 +95,7 @@ const ScheduleDialog = (props) => {
                 </Grid>
                 <Grid item lg={6} align="left">
                   <add-to-calendar-button
-                    name={props.courseCode}
+                    name={props.courseTitle}
                     startDate={format(
                       setDay(
                         new Date(props.firstDay),
@@ -105,7 +105,7 @@ const ScheduleDialog = (props) => {
                     )}
                     startTime={formatter(props.courseStart, 'HH:mm', props.courseInfo.allDay)}
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
-                    description={props.courseTitle}
+                    description={props.courseName}
                     Location={props.courseLocation}
                     options="'Apple', 'Outlook.com','MicrosoftTeams'"
                     buttonsList
