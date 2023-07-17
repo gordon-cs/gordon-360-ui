@@ -59,7 +59,7 @@ const EventItem = ({ event }) => {
               their system set the same as 360, the button will appear correct, but otherwise the 
               button might be light in dark mode and vice versa.
               For now, it works in some cases, and doesn't look too terrible otherwise
-              Potential fis is to query the localStorage key to get the theme mode setting for the 
+              Potential fix is to query the localStorage key to get the theme mode setting for the 
               user.*/
             ></add-to-calendar-button>
           )}
