@@ -11,15 +11,15 @@
   align-items: center;
   cursor: pointer;
   &:hover {
-    background-color: $neutral-light-gray2;
-    box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
+    background-color: var(--mui-palette-neutral-300);
+    box-shadow: 0 0 0 0.25rem var(--mui-palette-neutral-300);
   }
   &_text {
     text-align: center;
     font-size: 10;
   }
   &_templatelink {
-    color: $primary-blue;
+    color: var(--mui-palette-primary-main);
     display: block;
     text-align: center;
     font-size: 0.8rem;

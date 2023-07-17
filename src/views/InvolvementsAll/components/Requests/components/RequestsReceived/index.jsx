@@ -66,11 +66,7 @@ const RequestReceived = ({ involvement }) => {
                     />
 
                     <ListItemSecondaryAction>
-                      <Button
-                        className={styles.deny_request_button}
-                        onClick={() => onDeny(request.RequestID)}
-                        size="small"
-                      >
+                      <Button color="error" onClick={() => onDeny(request.RequestID)} size="small">
                         Deny
                       </Button>
                       &emsp;
