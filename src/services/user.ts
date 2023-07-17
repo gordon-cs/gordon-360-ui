@@ -244,11 +244,11 @@ const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
 const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
-const getMailStops = (): Promise<string[]> => http.get(`profiles/mail_stops`);
+const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
-const updateMailStop = (value: string) => http.put(`profiles/mail_stop`, value);
+const updateMailStop = (value: string) => http.put(`profiles/mailstop`, value);
 
 const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
   http.put(`profiles/office_location`, OfficeLocation);
