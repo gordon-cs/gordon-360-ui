@@ -264,10 +264,20 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     createSnackbar(status.message, status.type);
   };
 
-  const graduationYear =
-    isAlumni && profile.PreferredClassYear?.trim() ? (
-      <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
-    ) : null;
+  const gradYearAndMajor = () => {
+    var text = profile.PreferredClassYear
+    if (profile.Major1Description !== "") {
+      text += " | " + profile.Major1Description
+    }
+    if (profile.Major2Description !== "") {
+      text += " & " + profile.Major2Description
+    }
+    return text
+  };
+
+  const graduationYear = isAlumni && (
+      <ProfileInfoListItem title={profile.College + ' Alum:'} contentText={gradYearAndMajor()} />
+    );
 
   const showCliftonStrengthsBlock =
     (profile.CliftonStrengths && !profile.CliftonStrengths.Private) ||
