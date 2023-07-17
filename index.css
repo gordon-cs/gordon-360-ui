@@ -33,7 +33,7 @@
   display: flex;
   justify-content: center;
   height: 50vh;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .container {
