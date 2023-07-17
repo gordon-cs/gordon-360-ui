@@ -111,6 +111,26 @@ export const windowBreakWidths = {
   breakXL: 1536,
 } as const;
 
+/**
+ * Possible stored user color settings
+ */
+export enum ColorSetting {
+  System = 'system',
+  Dark = 'dark',
+  Light = 'light',
+}
+
+/**
+ *  Possible MUI theme modes
+ */
+export enum ColorMode {
+  Dark = 'dark',
+  Light = 'light',
+}
+
+// key for caching user color preference in localStorage
+export const STORAGE_COLOR_PREFERENCE_KEY = 'colorMode';
+
 // Extend the interface, add neutral color with same color options as the primary palette.
 declare module '@mui/material/styles' {
   interface Palette {
