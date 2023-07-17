@@ -30,4 +30,7 @@
     text-align: center;
     padding-bottom: 0.5rem;
   }
+  &_text {
+    color: var(--mui-palette-neutral-contrastText);
+  }
 }

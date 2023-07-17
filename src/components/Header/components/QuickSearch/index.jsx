@@ -21,8 +21,7 @@ const renderInput = ({ autoFocus, value, ref, ...other }) => (
     InputProps={{
       disableUnderline: true,
       classes: {
-        // Use static class as target of global styles
-        root: `${styles.root} gc360_quick_search_root`,
+        root: styles.root,
       },
       startAdornment: (
         <InputAdornment position="start">
