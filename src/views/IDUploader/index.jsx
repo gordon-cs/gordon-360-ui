@@ -87,11 +87,7 @@ const IDUploader = () => {
     <Grid container justifyContent="center" spacing={2}>
       <Grid item xs={12} md={6} lg={8}>
         <Card>
-          <CardHeader
-            title="ID Photo Guidelines"
-            titleTypographyProps={{ align: 'center' }}
-            className={styles.ID_card_header}
-          />
+          <CardHeader title="ID Photo Guidelines" titleTypographyProps={{ align: 'center' }} />
           <CardContent>
             <List
               component="ol"
@@ -125,7 +121,7 @@ const IDUploader = () => {
 
       <Grid item xs={12} md={6} lg={4} container justifyContent="center">
         <Card>
-          <CardHeader title="Preview your ID Card" className={styles.ID_card_header} />
+          <CardHeader title="Preview your ID Card" />
           <CardContent className={styles.ID_card}>
             <img
               className={styles.ID_card_header}

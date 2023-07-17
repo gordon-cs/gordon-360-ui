@@ -6,9 +6,7 @@ import { defaults, Doughnut } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import session from 'services/session';
 import user from 'services/user';
-import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
-import styles2 from 'app.module.css';
 import { theme360 } from 'theme';
 
 const CLWCreditsDaysLeft = () => {
@@ -166,7 +164,7 @@ const CLWCreditsDaysLeft = () => {
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
-            <CardHeader title={currSessionDescription} className={styles2.gc360_header} />
+            <CardHeader title={currSessionDescription} />
           </Grid>
           <Grid item xs={5} align="right">
             <Button

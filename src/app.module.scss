@@ -20,11 +20,6 @@
   }
 }
 
-.gc360_header {
-  background-color: var(--mui-palette-primary-main);
-  color: var(--mui-palette-primary-contrastText);
-}
-
 @media (min-width: $break-sm) {
   .app_main {
     height: calc(100vh - #{$header-height-sm});

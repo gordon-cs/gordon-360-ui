@@ -15,12 +15,12 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLimitedAvailability from 'components/GordonLimitedAvailability';
 import GordonOffline from 'components/GordonOffline';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import { isValid, set } from 'date-fns';
@@ -29,24 +29,12 @@ import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
 import ShiftDisplay from './components/ShiftDisplay';
 import styles from './Timesheets.module.css';
-import styles2 from 'app.module.css';
 import { theme360 } from 'theme';
-import GordonUnauthenticated from 'components/GordonUnauthenticated';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
 
 const withNoSeconds = (date) => set(date, { seconds: 0, milliseconds: 0 });
-
-const CustomTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: 'var(--mui-palette-neutral-dark)',
-    color: 'var(--mui-palette-neutral-contrastText)',
-    boxShadow: theme.shadows[1],
-    fontSize: 12,
-    maxWidth: 500,
-  },
-}))(Tooltip);
 
 const Timesheets = (props) => {
   const [userJobs, setUserJobs] = useState([]);
@@ -322,7 +310,6 @@ const Timesheets = (props) => {
       setClockInOut('Clock In');
       setSelectedDateIn(null);
       setSelectedDateOut(null);
-      setHoursWorkedInDecimal(0);
     }
   };
 
@@ -379,45 +366,12 @@ const Timesheets = (props) => {
     </Button>
   );
 
-  const timesheetTitle = (
-    <div className={styles.header_tooltip_container}>
-      <CustomTooltip
-        disableFocusListener
-        disableTouchListener
-        title={
-          // eslint-disable-next-line no-multi-str
-          'Student employees are not permitted to work more than 20 total hours\
-                      per work week, or more than 40 hours during winter, spring, and summer breaks.\
-                      \
-                      To request permission for a special circumstance, please email\
-                      student-employment@gordon.edu before exceeding this limit.'
-        }
-        placement="bottom"
-      >
-        <div ref={tooltipRef}>
-          <CardHeader
-            className="disable_select"
-            style={{ color: 'var(--mui-palette-neutral-main)' }}
-            title="Enter a shift"
-          />
-          <InfoOutlinedIcon
-            className={styles.tooltip_icon}
-            style={{
-              fontSize: 18,
-            }}
-          />
-        </div>
-      </CustomTooltip>
-    </div>
-  );
-
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Grid container spacing={2} className={styles.timesheets}>
           <Grid item xs={12}>
             <Card>
-              <CardHeader title={timesheetTitle} className={styles2.gc360_header}></CardHeader>
               <CardContent
                 style={{
                   marginLeft: 8,
@@ -426,14 +380,45 @@ const Timesheets = (props) => {
               >
                 <Grid container spacing={2} alignItems="center" alignContent="center">
                   <Grid item md={2}>
-                    <Button onClick={changeState} variant="contained" className={styles.button}>
+                    <Button
+                      variant="outlined"
+                      color="link"
+                      onClick={changeState}
+                      className={styles.clockInOutButton}
+                    >
                       {' '}
                       {clockInOut}
                     </Button>
-                    &nbsp;
+                  </Grid>
+                  <Grid item md={8}>
+                    <div className={styles.header_tooltip_container}>
+                      <Tooltip
+                        classes={{ tooltip: styles.tooltip }}
+                        disableFocusListener
+                        disableTouchListener
+                        title={
+                          // eslint-disable-next-line no-multi-str
+                          'Student employees are not permitted to work more than 20 total hours\
+                      per work week, or more than 40 hours during winter, spring, and summer breaks.\
+                      \
+                      To request permission for a special circumstance, please email\
+                      student-employment@gordon.edu before exceeding this limit.'
+                        }
+                        placement="bottom"
+                      >
+                        <div ref={tooltipRef}>
+                          <CardHeader className="disable_select" title="Enter a shift" />
+                          <InfoOutlinedIcon
+                            className={styles.tooltip_icon}
+                            style={{
+                              fontSize: 18,
+                            }}
+                          />
+                        </div>
+                      </Tooltip>
+                    </div>
                   </Grid>
                 </Grid>
-                <br />
                 <Grid
                   container
                   spacing={2}
