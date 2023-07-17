@@ -9,7 +9,7 @@ const UpdateOfficeHours = (props) => {
   const [open, setOpen] = useState(false);
   const [hours, setHours] = useState(props.officeHours);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  var maxCharacter = 4000;
+  const maxCharacter = 4000;
 
   const handleSubmit = async () => {
     try {
