@@ -294,21 +294,24 @@ const Admin = () => {
   );
 
   let headerContents = (
-    <Grid container direction="row" alignItems="center" columnSpacing={{ xs: 2, sm: 4 }}>
-      <Grid item>
-        <img src={recimLogo} alt="Rec-IM Logo" className={styles.headerImg}></img>
+    <Grid container alignItems="center" columnSpacing={4} className={styles.header}>
+      <Grid item container xs={9} alignItems="center" columnSpacing={2}>
+        <Grid item>
+          <img src={recimLogo} alt="Rec-IM Logo" className={styles.headerImg}></img>
+        </Grid>
+        <Grid item xs={8}>
+          <Typography className={styles.title}>
+            <Box component="span" sx={{ color: 'secondary.main' }}>
+              Gordon
+            </Box>{' '}
+            Rec-IM
+          </Typography>
+          <Typography className={styles.subtitle}>
+            <i>"Competition reveals character"</i>
+          </Typography>
+        </Grid>
       </Grid>
-      <Grid item xs={8}>
-        <Typography className={styles.title}>
-          <Box component="span" sx={{ color: 'secondary.main' }}>
-            Gordon
-          </Box>{' '}
-          Rec-IM
-        </Typography>
-        <Typography className={styles.subtitle}>
-          <i>"Competition reveals character"</i>
-        </Typography>
-      </Grid>
+
       <Grid item xs={3} textAlign={'right'}>
         <IconButton onClick={handleAdminMenuOpen} sx={{ mr: '1rem' }}>
           <SummarizeIcon
