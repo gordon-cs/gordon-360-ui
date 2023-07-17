@@ -17,6 +17,11 @@
   text-shadow: 0px 1px 6px var(--mui-palette-neutral-A400);
 }
 
+.button {
+  background-color: var(--mui-palette-secondary-main);
+  color: var(--mui-palette-secondary-contrastText);
+}
+
 @media (min-width: $break-md) {
   .value {
     font-size: 3.3vw;

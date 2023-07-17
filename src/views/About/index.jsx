@@ -5,6 +5,7 @@ import contributors from './contributors.json';
 import origins from './origins.json';
 import versionUI from './version.json';
 import styles from './About.module.css';
+import styles2 from 'app.module.css';
 
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
 
@@ -23,11 +24,13 @@ const About = () => {
             className={styles.about_title}
             title="Conceived and Built at Gordon College"
             titleTypographyProps={{ variant: 'h4' }}
+            subheader={'By Students For Students'}
           />
-          <Typography className={styles.about_subheader}>By Students for Students</Typography>
+          <br />
           <CardContent>
             <Card>
-              <CardHeader className={styles.about_header} title={`${projectName}`} />
+              <CardHeader className={styles2.gc360_header} title={`${projectName}`} />
+
               <CardContent>
                 <Typography variant="body1" component="ul" style={{ textAlign: 'start' }}>
                   <li>Mobile-friendly, responsive web portal</li>

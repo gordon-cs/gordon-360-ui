@@ -23,6 +23,7 @@ import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Events.module.css';
+import styles2 from 'app.module.css';
 
 const Events = () => {
   const [open, setOpen] = useState(false);
@@ -132,7 +133,7 @@ const Events = () => {
   const searchPageTitle = (
     <div align="center">
       Search
-      <b className={styles.searchPageTitle}> Gordon </b>
+      <b className={styles.events_gordon_text}> Gordon </b>
       Events
     </div>
   );
@@ -141,39 +142,22 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <Card className={styles.card_style}>
+          <CardHeader title={searchPageTitle} className={styles2.gc360_header} />
+          <Card style={{ padding: '0 3vw' }}>
             <CardContent>
-              <Grid container direction="row" alignItems="center">
-                <Grid item xs={4} />
-                <Grid item xs={4} align="center">
-                  <CardHeader title={searchPageTitle} />
-                </Grid>
-                <Grid item xs={4} align="right">
-                  {isAuthenticated && (
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      onClick={() => navigate('/attended')}
-                    >
-                      ATTENDED CL&amp;W
-                    </Button>
-                  )}
-                </Grid>
-              </Grid>
-
               {/* Search Bar and Filters */}
               <Grid container spacing={2} direction="row">
                 <Grid item xs={12}>
-                  <Grid container spacing={2} alignItems="center">
+                  <Grid container spacing={1.5} alignItems="center">
                     <Media
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <EventIcon className={styles.event_filter_icon} />
+                          <EventIcon className={styles.events_icon} />
                         </Grid>
                       )}
                     />
-                    <Grid item xs={8}>
+                    <Grid item xs={true}>
                       <TextField
                         id="search"
                         label="Search"
@@ -202,8 +186,19 @@ const Events = () => {
                         Filters
                       </Button>
                     </Grid>
+
+                    <Grid item>
+                      {isAuthenticated && (
+                        <Button
+                          className={styles.events_button}
+                          variant="contained"
+                          onClick={() => navigate('/attended')}
+                        >
+                          ATTENDED CL&amp;W
+                        </Button>
+                      )}
+                    </Grid>
                   </Grid>
-                  <br />
                 </Grid>
 
                 <Grid item xs={12}>
@@ -213,10 +208,11 @@ const Events = () => {
                         query="(min-width: 600px)"
                         render={() => (
                           <Grid item>
-                            <FilterListIcon className={styles.event_filter_list_icon} />
+                            <FilterListIcon className={styles.events_icon} />
                           </Grid>
                         )}
                       />
+
                       <Grid item xs={8}>
                         <Autocomplete
                           id="event-filters"
@@ -266,12 +262,9 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <Card className={styles.card_style}>
+          <CardHeader title={searchPageTitle} className={styles2.gc360_header} />
+          <Card style={{ padding: '0 3vw' }}>
             <CardContent>
-              <Grid container item xs={12} justifyContent="center">
-                <CardHeader title={searchPageTitle} />
-              </Grid>
-
               {/* Search Bar and Filters */}
               <Grid container spacing={2} direction="row">
                 <Grid item xs={12} container spacing={2} alignItems="center">
@@ -279,7 +272,7 @@ const Events = () => {
                     query="(min-width: 600px)"
                     render={() => (
                       <Grid item>
-                        <EventIcon className={styles.event_icon} />
+                        <EventIcon className={styles.events_icon} />
                       </Grid>
                     )}
                   />
@@ -323,7 +316,8 @@ const Events = () => {
                   <Grid item>
                     {isAuthenticated && (
                       <Button
-                        color="secondary"
+                        color="primary"
+                        className={styles.events_button}
                         variant="contained"
                         onClick={() => navigate('/attended')}
                       >
@@ -349,7 +343,7 @@ const Events = () => {
                       query="(min-width: 600px)"
                       render={() => (
                         <Grid item>
-                          <FilterListIcon className={styles.event_filter_list_icon} />
+                          <FilterListIcon className={styles.events_icon} />
                         </Grid>
                       )}
                     />
@@ -378,7 +372,7 @@ const Events = () => {
               </Grid>
             </CardContent>
           </Card>
-
+          <br />
           {/* List of Events */}
           <Grid item xs={12}>
             {content}
@@ -388,5 +382,4 @@ const Events = () => {
     );
   }
 };
-
 export default Events;

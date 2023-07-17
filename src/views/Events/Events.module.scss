@@ -1,23 +1,20 @@
-.searchPageTitle {
-  color: var(--mui-palette-secondary-main);
-}
-.event {
-  &_filter_icon {
-    color: var(--mui-palette-neutral-500);
-    font-size: 20;
+.events {
+  &_gordon_text {
+    color: var(--mui-palette-secondary-main);
   }
-  &_filter_list_icon {
-    color: var(--mui-palette-neutral-500);
-    font-size: 20;
-  }
+
   &_icon {
-    color: var(--mui-palette-neutral-500);
+    color: var(--mui-palette-neutral-700);
     font-size: 20;
   }
-  &_filter_button {
-    font-weight: bold;
+
+  &_button {
+    background-color: var(--mui-palette-secondary-main);
+    color: var(--mui-palette-secondary-contrastText);
   }
 }
+
+
 .card_style {
   padding: 0 3vw;
 }
