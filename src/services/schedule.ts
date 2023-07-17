@@ -88,6 +88,7 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
         id: eventId++,
         name: course.CRS_TITLE,
         title: course.CRS_CDE,
+        // you might confused about name and title reference, but it is for displaying course code in the panel and course name in the dialog
         location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
         start: today.toDate(),
         end: today.toDate(),
