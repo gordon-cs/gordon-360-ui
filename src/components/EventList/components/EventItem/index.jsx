@@ -53,7 +53,7 @@ const EventItem = ({ event }) => {
               timeZone="currentBrowser"
               description={event.Description}
               onClick={() => setExpanded((e) => !e)}
-              lightMode="system" // Set to system, if we give users
+              lightMode="system" // Set to system @TODO use localstorage setting to update
             ></add-to-calendar-button>
           )}
         </CardContent>
