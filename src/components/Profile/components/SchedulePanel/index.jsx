@@ -35,11 +35,13 @@ const GordonSchedulePanel = (props) => {
   const [firstDay, setFirstDay] = useState('');
   const [lastDay, setLastDay] = useState('');
   const [recurringDays, setRecurringDays] = useState([]);
+  const [courseCode, setCourseCode] = useState('');
   const [courseTitle, setCourseTitle] = useState('');
   const [courseLocation, setCourseLocation] = useState('');
   const [courseStart, setCourseStart] = useState('');
   const [courseEnd, setCourseEnd] = useState('');
   const [selectedSession, setSelectedSession] = useState('');
+
   const isOnline = useNetworkStatus();
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
@@ -89,8 +91,9 @@ const GordonSchedulePanel = (props) => {
     if (props.myProf) {
       setScheduleDialogOpen(true);
       setRecurringDays(calEvent.meetingDays.map((day) => `${day}`).join(', '));
-      setCourseTitle(calEvent.title.split('in')[0]);
-      setCourseLocation(calEvent.title.split('in')[1]);
+      setCourseCode(calEvent.code);
+      setCourseTitle(calEvent.title);
+      setCourseLocation(calEvent.location);
       setCourseStart(calEvent.start);
       setCourseEnd(calEvent.end);
       setSelectedCourseInfo(calEvent);
@@ -118,6 +121,7 @@ const GordonSchedulePanel = (props) => {
         handleScheduleDialogClose={handleScheduleDialogClose}
         courseInfo={selectedCourseInfo}
         recurringDays={recurringDays}
+        courseCode={courseCode}
         courseTitle={courseTitle}
         courseLocation={courseLocation}
         firstDay={firstDay}
