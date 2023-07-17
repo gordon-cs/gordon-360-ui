@@ -21,7 +21,6 @@ import { Component } from 'react';
 import jobs from 'services/jobs';
 import ShiftItem from '../ShiftItem';
 import styles from './SavedShiftsList.module.css';
-import styles2 from 'app.module.css';
 
 export default class SavedShiftsList extends Component {
   constructor(props) {
@@ -258,9 +257,8 @@ export default class SavedShiftsList extends Component {
         <>
           {confirmationBox}
           <Card>
-            <CardHeader className={styles2.gc360_header} title={cardTitle} />
-            <br />
             <CardContent>
+              <CardHeader className="disable_select" title={cardTitle} />
               <Grid
                 className={styles.shift_list && styles.boxShadow}
                 container

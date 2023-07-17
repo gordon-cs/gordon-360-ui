@@ -1,20 +1,11 @@
 import GordonDialogBox from 'components/GordonDialogBox';
 import LinkIcon from '@mui/icons-material/InsertLink';
-import {
-  ListItemIcon,
-  ListItemText,
-  ListSubheader,
-  List,
-  ListItem,
-  CardHeader,
-} from '@mui/material';
+import { ListItemIcon, ListItemText, ListSubheader, List, ListItem } from '@mui/material';
 import CanvasIcon from './images/Canvas.ico';
 import GordonIcon from './images/favicon.ico';
 import GOIcon from './images/GoGordonFavicon.ico';
 import MyGordonIcon from './images/MyGordonFavicon.ico';
 import { PropsWithChildren } from 'react';
-import styles from './QuickLinksDialog.module.css';
-import styles2 from 'app.module.css';
 
 type ListItemProps = {
   name: string;
@@ -69,19 +60,14 @@ const GordonQuickLinksDialog = ({ linkopen, handleLinkClose }: Props) => {
     <GordonDialogBox
       aria-labelledby="useful-links"
       open={linkopen}
-      title=""
+      title="Useful Links"
       buttonClicked={handleLinkClose}
       buttonName="Close"
     >
-      <CardHeader title="Useful Links" className={styles2.gc360_header} />
       <List
         component="nav"
         subheader={
-          <ListSubheader
-            component="div"
-            className={styles.quick_links_dialog_link_text}
-            disableSticky
-          >
+          <ListSubheader component="div" disableSticky>
             Academics
           </ListSubheader>
         }
@@ -93,11 +79,7 @@ const GordonQuickLinksDialog = ({ linkopen, handleLinkClose }: Props) => {
       <List
         component="nav"
         subheader={
-          <ListSubheader
-            component="div"
-            className={styles.quick_links_dialog_link_text}
-            disableSticky
-          >
+          <ListSubheader component="div" disableSticky>
             Information
           </ListSubheader>
         }

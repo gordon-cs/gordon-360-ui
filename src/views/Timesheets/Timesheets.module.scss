@@ -11,17 +11,13 @@
 }
 
 .timesheets {
-  text-align: center;
-  background-color: var(--mui-palette-neutral-main);
-
-  .button {
-    background-color: var(--mui-palette-secondary-main);
+  :global(.MuiGrid-item) {
+    text-align: center;
   }
 
   .header_tooltip_container {
     display: inline-flex;
     position: relative;
-    color: var(--mui-palette-neutral-main);
   }
 
   .header_tooltip_container .tooltip_icon {

@@ -1,9 +1,9 @@
-.banner_submission {
-  &_upload_button {
+.bannerSubmission {
+  &_header {
     background-color: var(--mui-palette-primary-main);
     color: var(--mui-palette-primary-contrastText);
   }
-  &_card_action {
+  &_card {
     justify-content: center;
   }
 }
