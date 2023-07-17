@@ -7,7 +7,7 @@ import {
   People as PeopleIcon,
   Work as WorkIcon,
 } from '@mui/icons-material';
-import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
@@ -20,6 +20,9 @@ import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
 import styles from './Header.module.css';
+import gc_360_yellow_logo_72 from './gc_360_yellow_logo_72.png';
+import gc_360_yellow_logo_64 from './gc_360_yellow_logo_64.png';
+import gc_360_yellow_logo_56 from './gc_360_yellow_logo_56.png';
 
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
@@ -137,6 +140,16 @@ const GordonHeader = ({ onDrawerToggle }) => {
     </Button>
   );
 
+  function logoSizedForHeader() {
+    if (width >= 900) {
+      return gc_360_yellow_logo_72;
+    } else if (width >= 600) {
+      return gc_360_yellow_logo_64;
+    } else {
+      return gc_360_yellow_logo_56;
+    }
+  }
+
   return (
     <section className={styles.gordon_header}>
       <AppBar className={styles.app_bar} position="static">
@@ -150,15 +163,15 @@ const GordonHeader = ({ onDrawerToggle }) => {
           >
             <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
-          &nbsp;&nbsp; &nbsp;&nbsp;
-          <Tab //this is an "invisible" button behind the new logo that links back to the home page
-            className={styles.tab}
-            label=" "
-            component={ForwardNavLink}
-            disableRipple={true}
+          <Link
             to="/"
-            onChange={(event, value) => setTabIndex(value)}
-          />
+            component={ForwardNavLink}
+            value={tabIndex}
+            onClick={(event, value) => setTabIndex(value)}
+          >
+            <img src={logoSizedForHeader()}></img>
+          </Link>
+
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
             <Routes>
               {routes.map((route) => (
