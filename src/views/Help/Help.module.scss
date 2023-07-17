@@ -22,7 +22,7 @@
     color: var(--mui-palette-primary-contrastText);
   }
 
-  &_section:global(.MuiCard-root) {
+  &_section {
     box-shadow: none;
     color: var(--mui-palette-neutral-contrastText);
   }

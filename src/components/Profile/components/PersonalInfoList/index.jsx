@@ -192,7 +192,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         myProf && (
           <FormControlLabel
             control={
-              <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
+              <Switch
+                onChange={handleChangeMobilePhonePrivacy}
+                color="secondary"
+                checked={!isMobilePhonePrivate}
+              />
             }
             label={isMobilePhonePrivate ? 'Private' : 'Public'}
             labelPlacement="bottom"
@@ -264,10 +268,20 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     createSnackbar(status.message, status.type);
   };
 
-  const graduationYear =
-    isAlumni && profile.PreferredClassYear?.trim() ? (
-      <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
-    ) : null;
+  const gradYearAndMajor = () => {
+    var text = profile.PreferredClassYear
+    if (profile.Major1Description !== "") {
+      text += " | " + profile.Major1Description
+    }
+    if (profile.Major2Description !== "") {
+      text += " & " + profile.Major2Description
+    }
+    return text
+  };
+
+  const graduationYear = isAlumni && (
+      <ProfileInfoListItem title={profile.College + ' Alum:'} contentText={gradYearAndMajor()} />
+    );
 
   const showCliftonStrengthsBlock =
     (profile.CliftonStrengths && !profile.CliftonStrengths.Private) ||
@@ -318,6 +332,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             control={
               <Switch
                 onChange={handleChangeCliftonStrengthsPrivacy}
+                color="secondary"
                 checked={!isCliftonStrengthsPrivate}
               />
             }
@@ -386,7 +401,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 </Grid>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   onClick={() => setIsJoinDialogOpen(true)}
                 >
                   Instructions
@@ -400,7 +415,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   <Grid container>
                     <Typography sx={{ fontSize: '0.8rem' }}>
                       <Link
-                        className={styles.salsbury_link}
+                        className={`gc360_text_link ${styles.salsbury_link}`}
                         href="https://m.youtube.com/shorts/FxE5PPS94sc"
                         underline="always"
                         target="_blank"
@@ -425,7 +440,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       <br />
                       <br />
                       <Link
-                        className={styles.dp_link}
+                        className={`gc360_text_link ${styles.dp_link}`}
                         href="https://m.youtube.com/shorts/47402r3FqSs"
                         underline="always"
                         target="_blank"
@@ -453,7 +468,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       <br />
                       <br />
                       <Link
-                        className={styles.dd_link}
+                        className={`gc360_text_link ${styles.dd_link}`}
                         href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
                         underline="always"
                         target="_blank"
