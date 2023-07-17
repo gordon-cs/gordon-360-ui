@@ -266,7 +266,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
         contentText={
-          myProf && isStudent && !isAlumni ? (
+          myProf && isStudent ? (
             <Grid container spacing={0} alignItems="center">
               <Grid item>
                 {!profile.PlannedGradYear?.length ? 'Deciding' : profile.PlannedGradYear}
