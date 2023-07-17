@@ -11,7 +11,7 @@ const EditShiftNotesDialog = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     var shiftNote = shiftNoteInput;
-    props.onDialogSubmit(shiftNote);
+    //props.onDialogSubmit(shiftNote); //need to change this
     handleClose();
   };
 
