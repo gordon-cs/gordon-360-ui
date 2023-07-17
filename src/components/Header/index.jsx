@@ -163,15 +163,9 @@ const GordonHeader = ({ onDrawerToggle }) => {
           >
             <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
-          <Link
-            to="/"
-            component={ForwardNavLink}
-            value={tabIndex}
-            onClick={(event, value) => setTabIndex(value)}
-          >
+          <Link to="/" component={ForwardNavLink} value={tabIndex}>
             <img src={logoSizedForHeader()}></img>
           </Link>
-
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
             <Routes>
               {routes.map((route) => (
