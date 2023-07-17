@@ -34,7 +34,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
     if (membershipHistories.length === 0) {
       return (
         <Link to={`/involvements`}>
-          <Typography variant="body2" className={styles.noMemberships}>
+          <Typography variant="body2" className={`gc360_text_link ${styles.noMemberships}`}>
             No Involvements to display. Click here to see Involvements around campus!
           </Typography>
         </Link>
@@ -58,7 +58,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
   const transcriptButton = myProf && (
     <Grid container justifyContent="center">
       <Link to="/transcript">
-        <Button variant="contained" className={styles.memberships_card_content_button}>
+        <Button variant="contained" color="secondary">
           Experience Transcript
         </Button>
       </Link>
