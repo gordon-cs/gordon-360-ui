@@ -82,6 +82,7 @@ const Admin = () => {
   const [selectedDateOut, setSelectedDateOut] = useState(null);
   const [openRecimReportBox, setOpenRecimReportBox] = useState();
   const [recimReport, setRecimReport] = useState();
+  const [isSuperAdmin, setIsSuperAdmin] = useState(true); //temporary implementation
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -383,6 +384,7 @@ const Admin = () => {
                 <ParticipantList
                   participants={participants}
                   isAdminPage={true}
+                  isSuperAdmin={isSuperAdmin}
                   editDetails={handleOpenEditParticipant}
                 />
               </>

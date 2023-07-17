@@ -1,6 +1,13 @@
 @use 'sass:color';
 @import '../../../../../vars';
 
+.menuTitle {
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+  color: $neutral-gray;
+  text-align: center;
+}
+
 .listing {
   background-color: $neutral-light-gray2-opacity10;
   margin-top: 0.1em;

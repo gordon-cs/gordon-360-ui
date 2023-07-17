@@ -15,7 +15,6 @@ import { TabPanel } from '../TabPanel';
 import { addDays } from 'date-fns';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
 import SearchIcon from '@mui/icons-material/Search';
-import GordonLoader from 'components/Loader';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -39,12 +38,14 @@ const ParticipantList = ({
   withAttendance,
   attendance,
   isAdmin,
+  isSuperAdmin,
   matchID,
   teamID,
   showInactive,
   callbackFunction,
 }) => {
   const [visisbleParticipants, setVisibleParticipants] = useState(participants);
+
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
@@ -52,7 +53,7 @@ const ParticipantList = ({
     // dip is not a major factor.
     const delayDebounceFn = setTimeout(() => {
       setVisibleParticipants(
-        participants?.map((p) =>
+        participants?.filter((p) =>
           p.Username.replace(/[^A-Z0-9]+/gi, '')
             .toLowerCase()
             .includes(searchValue.replace(/[^A-Z0-9]+/gi, '').toLowerCase()),
@@ -71,7 +72,6 @@ const ParticipantList = ({
       await editTeamParticipant(teamID, { Username: currentCaptain, RoleTypeID: 3 }); //member
     callbackFunction((r) => !r);
   };
-
   const participantSearchBar = () => {
     return (
       <Grid item>
@@ -106,6 +106,7 @@ const ParticipantList = ({
         participant={participant}
         minimal={minimal}
         isAdminPage={isAdminPage}
+        isSuperAdmin={isSuperAdmin}
         editParticipantInfo={editDetails}
         withAttendance={withAttendance}
         initialAttendance={
