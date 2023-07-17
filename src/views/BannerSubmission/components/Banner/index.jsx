@@ -1,12 +1,4 @@
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Link,
-  Typography,
-} from '@mui/material';
+import { Button, Card, CardActions, CardContent, CardMedia, Link, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import styles from './Banner.module.css';
 
@@ -39,7 +31,7 @@ const Banner = ({ banner, handleNewsItemDelete }) => (
         variant="outlined"
         startIcon={<DeleteIcon />}
         onClick={() => handleNewsItemDelete(banner.ID)}
-        className={styles.deleteButton}
+        color="error"
       >
         Delete
       </Button>
