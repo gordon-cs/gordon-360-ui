@@ -5,17 +5,18 @@ import styles from './Page404.module.css';
 const message_line_1 = "Hmmm... We're not quite sure";
 const message_line_2 = "what you're looking for";
 
-const Page404 = () => {
+const Page404 = (props) => {
+  let messageLines = props.messages ?? [message_line_1, message_line_2]
+
   return (
     <Grid container className={styles.page404_main}>
       {/* 404 message */}
       <Grid item className={styles.page404_message}>
-        <Typography variant="h4" className={styles.page404_title}>
-          {message_line_1}
-        </Typography>
-        <Typography variant="h4" className={styles.page404_title}>
-          {message_line_2}
-        </Typography>
+        {messageLines.map((msg) =>
+          <Typography variant="h4" className={styles.page404_title}>
+            {msg}
+          </Typography>
+        )}
       </Grid>
       {/* Gordon mascot image */}
       <Grid item align="center" className={styles.page404_image}>
