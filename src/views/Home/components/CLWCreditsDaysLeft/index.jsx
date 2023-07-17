@@ -7,7 +7,9 @@ import { Link } from 'react-router-dom';
 import session from 'services/session';
 import user from 'services/user';
 import { gordonColors } from 'theme';
-import styles from 'app.module.css';
+import styles from '../Doughnut.module.css';
+import styles2 from 'app.module.css';
+import { theme360 } from 'theme';
 
 const CLWCreditsDaysLeft = () => {
   const [firstDay, setFirstDay] = useState('');
@@ -40,9 +42,12 @@ const CLWCreditsDaysLeft = () => {
     loadData();
   }, []);
 
-  let daysColor = gordonColors.primary.blue;
-  let chapelColor = gordonColors.primary.cyan;
-  let emptyColor = gordonColors.neutral.lightGray;
+  // variable colors do not work in chartjs, so fixed colors from the light palette are used
+  const colors = theme360.colorSchemes.light.palette;
+
+  let daysColor = colors.primary.main;
+  let chapelColor = colors.secondary.main;
+  let emptyColor = colors.neutral.A700;
 
   defaults.global.legend.display = false;
 
@@ -75,7 +80,7 @@ const CLWCreditsDaysLeft = () => {
     const remaining = current > required ? 0 : required - current;
     const data = {
       legendEntries: ['Days Finished', 'CL&W Credits'],
-      legendColors: [gordonColors.primary.blue, gordonColors.primary.cyan],
+      legendColors: [daysColor, chapelColor],
       datasets: [
         {
           label: ['Days Finished', 'Days Remaining'],
@@ -122,7 +127,10 @@ const CLWCreditsDaysLeft = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <div className={styles.value} style={{ color: daysColor }}>
+            <div
+              className={styles.value}
+              style={{ color: theme360.vars.palette.link.contrastText }}
+            >
               {daysFinished}
             </div>
             <div className={styles.label}>
@@ -158,7 +166,7 @@ const CLWCreditsDaysLeft = () => {
       <CardContent>
         <Grid container direction="row" alignItems="center">
           <Grid item xs={7} align="left">
-            <CardHeader title={currSessionDescription} className={styles.gc360_header} />
+            <CardHeader title={currSessionDescription} className={styles2.gc360_header} />
           </Grid>
           <Grid item xs={5} align="right">
             <Button

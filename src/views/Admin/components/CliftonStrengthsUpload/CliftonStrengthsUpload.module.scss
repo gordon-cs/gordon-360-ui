@@ -1,18 +1,18 @@
 @import '../../../../vars';
 
 .header {
-  background-color: $primary-blue;
-  color: white;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
 }
 
 .resultmessage {
   &_green {
     font-size: 1.5rem;
-    color: #009900;
+    color: var(--mui-palette-success-dark);
   }
   &_red {
     font-size: 1.5rem;
-    color: #b53228;
+    color: var(--mui-palette-error-main);
   }
 }
 

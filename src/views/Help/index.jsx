@@ -263,7 +263,9 @@ const Help = () => {
         <Typography variant="subtitle1" className={styles.help_section} gutterBottom>
           <br /> Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
-            <Button color="primary">Report to CTS</Button>
+            <Button variant="text" className="gc360_text_link">
+              Report to CTS
+            </Button>
           </a>
         </Typography>
       </Grid>

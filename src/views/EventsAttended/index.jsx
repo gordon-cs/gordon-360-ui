@@ -29,7 +29,7 @@ const EventsAttended = () => {
   } else if (events.length > 0) {
     content = (
       <Grid container direction="row" justifyContent="center" spacing="2">
-        <Grid item align="center">
+        <Grid item align="center" xs="12">
           <Button variant="contained" color="secondary" component={Link} to="/events?CLW%20Credits">
             Need More Chapel Credits?
           </Button>

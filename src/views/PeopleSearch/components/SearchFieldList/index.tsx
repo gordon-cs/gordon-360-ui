@@ -354,6 +354,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     checked={searchParams.includeStudent}
                     name="includeStudent"
                     onChange={handleUpdate}
+                    color="secondary"
                   />
                 }
                 label="Student"
@@ -366,6 +367,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 checked={searchParams.includeFacStaff}
                 name="includeFacStaff"
                 onChange={handleUpdate}
+                color="secondary"
               />
             }
             label="Faculty/Staff"
@@ -379,6 +381,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     checked={searchParams.includeAlumni}
                     name="includeAlumni"
                     onChange={handleUpdate}
+                    color="secondary"
                   />
                 }
                 label="Alumni"
@@ -464,15 +467,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
               <Grid container spacing={4} direction="row">
                 {/* Advanced Search Filters: Student/Alumni */}
                 <AdvancedOptionsColumn>
-                  <Typography
-                    align="center"
-                    gutterBottom
-                    color={
-                      searchParams.includeStudent || searchParams.includeAlumni
-                        ? 'primary'
-                        : 'initial'
-                    }
-                  >
+                  <Typography align="center" gutterBottom color="neutral">
                     {profile?.PersonType === 'stu' ? 'Student' : 'Student/Alumni'}
                   </Typography>
                   <SearchField
@@ -538,6 +533,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                         min={1889}
                         max={currentYear}
                         disabled={!searchParams.includeAlumni}
+                        color="secondary"
                       />
                       <Typography fontSize={15} align="center">
                         {graduationYearRange[0]}-{graduationYearRange[1]}
@@ -546,7 +542,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   )}
                   {(isAlumni || isFacStaff) && (
                     <FormControlLabel
-                      control={<Switch onChange={handleSwitchChange} />}
+                      control={<Switch onChange={handleSwitchChange} color="secondary" />}
                       label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
                       labelPlacement="end"
                     />
@@ -555,11 +551,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
                 {/* Advanced Search Filters: Faculty/Staff */}
                 <AdvancedOptionsColumn>
-                  <Typography
-                    align="center"
-                    gutterBottom
-                    color={searchParams.includeFacStaff ? 'primary' : 'initial'}
-                  >
+                  <Typography align="center" gutterBottom color="neutral">
                     Faculty/Staff
                   </Typography>
                   <SearchField
@@ -584,7 +576,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
                 {/* Advanced Search Filters: Everyone */}
                 <AdvancedOptionsColumn>
-                  <Typography align="center" gutterBottom color="primary">
+                  <Typography align="center" color="neutral">
                     Everyone
                   </Typography>
                   <SearchField
