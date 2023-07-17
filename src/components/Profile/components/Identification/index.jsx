@@ -727,10 +727,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
             to={`/profile/${userProfile.AD_Username}`}
             className={styles.identification_card_content_public_profile_link}
           >
-            <Button
-              className={styles.identification_card_content_public_profile_link_button}
-              variant="contained"
-            >
+            <Button color="secondary" variant="contained">
               View My Public Profile
             </Button>
           </Link>
