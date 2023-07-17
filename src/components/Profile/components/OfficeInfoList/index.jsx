@@ -5,7 +5,7 @@ import { Markup } from 'interweave';
 import styles from './OfficeInfoList.module.css';
 import { gordonColors } from 'theme';
 import UpdateOffice from './UpdateOfficeLocationDialog';
-import UpdateOfficeHours from './EditOfficeHoursDialog';
+import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 import UpdateMail from './UpdateMailDestinationDialog';
 import GordonTooltip from 'components/GordonTooltip';
 import user from 'services/user';
