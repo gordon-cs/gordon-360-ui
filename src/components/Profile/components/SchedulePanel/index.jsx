@@ -45,7 +45,10 @@ const GordonSchedulePanel = (props) => {
 
   useEffect(() => {
     const loadPage = async () => {
-      setSessions(await sessionService.getAll());
+      const allSessions = await sessionService.getAll();
+      //const schedule = await scheduleService.getSchedule(props.profile.AD_Username, allSessions[0]);
+
+      setSessions(allSessions);
       if (sessionFromURL) {
         setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
       } else {
@@ -84,7 +87,7 @@ const GordonSchedulePanel = (props) => {
     } catch (e) {}
     setLoading(false);
   };
-
+  console.log(sessions);
   const handleScheduleDialogOpen = useCallback((calEvent) => {
     if (props.myProf) {
       setScheduleDialogOpen(true);
