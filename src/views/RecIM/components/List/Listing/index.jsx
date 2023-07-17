@@ -248,6 +248,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
 
 const ParticipantListing = ({
   participant,
+  handleUserSuspension,
   minimal,
   callbackFunction,
   showParticipantOptions,
@@ -525,6 +526,8 @@ const ParticipantListing = ({
               <MenuItem
                 dense
                 onClick={() => {
+                  handleUserSuspension({ username: participant.Username });
+
                   setAnchorEl(null);
                 }}
                 divider
@@ -536,6 +539,7 @@ const ParticipantListing = ({
               <MenuItem
                 dense
                 onClick={() => {
+                  handleUpdateParticipantStatus({ statusID: 4, description: 'Cleared' });
                   setAnchorEl(null);
                 }}
                 divider
@@ -547,6 +551,10 @@ const ParticipantListing = ({
               <MenuItem
                 dense
                 onClick={() => {
+                  handleUpdateParticipantStatus({
+                    statusID: 3,
+                    description: 'Banned',
+                  });
                   setAnchorEl(null);
                 }}
                 divider
@@ -558,6 +566,7 @@ const ParticipantListing = ({
               <MenuItem
                 dense
                 onClick={() => {
+                  handleUpdateParticipantStatus({ statusID: 4, description: 'Cleared' });
                   setAnchorEl(null);
                 }}
                 divider
