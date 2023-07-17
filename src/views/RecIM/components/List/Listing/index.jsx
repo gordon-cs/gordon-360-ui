@@ -31,7 +31,7 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
-import { editParticipantAdmin } from 'services/recim/participant';
+import { editParticipantAdmin, editParticipantStatus } from 'services/recim/participant';
 
 const activityTypeIconPair = [
   {
@@ -304,7 +304,6 @@ const ParticipantListing = ({
   }, [participant, teamID, withAttendance]);
 
   const handleParticipantOptions = (event) => {
-    console.log(participant);
     setAnchorEl(event.currentTarget);
   };
 
@@ -359,6 +358,12 @@ const ParticipantListing = ({
       username: participant.Username,
     };
     attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
+  };
+
+  const handleUpdateParticipantStatus = async (props) => {
+    await editParticipantStatus(participant.Username, { StatusID: props.statusID });
+    participant.Status = props.description;
+    handleClose();
   };
 
   const participantDetails = () => {
@@ -496,7 +501,8 @@ const ParticipantListing = ({
               <MenuItem
                 dense
                 onClick={() => {
-                  editParticipantInfo(participant);
+                  handleUpdateParticipantStatus({ statusID: 4, description: 'Cleared' });
+                  setAnchorEl(null);
                 }}
                 divider
               >
@@ -507,7 +513,8 @@ const ParticipantListing = ({
               <MenuItem
                 dense
                 onClick={() => {
-                  editParticipantInfo(participant);
+                  handleUpdateParticipantStatus({ statusID: 1, description: 'Pending' });
+                  setAnchorEl(null);
                 }}
                 divider
               >
@@ -518,7 +525,7 @@ const ParticipantListing = ({
               <MenuItem
                 dense
                 onClick={() => {
-                  editParticipantInfo(participant);
+                  setAnchorEl(null);
                 }}
                 divider
               >
@@ -529,7 +536,7 @@ const ParticipantListing = ({
               <MenuItem
                 dense
                 onClick={() => {
-                  editParticipantInfo(participant);
+                  setAnchorEl(null);
                 }}
                 divider
               >
@@ -540,11 +547,22 @@ const ParticipantListing = ({
               <MenuItem
                 dense
                 onClick={() => {
-                  editParticipantInfo(participant);
+                  setAnchorEl(null);
                 }}
                 divider
               >
                 Ban Participant
+              </MenuItem>
+            )}
+            {participant.Status === 'Banned' && isSuperAdmin && (
+              <MenuItem
+                dense
+                onClick={() => {
+                  setAnchorEl(null);
+                }}
+                divider
+              >
+                Unban Participant
               </MenuItem>
             )}
           </Menu>
