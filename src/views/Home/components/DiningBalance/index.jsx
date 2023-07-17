@@ -17,11 +17,6 @@ import user from 'services/user';
 import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
 import EditIcon from '@mui/icons-material/Edit';
-//import styles from './DiningBalance.module.scss';
-import { useTheme } from '@emotion/react';
-import { FaPen } from 'react-icons/fa';
-
-import { theme360 } from 'theme';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
@@ -153,9 +148,20 @@ const DiningBalance = () => {
           spacing={0}
           style={{ paddingTop: 5, paddingBottom: 10 }}
         >
-          <Grid item>
+          <Grid item sx={10}>
             <Typography variant="body2" className={styles.label2}>
               {diningInfo.ChoiceDescription}
+              <IconButton
+                variant="body2"
+                title="Change Meal Plan"
+                className={styles.label2}
+                //className={styles.gc360_my_profile_edit_icon}
+                component={Link}
+                href="https://www.gordon.edu/mealplan"
+                size="small"
+              >
+                <EditIcon />
+              </IconButton>
             </Typography>
           </Grid>
         </Grid>
@@ -232,19 +238,6 @@ const DiningBalance = () => {
             >
               TODAY'S MENU
             </Button>
-          </Grid>
-          <Grid container direction="row" alignSelf="center">
-            <Grid item xs={11} align="right">
-              <IconButton
-                title="Change Meal Plan"
-                className={styles.gc360_my_profile_edit_icon}
-                component={Link}
-                href="https://www.gordon.edu/mealplan"
-                size="small"
-              >
-                <EditIcon />
-              </IconButton>
-            </Grid>
           </Grid>
         </Grid>
         {content}
