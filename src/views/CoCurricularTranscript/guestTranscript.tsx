@@ -111,5 +111,4 @@ export const exampleStudentProfile: StudentProfileInfo = {
   ChapelRequired: 0,
   ChapelAttended: 0,
   plannedGradYear: '',
-  isPlannedGradYearPrivate: 0,
 };

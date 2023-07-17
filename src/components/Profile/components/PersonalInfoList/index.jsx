@@ -45,9 +45,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
   );
-  const [isPlannedGraduationYearPrivate, setIsPlannedGraduationYearPrivate] = useState(
-    false, // Always public for now
-  );
   const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
     profile.CliftonStrengths?.Private,
   );
@@ -135,20 +132,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         isHomePhonePrivate
           ? 'Personal Info Visible (This change may take several minutes)'
           : 'Personal Info Hidden (This change may take several minutes)',
-        'success',
-      );
-    } catch {
-      createSnackbar('Privacy Change Failed', 'error');
-    }
-  };
-
-  const handleChangePlannedGraduationYearPrivate = async () => {
-    try {
-      await userService.setPlannedGraduationYearPrivate(!isPlannedGraduationYearPrivate);
-      setIsPlannedGraduationYearPrivate(!isPlannedGraduationYearPrivate);
-
-      createSnackbar(
-        isPlannedGraduationYearPrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
         'success',
       );
     } catch {
@@ -279,15 +262,12 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 <UpdatePlannedGraduationYear />
               </Grid>
             </Grid>
-          ) : profile.IsPlannedGradYearPrivate ? (
-            PRIVATE_INFO
           ) : !profile.PlannedGradYear?.length ? (
             'Deciding'
           ) : (
             profile.PlannedGradYear
           )
         }
-        privateInfo={isPlannedGraduationYearPrivate}
         myProf={myProf}
       />
     );

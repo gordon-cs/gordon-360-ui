@@ -119,7 +119,6 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   ChapelRequired: number;
   ChapelAttended: number;
   plannedGradYear: string;
-  isPlannedGradYearPrivate: number;
 };
 
 type UnformattedAlumniProfileInfo = BaseProfileInfo & {
@@ -264,9 +263,6 @@ const setMobilePhonePrivacy = (makePrivate: boolean) =>
 const setHomePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
-const setPlannedGraduationYearPrivate = (makePrivate: boolean) =>
-  http.put('profiles/planned_graduation_year_privacy/' + makePrivate);
-
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
@@ -361,7 +357,6 @@ const getMembershipHistory = (username: string): Promise<MembershipHistory[]> =>
 const userService = {
   setMobilePhonePrivacy,
   setPlannedGraduationYear,
-  setPlannedGraduationYearPrivate,
   setHomePhonePrivacy,
   setMobilePhoneNumber,
   updateOfficeLocation,
