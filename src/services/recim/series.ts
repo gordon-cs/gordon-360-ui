@@ -87,7 +87,8 @@ type AutoScheduleParameters =
     }
   | {
       numberOfLadderMatches: number;
-    };
+    }
+  | null;
 
 //Series Routes
 const createSeries = async (
