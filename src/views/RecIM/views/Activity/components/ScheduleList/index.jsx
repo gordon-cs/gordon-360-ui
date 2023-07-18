@@ -124,38 +124,23 @@ const ScheduleList = ({
     };
 
     let parameterFields = (type, numTeams) => {
-      let textFieldParams = {};
-      switch (type) {
-        case 'Round Robin':
-          textFieldParams = {
-            label: 'Num Matches',
-            helperText: 'Max number of matches per team',
-            parameterLabel: 'roundRobinMatchCapacity',
-          };
-          break;
-        case 'Ladder':
-          textFieldParams = {
-            label: 'Num Matches',
-            helperText: 'Number of matches total amongst teams',
-            parameterLabel: 'numberOfLadderMatches',
-          };
-          break;
-        default:
-          textFieldParams = {};
-      }
       return (
         <Box component="form">
           <FormControl>
             <TextField
               variant="filled"
-              label={textFieldParams.label}
-              helperText={textFieldParams.helperText}
+              label="Num Matches"
+              helperText={
+                type === 'Round Robin'
+                  ? 'Max number of matches per team'
+                  : 'Number of matches total amongst teams'
+              }
               value={autoscheduleParameters}
               onChange={(event) => {
-                setAutoscheduleParameters({ [textFieldParams.parameterLabel]: event.target.value });
-                // known bug: if you type a number, you cant delete it without an error
-                if (event.target.value > numTeams || event.target.value < 1) setHasError(true);
-                else setHasError(false);
+                setAutoscheduleParameters(event.target.value);
+                setHasError(
+                  (event.target.value > numTeams || event.target.value < 1) && event.target.value,
+                );
               }}
               type="number"
             />
@@ -186,10 +171,13 @@ const ScheduleList = ({
     setOpenAutoSchedulerDisclaimer(true);
     closeMenusAndForms();
   };
+  console.log(autoscheduleParameters);
 
   const handleConfirmAutoSchedule = () => {
+    let parameterLabel =
+      series.Type === 'Round Robin' ? 'roundRobinMatchCapacity' : 'numberOfLadderMatches';
     setLoading(true);
-    scheduleSeriesMatches(series.ID, autoscheduleParameters).then((res) => {
+    scheduleSeriesMatches(series.ID, { [parameterLabel]: autoscheduleParameters }).then((res) => {
       setOpenAutoSchedulerDisclaimer(false);
       setAutoscheduleParameters(null);
       setReload((prev) => !prev);
