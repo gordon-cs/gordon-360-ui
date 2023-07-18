@@ -14,7 +14,6 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { AuthGroup } from 'services/auth';
 import BannerAdmin from './components/BannerAdmin';
 import styles from './BannerSubmission.module.css';
-import styles2 from 'app.module.css';
 
 const BannerSubmission = () => {
   const authenticated = useIsAuthenticated();
@@ -40,7 +39,7 @@ const BannerSubmission = () => {
           <CardHeader
             title="Advertise your club or event on the 360 Homepage!"
             titleTypographyProps={{ variant: 'h4', align: 'center' }}
-            className={styles2.gc360_header}
+            className={styles.bannerSubmission_header}
           />
           <CardContent>
             <Typography variant="h6">Banner Image Guidelines</Typography>
@@ -55,7 +54,7 @@ const BannerSubmission = () => {
               accepted.
             </Typography>
           </CardContent>
-          <CardActions className={styles.banner_submission_card_action}>
+          <CardActions className={styles.bannerSubmission_card}>
             <Button
               variant="contained"
               color="secondary"

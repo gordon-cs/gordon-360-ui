@@ -11,11 +11,8 @@
 }
 
 .timesheets {
-  text-align: center;
-  background-color: var(--mui-palette-neutral-main);
-
-  .button {
-    background-color: var(--mui-palette-secondary-main);
+  :global(.MuiGrid-item) {
+    text-align: center;
   }
 
   .text {

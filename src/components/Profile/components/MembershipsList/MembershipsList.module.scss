@@ -17,6 +17,13 @@
         padding-left: 16px;
       }
     }
+    &_note {
+      color: var(--mui-palette-neutral-700);
+      background-color: var(--mui-palette-neutral-main);
+      padding: 0.3rem 1rem;
+      margin-top: 1rem;
+      border-radius: 5px;
+    }
   }
 }
 

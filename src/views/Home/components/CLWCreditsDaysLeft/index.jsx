@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import session from 'services/session';
 import user from 'services/user';
 import styles from '../Doughnut.module.css';
-import styles2 from 'app.module.css';
 import { theme360 } from 'theme';
 
 const CLWCreditsDaysLeft = () => {
@@ -178,6 +177,7 @@ const CLWCreditsDaysLeft = () => {
                 MORE CREDITS
               </Button>
             </Grid>
+
           </Grid>
         }
         className={styles2.gc360_header}

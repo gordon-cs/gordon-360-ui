@@ -5,7 +5,6 @@ import { Doughnut } from 'react-chartjs-2';
 import session from 'services/session';
 import user from 'services/user';
 import styles from '../Doughnut.module.css';
-import styles2 from 'app.module.css';
 import { theme360 } from 'theme';
 
 const lowBalance = 20; //dollars
@@ -24,6 +23,7 @@ const DiningBalance = () => {
   let dollarsColor = colors.warning.main;
   let guestColor = colors.error.main;
   let emptyColor = colors.neutral.A700;
+
   let balanceColor = colors.success.main;
 
   useEffect(() => {
@@ -218,11 +218,11 @@ const DiningBalance = () => {
                 TODAY'S MENU
               </Button>
             </Grid>
+
           </Grid>
-        }
-        className={styles2.gc360_header}
-      />
-      <CardContent>{content}</CardContent>
+        </Grid>
+        {content}
+      </CardContent>
     </Card>
   );
 };

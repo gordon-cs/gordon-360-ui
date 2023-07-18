@@ -1,9 +1,17 @@
-.events {
-  &_gordon_text {
-    color: var(--mui-palette-secondary-main);
+.searchPageTitle {
+  color: var(--mui-palette-secondary-main);
+}
+.event {
+  &_filter_icon {
+    color: var(--mui-palette-neutral-500);
+    font-size: 20;
+  }
+  &_filter_list_icon {
+    color: var(--mui-palette-neutral-500);
+    font-size: 20;
   }
   &_icon {
-    color: var(--mui-palette-neutral-700);
+    color: var(--mui-palette-neutral-500);
     font-size: 20;
   }
   &_filter_button {

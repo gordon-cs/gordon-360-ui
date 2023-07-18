@@ -29,7 +29,6 @@ import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
 import ShiftDisplay from './components/ShiftDisplay';
 import styles from './Timesheets.module.css';
-import styles2 from 'app.module.css';
 import { theme360 } from 'theme';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
@@ -311,7 +310,6 @@ const Timesheets = (props) => {
       setClockInOut('Clock In');
       setSelectedDateIn(null);
       setSelectedDateOut(null);
-      setHoursWorkedInDecimal(0);
     }
   };
 
@@ -407,6 +405,7 @@ const Timesheets = (props) => {
                 }
                 className={styles2.gc360_header}
               ></CardHeader>
+
               <CardContent
                 style={{
                   marginLeft: 8,
@@ -418,6 +417,7 @@ const Timesheets = (props) => {
                     <Button
                       variant="contained"
                       color="secondary"
+
                       onClick={changeState}
                       className={styles.clockInOutButton}
                     >
@@ -426,7 +426,6 @@ const Timesheets = (props) => {
                     </Button>
                   </Grid>
                 </Grid>
-                <br />
                 <Grid
                   container
                   spacing={2}

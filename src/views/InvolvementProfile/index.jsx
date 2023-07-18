@@ -412,7 +412,7 @@ const InvolvementProfile = () => {
               <GordonLoader />
             ) : profile ? (
               <>
-                <hr width="101.5%"></hr>
+                <hr width="70%"></hr>
 
                 <Grid item>
                   <Typography>
