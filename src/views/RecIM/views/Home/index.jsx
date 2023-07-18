@@ -35,7 +35,7 @@ import {
 } from 'services/recim/participant';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from 'views/RecIM/recim_logo.png';
-import { isAfter, isFuture } from 'date-fns';
+import { isFuture } from 'date-fns';
 import { TabPanel } from 'views/RecIM/components/TabPanel';
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -50,7 +50,6 @@ const Home = () => {
   const [activities, setActivities] = useState([]);
   const [ongoingActivities, setOngoingActivities] = useState([]);
   const [registrableActivities, setRegistrableActivities] = useState([]);
-  const [completedActivities, setCompletedActivities] = useState([]);
   const [participantTeams, setParticipantTeams] = useState([]);
   const [invites, setInvites] = useState([]);
   const [homeMenuAnchorEl, setHomeMenuAnchorEl] = useState();
@@ -102,19 +101,14 @@ const Home = () => {
   useEffect(() => {
     let open = [];
     let ongoing = [];
-    let completed = [];
     activities.forEach((activity) => {
       if (activity.RegistrationOpen || isFuture(Date.parse(activity.RegistrationStart))) {
         open.push(activity);
-      } else if (isFuture(Date.parse(activity.EndDate))) {
         ongoing.push(activity);
-      } else {
-        completed.push(activity);
       }
     });
     setOngoingActivities(ongoing);
     setRegistrableActivities(open);
-    setCompletedActivities(completed);
   }, [activities]);
 
   const handleHomeSettings = (e) => {
@@ -215,18 +209,6 @@ const Home = () => {
     </CardContent>
   );
 
-  let recentlyCompletedActivities = (
-    <CardContent>
-      {completedActivities.length > 0 ? (
-        <ActivityList activities={completedActivities} showActivityOptions={hasPermissions} />
-      ) : (
-        <Typography className={styles.secondaryText}>
-          It looks like there aren't any recently completed Rec-IM activities
-        </Typography>
-      )}
-    </CardContent>
-  );
-
   let myInvites = (
     <CardContent>
       {invites.length > 0 ? (
@@ -266,16 +248,12 @@ const Home = () => {
         >
           <Tab label="Upcoming" />
           <Tab label="Ongoing" />
-          <Tab label="Completed" />
         </Tabs>
         <TabPanel value={activityTab} index={0}>
           {upcomingActivitiesContent}
         </TabPanel>
         <TabPanel value={activityTab} index={1}>
           {ongoingActivitiesContent}
-        </TabPanel>
-        <TabPanel value={activityTab} index={2}>
-          {recentlyCompletedActivities}
         </TabPanel>
       </CardContent>
     </Card>
