@@ -195,14 +195,16 @@ const StaffMenu = ({ userProfile }) => {
         <Grid item xs={12} sm={9} md={6} lg={3}>
           <Card>
             <CardContent>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<RefreshIcon />}
-                onClick={loadAllCurrentApplications}
-              >
-                Refresh Application Data
-              </Button>
+              <Grid container justifyContent="center" alignItems="center">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<RefreshIcon />}
+                  onClick={loadAllCurrentApplications}
+                >
+                  Refresh Application Data
+                </Button>
+              </Grid>
             </CardContent>
           </Card>
         </Grid>

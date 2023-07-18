@@ -45,7 +45,7 @@ import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
-import { gordonColors } from 'theme';
+import styles from './SearchFieldList.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
@@ -74,7 +74,7 @@ const relationship_statuses = [
 const searchPageTitle = (
   <>
     Search the
-    <b style={{ color: gordonColors.primary.blue }}> Gordon </b>
+    <b className={styles.people_text}> Gordon </b>
     Community
   </>
 );
@@ -160,7 +160,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       // Only students and facstaff search students by default - alumni aren't allowed to search students
       includeStudent: isStudent || isFacStaff,
       // Only alumni search alumni by default
-      includeAlumni: isAlumni,
+      includeAlumni: isAlumni && !isStudent && !isFacStaff,
     }),
     [isAlumni, isFacStaff, isStudent],
   );
@@ -173,8 +173,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
    * Whether the user can search for the current params.
    * This prevents a search with empty params, which freezes the client by trying to render thousands of results
    */
-  const canSearch = useMemo(() => {
-    const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = searchParams;
+  const canSearch = (params: PeopleSearchQuery) => {
+    const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = params;
 
     // Must search some cohort of people
     const includesSomeone = includeStudent || includeFacStaff || includeAlumni;
@@ -183,23 +183,26 @@ const SearchFieldList = ({ onSearch }: Props) => {
     const anySearchCriteria = Object.values(criteria).some((c) => containsLetterRegExp.test(c));
 
     return includesSomeone && anySearchCriteria;
-  }, [searchParams]);
+  };
 
-  const search = useCallback(async () => {
-    if (canSearch) {
-      setLoadingSearch(true);
+  const search = useCallback(
+    async (params: PeopleSearchQuery) => {
+      if (canSearch(params)) {
+        setLoadingSearch(true);
 
-      await peopleSearchService.search(searchParams).then(onSearch);
+        await peopleSearchService.search(params).then(onSearch);
 
-      const newQueryString = serializeSearchParams(searchParams);
-      // If search params are new since last search, add search to history
-      if (window.location.search !== newQueryString) {
-        navigate(newQueryString);
+        const newQueryString = serializeSearchParams(params);
+        // If search params are new since last search, add search to history
+        if (window.location.search !== newQueryString) {
+          navigate(newQueryString);
+        }
+
+        setLoadingSearch(false);
       }
-
-      setLoadingSearch(false);
-    }
-  }, [canSearch, searchParams, onSearch, navigate]);
+    },
+    [canSearch, searchParams, onSearch, navigate],
+  );
 
   useEffect(() => {
     const loadPage = async () => {
@@ -227,12 +230,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
     loadPage();
   }, []);
-
   useEffect(() => {
     const readSearchParamsFromURL = () => {
       const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
 
-      setSearchParams((oldSearchParams) => {
+      const recalculate = (oldSearchParams: PeopleSearchQuery) => {
         // If there are no search params in the URL, reset to initialSearchParams
         if (newSearchParams === null) {
           return initialSearchParams;
@@ -243,16 +245,18 @@ const SearchFieldList = ({ onSearch }: Props) => {
           ...oldSearchParams,
           ...newSearchParams,
         };
-      });
+      };
+      const params = recalculate(searchParams);
+      setSearchParams(params);
+      search(params);
     };
-
     // Read search params from URL when SearchFieldList mounts (or initialSearchParams changes)
     readSearchParamsFromURL();
 
     // Read search params from URL on 'popstate' (back/forward navigation) events
     window.addEventListener('popstate', readSearchParamsFromURL);
     return () => window.removeEventListener('popstate', readSearchParamsFromURL);
-  }, [initialSearchParams]);
+  }, []);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === 'graduation_year') {
@@ -298,7 +302,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   const handleEnterKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
-      search();
+      search(searchParams);
     }
   };
 
@@ -332,8 +336,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }
 
   const PeopleSearchCheckbox = (
-    <Grid item xs={12} md={6}>
-      <FormLabel component="label">Include: &nbsp;</FormLabel>
+    <Grid item xs={12} md={6} className={styles.people_section}>
+      <FormLabel component="label" color="primary">
+        Include: &nbsp;
+      </FormLabel>
       {loading ? (
         <GordonLoader size={20} />
       ) : (
@@ -347,6 +353,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     checked={searchParams.includeStudent}
                     name="includeStudent"
                     onChange={handleUpdate}
+                    color="secondary"
                   />
                 }
                 label="Student"
@@ -359,6 +366,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 checked={searchParams.includeFacStaff}
                 name="includeFacStaff"
                 onChange={handleUpdate}
+                color="secondary"
               />
             }
             label="Faculty/Staff"
@@ -372,6 +380,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     checked={searchParams.includeAlumni}
                     name="includeAlumni"
                     onChange={handleUpdate}
+                    color="secondary"
                   />
                 }
                 label="Alumni"
@@ -384,7 +393,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   );
 
   return (
-    <Card style={{ padding: '1rem' }}>
+    <Card className={styles.people_section}>
       <CardContent>
         <CardHeader title={searchPageTitle} titleTypographyProps={{ align: 'center' }} />
 
@@ -438,11 +447,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <Grid container alignItems="center">
           <Accordion style={{ flexGrow: 1 }} elevation={3}>
             <AccordionSummary
-              expandIcon={<ExpandMore />}
+              expandIcon={<ExpandMore className={styles.people} />}
               id="more-search-options-header"
               aria-controls="more-search-options-controls"
             >
-              <Typography variant="h6" align="center">
+              <Typography variant="h6" align="center" className={styles.people_searchbar}>
                 More Search Options
               </Typography>
             </AccordionSummary>
@@ -450,15 +459,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
               <Grid container spacing={4} direction="row">
                 {/* Advanced Search Filters: Student/Alumni */}
                 <AdvancedOptionsColumn>
-                  <Typography
-                    align="center"
-                    gutterBottom
-                    color={
-                      searchParams.includeStudent || searchParams.includeAlumni
-                        ? 'primary'
-                        : 'initial'
-                    }
-                  >
+                  <Typography align="center" gutterBottom color="neutral">
                     {profile?.PersonType === 'stu' ? 'Student' : 'Student/Alumni'}
                   </Typography>
                   <SearchField
@@ -524,6 +525,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                         min={1889}
                         max={currentYear}
                         disabled={!searchParams.includeAlumni}
+                        color="secondary"
                       />
                       <Typography fontSize={15} align="center">
                         {graduationYearRange[0]}-{graduationYearRange[1]}
@@ -532,7 +534,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   )}
                   {(isAlumni || isFacStaff) && (
                     <FormControlLabel
-                      control={<Switch onChange={handleSwitchChange} />}
+                      control={<Switch onChange={handleSwitchChange} color="secondary" />}
                       label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
                       labelPlacement="end"
                     />
@@ -541,11 +543,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
                 {/* Advanced Search Filters: Faculty/Staff */}
                 <AdvancedOptionsColumn>
-                  <Typography
-                    align="center"
-                    gutterBottom
-                    color={searchParams.includeFacStaff ? 'primary' : 'initial'}
-                  >
+                  <Typography align="center" gutterBottom color="neutral">
                     Faculty/Staff
                   </Typography>
                   <SearchField
@@ -570,7 +568,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
                 {/* Advanced Search Filters: Everyone */}
                 <AdvancedOptionsColumn>
-                  <Typography align="center" gutterBottom color="primary">
+                  <Typography align="center" color="neutral">
                     Everyone
                   </Typography>
                   <SearchField
@@ -605,7 +603,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       <CardActions>
         <Button
           variant="contained"
-          color="neutral"
+          color="secondary"
           onClick={() => setSearchParams(initialSearchParams)}
         >
           RESET
@@ -615,7 +613,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
         ) : (
           <Button
             color="primary"
-            onClick={search}
+            onClick={() => search(searchParams)}
             fullWidth
             variant="contained"
             disabled={!canSearch}

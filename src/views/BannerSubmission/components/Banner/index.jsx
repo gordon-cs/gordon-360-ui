@@ -31,7 +31,7 @@ const Banner = ({ banner, handleNewsItemDelete }) => (
         variant="outlined"
         startIcon={<DeleteIcon />}
         onClick={() => handleNewsItemDelete(banner.ID)}
-        className={styles.deleteButton}
+        color="error"
       >
         Delete
       </Button>

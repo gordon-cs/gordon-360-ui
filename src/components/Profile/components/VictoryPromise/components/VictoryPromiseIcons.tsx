@@ -2,8 +2,8 @@ import { Typography } from '@mui/material';
 import { Tooltip } from '@mui/material';
 import { toTitleCase } from 'services/utils';
 import { Colors, VictoryPromiseCategory, VictoryPromiseColor } from 'services/victoryPromise';
-import { gordonColors } from 'theme';
 import styles from './VictoryPromiseIcon.module.css';
+import { theme360 } from 'theme';
 
 const CategoryDescription = {
   christian_character:
@@ -23,8 +23,10 @@ const VictoryPromiseIcon = ({
   category: VictoryPromiseCategory;
   active: boolean;
 }) => {
-  const primary = active ? Colors[category] : gordonColors.primary.blue;
-  const secondary = active ? gordonColors.neutral.grayShades[50] : gordonColors.neutral.gray;
+  const primary = active ? Colors[category] : theme360.vars.palette.primary.main;
+  const secondary = active
+    ? theme360.vars.palette.neutral.light
+    : theme360.vars.palette.neutral.dark;
   const IconComponent = CategoryIcon[category];
   return (
     <Tooltip
@@ -44,8 +46,10 @@ const VictoryPromiseIcon = ({
   );
 };
 
-type PrimaryColor = VictoryPromiseColor | typeof gordonColors.primary.blue;
-type SecondaryColor = typeof gordonColors.neutral.gray | typeof gordonColors.neutral.grayShades[50];
+type PrimaryColor = VictoryPromiseColor | typeof theme360.vars.palette.primary.main;
+type SecondaryColor =
+  | typeof theme360.vars.palette.neutral.dark
+  | typeof theme360.vars.palette.neutral.light;
 
 type IconProps = {
   primary: PrimaryColor;
