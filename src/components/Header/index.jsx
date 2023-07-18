@@ -23,9 +23,6 @@ import styles from './Header.module.css';
 import gc_360_yellow_logo_72 from './gc_360_yellow_logo_72.png';
 import gc_360_yellow_logo_64 from './gc_360_yellow_logo_64.png';
 import gc_360_yellow_logo_56 from './gc_360_yellow_logo_56.png';
-import gc_2pi_yellow_logo_72 from './gc_2pi_yellow_logo_72.png';
-import gc_2pi_yellow_logo_64 from './gc_2pi_yellow_logo_64.png';
-import gc_2pi_yellow_logo_56 from './gc_2pi_yellow_logo_56.png';
 
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
@@ -144,24 +141,12 @@ const GordonHeader = ({ onDrawerToggle }) => {
   );
 
   function logoSizedForHeader() {
-    if (projectName === 'Gordon 360')
-    {
-      if (width >= 900) {
-        return gc_360_yellow_logo_72;
-      } else if (width >= 600) {
-        return gc_360_yellow_logo_64;
-      } else {
-        return gc_360_yellow_logo_56;
-      }
+    if (width >= 900) {
+      return gc_360_yellow_logo_72;
+    } else if (width >= 600) {
+      return gc_360_yellow_logo_64;
     } else {
-      // Pi day (March 14)
-      if (width >= 900) {
-        return gc_2pi_yellow_logo_72;
-      } else if (width >= 600) {
-        return gc_2pi_yellow_logo_64;
-      } else {
-        return gc_2pi_yellow_logo_56;
-      }
+      return gc_360_yellow_logo_56;
     }
   }
 
