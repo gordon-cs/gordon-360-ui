@@ -69,7 +69,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
     </Grid>
   );
   const noteInfo = myProf && (
-    <div align="left" className={styles.memberships_card_content_note}>
+    <div align="left" className={styles.memberships_card_note}>
       <Typography>NOTE:</Typography>
       <ul>
         <li>
