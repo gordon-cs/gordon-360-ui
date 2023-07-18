@@ -77,7 +77,7 @@
     }
   }
 
-  @media (min-width: $break-md) {
+  @media (min-width: $break-lg) {
     .menu_button {
       display: none;
     }
@@ -92,9 +92,6 @@
       visibility: visible;
     }
 
-    .tab {
-      min-width: 80px;
-    }
     .right_side_container {
       display: flex;
       margin-left: 24px;
@@ -106,7 +103,7 @@
       flex: 7;
     }
     .tab {
-      min-width: 160px;
+      min-width: 110px;
     }
   }
 
