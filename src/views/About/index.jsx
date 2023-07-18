@@ -1,4 +1,3 @@
-import { Fragment, useState, useEffect } from 'react';
 import versionService from 'services/version';
 import { projectName } from 'project-name';
 import contributors from './contributors.json';
