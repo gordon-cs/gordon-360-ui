@@ -249,21 +249,23 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     );
 
   const plannedGraduationYear =
-    isFacStaff || (isAlumni && !profile.PlannedGradYear?.length) ? null : (
+    isFacStaff ||
+    (!myProf && !profile.PlannedGradYear?.length) ||
+    (isAlumni && !profile.PlannedGradYear?.length) ? null : (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
         contentText={
           myProf && isStudent ? (
             <Grid container spacing={0} alignItems="center">
               <Grid item>
-                {!profile.PlannedGradYear?.length ? 'Deciding' : profile.PlannedGradYear}
+                {!profile.PlannedGradYear?.length
+                  ? 'Fill in with your planned graduation year'
+                  : profile.PlannedGradYear}
               </Grid>
               <Grid item>
                 <UpdatePlannedGraduationYear />
               </Grid>
             </Grid>
-          ) : !profile.PlannedGradYear?.length ? (
-            'Deciding'
           ) : (
             profile.PlannedGradYear
           )
