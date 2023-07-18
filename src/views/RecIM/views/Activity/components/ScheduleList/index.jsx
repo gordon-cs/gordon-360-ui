@@ -37,9 +37,6 @@ import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
 import { deleteMatchList } from 'services/recim/match';
-import GordonLoader from 'components/Loader';
-import { Box } from '@mui/system';
-import { FormControl } from '@mui/base';
 
 const ScheduleList = ({
   isAdmin,
