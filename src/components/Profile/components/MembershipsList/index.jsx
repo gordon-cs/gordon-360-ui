@@ -34,7 +34,11 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
     if (membershipHistories.length === 0) {
       return (
         <Link to={`/involvements`}>
-          <Typography variant="body2" className={`gc360_text_link ${styles.noMemberships}`}>
+          <Typography
+            variant="body2"
+            className={`gc360_text_link ${styles.noMemberships}`}
+            align="center"
+          >
             No Involvements to display. Click here to see Involvements around campus!
           </Typography>
         </Link>
@@ -66,14 +70,9 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
   );
   const noteInfo = myProf && (
     <div align="left" className={styles.memberships_card_note}>
-      <Typography>NOTE:</Typography>
-      <ul>
-        <li>
-          <Typography>
-            Shaded areas are visible only to you and other members of the same club session.
-          </Typography>
-        </li>
-      </ul>
+      <Typography>
+        NOTE: Shaded areas are visible only to you and other members of the same club session.
+      </Typography>
     </div>
   );
 
