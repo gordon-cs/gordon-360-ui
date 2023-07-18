@@ -305,7 +305,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       search(searchParams);
     }
   };
-
+  console.log('testing eslint');
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     setGraduationYearRange(newValue as number[]);
     let values = graduationYearRange.toString().split(',');
