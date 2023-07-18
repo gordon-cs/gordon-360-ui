@@ -87,8 +87,7 @@ type AutoScheduleParameters =
     }
   | {
       numberOfLadderMatches: number;
-    }
-  | null;
+    };
 
 //Series Routes
 const createSeries = async (
@@ -118,7 +117,7 @@ const putSeriesSchedule = (schedule: UploadSeriesSchedule): Promise<SeriesSchedu
 
 const scheduleSeriesMatches = (
   seriesID: number,
-  params: AutoScheduleParameters | null,
+  params: AutoScheduleParameters,
 ): Promise<Match[]> => http.post(`recim/series/${seriesID}/autoschedule`, params);
 
 const deleteSeriesCascade = (seriesID: number): Promise<CreatedSeries> =>
