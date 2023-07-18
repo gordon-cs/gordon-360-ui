@@ -50,22 +50,20 @@ const OfficeInfoList = ({
     />
   ) : null;
 
-  const officeHours = office_hours ? (
+  const officeHours = myProf ? (
     <ProfileInfoListItem
       title="Office Hours:"
       contentText={
-        myProf ? (
-          <Grid container spacing={0} alignItems="center">
-            <Grid item>{office_hours}</Grid>
-            <Grid item>
-              <UpdateOfficeHours officeHours={office_hours} />
-            </Grid>
+        <Grid container spacing={0} alignItems="center">
+          <Grid item>{office_hours ? office_hours : 'Add office hours here'}</Grid>
+          <Grid item>
+            <UpdateOfficeHours officeHours={office_hours} />
           </Grid>
-        ) : (
-          `${office_hours}`
-        )
+        </Grid>
       }
     />
+  ) : office_hours ? (
+    <ProfileInfoListItem title="Office Hours:" contentText={`${office_hours}`} />
   ) : null;
 
   const room =
