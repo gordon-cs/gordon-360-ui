@@ -104,6 +104,7 @@ const Home = () => {
     activities.forEach((activity) => {
       if (activity.RegistrationOpen || isFuture(Date.parse(activity.RegistrationStart))) {
         open.push(activity);
+      } else {
         ongoing.push(activity);
       }
     });
