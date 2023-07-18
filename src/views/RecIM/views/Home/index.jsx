@@ -247,8 +247,8 @@ const Home = () => {
           aria-label="admin control center tabs"
           centered
         >
-          <Tab label="Upcoming Activities" />
-          <Tab label="Ongoing Activities" />
+          <Tab label="Upcoming" />
+          <Tab label="Ongoing" />
         </Tabs>
         <TabPanel value={activityTab} index={0}>
           {upcomingActivitiesContent}

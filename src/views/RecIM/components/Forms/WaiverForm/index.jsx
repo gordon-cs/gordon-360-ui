@@ -35,7 +35,6 @@ const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverFor
     };
     loadData();
   }, [username]);
-  console.log(isParticipant);
 
   const currentInfo = useMemo(() => {
     return {
