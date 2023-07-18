@@ -152,9 +152,18 @@ const GordonHeader = ({ onDrawerToggle }) => {
           </IconButton>
           <Link to="/" component={ForwardNavLink} value={tabIndex}>
             <picture>
-              <source srcset="images/gc_360_yellow_logo_72.png" media="(min-width: 900px)" />
-              <source srcset="images/gc_360_yellow_logo_64.png" media="(min-width: 600px)" />
-              <img src="images/gc_360_yellow_logo_56.png"></img>
+              {projectName === 'Gordon 360'
+                ? <source srcset="images/gc_360_yellow_logo_72.png" media="(min-width: 900px)" />
+                : <source srcset="images/gc_2pi_yellow_logo_72.png" media="(min-width: 900px)" />
+              }
+              {projectName === 'Gordon 360'
+                ? <source srcset="images/gc_360_yellow_logo_64.png" media="(min-width: 600px)" />
+                : <source srcset="images/gc_2pi_yellow_logo_64.png" media="(min-width: 600px)" />
+              }
+              {projectName === 'Gordon 360'
+                ? <img src="images/gc_360_yellow_logo_56.png" alt="Gordon 360"></img>
+                : <img src="images/gc_2pi_yellow_logo_56.png" alt="Gordon 2pi"></img>
+              }
             </picture>
           </Link>
 
