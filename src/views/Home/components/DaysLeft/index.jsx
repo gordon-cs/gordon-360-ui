@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import GordonLoader from 'components/Loader';
 import session from 'services/session';
-import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
 import styles2 from 'app.module.css';
 import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
