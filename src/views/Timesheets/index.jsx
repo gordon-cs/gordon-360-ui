@@ -395,11 +395,7 @@ const Timesheets = (props) => {
         placement="bottom"
       >
         <div ref={tooltipRef}>
-          <CardHeader
-            className="disable_select"
-            style={{ color: 'var(--mui-palette-neutral-main)' }}
-            title="Enter a shift"
-          />
+          <CardHeader className={`disable_select ${styles.text}`} title="Enter a shift" />
           <InfoOutlinedIcon
             className={styles.tooltip_icon}
             style={{
