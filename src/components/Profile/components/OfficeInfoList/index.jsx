@@ -66,55 +66,51 @@ const OfficeInfoList = ({
     <ProfileInfoListItem title="Office Hours:" contentText={`${office_hours}`} />
   ) : null;
 
-  const room =
-    BuildingDescription || OnCampusRoom ? (
-      <ProfileInfoListItem
-        title="Room:"
-        contentText={
-          myProf ? (
-            <Grid container spacing={0} alignItems="center">
-              <Grid item>
-                {BuildingDescription}, {OnCampusRoom}
-              </Grid>
-              <Grid item>
-                <UpdateOffice />
-              </Grid>
-            </Grid>
-          ) : (
-            `${BuildingDescription}, ${OnCampusRoom}`
-          )
-        }
-      />
-    ) : null;
+  const room = myProf ? (
+    <ProfileInfoListItem
+      title="Room:"
+      contentText={
+        <Grid container spacing={0} alignItems="center">
+          <Grid item>
+            {BuildingDescription || OnCampusRoom
+              ? (BuildingDescription, OnCampusRoom)
+              : 'Add your office location here'}
+          </Grid>
+          <Grid item>
+            <UpdateOffice />
+          </Grid>
+        </Grid>
+      }
+    />
+  ) : BuildingDescription || OnCampusRoom ? (
+    <ProfileInfoListItem title="Room:" contentText={({ BuildingDescription }, { OnCampusRoom })} />
+  ) : null;
 
-  const mailstop = Mail_Location ? (
+  const mailstop = myProf ? (
     <ProfileInfoListItem
       title="Mailstop:"
       contentText={
-        myProf ? (
-          <Grid container spacing={0} alignItems="center">
-            <Grid item>
-              <Typography>
-                {Mail_Location}
+        <Grid container spacing={0} alignItems="center">
+          <Grid item>
+            <Typography>
+              {Mail_Location ? Mail_Location : 'Add your mail location here'}
+              {Mail_Description && (
                 <GordonTooltip
                   content={Mail_Description}
                   enterTouchDelay={50}
                   leaveTouchDelay={2000}
                 />
-              </Typography>
-            </Grid>
-            <Grid item>
-              <UpdateMail />
-            </Grid>
+              )}
+            </Typography>
           </Grid>
-        ) : (
-          <Typography>
-            {Mail_Location}
-            <GordonTooltip content={Mail_Description} enterTouchDelay={50} leaveTouchDelay={2000} />
-          </Typography>
-        )
+          <Grid item>
+            <UpdateMail />
+          </Grid>
+        </Grid>
       }
     />
+  ) : Mail_Location ? (
+    <ProfileInfoListItem title="Mailstop:" contentText={{ Mail_Location }} />
   ) : null;
 
   const updateOfficeInfo =
