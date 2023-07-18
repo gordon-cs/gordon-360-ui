@@ -165,7 +165,8 @@ const ScheduleList = ({
           {standardDate(series.StartDate, false)}, or the earliest available day, at{' '}
           {format(Date.parse(series.Schedule.StartTime), 'h:mmaaa')}.{' '}
         </Typography>
-        {parameterFields(series.Type, series.TeamStanding.length)}
+        {(series.Type === 'Round Robin' || series.Type === 'Ladder') &&
+          parameterFields(series.Type, series.TeamStanding.length)}
       </Typography>,
     );
     setOpenAutoSchedulerDisclaimer(true);
