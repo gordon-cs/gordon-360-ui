@@ -82,8 +82,8 @@ export type BracketInfo = {
 };
 
 type AutoScheduleParameters = {
-  RoundRobinMatchCapacity: number;
-  NumberOfLadderMatches: number;
+  roundRobinMatchCapacity: number;
+  numberOfLadderMatches: number;
 };
 
 //Series Routes
