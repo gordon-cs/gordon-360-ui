@@ -123,31 +123,26 @@ const ScheduleList = ({
       }
     };
 
-    let parameterFields = (type, numTeams) => {
-      return (
-        <Box component="form">
-          <FormControl>
-            <TextField
-              variant="filled"
-              label="Num Matches"
-              helperText={
-                type === 'Round Robin'
-                  ? 'Max number of matches per team'
-                  : 'Number of matches total amongst teams'
-              }
-              value={autoscheduleParameters}
-              onChange={(event) => {
-                setAutoscheduleParameters(event.target.value);
-                setHasError(
-                  (event.target.value > numTeams || event.target.value < 1) && event.target.value,
-                );
-              }}
-              type="number"
-            />
-          </FormControl>
-        </Box>
-      );
-    };
+    let parameterFields = (
+      <TextField
+        variant="filled"
+        label="Num Matches"
+        helperText={
+          series.Type === 'Round Robin'
+            ? 'Max number of matches per team'
+            : 'Number of matches total amongst teams'
+        }
+        value={autoscheduleParameters}
+        onChange={(event) => {
+          setAutoscheduleParameters(event.target.value);
+          setHasError(
+            (event.target.value > series.TeamStanding.length || event.target.value < 1) &&
+              event.target.value,
+          );
+        }}
+        type="number"
+      />
+    );
 
     setDisclaimerContent(
       <Typography margin={4}>
@@ -165,8 +160,7 @@ const ScheduleList = ({
           {standardDate(series.StartDate, false)}, or the earliest available day, at{' '}
           {format(Date.parse(series.Schedule.StartTime), 'h:mmaaa')}.{' '}
         </Typography>
-        {(series.Type === 'Round Robin' || series.Type === 'Ladder') &&
-          parameterFields(series.Type, series.TeamStanding.length)}
+        {(series.Type === 'Round Robin' || series.Type === 'Ladder') && parameterFields}
       </Typography>,
     );
     setOpenAutoSchedulerDisclaimer(true);
@@ -174,7 +168,7 @@ const ScheduleList = ({
   };
 
   const handleConfirmAutoSchedule = () => {
-    let parameterLabel =
+    const parameterLabel =
       series.Type === 'Round Robin' ? 'roundRobinMatchCapacity' : 'numberOfLadderMatches';
     setLoading(true);
     scheduleSeriesMatches(series.ID, { [parameterLabel]: autoscheduleParameters }).then((res) => {
