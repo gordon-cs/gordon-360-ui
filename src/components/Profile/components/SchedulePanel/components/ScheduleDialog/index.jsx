@@ -26,37 +26,31 @@ const ScheduleDialog = (props) => {
         {props.courseInfo && (
           <>
             <DialogTitle className={styles.dialogTitle} align="center">
-              Course Information
+              {props.courseTitle}
             </DialogTitle>
             <DialogContent>
-              <Typography className={styles.courseTitle} align="left">
-                Title: {props.courseTitle}
+              <Typography className={styles.dialogTextLarge} align="left">
+                Title: {props.courseName}
               </Typography>
-              <Typography className={styles.courseInfo} align="left">
+              <Typography className={styles.dialogTextMedium} align="left">
                 Room: {props.courseLocation}
               </Typography>
-              <Typography className={styles.courseInfo} align="left">
-                {props.courseInfo.allDay ? (
-                  'Time: ASYNC'
-                ) : (
-                  <>
-                    Time:
-                    {formatter(props.courseStart, " hh:mm aaaaa'm' ")}-
-                    {formatter(props.courseEnd, " hh:mm aaaaa'm' ")}
-                  </>
-                )}
+              <Typography className={styles.dialogTextMedium} align="left">
+                Time:
+                {formatter(props.courseStart, " hh:mm aaaaa'm' ")}-
+                {formatter(props.courseEnd, " hh:mm aaaaa'm' ")}
               </Typography>
-              <Typography className={styles.courseInfo} align="left">
+              <Typography className={styles.dialogTextMedium} align="left">
                 Week Day(s): {props.recurringDays}
               </Typography>
-              <Typography className={styles.courseInfo} align="left">
+              <Typography className={styles.dialogTextMedium} align="left">
                 Term Date: {formatter(props.firstDay, 'yyyy-MM-dd')} to
                 {formatter(props.lastDay, ' yyyy-MM-dd')}
               </Typography>
             </DialogContent>
           </>
         )}
-        <DialogActions className={styles.DialogActions}>
+        <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
           {/* There are two separate add-to-calendar button elements because Google calendar is the only
           calendar that supports recurring events, the other add-to-calendar button is for the other
           options that users can choose and manually set the course as recurring */}
@@ -64,7 +58,7 @@ const ScheduleDialog = (props) => {
           <Grid container lg={12} xs={12}>
             {props.courseInfo && (
               <>
-                <Grid item xs={0} lg={1}></Grid>
+                <Grid item xs={1} lg={2}></Grid>
                 <Grid item lg={2} align="right">
                   <add-to-calendar-button
                     name={props.courseTitle}
@@ -81,11 +75,9 @@ const ScheduleDialog = (props) => {
                     // and endTime as null if they are all day events.
                     startTime={formatter(props.courseStart, 'HH:mm', props.courseInfo.allDay)}
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
-                    description={
-                      props.courseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
-                    }
+                    description={props.courseName}
                     Location={props.courseLocation}
-                    options="'Google'"
+                    options="'Google', 'Apple'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
@@ -99,7 +91,7 @@ const ScheduleDialog = (props) => {
                     Timezone="currentBrowser"
                   ></add-to-calendar-button>
                 </Grid>
-                <Grid item lg={8} align="left">
+                <Grid item lg={6} align="left">
                   <add-to-calendar-button
                     name={props.courseTitle}
                     startDate={format(
@@ -111,11 +103,9 @@ const ScheduleDialog = (props) => {
                     )}
                     startTime={formatter(props.courseStart, 'HH:mm', props.courseInfo.allDay)}
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
-                    description={
-                      props.courseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
-                    }
+                    description={props.courseName}
                     Location={props.courseLocation}
-                    options="'Microsoft 365','Apple', 'Outlook.com','MicrosoftTeams'"
+                    options="'Apple', 'Outlook.com','MicrosoftTeams'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
