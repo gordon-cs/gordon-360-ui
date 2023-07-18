@@ -71,10 +71,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
   const noteInfo = myProf && (
     <div align="left" className={styles.memberships_card_note}>
       <Typography>
-        NOTE:{' '}
-        <span>
-          Shaded areas are visible only to you and other members of the same club session.
-        </span>
+        NOTE: Shaded areas are visible only to you and other members of the same club session.
       </Typography>
     </div>
   );
