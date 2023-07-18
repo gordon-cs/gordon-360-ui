@@ -172,7 +172,6 @@ const ScheduleList = ({
     setOpenAutoSchedulerDisclaimer(true);
     closeMenusAndForms();
   };
-  console.log(autoscheduleParameters);
 
   const handleConfirmAutoSchedule = () => {
     let parameterLabel =
