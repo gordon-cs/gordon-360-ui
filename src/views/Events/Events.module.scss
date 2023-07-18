@@ -2,18 +2,14 @@
   &_gordon_text {
     color: var(--mui-palette-secondary-main);
   }
-
   &_icon {
     color: var(--mui-palette-neutral-700);
     font-size: 20;
   }
-
-  &_button {
-    background-color: var(--mui-palette-secondary-main);
-    color: var(--mui-palette-secondary-contrastText);
+  &_filter_button {
+    font-weight: bold;
   }
 }
-
 
 .card_style {
   padding: 0 3vw;

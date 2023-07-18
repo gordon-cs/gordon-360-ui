@@ -41,7 +41,6 @@ const DiningBalance = () => {
   } else if (typeof diningInfo !== 'object') {
     //Set color to use when displaying balance based on how low it is...
     const diningBalance = parseInt(diningInfo);
-    let balanceColor = colors.secondary.green;
     if (lowBalance >= diningBalance && diningBalance > reallyLowBalance) {
       balanceColor = colors.warning.main;
     } else if (reallyLowBalance >= diningBalance && diningBalance > 0) {
@@ -210,7 +209,7 @@ const DiningBalance = () => {
             <Grid item xs={5} align="right">
               <Button
                 variant="contained"
-                className={styles.button}
+                color="secondary"
                 component={Link}
                 href="https://gordon.cafebonappetit.com/"
                 target="_blank"

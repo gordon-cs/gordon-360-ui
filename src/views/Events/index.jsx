@@ -180,7 +180,7 @@ const Events = () => {
                         color={open ? (filters.length === 0 ? 'primary' : 'secondary') : 'link'}
                         variant={open ? 'contained' : 'outlined'}
                         onClick={handleExpandClick}
-                        className={open ? null : styles.event_filter_button}
+                        className={open ? null : styles.events_filter_button}
                       >
                         <AddIcon fontSize="inherit" />
                         Filters
@@ -190,7 +190,7 @@ const Events = () => {
                     <Grid item>
                       {isAuthenticated && (
                         <Button
-                          className={styles.events_button}
+                          color="secondary"
                           variant="contained"
                           onClick={() => navigate('/attended')}
                         >
@@ -316,8 +316,7 @@ const Events = () => {
                   <Grid item>
                     {isAuthenticated && (
                       <Button
-                        color="primary"
-                        className={styles.events_button}
+                        color="secondary"
                         variant="contained"
                         onClick={() => navigate('/attended')}
                       >

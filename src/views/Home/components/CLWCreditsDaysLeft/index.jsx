@@ -6,7 +6,6 @@ import { defaults, Doughnut } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import session from 'services/session';
 import user from 'services/user';
-import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
 import styles2 from 'app.module.css';
 import { theme360 } from 'theme';
