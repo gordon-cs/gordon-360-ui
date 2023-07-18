@@ -34,7 +34,6 @@ const CoCurricularTranscript = () => {
         setLoading(true);
         const transcriptItems = await transcriptService.getItems(profile.AD_Username);
         setTranscriptItems(transcriptItems);
-        console.log(transcriptItems);
       } else {
         setTranscriptItems(exampleTranscriptItems);
       }
