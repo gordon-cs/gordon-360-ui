@@ -14,13 +14,13 @@ const UpdateUserPrivacy = (username, field) => {
     try {
       await userService.setUserPrivacy({ Field: field, VisibilityGroup: event.target.value });
       setSnackbar({
-        message: 'Your office location will update within a couple hours.',
+        message: 'Your privacy setting will update within a couple hours.',
         severity: 'success',
         open: true,
       });
     } catch {
       setSnackbar({
-        message: 'Office location failed to update. Please contact CTS.',
+        message: 'Privacy setting failed to update. Please contact CTS.',
         severity: 'error',
         open: true,
       });
