@@ -1,4 +1,5 @@
 import { MembershipHistory, MembershipHistorySession } from 'services/user';
+import { StudentEmployment } from 'services/transcript';
 import { StudentProfileInfo } from 'services/user';
 import { Class } from 'services/peopleSearch';
 import { Participation } from 'services/membership';
@@ -29,9 +30,37 @@ const activity360: MembershipHistory = {
   Sessions: [sessionSpring],
   LatestDate: currentYear + '-05-10T00:00:00',
 };
+const sessionSpringAdmin: MembershipHistorySession = {
+  MembershipID: -1,
+  SessionCode: currentYear + '01',
+  Participation: Participation.GroupAdmin,
+};
+const activityISOAdmin: MembershipHistory = {
+  ActivityCode: 'ISO',
+  ActivityDescription: 'International Student Organization',
+  ActivityImagePath: '',
+  Sessions: [sessionSpringAdmin],
+  LatestDate: currentYear + '-05-10T00:00:00',
+};
+const experienceSAF: StudentEmployment = {
+  Job_Department: 'SAF',
+  Job_Department_Name: 'Gordon Police',
+  Job_Start_Date: currentYear - 2 + '-05-13T00:00:00',
+  Job_End_Date: currentYear + '-05-13T00:00:00',
+  Job_Expected_End_Date: currentYear + '-05-13T00:00:00',
+  Job_Title: 'Gordon Police: Head Dispatcher',
+};
+const experienceCTS: StudentEmployment = {
+  Job_Department: 'CTS',
+  Job_Department_Name: 'Center for Technology Services',
+  Job_Start_Date: currentYear - 1 + '-08-22T00:00:00',
+  Job_End_Date: currentYear + '-05-13T00:00:00',
+  Job_Expected_End_Date: currentYear + '-05-13T00:00:00',
+  Job_Title: 'Access Control Assistant - CTS',
+};
 export const exampleTranscriptItems: TranscriptItems = {
-  honors: [],
-  experiences: [],
+  honors: [activityISOAdmin],
+  experiences: [experienceSAF, experienceCTS],
   service: [],
   activities: [activityISO, activity360],
 };
