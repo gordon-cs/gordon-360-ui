@@ -119,6 +119,14 @@ const MatchList = ({ matches, activityID }) => {
   if (!matches?.length || !matches[0])
     return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
 
+  organizedMatches = [
+    {
+      FullDate: firstFullDate,
+      DayOfWeek: firstDate?.slice(0, 3),
+      DayOnly: firstDate?.slice(4),
+      Matches: [],
+    },
+  ];
   let j = 0;
   matches.forEach((m) => {
     let date = standardDate(m.StartTime, false, true);
@@ -176,6 +184,7 @@ const MatchList = ({ matches, activityID }) => {
       })}
     </>
   );
+
   return organizedMatches.length === 1 ? (
     <List dense>
       {organizedMatches[0].Matches.map((match) => (
