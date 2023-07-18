@@ -1,4 +1,14 @@
-import { Button, Card, CardContent, CardHeader, Grid, Link, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Link,
+  Typography,
+  IconButton,
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
@@ -139,9 +149,20 @@ const DiningBalance = () => {
           spacing={0}
           style={{ paddingTop: 5, paddingBottom: 10 }}
         >
-          <Grid item>
+          <Grid item sx={10}>
             <Typography variant="body2" className={styles.label2}>
               {diningInfo.ChoiceDescription}
+              <IconButton
+                variant="body2"
+                title="Change Meal Plan"
+                className={styles.label2}
+                //className={styles.gc360_my_profile_edit_icon}
+                component={Link}
+                href="https://www.gordon.edu/mealplan"
+                size="small"
+              >
+                <EditIcon />
+              </IconButton>
             </Typography>
           </Grid>
         </Grid>
@@ -201,7 +222,7 @@ const DiningBalance = () => {
   return (
     <Card>
       <CardContent>
-        <Grid container direction="row" alignItems="center">
+        <Grid container direction="row" alignItems="center" spacing={0}>
           <Grid item xs={7} align="left">
             <CardHeader title="Dining Balance" />
           </Grid>
