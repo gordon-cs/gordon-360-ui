@@ -5,20 +5,28 @@
     list-style-type: '• ';
   }
 
-  & :global(.MuiCard-root) {
-    box-shadow: none;
+  & :global {
+    .MuiCard-root {
+      box-shadow: none;
+    }
+    .MuiCardHeader-subheader {
+      color: var(--mui-palette-primary-contrastText);
+    }
   }
 
   &_title {
     text-align: center;
-    padding-top: 2rem;
-    color: var(--mui-palette-neutral-contrastText);
+    padding: 1rem;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+
   }
 
   &_contributors:global(.MuiTypography-root) {
     white-space: pre-wrap;
     margin-left: 1rem;
   }
+
 
   &_header {
     background-color: var(--mui-palette-primary-main);

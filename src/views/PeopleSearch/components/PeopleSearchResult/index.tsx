@@ -8,11 +8,12 @@ import { useWindowSize } from 'hooks';
 import userService from 'services/user';
 import styles from './PeopleSearchResult.module.css';
 
-/*Const string was created with https://png-pixel.com/ .
- *It is a 1 x 1 pixel with the same color as gordonColors.neutral.lightGray (7/9/21)
+/* Const string was created with https://png-pixel.com/ .
+ * This is a single pixel image of neutral gray (#808080) with 15% opacity.  This works
+ * well with both light and dark mode.
  */
-const GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/erVfwAJRwPA/3pinwAAAABJRU5ErkJggg==';
+const COLOR_80808026_1X1 =
+ 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 const JPG_BASE64_HEADER = 'data:image/jpg;base64,';
 const breakpointWidth = 810;
 
@@ -35,7 +36,7 @@ interface Props {
 
 const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
   const [avatar, setAvatar] = useState<string | null>(
-    person.AD_Username ? GORDONCOLORS_NEUTRAL_LIGHTGRAY_1X1 : null,
+    person.AD_Username ? COLOR_80808026_1X1 : null,
   );
   const [hasBeenRun, setHasBeenRun] = useState(false);
   const [width] = useWindowSize();
