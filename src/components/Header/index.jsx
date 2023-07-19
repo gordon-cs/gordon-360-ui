@@ -7,7 +7,7 @@ import {
   People as PeopleIcon,
   Work as WorkIcon,
 } from '@mui/icons-material';
-import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
@@ -150,6 +150,13 @@ const GordonHeader = ({ onDrawerToggle }) => {
           >
             <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
+          <Link to="/" component={ForwardNavLink} value={tabIndex}>
+            <picture>
+              <source srcset="images/gc_360_yellow_logo_72.png" media="(min-width: 900px)" />
+              <source srcset="images/gc_360_yellow_logo_64.png" media="(min-width: 600px)" />
+              <img src="images/gc_360_yellow_logo_56.png"></img>
+            </picture>
+          </Link>
 
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
             <Routes>
@@ -165,7 +172,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
               ))}
             </Routes>
           </Typography>
-
           <div className={styles.center_container}>
             <Tabs textColor="inherit" indicatorColor="secondary" centered value={tabIndex}>
               <Tab
@@ -193,23 +199,19 @@ const GordonHeader = ({ onDrawerToggle }) => {
               {requiresAuthTab('Timesheets', <WorkIcon />)}
             </Tabs>
           </div>
-
           <div className={styles.people_search_container_container}>
             {/* Width is dynamic */}
             <div className={styles.people_search_container}>
               {isAuthenticated ? <GordonQuickSearch /> : loginButton}
             </div>
           </div>
-
           <GordonNavAvatarRightCorner onClick={handleOpenMenu} menuOpened={isMenuOpen} />
-
           <GordonNavButtonsRightCorner
             open={isMenuOpen}
             openDialogBox={setDialog}
             anchorEl={anchorElement}
             onClose={handleCloseMenu}
           />
-
           {createDialogBox()}
         </Toolbar>
       </AppBar>

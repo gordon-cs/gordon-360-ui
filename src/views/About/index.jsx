@@ -1,8 +1,7 @@
 import { Fragment, useState, useEffect } from 'react';
 import versionService from 'services/version';
-import { projectName } from 'project-name';
 import contributors from './contributors.json';
-import origins from './origins.json';
+import supporters from './supporters.json';
 import versionUI from './version.json';
 import styles from './About.module.css';
 
@@ -27,20 +26,46 @@ const About = () => {
           <Typography className={styles.about_subheader}>By Students for Students</Typography>
           <CardContent>
             <Card>
-              <CardHeader className={styles.about_header} title={`${projectName}`} />
+              <CardHeader className={styles.about_header} title="History" />
               <CardContent>
-                <Typography variant="body1" component="ul" style={{ textAlign: 'start' }}>
-                  <li>Mobile-friendly, responsive web portal</li>
-                  <li>Promotional access to student Involvement and leadership</li>
-                  <li>Academic session-based Campus Involvements and Leadership Experiences</li>
-                  <li>Subscriber email feeds</li>
-                  <li>Membership affinity connections</li>
-                  <li>Student leader and Advisor Activity self-management</li>
-                  <li>Rosters and administrative records</li>
-                  <li>Student Membership and Leadership Co-Curricular Transcript</li>
+                <Typography variant="body1">
+                  Gordon 360 was created by students in the
+                  2016 Summer Practicum in Computer Science.
+                  It started with two main goals: capture co-curricular
+                  involvements for an experience transcript,
+                  and make basic info like meal credits and chapel attendance
+                  easily available.
+                </Typography>
+                <br />
+                <Typography variant="body1">
+                  Since then, students have worked on 360 in subsequent Summer
+                  Practicums, for GoCo labs during the school year, and as
+                  senior projects.  Major additions include:
+                  <ul>
+                  <li>Events search on the master
+                    calendar (integrating with 25Live),</li>
+                  <li>People search, which is now the sole campus
+                    directory,</li>
+                  <li>individual profiles to allow people to update their
+                    data and control its visiblity to the campus community,</li>
+                  <li>Timesheets for student jobs on campus,</li>
+                  <li>dark mode,</li>
+                  <li>(coming soon) RecIM to manage fun and competitive
+                    recreational activities,</li>
+                  <li>and more.</li>
+                  </ul>
+                  They also maintained the code, revising and sometimes
+                  rewriting it to use new tools and adapt to changes
+                  in existing tools.
+                </Typography>
+                <br />
+                <Typography variant="body1">
+                  Faculty and CTS staff have helped with
+                  coaching and code reviews, and sometimes with actual coding.
                 </Typography>
               </CardContent>
             </Card>
+
             <Card>
               <CardHeader className={styles.about_header} title="Institutional Benefits" />
               <CardContent>
@@ -53,19 +78,22 @@ const About = () => {
                   <li>Academic Advising resource</li>
                   <li>Leadership and Involvement advising resource</li>
                   <li>Institutional reporting</li>
+                  <li>Reduced reliance on old and outside websites</li>
                 </Typography>
               </CardContent>
             </Card>
+
             <Card>
-              <CardHeader className={styles.about_header} title="Origins" />
+              <CardHeader className={styles.about_header} title="Supporters" />
               <CardContent>
-                {origins.map((section) => {
+                {supporters.map((section) => {
                   return (
                     <Fragment key={section.title}>
                       <Typography variant="subtitle1" gutterBottom>
                         <strong>{section.title}</strong>
                       </Typography>
-                      <Typography variant="body2" paragraph className={styles.about_Origins}>
+                      <Typography variant="body2" paragraph
+                                  className={styles.about_contributors}>
                         {section.body}
                       </Typography>
                     </Fragment>
@@ -73,8 +101,9 @@ const About = () => {
                 })}
               </CardContent>
             </Card>
+
             <Card>
-              <CardHeader className={styles.about_header} title="GoCo Tech Lab Developers" />
+              <CardHeader className={styles.about_header} title="Developers" />
               <CardContent>
                 {contributors.map((section) => {
                   return (
@@ -92,38 +121,35 @@ const About = () => {
             </Card>
           </CardContent>
         </Card>
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" className={styles.about_text}>
           Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">
-            <Button color="secondary">Report to CTS</Button>
+            <Button variant="text" className="gc360_text_link">
+              Report to CTS
+            </Button>
           </a>
         </Typography>
         <hr />
-        {versionUI.map((section) => {
-          return (
-            <Fragment key={section.commit}>
-              <Grid container xs={6}>
-                <Grid item xs={1}>
-                  <Typography variant="body2">UI</Typography>
-                </Grid>
-                <Grid item xs={11}>
-                  <Typography variant="body2">
-                    {section.date} (Git SHA: {section.commit})
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={1}>
-                  <Typography variant="body2">API</Typography>
-                </Grid>
-                <Grid item xs={11}>
-                  <Typography variant="body2">
-                    {versionAPI?.BuildTime} (Git SHA: {versionAPI?.GitHash})
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Fragment>
-          );
-        })}
+        <Grid container xs={12}>
+          <Grid item xs={1}>
+            <Typography variant="body2" className={styles.about_text}>
+              UI
+            </Typography>
+          </Grid>
+          <Grid item xs={11}>
+            <Typography variant="body2" className={styles.about_text}>
+              {versionUI.date} (Git SHA: {versionUI.commit})
+            </Typography>
+          </Grid>
+          <Grid item xs={1}>
+            <Typography variant="body2" className={styles.about_text}>API</Typography>
+          </Grid>
+          <Grid item xs={11}>
+            <Typography variant="body2" className={styles.about_text}>
+              {versionAPI?.BuildTime} (Git SHA: {versionAPI?.GitHash})
+            </Typography>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
