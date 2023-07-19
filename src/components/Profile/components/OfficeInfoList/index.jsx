@@ -104,7 +104,7 @@ const OfficeInfoList = ({
       }
     />
   ) : Mail_Location ? (
-    <ProfileInfoListItem title="Mailstop:" contentText={Mail_Location} />
+    <ProfileInfoListItem title="Mailstop:" contentText={`${Mail_Location}`} />
   ) : null;
 
   return (
