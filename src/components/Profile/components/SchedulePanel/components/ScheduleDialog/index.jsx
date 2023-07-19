@@ -107,7 +107,7 @@ const ScheduleDialog = (props) => {
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
                     description={props.courseName}
                     Location={props.courseLocation}
-                    options="'Apple', 'Outlook.com','MicrosoftTeams'"
+                    options="'Apple','Microsoft365|Gordon Outlook','MicrosoftTeams'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
