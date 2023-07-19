@@ -59,7 +59,7 @@ const ScheduleDialog = (props) => {
           <Grid container lg={12} xs={12}>
             {props.courseInfo && (
               <>
-                <Grid item xs={1} lg={2}></Grid>
+                <Grid item xs={0} lg={1}></Grid>
                 <Grid item lg={2} align="right">
                   <add-to-calendar-button
                     name={props.courseTitle}
