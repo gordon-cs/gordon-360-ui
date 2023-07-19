@@ -1,12 +1,20 @@
-import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
+import { useState, Fragment } from 'react';
+import { Card, CardContent, CardHeader, Grid, List, Typography, IconButton } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
+import { Markup } from 'interweave';
 import styles from './OfficeInfoList.module.css';
+import { gordonColors } from 'theme';
 import UpdateOffice from './UpdateOfficeLocationDialog';
+import UpdateOfficeHours from './UpdateOfficeHoursDialog';
+import UpdateMail from './UpdateMailDestinationDialog';
 import GordonTooltip from 'components/GordonTooltip';
+import user from 'services/user';
+import EditIcon from '@mui/icons-material/Edit';
 
 const OfficeInfoList = ({
   myProf,
   profile: {
+    AD_Username,
     BuildingDescription,
     OnCampusDepartment,
     OnCampusRoom,
@@ -23,7 +31,7 @@ const OfficeInfoList = ({
   }
 
   // Only display if there is some info to show
-  if (!BuildingDescription && !OnCampusRoom && !OnCampusPhone && !office_hours) {
+  if (!myProf && !BuildingDescription && !OnCampusRoom && !OnCampusPhone && !office_hours) {
     return null;
   }
 
@@ -38,6 +46,24 @@ const OfficeInfoList = ({
         <a href={'tel:978867' + OnCampusPhone} className="gc360_text_link">
           {'(978) 867-' + OnCampusPhone}
         </a>
+      }
+    />
+  ) : null;
+
+  const officeHours = office_hours ? (
+    <ProfileInfoListItem
+      title="Office Hours:"
+      contentText={
+        myProf ? (
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>{office_hours}</Grid>
+            <Grid item>
+              <UpdateOfficeHours officeHours={office_hours} />
+            </Grid>
+          </Grid>
+        ) : (
+          `${office_hours}`
+        )
       }
     />
   ) : null;
@@ -67,10 +93,28 @@ const OfficeInfoList = ({
     <ProfileInfoListItem
       title="Mailstop:"
       contentText={
-        <Typography>
-          {Mail_Location}
-          {<GordonTooltip content={Mail_Description} enterTouchDelay={50} leaveTouchDelay={2000} />}
-        </Typography>
+        myProf ? (
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>
+              <Typography>
+                {Mail_Location}
+                <GordonTooltip
+                  content={Mail_Description}
+                  enterTouchDelay={50}
+                  leaveTouchDelay={2000}
+                />
+              </Typography>
+            </Grid>
+            <Grid item>
+              <UpdateMail />
+            </Grid>
+          </Grid>
+        ) : (
+          <Typography>
+            {Mail_Location}
+            <GordonTooltip content={Mail_Description} enterTouchDelay={50} leaveTouchDelay={2000} />
+          </Typography>
+        )
       }
     />
   ) : null;
@@ -78,12 +122,20 @@ const OfficeInfoList = ({
   const updateOfficeInfo =
     myProf && PersonType?.includes('fac') ? (
       <Typography align="left" className={styles.note}>
-        NOTE: Update your office hours in the Schedule Panel below.
+        NOTE: Update your office info{' '}
+        <a
+          href="https://go.gordon.edu/general/myaccount.cfm"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: gordonColors.primary.blue }}
+        >
+          here
+        </a>
       </Typography>
     ) : null;
 
   return (
-    <Grid item xs={12}>
+    <Grid item xs={12} lg={12}>
       <Card className={styles.office_info_list}>
         <Grid container className={styles.office_info_list_header}>
           <CardHeader title="Office Information" />
@@ -94,7 +146,7 @@ const OfficeInfoList = ({
             {room}
             {mailstop}
             {officePhone}
-            {updateOfficeInfo}
+            {officeHours}
           </List>
         </CardContent>
       </Card>

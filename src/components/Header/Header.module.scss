@@ -13,7 +13,6 @@
   .app_bar {
     position: absolute;
     background-repeat: no-repeat;
-    background-image: url('./gc_new_logo_white_yellow_56.png');
     height: $header-height-xs;
   }
 
@@ -67,7 +66,6 @@
 
   @media (min-width: $break-sm) {
     .app_bar {
-      background-image: url('./gc_new_logo_white_yellow_64.png');
       height: $header-height-sm;
       background-color: var(--mui-palette-primary-main);
     }
@@ -79,12 +77,11 @@
     }
   }
 
-  @media (min-width: $break-md) {
+  @media (min-width: $break-lg) {
     .menu_button {
       display: none;
     }
     .app_bar {
-      background-image: url('./gc_new_logo_white_yellow_72.png');
       height: $header-height-md;
     }
 
@@ -95,9 +92,6 @@
       visibility: visible;
     }
 
-    .tab {
-      min-width: 80px;
-    }
     .right_side_container {
       display: flex;
       margin-left: 24px;
@@ -109,7 +103,7 @@
       flex: 7;
     }
     .tab {
-      min-width: 160px;
+      min-width: 110px;
     }
   }
 

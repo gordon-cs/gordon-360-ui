@@ -7,7 +7,7 @@ import {
   People as PeopleIcon,
   Work as WorkIcon,
 } from '@mui/icons-material';
-import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography } from '@mui/material';
+import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
 import { projectName } from 'project-name';
@@ -150,15 +150,14 @@ const GordonHeader = ({ onDrawerToggle }) => {
           >
             <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
-          &nbsp;&nbsp; &nbsp;&nbsp;
-          <Tab //this is an "invisible" button behind the new logo that links back to the home page
-            className={styles.tab}
-            label=" "
-            component={ForwardNavLink}
-            disableRipple={true}
-            to="/"
-            onChange={(event, value) => setTabIndex(value)}
-          />
+          <Link to="/" component={ForwardNavLink} value={tabIndex}>
+            <picture>
+              <source srcset="images/gc_360_yellow_logo_72.png" media="(min-width: 900px)" />
+              <source srcset="images/gc_360_yellow_logo_64.png" media="(min-width: 600px)" />
+              <img src="images/gc_360_yellow_logo_56.png"></img>
+            </picture>
+          </Link>
+
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
             <Routes>
               {routes.map((route) => (
