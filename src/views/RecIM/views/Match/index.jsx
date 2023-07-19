@@ -153,20 +153,20 @@ const Match = () => {
     // The user is not logged in
     return <GordonUnauthenticated feature={'the Rec-IM page'} />;
   } else {
-    let headerContents =
-      match?.Scores.length <= 2 ? (
-        <Grid container direction="column" className={styles.header}>
-          {/* match time/location */}
-          <Grid item container spacing={4}>
-            <Grid item xs={6} textAlign="right">
-              <Typography className={styles.subtitle}>
-                {match && standardDate(match.StartTime, true)}
-              </Typography>
-            </Grid>
-            <Grid item xs={6} textAlign="left">
-              <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
-            </Grid>
+    let headerContents = (
+      <Grid container direction="column" className={styles.header}>
+        {/* match time/location */}
+        <Grid item container spacing={4}>
+          <Grid item xs={6} textAlign="right">
+            <Typography className={styles.subtitle}>
+              {match && standardDate(match.StartTime, true)}
+            </Typography>
           </Grid>
+          <Grid item xs={6} textAlign="left">
+            <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
+          </Grid>
+        </Grid>
+        {match?.Scores.length <= 2 ? (
           <Grid
             item
             container
@@ -289,34 +289,45 @@ const Match = () => {
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      ) : (
-        <Grid container direction="column" className={styles.header}>
-          <Grid item container alignItems="center" spacing={1} flexWrap="nowrap">
+        ) : (
+          <Grid
+            item
+            container
+            alignItems="center"
+            justifyContent="space-between"
+            spacing={1}
+            flexWrap="nowrap"
+          >
             <Grid
               item
               container
-              xs={5}
+              xs={1.5}
+              sm={5}
               columnSpacing={2}
               className={`${styles.teamInfo} ${styles.teamInfoRight}`}
             >
-              <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
+              <Grid item xs={4} lg="auto" className={styles.headerImgContainer}>
                 <img
-                  src={match?.Activity.Logo ?? defaultLogo}
-                  alt="Activity Icon"
+                  src={
+                    (match?.Status === 'Completed' ? currentWinner?.Logo : match?.Activity.Logo) ??
+                    defaultLogo
+                  }
+                  alt="Icon"
                   className={styles.headerImg}
                 ></img>
               </Grid>
-              <Grid item sm={8} lg="auto">
-                <LinkRouter to={`/recim/activity/${match?.Activity.ID}`}>
-                  <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
-                    {match?.Activity.Name}
-                  </Typography>
-                </LinkRouter>
-              </Grid>
+              {match?.Status !== 'Completed' && (
+                <Grid item xs={8} lg="auto">
+                  <LinkRouter to={`/recim/activity/${match?.Activity.ID}`}>
+                    <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
+                      {match?.Activity.Name}
+                    </Typography>
+                  </LinkRouter>
+                </Grid>
+              )}
             </Grid>
 
-            <Grid item container xs={2} alignItems="center" direction="column" sx={{ mt: 3 }}>
+            <Grid item container xs={3.5} alignItems="center" direction="column" sx={{ mt: 3 }}>
               {match?.Status === 'Completed' && (
                 <Grid item>
                   <Typography className={styles.subtitle}>Final</Typography>
@@ -357,8 +368,9 @@ const Match = () => {
               </IconButton>
             </Grid>
           </Grid>
-        </Grid>
-      );
+        )}
+      </Grid>
+    );
     // console.log(match);
     return (
       <>
