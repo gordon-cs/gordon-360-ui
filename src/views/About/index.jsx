@@ -22,46 +22,44 @@ const About = () => {
             className={styles.about_title}
             title="Conceived and Built at Gordon College"
             titleTypographyProps={{ variant: 'h4' }}
+            subheader={'By Students For Students'}
           />
-          <Typography className={styles.about_subheader}>By Students for Students</Typography>
+          <br />
           <CardContent>
             <Card>
-              <CardHeader className={styles.about_header} title="History" />
+              <CardHeader className="gc360_header" title="History" />
               <CardContent>
                 <Typography variant="body1">
-                  Gordon 360 was created by students in the
-                  2016 Summer Practicum in Computer Science.
-                  It started with two main goals: capture co-curricular
-                  involvements for an experience transcript,
-                  and make basic info like meal credits and chapel attendance
+                  Gordon 360 was created by students in the 2016 Summer Practicum in Computer
+                  Science. It started with two main goals: capture co-curricular involvements for an
+                  experience transcript, and make basic info like meal credits and chapel attendance
                   easily available.
                 </Typography>
                 <br />
                 <Typography variant="body1">
-                  Since then, students have worked on 360 in subsequent Summer
-                  Practicums, for GoCo labs during the school year, and as
-                  senior projects.  Major additions include:
+                  Since then, students have worked on 360 in subsequent Summer Practicums, for GoCo
+                  labs during the school year, and as senior projects. Major additions include:
                   <ul>
-                  <li>Events search on the master
-                    calendar (integrating with 25Live),</li>
-                  <li>People search, which is now the sole campus
-                    directory,</li>
-                  <li>individual profiles to allow people to update their
-                    data and control its visiblity to the campus community,</li>
-                  <li>Timesheets for student jobs on campus,</li>
-                  <li>dark mode,</li>
-                  <li>(coming soon) RecIM to manage fun and competitive
-                    recreational activities,</li>
-                  <li>and more.</li>
+                    <li>Events search on the master calendar (integrating with 25Live),</li>
+                    <li>People search, which is now the sole campus directory,</li>
+                    <li>
+                      individual profiles to allow people to update their data and control its
+                      visiblity to the campus community,
+                    </li>
+                    <li>Timesheets for student jobs on campus,</li>
+                    <li>dark mode,</li>
+                    <li>
+                      (coming soon) RecIM to manage fun and competitive recreational activities,
+                    </li>
+                    <li>and more.</li>
                   </ul>
-                  They also maintained the code, revising and sometimes
-                  rewriting it to use new tools and adapt to changes
-                  in existing tools.
+                  They also maintained the code, revising and sometimes rewriting it to use new
+                  tools and adapt to changes in existing tools.
                 </Typography>
                 <br />
                 <Typography variant="body1">
-                  Faculty and CTS staff have helped with
-                  coaching and code reviews, and sometimes with actual coding.
+                  Faculty and CTS staff have helped with coaching and code reviews, and sometimes
+                  with actual coding.
                 </Typography>
               </CardContent>
             </Card>
@@ -92,8 +90,7 @@ const About = () => {
                       <Typography variant="subtitle1" gutterBottom>
                         <strong>{section.title}</strong>
                       </Typography>
-                      <Typography variant="body2" paragraph
-                                  className={styles.about_contributors}>
+                      <Typography variant="body2" paragraph className={styles.about_contributors}>
                         {section.body}
                       </Typography>
                     </Fragment>
@@ -142,7 +139,9 @@ const About = () => {
             </Typography>
           </Grid>
           <Grid item xs={1}>
-            <Typography variant="body2" className={styles.about_text}>API</Typography>
+            <Typography variant="body2" className={styles.about_text}>
+              API
+            </Typography>
           </Grid>
           <Grid item xs={11}>
             <Typography variant="body2" className={styles.about_text}>
