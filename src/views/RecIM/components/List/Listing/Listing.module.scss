@@ -2,14 +2,10 @@
 @import '../../../../../vars';
 
 .listing {
-  background-color: $neutral-light-gray2-opacity10;
+  @extend %baseListing;
   margin-top: 0.1em;
   margin-bottom: 0.1em;
   padding: 1em;
-  border-radius: 0.5em;
-  align-items: center;
-  box-shadow: inset -1px -1px $neutral-light-gray2-opacity50;
-  transition: all 0.3s ease-in-out;
 }
 
 //trial new listing look
@@ -19,22 +15,34 @@
   transition: all 0.3s ease-in-out;
 }
 
-.matchHistoryListing {
+%baseListing {
   background-color: $neutral-light-gray2-opacity10;
-  margin-top: 0.1em;
-  margin-bottom: 0.1em;
-  padding: 1em;
   border-radius: 0.5em;
   align-items: center;
   box-shadow: inset -1px -1px $neutral-light-gray2-opacity50;
   transition: all 0.3s ease-in-out;
+}
+
+.matchHistoryListing {
+  @extend %baseListing;
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+  padding: 0.5em;
 
   &_winner {
-    background-color: $secondary-green;
+    @extend %baseListing;
+    margin-top: 0.1em;
+    margin-bottom: 0.1em;
+    padding: 0.5em;
+    box-shadow: inset 3px 0px 0px var(--mui-palette-success-light);
   }
 
   &_loser {
-    background-color: $secondary-red;
+    @extend %baseListing;
+    margin-top: 0.1em;
+    margin-bottom: 0.1em;
+    padding: 0.5em;
+    box-shadow: inset 3px 0px 0px var(--mui-palette-error-light);
   }
 }
 

@@ -503,6 +503,7 @@ const MatchHistoryListing = ({ match, activityID }) => {
       <ListItemButton
         component={Link}
         to={`/recim/activity/${activityID}/match/${match.MatchID}`}
+        // sx={{ borderRadius: '0.5em' }}
         className={
           ownScore > oppScore
             ? styles.matchHistoryListing_winner
