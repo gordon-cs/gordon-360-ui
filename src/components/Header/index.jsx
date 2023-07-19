@@ -21,6 +21,14 @@ import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
 import styles from './Header.module.css';
 
+// Define header logo image - special image for Pi Day
+const todaysDate = new Date(); // Months: 0 = Jan, 1 = Feb, 2 = Mar, etc.
+const isPiDay = todaysDate.getMonth() === 2 && todaysDate.getDate() === 14; // March 14 (3/14)
+const angleMode = isPiDay ? "2pi" : "360";
+const headerLogo72dpi = "images/gc_" + angleMode + "_yellow_logo_72.png";
+const headerLogo64dpi = "images/gc_" + angleMode + "_yellow_logo_64.png";
+const headerLogo56dpi = "images/gc_" + angleMode + "_yellow_logo_56.png";
+
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
 // Tab url regular expressions must be listed in the same order as the tabs, since the
@@ -152,9 +160,9 @@ const GordonHeader = ({ onDrawerToggle }) => {
           </IconButton>
           <Link to="/" component={ForwardNavLink} value={tabIndex}>
             <picture>
-              <source srcset="images/gc_360_yellow_logo_72.png" media="(min-width: 900px)" />
-              <source srcset="images/gc_360_yellow_logo_64.png" media="(min-width: 600px)" />
-              <img src="images/gc_360_yellow_logo_56.png"></img>
+              <source srcset={headerLogo72dpi} media="(min-width: 900px)" />
+              <source srcset={headerLogo64dpi} media="(min-width: 600px)" />
+              <img src={headerLogo56dpi} alt="Gordon 360 Logo"></img>
             </picture>
           </Link>
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
