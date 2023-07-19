@@ -23,7 +23,6 @@ import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Events.module.css';
-import styles2 from 'app.module.css';
 
 const Events = () => {
   const [open, setOpen] = useState(false);
@@ -142,7 +141,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <CardHeader title={searchPageTitle} className={styles2.gc360_header} />
+          <CardHeader title={searchPageTitle} className={'gc360_header'} />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
               {/* Search Bar and Filters */}
@@ -262,7 +261,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <CardHeader title={searchPageTitle} className={styles2.gc360_header} />
+          <CardHeader title={searchPageTitle} className={'gc360_header'} />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
               {/* Search Bar and Filters */}

@@ -46,7 +46,6 @@ import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
 import styles from './SearchFieldList.module.css';
-import styles2 from 'app.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
@@ -398,7 +397,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       <CardHeader
         title={searchPageTitle}
         titleTypographyProps={{ align: 'center' }}
-        className={styles2.gc360_header}
+        className={'gc360_header'}
       />
       <CardContent>
         {/* Search Section 1: General Info */}
