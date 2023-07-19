@@ -93,7 +93,7 @@ const ScheduleDialog = (props) => {
                     Timezone="currentBrowser"
                   ></add-to-calendar-button>
                 </Grid>
-                <Grid item lg={6} align="left">
+                <Grid item lg={8} align="left">
                   <add-to-calendar-button
                     name={props.courseTitle}
                     startDate={format(
@@ -107,7 +107,7 @@ const ScheduleDialog = (props) => {
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
                     description={props.courseName}
                     Location={props.courseLocation}
-                    options="'Apple','Microsoft365|Gordon Outlook','MicrosoftTeams'"
+                    options="'Apple','Microsoft365|Gordon Outlook','Outlook.com','MicrosoftTeams'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
