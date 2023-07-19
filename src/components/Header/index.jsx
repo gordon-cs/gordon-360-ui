@@ -157,7 +157,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
               <img src="images/gc_360_yellow_logo_56.png"></img>
             </picture>
           </Link>
-
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
             <Routes>
               {routes.map((route) => (

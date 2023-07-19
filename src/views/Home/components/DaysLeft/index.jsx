@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import GordonLoader from 'components/Loader';
 import session from 'services/session';
+import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import styles2 from 'app.module.css';
 import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import { theme360 } from 'theme';
 
@@ -37,9 +39,11 @@ const DaysLeft = () => {
   const colors = theme360.colorSchemes.light.palette;
 
   return (
-    <Card>
+    <Card className={styles.card}>
+      <CardHeader title={currentSessionDescription} className={styles2.gc360_header}>
+        <br />
+      </CardHeader>
       <CardContent>
-        <CardHeader title={currentSessionDescription} className={styles.cardHeader} />
         {loading ? (
           <GordonLoader />
         ) : (
