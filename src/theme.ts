@@ -211,7 +211,6 @@ export const theme360 = extendTheme({
       palette: {
         primary: {
           main: GordonBlue,
-          light: GordonLightBlue,
           contrastText: White,
           50: GordonBlue_opacity50,
           100: '#BBDDF0',
