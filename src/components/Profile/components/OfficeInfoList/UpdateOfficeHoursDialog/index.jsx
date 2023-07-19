@@ -13,7 +13,6 @@ const UpdateOfficeHours = (props) => {
 
   const handleSubmit = async () => {
     try {
-      // props.changeProfile(true);
       await userService.updateOfficeHours(hours);
       props.changeOfficeHours(hours);
     } catch {
