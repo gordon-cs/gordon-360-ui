@@ -310,6 +310,7 @@ const Timesheets = (props) => {
       setClockInOut('Clock In');
       setSelectedDateIn(null);
       setSelectedDateOut(null);
+      setHoursWorkedInDecimal(0);
     }
   };
 
@@ -372,25 +373,9 @@ const Timesheets = (props) => {
         <Grid container spacing={2} className={styles.timesheets}>
           <Grid item xs={12}>
             <Card>
-              <CardContent
-                style={{
-                  marginLeft: 8,
-                  marginTop: 8,
-                }}
-              >
-                <Grid container spacing={2} alignItems="center" alignContent="center">
-                  <Grid item md={2}>
-                    <Button
-                      variant="outlined"
-                      color="link"
-                      onClick={changeState}
-                      className={styles.clockInOutButton}
-                    >
-                      {' '}
-                      {clockInOut}
-                    </Button>
-                  </Grid>
-                  <Grid item md={8}>
+              <CardHeader
+                title={
+                  <Grid item alignItems="center">
                     <div className={styles.header_tooltip_container}>
                       <Tooltip
                         classes={{ tooltip: styles.tooltip }}
@@ -418,7 +403,29 @@ const Timesheets = (props) => {
                       </Tooltip>
                     </div>
                   </Grid>
+                }
+                className="gc360_header"
+              ></CardHeader>
+              <CardContent
+                style={{
+                  marginLeft: 8,
+                  marginTop: 8,
+                }}
+              >
+                <Grid container spacing={2} alignItems="center" alignContent="center">
+                  <Grid item md={2}>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={changeState}
+                      className={styles.clockInOutButton}
+                    >
+                      {' '}
+                      {clockInOut}
+                    </Button>
+                  </Grid>
                 </Grid>
+                <br />
                 <Grid
                   container
                   spacing={2}
