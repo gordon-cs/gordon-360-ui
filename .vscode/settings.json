@@ -6,7 +6,6 @@
   "explorer.fileNesting.patterns": {
     "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml",
     "*.module.scss": "${capture}.module.css, ${capture}.module.css.map",
-    "*.global.scss": "${capture}.global.css, ${capture}.global.css.map",
-    ".env": ".env.*"
+    "*.global.scss": "${capture}.global.css, ${capture}.global.css.map"
   }
 }
