@@ -321,13 +321,12 @@ const SearchFieldList = ({ onSearch }: Props) => {
   };
 
   const handleSwitchChange = () => {
-    if (switchYearRange) {
-      setSearchParams((sp) => ({
-        ...sp,
-        initial_year: '',
-        final_year: '',
-      }));
-    }
+    setSearchParams((sp) => ({
+      ...sp,
+      initial_year: '',
+      final_year: '',
+      graduation_year: '',
+    }));
     setSwitchYearRange((prev) => !prev);
   };
 
