@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
-const UpdateMail = () => {
+const UpdateMail = (changeMailLocation) => {
   const [open, setOpen] = useState(false);
   const [mailStop, setMailStop] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
@@ -15,11 +15,7 @@ const UpdateMail = () => {
   const handleSubmit = async () => {
     try {
       await userService.updateMailStop(mailStop);
-      setSnackbar({
-        message: 'Your mail destination will update within a couple hours.',
-        severity: 'success',
-        open: true,
-      });
+      changeMailLocation(mailStop);
     } catch {
       setSnackbar({
         message: 'Mail destination failed to update. Please contact CTS.',

@@ -13,12 +13,9 @@ const UpdateOfficeHours = (props) => {
 
   const handleSubmit = async () => {
     try {
+      // props.changeProfile(true);
       await userService.updateOfficeHours(hours);
-      setSnackbar({
-        message: 'Your office hours will update within a couple hours.',
-        severity: 'success',
-        open: true,
-      });
+      props.changeOfficeHours(hours);
     } catch {
       setSnackbar({
         message: 'Office hours failed to update. Please contact CTS.',
