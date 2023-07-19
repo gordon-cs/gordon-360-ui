@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import GordonSnackbar from 'components/Snackbar';
-import { useAuthGroups, useUser } from 'hooks';
+import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
