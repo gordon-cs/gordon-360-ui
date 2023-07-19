@@ -209,6 +209,14 @@ const MatchHistoryList = ({ matches, activityID }) => {
   );
 };
 
+/**
+ * Currently used in Match page to render multiple
+ * Teams that can expand into participantLists
+ */
+const ExpandableTeamList = ({ teams, teamScores }) => {
+  return null;
+};
+
 // setTargetTeamID is used for edit Match teams
 const TeamList = ({
   participant,
@@ -316,6 +324,7 @@ export {
   ParticipantList,
   MatchList,
   MatchHistoryList,
+  ExpandableTeamList,
   TeamList,
   SurfaceList,
   SportList,

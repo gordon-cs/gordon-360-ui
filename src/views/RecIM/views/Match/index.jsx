@@ -74,6 +74,7 @@ const Match = () => {
   const [anchorEl, setAnchorEl] = useState();
   const [currentWinner, setCurrentWinner] = useState();
   const openMenu = Boolean(anchorEl);
+  const isMultiTeamMatch = match?.Scores.length > 2;
 
   //console.log(match);
   const createSnackbar = useCallback((message, severity) => {
@@ -89,7 +90,7 @@ const Match = () => {
   }, [profile]);
 
   useEffect(() => {
-    if (match?.Scores.length <= 2) {
+    if (!isMultiTeamMatch) {
       const assignMatchScores = async () => {
         setTeam0Score(
           match.Scores.find((team) => team.TeamID === match.Team[0]?.ID)?.TeamScore ?? 0,
@@ -113,6 +114,7 @@ const Match = () => {
     }
   }, [match]);
   console.log(match);
+
   useEffect(() => {
     const loadMatch = async () => {
       setLoading(true);
@@ -166,7 +168,7 @@ const Match = () => {
             <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
           </Grid>
         </Grid>
-        {match?.Scores.length <= 2 ? (
+        {!isMultiTeamMatch ? (
           <Grid
             item
             container
@@ -372,10 +374,13 @@ const Match = () => {
       </Grid>
     );
 
-    const content = () => {
-      if (match?.Scores.length <= 2)
-        return (
-          <Grid container spacing={2}>
+    if (loading) return <GordonLoader />;
+    // console.log(match);
+    return (
+      <>
+        <Header match={match}>{headerContents}</Header>
+        <Grid container spacing={2}>
+          {!isMultiTeamMatch && (
             <Grid item xs={12} md={6}>
               <RosterCard
                 participants={match.Team[0]?.Participant}
@@ -400,6 +405,8 @@ const Match = () => {
                 </CardContent>
               </Card>
             </Grid>
+          )}
+          {!isMultiTeamMatch && (
             <Grid item xs={12} md={6}>
               <RosterCard
                 participants={match.Team[1]?.Participant}
@@ -424,97 +431,107 @@ const Match = () => {
                 </CardContent>
               </Card>
             </Grid>
-
-            {/* forms and dialogs */}
-            <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
-              <Typography className={styles.menuTitle}>Admin Settings</Typography>
-              <MenuItem
-                className={styles.greenMenuButton}
-                dense
-                disabled={match.Scores.length === 0}
-                onClick={() => handleMatchCompletedShortcut()}
-              >
-                Mark as {match?.Status === 'Completed' ? 'Confirmed' : 'Completed'}
-              </MenuItem>
-              <MenuItem
-                className={styles.menuButton}
-                dense
-                disabled={match.Scores.length === 0 || match.Status === 'Completed'}
-                onClick={() => {
-                  setOpenEditMatchStatsForm(true);
-                }}
-              >
-                Edit Match Stats
-              </MenuItem>
-              <MenuItem
-                className={styles.menuButton}
-                dense
-                disabled={match.Status === 'Completed'}
-                onClick={() => {
-                  setOpenMatchInformationForm(true);
-                }}
-              >
-                Edit Match Information
-              </MenuItem>
-              <MenuItem
-                dense
-                className={styles.redButton}
-                onClick={() => {
-                  setOpenConfirmDelete(true);
-                }}
-              >
-                Delete Match
-              </MenuItem>
-            </Menu>
-            <MatchForm
-              createSnackbar={createSnackbar}
-              onClose={() => setReload((prev) => !prev)}
-              openMatchInformationForm={openMatchInformationForm}
-              setOpenMatchInformationForm={(bool) => setOpenMatchInformationForm(bool)}
-              match={match}
-            />
-
-            {match.Scores.length !== 0 && (
-              <EditMatchStatsForm
-                match={match}
-                setMatch={setMatch}
-                onClose={() => {
-                  setAnchorEl(null);
-                  setReload((prev) => !prev);
-                }}
-                createSnackbar={createSnackbar}
-                openEditMatchStatsForm={openEditMatchStatsForm}
-                setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+          )}
+          {isMultiTeamMatch && (
+            <Grid item xs={12}>
+              <RosterCard
+                participants={match.Team[0]?.Participant}
+                teamName={match.Team[0]?.Name}
+                withAttendance
+                attendance={
+                  matchAttendance?.find((item) => item.TeamID === match.Team[0]?.ID)?.Attendance
+                }
+                isAdmin={user?.IsAdmin}
+                matchID={match.ID}
+                teamID={match.Team[0]?.ID}
               />
-            )}
-            <GordonDialogBox
-              title="Confirm Delete"
-              open={openConfirmDelete}
-              cancelButtonClicked={() => setOpenConfirmDelete(false)}
-              cancelButtonName="No, keep this match"
-              buttonName="Yes, delete this match"
-              buttonClicked={() => handleDelete()}
-              severity="error"
-            >
-              <br />
-              <Typography variant="body1">
-                Are you sure you want to permanently delete this match: '{matchName}'?
-              </Typography>
-              <Typography variant="body1">This action cannot be undone.</Typography>
-            </GordonDialogBox>
-          </Grid>
-        );
-      else {
-        return <GordonLoader />;
-      }
-    };
+            </Grid>
+          )}
 
-    if (loading) return <GordonLoader />;
-    // console.log(match);
-    return (
-      <>
-        <Header match={match}>{headerContents}</Header>
-        {content()}
+          {/* forms and dialogs */}
+          <Menu open={openMenu} onClose={handleClose} anchorEl={anchorEl}>
+            <Typography className={styles.menuTitle}>Admin Settings</Typography>
+            <MenuItem
+              className={styles.greenMenuButton}
+              dense
+              disabled={match.Scores.length === 0}
+              onClick={() => {
+                setAnchorEl(null);
+                handleMatchCompletedShortcut();
+              }}
+            >
+              Mark as {match?.Status === 'Completed' ? 'Confirmed' : 'Completed'}
+            </MenuItem>
+            <MenuItem
+              className={styles.menuButton}
+              dense
+              disabled={match.Scores.length === 0 || match.Status === 'Completed'}
+              onClick={() => {
+                setAnchorEl(null);
+                setOpenEditMatchStatsForm(true);
+              }}
+            >
+              Edit Match Stats
+            </MenuItem>
+            <MenuItem
+              className={styles.menuButton}
+              dense
+              disabled={match.Status === 'Completed'}
+              onClick={() => {
+                setAnchorEl(null);
+                setOpenMatchInformationForm(true);
+              }}
+            >
+              Edit Match Information
+            </MenuItem>
+            <MenuItem
+              dense
+              className={styles.redButton}
+              onClick={() => {
+                setAnchorEl(null);
+                setOpenConfirmDelete(true);
+              }}
+            >
+              Delete Match
+            </MenuItem>
+          </Menu>
+          <MatchForm
+            createSnackbar={createSnackbar}
+            onClose={() => setReload((prev) => !prev)}
+            openMatchInformationForm={openMatchInformationForm}
+            setOpenMatchInformationForm={(bool) => setOpenMatchInformationForm(bool)}
+            match={match}
+          />
+
+          {match.Scores.length !== 0 && (
+            <EditMatchStatsForm
+              match={match}
+              setMatch={setMatch}
+              onClose={() => {
+                setAnchorEl(null);
+                setReload((prev) => !prev);
+              }}
+              createSnackbar={createSnackbar}
+              openEditMatchStatsForm={openEditMatchStatsForm}
+              setOpenEditMatchStatsForm={setOpenEditMatchStatsForm}
+            />
+          )}
+          <GordonDialogBox
+            title="Confirm Delete"
+            open={openConfirmDelete}
+            cancelButtonClicked={() => setOpenConfirmDelete(false)}
+            cancelButtonName="No, keep this match"
+            buttonName="Yes, delete this match"
+            buttonClicked={() => handleDelete()}
+            severity="error"
+          >
+            <br />
+            <Typography variant="body1">
+              Are you sure you want to permanently delete this match: '{matchName}'?
+            </Typography>
+            <Typography variant="body1">This action cannot be undone.</Typography>
+          </GordonDialogBox>
+        </Grid>
         <GordonSnackbar
           open={snackbar.open}
           text={snackbar.message}
