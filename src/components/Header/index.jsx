@@ -23,7 +23,7 @@ import styles from './Header.module.css';
 
 // Define header logo image - special image for Pi Day
 const todaysDate = new Date(); // Months: 0 = Jan, 1 = Feb, 2 = Mar, etc.
-const isPiDay = todaysDate.getMonth() === 6 && todaysDate.getDate() === 18; // March 14 (3/14)
+const isPiDay = todaysDate.getMonth() === 2 && todaysDate.getDate() === 14; // March 14 (3/14)
 const angleMode = isPiDay ? "2pi" : "360";
 const headerLogo72dpi = "images/gc_" + angleMode + "_yellow_logo_72.png";
 const headerLogo64dpi = "images/gc_" + angleMode + "_yellow_logo_64.png";
