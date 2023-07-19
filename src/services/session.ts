@@ -1,5 +1,6 @@
 import { parse } from 'date-fns';
 import http from './http';
+import scheduleService from 'services/schedule';
 
 type Session = {
   SessionBeginDate: string;
@@ -85,6 +86,11 @@ const getTermCode = (): string => {
   return `${year.toString().substr(-2)}${term}`;
 };
 
+const checkSchedule = async (username: string, sessionCode: string) => {
+  const schedule = await scheduleService.getSchedule(username, sessionCode);
+  return schedule.length > 0;
+};
+
 const parseSessionCode = (sessionCode: string) => parse(sessionCode, 'yyyyMM', new Date());
 
 const sessionService = {
@@ -93,6 +99,7 @@ const sessionService = {
   getCurrent,
   getDaysLeft,
   getTermCode,
+  checkSchedule,
   decodeSessionCode,
   encodeSessionCode,
   parseSessionCode,

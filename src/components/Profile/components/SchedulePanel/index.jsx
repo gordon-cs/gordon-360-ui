@@ -41,15 +41,25 @@ const GordonSchedulePanel = (props) => {
   const [courseStart, setCourseStart] = useState('');
   const [courseEnd, setCourseEnd] = useState('');
   const [selectedSession, setSelectedSession] = useState('');
+  const [hasSchedule, setHasSchedule] = useState(true);
+  const [fullCourse, setFullCourse] = useState([]);
 
   const isOnline = useNetworkStatus();
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
+  // const checkSchedule = async (sessionCode) => {
+  //   const schedule = await scheduleService.getSchedule(props.profile.AD_Username, sessionCode);
+  //   if (schedule.length > 0) {
+  //     setHasSchedule(true);
+  //   } else {
+  //     setHasSchedule(false);
+  //   }
+  // };
+
   useEffect(() => {
     const loadPage = async () => {
       const allSessions = await sessionService.getAll();
-      //const schedule = await scheduleService.getSchedule(props.profile.AD_Username, allSessions[0]);
-
+      // .filter((item) => item.SessionCode.includes('2020'))
       setSessions(allSessions);
       if (sessionFromURL) {
         setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
@@ -86,10 +96,14 @@ const GordonSchedulePanel = (props) => {
     try {
       const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       setEventInfo(scheduleService.makeScheduleCourses(schedule));
+      setFullCourse(schedule);
     } catch (e) {}
     setLoading(false);
   };
-  console.log(sessions);
+
+  const asdf = sessionService.checkSchedule(props.profile.AD_Username, '201809');
+  console.log(fullCourse);
+  // console.log(hasSchedule);
   const handleScheduleDialogOpen = useCallback((calEvent) => {
     if (props.myProf) {
       setScheduleDialogOpen(true);
