@@ -78,7 +78,7 @@ const ScheduleDialog = (props) => {
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
                     description={props.courseName}
                     Location={props.courseLocation}
-                    options="'Google', 'Apple'"
+                    options="'Google'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
@@ -107,7 +107,7 @@ const ScheduleDialog = (props) => {
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
                     description={props.courseName}
                     Location={props.courseLocation}
-                    options="'Apple','Microsoft365|Gordon Outlook','Outlook.com','MicrosoftTeams'"
+                    options="'Microsoft365|Gordon Outlook','Apple','Outlook.com|Outlook','MicrosoftTeams'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
