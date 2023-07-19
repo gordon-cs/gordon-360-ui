@@ -39,7 +39,7 @@ const BannerSubmission = () => {
           <CardHeader
             title="Advertise your club or event on the 360 Homepage!"
             titleTypographyProps={{ variant: 'h4', align: 'center' }}
-            className={styles.bannerSubmission_header}
+            className="gc360_header"
           />
           <CardContent>
             <Typography variant="h6">Banner Image Guidelines</Typography>
@@ -54,7 +54,7 @@ const BannerSubmission = () => {
               accepted.
             </Typography>
           </CardContent>
-          <CardActions className={styles.bannerSubmission_card}>
+          <CardActions className={styles.banner_submission_card_action}>
             <Button
               variant="contained"
               color="secondary"
