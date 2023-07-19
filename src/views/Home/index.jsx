@@ -43,7 +43,7 @@ const Home = () => {
   } else if (isOnline && !hasAnswered) {
     return <WellnessQuestion setStatus={() => setHasAnswered(true)} />;
   } else {
-    // const doughnut = profile?.PersonType?.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
+    const doughnut = profile?.PersonType?.includes('stu') ? <CLWCreditsDaysLeft /> : <DaysLeft />;
 
     return (
       <Grid container justifyContent="center" spacing={2}>
