@@ -42,9 +42,13 @@
   .redIconText {
     color: var(--mui-palette-error-dark);
   }
-
-  .redButton {
-    background: var(--mui-palette-error-dark);
-    color: var(--mui-palette-neutral-light);
-  }
+}
+.shiftItemIcons {
+  visibility: 'hidden';
+}
+.shiftNotesTooltip {
+  font-size: 16;
+}
+.shiftCommentTooltip {
+  font-size: 16;
 }

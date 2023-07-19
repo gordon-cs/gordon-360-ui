@@ -1,5 +1,5 @@
 import { Grid, Typography, Tabs, Tab, Box, List } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   ActivityListing,
   MatchListing,
@@ -85,6 +85,19 @@ const ParticipantList = ({
 
 const MatchList = ({ matches, activityID }) => {
   const [selectedDay, setSelectedDay] = useState(0);
+  let firstDate = matches[0] ? standardDate(matches[0].StartTime, false, true) : null;
+  let firstFullDate = matches[0] ? getFullDate(matches[0].StartTime) : null;
+  let organizedMatches = useMemo(
+    () => [
+      {
+        FullDate: firstFullDate,
+        DayOfWeek: firstDate?.slice(0, 3),
+        DayOnly: firstDate?.slice(4),
+        Matches: [],
+      },
+    ],
+    [firstDate, firstFullDate],
+  );
 
   if (!matches?.length || !matches[0])
     return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
@@ -102,21 +115,31 @@ const MatchList = ({ matches, activityID }) => {
 
   useEffect(() => {
     let now = new Date();
-    let today = getFullDate(now.toJSON());
+    const today = getFullDate(now.toJSON());
     let index = organizedMatches.findIndex((day) => day.FullDate === today);
     if (index === -1)
       for (let i = 1; i < 8; i++) {
         now = addDays(now, i);
-        today = getFullDate(now.toJSON());
-        index = organizedMatches.findIndex((day) => day.FullDate === today);
+        const nextDay = getFullDate(now.toJSON());
+        index = organizedMatches.findIndex((day) => day.FullDate === nextDay);
         if (index !== -1) {
           setSelectedDay(index);
           break;
         }
       }
     else setSelectedDay(index);
-  }, []);
+  }, [organizedMatches]);
+  if (!matches?.length || !matches[0])
+    return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
 
+  organizedMatches = [
+    {
+      FullDate: firstFullDate,
+      DayOfWeek: firstDate?.slice(0, 3),
+      DayOnly: firstDate?.slice(4),
+      Matches: [],
+    },
+  ];
   let j = 0;
   matches.forEach((m) => {
     let date = standardDate(m.StartTime, false, true);
@@ -174,6 +197,7 @@ const MatchList = ({ matches, activityID }) => {
       })}
     </>
   );
+
   return organizedMatches.length === 1 ? (
     <List dense>
       {organizedMatches[0].Matches.map((match) => (

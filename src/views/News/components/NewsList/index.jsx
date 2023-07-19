@@ -1,7 +1,6 @@
 import { Card, Grid, List, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { gordonColors } from 'theme';
 import NewsItem from '../NewsItem';
 import styles from './NewsList.module.css';
 
@@ -10,17 +9,11 @@ import styles from './NewsList.module.css';
 
 const BREAKPOINT_WIDTH = 540;
 
-const headerStyle = {
-  backgroundColor: gordonColors.primary.blue,
-  color: '#FFF',
-  padding: '10px',
-};
-
 const singleHeader = (
-  <div style={headerStyle}>
+  <div className={styles.news_header}>
     <Grid container direction="row">
       <Grid item xs={12}>
-        <Typography variant="body2" style={headerStyle}>
+        <Typography variant="body2" className={styles.news_header}>
           NEWS
         </Typography>
       </Grid>
@@ -29,24 +22,24 @@ const singleHeader = (
 );
 
 const fullHeader = (
-  <Grid container direction="row" style={headerStyle}>
+  <Grid container direction="row" className={styles.news_header}>
     <Grid item xs={2}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.news_header}>
         CATEGORY
       </Typography>
     </Grid>
     <Grid item xs={5}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.news_header}>
         SUBJECT
       </Typography>
     </Grid>
     <Grid item xs={3}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.news_header}>
         POSTED BY
       </Typography>
     </Grid>
     <Grid item xs={2}>
-      <Typography variant="body2" style={headerStyle}>
+      <Typography variant="body2" className={styles.news_header}>
         POSTED
       </Typography>
     </Grid>
@@ -99,7 +92,7 @@ const NewsList = ({ news, personalUnapprovedNews, handleNewsItemEdit, handleNews
     </Card>
   ) : (
     //No news
-    <Typography variant="h4" align="center">
+    <Typography variant="h4" align="center" className={styles.news_title}>
       No News To Show
     </Typography>
   );

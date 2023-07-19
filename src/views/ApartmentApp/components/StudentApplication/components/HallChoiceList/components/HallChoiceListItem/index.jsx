@@ -1,11 +1,11 @@
 import {
   Divider,
   FormControl,
+  FormLabel,
   FormHelperText,
   Grid,
   IconButton,
   Input,
-  InputLabel,
   ListItem,
   ListItemSecondaryAction,
   MenuItem,
@@ -70,7 +70,7 @@ const HallChoiceListItem = ({
         <Grid container alignItems="center" spacing={3}>
           <Grid item xs={4} sm={2}>
             <FormControl fullWidth>
-              <InputLabel>Rank</InputLabel>
+              <FormLabel>Rank</FormLabel>
               <Select
                 disabled={disabled}
                 value={hallRank}
@@ -83,7 +83,7 @@ const HallChoiceListItem = ({
           </Grid>
           <Grid item xs={8} sm={10}>
             <FormControl fullWidth error={!isHallNameValid}>
-              <InputLabel>Hall</InputLabel>
+              <FormLabel>Hall</FormLabel>
               <Select
                 disabled={disabled}
                 value={isHallNameValid ? hallName : ''}

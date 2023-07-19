@@ -3,16 +3,30 @@
   // Make rows alternate white and grey
   /* stylelint-disable */
   .shift_list > .shift_item:nth-child(even) {
-    background: $neutral-light-gray;
+    background: var(--mui-palette-neutral-200);
     &:hover {
-      background-color: $primary-cyan;
+      background-color: var(--mui-palette-secondary-main);
     }
   }
 
   .shift_list > .shift_item:nth-child(odd) {
-    background: $neutral-white;
+    background: var(--mui-palette-primary-contrastText);
     &:hover {
-      background-color: $primary-cyan;
+      background-color: var(--mui-palette-secondary-main);
     }
   }
+}
+.headerStyle {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+}
+.headerItem {
+  padding-bottom: 15px;
+  user-select: none;
+}
+.boxShadow {
+  box-shadow: 0px 1px 2px 1px rgba(0, 0, 0, 0.2);
+}
+.formControl {
+  max-width: 252;
 }

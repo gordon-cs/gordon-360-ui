@@ -2,7 +2,7 @@
 
 .gordon_nav_links {
   .active > li {
-    background: $neutral-gray2;
+    background: var(--mui-palette-neutral-dark);
   }
 
   .gordon_nav_links_bottom {

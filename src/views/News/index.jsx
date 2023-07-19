@@ -25,6 +25,7 @@ import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import newsService from 'services/news';
 import NewsList from './components/NewsList';
+import styles from './StudentNews.module.css';
 
 const CROP_DIM = 200; // Width of cropped image canvas
 
@@ -131,7 +132,7 @@ const StudentNews = () => {
     // If an error occured and there's no currently running timeout, the error is displayed
     // and a timeout for that error message is created
     if (photoDialogError !== null) {
-      message = <span style={{ color: '#B63228' }}>{photoDialogError}</span>;
+      message = <span className={styles.photo_dialog_error}>{photoDialogError}</span>;
       if (photoDialogErrorTimeout === null) {
         // Shows the error message for 6 seconds and then returns back to normal text
         setPhotoDialogErrorTimeout(
