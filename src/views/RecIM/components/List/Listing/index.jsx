@@ -113,6 +113,10 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
+const ExpandableTeamListing = ({ team, teamScores, attendance }) => {
+  return null;
+};
+
 const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
 
@@ -797,6 +801,7 @@ const SurfaceListing = ({ surface, confirmDelete, editDetails }) => {
 
 export {
   ActivityListing,
+  ExpandableTeamListing,
   TeamListing,
   ParticipantListing,
   MatchListing,

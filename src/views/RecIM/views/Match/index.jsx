@@ -16,7 +16,7 @@ import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Match.module.css';
-import { MatchHistoryList, ParticipantList } from './../../components/List';
+import { ExpandableTeamList, MatchHistoryList, ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
 import {
   getMatchByID,
@@ -434,17 +434,12 @@ const Match = () => {
           )}
           {isMultiTeamMatch && (
             <Grid item xs={12}>
-              <RosterCard
-                participants={match.Team[0]?.Participant}
-                teamName={match.Team[0]?.Name}
-                withAttendance
-                attendance={
-                  matchAttendance?.find((item) => item.TeamID === match.Team[0]?.ID)?.Attendance
-                }
-                isAdmin={user?.IsAdmin}
-                matchID={match.ID}
-                teamID={match.Team[0]?.ID}
-              />
+              <Card>
+                <CardHeader title="Teams" className={styles.cardHeader} />
+                <CardContent>
+                  <ExpandableTeamList teams={match?.Teams} teamScores={match?.Scores} />
+                </CardContent>
+              </Card>
             </Grid>
           )}
 

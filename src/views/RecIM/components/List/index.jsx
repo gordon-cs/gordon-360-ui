@@ -213,7 +213,7 @@ const MatchHistoryList = ({ matches, activityID }) => {
  * Currently used in Match page to render multiple
  * Teams that can expand into participantLists
  */
-const ExpandableTeamList = ({ teams, teamScores }) => {
+const ExpandableTeamList = ({ teams, teamScores, attendance }) => {
   return null;
 };
 
