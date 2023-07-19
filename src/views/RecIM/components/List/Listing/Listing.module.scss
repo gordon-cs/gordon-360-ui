@@ -2,25 +2,25 @@
 @import '../../../../../vars';
 
 .listing {
-  background-color: $neutral-light-gray2-opacity10;
+  background-color: var(--mui-palette-neutral-A700);
   margin-top: 0.1em;
   margin-bottom: 0.1em;
   padding: 1em;
   border-radius: 0.5em;
   align-items: center;
-  box-shadow: inset -1px -1px $neutral-light-gray2-opacity50;
+  box-shadow: inset -1px -1px var(--mui-palette-neutral-A400);
   transition: all 0.3s ease-in-out;
 }
 
 //trial new listing look
 .listing:hover {
-  background-color: $neutral-light-gray2-opacity40;
-  box-shadow: inset 1px 1px $neutral-black-opacity10;
+  background-color: var(--mui-palette-neutral-300);
+  box-shadow: inset 1px 1px var(--mui-palette-neutral-A700);
   transition: all 0.3s ease-in-out;
 }
 
 .attendedListing {
-  outline: solid 1px $secondary-green;
+  outline: solid 1px var(--mui-palette-success-main);
 }
 
 .absentListing {
@@ -33,34 +33,34 @@
 }
 
 .redButton {
-  background-color: $secondary-red;
-  color: $neutral-white;
+  background-color: var(--mui-palette-error-dark);
+  color: var(--mui-palette-error-contrastText);
 }
 
 .redButton:hover {
-  background-color: $alternative-red;
+  background-color: var(--mui-palette-error-main);
 }
 
 .rejectIcon {
   width: 2rem;
   height: 2rem;
-  background-color: $primary-blue;
-  color: $neutral-white;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
 }
 
 .rejectIcon:hover {
-  background-color: $primary-blue-300;
+  background-color: var(--mui-palette-primary-light);
 }
 
 .acceptIcon {
   width: 2rem;
   height: 2rem;
-  background-color: $primary-cyan;
-  color: $neutral-white;
+  background-color: var(--mui-palette-secondary-main);
+  color: var(--mui-palette-secondary-contrastText);
 }
 
 .acceptIcon:hover {
-  background-color: $primary-cyan-600;
+  background-color: var(--mui-palette-secondary-600);
 }
 
 .avatar {
@@ -75,30 +75,30 @@
 }
 
 .listingTitle {
-  color: $neutral-dark-gray2;
+  color: var(--mui-palette-neutral-800);
   font-weight: bold;
   font-size: 0.9em;
 }
 
 .listingSubtitle {
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-500);
   font-size: 0.8em;
 
   &_small {
-    color: $neutral-gray;
+    color: var(--mui-palette-neutral-500);
     font-size: 0.7em;
   }
 }
 
 .listingAdditionalInfo {
-  color: $neutral-dark-gray2;
+  color: var(--mui-palette-neutral-800);
   font-style: italic;
   font-size: 0.8em;
 }
 
 .matchWinner {
   font-weight: bold;
-  text-decoration: underline 0.2em $secondary-green;
+  text-decoration: underline 0.2em var(--mui-palette-success-main);
 }
 
 .activityType_league {
@@ -126,17 +126,17 @@
   }
 
   .listingSubtitle {
-    color: $neutral-gray;
+    color: var(--mui-palette-neutral-500);
     font-size: 0.7em;
 
     &_small {
-      color: $neutral-gray;
+      color: var(--mui-palette-neutral-500);
       font-size: 0.6em;
     }
   }
 
   .listingTitle {
-    color: $neutral-dark-gray2;
+    color: var(--mui-palette-neutral-800);
     font-weight: bold;
     font-size: 1.1em;
   }
@@ -159,13 +159,13 @@
   .rejectIcon {
     width: 2.5rem;
     height: 2.5rem;
-    background-color: $primary-blue;
-    color: $neutral-white;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
   }
 
   .acceptIcon {
     width: 2.5rem;
     height: 2.5rem;
-    background-color: $primary-cyan;
+    background-color: var(--mui-palette-secondary-main);
   }
 }

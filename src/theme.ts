@@ -132,6 +132,7 @@ declare module '@mui/material' {
 // Primary
 let GordonBlue = '#014983';
 let GordonBlue_opacity50 = '#01498382';
+let GordonLightBlue = '#016bc0';
 
 // Secondary
 let ScottieCyan = '#00AEEF';
@@ -183,6 +184,7 @@ export const newTheme = extendTheme({
       palette: {
         primary: {
           main: GordonBlue,
+          light: GordonLightBlue,
           contrastText: White,
           50: GordonBlue_opacity50,
           100: '#BBDDF0',
@@ -194,6 +196,8 @@ export const newTheme = extendTheme({
           700: '#1C75B3',
           800: '#1365A2',
           900: '#014883',
+          A100: '#013865',
+          A200: '#293a48',
         },
         secondary: {
           main: ScottieCyan,

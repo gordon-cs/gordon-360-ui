@@ -6,11 +6,11 @@
 }
 
 .header_style {
-  color: $primary-blue;
+  color: var(--mui-palette-primary-main);
   @extend %header_style;
 
   &_text {
-    color: #9f9f9d;
+    color: var(--mui-palette-neutral-500);
     @extend %header_style;
   }
 }

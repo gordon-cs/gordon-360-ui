@@ -11,25 +11,25 @@
 }
 
 .label {
-  color: $neutral-dark-gray;
+  color: var(--mui-palette-neutral-800);
   padding: 10px;
 }
 
 .container {
   padding-top: 10px;
-  border-top: 1px solid $neutral-gray3;
+  border-top: 1px solid var(--mui-palette-neutral-400);
 }
 
 .icon {
   &_current {
     @extend %icon;
-    color: #293a48;
+    color: var(--mui-palette-primary-A200);
     font-size: large;
   }
 
   &_previous {
     @extend %icon;
-    color: #8f8f8d;
+    color: var(--mui-palette-neutral-500);
     font-size: small;
   }
 }
@@ -37,11 +37,11 @@
 .text {
   &_current {
     @extend %text;
-    color: $neutral-dark-gray;
+    color: var(--mui-palette-neutral-800);
   }
 
   &_previous {
     @extend %text;
-    color: #8f8f8d;
+    color: var(--mui-palette-neutral-500);
   }
 }

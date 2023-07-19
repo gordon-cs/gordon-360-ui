@@ -1,7 +1,7 @@
 @import '../../../../vars';
 
 .selectedSurfaces {
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-500);
   text-align: left;
 }
 
