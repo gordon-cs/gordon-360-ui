@@ -60,6 +60,11 @@ a {
   }
 }
 
+.gc360_header {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+}
+
 @media (max-width: $break-md) {
   .gc360_a_link {
     color: var(--mui-palette-secondary-main) !important;
