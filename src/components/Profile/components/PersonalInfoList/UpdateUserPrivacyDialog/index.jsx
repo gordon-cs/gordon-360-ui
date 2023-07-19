@@ -6,7 +6,7 @@ import SearchField from 'views/PeopleSearch/components/SearchFieldList/component
 
 const UpdateUserPrivacy = (username, field) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [group, setGroup] = useState('');
+  const [privacySettingList, setPrivacySettingList] = useState([]);
   const [groupList, setGroupList] = useState([]);
   let visibleTo = '';
 
@@ -14,13 +14,13 @@ const UpdateUserPrivacy = (username, field) => {
     try {
       await userService.setUserPrivacy({ Field: field, VisibilityGroup: event.target.value });
       setSnackbar({
-        message: 'Your office location will update within a couple hours.',
+        message: 'Your privacy setting will update within a couple hours.',
         severity: 'success',
         open: true,
       });
     } catch {
       setSnackbar({
-        message: 'Office location failed to update. Please contact CTS.',
+        message: 'Privacy setting failed to update. Please contact CTS.',
         severity: 'error',
         open: true,
       });
@@ -32,8 +32,8 @@ const UpdateUserPrivacy = (username, field) => {
   }, []);
 
   useEffect(() => {
-    userService.getPrivacySetting(username).then(setGroup);
-  }, [group]);
+    userService.getPrivacySetting(username).then(setPrivacySettingList);
+  }, [privacySettingList]);
 
   let tempField = field;
   if (field == 'HomeCity HomeState') {
@@ -43,23 +43,19 @@ const UpdateUserPrivacy = (username, field) => {
   }
 
   // get user's privacy setting (Public, Privacy, FacStaff) for this field
-  for (let i = 0; i < group.length; i++) {
-    if (group[i].Field === field) {
-      visibleTo = group[i].VisibilityGroup;
+  for (let i = 0; i < privacySettingList.length; i++) {
+    if (privacySettingList[i].Field === field) {
+      visibleTo = privacySettingList[i].VisibilityGroup;
     }
   }
 
   field = tempField;
 
-  if (field == 'HomeCity HomeState') {
-    visibleTo = group[i].VisibilityGroup;
-  }
-
   return (
     <div>
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         <SearchField
-          name="visible to"
+          name="visibility"
           value={visibleTo}
           updateValue={handlePrivacy}
           options={groupList}
