@@ -25,7 +25,7 @@ const NewsCard = () => {
             </Grid>
           </Grid>
         }
-        className={'gc360_header'}
+        className="gc360_header"
       />
       <CardContent>
         {news.length > 0 ? (

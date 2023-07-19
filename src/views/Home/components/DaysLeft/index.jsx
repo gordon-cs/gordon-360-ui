@@ -38,7 +38,7 @@ const DaysLeft = () => {
 
   return (
     <Card className={styles.card}>
-      <CardHeader title={currentSessionDescription} className={'gc360_header'}>
+      <CardHeader title={currentSessionDescription} className="gc360_header">
         <br />
       </CardHeader>
       <CardContent>

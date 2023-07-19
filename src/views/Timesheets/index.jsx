@@ -404,7 +404,7 @@ const Timesheets = (props) => {
                     </div>
                   </Grid>
                 }
-                className={'gc360_header'}
+                className="gc360_header"
               ></CardHeader>
               <CardContent
                 style={{

@@ -179,7 +179,7 @@ const CLWCreditsDaysLeft = () => {
             </Grid>
           </Grid>
         }
-        className={'gc360_header'}
+        className="gc360_header"
       />
       <CardContent>{content}</CardContent>
     </Card>

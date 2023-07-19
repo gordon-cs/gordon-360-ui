@@ -72,7 +72,7 @@ const GordonQuickLinksDialog = ({ linkopen, handleLinkClose }: Props) => {
       buttonClicked={handleLinkClose}
       buttonName="Close"
     >
-      <CardHeader title="Useful Links" className={'gc360_header'} />
+      <CardHeader title="Useful Links" className="gc360_header" />
       <List
         component="nav"
         subheader={

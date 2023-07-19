@@ -27,7 +27,7 @@ const About = () => {
           <br />
           <CardContent>
             <Card>
-              <CardHeader className={'gc360_header'} title="History" />
+              <CardHeader className="gc360_header" title="History" />
               <CardContent>
                 <Typography variant="body1">
                   Gordon 360 was created by students in the 2016 Summer Practicum in Computer

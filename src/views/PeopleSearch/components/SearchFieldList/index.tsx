@@ -397,7 +397,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       <CardHeader
         title={searchPageTitle}
         titleTypographyProps={{ align: 'center' }}
-        className={'gc360_header'}
+        className="gc360_header"
       />
       <CardContent>
         {/* Search Section 1: General Info */}

@@ -257,7 +257,7 @@ export default class SavedShiftsList extends Component {
         <>
           {confirmationBox}
           <Card>
-            <CardHeader className={'gc360_header'} title={cardTitle} />
+            <CardHeader className="gc360_header" title={cardTitle} />
             <br />
             <CardContent>
               <Grid

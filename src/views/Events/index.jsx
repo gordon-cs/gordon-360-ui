@@ -141,7 +141,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <CardHeader title={searchPageTitle} className={'gc360_header'} />
+          <CardHeader title={searchPageTitle} className="gc360_header" />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
               {/* Search Bar and Filters */}
@@ -261,7 +261,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <CardHeader title={searchPageTitle} className={'gc360_header'} />
+          <CardHeader title={searchPageTitle} className="gc360_header" />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
               {/* Search Bar and Filters */}
