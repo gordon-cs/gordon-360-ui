@@ -1,9 +1,8 @@
+
 import { useState, Fragment, useEffect } from 'react';
 import { Card, CardContent, CardHeader, Grid, List, Typography, IconButton } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
-import { Markup } from 'interweave';
 import styles from './OfficeInfoList.module.css';
-import { gordonColors } from 'theme';
 import UpdateOffice from './UpdateOfficeLocationDialog';
 import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 import UpdateMail from './UpdateMailDestinationDialog';
@@ -15,7 +14,6 @@ import { SignalWifiStatusbarConnectedNoInternet4TwoTone } from '@mui/icons-mater
 const OfficeInfoList = ({
   myProf,
   profile: {
-    AD_Username,
     BuildingDescription,
     OnCampusDepartment,
     OnCampusRoom,
@@ -71,8 +69,8 @@ const OfficeInfoList = ({
       }
     />
   ) : profOfficeHours ? (
-    <ProfileInfoListItem title="Office Hours:" contentText={`${profOfficeHours}`} />
-  ) : null;
+    <ProfileInfoListItem title="Office Hours:" contentText={profOfficeHours}} />
+
 
   const room = myProf ? (
     <ProfileInfoListItem
@@ -91,7 +89,7 @@ const OfficeInfoList = ({
       }
     />
   ) : BuildingDescription || OnCampusRoom ? (
-    <ProfileInfoListItem title="Room:" contentText={({ BuildingDescription }, { OnCampusRoom })} />
+    <ProfileInfoListItem title="Room:" contentText={`${BuildingDescription}, ${OnCampusRoom}`} />
   ) : null;
 
   const mailstop = myProf ? (
@@ -118,7 +116,7 @@ const OfficeInfoList = ({
       }
     />
   ) : profMailLocation ? (
-    <ProfileInfoListItem title="Mailstop:" contentText={{ profMailLocation }} />
+    <ProfileInfoListItem title="Mailstop:" contentText={ profMailLocation } />
   ) : null;
 
   return (
