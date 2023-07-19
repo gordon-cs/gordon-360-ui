@@ -26,6 +26,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
     const { prefix, prefix2 } = socialMediaInfo[platform];
     const isValid =
       value === '' || value.indexOf(prefix) === 0 || (prefix2 && value.indexOf(prefix2) === 0);
+
     if (isValid) {
       setFormErrors(formErrors.filter((error) => error !== platform));
     } else if (!formErrors.includes(platform)) {
