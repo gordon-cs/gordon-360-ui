@@ -63,7 +63,7 @@ const OfficeInfoList = ({
       }
     />
   ) : office_hours ? (
-    <ProfileInfoListItem title="Office Hours:" contentText={`${office_hours}`} />
+    <ProfileInfoListItem title="Office Hours:" contentText={office_hours} />
   ) : null;
 
   const room = myProf ? (
@@ -83,7 +83,7 @@ const OfficeInfoList = ({
       }
     />
   ) : BuildingDescription || OnCampusRoom ? (
-    <ProfileInfoListItem title="Room:" contentText={({ BuildingDescription }, { OnCampusRoom })} />
+    <ProfileInfoListItem title="Room:" contentText={`${BuildingDescription}, ${OnCampusRoom}`} />
   ) : null;
 
   const mailstop = myProf ? (
