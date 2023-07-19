@@ -1,4 +1,3 @@
-
 import { useState, Fragment, useEffect } from 'react';
 import { Card, CardContent, CardHeader, Grid, List, Typography, IconButton } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
@@ -26,7 +25,6 @@ const OfficeInfoList = ({
 }) => {
   const [profOfficeHours, setProfOfficeHours] = useState(office_hours);
   const [profMailLocation, setProfMailLocation] = useState(Mail_Location);
-  // useEffect(() => {setNewProfile(false)})
 
   // Only display on FacStaff profiles
   if (!PersonType?.includes('fac')) {
@@ -69,8 +67,8 @@ const OfficeInfoList = ({
       }
     />
   ) : profOfficeHours ? (
-    <ProfileInfoListItem title="Office Hours:" contentText={profOfficeHours}} />
-
+    <ProfileInfoListItem title="Office Hours:" contentText={profOfficeHours} />
+  ) : null;
 
   const room = myProf ? (
     <ProfileInfoListItem
@@ -116,7 +114,7 @@ const OfficeInfoList = ({
       }
     />
   ) : profMailLocation ? (
-    <ProfileInfoListItem title="Mailstop:" contentText={ profMailLocation } />
+    <ProfileInfoListItem title="Mailstop:" contentText={profMailLocation} />
   ) : null;
 
   return (
