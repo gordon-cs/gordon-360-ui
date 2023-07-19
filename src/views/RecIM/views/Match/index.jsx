@@ -371,13 +371,10 @@ const Match = () => {
         )}
       </Grid>
     );
-    // console.log(match);
-    return (
-      <>
-        <Header match={match}>{headerContents}</Header>
-        {loading ? (
-          <GordonLoader />
-        ) : (
+
+    const content = () => {
+      if (match?.Scores.length <= 2)
+        return (
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
               <RosterCard
@@ -506,7 +503,18 @@ const Match = () => {
               <Typography variant="body1">This action cannot be undone.</Typography>
             </GordonDialogBox>
           </Grid>
-        )}
+        );
+      else {
+        return <GordonLoader />;
+      }
+    };
+
+    if (loading) return <GordonLoader />;
+    // console.log(match);
+    return (
+      <>
+        <Header match={match}>{headerContents}</Header>
+        {content()}
         <GordonSnackbar
           open={snackbar.open}
           text={snackbar.message}
