@@ -1,42 +1,62 @@
 [
   {
-    "title": "Software Development Team, Summer 2017 ",
-    "body": "Bradley Boutcher '18, Matthew Felgate '18, Jenny Kim '19, Sam Nguyen '19, Chris Qiao '17, and Joseph Ross\nDr. Russ Tuck, Dr. Jonathan Senning '85, Summer Practicum in Computer Science (2017)"
+    "title": "Preliminary Concepts and Imagineering",
+    "body": "Carissa Church '18 and Grace Crook '18 (Directed by Chris Carlson '87, Student Life)"
   },
   {
-    "title": "Software Development Team, 2017/2018",
-    "body": "Addison Abbot '20, Matt Felgate '18, and Rebekah Stauffer '19\nChris Hansen, Jason Whitehouse '99, Information Systems Group"
+    "title": "Summer Practicum, 2016",
+    "body": "Ezeanyinabia 'Eze' Anyanwu '17, Adam Bartholomew '17, and James Kempf '17 (Director: Russ Tuck, Ph.D.)"
   },
   {
-    "title": "Software Development Team, Summer 2018",
-    "body": "Addison Abbot '20, Nikki Adevai '19, Emily Bishop '20, Stephen Macomber '19, Max Moniz '19, and Nathaniel Rudenberg '20\nDr. Russ Tuck, Dr. Jonathan Senning '85, Summer Practicum in Computer Science (2018)"
+    "title": "GoCo Tech Labs, 2016-17",
+    "body": "Emmanuel Roussel '17 and Stephanie Powers '17 (Directors: Chris Hansen, Jason Whitehouse '99, Information Systems Group)"
   },
   {
-    "title": "Software Development Team, 2018/2019",
-    "body": "Addison Abbot '20, Nikki Adevai '19, Emily Bishop '20, Nathaniel Rudenberg '20, and Sam Nguyen '19,\nChris Hansen, Jason Whitehouse '99, Information Systems Group"
+    "title": "Summer Practicum, 2017",
+    "body": "Bradley Boutcher '18, Matthew Felgate '18, Jenny Kim '19, Sam Nguyen '19, Chris Qiao '17, and Joseph Ross (Directors: Jonathan Senning, Ph.D. '85 and Russ Tuck, Ph.D.)"
   },
   {
-    "title": "Software Development Team, Summer 2019",
-    "body": "Isaac Bleecker '21, Jahnuel Dorelus '21, SeHee Hyung '22, Phil Lee, Yerang Lim '21, Hyeok Chin (Jake) Moon '19, Evan Platzer '20, Joshua Rogers '21, and Yi (Edward) Zhou '20\nDr. Russ Tuck, Dr. Jonathan Senning '85, Summer Practicum in Computer Science (2019)"
+    "title": "GoCo Tech Labs, 2017-18",
+    "body": "Addison Abbot '20, Matt Felgate '18, and Rebekah Stauffer '19 (Directors: Chris Hansen, Jason Whitehouse '99, Information Systems Group)"
   },
   {
-    "title": "Software Development Team, 2019/2020",
-    "body": "Ben Abbett '21 Addison Abbot '20, Nathaniel Rudenberg '20, Jessica Guan '21 and Joshua Rogers '21\nChris Hansen, Jason Whitehouse '99, Information Systems Group"
+    "title": "Summer Practicum, 2018",
+    "body": "Addison Abbot '20, Nikki Adevai '19, Emily Bishop '20, Stephen Macomber '19, Max Moniz '19, and Nathaniel Rudenberg '20 (Directors: Jonathan Senning, Ph.D. '85 and Russ Tuck, Ph.D.)"
   },
   {
-    "title": "Software Development Team, Summer 2020",
-    "body": "Ari Dospassos '21, Caleb Chang '20, Cameron Abbot '23, Gahngnin Kim '21, Jahnuel Dorelus '21, Marilyn Stoltzfus '21, Matheus Ramos '21, Nick Noormand '21, and Shouwang Zhu '21\nDr. Russ Tuck, Dr. Jonathan Senning '85, Summer Practicum in Computer Science (2020)"
+    "title": "GoCo Tech Labs, 2018-19",
+    "body": "Addison Abbot '20, Nikki Adevai '19, Emily Bishop '20, Nathaniel Rudenberg '20, and Sam Nguyen '19 (Directors: Chris Hansen, Jason Whitehouse '99, Information Systems Group)"
   },
   {
-    "title": "Software Development Team, 2020/2021",
-    "body": "Aidan Perez '22, Benjamin Abbett '21, Bethany Ruggerio '23, Cameron Abbot '23, Gahngnin Kim '21, Hudson Finn '22, Hyungyu Park '22, Joshua Peters '23, Joshua Rogers '21, Matheus Ramos '22\nBennett Forkner, Evan Platzer '20, Information Systems Group"
+    "title": "Summer Practicum, 2019",
+    "body": "Isaac Bleecker '21, Jahnuel Dorelus '21, SeHee Hyung '22, Phil Lee, Yerang Lim '21, Hyeok Chin (Jake) Moon '19, Evan Platzer '20, Joshua Rogers '21, and Yi (Edward) Zhou '20 (Directors: Jonathan Senning, Ph.D. '85 and Russ Tuck, Ph.D.)"
   },
   {
-    "title": "Software Development Team, Summer 2021",
-    "body": "Cameron Abbot '23, David Gurge '23, Hyungyu Park '22, Joshua Peters '23, Kaiwen Chu '23, Roddy Ngolomingi '22, Silas White '23, \nDr. Russ Tuck, Dr. Jonathan Senning '85, Summer Practicum in Computer Science (2021)"
+    "title": "GoCo Tech Labs, 2019-20",
+    "body": "Ben Abbett '21 Addison Abbot '20, Nathaniel Rudenberg '20, Jessica Guan '21 and Joshua Rogers '21 (Directors: Chris Hansen, Jason Whitehouse '99, Information Systems Group)"
   },
   {
-    "title": "Software Development Team, 2021/2022",
-    "body": "Bethany Ruggerio '23, Cameron Abbot '23, Kaiwen Chu '23, Hyungyu Park '22, Silas White '23\nBennett Forkner, Evan Platzer '20, Information Systems Group"
+    "title": "Summer Practicum, 2020",
+    "body": "Ari Dospassos '21, Caleb Chang '20, Cameron Abbot '23, Gahngnin Kim '21, Jahnuel Dorelus '21, Marilyn Stoltzfus '21, Matheus Ramos '21, Nick Noormand '21, and Shouwang Zhu '21 (Directors: Jonathan Senning, Ph.D. '85 and Russ Tuck, Ph.D.)"
+  },
+  {
+    "title": "GoCo Tech Labs, 2020-21",
+    "body": "Aidan Perez '22, Benjamin Abbett '21, Bethany Ruggerio '23, Cameron Abbot '23, Gahngnin Kim '21, Hudson Finn '22, Hyungyu Park '22, Joshua Peters '23, Joshua Rogers '21, Matheus Ramos '22 (Directors: Evan Platzer '20, Bennett Forkner, Information Systems Group)"
+  },
+  {
+    "title": "Summer Practicum, 2021",
+    "body": "Cameron Abbot '23, David Gurge '23, Hyungyu Park '22, Joshua Peters '23, Kaiwen Chu '23, Roddy Ngolomingi '22, Silas White '23 (Directors: Jonathan Senning, Ph.D. '85 and Russ Tuck, Ph.D.)"
+  },
+  {
+    "title": "GoCo Tech Labs, 2021-22",
+    "body": "Bethany Ruggerio '23, Cameron Abbot '23, Kaiwen Chu '23, Hyungyu Park '22, Silas White '23 (Directors: Evan Platzer '20, Bennett Forkner, Information Systems Group)"
+  },
+  {
+    "title": "GoCo Tech Labs, 2022-23",
+    "body": "Arabella Ji '24, Charlie Lee '23, Jake Colbert '23, Kaiwen Chu '23, Sharon Patta '24, Sofi Stonehouse '25 (Directors: Evan Platzer '20, Bennett Forkner, Information Systems Group)"
+  },
+  {
+    "title": "Summer Practicum, 2023",
+    "body": "Jack Hammond, Arabella Ji, Matt Jones, Gideon Kim, Jae Min Lee, Eric Mo, Antonia Vontobel, Andrew Wang (Directors: Jonathan Senning, Ph.D. '85 and Russ Tuck, Ph.D.; Additional code reviews and mentoring: Evan Platzer '20, Amos Cha '23, and Bennett Forkner)"
   }
 ]

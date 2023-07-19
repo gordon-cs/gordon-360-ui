@@ -20,9 +20,14 @@ import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
 import styles from './Header.module.css';
-import gc_360_yellow_logo_72 from './gc_360_yellow_logo_72.png';
-import gc_360_yellow_logo_64 from './gc_360_yellow_logo_64.png';
-import gc_360_yellow_logo_56 from './gc_360_yellow_logo_56.png';
+
+// Define header logo image - special image for Pi Day
+const todaysDate = new Date(); // Months: 0 = Jan, 1 = Feb, 2 = Mar, etc.
+const isPiDay = todaysDate.getMonth() === 2 && todaysDate.getDate() === 14; // March 14 (3/14)
+const angleMode = isPiDay ? "2pi" : "360";
+const headerLogo72dpi = "images/gc_" + angleMode + "_yellow_logo_72.png";
+const headerLogo64dpi = "images/gc_" + angleMode + "_yellow_logo_64.png";
+const headerLogo56dpi = "images/gc_" + angleMode + "_yellow_logo_56.png";
 
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
@@ -140,16 +145,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
     </Button>
   );
 
-  function logoSizedForHeader() {
-    if (width >= 900) {
-      return gc_360_yellow_logo_72;
-    } else if (width >= 600) {
-      return gc_360_yellow_logo_64;
-    } else {
-      return gc_360_yellow_logo_56;
-    }
-  }
-
   return (
     <section className={styles.gordon_header}>
       <AppBar className={styles.app_bar} position="static">
@@ -163,15 +158,13 @@ const GordonHeader = ({ onDrawerToggle }) => {
           >
             <MenuIcon className={styles.menu_button_icon} />
           </IconButton>
-          <Link
-            to="/"
-            component={ForwardNavLink}
-            value={tabIndex}
-            onClick={(event, value) => setTabIndex(value)}
-          >
-            <img src={logoSizedForHeader()}></img>
+          <Link to="/" component={ForwardNavLink} value={tabIndex}>
+            <picture>
+              <source srcset={headerLogo72dpi} media="(min-width: 900px)" />
+              <source srcset={headerLogo64dpi} media="(min-width: 600px)" />
+              <img src={headerLogo56dpi} alt="Gordon 360 Logo"></img>
+            </picture>
           </Link>
-
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
             <Routes>
               {routes.map((route) => (

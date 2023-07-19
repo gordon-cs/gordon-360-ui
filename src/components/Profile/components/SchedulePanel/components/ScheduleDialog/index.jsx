@@ -10,6 +10,7 @@ import {
 import 'add-to-calendar-button';
 import { format, setDay } from 'date-fns';
 import styles from './ScheduleDialog.module.css';
+import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 
 const dayArr = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
@@ -87,7 +88,8 @@ const ScheduleDialog = (props) => {
                       ';UNTIL=' +
                       formatter(props.lastDay, 'yyyyMMdd')
                     }
-                    lightMode="bodyScheme"
+                    lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
+                    //Get user theme mode preference
                     Timezone="currentBrowser"
                   ></add-to-calendar-button>
                 </Grid>
@@ -109,7 +111,8 @@ const ScheduleDialog = (props) => {
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
-                    lightMode="bodyScheme"
+                    lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
+                    //Get user theme mode preference
                     Timezone="currentBrowser"
                   ></add-to-calendar-button>
                 </Grid>
