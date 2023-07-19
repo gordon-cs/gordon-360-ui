@@ -542,6 +542,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       <ProfileInfoListItem
         title="Spouse:"
         contentText={profile.SpouseName}
+        ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, 'Spouse')}
         privateInfo={(keepPrivate && myProf) || isSpousePrivate}
       />
     ) : null;
