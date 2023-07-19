@@ -72,8 +72,10 @@ const Match = () => {
   const [matchAttendance, setMatchAttendance] = useState();
   const [matchName, setMatchName] = useState();
   const [anchorEl, setAnchorEl] = useState();
+  const [currentWinner, setCurrentWinner] = useState();
   const openMenu = Boolean(anchorEl);
 
+  //console.log(match);
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
   }, []);
@@ -87,7 +89,7 @@ const Match = () => {
   }, [profile]);
 
   useEffect(() => {
-    if (match) {
+    if (match?.Scores.length <= 2) {
       const assignMatchScores = async () => {
         setTeam0Score(
           match.Scores.find((team) => team.TeamID === match.Team[0]?.ID)?.TeamScore ?? 0,
@@ -99,8 +101,18 @@ const Match = () => {
       setMatchName(`${match?.Team[0]?.Name ?? 'TBD'} vs ${match?.Team[1]?.Name ?? 'TBD'}`);
       assignMatchScores();
     }
-  }, [match]);
 
+    if (match?.Scores.length > 0) {
+      let winnerID = match.Scores.sort(function (a, b) {
+        let x = a['TeamScore'];
+        let y = b['TeamScore'];
+        return x < y ? -1 : x > y ? 1 : 0;
+      })[0].TeamID;
+      let winner = match.Team.find((t) => t.ID === winnerID);
+      setCurrentWinner(winner);
+    }
+  }, [match]);
+  console.log(match);
   useEffect(() => {
     const loadMatch = async () => {
       setLoading(true);
@@ -141,84 +153,193 @@ const Match = () => {
     // The user is not logged in
     return <GordonUnauthenticated feature={'the Rec-IM page'} />;
   } else {
-    let headerContents = (
-      <Grid container direction="column" className={styles.header}>
-        {/* match time/location */}
-        <Grid item container spacing={4}>
-          <Grid item xs={6} textAlign="right">
-            <Typography className={styles.subtitle}>
-              {match && standardDate(match.StartTime, true)}
-            </Typography>
+    let headerContents =
+      match?.Scores.length <= 2 ? (
+        <Grid container direction="column" className={styles.header}>
+          {/* match time/location */}
+          <Grid item container spacing={4}>
+            <Grid item xs={6} textAlign="right">
+              <Typography className={styles.subtitle}>
+                {match && standardDate(match.StartTime, true)}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} textAlign="left">
+              <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={6} textAlign="left">
-            <Typography className={styles.subtitle}>@{match?.Surface}</Typography>
-          </Grid>
-        </Grid>
-
-        {/* team info */}
-        <Grid
-          item
-          container
-          alignItems="center"
-          justifyContent="space-around"
-          spacing={1}
-          flexWrap="nowrap"
-        >
-          {/* left team info */}
           <Grid
             item
             container
-            xs={5}
-            columnSpacing={2}
+            alignItems="center"
             justifyContent="space-around"
-            className={`${styles.teamInfo} ${styles.teamInfoLeft}`}
+            spacing={1}
+            flexWrap="nowrap"
           >
-            <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
-              <img
-                src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID)?.Logo ?? defaultLogo}
-                alt="Team Icon"
-                className={styles.headerImg}
-              ></img>
-            </Grid>
-            <Grid item sm={8} lg="auto">
-              <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
-                <Typography
-                  variant="h5"
-                  className={`${styles.teamName} gc360_text_link ${
-                    team0Score > team1Score && match?.Status === 'Completed' && styles.matchWinner
-                  }`}
-                >
-                  {match?.Team[0]?.Name ?? 'No team yet...'}
+            {/* left team info */}
+            <Grid
+              item
+              container
+              xs={5}
+              columnSpacing={2}
+              justifyContent="space-around"
+              className={`${styles.teamInfo} ${styles.teamInfoLeft}`}
+            >
+              <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
+                <img
+                  src={match?.Team.find((t) => t.ID === match?.Team[0]?.ID)?.Logo ?? defaultLogo}
+                  alt="Team Icon"
+                  className={styles.headerImg}
+                ></img>
+              </Grid>
+              <Grid item sm={8} lg="auto">
+                <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[0]?.ID}`}>
+                  <Typography
+                    variant="h5"
+                    className={`${styles.teamName} gc360_text_link ${
+                      team0Score > team1Score && match?.Status === 'Completed' && styles.matchWinner
+                    }`}
+                  >
+                    {match?.Team[0]?.Name ?? 'No team yet...'}
+                  </Typography>
+                </LinkRouter>
+                <Typography className={styles.subtitle}>
+                  {match?.Team[0]?.TeamRecord.WinCount ?? 0}W :{' '}
+                  {match?.Team[0]?.TeamRecord.LossCount ?? 0}L
                 </Typography>
-              </LinkRouter>
-              <Typography className={styles.subtitle}>
-                {match?.Team[0]?.TeamRecord.WinCount ?? 0}W :{' '}
-                {match?.Team[0]?.TeamRecord.LossCount ?? 0}L
-              </Typography>
+                {user?.IsAdmin && (
+                  <i className={styles.subtitle}>
+                    Sportsmanship: {match?.Scores[0]?.SportsmanshipScore}
+                  </i>
+                )}
+              </Grid>
+            </Grid>
+
+            <Grid item container xs={2} alignItems="center" direction="column" sx={{ mt: 3 }}>
+              {match?.Status === 'Completed' && (
+                <Grid item>
+                  <Typography className={styles.subtitle}>Final</Typography>
+                </Grid>
+              )}
+              <Grid item>
+                <Typography variant="h5" className={styles.matchScore}>
+                  {team0Score} : {team1Score}
+                </Typography>
+              </Grid>
+              {/* admin controls */}
               {user?.IsAdmin && (
-                <i className={styles.subtitle}>
-                  Sportsmanship: {match?.Scores[0]?.SportsmanshipScore}
-                </i>
+                <Grid item>
+                  <IconButton
+                    onClick={handleSettingsClick}
+                    sx={
+                      openMenu && {
+                        animation: 'spin 0.2s linear ',
+                        '@keyframes spin': {
+                          '0%': {
+                            transform: 'rotate(0deg)',
+                          },
+                          '100%': {
+                            transform: 'rotate(120deg)',
+                          },
+                        },
+                      }
+                    }
+                  >
+                    <SettingsIcon fontSize="large" />
+                  </IconButton>
+                </Grid>
               )}
             </Grid>
-          </Grid>
 
-          <Grid item container xs={2} alignItems="center" direction="column" sx={{ mt: 3 }}>
-            {match?.Status === 'Completed' && (
-              <Grid item>
-                <Typography className={styles.subtitle}>Final</Typography>
+            {/* right team info */}
+            <Grid
+              item
+              container
+              xs={5}
+              columnSpacing={2}
+              justifyContent="space-around"
+              className={`${styles.teamInfo} ${styles.teamInfoRight}`}
+            >
+              <Grid item sm={8} lg="auto">
+                <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
+                  <Typography
+                    variant="h5"
+                    className={`${styles.teamName} gc360_text_link ${
+                      team1Score > team0Score && match?.Status === 'Completed' && styles.matchWinner
+                    }`}
+                  >
+                    {match?.Team[1]?.Name ?? 'No team yet...'}
+                  </Typography>
+                </LinkRouter>
+                <Typography className={styles.subtitle}>
+                  {match?.Team[1]?.TeamRecord.WinCount ?? 0}W :{' '}
+                  {match?.Team[1]?.TeamRecord.LossCount ?? 0}L
+                </Typography>
+                {user?.IsAdmin && (
+                  <i className={styles.subtitle}>
+                    Sportsmanship: {match?.Scores[1]?.SportsmanshipScore}
+                  </i>
+                )}
               </Grid>
-            )}
-            <Grid item>
-              <Typography variant="h5" className={styles.matchScore}>
-                {team0Score} : {team1Score}
-              </Typography>
+              <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
+                <img
+                  src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID)?.Logo ?? defaultLogo}
+                  alt="Team Icon"
+                  className={styles.headerImg}
+                ></img>
+              </Grid>
             </Grid>
-            {/* admin controls */}
-            {user?.IsAdmin && (
-              <Grid item>
-                <IconButton
-                  onClick={handleSettingsClick}
+          </Grid>
+        </Grid>
+      ) : (
+        <Grid container direction="column" className={styles.header}>
+          <Grid item container alignItems="center" spacing={1} flexWrap="nowrap">
+            <Grid
+              item
+              container
+              xs={5}
+              columnSpacing={2}
+              className={`${styles.teamInfo} ${styles.teamInfoRight}`}
+            >
+              <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
+                <img
+                  src={match?.Activity.Logo ?? defaultLogo}
+                  alt="Activity Icon"
+                  className={styles.headerImg}
+                ></img>
+              </Grid>
+              <Grid item sm={8} lg="auto">
+                <LinkRouter to={`/recim/activity/${match?.Activity.ID}`}>
+                  <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
+                    {match?.Activity.Name}
+                  </Typography>
+                </LinkRouter>
+              </Grid>
+            </Grid>
+
+            <Grid item container xs={2} alignItems="center" direction="column" sx={{ mt: 3 }}>
+              {match?.Status === 'Completed' && (
+                <Grid item>
+                  <Typography className={styles.subtitle}>Final</Typography>
+                </Grid>
+              )}
+              {match?.Status === 'Completed' && (
+                <Grid item textAlign="center">
+                  <Typography variant="h5">Winner</Typography>
+                  <LinkRouter
+                    to={`/recim/activity/${match?.Activity.ID}/team/${currentWinner?.ID}`}
+                  >
+                    <Typography variant="h5" className={`${styles.matchScore} gc360_text_link`}>
+                      {currentWinner?.Name}
+                    </Typography>
+                  </LinkRouter>
+                </Grid>
+              )}
+            </Grid>
+            {/* right team info */}
+            <Grid item xs={5} textAlign={'right'}>
+              <IconButton onClick={handleSettingsClick} sx={{ mr: '1rem' }}>
+                <SettingsIcon
+                  fontSize="large"
                   sx={
                     openMenu && {
                       animation: 'spin 0.2s linear ',
@@ -232,54 +353,12 @@ const Match = () => {
                       },
                     }
                   }
-                >
-                  <SettingsIcon fontSize="large" />
-                </IconButton>
-              </Grid>
-            )}
-          </Grid>
-
-          {/* right team info */}
-          <Grid
-            item
-            container
-            xs={5}
-            columnSpacing={2}
-            justifyContent="space-around"
-            className={`${styles.teamInfo} ${styles.teamInfoRight}`}
-          >
-            <Grid item sm={8} lg="auto">
-              <LinkRouter to={`/recim/activity/${match?.Activity.ID}/team/${match?.Team[1]?.ID}`}>
-                <Typography
-                  variant="h5"
-                  className={`${styles.teamName} gc360_text_link ${
-                    team1Score > team0Score && match?.Status === 'Completed' && styles.matchWinner
-                  }`}
-                >
-                  {match?.Team[1]?.Name ?? 'No team yet...'}
-                </Typography>
-              </LinkRouter>
-              <Typography className={styles.subtitle}>
-                {match?.Team[1]?.TeamRecord.WinCount ?? 0}W :{' '}
-                {match?.Team[1]?.TeamRecord.LossCount ?? 0}L
-              </Typography>
-              {user?.IsAdmin && (
-                <i className={styles.subtitle}>
-                  Sportsmanship: {match?.Scores[1]?.SportsmanshipScore}
-                </i>
-              )}
-            </Grid>
-            <Grid item sm={4} lg="auto" className={styles.headerImgContainer}>
-              <img
-                src={match?.Team.find((t) => t.ID === match?.Team[1]?.ID)?.Logo ?? defaultLogo}
-                alt="Team Icon"
-                className={styles.headerImg}
-              ></img>
+                />
+              </IconButton>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    );
+      );
     // console.log(match);
     return (
       <>
@@ -351,7 +430,7 @@ const Match = () => {
               <MenuItem
                 className={styles.menuButton}
                 dense
-                disabled={match.Scores.length === 0}
+                disabled={match.Scores.length === 0 || match.Status === 'Completed'}
                 onClick={() => {
                   setOpenEditMatchStatsForm(true);
                 }}
@@ -361,6 +440,7 @@ const Match = () => {
               <MenuItem
                 className={styles.menuButton}
                 dense
+                disabled={match.Status === 'Completed'}
                 onClick={() => {
                   setOpenMatchInformationForm(true);
                 }}
