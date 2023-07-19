@@ -1,9 +1,8 @@
-* {
+/* Styles for the index.html template page, specifically used for the loading screen */
+
+.loading-screen-icon {
   box-sizing: border-box;
   margin: 0;
-}
-
-.icon {
   display: block;
   justify-content: center;
   text-align: center;
@@ -11,24 +10,32 @@
   max-width: 90%;
 }
 
-.subtitle {
+.loading-screen-subtitle {
+  box-sizing: border-box;
+  margin: 0;
   text-align: center;
   height: 8vh;
   overflow: hidden;
 }
 
-.splash-container {
+.loading-screen-splash-container {
+  box-sizing: border-box;
+  margin: 0;
   overflow-x: hidden;
 }
 
-.top-container {
+.loading-screen-top-container {
+  box-sizing: border-box;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 40vh;
   overflow: hidden;
 }
-.bottom-container {
+.loading-screen-bottom-container {
+  box-sizing: border-box;
+  margin: 0;
   padding-top: 1vh;
   display: flex;
   justify-content: center;
@@ -36,45 +43,63 @@
   overflow: hidden;
 }
 
-.container {
+.loading-screen-container {
+  box-sizing: border-box;
+  margin: 0;
   display: flex;
   align-items: center;
   overflow: visible;
 }
 
-.circle {
+.loading-screen-circle {
+  box-sizing: border-box;
+  margin: 0;
   border: 10px solid transparent;
   margin: -2px;
   display: block;
   border-radius: 100%;
 }
 
-.holder {
+.loading-screen-holder {
+  box-sizing: border-box;
+  margin: 0;
   animation: spin 9s linear infinite;
   overflow: visible;
 }
 
-.support {
-    border: 10px solid #00000000;
-    margin: 85px;
-    display: block;
+.loading-screen-support {
+  box-sizing: border-box;
+  margin: 0;
+  border: 10px solid #00000000;
+  margin: 85px;
+  display: block;
 }
 
-.spin {
+.loading-screen-spin {
+  box-sizing: border-box;
+  margin: 0;
   animation: spin 3s linear infinite;
 }
 
-.c1 {
-    border-top: 10px solid #00AEEF;
+.loading-screen-c1 {
+  box-sizing: border-box;
+  margin: 0;
+  border-top: 10px solid #00aeef;
 }
-.c2 {
-    border-top: 10px solid #C7EFCF;
+.loading-screen-c2 {
+  box-sizing: border-box;
+  margin: 0;
+  border-top: 10px solid #c7efcf;
 }
-.c3 {
-    border-top: 10px solid #FDB913;
+.loading-screen-c3 {
+  box-sizing: border-box;
+  margin: 0;
+  border-top: 10px solid #fdb913;
 }
-.c4 {
-    border-top: 10px solid #FF5D53;
+.loading-screen-c4 {
+  box-sizing: border-box;
+  margin: 0;
+  border-top: 10px solid #ff5d53;
 }
 
 @keyframes spin {
