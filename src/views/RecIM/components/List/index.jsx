@@ -99,20 +99,6 @@ const MatchList = ({ matches, activityID }) => {
     [firstDate, firstFullDate],
   );
 
-  if (!matches?.length || !matches[0])
-    return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
-
-  let firstDate = standardDate(matches[0].StartTime, false, true);
-  let firstFullDate = getFullDate(matches[0].StartTime);
-  let organizedMatches = [
-    {
-      FullDate: firstFullDate,
-      DayOfWeek: firstDate.slice(0, 3),
-      DayOnly: firstDate.slice(4),
-      Matches: [],
-    },
-  ];
-
   useEffect(() => {
     let now = new Date();
     const today = getFullDate(now.toJSON());
