@@ -76,7 +76,6 @@ const Match = () => {
   const openMenu = Boolean(anchorEl);
   const isMultiTeamMatch = match?.Scores.length > 2;
 
-  //console.log(match);
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
   }, []);
@@ -113,7 +112,6 @@ const Match = () => {
       setCurrentWinner(winner);
     }
   }, [match]);
-  console.log(match);
 
   useEffect(() => {
     const loadMatch = async () => {
@@ -375,7 +373,7 @@ const Match = () => {
     );
 
     if (loading) return <GordonLoader />;
-    // console.log(match);
+
     return (
       <>
         <Header match={match}>{headerContents}</Header>
@@ -437,7 +435,11 @@ const Match = () => {
               <Card>
                 <CardHeader title="Teams" className={styles.cardHeader} />
                 <CardContent>
-                  <ExpandableTeamList teams={match?.Teams} teamScores={match?.Scores} />
+                  <ExpandableTeamList
+                    teams={match?.Team}
+                    teamScores={match?.Scores}
+                    attendance={matchAttendance}
+                  />
                 </CardContent>
               </Card>
             </Grid>

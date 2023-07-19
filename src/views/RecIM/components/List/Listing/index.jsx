@@ -113,8 +113,46 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const ExpandableTeamListing = ({ team, teamScores, attendance }) => {
-  return null;
+const ExpandableTeamListing = ({ team, teamScore, attendance }) => {
+  const log = () => {
+    console.log('');
+    console.log(team);
+    console.log(teamScore);
+    console.log(attendance);
+    console.log('');
+  };
+
+  let content = (
+    <ListItemButton onClick={() => log()}>
+      <ListItemAvatar>
+        <Avatar src={team.Logo ?? defaultLogo} className={styles.teamLogo}></Avatar>
+      </ListItemAvatar>
+      <Grid container columnSpacing={2}>
+        <Grid item xs={12}>
+          <Typography className={styles.listingTitle}>{team.Name}</Typography>
+        </Grid>
+
+        <Grid item container>
+          <Grid item xs={6}>
+            <Typography className={styles.listingSubtitle}>Score: {teamScore.TeamScore}</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography className={styles.listingSubtitle}>Status: {team.Status}</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography className={styles.listingSubtitle}>
+              Sportsmanship: {teamScore.SportsmanshipScore}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+    </ListItemButton>
+  );
+  return (
+    <ListItem key={team.ID} className={styles.listingWrapper}>
+      {content}
+    </ListItem>
+  );
 };
 
 const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {

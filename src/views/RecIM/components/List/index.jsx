@@ -8,6 +8,7 @@ import {
   TeamListing,
   SportListing,
   MatchHistoryListing,
+  ExpandableTeamListing,
 } from './Listing';
 import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
@@ -46,7 +47,6 @@ const ParticipantList = ({
   // callback to remove current captain
   const promoteNewCaptain = async (newCaptainUsername) => {
     let currentCaptain = participants.find((p) => p.Role === 'Team-captain/Creator').Username;
-    console.log(currentCaptain, newCaptainUsername);
     await editTeamParticipant(teamID, { Username: newCaptainUsername, RoleTypeID: 5 }); //captain
     await editTeamParticipant(teamID, { Username: currentCaptain, RoleTypeID: 3 }); //member
     callbackFunction((r) => !r);
@@ -214,7 +214,26 @@ const MatchHistoryList = ({ matches, activityID }) => {
  * Teams that can expand into participantLists
  */
 const ExpandableTeamList = ({ teams, teamScores, attendance }) => {
-  return null;
+  // console.log('');
+  // console.log(teams);
+  // console.log(teamScores);
+  // console.log(attendance);
+  // console.log('');
+
+  if (!teams?.length)
+    return <Typography className={styles.secondaryText}>No teams to show.</Typography>;
+
+  return (
+    <List dense>
+      {teams.map((team) => (
+        <ExpandableTeamListing
+          team={team}
+          teamScore={teamScores.find((score) => score.TeamID === team.ID)}
+          attendance={attendance.find((att) => att.TeamID === team.ID)}
+        />
+      ))}
+    </List>
+  );
 };
 
 // setTargetTeamID is used for edit Match teams
