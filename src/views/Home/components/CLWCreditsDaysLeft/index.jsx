@@ -161,24 +161,27 @@ const CLWCreditsDaysLeft = () => {
 
   return (
     <Card>
-      <CardContent>
-        <Grid container direction="row" alignItems="center">
-          <Grid item xs={7} align="left">
-            <CardHeader title={currSessionDescription} />
+      <CardHeader
+        title={
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={7} align="left">
+              {currSessionDescription}
+            </Grid>
+            <Grid item xs={5} align="right">
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                to="/events?CLW%20Credits"
+              >
+                MORE CREDITS
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={5} align="right">
-            <Button
-              variant="contained"
-              color="secondary"
-              component={Link}
-              to="/events?CLW%20Credits"
-            >
-              MORE CREDITS
-            </Button>
-          </Grid>
-        </Grid>
-        {content}
-      </CardContent>
+        }
+        className="gc360_header"
+      />
+      <CardContent>{content}</CardContent>
     </Card>
   );
 };

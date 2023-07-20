@@ -37,9 +37,11 @@ const DaysLeft = () => {
   const colors = theme360.colorSchemes.light.palette;
 
   return (
-    <Card>
+    <Card className={styles.card}>
+      <CardHeader title={currentSessionDescription} className="gc360_header">
+        <br />
+      </CardHeader>
       <CardContent>
-        <CardHeader title={currentSessionDescription} className={styles.cardHeader} />
         {loading ? (
           <GordonLoader />
         ) : (

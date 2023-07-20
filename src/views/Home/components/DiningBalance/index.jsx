@@ -33,7 +33,6 @@ const DiningBalance = () => {
   let dollarsColor = colors.warning.main;
   let guestColor = colors.error.main;
   let emptyColor = colors.neutral.A700;
-
   let balanceColor = colors.success.main;
 
   useEffect(() => {
@@ -220,27 +219,30 @@ const DiningBalance = () => {
   }
 
   return (
-    <Card>
-      <CardContent>
-        <Grid container direction="row" alignItems="center" spacing={0}>
-          <Grid item xs={7} align="left">
-            <CardHeader title="Dining Balance" />
+    <Card className={styles.card}>
+      <CardHeader
+        title={
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={7} align="left">
+              Dining Balance
+            </Grid>
+            <Grid item xs={5} align="right">
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                href="https://gordon.cafebonappetit.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                TODAY'S MENU
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={5} align="right">
-            <Button
-              variant="contained"
-              color="secondary"
-              component={Link}
-              href="https://gordon.cafebonappetit.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              TODAY'S MENU
-            </Button>
-          </Grid>
-        </Grid>
-        {content}
-      </CardContent>
+        }
+        className="gc360_header"
+      />
+      <CardContent>{content}</CardContent>
     </Card>
   );
 };
