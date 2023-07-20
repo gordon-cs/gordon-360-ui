@@ -214,18 +214,14 @@ const MatchHistoryList = ({ matches, activityID }) => {
  * Teams that can expand into participantLists
  */
 const ExpandableTeamList = ({ teams, teamScores, attendance, activityID }) => {
-  // console.log('');
-  // console.log(teams);
-  // console.log(teamScores);
-  // console.log(attendance);
-  // console.log('');
-
   if (!teams?.length)
     return <Typography className={styles.secondaryText}>No teams to show.</Typography>;
 
   /**
    * sort by score then by sportsmanship
    */
+  let formattedTeams = [];
+
   teams.sort((a, b) => {
     let aScore = teamScores.find((ts) => ts.TeamID === a.ID);
     let bScore = teamScores.find((ts) => ts.TeamID === b.ID);
@@ -234,10 +230,21 @@ const ExpandableTeamList = ({ teams, teamScores, attendance, activityID }) => {
       if (aScore.SportsmanshipScore > bScore.SportsmanshipScore) return -1;
     return 1;
   });
+  let ranking = 1;
+  teams.forEach((team) => {
+    formattedTeams.push({
+      ...team,
+      ...{
+        Ranking: ranking,
+        ActivityID: activityID,
+      },
+    });
+    ranking++;
+  });
 
   return (
     <List dense>
-      {teams.map((team) => (
+      {formattedTeams.map((team) => (
         <ExpandableTeamListing
           key={team.ID}
           team={team}
