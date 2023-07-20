@@ -85,6 +85,7 @@ export enum AuthGroup {
   HousingAdmin = '360-HousingAdmin-SG',
   NewsAdmin = '360-NewsAdmin-SG',
   Police = '360-Police-SG',
+  RecIMAdmin = '360-RecIMAdmin-SG',
   SensitiveInfoView = '360-SensitiveInfoView-SG',
   SiteAdmin = '360-SiteAdmin-SG',
   Staff = '360-Staff-SG',

@@ -13,7 +13,7 @@ import {
   Fab,
 } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
-import { useUser } from 'hooks';
+import { useAuthGroups, useUser } from 'hooks';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
@@ -45,6 +45,7 @@ import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { getRecIMReport } from 'services/recim/recim';
 import { Print } from '@mui/icons-material';
+import { AuthGroup } from 'services/auth';
 //consider using react-to-print or react-pdf to create downloadable admin report
 
 const TabPanel = ({ children, value, index }) => {
@@ -82,7 +83,7 @@ const Admin = () => {
   const [selectedDateOut, setSelectedDateOut] = useState(null);
   const [openRecimReportBox, setOpenRecimReportBox] = useState();
   const [recimReport, setRecimReport] = useState();
-  const [isSuperAdmin, setIsSuperAdmin] = useState(true); //temporary implementation
+  const isSuperAdmin = useAuthGroups(AuthGroup.RecIMAdmin) || true;
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -106,11 +107,9 @@ const Admin = () => {
     };
 
     setLoading(true);
-    if (user?.IsAdmin) {
-      loadData();
-    }
-    setLoading(false);
-  }, [user?.IsAdmin]);
+    if (user?.IsAdmin) loadData();
+    if (user) setLoading(false);
+  }, [user]);
 
   const handleAdminMenuOpen = (e) => {
     setAdminMenuAnchorEl(e.currentTarget);
@@ -344,7 +343,7 @@ const Admin = () => {
   if (!profile || !user) return <GordonUnauthenticated feature={'the Rec-IM page'} />;
 
   // Navigate away from admin page if user is not an admin
-  if (!user?.IsAdmin) {
+  if (!(user?.IsAdmin || isSuperAdmin)) {
     navigate(`/recim`);
   }
 
