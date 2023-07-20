@@ -83,7 +83,7 @@ const Admin = () => {
   const [selectedDateOut, setSelectedDateOut] = useState(null);
   const [openRecimReportBox, setOpenRecimReportBox] = useState();
   const [recimReport, setRecimReport] = useState();
-  const isSuperAdmin = useAuthGroups(AuthGroup.RecIMAdmin) || true;
+  const isSuperAdmin = useAuthGroups(AuthGroup.RecIMAdmin);
 
   useEffect(() => {
     const loadProfile = async () => {
