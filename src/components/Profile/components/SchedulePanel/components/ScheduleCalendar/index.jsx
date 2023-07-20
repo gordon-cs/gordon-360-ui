@@ -41,7 +41,6 @@ const GordonScheduleCalendar = (props) => {
     { resourceId: 'WE', resourceTitle: 'Wednesday' },
     { resourceId: 'TH', resourceTitle: 'Thursday' },
     { resourceId: 'FR', resourceTitle: 'Friday' },
-    { resourceId: 'SA', resourceTitle: 'Saturday' },
   ];
 
   // Localizer is always required for react-big-calendar initialization
