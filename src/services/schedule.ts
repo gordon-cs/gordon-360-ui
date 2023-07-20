@@ -47,7 +47,7 @@ const getSchedule = (username: string = '', sessionID: string = ''): Promise<Cou
 };
 
 const getAllCourses = (username: string): Promise<SessionCourses> =>
-  http.get(`schedule/${username}/courses`);
+  http.get(`schedule/${username}/allcourses`);
 
 function getMeetingDays(course: CourseSchedule): string[] {
   let dayArray = [];
