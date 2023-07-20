@@ -10,6 +10,7 @@ import {
 import 'add-to-calendar-button';
 import { format, setDay } from 'date-fns';
 import styles from './ScheduleDialog.module.css';
+import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 
 const dayArr = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
@@ -58,7 +59,7 @@ const ScheduleDialog = (props) => {
           <Grid container lg={12} xs={12}>
             {props.courseInfo && (
               <>
-                <Grid item xs={1} lg={2}></Grid>
+                <Grid item xs={0} lg={1}></Grid>
                 <Grid item lg={2} align="right">
                   <add-to-calendar-button
                     name={props.courseTitle}
@@ -77,7 +78,7 @@ const ScheduleDialog = (props) => {
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
                     description={props.courseName}
                     Location={props.courseLocation}
-                    options="'Google', 'Apple'"
+                    options="'Google'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
@@ -87,11 +88,12 @@ const ScheduleDialog = (props) => {
                       ';UNTIL=' +
                       formatter(props.lastDay, 'yyyyMMdd')
                     }
-                    lightMode="bodyScheme"
+                    lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
+                    //Get user theme mode preference
                     Timezone="currentBrowser"
                   ></add-to-calendar-button>
                 </Grid>
-                <Grid item lg={6} align="left">
+                <Grid item lg={8} align="left">
                   <add-to-calendar-button
                     name={props.courseTitle}
                     startDate={format(
@@ -105,11 +107,12 @@ const ScheduleDialog = (props) => {
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
                     description={props.courseName}
                     Location={props.courseLocation}
-                    options="'Apple', 'Outlook.com','MicrosoftTeams'"
+                    options="'Microsoft365|Gordon Outlook','Apple','Outlook.com|Outlook','MicrosoftTeams'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
-                    lightMode="bodyScheme"
+                    lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
+                    //Get user theme mode preference
                     Timezone="currentBrowser"
                   ></add-to-calendar-button>
                 </Grid>
