@@ -31,7 +31,7 @@ import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
-import UpdateUserPrivacy from './UpdateUserPrivacyDialog';
+import UpdateUserPrivacy from './UpdateUserPrivacyDropDownMenu';
 
 const PRIVATE_INFO = 'Private as requested.';
 
