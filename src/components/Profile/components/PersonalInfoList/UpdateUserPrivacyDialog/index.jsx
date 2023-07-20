@@ -1,4 +1,4 @@
-import { FormControl, IconButton, Input, InputLabel } from '@mui/material';
+import { FormControl, Grid } from '@mui/material';
 import GordonSnackbar from 'components/Snackbar';
 import { useState, useEffect } from 'react';
 import userService from 'services/user';
@@ -43,7 +43,7 @@ const UpdateUserPrivacy = (username, field) => {
   }
 
   return (
-    <div>
+    <Grid>
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         <SearchField
           name="visibility"
@@ -60,7 +60,7 @@ const UpdateUserPrivacy = (username, field) => {
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
-    </div>
+    </Grid>
   );
 };
 
