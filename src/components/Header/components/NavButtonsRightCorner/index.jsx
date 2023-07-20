@@ -3,6 +3,7 @@ import List from '@mui/material/List';
 import Popover from '@mui/material/Popover';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
+import PaletteSwitcherDialog from 'components/PaletteSwitcherDialog';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
@@ -19,6 +20,7 @@ import styles from './NavButtonsRightCorner.module.css';
  */
 const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl }) => {
   const [linkOpen, setLinkOpen] = useState(false);
+  const [paletteOptionsOpen, setPaletteOptionsOpen] = useState(false);
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
@@ -50,23 +52,14 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
     />
   );
 
-  const transcriptButton = !isAuthenticated && (
+  const paletteOptionsButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : null}
-      onLinkClick={onClose}
+      onLinkClick={() => {
+        onClose();
+        setPaletteOptionsOpen(true);
+      }}
       openUnavailableDialog={openDialogBox}
-      linkName={'Experience Transcript'}
-      linkPath={'/transcript'}
-    />
-  );
-
-  const timesheetsButton = (
-    <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
-      onLinkClick={onClose}
-      openUnavailableDialog={openDialogBox}
-      linkName={'Timesheets'}
-      linkPath={'/timesheets'}
+      linkName={'Appearance'}
     />
   );
 
@@ -124,10 +117,10 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
             <div class={styles.right_menu_triangle} />
             {myProfileButton}
             {linksButton}
-            {transcriptButton}
-            {timesheetsButton}
+
             {helpButton}
             {aboutButton}
+            {paletteOptionsButton}
             {feedbackButton}
             {adminButton}
             {signOutButton}
@@ -139,6 +132,10 @@ const GordonNavButtonsRightCorner = ({ onClose, openDialogBox, open, anchorEl })
         handleLinkClickOpen={() => setLinkOpen(true)}
         handleLinkClose={() => setLinkOpen(false)}
         linkopen={linkOpen}
+      />
+      <PaletteSwitcherDialog
+        handleClose={() => setPaletteOptionsOpen(false)}
+        dialogOpen={paletteOptionsOpen}
       />
     </>
   );

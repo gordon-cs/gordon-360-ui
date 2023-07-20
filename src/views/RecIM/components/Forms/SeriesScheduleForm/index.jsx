@@ -118,7 +118,7 @@ const SeriesScheduleForm = ({
   const currentInfo = useMemo(() => {
     if (seriesSchedule) {
       var seriesSurfaces = [];
-      seriesSchedule.SurfaceIDs.forEach((surface) =>
+      seriesSchedule.SurfaceIDs?.forEach((surface) =>
         seriesSurfaces.push(surfaces.find((_surface) => _surface.ID === surface)?.Name),
       );
       return {

@@ -44,6 +44,7 @@ const PrivacyToggle = ({ element, createSnackbar }) => {
           onChange={() => toggleMembershipPrivacy(element)}
           checked={!element.Privacy}
           key={element.ActivityDescription + element.ActivityCode}
+          color="secondary"
         />
       </Grid>
       <Grid item xs={12} align="center">
