@@ -7,6 +7,7 @@ import {
   SurfaceListing,
   TeamListing,
   SportListing,
+  MatchHistoryListing,
 } from './Listing';
 import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
@@ -83,7 +84,7 @@ const ParticipantList = ({
   return <List dense>{content}</List>;
 };
 
-const MatchList = ({ matches, activityID }) => {
+const MatchList = ({ matches = [], activityID }) => {
   const [selectedDay, setSelectedDay] = useState(0);
   let firstDate = matches[0] ? standardDate(matches[0].StartTime, false, true) : null;
   let firstFullDate = matches[0] ? getFullDate(matches[0].StartTime) : null;
@@ -196,6 +197,18 @@ const MatchList = ({ matches, activityID }) => {
   );
 };
 
+const MatchHistoryList = ({ matches, activityID }) => {
+  return matches.length > 0 ? (
+    <List dense>
+      {matches.map((match) => (
+        <MatchHistoryListing key={match?.MatchID} match={match} activityID={activityID} />
+      ))}
+    </List>
+  ) : (
+    <Typography className={styles.secondaryText}>Team hasn't played any matches.</Typography>
+  );
+};
+
 // setTargetTeamID is used for edit Match teams
 const TeamList = ({
   participant,
@@ -298,4 +311,12 @@ const SurfaceList = ({ surfaces, confirmDelete, editDetails }) => {
   return <List dense>{content}</List>;
 };
 
-export { ActivityList, ParticipantList, MatchList, TeamList, SurfaceList, SportList };
+export {
+  ActivityList,
+  ParticipantList,
+  MatchList,
+  MatchHistoryList,
+  TeamList,
+  SurfaceList,
+  SportList,
+};

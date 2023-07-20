@@ -493,6 +493,55 @@ const ParticipantListing = ({
   );
 };
 
+// compacted match listing
+const MatchHistoryListing = ({ match, activityID }) => {
+  if (!match) return null;
+  const ownScore = match.TeamScore;
+  const oppScore = match.OpposingTeamScore;
+  return (
+    <ListItem key={match.MatchID} className={styles.listingWrapper}>
+      <ListItemButton
+        component={Link}
+        to={`/recim/activity/${activityID}/match/${match.MatchID}`}
+        // sx={{ borderRadius: '0.5em' }}
+        className={
+          ownScore > oppScore
+            ? styles.matchHistoryListing_winner
+            : ownScore < oppScore
+            ? styles.matchHistoryListing_loser
+            : styles.matchHistoryListing
+        }
+      >
+        <Grid container alignItems="center">
+          <Grid item xs={2} textAlign="center">
+            <Typography>
+              {ownScore} : {oppScore}
+            </Typography>
+          </Grid>
+          <Grid item xs={1}>
+            <Typography>vs.</Typography>
+          </Grid>
+          <Grid item xs={2.8}>
+            <img
+              src={match.Opponent?.Logo ?? defaultLogo}
+              alt="Team Icon"
+              className={styles.teamHistoryLogo}
+            ></img>
+          </Grid>
+          <Grid item xs={4.2}>
+            <Typography>{match.Opponent.Name}</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography className={styles.listingSubtitle}>
+              {standardDate(match.MatchStartTime, true)}
+            </Typography>
+          </Grid>
+        </Grid>
+      </ListItemButton>
+    </ListItem>
+  );
+};
+
 const MatchListing = ({ match, activityID }) => {
   if (!match) return null;
   if (match.Team?.length === 2) {
@@ -751,6 +800,7 @@ export {
   TeamListing,
   ParticipantListing,
   MatchListing,
+  MatchHistoryListing,
   SurfaceListing,
   SportListing,
 };

@@ -16,7 +16,7 @@ import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Match.module.css';
-import { ParticipantList } from './../../components/List';
+import { MatchHistoryList, ParticipantList } from './../../components/List';
 import { getParticipantByUsername } from 'services/recim/participant';
 import {
   getMatchByID,
@@ -77,7 +77,6 @@ const Match = () => {
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
   }, []);
-
   useEffect(() => {
     const loadData = async () => {
       if (profile) {
@@ -281,7 +280,6 @@ const Match = () => {
         </Grid>
       </Grid>
     );
-
     return (
       <>
         <Header match={match}>{headerContents}</Header>
@@ -301,6 +299,17 @@ const Match = () => {
                 matchID={match.ID}
                 teamID={match.Team[0]?.ID}
               />
+              <Card sx={{ marginTop: 1 }}>
+                <CardHeader title="Past Matches" className={styles.cardHeader} />
+                <CardContent>
+                  <MatchHistoryList
+                    matches={
+                      match?.Team.find((item) => item.ID === match.Team[0]?.ID)?.MatchHistory
+                    }
+                    activityID={match.Activity.ID}
+                  />
+                </CardContent>
+              </Card>
             </Grid>
             <Grid item xs={12} md={6}>
               <RosterCard
@@ -314,6 +323,17 @@ const Match = () => {
                 matchID={match.ID}
                 teamID={match.Team[1]?.ID}
               />
+              <Card sx={{ marginTop: 1 }}>
+                <CardHeader title="Past Matches" className={styles.cardHeader} />
+                <CardContent>
+                  <MatchHistoryList
+                    matches={
+                      match?.Team.find((item) => item.ID === match.Team[1]?.ID)?.MatchHistory
+                    }
+                    activityID={match.Activity.ID}
+                  />
+                </CardContent>
+              </Card>
             </Grid>
 
             {/* forms and dialogs */}
