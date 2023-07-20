@@ -1,5 +1,5 @@
-import { Grid, Typography, Tabs, Tab, Box, List } from '@mui/material';
-import { useEffect, useState, useMemo } from 'react';
+import { Grid, Typography, Tabs, Tab, Box, List, TextField, InputAdornment, useMediaQuery } from '@mui/material';
+import { useEffect, useState } from 'react';
 import {
   ActivityListing,
   MatchListing,
@@ -16,7 +16,14 @@ import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
 import { addDays } from 'date-fns';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
-import { useMediaQuery } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { getParticipantByUsername } from 'services/recim/participant';
+import GordonDialogBox from 'components/GordonDialogBox';
+import { DateTimePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { editParticipantStatus } from 'services/recim/participant';
+
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -40,24 +47,115 @@ const ParticipantList = ({
   withAttendance,
   attendance,
   isAdmin,
+  isSuperAdmin,
   matchID,
   teamID,
   showInactive,
   callbackFunction,
 }) => {
+  const [visisbleParticipants, setVisibleParticipants] = useState(participants);
+  const [openSuspensionDialog, setOpenSuspensionDialog] = useState(false);
+  const [suspendee, setSuspendee] = useState();
+  const [suspensionEndDateTime, setSuspensionEndDateTime] = useState('');
+  const [searchValue, setSearchValue] = useState('');
   const isMobile = useMediaQuery('(max-width:600px)');
-  console.log(isMobile);
+
+  useEffect(() => {
+    // this is a temporary solution. Only admins will see this and thus the performance
+    // dip is not a major factor.
+    const delayDebounceFn = setTimeout(() => {
+      setVisibleParticipants(
+        participants?.filter((p) =>
+          p.Username.replace(/[^A-Z0-9]+/gi, '')
+            .toLowerCase()
+            .includes(searchValue.replace(/[^A-Z0-9]+/gi, '').toLowerCase()),
+        ),
+      );
+    }, 200);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchValue]);
+
   // callback to remove current captain
   const promoteNewCaptain = async (newCaptainUsername) => {
-    let currentCaptain = participants.find((p) => p.Role === 'Team-captain/Creator').Username;
+    let currentCaptain = participants.find((p) => p.Role === 'Team-captain/Creator')?.Username;
     await editTeamParticipant(teamID, { Username: newCaptainUsername, RoleTypeID: 5 }); //captain
-    await editTeamParticipant(teamID, { Username: currentCaptain, RoleTypeID: 3 }); //member
+    if (currentCaptain)
+      await editTeamParticipant(teamID, { Username: currentCaptain, RoleTypeID: 3 }); //member
     callbackFunction((r) => !r);
   };
 
+  const handleUserSuspension = (props) => {
+    getParticipantByUsername(props.username).then((user) => setSuspendee(user));
+    setOpenSuspensionDialog(true);
+  };
+
+  const handleSuspend = async () => {
+    await editParticipantStatus(suspendee.Username, {
+      StatusID: 2,
+      EndDate: suspensionEndDateTime,
+    });
+    setOpenSuspensionDialog(false);
+    setSuspendee(null);
+  };
+
+  const participantSearchBar = () => {
+    return (
+      <Grid item>
+        <TextField
+          sx={{ padding: 2 }}
+          type="search"
+          fullWidth
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          InputProps={{
+            disableUnderline: true,
+            startAdornment: (
+              <InputAdornment position="start" sx={{ color: 'grey' }}>
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Grid>
+    );
+  };
+
+  let suspensionContent = (
+    <GordonDialogBox
+      title="Confirm Suspension"
+      open={openSuspensionDialog}
+      cancelButtonClicked={() => setOpenSuspensionDialog(false)}
+      buttonName={'Suspend User'}
+      buttonClicked={() => handleSuspend()}
+      severity="error"
+    >
+      <Typography margin={2}>
+        <Typography variant="body1" paragraph>
+          You are attempting to Suspend User:
+        </Typography>
+        <Typography variant="body1" paragraph>
+          {suspendee?.FirstName} {suspendee?.LastName} {'(' + suspendee?.Username + ')'}
+        </Typography>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} variant="filled" />}
+            label="End of Suspension"
+            value={suspensionEndDateTime}
+            onChange={(value) => setSuspensionEndDateTime(value)}
+          />
+        </LocalizationProvider>
+        <Grid xs={12}>
+          {' '}
+          <i> *no date implies indefinite suspension</i>
+        </Grid>
+      </Typography>
+    </GordonDialogBox>
+  );
+
   if (!participants?.length)
     return <Typography className={styles.secondaryText}>No participants to show.</Typography>;
-  let content = participants.map((participant) => {
+  let content = visisbleParticipants.map((participant) => {
     if (!showInactive && participant.Role === 'Inactive') {
       return null;
     }
@@ -65,8 +163,10 @@ const ParticipantList = ({
       <ParticipantListing
         key={participant.username}
         participant={participant}
+        handleUserSuspension={handleUserSuspension}
         minimal={minimal}
         isAdminPage={isAdminPage}
+        isSuperAdmin={isSuperAdmin}
         editParticipantInfo={editDetails}
         withAttendance={withAttendance}
         initialAttendance={
@@ -85,7 +185,15 @@ const ParticipantList = ({
       />
     );
   });
-  return <List dense>{content}</List>;
+  return (
+    <>
+      {participantSearchBar()}
+      <List dense>
+        {content}
+        {suspensionContent}
+      </List>
+    </>
+  );
 };
 
 const MatchList = ({ matches = [], activityID }) => {

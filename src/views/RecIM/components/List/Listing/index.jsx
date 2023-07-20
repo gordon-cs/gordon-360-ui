@@ -38,7 +38,9 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import { editParticipantAdmin, editParticipantStatus } from 'services/recim/participant';
 import { ParticipantList } from '..';
+
 
 const activityTypeIconPair = [
   {
@@ -333,10 +335,12 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
 
 const ParticipantListing = ({
   participant,
+  handleUserSuspension,
   minimal,
   callbackFunction,
   showParticipantOptions,
   isAdminPage,
+  isSuperAdmin,
   editParticipantInfo,
   withAttendance,
   isAdmin,
@@ -349,22 +353,18 @@ const ParticipantListing = ({
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
   const [anchorEl, setAnchorEl] = useState();
-  const [anchorCustomParticipantEl, setAnchorCustomParticipantEl] = useState();
   const moreOptionsOpen = Boolean(anchorEl);
-  const moreOptionsCustomParticipantOpen = Boolean(anchorCustomParticipantEl);
   const [didAttend, setDidAttend] = useState(initialAttendance != null);
   const [attendanceCount, setAttendanceCount] = useState();
   const [fullName, setFullName] = useState('');
 
   const handleClickOff = () => {
     setAnchorEl(null);
-    setAnchorCustomParticipantEl(null);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    setAnchorCustomParticipantEl(null);
-    callbackFunction((val) => !val);
+    if (!isAdminPage) callbackFunction((val) => val);
   };
 
   useEffect(() => {
@@ -391,10 +391,6 @@ const ParticipantListing = ({
     loadData();
     if (teamID && withAttendance) loadAttendanceCount();
   }, [participant, teamID, withAttendance]);
-
-  const handleCustomParticipantOptions = (event) => {
-    setAnchorCustomParticipantEl(event.currentTarget);
-  };
 
   const handleParticipantOptions = (event) => {
     setAnchorEl(event.currentTarget);
@@ -438,6 +434,12 @@ const ParticipantListing = ({
     handleClose();
   };
 
+  const toggleParticipantAdminStatus = async () => {
+    await editParticipantAdmin(participant.Username, !participant.IsAdmin);
+    participant.IsAdmin = !participant.IsAdmin;
+    handleClose();
+  };
+
   const handleAttendance = async (attended) => {
     setDidAttend(attended);
     let att = {
@@ -445,6 +447,12 @@ const ParticipantListing = ({
       username: participant.Username,
     };
     attended ? await updateAttendance(matchID, att) : await removeAttendance(matchID, att);
+  };
+
+  const handleUpdateParticipantStatus = async (props) => {
+    await editParticipantStatus(participant.Username, { StatusID: props.statusID });
+    participant.Status = props.description;
+    handleClose();
   };
 
   const participantDetails = () => {
@@ -464,6 +472,7 @@ const ParticipantListing = ({
   };
 
   if (!participant) return null;
+
   return (
     // first ListItem is used only for paddings/margins
     // second ListItem (nested inside) is used to layout avatar and secondaryAction
@@ -471,8 +480,8 @@ const ParticipantListing = ({
       <ListItem
         secondaryAction={
           <>
-            {isAdminPage && participant.IsCustom && (
-              <IconButton edge="end" onClick={handleCustomParticipantOptions}>
+            {isAdminPage && (
+              <IconButton edge="end" onClick={handleParticipantOptions}>
                 <MoreHorizIcon />
               </IconButton>
             )}
@@ -551,30 +560,110 @@ const ParticipantListing = ({
             )}
           </Menu>
         )}
-        {isAdminPage && participant.IsCustom && (
-          <Menu
-            open={moreOptionsCustomParticipantOpen}
-            onClose={handleClickOff}
-            anchorEl={anchorCustomParticipantEl}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-          >
-            <MenuItem
-              dense
-              onClick={() => {
-                editParticipantInfo(participant);
-                setAnchorCustomParticipantEl(null);
-              }}
-              divider
-            >
-              Edit Participant Information
-            </MenuItem>
+        {isAdminPage && (
+          <Menu open={moreOptionsOpen} onClose={handleClickOff} anchorEl={anchorEl}>
+            <Typography className={styles.menuTitle}>Available Options</Typography>
+            {participant.isCustom && (
+              <MenuItem
+                dense
+                onClick={() => {
+                  editParticipantInfo(participant);
+                  setAnchorEl(null);
+                }}
+                divider
+              >
+                Edit Participant Information
+              </MenuItem>
+            )}
+            {isSuperAdmin && (
+              <MenuItem
+                dense
+                onClick={() => {
+                  toggleParticipantAdminStatus();
+                  setAnchorEl(null);
+                }}
+                divider
+              >
+                {participant.IsAdmin ? 'Remove Admin Status' : 'Grant Admin Status'}
+              </MenuItem>
+            )}
+
+            {participant.Status === 'Pending' && (
+              <MenuItem
+                dense
+                onClick={() => {
+                  handleUpdateParticipantStatus({ statusID: 4, description: 'Cleared' });
+                  setAnchorEl(null);
+                }}
+                divider
+              >
+                Mark as Cleared
+              </MenuItem>
+            )}
+            {participant.Status === 'Cleared' && (
+              <MenuItem
+                dense
+                onClick={() => {
+                  handleUpdateParticipantStatus({ statusID: 1, description: 'Pending' });
+                  setAnchorEl(null);
+                }}
+                divider
+              >
+                Mark as Pending Waiver
+              </MenuItem>
+            )}
+            {participant.Status === 'Cleared' && (
+              <MenuItem
+                dense
+                onClick={() => {
+                  handleUserSuspension({ username: participant.Username });
+
+                  setAnchorEl(null);
+                }}
+                divider
+              >
+                Suspend Participant
+              </MenuItem>
+            )}
+            {participant.Status === 'Suspension' && (
+              <MenuItem
+                dense
+                onClick={() => {
+                  handleUpdateParticipantStatus({ statusID: 4, description: 'Cleared' });
+                  setAnchorEl(null);
+                }}
+                divider
+              >
+                End Participant Suspension
+              </MenuItem>
+            )}
+            {(participant.Status === 'Cleared' || participant.Status === 'Suspension') && (
+              <MenuItem
+                dense
+                onClick={() => {
+                  handleUpdateParticipantStatus({
+                    statusID: 3,
+                    description: 'Banned',
+                  });
+                  setAnchorEl(null);
+                }}
+                divider
+              >
+                Ban Participant
+              </MenuItem>
+            )}
+            {participant.Status === 'Banned' && isSuperAdmin && (
+              <MenuItem
+                dense
+                onClick={() => {
+                  handleUpdateParticipantStatus({ statusID: 4, description: 'Cleared' });
+                  setAnchorEl(null);
+                }}
+                divider
+              >
+                Unban Participant
+              </MenuItem>
+            )}
           </Menu>
         )}
       </ListItem>
