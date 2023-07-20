@@ -442,6 +442,7 @@ const Match = () => {
                     teamScores={match?.Scores}
                     attendance={matchAttendance}
                     activityID={match.Activity.ID}
+                    isAdmin={user?.IsAdmin}
                   />
                 </CardContent>
               </Card>
