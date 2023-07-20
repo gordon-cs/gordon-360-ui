@@ -11,7 +11,7 @@ import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography, Link } from
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus, useWindowSize } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { authenticate } from 'services/auth';
 import { windowBreakWidths } from 'theme';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
@@ -32,7 +32,6 @@ const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...pr
 // Tab url regular expressions must be listed in the same order as the tabs, since the
 // indices of the elements in the array on the next line are mapped to the indices of the tabs
 const TabUrlPatterns = [
-  /^\/$/,
   /^\/involvements\/?$|^\/activity/,
   /^\/events\/?$/,
   /^\/people$|^\/myprofile|^\/profile/,
@@ -57,19 +56,15 @@ const useTabHighlight = () => {
 };
 
 const GordonHeader = ({ onDrawerToggle }) => {
+  const navigate = useNavigate();
   const [dialog, setDialog] = useState('');
-  const [width] = useWindowSize();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [anchorElement, setAnchorElement] = useState(null);
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
   const tabIndex = useTabHighlight();
 
-  useEffect(() => {
-    if (width < windowBreakWidths.breakMD) {
-      setIsMenuOpen(false);
-    }
-  }, [width]);
+  const handleOpenProfile = () => {
+    navigate('/myprofile');
+  };
 
   const createDialogBox = () => {
     const isOffline = dialog === 'offline';
@@ -121,16 +116,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
     }
   };
 
-  const handleOpenMenu = (event) => {
-    setAnchorElement(event.currentTarget);
-    setIsMenuOpen(true);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorElement(null);
-    setIsMenuOpen(false);
-  };
-
   const loginButton = (
     <Button
       className={styles.login_button}
@@ -169,13 +154,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
             <Tabs textColor="inherit" indicatorColor="secondary" centered value={tabIndex}>
               <Tab
                 className={styles.tab}
-                icon={<HomeIcon />}
-                label="Home"
-                component={ForwardNavLink}
-                to="/"
-              />
-              <Tab
-                className={styles.tab}
                 icon={<LocalActivityIcon />}
                 label="Involvements"
                 component={ForwardNavLink}
@@ -198,13 +176,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
               {isAuthenticated ? <GordonQuickSearch /> : loginButton}
             </div>
           </div>
-          <GordonNavAvatarRightCorner onClick={handleOpenMenu} menuOpened={isMenuOpen} />
-          <GordonNavButtonsRightCorner
-            open={isMenuOpen}
-            openDialogBox={setDialog}
-            anchorEl={anchorElement}
-            onClose={handleCloseMenu}
-          />
+          <GordonNavAvatarRightCorner onClick={handleOpenProfile} />
           {createDialogBox()}
         </Toolbar>
       </AppBar>

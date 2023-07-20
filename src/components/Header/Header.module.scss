@@ -55,7 +55,7 @@
 
   @media (min-width: $break-sm) {
     .app_bar {
-      height: $header-height-sm;
+      height: $header-height-md;
       background-color: var(--mui-palette-primary-main);
     }
     .people_search_container {
@@ -67,9 +67,6 @@
   }
 
   @media (min-width: $break-lg) {
-    .hamburger_menu_button {
-      display: none;
-    }
     .app_bar {
       height: $header-height-md;
     }
