@@ -1,7 +1,6 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Event as EventIcon,
-  Home as HomeIcon,
   LocalActivity as LocalActivityIcon,
   Menu as MenuIcon,
   People as PeopleIcon,
@@ -9,11 +8,10 @@ import {
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { useNetworkStatus, useWindowSize } from 'hooks';
+import { useNetworkStatus } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
 import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { authenticate } from 'services/auth';
-import { windowBreakWidths } from 'theme';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
