@@ -1,5 +1,5 @@
-import { gordonColors } from 'theme';
 import http from './http';
+import { theme360 } from 'theme';
 
 export type VictoryPromiseCategory =
   | 'christian_character'
@@ -8,13 +8,13 @@ export type VictoryPromiseCategory =
   | 'leadership_worldwide';
 
 export const Colors = {
-  christian_character: gordonColors.secondary.red,
-  intellectual_maturity: gordonColors.secondary.green,
-  lives_of_service: gordonColors.secondary.yellow,
-  leadership_worldwide: gordonColors.primary.cyan,
+  christian_character: theme360.vars.palette.error.main,
+  intellectual_maturity: theme360.vars.palette.success.main,
+  lives_of_service: theme360.vars.palette.warning.main,
+  leadership_worldwide: theme360.vars.palette.secondary.main,
 } as const;
 
-export type VictoryPromiseColor = typeof Colors[VictoryPromiseCategory];
+export type VictoryPromiseColor = (typeof Colors)[VictoryPromiseCategory];
 
 type VPScores = {
   /** Intellectual Maturity score */

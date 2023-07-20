@@ -1,4 +1,14 @@
-import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Divider, Switch } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  Divider,
+  Switch,
+  TextField,
+} from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { ContentCard } from 'views/RecIM/components/Forms/Form/components/ContentCard';
@@ -27,7 +37,6 @@ import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
 import { deleteMatchList } from 'services/recim/match';
-import GordonLoader from 'components/Loader';
 
 const ScheduleList = ({
   isAdmin,
@@ -47,12 +56,14 @@ const ScheduleList = ({
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [openConfirmDeleteMatches, setOpenConfirmDeleteMatches] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
+  const [hasError, setHasError] = useState(false);
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
   const [showBracket, setShowBracket] = useState(false);
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
   const [seriesSchedule, setSeriesSchedule] = useState();
+  const [autoscheduleParameters, setAutoscheduleParameters] = useState();
 
   useEffect(() => {
     if (width < windowBreakWidths.breakSM) setIsMobileView(true);
@@ -70,6 +81,8 @@ const ScheduleList = ({
   // default closure
   const closeMenusAndForms = () => {
     setAnchorEl(null);
+    setHasError(false);
+    setAutoscheduleParameters(null);
     setShowAdminTools(false);
     setShowDetailsMenu(false);
   };
@@ -99,13 +112,35 @@ const ScheduleList = ({
         case 'Single Elim':
           return numTeams - 1;
         case 'Ladder':
-          return 1; //temporary
+          return '1 (by default)'; //temporary
         case 'Double Elim':
           return numTeams * 2 - 1;
         default:
           return null;
       }
     };
+
+    let parameterFields = (
+      <TextField
+        variant="filled"
+        label="Num Matches"
+        helperText={
+          series.Type === 'Round Robin'
+            ? 'Max number of matches per team'
+            : 'Number of matches total amongst teams'
+        }
+        value={autoscheduleParameters}
+        onChange={(event) => {
+          setAutoscheduleParameters(event.target.value);
+          setHasError(
+            (event.target.value > series.TeamStanding.length || event.target.value < 1) &&
+              event.target.value,
+          );
+        }}
+        type="number"
+      />
+    );
+
     setDisclaimerContent(
       <Typography margin={4}>
         <Typography variant="body1" paragraph>
@@ -122,6 +157,7 @@ const ScheduleList = ({
           {standardDate(series.StartDate, false)}, or the earliest available day, at{' '}
           {format(Date.parse(series.Schedule.StartTime), 'h:mmaaa')}.{' '}
         </Typography>
+        {(series.Type === 'Round Robin' || series.Type === 'Ladder') && parameterFields}
       </Typography>,
     );
     setOpenAutoSchedulerDisclaimer(true);
@@ -129,9 +165,12 @@ const ScheduleList = ({
   };
 
   const handleConfirmAutoSchedule = () => {
+    const parameterLabel =
+      series.Type === 'Round Robin' ? 'roundRobinMatchCapacity' : 'numberOfLadderMatches';
     setLoading(true);
-    scheduleSeriesMatches(series.ID).then((res) => {
+    scheduleSeriesMatches(series.ID, { [parameterLabel]: autoscheduleParameters }).then((res) => {
       setOpenAutoSchedulerDisclaimer(false);
+      setAutoscheduleParameters(null);
       setReload((prev) => !prev);
       setLoading(false);
     });
@@ -399,8 +438,12 @@ const ScheduleList = ({
         maxWidth="sm"
         buttonClicked={() => handleConfirmAutoSchedule()}
         buttonName={loading ? 'Scheduling...' : 'I Understand'}
-        isButtonDisabled={loading}
-        cancelButtonClicked={() => setOpenAutoSchedulerDisclaimer(false)}
+        isButtonDisabled={loading || hasError}
+        cancelButtonClicked={() => {
+          setAutoscheduleParameters(null);
+          setHasError(false);
+          setOpenAutoSchedulerDisclaimer(false);
+        }}
         cancelButtonName="Cancel"
       >
         <ContentCard title={`You are attempting to use the auto-scheduler for ${series.Name}`}>

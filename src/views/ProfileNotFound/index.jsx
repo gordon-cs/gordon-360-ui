@@ -1,14 +1,7 @@
-import { Typography, Grid } from '@mui/material';
+import Page404 from 'views/Page404';
 
-const ProfileNotFound = () =>
-(
-  <Grid item>
-    <br />
-    <br />
-    <Typography variant="h4" align="center">
-      No profile exists for this user
-    </Typography>
-  </Grid>
+const ProfileNotFound = () => (
+  <Page404 messages={['This Profile is Unavailable']} />
 );
 
-export default ProfileNotFound
+export default ProfileNotFound;

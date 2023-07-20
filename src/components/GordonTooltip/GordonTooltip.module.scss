@@ -12,5 +12,9 @@
   cursor: pointer;
   margin: 0 1rem;
   font-size: 1.2rem;
-  color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-link-main);
+  transition: 0.3s;
+  &:hover {
+    color: var(--mui-palette-link-light);
+  }
 }

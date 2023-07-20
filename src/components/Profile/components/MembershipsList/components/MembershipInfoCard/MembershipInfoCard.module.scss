@@ -9,9 +9,9 @@
     word-break: keep-all;
     flex-wrap: wrap;
     a {
-      color: $primary-blue;
+      color: var(--mui-palette-link-main);
       &:hover {
-        color: $primary-cyan !important;
+        color: var(--mui-palette-link-light) !important;
       }
     }
   }
@@ -51,7 +51,8 @@
       flex-direction: row-reverse;
       padding: 0.5rem;
       &_text {
-        border-left: 2px solid $primary-blue;
+        // padding-right: 0rem !important;
+        border-left: 2px solid var(--mui-palette-primary-main);
       }
     }
     &_image {

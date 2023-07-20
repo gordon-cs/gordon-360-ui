@@ -2,12 +2,12 @@
 
 .header {
   background-color: var(--mui-palette-primary-main);
-  color: $neutral-white;
+  color: var(--mui-palette-primary-contrastText);
   padding-left: 1rem;
 }
 
 .expandIcon {
-  color: $neutral-white;
+  color: var(--mui-palette-primary-contrastText);
 }
 
 .accordionHeader {
@@ -18,15 +18,24 @@
   .header {
     padding-left: 0rem;
     justify-content: center;
-    background-color: $primary-blue;
-    color: $neutral-white;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
   }
 }
 
-.officeHourText {
+.officeHourTitle {
   padding-top: 1rem;
   font-weight: bold;
-  overflow-wrap: normal;
+}
+
+.officeHourText {
+  overflow-wrap: break-word;
+}
+
+.addCalendarInfoText {
+  overflow-wrap: break-word;
+  color: var(--mui-palette-primary-main);
+  font-weight: bold;
 }
