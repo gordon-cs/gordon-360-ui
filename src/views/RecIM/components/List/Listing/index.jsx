@@ -12,12 +12,16 @@ import {
   MenuItem,
   Checkbox,
   FormControlLabel,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { isPast } from 'date-fns';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -113,7 +117,7 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const ExpandableTeamListing = ({ team, teamScore, attendance, activityID }) => {
+const ExpandableTeamListing = ({ team, teamScore, attendance }) => {
   const log = () => {
     console.log('');
     console.log(team);
@@ -121,28 +125,25 @@ const ExpandableTeamListing = ({ team, teamScore, attendance, activityID }) => {
     console.log(attendance);
     console.log('');
   };
+  console.log(team);
 
   let content = (
-    <ListItemButton className={styles.listing} onClick={() => log()}>
+    <ListItem>
       <Typography className={styles.listingTitle} paddingRight={2}>
-        {team.ranking}
+        #{team.Ranking}
       </Typography>
-
       <ListItemAvatar>
         <Avatar src={team.Logo ?? defaultLogo} className={styles.teamLogo}></Avatar>
       </ListItemAvatar>
-      <Grid container columnSpacing={2}>
+      <Grid container columnSpacing={0}>
         <Grid item xs={8}>
-          <Typography className={styles.listingTitle}>{team.Name}</Typography>
+          <Link to={`/recim/activity/${team.ActivityID}/team/${team.ID}`}>
+            <Typography className={`${styles.listingTitle} gc360_text_link`}>
+              {team.Name}
+            </Typography>
+          </Link>
         </Grid>
-        <Grid
-          item
-          container
-          direction="row"
-          textAlign="right"
-          justifyContent="space-between"
-          xs={4}
-        >
+        <Grid item container direction="row" textAlign="right" justifyContent="space-evenly" xs={4}>
           <Grid item xs={9}>
             <Typography>Score: </Typography>
           </Grid>
@@ -158,12 +159,26 @@ const ExpandableTeamListing = ({ team, teamScore, attendance, activityID }) => {
           </Grid>
         </Grid>
       </Grid>
-    </ListItemButton>
+    </ListItem>
   );
   return (
-    <ListItem key={team.ID} className={styles.listingWrapper}>
-      {content}
-    </ListItem>
+    <Accordion disableGutters className={styles.listingWrapper}>
+      <AccordionSummary
+        justifyContent="center"
+        alignItems="center"
+        expandIcon={<ExpandMoreIcon />}
+        //sx={{ padding: 0 }}
+      >
+        {/* <ListItem
+          key={team.ID}
+          //className={styles.listingWrapper}
+        > */}
+        {content}
+        {/* </ListItem> */}
+      </AccordionSummary>
+
+      <AccordionDetails>participant list</AccordionDetails>
+    </Accordion>
   );
 };
 
