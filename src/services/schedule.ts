@@ -18,6 +18,14 @@ type CourseSchedule = {
   END_TIME: string;
 };
 
+type SessionCourses = {
+  SessionBeginDate: string;
+  SessionCode: string;
+  SessionDescription: string;
+  SessionEndDate: string;
+  AllCourses: CourseSchedule;
+};
+
 type ScheduleEvent = {
   id: number;
   name: string;
@@ -37,6 +45,9 @@ const getSchedule = (username: string = '', sessionID: string = ''): Promise<Cou
   }
   return http.get(`schedule/${username}?sessionID=${sessionID}`);
 };
+
+const getAllCourses = (username: string): Promise<SessionCourses> =>
+  http.get(`schedule/${username}/courses`);
 
 function getMeetingDays(course: CourseSchedule): string[] {
   let dayArray = [];
@@ -117,6 +128,7 @@ const scheduleService = {
   getSchedule,
   makeScheduleCourses,
   getCanReadStudentSchedules,
+  getAllCourses,
 };
 
 export default scheduleService;
