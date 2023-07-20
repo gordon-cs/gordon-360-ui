@@ -58,6 +58,11 @@ const UpdatePlannedGraduationYear = () => {
             autoFocus
           />
         </FormControl>
+        <p>
+          <br /> This does not set your official graduation <br />
+          year. To make an official change, please <br /> contact{' '}
+          <a href="mailto:registrar@gordon.edu">the Registrar's Office</a>.
+        </p>
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
