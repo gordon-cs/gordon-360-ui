@@ -90,8 +90,6 @@ const GordonSchedulePanel = (props) => {
     setLoading(false);
   };
 
-  console.log(allCourses);
-  // console.log(hasSchedule);
   const handleScheduleDialogOpen = useCallback((calEvent) => {
     if (props.myProf) {
       setScheduleDialogOpen(true);
