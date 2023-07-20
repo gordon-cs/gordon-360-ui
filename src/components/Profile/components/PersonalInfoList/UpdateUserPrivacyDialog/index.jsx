@@ -6,9 +6,9 @@ import SearchField from 'views/PeopleSearch/components/SearchFieldList/component
 
 const UpdateUserPrivacy = (username, field) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [privacySettingList, setPrivacySettingList] = useState([]);
-  const [groupList, setGroupList] = useState([]);
-  let visibleTo = '';
+  const [privacySettingList, setPrivacySettingList] = useState();
+  const [groupList, setGroupList] = useState();
+  const [visibleTo, setVisibleTo] = useState('Private'); // default private while loading
 
   const handlePrivacy = async (event) => {
     try {
@@ -28,19 +28,18 @@ const UpdateUserPrivacy = (username, field) => {
   };
 
   useEffect(() => {
-    userService.getVisibilityGroups().then(setGroupList);
+    const loadData = async () => {
+      userService.getVisibilityGroups().then(setGroupList);
+      userService.getPrivacySetting(username).then(setPrivacySettingList);
+    };
+    loadData();
   }, []);
 
   useEffect(() => {
-    userService.getPrivacySetting(username).then(setPrivacySettingList);
-  }, [privacySettingList]);
-
-  // get user's privacy setting (Public, Privacy, FacStaff) for this field
-  for (let i = 0; i < privacySettingList.length; i++) {
-    if (privacySettingList[i].Field === field[0]) {
-      visibleTo = privacySettingList[i].VisibilityGroup;
+    if (privacySettingList) {
+      setVisibleTo(privacySettingList.find((f) => f.Field === field[0])?.VisibilityGroup);
     }
-  }
+  }, [privacySettingList]);
 
   return (
     <Grid>
@@ -48,7 +47,10 @@ const UpdateUserPrivacy = (username, field) => {
         <SearchField
           name="visibility"
           value={visibleTo}
-          updateValue={handlePrivacy}
+          updateValue={(e) => {
+            setVisibleTo(e.target.value);
+            handlePrivacy(e);
+          }}
           options={groupList}
           select
           size={120}
