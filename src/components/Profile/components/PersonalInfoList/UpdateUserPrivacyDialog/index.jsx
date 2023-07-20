@@ -35,21 +35,21 @@ const UpdateUserPrivacy = (username, field) => {
     userService.getPrivacySetting(username).then(setPrivacySettingList);
   }, [privacySettingList]);
 
-  let tempField = field;
-  if (field == 'HomeCity HomeState') {
-    field = 'HomeCity';
-  } else if (field == 'Country HomeCountry') {
-    field = 'Country';
-  }
+  // let tempField = field;
+  // if (field == 'HomeCity HomeState') {
+  //   field = 'HomeCity';
+  // } else if (field == 'Country HomeCountry') {
+  //   field = 'Country';
+  // }
 
   // get user's privacy setting (Public, Privacy, FacStaff) for this field
   for (let i = 0; i < privacySettingList.length; i++) {
-    if (privacySettingList[i].Field === field) {
+    if (privacySettingList[i].Field === field[0]) {
       visibleTo = privacySettingList[i].VisibilityGroup;
     }
   }
 
-  field = tempField;
+  // field = tempField;
 
   return (
     <div>

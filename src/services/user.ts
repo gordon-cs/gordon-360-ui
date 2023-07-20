@@ -181,7 +181,7 @@ export type OfficeLocationQuery = {
 };
 
 export type UserPrivacyQuery = {
-  Field: string;
+  Field: string[];
   VisibilityGroup: string;
 };
 

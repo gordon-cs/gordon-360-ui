@@ -172,7 +172,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, 'HomePhone')}
+      ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, ['HomePhone'])}
       privateInfo={isHomePhonePrivate}
       myProf={myProf}
     />
@@ -197,7 +197,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, 'MobilePhone')}
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, ['MobilePhone'])}
       privateInfo={isMobilePhonePrivate}
       myProf={myProf}
     />
@@ -207,8 +207,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   let combineHomeLocation =
     profile.Country === 'United States of America' || !profile.Country
-      ? 'HomeCity HomeState'
-      : 'Country HomeCountry';
+      ? ['HomeCity', 'HomeState']
+      : ['Country', 'HomeCountry'];
 
   const home = (
     <ProfileInfoListItem
@@ -542,7 +542,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       <ProfileInfoListItem
         title="Spouse:"
         contentText={profile.SpouseName}
-        ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, 'Spouse')}
+        ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, ['Spouse'])}
         privateInfo={(keepPrivate && myProf) || isSpousePrivate}
       />
     ) : null;
