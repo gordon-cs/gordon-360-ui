@@ -198,7 +198,6 @@ const MatchList = ({ matches = [], activityID }) => {
 };
 
 const MatchHistoryList = ({ matches, activityID }) => {
-  console.log(matches);
   return matches.length > 0 ? (
     <List dense>
       {matches.map((match) => (
