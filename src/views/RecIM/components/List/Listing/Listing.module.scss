@@ -16,7 +16,7 @@
 }
 
 %baseListing {
-  background-color: $neutral-light-gray2-opacity10;
+  background-color: var(--mui-palette-neutral-50);
   border-radius: 0.5em;
   align-items: center;
   box-shadow: inset -1px -1px $neutral-light-gray2-opacity50;
