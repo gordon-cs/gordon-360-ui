@@ -102,12 +102,12 @@
 }
 
 .redButton {
-  background-color: var(--mui-palette-error-dark);
+  background-color: var(--mui-palette-error-main);
   color: var(--mui-palette-error-contrastText);
 }
 
 .redButton:hover {
-  background-color: var(--mui-palette-error-main);
+  background-color: var(--mui-palette-error-dark);
 }
 
 .logoContainer {

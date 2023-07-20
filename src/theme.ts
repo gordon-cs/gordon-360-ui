@@ -164,6 +164,7 @@ const ScottieCyan_opacity10 = '#00AEEF1A';
 //Not an official gordon color anymore, we can consider changing this, it is a good error color
 const OldSchemeRed = '#B53228';
 const NauticalRed = '#FF5D53';
+const PureRed = '#FF0000';
 
 // Success
 const LaVidaGreen = '#006D22';
@@ -239,9 +240,9 @@ export const theme360 = extendTheme({
           900: '#005195',
         },
         error: {
-          main: TestToolContrast,
-          dark: OldSchemeRed,
+          main: OldSchemeRed,
           light: NauticalRed,
+          dark: PureRed,
           contrastText: White,
         },
         success: {
