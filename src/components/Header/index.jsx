@@ -9,11 +9,9 @@ import {
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
-import { projectName } from 'project-name';
+import { useNetworkStatus, useWindowSize } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
-import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
-import routes from 'routes';
+import { NavLink, useLocation } from 'react-router-dom';
 import { authenticate } from 'services/auth';
 import { windowBreakWidths } from 'theme';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
@@ -24,10 +22,10 @@ import styles from './Header.module.css';
 // Define header logo image - special image for Pi Day
 const todaysDate = new Date(); // Months: 0 = Jan, 1 = Feb, 2 = Mar, etc.
 const isPiDay = todaysDate.getMonth() === 2 && todaysDate.getDate() === 14; // March 14 (3/14)
-const angleMode = isPiDay ? "2pi" : "360";
-const headerLogo72dpi = "images/gc_" + angleMode + "_yellow_logo_72.png";
-const headerLogo64dpi = "images/gc_" + angleMode + "_yellow_logo_64.png";
-const headerLogo56dpi = "images/gc_" + angleMode + "_yellow_logo_56.png";
+const angleMode = isPiDay ? '2pi' : '360';
+const headerLogo72dpi = 'images/gc_' + angleMode + '_yellow_logo_72.png';
+const headerLogo64dpi = 'images/gc_' + angleMode + '_yellow_logo_64.png';
+const headerLogo56dpi = 'images/gc_' + angleMode + '_yellow_logo_56.png';
 
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
@@ -64,7 +62,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [anchorElement, setAnchorElement] = useState(null);
   const isOnline = useNetworkStatus();
-  const setDocumentTitle = useDocumentTitle();
   const isAuthenticated = useIsAuthenticated();
   const tabIndex = useTabHighlight();
 
@@ -150,13 +147,13 @@ const GordonHeader = ({ onDrawerToggle }) => {
       <AppBar className={styles.app_bar} position="static">
         <Toolbar>
           <IconButton
-            className={styles.menu_button}
+            className={styles.hamburger_menu_button}
             color="primary"
             aria-label="open drawer"
             onClick={onDrawerToggle}
             size="large"
           >
-            <MenuIcon className={styles.menu_button_icon} />
+            <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
           <Link to="/" component={ForwardNavLink} value={tabIndex}>
             <picture>
@@ -166,18 +163,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
             </picture>
           </Link>
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
-            <Routes>
-              {routes.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={() => {
-                    setDocumentTitle(route.name || projectName);
-                    return <span>{route.name || projectName}</span>;
-                  }}
-                />
-              ))}
-            </Routes>
+            {/* This h6 box uses flex to keep people search and the profile button stuck to the right side of the header */}
           </Typography>
           <div className={styles.center_container}>
             <Tabs textColor="inherit" indicatorColor="secondary" centered value={tabIndex}>

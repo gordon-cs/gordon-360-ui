@@ -1,9 +1,5 @@
 @import '../../vars';
 
-.searchIcon {
-  color: var(--mui-palette-primary-contrastText);
-}
-
 .gordon_header {
   position: absolute;
   width: 100%;
@@ -30,20 +26,13 @@
     text-decoration: none;
   }
 
-  .menu_button {
+  .hamburger_menu_button {
     margin-left: -12px;
   }
 
   .center_container {
     visibility: hidden;
     width: 0;
-  }
-
-  .right_side_container {
-    margin-left: 16px;
-    padding: 0;
-    align-items: center;
-    display: none;
   }
 
   .people_search_container_container {
@@ -78,7 +67,7 @@
   }
 
   @media (min-width: $break-lg) {
-    .menu_button {
+    .hamburger_menu_button {
       display: none;
     }
     .app_bar {
@@ -90,11 +79,6 @@
       justify-content: center;
       display: flex;
       visibility: visible;
-    }
-
-    .right_side_container {
-      display: flex;
-      margin-left: 24px;
     }
   }
 
@@ -118,7 +102,7 @@
     font-weight: bold;
   }
 
-  .menu_button_icon {
+  .hamburger_menu_button_icon {
     color: var(--mui-palette-primary-contrastText);
   }
 
