@@ -167,7 +167,12 @@ const ExpandableTeamListing = ({ team, teamScore, attendance, isAdmin }) => {
 
   return (
     <Accordion disableGutters className={styles.listingWrapper}>
-      <AccordionSummary justifyContent="center" alignItems="center" expandIcon={<ExpandMoreIcon />}>
+      <AccordionSummary
+        sx={{ paddingLeft: 0 }}
+        justifyContent="center"
+        alignItems="center"
+        expandIcon={<ExpandMoreIcon />}
+      >
         {content}
       </AccordionSummary>
 
