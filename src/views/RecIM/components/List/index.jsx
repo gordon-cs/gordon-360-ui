@@ -213,7 +213,7 @@ const MatchHistoryList = ({ matches, activityID }) => {
  * Currently used in Match page to render multiple
  * Teams that can expand into participantLists
  */
-const ExpandableTeamList = ({ teams, teamScores, attendance, activityID }) => {
+const ExpandableTeamList = ({ teams, teamScores, attendance, activityID, isAdmin }) => {
   if (!teams?.length)
     return <Typography className={styles.secondaryText}>No teams to show.</Typography>;
 
@@ -250,6 +250,7 @@ const ExpandableTeamList = ({ teams, teamScores, attendance, activityID }) => {
           team={team}
           teamScore={teamScores.find((score) => score.TeamID === team.ID)}
           attendance={attendance.find((att) => att.TeamID === team.ID)}
+          isAdmin={isAdmin}
         />
       ))}
     </List>

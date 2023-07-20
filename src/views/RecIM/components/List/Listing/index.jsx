@@ -15,6 +15,9 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Card,
+  CardHeader,
+  CardContent,
 } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
@@ -35,6 +38,7 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
+import { ParticipantList } from '..';
 
 const activityTypeIconPair = [
   {
@@ -117,16 +121,7 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const ExpandableTeamListing = ({ team, teamScore, attendance }) => {
-  const log = () => {
-    console.log('');
-    console.log(team);
-    console.log(teamScore);
-    console.log(attendance);
-    console.log('');
-  };
-  console.log(team);
-
+const ExpandableTeamListing = ({ team, teamScore, attendance, isAdmin }) => {
   let content = (
     <ListItem>
       <Typography className={styles.listingTitle} paddingRight={2}>
@@ -169,23 +164,32 @@ const ExpandableTeamListing = ({ team, teamScore, attendance }) => {
       </Grid>
     </ListItem>
   );
+
   return (
     <Accordion disableGutters className={styles.listingWrapper}>
-      <AccordionSummary
-        justifyContent="center"
-        alignItems="center"
-        expandIcon={<ExpandMoreIcon />}
-        //sx={{ padding: 0 }}
-      >
-        {/* <ListItem
-          key={team.ID}
-          //className={styles.listingWrapper}
-        > */}
+      <AccordionSummary justifyContent="center" alignItems="center" expandIcon={<ExpandMoreIcon />}>
         {content}
-        {/* </ListItem> */}
       </AccordionSummary>
 
-      <AccordionDetails>participant list</AccordionDetails>
+      <AccordionDetails>
+        <Card>
+          <CardHeader
+            title="Participants"
+            className={styles.cardHeaderSecondary}
+            titleTypographyProps={{ variant: 'h7' }}
+          />
+          <CardContent>
+            <ParticipantList
+              participants={team.Participant}
+              withAttendance
+              attendance={attendance.Attendance}
+              matchID={teamScore.MatchID}
+              teamID={team.ID}
+              isAdmin={isAdmin}
+            />
+          </CardContent>
+        </Card>
+      </AccordionDetails>
     </Accordion>
   );
 };
