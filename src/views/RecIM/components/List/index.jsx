@@ -8,6 +8,7 @@ import {
   TeamListing,
   SportListing,
   MatchHistoryListing,
+  ExpandableTeamListing,
 } from './Listing';
 import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
@@ -15,6 +16,7 @@ import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
 import { addDays } from 'date-fns';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
+import { useMediaQuery } from '@mui/material';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -43,10 +45,11 @@ const ParticipantList = ({
   showInactive,
   callbackFunction,
 }) => {
+  const isMobile = useMediaQuery('(max-width:600px)');
+  console.log(isMobile);
   // callback to remove current captain
   const promoteNewCaptain = async (newCaptainUsername) => {
     let currentCaptain = participants.find((p) => p.Role === 'Team-captain/Creator').Username;
-    console.log(currentCaptain, newCaptainUsername);
     await editTeamParticipant(teamID, { Username: newCaptainUsername, RoleTypeID: 5 }); //captain
     await editTeamParticipant(teamID, { Username: currentCaptain, RoleTypeID: 3 }); //member
     callbackFunction((r) => !r);
@@ -78,6 +81,7 @@ const ParticipantList = ({
           participant.Role !== 'Team-captain/Creator' &&
           participant.Role !== 'Requested Join' // don't promote people who haven't joined
         }
+        isMobile={isMobile}
       />
     );
   });
@@ -198,7 +202,7 @@ const MatchList = ({ matches = [], activityID }) => {
 };
 
 const MatchHistoryList = ({ matches, activityID }) => {
-  return matches.length > 0 ? (
+  return matches?.length > 0 ? (
     <List dense>
       {matches.map((match) => (
         <MatchHistoryListing key={match?.MatchID} match={match} activityID={activityID} />
@@ -206,6 +210,54 @@ const MatchHistoryList = ({ matches, activityID }) => {
     </List>
   ) : (
     <Typography className={styles.secondaryText}>Team hasn't played any matches.</Typography>
+  );
+};
+
+/**
+ * Currently used in Match page to render multiple
+ * Teams that can expand into participantLists
+ */
+const ExpandableTeamList = ({ teams, teamScores, attendance, activityID, isAdmin }) => {
+  if (!teams?.length)
+    return <Typography className={styles.secondaryText}>No teams to show.</Typography>;
+
+  /**
+   * sort by score then by sportsmanship
+   */
+  let formattedTeams = [];
+
+  teams.sort((a, b) => {
+    let aScore = teamScores.find((ts) => ts.TeamID === a.ID);
+    let bScore = teamScores.find((ts) => ts.TeamID === b.ID);
+    if (aScore.TeamScore > bScore.TeamScore) return -1;
+    if (aScore.TeamScore === bScore.TeamScore)
+      if (aScore.SportsmanshipScore > bScore.SportsmanshipScore) return -1;
+    return 1;
+  });
+  let ranking = 1;
+  teams.forEach((team) => {
+    formattedTeams.push({
+      ...team,
+      ...{
+        Ranking: ranking,
+        ActivityID: activityID,
+      },
+    });
+    ranking++;
+  });
+
+  return (
+    <List dense>
+      {formattedTeams.map((team) => (
+        <ExpandableTeamListing
+          key={team.ID}
+          team={team}
+          teamScore={teamScores.find((score) => score.TeamID === team.ID)}
+          attendance={attendance.find((att) => att.TeamID === team.ID)}
+          isAdmin={isAdmin}
+        />
+      ))}
+    </List>
   );
 };
 
@@ -316,6 +368,7 @@ export {
   ParticipantList,
   MatchList,
   MatchHistoryList,
+  ExpandableTeamList,
   TeamList,
   SurfaceList,
   SportList,
