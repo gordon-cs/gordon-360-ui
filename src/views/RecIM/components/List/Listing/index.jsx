@@ -12,12 +12,19 @@ import {
   MenuItem,
   Checkbox,
   FormControlLabel,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Card,
+  CardHeader,
+  CardContent,
 } from '@mui/material';
 import styles from './Listing.module.css';
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { isPast } from 'date-fns';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -32,6 +39,8 @@ import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 import { editParticipantAdmin, editParticipantStatus } from 'services/recim/participant';
+import { ParticipantList } from '..';
+
 
 const activityTypeIconPair = [
   {
@@ -111,6 +120,84 @@ const ActivityListing = ({ activity }) => {
         </Grid>
       </ListItemButton>
     </ListItem>
+  );
+};
+
+const ExpandableTeamListing = ({ team, teamScore, attendance, isAdmin }) => {
+  let content = (
+    <ListItem>
+      <Typography className={styles.listingTitle} paddingRight={2}>
+        #{team.Ranking}
+      </Typography>
+      <ListItemAvatar>
+        <Avatar src={team.Logo ?? defaultLogo} className={styles.teamLogo}></Avatar>
+      </ListItemAvatar>
+      <Grid container>
+        <Grid item container xs={8}>
+          <Grid item xs={12}>
+            <Link to={`/recim/activity/${team.ActivityID}/team/${team.ID}`}>
+              <Typography className={`${styles.listingTitle} gc360_text_link`}>
+                {team.Name}
+              </Typography>
+            </Link>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography className={styles.listingSubtitle}>
+              Sportsmanship: {teamScore.SportsmanshipScore}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid
+          item
+          container
+          direction="row"
+          textAlign="right"
+          justifyContent="space-around"
+          alignItems="center"
+          xs={4}
+        >
+          <Grid item xs={11}>
+            <Typography className={styles.listingTitle}>{teamScore.TeamScore}</Typography>
+          </Grid>
+          <Grid item xs={1}>
+            <Typography>pts</Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+    </ListItem>
+  );
+
+  return (
+    <Accordion disableGutters className={styles.listingWrapper}>
+      <AccordionSummary
+        sx={{ paddingLeft: 0 }}
+        justifyContent="center"
+        alignItems="center"
+        expandIcon={<ExpandMoreIcon />}
+      >
+        {content}
+      </AccordionSummary>
+
+      <AccordionDetails>
+        <Card>
+          <CardHeader
+            title="Participants"
+            className={styles.cardHeaderSecondary}
+            titleTypographyProps={{ variant: 'h7' }}
+          />
+          <CardContent>
+            <ParticipantList
+              participants={team.Participant}
+              withAttendance
+              attendance={attendance.Attendance}
+              matchID={teamScore.MatchID}
+              teamID={team.ID}
+              isAdmin={isAdmin}
+            />
+          </CardContent>
+        </Card>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 
@@ -261,6 +348,7 @@ const ParticipantListing = ({
   teamID,
   matchID,
   makeNewCaptain,
+  isMobile,
 }) => {
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
@@ -373,10 +461,11 @@ const ParticipantListing = ({
         <ListItemAvatar>
           <Avatar
             src={`data:image/jpg;base64,${avatar}`}
-            className={minimal ? styles.avatarSmall : styles.avatar}
+            className={minimal || isMobile ? styles.avatarSmall : styles.avatar}
             variant="rounded"
-          ></Avatar>
+          />
         </ListItemAvatar>
+
         <ListItemText primary={fullName} secondary={participant.Role} />
       </>
     );
@@ -409,8 +498,9 @@ const ParticipantListing = ({
             {withAttendance && (
               <>
                 {isAdmin && (
-                  <Typography className={styles.listingSubtitle}>
-                    attended {attendanceCount} match{attendanceCount !== 1 && `es`}
+                  <Typography className={styles.listingSubtitle} textAlign="right">
+                    att{!isMobile && 'ended'}: {attendanceCount} {!isMobile && 'match'}
+                    {attendanceCount !== 1 && !isMobile && `es`}
                   </Typography>
                 )}
                 <FormControlLabel
@@ -423,7 +513,7 @@ const ParticipantListing = ({
                       disabled={!isAdmin}
                     />
                   }
-                  label={didAttend ? 'Present' : <i>Absent</i>}
+                  label={!isMobile && (didAttend ? 'Present' : <i>Absent</i>)}
                   labelPlacement="start"
                   className={!didAttend && styles.listingSubtitle}
                 />
@@ -577,6 +667,55 @@ const ParticipantListing = ({
           </Menu>
         )}
       </ListItem>
+    </ListItem>
+  );
+};
+
+// compacted match listing
+const MatchHistoryListing = ({ match, activityID }) => {
+  if (!match) return null;
+  const ownScore = match.TeamScore;
+  const oppScore = match.OpposingTeamScore;
+  return (
+    <ListItem key={match.MatchID} className={styles.listingWrapper}>
+      <ListItemButton
+        component={Link}
+        to={`/recim/activity/${activityID}/match/${match.MatchID}`}
+        // sx={{ borderRadius: '0.5em' }}
+        className={
+          ownScore > oppScore
+            ? styles.matchHistoryListing_winner
+            : ownScore < oppScore
+            ? styles.matchHistoryListing_loser
+            : styles.matchHistoryListing
+        }
+      >
+        <Grid container alignItems="center">
+          <Grid item xs={2} textAlign="center">
+            <Typography>
+              {ownScore} : {oppScore}
+            </Typography>
+          </Grid>
+          <Grid item xs={1}>
+            <Typography>vs.</Typography>
+          </Grid>
+          <Grid item xs={2.8}>
+            <img
+              src={match.Opponent?.Logo ?? defaultLogo}
+              alt="Team Icon"
+              className={styles.teamHistoryLogo}
+            ></img>
+          </Grid>
+          <Grid item xs={4.2}>
+            <Typography>{match.Opponent.Name}</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography className={styles.listingSubtitle}>
+              {standardDate(match.MatchStartTime, true)}
+            </Typography>
+          </Grid>
+        </Grid>
+      </ListItemButton>
     </ListItem>
   );
 };
@@ -836,9 +975,11 @@ const SurfaceListing = ({ surface, confirmDelete, editDetails }) => {
 
 export {
   ActivityListing,
+  ExpandableTeamListing,
   TeamListing,
   ParticipantListing,
   MatchListing,
+  MatchHistoryListing,
   SurfaceListing,
   SportListing,
 };

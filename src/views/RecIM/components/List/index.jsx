@@ -1,4 +1,4 @@
-import { Grid, Typography, Tabs, Tab, Box, List, TextField, InputAdornment } from '@mui/material';
+import { Grid, Typography, Tabs, Tab, Box, List, TextField, InputAdornment, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
   ActivityListing,
@@ -7,6 +7,8 @@ import {
   SurfaceListing,
   TeamListing,
   SportListing,
+  MatchHistoryListing,
+  ExpandableTeamListing,
 } from './Listing';
 import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
@@ -21,6 +23,7 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { editParticipantStatus } from 'services/recim/participant';
+
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -55,6 +58,7 @@ const ParticipantList = ({
   const [suspendee, setSuspendee] = useState();
   const [suspensionEndDateTime, setSuspensionEndDateTime] = useState('');
   const [searchValue, setSearchValue] = useState('');
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     // this is a temporary solution. Only admins will see this and thus the performance
@@ -177,6 +181,7 @@ const ParticipantList = ({
           participant.Role !== 'Team-captain/Creator' &&
           participant.Role !== 'Requested Join' // don't promote people who haven't joined
         }
+        isMobile={isMobile}
       />
     );
   });
@@ -191,7 +196,7 @@ const ParticipantList = ({
   );
 };
 
-const MatchList = ({ matches, activityID }) => {
+const MatchList = ({ matches = [], activityID }) => {
   const [selectedDay, setSelectedDay] = useState(0);
   let firstDate = matches[0] ? standardDate(matches[0].StartTime, false, true) : null;
   let firstFullDate = matches[0] ? getFullDate(matches[0].StartTime) : null;
@@ -304,6 +309,66 @@ const MatchList = ({ matches, activityID }) => {
   );
 };
 
+const MatchHistoryList = ({ matches, activityID }) => {
+  return matches?.length > 0 ? (
+    <List dense>
+      {matches.map((match) => (
+        <MatchHistoryListing key={match?.MatchID} match={match} activityID={activityID} />
+      ))}
+    </List>
+  ) : (
+    <Typography className={styles.secondaryText}>Team hasn't played any matches.</Typography>
+  );
+};
+
+/**
+ * Currently used in Match page to render multiple
+ * Teams that can expand into participantLists
+ */
+const ExpandableTeamList = ({ teams, teamScores, attendance, activityID, isAdmin }) => {
+  if (!teams?.length)
+    return <Typography className={styles.secondaryText}>No teams to show.</Typography>;
+
+  /**
+   * sort by score then by sportsmanship
+   */
+  let formattedTeams = [];
+
+  teams.sort((a, b) => {
+    let aScore = teamScores.find((ts) => ts.TeamID === a.ID);
+    let bScore = teamScores.find((ts) => ts.TeamID === b.ID);
+    if (aScore.TeamScore > bScore.TeamScore) return -1;
+    if (aScore.TeamScore === bScore.TeamScore)
+      if (aScore.SportsmanshipScore > bScore.SportsmanshipScore) return -1;
+    return 1;
+  });
+  let ranking = 1;
+  teams.forEach((team) => {
+    formattedTeams.push({
+      ...team,
+      ...{
+        Ranking: ranking,
+        ActivityID: activityID,
+      },
+    });
+    ranking++;
+  });
+
+  return (
+    <List dense>
+      {formattedTeams.map((team) => (
+        <ExpandableTeamListing
+          key={team.ID}
+          team={team}
+          teamScore={teamScores.find((score) => score.TeamID === team.ID)}
+          attendance={attendance.find((att) => att.TeamID === team.ID)}
+          isAdmin={isAdmin}
+        />
+      ))}
+    </List>
+  );
+};
+
 // setTargetTeamID is used for edit Match teams
 const TeamList = ({
   participant,
@@ -406,4 +471,13 @@ const SurfaceList = ({ surfaces, confirmDelete, editDetails }) => {
   return <List dense>{content}</List>;
 };
 
-export { ActivityList, ParticipantList, MatchList, TeamList, SurfaceList, SportList };
+export {
+  ActivityList,
+  ParticipantList,
+  MatchList,
+  MatchHistoryList,
+  ExpandableTeamList,
+  TeamList,
+  SurfaceList,
+  SportList,
+};
