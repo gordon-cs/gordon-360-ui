@@ -222,8 +222,6 @@ export const theme360 = extendTheme({
           700: '#1C75B3',
           800: '#1365A2',
           900: '#014883',
-          A100: '#013865',
-          A200: '#293a48',
         },
         secondary: {
           main: ScottieCyan,
