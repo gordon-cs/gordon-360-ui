@@ -344,6 +344,7 @@ const ParticipantListing = ({
   teamID,
   matchID,
   makeNewCaptain,
+  isMobile,
 }) => {
   const { teamID: teamIDParam, activityID } = useParams(); // for use by team page roster
   const [avatar, setAvatar] = useState();
@@ -452,10 +453,11 @@ const ParticipantListing = ({
         <ListItemAvatar>
           <Avatar
             src={`data:image/jpg;base64,${avatar}`}
-            className={minimal ? styles.avatarSmall : styles.avatar}
+            className={minimal || isMobile ? styles.avatarSmall : styles.avatar}
             variant="rounded"
-          ></Avatar>
+          />
         </ListItemAvatar>
+
         <ListItemText primary={fullName} secondary={participant.Role} />
       </>
     );
@@ -487,8 +489,9 @@ const ParticipantListing = ({
             {withAttendance && (
               <>
                 {isAdmin && (
-                  <Typography className={styles.listingSubtitle}>
-                    attended {attendanceCount} match{attendanceCount !== 1 && `es`}
+                  <Typography className={styles.listingSubtitle} textAlign="right">
+                    att{!isMobile && 'ended'}: {attendanceCount} {!isMobile && 'match'}
+                    {attendanceCount !== 1 && !isMobile && `es`}
                   </Typography>
                 )}
                 <FormControlLabel
@@ -501,7 +504,7 @@ const ParticipantListing = ({
                       disabled={!isAdmin}
                     />
                   }
-                  label={didAttend ? 'Present' : <i>Absent</i>}
+                  label={!isMobile && (didAttend ? 'Present' : <i>Absent</i>)}
                   labelPlacement="start"
                   className={!didAttend && styles.listingSubtitle}
                 />

@@ -10,12 +10,13 @@ import {
   MatchHistoryListing,
   ExpandableTeamListing,
 } from './Listing';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './List.module.css';
 import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
 import { addDays } from 'date-fns';
 import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
+import { useMediaQuery } from '@mui/material';
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
@@ -44,6 +45,8 @@ const ParticipantList = ({
   showInactive,
   callbackFunction,
 }) => {
+  const isMobile = useMediaQuery('(max-width:600px)');
+  console.log(isMobile);
   // callback to remove current captain
   const promoteNewCaptain = async (newCaptainUsername) => {
     let currentCaptain = participants.find((p) => p.Role === 'Team-captain/Creator').Username;
@@ -78,6 +81,7 @@ const ParticipantList = ({
           participant.Role !== 'Team-captain/Creator' &&
           participant.Role !== 'Requested Join' // don't promote people who haven't joined
         }
+        isMobile={isMobile}
       />
     );
   });
