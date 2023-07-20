@@ -188,9 +188,11 @@ const GordonSchedulePanel = (props) => {
                 </Grid>
                 <Grid lg={7}></Grid>
                 <Grid item align="center" className={styles.addCalendarInfoText}>
-                  <Typography className={styles.addCalendarInfoText}>
-                    Click on Course to add Schedule to Personal Calendar
-                  </Typography>
+                  {props.myProf && (
+                    <Typography className={styles.addCalendarInfoText}>
+                      Click on Course to add Schedule to Personal Calendar
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar

@@ -1,20 +1,18 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { Card, CardContent, CardHeader, Grid, List, Typography, IconButton } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
-import { Markup } from 'interweave';
 import styles from './OfficeInfoList.module.css';
-import { gordonColors } from 'theme';
 import UpdateOffice from './UpdateOfficeLocationDialog';
 import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 import UpdateMail from './UpdateMailDestinationDialog';
 import GordonTooltip from 'components/GordonTooltip';
 import user from 'services/user';
 import EditIcon from '@mui/icons-material/Edit';
+import { SignalWifiStatusbarConnectedNoInternet4TwoTone } from '@mui/icons-material';
 
 const OfficeInfoList = ({
   myProf,
   profile: {
-    AD_Username,
     BuildingDescription,
     OnCampusDepartment,
     OnCampusRoom,
@@ -25,6 +23,9 @@ const OfficeInfoList = ({
     Mail_Description,
   },
 }) => {
+  const [profOfficeHours, setProfOfficeHours] = useState(office_hours);
+  const [profMailLocation, setProfMailLocation] = useState(Mail_Location);
+
   // Only display on FacStaff profiles
   if (!PersonType?.includes('fac')) {
     return null;
@@ -55,15 +56,18 @@ const OfficeInfoList = ({
       title="Office Hours:"
       contentText={
         <Grid container spacing={0} alignItems="center">
-          <Grid item>{office_hours ? office_hours : 'Add office hours here'}</Grid>
+          <Grid item>{profOfficeHours ? profOfficeHours : 'Add office hours here'}</Grid>
           <Grid item>
-            <UpdateOfficeHours officeHours={office_hours} />
+            <UpdateOfficeHours
+              officeHours={profOfficeHours}
+              changeOfficeHours={setProfOfficeHours}
+            />
           </Grid>
         </Grid>
       }
     />
-  ) : office_hours ? (
-    <ProfileInfoListItem title="Office Hours:" contentText={`${office_hours}`} />
+  ) : profOfficeHours ? (
+    <ProfileInfoListItem title="Office Hours:" contentText={profOfficeHours} />
   ) : null;
 
   const room = myProf ? (
@@ -83,7 +87,7 @@ const OfficeInfoList = ({
       }
     />
   ) : BuildingDescription || OnCampusRoom ? (
-    <ProfileInfoListItem title="Room:" contentText={({ BuildingDescription }, { OnCampusRoom })} />
+    <ProfileInfoListItem title="Room:" contentText={`${BuildingDescription}, ${OnCampusRoom}`} />
   ) : null;
 
   const mailstop = myProf ? (
@@ -93,7 +97,7 @@ const OfficeInfoList = ({
         <Grid container spacing={0} alignItems="center">
           <Grid item>
             <Typography>
-              {Mail_Location ? Mail_Location : 'Add your mail location here'}
+              {profMailLocation ? profMailLocation : 'Add your mail location here'}
               {Mail_Description && (
                 <GordonTooltip
                   content={Mail_Description}
@@ -104,29 +108,14 @@ const OfficeInfoList = ({
             </Typography>
           </Grid>
           <Grid item>
-            <UpdateMail />
+            <UpdateMail changeMailLocation={setProfMailLocation} />
           </Grid>
         </Grid>
       }
     />
-  ) : Mail_Location ? (
-    <ProfileInfoListItem title="Mailstop:" contentText={{ Mail_Location }} />
+  ) : profMailLocation ? (
+    <ProfileInfoListItem title="Mailstop:" contentText={profMailLocation} />
   ) : null;
-
-  const updateOfficeInfo =
-    myProf && PersonType?.includes('fac') ? (
-      <Typography align="left" className={styles.note}>
-        NOTE: Update your office info{' '}
-        <a
-          href="https://go.gordon.edu/general/myaccount.cfm"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: gordonColors.primary.blue }}
-        >
-          here
-        </a>
-      </Typography>
-    ) : null;
 
   return (
     <Grid item xs={12} lg={12}>

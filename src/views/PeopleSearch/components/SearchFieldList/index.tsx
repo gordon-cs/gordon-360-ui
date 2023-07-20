@@ -74,7 +74,7 @@ const relationship_statuses = [
 const searchPageTitle = (
   <>
     Search the
-    <b className={styles.people_text}> Gordon </b>
+    <b className={styles.search_field_list_gordon_text}> Gordon </b>
     Community
   </>
 );
@@ -321,13 +321,12 @@ const SearchFieldList = ({ onSearch }: Props) => {
   };
 
   const handleSwitchChange = () => {
-    if (switchYearRange) {
-      setSearchParams((sp) => ({
-        ...sp,
-        initial_year: '',
-        final_year: '',
-      }));
-    }
+    setSearchParams((sp) => ({
+      ...sp,
+      initial_year: '',
+      final_year: '',
+      graduation_year: '',
+    }));
     setSwitchYearRange((prev) => !prev);
   };
 
@@ -336,7 +335,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }
 
   const PeopleSearchCheckbox = (
-    <Grid item xs={12} md={6} className={styles.people_section}>
+    <Grid item xs={12} md={6} className={styles.search_field_list_people_text}>
       <FormLabel component="label" color="primary">
         Include: &nbsp;
       </FormLabel>
@@ -393,10 +392,13 @@ const SearchFieldList = ({ onSearch }: Props) => {
   );
 
   return (
-    <Card className={styles.people_section}>
+    <Card className={styles.search_field_list_gordon_text}>
+      <CardHeader
+        title={searchPageTitle}
+        titleTypographyProps={{ align: 'center' }}
+        className="gc360_header"
+      />
       <CardContent>
-        <CardHeader title={searchPageTitle} titleTypographyProps={{ align: 'center' }} />
-
         {/* Search Section 1: General Info */}
         <Grid container spacing={2} direction="row" alignItems="center" justifyContent="center">
           <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
@@ -447,11 +449,15 @@ const SearchFieldList = ({ onSearch }: Props) => {
         <Grid container alignItems="center">
           <Accordion style={{ flexGrow: 1 }} elevation={3}>
             <AccordionSummary
-              expandIcon={<ExpandMore className={styles.people} />}
+              expandIcon={<ExpandMore className={styles.search_field_list_accordion_arrow} />}
               id="more-search-options-header"
               aria-controls="more-search-options-controls"
             >
-              <Typography variant="h6" align="center" className={styles.people_searchbar}>
+              <Typography
+                variant="h6"
+                align="center"
+                className={styles.search_field_list_people_text}
+              >
                 More Search Options
               </Typography>
             </AccordionSummary>
@@ -600,28 +606,30 @@ const SearchFieldList = ({ onSearch }: Props) => {
         </Grid>
       </CardContent>
 
-      <CardActions>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => setSearchParams(initialSearchParams)}
-        >
-          RESET
-        </Button>
-        {loadingSearch ? (
-          <GordonLoader />
-        ) : (
+      <Grid container spacing={2} alignItems="center" justifyContent="center">
+        <CardActions>
           <Button
-            color="primary"
-            onClick={() => search(searchParams)}
-            fullWidth
             variant="contained"
-            disabled={!canSearch}
+            color="error"
+            onClick={() => setSearchParams(initialSearchParams)}
           >
-            SEARCH
+            CLEAR
           </Button>
-        )}
-      </CardActions>
+          {loadingSearch ? (
+            <GordonLoader />
+          ) : (
+            <Button
+              color="secondary"
+              onClick={() => search(searchParams)}
+              className={styles.search_field_list_search_width}
+              variant="contained"
+              disabled={!canSearch}
+            >
+              SEARCH
+            </Button>
+          )}
+        </CardActions>
+      </Grid>
     </Card>
   );
 };
