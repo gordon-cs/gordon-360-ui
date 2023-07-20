@@ -135,27 +135,35 @@ const ExpandableTeamListing = ({ team, teamScore, attendance }) => {
       <ListItemAvatar>
         <Avatar src={team.Logo ?? defaultLogo} className={styles.teamLogo}></Avatar>
       </ListItemAvatar>
-      <Grid container columnSpacing={0}>
-        <Grid item xs={8}>
-          <Link to={`/recim/activity/${team.ActivityID}/team/${team.ID}`}>
-            <Typography className={`${styles.listingTitle} gc360_text_link`}>
-              {team.Name}
-            </Typography>
-          </Link>
-        </Grid>
-        <Grid item container direction="row" textAlign="right" justifyContent="space-evenly" xs={4}>
-          <Grid item xs={9}>
-            <Typography>Score: </Typography>
+      <Grid container>
+        <Grid item container xs={8}>
+          <Grid item xs={12}>
+            <Link to={`/recim/activity/${team.ActivityID}/team/${team.ID}`}>
+              <Typography className={`${styles.listingTitle} gc360_text_link`}>
+                {team.Name}
+              </Typography>
+            </Link>
           </Grid>
-          <Grid item xs={2}>
-            <Typography className={styles.listingTitle}>{teamScore.TeamScore}</Typography>
-          </Grid>
-        </Grid>
-        <Grid item container>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Typography className={styles.listingSubtitle}>
               Sportsmanship: {teamScore.SportsmanshipScore}
             </Typography>
+          </Grid>
+        </Grid>
+        <Grid
+          item
+          container
+          direction="row"
+          textAlign="right"
+          justifyContent="space-around"
+          alignItems="center"
+          xs={4}
+        >
+          <Grid item xs={11}>
+            <Typography className={styles.listingTitle}>{teamScore.TeamScore}</Typography>
+          </Grid>
+          <Grid item xs={1}>
+            <Typography>pts</Typography>
           </Grid>
         </Grid>
       </Grid>
