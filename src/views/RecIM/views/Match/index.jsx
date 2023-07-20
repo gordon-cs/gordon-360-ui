@@ -103,10 +103,10 @@ const Match = () => {
     }
 
     if (match?.Scores.length > 0) {
-      let winnerID = match.Scores.sort(function (a, b) {
+      let winnerID = match.Scores.sort((a, b) => {
         let x = a['TeamScore'];
         let y = b['TeamScore'];
-        return x < y ? -1 : x > y ? 1 : 0;
+        return x > y ? -1 : 1;
       })[0].TeamID;
       let winner = match.Team.find((t) => t.ID === winnerID);
       setCurrentWinner(winner);
@@ -298,6 +298,9 @@ const Match = () => {
             spacing={1}
             flexWrap="nowrap"
           >
+            {/**
+             * MULTI TEAM MATCH HEADER
+             */}
             <Grid
               item
               container
@@ -327,13 +330,12 @@ const Match = () => {
               )}
             </Grid>
 
-            <Grid item container xs={3.5} alignItems="center" direction="column" sx={{ mt: 3 }}>
-              {match?.Status === 'Completed' && (
+            {match?.Status === 'Completed' && (
+              <Grid item container xs={3.5} alignItems="center" direction="column" sx={{ mt: 3 }}>
                 <Grid item>
                   <Typography className={styles.subtitle}>Final</Typography>
                 </Grid>
-              )}
-              {match?.Status === 'Completed' && (
+
                 <Grid item textAlign="center">
                   <Typography variant="h5">Winner</Typography>
                   <LinkRouter
@@ -344,8 +346,8 @@ const Match = () => {
                     </Typography>
                   </LinkRouter>
                 </Grid>
-              )}
-            </Grid>
+              </Grid>
+            )}
             {/* right team info */}
             <Grid item xs={5} textAlign={'right'}>
               <IconButton onClick={handleSettingsClick} sx={{ mr: '1rem' }}>
@@ -439,6 +441,7 @@ const Match = () => {
                     teams={match?.Team}
                     teamScores={match?.Scores}
                     attendance={matchAttendance}
+                    activityID={match.Activity.ID}
                   />
                 </CardContent>
               </Card>

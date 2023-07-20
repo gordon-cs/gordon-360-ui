@@ -113,7 +113,7 @@ const ActivityListing = ({ activity }) => {
   );
 };
 
-const ExpandableTeamListing = ({ team, teamScore, attendance }) => {
+const ExpandableTeamListing = ({ team, teamScore, attendance, activityID }) => {
   const log = () => {
     console.log('');
     console.log(team);
@@ -123,22 +123,34 @@ const ExpandableTeamListing = ({ team, teamScore, attendance }) => {
   };
 
   let content = (
-    <ListItemButton onClick={() => log()}>
+    <ListItemButton className={styles.listing} onClick={() => log()}>
+      <Typography className={styles.listingTitle} paddingRight={2}>
+        {team.ranking}
+      </Typography>
+
       <ListItemAvatar>
         <Avatar src={team.Logo ?? defaultLogo} className={styles.teamLogo}></Avatar>
       </ListItemAvatar>
       <Grid container columnSpacing={2}>
-        <Grid item xs={12}>
+        <Grid item xs={8}>
           <Typography className={styles.listingTitle}>{team.Name}</Typography>
         </Grid>
-
+        <Grid
+          item
+          container
+          direction="row"
+          textAlign="right"
+          justifyContent="space-between"
+          xs={4}
+        >
+          <Grid item xs={9}>
+            <Typography>Score: </Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography className={styles.listingTitle}>{teamScore.TeamScore}</Typography>
+          </Grid>
+        </Grid>
         <Grid item container>
-          <Grid item xs={6}>
-            <Typography className={styles.listingSubtitle}>Score: {teamScore.TeamScore}</Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography className={styles.listingSubtitle}>Status: {team.Status}</Typography>
-          </Grid>
           <Grid item xs={6}>
             <Typography className={styles.listingSubtitle}>
               Sportsmanship: {teamScore.SportsmanshipScore}

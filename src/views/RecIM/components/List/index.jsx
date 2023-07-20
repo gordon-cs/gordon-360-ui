@@ -10,7 +10,7 @@ import {
   MatchHistoryListing,
   ExpandableTeamListing,
 } from './Listing';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from './List.module.css';
 import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';
@@ -213,7 +213,7 @@ const MatchHistoryList = ({ matches, activityID }) => {
  * Currently used in Match page to render multiple
  * Teams that can expand into participantLists
  */
-const ExpandableTeamList = ({ teams, teamScores, attendance }) => {
+const ExpandableTeamList = ({ teams, teamScores, attendance, activityID }) => {
   // console.log('');
   // console.log(teams);
   // console.log(teamScores);
@@ -223,10 +223,23 @@ const ExpandableTeamList = ({ teams, teamScores, attendance }) => {
   if (!teams?.length)
     return <Typography className={styles.secondaryText}>No teams to show.</Typography>;
 
+  /**
+   * sort by score then by sportsmanship
+   */
+  teams.sort((a, b) => {
+    let aScore = teamScores.find((ts) => ts.TeamID === a.ID);
+    let bScore = teamScores.find((ts) => ts.TeamID === b.ID);
+    if (aScore.TeamScore > bScore.TeamScore) return -1;
+    if (aScore.TeamScore === bScore.TeamScore)
+      if (aScore.SportsmanshipScore > bScore.SportsmanshipScore) return -1;
+    return 1;
+  });
+
   return (
     <List dense>
       {teams.map((team) => (
         <ExpandableTeamListing
+          key={team.ID}
           team={team}
           teamScore={teamScores.find((score) => score.TeamID === team.ID)}
           attendance={attendance.find((att) => att.TeamID === team.ID)}
