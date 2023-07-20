@@ -13,7 +13,6 @@ import { forwardRef, useEffect, useState } from 'react';
 import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { authenticate } from 'services/auth';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
-import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
 import styles from './Header.module.css';
 
