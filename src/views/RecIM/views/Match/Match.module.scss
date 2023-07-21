@@ -13,7 +13,7 @@
   .matchScore {
     white-space: nowrap;
     font-weight: bold;
-    color: $neutral-dark-gray;
+    color: var(--mui-palette-neutral-800);
   }
   .headerImg {
     width: 4.5em;
@@ -63,8 +63,8 @@
 // if desired, this should just be a global change and
 // universally applied to all 360 cards
 .cardHeader {
-  background-color: $primary-blue;
-  color: $neutral-white;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
 }
 
 :global(.MuiCardHeader-root).cardHeader {
@@ -76,26 +76,26 @@
 }
 
 .grayText {
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-500);
 }
 
 .title {
   font-weight: bold;
-  color: $neutral-dark-gray2;
+  color: var(--mui-palette-neutral-800);
 }
 
 .subtitle {
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-500);
   font-size: 0.9em;
 }
 
 .redButton {
-  background-color: $secondary-red;
-  color: $neutral-white;
+  background-color: var(--mui-palette-error-main);
+  color: var(--mui-palette-error-contrastText);
 }
 
 .redButton:hover {
-  background-color: $alternative-red;
+  background-color: var(--mui-palette-error-light);
 }
 
 .greenMenuButton {
@@ -105,22 +105,23 @@
 
 .greenMenuButton:hover {
   background-color: white;
-  box-shadow: inset -2px -2px $secondary-green, inset 2px 2px $secondary-green;
+  box-shadow: inset -2px -2px var(--mui-palette-success-main),
+    inset 2px 2px var(--mui-palette-success-main);
   transition: all 0.2s ease-in-out;
 }
 
 .matchWinner {
   font-weight: bold;
-  text-decoration: underline $secondary-green 0.2em;
+  text-decoration: underline var(--mui-palette-success-main) 0.2em;
 }
 
 .menuTitle {
   margin-top: 0.5em;
   margin-bottom: 0.2em;
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-500);
   text-align: center;
 }
 
 .menuButton:hover {
-  background-color: $neutral-black-opacity10;
+  background-color: var(--mui-palette-neutral-A700);
 }
