@@ -7,7 +7,7 @@ import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 import styles from './UpdatePlannedGradYear.module.css';
 
-const UpdatePlannedGraduationYear = () => {
+const UpdatePlannedGraduationYear = (props) => {
   const [open, setOpen] = useState(false);
   const [plannedGraduationYear, setPlannedGraduationYear] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
@@ -16,10 +16,7 @@ const UpdatePlannedGraduationYear = () => {
   const handleSubmit = async () => {
     try {
       await userService.setPlannedGraduationYear(plannedGraduationYear);
-      createSnackbar(
-        'Your Planned Graduation Year will update within a couple minutes.',
-        'success',
-      );
+      props.change(plannedGraduationYear);
     } catch {
       createSnackbar('Planned Graduation Year failed to update. Please contact CTS.', 'error');
     }

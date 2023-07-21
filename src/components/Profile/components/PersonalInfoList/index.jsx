@@ -61,6 +61,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     AuthGroup.AcademicInfoView,
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
+  const [profPlannedGradYear, setProfPlannedGradYear] = useState(profile.PlannedGradYear);
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -249,21 +250,19 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     );
 
   const plannedGraduationYear =
-    isFacStaff ||
-    (!myProf && !profile.PlannedGradYear?.length) ||
-    (isAlumni && !profile.PlannedGradYear?.length) ? null : (
+    isFacStaff || (!myProf && !profPlannedGradYear) || (isAlumni && !profPlannedGradYear) ? null : (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
         contentText={
           myProf && isStudent ? (
             <Grid container spacing={0} alignItems="center">
               <Grid item>
-                {!profile.PlannedGradYear?.length
+                {!profPlannedGradYear
                   ? 'Fill in with your planned graduation year'
-                  : profile.PlannedGradYear}
+                  : profPlannedGradYear}
               </Grid>
               <Grid item>
-                <UpdatePlannedGraduationYear />
+                <UpdatePlannedGraduationYear change={setProfPlannedGradYear} />
               </Grid>
             </Grid>
           ) : (
