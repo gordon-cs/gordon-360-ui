@@ -2,6 +2,8 @@ import moment from 'moment';
 import http from './http';
 
 type CourseSchedule = {
+  UserID: string;
+  SessionCode: string;
   CRS_CDE: string;
   CRS_TITLE: string;
   BLDG_CDE: string;
@@ -16,6 +18,7 @@ type CourseSchedule = {
   BEGIN_TIME: string;
   /** A timespan of the format HH:mm:ss, stringified */
   END_TIME: string;
+  Role: string;
 };
 
 type SessionCourses = {

@@ -134,7 +134,8 @@ const GordonSchedulePanel = (props) => {
       />
     );
   }
-
+  // console.log(currentAcademicSession);
+  // console.log(selectedSession);
   return loading ? (
     <GordonLoader />
   ) : (
@@ -183,7 +184,7 @@ const GordonSchedulePanel = (props) => {
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar
                     profile={props.profile}
-                    term={selectedSession}
+                    term={selectedSession === '' ? currentAcademicSession : selectedSession}
                     myProf={props.myProf}
                     reloadCall={reloadCall}
                     isOnline={props.isOnline}

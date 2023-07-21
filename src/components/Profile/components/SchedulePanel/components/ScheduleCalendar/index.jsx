@@ -11,6 +11,7 @@ const GordonScheduleCalendar = (props) => {
   const [selectedEvent, setSelectedEvent] = useState();
   const [currentSession, setCurrentSession] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
+  const [allCourses, setAllCourses] = useState([]);
 
   useEffect(() => {
     loadData(props.profile);
@@ -20,8 +21,10 @@ const GordonScheduleCalendar = (props) => {
     setLoading(true);
     let courseInfo = null;
     try {
-      const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
-      courseInfo = scheduleService.makeScheduleCourses(schedule);
+      //const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
+      const allSchedule = await scheduleService.getAllCourses(searchedUser.AD_Username);
+      const sessionSchedule = allSchedule.filter((item) => item.SessionCode === props.term);
+      courseInfo = scheduleService.makeScheduleCourses(sessionSchedule[0]?.AllCourses);
     } catch (e) {
       setLoading(false);
     }
@@ -35,12 +38,15 @@ const GordonScheduleCalendar = (props) => {
     setCurrentSession(currentSession);
     setLoading(false);
   };
+
+  console.log(eventInfo);
   const resourceMap = [
     { resourceId: 'MO', resourceTitle: 'Monday' },
     { resourceId: 'TU', resourceTitle: 'Tuesday' },
     { resourceId: 'WE', resourceTitle: 'Wednesday' },
     { resourceId: 'TH', resourceTitle: 'Thursday' },
     { resourceId: 'FR', resourceTitle: 'Friday' },
+    { resourceId: 'SA', resourceTitle: 'Saturday' },
   ];
 
   // Localizer is always required for react-big-calendar initialization
