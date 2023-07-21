@@ -5,6 +5,7 @@ import GordonSnackbar from 'components/Snackbar';
 import { useState } from 'react';
 import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
+import styles from './UpdatePlannedGradYear.module.css';
 
 const UpdatePlannedGraduationYear = () => {
   const [open, setOpen] = useState(false);
@@ -58,8 +59,8 @@ const UpdatePlannedGraduationYear = () => {
             autoFocus
           />
         </FormControl>
-        <p>
-          <br /> This does not set your official graduation <br />
+        <p className={styles.note}>
+          NOTE: This does not set your official graduation <br />
           year. To make an official change, please <br /> contact{' '}
           <a href="mailto:registrar@gordon.edu">the Registrar's Office</a>.
         </p>
