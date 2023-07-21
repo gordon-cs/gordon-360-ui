@@ -158,38 +158,12 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     }
   };
 
-  const [privacySettingList, setPrivacySettingList] = useState();
-  const [fieldPrivacy, setFieldPrivacy] = useState('Private'); // default private while loading
-
-  useEffect(() => {
-    const loadData = async () => {
-      userService.getPrivacySetting(profile.AD_Username).then(setPrivacySettingList);
-    };
-    loadData();
-  }, []);
-
-  const privacyColorHelper = (field) => {
-    useEffect(() => {
-      if (privacySettingList) {
-        setFieldPrivacy(privacySettingList.find((f) => f.Field === field)?.VisibilityGroup);
-      }
-    }, [privacySettingList]);
-    console.log(privacySettingList);
-    return fieldPrivacy;
-  };
-
   const homePhoneListItem = profile.HomePhone ? (
     <ProfileInfoListItem
       title="Home Phone:"
       contentText={
         myProf ? (
-          <Grid
-            className={
-              privacyColorHelper('MobilePhone') === 'Public' ? styles.not_private : styles.private
-            }
-          >
-            {formatPhone(profile.HomePhone)}
-          </Grid>
+          <Grid className={styles.not_private}>{formatPhone(profile.HomePhone)}</Grid>
         ) : profile.HomePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
@@ -209,14 +183,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       title="Mobile Phone:"
       contentText={
         myProf ? (
-          <Grid
-            container
-            spacing={0}
-            alignItems="center"
-            className={
-              privacyColorHelper('HomePhone') === 'Public' ? styles.not_private : styles.private
-            }
-          >
+          <Grid container spacing={0} alignItems="center" className={styles.not_private}>
             <Grid item>{formatPhone(profile.MobilePhone)}</Grid>
             <Grid item>{isStudent ? <UpdatePhone /> : null}</Grid>
           </Grid>
@@ -247,11 +214,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       contentText={
         <>
           {streetAddr}
-          <span
-            className={
-              privacyColorHelper('Country') === 'Public' ? styles.not_private : styles.private
-            }
-          >
+          <span className={styles.not_private}>
             {profile.HomeCity === PRIVATE_INFO || profile.Country === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
