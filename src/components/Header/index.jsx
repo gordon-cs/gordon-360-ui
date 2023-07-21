@@ -119,7 +119,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
 
   const loginButton = (
     <Button
-      className={styles.login_button}
       variant="contained"
       color="secondary"
       onClick={authenticate}
@@ -129,64 +128,55 @@ const GordonHeader = ({ onDrawerToggle }) => {
   );
 
   return (
-    <section className={styles.gordon_header}>
-      <AppBar className={styles.app_bar} position="static">
-        <Toolbar>
+    <AppBar position="sticky">
+      <Toolbar className={styles.toolbar}>
+        <div className={styles.side_container}>
           <IconButton
-            className={styles.hamburger_menu_button}
-            color="primary"
+            edge='start'
             aria-label="open drawer"
             onClick={onDrawerToggle}
             size="large"
           >
-            <MenuIcon className={styles.hamburger_menu_button_icon} />
+            <MenuIcon className={styles.menu_icon} />
           </IconButton>
-          <Link to="/" component={ForwardNavLink} value={tabIndex}>
+
+          <Link to="/" component={ForwardNavLink} >
             <picture>
               {/* pick a different image as the screen gets smaller.*/}
-              <source srcset={headerLogo72dpi} media="(min-width: 900px)" />
-              <source srcset={headerLogo64dpi} media="(min-width: 600px)" />
+              <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
+              <source srcSet={headerLogo64dpi} media="(min-width: 600px)" />
               <source srcSet={headerLogo56dpiNoText} media="(max-width: 375px)" />
               <img src={headerLogo56dpi} alt="Gordon 360 Logo"></img>
             </picture>
           </Link>
-          <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
-            {/* This h6 box uses flex to keep people search and the profile button stuck to the right side of the header */}
-          </Typography>
-          <div className={styles.center_container}>
-            <Tabs textColor="inherit" indicatorColor="secondary" centered value={tabIndex}>
-              <Tab
-                className={styles.tab}
-                icon={<LocalActivityIcon />}
-                label="Involvements"
-                component={ForwardNavLink}
-                to="/involvements"
-              />
-              <Tab
-                className={styles.tab}
-                icon={<EventIcon />}
-                label="Events"
-                component={ForwardNavLink}
-                to="/events"
-              />
-              {requiresAuthTab('People', <PeopleIcon />)}
-              {requiresAuthTab('Timesheets', <WorkIcon />)}
-            </Tabs>
-          </div>
-          <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
-            {/* This h6 box uses flex to keep people search and the profile button stuck to the right side of the header */}
-          </Typography>
-          <div className={styles.people_search_container_container}>
-            {/* Width is dynamic */}
-            <div className={styles.people_search_container}>
-              {isAuthenticated ? <GordonQuickSearch /> : loginButton}
-            </div>
-          </div>
+        </div>
+
+        <Tabs textColor="inherit" indicatorColor="secondary" centered value={tabIndex} className={styles.center_container}>
+          <Tab
+            className={styles.tab}
+            icon={<LocalActivityIcon />}
+            label="Involvements"
+            component={ForwardNavLink}
+            to="/involvements"
+          />
+          <Tab
+            className={styles.tab}
+            icon={<EventIcon />}
+            label="Events"
+            component={ForwardNavLink}
+            to="/events"
+          />
+          {requiresAuthTab('People', <PeopleIcon />)}
+          {requiresAuthTab('Timesheets', <WorkIcon />)}
+        </Tabs>
+
+        <div className={styles.side_container}>
+          {isAuthenticated ? <GordonQuickSearch /> : loginButton}
           <GordonNavAvatarRightCorner onClick={handleOpenProfile} />
-          {createDialogBox()}
-        </Toolbar>
-      </AppBar>
-    </section>
+        </div>
+        {createDialogBox()}
+      </Toolbar>
+    </AppBar>
   );
 };
 
