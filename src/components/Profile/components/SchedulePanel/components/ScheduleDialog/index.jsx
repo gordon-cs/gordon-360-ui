@@ -10,6 +10,7 @@ import {
 import 'add-to-calendar-button';
 import { format, setDay } from 'date-fns';
 import styles from './ScheduleDialog.module.css';
+import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 
 const dayArr = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
 
@@ -26,37 +27,31 @@ const ScheduleDialog = (props) => {
         {props.courseInfo && (
           <>
             <DialogTitle className={styles.dialogTitle} align="center">
-              Course Information
+              {props.courseTitle}
             </DialogTitle>
             <DialogContent>
-              <Typography className={styles.courseTitle} align="left">
-                Title: {props.courseTitle}
+              <Typography className={styles.dialogTextLarge} align="left">
+                Title: {props.courseName}
               </Typography>
-              <Typography className={styles.courseInfo} align="left">
+              <Typography className={styles.dialogTextMedium} align="left">
                 Room: {props.courseLocation}
               </Typography>
-              <Typography className={styles.courseInfo} align="left">
-                {props.courseInfo.allDay ? (
-                  'Time: ASYNC'
-                ) : (
-                  <>
-                    Time:
-                    {formatter(props.courseStart, " hh:mm aaaaa'm' ")}-
-                    {formatter(props.courseEnd, " hh:mm aaaaa'm' ")}
-                  </>
-                )}
+              <Typography className={styles.dialogTextMedium} align="left">
+                Time:
+                {formatter(props.courseStart, " hh:mm aaaaa'm' ")}-
+                {formatter(props.courseEnd, " hh:mm aaaaa'm' ")}
               </Typography>
-              <Typography className={styles.courseInfo} align="left">
+              <Typography className={styles.dialogTextMedium} align="left">
                 Week Day(s): {props.recurringDays}
               </Typography>
-              <Typography className={styles.courseInfo} align="left">
+              <Typography className={styles.dialogTextMedium} align="left">
                 Term Date: {formatter(props.firstDay, 'yyyy-MM-dd')} to
                 {formatter(props.lastDay, ' yyyy-MM-dd')}
               </Typography>
             </DialogContent>
           </>
         )}
-        <DialogActions className={styles.DialogActions}>
+        <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
           {/* There are two separate add-to-calendar button elements because Google calendar is the only
           calendar that supports recurring events, the other add-to-calendar button is for the other
           options that users can choose and manually set the course as recurring */}
@@ -81,9 +76,7 @@ const ScheduleDialog = (props) => {
                     // and endTime as null if they are all day events.
                     startTime={formatter(props.courseStart, 'HH:mm', props.courseInfo.allDay)}
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
-                    description={
-                      props.courseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
-                    }
+                    description={props.courseName}
                     Location={props.courseLocation}
                     options="'Google'"
                     buttonsList
@@ -95,7 +88,8 @@ const ScheduleDialog = (props) => {
                       ';UNTIL=' +
                       formatter(props.lastDay, 'yyyyMMdd')
                     }
-                    lightMode="bodyScheme"
+                    lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
+                    //Get user theme mode preference
                     Timezone="currentBrowser"
                   ></add-to-calendar-button>
                 </Grid>
@@ -111,15 +105,14 @@ const ScheduleDialog = (props) => {
                     )}
                     startTime={formatter(props.courseStart, 'HH:mm', props.courseInfo.allDay)}
                     endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
-                    description={
-                      props.courseInfo.allDay ? 'Asynchronous Course' : 'Synchronous Course'
-                    }
+                    description={props.courseName}
                     Location={props.courseLocation}
-                    options="'Microsoft 365','Apple', 'Outlook.com','MicrosoftTeams'"
+                    options="'Microsoft365|Gordon Outlook','Apple','Outlook.com|Outlook','MicrosoftTeams'"
                     buttonsList
                     hideTextLabelButton
                     buttonStyle="round"
-                    lightMode="bodyScheme"
+                    lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
+                    //Get user theme mode preference
                     Timezone="currentBrowser"
                   ></add-to-calendar-button>
                 </Grid>
