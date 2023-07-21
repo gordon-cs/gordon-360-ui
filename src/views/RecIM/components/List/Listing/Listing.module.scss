@@ -2,7 +2,7 @@
 @import '../../../../../vars';
 
 .listing {
-  background-color: var(--mui-palette-neutral-A700);
+  background-color: var(--mui-palette-neutral-50);
   margin-top: 0.1em;
   margin-bottom: 0.1em;
   padding: 1em;
@@ -102,15 +102,15 @@
 }
 
 .activityType_league {
-  background-color: rgba($secondary-orange, 0.35);
+  background-color: var(--mui-palette-error-light);
 }
 
 .activityType_tournament {
-  background-color: rgba($secondary-green, 0.35);
+  background-color: var(--mui-palette-success-main);
 }
 
 .activityType_oneoff {
-  background-color: rgba($secondary-yellow, 0.4);
+  background-color: var(--mui-palette-warning-main);
 }
 
 .teamLogo {
