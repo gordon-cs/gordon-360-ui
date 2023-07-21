@@ -14,7 +14,7 @@ import {
   FormControl,
   Select,
 } from '@mui/material';
-import { gordonColors } from 'theme';
+import { theme360 } from 'theme';
 import { styled } from '@mui/material/styles';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState, useCallback } from 'react';
@@ -55,8 +55,8 @@ const RulesTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: gordonColors.neutral.lightGray,
-    color: gordonColors.neutral.contrastText,
+    backgroundColor: theme360.vars.palette.neutral.main,
+    color: theme360.vars.palette.neutral.contrastText,
     maxWidth: 200,
   },
 }));
