@@ -257,10 +257,11 @@ export default class SavedShiftsList extends Component {
         <>
           {confirmationBox}
           <Card>
+            <CardHeader className="gc360_header" title={cardTitle} />
+            <br />
             <CardContent>
-              <CardHeader className="disable_select" title={cardTitle} />
               <Grid
-                className={styles.shift_list}
+                className={styles.shift_list && styles.boxShadow}
                 container
                 spacing={2}
                 margin="-0.5em"

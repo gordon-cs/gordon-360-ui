@@ -1,6 +1,4 @@
-@import '../../vars';
-
 .cardheader {
-  background-color: $primary-blue;
-  color: white;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
 }

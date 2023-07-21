@@ -1,0 +1,109 @@
+/* Styles for the index.html template page, specifically used for the loading screen */
+
+.loading-screen-icon {
+  box-sizing: border-box;
+  margin: 0;
+  display: block;
+  justify-content: center;
+  text-align: center;
+  height: 90%;
+  max-width: 90%;
+}
+
+.loading-screen-subtitle {
+  box-sizing: border-box;
+  margin: 0;
+  text-align: center;
+  height: 8vh;
+  overflow: hidden;
+}
+
+.loading-screen-splash-container {
+  box-sizing: border-box;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.loading-screen-top-container {
+  box-sizing: border-box;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+  overflow: hidden;
+}
+.loading-screen-bottom-container {
+  box-sizing: border-box;
+  margin: 0;
+  padding-top: 1vh;
+  display: flex;
+  justify-content: center;
+  height: 50vh;
+  overflow: hidden;
+}
+
+.loading-screen-container {
+  box-sizing: border-box;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+}
+
+.loading-screen-circle {
+  box-sizing: border-box;
+  margin: 0;
+  border: 10px solid transparent;
+  margin: -2px;
+  display: block;
+  border-radius: 100%;
+}
+
+.loading-screen-holder {
+  box-sizing: border-box;
+  margin: 0;
+  animation: spin 9s linear infinite;
+  overflow: visible;
+}
+
+.loading-screen-support {
+  box-sizing: border-box;
+  margin: 0;
+  border: 10px solid #00000000;
+  margin: 85px;
+  display: block;
+}
+
+.loading-screen-spin {
+  box-sizing: border-box;
+  margin: 0;
+  animation: spin 3s linear infinite;
+}
+
+.loading-screen-c1 {
+  box-sizing: border-box;
+  margin: 0;
+  border-top: 10px solid #00aeef;
+}
+.loading-screen-c2 {
+  box-sizing: border-box;
+  margin: 0;
+  border-top: 10px solid #c7efcf;
+}
+.loading-screen-c3 {
+  box-sizing: border-box;
+  margin: 0;
+  border-top: 10px solid #fdb913;
+}
+.loading-screen-c4 {
+  box-sizing: border-box;
+  margin: 0;
+  border-top: 10px solid #ff5d53;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

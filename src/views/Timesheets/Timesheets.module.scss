@@ -1,19 +1,31 @@
 .tooltip {
-  background-color: var(--mui-palette-neutral-contrastText);
-  color: rgba(255, 255, 255, 0.87);
-  box-shadow: 0 3px 6px #00000029, 0 3px 6px rgba(0, 0, 0, 0.23);
+  background-color: var(--mui-palette-info-dark);
+  color: var(--mui-palette-info-contrastText);
+  box-shadow: 0 3px 6px var(--mui-palette-neutral-A700), 0 3px 6px var(--mui-palette-neutral-A400);
   font-size: 12px;
   max-width: 500px;
 }
 
+.clockInOutButton {
+  font-weight: bold;
+}
+
 .timesheets {
-  :global(.MuiGrid-item) {
-    text-align: center;
+  text-align: center;
+  background-color: var(--mui-palette-neutral-main);
+
+  .button {
+    background-color: var(--mui-palette-secondary-main);
+  }
+
+  .text {
+    color: var(--mui-palette-primary-contrastText);
   }
 
   .header_tooltip_container {
     display: inline-flex;
     position: relative;
+    color: var(--mui-palette-primary-contrastText);
   }
 
   .header_tooltip_container .tooltip_icon {

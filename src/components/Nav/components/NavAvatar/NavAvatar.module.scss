@@ -1,5 +1,3 @@
-@import '../../../../vars';
-
 .gordon_nav_avatar {
   margin: 0;
   padding: 1rem;
@@ -10,11 +8,11 @@
   }
 
   .placeholder {
-    background-color: $primary-cyan;
+    background-color: var(--mui-palette-secondary-main);
     height: 4rem;
   }
 
-  .avatar > img {
+  .avatar>img {
     object-fit: cover;
     height: 100%;
   }

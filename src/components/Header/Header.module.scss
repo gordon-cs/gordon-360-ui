@@ -1,9 +1,5 @@
 @import '../../vars';
 
-.searchIcon {
-  color: var(--mui-palette-primary-contrastText);
-}
-
 .gordon_header {
   position: absolute;
   width: 100%;
@@ -13,7 +9,6 @@
   .app_bar {
     position: absolute;
     background-repeat: no-repeat;
-    background-image: url('./gc_seal_top_56.png');
     height: $header-height-xs;
   }
 
@@ -31,20 +26,13 @@
     text-decoration: none;
   }
 
-  .menu_button {
+  .hamburger_menu_button {
     margin-left: -12px;
   }
 
   .center_container {
     visibility: hidden;
     width: 0;
-  }
-
-  .right_side_container {
-    margin-left: 16px;
-    padding: 0;
-    align-items: center;
-    display: none;
   }
 
   .people_search_container_container {
@@ -67,8 +55,7 @@
 
   @media (min-width: $break-sm) {
     .app_bar {
-      background-image: url('./gc_seal_top_64.png');
-      height: $header-height-sm;
+      height: $header-height-md;
       background-color: var(--mui-palette-primary-main);
     }
     .people_search_container {
@@ -79,12 +66,8 @@
     }
   }
 
-  @media (min-width: $break-md) {
-    .menu_button {
-      display: none;
-    }
+  @media (min-width: $break-lg) {
     .app_bar {
-      background-image: url('./gc_seal_top_72.png');
       height: $header-height-md;
     }
 
@@ -94,14 +77,6 @@
       display: flex;
       visibility: visible;
     }
-
-    .tab {
-      min-width: 80px;
-    }
-    .right_side_container {
-      display: flex;
-      margin-left: 24px;
-    }
   }
 
   @media (min-width: $break-lg) {
@@ -109,7 +84,7 @@
       flex: 7;
     }
     .tab {
-      min-width: 160px;
+      min-width: 110px;
     }
   }
 
@@ -124,7 +99,7 @@
     font-weight: bold;
   }
 
-  .menu_button_icon {
+  .hamburger_menu_button_icon {
     color: var(--mui-palette-primary-contrastText);
   }
 

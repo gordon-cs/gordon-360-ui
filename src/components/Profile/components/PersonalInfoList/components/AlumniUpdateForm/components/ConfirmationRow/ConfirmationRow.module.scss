@@ -1,5 +1,3 @@
-@import '../../../../../../../../vars';
-
 %text {
   text-transform: capitalize;
   padding-left: 10px;
@@ -11,13 +9,13 @@
 }
 
 .label {
-  color: $neutral-dark-gray;
+  color: var(--mui-palette-neutral-800);
   padding: 10px;
 }
 
 .container {
   padding-top: 10px;
-  border-top: 1px solid $neutral-gray3;
+  border-top: 1px solid var(--mui-palette-neutral-400);
 }
 
 .icon {
@@ -37,7 +35,7 @@
 .text {
   &_current {
     @extend %text;
-    color: $neutral-dark-gray;
+    color: var(--mui-palette-neutral-800);
   }
 
   &_previous {

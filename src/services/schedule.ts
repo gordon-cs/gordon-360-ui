@@ -18,12 +18,23 @@ type CourseSchedule = {
   END_TIME: string;
 };
 
+type SessionCourses = {
+  SessionBeginDate: string;
+  SessionCode: string;
+  SessionDescription: string;
+  SessionEndDate: string;
+  AllCourses: CourseSchedule;
+};
+
 type ScheduleEvent = {
   id: number;
+  name: string;
   title: string;
+  location: string;
   start: Date;
   end: Date;
-  resourceId: number;
+  resourceId: string;
+  meetingDays: string[];
 };
 
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
@@ -35,26 +46,29 @@ const getSchedule = (username: string = '', sessionID: string = ''): Promise<Cou
   return http.get(`schedule/${username}?sessionID=${sessionID}`);
 };
 
-function getMeetingDays(course: CourseSchedule): number[] {
+const getAllCourses = (username: string): Promise<SessionCourses> =>
+  http.get(`schedule/${username}/allcourses`);
+
+function getMeetingDays(course: CourseSchedule): string[] {
   let dayArray = [];
 
   if (course.MONDAY_CDE === 'M') {
-    dayArray.push(1);
+    dayArray.push('MO');
   }
   if (course.TUESDAY_CDE === 'T') {
-    dayArray.push(2);
+    dayArray.push('TU');
   }
   if (course.WEDNESDAY_CDE === 'W') {
-    dayArray.push(3);
+    dayArray.push('WE');
   }
   if (course.THURSDAY_CDE === 'R') {
-    dayArray.push(4);
+    dayArray.push('TH');
   }
   if (course.FRIDAY_CDE === 'F') {
-    dayArray.push(5);
+    dayArray.push('FR');
   }
   if (course.SATURDAY_CDE === 'S') {
-    dayArray.push(6);
+    dayArray.push('SA');
   }
 
   return dayArray;
@@ -63,7 +77,7 @@ function getMeetingDays(course: CourseSchedule): number[] {
 function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
   const today = moment();
   let eventId = 0;
-  let asyncMeetingDays = [1, 2, 3, 4, 5];
+  let asyncMeetingDays = ['MO', 'TU', 'WE', 'TH', 'FR'];
 
   const eventArray = schedule.flatMap((course) => {
     course.CRS_CDE = course.CRS_CDE.trim();
@@ -83,19 +97,26 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
     if (course.ROOM_CDE === 'ASY') {
       return asyncMeetingDays.map((day) => ({
         id: eventId++,
-        title: course.CRS_CDE + ' in ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
+        name: course.CRS_TITLE,
+        title: course.CRS_CDE,
+        // you might confused about name and title reference, but it is for displaying course code in the panel and course name in the dialog
+        location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
         start: today.toDate(),
         end: today.toDate(),
         resourceId: day,
         allDay: true,
+        meetingDays: ['MO', 'TU', 'WE', 'TH', 'FR'],
       }));
     } else {
       return meetingDays.map((day) => ({
         id: eventId++,
-        title: course.CRS_CDE + ' in ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
+        name: course.CRS_TITLE,
+        title: course.CRS_CDE,
+        location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
         start: beginTime.toDate(),
         end: endTime.toDate(),
         resourceId: day,
+        meetingDays: meetingDays,
       }));
     }
   });
@@ -107,6 +128,7 @@ const scheduleService = {
   getSchedule,
   makeScheduleCourses,
   getCanReadStudentSchedules,
+  getAllCourses,
 };
 
 export default scheduleService;

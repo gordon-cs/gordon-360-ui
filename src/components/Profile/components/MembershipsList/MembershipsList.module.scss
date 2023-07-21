@@ -13,15 +13,16 @@
     border-top-right-radius: 0px !important;
     &_content {
       padding: 1rem !important;
-      &_button {
-        background-color: var(--mui-palette-secondary-main) !important;
-        color: var(--mui-palette-secondary-contrastText) !important;
-        margin: 0.5rem 0.5rem 1rem 0.5rem !important;
-      }
       .noMemberships {
         padding-left: 16px;
-        color: var(--mui-palette-secondary-main);
       }
+    }
+    &_note {
+      color: var(--mui-palette-neutral-700);
+      background-color: var(--mui-palette-neutral-main);
+      padding: 0.3rem 1rem;
+      margin-top: 1rem;
+      border-radius: 5px;
     }
   }
 }

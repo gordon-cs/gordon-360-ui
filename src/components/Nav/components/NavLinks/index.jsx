@@ -8,14 +8,15 @@ import { Divider, List } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonNavButton from 'components/NavButton';
 import GordonQuickLinksDialog from 'components/QuickLinksDialog';
+import PaletteSwitcherDialog from 'components/PaletteSwitcherDialog';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavLinks.module.css';
-// import { ModeSwitcher } from 'components/ThemeModeSwitcher'; //Uncomment to test dark mode
 
 const GordonNavLinks = ({ onLinkClick }) => {
   const [areLinksOpen, setAreLinksOpen] = useState(false);
+  const [paletteOptionsOpen, setPaletteOptionsOpen] = useState(false);
   const [dialog, setDialog] = useState(null);
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
@@ -123,6 +124,17 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
+  const paletteOptionsButton = (
+    <GordonNavButton
+      onLinkClick={() => {
+        onLinkClick();
+        setPaletteOptionsOpen(true);
+      }}
+      openUnavailableDialog={setDialog}
+      linkName={'Appearance'}
+    />
+  );
+
   const helpButton = (
     <GordonNavButton
       onLinkClick={onLinkClick}
@@ -184,17 +196,20 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {linksButton}
         {helpButton}
         {aboutButton}
+        {paletteOptionsButton}
         {feedbackButton}
         {adminButton}
         {signOutButton}
-        {/* <ModeSwitcher /> */}
-        {/* Uncomment above button to test dark mode */}
       </List>
 
       <GordonQuickLinksDialog
         handleLinkClickOpen={() => setAreLinksOpen(true)}
         handleLinkClose={() => setAreLinksOpen(false)}
         linkopen={areLinksOpen}
+      />
+      <PaletteSwitcherDialog
+        handleClose={() => setPaletteOptionsOpen(false)}
+        dialogOpen={paletteOptionsOpen}
       />
 
       {dialogBox()}

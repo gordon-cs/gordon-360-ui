@@ -1,18 +1,17 @@
-@import '../../../../vars';
 .timesheets {
   .job_tabs {
     display: inline-flex !important;
     margin-bottom: 8px;
-    box-shadow: 0px 1px 2px 0px $neutral-black-opacity55;
+    box-shadow: 0px 1px 2px 0px var(--mui-palette-neutral-A200);
   }
 
   .job_tab {
-    border-left: 0.5px solid $neutral-gray !important;
-    border-right: 0.5px solid $neutral-gray !important;
+    border-left: 0.5px solid var(--mui-palette-neutral-500) !important;
+    border-right: 0.5px solid var(--mui-palette-neutral-500) !important;
   }
 
   .job_tab:global(.Mui-selected) {
-    background-color: $neutral-light-gray !important;
+    background-color: var(--mui-palette-neutral-200) !important;
   }
 
   .job_tabs :global(.MuiTabs-indicator) {
