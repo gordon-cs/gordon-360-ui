@@ -2,10 +2,10 @@
 // Cannot convert to CSS Module because this is using a third party library
 // These styles must not be converted by CSS Modules because the classes they are
 // selecting/overiding are not converted (added afterwards)
-@import '../../../../../../vars';
 
 // This is direct import from the API scss file. Needs to clean up some unnecessary design formats.
 @import '../../../../../../../node_modules/react-big-calendar/lib/sass/styles';
+
 .rbc-btn {
   color: inherit;
   font: inherit;
@@ -101,23 +101,28 @@ button.rbc-input::-moz-focus-inner {
   border: 1px solid var(--mui-palette-neutral-dark);
   min-height: 0;
 }
+
 .rbc-time-view .rbc-time-gutter {
   white-space: nowrap;
   background-color: var(--mui-palette-neutral-light);
 }
+
 .rbc-time-view .rbc-allday-cell {
   box-sizing: content-box;
   width: 100%;
   height: 100%;
   position: relative;
 }
-.rbc-time-view .rbc-allday-cell + .rbc-allday-cell {
+
+.rbc-time-view .rbc-allday-cell+.rbc-allday-cell {
   border-left: 1px solid var(--mui-palette-neutral-dark);
 }
+
 .rbc-time-view .rbc-allday-events {
   position: relative;
   z-index: 4;
 }
+
 .rbc-time-view .rbc-row {
   box-sizing: border-box;
   min-height: 0px;
@@ -162,16 +167,19 @@ button.rbc-input::-moz-focus-inner {
   min-height: 0;
   border-bottom: 0px solid var(--mui-palette-neutral-dark);
 }
-.rbc-header + .rbc-header {
+
+.rbc-header+.rbc-header {
   border-left: 1px solid var(--mui-palette-neutral-dark);
 }
-.rbc-rtl .rbc-header + .rbc-header {
+
+.rbc-rtl .rbc-header+.rbc-header {
   border-left-width: 0;
   border-right: 1px solid var(--mui-palette-neutral-dark);
 }
-.rbc-header > a,
-.rbc-header > a:active,
-.rbc-header > a:visited {
+
+.rbc-header>a,
+.rbc-header>a:active,
+.rbc-header>a:visited {
   color: inherit;
   text-decoration: none;
 }
@@ -191,49 +199,61 @@ button.rbc-input::-moz-focus-inner {
   display: none;
   white-space: nowrap;
 }
-.rbc-btn-group + button {
+
+.rbc-btn-group+button {
   margin-left: 10px;
 }
-.rbc-btn-group button + button {
+
+.rbc-btn-group button+button {
   margin-left: -1px;
 }
-.rbc-rtl .rbc-btn-group button + button {
+
+.rbc-rtl .rbc-btn-group button+button {
   margin-left: 0;
   margin-right: -1px;
 }
-.rbc-btn-group > button:not(:first-child):not(:last-child) {
+
+.rbc-btn-group>button:not(:first-child):not(:last-child) {
   border-radius: 0;
 }
-.rbc-btn-group + .rbc-btn-group,
-.rbc-btn-group > button:first-child:not(:last-child) {
+
+.rbc-btn-group+.rbc-btn-group,
+.rbc-btn-group>button:first-child:not(:last-child) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-.rbc-btn-group > button:last-child:not(:first-child) {
+
+.rbc-btn-group>button:last-child:not(:first-child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-.rbc-rtl .rbc-btn-group > button:first-child:not(:last-child) {
+
+.rbc-rtl .rbc-btn-group>button:first-child:not(:last-child) {
   border-radius: 4px;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
-.rbc-time-content > * + * > * {
+
+.rbc-time-content>*+*>* {
   border-left: 1px solid var(--mui-palette-neutral-light);
 }
-.rbc-rtl .rbc-time-content > * + * > * {
+
+.rbc-rtl .rbc-time-content>*+*>* {
   border-left-width: 0;
   border-right: 1px solid var(--mui-palette-neutral-light);
 }
+
 .rbc-timeslot-group {
   border-bottom: 1px solid var(--mui-palette-neutral-dark);
   min-height: 40px;
   display: flex;
   flex-flow: column nowrap;
 }
+
 .rbc-day-slot .rbc-time-slot {
   border-top: 1px solid var(--mui-palette-neutral-light);
 }
+
 .rbc-time-view-resources .rbc-time-gutter,
 .rbc-time-view-resources .rbc-time-header-gutter {
   position: sticky;
@@ -243,6 +263,7 @@ button.rbc-input::-moz-focus-inner {
   z-index: 10;
   margin-right: -1px;
 }
+
 .rbc-current-time-indicator {
   position: absolute;
   z-index: 3;
@@ -252,6 +273,7 @@ button.rbc-input::-moz-focus-inner {
   background-color: var(--mui-palette-success-dark);
   pointer-events: none;
 }
+
 .rbc-time-content {
   display: flex;
   flex: 1 0 0%;
@@ -261,7 +283,8 @@ button.rbc-input::-moz-focus-inner {
   overflow-y: auto;
   position: relative;
 }
-.rbc-time-header-content > .rbc-row.rbc-row-resource {
+
+.rbc-time-header-content>.rbc-row.rbc-row-resource {
   border-bottom: 1px solid var(--mui-palette-neutral-dark);
   flex-shrink: 0;
 }
