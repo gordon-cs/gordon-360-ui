@@ -35,6 +35,7 @@ const TabUrlPatterns = [
   /^\/events\/?$/,
   /^\/people$|^\/myprofile|^\/profile/,
   /^\/timesheets$/,
+  /^\/recim$/,
 ];
 
 /**
