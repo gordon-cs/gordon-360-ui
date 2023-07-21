@@ -408,7 +408,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             {myProf && mailCombo && (
               <>
                 <Grid container item xs={1.1} alignItems="center">
-                  <Typography className={styles.private}>
+                  <Typography className={styles.private} marginLeft="-0.5em">
                     {showMailCombo ? mailCombo : '****'}
                   </Typography>
                 </Grid>
