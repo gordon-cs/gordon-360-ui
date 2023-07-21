@@ -1,5 +1,19 @@
 /* Styles for the index.html template page, specifically used for the loading screen */
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Gotham SSm 4r', 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+}
+
 .loading-screen-icon {
   box-sizing: border-box;
   margin: 0;
@@ -33,6 +47,7 @@
   height: 40vh;
   overflow: hidden;
 }
+
 .loading-screen-bottom-container {
   box-sizing: border-box;
   margin: 0;
@@ -86,16 +101,19 @@
   margin: 0;
   border-top: 10px solid #00aeef;
 }
+
 .loading-screen-c2 {
   box-sizing: border-box;
   margin: 0;
   border-top: 10px solid #c7efcf;
 }
+
 .loading-screen-c3 {
   box-sizing: border-box;
   margin: 0;
   border-top: 10px solid #fdb913;
 }
+
 .loading-screen-c4 {
   box-sizing: border-box;
   margin: 0;

@@ -9,27 +9,13 @@
 // https://www.paulirish.com/2012/box-sizing-border-box-ftw/
 html {
   box-sizing: border-box;
+  background-color: var(--mui-palette-neutral-main);
 }
 
 *,
 *::before,
 *::after {
   box-sizing: inherit;
-}
-
-body,
-html,
-#root {
-  height: 100%;
-}
-
-body {
-  font-family: 'Gotham SSm 4r', 'Gotham SSm A', 'Gotham SSm B', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  margin: 0;
-  max-width: 100%;
-  padding: 0;
 }
 
 a {
@@ -41,20 +27,24 @@ a {
     text-decoration: none;
   }
 }
+
 // style for links that are menu items or buttons (not just text)
 .gc360_link {
   color: var(--mui-palette-neutral-contrastText);
   background-color: var(--mui-palette-neutral-light);
+
   &:hover {
     color: var(--mui-palette-neutral-contrastText) !important;
     background-color: var(--mui-palette-neutral-main);
     text-decoration: none !important;
   }
 }
+
 // style for links that are simply text and therefore need more of a sign that they are clickable
 .gc360_text_link {
   color: var(--mui-palette-link-main);
   transition: color 200ms;
+
   &:hover {
     color: var(--mui-palette-link-light) !important;
   }
@@ -95,27 +85,32 @@ strong {
     display: grid;
     grid-template-rows: auto auto auto auto auto auto;
     padding-bottom: 1rem;
+
     &_alert {
       grid-row: 1;
     }
+
     &_title {
       grid-row: 2;
       background-color: var(--mui-palette-primary-main);
       text-align: center;
       color: var(--mui-palette-primary-contrastText);
     }
+
     &_content {
       display: grid;
       grid-row: 3;
       grid-template-rows: auto auto;
       grid-row-gap: 10px;
       justify-items: center;
+
       &_text {
         color: var(--mui-palette-neutral-contrastText);
         grid-row: 1;
         text-align: center;
         max-width: 285px;
       }
+
       &_dropzone {
         transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
         width: 18rem;
@@ -128,43 +123,53 @@ strong {
         justify-content: center;
         align-items: center;
         outline: none;
+
         &:hover {
           background-color: var(--mui-palette-neutral-dark);
           box-shadow: 0 0 0 0.25rem var(--mui-palette-neutral-dark);
         }
+
         &_img {
           border-radius: 0.5rem;
           height: 90%;
           width: 90%;
         }
       }
+
       &_cropper {
         grid-row: 2;
       }
+
       &_button {
         grid-row: 3;
         margin-top: 1rem !important;
       }
     }
+
     &_actions_top {
       grid-row: 4;
       padding-top: 0rem !important;
       padding-bottom: 1rem !important;
       justify-content: center !important;
+
       button {
         width: 86%;
       }
     }
+
     &_actions_middle {
       grid-row: 5;
       justify-content: space-evenly !important;
+
       button {
         width: 38%;
       }
     }
+
     &_actions_bottom {
       grid-row: 6;
       justify-content: space-evenly !important;
+
       button {
         width: 38%;
       }
@@ -175,12 +180,14 @@ strong {
 @media (max-width: $break-sm) {
   .gc360_photo_dialog {
     height: 100%;
+
     &_box {
       &_content {
         &_dropzone {
           width: 12em;
           height: 12rem;
         }
+
         &_cropper {
           padding-right: 20px;
         }
