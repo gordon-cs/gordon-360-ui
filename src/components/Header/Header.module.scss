@@ -25,12 +25,6 @@
   display: none;
 }
 
-.people_search_container {
-  transition: width 0.3s;
-  display: inline-block;
-}
-
-
 @media (min-width: $break-md) {
   .center_container {
     display: flex;
