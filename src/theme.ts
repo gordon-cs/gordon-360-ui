@@ -1,135 +1,6 @@
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
 
 // Colors from http://www.gordon.edu/brandstandards
-// Shades from https://goo.gl/AF45tZ
-
-// Deprecated GordonColors, deprecated by Theme Palette update
-// Delete once no longer used!
-export const gordonColors = {
-  primary: {
-    blue: '#014983',
-    blueShades: {
-      50: '#8fcdfe',
-      100: '#43aafe',
-      200: '#0b91fd',
-      300: '#016bc0',
-      400: '#015aa1',
-      500: '#014983',
-      600: '#013865',
-      700: '#012746',
-      800: '#001628',
-      900: '#00050a',
-      A100: '#84c8ff',
-      A200: '#1e9bff',
-      A400: '#0065b7',
-      A700: '#00579d',
-      contrastDefaultColor: 'light',
-    },
-    cyan: '#00AEEF',
-    cyanShades: {
-      50: '#f9fdff',
-      100: '#ade9ff',
-      200: '#75d9ff',
-      300: '#2dc6ff',
-      400: '#0fbeff',
-      500: '#00aeef',
-      600: '#0098d0',
-      700: '#0081b2',
-      800: '#006b93',
-      900: '#005575',
-      A100: '#effbff',
-      A200: '#89dfff',
-      A400: '#23c3ff',
-      A700: '#09bcff',
-      contrastDefaultColor: 'light',
-    },
-  },
-  secondary: {
-    green: '#B2BB1C',
-    greenShades: {
-      main: '#B2BB1C',
-      secondary: '#009900',
-    },
-    yellow: '#FDB913',
-    yellowShades: {
-      main: '#FDB913',
-    },
-    orange: '#DE571F',
-    red: '#B53228',
-    redShades: {
-      50: '#fbedeb',
-      100: '#edb1ad',
-      200: '#e3867f',
-      300: '#d64f44',
-      400: '#ce392e',
-      500: '#b53228',
-      600: '#9c2b22',
-      700: '#83241d',
-      800: '#6a1d17',
-      900: '#511612',
-      A100: '#fee0de',
-      A200: '#fb847b',
-      A400: '#e6382a',
-      A700: '#d03226',
-      contrastDefaultColor: 'light',
-    },
-  },
-  neutral: {
-    main: '#EBEAEA',
-    dark: '#CCCCCB',
-    contrastText: 'rgba(0, 0, 0, 0.87)',
-    lightGray: '#EBEAEA',
-    gray: '#CCCCCB',
-    grayShades: {
-      50: '#ffffff',
-      100: '#ffffff',
-      200: '#ffffff',
-      300: '#eaeaea',
-      400: '#dbdbda',
-      500: '#cccccb',
-      600: '#bdbdbc',
-      700: '#aeaeac',
-      800: '#9f9f9d',
-      900: '#8f8f8d',
-      A100: '#ffffff',
-      A200: '#ffffff',
-      A400: '#e9e9e1',
-      A700: '#dbdbd6',
-      contrastDefaultColor: 'dark',
-    },
-    darkGray: '#31342B',
-  },
-} as const;
-
-// Material-UI breakpoints. This is to allow components to use Material-UI's breakpoints since
-// you cannot import variables from a vars.scss to a JS file.
-export const windowBreakWidths = {
-  breakXS: 0,
-  breakSM: 600,
-  breakMD: 900,
-  breakLG: 1200,
-  breakXL: 1536,
-} as const;
-
-/**
- * Possible stored user color settings
- */
-export enum ColorSetting {
-  System = 'system',
-  Dark = 'dark',
-  Light = 'light',
-}
-
-/**
- *  Possible MUI theme modes
- */
-export enum ColorMode {
-  Dark = 'dark',
-  Light = 'light',
-}
-
-// key for caching user color preference in localStorage
-export const STORAGE_COLOR_PREFERENCE_KEY = 'colorMode';
 
 // Extend the interface, add neutral color with same color options as the primary palette.
 declare module '@mui/material/styles' {
@@ -150,7 +21,7 @@ declare module '@mui/material' {
   }
 }
 
-// Color declarations:
+// Color declarations for simplified naming:
 // Primary
 const GordonBlue = '#014983';
 const GordonBlue_opacity50 = '#01498382';
@@ -190,13 +61,7 @@ const Black_opacity50 = '#00000080';
 const Black_opacity20 = '#00000033';
 const Black_opacity10 = '#0000001a';
 
-// Dev Tool coloring - Colors for development and testing purposes only
-// These colors can be used to test palette colors with an obvious visual indicator of which colors
-// have been updated on screen.
-const TestTool = '#FF8400'; // devTool orange
-const TestToolContrast = '#FF0000'; // devTool red
-const TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
-const Placeholder = '#00ff00'; // For unused slots that can be filled with new colors
+const Placeholder = '#00ff00'; // For unused theme slots that can be filled with new colors
 
 // Dark Mode Colors!:
 const Gray = '#282828';
@@ -205,8 +70,10 @@ const LinkBlue = '#0260ad';
 
 // Theme to use in the CSS vars provider, allowing multiple theme modes
 // This theme can be imported in javascript to reference colors directly
+// See documentation in the docs directory for more information!
 export const theme360 = extendTheme({
   colorSchemes: {
+    // Palette for light theme mode
     light: {
       palette: {
         primary: {
@@ -251,11 +118,11 @@ export const theme360 = extendTheme({
         warning: { main: BarringtonGold, dark: OldSchemeRed },
         info: { main: NightMarsh, light: SnowDay, dark: Athletics, contrastText: White },
         neutral: {
-          main: BackgroundLightGray, //currently $neutral-light-gray in _vars
-          dark: LightGray, //currently $neutral-gray2
-          light: White, //currently $neutral-white
+          main: BackgroundLightGray,
+          dark: LightGray,
+          light: White,
           contrastText: Black,
-          50: '#FAF9F9', //Neutral hues must be flipped in dark mode for proper contrast text
+          50: '#FAF9F9',
           100: '#F4F3F3',
           200: '#EBEAEA',
           300: '#DCDBDB',
@@ -279,10 +146,9 @@ export const theme360 = extendTheme({
       },
     },
     dark: {
-      // Palette for dark theme mode ------------------------TEMPORARY-COLORS---------------
+      // Palette for dark theme mode
       palette: {
-        // Variables to set various MUI components, may or may not use, but good to have the
-        // customizeability
+        // Variables to set various MUI components, helpful for future customizeability
         AppBar: {
           darkBg: NightMarsh,
         },
@@ -292,6 +158,9 @@ export const theme360 = extendTheme({
         text: {
           primary: White, // Various MUI components and text
         },
+        action: {
+          active: White, // Various icons, especially in PersonalInfo on the profile
+        },
         // May be used later, gives us the flexibility to change switch colors when switched off
         // if needed for dark mode.
         // Switch: {
@@ -300,10 +169,6 @@ export const theme360 = extendTheme({
         // common: {
         //   onBackground: Placeholder, // switch track off color
         // },
-        action: {
-          active: White, // Various icons, especially in PersonalInfo
-        },
-
         // May be used later, gives us the flexibility to change tooltip colors if needed for dark
         // mode.
         // Tooltip: {
@@ -368,3 +233,33 @@ export const theme360 = extendTheme({
     },
   },
 });
+
+// Material-UI breakpoints. This is to allow components to use Material-UI's breakpoints since
+// you cannot import variables from a vars.scss to a JS file.
+export const windowBreakWidths = {
+  breakXS: 0,
+  breakSM: 600,
+  breakMD: 900,
+  breakLG: 1200,
+  breakXL: 1536,
+} as const;
+
+/**
+ * Possible stored user color settings
+ */
+export enum ColorSetting {
+  System = 'system',
+  Dark = 'dark',
+  Light = 'light',
+}
+
+/**
+ *  Possible MUI theme modes
+ */
+export enum ColorMode {
+  Dark = 'dark',
+  Light = 'light',
+}
+
+// key for caching user color preference in localStorage
+export const STORAGE_COLOR_PREFERENCE_KEY = 'colorMode';

@@ -1,6 +1,5 @@
 import Confetti from 'react-dom-confetti';
-//Deprecated use of gordon colors, will need to be updated
-import { gordonColors } from 'theme';
+import { theme360 } from 'theme';
 
 const GordonConfetti = ({ active, colorOption, colors }) => {
   let config = {
@@ -16,18 +15,20 @@ const GordonConfetti = ({ active, colorOption, colors }) => {
     perspective: '500px',
   };
 
+  const themeColors = theme360.colorSchemes.light.palette;
+
   if (colors) {
     config.colors = colors;
   } else if (colorOption === 'Gordon') {
     config.colors = [
       '#ddd',
-      gordonColors.primary.blue,
-      gordonColors.primary.cyan,
-      gordonColors.secondary.orange,
-      gordonColors.secondary.green,
+      themeColors.primary.main,
+      themeColors.secondary.main,
+      themeColors.error.light,
+      themeColors.success.main,
     ];
   } else if (colorOption === 'GordonBlue') {
-    config.colors = ['#ddd', gordonColors.primary.blue, gordonColors.primary.cyan];
+    config.colors = ['#ddd', themeColors.primary.main, themeColors.secondary.main];
   }
 
   return <Confetti active={active} config={config} />;
