@@ -250,28 +250,29 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     );
 
   const plannedGraduationYear =
-    isFacStaff || (!myProf && !profPlannedGradYear) || (isAlumni && !profPlannedGradYear) ? null : (
+    myProf && isStudent ? (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
         contentText={
-          myProf && isStudent ? (
-            <Grid container spacing={0} alignItems="center">
-              <Grid item>
-                {!profPlannedGradYear
-                  ? 'Fill in with your planned graduation year'
-                  : profPlannedGradYear}
-              </Grid>
-              <Grid item>
-                <UpdatePlannedGraduationYear change={setProfPlannedGradYear} />
-              </Grid>
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>
+              {!profPlannedGradYear
+                ? 'Fill in with your planned graduation year'
+                : profPlannedGradYear}
             </Grid>
-          ) : (
-            profile.PlannedGradYear
-          )
+            <Grid item>
+              <UpdatePlannedGraduationYear change={setProfPlannedGradYear} />
+            </Grid>
+          </Grid>
         }
+      />
+    ) : profPlannedGradYear ? (
+      <ProfileInfoListItem
+        title={'Planned Graduation Year:'}
+        contentText={profile.PlannedGradYear}
         myProf={myProf}
       />
-    );
+    ) : null;
 
   const updateAlumniInfoButton =
     profile.PersonType === 'alu' && isOnline && myProf ? (
