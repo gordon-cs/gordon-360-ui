@@ -5,15 +5,19 @@ const GordonError = ({ error }) => {
   return (
     <Grid className={styles.gordon_error} container justifyContent="center" alignItems="center">
       <Grid item xs={11} md={7} lg={5}>
-        <Typography color="primary" variant="h3">
+        <Typography className={styles.title} variant="h3">
           Something went wrong.
         </Typography>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" gutterBottom className={styles.text}>
           Please email the below error to
-          <a href="mailto:cts@gordon.edu?subject=Gordon 360 Error"> cts@gordon.edu</a>.
+          <a className={styles.link} href="mailto:cts@gordon.edu?subject=Gordon 360 Error">
+            {' '}
+            cts@gordon.edu
+          </a>
+          .
         </Typography>
         <br />
-        <Typography color="error" variant="h6">
+        <Typography color="error" variant="h6" className={styles.errMessage}>
           {error.toString()}
         </Typography>
       </Grid>

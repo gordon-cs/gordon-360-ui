@@ -1,11 +1,12 @@
-@import '../../../../vars';
-
 .gordon_nav_links {
-  .active > li {
+  padding: 0;
+
+  .active>li {
     background: var(--mui-palette-neutral-dark);
   }
 
   .gordon_nav_links_bottom {
+    padding: 0;
     position: fixed;
     bottom: 0;
   }

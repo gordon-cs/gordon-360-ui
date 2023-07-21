@@ -1,6 +1,3 @@
-/* Style sheet for CoCurricular Transcript view */
-@import '../../vars';
-
 .fab {
   right: 20px;
   bottom: 20px;
@@ -22,6 +19,7 @@
 /* @media print takes effect when in a print view (eg after hitting Print Co-Curricular Transcript).
    Allows logo to only show when printing. */
 @media print {
+
   body header,
   .no_print {
     visibility: hidden;
