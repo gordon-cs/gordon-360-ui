@@ -1,5 +1,3 @@
-@import '../../../../../../vars';
-
 div.staff_apartment_application {
   & :global(.MuiToolbar-root).stylized_table_toolbar {
     color: var(--mui-palette-primary-main);
@@ -8,11 +6,13 @@ div.staff_apartment_application {
   }
 
   & :global(.MuiTableHead-root).stylized_table_head {
+
     :global(.MuiTableCell-head),
     :global(.MuiTableCell-stickyHeader),
     :global(.MuiTableSortLabel-root) {
       background-color: var(--mui-palette-primary-main);
       color: var(--mui-palette-primary-contrastText);
+
       svg:global(.MuiSvgIcon-root).MuiTableSortLabel-icon {
         color: var(--mui-palette-primary-contrastText);
       }
@@ -20,23 +20,23 @@ div.staff_apartment_application {
   }
 
   // Make rows alternate white and grey
-  & .striped_table > tr:nth-child(even) {
+  & .striped_table>tr:nth-child(even) {
     background-color: var(--mui-palette-neutral-main);
   }
 
-  & .striped_table > tr:nth-child(odd) {
+  & .striped_table>tr:nth-child(odd) {
     background-color: var(--mui-palette-neutral-light);
   }
 
   // Make rows alternate white and grey but in groups of two
   // (Needed to make the collapsible sub-tables match the row above
-  & .double_striped_table > tr:nth-child(4n),
-  & .double_striped_table > tr:nth-child(4n - 1) {
+  & .double_striped_table>tr:nth-child(4n),
+  & .double_striped_table>tr:nth-child(4n - 1) {
     background-color: var(--mui-palette-neutral-main);
   }
 
-  & .double_striped_table > tr:nth-child(4n - 2),
-  & .double_striped_table > tr:nth-child(4n - 3) {
+  & .double_striped_table>tr:nth-child(4n - 2),
+  & .double_striped_table>tr:nth-child(4n - 3) {
     background-color: var(--mui-palette-neutral-light);
   }
 
