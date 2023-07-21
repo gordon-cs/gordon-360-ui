@@ -46,16 +46,9 @@
     transition: width 0.3s;
     display: inline-block;
   }
-
   @media (min-width: $break-xs) {
     .people_search_container {
       width: 40vw;
-    }
-  }
-
-  @media (min-width: $break-md) {
-    .center_container {
-      display: flex;
     }
   }
 
