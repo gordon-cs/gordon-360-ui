@@ -5,10 +5,10 @@
   height: 18rem;
   border-style: dashed;
   border-radius: 1rem;
-  border-color: $neutral-gray3;
+  border-color: var(--mui-palette-neutral-dark);
   &:hover {
-    background-color: $neutral-light-gray2;
-    box-shadow: 0 0 0 0.25rem $neutral-light-gray2;
+    background-color: var(--mui-palette-neutral-main);
+    box-shadow: 0 0 0 0.25rem var(--mui-palette-neutral-main);
   }
 }
 

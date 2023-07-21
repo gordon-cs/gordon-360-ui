@@ -29,6 +29,7 @@ import { useEffect, useRef, useState } from 'react';
 import jobsService from 'services/jobs';
 import ShiftDisplay from './components/ShiftDisplay';
 import styles from './Timesheets.module.css';
+import { theme360 } from 'theme';
 
 const MINIMUM_SHIFT_LENGTH = 0.08; // Minimum length for a shift is 5 minutes, 1/12 hour
 const MILLISECONDS_PER_HOUR = 3600000;
@@ -309,6 +310,7 @@ const Timesheets = (props) => {
       setClockInOut('Clock In');
       setSelectedDateIn(null);
       setSelectedDateOut(null);
+      setHoursWorkedInDecimal(0);
     }
   };
 
@@ -371,17 +373,9 @@ const Timesheets = (props) => {
         <Grid container spacing={2} className={styles.timesheets}>
           <Grid item xs={12}>
             <Card>
-              <CardContent
-                style={{
-                  marginLeft: 8,
-                  marginTop: 8,
-                }}
-              >
-                <Grid container spacing={2} alignItems="center" alignContent="center">
-                  <Grid item md={2}>
-                    <Button onClick={changeState}> {clockInOut}</Button>
-                  </Grid>
-                  <Grid item md={8}>
+              <CardHeader
+                title={
+                  <Grid item alignItems="center">
                     <div className={styles.header_tooltip_container}>
                       <Tooltip
                         classes={{ tooltip: styles.tooltip }}
@@ -409,7 +403,29 @@ const Timesheets = (props) => {
                       </Tooltip>
                     </div>
                   </Grid>
+                }
+                className="gc360_header"
+              ></CardHeader>
+              <CardContent
+                style={{
+                  marginLeft: 8,
+                  marginTop: 8,
+                }}
+              >
+                <Grid container spacing={2} alignItems="center" alignContent="center">
+                  <Grid item md={2}>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={changeState}
+                      className={styles.clockInOutButton}
+                    >
+                      {' '}
+                      {clockInOut}
+                    </Button>
+                  </Grid>
                 </Grid>
+                <br />
                 <Grid
                   container
                   spacing={2}
@@ -424,6 +440,27 @@ const Timesheets = (props) => {
                       value={selectedDateIn}
                       onChange={setSelectedDateIn}
                       className="disable_select"
+                      PopperProps={{
+                        //Style overrides for the dateTimePicker, fixes dark mode
+                        sx: {
+                          '& .MuiDayPicker-weekDayLabel': {
+                            color: theme360.vars.palette.neutral.contrastText,
+                          },
+                          '& .MuiPickersDay-root': {
+                            backgroundColor: theme360.vars.palette.neutral.light,
+                            color: theme360.vars.palette.neutral.contrastText,
+                          },
+                          '& .MuiPickersDay-root:hover': {
+                            backgroundColor: theme360.vars.palette.neutral.main,
+                          },
+                          '& .MuiPickersDay-root:disabled': {
+                            backgroundColor: theme360.vars.palette.neutral.main,
+                          },
+                          '& .MuiClockNumber-root': {
+                            color: theme360.vars.palette.neutral.contrastText,
+                          },
+                        },
+                      }}
                       disableFuture
                     />
                   </Grid>
@@ -434,6 +471,30 @@ const Timesheets = (props) => {
                       value={selectedDateOut ?? selectedDateIn}
                       onChange={setSelectedDateOut}
                       className="disable_select"
+                      PopperProps={{
+                        //Style overrides for the dateTimePicker, fixes dark mode
+                        sx: {
+                          '& .MuiDayPicker-weekDayLabel': {
+                            color: theme360.vars.palette.neutral.contrastText,
+                          },
+                          '& .MuiPickersDay-root': {
+                            backgroundColor: theme360.vars.palette.neutral.light,
+                            color: theme360.vars.palette.neutral.contrastText,
+                          },
+                          '& .MuiPickersDay-root:hover': {
+                            backgroundColor: theme360.vars.palette.neutral.main,
+                          },
+                          '& .MuiPickersDay-root:disabled': {
+                            backgroundColor: theme360.vars.palette.neutral.main,
+                          },
+                          '& .MuiClockNumber-root': {
+                            color: theme360.vars.palette.neutral.contrastText,
+                          },
+                          '& .PrivatePickersToolbarText-root': {
+                            color: theme360.vars.palette.neutral.contrastText,
+                          },
+                        },
+                      }}
                       disableFuture
                       showToolbar={true}
                       disabled={selectedDateIn === null}
@@ -475,7 +536,7 @@ const Timesheets = (props) => {
                   <Grid item xs={12}>
                     <Typography className={'disable_select'}>
                       <Link
-                        className={styles.timesheets_link}
+                        className="gc360_text_link"
                         href="https://reports.gordon.edu/Reports/Pages/Report.aspx?ItemPath=%2fStudent+Timesheets%2fPaid+Hours+By+Pay+Period"
                         underline="always"
                         target="_blank"

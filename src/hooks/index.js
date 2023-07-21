@@ -5,3 +5,4 @@ export { default as useNetworkStatus } from './useNetworkStatus';
 export { default as useUser } from './useUser';
 export { default as useUserActions } from './useUserActions';
 export { default as useWindowSize } from './useWindowSize';
+export { default as useWatchSystemColorScheme } from './useWatchSystemColorScheme';

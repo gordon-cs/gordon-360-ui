@@ -4,7 +4,7 @@ import GordonLoader from 'components/Loader';
 import session from 'services/session';
 import styles from '../Doughnut.module.css';
 import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
-import { gordonColors } from 'theme';
+import { theme360 } from 'theme';
 
 const DaysLeft = () => {
   const [daysRemaining, setDaysRemaining] = useState();
@@ -34,10 +34,14 @@ const DaysLeft = () => {
     load();
   }, []);
 
+  const colors = theme360.colorSchemes.light.palette;
+
   return (
-    <Card>
+    <Card className={styles.card}>
+      <CardHeader title={currentSessionDescription} className="gc360_header">
+        <br />
+      </CardHeader>
       <CardContent>
-        <CardHeader title={currentSessionDescription} className={styles.cardHeader} />
         {loading ? (
           <GordonLoader />
         ) : (
@@ -51,7 +55,7 @@ const DaysLeft = () => {
                   datasets: [
                     {
                       data: [daysFinished, daysRemaining],
-                      backgroundColor: gordonColors.primary.blue,
+                      backgroundColor: [colors.primary.main, colors.neutral.A400],
                     },
                   ],
                   labels: ['Days Finished', 'Days Remaining'],
@@ -61,7 +65,7 @@ const DaysLeft = () => {
             </Grid>
 
             <Grid item container justifyContent="center" direction="column" alignItems="center">
-              <Typography className={styles.value} color="primary">
+              <Typography className={styles.value} color="secondary">
                 {daysFinished}
               </Typography>
               <Typography className={styles.label}>Days Finished</Typography>

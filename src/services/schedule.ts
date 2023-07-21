@@ -18,9 +18,19 @@ type CourseSchedule = {
   END_TIME: string;
 };
 
+type SessionCourses = {
+  SessionBeginDate: string;
+  SessionCode: string;
+  SessionDescription: string;
+  SessionEndDate: string;
+  AllCourses: CourseSchedule;
+};
+
 type ScheduleEvent = {
   id: number;
+  name: string;
   title: string;
+  location: string;
   start: Date;
   end: Date;
   resourceId: string;
@@ -35,6 +45,9 @@ const getSchedule = (username: string = '', sessionID: string = ''): Promise<Cou
   }
   return http.get(`schedule/${username}?sessionID=${sessionID}`);
 };
+
+const getAllCourses = (username: string): Promise<SessionCourses> =>
+  http.get(`schedule/${username}/allcourses`);
 
 function getMeetingDays(course: CourseSchedule): string[] {
   let dayArray = [];
@@ -84,7 +97,10 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
     if (course.ROOM_CDE === 'ASY') {
       return asyncMeetingDays.map((day) => ({
         id: eventId++,
-        title: course.CRS_CDE + ' in ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
+        name: course.CRS_TITLE,
+        title: course.CRS_CDE,
+        // you might confused about name and title reference, but it is for displaying course code in the panel and course name in the dialog
+        location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
         start: today.toDate(),
         end: today.toDate(),
         resourceId: day,
@@ -94,7 +110,9 @@ function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
     } else {
       return meetingDays.map((day) => ({
         id: eventId++,
-        title: course.CRS_CDE + ' in ' + course.BLDG_CDE + ' ' + course.ROOM_CDE,
+        name: course.CRS_TITLE,
+        title: course.CRS_CDE,
+        location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
         start: beginTime.toDate(),
         end: endTime.toDate(),
         resourceId: day,
@@ -110,6 +128,7 @@ const scheduleService = {
   getSchedule,
   makeScheduleCourses,
   getCanReadStudentSchedules,
+  getAllCourses,
 };
 
 export default scheduleService;

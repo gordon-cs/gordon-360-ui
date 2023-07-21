@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import newsService from 'services/news';
 import NewsItem from 'views/News/components/NewsItem';
-import styles from './NewsCard.module.css';
 
 const NewsCard = () => {
   const [news, setNews] = useState([]);
@@ -11,7 +10,6 @@ const NewsCard = () => {
   useEffect(() => {
     newsService.getTodaysNews().then(setNews);
   }, []);
-
   return (
     <Card>
       <CardHeader
@@ -27,6 +25,7 @@ const NewsCard = () => {
             </Grid>
           </Grid>
         }
+        className="gc360_header"
       />
       <CardContent>
         {news.length > 0 ? (
@@ -40,5 +39,4 @@ const NewsCard = () => {
     </Card>
   );
 };
-
 export default NewsCard;

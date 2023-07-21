@@ -14,15 +14,11 @@
   &_title {
     text-align: center;
     padding: 1rem;
-    color: var(--mui-palette-neutral-contrastText);
-  }
-
-  &_header {
-    background-color: var(--mui-palette-primary-main);
     color: var(--mui-palette-primary-contrastText);
+    background-color: var(--mui-palette-primary-main);
   }
 
-  &_section:global(.MuiCard-root) {
+  &_section {
     box-shadow: none;
     color: var(--mui-palette-neutral-contrastText);
   }

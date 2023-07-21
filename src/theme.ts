@@ -111,14 +111,36 @@ export const windowBreakWidths = {
   breakXL: 1536,
 } as const;
 
+/**
+ * Possible stored user color settings
+ */
+export enum ColorSetting {
+  System = 'system',
+  Dark = 'dark',
+  Light = 'light',
+}
+
+/**
+ *  Possible MUI theme modes
+ */
+export enum ColorMode {
+  Dark = 'dark',
+  Light = 'light',
+}
+
+// key for caching user color preference in localStorage
+export const STORAGE_COLOR_PREFERENCE_KEY = 'colorMode';
+
 // Extend the interface, add neutral color with same color options as the primary palette.
 declare module '@mui/material/styles' {
   interface Palette {
     neutral: Palette['primary'];
+    link: Palette['primary'];
   }
   // allow configuration using `createTheme`
   interface PaletteOptions {
     neutral: PaletteOptions['primary'];
+    link: Palette['primary'];
   }
 }
 
@@ -130,53 +152,60 @@ declare module '@mui/material' {
 
 // Color declarations:
 // Primary
-let GordonBlue = '#014983';
-let GordonBlue_opacity50 = '#01498382';
+const GordonBlue = '#014983';
+const GordonBlue_opacity50 = '#01498382';
 
 // Secondary
-let ScottieCyan = '#00AEEF';
-let ScottieCyan_opacity10 = '#00AEEF1A';
+const ScottieCyan = '#00AEEF';
+const ScottieCyan_opacity75 = '#00AEEFBF';
+const ScottieCyan_opacity10 = '#00AEEF1A';
 
 // Error
 //Not an official gordon color anymore, we can consider changing this, it is a good error color
-let OldSchemeRed = '#B53228';
-let NauticalRed = '#FF5D53';
+const OldSchemeRed = '#B53228';
+const NauticalRed = '#FF5D53';
 
 // Success
-let LaVidaGreen = '#006D22';
-let OldSchemeGreen = '#B2BB1C';
-let SeaSpray = '#C7EFCF';
+const LaVidaGreen = '#006D22';
+const OldSchemeGreen = '#B2BB1C';
+const SeaSpray = '#C7EFCF';
 
 // Warning
-let BarringtonGold = '#FDB913';
+const BarringtonGold = '#FDB913';
 
 // Info
-let SnowDay = '#D5F0FE';
-let NightMarsh = '#023947';
-let Athletics = '#081F2C';
+const SnowDay = '#D5F0FE';
+const NightMarsh = '#023947';
+const NightMarsh_opacity50 = '#02394782';
+const Athletics = '#081F2C';
 
 // Neutral
-let BackgroundLightGray = '#EBEAEA';
-let LightGray = '#CCCCCB';
+const BackgroundLightGray = '#EBEAEA';
+const LightGray = '#CCCCCB';
 
 // Contrast
-let Black = '#000000';
-let White = '#FFFFFF';
-let Black_opacity50 = '#00000080';
-let Black_opacity20 = '#00000033';
-let Black_opacity10 = '#0000001a';
+const Black = '#000000';
+const White = '#FFFFFF';
+const Black_opacity50 = '#00000080';
+const Black_opacity20 = '#00000033';
+const Black_opacity10 = '#0000001a';
 
 // Dev Tool coloring - Colors for development and testing purposes only
-let TestTool = '#FF8400'; // devTool orange
-let TestToolContrast = '#FF0000'; // devTool red
-let TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
+// These colors can be used to test palette colors with an obvious visual indicator of which colors
+// have been updated on screen.
+const TestTool = '#FF8400'; // devTool orange
+const TestToolContrast = '#FF0000'; // devTool red
+const TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
+const Placeholder = '#00ff00'; // For unused slots that can be filled with new colors
 
 // Dark Mode Colors!:
-let Gray = '#303233';
-let DarkGray = '#232424';
+const Gray = '#282828';
+const DarkGray = '#151515';
+const LinkBlue = '#0260ad';
 
 // Theme to use in the CSS vars provider, allowing multiple theme modes
-export const newTheme = extendTheme({
+// This theme can be imported in javascript to reference colors directly
+export const theme360 = extendTheme({
   colorSchemes: {
     light: {
       palette: {
@@ -196,6 +225,7 @@ export const newTheme = extendTheme({
         },
         secondary: {
           main: ScottieCyan,
+          dark: ScottieCyan_opacity75,
           contrastText: White,
           50: ScottieCyan_opacity10,
           100: '#B0E2F9',
@@ -219,13 +249,13 @@ export const newTheme = extendTheme({
           light: SeaSpray,
         },
         warning: { main: BarringtonGold, dark: OldSchemeRed },
-        info: { main: NightMarsh, light: SnowDay, dark: Athletics },
+        info: { main: NightMarsh, light: SnowDay, dark: Athletics, contrastText: White },
         neutral: {
-          main: BackgroundLightGray /* page background and contrast light grey */, //currently $neutral-light-gray in _vars
-          dark: LightGray /* light gray */, //currently $neutral-gray2
+          main: BackgroundLightGray, //currently $neutral-light-gray in _vars
+          dark: LightGray, //currently $neutral-gray2
           light: White, //currently $neutral-white
-          contrastText: Black /* black */,
-          50: '#FAF9F9', //Hues need to be flipped in dark mode for contrasting text to look right
+          contrastText: Black,
+          50: '#FAF9F9', //Neutral hues must be flipped in dark mode for proper contrast text
           100: '#F4F3F3',
           200: '#EBEAEA',
           300: '#DCDBDB',
@@ -240,6 +270,12 @@ export const newTheme = extendTheme({
           A400: Black_opacity20,
           A700: Black_opacity10,
         },
+        link: {
+          main: GordonBlue,
+          light: ScottieCyan,
+          dark: Placeholder,
+          contrastText: ScottieCyan,
+        },
       },
     },
     dark: {
@@ -247,18 +283,23 @@ export const newTheme = extendTheme({
       palette: {
         // Variables to set various MUI components, may or may not use, but good to have the
         // customizeability
+        AppBar: {
+          darkBg: NightMarsh,
+        },
         background: {
           paper: DarkGray, // Card Colors
         },
         text: {
           primary: White, // Various MUI components and text
         },
-        Switch: {
-          defaultColor: TestTool, // switch ball off color
-        },
-        common: {
-          onBackground: TestTool, // switch track off color
-        },
+        // May be used later, gives us the flexibility to change switch colors when switched off
+        // if needed for dark mode.
+        // Switch: {
+        //   defaultColor: Placeholder, // switch ball off color
+        // },
+        // common: {
+        //   onBackground: Placeholder, // switch track off color
+        // },
         action: {
           active: White, // Various icons, especially in PersonalInfo
         },
@@ -266,56 +307,48 @@ export const newTheme = extendTheme({
         // May be used later, gives us the flexibility to change tooltip colors if needed for dark
         // mode.
         // Tooltip: {
-        //   bg: TestTool, // Tooltip background color
+        //   bg: Placeholder, // Tooltip background color
         // },
         primary: {
           main: NightMarsh,
+          dark: NightMarsh_opacity50,
           contrastText: White,
           50: GordonBlue_opacity50, //should be half opacity of main
-          100: TestTool,
-          200: TestTool,
-          300: TestTool,
-          400: TestTool,
-          500: TestTool,
-          600: TestTool,
-          700: TestTool,
-          800: TestTool,
-          900: TestTool,
         },
         secondary: {
           main: GordonBlue,
           contrastText: White,
-          50: TestTool,
-          100: TestTool,
-          200: TestTool,
-          300: TestTool,
-          400: TestTool,
-          500: TestTool,
-          600: TestTool,
-          700: TestTool,
-          800: TestTool,
-          900: TestTool,
+          50: GordonBlue_opacity50,
+          100: '#BBDDF0',
+          200: '#92C8E6',
+          300: '#6BB2DC',
+          400: '#4EA2D7',
+          500: '#3394D1',
+          600: '#2886C5',
+          700: '#1C75B3',
+          800: '#1365A2',
+          900: '#014883',
         },
         error: {
-          main: TestTool,
-          light: TestTool,
-          contrastText: TestTool,
+          main: OldSchemeRed,
+          light: NauticalRed,
+          contrastText: White,
         },
         success: {
-          dark: TestTool,
-          main: TestTool,
-          light: TestTool,
+          dark: LaVidaGreen,
+          main: OldSchemeGreen,
+          light: SeaSpray,
         },
-        warning: { main: TestTool, dark: TestTool },
-        info: { main: TestTool },
+        warning: { main: BarringtonGold, dark: OldSchemeRed },
+        info: { main: NightMarsh, light: SnowDay, dark: Athletics, contrastText: White },
         neutral: {
           main: DarkGray,
-          dark: TestTool,
+          dark: Athletics,
           light: Gray,
           contrastText: White,
           50: '#000000',
           100: '#1D1C1C',
-          200: '#3D3D3D',
+          200: '#353535',
           300: '#5C5B5B',
           400: '#706F6F',
           500: '#989797',
@@ -324,6 +357,12 @@ export const newTheme = extendTheme({
           800: '#EBEAEA',
           900: '#F4F3F3',
           A100: '#FAF9F9',
+        },
+        link: {
+          main: LinkBlue,
+          light: ScottieCyan,
+          dark: Placeholder,
+          contrastText: ScottieCyan,
         },
       },
     },

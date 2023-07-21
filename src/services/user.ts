@@ -253,8 +253,11 @@ const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibili
 
 const getPrivacySetting = (username: string): Promise<string> =>
   http.get(`profiles/privacy_setting/${username}/`);
+const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
+
+const updateMailStop = (value: string) => http.put(`profiles/mailstop`, value);
 
 const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
   http.put(`profiles/office_location`, OfficeLocation);
@@ -362,9 +365,11 @@ const userService = {
   setMobilePhonePrivacy,
   setUserPrivacy,
   setMobilePhoneNumber,
+  updateMailStop,
   updateOfficeLocation,
   updateOfficeHours,
   setImagePrivacy,
+  getMailStops,
   getChapelCredits,
   getImage,
   getDiningInfo,

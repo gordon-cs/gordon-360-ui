@@ -35,16 +35,21 @@ const GordonSchedulePanel = (props) => {
   const [firstDay, setFirstDay] = useState('');
   const [lastDay, setLastDay] = useState('');
   const [recurringDays, setRecurringDays] = useState([]);
+  const [courseName, setCourseName] = useState('');
   const [courseTitle, setCourseTitle] = useState('');
   const [courseLocation, setCourseLocation] = useState('');
   const [courseStart, setCourseStart] = useState('');
   const [courseEnd, setCourseEnd] = useState('');
   const [selectedSession, setSelectedSession] = useState('');
+  const [allCourses, setAllCourses] = useState([]);
+
   const isOnline = useNetworkStatus();
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
   useEffect(() => {
     const loadPage = async () => {
+      const allCourses = await scheduleService.getAllCourses(props.profile.AD_Username);
+      setAllCourses(allCourses);
       setSessions(await sessionService.getAll());
       if (sessionFromURL) {
         setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
@@ -89,8 +94,9 @@ const GordonSchedulePanel = (props) => {
     if (props.myProf) {
       setScheduleDialogOpen(true);
       setRecurringDays(calEvent.meetingDays.map((day) => `${day}`).join(', '));
-      setCourseTitle(calEvent.title.split('in')[0]);
-      setCourseLocation(calEvent.title.split('in')[1]);
+      setCourseName(calEvent.name);
+      setCourseTitle(calEvent.title);
+      setCourseLocation(calEvent.location);
       setCourseStart(calEvent.start);
       setCourseEnd(calEvent.end);
       setSelectedCourseInfo(calEvent);
@@ -118,6 +124,7 @@ const GordonSchedulePanel = (props) => {
         handleScheduleDialogClose={handleScheduleDialogClose}
         courseInfo={selectedCourseInfo}
         recurringDays={recurringDays}
+        courseName={courseName}
         courseTitle={courseTitle}
         courseLocation={courseLocation}
         firstDay={firstDay}
@@ -155,8 +162,8 @@ const GordonSchedulePanel = (props) => {
                       onChange={(e) => handleSelectSession(e.target.value)}
                     >
                       {(isOnline
-                        ? sessions
-                        : sessions.filter((item) => item.SessionCode === selectedSession)
+                        ? allCourses.filter((item) => item.AllCourses.length > 0)
+                        : allCourses.filter((item) => item.SessionCode === selectedSession)
                       ).map(({ SessionDescription: description, SessionCode: code }) => (
                         <MenuItem label={description} value={code} key={code}>
                           {description}
@@ -167,9 +174,11 @@ const GordonSchedulePanel = (props) => {
                 </Grid>
                 <Grid lg={7}></Grid>
                 <Grid item align="center" className={styles.addCalendarInfoText}>
-                  <Typography className={styles.addCalendarInfoText}>
-                    Click on Course to add Schedule to Personal Calendar
-                  </Typography>
+                  {props.myProf && (
+                    <Typography className={styles.addCalendarInfoText}>
+                      Click on Course to add Schedule to Personal Calendar
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar

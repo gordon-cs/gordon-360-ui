@@ -9,9 +9,9 @@
     word-break: keep-all;
     flex-wrap: wrap;
     a {
-      color: var(--mui-palette-primary-main);
+      color: var(--mui-palette-link-main);
       &:hover {
-        color: var(--mui-palette-secondary-main) !important;
+        color: var(--mui-palette-link-light) !important;
       }
     }
   }
