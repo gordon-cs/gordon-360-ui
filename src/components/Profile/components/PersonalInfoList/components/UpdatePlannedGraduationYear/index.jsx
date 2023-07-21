@@ -57,7 +57,7 @@ const UpdatePlannedGraduationYear = (props) => {
           />
         </FormControl>
         <p className={styles.note}>
-          NOTE: This does not set your official graduation <br />
+          NOTE: <br /> This does not set your official graduation <br />
           year. To make an official change, please <br /> contact{' '}
           <a href="mailto:registrar@gordon.edu">the Registrar's Office</a>.
         </p>
