@@ -285,6 +285,9 @@ export const theme360 = extendTheme({
       palette: {
         // Variables to set various MUI components, may or may not use, but good to have the
         // customizeability
+        Alert: {
+          errorFilledBg: OldSchemeRed,
+        },
         background: {
           paper: DarkGray, // Card Colors
         },
