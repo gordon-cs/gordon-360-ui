@@ -41,7 +41,6 @@ import defaultLogo from 'views/RecIM/recim_logo.png';
 import { editParticipantAdmin, editParticipantStatus } from 'services/recim/participant';
 import { ParticipantList } from '..';
 
-
 const activityTypeIconPair = [
   {
     type: 'League',

@@ -43,7 +43,7 @@
 }
 
 .ongoingChip {
-  background-color: var(--mui-palette-secondary-100);
+  background-color: var(--mui-palette-secondary-200);
 }
 
 // All below should eventually be refactored to global styles
@@ -143,7 +143,7 @@
   bottom: 0;
   font-size: small;
   text-align: center;
-  color: var(--mui-palette-neutral-light);
+  color: white;
 }
 
 .logo {

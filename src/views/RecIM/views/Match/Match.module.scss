@@ -99,15 +99,20 @@
 }
 
 .greenMenuButton {
-  background-color: white;
+  background-color: var(--mui-palette-neutral-100);
   transition: all 0.2s ease-in-out;
 }
 
 .greenMenuButton:hover {
-  background-color: white;
+  background-color: var(--mui-palette-neutral-100);
   box-shadow: inset -2px -2px var(--mui-palette-success-main),
     inset 2px 2px var(--mui-palette-success-main);
   transition: all 0.2s ease-in-out;
+}
+
+.titleInnerBox {
+  background-color: var(--mui-palette-error-main);
+  color: var(--mui-palette-error-contrastText);
 }
 
 .matchWinner {
@@ -120,6 +125,10 @@
   margin-bottom: 0.2em;
   color: var(--mui-palette-neutral-500);
   text-align: center;
+}
+
+.menuButton {
+  background-color: var(--mui-palette-neutral-100);
 }
 
 .menuButton:hover {
