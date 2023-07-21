@@ -207,6 +207,7 @@ const LinkBlue = '#0260ad';
 // This theme can be imported in javascript to reference colors directly
 export const theme360 = extendTheme({
   colorSchemes: {
+    // Palette for light theme mode
     light: {
       palette: {
         primary: {
@@ -279,7 +280,7 @@ export const theme360 = extendTheme({
       },
     },
     dark: {
-      // Palette for dark theme mode ------------------------TEMPORARY-COLORS---------------
+      // Palette for dark theme mode
       palette: {
         // Variables to set various MUI components, may or may not use, but good to have the
         // customizeability
