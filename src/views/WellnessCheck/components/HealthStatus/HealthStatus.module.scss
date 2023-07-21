@@ -8,11 +8,11 @@
   }
 
   :global(.MuiButton-contained) {
-    background-color: $primary-cyan;
-    color: $neutral-white;
+    background-color: var(--mui-palette-secondary-main);
+    color: var(--mui-palette-secondary-contrastText);
 
     &:hover {
-      background-color: $primary-cyan;
+      background-color: var(--mui-palette-secondary-main);
     }
   }
 
@@ -22,8 +22,8 @@
   }
 
   .wellness_header {
-    background-color: $primary-blue;
-    color: $neutral-white;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
     padding: 10px;
     font-size: 20px;
   }
@@ -71,32 +71,32 @@
 }
 
 .GREEN {
-  --status-background-color: #{$wellness-green};
-  --status-color: #{$neutral-white};
+  --status-background-color: var(--mui-palette-success-dark);
+  --status-color: var(--mui-palette-neutral-light);
 }
 
 .YELLOW {
-  --status-background-color: #{$wellness-yellow};
-  --status-color: #{$neutral-dark-gray};
+  --status-background-color: var(--mui-palette-warning-main);
+  --status-color: var(--mui-palette-neutral-800);
 }
 
 .RED {
-  --status-background-color: #{$wellness-red};
-  --status-color: #{$neutral-gray2};
+  --status-background-color: var(--mui-palette-error-main);
+  --status-color: var(--mui-palette-neutral-dark);
 }
 
 a.rtc_link {
-  color: $primary-cyan;
+  color: var(--mui-palette-secondary-main);
   text-decoration: underline;
 }
 
 a.rtc_link:hover {
-  color: $primary-blue;
+  color: var(--mui-palette-primary-main);
   text-decoration: underline;
 }
 
 a.contact_link {
-  color: $primary-cyan;
+  color: var(--mui-palette-secondary-main);
   text-decoration: underline;
 
   &:hover {
