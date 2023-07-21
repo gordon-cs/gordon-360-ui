@@ -1,3 +1,19 @@
 .gordon_error {
   height: 100%;
 }
+
+.title {
+  color: var(--mui-palette-primary-contrastText);
+}
+
+.email {
+  color: var(--mui-palette-secondary-main);
+}
+
+.request {
+  color: var(--mui-palette-warning-main);
+}
+
+.content {
+  color: var(--mui-palette-error-light);
+}
