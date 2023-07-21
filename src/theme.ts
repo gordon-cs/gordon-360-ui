@@ -32,8 +32,8 @@ const ScottieCyan_opacity75 = '#00AEEFBF';
 const ScottieCyan_opacity10 = '#00AEEF1A';
 
 // Error
-//Not an official gordon color anymore, we can consider changing this, it is a good error color
-const OldSchemeRed = '#B53228';
+//Red used in the old color scheme, good error color
+const ChristmasRed = '#B53228';
 const NauticalRed = '#FF5D53';
 
 // Success
@@ -106,7 +106,7 @@ export const theme360 = extendTheme({
           900: '#005195',
         },
         error: {
-          main: OldSchemeRed,
+          main: ChristmasRed,
           light: NauticalRed,
           contrastText: White,
         },
@@ -115,7 +115,7 @@ export const theme360 = extendTheme({
           main: OldSchemeGreen,
           light: SeaSpray,
         },
-        warning: { main: BarringtonGold, dark: OldSchemeRed },
+        warning: { main: BarringtonGold, dark: ChristmasRed },
         info: { main: NightMarsh, light: SnowDay, dark: Athletics, contrastText: White },
         neutral: {
           main: BackgroundLightGray,
@@ -178,7 +178,7 @@ export const theme360 = extendTheme({
           main: NightMarsh,
           dark: NightMarsh_opacity50,
           contrastText: White,
-          50: GordonBlue_opacity50, //should be half opacity of main
+          50: NightMarsh_opacity50, //should be half opacity of main
         },
         secondary: {
           main: GordonBlue,
@@ -195,7 +195,7 @@ export const theme360 = extendTheme({
           900: '#014883',
         },
         error: {
-          main: OldSchemeRed,
+          main: ChristmasRed,
           light: NauticalRed,
           contrastText: White,
         },
@@ -204,7 +204,7 @@ export const theme360 = extendTheme({
           main: OldSchemeGreen,
           light: SeaSpray,
         },
-        warning: { main: BarringtonGold, dark: OldSchemeRed },
+        warning: { main: BarringtonGold, dark: ChristmasRed },
         info: { main: NightMarsh, light: SnowDay, dark: Athletics, contrastText: White },
         neutral: {
           main: DarkGray,
@@ -244,8 +244,11 @@ export const windowBreakWidths = {
   breakXL: 1536,
 } as const;
 
+// key for caching user color preference in localStorage
+export const STORAGE_COLOR_PREFERENCE_KEY = 'colorMode';
+
 /**
- * Possible stored user color settings
+ * Stored user color settings, possible options in localstorage
  */
 export enum ColorSetting {
   System = 'system',
@@ -254,12 +257,9 @@ export enum ColorSetting {
 }
 
 /**
- *  Possible MUI theme modes
+ *  MUI theme modes, possible theme modes
  */
 export enum ColorMode {
   Dark = 'dark',
   Light = 'light',
 }
-
-// key for caching user color preference in localStorage
-export const STORAGE_COLOR_PREFERENCE_KEY = 'colorMode';
