@@ -263,6 +263,8 @@ const Home = () => {
           onChange={(event, newTab) => setActivityTab(newTab)}
           aria-label="admin control center tabs"
           centered
+          textColor="secondary"
+          indicatorColor="secondary"
         >
           <Tab label="Upcoming" />
           <Tab label="Ongoing" />
@@ -289,6 +291,8 @@ const Home = () => {
         onChange={(event, newTab) => setTeamTab(newTab)}
         aria-label="admin control center tabs"
         centered
+        textColor="secondary"
+        indicatorColor="secondary"
       >
         <Tab label="My Teams" />
         <Tab

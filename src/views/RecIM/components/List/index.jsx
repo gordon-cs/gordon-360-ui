@@ -276,6 +276,8 @@ const MatchList = ({ matches = [], activityID }) => {
           onChange={(event, tabIndex) => setSelectedDay(tabIndex)}
           variant="scrollable"
           aria-label="admin control center tabs"
+          textColor="secondary"
+          indicatorColor="secondary"
         >
           {organizedMatches.map((day) => {
             return (

@@ -4,7 +4,7 @@
 .menuTitle {
   margin-top: 0.5em;
   margin-bottom: 0.2em;
-  color: $neutral-gray;
+  color: var(--mui-palette-neutral-500);
   text-align: center;
 }
 
@@ -26,7 +26,7 @@
   background-color: var(--mui-palette-neutral-50);
   border-radius: 0.5em;
   align-items: center;
-  box-shadow: inset -1px -1px $neutral-light-gray2-opacity50;
+  box-shadow: inset -1px -1px var(--mui-palette-neutral-A700);
   transition: all 0.3s ease-in-out;
 }
 
@@ -54,8 +54,8 @@
 }
 
 .matchHistoryListing:hover {
-  background-color: $neutral-light-gray2-opacity40;
-  box-shadow: inset 1px 1px $neutral-black-opacity10;
+  background-color: var(--mui-palette-neutral-A200);
+  box-shadow: inset 1px 1px var(--mui-palette-neutral-A700);
   transition: all 0.3s ease-in-out;
 }
 
@@ -63,7 +63,7 @@
   background-color: var(--mui-palette-neutral-50);
   border-radius: 0.5em;
   align-items: center;
-  box-shadow: inset -1px -1px $neutral-light-gray2-opacity50;
+  box-shadow: inset -1px -1px var(--mui-palette-neutral-A700);
   transition: all 0.3s ease-in-out;
 }
 
@@ -91,8 +91,8 @@
 }
 
 .matchHistoryListing:hover {
-  background-color: $neutral-light-gray2-opacity40;
-  box-shadow: inset 1px 1px $neutral-black-opacity10;
+  background-color: var(--mui-palette-neutral-100);
+  box-shadow: inset 1px 1px var(--mui-palette-neutral-A700);
   transition: all 0.3s ease-in-out;
 }
 
@@ -207,7 +207,7 @@
 
 .cardHeaderSecondary {
   background-color: var(--mui-palette-primary-700);
-  color: $neutral-white;
+  color: var(--mui-palette-error-contrastText);
 }
 
 @media (min-width: $break-xs) {
