@@ -23,6 +23,7 @@ const angleMode = isPiDay ? '2pi' : '360';
 const headerLogo72dpi = 'images/gc_' + angleMode + '_yellow_logo_72.png';
 const headerLogo64dpi = 'images/gc_' + angleMode + '_yellow_logo_64.png';
 const headerLogo56dpi = 'images/gc_' + angleMode + '_yellow_logo_56.png';
+const headerLogo56dpiNoText = 'images/gc_' + angleMode + '_yellow_logo_56_vert.png';
 
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
@@ -139,8 +140,10 @@ const GordonHeader = ({ onDrawerToggle }) => {
           </IconButton>
           <Link to="/" component={ForwardNavLink} value={tabIndex}>
             <picture>
+              {/* pick a different image as the screen gets smaller.*/}
               <source srcset={headerLogo72dpi} media="(min-width: 900px)" />
               <source srcset={headerLogo64dpi} media="(min-width: 600px)" />
+              <source srcSet={headerLogo56dpiNoText} media="(max-width: 375px)" />
               <img src={headerLogo56dpi} alt="Gordon 360 Logo"></img>
             </picture>
           </Link>
@@ -167,6 +170,9 @@ const GordonHeader = ({ onDrawerToggle }) => {
               {requiresAuthTab('Timesheets', <WorkIcon />)}
             </Tabs>
           </div>
+          <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
+            {/* This h6 box uses flex to keep people search and the profile button stuck to the right side of the header */}
+          </Typography>
           <div className={styles.people_search_container_container}>
             {/* Width is dynamic */}
             <div className={styles.people_search_container}>
