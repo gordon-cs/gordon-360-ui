@@ -62,7 +62,7 @@ const GordonDialogBox = ({
         sx={severity ? { bgcolor: `${severity}.main`, pb: '0' } : { bgcolor: 'primary.main' }}
       >
         {severity ? (
-          <Alert variant="contained" severity={severity}>
+          <Alert variant="filled" severity={severity}>
             <AlertTitle>
               <strong>{title}</strong>
             </AlertTitle>
