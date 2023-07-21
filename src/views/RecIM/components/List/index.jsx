@@ -85,6 +85,8 @@ const ParticipantList = ({
     return () => clearTimeout(delayDebounceFn);
   }, [searchValue]);
 
+  useEffect(() => setVisibleParticipants(participants), [participants]);
+
   // callback to remove current captain
   const promoteNewCaptain = async (newCaptainUsername) => {
     let currentCaptain = participants.find((p) => p.Role === 'Team-captain/Creator')?.Username;
@@ -196,7 +198,7 @@ const ParticipantList = ({
   });
   return (
     <>
-      {participantSearchBar()}
+      {isAdminPage && participantSearchBar()}
       <List dense>
         {content}
         {suspensionContent}
