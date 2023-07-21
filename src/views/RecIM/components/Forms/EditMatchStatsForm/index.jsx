@@ -100,6 +100,8 @@ const EditMatchStatsForm = ({
           variant="scrollable"
           scrollButtons="auto"
           aria-label="team name edit stats tabs"
+          textColor="secondary"
+          indicatorColor="secondary"
         >
           {match.Team.map((team) => {
             return <Tab disabled={errors?.length > 0} label={team.Name} />;

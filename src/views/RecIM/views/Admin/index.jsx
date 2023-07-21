@@ -356,6 +356,8 @@ const Admin = () => {
             value={tab}
             onChange={(event, newTab) => setTab(newTab)}
             aria-label="admin control center tabs"
+            textColor="secondary"
+            indicatorColor="secondary"
           >
             <Tab label="Activities" />
             <Tab label="Teams" />

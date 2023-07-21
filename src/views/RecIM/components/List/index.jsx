@@ -239,7 +239,6 @@ const MatchList = ({ matches = [], activityID }) => {
       }
     else setSelectedDay(index);
   }, [organizedMatches]);
-
   if (!matches?.length || !matches[0])
     return <Typography className={styles.secondaryText}>No matches to show.</Typography>;
 
@@ -279,6 +278,8 @@ const MatchList = ({ matches = [], activityID }) => {
           onChange={(event, tabIndex) => setSelectedDay(tabIndex)}
           variant="scrollable"
           aria-label="admin control center tabs"
+          textColor="secondary"
+          indicatorColor="secondary"
         >
           {organizedMatches.map((day) => {
             return (
