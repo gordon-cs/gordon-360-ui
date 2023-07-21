@@ -1,5 +1,15 @@
-import { Grid, Typography, Tabs, Tab, Box, List, TextField, InputAdornment, useMediaQuery } from '@mui/material';
-import { useEffect, useState } from 'react';
+import {
+  Grid,
+  Typography,
+  Tabs,
+  Tab,
+  Box,
+  List,
+  TextField,
+  InputAdornment,
+  useMediaQuery,
+} from '@mui/material';
+import { useEffect, useState, useMemo } from 'react';
 import {
   ActivityListing,
   MatchListing,
@@ -23,7 +33,6 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { editParticipantStatus } from 'services/recim/participant';
-
 
 const ActivityList = ({ activities, showActivityOptions }) => {
   if (!activities?.length)
