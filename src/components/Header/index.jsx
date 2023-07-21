@@ -6,7 +6,7 @@ import {
   People as PeopleIcon,
   Work as WorkIcon,
 } from '@mui/icons-material';
-import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography, Link } from '@mui/material';
+import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
@@ -43,10 +43,13 @@ const TabUrlPatterns = [
  */
 const useTabHighlight = () => {
   const location = useLocation();
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(false);
 
   useEffect(() => {
     const matchedIndex = TabUrlPatterns.findIndex((pattern) => pattern.test(location.pathname));
+    if (matchedIndex === -1) {
+      setTabIndex(false)
+    }
     setTabIndex(matchedIndex); // This won't cause an update if the new value is the same as the old value
   }, [location.pathname]);
 
@@ -68,7 +71,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
     const isOffline = dialog === 'offline';
     return (
       <GordonDialogBox
-        open={dialog}
+        open={Boolean(dialog)}
         onClose={() => setDialog(null)}
         title={isOffline ? 'Unavailabile Offline' : 'Login Required'}
         buttonClicked={() => setDialog(null)}
