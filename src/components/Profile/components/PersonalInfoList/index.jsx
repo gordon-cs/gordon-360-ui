@@ -176,6 +176,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         setFieldPrivacy(privacySettingList.find((f) => f.Field === field)?.VisibilityGroup);
       }
     }, [privacySettingList]);
+    console.log(privacySettingList);
     return fieldPrivacy;
   };
 
@@ -184,8 +185,14 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       title="Home Phone:"
       contentText={
         myProf ? (
-          formatPhone(profile.HomePhone)
-        ) : profile.HomePhone !== PRIVATE_INFO ? (
+          <Grid
+            className={
+              privacyColorHelper('MobilePhone') === 'Public' ? styles.not_private : styles.private
+            }
+          >
+            {formatPhone(profile.HomePhone)}
+          </Grid>
+        ) : profile.HomePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
         ) : (
           <a href={`tel:${profile.HomePhone}`} className="gc360_text_link">
@@ -193,7 +200,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, ['HomePhone'])}
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, ['HomePhone'])}
       privateInfo={isHomePhonePrivate}
       myProf={myProf}
     />
@@ -208,7 +215,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             container
             spacing={0}
             alignItems="center"
-            className={privacyColorHelper('MobilePhone') == 'Public' ? styles.not_private : null}
+            className={
+              privacyColorHelper('HomePhone') === 'Public' ? styles.not_private : styles.private
+            }
           >
             <Grid item>{formatPhone(profile.MobilePhone)}</Grid>
             <Grid item>{isStudent ? <UpdatePhone /> : null}</Grid>
@@ -240,7 +249,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       contentText={
         <>
           {streetAddr}
-          <span className={keepPrivate ? null : styles.not_private}>
+          <span
+            className={
+              privacyColorHelper('Country') === 'Public' ? styles.not_private : styles.private
+            }
+          >
             {profile.HomeCity === PRIVATE_INFO || profile.Country === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
