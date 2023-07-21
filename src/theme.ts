@@ -164,6 +164,7 @@ const ScottieCyan_opacity10 = '#00AEEF1A';
 //Not an official gordon color anymore, we can consider changing this, it is a good error color
 const OldSchemeRed = '#B53228';
 const NauticalRed = '#FF5D53';
+const PureRed = '#FF0000';
 
 // Success
 const LaVidaGreen = '#006D22';
@@ -240,6 +241,7 @@ export const theme360 = extendTheme({
         },
         error: {
           main: OldSchemeRed,
+          dark: PureRed,
           light: NauticalRed,
           contrastText: White,
         },
@@ -343,17 +345,17 @@ export const theme360 = extendTheme({
           dark: Athletics,
           light: Gray,
           contrastText: White,
-          50: '#000000',
-          100: '#1D1C1C',
-          200: '#353535',
-          300: '#5C5B5B',
-          400: '#706F6F',
-          500: '#989797',
-          600: '#B8B7B7',
-          700: '#DCDBDB',
-          800: '#EBEAEA',
-          900: '#F4F3F3',
-          A100: '#FAF9F9',
+          50: '#1D1C1C',
+          100: '#353535',
+          200: '#5C5B5B',
+          300: '#706F6F',
+          400: '#989797',
+          500: '#B8B7B7',
+          600: '#DCDBDB',
+          700: '#EBEAEA',
+          800: '#F4F3F3',
+          900: '#FAF9F9',
+          A100: White,
         },
         link: {
           main: LinkBlue,

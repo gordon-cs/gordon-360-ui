@@ -300,7 +300,7 @@ const Admin = () => {
       </Grid>
       <Grid item xs={8}>
         <Typography className={styles.title}>
-          <Box component="span" sx={{ color: 'secondary.main' }}>
+          <Box component="span" sx={{ color: 'var(--mui-palette-secondary-main)' }}>
             Gordon
           </Box>{' '}
           Rec-IM
