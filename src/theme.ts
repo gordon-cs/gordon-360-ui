@@ -206,6 +206,9 @@ const LinkBlue = '#0260ad';
 // Theme to use in the CSS vars provider, allowing multiple theme modes
 // This theme can be imported in javascript to reference colors directly
 export const theme360 = extendTheme({
+  typography: {
+    fontFamily: '"Gotham SSm 4r", "Gotham SSm A", "Gotham SSm B", sans-serif'
+  },
   colorSchemes: {
     light: {
       palette: {
