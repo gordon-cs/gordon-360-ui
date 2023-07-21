@@ -304,7 +304,7 @@ const Match = () => {
             <Grid
               item
               container
-              xs={1.5}
+              xs={4}
               sm={5}
               columnSpacing={2}
               className={`${styles.teamInfo} ${styles.teamInfoRight}`}
@@ -331,7 +331,7 @@ const Match = () => {
             </Grid>
 
             {match?.Status === 'Completed' && (
-              <Grid item container xs={3.5} alignItems="center" direction="column" sx={{ mt: 3 }}>
+              <Grid item container xs={3} alignItems="center" direction="column" sx={{ mt: 3 }}>
                 <Grid item>
                   <Typography className={styles.subtitle}>Final</Typography>
                 </Grid>
@@ -348,7 +348,7 @@ const Match = () => {
                 </Grid>
               </Grid>
             )}
-            {/* right team info */}
+
             <Grid item xs={5} textAlign={'right'}>
               <IconButton onClick={handleSettingsClick} sx={{ mr: '1rem' }}>
                 <SettingsIcon
