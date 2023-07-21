@@ -5,7 +5,6 @@ import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
 const UpdateUserPrivacy = (username, field) => {
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [privacySettingList, setPrivacySettingList] = useState();
   const [groupList, setGroupList] = useState();
   const [visibleTo, setVisibleTo] = useState('Private'); // default private while loading
@@ -13,18 +12,7 @@ const UpdateUserPrivacy = (username, field) => {
   const handlePrivacy = async (event) => {
     try {
       await userService.setUserPrivacy({ Field: field, VisibilityGroup: event.target.value });
-      setSnackbar({
-        message: 'Your privacy setting will update within a couple hours.',
-        severity: 'success',
-        open: true,
-      });
-    } catch {
-      setSnackbar({
-        message: 'Privacy setting failed to update. Please contact CTS.',
-        severity: 'error',
-        open: true,
-      });
-    }
+    } catch {}
   };
 
   useEffect(() => {
@@ -56,12 +44,6 @@ const UpdateUserPrivacy = (username, field) => {
           size={120}
         />
       </FormControl>
-      <GordonSnackbar
-        open={snackbar.open}
-        severity={snackbar.severity}
-        text={snackbar.message}
-        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-      />
     </Grid>
   );
 };
