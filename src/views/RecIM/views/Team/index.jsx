@@ -217,12 +217,6 @@ const Team = () => {
             <ParticipantList participants={team.Participant} />
           )}
         </CardContent>
-        <InviteParticipantForm
-          createSnackbar={createSnackbar}
-          openInviteParticipantForm={openInviteParticipantForm}
-          setOpenInviteParticipantForm={(bool) => setOpenInviteParticipantForm(bool)}
-          teamID={teamID}
-        />
       </Card>
     );
 
