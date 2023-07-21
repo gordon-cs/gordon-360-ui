@@ -1,46 +1,115 @@
 @import '../../vars';
 
-.toolbar {
-  justify-content: space-between;
-}
+.gordon_header {
+  position: absolute;
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
 
-.tab {
-  text-transform: capitalize;
-
-  &.disabled_tab {
-    color: var(--mui-palette-neutral-900);
+  .app_bar {
+    position: absolute;
+    background-repeat: no-repeat;
+    height: $header-height-xs;
   }
-}
 
-.tab.tab:hover {
-  text-decoration: none;
-}
+  .tab {
+    transition: min-width 0.2s;
+    color: var(--mui-palette-primary-contrastText);
+    text-transform: capitalize;
 
-.side_container {
-  display: flex;
-  align-items: center;
-}
+    &.disabled_tab {
+      color: var(--mui-palette-neutral-900);
+    }
+  }
 
-.center_container {
-  display: none;
-}
+  & .tab.tab:hover {
+    text-decoration: none;
+  }
 
-@media (min-width: $break-md) {
+  .hamburger_menu_button {
+    margin-left: -12px;
+  }
+
   .center_container {
-    display: flex;
+    visibility: hidden;
+    width: 0;
   }
 
-  .tab {
-    padding-inline: 0;
+  .people_search_container_container {
+    width: 15rem;
+    text-align: right;
   }
-}
 
-@media (min-width: $break-lg) {
-  .tab {
-    min-width: 110px;
+  .people_search_container {
+    text-align: right;
+    width: 9rem;
+    transition: width 0.3s;
+    display: inline-block;
   }
-}
 
-.menu_icon {
-  color: var(--mui-palette-primary-contrastText);
+  @media (min-width: $break-xs) {
+    .people_search_container {
+      width: 40vw;
+    }
+  }
+
+  @media (min-width: $break-md) {
+    .center_container {
+      display: flex;
+    }
+  }
+
+  @media (min-width: $break-sm) {
+    .app_bar {
+      height: $header-height-md;
+      background-color: var(--mui-palette-primary-main);
+    }
+    .people_search_container {
+      width: 13rem;
+      &:focus-within {
+        width: 15rem;
+      }
+    }
+  }
+
+  @media (min-width: $break-lg) {
+    .app_bar {
+      height: $header-height-md;
+    }
+
+    .center_container {
+      flex: 3;
+      justify-content: center;
+      display: flex;
+      visibility: visible;
+    }
+  }
+
+  @media (min-width: $break-lg) {
+    .center_container {
+      flex: 7;
+    }
+    .tab {
+      min-width: 110px;
+    }
+  }
+
+  .header_button {
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+
+  .title {
+    flex: 1;
+    margin-right: 10px;
+    font-weight: bold;
+  }
+
+  .hamburger_menu_button_icon {
+    color: var(--mui-palette-primary-contrastText);
+  }
+
+  .login_button {
+    color: var(--mui-palette-secondary-contrastText);
+  }
 }
