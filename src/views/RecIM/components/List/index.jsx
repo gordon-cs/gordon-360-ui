@@ -196,7 +196,7 @@ const ParticipantList = ({
   });
   return (
     <>
-      {participantSearchBar()}
+      {isAdminPage && participantSearchBar()}
       <List dense>
         {content}
         {suspensionContent}
