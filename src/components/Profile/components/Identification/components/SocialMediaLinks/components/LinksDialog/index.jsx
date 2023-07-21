@@ -98,13 +98,12 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
               multiline
               className={styles.gc360_links_dialog_content_field}
               variant="outlined"
-              color="link"
             />
           </div>
         ))}
       </DialogContent>
       <DialogActions className={styles.gc360_links_dialog_actions}>
-        <Button onClick={onClose} variant="contained" color="secondary">
+        <Button onClick={onClose} variant="outlined" color="primary">
           Cancel
         </Button>
         {hasUpdatedLink && !formErrors.length && (
