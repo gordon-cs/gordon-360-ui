@@ -243,7 +243,6 @@ export const theme360 = extendTheme({
           main: OldSchemeRed,
           dark: PureRed,
           light: NauticalRed,
-          dark: PureRed,
           contrastText: White,
         },
         success: {
