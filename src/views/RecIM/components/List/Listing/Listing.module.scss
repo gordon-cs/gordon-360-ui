@@ -54,43 +54,6 @@
 }
 
 .matchHistoryListing:hover {
-  background-color: var(--mui-palette-neutral-A200);
-  box-shadow: inset 1px 1px var(--mui-palette-neutral-A700);
-  transition: all 0.3s ease-in-out;
-}
-
-%baseListing {
-  background-color: var(--mui-palette-neutral-50);
-  border-radius: 0.5em;
-  align-items: center;
-  box-shadow: inset -1px -1px var(--mui-palette-neutral-A700);
-  transition: all 0.3s ease-in-out;
-}
-
-.matchHistoryListing {
-  @extend %baseListing;
-  margin-top: 0.1em;
-  margin-bottom: 0.1em;
-  padding: 0.5em;
-
-  &_winner {
-    @extend %baseListing;
-    margin-top: 0.1em;
-    margin-bottom: 0.1em;
-    padding: 0.5em;
-    box-shadow: inset 3px 0px 0px var(--mui-palette-success-main);
-  }
-
-  &_loser {
-    @extend %baseListing;
-    margin-top: 0.1em;
-    margin-bottom: 0.1em;
-    padding: 0.5em;
-    box-shadow: inset 3px 0px 0px var(--mui-palette-error-light);
-  }
-}
-
-.matchHistoryListing:hover {
   background-color: var(--mui-palette-neutral-100);
   box-shadow: inset 1px 1px var(--mui-palette-neutral-A700);
   transition: all 0.3s ease-in-out;
