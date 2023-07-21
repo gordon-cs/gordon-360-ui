@@ -155,7 +155,6 @@ const DiningBalance = () => {
                 variant="body2"
                 title="Change Meal Plan"
                 className={styles.label2}
-                //className={styles.gc360_my_profile_edit_icon}
                 component={Link}
                 href="https://www.gordon.edu/mealplan"
                 size="small"
