@@ -41,12 +41,15 @@ const GordonSchedulePanel = (props) => {
   const [courseStart, setCourseStart] = useState('');
   const [courseEnd, setCourseEnd] = useState('');
   const [selectedSession, setSelectedSession] = useState('');
+  const [allCourses, setAllCourses] = useState([]);
 
   const isOnline = useNetworkStatus();
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
   useEffect(() => {
     const loadPage = async () => {
+      const allCourses = await scheduleService.getAllCourses(props.profile.AD_Username);
+      setAllCourses(allCourses);
       setSessions(await sessionService.getAll());
       if (sessionFromURL) {
         setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
@@ -159,8 +162,8 @@ const GordonSchedulePanel = (props) => {
                       onChange={(e) => handleSelectSession(e.target.value)}
                     >
                       {(isOnline
-                        ? sessions
-                        : sessions.filter((item) => item.SessionCode === selectedSession)
+                        ? allCourses.filter((item) => item.AllCourses.length > 0)
+                        : allCourses.filter((item) => item.SessionCode === selectedSession)
                       ).map(({ SessionDescription: description, SessionCode: code }) => (
                         <MenuItem label={description} value={code} key={code}>
                           {description}
