@@ -1,5 +1,4 @@
 import { FormControl, Grid } from '@mui/material';
-import GordonSnackbar from 'components/Snackbar';
 import { useState, useEffect } from 'react';
 import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';

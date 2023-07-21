@@ -4,7 +4,6 @@ import {
   CardHeader,
   Divider,
   FormControlLabel,
-  FormControl,
   Grid,
   Link,
   List,
@@ -30,7 +29,6 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
-import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 import UpdateUserPrivacy from './UpdateUserPrivacyDropDownMenu';
 
 const PRIVATE_INFO = 'Private as requested.';
