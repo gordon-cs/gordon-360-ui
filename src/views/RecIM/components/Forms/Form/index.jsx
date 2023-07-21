@@ -1,9 +1,6 @@
-import { Grid } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { ConfirmationRow } from './components/ConfirmationRow';
-import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
 
@@ -29,10 +26,8 @@ const Form = ({
   additionalContent,
   additionCancelActions,
   newInfoCallback,
-  showConfirmationWindow = true,
 }) => {
   const [newInfo, setNewInfo] = useState(currentInfo);
-  const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
 
   const allFields = useMemo(() => fieldSets.flat(), [fieldSets]);
 
@@ -71,7 +66,6 @@ const Form = ({
   };
 
   const handleWindowClose = () => {
-    setOpenConfirmWindow(false);
     setOpenForm(false);
     setNewInfo(currentInfo);
   };
