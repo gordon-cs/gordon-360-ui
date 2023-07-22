@@ -49,7 +49,7 @@ const GordonSchedulePanel = (props) => {
   useEffect(() => {
     const loadPage = async () => {
       const allCourses = await scheduleService.getAllCourses(props.profile.AD_Username);
-      setAllCourses(allCourses);
+      setAllCourses(allCourses.filter((item) => item.AllCourses.length > 0));
       setSessions(await sessionService.getAll());
       if (sessionFromURL) {
         setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
@@ -162,7 +162,7 @@ const GordonSchedulePanel = (props) => {
                       onChange={(e) => handleSelectSession(e.target.value)}
                     >
                       {(isOnline
-                        ? allCourses.filter((item) => item.AllCourses.length > 0)
+                        ? allCourses
                         : allCourses.filter((item) => item.SessionCode === selectedSession)
                       ).map(({ SessionDescription: description, SessionCode: code }) => (
                         <MenuItem label={description} value={code} key={code}>
@@ -183,7 +183,8 @@ const GordonSchedulePanel = (props) => {
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar
                     profile={props.profile}
-                    term={selectedSession}
+                    term={selectedSession === '' ? currentAcademicSession : selectedSession}
+                    allCourses={allCourses}
                     myProf={props.myProf}
                     reloadCall={reloadCall}
                     isOnline={props.isOnline}
