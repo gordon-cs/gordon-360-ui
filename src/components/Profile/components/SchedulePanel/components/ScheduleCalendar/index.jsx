@@ -5,6 +5,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import scheduleService from 'services/schedule';
 import session from 'services/session';
 import './ScheduleCalendar.css';
+import { Schedule } from '@mui/icons-material';
 
 const GordonScheduleCalendar = (props) => {
   const [loading, setLoading] = useState(true);
@@ -21,10 +22,10 @@ const GordonScheduleCalendar = (props) => {
     setLoading(true);
     let courseInfo = null;
     try {
-      //const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
-      const allSchedule = await scheduleService.getAllCourses(searchedUser.AD_Username);
-      const sessionSchedule = allSchedule.filter((item) => item.SessionCode === props.term);
-      courseInfo = scheduleService.makeScheduleCourses(sessionSchedule[0]?.AllCourses);
+      const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
+      // const allSchedule = await scheduleService.getAllCourses(searchedUser.AD_Username);
+      //setAllCourses(props.allSchedule.filter((item) => item.SessionCode === props.term));
+      courseInfo = scheduleService.makeScheduleCourses(schedule);
     } catch (e) {
       setLoading(false);
     }
