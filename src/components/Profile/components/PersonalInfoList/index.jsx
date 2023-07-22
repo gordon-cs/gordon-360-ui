@@ -23,6 +23,7 @@ import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog';
+import UpdatePlannedGraduationYear from './components/UpdatePlannedGraduationYear';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
@@ -60,6 +61,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     AuthGroup.AcademicInfoView,
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
+  const [profPlannedGradYear, setProfPlannedGradYear] = useState(profile.PlannedGradYear);
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -247,6 +249,31 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       />
     );
 
+  const plannedGraduationYear =
+    myProf && isStudent ? (
+      <ProfileInfoListItem
+        title={'Planned Graduation Year:'}
+        contentText={
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>
+              {!profPlannedGradYear
+                ? 'Fill in with your planned graduation year'
+                : profPlannedGradYear}
+            </Grid>
+            <Grid item>
+              <UpdatePlannedGraduationYear change={setProfPlannedGradYear} />
+            </Grid>
+          </Grid>
+        }
+      />
+    ) : profPlannedGradYear ? (
+      <ProfileInfoListItem
+        title={'Planned Graduation Year:'}
+        contentText={profile.PlannedGradYear}
+        myProf={myProf}
+      />
+    ) : null;
+
   const updateAlumniInfoButton =
     isAlumni && isOnline && myProf ? (
       <Grid container justifyContent="center">
@@ -381,7 +408,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             {myProf && mailCombo && (
               <>
                 <Grid container item xs={1.1} alignItems="center">
-                  <Typography className={styles.private}>
+                  <Typography className={styles.private} marginLeft="-0.5em">
                     {showMailCombo ? mailCombo : '****'}
                   </Typography>
                 </Grid>
@@ -672,6 +699,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <List>
             {majors}
             {minors}
+            {plannedGraduationYear}
             {graduationYear}
             {cliftonStrengths}
             {advisors}

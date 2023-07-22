@@ -2,6 +2,8 @@ import moment from 'moment';
 import http from './http';
 
 type CourseSchedule = {
+  Username: string;
+  SessionCode: string;
   CRS_CDE: string;
   CRS_TITLE: string;
   BLDG_CDE: string;
@@ -16,6 +18,15 @@ type CourseSchedule = {
   BEGIN_TIME: string;
   /** A timespan of the format HH:mm:ss, stringified */
   END_TIME: string;
+  Role: string;
+};
+
+type SessionCourses = {
+  SessionBeginDate: string;
+  SessionCode: string;
+  SessionDescription: string;
+  SessionEndDate: string;
+  AllCourses: CourseSchedule;
 };
 
 type ScheduleEvent = {
@@ -37,6 +48,9 @@ const getSchedule = (username: string = '', sessionID: string = ''): Promise<Cou
   }
   return http.get(`schedule/${username}?sessionID=${sessionID}`);
 };
+
+const getAllCourses = (username: string): Promise<SessionCourses> =>
+  http.get(`schedule/${username}/allcourses`);
 
 function getMeetingDays(course: CourseSchedule): string[] {
   let dayArray = [];
@@ -117,6 +131,7 @@ const scheduleService = {
   getSchedule,
   makeScheduleCourses,
   getCanReadStudentSchedules,
+  getAllCourses,
 };
 
 export default scheduleService;
