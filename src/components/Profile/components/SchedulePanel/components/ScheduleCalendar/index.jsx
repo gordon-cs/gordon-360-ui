@@ -40,7 +40,7 @@ const GordonScheduleCalendar = (props) => {
     setLoading(false);
   };
 
-  console.log(eventInfo);
+  console.log(props.allCourses);
   const resourceMap = [
     { resourceId: 'MO', resourceTitle: 'Monday' },
     { resourceId: 'TU', resourceTitle: 'Tuesday' },
