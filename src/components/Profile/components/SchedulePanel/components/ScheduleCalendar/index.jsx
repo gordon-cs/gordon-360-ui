@@ -19,11 +19,10 @@ const GordonScheduleCalendar = (props) => {
     loadData(props.profile);
   }, [props.profile, props.reloadCall]);
 
-  const loadData = async (searchedUser) => {
+  const loadData = async () => {
     setLoading(true);
     let courseInfo = null;
     try {
-      // const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
       const course = props.allCourses.filter((item) => item.SessionCode === props.term);
       setAllCourses(course);
       courseInfo = scheduleService.makeScheduleCourses(course[0].AllCourses);
