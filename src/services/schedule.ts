@@ -2,7 +2,7 @@ import moment from 'moment';
 import http from './http';
 
 type CourseSchedule = {
-  UserID: string;
+  Username: string;
   SessionCode: string;
   CRS_CDE: string;
   CRS_TITLE: string;
