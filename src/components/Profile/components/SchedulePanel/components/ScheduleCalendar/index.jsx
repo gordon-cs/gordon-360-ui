@@ -13,6 +13,7 @@ const GordonScheduleCalendar = (props) => {
   const [currentSession, setCurrentSession] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
   const [allCourses, setAllCourses] = useState([]);
+  const [allCoursess, setAllCoursess] = useState([]);
 
   useEffect(() => {
     loadData(props.profile);
@@ -22,10 +23,10 @@ const GordonScheduleCalendar = (props) => {
     setLoading(true);
     let courseInfo = null;
     try {
-      const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
-      // const allSchedule = await scheduleService.getAllCourses(searchedUser.AD_Username);
-      //setAllCourses(props.allSchedule.filter((item) => item.SessionCode === props.term));
-      courseInfo = scheduleService.makeScheduleCourses(schedule);
+      // const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
+      const course = props.allCourses.filter((item) => item.SessionCode === props.term);
+      setAllCourses(course);
+      courseInfo = scheduleService.makeScheduleCourses(course[0].AllCourses);
     } catch (e) {
       setLoading(false);
     }
@@ -40,7 +41,6 @@ const GordonScheduleCalendar = (props) => {
     setLoading(false);
   };
 
-  console.log(props.allCourses);
   const resourceMap = [
     { resourceId: 'MO', resourceTitle: 'Monday' },
     { resourceId: 'TU', resourceTitle: 'Tuesday' },
