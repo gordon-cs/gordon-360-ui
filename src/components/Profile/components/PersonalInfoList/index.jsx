@@ -594,11 +594,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     myProf &&
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
-        NOTE: To update your data, please contact{' '}
-        <a className={`gc360_text_link ${styles.note_link}`} href="mailto: hr@gordon.edu">
-          Human Resources
-        </a>{' '}
-        (x4828).
+        NOTE: To update your personal info, please go to{' '}
+        <a href="https://gordon.criterionhcm.com/">Criterion</a> and look under "Personal Info" tab.
       </Typography>
     ) : isStudent ? (
       <div align="left" className={styles.note}>
