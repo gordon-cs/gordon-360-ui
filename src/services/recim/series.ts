@@ -14,6 +14,8 @@ export type Series = {
   Match: Match[];
   TeamStanding: TeamRecord[];
   Schedule: SeriesSchedule;
+  WinnerID: number;
+  Points: number;
 };
 
 type SeriesSchedule = {
@@ -44,7 +46,7 @@ type DaysOfWeek = {
   Sat: boolean;
 };
 
-type CreatedSeries = {
+export type CreatedSeries = {
   ID: number;
   Name: string;
   StartDate: string;
@@ -53,6 +55,8 @@ type CreatedSeries = {
   TypeID: number;
   StatusID: number;
   ScheduleID: number;
+  WinnerID: number;
+  Points: number;
 };
 
 type UploadSeries = {
@@ -63,6 +67,8 @@ type UploadSeries = {
   TypeID: number;
   ScheduleID?: number;
   NumberOfTeamsAdmitted: number; //used for subsequent series creation post initial setup, nullable
+  WinnerID: number;
+  Points: number;
 };
 
 type PatchSeries = {
@@ -71,6 +77,22 @@ type PatchSeries = {
   EndDate: string;
   StatusID: number;
   ScheduleID?: number;
+  WinnerID: number;
+  Points: number;
+};
+
+type PatchSeriesTeamRecord = {
+  TeamID: number;
+  WinCount: number | null;
+  LossCount: number | null;
+  TieCount: number | null;
+};
+
+type AutoScheduleEstimate = {
+  SeriesID: number;
+  Name: string;
+  EndDate: string;
+  GamesCreated: number;
 };
 
 export type BracketInfo = {
@@ -109,6 +131,11 @@ const getAllSeries = (): Promise<Series[]> => http.get(`recim/series`);
 const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<CreatedSeries> =>
   http.patch(`recim/series/${seriesID}`, updatedSeries);
 
+const editSeriesTeamRecord = (
+  seriesID: number,
+  updatedRecord: PatchSeriesTeamRecord,
+): Promise<TeamRecord> => http.patch(`recim/series/${seriesID}/teamrecord`);
+
 const getSeriesSchedule = (seriesID: number): Promise<SeriesSchedule> =>
   http.get(`recim/series/${seriesID}/schedule`);
 
@@ -119,6 +146,9 @@ const scheduleSeriesMatches = (
   seriesID: number,
   params: AutoScheduleParameters,
 ): Promise<Match[]> => http.post(`recim/series/${seriesID}/autoschedule`, params);
+
+const getAutoSchedulerEstimate = (seriesID: number): Promise<AutoScheduleEstimate> =>
+  http.get(`recim/series/${seriesID}/autoschedule`);
 
 const deleteSeriesCascade = (seriesID: number): Promise<CreatedSeries> =>
   http.del(`recim/series/${seriesID}`);
@@ -133,9 +163,11 @@ export {
   getSeriesTypes,
   getAllSeries,
   editSeries,
+  editSeriesTeamRecord,
   getSeriesSchedule,
   putSeriesSchedule,
   scheduleSeriesMatches,
+  getAutoSchedulerEstimate,
   deleteSeriesCascade,
   getBracketInfo,
 };
