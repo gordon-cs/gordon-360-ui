@@ -116,6 +116,8 @@ const Admin = () => {
   };
 
   const handleAdminMenuClose = () => {
+    setSelectedDateIn(null);
+    setSelectedDateOut(null);
     setAdminMenuAnchorEl(null);
   };
 
