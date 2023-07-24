@@ -23,7 +23,7 @@ const getAffiliations = (): Promise<Affiliation[]> => http.get(`recim/affiliatio
 const getAffiliationByName = (name: string): Promise<Affiliation> =>
   http.get(`recim/affiliations/${name}`);
 
-const createAffiliation = (name: string): Promise<string> => http.put(`recim/affiliations`);
+const createAffiliation = (name: string): Promise<string> => http.post(`recim/affiliations`, name);
 
 const assignPointsToAffiliation = async (name: string, points: AffiliationPoints) =>
   http.put(`recim/affiliations/${name}/points`, points);
