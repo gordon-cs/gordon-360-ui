@@ -14,6 +14,8 @@ export type Series = {
   Match: Match[];
   TeamStanding: TeamRecord[];
   Schedule: SeriesSchedule;
+  WinnerID: number;
+  Points: number;
 };
 
 type SeriesSchedule = {
@@ -44,7 +46,7 @@ type DaysOfWeek = {
   Sat: boolean;
 };
 
-type CreatedSeries = {
+export type CreatedSeries = {
   ID: number;
   Name: string;
   StartDate: string;
@@ -53,6 +55,8 @@ type CreatedSeries = {
   TypeID: number;
   StatusID: number;
   ScheduleID: number;
+  WinnerID: number;
+  Points: number;
 };
 
 type UploadSeries = {
@@ -63,6 +67,8 @@ type UploadSeries = {
   TypeID: number;
   ScheduleID?: number;
   NumberOfTeamsAdmitted: number; //used for subsequent series creation post initial setup, nullable
+  WinnerID: number;
+  Points: number;
 };
 
 type PatchSeries = {
@@ -71,6 +77,8 @@ type PatchSeries = {
   EndDate: string;
   StatusID: number;
   ScheduleID?: number;
+  WinnerID: number;
+  Points: number;
 };
 
 export type BracketInfo = {
