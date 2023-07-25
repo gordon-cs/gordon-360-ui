@@ -505,24 +505,30 @@ const Admin = () => {
         >
           <Typography className={styles.menuTitle}>Generate Admin Reports</Typography>
           <MenuItem>
-            <DateTimePicker
-              renderInput={(props) => <TextField {...props} />}
-              label="Start Date/Time"
-              value={selectedDateIn}
-              onChange={setSelectedDateIn}
-              className="disable_select"
-              disableFuture={true}
-            />
-            <DateTimePicker
-              renderInput={(props) => <TextField {...props} />}
-              label="End Date/Time"
-              value={selectedDateOut}
-              onChange={setSelectedDateOut}
-              className="disable_select"
-              disabled={selectedDateIn === null}
-              minDateTime={selectedDateIn}
-              disableFuture={true}
-            />
+            <Grid container xs={12} fullWidth spacing={1}>
+              <Grid item xs={12} sm={6} fullWidth>
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label="Start Date/Time"
+                  value={selectedDateIn}
+                  onChange={setSelectedDateIn}
+                  className="disable_select"
+                  disableFuture={true}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} fullWidth>
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label="End Date/Time"
+                  value={selectedDateOut}
+                  onChange={setSelectedDateOut}
+                  className="disable_select"
+                  disabled={selectedDateIn === null}
+                  minDateTime={selectedDateIn}
+                  disableFuture={true}
+                />
+              </Grid>
+            </Grid>
           </MenuItem>
           <MenuItem
             dense
