@@ -1,5 +1,3 @@
-@import '../../vars';
-
 .wellness_question {
   :global(.MuiButtonBase-root) {
     padding: 4px;
@@ -21,6 +19,7 @@
     border: 15px solid var(--mui-palette-success-dark);
     border-radius: 2px;
     color: var(--mui-palette-primary-contrastText);
+
     :global(.MuiButton-contained) {
       background: var(--mui-palette-success-dark);
       color: var(--mui-palette-primary-contrastText);
@@ -31,6 +30,7 @@
     border: 15px solid var(--mui-palette-warning-main);
     border-radius: 2px;
     color: var(--mui-palette-neutral-dark);
+
     :global(.MuiButton-contained) {
       background: var(--mui-palette-warning-main);
       color: var(--mui-palette-neutral-dark);
@@ -43,6 +43,7 @@
 
   a {
     color: var(--mui-palette-link-main);
+
     &:hover {
       color: var(--mui-palette-link-light);
       text-decoration: none;
@@ -53,6 +54,7 @@
   a.contact_link {
     color: var(--mui-palette-secondary-main);
     text-decoration: underline;
+
     &:hover {
       text-decoration: underline;
     }
