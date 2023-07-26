@@ -28,12 +28,16 @@ const createAffiliation = (name: string): Promise<string> => http.post(`recim/af
 const assignPointsToAffiliation = async (name: string, points: AffiliationPoints) =>
   http.put(`recim/affiliations/${name}/points`, points);
 
+const updateAffiliation = async (name: string, update: PatchAffiliation): Promise<any> =>
+  http.patch(`recim/affiliation/${name}`, update);
+
 const deleteAffiliation = async (name: string) => http.del(`recim/affiliations/${name}`);
 
 export {
   getAffiliations,
   getAffiliationByName,
   createAffiliation,
+  updateAffiliation,
   assignPointsToAffiliation,
   deleteAffiliation,
 };
