@@ -55,8 +55,6 @@ const TeamForm = ({
       required: true,
     });
   }
-  console.log(team);
-  console.log(affiliations);
 
   const currentInfo = useMemo(() => {
     if (team) {

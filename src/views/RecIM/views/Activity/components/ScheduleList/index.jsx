@@ -27,6 +27,7 @@ import {
   deleteSeriesCascade,
   scheduleSeriesMatches,
   getSeriesSchedule,
+  getSeriesWinners,
 } from 'services/recim/series';
 import { useState, useEffect } from 'react';
 import styles from './../../Activity.module.css';
@@ -64,6 +65,7 @@ const ScheduleList = ({
   const [isMobileView, setIsMobileView] = useState(false);
   const [seriesSchedule, setSeriesSchedule] = useState();
   const [autoscheduleParameters, setAutoscheduleParameters] = useState();
+  const [seriesWinners, setSeriesWinners] = useState();
 
   useEffect(() => {
     if (width < windowBreakWidths.breakSM) setIsMobileView(true);
@@ -71,12 +73,15 @@ const ScheduleList = ({
   }, [width]);
 
   useEffect(() => {
-    const loadSchedule = async () => {
+    const loadData = async () => {
       let fetchedSchedule = await getSeriesSchedule(series.ID);
+      getSeriesWinners(series.ID).then(setSeriesWinners);
       if (fetchedSchedule.ID !== 0) setSeriesSchedule(fetchedSchedule);
     };
-    loadSchedule();
+    loadData();
   }, [series]);
+
+  console.log(seriesWinners);
 
   // default closure
   const closeMenusAndForms = () => {
