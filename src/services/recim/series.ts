@@ -139,7 +139,7 @@ const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<Creat
 const editSeriesTeamRecord = (
   seriesID: number,
   updatedRecord: PatchSeriesTeamRecord,
-): Promise<TeamRecord> => http.patch(`recim/series/${seriesID}/teamrecord`);
+): Promise<TeamRecord> => http.patch(`recim/series/${seriesID}/teamrecord`, updatedRecord);
 
 const getSeriesSchedule = (seriesID: number): Promise<SeriesSchedule> =>
   http.get(`recim/series/${seriesID}/schedule`);
