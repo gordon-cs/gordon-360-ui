@@ -246,7 +246,7 @@ const Home = () => {
 
   let affiliationsCard = (
     <Card>
-      <CardHeader title="Hall Points" className={`${styles.cardHeader} ${styles.center}`} />
+      <CardHeader title="Hall Standing" className={`${styles.cardHeader} ${styles.center}`} />
       <CardContent>
         <AffiliationsChart />
       </CardContent>
@@ -383,6 +383,7 @@ const Home = () => {
             <Checkbox
               color="secondary"
               inputProps={{ 'aria-label': 'toggle' }}
+              checked={allowEmails}
               defaultChecked={participant?.AllowEmails}
               onChange={(e) => handleAllowEmails(e.target.checked)}
             />
