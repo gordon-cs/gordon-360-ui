@@ -23,6 +23,7 @@ const Form = ({
   setOpenForm,
   openForm,
   handleConfirm,
+  headerNotes,
   additionalContent,
   additionCancelActions,
   newInfoCallback,
@@ -91,6 +92,7 @@ const Form = ({
       cancelButtonName="cancel"
       onClose={handleCancelClick}
     >
+      {headerNotes}
       {loading ? (
         <GordonLoader />
       ) : (
