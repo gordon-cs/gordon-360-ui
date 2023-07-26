@@ -72,29 +72,28 @@ const SeriesPlacementForm = ({
   }, [series.ID, targetTeamID, seriesWinners]);
 
   const navigationContent = (
-    <>
-      <Box className={styles.scrollableCenteredTabs} mt={1}>
-        <Tabs
-          value={selectedTab}
-          onChange={(event, tabIndex) => {
-            setLoading(true);
-            handleConfirm();
-            setSelectedTab(tabIndex);
-            setTargetTeamID(series.TeamStanding[tabIndex].TeamID);
-            setLoading(false);
-          }}
-          variant="scrollable"
-          scrollButtons="auto"
-          aria-label="team name edit stats tabs"
-          textColor="secondary"
-          indicatorColor="secondary"
-        >
-          {series.TeamStanding.map((team) => {
-            return <Tab label={team.Name} />;
-          })}
-        </Tabs>
-      </Box>
-    </>
+    <Box className={styles.scrollableCenteredTabs} mt={1}>
+      <Tabs
+        value={selectedTab}
+        scrollButtons
+        allowScrollButtonsMobile
+        onChange={(event, tabIndex) => {
+          setLoading(true);
+          handleConfirm();
+          setSelectedTab(tabIndex);
+          setTargetTeamID(series.TeamStanding[tabIndex].TeamID);
+          setLoading(false);
+        }}
+        variant="scrollable"
+        aria-label="team name edit stats tabs"
+        textColor="secondary"
+        indicatorColor="secondary"
+      >
+        {series.TeamStanding.map((team) => {
+          return <Tab label={team.Name} />;
+        })}
+      </Tabs>
+    </Box>
   );
 
   const handleConfirm = (newInfo, handleWindowClose) => {
@@ -146,20 +145,7 @@ const SeriesPlacementForm = ({
           <i>*Upon Completed, the winner will be automatically generated</i>
         </Typography>
       }
-      additionalContent={
-        <Grid container xs={12}>
-          <Grid item xs={12} padding="1em">
-            <Typography>
-              <i>
-                Teams are ordered by <b>Score</b> then by <b>Sportsmanship Rating</b>
-              </i>
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            {navigationContent}
-          </Grid>
-        </Grid>
-      }
+      additionalContent={navigationContent}
       currentInfo={currentInfo}
       loading={loading}
       isSaving={isSaving}

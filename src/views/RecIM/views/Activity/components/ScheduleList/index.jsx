@@ -496,7 +496,6 @@ const ScheduleList = ({
           Games have not yet been scheduled for this series.
         </Typography>
       )}
-      {}
       <GordonDialogBox
         open={openAutoSchedulerDisclaimer}
         title="Auto-Scheduler Disclaimer"
