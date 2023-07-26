@@ -3,6 +3,7 @@ import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
+import { Grid } from '@mui/material';
 
 export const validateFieldFromUpdatedInfo = (updatedInfo) => (field) => {
   const value = updatedInfo[field.name];
@@ -100,7 +101,9 @@ const Form = ({
           <ContentCard
             title={formTitles.contentCardTitles?.[index] ?? `${formTitles.name} Information`}
           >
-            {additionalContent}
+            <Grid container xs={12} justifyContent="center">
+              {additionalContent}
+            </Grid>
             {fieldSet.map((field) => (
               <InformationField
                 {...field}
