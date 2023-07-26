@@ -15,6 +15,9 @@ import {
   Box,
   IconButton,
   Checkbox,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ActivityForm from '../../components/Forms/ActivityForm';
@@ -39,6 +42,7 @@ import { isFuture } from 'date-fns';
 import { TabPanel } from 'views/RecIM/components/TabPanel';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AffiliationsChart from './components/AffiliationsChart';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -246,10 +250,17 @@ const Home = () => {
 
   let affiliationsCard = (
     <Card>
-      <CardHeader title="Hall Standing" className={`${styles.cardHeader} ${styles.center}`} />
-      <CardContent>
-        <AffiliationsChart />
-      </CardContent>
+      <Accordion>
+        <AccordionSummary
+          className={`${styles.cardHeader} ${styles.center}`}
+          expandIcon={<ExpandMoreIcon />}
+        >
+          <Typography> Display Hall Ranking</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <AffiliationsChart />
+        </AccordionDetails>
+      </Accordion>
     </Card>
   );
 
