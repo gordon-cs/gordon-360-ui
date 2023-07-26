@@ -130,7 +130,7 @@ const getAllSeries = (): Promise<Series[]> => http.get(`recim/series`);
 const getSeriesWinners = (ID: number): Promise<AffiliationPoints[]> =>
   http.get(`recim/series/${ID}/winners`);
 
-const updateSeriesWinners = (ID: number, winner: AffiliationPointsUpload): Promise<any> =>
+const updateSeriesWinners = async (ID: number, winner: AffiliationPointsUpload) =>
   http.put(`recim/series/${ID}/winners`, winner);
 
 const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<CreatedSeries> =>

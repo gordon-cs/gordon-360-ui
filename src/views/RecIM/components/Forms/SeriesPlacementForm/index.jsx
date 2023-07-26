@@ -90,12 +90,7 @@ const SeriesPlacementForm = ({
           indicatorColor="secondary"
         >
           {series.TeamStanding.map((team) => {
-            return (
-              <Tab
-                //disabled={errors?.length > 0}
-                label={team.Name}
-              />
-            );
+            return <Tab label={team.Name} />;
           })}
         </Tabs>
       </Box>
@@ -110,8 +105,23 @@ const SeriesPlacementForm = ({
         .then(() => {
           setSaving(false);
           createSnackbar(`Series placement points have been edited`, 'success');
-          onClose();
-          handleWindowClose();
+
+          let existingIndex = seriesWinners?.findIndex((team) => team.TeamID === targetTeamID);
+
+          //pseudo update
+          if (existingIndex === -1) {
+            seriesWinners.push(fullRequest);
+            createSnackbar(
+              `This team does not have an affiliation, points will not be permanently stored`,
+              'warning',
+            );
+          } else seriesWinners[existingIndex].Points = fullRequest.Points;
+
+          if (handleWindowClose) {
+            onClose();
+            handleWindowClose();
+            setSelectedTab(0);
+          }
         })
         .catch((reason) => {
           setSaving(false);
