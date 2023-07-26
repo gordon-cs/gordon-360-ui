@@ -2,6 +2,7 @@ import http from '../http';
 import { Match } from './match';
 import { TeamRecord } from './team';
 import { Lookup } from './recim';
+import { AffiliationPoints, AffiliationPointsUpload } from './affiliations';
 
 export type Series = {
   ID: number;
@@ -67,7 +68,6 @@ type UploadSeries = {
   TypeID: number;
   ScheduleID?: number;
   NumberOfTeamsAdmitted: number; //used for subsequent series creation post initial setup, nullable
-  WinnerID: number;
   Points: number;
 };
 
@@ -77,7 +77,6 @@ type PatchSeries = {
   EndDate: string;
   StatusID: number;
   ScheduleID?: number;
-  WinnerID: number;
   Points: number;
 };
 
@@ -128,6 +127,12 @@ const getSeriesTypes = (): Promise<Lookup[]> => http.get(`recim/series/lookup?ty
 
 const getAllSeries = (): Promise<Series[]> => http.get(`recim/series`);
 
+const getSeriesWinners = (ID: number): Promise<AffiliationPoints[]> =>
+  http.get(`recim/series/${ID}/winners`);
+
+const updateSeriesWinners = (ID: number, winner: AffiliationPointsUpload): Promise<any> =>
+  http.put(`recim/series/${ID}/winners`, winner);
+
 const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<CreatedSeries> =>
   http.patch(`recim/series/${seriesID}`, updatedSeries);
 
@@ -162,6 +167,8 @@ export {
   getSeriesStatusTypes,
   getSeriesTypes,
   getAllSeries,
+  getSeriesWinners,
+  updateSeriesWinners,
   editSeries,
   editSeriesTeamRecord,
   getSeriesSchedule,
