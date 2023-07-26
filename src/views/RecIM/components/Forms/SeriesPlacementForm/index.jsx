@@ -59,10 +59,6 @@ const SeriesPlacementForm = ({
       type: 'number',
     },
   ];
-  console.log(series);
-  console.log(seriesWinners);
-  console.log(targetTeamID);
-  console.log(seriesWinners?.find((team) => team.TeamID === targetTeamID));
 
   const currentInfo = useMemo(() => {
     var targetTeamPoints = seriesWinners?.find((team) => team.TeamID === targetTeamID);
