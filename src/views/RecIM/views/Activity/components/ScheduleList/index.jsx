@@ -39,6 +39,7 @@ import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
 import { deleteMatchList } from 'services/recim/match';
+import SeriesPlacementForm from 'views/RecIM/components/Forms/SeriesPlacementForm';
 
 const ScheduleList = ({
   isAdmin,
@@ -61,6 +62,7 @@ const ScheduleList = ({
   const [hasError, setHasError] = useState(false);
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
+  const [openSeriesPlacementForm, setOpenSeriesPlacementForm] = useState(false);
   const [showBracket, setShowBracket] = useState(false);
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
@@ -82,8 +84,6 @@ const ScheduleList = ({
     loadData();
   }, [series]);
 
-  console.log(seriesWinners);
-
   // default closure
   const closeMenusAndForms = () => {
     setAnchorEl(null);
@@ -101,6 +101,11 @@ const ScheduleList = ({
 
   const handleCreateMatch = () => {
     setOpenMatchForm(true);
+    closeMenusAndForms();
+  };
+
+  const handleSeriesPlacementForm = () => {
+    setOpenSeriesPlacementForm(true);
     closeMenusAndForms();
   };
 
@@ -418,22 +423,22 @@ const ScheduleList = ({
                 dense
                 onClick={async () => {
                   closeMenusAndForms();
-                  editSeries(series.ID, { StatusID: 2 }).then((series.Status = 'In Progress'));
+                  editSeries(series.ID, { StatusID: 2 }).then(setReload((prev) => !prev));
                 }}
                 className={styles.menuButton}
               >
-                Mark Series as 'in-progress'
+                Mark Series as 'In-Progress'
               </MenuItem>
             ) : (
               <MenuItem
                 dense
                 onClick={async () => {
                   closeMenusAndForms();
-                  editSeries(series.ID, { StatusID: 3 }).then((series.Status = 'Completed'));
+                  editSeries(series.ID, { StatusID: 3 }).then(setReload((prev) => !prev));
                 }}
                 className={styles.menuButton}
               >
-                Mark Series as 'completed'
+                Mark Series as 'Completed'
               </MenuItem>
             ))}
           <MenuItem
@@ -446,13 +451,28 @@ const ScheduleList = ({
           </MenuItem>
           <MenuItem
             dense
+            disabled={series?.Status !== 'Completed'}
+            onClick={handleSeriesPlacementForm}
+            className={styles.menuButton}
+          >
+            Assign Placement Points
+          </MenuItem>
+          <MenuItem
+            dense
             disabled={series?.Status === 'Completed'}
             onClick={handleCreateMatch}
             className={styles.menuButton}
           >
             Create a match
           </MenuItem>
-          <MenuItem dense onClick={handleDelete} className={styles.redButton}>
+          <Divider />
+          <MenuItem
+            dense
+            onClick={handleDelete}
+            className={styles.redButton}
+            sx={{ marginTop: '-0.5em' }}
+            // add spacing to prevent accidentally deleting the series on mobile
+          >
             Delete
           </MenuItem>
         </Menu>
@@ -526,6 +546,13 @@ const ScheduleList = ({
         activityID={series.ActivityID}
         series={series}
         activityTeams={activityTeams}
+      />
+      <SeriesPlacementForm
+        createSnackbar={createSnackbar}
+        onClose={() => setReload((prev) => !prev)}
+        openSeriesPlacementForm={openSeriesPlacementForm}
+        setOpenSeriesPlacementForm={(bool) => setOpenSeriesPlacementForm(bool)}
+        series={series}
       />
       <SeriesScheduleForm
         createSnackbar={createSnackbar}
