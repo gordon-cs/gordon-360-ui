@@ -1,9 +1,7 @@
-@import '../../vars';
-
 .header {
-  background-color: $primary-blue;
-  color: $neutral-white;
+  background-color: var(--mui-palette-primary-main);
   text-align: center;
+  color: var(--mui-palette-primary-contrastText);
 }
 
 .print_button {
@@ -12,4 +10,5 @@
   bottom: min(5vw, 4rem);
   right: max(2rem, 5vw);
   z-index: 1;
+  color: var(--mui-palette-primary-contrastText);
 }

@@ -1,21 +1,20 @@
-@import '../../../../vars';
-
 .news_item {
   padding: 1rem;
   align-items: center;
   transition: background-color 150ms;
-  border-top: solid 1.5px $neutral-light-gray;
+  border-top: solid 1.5px var(--mui-palette-neutral-main);
 
   .news_authorProfileLink {
     color: inherit;
   }
+
   .news_authorProfileLink:hover {
     text-decoration: underline;
   }
 
   &.unapproved {
-    background-color: $neutral-light-gray;
-    border-color: $neutral-gray2;
+    background-color: var(--mui-palette-neutral-main);
+    border-color: var(--mui-palette-neutral-dark);
     font-style: italic;
 
     p {
@@ -24,19 +23,23 @@
   }
 
   &:hover {
-    background-color: $primary-cyan;
+    background-color: var(--mui-palette-secondary-main);
     cursor: pointer;
 
     .news_column,
     .descriptionText,
     .news_content,
     .news_heading {
-      color: $neutral-white;
+      color: var(--mui-palette-secondary-contrastText);
+
+      &_bold {
+        font-weight: bold;
+      }
     }
   }
 
   &:hover.unapproved {
-    background-color: $neutral-gray2;
+    background-color: var(--mui-palette-neutral-dark);
 
     p {
       opacity: 1;
@@ -46,7 +49,11 @@
     .descriptionText,
     .news_content,
     .news_heading {
-      color: $neutral-dark-gray;
+      color: var(--mui-palette-neutral-contrastText);
+
+      &_bold {
+        font-weight: bold;
+      }
     }
   }
 
@@ -55,7 +62,11 @@
   }
 
   button.deleteButton {
-    border-color: $secondary-red;
-    color: $secondary-red;
+    border-color: var(--mui-palette-error-main);
+    color: var(--mui-palette-error-main);
   }
+}
+
+.collapsible {
+  width: 100%;
 }

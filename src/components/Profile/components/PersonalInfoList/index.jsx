@@ -21,9 +21,9 @@ import { useAuthGroups } from 'hooks';
 import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
-import { gordonColors } from 'theme';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import UpdatePhone from './components/UpdatePhoneDialog';
+import UpdatePlannedGraduationYear from './components/UpdatePlannedGraduationYear';
 import styles from './PersonalInfoList.module.css';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
@@ -61,6 +61,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     AuthGroup.AcademicInfoView,
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
+  const [profPlannedGradYear, setProfPlannedGradYear] = useState(profile.PlannedGradYear);
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -193,7 +194,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         myProf && (
           <FormControlLabel
             control={
-              <Switch onChange={handleChangeMobilePhonePrivacy} checked={!isMobilePhonePrivate} />
+              <Switch
+                onChange={handleChangeMobilePhonePrivacy}
+                color="secondary"
+                checked={!isMobilePhonePrivate}
+              />
             }
             label={isMobilePhonePrivate ? 'Private' : 'Public'}
             labelPlacement="bottom"
@@ -244,6 +249,31 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       />
     );
 
+  const plannedGraduationYear =
+    myProf && isStudent ? (
+      <ProfileInfoListItem
+        title={'Planned Graduation Year:'}
+        contentText={
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>
+              {!profPlannedGradYear
+                ? 'Fill in with your planned graduation year'
+                : profPlannedGradYear}
+            </Grid>
+            <Grid item>
+              <UpdatePlannedGraduationYear change={setProfPlannedGradYear} />
+            </Grid>
+          </Grid>
+        }
+      />
+    ) : profPlannedGradYear ? (
+      <ProfileInfoListItem
+        title={'Planned Graduation Year:'}
+        contentText={profile.PlannedGradYear}
+        myProf={myProf}
+      />
+    ) : null;
+
   const updateAlumniInfoButton =
     profile.PersonType === 'alu' && isOnline && myProf ? (
       <Grid container justifyContent="center">
@@ -265,10 +295,20 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     createSnackbar(status.message, status.type);
   };
 
-  const graduationYear =
-    isAlumni && profile.PreferredClassYear?.trim() ? (
-      <ProfileInfoListItem title={'Graduation Year:'} contentText={profile.PreferredClassYear} />
-    ) : null;
+  const gradYearAndMajor = () => {
+    var text = profile.PreferredClassYear;
+    if (profile.Major1Description !== '') {
+      text += ' | ' + profile.Major1Description;
+    }
+    if (profile.Major2Description !== '') {
+      text += ' & ' + profile.Major2Description;
+    }
+    return text;
+  };
+
+  const graduationYear = isAlumni && (
+    <ProfileInfoListItem title={profile.College + ' Alum:'} contentText={gradYearAndMajor()} />
+  );
 
   const showCliftonStrengthsBlock =
     (profile.CliftonStrengths && !profile.CliftonStrengths.Private) ||
@@ -319,6 +359,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             control={
               <Switch
                 onChange={handleChangeCliftonStrengthsPrivacy}
+                color="secondary"
                 checked={!isCliftonStrengthsPrivate}
               />
             }
@@ -355,13 +396,19 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
-            <Grid container item xs={myProf && mailCombo ? 2.5 : 5} alignItems="center">
+            <Grid
+              container
+              item
+              xs={myProf && mailCombo ? 2.5 : 5}
+              lg={myProf && mailCombo ? 2.4 : 5}
+              alignItems="center"
+            >
               <Typography>{`#${profile.Mail_Location}`}</Typography>
             </Grid>
             {myProf && mailCombo && (
               <>
-                <Grid container item xs={1} alignItems="center">
-                  <Typography className={styles.private}>
+                <Grid container item xs={1.1} alignItems="center">
+                  <Typography className={styles.private} marginLeft="-0.5em">
                     {showMailCombo ? mailCombo : '****'}
                   </Typography>
                 </Grid>
@@ -387,7 +434,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 </Grid>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   onClick={() => setIsJoinDialogOpen(true)}
                 >
                   Instructions
@@ -401,7 +448,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   <Grid container>
                     <Typography sx={{ fontSize: '0.8rem' }}>
                       <Link
-                        className={styles.salsbury_link}
+                        className={`gc360_text_link ${styles.salsbury_link}`}
                         href="https://m.youtube.com/shorts/FxE5PPS94sc"
                         underline="always"
                         target="_blank"
@@ -426,7 +473,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       <br />
                       <br />
                       <Link
-                        className={styles.dp_link}
+                        className={`gc360_text_link ${styles.dp_link}`}
                         href="https://m.youtube.com/shorts/47402r3FqSs"
                         underline="always"
                         target="_blank"
@@ -454,7 +501,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       <br />
                       <br />
                       <Link
-                        className={styles.dd_link}
+                        className={`gc360_text_link ${styles.dd_link}`}
                         href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
                         underline="always"
                         target="_blank"
@@ -547,11 +594,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     myProf &&
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
-        NOTE: To update your data, please contact{' '}
-        <a style={{ color: gordonColors.primary.blue }} href="mailto: hr@gordon.edu">
-          Human Resources
-        </a>{' '}
-        (x4828).
+        NOTE: To update your personal info, please go to{' '}
+        <a href="https://gordon.criterionhcm.com/">Criterion</a> and look under "Personal Info" tab.
       </Typography>
     ) : isStudent ? (
       <div align="left" className={styles.note}>
@@ -562,14 +606,38 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </li>
           <li>
             <Typography>
-              To update your On Campus Address, please contact{' '}
-              <a href="mailto: housing@gordon.edu">Housing</a> (x4263).
+              To add/update your mail forwarding address, fill out this{' '}
+              <a
+                href="https://forms.office.com/r/98eR7TUXg6"
+                className={`gc360_text_link ${styles.note_link}`}
+              >
+                Forward Request Form.
+              </a>
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              To update your On-Campus Address, please contact{' '}
+              <a
+                href="mailto: housing@gordon.edu"
+                className={`gc360_text_link ${styles.note_link}`}
+              >
+                Housing
+              </a>{' '}
+              (x4263).
             </Typography>
           </li>
           <li>
             <Typography>
               For all other changes or to partially/fully prevent your data from displaying, please
-              contact the <a href="mailto: registrar@gordon.edu">Registrar's Office</a> (x4242).
+              contact the{' '}
+              <a
+                href="mailto: registrar@gordon.edu"
+                className={`gc360_text_link ${styles.note_link}`}
+              >
+                Registrar's Office
+              </a>{' '}
+              (x4242).
             </Typography>
           </li>
         </ul>
@@ -628,6 +696,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <List>
             {majors}
             {minors}
+            {plannedGraduationYear}
             {graduationYear}
             {cliftonStrengths}
             {advisors}

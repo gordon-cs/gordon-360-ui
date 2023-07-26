@@ -1,451 +1,204 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import React, { useState, useEffect, Fragment, useCallback } from 'react';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
   Grid,
-  Switch,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  CardHeader,
   Typography,
 } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
-import { formatDistanceToNow } from 'date-fns';
-import { Markup } from 'interweave';
-import { Component, Fragment } from 'react';
-import myschedule from 'services/myschedule';
-import schedulecontrol from 'services/schedulecontrol';
-import { gordonColors } from 'theme';
-import urlRegex from 'url-regex-safe';
-import EditDescriptionDialog from './components/EditDescriptionDialog';
-import RemoveScheduleDialog from './components/RemoveScheduleDialog';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
-import MyScheduleDialog from './components/myScheduleDialog';
+import ScheduleDialog from './components/ScheduleDialog';
+import styles from './ScheduleHeader.module.css';
+import scheduleService from 'services/schedule';
+import { useNetworkStatus, useUser } from 'hooks';
+import sessionService from 'services/session';
 
-// Default values
-const STARTHOUR = '08:00';
-const ENDHOUR = '22:00';
+const GordonSchedulePanel = (props) => {
+  const [myProf, setMyProf] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(props, myProf ? false : true);
+  const [loading, setLoading] = useState(true);
+  const [reloadCall, setReloadCall] = useState(false);
+  const [sessions, setSessions] = useState([]);
+  const [eventInfo, setEventInfo] = useState([]);
+  const [currentAcademicSession, setCurrentAcademicSession] = useState('');
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
+  const [selectedCourseInfo, setSelectedCourseInfo] = useState();
+  const [firstDay, setFirstDay] = useState('');
+  const [lastDay, setLastDay] = useState('');
+  const [recurringDays, setRecurringDays] = useState([]);
+  const [courseName, setCourseName] = useState('');
+  const [courseTitle, setCourseTitle] = useState('');
+  const [courseLocation, setCourseLocation] = useState('');
+  const [courseStart, setCourseStart] = useState('');
+  const [courseEnd, setCourseEnd] = useState('');
+  const [selectedSession, setSelectedSession] = useState('');
+  const [allCourses, setAllCourses] = useState([]);
 
-const styles2 = {
-  colorSwitchBase: {
-    color: gordonColors.neutral.lightGray,
-    '&$colorChecked': {
-      color: gordonColors.primary.cyan,
-      '& + $colorBar': {
-        backgroundColor: gordonColors.primary.cyan,
-      },
-    },
-  },
-  colorBar: {},
-  colorChecked: {},
+  const isOnline = useNetworkStatus();
+  const sessionFromURL = new URLSearchParams(location.search).get('session');
+
+  useEffect(() => {
+    const loadPage = async () => {
+      const allCourses = await scheduleService.getAllCourses(props.profile.AD_Username);
+      setAllCourses(allCourses.filter((item) => item.AllCourses.length > 0));
+      setSessions(await sessionService.getAll());
+      if (sessionFromURL) {
+        setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
+      } else {
+        const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
+        setCurrentAcademicSession(currentSessionCode);
+        const currSession = await sessionService.getCurrent();
+        const firstDay = currSession.SessionBeginDate;
+        const lastDay = currSession.SessionEndDate;
+
+        setFirstDay(firstDay);
+        setLastDay(lastDay);
+      }
+    };
+    loadPage();
+  }, [sessionFromURL]);
+
+  const handleSelectSession = async (value) => {
+    setSelectedSession(value);
+    reloadHandler();
+    const currSession = await sessionService.get(value);
+    const firstDay = currSession.SessionBeginDate;
+    const lastDay = currSession.SessionEndDate;
+
+    setFirstDay(firstDay);
+    setLastDay(lastDay);
+  };
+
+  useEffect(() => {
+    loadData(props.profile);
+  }, [props.profile]);
+
+  const loadData = async (searchedUser) => {
+    try {
+      const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
+      setEventInfo(scheduleService.makeScheduleCourses(schedule));
+    } catch (e) {}
+    setLoading(false);
+  };
+
+  const handleScheduleDialogOpen = useCallback((calEvent) => {
+    if (props.myProf) {
+      setScheduleDialogOpen(true);
+      setRecurringDays(calEvent.meetingDays.map((day) => `${day}`).join(', '));
+      setCourseName(calEvent.name);
+      setCourseTitle(calEvent.title);
+      setCourseLocation(calEvent.location);
+      setCourseStart(calEvent.start);
+      setCourseEnd(calEvent.end);
+      setSelectedCourseInfo(calEvent);
+    }
+  }, []);
+
+  const handleScheduleDialogClose = () => {
+    setScheduleDialogOpen(false);
+  };
+
+  const handleIsExpanded = () => setIsExpanded((prevExpanded) => !prevExpanded);
+
+  const reloadHandler = () => {
+    setReloadCall((val) => !val);
+  };
+
+  const { classes } = props;
+
+  let scheduleDialog;
+
+  if (props.myProf) {
+    scheduleDialog = (
+      <ScheduleDialog
+        scheduleDialogOpen={scheduleDialogOpen}
+        handleScheduleDialogClose={handleScheduleDialogClose}
+        courseInfo={selectedCourseInfo}
+        recurringDays={recurringDays}
+        courseName={courseName}
+        courseTitle={courseTitle}
+        courseLocation={courseLocation}
+        firstDay={firstDay}
+        lastDay={lastDay}
+        courseStart={courseStart}
+        courseEnd={courseEnd}
+      />
+    );
+  }
+
+  return loading ? (
+    <GordonLoader />
+  ) : (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      {
+        <>
+          <Accordion TransitionProps={{ unmountOnExit: true }} onChange={handleIsExpanded}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+              className={styles.header}
+            >
+              <CardHeader className={styles.accordionHeader} title={'Schedule'} />
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container direction="row" justifyContent="center" align="left" spacing={4}>
+                <Grid item xs={12} lg={3} spacing={2}>
+                  <FormControl variant="filled" fullWidth>
+                    <InputLabel id="schedule session">Term</InputLabel>
+                    <Select
+                      labelId="schedule-session"
+                      id="schedule-session"
+                      value={selectedSession}
+                      onChange={(e) => handleSelectSession(e.target.value)}
+                    >
+                      {(isOnline
+                        ? allCourses
+                        : allCourses.filter((item) => item.SessionCode === selectedSession)
+                      ).map(({ SessionDescription: description, SessionCode: code }) => (
+                        <MenuItem label={description} value={code} key={code}>
+                          {description}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid lg={7}></Grid>
+                <Grid item align="center" className={styles.addCalendarInfoText}>
+                  {props.myProf && (
+                    <Typography className={styles.addCalendarInfoText}>
+                      Click on Course to add Schedule to Personal Calendar
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} lg={10}>
+                  <GordonScheduleCalendar
+                    profile={props.profile}
+                    term={selectedSession === '' ? currentAcademicSession : selectedSession}
+                    allCourses={allCourses}
+                    myProf={props.myProf}
+                    reloadCall={reloadCall}
+                    isOnline={props.isOnline}
+                    onSelectEvent={handleScheduleDialogOpen}
+                  />
+                </Grid>
+              </Grid>
+              {scheduleDialog}
+            </AccordionDetails>
+          </Accordion>
+        </>
+      }
+    </LocalizationProvider>
+  );
 };
 
-class GordonSchedulePanel extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      myProf: false, //myProf is boolean value that determines whether this is myprofile or not. this.props.profile actually contains profile data.
-      isSchedulePrivate: 0,
-      isExpanded: false,
-      myScheduleOpen: false,
-      disabled: true,
-      selectedEvent: null,
-      isDoubleClick: false,
-      description: '',
-      modifiedTimeStamp: null,
-      loading: true,
-      start: STARTHOUR,
-      end: ENDHOUR,
-      resourceId: 0,
-      reloadCall: false,
-    };
-    this.scheduleControlInfo = null;
-
-    this.handleIsExpanded = this.handleIsExpanded.bind(this);
-    this.handleMyScheduleOpen = this.handleMyScheduleOpen.bind(this);
-    this.handleMyScheduleClose = this.handleMyScheduleClose.bind(this);
-    this.handleRemoveMyScheduleOpen = this.handleRemoveMyScheduleOpen.bind(this);
-    this.handleRemoveMyScheduleClose = this.handleRemoveMyScheduleClose.bind(this);
-    this.handleRemoveButton = this.handleRemoveButton.bind(this);
-    this.handleEditDescriptionOpen = this.handleEditDescriptionOpen.bind(this);
-    this.handleEditDescriptionClose = this.handleEditDescriptionClose.bind(this);
-    this.handleEditDescriptionButton = this.handleEditDescriptionButton.bind(this);
-    this.handleDoubleClick = this.handleDoubleClick.bind(this);
-    this.handleRemoveSubmit = this.handleRemoveSubmit.bind(this);
-    this.reloadHandler = this.reloadHandler.bind(this);
-  }
-
-  componentDidMount() {
-    this.loadData(this.props.profile);
-  }
-
-  loadData = async (searchedUser) => {
-    try {
-      const scheduleControlInfo = await schedulecontrol.getScheduleControl(
-        searchedUser.AD_Username,
-      );
-      this.scheduleControlInfo = scheduleControlInfo;
-    } catch (e) {
-      this.setState({ loading: false });
-    }
-    if (this.scheduleControlInfo) {
-      this.setState({
-        isSchedulePrivate: this.scheduleControlInfo.IsSchedulePrivate,
-        description: this.scheduleControlInfo.Description
-          ? this.scheduleControlInfo.Description.replace(new RegExp('SlSh', 'g'), '/')
-              .replace(new RegExp('CoLn', 'g'), ':')
-              .replace(new RegExp('dOT', 'g'), '.')
-          : '',
-        modifiedTimeStamp: this.scheduleControlInfo.ModifiedTimeStamp,
-      });
-    }
-    this.setState({ loading: false });
-  };
-
-  handleMyScheduleOpen = (slotInfo) => {
-    if (this.props.myProf) {
-      this.setState({ myScheduleOpen: true });
-      if (slotInfo) {
-        let startTime = slotInfo.start.toTimeString().split(':');
-        let endTime = slotInfo.end.toTimeString().split(':');
-        this.setState({
-          start: startTime[0] + ':' + startTime[1],
-          end: endTime[0] + ':' + endTime[1],
-          resourceId: slotInfo.resourceId,
-        });
-      }
-      this.setState({ isDoubleClick: false });
-    }
-  };
-
-  handleMyScheduleClose = () => {
-    this.setState({
-      myScheduleOpen: false,
-      isDoubleClick: false,
-      selectedEvent: null,
-    });
-  };
-
-  handleRemoveMyScheduleOpen = () => {
-    this.setState({ removeMyScheduleOpen: true });
-  };
-
-  handleRemoveMyScheduleClose = () => {
-    this.setState({ removeMyScheduleOpen: false });
-  };
-
-  handleRemoveButton = (event) => {
-    if (event.id > 1000) {
-      this.setState({ disabled: false, selectedEvent: event });
-    } else {
-      this.setState({ disabled: true });
-    }
-  };
-
-  handleEditDescriptionOpen = () => {
-    this.setState({ editDescriptionOpen: true });
-  };
-
-  handleEditDescriptionClose = () => {
-    this.setState({ editDescriptionOpen: false });
-  };
-
-  handleEditDescriptionButton = () => {
-    this.setState({ disabled: false });
-  };
-
-  handleDescriptionSubmit = async (descValue) => {
-    await schedulecontrol.setScheduleDescription(descValue);
-    this.loadData(this.props.profile);
-  };
-
-  handleMyScheduleSubmit = (mySchedule) => {
-    var data = {
-      Event_ID: null,
-      Gordon_ID: this.props.profile.ID,
-      DESCRIPTION: mySchedule.description,
-      LOCATION: mySchedule.location,
-      MON_CDE: mySchedule.monday ? 'M' : null,
-      TUE_CDE: mySchedule.tuesday ? 'T' : null,
-      WED_CDE: mySchedule.wednesday ? 'W' : null,
-      THU_CDE: mySchedule.thursday ? 'R' : null,
-      FRI_CDE: mySchedule.friday ? 'F' : null,
-      SAT_CDE: mySchedule.saturday ? 'S' : null,
-      // SUN_CDE: mySchedule.sunday ? 'N' : null,
-      IS_ALLDAY: mySchedule.allDay ? 1 : 0,
-      BEGIN_TIME: mySchedule.startHour,
-      END_TIME: mySchedule.endHour,
-    };
-
-    if (this.state.isDoubleClick) {
-      this.setState({ isDoubleClick: false });
-      data.Event_ID = this.state.selectedEvent.id;
-      myschedule
-        .updateMySchedule(data)
-        .then((value) => {
-          this.loadData(this.props.profile);
-          this.setState({ reloadCall: true });
-        })
-        .catch((error) => {
-          alert('There was an error while updating the event');
-          console.log(error);
-        });
-    } else {
-      myschedule
-        .addMySchedule(data)
-        .then((value) => {
-          this.loadData(this.props.profile);
-          this.setState({ reloadCall: true });
-        })
-        .catch((error) => {
-          alert('There was an error while adding the event');
-          console.log(error);
-        });
-    }
-  };
-
-  handleRemoveSubmit() {
-    myschedule
-      .deleteMySchedule(this.state.selectedEvent.id)
-      .then((value) => {
-        this.loadData(this.props.profile);
-        this.setState({ reloadCall: true, disabled: true });
-      })
-      .catch((error) => {
-        alert('There was an error while removing the event');
-        console.log(error);
-      });
-  }
-
-  handleDoubleClick = (event) => {
-    if (this.props.myProf && event.id > 1000) {
-      this.setState({ myScheduleOpen: true, selectedEvent: event, isDoubleClick: true });
-    }
-  };
-
-  handleChangeSchedulePrivacy() {
-    this.setState({ isSchedulePrivate: !this.state.isSchedulePrivate }, () => {
-      schedulecontrol.setSchedulePrivacy(this.state.isSchedulePrivate);
-    });
-  }
-
-  handleIsExpanded() {
-    this.setState({ isExpanded: !this.state.isExpanded });
-  }
-
-  reloadHandler() {
-    this.setState({ reloadCall: false });
-  }
-
-  render() {
-    const replaced = this.state.description.replace(urlRegex({ strict: false }), function (url) {
-      if (url.split('://')[0] !== 'http' && url.split('://')[0] !== 'https') {
-        return '<a target="_blank" rel="noopener" href="https://' + url + '">' + url + '</a>';
-      } else {
-        return '<a target="_blank" rel="noopener" href="' + url + '">' + url + '</a>';
-      }
-    });
-
-    const button = {
-      background: gordonColors.primary.cyan,
-      color: 'white',
-    };
-    const { classes } = this.props;
-    let isFaculty = String(this.props.profile.PersonType).includes('fac');
-
-    let privacyButton,
-      removeOfficeHourButton,
-      editDescriptionButton,
-      schedulePanel,
-      editDialog,
-      myScheduleDialog,
-      removeScheduleDialog,
-      lastUpdate;
-
-    lastUpdate = (
-      <div style={{ color: gordonColors.primary.cyan }}>
-        <Typography style={{ fontSize: '0.9rem' }}>Last Updated</Typography>
-        {Boolean(this.scheduleControlInfo) && (
-          <Typography>
-            {formatDistanceToNow(new Date(this.state.modifiedTimeStamp), { addSuffix: true })}
-          </Typography>
-        )}
-      </div>
-    );
-
-    if (this.props.myProf) {
-      editDialog = (
-        <EditDescriptionDialog
-          onDialogSubmit={this.handleDescriptionSubmit}
-          handleEditDescriptionClose={this.handleEditDescriptionClose}
-          editDescriptionOpen={this.state.editDescriptionOpen}
-          descriptiontext={this.state.description}
-        />
-      );
-
-      myScheduleDialog = (
-        <MyScheduleDialog
-          onDialogSubmit={this.handleMyScheduleSubmit}
-          handleMyScheduleClose={this.handleMyScheduleClose}
-          myScheduleOpen={this.state.myScheduleOpen}
-          selectedEvent={this.state.selectedEvent}
-          isDoubleClick={this.state.isDoubleClick}
-          startTime={this.state.start}
-          endTime={this.state.end}
-          resourceId={this.state.resourceId}
-        />
-      );
-
-      removeScheduleDialog = (
-        <RemoveScheduleDialog
-          onDialogSubmit={this.handleRemoveSubmit}
-          handleRemoveMyScheduleClose={this.handleRemoveMyScheduleClose}
-          removeMyScheduleOpen={this.state.removeMyScheduleOpen}
-        />
-      );
-    }
-
-    if (this.props.myProf && !isFaculty) {
-      privacyButton = (
-        <Fragment>
-          <Switch
-            onChange={() => {
-              this.handleChangeSchedulePrivacy();
-            }}
-            checked={!this.state.isSchedulePrivate}
-            classes={{
-              switchBase: classes.colorSwitchBase,
-              checked: classes.colorChecked,
-              bar: classes.colorBar,
-            }}
-          />
-          <Typography style={{ fontSize: '0.9rem' }}>
-            {this.state.isSchedulePrivate
-              ? 'Course Schedule : Private'
-              : 'Course Schedule : Public'}
-          </Typography>
-        </Fragment>
-      );
-    }
-
-    if (this.props.myProf) {
-      editDescriptionButton = (
-        <Fragment>
-          <Button variant="contained" style={button} onClick={this.handleEditDescriptionOpen}>
-            EDIT DESCRIPTION
-          </Button>
-        </Fragment>
-      );
-    }
-
-    if (this.props.myProf) {
-      removeOfficeHourButton = (
-        <Fragment>
-          <Button
-            variant="contained"
-            style={{ backgroundColor: gordonColors.secondary.red, color: 'white' }}
-            onClick={this.handleRemoveMyScheduleOpen}
-            disabled={this.state.disabled} //disabled
-          >
-            REMOVE EVENT
-          </Button>
-        </Fragment>
-      );
-    }
-
-    let panelTitle = '';
-    this.state.isExpanded ? (panelTitle = 'Hide') : (panelTitle = 'Show');
-    if (this.state.loading) {
-      schedulePanel = <GordonLoader />;
-    } else {
-      schedulePanel = (
-        <Accordion TransitionProps={{ unmountOnExit: true }} onChange={this.handleIsExpanded}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>{panelTitle} the Schedule</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid container direction="row" justifyContent="center">
-              {this.props.isOnline && (
-                <Grid container direction="row" item xs={12} lg={10}>
-                  <Grid
-                    container
-                    item
-                    xs={12}
-                    lg={8}
-                    alignItems="center"
-                    justifyContent="flex-start"
-                  >
-                    <Markup content={replaced} />
-                  </Grid>
-
-                  <Grid
-                    container
-                    direction="column"
-                    item
-                    xs={12}
-                    lg={4}
-                    alignItems="flex-end"
-                    justifyContent="flex-end"
-                  >
-                    {privacyButton}
-                  </Grid>
-
-                  <Grid item xs={6} lg={2}>
-                    {editDescriptionButton}
-                  </Grid>
-
-                  <Grid item xs={6} lg={2}>
-                    {removeOfficeHourButton}
-                  </Grid>
-
-                  <Grid
-                    container
-                    direction="column"
-                    item
-                    xs={12}
-                    lg={8}
-                    alignItems="flex-end"
-                    justifyContent="flex-end"
-                  >
-                    {lastUpdate}
-                  </Grid>
-                </Grid>
-              )}
-
-              <Grid item xs={12} lg={10}>
-                <GordonScheduleCalendar
-                  profile={this.props.profile}
-                  myProf={this.props.myProf}
-                  handleRemoveButton={this.handleRemoveButton.bind(this)}
-                  handleEditDescriptionButton={this.handleEditDescriptionButton.bind(this)}
-                  handleDoubleClick={this.handleDoubleClick.bind(this)}
-                  handleMyScheduleOpen={this.handleMyScheduleOpen.bind(this)}
-                  schedulePrivacy={this.state.isSchedulePrivate}
-                  reloadHandler={this.reloadHandler}
-                  reloadCall={this.state.reloadCall}
-                  isOnline={this.props.isOnline}
-                />
-              </Grid>
-            </Grid>
-
-            {editDialog}
-            {myScheduleDialog}
-            {removeScheduleDialog}
-          </AccordionDetails>
-        </Accordion>
-      );
-    }
-
-    return (
-      <LocalizationProvider dateAdapter={AdapterDateFns}>{schedulePanel}</LocalizationProvider>
-    );
-  }
-}
-
-export default withStyles(styles2)(GordonSchedulePanel);
+export default GordonSchedulePanel;

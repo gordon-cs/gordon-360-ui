@@ -21,12 +21,11 @@ const renderInput = ({ autoFocus, value, ref, ...other }) => (
     InputProps={{
       disableUnderline: true,
       classes: {
-        // Use static class as target of global styles
-        root: `${styles.root} gc360_quick_search_root`,
+        root: styles.root,
       },
       startAdornment: (
         <InputAdornment position="start">
-          <SearchIcon />
+          <SearchIcon className={styles.searchIcon} />
         </InputAdornment>
       ),
       ...other,
@@ -264,7 +263,7 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
                   }),
                 )
               ) : (
-                <MenuItem className={styles.suggestion} style={{ paddingBottom: '5px' }}>
+                <MenuItem className={styles.suggestion_no_results}>
                   <Typography className={styles.no_results} variant="body2">
                     No results
                   </Typography>

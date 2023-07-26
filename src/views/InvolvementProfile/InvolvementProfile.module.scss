@@ -1,8 +1,7 @@
-@import '../../vars';
-
 .photoUploader {
   justify-content: center;
   align-items: center;
+
   &:hover {
     cursor: pointer;
   }
@@ -10,4 +9,18 @@
 
 .update_image_components {
   margin-top: 15px;
+}
+
+.dialogContentText {
+  text-align: 'center';
+}
+
+.imageDrop {
+  max-width: 320px;
+  max-height: 320px;
+  border-radius: 0.5rem;
+}
+
+.activityURL {
+  font-weight: bold;
 }

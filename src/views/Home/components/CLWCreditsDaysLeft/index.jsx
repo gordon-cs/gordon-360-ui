@@ -1,12 +1,4 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Typography,
-  useThemeProps,
-} from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { format, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -14,8 +6,8 @@ import { defaults, Doughnut } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 import session from 'services/session';
 import user from 'services/user';
-import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
+import { theme360 } from 'theme';
 
 const CLWCreditsDaysLeft = () => {
   const [firstDay, setFirstDay] = useState('');
@@ -48,9 +40,12 @@ const CLWCreditsDaysLeft = () => {
     loadData();
   }, []);
 
-  let daysColor = gordonColors.primary.blue;
-  let chapelColor = gordonColors.primary.cyan;
-  let emptyColor = gordonColors.neutral.lightGray;
+  // variable colors do not work in chartjs, so fixed colors from the light palette are used
+  const colors = theme360.colorSchemes.light.palette;
+
+  let daysColor = colors.primary.main;
+  let chapelColor = colors.secondary.main;
+  let emptyColor = colors.neutral.A700;
 
   defaults.global.legend.display = false;
 
@@ -83,7 +78,7 @@ const CLWCreditsDaysLeft = () => {
     const remaining = current > required ? 0 : required - current;
     const data = {
       legendEntries: ['Days Finished', 'CL&W Credits'],
-      legendColors: [gordonColors.primary.blue, gordonColors.primary.cyan],
+      legendColors: [daysColor, chapelColor],
       datasets: [
         {
           label: ['Days Finished', 'Days Remaining'],
@@ -130,7 +125,10 @@ const CLWCreditsDaysLeft = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <div className={styles.value} style={{ color: daysColor }}>
+            <div
+              className={styles.value}
+              style={{ color: theme360.vars.palette.link.contrastText }}
+            >
               {daysFinished}
             </div>
             <div className={styles.label}>
@@ -162,25 +160,28 @@ const CLWCreditsDaysLeft = () => {
   }
 
   return (
-    <Card className={styles.card}>
-      <CardContent>
-        <Grid container direction="row" alignItems="center">
-          <Grid item xs={7} align="left">
-            <CardHeader title={currSessionDescription} />
+    <Card>
+      <CardHeader
+        title={
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={7} align="left">
+              {currSessionDescription}
+            </Grid>
+            <Grid item xs={5} align="right">
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                to="/events?CLW%20Credits"
+              >
+                MORE CREDITS
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={5} align="right">
-            <Button
-              variant="contained"
-              color="secondary"
-              component={Link}
-              to="/events?CLW%20Credits"
-            >
-              MORE CREDITS
-            </Button>
-          </Grid>
-        </Grid>
-        {content}
-      </CardContent>
+        }
+        className="gc360_header"
+      />
+      <CardContent>{content}</CardContent>
     </Card>
   );
 };

@@ -16,23 +16,15 @@ import styles from './MembershipsList.module.css';
  * @returns {JSX} A list of the user's memberships
  */
 const MembershipsList = ({ username, myProf, createSnackbar }) => {
-  const [memberships, setMemberships] = useState([]);
   const [loading, setLoading] = useState(true);
   const [membershipHistories, setMembershipHistories] = useState([]);
 
   useEffect(() => {
     async function loadMemberships() {
       setLoading(true);
+      const memberships = await membershipService.groupByActivityCode(username);
+      setMembershipHistories(memberships);
 
-      const memberships = await membershipService.get({ username, sessionCode: '*' });
-
-      if (myProf) {
-        const myMemberships = await membershipService.groupByActivityCode(username);
-        setMembershipHistories(myMemberships);
-      } else {
-        const publicMemberships = await membershipService.getPublicMemberships(username);
-        setMembershipHistories(publicMemberships);
-      }
       setLoading(false);
     }
     loadMemberships();
@@ -42,7 +34,11 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
     if (membershipHistories.length === 0) {
       return (
         <Link to={`/involvements`}>
-          <Typography variant="body2" className={styles.noMemberships}>
+          <Typography
+            variant="body2"
+            className={`gc360_text_link ${styles.noMemberships}`}
+            align="center"
+          >
             No Involvements to display. Click here to see Involvements around campus!
           </Typography>
         </Link>
@@ -65,12 +61,19 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
 
   const transcriptButton = myProf && (
     <Grid container justifyContent="center">
-      <Link className="gc360_link" to="/transcript">
-        <Button variant="contained" className={styles.memberships_card_content_button}>
+      <Link to="/transcript">
+        <Button variant="contained" color="secondary">
           Experience Transcript
         </Button>
       </Link>
     </Grid>
+  );
+  const noteInfo = myProf && (
+    <div align="left" className={styles.memberships_card_note}>
+      <Typography>
+        NOTE: Shaded areas are visible only to you and other members of the same club session.
+      </Typography>
+    </div>
   );
 
   return (
@@ -84,6 +87,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
             {transcriptButton}
             <List>
               <MembershipsList />
+              {noteInfo}
             </List>
           </CardContent>
         </Card>

@@ -1,13 +1,15 @@
-@import '../../../../vars';
-
 .requests {
   &_header.requests_header {
     background-color: var(--mui-palette-primary-main);
-    color: $neutral-white;
+    color: var(--mui-palette-primary-contrastText);
   }
 
   & .weak {
     color: var(--mui-palette-primary-50);
     font-size: 85%;
+  }
+
+  &_expand_icon {
+    color: var(--mui-palette-primary-contrastText);
   }
 }

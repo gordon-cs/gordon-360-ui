@@ -1,11 +1,9 @@
-@import '../../vars';
-
 .people_search_parent {
   @extend %list_item;
 
   :global {
     .gc360_quick_search_root {
-      border-color: $neutral-dark-gray; // override to black instead of white
+      border-color: var(--mui-palette-neutral-main); // override to black instead of white
     }
 
     .gc360_quick_search_dropdown {
@@ -20,15 +18,17 @@ strong.over_emphasized {
 }
 
 .apartment_card_header {
-  background-color: $primary-blue;
-  color: $neutral-white;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+
   :global {
     .MuiTypography-colorTextSecondary {
-      color: $neutral-white-opacity80;
+      color: var(--mui-palette-primary-contrastText);
       font-size: 1.25rem;
     }
+
     .MuiCardHeader-subheader {
-      color: $neutral-white;
+      color: var(--mui-palette-primary-contrastText);
     }
   }
 }
@@ -43,14 +43,14 @@ strong.over_emphasized {
   }
 
   & :global(.MuiTableContainer-root) {
-    border: 1px solid $neutral-gray3;
+    border: 1px solid var(--mui-palette-neutral-700);
     border-radius: 4px;
   }
 }
 
 .list_item,
 %list_item {
-  color: $neutral-dark-gray;
+  color: var(--mui-palette-neutral-700);
 }
 
 .nested_list_item {
@@ -60,11 +60,11 @@ strong.over_emphasized {
 
 .bordered_list_item {
   @extend %list_item;
-  border: 1px solid $primary-blue;
+  border: 1px solid var(--mui-palette-primary-main);
 }
 
 .error {
-  color: $secondary-red;
+  color: var(--mui-palette-error-main);
 }
 
 :global(.MuiGrid-item) .sticky_page_bottom_bar {
@@ -83,9 +83,11 @@ strong.over_emphasized {
 
 .apartment_agreements_form_control {
   text-align: left;
+
   &_label {
-    color: $neutral-dark-gray;
+    color: var(--mui-palette-neutral-700);
   }
+
   // (CSSMODULES - fix mui overrides - disable no-descending-specificity)
   /* stylelint-disable-next-line */
   & :global(.MuiDivider-root) {
@@ -95,11 +97,13 @@ strong.over_emphasized {
 }
 
 .email {
-  color: $primary-blue;
+  color: var(--mui-palette-primary-main);
   display: flex;
+
   &:hover {
-    color: $primary-cyan;
+    color: var(--mui-palette-secondary-main);
   }
+
   &_icon {
     margin-right: 0.75rem;
   }

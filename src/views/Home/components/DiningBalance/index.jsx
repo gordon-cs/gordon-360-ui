@@ -1,12 +1,21 @@
-import { Button, Card, CardContent, CardHeader, Grid, Link, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Link,
+  Typography,
+  IconButton,
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import session from 'services/session';
 import user from 'services/user';
-import { gordonColors } from 'theme';
 import styles from '../Doughnut.module.css';
-import { useTheme } from '@emotion/react';
+import { theme360 } from 'theme';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars
@@ -16,14 +25,15 @@ const DiningBalance = () => {
   const [diningInfo, setDiningInfo] = useState(null);
   const [[daysRemaining, daysInSession], setDaysLeft] = useState([null, null]);
 
-  //Doesn't re-render colors when using getColor!!!!!
-  let daysColor = gordonColors.primary.blue;
-  let swipesColor = gordonColors.secondary.green;
-  let dollarsColor = gordonColors.secondary.yellow;
-  let guestColor = gordonColors.secondary.orange;
-  let emptyColor = gordonColors.neutral.lightGray;
+  //other than the transparent background, colors don't need to change to dark mode
+  const colors = theme360.colorSchemes.light.palette;
 
-  let balanceColor = gordonColors.secondary.green;
+  let daysColor = colors.primary.main;
+  let swipesColor = colors.success.main;
+  let dollarsColor = colors.warning.main;
+  let guestColor = colors.error.main;
+  let emptyColor = colors.neutral.A700;
+  let balanceColor = colors.success.main;
 
   useEffect(() => {
     Promise.all([user.getDiningInfo(), session.getDaysLeft()]).then(([diningInfo, daysLeft]) => {
@@ -41,11 +51,11 @@ const DiningBalance = () => {
     //Set color to use when displaying balance based on how low it is...
     const diningBalance = parseInt(diningInfo);
     if (lowBalance >= diningBalance && diningBalance > reallyLowBalance) {
-      balanceColor = gordonColors.secondary.yellow;
+      balanceColor = colors.warning.main;
     } else if (reallyLowBalance >= diningBalance && diningBalance > 0) {
-      balanceColor = gordonColors.secondary.orange;
+      balanceColor = colors.error.main;
     } else if (diningBalance === 0) {
-      balanceColor = gordonColors.neutral.lightGray;
+      balanceColor = colors.neutral.dark;
     }
 
     content = (
@@ -138,9 +148,19 @@ const DiningBalance = () => {
           spacing={0}
           style={{ paddingTop: 5, paddingBottom: 10 }}
         >
-          <Grid item>
+          <Grid item sx={10}>
             <Typography variant="body2" className={styles.label2}>
               {diningInfo.ChoiceDescription}
+              <IconButton
+                variant="body2"
+                title="Change Meal Plan"
+                className={styles.label2}
+                component={Link}
+                href="https://www.gordon.edu/mealplan"
+                size="small"
+              >
+                <EditIcon />
+              </IconButton>
             </Typography>
           </Grid>
         </Grid>
@@ -199,29 +219,29 @@ const DiningBalance = () => {
 
   return (
     <Card className={styles.card}>
-      <CardContent>
-        <Grid container direction="row" alignItems="center">
-          <Grid item xs={7} align="left">
-            <CardHeader title="Dining Balance" />
+      <CardHeader
+        title={
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={7} align="left">
+              Dining Balance
+            </Grid>
+            <Grid item xs={5} align="right">
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                href="https://gordon.cafebonappetit.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                TODAY'S MENU
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={5} align="right">
-            <Button
-              variant="contained"
-              style={{
-                backgroundColor: 'var(--mui-palette-secondary-main)',
-                color: 'var(--mui-palette-secondary-contrastText',
-              }}
-              component={Link}
-              href="https://gordon.cafebonappetit.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              TODAY'S MENU
-            </Button>
-          </Grid>
-        </Grid>
-        {content}
-      </CardContent>
+        }
+        className="gc360_header"
+      />
+      <CardContent>{content}</CardContent>
     </Card>
   );
 };

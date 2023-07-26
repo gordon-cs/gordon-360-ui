@@ -1,5 +1,3 @@
-@import '../../vars';
-
 .help {
   margin: 1rem;
 
@@ -14,14 +12,12 @@
   &_title {
     text-align: center;
     padding: 1rem;
+    color: var(--mui-palette-primary-contrastText);
+    background-color: var(--mui-palette-primary-main);
   }
 
-  &_header {
-    background-color: $primary-blue;
-    color: $neutral-white;
-  }
-
-  &_section:global(.MuiCard-root) {
+  &_section {
     box-shadow: none;
+    color: var(--mui-palette-neutral-contrastText);
   }
 }

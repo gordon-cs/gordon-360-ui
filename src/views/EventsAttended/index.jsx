@@ -6,14 +6,7 @@ import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import event from 'services/event';
-import { gordonColors } from 'theme';
-
-const style = {
-  button: {
-    background: gordonColors.primary.cyan,
-    color: 'white',
-  },
-};
+import styles from './EventsAttended.module.css';
 
 const EventsAttended = () => {
   const [events, setEvents] = useState([]);
@@ -36,13 +29,8 @@ const EventsAttended = () => {
   } else if (events.length > 0) {
     content = (
       <Grid container direction="row" justifyContent="center" spacing="2">
-        <Grid item align="center">
-          <Button
-            variant="contained"
-            style={style.button}
-            component={Link}
-            to="/events?CLW%20Credits"
-          >
+        <Grid item align="center" xs="12">
+          <Button variant="contained" color="secondary" component={Link} to="/events?CLW%20Credits">
             Need More Chapel Credits?
           </Button>
         </Grid>
@@ -55,16 +43,11 @@ const EventsAttended = () => {
     content = (
       <Grid item align="center">
         <br /> <br />
-        <Typography variant="h4" align="center">
+        <Typography variant="h4" align="center" className={styles.title}>
           No Events To Show
         </Typography>
         <br />
-        <Button
-          variant="contained"
-          style={style.button}
-          component={Link}
-          to="/events?CLW%20Credits"
-        >
+        <Button variant="contained" color="secondary" component={Link} to="/events?CLW%20Credits">
           Need More Chapel Credits?
         </Button>
       </Grid>

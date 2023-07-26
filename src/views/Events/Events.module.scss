@@ -1,0 +1,16 @@
+.events {
+  &_gordon_text {
+    color: var(--mui-palette-link-light);
+  }
+  &_icon {
+    color: var(--mui-palette-neutral-700);
+    font-size: 20;
+  }
+  &_filter_button {
+    font-weight: bold;
+  }
+}
+
+.card_style {
+  padding: 0 3vw;
+}

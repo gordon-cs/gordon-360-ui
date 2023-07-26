@@ -3,5 +3,12 @@
 .gordon_nav_drawer {
   max-width: 250px;
   width: 65%;
-  background-color: $neutral-white;
+  background-color: var(--mui-palette-neutral-light);
+  background-image: none; //Remove mui background overlay, fixes dark mode appearance
+}
+
+@media (min-width: $break-md) {
+  .nav_avatar {
+    display: none;
+  }
 }

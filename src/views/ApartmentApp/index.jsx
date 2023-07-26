@@ -5,6 +5,9 @@ import GordonLoader from 'components/Loader';
 import { useAuthGroups, useUser } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import StudentApplication from './components/StudentApplication';
+
+//Imports for application period closed view
+import { Card, CardContent, Grid, Button, Link } from '@mui/material';
 // eslint-disable-next-line no-unused-vars
 import { useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
 import { AuthGroup } from 'services/auth';
@@ -57,6 +60,8 @@ const ApartApp = () => {
         <div className={'student_apartment_application'}>
           <StudentApplication userProfile={profile} />
         </div>
+        // MJ Note, does this code still get used/should we automate it somehow?
+        // Also should this be seperated into its own component?
         /*
         <Grid container justifyContent="center" spacing="16">
           <Grid item xs={12} md={8}>

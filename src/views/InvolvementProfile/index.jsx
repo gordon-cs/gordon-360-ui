@@ -23,7 +23,6 @@ import { AuthGroup } from 'services/auth';
 import emailsService from 'services/emails';
 import membershipService from 'services/membership';
 import sessionService from 'services/session';
-import { gordonColors } from 'theme';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import styles from './InvolvementProfile.module.css';
@@ -215,11 +214,6 @@ const InvolvementProfile = () => {
     const { ActivityBlurb, ActivityDescription, ActivityURL, ActivityImagePath, ActivityJoinInfo } =
       involvementInfo;
 
-    const redButton = {
-      background: gordonColors.secondary.red,
-      color: 'white',
-    };
-
     const editInvolvement = loadingProfile ? (
       <GordonLoader />
     ) : isAdmin || isSiteAdmin ? (
@@ -261,7 +255,7 @@ const InvolvementProfile = () => {
               <Button
                 variant="contained"
                 onClick={() => setIsRemoveImageDialogOpen(true)}
-                style={redButton}
+                color="error"
               >
                 Remove image
               </Button>
@@ -285,7 +279,7 @@ const InvolvementProfile = () => {
               <>
                 <DialogContentText
                   id="edit-involvement-image-dialog-description"
-                  style={{ textAlign: 'center' }}
+                  className={styles.dialogContentText}
                 >
                   {window.innerWidth < 600
                     ? 'Tap Image to Browse Files'
@@ -302,12 +296,7 @@ const InvolvementProfile = () => {
                     <section>
                       <div className={styles.photoUploader} {...getRootProps()}>
                         <input {...getInputProps()} />
-                        <img
-                          className="rounded_corners"
-                          src={ActivityImagePath}
-                          alt=""
-                          style={{ maxWidth: '320px', maxHeight: '320px' }}
-                        />
+                        <img className={styles.imageDrop} src={ActivityImagePath} alt="" />
                       </div>
                     </section>
                   )}
@@ -411,8 +400,8 @@ const InvolvementProfile = () => {
             <Grid item align="center">
               {ActivityBlurb && <Typography>{ActivityBlurb}</Typography>}
               {ActivityURL?.length !== 0 && (
-                <Typography>
-                  <a href={ActivityURL} className="gc360_text_link" style={{ fontWeight: 'bold' }}>
+                <Typography className={styles.activityURL}>
+                  <a href={ActivityURL} className="gc360_text_link">
                     {ActivityURL}
                   </a>
                 </Typography>
@@ -423,7 +412,7 @@ const InvolvementProfile = () => {
               <GordonLoader />
             ) : profile ? (
               <>
-                <hr width="70%"></hr>
+                <hr width="101.5%"></hr>
 
                 <Grid item>
                   <Typography>

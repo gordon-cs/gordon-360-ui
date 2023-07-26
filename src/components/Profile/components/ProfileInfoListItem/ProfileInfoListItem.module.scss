@@ -1,5 +1,3 @@
-@import '../../../../vars';
-
 .profile_info_list_item {
   hyphens: auto;
   -ms-hyphens: auto;
@@ -13,40 +11,40 @@
 }
 
 .private {
-  color: $neutral-black-opacity40;
+  color: var(--mui-palette-neutral-500);
 }
 
 .privateNotMine,
 .privateNotMine a {
-  color: $secondary-red;
+  color: var(--mui-palette-error-main);
 }
 
 .not_private {
   opacity: 1;
-  color: $dark-text-color;
+  color: var(--mui-palette-neutral-contrastText);
 }
 
 .my_personal_info {
   & .private {
-    color: $neutral-black-opacity40;
+    color: var(--mui-palette-neutral-500);
 
     & .not_private {
       opacity: 1;
-      color: $dark-text-color;
+      color: var(--mui-palette-neutral-contrastText);
     }
   }
 }
 
 .public_personal_info {
   & .private {
-    color: $secondary-red;
+    color: var(--mui-palette-error-main);
 
     & a.gc360_text_link {
       color: inherit;
     }
 
     & .not_private {
-      color: $dark-text-color;
+      color: var(--mui-palette-neutral-contrastText);
     }
   }
 }

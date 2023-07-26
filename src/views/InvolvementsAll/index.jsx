@@ -16,9 +16,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import involvementService from 'services/activity';
 import membershipService, { NonGuestParticipations } from 'services/membership';
 import sessionService from 'services/session';
-import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
+import styles from './Involvements.module.css';
 
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -126,22 +126,50 @@ const InvolvementsAll = () => {
   }
 
   const searchPageTitle = (
-    <div align="center">
+    <div align="left">
       Search
-      <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+      <b className={styles.involvements_gordon_text}> Gordon </b>
       Involvements
     </div>
   );
 
   return (
     <Grid container justifyContent="center" spacing={4}>
+      {loadingProfile ? (
+        <GordonLoader />
+      ) : (
+        profile && (
+          <Grid item xs={12} lg={8}>
+            <Card>
+              <CardHeader
+                title={`My ${myInvolvementsHeadingText} Involvements`}
+                className="gc360_header"
+              />
+              <CardContent>
+                {loading ? (
+                  <GordonLoader />
+                ) : (
+                  <InvolvementsGrid
+                    involvements={myInvolvements}
+                    sessionCode={selectedSession}
+                    noInvolvementsText={myInvolvementsNoneText}
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        )
+      )}
+      {!isOnline ? null : loadingProfile ? (
+        <GordonLoader />
+      ) : (
+        profile && <Requests profile={profile} session={selectedSession} />
+      )}
       <Grid item xs={12} lg={8}>
         <Card>
+          <CardHeader title={searchPageTitle} className="gc360_header" />
           <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <CardHeader title={searchPageTitle} />
-              </Grid>
               <Grid item xs={12} lg={6}>
                 <TextField
                   id="search"
@@ -198,51 +226,10 @@ const InvolvementsAll = () => {
         </Card>
       </Grid>
 
-      {!isOnline ? null : loadingProfile ? (
-        <GordonLoader />
-      ) : (
-        profile && <Requests profile={profile} session={selectedSession} />
-      )}
-
-      {loadingProfile ? (
-        <GordonLoader />
-      ) : (
-        profile && (
-          <Grid item xs={12} lg={8}>
-            <Card>
-              <CardHeader
-                title={`My ${myInvolvementsHeadingText} Involvements`}
-                style={{
-                  backgroundColor: 'var(--mui-palette-primary-main)',
-                  color: gordonColors.neutral.grayShades[50],
-                }}
-              />
-              <CardContent>
-                {loading ? (
-                  <GordonLoader />
-                ) : (
-                  <InvolvementsGrid
-                    involvements={myInvolvements}
-                    sessionCode={selectedSession}
-                    noInvolvementsText={myInvolvementsNoneText}
-                  />
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
-        )
-      )}
-
       {/* All Involvements (public) */}
       <Grid item xs={12} lg={8}>
         <Card>
-          <CardHeader
-            title={`${involvementSessionText} Involvements`}
-            style={{
-              backgroundColor: 'var(--mui-palette-primary-main)',
-              color: gordonColors.neutral.grayShades[50],
-            }}
-          />
+          <CardHeader title={`${involvementSessionText} Involvements`} className="gc360_header" />
           <CardContent>
             {loading ? (
               <GordonLoader />
