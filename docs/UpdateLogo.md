@@ -7,4 +7,5 @@ Locations that needed logo update in Gordon 360:
 - Involvements default picture
 - Favicon of Gordon360
 - PWA for the mobile version of Gordon 360
-- 
+
+@TODO - Finish these docs, and potentially make this a full doc for the PWA and how it's set up.
