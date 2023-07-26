@@ -388,7 +388,7 @@ const ScheduleList = ({
           <Typography className={styles.menuTitle}>Schedule</Typography>
           <MenuItem
             dense
-            disabled={series.TeamStanding.length === 0}
+            disabled={series.TeamStanding.length === 0 || series?.Status === 'Completed'}
             onClick={handleAutoSchedule}
             className={styles.menuButton}
           >
@@ -396,13 +396,19 @@ const ScheduleList = ({
           </MenuItem>
           <MenuItem
             dense
+            disabled={series?.Status === 'Completed'}
             onClick={handleSeriesScheduleMenuClick}
             className={styles.menuButton}
             divider
           >
             Edit schedule
           </MenuItem>
-          <MenuItem dense onClick={handleDeleteMatches} className={styles.redButton}>
+          <MenuItem
+            dense
+            disabled={series?.Status === 'Completed'}
+            onClick={handleDeleteMatches}
+            className={styles.redButton}
+          >
             Delete matches
           </MenuItem>
           <Typography className={styles.menuTitle}>Series</Typography>
@@ -430,10 +436,20 @@ const ScheduleList = ({
                 Mark Series as 'completed'
               </MenuItem>
             ))}
-          <MenuItem dense onClick={handleEditSeriesMenuClick} className={styles.menuButton}>
+          <MenuItem
+            dense
+            disabled={series?.Status === 'Completed'}
+            onClick={handleEditSeriesMenuClick}
+            className={styles.menuButton}
+          >
             Edit series info
           </MenuItem>
-          <MenuItem dense onClick={handleCreateMatch} className={styles.menuButton}>
+          <MenuItem
+            dense
+            disabled={series?.Status === 'Completed'}
+            onClick={handleCreateMatch}
+            className={styles.menuButton}
+          >
             Create a match
           </MenuItem>
           <MenuItem dense onClick={handleDelete} className={styles.redButton}>
