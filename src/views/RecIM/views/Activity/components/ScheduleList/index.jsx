@@ -28,6 +28,7 @@ import {
   scheduleSeriesMatches,
   getSeriesSchedule,
   getSeriesWinners,
+  editSeries,
 } from 'services/recim/series';
 import { useState, useEffect } from 'react';
 import styles from './../../Activity.module.css';
@@ -405,6 +406,30 @@ const ScheduleList = ({
             Delete matches
           </MenuItem>
           <Typography className={styles.menuTitle}>Series</Typography>
+          {series &&
+            (series.Status === 'Completed' ? (
+              <MenuItem
+                dense
+                onClick={async () => {
+                  closeMenusAndForms();
+                  editSeries(series.ID, { StatusID: 2 }).then((series.Status = 'In Progress'));
+                }}
+                className={styles.menuButton}
+              >
+                Mark Series as 'in-progress'
+              </MenuItem>
+            ) : (
+              <MenuItem
+                dense
+                onClick={async () => {
+                  closeMenusAndForms();
+                  editSeries(series.ID, { StatusID: 3 }).then((series.Status = 'Completed'));
+                }}
+                className={styles.menuButton}
+              >
+                Mark Series as 'completed'
+              </MenuItem>
+            ))}
           <MenuItem dense onClick={handleEditSeriesMenuClick} className={styles.menuButton}>
             Edit series info
           </MenuItem>
