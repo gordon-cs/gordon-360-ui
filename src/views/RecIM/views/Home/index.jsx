@@ -35,9 +35,10 @@ import {
 } from 'services/recim/participant';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from 'views/RecIM/recim_logo.png';
-import { isAfter, isFuture } from 'date-fns';
+import { isFuture } from 'date-fns';
 import { TabPanel } from 'views/RecIM/components/TabPanel';
 import SettingsIcon from '@mui/icons-material/Settings';
+import AffiliationsChart from './components/AffiliationsChart';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -243,6 +244,15 @@ const Home = () => {
     </CardContent>
   );
 
+  let affiliationsCard = (
+    <Card>
+      <CardHeader title="Hall Points" className={`${styles.cardHeader} ${styles.center}`} />
+      <CardContent>
+        <AffiliationsChart />
+      </CardContent>
+    </Card>
+  );
+
   let myTeams = (
     <CardContent>
       {participantTeams.length > 0 ? (
@@ -322,6 +332,9 @@ const Home = () => {
           <GordonLoader />
         ) : (
           <Grid container spacing={2}>
+            <Grid item xs={12}>
+              {affiliationsCard}
+            </Grid>
             <Grid item xs={12} md={6.5}>
               {activitiesCard}
             </Grid>
