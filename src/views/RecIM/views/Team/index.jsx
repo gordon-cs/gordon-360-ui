@@ -90,17 +90,12 @@ const Team = () => {
     }
   }, [team]);
 
-  const teamRecord = () => {
+  const teamDetails = () => {
     if (team) {
-      if (team.TeamRecord[0]) {
-        return (
-          <Typography className={styles.subtitle}>
-            {team.TeamRecord[0].WinCount ?? 0}W : {team.TeamRecord[0].LossCount ?? 0}L :{' '}
-            {team.TeamRecord[0].TieCount ?? 0}T
-          </Typography>
-        );
+      if (team.Affiliation) {
+        return <Typography className={styles.subtitle}>{team.Affiliation}</Typography>;
       }
-      return <Typography className={styles.subtitle}>Activity has not started</Typography>;
+      return <Typography className={styles.subtitle}>Unaffiliated</Typography>;
     }
     return <GordonLoader size={15} inline />;
   };
@@ -153,7 +148,7 @@ const Team = () => {
             <Typography className={styles.title}>
               {team?.Name ?? <GordonLoader size={15} inline />}
             </Typography>
-            {teamRecord()}
+            {teamDetails()}
           </Grid>
         </Grid>
         {hasPermissions && (
