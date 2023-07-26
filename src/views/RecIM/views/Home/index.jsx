@@ -255,7 +255,7 @@ const Home = () => {
           className={`${styles.cardHeader} ${styles.center}`}
           expandIcon={<ExpandMoreIcon />}
         >
-          <Typography> Display Hall Ranking</Typography>
+          <Typography>Hall Rankings</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <AffiliationsChart />

@@ -64,6 +64,7 @@ type UploadTeam = {
   Name: string;
   ActivityID: number;
   Logo: string;
+  Affiliation: string | null;
 };
 
 type PatchTeam = {
@@ -71,6 +72,7 @@ type PatchTeam = {
   StatusID: number;
   Logo: PatchLogo;
   IsLogoUpdate: boolean;
+  Affiliation: string | null;
 };
 
 //Team Routes
@@ -84,11 +86,13 @@ const createTeam = (username: string, newTeam: UploadTeam): Promise<CreatedTeam>
 
 const getTeamByID = (ID: number): Promise<Team> => http.get(`recim/Teams/${ID}`);
 
-const getTeamStatusTypes = (ID: number): Promise<Lookup[]> =>
-  http.get(`recim/Teams/lookup?type=status`);
+const getTeamStatusTypes = (): Promise<Lookup[]> => http.get(`recim/Teams/lookup?type=status`);
 
-const getTeamParticipantRoleTypes = (ID: number): Promise<Lookup[]> =>
+const getTeamParticipantRoleTypes = (): Promise<Lookup[]> =>
   http.get(`recim/Teams/lookup?type=role`);
+
+const getTeamAffiliations = (): Promise<Lookup[]> =>
+  http.get(`recim/Teams/lookup?type=affiliation`);
 
 const addParticipantToTeam = (
   teamID: number,
@@ -125,6 +129,7 @@ export {
   getTeamByID,
   getTeamStatusTypes,
   getTeamParticipantRoleTypes,
+  getTeamAffiliations,
   addParticipantToTeam,
   editTeamParticipant,
   deleteTeamParticipant,
