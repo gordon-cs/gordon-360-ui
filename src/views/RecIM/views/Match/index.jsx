@@ -343,7 +343,9 @@ const Match = () => {
                 </Grid>
 
                 <Grid item textAlign="center">
-                  <Typography variant="h5">Winner</Typography>
+                  <Typography variant="h5" className={styles.multiTeamWinner}>
+                    Winner
+                  </Typography>
                   <LinkRouter
                     to={`/recim/activity/${match?.Activity.ID}/team/${currentWinner?.ID}`}
                   >
