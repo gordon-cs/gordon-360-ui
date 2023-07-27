@@ -1,4 +1,14 @@
-import { Button, Card, CardContent, CardHeader, Grid, Link, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Link,
+  Typography,
+  IconButton,
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
@@ -23,7 +33,6 @@ const DiningBalance = () => {
   let dollarsColor = colors.warning.main;
   let guestColor = colors.error.main;
   let emptyColor = colors.neutral.A700;
-
   let balanceColor = colors.success.main;
 
   useEffect(() => {
@@ -139,9 +148,19 @@ const DiningBalance = () => {
           spacing={0}
           style={{ paddingTop: 5, paddingBottom: 10 }}
         >
-          <Grid item>
+          <Grid item sx={10}>
             <Typography variant="body2" className={styles.label2}>
               {diningInfo.ChoiceDescription}
+              <IconButton
+                variant="body2"
+                title="Change Meal Plan"
+                className={styles.label2}
+                component={Link}
+                href="https://www.gordon.edu/mealplan"
+                size="small"
+              >
+                <EditIcon />
+              </IconButton>
             </Typography>
           </Grid>
         </Grid>
@@ -199,27 +218,30 @@ const DiningBalance = () => {
   }
 
   return (
-    <Card>
-      <CardContent>
-        <Grid container direction="row" alignItems="center">
-          <Grid item xs={7} align="left">
-            <CardHeader title="Dining Balance" />
+    <Card className={styles.card}>
+      <CardHeader
+        title={
+          <Grid container direction="row" alignItems="center">
+            <Grid item xs={7} align="left">
+              Dining Balance
+            </Grid>
+            <Grid item xs={5} align="right">
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                href="https://gordon.cafebonappetit.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                TODAY'S MENU
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={5} align="right">
-            <Button
-              variant="contained"
-              color="secondary"
-              component={Link}
-              href="https://gordon.cafebonappetit.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              TODAY'S MENU
-            </Button>
-          </Grid>
-        </Grid>
-        {content}
-      </CardContent>
+        }
+        className="gc360_header"
+      />
+      <CardContent>{content}</CardContent>
     </Card>
   );
 };

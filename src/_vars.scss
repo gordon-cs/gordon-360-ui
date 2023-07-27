@@ -5,9 +5,7 @@
 // Ensure that the relative path (i.e. `../../`, etc.) is correct when importing from a nested
 // component.
 
-// Theme palette update does not deprecate the following variables-----------------------
-// - BREAKPOINTS WILL STILL BE USED FROM THIS FILE,
-// do not delete this file fully even after theme palette is fully implemented
+// Colors have moved to theme.ts for dark mode conversion
 
 // Material-UI breakpoints as Sass variables for use in custom styles
 $break-xs: 360px;

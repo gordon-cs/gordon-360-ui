@@ -6,14 +6,19 @@
   color: var(--mui-palette-primary-contrastText);
 }
 
-.email {
-  color: var(--mui-palette-secondary-main);
-}
-
-.request {
+.text {
   color: var(--mui-palette-warning-main);
 }
 
-.content {
+.errMessage {
   color: var(--mui-palette-error-light);
+}
+
+.link {
+  color: var(--mui-palette-link-light);
+  font-weight: bold;
+  &:hover {
+    color: var(--mui-palette-neutral-main);
+    transition: color 0.5s;
+  }
 }

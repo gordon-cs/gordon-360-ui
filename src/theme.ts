@@ -1,37 +1,6 @@
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
 
 // Colors from http://www.gordon.edu/brandstandards
-// Shades from https://goo.gl/AF45tZ
-
-// Material-UI breakpoints. This is to allow components to use Material-UI's breakpoints since
-// you cannot import variables from a vars.scss to a JS file.
-export const windowBreakWidths = {
-  breakXS: 0,
-  breakSM: 600,
-  breakMD: 900,
-  breakLG: 1200,
-  breakXL: 1536,
-} as const;
-
-/**
- * Possible stored user color settings
- */
-export enum ColorSetting {
-  System = 'system',
-  Dark = 'dark',
-  Light = 'light',
-}
-
-/**
- *  Possible MUI theme modes
- */
-export enum ColorMode {
-  Dark = 'dark',
-  Light = 'light',
-}
-
-// key for caching user color preference in localStorage
-export const STORAGE_COLOR_PREFERENCE_KEY = 'colorMode';
 
 // Extend the interface, add neutral color with same color options as the primary palette.
 declare module '@mui/material/styles' {
@@ -52,7 +21,7 @@ declare module '@mui/material' {
   }
 }
 
-// Color declarations:
+// Color declarations for simplified naming:
 // Primary
 const GordonBlue = '#014983';
 const GordonBlue_opacity50 = '#01498382';
@@ -63,8 +32,8 @@ const ScottieCyan_opacity75 = '#00AEEFBF';
 const ScottieCyan_opacity10 = '#00AEEF1A';
 
 // Error
-//Not an official gordon color anymore, we can consider changing this, it is a good error color
-const OldSchemeRed = '#B53228';
+//Red used in the old color scheme, good error color
+const ChristmasRed = '#B53228';
 const NauticalRed = '#FF5D53';
 const PureRed = '#FF0000';
 
@@ -93,13 +62,7 @@ const Black_opacity50 = '#00000080';
 const Black_opacity20 = '#00000033';
 const Black_opacity10 = '#0000001a';
 
-// Dev Tool coloring - Colors for development and testing purposes only
-// These colors can be used to test palette colors with an obvious visual indicator of which colors
-// have been updated on screen.
-const TestTool = '#FF8400'; // devTool orange
-const TestToolContrast = '#FF0000'; // devTool red
-const TestToolHalfOpacity = '#FF840082'; // devTool orange half opacity
-const Placeholder = '#00ff00'; // For unused slots that can be filled with new colors
+const Placeholder = '#00ff00'; // For unused theme slots that can be filled with new colors
 
 // Dark Mode Colors!:
 const Gray = '#282828';
@@ -108,8 +71,10 @@ const LinkBlue = '#0260ad';
 
 // Theme to use in the CSS vars provider, allowing multiple theme modes
 // This theme can be imported in javascript to reference colors directly
+// See documentation in the docs directory for more information!
 export const theme360 = extendTheme({
   colorSchemes: {
+    // Palette for light theme mode
     light: {
       palette: {
         primary: {
@@ -142,8 +107,7 @@ export const theme360 = extendTheme({
           900: '#005195',
         },
         error: {
-          main: OldSchemeRed,
-          dark: PureRed,
+          main: ChristmasRed,
           light: NauticalRed,
           contrastText: White,
         },
@@ -152,14 +116,14 @@ export const theme360 = extendTheme({
           main: OldSchemeGreen,
           light: SeaSpray,
         },
-        warning: { main: BarringtonGold, dark: OldSchemeRed },
+        warning: { main: BarringtonGold, dark: ChristmasRed },
         info: { main: NightMarsh, light: SnowDay, dark: Athletics, contrastText: White },
         neutral: {
-          main: BackgroundLightGray, //currently $neutral-light-gray in _vars
-          dark: LightGray, //currently $neutral-gray2
-          light: White, //currently $neutral-white
+          main: BackgroundLightGray,
+          dark: LightGray,
+          light: White,
           contrastText: Black,
-          50: '#FAF9F9', //Neutral hues must be flipped in dark mode for proper contrast text
+          50: '#FAF9F9',
           100: '#F4F3F3',
           200: '#EBEAEA',
           300: '#DCDBDB',
@@ -183,12 +147,11 @@ export const theme360 = extendTheme({
       },
     },
     dark: {
-      // Palette for dark theme mode ------------------------TEMPORARY-COLORS---------------
+      // Palette for dark theme mode
       palette: {
-        // Variables to set various MUI components, may or may not use, but good to have the
-        // customizeability
-        Alert: {
-          errorFilledBg: OldSchemeRed,
+        // Variables to set various MUI components, helpful for future customizeability
+        AppBar: {
+          darkBg: NightMarsh,
         },
         background: {
           paper: DarkGray, // Card Colors
@@ -196,7 +159,9 @@ export const theme360 = extendTheme({
         text: {
           primary: White, // Various MUI components and text
         },
-
+        action: {
+          active: White, // Various icons, especially in PersonalInfo on the profile
+        },
         // May be used later, gives us the flexibility to change switch colors when switched off
         // if needed for dark mode.
         // Switch: {
@@ -205,10 +170,6 @@ export const theme360 = extendTheme({
         // common: {
         //   onBackground: Placeholder, // switch track off color
         // },
-        action: {
-          active: White, // Various icons, especially in PersonalInfo
-        },
-
         // May be used later, gives us the flexibility to change tooltip colors if needed for dark
         // mode.
         // Tooltip: {
@@ -219,7 +180,7 @@ export const theme360 = extendTheme({
           main: NightMarsh,
           dark: NightMarsh_opacity50,
           contrastText: White,
-          50: GordonBlue_opacity50, //should be half opacity of main
+          50: NightMarsh_opacity50, //should be half opacity of main
         },
         secondary: {
           main: GordonBlue,
@@ -236,7 +197,7 @@ export const theme360 = extendTheme({
           900: '#014883',
         },
         error: {
-          main: OldSchemeRed,
+          main: ChristmasRed,
           light: NauticalRed,
           contrastText: White,
         },
@@ -245,7 +206,7 @@ export const theme360 = extendTheme({
           main: OldSchemeGreen,
           light: SeaSpray,
         },
-        warning: { main: BarringtonGold, dark: OldSchemeRed },
+        warning: { main: BarringtonGold, dark: ChristmasRed },
         info: { main: NightMarsh, light: SnowDay, dark: Athletics, contrastText: White },
         neutral: {
           main: DarkGray,
@@ -274,3 +235,33 @@ export const theme360 = extendTheme({
     },
   },
 });
+
+// Material-UI breakpoints. This is to allow components to use Material-UI's breakpoints since
+// you cannot import variables from a vars.scss to a JS file.
+export const windowBreakWidths = {
+  breakXS: 0,
+  breakSM: 600,
+  breakMD: 900,
+  breakLG: 1200,
+  breakXL: 1536,
+} as const;
+
+// key for caching user color preference in localStorage
+export const STORAGE_COLOR_PREFERENCE_KEY = 'colorMode';
+
+/**
+ * Stored user color settings, possible options in localstorage
+ */
+export enum ColorSetting {
+  System = 'system',
+  Dark = 'dark',
+  Light = 'light',
+}
+
+/**
+ *  MUI theme modes, possible theme modes
+ */
+export enum ColorMode {
+  Dark = 'dark',
+  Light = 'light',
+}

@@ -1,5 +1,3 @@
-@import '../../../../../../vars';
-
 div.staff_apartment_application {
   & :global(.MuiToolbar-root).stylized_table_toolbar {
     color: var(--mui-palette-primary-main);
@@ -13,6 +11,7 @@ div.staff_apartment_application {
     :global(.MuiTableSortLabel-root) {
       background-color: var(--mui-palette-primary-main);
       color: var(--mui-palette-primary-contrastText);
+
       svg:global(.MuiSvgIcon-root).MuiTableSortLabel-icon {
         color: var(--mui-palette-primary-contrastText);
       }
