@@ -38,8 +38,7 @@ $dog-body-height: 5em;
   left: 0;
   top: 0;
   /* stylelint-disable function-calc-no-unspaced-operator */
-  transform: translateX(calc(#{-1 * $dog-body-width} / 3.2))
-    translateY(calc(#{-1 * $dog-body-height} / 2.5)) rotate(-15deg);
+  transform: translateX(calc(#{-1 * $dog-body-width} / 3.2)) translateY(calc(#{-1 * $dog-body-height} / 2.5)) rotate(-15deg);
   /* stylelint-enable function-calc-no-unspaced-operator */
   border-radius: 0.2em;
 }

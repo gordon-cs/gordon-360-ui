@@ -7,13 +7,14 @@
 }
 
 .event_item:hover {
+
   .event_column,
   .descriptionText {
     color: var(--mui-palette-primary-contrastText);
   }
 }
 
-:global(.gc360_event_list) > section {
+:global(.gc360_event_list)>section {
   background-color: var(--mui-palette-neutral-light);
   transition: background-color 200ms ease;
 
@@ -24,7 +25,7 @@
 }
 
 // Make even-numbered rows gray
-:global(.gc360_event_list) > section:nth-child(even) {
+:global(.gc360_event_list)>section:nth-child(even) {
   background-color: var(--mui-palette-neutral-200);
 
   &:hover {

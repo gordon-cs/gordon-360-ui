@@ -1,7 +1,8 @@
 .timesheets {
+
   // Make rows alternate white and grey
   /* stylelint-disable */
-  .shift_list > .shift_item:nth-child(even) {
+  .shift_list>.shift_item:nth-child(even) {
     background: var(--mui-palette-neutral-200);
 
     &:hover {
@@ -9,7 +10,7 @@
     }
   }
 
-  .shift_list > .shift_item:nth-child(odd) {
+  .shift_list>.shift_item:nth-child(odd) {
     background: var(--mui-palette-primary-contrastText);
 
     &:hover {
