@@ -375,12 +375,8 @@ const ParticipantListing = ({
             participant.Username,
           );
           setAvatar(preferredImage || defaultImage);
-          const userInfo = await user.getProfileInfo(participant.Username);
-          setFullName(userInfo.fullName);
-        } else {
-          //non-gordon participant
-          setFullName(`${participant.FirstName} ${participant.LastName}`);
         }
+        setFullName(`${participant.FirstName} ${participant.LastName}`);
       }
     };
 
