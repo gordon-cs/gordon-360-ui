@@ -1,3 +1,4 @@
+import { useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { HorizontalBar } from 'react-chartjs-2';
 import { getAffiliations } from 'services/recim/affiliations';
@@ -6,18 +7,29 @@ import { theme360 } from 'theme';
 const AffiliationsChart = () => {
   const [affiliations, setAffiliations] = useState();
   const [data, setData] = useState([]);
+  const isMobile = useMediaQuery(`(max-width: 600px)`);
 
   const options = {
     scales: {
-      yAxes: {
+      yAxis: {
+        display: false,
         beginAtZero: true,
         ticks: {
           beginAtZero: true,
         },
       },
     },
+    legend: {
+      display: !isMobile,
+    },
     title: {
       display: false,
+    },
+    layout: {
+      padding: {
+        top: isMobile ? -10 : 0,
+        bottom: isMobile ? -5 : 0,
+      },
     },
   };
 
