@@ -278,12 +278,14 @@ const ScheduleList = ({
     if (series.Status === 'In Progress') {
       if (isFuture(Date.parse(series.StartDate)))
         return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
-      <Chip
-        icon={<ScheduleIcon />}
-        label="ongoing"
-        size="small"
-        className={styles.ongoingChip}
-      ></Chip>;
+      return (
+        <Chip
+          icon={<ScheduleIcon />}
+          label="ongoing"
+          size="small"
+          className={styles.ongoingChip}
+        ></Chip>
+      );
     }
     if (series.Status === 'Completed')
       return <Chip icon={<RestoreIcon />} label="completed" color="success" size="small"></Chip>;
