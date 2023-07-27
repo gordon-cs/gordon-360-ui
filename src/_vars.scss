@@ -5,54 +5,6 @@
 // Ensure that the relative path (i.e. `../../`, etc.) is correct when importing from a nested
 // component.
 
-// For use in a .ts file, see `src/theme.ts`.
-$primary-blue-300: #016bc0;
-$primary-blue: #014983;
-$primary-blue-600: #013865;
-$primary-cyan: #00aeef;
-$primary-cyan-600: #0098d0;
-$secondary-green: #b2bb1c;
-$secondary-yellow: #fdb913;
-$secondary-orange: #de571f;
-$secondary-red: #b53228;
-
-$alternative-red: #ff0000;
-
-$neutral-white: #ffffff;
-$neutral-white-opacity80: #ffffffcd;
-$neutral-white-opacity50: #ffffff80;
-$neutral-white-opacity30: #ffffff4d;
-$neutral-light-gray: #ebeaea;
-$neutral-light-gray2: #dddddd;
-$neutral-light-gray2-opacity80: #ddddddcd;
-$neutral-light-gray2-opacity50: #dddddd80;
-$neutral-light-gray2-opacity40: #dddddd4d;
-$neutral-light-gray2-opacity20: #dddddd33;
-$neutral-light-gray2-opacity10: #dddddd1a;
-$neutral-gray: #808080;
-$neutral-gray2: #cccccb;
-$neutral-gray3: #adadad;
-$neutral-dark-gray: #31342b;
-$neutral-dark-gray2: #444444;
-$neutral-dark-gray3: #555555;
-
-$neutral-black: #000000;
-$neutral-black-opacity90: #000000e6;
-$neutral-black-opacity70: #000000b2;
-$neutral-black-opacity55: #0000008c;
-$neutral-black-opacity40: #00000066;
-$neutral-black-opacity20: #00000033;
-$neutral-black-opacity15: #00000026;
-$neutral-black-opacity125: #00000020;
-$neutral-black-opacity10: #0000001a;
-
-$dark-text-color: rgba(0, 0, 0, 0.87);
-
-$wellness-red: #a30000;
-$wellness-green: #005500;
-$wellness-yellow: #ffcc00;
-
-// NOT DEPRECATED
 // Theme palette update does not deprecate the following variables-----------------------
 // - BREAKPOINTS WILL STILL BE USED FROM THIS FILE,
 // do not delete this file fully even after theme palette is fully implemented
