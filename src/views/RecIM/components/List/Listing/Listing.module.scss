@@ -169,8 +169,8 @@
 }
 
 .cardHeaderSecondary {
-  //background-color: var(--mui-palette-primary-700);
-  color: var(--mui-palette-error-contrastText);
+  background-color: var(--mui-palette-neutral-dark);
+  color: var(--mui-palette-primary-contrastText);
 }
 
 @media (min-width: $break-xs) {
