@@ -114,7 +114,11 @@ const ActivityForm = ({
         helperText: '*Required',
       },
       {
-        label: 'Completed',
+        label: (
+          <>
+            Completed <i>(invisible)</i>
+          </>
+        ),
         name: 'completed',
         type: 'checkbox',
         helperText: '*Required',
