@@ -102,13 +102,10 @@ export type BracketInfo = {
   IsLosers: boolean;
 };
 
-type AutoScheduleParameters =
-  | {
-      roundRobinMatchCapacity: number;
-    }
-  | {
-      numberOfLadderMatches: number;
-    };
+type AutoScheduleParameters = {
+  roundRobinMatchCapacity: number | undefined;
+  numberOfLadderMatches: number | undefined;
+};
 
 //Series Routes
 const createSeries = async (
@@ -152,8 +149,18 @@ const scheduleSeriesMatches = (
   params: AutoScheduleParameters,
 ): Promise<Match[]> => http.post(`recim/series/${seriesID}/autoschedule`, params);
 
-const getAutoSchedulerEstimate = (seriesID: number): Promise<AutoScheduleEstimate> =>
-  http.get(`recim/series/${seriesID}/autoschedule`);
+const getAutoSchedulerEstimate = (
+  seriesID: number,
+  params: AutoScheduleParameters,
+): Promise<AutoScheduleEstimate> => {
+  let str = '';
+  if (params?.numberOfLadderMatches)
+    str += `?numberOfLadderMatches=${params?.numberOfLadderMatches}`;
+  if (params?.roundRobinMatchCapacity)
+    str += `?roundRobinMatchCapacity=${params?.roundRobinMatchCapacity}`;
+
+  return http.get(`recim/series/${seriesID}/autoschedule${str}`);
+};
 
 const deleteSeriesCascade = (seriesID: number): Promise<CreatedSeries> =>
   http.del(`recim/series/${seriesID}`);

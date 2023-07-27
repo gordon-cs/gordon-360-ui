@@ -29,6 +29,7 @@ import {
   getSeriesSchedule,
   getSeriesWinners,
   editSeries,
+  getAutoSchedulerEstimate,
 } from 'services/recim/series';
 import { useState, useEffect } from 'react';
 import styles from './../../Activity.module.css';
@@ -68,7 +69,9 @@ const ScheduleList = ({
   const [isMobileView, setIsMobileView] = useState(false);
   const [seriesSchedule, setSeriesSchedule] = useState();
   const [autoscheduleParameters, setAutoscheduleParameters] = useState();
+  const [parameterLabel, setParameterLabel] = useState('');
   const [seriesWinners, setSeriesWinners] = useState();
+  const [autoScheduleEstimate, setAutoScheduleEstimate] = useState();
 
   useEffect(() => {
     if (width < windowBreakWidths.breakSM) setIsMobileView(true);
@@ -82,7 +85,24 @@ const ScheduleList = ({
       if (fetchedSchedule.ID !== 0) setSeriesSchedule(fetchedSchedule);
     };
     loadData();
+
+    if (series)
+      setParameterLabel(
+        series.Type === 'Round Robin' ? 'roundRobinMatchCapacity' : 'numberOfLadderMatches',
+      );
   }, [series]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (autoscheduleParameters?.length && parameterLabel?.length) {
+        let est = await getAutoSchedulerEstimate(series.ID, {
+          [parameterLabel]: autoscheduleParameters,
+        });
+        setAutoScheduleEstimate(est);
+      }
+    };
+    loadData();
+  }, [parameterLabel, autoscheduleParameters, series]);
 
   // default closure
   const closeMenusAndForms = () => {
@@ -176,8 +196,6 @@ const ScheduleList = ({
   };
 
   const handleConfirmAutoSchedule = () => {
-    const parameterLabel =
-      series.Type === 'Round Robin' ? 'roundRobinMatchCapacity' : 'numberOfLadderMatches';
     setLoading(true);
     scheduleSeriesMatches(series.ID, { [parameterLabel]: autoscheduleParameters }).then((res) => {
       setOpenAutoSchedulerDisclaimer(false);
@@ -516,6 +534,44 @@ const ScheduleList = ({
       >
         <ContentCard title={`You are attempting to use the auto-scheduler for ${series.Name}`}>
           {disclaimerContent}
+          <Typography marginLeft={4}>
+            {autoscheduleParameters && (
+              <Grid container xs={12} textAlign="left">
+                {/* Header */}
+                <Grid item xs={12}>
+                  <Typography variant="body1" fontWeight="bold">
+                    Given current parameters
+                  </Typography>
+                </Grid>
+                {/* Estimate */}
+                <Grid item container xs={12}>
+                  <Grid item xs={4}>
+                    <Typography variant="body2">Matches Created:</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2" fontWeight="bold">
+                      {autoScheduleEstimate?.GamesCreated}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container xs={12}>
+                  <Grid item xs={4}>
+                    <Typography variant="body2"> End Time of Final Game:</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2" fontWeight="bold">
+                      {autoScheduleEstimate && standardDate(autoScheduleEstimate.EndDate, true)}{' '}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="caption" fontWeight="light">
+                      <i>*this estimate is based on the current series schedule</i>{' '}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            )}
+          </Typography>
         </ContentCard>
       </GordonDialogBox>
       <GordonDialogBox
