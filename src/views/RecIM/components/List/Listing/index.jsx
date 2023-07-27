@@ -203,6 +203,12 @@ const ExpandableTeamListing = ({ team, teamScore, attendance, isAdmin }) => {
 const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
 
+  const roundToTwoDecimals = (num) => {
+    let float = parseFloat(num, 10); //ensure number and base 10
+    if (float === undefined) return;
+    return Math.round((float + Number.EPSILON) * 100) / 100;
+  };
+
   const handleAcceptInvite = () => {
     callbackFunction('accepted', team.Activity.ID, team.ID);
   };
@@ -235,7 +241,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
             </Grid>
             <Grid item xs={6}>
               <Typography className={styles.listingSubtitle}>
-                Sportsmanship: {targetTeamStats.SportsmanshipScore}
+                Sportsmanship: {roundToTwoDecimals(targetTeamStats.SportsmanshipScore)}
               </Typography>
             </Grid>
           </Grid>
@@ -308,7 +314,8 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                       </Typography>
                       <Typography className={styles.listingSubtitle_small}>
                         Sportsmanship:{' '}
-                        {team.TeamRecord[0]?.SportsmanshipRating ?? team.SportsmanshipRating}
+                        {roundToTwoDecimals(team.TeamRecord[0].SportsmanshipRating) ??
+                          roundToTwoDecimals(team.SportsmanshipRating)}
                       </Typography>
                     </Grid>
                   )}
