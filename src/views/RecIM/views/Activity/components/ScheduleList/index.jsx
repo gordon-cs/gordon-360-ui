@@ -275,21 +275,20 @@ const ScheduleList = ({
   };
 
   const status = () => {
-    // future series
-    if (isFuture(Date.parse(series.StartDate)))
-      return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
-    // past series
-    else if (isPast(Date.parse(series.EndDate)))
-      return <Chip icon={<RestoreIcon />} label="completed" color="success" size="small"></Chip>;
-    // current series
-    return (
+    if (series.Status === 'In Progress') {
+      if (isFuture(Date.parse(series.StartDate)))
+        return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
       <Chip
         icon={<ScheduleIcon />}
         label="ongoing"
         size="small"
         className={styles.ongoingChip}
-      ></Chip>
-    );
+      ></Chip>;
+    }
+    if (series.Status === 'Completed')
+      return <Chip icon={<RestoreIcon />} label="completed" color="success" size="small"></Chip>;
+
+    return <Chip icon={<RestoreIcon />} label="closed" size="small" color="error"></Chip>;
   };
   const scheduleMenu = () => {
     let daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
