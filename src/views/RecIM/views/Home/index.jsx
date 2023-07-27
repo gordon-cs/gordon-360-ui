@@ -253,7 +253,7 @@ const Home = () => {
       <Accordion>
         <AccordionSummary
           className={`${styles.cardHeader} ${styles.center}`}
-          expandIcon={<ExpandMoreIcon color="neutral" />}
+          expandIcon={<ExpandMoreIcon className={styles.expandMoreIcon} />}
         >
           <Typography>Hall Rankings</Typography>
         </AccordionSummary>
