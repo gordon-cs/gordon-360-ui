@@ -5,23 +5,27 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import scheduleService from 'services/schedule';
 import session from 'services/session';
 import './ScheduleCalendar.css';
+import { Schedule } from '@mui/icons-material';
 
 const GordonScheduleCalendar = (props) => {
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState();
   const [currentSession, setCurrentSession] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
+  const [allCourses, setAllCourses] = useState([]);
+  const [allCoursess, setAllCoursess] = useState([]);
 
   useEffect(() => {
     loadData(props.profile);
   }, [props.profile, props.reloadCall]);
 
-  const loadData = async (searchedUser) => {
+  const loadData = async () => {
     setLoading(true);
     let courseInfo = null;
     try {
-      const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
-      courseInfo = scheduleService.makeScheduleCourses(schedule);
+      const course = props.allCourses.filter((item) => item.SessionCode === props.term);
+      setAllCourses(course);
+      courseInfo = scheduleService.makeScheduleCourses(course[0].AllCourses);
     } catch (e) {
       setLoading(false);
     }
@@ -35,6 +39,7 @@ const GordonScheduleCalendar = (props) => {
     setCurrentSession(currentSession);
     setLoading(false);
   };
+
   const resourceMap = [
     { resourceId: 'MO', resourceTitle: 'Monday' },
     { resourceId: 'TU', resourceTitle: 'Tuesday' },

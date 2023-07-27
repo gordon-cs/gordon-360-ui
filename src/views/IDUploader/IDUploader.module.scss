@@ -1,5 +1,3 @@
-@import '../../vars';
-
 .ID_card {
   display: grid;
   gap: 1rem;
@@ -11,6 +9,8 @@
   &_header {
     grid-area: header;
     width: 100%;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
   }
 
   &_photo {

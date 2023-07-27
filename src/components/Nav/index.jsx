@@ -16,8 +16,10 @@ const GordonNav = ({ onDrawerToggle, drawerOpen }) => (
         keepMounted: true, // Better open performance on mobile.
       }}
     >
-      <GordonNavAvatar onLinkClick={onDrawerToggle} />
-      <Divider />
+      <div className={styles.nav_avatar}>
+        <GordonNavAvatar onLinkClick={onDrawerToggle} />
+        <Divider />
+      </div>
       <GordonNavLinks onLinkClick={onDrawerToggle} />
     </Drawer>
   </section>

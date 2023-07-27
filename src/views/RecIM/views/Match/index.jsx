@@ -309,7 +309,7 @@ const Match = () => {
               columnSpacing={2}
               className={`${styles.teamInfo} ${styles.teamInfoRight}`}
             >
-              <Grid item xs={3} sm={4} md={2.8} lg={2.3} className={styles.headerImgContainer}>
+              <Grid item className={styles.headerImgContainer}>
                 <img
                   src={
                     (match?.Status === 'Completed' ? currentWinner?.Logo : match?.Activity.Logo) ??
@@ -320,12 +320,18 @@ const Match = () => {
                 ></img>
               </Grid>
               {match?.Status !== 'Completed' && (
-                <Grid item xs={9}>
+                <Grid direction="column" item>
                   <LinkRouter to={`/recim/activity/${match?.Activity.ID}`}>
                     <Typography variant="h5" className={`${styles.teamName} gc360_text_link`}>
                       {match?.Activity.Name}
                     </Typography>
                   </LinkRouter>
+                  <Typography
+                    variant="subtitle"
+                    className={`${styles.teamName} ${styles.grayText}`}
+                  >
+                    {match?.Series.Name}
+                  </Typography>
                 </Grid>
               )}
             </Grid>
@@ -337,7 +343,9 @@ const Match = () => {
                 </Grid>
 
                 <Grid item textAlign="center">
-                  <Typography variant="h5">Winner</Typography>
+                  <Typography variant="h5" className={styles.multiTeamWinner}>
+                    Winner
+                  </Typography>
                   <LinkRouter
                     to={`/recim/activity/${match?.Activity.ID}/team/${currentWinner?.ID}`}
                   >

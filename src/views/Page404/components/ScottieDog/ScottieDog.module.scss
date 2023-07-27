@@ -1,5 +1,3 @@
-@import '../../../../vars';
-
 $dog-color: var(--mui-palette-neutral-700);
 $dog-body-width: 10em;
 $dog-body-height: 5em;
@@ -14,14 +12,17 @@ $dog-body-height: 5em;
   animation-delay: 5s; // plus time to 'walk' from off screen to screen
   left: calc(100% + 10em); // 10em buffer to make sure head is off the screen at start
 }
+
 @keyframes dog-walk {
   100% {
     left: -50%;
   }
 }
+
 .dog * {
   position: absolute;
 }
+
 .dog_body {
   background-color: $dog-color;
   width: $dog-body-width;
@@ -29,6 +30,7 @@ $dog-body-height: 5em;
   top: 0;
   border-radius: 0 1.5em 0 1.5em;
 }
+
 .dog_head {
   background-color: $dog-color;
   height: calc(#{$dog-body-height} / 1.6);
@@ -41,6 +43,7 @@ $dog-body-height: 5em;
   /* stylelint-enable function-calc-no-unspaced-operator */
   border-radius: 0.2em;
 }
+
 .dog_eye {
   background-color: var(--mui-palette-neutral-300);
   width: 0.7em;
@@ -49,6 +52,7 @@ $dog-body-height: 5em;
   right: 30%;
   top: 15%;
 }
+
 .dog_nose {
   background-color: black;
   width: 0.9em;
@@ -56,6 +60,7 @@ $dog-body-height: 5em;
   border-radius: 50%;
   transform: translateX(-0.2em) translateY(-0.2em);
 }
+
 .dog_ear {
   right: 0;
   top: 0;
@@ -66,6 +71,7 @@ $dog-body-height: 5em;
   border-right: solid 1em transparent;
   border-bottom: solid 2em $dog-color;
 }
+
 .dog_collar {
   background-color: var(--mui-palette-error-main);
   bottom: 0;
@@ -79,6 +85,7 @@ $dog-body-height: 5em;
   text-align: center;
   font-family: monospace;
 }
+
 .dog_leg {
   background-color: $dog-color;
   width: 1.5em;
@@ -86,22 +93,27 @@ $dog-body-height: 5em;
   top: 5em;
   left: 0;
 }
+
 .dog_leg1 {
   transform: translateX(2em);
 }
+
 .dog_leg2 {
   transform: translateX(4em);
   height: 1.2em;
   background-color: var(--mui-palette-neutral-800);
 }
+
 .dog_leg3 {
   transform: translateX($dog-body-width - 3.5em);
 }
+
 .dog_leg4 {
   transform: translateX($dog-body-width - 1.5em);
   height: 1.2em;
   background-color: var(--mui-palette-neutral-800);
 }
+
 .dog_tail {
   transform: translateX($dog-body-width - 2em + 0.8em) translateY(-4.5em + 1em) rotate(30deg);
   width: 0;
@@ -112,6 +124,7 @@ $dog-body-height: 5em;
   transform-origin: bottom;
   animation: wag-tail 1s infinite;
 }
+
 @keyframes wag-tail {
   50% {
     transform: translateX($dog-body-width - 2em + 0.8em) translateY(-4.5em + 1em) rotate(10deg);
