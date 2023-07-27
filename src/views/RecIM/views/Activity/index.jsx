@@ -196,6 +196,7 @@ const Activity = () => {
       setOpenTeamForm(true);
     }
   };
+
   // profile hook used for future authentication
   // Administration privs will use AuthGroups -> example can be found in
   //           src/components/Header/components/NavButtonsRightCorner

@@ -3,7 +3,7 @@ import { Tabs, Tab } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
 import { getMatchTeamStatusTypes, updateMatchStats, getMatchByID } from 'services/recim/match';
 import Form, { validateFieldFromUpdatedInfo } from '../Form';
-import styles from './EditMatchStatsForm.module.css';
+import styles from '../Forms.module.css';
 import { useParams } from 'react-router';
 
 const EditMatchStatsForm = ({

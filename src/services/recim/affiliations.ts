@@ -6,10 +6,16 @@ type PatchAffiliation = {
   Logo: string;
 };
 
-type AffiliationPoints = {
+export type AffiliationPointsUpload = {
   TeamID: number;
   SeriesID: number;
   Points: number | null;
+};
+
+export type AffiliationPoints = {
+  TeamID: number;
+  SeriesID: number;
+  Points: number;
 };
 
 type Affiliation = {
@@ -25,8 +31,11 @@ const getAffiliationByName = (name: string): Promise<Affiliation> =>
 
 const createAffiliation = (name: string): Promise<string> => http.post(`recim/affiliations`, name);
 
-const assignPointsToAffiliation = async (name: string, points: AffiliationPoints) =>
+const assignPointsToAffiliation = async (name: string, points: AffiliationPointsUpload) =>
   http.put(`recim/affiliations/${name}/points`, points);
+
+const updateAffiliation = async (name: string, update: PatchAffiliation): Promise<any> =>
+  http.patch(`recim/affiliation/${name}`, update);
 
 const deleteAffiliation = async (name: string) => http.del(`recim/affiliations/${name}`);
 
@@ -34,6 +43,7 @@ export {
   getAffiliations,
   getAffiliationByName,
   createAffiliation,
+  updateAffiliation,
   assignPointsToAffiliation,
   deleteAffiliation,
 };

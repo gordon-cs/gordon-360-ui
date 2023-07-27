@@ -15,6 +15,9 @@ import {
   Box,
   IconButton,
   Checkbox,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ActivityForm from '../../components/Forms/ActivityForm';
@@ -35,9 +38,11 @@ import {
 } from 'services/recim/participant';
 import { getTeamInvites } from 'services/recim/team';
 import recimLogo from 'views/RecIM/recim_logo.png';
-import { isAfter, isFuture } from 'date-fns';
+import { isFuture } from 'date-fns';
 import { TabPanel } from 'views/RecIM/components/TabPanel';
 import SettingsIcon from '@mui/icons-material/Settings';
+import AffiliationsChart from './components/AffiliationsChart';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -243,6 +248,22 @@ const Home = () => {
     </CardContent>
   );
 
+  let affiliationsCard = (
+    <Card>
+      <Accordion>
+        <AccordionSummary
+          className={`${styles.cardHeader} ${styles.center}`}
+          expandIcon={<ExpandMoreIcon color="neutral" />}
+        >
+          <Typography>Hall Rankings</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <AffiliationsChart />
+        </AccordionDetails>
+      </Accordion>
+    </Card>
+  );
+
   let myTeams = (
     <CardContent>
       {participantTeams.length > 0 ? (
@@ -322,6 +343,9 @@ const Home = () => {
           <GordonLoader />
         ) : (
           <Grid container spacing={2}>
+            <Grid item xs={12}>
+              {affiliationsCard}
+            </Grid>
             <Grid item xs={12} md={6.5}>
               {activitiesCard}
             </Grid>
@@ -370,6 +394,7 @@ const Home = () => {
             <Checkbox
               color="secondary"
               inputProps={{ 'aria-label': 'toggle' }}
+              checked={allowEmails}
               defaultChecked={participant?.AllowEmails}
               onChange={(e) => handleAllowEmails(e.target.checked)}
             />

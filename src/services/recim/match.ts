@@ -99,10 +99,8 @@ const updateMatchAttendance = (
 const updateAttendance = (matchID: number, attendance: Attendance): Promise<Attendance> =>
   http.post(`recim/matches/${matchID}/attendance`, attendance);
 
-const removeAttendance = (matchID: number, attendance: Attendance): Promise<Attendance> => {
-  console.log(attendance);
-  return http.del(`recim/matches/${matchID}/attendance`, attendance);
-};
+const removeAttendance = (matchID: number, attendance: Attendance): Promise<Attendance> =>
+  http.del(`recim/matches/${matchID}/attendance`, attendance);
 
 const getMatchAttendance = (matchID: number): Promise<MatchAttendance> =>
   http.get(`recim/matches/${matchID}/attendance`);
