@@ -22,7 +22,7 @@ import {
   standardDate,
   standardTimeOnly,
 } from 'views/RecIM/components/Helpers';
-import { format, isPast, isFuture } from 'date-fns';
+import { format, isFuture } from 'date-fns';
 import {
   deleteSeriesCascade,
   scheduleSeriesMatches,
@@ -422,7 +422,8 @@ const ScheduleList = ({
                 dense
                 onClick={async () => {
                   closeMenusAndForms();
-                  editSeries(series.ID, { StatusID: 2 }).then(setReload((prev) => !prev));
+                  await editSeries(series.ID, { StatusID: 2 });
+                  setReload((prev) => !prev);
                 }}
                 className={styles.menuButton}
               >
@@ -433,7 +434,8 @@ const ScheduleList = ({
                 dense
                 onClick={async () => {
                   closeMenusAndForms();
-                  editSeries(series.ID, { StatusID: 3 }).then(setReload((prev) => !prev));
+                  await editSeries(series.ID, { StatusID: 3 });
+                  setReload((prev) => !prev);
                 }}
                 className={styles.menuButton}
               >
