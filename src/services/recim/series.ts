@@ -149,6 +149,9 @@ const scheduleSeriesMatches = (
   params: AutoScheduleParameters,
 ): Promise<Match[]> => http.post(`recim/series/${seriesID}/autoschedule`, params);
 
+const deleteSeriesMatches = async (seriesID: number) =>
+  http.del(`recim/series/${seriesID}/matches`);
+
 const getAutoSchedulerEstimate = (
   seriesID: number,
   params: AutoScheduleParameters,
@@ -183,5 +186,6 @@ export {
   scheduleSeriesMatches,
   getAutoSchedulerEstimate,
   deleteSeriesCascade,
+  deleteSeriesMatches,
   getBracketInfo,
 };
