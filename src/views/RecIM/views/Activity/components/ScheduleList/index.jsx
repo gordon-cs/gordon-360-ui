@@ -501,7 +501,7 @@ const ScheduleList = ({
 
       {series.Type === 'Single Elim' && series.Match.length > 0 && (
         <Grid container justifyContent="center" alignItems="center">
-          show bracket
+          show bracket {'(beta)'}
           <Switch color="secondary" onClick={(event) => setShowBracket(event.target.checked)} />
         </Grid>
       )}
