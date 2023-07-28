@@ -30,6 +30,7 @@ import {
   getSeriesWinners,
   editSeries,
   getAutoSchedulerEstimate,
+  deleteSeriesMatches,
 } from 'services/recim/series';
 import { useState, useEffect } from 'react';
 import styles from './../../Activity.module.css';
@@ -39,7 +40,6 @@ import RecIMBracket from 'views/RecIM/components/RecIMBracket/index';
 import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
-import { deleteMatchList } from 'services/recim/match';
 import SeriesPlacementForm from 'views/RecIM/components/Forms/SeriesPlacementForm';
 
 const ScheduleList = ({
@@ -270,7 +270,7 @@ const ScheduleList = ({
 
   const handleConfirmDeleteMatches = async () => {
     setLoading(true);
-    deleteMatchList(series.Match).then(() => {
+    deleteSeriesMatches(series.ID).then(() => {
       setOpenConfirmDeleteMatches(false);
       setLoading(false);
       setReload(!reload);
