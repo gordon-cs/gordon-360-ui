@@ -21,6 +21,7 @@ import GordonLoader from 'components/Loader';
 import SimpleSnackbar from 'components/Snackbar';
 import { Component } from 'react';
 import styles from './ShiftItem.module.css';
+import EditShiftNotesDialog from './EditShiftNotesDialog';
 
 const PickerInput = (props) => {
   return (
@@ -45,6 +46,7 @@ export default class ShiftItem extends Component {
       newDateTimeIn: null,
       newDateTimeOut: null,
       newHoursWorked: null,
+      newShiftNotes: null, // I am adding this
       dateInIsFuture: false,
       dateOutIsFuture: false,
       enteredFutureTime: false,
@@ -65,6 +67,7 @@ export default class ShiftItem extends Component {
         newDateTimeIn: null,
         newDateTimeOut: null,
         newHoursWorked: null,
+        newShiftNotes: null,
         dateInIsFuture: false,
         dateOutIsFuture: false,
         enteredFutureTime: false,
@@ -271,6 +274,7 @@ export default class ShiftItem extends Component {
           this.state.newDateTimeIn,
           this.state.newDateTimeOut,
           this.state.newHoursWorked,
+          this.state.newShiftNotes, //I am adding this
           this.props.value.LAST_CHANGED_BY,
         )
         .then(() => {
@@ -278,6 +282,7 @@ export default class ShiftItem extends Component {
             editing: false,
             newDateTimeIn: null,
             newDateTimeOut: null,
+            newShiftNotes: null, //I am adding this
             newHoursWorked: null,
             dateInIsFuture: false,
             dateOutIsFuture: false,
@@ -548,6 +553,7 @@ export default class ShiftItem extends Component {
                     {hoursWorkedDisp}
                   </Typography>
                   {shiftNotesTooltip}
+                  {this.state.editing && <EditShiftNotesDialog />}
                 </div>
               </Grid>
               <Grid item xs={1}>
