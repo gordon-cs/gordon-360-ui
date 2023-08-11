@@ -371,7 +371,6 @@ const userService = {
   setMobilePhonePrivacy,
   setUserPrivacy,
   setPlannedGraduationYear,
-  setHomePhonePrivacy,
   setMobilePhoneNumber,
   updateMailStop,
   updateOfficeLocation,
