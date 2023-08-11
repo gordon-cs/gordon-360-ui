@@ -118,6 +118,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   Minor3Description: string;
   ChapelRequired: number;
   ChapelAttended: number;
+  plannedGradYear: string;
 };
 
 type UnformattedAlumniProfileInfo = BaseProfileInfo & {
@@ -257,6 +258,11 @@ const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
+const setPlannedGraduationYear = (value: number) => {
+  const body = { ['plannedGradYear']: value };
+  http.put(`profiles/plannedGradYear`, body);
+};
+
 const updateMailStop = (value: string) => http.put(`profiles/mailstop`, value);
 
 const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
@@ -364,6 +370,8 @@ const getMembershipHistory = (username: string): Promise<MembershipHistory[]> =>
 const userService = {
   setMobilePhonePrivacy,
   setUserPrivacy,
+  setPlannedGraduationYear,
+  setHomePhonePrivacy,
   setMobilePhoneNumber,
   updateMailStop,
   updateOfficeLocation,

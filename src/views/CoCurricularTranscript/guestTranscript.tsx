@@ -177,4 +177,5 @@ export const exampleStudentProfile: StudentProfileInfo = {
   Minor3Description: '',
   ChapelRequired: 0,
   ChapelAttended: 0,
+  plannedGradYear: '',
 };
