@@ -160,7 +160,7 @@ const Timesheets = (props) => {
   }
 
   if (!isUserStudent) {
-    // return <GordonLimitedAvailability pageName="TimeSheets" />;
+    return <GordonLimitedAvailability pageName="TimeSheets" />;
   }
 
   const handleSaveButtonClick = () => {
