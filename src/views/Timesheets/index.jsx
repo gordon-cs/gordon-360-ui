@@ -1,9 +1,9 @@
-//Main timesheets page
 import {
   Button,
   Card,
   CardContent,
   CardHeader,
+  Container,
   FormControl,
   Grid,
   Input,
@@ -370,6 +370,25 @@ const Timesheets = (props) => {
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Container>
+          <Card>
+            <CardHeader title="Timesheets is moving!" />
+            <CardContent>
+              <Typography>
+                Timesheets is moving from Gordon 360 to{' '}
+                <a
+                  class="gc360_text_link"
+                  href="https://gordon.criterionhcm.com/ui/#"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Criterion
+                </a>
+                . All timesheets for August 20th or later must be entered in Criterion.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Container>
         <Grid container spacing={2} className={styles.timesheets}>
           <Grid item xs={12}>
             <Card>
@@ -563,4 +582,38 @@ const Timesheets = (props) => {
   );
 };
 
-export default Timesheets;
+const Notice = () => (
+  <Container>
+    <Card>
+      <CardHeader title="Timesheets have moved" />
+      <CardContent>
+        <Typography>
+          Student Timesheets are now located on{' '}
+          <a
+            class="gc360_text_link"
+            href="https://gordon.criterionhcm.com/ui/#"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Criterion
+          </a>
+          . If you are attempting to enter time for a job worked prior to 8/20/23 please email{' '}
+          <a
+            class="gc360_text_link"
+            href="mailto:payroll@gordon.edu"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Payroll@Gordon.edu
+          </a>
+          .
+        </Typography>
+      </CardContent>
+    </Card>
+  </Container>
+);
+
+const switchOverDate = new Date('2023-08-27 00:00');
+const Component = () => (Date.now() > switchOverDate ? <Notice /> : <Timesheets />);
+
+export default Component;
