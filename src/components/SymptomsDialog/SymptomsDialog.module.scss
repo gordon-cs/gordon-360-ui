@@ -1,13 +1,11 @@
-@import '../../vars';
-
 .symptoms_dialog {
   :global(.MuiDialog-paper) {
-    border: 15px solid $wellness-yellow;
+    border: 15px solid var(--mui-palette-warning-main);
     border-radius: 5px;
-    color: $neutral-dark-gray;
+    color: var(--mui-palette-neutral-800);
   }
 
   .confirm_symptoms {
-    background: $wellness-yellow;
+    background: var(--mui-palette-warning-main);
   }
 }
