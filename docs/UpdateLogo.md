@@ -8,4 +8,3 @@ Locations that needed logo update in Gordon 360:
 - Involvements default picture
 - Favicon of Gordon360
 - PWA for the mobile version of Gordon 360
--
