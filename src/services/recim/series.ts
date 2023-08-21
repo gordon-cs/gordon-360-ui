@@ -2,6 +2,7 @@ import http from '../http';
 import { Match } from './match';
 import { TeamRecord } from './team';
 import { Lookup } from './recim';
+import { AffiliationPoints, AffiliationPointsUpload } from './affiliations';
 
 export type Series = {
   ID: number;
@@ -14,6 +15,8 @@ export type Series = {
   Match: Match[];
   TeamStanding: TeamRecord[];
   Schedule: SeriesSchedule;
+  WinnerID: number;
+  Points: number;
 };
 
 type SeriesSchedule = {
@@ -44,7 +47,7 @@ type DaysOfWeek = {
   Sat: boolean;
 };
 
-type CreatedSeries = {
+export type CreatedSeries = {
   ID: number;
   Name: string;
   StartDate: string;
@@ -53,6 +56,8 @@ type CreatedSeries = {
   TypeID: number;
   StatusID: number;
   ScheduleID: number;
+  WinnerID: number;
+  Points: number;
 };
 
 type UploadSeries = {
@@ -63,6 +68,7 @@ type UploadSeries = {
   TypeID: number;
   ScheduleID?: number;
   NumberOfTeamsAdmitted: number; //used for subsequent series creation post initial setup, nullable
+  Points: number;
 };
 
 type PatchSeries = {
@@ -71,6 +77,21 @@ type PatchSeries = {
   EndDate: string;
   StatusID: number;
   ScheduleID?: number;
+  Points: number;
+};
+
+type PatchSeriesTeamRecord = {
+  TeamID: number;
+  WinCount: number | null;
+  LossCount: number | null;
+  TieCount: number | null;
+};
+
+type AutoScheduleEstimate = {
+  SeriesID: number;
+  Name: string;
+  EndDate: string;
+  GamesCreated: number;
 };
 
 export type BracketInfo = {
@@ -79,6 +100,11 @@ export type BracketInfo = {
   RoundOf: number;
   SeedIndex: number;
   IsLosers: boolean;
+};
+
+type AutoScheduleParameters = {
+  roundRobinMatchCapacity: number | undefined;
+  numberOfLadderMatches: number | undefined;
 };
 
 //Series Routes
@@ -98,8 +124,19 @@ const getSeriesTypes = (): Promise<Lookup[]> => http.get(`recim/series/lookup?ty
 
 const getAllSeries = (): Promise<Series[]> => http.get(`recim/series`);
 
+const getSeriesWinners = (ID: number): Promise<AffiliationPoints[]> =>
+  http.get(`recim/series/${ID}/winners`);
+
+const updateSeriesWinners = async (ID: number, winner: AffiliationPointsUpload) =>
+  http.put(`recim/series/${ID}/winners`, winner);
+
 const editSeries = (seriesID: number, updatedSeries: PatchSeries): Promise<CreatedSeries> =>
   http.patch(`recim/series/${seriesID}`, updatedSeries);
+
+const editSeriesTeamRecord = (
+  seriesID: number,
+  updatedRecord: PatchSeriesTeamRecord,
+): Promise<TeamRecord> => http.patch(`recim/series/${seriesID}/teamrecord`, updatedRecord);
 
 const getSeriesSchedule = (seriesID: number): Promise<SeriesSchedule> =>
   http.get(`recim/series/${seriesID}/schedule`);
@@ -107,8 +144,23 @@ const getSeriesSchedule = (seriesID: number): Promise<SeriesSchedule> =>
 const putSeriesSchedule = (schedule: UploadSeriesSchedule): Promise<SeriesSchedule> =>
   http.put(`recim/series/schedule`, schedule);
 
-const scheduleSeriesMatches = (seriesID: number): Promise<Match[]> =>
-  http.post(`recim/series/${seriesID}/autoschedule`, {});
+const scheduleSeriesMatches = (
+  seriesID: number,
+  params: AutoScheduleParameters,
+): Promise<Match[]> => http.post(`recim/series/${seriesID}/autoschedule`, params);
+
+const getAutoSchedulerEstimate = (
+  seriesID: number,
+  params: AutoScheduleParameters,
+): Promise<AutoScheduleEstimate> => {
+  let str = '';
+  if (params?.numberOfLadderMatches)
+    str += `?numberOfLadderMatches=${params?.numberOfLadderMatches}`;
+  if (params?.roundRobinMatchCapacity)
+    str += `?roundRobinMatchCapacity=${params?.roundRobinMatchCapacity}`;
+
+  return http.get(`recim/series/${seriesID}/autoschedule${str}`);
+};
 
 const deleteSeriesCascade = (seriesID: number): Promise<CreatedSeries> =>
   http.del(`recim/series/${seriesID}`);
@@ -122,10 +174,14 @@ export {
   getSeriesStatusTypes,
   getSeriesTypes,
   getAllSeries,
+  getSeriesWinners,
+  updateSeriesWinners,
   editSeries,
+  editSeriesTeamRecord,
   getSeriesSchedule,
   putSeriesSchedule,
   scheduleSeriesMatches,
+  getAutoSchedulerEstimate,
   deleteSeriesCascade,
   getBracketInfo,
 };

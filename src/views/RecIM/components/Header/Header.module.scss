@@ -18,14 +18,14 @@
 
 .mainHeader {
   @extend %fixSpacingAndShadow;
-  background-color: $neutral-white;
+  background-color: var(--mui-palette-neutral-light);
   margin-top: -1rem;
-  border-bottom: 1px solid $neutral-light-gray;
+  border-bottom: 1px solid var(--mui-palette-neutral-main);
 }
 
 .stickyNav {
   @extend %fixSpacingAndShadow;
-  background-color: $neutral-white;
+  background-color: var(--mui-palette-neutral-light);
   position: sticky;
   top: -1rem;
   margin-bottom: 1rem;

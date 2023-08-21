@@ -1,11 +1,9 @@
-import { Grid } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { ConfirmationRow } from './components/ConfirmationRow';
-import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
 import { InformationField } from './components/InformationField';
+import { Grid } from '@mui/material';
 
 export const validateFieldFromUpdatedInfo = (updatedInfo) => (field) => {
   const value = updatedInfo[field.name];
@@ -26,13 +24,12 @@ const Form = ({
   setOpenForm,
   openForm,
   handleConfirm,
+  headerNotes,
   additionalContent,
   additionCancelActions,
   newInfoCallback,
-  showConfirmationWindow = true,
 }) => {
   const [newInfo, setNewInfo] = useState(currentInfo);
-  const [openConfirmWindow, setOpenConfirmWindow] = useState(false);
 
   const allFields = useMemo(() => fieldSets.flat(), [fieldSets]);
 
@@ -71,7 +68,6 @@ const Form = ({
   };
 
   const handleWindowClose = () => {
-    setOpenConfirmWindow(false);
     setOpenForm(false);
     setNewInfo(currentInfo);
   };
@@ -97,6 +93,7 @@ const Form = ({
       cancelButtonName="cancel"
       onClose={handleCancelClick}
     >
+      {headerNotes}
       {loading ? (
         <GordonLoader />
       ) : (
@@ -104,7 +101,9 @@ const Form = ({
           <ContentCard
             title={formTitles.contentCardTitles?.[index] ?? `${formTitles.name} Information`}
           >
-            {additionalContent}
+            <Grid container xs={12} justifyContent="center">
+              {additionalContent}
+            </Grid>
             {fieldSet.map((field) => (
               <InformationField
                 {...field}

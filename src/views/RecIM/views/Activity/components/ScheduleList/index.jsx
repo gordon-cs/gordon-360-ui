@@ -1,4 +1,14 @@
-import { Grid, Typography, Chip, IconButton, Menu, MenuItem, Divider, Switch } from '@mui/material';
+import {
+  Grid,
+  Typography,
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  Divider,
+  Switch,
+  TextField,
+} from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { ContentCard } from 'views/RecIM/components/Forms/Form/components/ContentCard';
@@ -12,11 +22,14 @@ import {
   standardDate,
   standardTimeOnly,
 } from 'views/RecIM/components/Helpers';
-import { format, isPast, isFuture } from 'date-fns';
+import { format, isFuture } from 'date-fns';
 import {
   deleteSeriesCascade,
   scheduleSeriesMatches,
   getSeriesSchedule,
+  getSeriesWinners,
+  editSeries,
+  getAutoSchedulerEstimate,
 } from 'services/recim/series';
 import { useState, useEffect } from 'react';
 import styles from './../../Activity.module.css';
@@ -27,7 +40,7 @@ import MatchForm from 'views/RecIM/components/Forms/MatchForm';
 import { useWindowSize } from 'hooks';
 import { windowBreakWidths } from 'theme';
 import { deleteMatchList } from 'services/recim/match';
-import GordonLoader from 'components/Loader';
+import SeriesPlacementForm from 'views/RecIM/components/Forms/SeriesPlacementForm';
 
 const ScheduleList = ({
   isAdmin,
@@ -47,12 +60,18 @@ const ScheduleList = ({
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [openConfirmDeleteMatches, setOpenConfirmDeleteMatches] = useState(false);
   const [disclaimerContent, setDisclaimerContent] = useState('');
+  const [hasError, setHasError] = useState(false);
   const [openEditSeriesForm, setOpenEditSeriesForm] = useState(false);
   const [openSeriesScheduleForm, setOpenSeriesScheduleForm] = useState(false);
+  const [openSeriesPlacementForm, setOpenSeriesPlacementForm] = useState(false);
   const [showBracket, setShowBracket] = useState(false);
   const [openMatchForm, setOpenMatchForm] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
   const [seriesSchedule, setSeriesSchedule] = useState();
+  const [autoscheduleParameters, setAutoscheduleParameters] = useState();
+  const [parameterLabel, setParameterLabel] = useState('');
+  const [seriesWinners, setSeriesWinners] = useState();
+  const [autoScheduleEstimate, setAutoScheduleEstimate] = useState();
 
   useEffect(() => {
     if (width < windowBreakWidths.breakSM) setIsMobileView(true);
@@ -60,16 +79,36 @@ const ScheduleList = ({
   }, [width]);
 
   useEffect(() => {
-    const loadSchedule = async () => {
+    const loadData = async () => {
       let fetchedSchedule = await getSeriesSchedule(series.ID);
+      getSeriesWinners(series.ID).then(setSeriesWinners);
       if (fetchedSchedule.ID !== 0) setSeriesSchedule(fetchedSchedule);
     };
-    loadSchedule();
+    loadData();
+
+    if (series)
+      setParameterLabel(
+        series.Type === 'Round Robin' ? 'roundRobinMatchCapacity' : 'numberOfLadderMatches',
+      );
   }, [series]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (autoscheduleParameters?.length && parameterLabel?.length) {
+        let est = await getAutoSchedulerEstimate(series.ID, {
+          [parameterLabel]: autoscheduleParameters,
+        });
+        setAutoScheduleEstimate(est);
+      }
+    };
+    loadData();
+  }, [parameterLabel, autoscheduleParameters, series]);
 
   // default closure
   const closeMenusAndForms = () => {
     setAnchorEl(null);
+    setHasError(false);
+    setAutoscheduleParameters(null);
     setShowAdminTools(false);
     setShowDetailsMenu(false);
   };
@@ -82,6 +121,11 @@ const ScheduleList = ({
 
   const handleCreateMatch = () => {
     setOpenMatchForm(true);
+    closeMenusAndForms();
+  };
+
+  const handleSeriesPlacementForm = () => {
+    setOpenSeriesPlacementForm(true);
     closeMenusAndForms();
   };
 
@@ -99,13 +143,35 @@ const ScheduleList = ({
         case 'Single Elim':
           return numTeams - 1;
         case 'Ladder':
-          return 1; //temporary
+          return '1 (by default)'; //temporary
         case 'Double Elim':
           return numTeams * 2 - 1;
         default:
           return null;
       }
     };
+
+    let parameterFields = (
+      <TextField
+        variant="filled"
+        label="Num Matches"
+        helperText={
+          series.Type === 'Round Robin'
+            ? 'Max number of matches per team'
+            : 'Number of matches total amongst teams'
+        }
+        value={autoscheduleParameters}
+        onChange={(event) => {
+          setAutoscheduleParameters(event.target.value);
+          setHasError(
+            (event.target.value > series.TeamStanding.length || event.target.value < 1) &&
+              event.target.value,
+          );
+        }}
+        type="number"
+      />
+    );
+
     setDisclaimerContent(
       <Typography margin={4}>
         <Typography variant="body1" paragraph>
@@ -122,6 +188,7 @@ const ScheduleList = ({
           {standardDate(series.StartDate, false)}, or the earliest available day, at{' '}
           {format(Date.parse(series.Schedule.StartTime), 'h:mmaaa')}.{' '}
         </Typography>
+        {(series.Type === 'Round Robin' || series.Type === 'Ladder') && parameterFields}
       </Typography>,
     );
     setOpenAutoSchedulerDisclaimer(true);
@@ -130,8 +197,9 @@ const ScheduleList = ({
 
   const handleConfirmAutoSchedule = () => {
     setLoading(true);
-    scheduleSeriesMatches(series.ID).then((res) => {
+    scheduleSeriesMatches(series.ID, { [parameterLabel]: autoscheduleParameters }).then((res) => {
       setOpenAutoSchedulerDisclaimer(false);
+      setAutoscheduleParameters(null);
       setReload((prev) => !prev);
       setLoading(false);
     });
@@ -225,21 +293,22 @@ const ScheduleList = ({
   };
 
   const status = () => {
-    // future series
-    if (isFuture(Date.parse(series.StartDate)))
-      return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
-    // past series
-    else if (isPast(Date.parse(series.EndDate)))
+    if (series.Status === 'In Progress') {
+      if (isFuture(Date.parse(series.StartDate)))
+        return <Chip icon={<UpdateIcon />} label="scheduled" color="secondary" size="small"></Chip>;
+      return (
+        <Chip
+          icon={<ScheduleIcon />}
+          label="ongoing"
+          size="small"
+          className={styles.ongoingChip}
+        ></Chip>
+      );
+    }
+    if (series.Status === 'Completed')
       return <Chip icon={<RestoreIcon />} label="completed" color="success" size="small"></Chip>;
-    // current series
-    return (
-      <Chip
-        icon={<ScheduleIcon />}
-        label="ongoing"
-        size="small"
-        className={styles.ongoingChip}
-      ></Chip>
-    );
+
+    return <Chip icon={<RestoreIcon />} label="closed" size="small" color="error"></Chip>;
   };
   const scheduleMenu = () => {
     let daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -343,7 +412,7 @@ const ScheduleList = ({
           <Typography className={styles.menuTitle}>Schedule</Typography>
           <MenuItem
             dense
-            disabled={series.TeamStanding.length === 0}
+            disabled={series.TeamStanding.length === 0 || series?.Status === 'Completed'}
             onClick={handleAutoSchedule}
             className={styles.menuButton}
           >
@@ -351,23 +420,80 @@ const ScheduleList = ({
           </MenuItem>
           <MenuItem
             dense
+            disabled={series?.Status === 'Completed'}
             onClick={handleSeriesScheduleMenuClick}
             className={styles.menuButton}
             divider
           >
             Edit schedule
           </MenuItem>
-          <MenuItem dense onClick={handleDeleteMatches} className={styles.redButton}>
+          <MenuItem
+            dense
+            disabled={series?.Status === 'Completed'}
+            onClick={handleDeleteMatches}
+            className={styles.redButton}
+          >
             Delete matches
           </MenuItem>
           <Typography className={styles.menuTitle}>Series</Typography>
-          <MenuItem dense onClick={handleEditSeriesMenuClick} className={styles.menuButton}>
+          {series &&
+            (series.Status === 'Completed' ? (
+              <MenuItem
+                dense
+                onClick={async () => {
+                  closeMenusAndForms();
+                  await editSeries(series.ID, { StatusID: 2 });
+                  setReload((prev) => !prev);
+                }}
+                className={styles.menuButton}
+              >
+                Mark Series as 'In-Progress'
+              </MenuItem>
+            ) : (
+              <MenuItem
+                dense
+                onClick={async () => {
+                  closeMenusAndForms();
+                  await editSeries(series.ID, { StatusID: 3 });
+                  setReload((prev) => !prev);
+                }}
+                className={styles.menuButton}
+              >
+                Mark Series as 'Completed'
+              </MenuItem>
+            ))}
+          <MenuItem
+            dense
+            disabled={series?.Status === 'Completed'}
+            onClick={handleEditSeriesMenuClick}
+            className={styles.menuButton}
+          >
             Edit series info
           </MenuItem>
-          <MenuItem dense onClick={handleCreateMatch} className={styles.menuButton}>
+          <MenuItem
+            dense
+            disabled={series?.Status !== 'Completed'}
+            onClick={handleSeriesPlacementForm}
+            className={styles.menuButton}
+          >
+            Assign Placement Points
+          </MenuItem>
+          <MenuItem
+            dense
+            disabled={series?.Status === 'Completed'}
+            onClick={handleCreateMatch}
+            className={styles.menuButton}
+          >
             Create a match
           </MenuItem>
-          <MenuItem dense onClick={handleDelete} className={styles.redButton}>
+          <Divider />
+          <MenuItem
+            dense
+            onClick={handleDelete}
+            className={styles.redButton}
+            sx={{ marginTop: '-0.5em' }}
+            // add spacing to prevent accidentally deleting the series on mobile
+          >
             Delete
           </MenuItem>
         </Menu>
@@ -391,7 +517,6 @@ const ScheduleList = ({
           Games have not yet been scheduled for this series.
         </Typography>
       )}
-      {}
       <GordonDialogBox
         open={openAutoSchedulerDisclaimer}
         title="Auto-Scheduler Disclaimer"
@@ -399,12 +524,54 @@ const ScheduleList = ({
         maxWidth="sm"
         buttonClicked={() => handleConfirmAutoSchedule()}
         buttonName={loading ? 'Scheduling...' : 'I Understand'}
-        isButtonDisabled={loading}
-        cancelButtonClicked={() => setOpenAutoSchedulerDisclaimer(false)}
+        isButtonDisabled={loading || hasError}
+        cancelButtonClicked={() => {
+          setAutoscheduleParameters(null);
+          setHasError(false);
+          setOpenAutoSchedulerDisclaimer(false);
+        }}
         cancelButtonName="Cancel"
       >
         <ContentCard title={`You are attempting to use the auto-scheduler for ${series.Name}`}>
           {disclaimerContent}
+          <Typography marginLeft={4}>
+            {autoscheduleParameters && (
+              <Grid container xs={12} textAlign="left">
+                {/* Header */}
+                <Grid item xs={12}>
+                  <Typography variant="body1" fontWeight="bold">
+                    Given current parameters
+                  </Typography>
+                </Grid>
+                {/* Estimate */}
+                <Grid item container xs={12}>
+                  <Grid item xs={4}>
+                    <Typography variant="body2">Matches Created:</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2" fontWeight="bold">
+                      {autoScheduleEstimate?.GamesCreated}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container xs={12}>
+                  <Grid item xs={4}>
+                    <Typography variant="body2"> End Time of Final Game:</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="body2" fontWeight="bold">
+                      {autoScheduleEstimate && standardDate(autoScheduleEstimate.EndDate, true)}{' '}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="caption" fontWeight="light">
+                      <i>*this estimate is based on the current series schedule</i>{' '}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            )}
+          </Typography>
         </ContentCard>
       </GordonDialogBox>
       <GordonDialogBox
@@ -437,6 +604,13 @@ const ScheduleList = ({
         activityID={series.ActivityID}
         series={series}
         activityTeams={activityTeams}
+      />
+      <SeriesPlacementForm
+        createSnackbar={createSnackbar}
+        onClose={() => setReload((prev) => !prev)}
+        openSeriesPlacementForm={openSeriesPlacementForm}
+        setOpenSeriesPlacementForm={(bool) => setOpenSeriesPlacementForm(bool)}
+        series={series}
       />
       <SeriesScheduleForm
         createSnackbar={createSnackbar}

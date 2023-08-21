@@ -3,7 +3,7 @@ import { Tabs, Tab } from '@mui/material';
 import { useState, useMemo, useEffect } from 'react';
 import { getMatchTeamStatusTypes, updateMatchStats, getMatchByID } from 'services/recim/match';
 import Form, { validateFieldFromUpdatedInfo } from '../Form';
-import styles from './EditMatchStatsForm.module.css';
+import styles from '../Forms.module.css';
 import { useParams } from 'react-router';
 
 const EditMatchStatsForm = ({
@@ -100,6 +100,8 @@ const EditMatchStatsForm = ({
           variant="scrollable"
           scrollButtons="auto"
           aria-label="team name edit stats tabs"
+          textColor="secondary"
+          indicatorColor="secondary"
         >
           {match.Team.map((team) => {
             return <Tab disabled={errors?.length > 0} label={team.Name} />;

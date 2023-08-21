@@ -16,6 +16,6 @@
 .score {
   display: block;
   float: right;
-  color: $neutral-light-gray;
+  color: var(--mui-palette-primary-contrastText);
   font-weight: bold;
 }

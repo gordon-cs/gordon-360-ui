@@ -105,6 +105,13 @@ const SeriesForm = ({
           helperText: '*Invalid Number',
         },
       ];
+  additionalFields.push({
+    label: 'Points for Winning',
+    name: 'points',
+    type: 'number',
+    min: 0,
+    helperText: '*Invalid Number',
+  });
 
   const currentInfo = useMemo(() => {
     if (series) {
@@ -117,6 +124,7 @@ const SeriesForm = ({
         ),
         statusID: series.Status,
         scheduleID: scheduleID,
+        points: series.Points,
       };
     } else {
       return {
@@ -128,6 +136,7 @@ const SeriesForm = ({
         numberOfTeamsAdmitted: '',
         referenceSeriesID: '',
         scheduleID: scheduleID, //nullable, if scheduleID is passed, it will be assigned to the series
+        points: 0,
       };
     }
   }, [activityID, activityTeams, scheduleID, series]);

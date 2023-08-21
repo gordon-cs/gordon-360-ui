@@ -152,7 +152,8 @@ export default class ShiftDisplay extends Component {
               onChange={this.handleTabChange}
               variant="fullWidth"
               className={styles.job_tabs}
-              textColor="inherit"
+              textColor="secondary"
+              indicatorColor="secondary"
             >
               {jobTabs}
             </Tabs>
@@ -164,6 +165,8 @@ export default class ShiftDisplay extends Component {
               orientation="vertical"
               variant="fullWidth"
               className={styles.job_tabs}
+              textColor="secondary"
+              indicatorColor="secondary"
             >
               {jobTabs}
             </Tabs>

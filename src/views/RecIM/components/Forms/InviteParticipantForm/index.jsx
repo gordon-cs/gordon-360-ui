@@ -29,11 +29,9 @@ const InviteParticipantForm = ({
 
   const onSearchSubmit = (username, firstName, lastName) => {
     // Check if participant exists in invite list
-    for (let index = 0; index < inviteList.length; index++) {
-      if (inviteList[index].Username === username) {
-        createSnackbar('Participant already in list', 'error');
-        return;
-      }
+    if (inviteList.find((p) => p.Username === username)) {
+      createSnackbar('Participant already in list', 'error');
+      return;
     }
 
     setInviteList([

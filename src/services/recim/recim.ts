@@ -44,6 +44,6 @@ type RecIMReport = {
 };
 
 const getRecIMReport = (startTime: string, endTime: string): Promise<RecIMReport> =>
-  http.get(`recim/admin/report?start=${startTime}&end=${endTime}`);
+  http.get(`recim/admin/report?startTime=${startTime}&endTime=${endTime}`);
 
 export { getRecIMReport };

@@ -13,7 +13,7 @@ import {
   Fab,
 } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
-import { useUser } from 'hooks';
+import { useAuthGroups, useUser } from 'hooks';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
@@ -45,6 +45,7 @@ import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { getRecIMReport } from 'services/recim/recim';
 import { Print } from '@mui/icons-material';
+import { AuthGroup } from 'services/auth';
 //consider using react-to-print or react-pdf to create downloadable admin report
 
 const TabPanel = ({ children, value, index }) => {
@@ -82,6 +83,7 @@ const Admin = () => {
   const [selectedDateOut, setSelectedDateOut] = useState(null);
   const [openRecimReportBox, setOpenRecimReportBox] = useState();
   const [recimReport, setRecimReport] = useState();
+  const isSuperAdmin = useAuthGroups(AuthGroup.RecIMAdmin);
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -105,17 +107,17 @@ const Admin = () => {
     };
 
     setLoading(true);
-    if (user?.IsAdmin) {
-      loadData();
-    }
-    setLoading(false);
-  }, [user?.IsAdmin]);
+    if (user?.IsAdmin) loadData();
+    if (user) setLoading(false);
+  }, [user]);
 
   const handleAdminMenuOpen = (e) => {
     setAdminMenuAnchorEl(e.currentTarget);
   };
 
   const handleAdminMenuClose = () => {
+    setSelectedDateIn(null);
+    setSelectedDateOut(null);
     setAdminMenuAnchorEl(null);
   };
 
@@ -294,21 +296,24 @@ const Admin = () => {
   );
 
   let headerContents = (
-    <Grid container direction="row" alignItems="center" columnSpacing={{ xs: 2, sm: 4 }}>
-      <Grid item>
-        <img src={recimLogo} alt="Rec-IM Logo" className={styles.headerImg}></img>
+    <Grid container alignItems="center" columnSpacing={4} className={styles.header}>
+      <Grid item container xs={9} alignItems="center" columnSpacing={2}>
+        <Grid item>
+          <img src={recimLogo} alt="Rec-IM Logo" className={styles.headerImg}></img>
+        </Grid>
+        <Grid item xs={8}>
+          <Typography className={styles.title}>
+            <Box component="span" sx={{ color: 'secondary.main' }}>
+              Gordon
+            </Box>{' '}
+            Rec-IM
+          </Typography>
+          <Typography className={styles.subtitle}>
+            <i>"Competition reveals character"</i>
+          </Typography>
+        </Grid>
       </Grid>
-      <Grid item xs={8}>
-        <Typography className={styles.title}>
-          <Box component="span" sx={{ color: 'secondary.main' }}>
-            Gordon
-          </Box>{' '}
-          Rec-IM
-        </Typography>
-        <Typography className={styles.subtitle}>
-          <i>"Competition reveals character"</i>
-        </Typography>
-      </Grid>
+
       <Grid item xs={3} textAlign={'right'}>
         <IconButton onClick={handleAdminMenuOpen} sx={{ mr: '1rem' }}>
           <SummarizeIcon
@@ -340,7 +345,7 @@ const Admin = () => {
   if (!profile || !user) return <GordonUnauthenticated feature={'the Rec-IM page'} />;
 
   // Navigate away from admin page if user is not an admin
-  if (!user?.IsAdmin) {
+  if (!(user?.IsAdmin || isSuperAdmin)) {
     navigate(`/recim`);
   }
 
@@ -353,6 +358,8 @@ const Admin = () => {
             value={tab}
             onChange={(event, newTab) => setTab(newTab)}
             aria-label="admin control center tabs"
+            textColor="secondary"
+            indicatorColor="secondary"
           >
             <Tab label="Activities" />
             <Tab label="Teams" />
@@ -380,6 +387,7 @@ const Admin = () => {
                 <ParticipantList
                   participants={participants}
                   isAdminPage={true}
+                  isSuperAdmin={isSuperAdmin}
                   editDetails={handleOpenEditParticipant}
                 />
               </>
@@ -497,24 +505,30 @@ const Admin = () => {
         >
           <Typography className={styles.menuTitle}>Generate Admin Reports</Typography>
           <MenuItem>
-            <DateTimePicker
-              renderInput={(props) => <TextField {...props} />}
-              label="Start Date/Time"
-              value={selectedDateIn}
-              onChange={setSelectedDateIn}
-              className="disable_select"
-              disableFuture={true}
-            />
-            <DateTimePicker
-              renderInput={(props) => <TextField {...props} />}
-              label="End Date/Time"
-              value={selectedDateOut}
-              onChange={setSelectedDateOut}
-              className="disable_select"
-              disabled={selectedDateIn === null}
-              minDateTime={selectedDateIn}
-              disableFuture={true}
-            />
+            <Grid container xs={12} fullWidth spacing={1}>
+              <Grid item xs={12} sm={6} fullWidth>
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label="Start Date/Time"
+                  value={selectedDateIn}
+                  onChange={setSelectedDateIn}
+                  className="disable_select"
+                  disableFuture={true}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} fullWidth>
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label="End Date/Time"
+                  value={selectedDateOut}
+                  onChange={setSelectedDateOut}
+                  className="disable_select"
+                  disabled={selectedDateIn === null}
+                  minDateTime={selectedDateIn}
+                  disableFuture={true}
+                />
+              </Grid>
+            </Grid>
           </MenuItem>
           <MenuItem
             dense

@@ -15,6 +15,9 @@ import {
   Box,
   IconButton,
   Checkbox,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import ActivityForm from '../../components/Forms/ActivityForm';
@@ -38,6 +41,8 @@ import recimLogo from 'views/RecIM/recim_logo.png';
 import { isFuture } from 'date-fns';
 import { TabPanel } from 'views/RecIM/components/TabPanel';
 import SettingsIcon from '@mui/icons-material/Settings';
+import AffiliationsChart from './components/AffiliationsChart';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -50,6 +55,7 @@ const Home = () => {
   const [activities, setActivities] = useState([]);
   const [ongoingActivities, setOngoingActivities] = useState([]);
   const [registrableActivities, setRegistrableActivities] = useState([]);
+  const [completedActivities, setCompletedActivities] = useState([]);
   const [participantTeams, setParticipantTeams] = useState([]);
   const [invites, setInvites] = useState([]);
   const [homeMenuAnchorEl, setHomeMenuAnchorEl] = useState();
@@ -101,15 +107,19 @@ const Home = () => {
   useEffect(() => {
     let open = [];
     let ongoing = [];
+    let completed = [];
     activities.forEach((activity) => {
       if (activity.RegistrationOpen || isFuture(Date.parse(activity.RegistrationStart))) {
         open.push(activity);
-      } else {
+      } else if (isFuture(Date.parse(activity.EndDate))) {
         ongoing.push(activity);
+      } else {
+        completed.push(activity);
       }
     });
     setOngoingActivities(ongoing);
     setRegistrableActivities(open);
+    setCompletedActivities(completed);
   }, [activities]);
 
   const handleHomeSettings = (e) => {
@@ -210,6 +220,18 @@ const Home = () => {
     </CardContent>
   );
 
+  let recentlyCompletedActivities = (
+    <CardContent>
+      {completedActivities.length > 0 ? (
+        <ActivityList activities={completedActivities} showActivityOptions={hasPermissions} />
+      ) : (
+        <Typography className={styles.secondaryText}>
+          It looks like there aren't any recently completed Rec-IM activities
+        </Typography>
+      )}
+    </CardContent>
+  );
+
   let myInvites = (
     <CardContent>
       {invites.length > 0 ? (
@@ -224,6 +246,22 @@ const Home = () => {
         <Typography className={styles.secondaryText}>No pending invites</Typography>
       )}
     </CardContent>
+  );
+
+  let affiliationsCard = (
+    <Card>
+      <Accordion>
+        <AccordionSummary
+          className={`${styles.cardHeader} ${styles.center}`}
+          expandIcon={<ExpandMoreIcon className={styles.expandMoreIcon} />}
+        >
+          <Typography>Hall Rankings</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <AffiliationsChart />
+        </AccordionDetails>
+      </Accordion>
+    </Card>
   );
 
   let myTeams = (
@@ -246,15 +284,21 @@ const Home = () => {
           onChange={(event, newTab) => setActivityTab(newTab)}
           aria-label="admin control center tabs"
           centered
+          textColor="secondary"
+          indicatorColor="secondary"
         >
           <Tab label="Upcoming" />
           <Tab label="Ongoing" />
+          <Tab label="Completed" />
         </Tabs>
         <TabPanel value={activityTab} index={0}>
           {upcomingActivitiesContent}
         </TabPanel>
         <TabPanel value={activityTab} index={1}>
           {ongoingActivitiesContent}
+        </TabPanel>
+        <TabPanel value={activityTab} index={2}>
+          {recentlyCompletedActivities}
         </TabPanel>
       </CardContent>
     </Card>
@@ -268,6 +312,8 @@ const Home = () => {
         onChange={(event, newTab) => setTeamTab(newTab)}
         aria-label="admin control center tabs"
         centered
+        textColor="secondary"
+        indicatorColor="secondary"
       >
         <Tab label="My Teams" />
         <Tab
@@ -297,6 +343,9 @@ const Home = () => {
           <GordonLoader />
         ) : (
           <Grid container spacing={2}>
+            <Grid item xs={12}>
+              {affiliationsCard}
+            </Grid>
             <Grid item xs={12} md={6.5}>
               {activitiesCard}
             </Grid>
@@ -345,6 +394,7 @@ const Home = () => {
             <Checkbox
               color="secondary"
               inputProps={{ 'aria-label': 'toggle' }}
+              checked={allowEmails}
               defaultChecked={participant?.AllowEmails}
               onChange={(e) => handleAllowEmails(e.target.checked)}
             />

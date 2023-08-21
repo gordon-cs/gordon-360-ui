@@ -5,7 +5,7 @@
   grid-template-rows: auto auto auto;
   overflow-y: auto;
   &_title {
-    color: $neutral-white;
+    color: var(--mui-palette-primary-contrastText);
     text-align: center;
   }
   &_content :global(.MuiDialogTitle-root) {
