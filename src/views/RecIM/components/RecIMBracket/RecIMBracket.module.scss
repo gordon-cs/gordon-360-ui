@@ -1,0 +1,21 @@
+@import '../../../../vars';
+
+.bracketMatchLink {
+  width: 100%;
+}
+
+.bracketMatchLink:hover {
+  opacity: 0.85;
+}
+
+.disableLink:hover {
+  cursor: default;
+  opacity: 1;
+}
+
+.score {
+  display: block;
+  float: right;
+  color: var(--mui-palette-primary-contrastText);
+  font-weight: bold;
+}

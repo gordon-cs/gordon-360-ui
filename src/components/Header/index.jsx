@@ -7,6 +7,7 @@ import {
   Work as WorkIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography, Link } from '@mui/material';
+import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
@@ -34,6 +35,7 @@ const TabUrlPatterns = [
   /^\/events\/?$/,
   /^\/people$|^\/myprofile|^\/profile/,
   /^\/timesheets$/,
+  /^\/recim$/,
 ];
 
 /**
@@ -101,7 +103,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
         />
       );
     } else {
-      const route = `/${name.toLowerCase()}`;
+      const route = `/${name.toLowerCase().replace('-', '')}`;
       return (
         <Tab
           className={styles.tab}
@@ -168,6 +170,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
               />
               {requiresAuthTab('People', <PeopleIcon />)}
               {requiresAuthTab('Timesheets', <WorkIcon />)}
+              {requiresAuthTab('Rec-IM', <RecIMIcon />)}
             </Tabs>
           </div>
           <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">

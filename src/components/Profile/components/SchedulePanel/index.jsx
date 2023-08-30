@@ -44,6 +44,7 @@ const GordonSchedulePanel = (props) => {
   const [allCourses, setAllCourses] = useState([]);
 
   const isOnline = useNetworkStatus();
+  // eslint-disable-next-line no-restricted-globals
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
   useEffect(() => {
