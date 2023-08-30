@@ -613,7 +613,7 @@ const Notice = () => (
   </Container>
 );
 
-const switchOverDate = new Date('2023-08-27 00:00');
+const switchOverDate = new Date('2023-08-22 12:00');
 const Component = () => (Date.now() > switchOverDate ? <Notice /> : <Timesheets />);
 
 export default Component;
