@@ -203,11 +203,19 @@ const ExpandableTeamListing = ({ team, teamScore, attendance, isAdmin }) => {
 const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction }) => {
   if (!team && !match) return null;
 
-  const handleAcceptInvite = () => {
+  const handleAcceptInvite = (e) => {
+    // the next two lines prevent parent from redirecting while executing handleRejectInvite()
+    e.stopPropagation();
+    e.preventDefault();
+
     callbackFunction('accepted', team.Activity.ID, team.ID);
   };
 
-  const handleRejectInvite = () => {
+  const handleRejectInvite = (e) => {
+    // the next two lines prevent parent from redirecting while executing handleRejectInvite()
+    e.stopPropagation();
+    e.preventDefault();
+
     callbackFunction('rejected', team.Activity.ID, team.ID);
   };
 
@@ -288,15 +296,7 @@ const TeamListing = ({ team, invite, match, setTargetTeamID, callbackFunction })
                   )}
                   {invite && (
                     <Grid item>
-                      <IconButton
-                        className={styles.rejectIcon}
-                        onClick={(e) => {
-                          // the next two lines prevent parent from redirecting while executing handleRejectInvite()
-                          e.stopPropagation();
-                          e.preventDefault();
-                          handleRejectInvite();
-                        }}
-                      >
+                      <IconButton className={styles.rejectIcon} onClick={handleRejectInvite}>
                         <ClearIcon />
                       </IconButton>
                     </Grid>
