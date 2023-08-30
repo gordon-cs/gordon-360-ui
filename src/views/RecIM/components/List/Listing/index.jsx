@@ -20,7 +20,7 @@ import {
   CardContent,
 } from '@mui/material';
 import styles from './Listing.module.css';
-import { Link, useParams } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { isPast } from 'date-fns';
@@ -529,6 +529,7 @@ const ParticipantListing = ({
         ) : (
           <ListItemButton
             to={`/profile/${participant.Username}`}
+            component={NavLink}
             className={`${styles.listing} ${
               withAttendance && (didAttend ? styles.attendedListing : styles.absentListing)
             }`}
