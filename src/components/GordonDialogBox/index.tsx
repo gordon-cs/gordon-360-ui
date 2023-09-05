@@ -57,7 +57,7 @@ const GordonDialogBox = ({
         sx={
           severity
             ? { bgcolor: `${severity}.main`, color: `${severity}.contrastText` }
-            : { bgcolor: 'primary.main' }
+            : { bgcolor: 'primary.main', color: 'primary.contrastText' }
         }
       >
         {title}
