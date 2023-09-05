@@ -7,9 +7,7 @@ import {
   DialogProps,
   DialogTitle,
 } from '@mui/material';
-import { Alert, AlertTitle } from '@mui/material';
-import { PropsWithChildren } from 'react';
-import styles from './GordonDialogBox.module.css';
+import { KeyboardEvent, PropsWithChildren } from 'react';
 
 type Props = {
   open: boolean;
@@ -37,12 +35,11 @@ const GordonDialogBox = ({
   children,
   ...otherProps
 }: PropsWithChildren<Props>) => {
-  const handleKeyPress = (event: { key: string }) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (
       !isButtonDisabled &&
       event.key === 'Enter' &&
-      document.activeElement?.className ===
-        'MuiDialog-container MuiDialog-scrollPaper css-hz1bth-MuiDialog-container'
+      event.currentTarget.classList.contains('MuiDialog-root')
     ) {
       buttonClicked(event);
     }
@@ -50,33 +47,25 @@ const GordonDialogBox = ({
 
   return (
     <Dialog
-      className={styles.gc360_gordondialogbox}
       {...otherProps}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       onKeyDown={(event) => handleKeyPress(event)}
     >
       <DialogTitle
-        className={styles.gc360_gordondialogbox_title}
         id="alert-dialog-title"
-        sx={severity ? { bgcolor: `${severity}.main`, pb: '0' } : { bgcolor: 'primary.main' }}
+        sx={
+          severity
+            ? { bgcolor: `${severity}.main`, color: `${severity}.contrastText` }
+            : { bgcolor: 'primary.main' }
+        }
       >
-        {severity ? (
-          <Alert variant="filled" severity={severity}>
-            <AlertTitle>
-              <strong>{title}</strong>
-            </AlertTitle>
-          </Alert>
-        ) : (
-          title
-        )}
+        {title}
       </DialogTitle>
-      <DialogContent className={styles.gc360_gordondialogbox_content} id="alert-dialog-description">
-        {children}
-      </DialogContent>
-      <DialogActions className={styles.gc360_gordondialogbox_actions}>
+      <DialogContent id="alert-dialog-description">{children}</DialogContent>
+      <DialogActions>
         {cancelButtonClicked && (
-          <Button variant="contained" color="neutral" onClick={cancelButtonClicked}>
+          <Button variant="outlined" onClick={cancelButtonClicked}>
             {cancelButtonName ?? 'Cancel'}
           </Button>
         )}

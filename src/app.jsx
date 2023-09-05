@@ -35,21 +35,17 @@ const App = () => {
   return (
     <ErrorBoundary>
       <Router historyRef={historyRef.current}>
-        <section className={styles.app_wrapper}>
-          <GordonHeader onDrawerToggle={onDrawerToggle} />
-          <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
-          <main className={styles.app_main}>
-            <>
-              <BirthdayMessage />
-              <AppRedirect />
-              <Routes>
-                {routes.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-              </Routes>
-            </>
-          </main>
-        </section>
+        <GordonHeader onDrawerToggle={onDrawerToggle} />
+        <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
+        <main className={styles.app_main}>
+          <BirthdayMessage />
+          <AppRedirect />
+          <Routes>
+            {routes.map((route) => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
+          </Routes>
+        </main>
       </Router>
     </ErrorBoundary>
   );
