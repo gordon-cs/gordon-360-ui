@@ -35,7 +35,6 @@ const ScottieCyan_opacity10 = '#00AEEF1A';
 //Red used in the old color scheme, good error color
 const ChristmasRed = '#B53228';
 const NauticalRed = '#FF5D53';
-const PureRed = '#FF0000';
 
 // Success
 const LaVidaGreen = '#006D22';
@@ -231,6 +230,18 @@ export const theme360 = extendTheme({
           dark: Placeholder,
           contrastText: ScottieCyan,
         },
+      },
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        outlinedPrimary: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &': {
+            color: theme.vars.palette.neutral.contrastText,
+            borderColor: theme.vars.palette.neutral.contrastText,
+          },
+        }),
       },
     },
   },
