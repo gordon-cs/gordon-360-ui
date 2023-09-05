@@ -6,7 +6,7 @@ import {
   People as PeopleIcon,
   Work as WorkIcon,
 } from '@mui/icons-material';
-import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography, Link } from '@mui/material';
+import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus } from 'hooks';
@@ -42,6 +42,7 @@ const TabUrlPatterns = [
  * Update the tab highlight indicator based on the url
  *
  * The checks use regular expressions to check for matches in the url.
+ * @returns the index of the tab to highlight
  */
 const useTabHighlight = () => {
   const location = useLocation();
@@ -128,9 +129,9 @@ const GordonHeader = ({ onDrawerToggle }) => {
   );
 
   return (
-    <section className={styles.gordon_header}>
-      <AppBar className={styles.app_bar} position="static">
-        <Toolbar>
+    <AppBar className={styles.app_bar} position="static">
+      <Toolbar className={styles.toolbar}>
+        <div className={styles.side_container}>
           <IconButton
             className={styles.hamburger_menu_button}
             color="primary"
@@ -149,44 +150,41 @@ const GordonHeader = ({ onDrawerToggle }) => {
               <img src={headerLogo56dpi} alt="Gordon 360 Logo"></img>
             </picture>
           </Link>
-          <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
-            {/* This h6 box uses flex to keep people search and the profile button stuck to the right side of the header */}
-          </Typography>
-          <div className={styles.center_container}>
-            <Tabs textColor="inherit" indicatorColor="secondary" centered value={tabIndex}>
-              <Tab
-                className={styles.tab}
-                icon={<LocalActivityIcon />}
-                label="Involvements"
-                component={ForwardNavLink}
-                to="/involvements"
-              />
-              <Tab
-                className={styles.tab}
-                icon={<EventIcon />}
-                label="Events"
-                component={ForwardNavLink}
-                to="/events"
-              />
-              {requiresAuthTab('People', <PeopleIcon />)}
-              {requiresAuthTab('Timesheets', <WorkIcon />)}
-              {requiresAuthTab('Rec-IM', <RecIMIcon />)}
-            </Tabs>
-          </div>
-          <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
-            {/* This h6 box uses flex to keep people search and the profile button stuck to the right side of the header */}
-          </Typography>
-          <div className={styles.people_search_container_container}>
-            {/* Width is dynamic */}
-            <div className={styles.people_search_container}>
-              {isAuthenticated ? <GordonQuickSearch /> : loginButton}
-            </div>
+        </div>
+        <Tabs
+          textColor="inherit"
+          indicatorColor="secondary"
+          className={styles.center_container}
+          centered
+          value={tabIndex}
+        >
+          <Tab
+            className={styles.tab}
+            icon={<LocalActivityIcon />}
+            label="Involvements"
+            component={ForwardNavLink}
+            to="/involvements"
+          />
+          <Tab
+            className={styles.tab}
+            icon={<EventIcon />}
+            label="Events"
+            component={ForwardNavLink}
+            to="/events"
+          />
+          {requiresAuthTab('People', <PeopleIcon />)}
+          {requiresAuthTab('Timesheets', <WorkIcon />)}
+          {requiresAuthTab('Rec-IM', <RecIMIcon />)}
+        </Tabs>
+        <div className={styles.side_container}>
+          <div className={styles.people_search_container}>
+            {isAuthenticated ? <GordonQuickSearch /> : loginButton}
           </div>
           <GordonNavAvatarRightCorner onClick={handleOpenProfile} />
-          {createDialogBox()}
-        </Toolbar>
-      </AppBar>
-    </section>
+        </div>
+        {createDialogBox()}
+      </Toolbar>
+    </AppBar>
   );
 };
 

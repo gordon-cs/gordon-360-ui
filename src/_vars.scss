@@ -14,6 +14,14 @@ $break-md: 900px;
 $break-lg: 1200px;
 $break-xl: 1536px;
 
-$header-height-xs: 56px;
-$header-height-sm: 64px;
-$header-height-md: 72px;
+:root {
+  --header-height: 56px;
+
+  @media (min-width: $break-sm) {
+    --header-height: 64px;
+  }
+
+  @media (min-width: $break-md) {
+    --header-height: 72px;
+  }
+}
