@@ -93,7 +93,7 @@ export const theme360 = extendTheme({
         secondary: {
           main: ScottieCyan,
           dark: ScottieCyan_opacity75,
-          contrastText: White,
+          contrastText: Black,
           50: ScottieCyan_opacity10,
           100: '#B0E2F9',
           200: '#7BD0F5',
