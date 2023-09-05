@@ -3,6 +3,7 @@
 .app_bar {
   position: sticky;
   height: var(--header-height);
+  z-index: 100; // so quick search results appear above page.
 }
 
 .toolbar {
