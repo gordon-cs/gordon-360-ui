@@ -1,0 +1,17 @@
+@import '../../vars';
+
+.gc360_gordondialogbox {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  overflow-y: auto;
+  &_title {
+    color: var(--mui-palette-primary-contrastText);
+    text-align: center;
+  }
+  &_content :global(.MuiDialogTitle-root) {
+    padding: 8px 20px 8px 16px;
+  }
+  &_actions {
+    justify-content: space-evenly;
+  }
+}
