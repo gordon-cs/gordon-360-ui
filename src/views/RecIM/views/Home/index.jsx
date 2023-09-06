@@ -335,7 +335,7 @@ const Home = () => {
   );
 
   let headerAlert = (
-    /*participant?.Status === 'Pending' &&*/ <Alert
+    participant?.Status === 'Pending' && <Alert
       severity="error"
       sx={{ mb: '1rem' }}
       action={
