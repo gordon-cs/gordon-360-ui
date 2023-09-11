@@ -6,7 +6,6 @@ import {
   ListItemButton,
   ListItemText,
   Typography,
-  Chip,
   IconButton,
   Menu,
   MenuItem,
@@ -23,104 +22,18 @@ import styles from './Listing.module.css';
 import { Link, NavLink, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
-import { isPast } from 'date-fns';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
-import { editTeamParticipant, respondToTeamInvite } from 'services/recim/team';
+import { editTeamParticipant } from 'services/recim/team';
 import { isActivityRegisterable } from 'services/recim/activity';
 import { removeAttendance, updateAttendance } from 'services/recim/match';
 import { getParticipantAttendanceCountForTeam } from 'services/recim/team';
-import SportsFootballIcon from '@mui/icons-material/SportsFootball';
-import SportsCricketIcon from '@mui/icons-material/SportsCricket';
-import LocalActivityIcon from '@mui/icons-material/LocalActivity';
-import { standardDate, formatDateTimeRange } from '../../Helpers';
+import { standardDate } from '../../Helpers';
 import defaultLogo from 'views/RecIM/recim_logo.png';
 import { editParticipantAdmin, editParticipantStatus } from 'services/recim/participant';
 import { ParticipantList } from '..';
-
-const activityTypeIconPair = [
-  {
-    type: 'League',
-    icon: <SportsFootballIcon />,
-  },
-  {
-    type: 'Tournament',
-    icon: <SportsCricketIcon />,
-  },
-  {
-    type: 'One Off',
-    icon: <LocalActivityIcon />,
-  },
-];
-
-const ActivityListing = ({ activity }) => {
-  let activeSeries = activity.Series.find((series) => isPast(Date.parse(series.StartDate)));
-  let activeSeriesMessage =
-    activeSeries && activeSeries.Name + ' until ' + standardDate(activeSeries.EndDate);
-
-  if (!activity) return null;
-  return (
-    <ListItem key={activity.ID} className={styles.listingWrapper}>
-      <ListItemButton
-        component={Link}
-        to={`/recim/activity/${activity.ID}`}
-        className={styles.listing}
-      >
-        <Grid container columnSpacing={2} alignItems="center">
-          <Grid item container direction="column" xs={12} sm={4} spacing={1}>
-            <Grid item>
-              <Typography className={styles.listingTitle}>{activity.Name}</Typography>
-            </Grid>
-            <Grid item>
-              <Chip
-                icon={activityTypeIconPair.find((type) => type.type === activity.Type)?.icon}
-                label={activity.Type}
-                color={'success'}
-                className={
-                  styles['activityType_' + activity?.Type.toLowerCase().replace(/\s+/g, '')]
-                }
-                size="small"
-              />
-            </Grid>
-          </Grid>
-          <Grid item container xs={12} sm={7} direction="column" spacing={1}>
-            {activity.StartDate && (
-              <Grid item>
-                <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
-                  {activity.EndDate
-                    ? formatDateTimeRange(activity.StartDate, activity.EndDate)
-                    : standardDate(activity.StartDate) + ` - TBD`}
-                </Typography>
-              </Grid>
-            )}
-            <Grid item container columnSpacing={2}>
-              {activity.RegistrationOpen && (
-                <Grid item>
-                  <Chip
-                    icon={<EventAvailableIcon />}
-                    label={'Registration Open'}
-                    color={'success'}
-                    size="small"
-                  />
-                </Grid>
-              )}
-              <Grid item>
-                <Typography className={styles.listingSubtitle}>
-                  {activity.RegistrationOpen
-                    ? 'Registration closes ' + standardDate(activity.RegistrationEnd)
-                    : activeSeriesMessage}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </ListItemButton>
-    </ListItem>
-  );
-};
 
 const ExpandableTeamListing = ({ team, teamScore, attendance, isAdmin }) => {
   let content = (
@@ -970,7 +883,6 @@ const SurfaceListing = ({ surface, confirmDelete, editDetails }) => {
 };
 
 export {
-  ActivityListing,
   ExpandableTeamListing,
   TeamListing,
   ParticipantListing,

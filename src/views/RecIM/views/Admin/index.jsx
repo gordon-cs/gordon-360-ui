@@ -1,51 +1,45 @@
+import { Print } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 import {
+  Box,
+  Button,
   Card,
   CardContent,
-  Tabs,
-  Tab,
-  Button,
+  Fab,
   Grid,
-  Box,
   IconButton,
   Menu,
   MenuItem,
+  Tab,
+  Tabs,
   TextField,
-  Fab,
+  Typography,
 } from '@mui/material';
-import { useState, useEffect, useCallback } from 'react';
-import { useAuthGroups, useUser } from 'hooks';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import GordonDialogBox from 'components/GordonDialogBox';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
-import Header from '../../components/Header';
-import styles from './Admin.module.css';
-import { getParticipantByUsername } from 'services/recim/participant';
-import {
-  ActivityList,
-  TeamList,
-  ParticipantList,
-  SurfaceList,
-  SportList,
-} from '../../components/List';
-import { getActivities } from 'services/recim/activity';
-import { getTeams } from 'services/recim/team';
-import { getParticipants } from 'services/recim/participant';
-import { deleteSurface, getSurfaces } from 'services/recim/match';
-import AddIcon from '@mui/icons-material/Add';
-import ParticipantForm from 'views/RecIM/components/Forms/ParticipantForm';
-import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
-import SportForm from 'views/RecIM/components/Forms/SportForm';
-import GordonDialogBox from 'components/GordonDialogBox';
-import { Typography } from '@mui/material';
-import recimLogo from 'views/RecIM/recim_logo.png';
+import { useAuthGroups, useUser } from 'hooks';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { deleteSport, getAllSports } from 'services/recim/sport';
-import SummarizeIcon from '@mui/icons-material/Summarize';
-import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { getRecIMReport } from 'services/recim/recim';
-import { Print } from '@mui/icons-material';
 import { AuthGroup } from 'services/auth';
+import { getActivities } from 'services/recim/activity';
+import { deleteSurface, getSurfaces } from 'services/recim/match';
+import { getParticipantByUsername, getParticipants } from 'services/recim/participant';
+import { getRecIMReport } from 'services/recim/recim';
+import { deleteSport, getAllSports } from 'services/recim/sport';
+import { getTeams } from 'services/recim/team';
+import ParticipantForm from 'views/RecIM/components/Forms/ParticipantForm';
+import SportForm from 'views/RecIM/components/Forms/SportForm';
+import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
+import ActivityList from 'views/RecIM/components/List/Activity';
+import recimLogo from 'views/RecIM/recim_logo.png';
+import Header from '../../components/Header';
+import { ParticipantList, SportList, SurfaceList, TeamList } from '../../components/List';
+import styles from './Admin.module.css';
 //consider using react-to-print or react-pdf to create downloadable admin report
 
 const TabPanel = ({ children, value, index }) => {

@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import { useEffect, useState, useMemo } from 'react';
 import {
-  ActivityListing,
   MatchListing,
   ParticipantListing,
   SurfaceListing,
@@ -33,19 +32,6 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { editParticipantStatus } from 'services/recim/participant';
-
-const ActivityList = ({ activities, showActivityOptions }) => {
-  if (!activities?.length)
-    return <Typography className={styles.secondaryText}>No activities to show.</Typography>;
-  let content = activities.map((activity) => (
-    <ActivityListing
-      key={activity.ID}
-      activity={activity}
-      showActivityOptions={showActivityOptions}
-    />
-  ));
-  return <List dense>{content}</List>;
-};
 
 const ParticipantList = ({
   participants,
@@ -484,7 +470,6 @@ const SurfaceList = ({ surfaces, confirmDelete, editDetails }) => {
 };
 
 export {
-  ActivityList,
   ParticipantList,
   MatchList,
   MatchHistoryList,

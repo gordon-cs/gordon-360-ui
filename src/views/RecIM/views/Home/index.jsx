@@ -29,7 +29,7 @@ import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
 import Header from '../../components/Header';
 import styles from './Home.module.css';
-import { ActivityList, TeamList } from './../../components/List';
+import { TeamList } from './../../components/List';
 import { getActivities } from 'services/recim/activity';
 import {
   getParticipantTeams,
@@ -43,6 +43,7 @@ import { TabPanel } from 'views/RecIM/components/TabPanel';
 import SettingsIcon from '@mui/icons-material/Settings';
 import AffiliationsChart from './components/AffiliationsChart';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ActivityList from 'views/RecIM/components/List/Activity';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -199,7 +200,7 @@ const Home = () => {
   let ongoingActivitiesContent = (
     <CardContent>
       {ongoingActivities.length > 0 ? (
-        <ActivityList activities={ongoingActivities} showActivityOptions={hasPermissions} />
+        <ActivityList activities={ongoingActivities} />
       ) : (
         <Typography className={styles.secondaryText}>
           It looks like there aren't any Rec-IM activities currently ongoing
@@ -211,7 +212,7 @@ const Home = () => {
   let upcomingActivitiesContent = (
     <CardContent>
       {registrableActivities.length > 0 ? (
-        <ActivityList activities={registrableActivities} showActivityOptions={hasPermissions} />
+        <ActivityList activities={registrableActivities} />
       ) : (
         <Typography className={styles.secondaryText}>
           It looks like there aren't any Rec-IM activities currently open for registration
@@ -223,7 +224,7 @@ const Home = () => {
   let recentlyCompletedActivities = (
     <CardContent>
       {completedActivities.length > 0 ? (
-        <ActivityList activities={completedActivities} showActivityOptions={hasPermissions} />
+        <ActivityList activities={completedActivities} />
       ) : (
         <Typography className={styles.secondaryText}>
           It looks like there aren't any recently completed Rec-IM activities
