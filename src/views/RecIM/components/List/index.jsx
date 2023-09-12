@@ -15,7 +15,6 @@ import {
   ParticipantListing,
   SurfaceListing,
   TeamListing,
-  SportListing,
   MatchHistoryListing,
   ExpandableTeamListing,
 } from './Listing';
@@ -451,15 +450,6 @@ const TeamList = ({
   return <List dense>{content}</List>;
 };
 
-const SportList = ({ sports, confirmDelete, editDetails }) => {
-  if (!sports?.length)
-    return <Typography className={styles.secondaryText}>No sports to show.</Typography>;
-  let content = sports.map((sport) => (
-    <SportListing sport={sport} confirmDelete={confirmDelete} editDetails={editDetails} />
-  ));
-  return <List dense>{content}</List>;
-};
-
 const SurfaceList = ({ surfaces, confirmDelete, editDetails }) => {
   if (!surfaces?.length)
     return <Typography className={styles.secondaryText}>No surfaces to show.</Typography>;
@@ -469,12 +459,4 @@ const SurfaceList = ({ surfaces, confirmDelete, editDetails }) => {
   return <List dense>{content}</List>;
 };
 
-export {
-  ParticipantList,
-  MatchList,
-  MatchHistoryList,
-  ExpandableTeamList,
-  TeamList,
-  SurfaceList,
-  SportList,
-};
+export { ParticipantList, MatchList, MatchHistoryList, ExpandableTeamList, TeamList, SurfaceList };

@@ -748,77 +748,6 @@ const MatchListing = ({ match, activityID }) => {
   );
 };
 
-const SportListing = ({ sport, confirmDelete, editDetails }) => {
-  const [anchorEl, setAnchorEl] = useState();
-  const optionsOpen = Boolean(anchorEl);
-
-  if (!sport) return null;
-
-  const handleOptions = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  return (
-    <ListItem key={sport.ID} className={styles.listingWrapper}>
-      <ListItem
-        className={styles.listing}
-        secondaryAction={
-          <IconButton edge="end" onClick={handleOptions}>
-            <MoreHorizIcon />
-          </IconButton>
-        }
-      >
-        <Grid container direction="row">
-          <Grid item container direction="column" xs={6}>
-            <ListItemText>{sport.Name}</ListItemText>
-            <Typography className={styles.listingSubtitle}>{sport.Description}</Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography className={styles.listingAdditionalInfo}>
-              <b>Rules: </b>
-              {sport.Rules}
-            </Typography>
-          </Grid>
-        </Grid>
-        <Menu
-          open={optionsOpen}
-          onClose={() => setAnchorEl()}
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-        >
-          <MenuItem
-            dense
-            onClick={() => {
-              editDetails(sport);
-              setAnchorEl(null);
-            }}
-            divider
-          >
-            Edit details
-          </MenuItem>
-          <MenuItem
-            dense
-            onClick={() => {
-              confirmDelete(sport);
-              setAnchorEl(null);
-            }}
-            className={styles.redButton}
-          >
-            Delete sport
-          </MenuItem>
-        </Menu>
-      </ListItem>
-    </ListItem>
-  );
-};
-
 const SurfaceListing = ({ surface, confirmDelete, editDetails }) => {
   const [anchorEl, setAnchorEl] = useState();
   const optionsOpen = Boolean(anchorEl);
@@ -889,5 +818,4 @@ export {
   MatchListing,
   MatchHistoryListing,
   SurfaceListing,
-  SportListing,
 };

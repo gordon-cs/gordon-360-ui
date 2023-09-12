@@ -38,8 +38,9 @@ import SurfaceForm from 'views/RecIM/components/Forms/SurfaceForm';
 import ActivityList from 'views/RecIM/components/List/Activity';
 import recimLogo from 'views/RecIM/recim_logo.png';
 import Header from '../../components/Header';
-import { ParticipantList, SportList, SurfaceList, TeamList } from '../../components/List';
+import { ParticipantList, SurfaceList, TeamList } from '../../components/List';
 import styles from './Admin.module.css';
+import SportList from 'views/RecIM/components/List/Sport';
 //consider using react-to-print or react-pdf to create downloadable admin report
 
 const TabPanel = ({ children, value, index }) => {
