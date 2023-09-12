@@ -4,6 +4,8 @@ import { Team } from './team';
 import { Series } from './series';
 import { Lookup, PatchLogo } from './recim';
 
+type ActivityType = 'League' | 'Tournament' | 'One Off';
+
 type BaseActivity = {
   Name: string;
   StartDate?: string;
@@ -20,7 +22,7 @@ export type Activity = BaseActivity & {
   ID: number;
   RegistrationOpen: boolean;
   Status: string;
-  Type: string;
+  Type: ActivityType;
   Sport: Sport;
   Logo: string;
   Series: Series[];

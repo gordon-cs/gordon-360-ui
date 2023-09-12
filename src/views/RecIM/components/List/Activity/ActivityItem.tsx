@@ -1,5 +1,5 @@
 import { Grid, ListItem, ListItemButton, Typography, Chip } from '@mui/material';
-import styles from '../Listing.module.css';
+import styles from '../Listing/Listing.module.css';
 import { Link } from 'react-router-dom';
 import { isPast } from 'date-fns';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -9,20 +9,11 @@ import SportsCricketIcon from '@mui/icons-material/SportsCricket';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { standardDate, formatDateTimeRange } from '../../Helpers';
 
-const activityTypeIconPair = [
-  {
-    type: 'League',
-    icon: <SportsFootballIcon />,
-  },
-  {
-    type: 'Tournament',
-    icon: <SportsCricketIcon />,
-  },
-  {
-    type: 'One Off',
-    icon: <LocalActivityIcon />,
-  },
-];
+const activityTypeIcons = {
+  League: <SportsFootballIcon />,
+  Tournament: <SportsCricketIcon />,
+  'One Off': <LocalActivityIcon />,
+};
 
 type Props = {
   activity: Activity;
@@ -49,11 +40,11 @@ const ActivityListItem = ({ activity }: Props) => {
             </Grid>
             <Grid item>
               <Chip
-                icon={activityTypeIconPair.find((type) => type.type === activity.Type)?.icon}
+                icon={activityTypeIcons[activity.Type]}
                 label={activity.Type}
                 color={'success'}
                 className={
-                  styles['activityType_' + activity.Type.toLowerCase().replace(/\s+/g, '')]
+                  styles[`activityType_${activity.Type.toLowerCase().replace(/\s+/g, '')}`]
                 }
                 size="small"
               />
@@ -65,7 +56,7 @@ const ActivityListItem = ({ activity }: Props) => {
                 <Typography sx={{ color: 'gray', fontWeight: 'bold' }}>
                   {activity.EndDate
                     ? formatDateTimeRange(activity.StartDate, activity.EndDate)
-                    : standardDate(activity.StartDate) + ` - TBD`}
+                    : `${standardDate(activity.StartDate)} - TBD`}
                 </Typography>
               </Grid>
             )}
@@ -74,8 +65,8 @@ const ActivityListItem = ({ activity }: Props) => {
                 <Grid item>
                   <Chip
                     icon={<EventAvailableIcon />}
-                    label={'Registration Open'}
-                    color={'success'}
+                    label="Registration Open"
+                    color="success"
                     size="small"
                   />
                 </Grid>
@@ -83,7 +74,7 @@ const ActivityListItem = ({ activity }: Props) => {
               <Grid item>
                 <Typography className={styles.listingSubtitle}>
                   {activity.RegistrationOpen
-                    ? 'Registration closes ' + standardDate(activity.RegistrationEnd)
+                    ? `Registration closes ${standardDate(activity.RegistrationEnd)}`
                     : activeSeriesMessage}
                 </Typography>
               </Grid>
