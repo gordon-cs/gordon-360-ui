@@ -1,7 +1,6 @@
 import styles from '../List.module.css';
-import { Sport } from 'services/recim/sport';
+import listItemStyles from '../Listing/Listing.module.css';
 import {
-  Grid,
   List,
   ListItem,
   ListItemText,
@@ -10,55 +9,46 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import itemStyles from '../Listing/Listing.module.css';
 import { useState } from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { Surface } from 'services/recim/match';
 
 type Props = {
-  sports: Sport[];
-  confirmDelete: (sport: Sport) => void;
-  editDetails: (sport: Sport) => void;
+  surfaces: Surface[];
+  confirmDelete: (surface: Surface) => void;
+  editDetails: (surface: Surface) => void;
 };
 
-const SportList = ({ sports, confirmDelete, editDetails }: Props) =>
-  !sports?.length ? (
-    <Typography className={styles.secondaryText}>No sports to show.</Typography>
+const SurfaceList = ({ surfaces, confirmDelete, editDetails }: Props) =>
+  !surfaces?.length ? (
+    <Typography className={styles.secondaryText}>No surfaces to show.</Typography>
   ) : (
-    <List>
-      {sports.map((sport) => (
-        <SportListItem sport={sport} confirmDelete={confirmDelete} editDetails={editDetails} />
+    <List dense>
+      {surfaces.map((surface) => (
+        <SurfaceListing surface={surface} confirmDelete={confirmDelete} editDetails={editDetails} />
       ))}
     </List>
   );
 
-type ItemProps = Omit<Props, 'sports'> & { sport: Sport };
+type ItemProps = Omit<Props, 'surfaces'> & { surface: Surface };
 
-const SportListItem = ({ sport, confirmDelete, editDetails }: ItemProps) => {
+const SurfaceListing = ({ surface, confirmDelete, editDetails }: ItemProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const optionsOpen = Boolean(anchorEl);
 
-  if (!sport) return null;
+  if (!surface) return null;
 
   return (
     <ListItem
-      className={itemStyles.listing}
+      key={surface.ID}
+      className={listItemStyles.listing}
       secondaryAction={
         <IconButton edge="end" onClick={(event) => setAnchorEl(event.currentTarget)}>
           <MoreHorizIcon />
         </IconButton>
       }
     >
-      <Grid container alignContent="center">
-        <Grid item xs={5}>
-          <ListItemText primary={sport.Name} secondary={sport.Description} />
-        </Grid>
-        <Grid item xs={6}>
-          <Typography variant="body2">
-            <b>Rules: </b>
-            {sport.Rules}
-          </Typography>
-        </Grid>
-      </Grid>
+      <ListItemText secondary={surface.Description}>{surface.Name}</ListItemText>
       <Menu
         open={optionsOpen}
         onClose={() => setAnchorEl(null)}
@@ -75,7 +65,7 @@ const SportListItem = ({ sport, confirmDelete, editDetails }: ItemProps) => {
         <MenuItem
           dense
           onClick={() => {
-            editDetails(sport);
+            editDetails(surface);
             setAnchorEl(null);
           }}
           divider
@@ -85,16 +75,16 @@ const SportListItem = ({ sport, confirmDelete, editDetails }: ItemProps) => {
         <MenuItem
           dense
           onClick={() => {
-            confirmDelete(sport);
+            confirmDelete(surface);
             setAnchorEl(null);
           }}
-          className={itemStyles.redButton}
+          className={listItemStyles.redButton}
         >
-          Delete sport
+          Delete surface
         </MenuItem>
       </Menu>
     </ListItem>
   );
 };
 
-export default SportList;
+export default SurfaceList;

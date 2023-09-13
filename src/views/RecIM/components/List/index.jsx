@@ -13,7 +13,6 @@ import { useEffect, useState, useMemo } from 'react';
 import {
   MatchListing,
   ParticipantListing,
-  SurfaceListing,
   TeamListing,
   MatchHistoryListing,
   ExpandableTeamListing,
@@ -450,13 +449,4 @@ const TeamList = ({
   return <List dense>{content}</List>;
 };
 
-const SurfaceList = ({ surfaces, confirmDelete, editDetails }) => {
-  if (!surfaces?.length)
-    return <Typography className={styles.secondaryText}>No surfaces to show.</Typography>;
-  let content = surfaces.map((surface) => (
-    <SurfaceListing surface={surface} confirmDelete={confirmDelete} editDetails={editDetails} />
-  ));
-  return <List dense>{content}</List>;
-};
-
-export { ParticipantList, MatchList, MatchHistoryList, ExpandableTeamList, TeamList, SurfaceList };
+export { ParticipantList, MatchList, MatchHistoryList, ExpandableTeamList, TeamList };

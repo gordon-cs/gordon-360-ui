@@ -10,9 +10,8 @@
 
 .listing {
   @extend %baseListing;
-  margin-top: 0.1em;
-  margin-bottom: 0.1em;
   padding: 1em;
+  margin-block-end: 0.5rem;
 }
 
 //trial new listing look

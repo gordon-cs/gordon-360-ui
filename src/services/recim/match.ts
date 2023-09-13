@@ -69,7 +69,7 @@ type UploadAttendance = {
   Username: string;
 };
 
-type Surface = {
+export type Surface = {
   ID: number;
   Name: string;
   Description: string;
