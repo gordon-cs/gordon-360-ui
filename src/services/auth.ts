@@ -12,20 +12,30 @@ const acquireAccessToken = async () => {
   const activeAccount = msalInstance.getActiveAccount();
   const accounts = msalInstance.getAllAccounts();
 
-  if (!activeAccount && accounts.length === 0) {
+  const request: SilentRequest = {
+    ...apiRequest,
+  };
+
+  if (activeAccount || accounts.length === 1) {
+    // Acquire token for active or only available account
+    request.account = activeAccount || accounts[0];
+  } else if (accounts.length > 1) {
     /*
+     * No active account, and multiple available accounts.
+     * Ask user which account should be used.
+     */
+    request.prompt = 'select_account';
+  } else {
+    /*
+     * No active account and list of accounts is empty.
      * User is not signed in. Throw error or wait for user to login.
      * Do not attempt to log a user in outside of the context of MsalProvider
      */
   }
-  const request: SilentRequest = {
-    ...apiRequest,
-    account: activeAccount || accounts[0],
-  };
 
   const authResult = await msalInstance.acquireTokenSilent(request).catch((error) => {
     if (error instanceof InteractionRequiredAuthError) {
-      return msalInstance.acquireTokenRedirect(apiRequest);
+      return msalInstance.acquireTokenRedirect(request);
     } else {
       throw error;
     }
