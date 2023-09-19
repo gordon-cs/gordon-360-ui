@@ -165,8 +165,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
   const currentYear = new Date().getFullYear();
-  const [graduationYearRange, setGraduationYearRange] = useState<number[]>([1889, currentYear]);
-  // 1889 is the establish date of Gordon
+  const [graduationYearRange, setGraduationYearRange] = useState<number[]>([
+    1889, // Gordon College was established in 1889
+    currentYear,
+  ]);
+
   const [switchYearRange, setSwitchYearRange] = useState(true);
   const [involvements, setInvolvements] = useState<string[]>([]);
 
@@ -195,10 +198,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
         await peopleSearchService.search(params).then(onSearch);
 
-        const newQueryString = serializeSearchParams(params);
+        const newQueryString = serializeSearchParams(params).toString();
+
         // If search params are new since last search, add search to history
-        if (window.location.search !== newQueryString) {
-          navigate(newQueryString);
+        if (window.location.search !== `?${newQueryString}`) {
+          navigate({ search: newQueryString });
         }
 
         setLoadingSearch(false);

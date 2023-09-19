@@ -84,26 +84,24 @@ export const searchParamSerializerFactory = <
   /**
    * Convert an object of search params into a query string.
    *
-   * @param searchParams object of search params
-   * @returns search params encoded into a query string
+   * @param searchParams search params object
+   * @returns search params serialized as strings into a URLSearchParams object
    */
-  const serializeSearchParams = (searchParams: TSearchParams) => {
+  const serializeSearchParams = (searchParams: TSearchParams): URLSearchParams => {
     // Convert {key: value} object into array of [key, value] pairs
     const paramsArray = Object.entries(searchParams);
 
     // Filter out unchanged items
     const updatedParams = paramsArray.filter(([key, value]) => value !== initialSearchParams[key]);
 
-    // if no params have changed, return empty string
-    if (updatedParams.length === 0) return '';
-
-    // transform [key, value] pairs into `key=value` strings after encoding `value`
-    const stringifiedParams = updatedParams.map(
-      ([key, value]) => `${key}=${encodeURIComponent(value)}`,
+    // append each updated param to the output
+    const serializedParams = new URLSearchParams();
+    updatedParams.forEach(([key, value]) =>
+      serializedParams.append(key, encodeURIComponent(value)),
     );
 
-    // Finally, join `key=value` strings with `&` and prepend '?'
-    return `?${stringifiedParams.join('&')}`;
+    // Return URLSearchParams containing serialized value for each param
+    return serializedParams;
   };
 
   /**
