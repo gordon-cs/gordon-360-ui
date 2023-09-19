@@ -152,7 +152,7 @@ export const searchParamSerializerFactory = <
     }, initialSearchParams);
   };
 
-  return { serializeSearchParams, deserializeSearchParams, stripDomain };
+  return { serializeSearchParams, deserializeSearchParams };
 };
 
 /**
