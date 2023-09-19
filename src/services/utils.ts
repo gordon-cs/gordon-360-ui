@@ -134,13 +134,13 @@ export const searchParamSerializerFactory = <
    * If any key of `TSearchParams` is unspecified, it default to the initial value.
    *
    * @param queryString query string to deserialize to search params
-   * @returns object of search params, or null if no search params were found
+   * @returns object of search params, defaulting to initial values for any unspecified params
    */
-  const deserializeSearchParams = (queryString: URLSearchParams): TSearchParams | null => {
+  const deserializeSearchParams = (queryString: URLSearchParams): TSearchParams => {
     const queryParams = Array.from(queryString);
 
     if (queryParams.length === 0) {
-      return null;
+      return initialSearchParams;
     }
 
     return queryParams.reduce((state, [key, value]) => {

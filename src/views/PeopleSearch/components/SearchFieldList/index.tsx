@@ -128,6 +128,25 @@ const AdvancedOptionsColumn = ({ children, ...otherProps }: { children: ReactNod
   </Grid>
 );
 
+/**
+ * Determine whether the user can search for the current params.
+ * This prevents a search with empty params, which freezes the client by trying to render thousands of results
+ *
+ * @param params search params
+ * @returns whether the user is allowed to search using the given params
+ */
+const canSearch = (params: PeopleSearchQuery) => {
+  const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = params;
+
+  // Must search some cohort of people
+  const includesSomeone = includeStudent || includeFacStaff || includeAlumni;
+
+  // Must search for some non-empty criteria
+  const anySearchCriteria = Object.values(criteria).some((c) => containsLetterRegExp.test(c));
+
+  return includesSomeone && anySearchCriteria;
+};
+
 const SearchFieldList = ({ onSearch }: Props) => {
   const { profile } = useUser();
   const navigate = useNavigate();
@@ -169,22 +188,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
-  /**
-   * Whether the user can search for the current params.
-   * This prevents a search with empty params, which freezes the client by trying to render thousands of results
-   */
-  const canSearch = (params: PeopleSearchQuery) => {
-    const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = params;
-
-    // Must search some cohort of people
-    const includesSomeone = includeStudent || includeFacStaff || includeAlumni;
-
-    // Must search for some non-empty criteria
-    const anySearchCriteria = Object.values(criteria).some((c) => containsLetterRegExp.test(c));
-
-    return includesSomeone && anySearchCriteria;
-  };
-
   const search = useCallback(
     async (params: PeopleSearchQuery) => {
       if (canSearch(params)) {
@@ -201,7 +204,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
         setLoadingSearch(false);
       }
     },
-    [canSearch, searchParams, onSearch, navigate],
+    [onSearch, navigate],
   );
 
   useEffect(() => {
@@ -231,32 +234,20 @@ const SearchFieldList = ({ onSearch }: Props) => {
     loadPage();
   }, []);
   useEffect(() => {
-    const readSearchParamsFromURL = () => {
+    const readSearchParamsFromURL = (): void => {
       const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
 
-      const recalculate = (oldSearchParams: PeopleSearchQuery) => {
-        // If there are no search params in the URL, reset to initialSearchParams
-        if (newSearchParams === null) {
-          return initialSearchParams;
-        }
-
-        // Update search params with values from URL query string
-        return {
-          ...oldSearchParams,
-          ...newSearchParams,
-        };
-      };
-      const params = recalculate(searchParams);
-      setSearchParams(params);
-      search(params);
+      setSearchParams(newSearchParams);
+      search(newSearchParams);
     };
+
     // Read search params from URL when SearchFieldList mounts (or initialSearchParams changes)
     readSearchParamsFromURL();
 
     // Read search params from URL on 'popstate' (back/forward navigation) events
     window.addEventListener('popstate', readSearchParamsFromURL);
     return () => window.removeEventListener('popstate', readSearchParamsFromURL);
-  }, []);
+  }, [search]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === 'graduation_year') {
