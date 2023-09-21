@@ -1,10 +1,16 @@
-import { InputAdornment, MenuItem, Paper, TextField, Typography, Divider } from '@mui/material';
+import {
+  InputAdornment,
+  MenuItem,
+  TextField,
+  Typography,
+  Divider,
+  Autocomplete,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import Downshift from 'downshift';
 import { useDebounce, useNetworkStatus, useWindowSize } from 'hooks';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import quickSearchService from 'services/quickSearch';
 import styles from './QuickSearch.module.css';
 
@@ -12,36 +18,38 @@ const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 450;
 const NO_SEARCH_RESULTS = [0, []];
 
-const renderInput = ({ autoFocus, value, ref, ...other }) => (
-  <TextField
-    type="search"
-    autoFocus={autoFocus}
-    value={value}
-    inputRef={ref}
-    InputProps={{
-      disableUnderline: true,
-      classes: {
-        root: styles.root,
-      },
-      startAdornment: (
-        <InputAdornment position="start">
-          <SearchIcon className={styles.searchIcon} />
-        </InputAdornment>
-      ),
-      ...other,
-    }}
-  />
-);
+const highlightParse = (text) => text.replace(/ |\./, '|');
+
+// Highlight first occurrence of 'highlight' in 'text'
+function getHighlightedText(text, highlight) {
+  // Split text on highlight term, include term itself into parts, ignore case
+  const highlights = highlightParse(highlight);
+  const parts = text.split(new RegExp(`(${highlights})`, 'gi'));
+  let hasMatched = false;
+  return (
+    <span>
+      {parts.map((part, key) =>
+        !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
+          ? (hasMatched = true && (
+              <span className={styles.matched_text} key={key}>
+                {part}
+              </span>
+            ))
+          : part,
+      )}
+    </span>
+  );
+}
 
 const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit }) => {
   // Search time is never used via variable name, but it is used via index
   // to ensure that earlier searches which took longer to run don't overwrite later searches
   // eslint-disable-next-line no-unused-vars
   const [[searchTime, suggestions], setSearchResults] = useState(NO_SEARCH_RESULTS);
-  const [suggestionIndex, setSuggestionIndex] = useState(-1);
+  const [loading, setLoading] = useState(false);
   const [query, setQuery] = useDebounce('', 200);
   const [highlightQuery, setHighlightQuery] = useState(String);
-  const [downshift, setDownshift] = useState();
+  const navigate = useNavigate();
   const [width] = useWindowSize();
   const isOnline = useNetworkStatus();
   const placeholder = !isOnline
@@ -52,7 +60,7 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
     query = query.replace(/[^a-zA-Z0-9'\-.\s]/gm, '');
 
     // Trim beginning or trailing spaces or periods from query text
-    var highlightQuery = query.replace(/^[\s.]+|[\s.]+$/gm, '');
+    const highlightQuery = query.replace(/^[\s.]+|[\s.]+$/gm, '');
     setQuery(query);
     setHighlightQuery(highlightQuery);
   }
@@ -60,90 +68,25 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
   useEffect(() => {
     // Only load suggestions if query is of minimum length
     if (query?.length >= MIN_QUERY_LENGTH) {
-      quickSearchService.search(query).then((newResults) =>
+      setLoading(true);
+      quickSearchService.search(query).then((newResults) => {
         // Only update the search results if the new search time is greater than the previous search time
         setSearchResults((prevResults) =>
           newResults[0] > prevResults[0] ? newResults : prevResults,
-        ),
-      );
+        );
+        setLoading(false);
+      });
     } else {
       setSearchResults(NO_SEARCH_RESULTS);
     }
   }, [query]);
 
-  function handleClick(theChosenOne) {
-    if (theChosenOne && disableLink) {
-      onSearchSubmit(theChosenOne);
-    }
-    reset();
+  function handleSubmit(_event, person) {
+    if (!person) return;
+    disableLink ? onSearchSubmit(person.UserName) : navigate(`/profile/${person.UserName}`);
   }
 
-  function handleKeys(key) {
-    let sIndex = suggestionIndex;
-    let suggestionList = suggestions;
-    let theChosenOne;
-
-    if (key === 'Enter') {
-      if (suggestionList && suggestionList.length > 0) {
-        sIndex === -1
-          ? (theChosenOne = suggestionList[0].UserName)
-          : (theChosenOne = suggestionList[sIndex].UserName);
-        // If prop set to disable link, then trigger the onSearchSubmit callback function
-        // Else, redirect the user to the selected profile page
-        disableLink
-          ? onSearchSubmit(theChosenOne)
-          : (window.location.pathname = '/profile/' + theChosenOne);
-        reset();
-      }
-    }
-    if (key === 'ArrowDown') {
-      sIndex++;
-      sIndex = sIndex % suggestionList.length;
-      setSuggestionIndex(sIndex);
-    }
-    if (key === 'ArrowUp') {
-      if (sIndex !== -1) sIndex--;
-      if (sIndex === -1) sIndex = suggestionList.length - 1;
-      setSuggestionIndex(sIndex);
-    }
-  }
-
-  function reset() {
-    // Remove chosen username from the input
-    downshift.clearSelection();
-
-    // Remove loaded suggestions
-    downshift.clearItems();
-
-    setSuggestionIndex(-1);
-  }
-
-  function highlightParse(text) {
-    return text.replace(/ |\./, '|');
-  }
-
-  // Highlight first occurrence of 'highlight' in 'text'
-  function getHighlightedText(text, highlight) {
-    // Split text on highlight term, include term itself into parts, ignore case
-    var highlights = highlightParse(highlight);
-    var parts = text.split(new RegExp(`(${highlights})`, 'gi'));
-    var hasMatched = false;
-    return (
-      <span>
-        {parts.map((part, key) =>
-          !hasMatched && part.match(new RegExp(`(${highlights})`, 'i'))
-            ? (hasMatched = true && (
-                <span className={styles.matched_text} key={key}>
-                  {part}
-                </span>
-              ))
-            : part,
-        )}
-      </span>
-    );
-  }
-
-  function renderSuggestion({ suggestion, itemProps }) {
+  function renderSuggestion(props, suggestion) {
     // Bail if any required properties are missing
     if (!suggestion.UserName || !suggestion.FirstName || !suggestion.LastName) {
       return null;
@@ -151,19 +94,16 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
 
     const highlightQuerySplit = highlightQuery.match(/ |\./);
 
+    const linkProps = !disableLink
+      ? {
+          component: Link,
+          to: `/profile/${suggestion.UserName}`,
+        }
+      : { onClick: () => onSearchSubmit(suggestion.UserName) };
+
     return (
       <>
-        <MenuItem
-          {...itemProps}
-          key={suggestion.UserName}
-          onClick={() => handleClick(suggestion.UserName)}
-          className={
-            suggestionIndex !== -1 &&
-            suggestion.UserName === suggestions?.[suggestionIndex]?.UserName
-              ? styles.suggestion_selected
-              : styles.suggestion
-          }
-        >
+        <MenuItem {...props} {...linkProps} key={suggestion.UserName} className={styles.suggestion}>
           <Typography variant="body2">
             {/* If the query contains a space or a period, only highlight occurrences of the first
               name part of the query in the first name, and only highlight occurrences of the last
@@ -220,61 +160,38 @@ const GordonQuickSearch = ({ customPlaceholderText, disableLink, onSearchSubmit 
   }
 
   return (
-    <Downshift
-      // Assign reference to Downshift to state property for usage elsewhere in the component
-      ref={(downshift) => {
-        setDownshift(downshift);
-      }}
-    >
-      {({ getInputProps, getItemProps, isOpen }) => (
-        <span className={styles.quick_search} key="suggestion-list-span">
-          {renderInput(
-            getInputProps({
-              placeholder: placeholder,
-              ...(isOnline
-                ? {
-                    onChange: (event) => updateQuery(event.target.value),
-                    onKeyDown: (event) => handleKeys(event.key),
-                    onBlur: () => setQuery(''),
-                  }
-                : {
-                    style: { color: 'white' },
-                    disabled: { isOnline },
-                  }),
-            }),
-          )}
-          {isOpen && query.length >= MIN_QUERY_LENGTH && (
-            <Paper square className={`${styles.dropdown} gc360_quick_search_dropdown`}>
-              {suggestions.length > 0 ? (
-                suggestions.map((suggestion) =>
-                  renderSuggestion({
-                    suggestion,
-                    itemProps: getItemProps({
-                      item: suggestion.UserName,
-                      ...(!disableLink
-                        ? {
-                            component: Link,
-                            to: `/profile/${suggestion.UserName}`,
-                          }
-                        : {}),
-                    }),
-                  }),
-                )
-              ) : (
-                <MenuItem className={styles.suggestion_no_results}>
-                  <Typography className={styles.no_results} variant="body2">
-                    No results
-                  </Typography>
-                  <Typography className={styles.loading} variant="body2">
-                    Loading...
-                  </Typography>
-                </MenuItem>
-              )}
-            </Paper>
-          )}
-        </span>
+    <Autocomplete
+      loading={loading}
+      loadingText="Loading..."
+      noOptionsText="No results"
+      options={suggestions}
+      isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
+      renderInput={({ InputProps, ...params }) => (
+        <TextField
+          type="search"
+          placeholder={placeholder}
+          className={styles.root}
+          {...params}
+          InputProps={{
+            ...InputProps,
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className={styles.searchIcon} />
+              </InputAdornment>
+            ),
+          }}
+        />
       )}
-    </Downshift>
+      onInputChange={(_event, value) => updateQuery(value)}
+      onChange={handleSubmit}
+      renderOption={renderSuggestion}
+      getOptionLabel={(option) => (typeof option === 'string' ? option : option.UserName)}
+      filterOptions={(o) => o}
+      autoComplete
+      autoHighlight
+      blurOnSelect
+      forcePopupIcon={false}
+    />
   );
 };
 
