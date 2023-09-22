@@ -17,13 +17,9 @@
     "cropperjs": "^1.5.13",
     "date-fns": "^2.30.0",
     "history": "^5.3.0",
-    "http-proxy-middleware": "^2.0.0",
-    "interweave": "^13.1.0",
-    "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "luxon": "^3.3.0",
     "prop-types": ">=15.7.2",
-    "re2": "^1.18.0",
     "react": "^17.0.2",
     "react-big-calendar": "^1.6.9",
     "react-brackets": "^0.4.7",
@@ -43,7 +39,6 @@
     "react-router-dom": "^6.11.0",
     "react-to-print": "^2.14.13",
     "react-visibility-sensor": "^5.1.1",
-    "url-regex-safe": "^3.0.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
   },
   "devDependencies": {
