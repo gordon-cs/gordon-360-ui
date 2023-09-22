@@ -1,6 +1,6 @@
 import http from './http';
 
-type SearchResult = {
+export type SearchResult = {
   FirstName: string;
   NickName: string;
   LastName: string;
