@@ -48,41 +48,63 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
+type SearchFunction = (
+  query: string,
+) => Promise<[searchTime: number, searchResults: SearchResult[]]>;
+
 /**
  * Search for given query, if query is not updated before debounce timeout (400ms).
  *
  * Once results are fetched, update state with new results
  * and new highlight regex for the query used to fetch these results.
  */
-const performSearch = debounce(async (query: string, dispatch: Dispatch<Action>) => {
-  const resultsPromise = quickSearchService.search(query);
+const performSearch = debounce(
+  async (
+    query: string,
+    dispatch: Dispatch<Action>,
+    searchFunction: SearchFunction = quickSearchService.search,
+  ) => {
+    const resultsPromise = searchFunction(query);
 
-  const queryParts = query
-    .replace(startingAndEndingSpacesOrPeriodsRegex, '')
-    .split(spaceOrPeriodRegex);
-  const highlightRegex = new RegExp(`(${queryParts.join('|')})`, 'i');
+    const queryParts = query
+      .replace(startingAndEndingSpacesOrPeriodsRegex, '')
+      .split(spaceOrPeriodRegex);
+    const highlightRegex = new RegExp(`(${queryParts.join('|')})`, 'i');
 
-  const [searchTime, searchResults] = await resultsPromise;
+    const [searchTime, searchResults] = await resultsPromise;
 
-  dispatch({ type: 'LOAD', payload: { searchTime, searchResults, highlightRegex } });
-}, 400);
+    dispatch({ type: 'LOAD', payload: { searchTime, searchResults, highlightRegex } });
+  },
+  400,
+);
 
 type Props =
   | {
       disableLink: true;
       customPlaceholderText: string;
-      onSearchSubmit: (username: string) => void;
+      onSearchSubmit: (person: SearchResult) => void;
+      searchFunction?: SearchFunction;
     }
-  | undefined;
+  | {
+      disableLink: false;
+      customPlaceholderText: undefined;
+      onSearchSubmit: undefined;
+      searchFunction?: SearchFunction;
+    };
 
-const GordonQuickSearch = (props: Props) => {
+const GordonQuickSearch = ({
+  searchFunction,
+  disableLink = false,
+  customPlaceholderText,
+  onSearchSubmit,
+}: Props) => {
   const [state, dispatch] = useReducer(reducer, default_state);
   const navigate = useNavigate();
   const [width] = useWindowSize();
   const isOnline = useNetworkStatus();
   const placeholder = !isOnline
     ? 'Offline'
-    : props?.customPlaceholderText ?? (width < BREAKPOINT_WIDTH ? 'People' : 'People Search');
+    : customPlaceholderText ?? (width < BREAKPOINT_WIDTH ? 'People' : 'People Search');
 
   const handleInput = (_event: any, value: string) => {
     // remove special characters
@@ -90,7 +112,7 @@ const GordonQuickSearch = (props: Props) => {
 
     if (query.length >= MIN_QUERY_LENGTH) {
       dispatch({ type: 'INPUT' });
-      performSearch(query, dispatch);
+      performSearch(query, dispatch, searchFunction);
     } else {
       dispatch({ type: 'RESET' });
     }
@@ -98,9 +120,7 @@ const GordonQuickSearch = (props: Props) => {
 
   const handleSubmit = (_event: any, person: SearchResult | null) => {
     if (!person) return;
-    props?.disableLink
-      ? props.onSearchSubmit(person.UserName)
-      : navigate(`/profile/${person.UserName}`);
+    disableLink ? onSearchSubmit!(person) : navigate(`/profile/${person.UserName}`);
   };
 
   const renderOption = (params: HTMLAttributes<HTMLLIElement>, person: SearchResult) => {
@@ -116,8 +136,8 @@ const GordonQuickSearch = (props: Props) => {
     }
 
     // on click, execute callback if link disabled, otherwise behave as link.
-    const linkProps = props?.disableLink
-      ? { onClick: () => props.onSearchSubmit(person.UserName) }
+    const linkProps = disableLink
+      ? { onClick: () => onSearchSubmit!(person) }
       : {
           component: Link,
           to: `/profile/${person.UserName}`,
