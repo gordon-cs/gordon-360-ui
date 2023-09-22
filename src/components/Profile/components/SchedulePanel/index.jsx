@@ -35,7 +35,16 @@ const GordonSchedulePanel = ({ profile, myProf, isOnline }) => {
       sessionService.getCurrent(),
     ]).then(([allSessionCourses, currentSession]) => {
       setAllSessionCourses(allSessionCourses);
-      setSession(currentSession);
+
+      // If current session has courses, make it default session
+      if (allSessionCourses.some((s) => s.SessionCode === currentSession.SessionCode)) {
+        setSession(currentSession);
+      } else {
+        // Else default session should be most recent session that has courses
+        // Destructure session schedule to ignore AllCourses, creating an object of type Session
+        const { AllCourses: _, ...defaultSession } = allSessionCourses[0];
+        setSession(defaultSession);
+      }
 
       setLoading(false);
     });
