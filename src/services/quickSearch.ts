@@ -6,7 +6,6 @@ export type SearchResult = {
   LastName: string;
   MaidenName: string;
   UserName: string;
-  ConcatonatedInfo: string;
 };
 
 const search = async (
