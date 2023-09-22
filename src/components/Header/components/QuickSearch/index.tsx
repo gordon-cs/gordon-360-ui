@@ -11,12 +11,12 @@ import { SearchResult } from 'services/quickSearch';
 const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 450;
 
-const default_state: State = Object.freeze({
+const default_state = {
   loading: false,
   searchTime: 0,
-  searchResults: [],
+  searchResults: [] as SearchResult[],
   highlightRegex: null,
-});
+} as const satisfies State;
 
 type State = {
   loading: boolean;
