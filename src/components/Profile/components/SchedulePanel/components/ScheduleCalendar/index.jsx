@@ -3,7 +3,6 @@ import GordonLoader from 'components/Loader';
 import Moment from 'moment';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import scheduleService from 'services/schedule';
-import session from 'services/session';
 import './ScheduleCalendar.css';
 
 const resourceMap = [
@@ -15,9 +14,8 @@ const resourceMap = [
   { resourceId: 'SA', resourceTitle: 'Saturday' },
 ];
 
-const GordonScheduleCalendar = (props) => {
+const GordonScheduleCalendar = ({ allCourses, session, profile, isOnline, onSelectEvent }) => {
   const [loading, setLoading] = useState(true);
-  const [currentSession, setCurrentSession] = useState([]);
   const [eventInfo, setEventInfo] = useState([]);
 
   useEffect(() => {
@@ -25,7 +23,7 @@ const GordonScheduleCalendar = (props) => {
       setLoading(true);
       let courseInfo = null;
       try {
-        const course = props.allCourses.filter((item) => item.SessionCode === props.term);
+        const course = allCourses.filter((item) => item.SessionCode === session.SessionCode);
         courseInfo = scheduleService.makeScheduleCourses(course[0].AllCourses);
       } catch (e) {
         setLoading(false);
@@ -35,19 +33,16 @@ const GordonScheduleCalendar = (props) => {
         setEventInfo(courseInfo);
       }
 
-      let currentSession =
-        props.term === '' ? await session.getCurrent() : await session.get(props.term);
-      setCurrentSession(currentSession);
       setLoading(false);
     };
 
-    loadData(props.profile);
-  }, [props.allCourses, props.profile, props.reloadCall, props.term]);
+    loadData(profile);
+  }, [allCourses, profile, session]);
 
   // Localizer is always required for react-big-calendar initialization
   let formats = {
     dayHeaderFormat: (date, localizer = momentLocalizer(Moment)) =>
-      localizer.format(date, `[${currentSession.SessionDescription}]`),
+      localizer.format(date, `[${session.SessionDescription}]`),
   };
 
   const dayStart = new Date();
@@ -59,11 +54,11 @@ const GordonScheduleCalendar = (props) => {
   if (loading) {
     return <GordonLoader />;
   } else {
-    let Resource = ({ localizer = momentLocalizer(Moment) }) => (
+    return (
       <Calendar
-        selectable={props.isOnline}
+        selectable={isOnline}
         events={eventInfo}
-        localizer={localizer}
+        localizer={momentLocalizer(Moment)}
         min={dayStart}
         max={dayEnd}
         step={15}
@@ -75,11 +70,10 @@ const GordonScheduleCalendar = (props) => {
         resourceIdAccessor="resourceId"
         resourceTitleAccessor="resourceTitle"
         formats={formats}
-        onSelectEvent={props.onSelectEvent}
+        onSelectEvent={onSelectEvent}
         onSelecting={(slot) => false}
       />
     );
-    return Resource(momentLocalizer(Moment));
   }
 };
 

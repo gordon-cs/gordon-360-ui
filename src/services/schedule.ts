@@ -49,7 +49,7 @@ const getSchedule = (username: string = '', sessionID: string = ''): Promise<Cou
   return http.get(`schedule/${username}?sessionID=${sessionID}`);
 };
 
-const getAllCourses = (username: string): Promise<SessionCourses> =>
+const getAllSessionCourses = (username: string): Promise<SessionCourses[]> =>
   http.get(`schedule/${username}/allcourses`);
 
 function getMeetingDays(course: CourseSchedule): string[] {
@@ -131,7 +131,7 @@ const scheduleService = {
   getSchedule,
   makeScheduleCourses,
   getCanReadStudentSchedules,
-  getAllCourses,
+  getAllSessionCourses,
 };
 
 export default scheduleService;

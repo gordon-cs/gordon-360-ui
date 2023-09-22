@@ -20,106 +20,91 @@ const formatter = (date, display, isAllDay) => {
   return format(new Date(date), display);
 };
 
-const ScheduleDialog = (props) => {
+const ScheduleDialog = ({ course, session, onClose }) => {
+  if (!course) return null;
+  const recurringDays = course?.meetingDays.map((day) => `${day}`).join(', ');
   return (
-    <Dialog open={props.scheduleDialogOpen} keepMounted fullWidth={true} maxWidth="xs">
-      <div>
-        {props.courseInfo && (
-          <>
-            <DialogTitle className={styles.dialogTitle} align="center">
-              {props.courseTitle}
-            </DialogTitle>
-            <DialogContent>
-              <Typography align="left">Title: {props.courseName}</Typography>
-              <Typography align="left">Room: {props.courseLocation}</Typography>
-              <Typography calign="left">
-                Time:
-                {formatter(props.courseStart, " hh:mm aaaaa'm' ")}-
-                {formatter(props.courseEnd, " hh:mm aaaaa'm' ")}
-              </Typography>
-              <Typography align="left">Week Day(s): {props.recurringDays}</Typography>
-              <Typography align="left">
-                Term Date: {formatter(props.firstDay, 'yyyy-MM-dd')} to
-                {formatter(props.lastDay, ' yyyy-MM-dd')}
-              </Typography>
-            </DialogContent>
-          </>
-        )}
-        <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
-          {/* There are two separate add-to-calendar button elements because Google calendar is the only
+    <Dialog open={Boolean(course)} fullWidth={true} maxWidth="xs">
+      <DialogTitle className={styles.dialogTitle} align="center">
+        {course.title}
+      </DialogTitle>
+      <DialogContent>
+        <Typography>Title: {course.name}</Typography>
+        <Typography>Room: {course.location}</Typography>
+        <Typography>
+          Time:
+          {formatter(course.start, " hh:mm aaaaa'm' ")}-{formatter(course.end, " hh:mm aaaaa'm' ")}
+        </Typography>
+        <Typography>Week Day(s): {recurringDays}</Typography>
+        <Typography>
+          Term Date: {formatter(session.SessionBeginDate, 'yyyy-MM-dd')} to
+          {formatter(session.SessionEndDate, ' yyyy-MM-dd')}
+        </Typography>
+      </DialogContent>
+      <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
+        {/* There are two separate add-to-calendar button elements because Google calendar is the only
           calendar that supports recurring events, the other add-to-calendar button is for the other
           options that users can choose and manually set the course as recurring */}
 
-          <Grid container lg={12} xs={12}>
-            {props.courseInfo && (
-              <>
-                <Grid item xs={0} lg={1}></Grid>
-                <Grid item lg={2} align="right">
-                  <add-to-calendar-button
-                    name={props.courseTitle}
-                    // We had to add 1 to the index for the resourceId because the setDay function
-                    // starts at 0 for Sunday which we don't include in the course schedule
-                    startDate={formatter(
-                      setDay(
-                        new Date(props.firstDay),
-                        dayArr.indexOf(props.courseInfo?.resourceId) + 1,
-                      ),
-                      'yyyy-MM-dd',
-                    )}
-                    // By the nature of the add-to-calendar package, we have to set the startTime
-                    // and endTime as null if they are all day events.
-                    startTime={formatter(props.courseStart, 'HH:mm', props.courseInfo.allDay)}
-                    endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
-                    description={props.courseName}
-                    Location={props.courseLocation}
-                    options="'Google'"
-                    buttonsList
-                    hideTextLabelButton
-                    buttonStyle="round"
-                    recurrence={
-                      'RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=' +
-                      props.recurringDays +
-                      ';UNTIL=' +
-                      formatter(props.lastDay, 'yyyyMMdd')
-                    }
-                    lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
-                    //Get user theme mode preference
-                    Timezone="currentBrowser"
-                  ></add-to-calendar-button>
-                </Grid>
-                <Grid item lg={8} align="left">
-                  <add-to-calendar-button
-                    name={props.courseTitle}
-                    startDate={format(
-                      setDay(
-                        new Date(props.firstDay),
-                        dayArr.indexOf(props.courseInfo.resourceId) + 1,
-                      ),
-                      'yyyy-MM-dd',
-                    )}
-                    startTime={formatter(props.courseStart, 'HH:mm', props.courseInfo.allDay)}
-                    endTime={formatter(props.courseEnd, 'HH:mm', props.courseInfo.allDay)}
-                    description={props.courseName}
-                    Location={props.courseLocation}
-                    options="'Microsoft365|Gordon Outlook','Apple','Outlook.com|Outlook','MicrosoftTeams'"
-                    buttonsList
-                    hideTextLabelButton
-                    buttonStyle="round"
-                    lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
-                    //Get user theme mode preference
-                    Timezone="currentBrowser"
-                  ></add-to-calendar-button>
-                </Grid>
-              </>
-            )}
+        <Grid container lg={12} xs={12}>
+          <Grid item xs={0} lg={1}></Grid>
+          <Grid item lg={2} align="right">
+            <add-to-calendar-button
+              name={course.title}
+              // We had to add 1 to the index for the resourceId because the setDay function
+              // starts at 0 for Sunday which we don't include in the course schedule
+              startDate={formatter(
+                setDay(new Date(session.SessionBeginDate), dayArr.indexOf(course?.resourceId) + 1),
+                'yyyy-MM-dd',
+              )}
+              // By the nature of the add-to-calendar package, we have to set the startTime
+              // and endTime as null if they are all day events.
+              startTime={formatter(course.start, 'HH:mm', course.allDay)}
+              endTime={formatter(course.end, 'HH:mm', course.allDay)}
+              description={course.name}
+              Location={course.location}
+              options="'Google'"
+              buttonsList
+              hideTextLabelButton
+              buttonStyle="round"
+              recurrence={
+                'RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=' +
+                recurringDays +
+                ';UNTIL=' +
+                formatter(session.SessionEndDate, 'yyyyMMdd')
+              }
+              lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
+              //Get user theme mode preference
+              Timezone="currentBrowser"
+            ></add-to-calendar-button>
           </Grid>
-          <Grid className={styles.cancelButton}>
-            <Button onClick={props.handleScheduleDialogClose} variant="contained">
-              Cancel
-            </Button>
+          <Grid item lg={8} align="left">
+            <add-to-calendar-button
+              name={course.title}
+              startDate={format(
+                setDay(new Date(session.SessionBeginDate), dayArr.indexOf(course.resourceId) + 1),
+                'yyyy-MM-dd',
+              )}
+              startTime={formatter(course.start, 'HH:mm', course.allDay)}
+              endTime={formatter(course.end, 'HH:mm', course.allDay)}
+              description={course.name}
+              Location={course.location}
+              options="'Microsoft365|Gordon Outlook','Apple','Outlook.com|Outlook','MicrosoftTeams'"
+              buttonsList
+              hideTextLabelButton
+              buttonStyle="round"
+              lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
+              //Get user theme mode preference
+              Timezone="currentBrowser"
+            ></add-to-calendar-button>
           </Grid>
-        </DialogActions>
-      </div>
+        </Grid>
+        <Grid className={styles.cancelButton}>
+          <Button onClick={onClose} variant="contained">
+            Cancel
+          </Button>
+        </Grid>
+      </DialogActions>
     </Dialog>
   );
 };
