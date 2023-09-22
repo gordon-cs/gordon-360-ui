@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -19,16 +19,11 @@ import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
 import scheduleService from 'services/schedule';
-import { useNetworkStatus, useUser } from 'hooks';
 import sessionService from 'services/session';
 
-const GordonSchedulePanel = (props) => {
-  const [myProf, setMyProf] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(props, myProf ? false : true);
+const GordonSchedulePanel = ({ profile, myProf, isOnline }) => {
   const [loading, setLoading] = useState(true);
   const [reloadCall, setReloadCall] = useState(false);
-  const [sessions, setSessions] = useState([]);
-  const [eventInfo, setEventInfo] = useState([]);
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
   const [selectedCourseInfo, setSelectedCourseInfo] = useState();
@@ -43,30 +38,21 @@ const GordonSchedulePanel = (props) => {
   const [selectedSession, setSelectedSession] = useState('');
   const [allCourses, setAllCourses] = useState([]);
 
-  const isOnline = useNetworkStatus();
-  // eslint-disable-next-line no-restricted-globals
-  const sessionFromURL = new URLSearchParams(location.search).get('session');
-
   useEffect(() => {
-    const loadPage = async () => {
-      const allCourses = await scheduleService.getAllCourses(props.profile.AD_Username);
-      setAllCourses(allCourses.filter((item) => item.AllCourses.length > 0));
-      setSessions(await sessionService.getAll());
-      if (sessionFromURL) {
-        setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
-      } else {
-        const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
-        setCurrentAcademicSession(currentSessionCode);
-        const currSession = await sessionService.getCurrent();
-        const firstDay = currSession.SessionBeginDate;
-        const lastDay = currSession.SessionEndDate;
+    setLoading(true);
 
-        setFirstDay(firstDay);
-        setLastDay(lastDay);
-      }
-    };
-    loadPage();
-  }, [sessionFromURL]);
+    Promise.all([
+      scheduleService.getAllCourses(profile.AD_Username),
+      sessionService.getCurrent(),
+    ]).then(([allCourses, currentSession]) => {
+      setAllCourses(allCourses.filter((item) => item.AllCourses.length > 0));
+      setCurrentAcademicSession(currentSession.SessionCode);
+      setFirstDay(currentSession.SessionBeginDate);
+      setLastDay(currentSession.SessionEndDate);
+
+      setLoading(false);
+    });
+  }, [profile.AD_Username]);
 
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
@@ -79,50 +65,33 @@ const GordonSchedulePanel = (props) => {
     setLastDay(lastDay);
   };
 
-  useEffect(() => {
-    loadData(props.profile);
-  }, [props.profile]);
-
-  const loadData = async (searchedUser) => {
-    try {
-      const schedule = await scheduleService.getSchedule(searchedUser.AD_Username, props.term);
-      setEventInfo(scheduleService.makeScheduleCourses(schedule));
-    } catch (e) {}
-    setLoading(false);
-  };
-
-  const handleScheduleDialogOpen = useCallback((calEvent) => {
-    if (props.myProf) {
-      setScheduleDialogOpen(true);
-      setRecurringDays(calEvent.meetingDays.map((day) => `${day}`).join(', '));
-      setCourseName(calEvent.name);
-      setCourseTitle(calEvent.title);
-      setCourseLocation(calEvent.location);
-      setCourseStart(calEvent.start);
-      setCourseEnd(calEvent.end);
-      setSelectedCourseInfo(calEvent);
-    }
-  }, []);
-
-  const handleScheduleDialogClose = () => {
-    setScheduleDialogOpen(false);
-  };
-
-  const handleIsExpanded = () => setIsExpanded((prevExpanded) => !prevExpanded);
+  const handleScheduleDialogOpen = useCallback(
+    (calEvent) => {
+      if (myProf) {
+        setScheduleDialogOpen(true);
+        setRecurringDays(calEvent.meetingDays.map((day) => `${day}`).join(', '));
+        setCourseName(calEvent.name);
+        setCourseTitle(calEvent.title);
+        setCourseLocation(calEvent.location);
+        setCourseStart(calEvent.start);
+        setCourseEnd(calEvent.end);
+        setSelectedCourseInfo(calEvent);
+      }
+    },
+    [myProf],
+  );
 
   const reloadHandler = () => {
     setReloadCall((val) => !val);
   };
 
-  const { classes } = props;
-
   let scheduleDialog;
 
-  if (props.myProf) {
+  if (myProf) {
     scheduleDialog = (
       <ScheduleDialog
         scheduleDialogOpen={scheduleDialogOpen}
-        handleScheduleDialogClose={handleScheduleDialogClose}
+        handleScheduleDialogClose={() => setScheduleDialogOpen(false)}
         courseInfo={selectedCourseInfo}
         recurringDays={recurringDays}
         courseName={courseName}
@@ -142,7 +111,7 @@ const GordonSchedulePanel = (props) => {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       {
         <>
-          <Accordion TransitionProps={{ unmountOnExit: true }} onChange={handleIsExpanded}>
+          <Accordion TransitionProps={{ unmountOnExit: true }}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
               aria-controls="panel1a-content"
@@ -175,7 +144,7 @@ const GordonSchedulePanel = (props) => {
                 </Grid>
                 <Grid lg={7}></Grid>
                 <Grid item align="center" className={styles.addCalendarInfoText}>
-                  {props.myProf && (
+                  {myProf && (
                     <Typography className={styles.addCalendarInfoText}>
                       Click on Course to add Schedule to Personal Calendar
                     </Typography>
@@ -183,12 +152,12 @@ const GordonSchedulePanel = (props) => {
                 </Grid>
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar
-                    profile={props.profile}
+                    profile={profile}
                     term={selectedSession === '' ? currentAcademicSession : selectedSession}
                     allCourses={allCourses}
-                    myProf={props.myProf}
+                    myProf={myProf}
                     reloadCall={reloadCall}
-                    isOnline={props.isOnline}
+                    isOnline={isOnline}
                     onSelectEvent={handleScheduleDialogOpen}
                   />
                 </Grid>

@@ -30,21 +30,15 @@ const ScheduleDialog = (props) => {
               {props.courseTitle}
             </DialogTitle>
             <DialogContent>
-              <Typography className={styles.dialogTextLarge} align="left">
-                Title: {props.courseName}
-              </Typography>
-              <Typography className={styles.dialogTextMedium} align="left">
-                Room: {props.courseLocation}
-              </Typography>
-              <Typography className={styles.dialogTextMedium} align="left">
+              <Typography align="left">Title: {props.courseName}</Typography>
+              <Typography align="left">Room: {props.courseLocation}</Typography>
+              <Typography calign="left">
                 Time:
                 {formatter(props.courseStart, " hh:mm aaaaa'm' ")}-
                 {formatter(props.courseEnd, " hh:mm aaaaa'm' ")}
               </Typography>
-              <Typography className={styles.dialogTextMedium} align="left">
-                Week Day(s): {props.recurringDays}
-              </Typography>
-              <Typography className={styles.dialogTextMedium} align="left">
+              <Typography align="left">Week Day(s): {props.recurringDays}</Typography>
+              <Typography align="left">
                 Term Date: {formatter(props.firstDay, 'yyyy-MM-dd')} to
                 {formatter(props.lastDay, ' yyyy-MM-dd')}
               </Typography>
