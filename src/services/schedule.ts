@@ -60,13 +60,6 @@ type ScheduleEvent = {
 
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
 
-const getSchedule = (username: string = '', sessionID: string = ''): Promise<Course[]> => {
-  if (sessionID === '') {
-    return http.get(`schedule/${username}`);
-  }
-  return http.get(`schedule/${username}?sessionID=${sessionID}`);
-};
-
 const getAllSessionSchedules = (username: string): Promise<Schedule[]> =>
   http.get(`schedule/${username}/allcourses`);
 
@@ -137,7 +130,6 @@ function makeScheduleCourses(schedule: Course[]): ScheduleEvent[] {
 }
 
 const scheduleService = {
-  getSchedule,
   makeScheduleCourses,
   getCanReadStudentSchedules,
   getAllSessionSchedules,
