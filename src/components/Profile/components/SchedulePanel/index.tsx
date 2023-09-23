@@ -14,14 +14,20 @@ import GordonLoader from 'components/Loader';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
-import scheduleService from 'services/schedule';
+import scheduleService, { CourseEvent, Schedule } from 'services/schedule';
 import sessionService from 'services/session';
+import { Profile } from 'services/user';
 
-const GordonSchedulePanel = ({ profile, myProf }) => {
+type Props = {
+  profile: Profile;
+  myProf: boolean;
+};
+
+const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [loading, setLoading] = useState(true);
-  const [allSchedules, setAllSchedules] = useState([]);
-  const [selectedSchedule, setSelectedSchedule] = useState(null);
-  const [selectedCourse, setSelectedCourse] = useState();
+  const [allSchedules, setAllSchedules] = useState<Schedule[]>([]);
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<CourseEvent | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -56,22 +62,22 @@ const GordonSchedulePanel = ({ profile, myProf }) => {
           <CardHeader className={styles.accordionHeader} title={'Schedule'} />
         </AccordionSummary>
         <AccordionDetails>
-          <Grid container justifyContent="center" align="left" spacing={4}>
+          <Grid container justifyContent="center" spacing={4}>
             <Grid item xs={12} lg={3}>
               <TextField
                 label="Term"
                 id="schedule-session"
-                value={selectedSchedule.session.SessionCode}
+                value={selectedSchedule?.session.SessionCode ?? ''}
                 onChange={(e) =>
                   setSelectedSchedule(
-                    allSchedules.find((s) => s.session.SessionCode === e.target.value),
+                    allSchedules.find((s) => s.session.SessionCode === e.target.value) ?? null,
                   )
                 }
                 select
               >
                 {allSchedules.map(
                   ({ session: { SessionDescription: description, SessionCode: code } }) => (
-                    <MenuItem label={description} value={code} key={code}>
+                    <MenuItem value={code} key={code}>
                       {description}
                     </MenuItem>
                   ),
@@ -79,27 +85,31 @@ const GordonSchedulePanel = ({ profile, myProf }) => {
               </TextField>
             </Grid>
             <Grid lg={7}></Grid>
-            <Grid item align="center" className={styles.addCalendarInfoText}>
-              {myProf && (
-                <Typography className={styles.addCalendarInfoText}>
-                  Click on Course to add Schedule to Personal Calendar
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} lg={10}>
-              <GordonScheduleCalendar
-                schedule={selectedSchedule}
-                onSelectEvent={setSelectedCourse}
-              />
-            </Grid>
+            {selectedSchedule && (
+              <>
+                <Grid item className={styles.addCalendarInfoText}>
+                  {myProf && (
+                    <Typography className={styles.addCalendarInfoText}>
+                      Click on Course to add Schedule to Personal Calendar
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} lg={10}>
+                  <GordonScheduleCalendar
+                    schedule={selectedSchedule}
+                    onSelectEvent={setSelectedCourse}
+                  />
+                </Grid>
+              </>
+            )}
           </Grid>
         </AccordionDetails>
       </Accordion>
-      {myProf && (
+      {myProf && selectedCourse && selectedSchedule && (
         <ScheduleDialog
           onClose={() => setSelectedCourse(null)}
           course={selectedCourse}
-          session={selectedSchedule.session}
+          session={selectedSchedule?.session}
         />
       )}
     </>

@@ -1,11 +1,16 @@
 import Moment from 'moment';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import { scheduleCalendarResources } from 'services/schedule';
+import { CourseEvent, Schedule, scheduleCalendarResources } from 'services/schedule';
 import './ScheduleCalendar.css';
 
 const localizer = momentLocalizer(Moment);
 
-const GordonScheduleCalendar = ({ schedule, onSelectEvent }) => {
+type Props = {
+  schedule: Schedule;
+  onSelectEvent: (event: CourseEvent) => void;
+};
+
+const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
   const dayStart = new Date();
   dayStart.setHours(8, 0, 0, 0);
 
@@ -21,8 +26,7 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }) => {
       step={15}
       timeslots={4}
       defaultView="day"
-      defaultDate={Moment(new Date())}
-      resources={scheduleCalendarResources}
+      resources={scheduleCalendarResources as unknown as object[]}
       formats={{
         dayHeaderFormat: () => schedule.session.SessionDescription,
       }}

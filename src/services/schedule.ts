@@ -49,12 +49,12 @@ export const courseDayIds = [
   'SA',
 ] as const satisfies readonly CourseDayID[];
 
-type Schedule = {
+export type Schedule = {
   session: Session;
   courses: CourseEvent[];
 };
 
-type CourseEvent = {
+export type CourseEvent = {
   /**
    * used by `react-big-calendar` to determine which resource (e.g. `Monday`) this event should display for
    */
@@ -65,6 +65,7 @@ type CourseEvent = {
   start: Date;
   end: Date;
   meetingDays: CourseDayID[];
+  allDay?: boolean;
 };
 
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
